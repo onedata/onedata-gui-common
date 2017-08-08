@@ -1,0 +1,27 @@
+.login-layout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url($root-url + 'assets/images/main-background.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-x: center;
+  color: $color-one-white;
+  overflow: auto;
+  
+  .onedata-logo-container {
+    position: absolute;
+    margin: 30px;
+  }
+  .login-box-container {
+    margin-top: 100px;
+    width: 100%;
+    @media (min-height: 750px) {
+      @include absolute-align-middle-center();
+      transform: translateX(-50%) translateY(-50%) translateY(-50px);
+      margin-top: 0;
+    }
+  }
+}
