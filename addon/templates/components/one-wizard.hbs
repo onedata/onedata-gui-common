@@ -1,0 +1,12 @@
+<div class="row content-row steps-row">
+  {{one-steps steps=steps currentIndex=currentIndex wizard=this}}
+</div>
+
+<div class="row">
+  {{yield (hash step=currentStep index=currentIndex wizard=this)}}
+</div>
+
+{{!-- TODO consider conditional --}}
+{{!--<div class="row">
+  <button type="button" class="btn btn-default" {{action "next"}}>Next</button>
+</div>--}}

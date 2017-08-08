@@ -1,0 +1,102 @@
+$toggle-size-base: 1.4em;
+
+.one-way-toggle {
+  position: relative;
+  display: inline-block;
+  height: $toggle-size-base;
+  font-size: inherit;
+  vertical-align: middle;
+
+  &.form-control {
+    background-color: inherit;
+    border: 0;
+    box-shadow: none;
+    // padding and width properties to override bootstrap form-control styles
+    padding: 0;
+    width: auto;
+  }
+
+  &.disabled {
+    // override HammerJS inline styles
+    cursor: initial !important;
+  }
+
+  input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+
+    &:focus + div::before {
+      @include box-shadow($control-box-shadow-focus);
+      border: 1px solid $input-border-focus;
+    }
+
+    &:checked + div {
+      background-color: $brand-success;
+    }
+
+    &:checked + div:before {
+      margin-left: $toggle-size-base;
+    }
+  }
+
+  .one-way-toggle-control,
+  .one-way-toggle-control:before {
+    border: 1px solid $input-border;
+    border-radius: $toggle-size-base / 2;
+    box-sizing: border-box;
+    content: "";
+    height: $toggle-size-base;
+    @include box-shadow(none);
+  }
+
+  .one-way-toggle-control {
+    display: inline-block;
+    background-color: $color-one-light-gray;
+    transition: background-color 0.2s ease;
+    width: $toggle-size-base * 2;
+  }
+
+  .one-way-toggle-control:before {
+    display: block;
+    background-color: $input-bg;
+    position: relative;
+    transition: margin-left 0.2s ease, $control-focus-transition;
+    width: $toggle-size-base;
+    left: -1px;
+    top: -1px;
+  }
+
+  &.disabled .one-way-toggle-control {
+    opacity: $disabled-opacity;
+  }
+
+  .one-way-toggle-readonly-icon {
+    display: inline-block;
+    font-size: 120%;
+    vertical-align: top;
+  }
+
+  div.clickable::before {
+    cursor: pointer;
+  }
+}
+
+.toggle-form-row {
+  .control-label {
+    padding-top: 0;
+  }
+  
+  & + .form-control-feedback {
+    display: none;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .form-control {
+      padding-left: $padding-large-horizontal;
+    }
+    & + .form-control-feedback {
+      margin-top: 0;
+    }
+  }
+}

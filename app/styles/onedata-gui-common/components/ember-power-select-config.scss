@@ -1,0 +1,84 @@
+// above bootstrap modal
+$ember-basic-dropdown-content-z-index: $zindex-modal+1;
+
+$ember-power-select-border-color: $input-border;
+$ember-power-select-number-of-visible-options: 10;
+$ember-power-select-background-color: $input-bg;
+$ember-power-select-highlighted-background: $color-one-info;
+$ember-power-select-highlighted-color: white;
+$ember-power-select-trigger-default-border-radius: $input-border-radius;
+$ember-power-select-trigger-ltr-padding: $padding-base-vertical;
+$ember-power-select-line-height: $line-height-computed;
+$ember-power-select-opened-border-radius: 0;
+$ember-power-select-dropdown-default-border-radius: $input-border-radius;
+$ember-power-select-selected-background: $ember-power-select-background-color;
+
+@import 'ember-power-select';
+@import 'ember-power-select/themes/bootstrap';
+
+.ember-power-select-selected-item, .ember-power-select-placeholder {
+  margin-left: 0;
+}
+
+.ember-power-select-trigger {
+  padding-left: $padding-large-horizontal;
+  padding-right: 3em;
+  transition: all 0.2s ease;
+  min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
+  word-wrap: break-word;
+
+  &.ember-power-select-trigger--active:not([aria-expanded]) {
+    @include box-shadow($control-box-shadow-focus);
+    border: 1px solid $input-border-focus;
+  }
+
+  .ember-power-select-status-icon {
+    font-family: 'oneicons' !important;
+    border: 0;
+    transform: none;
+    right: 1.7em;
+    top: 0.55em;
+    margin: initial;
+    font-size: 1.7em;
+    font-weight: bold;
+    &:before {
+      content: $oneicon-arrow-down;
+    }
+  }
+
+  &:not([aria-expanded]) {
+    @include box-shadow($control-box-shadow);
+  }
+
+  &[aria-expanded="true"] {
+    color: white;
+    background-color: $color-one-info;
+
+    .ember-power-select-status-icon {
+      transform: none;
+      &:before {
+        content: $oneicon-arrow-up;
+      }
+    }
+  }
+}
+
+.ember-power-select-dropdown {
+  box-shadow: 0 0 5px #ccc;
+
+  .ember-power-select-options[role="listbox"] {
+    max-height: 600px;
+  }
+
+  .ember-power-select-option {
+    border-bottom: 1px solid $input-border;
+    padding: $padding-base-vertical;
+    min-height: $line-height-computed + 2 * $padding-base-vertical;
+    overflow: hidden;
+    word-wrap: break-word;
+
+    &::last-child {
+      border-bottom: 0;
+    }
+  }
+}

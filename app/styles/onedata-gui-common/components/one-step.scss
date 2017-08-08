@@ -1,0 +1,139 @@
+// requires Bootstrap 3 scaffolding, grid
+// requires onedata colors
+
+$step-circle-border-width: 3px;
+$step-circle-size: 32px;
+$color-one-step-inactive: $color-one-light-gray;
+$color-one-step-active: $color-one-info;
+
+$step-width: 350px;
+$max-steps: 10;
+
+.one-step {
+  position: relative;
+  width: 200px;
+  list-style: none;
+  display: none;
+  vertical-align: top;
+  font-size: $font-size-base;
+
+  &.active {
+    display: inline-block;
+    @media (max-width: $step-width) {
+      width: 100%;
+    }
+  }
+
+  @for $steps-num from 2 through $max-steps {
+    // $cols is possible number of visible steps (between 1 and $steps-num)
+    @for $cols from 1 through $steps-num {
+      @for $active-step-index from 1 through $steps-num {
+        // when there are $steps-num steps and $active-step-index step is active
+        .steps-#{$steps-num}.step-active-#{$active-step-index} & {
+          // when all $cols steps can be shown in the same time
+          @media (min-width: $cols * $step-width) {
+            // set all visible steps width to fill a whole container
+            min-width: 100% / $cols;
+
+            // number of next steps (after active) to show
+            $next-steps-num: min($cols - 1, $steps-num - $active-step-index);
+            // number of prev steps (before active) to show
+            $prev-steps-num: min($cols - 1 - $next-steps-num, $active-step-index - 1);
+
+            // TODO? if we want to show one prev step as soon as possible
+            // @if ($prev-steps-num == 0 and $next-steps-num > 1 and $active-step-index > 1) {
+            //   $prev-steps-num: 1;
+            //   $next-steps-num: $next-steps-num - 1;
+            // }
+            @if ($next-steps-num > 0) {
+              // show next steps
+              @for $next-step-index from $active-step-index + 1 through $active-step-index + $next-steps-num {
+                &.one-step-#{$next-step-index} {
+                  display: inline-block;
+                }
+              }
+            }
+            @if ($prev-steps-num > 0) {
+              // show prev steps
+              @for $prev-step-index from $active-step-index - $prev-steps-num through $active-step-index - 1 {
+                &.one-step-#{$prev-step-index} {
+                  display: inline-block;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .step-number {
+    margin-left: auto;
+    margin-right: auto;
+    width: $step-circle-size;
+    height: $step-circle-size;
+    border-style: solid;
+    border-width: $step-circle-border-width;
+    border-color: $color-one-step-inactive;
+    color: $color-one-step-inactive;
+    line-height: $step-circle-size - 2 * $step-circle-border-width;
+    font-size: 120%;
+    // TODO consider making variable for one-component borders
+    // TODO inactive color
+    text-align: center;
+  }
+
+  .step-title {
+    text-transform: capitalize;
+    margin-top: $step-circle-size * 0.5;
+    color: $color-one-step-inactive;
+    font-family: 'Open Sans Semibold';
+    font-size: $font-size-small;
+    white-space: nowrap;
+  }
+
+  .step-separator {
+    border-radius: $step-circle-border-width / 2;
+    position: absolute;
+    top: 1em;
+    width:60%;
+    height: $step-circle-border-width;
+    background-color: $color-one-step-inactive;
+
+    &.separator-left {
+      left: -30%;
+    }
+
+    &.separator-right {
+      left: 70%;
+    }
+  }
+
+  &:first-child .separator-left {
+    display: none;
+  }
+
+  &:last-child .separator-right {
+    display: none;
+  }
+
+  &.active, &.done {
+    .step-number {
+      border-color: $color-one-step-active;
+      background-color: $color-one-step-active;
+      color: $color-one-white;
+    }
+    .step-title {
+      color: $color-one-step-active;
+    }
+    .step-separator.separator-left {
+      background-color: $color-one-step-active;
+    }
+  }
+
+  &.done {
+    .step-separator.separator-right {
+      background-color: $color-one-step-active;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{{!-- TODO i18n --}}
+
+{{#if isCollectionEmpty}}
+
+  {{empty-collection-sidebar resourceType=resourceType}}
+
+{{else}}
+
+  {{#one-list-wrapper items=model.collection as |item|}}
+    {{#one-list-primary-item item=item
+      changePrimaryItemId=(action "changePrimaryItemId")
+      isActive=(eq primaryItemId item.id)
+      as |primarySection|}}
+      {{#if (eq primarySection 'header')}}
+        {{#if firstLevelItemIcon}}
+          {{one-icon icon=firstLevelItemIcon}} 
+        {{/if}}
+        <span class="one-label">{{item.name}}</span>
+      {{else if (eq primarySection 'secondary')}}
+        {{!-- TODO resource type specific --}}
+        {{!-- TODO isActive secondary --}}
+        <ul class="one-list one-list-level-2">
+          {{#each secondLevelItems as |sli|}}
+            <li 
+              class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}
+              {{action "sidebarSecondaryItemSelected"}}>
+              {{!-- TODO only for clusters --}}
+              {{#link-to
+                "onedata.sidebar.content.aspect"
+                "clusters"
+                "the-cluster"
+                sli.id
+                tagName="div"
+                class="item-header truncate"
+              }}
+                {{#if sli.icon}}
+                  {{one-icon icon=sli.icon}} 
+                {{/if}}
+                <span class="one-label">{{sli.label}}</span>
+              {{/link-to}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    {{/one-list-primary-item}}
+  {{/one-list-wrapper}}
+
+{{/if}}
+
+

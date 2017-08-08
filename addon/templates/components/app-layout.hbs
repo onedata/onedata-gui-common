@@ -1,0 +1,104 @@
+{{!-- Bootstrap layout for signed-in user --}}
+
+{{#side-menu width="85%" class="disable-user-select"}}
+  <div class="side-menu-background"></div>
+  <div class="side-menu-header">
+    <div class="row row-onedata-logo full-width">
+      <div class="onedata-logo"></div>
+      {{brand-info}}
+    </div>
+  </div>
+  {{user-account-button 
+    isActive=(eq mainMenu.currentItemId "users") 
+    manageAccount=(action "manageAccount")
+    mobileMode=true}}
+  {{main-menu
+    appModel=appModel
+    currentItemId=currentTabId
+    itemClicked="mobileMenuItemChanged"
+  }}
+{{/side-menu}}
+{{content-backdrop}}
+
+<div id="main-menu-container" 
+  class="col-in-app-layout col-main-menu hidden-xs hidden-sm full-height disable-user-select {{if sidenavTabId "sidenav-opened"}}" 
+  {{action "closeSidenav" bubbles=true}}>
+{{#perfect-scrollbar-element tagName="div" class="main-menu-content"}}
+  <div class="row row-onedata-logo full-width">
+    <div class="onedata-logo"></div>
+    {{brand-info}}
+  </div>
+  <div class="row row-main-menu full-width">
+    {{main-menu
+      appModel=appModel
+      sidenavItemId=sidenavTabId
+      currentItemId=currentTabId
+      itemClicked="mainMenuItemClicked"
+    }}
+  </div>
+{{/perfect-scrollbar-element}}
+  <div class="row row-account-button">
+    <div class="groove-border"></div>
+    {{user-account-button isActive=(eq mainMenu.currentItemId "users") manageAccount=(action "manageAccount")}}
+  </div>
+</div>
+{{#perfect-scrollbar-element tagName="div" id="col-sidebar" class=colSidebarClass}}
+  {{yield 'sidebar'}}
+{{/perfect-scrollbar-element}}
+
+<div class="container-fluid app-grid full-height">
+  <div class="row row-mobile-menu visible-xs-block visible-sm-block disable-user-select">
+    <div class="pull-left">
+      {{#side-menu-toggle}}
+        <button type="button" class="navbar-toggle{{unless showMobileSidebar " hidden-xs"}}">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      {{/side-menu-toggle}}
+      <button {{action 'showMobileSidebar'}} type="button" 
+        class="navbar-toggle toggle-back hidden-sm{{if showMobileSidebar " hidden-xs"}}">
+        {{one-icon icon="arrow-right"}}
+      </button>
+    </div>
+    <div class="pull-left">
+      <div class="tab-name" {{action "showMobileSidebar"}}>
+        <div class="visible-sm-block">{{currentTabId}}</div>
+        <div class="visible-xs-block">{{mobileAppLayoutHeader}}</div>
+      </div>
+    </div>
+    <div class="pull-right {{if globalCollapsibleToolbar.isToggleVisible "" " hidden"}}{{if showMobileSidebar " hidden-xs"}}">
+      <button type="button" 
+        class="navbar-toggle collapsible-toolbar-toggle collapsible-toolbar-global-toggle"
+        onClick={{disable-bubbling (action "globalCollapsibleToolbarToggle")}}>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+  </div>
+  <div class="row row-app full-height">
+    {{#one-sidenav open=sidenavSidebarOpen id="sidenav-sidebar"
+      coverSelector="#col-sidebar" model=sidenavModel.content
+      closed=(action "sidenavClosed")
+    }}
+      {{#promise-proxy-container proxy=sidenavModel}}
+        {{component sidenavContentComponent
+          model=sidenavModel.content
+          changeResourceId=(action "changeResourceId")
+        }}
+      {{/promise-proxy-container}}
+    {{/one-sidenav}}
+        
+    {{content-backdrop class="sidenav-backdrop"
+      progress=(if sidenavSidebarOpen 100 0)
+      click=(action "closeSidenav" bubbles=true)
+    }}
+    
+    {{#perfect-scrollbar-element
+      class=colContentClass
+    }}
+      {{yield 'content'}}
+    {{/perfect-scrollbar-element}}
+  </div>
+</div>

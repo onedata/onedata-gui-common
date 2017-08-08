@@ -1,0 +1,27 @@
+.application-error {
+  text-align: center;
+
+  .application-error-icon {
+    font-size: 256px;
+  }
+  
+  .error-details {
+    max-height: 0;
+    margin-top: 0;
+    transition: $collapse-transition, margin-top .2s linear;
+    opacity: 0;
+    color: $main-text-color;
+    &.active {
+      opacity: 1; 
+      // Different heights for animation purposes
+      max-height: 20em;
+      margin-top: 10px;
+      &.sm-row {
+        max-height: 5em;
+      }
+      &.lg-row {
+        max-height: 50em;
+      }
+    }
+  }
+}

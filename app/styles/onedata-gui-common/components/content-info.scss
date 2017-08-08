@@ -1,0 +1,61 @@
+.content-info {
+  // scroll-breakpoint-[number] toggles between two modes:
+  // - centered horizontally and vertically (on large screens) 
+  // - normally positiononed with scroll (on small screens)
+  // Mode changes when screen is [number]px high.
+  @for $i from 1 to 20 {
+    $size: $i * 100;
+    &.scroll-breakpoint-#{$size} .content-info-content-container {
+      @media (min-height: $size * 1px) {
+        @include absolute-align-middle-center();
+        width: 100%;
+        padding: $padding-large-horizontal
+      }
+    }
+  }
+  &.preserve-header {
+    .world-map {
+      top: $content-header-row-height + $content-col-padding;
+      @media (max-width: $screen-xs-max) {
+        top: $content-header-row-height;
+      }
+    }
+  }
+  .world-map {
+    position: absolute;
+    @include fill-container();
+    padding: $padding-large-horizontal;
+    overflow: auto;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  h1, h2, p {
+    letter-spacing: $letter-spacing-base;
+  }
+  h1 {
+    margin-bottom: 1em;
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 27pt;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: 12pt;
+    text-transform: uppercase;
+    margin-bottom: 0.8em;
+  }
+  p.lead {
+    margin-bottom: 2.5em;
+    font-size: 13pt;
+  }
+  .one-image {
+    margin-bottom: 30px;
+    .image {
+      max-width: 80%;
+    }
+  }
+  .btn-primary {
+    font-size: 130%;
+  }
+}

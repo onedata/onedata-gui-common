@@ -1,0 +1,16 @@
+<div class="tree-circle" {{action "show" key on="click"}}>
+  {{one-icon icon=_bulletIcon}}
+</div>
+{{yield (hash
+  content=(component 'one-tree-item-content' _showAction=(action "show" key))
+  subtree=(component 'one-tree' 
+    key=key
+    collapseRecursively=collapseRecursively
+    _isExpanded=_isSubtreeExpanded
+    _showAction=(action "show")
+    _parentKey=_parentKey
+    _rootKey=_rootKey
+    _areParentsExpanded=_areParentsExpanded
+    _activeSubtreeKeys=_activeSubtreeKeys
+    _hasTreeNotify=(action "hasTreeNotify"))
+)}}

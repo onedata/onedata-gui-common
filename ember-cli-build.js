@@ -3,9 +3,27 @@
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
-    // Add options here
+    // a "bootstrap" should be imported into app.scss
+    'ember-cli-bootstrap-sassy': {
+      // import SASS styles and some JS that is used outside of ember-bootstrap components 
+      'js': [
+        'transition',
+        // TODO: rewrite collapses to ember-bootstrap components
+        'tooltip',
+        'collapse',
+        'popover',
+      ],
+      'glyphicons': false
+    },
+    // import only JS
+    'ember-bootstrap': {
+      'importBootstrapCSS': false,
+      'importBootstrapTheme': false,
+      'importBootstrapFont': true,
+      'bootstrapVersion': 3
+    },
   });
 
   /*
@@ -14,6 +32,15 @@ module.exports = function(defaults) {
     This build file does *not* influence how the addon or the app using it
     behave. You most likely want to be modifying `./index.js` or app's build file
   */
+
+  const BOWER_ASSETS = [
+    'basictable/jquery.basictable.min.js',
+    'basictable/basictable.css',
+    'webui-popover/dist/jquery.webui-popover.css',
+    'webui-popover/dist/jquery.webui-popover.js',
+  ];
+
+  BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));
 
   return app.toTree();
 };

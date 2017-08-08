@@ -1,0 +1,31 @@
+.one-sidebar {
+  .row-heading {
+    position: relative;
+    .col-title {
+      padding: $onedata-logo-margin-top $one-list-item-padding;
+      line-height: $onedata-logo-height;
+      font-family: 'Open Sans Semibold';
+    }
+    @media (max-width: $screen-sm-max) {
+      display: none;
+    }
+  }
+  .row-body {
+    .search-bar-item {
+      padding-top: $one-list-item-padding;
+      .item-header {
+        margin-bottom: $one-list-item-padding;
+        border-bottom: 0;
+      }
+    }
+  }
+  .alert-promise-error {
+    margin-left: 10px;
+    margin-right: 10px;
+    border-left-width: 1px;
+    background-color: $color-one-white;
+    &::before {
+      display: none;
+    }
+  }
+}
