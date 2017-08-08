@@ -2,5 +2,8 @@
 'use strict';
 
 module.exports = {
-  name: 'onedata-gui-common'
+  name: 'onedata-gui-common',
+  isDevelopingAddon: function () {
+    return true;
+  }
 };
