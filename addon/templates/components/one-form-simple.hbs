@@ -1,0 +1,28 @@
+{{#bs-form
+  submitOnEnter=false
+  class=_formClasses
+  as |form|
+}}  
+  {{one-form-fields
+    bsForm=form
+    fields=currentFields
+    formValues=formValues
+    inputChanged=(action "inputChanged")
+    onFocusOut=(action "focusOut")
+    disabled=_disabled
+  }}
+  
+  {{#if submitButton}}
+    <div class="row">
+      <div class={{layoutConfig.formSubmitColumns}}>
+        {{#spin-button
+          class="btn btn-primary"
+          action=(action "submit")
+          disabled=(not _submitEnabled)
+        }}
+          {{submitText}}
+        {{/spin-button}}
+      </div>
+    </div>
+  {{/if}}
+{{/bs-form}}

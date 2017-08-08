@@ -1,0 +1,12 @@
+.status-icon {
+  // using camelCase because of status mapping from API
+  &.inProgress {
+    @extend .animated;
+    @extend .infinite;
+    @extend .semi-hinge;
+    @extend .pulse-mint;
+  }
+  &.done, &.waiting {
+    color: $color-one-mint;
+  }
+}

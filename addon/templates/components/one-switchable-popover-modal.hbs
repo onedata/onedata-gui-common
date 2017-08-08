@@ -1,0 +1,27 @@
+{{#if (eq _renderMode "popover")}}
+  <div>
+    {{#one-webui-popover
+      class=_popoverClass
+      placement=popoverPlacement
+      triggerSelector=_activeTriggerConfiguration.selector
+      open=_contentVisible}}
+      {{yield (hash
+        close=(action "close")
+        submit=(action "submit")
+      )}}
+    {{/one-webui-popover}}
+  </div>
+{{else if (eq _renderMode "modal")}}
+  {{#bs-modal
+    open=_contentVisible
+    onHide=(action "onModalHide")
+    class=_modalClass
+    as |modal|}}
+    {{#modal.body}}
+      {{yield (hash
+        close=(action "close")
+        submit=(action "submit")
+      )}}
+    {{/modal.body}}
+  {{/bs-modal}}
+{{/if}}

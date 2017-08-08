@@ -1,0 +1,72 @@
+.basic-table.bt {
+  thead {
+    display: none;
+  }
+
+  tbody {
+    tr {
+      border-top: 1px solid $main-border-color;
+
+      td {
+        border: none !important;
+        display: block;
+        text-align: left;
+
+        &:before {
+          content: attr(data-th) ": ";
+          display: inline-block;
+          margin-right: 1em;
+          text-align: right;
+          width: 50%;
+        }
+
+        &.bt-hide {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.dropdown-table-rows {
+    tbody {
+      tr {
+        position: relative;
+        overflow: hidden;
+        border-top: 0;
+        td {
+          &.row-header {
+            @include clickable();
+            &:before {
+              @include icon-toggle-float-right();
+              margin-right: 0;
+              content: $oneicon-arrow-down;
+              transform: translateY(-50%) rotate(0deg);
+              transition: transform .2s ease;
+            }
+          }
+          &:not(.row-header) {
+            max-height: 0;
+            opacity: 0;
+            transition: $collapse-transition;
+            overflow: hidden;
+            padding: 0;
+          }
+        }
+        &.active {
+          td {
+            &.row-header:before {
+              transform: translateY(-50%) rotate(180deg);
+            }
+            &:not(.row-header) {
+              opacity: 1;
+              // value for animation purposes
+              max-height: 9999em;
+              padding: 16px;
+              overflow: visible;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{{#if (and isCollapsible (not disableToggleIcon))}}
+  {{one-icon class="toggle-icon" icon="arrow-down"}}
+{{/if}}
+{{yield (hash
+  toggleAction=(action "toggle")
+)}}

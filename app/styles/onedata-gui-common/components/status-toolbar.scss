@@ -1,0 +1,17 @@
+$status-toolbar-height: 20px;
+
+.status-toolbar {
+  line-height: $status-toolbar-height;
+  font-size: $status-toolbar-height;
+  background-color: $color-one-white;
+  border: 1px solid $color-one-list-item-separator;
+  // fully rounded corners
+  border-radius: 999px;
+  padding: 2px 18px;
+  .status-icon {
+    float: left;
+  }
+  .status-icon + .status-icon:not(.hidden) {
+    margin-left: 8px;
+  }
+}

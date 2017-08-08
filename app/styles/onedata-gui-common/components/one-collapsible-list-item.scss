@@ -1,0 +1,18 @@
+$collapsible-list-item-padding: $padding-large-horizontal;
+$collapsible-list-item-btn-toggle-padding: 12px;
+
+.one-collapsible-list-item {
+  background-color: inherit;
+  transition: background-color .3s linear;
+  &.active {
+    background-color: $main-content-hover-background;
+  }
+  .list-header-row {
+    padding: $padding-large-horizontal $padding-large-vertical;
+  }
+  .form {
+    .row {
+      padding: 0;
+    }
+  }
+}

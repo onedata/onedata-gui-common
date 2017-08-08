@@ -2,18 +2,15 @@
 // TODO maybe use https://github.com/davidpett/ember-cli-sass-variables
 $root-url: '/' !default;
 
-$addon: 'onedata-gui-common';
-$comp-path: '#{addon}/components';
-
 html,
 body {
   position: relative;
   height: 100%;
 }
 
-@import '#{$addon}/colors';
-@import '#{$addon}/utils';
-@import '#{$addon}/fonts';
+@import 'onedata-gui-common/colors';
+@import 'onedata-gui-common/utils';
+@import 'onedata-gui-common/fonts';
 
 $letter-spacing-base: 0.07em;
 $control-box-shadow: inset 1px 1px 2px $color-one-semiwhite;
@@ -26,12 +23,12 @@ $color-sidebar-item-bg: $color-one-gray-sand;
 $color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
 $color-one-list-item-separator: $main-border-color;
 
-@import '#{$addon}/bootstrap-config';
-@import '#{$addon}/bootstrap-addons';
-@import '#{$addon}/ember-power-select-config';
-@import '#{$addon}/side-menu';
-@import '#{$addon}/_spin-button-base';
-@import '#{$addon}/spin-button-overrides';
+@import 'onedata-gui-common/bootstrap-config';
+@import 'onedata-gui-common/bootstrap-addons';
+// FIXME missing style?
+// @import 'onedata-gui-common/side-menu';
+@import 'onedata-gui-common/_spin-button-base';
+@import 'onedata-gui-common/spin-button-overrides';
 
 $mobile-top-height: 70px;
 $main-menu-width: 200px;
@@ -64,53 +61,51 @@ $collapse-transition: max-height .2s linear, padding .2s linear, opacity .2s lin
 
 $disabled-opacity: 0.6;
 
-@import '#{$addon}/animate';
-@import '#{$addon}/custom-animations';
-@import '#{$addon}/common';
+@import 'onedata-gui-common/animate';
+@import 'onedata-gui-common/custom-animations';
+@import 'onedata-gui-common/common';
+@import 'onedata-gui-common/spin-spinner-extensions';
 
 // Components
 
-@import '#{$comp-path}/login-layout';
-@import '#{$comp-path}/spin-spinner-extensions';
-@import '#{$comp-path}/app-layout';
-@import '#{$comp-path}/alert-global';
-@import '#{$comp-path}/main-content';
-@import '#{$comp-path}/one-list';
-@import '#{$comp-path}/one-list-item';
-@import '#{$comp-path}/main-menu';
-@import '#{$comp-path}/main-menu-item';
-@import '#{$comp-path}/one-sidebar';
-@import '#{$comp-path}/one-sidenav';
-@import '#{$comp-path}/one-wizard';
-@import '#{$comp-path}/one-steps';
-@import '#{$comp-path}/one-step';
-@import '#{$comp-path}/basic-table';
-@import '#{$comp-path}/basicauth-login-form';
-@import '#{$comp-path}/login-box';
-@import '#{$comp-path}/one-list-wrapper';
-@import '#{$comp-path}/two-level-sidebar';
-@import '#{$comp-path}/one-way-toggle';
-@import '#{$comp-path}/one-way-radio-group';
-@import '#{$comp-path}/one-checkbox';
-@import '#{$comp-path}/ember-power-select-config';
-@import '#{$comp-path}/content-info';
-@import '#{$comp-path}/one-collapsible-list';
-@import '#{$comp-path}/one-collapsible-list-item';
-@import '#{$comp-path}/one-collapsible-list-item-header';
-@import '#{$comp-path}/one-collapsible-list-item-content';
-@import '#{$comp-path}/cluster-storage-table';
-@import '#{$comp-path}/brand-info';
-@import '#{$comp-path}/user-account-button';
-@import '#{$comp-path}/one-webui-popover';
-@import '#{$comp-path}/resource-load-error';
-@import '#{$comp-path}/one-image';
-@import '#{$comp-path}/one-label-tip';
-@import '#{$comp-path}/cluster-spaces-table-item';
-@import '#{$comp-path}/ember-notify';
-@import '#{$comp-path}/one-collapsible-toolbar';
-@import '#{$comp-path}/one-collapsible-toolbar-item';
-@import '#{$comp-path}/application-error';
-@import '#{$comp-path}/one-tree';
-@import '#{$comp-path}/status-toolbar';
-@import '#{$comp-path}/status-icon';
-@import '#{$comp-path}/one-sidebar-toolbar-button';
+@import 'onedata-gui-common/components/login-layout';
+@import 'onedata-gui-common/components/app-layout';
+@import 'onedata-gui-common/components/alert-global';
+@import 'onedata-gui-common/components/main-content';
+@import 'onedata-gui-common/components/one-list';
+@import 'onedata-gui-common/components/one-list-item';
+@import 'onedata-gui-common/components/main-menu';
+@import 'onedata-gui-common/components/main-menu-item';
+@import 'onedata-gui-common/components/one-sidebar';
+@import 'onedata-gui-common/components/one-sidenav';
+@import 'onedata-gui-common/components/one-wizard';
+@import 'onedata-gui-common/components/one-steps';
+@import 'onedata-gui-common/components/one-step';
+@import 'onedata-gui-common/components/basic-table';
+@import 'onedata-gui-common/components/basicauth-login-form';
+@import 'onedata-gui-common/components/login-box';
+@import 'onedata-gui-common/components/one-list-wrapper';
+@import 'onedata-gui-common/components/two-level-sidebar';
+@import 'onedata-gui-common/components/one-way-toggle';
+@import 'onedata-gui-common/components/one-way-radio-group';
+@import 'onedata-gui-common/components/one-checkbox';
+@import 'onedata-gui-common/components/ember-power-select-config';
+@import 'onedata-gui-common/components/content-info';
+@import 'onedata-gui-common/components/one-collapsible-list';
+@import 'onedata-gui-common/components/one-collapsible-list-item';
+@import 'onedata-gui-common/components/one-collapsible-list-item-header';
+@import 'onedata-gui-common/components/one-collapsible-list-item-content';
+@import 'onedata-gui-common/components/brand-info';
+@import 'onedata-gui-common/components/user-account-button';
+@import 'onedata-gui-common/components/one-webui-popover';
+@import 'onedata-gui-common/components/resource-load-error';
+@import 'onedata-gui-common/components/one-image';
+@import 'onedata-gui-common/components/one-label-tip';
+@import 'onedata-gui-common/components/ember-notify';
+@import 'onedata-gui-common/components/one-collapsible-toolbar';
+@import 'onedata-gui-common/components/one-collapsible-toolbar-item';
+@import 'onedata-gui-common/components/application-error';
+@import 'onedata-gui-common/components/one-tree';
+@import 'onedata-gui-common/components/status-toolbar';
+@import 'onedata-gui-common/components/status-icon';
+@import 'onedata-gui-common/components/one-sidebar-toolbar-button';

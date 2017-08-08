@@ -1,0 +1,20 @@
+.one-steps {
+  text-align: justify;
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 0;
+  // hide space characters between li elements
+  font-size: 0;
+  
+  // span steps to fill whole line
+  &:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    margin: $mobile-horizontal-content-padding;
+    margin-bottom: 0;
+  }
+}

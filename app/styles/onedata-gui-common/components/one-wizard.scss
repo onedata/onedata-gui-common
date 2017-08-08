@@ -1,0 +1,14 @@
+$steps-row-height: 100px;
+$steps-height: 80px;
+
+.one-wizard {
+  .steps-row {
+    height: $steps-row-height;
+    padding: 0;
+    padding-top: ($steps-row-height - $steps-height - ($content-col-padding / 2)) / 2;
+    margin-bottom: $content-col-padding;
+  }
+  .content-info .world-map {
+    top: $steps-row-height + $content-col-padding;
+  }
+}

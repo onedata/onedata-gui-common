@@ -1,0 +1,18 @@
+$error-message-margin: 15px;
+
+.basicauth-login-form {
+  .form-group {
+    margin-bottom: $form-group-margin-bottom * 1.5;
+  }
+  .login-error-message {
+    margin-top: -$error-message-margin;
+    margin-bottom: $error-message-margin;
+    max-height: 0;
+    opacity: 0;
+    transition: $collapse-transition;
+    &.active {
+      max-height: 3em;
+      opacity: 1;
+    }
+  }
+}

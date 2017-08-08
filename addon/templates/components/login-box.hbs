@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-user-profile-icon">
+      <div class="login-logo"></div>
+      <div class="login-titles">
+        <div class="login-main-title {{onepanelServiceType}}">{{brandSubtitle}}</div>
+        <div class="login-main-subtitle">{{t "components.loginBox.controlPanel"}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row row-login-header text-center">
+    <div class="col-xs-12">
+      <h4>{{t "components.loginBox.login"}}</h4>
+      <div class="login-box-error-message {{if sessionHasExpired "active" ""}}">
+        Your session has expired
+      </div>
+    </div>
+  </div>
+  {{!--<div class="row text-center">
+    <div class="col-xs-12">
+      {{t "components.loginBox.newAccountWillBeCreated"}}
+    </div>
+  </div>--}}
+  {{!-- TODO remove .additional-bottom-margin after icons resize --}}
+  <div class="row additional-bottom-margin">
+    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-centered">
+        {{basicauth-login-form
+          authenticationSuccess="authenticationSuccess"
+          authenticationFailure="authenticationFailure"
+          authenticationStarted="authenticationStarted"
+        }}
+    </div>
+  </div>
+</div>

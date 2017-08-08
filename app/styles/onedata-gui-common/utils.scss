@@ -1,0 +1,71 @@
+// SCSS utils
+@mixin fill-container() {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@mixin -h-base-line($border-style) {
+  content:"";
+  position: absolute;
+  height: 1px;
+  border-top: $border-style;
+  // below v line
+  z-index: 0;
+}
+
+@mixin -v-base-line($border-style) {
+  content:"";
+  position: absolute;
+  height: 100%;
+  border-left: $border-style;
+  // on top of h line
+  z-index: 1;
+}
+
+@mixin top-line($border-style) {
+  @include -h-base-line($border-style);
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+@mixin bottom-line($border-style) {
+  @include -h-base-line($border-style);
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@mixin left-line($border-style) {
+  @include -v-base-line($border-style);
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+@mixin vendor-prefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
+
+@mixin vertical-align-middle() {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin absolute-align-middle-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
+@mixin clickable() {
+  cursor: pointer;
+}

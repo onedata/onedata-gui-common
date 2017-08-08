@@ -1,0 +1,35 @@
+$spinner-container-base-size: 120px;
+
+@mixin spinner-container-size-class($name, $size) {
+  &.#{$name} {
+    width: $size*$spinner-container-base-size;
+    height: $size*$spinner-container-base-size;
+
+    .spinner-logo {
+      width: $size*$spinner-container-base-size;
+      height: $size*$spinner-container-base-size;
+    }
+  }
+}
+
+.spinner-container {
+  position: relative;
+  
+  @include spinner-container-size-class(xs, 0.2);
+  @include spinner-container-size-class(sm, 0.4);
+  @include spinner-container-size-class(md, 0.8);
+  @include spinner-container-size-class(lg, 1.2);
+  
+  &.centered {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &.middle-centered {
+    @include absolute-align-middle-center();
+  }
+
+  .spinner-logo {
+    background-size: 30%;
+  }
+}

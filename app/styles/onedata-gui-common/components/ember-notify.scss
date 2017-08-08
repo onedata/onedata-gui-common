@@ -1,0 +1,28 @@
+
+.ember-notify {
+  &.alert-success {
+    border-color: $alert-success-border;
+    .close {
+      color: $alert-success-text;
+      &:hover,
+      &:active,
+      &:focus {
+        color: lighten($alert-success-text, 20%);
+      }
+    }
+  }
+  &.alert-info {
+    border-color: $alert-info-border;
+    .close {
+      color: $alert-info-text;
+      &:hover,
+      &:active,
+      &:focus {
+        color: lighten($alert-info-text, 20%);
+      }
+    }
+  }
+  .close {
+    opacity: 1;
+  }
+}

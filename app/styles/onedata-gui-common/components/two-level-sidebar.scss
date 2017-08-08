@@ -1,0 +1,26 @@
+.two-level-sidebar {
+  font-size: 13px;
+  font-family: 'Open Sans Semibold';
+
+  input {
+    font-family: 'Open Sans';
+  }
+
+  .one-list-item {
+    &.active {
+      background-color: $color-sidebar-item-bg;
+    }
+    .item-header {
+      border-bottom: 1px solid $color-one-list-item-separator;
+      &:hover {
+        background-color: $color-sidebar-item-active-bg;
+      }
+      .one-icon {
+        font-size: $menu-icon-font-size;
+      }
+    }
+    &.search-bar-item .item-header:hover {
+      background-color: initial;
+    }
+  }
+}
