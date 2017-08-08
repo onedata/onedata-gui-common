@@ -1,1 +1,116 @@
-@import 'onedata-gui-common/login-layout';
+// should be same as rootURL in environment.js
+// TODO maybe use https://github.com/davidpett/ember-cli-sass-variables
+$root-url: '/' !default;
+
+$addon: 'onedata-gui-common';
+$comp-path: '#{addon}/components';
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+@import '#{$addon}/colors';
+@import '#{$addon}/utils';
+@import '#{$addon}/fonts';
+
+$letter-spacing-base: 0.07em;
+$control-box-shadow: inset 1px 1px 2px $color-one-semiwhite;
+$control-box-shadow-focus: inset 0 1px 1px $color-one-semiwhite, 0 0 8px rgba($color-one-blue-gray, 0.2);
+$control-focus-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+$color-main-menu-bg: $color-one-semiblack;
+$color-sidebar-background: $color-one-semiwhite;
+$color-sidebar-item-bg: $color-one-gray-sand;
+$color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
+$color-one-list-item-separator: $main-border-color;
+
+@import '#{$addon}/bootstrap-config';
+@import '#{$addon}/bootstrap-addons';
+@import '#{$addon}/ember-power-select-config';
+@import '#{$addon}/side-menu';
+@import '#{$addon}/_spin-button-base';
+@import '#{$addon}/spin-button-overrides';
+
+$mobile-top-height: 70px;
+$main-menu-width: 200px;
+$sidebar-menu-width: 250px;
+$sidebar-menu-width-lg: 325px;
+$menu-icon-font-size: 2.5em;
+$mobile-menu-popover-width: 240px;
+
+$zindex-layer-1-2-overlay: $zindex-modal-background;
+$zindex-layer-1-max: $zindex-layer-1-2-overlay - 1;
+$zindex-layer-2-min: $zindex-layer-1-2-overlay + 1;
+
+$one-list-item-line-height: 64px;
+$one-list-item-separator: 1px solid;
+$one-list-item-padding: $padding-large-horizontal;
+
+$one-list-item-active-left-border-width: 8px;
+
+$sidemenu-header-height: 90px;
+$content-col-padding: 30px;
+$content-header-font-size: 1.25em;
+$onedata-logo-height: 35px;
+$onedata-brand-info-height: 30px;
+$onedata-logo-margin-top: $content-col-padding;
+$onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $one-list-item-padding * 2 - $onedata-brand-info-height;
+
+$main-content-hover-background: lighten($color-one-semiwhite, 3%);
+
+$collapse-transition: max-height .2s linear, padding .2s linear, opacity .2s linear;
+
+$disabled-opacity: 0.6;
+
+@import '#{$addon}/animate';
+@import '#{$addon}/custom-animations';
+@import '#{$addon}/common';
+
+// Components
+
+@import '#{$comp-path}/login-layout';
+@import '#{$comp-path}/spin-spinner-extensions';
+@import '#{$comp-path}/app-layout';
+@import '#{$comp-path}/alert-global';
+@import '#{$comp-path}/main-content';
+@import '#{$comp-path}/one-list';
+@import '#{$comp-path}/one-list-item';
+@import '#{$comp-path}/main-menu';
+@import '#{$comp-path}/main-menu-item';
+@import '#{$comp-path}/one-sidebar';
+@import '#{$comp-path}/one-sidenav';
+@import '#{$comp-path}/one-wizard';
+@import '#{$comp-path}/one-steps';
+@import '#{$comp-path}/one-step';
+@import '#{$comp-path}/basic-table';
+@import '#{$comp-path}/basicauth-login-form';
+@import '#{$comp-path}/login-box';
+@import '#{$comp-path}/one-list-wrapper';
+@import '#{$comp-path}/two-level-sidebar';
+@import '#{$comp-path}/one-way-toggle';
+@import '#{$comp-path}/one-way-radio-group';
+@import '#{$comp-path}/one-checkbox';
+@import '#{$comp-path}/ember-power-select-config';
+@import '#{$comp-path}/content-info';
+@import '#{$comp-path}/one-collapsible-list';
+@import '#{$comp-path}/one-collapsible-list-item';
+@import '#{$comp-path}/one-collapsible-list-item-header';
+@import '#{$comp-path}/one-collapsible-list-item-content';
+@import '#{$comp-path}/cluster-storage-table';
+@import '#{$comp-path}/brand-info';
+@import '#{$comp-path}/user-account-button';
+@import '#{$comp-path}/one-webui-popover';
+@import '#{$comp-path}/resource-load-error';
+@import '#{$comp-path}/one-image';
+@import '#{$comp-path}/one-label-tip';
+@import '#{$comp-path}/cluster-spaces-table-item';
+@import '#{$comp-path}/ember-notify';
+@import '#{$comp-path}/one-collapsible-toolbar';
+@import '#{$comp-path}/one-collapsible-toolbar-item';
+@import '#{$comp-path}/application-error';
+@import '#{$comp-path}/one-tree';
+@import '#{$comp-path}/status-toolbar';
+@import '#{$comp-path}/status-icon';
+@import '#{$comp-path}/one-sidebar-toolbar-button';
