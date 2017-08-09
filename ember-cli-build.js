@@ -5,6 +5,15 @@ const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
+    sassOptions: {
+      includePaths: [
+        'app/styles',
+        'app/styles/oneicons',
+        'app/styles/onedata-gui-common',
+        'app/styles/onedata-gui-common/components',
+      ],
+      onlyIncluded: false,
+    },
     // a "bootstrap" should be imported into app.scss
     'ember-cli-bootstrap-sassy': {
       // import SASS styles and some JS that is used outside of ember-bootstrap components 

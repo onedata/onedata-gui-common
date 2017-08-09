@@ -23,11 +23,13 @@ $color-sidebar-item-bg: $color-one-gray-sand;
 $color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
 $color-one-list-item-separator: $main-border-color;
 
-@import 'onedata-gui-common/bootstrap-config';
+@import 'bootstrap-config';
 @import 'onedata-gui-common/bootstrap-addons';
-// FIXME missing style?
-// @import 'onedata-gui-common/side-menu';
-@import 'onedata-gui-common/_spin-button-base';
+
+// Addons
+@import 'side-menu';
+@import '_spin-button-base';
+
 @import 'onedata-gui-common/spin-button-overrides';
 
 $mobile-top-height: 70px;
@@ -65,6 +67,7 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/custom-animations';
 @import 'onedata-gui-common/common';
 @import 'onedata-gui-common/spin-spinner-extensions';
+@import 'onedata-gui-common/ember-power-select-config';
 
 // Components
 
@@ -89,7 +92,6 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-way-toggle';
 @import 'onedata-gui-common/components/one-way-radio-group';
 @import 'onedata-gui-common/components/one-checkbox';
-@import 'onedata-gui-common/components/ember-power-select-config';
 @import 'onedata-gui-common/components/content-info';
 @import 'onedata-gui-common/components/one-collapsible-list';
 @import 'onedata-gui-common/components/one-collapsible-list-item';

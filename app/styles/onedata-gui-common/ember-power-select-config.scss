@@ -13,8 +13,8 @@ $ember-power-select-opened-border-radius: 0;
 $ember-power-select-dropdown-default-border-radius: $input-border-radius;
 $ember-power-select-selected-background: $ember-power-select-background-color;
 
-@import 'ember-power-select';
-@import 'ember-power-select/themes/bootstrap';
+@import '../ember-power-select';
+@import '../ember-power-select/themes/bootstrap';
 
 .ember-power-select-selected-item, .ember-power-select-placeholder {
   margin-left: 0;
