@@ -11,6 +11,7 @@ body {
 @import 'onedata-gui-common/colors';
 @import 'onedata-gui-common/utils';
 @import 'onedata-gui-common/fonts';
+@import 'onedata-gui-common/oneicons';
 
 $letter-spacing-base: 0.07em;
 $control-box-shadow: inset 1px 1px 2px $color-one-semiwhite;
@@ -23,7 +24,7 @@ $color-sidebar-item-bg: $color-one-gray-sand;
 $color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
 $color-one-list-item-separator: $main-border-color;
 
-@import 'bootstrap-config';
+@import 'onedata-gui-common/bootstrap-config';
 @import 'onedata-gui-common/bootstrap-addons';
 
 // Addons

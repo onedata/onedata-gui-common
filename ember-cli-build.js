@@ -8,8 +8,8 @@ module.exports = function (defaults) {
     sassOptions: {
       includePaths: [
         'app/styles',
-        'app/styles/oneicons',
         'app/styles/onedata-gui-common',
+        'app/styles/onedata-gui-common/oneicons',
         'app/styles/onedata-gui-common/components',
       ],
       onlyIncluded: false,
