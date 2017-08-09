@@ -12,8 +12,8 @@ import layout from 'onedata-gui-common/templates/components/one-form-field';
 import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
 
-const { 
-  layoutConfig 
+const {
+  layoutConfig
 } = config;
 
 export default Ember.Component.extend({

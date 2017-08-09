@@ -16,7 +16,6 @@ const {
   Component,
   inject: { service },
   computed,
-  computed: { alias },
   on,
   run: { next },
 } = Ember;
@@ -27,14 +26,17 @@ export default Component.extend(ClickOutside, {
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
   session: service(),
-  onepanelServer: service(),
   globalNotify: service(),
 
   menuOpen: false,
 
   mobileMode: false,
 
-  username: alias('onepanelServer.username'),
+  /**
+   * To implemnt for specific server-side implementation
+   * @abstract
+   */
+  username: undefined,
 
   menuTriggerSelector: computed(function () {
     return `#${this.get('elementId')} .user-toggle-icon`;

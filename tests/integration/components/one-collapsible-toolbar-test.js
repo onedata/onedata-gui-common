@@ -50,13 +50,13 @@ describe('Integration | Component | one collapsible toolbar', function() {
 
   it('renders buttons properly', function(done) {
     let actionOccurred = false;
-    this.set('itemAction', () => {
+    this.on('itemAction', () => {
       actionOccurred = true;
     });
     this.render(hbs`
       {{#one-collapsible-toolbar as |toolbar|}}
         {{#toolbar.item buttonStyle="danger" triggerClasses="trigger-class" 
-          buttonSize="xs" itemAction=itemAction}}
+          buttonSize="xs" itemAction=(action "itemAction")}}
           Button
         {{/toolbar.item}}
       {{/one-collapsible-toolbar}}
@@ -76,13 +76,13 @@ describe('Integration | Component | one collapsible toolbar', function() {
 
   it('renders dropdown properly', function(done) {
     let actionOccurred = false;
-    this.set('itemAction', () => {
+    this.on('itemAction', () => {
       actionOccurred = true;
     });
     this.render(hbs`
       <div style="width: 20px;">
         {{#one-collapsible-toolbar as |toolbar|}}
-          {{#toolbar.item triggerClasses="trigger-class" itemAction=itemAction}}
+          {{#toolbar.item triggerClasses="trigger-class" itemAction=(action "itemAction")}}
             Button
           {{/toolbar.item}}
         {{/one-collapsible-toolbar}}
