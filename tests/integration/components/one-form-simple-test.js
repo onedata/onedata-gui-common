@@ -5,12 +5,11 @@ import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 
-// FIXME uncomment after tests enable
-// const {
-//   RSVP: {
-//     Promise,
-//   },
-// } = Ember;
+const {
+  RSVP: {
+    Promise,
+  },
+} = Ember;
 
 const ERROR_MSG = 'error!';
 
@@ -119,44 +118,39 @@ describe('Integration | Component | one form simple', function () {
     });
   });
 
-  // FIXME
-  // FIXME this test is causing other tests to timeout
-  // FIXME
+  it('changes submit button "disable" attribute', function (done) {
+    let submitOccurred = false;
+    this.on('submitAction', () => {
+      submitOccurred = true;
+      return new Promise((resolve, reject) => reject());
+    });
 
-  // it('changes submit button "disable" attribute', function (done) {
-  //   let submitOccurred = false;
-  //   this.on('submitAction', () => {
-  //     submitOccurred = true;
-  //     return new Promise((resolve, reject) => reject());
-  //   });
+    this.render(hbs`
+    {{one-form-simple
+      validations=fakeValidations
+      fields=fields
+      submit=(action "submitAction")
+    }}
+      `);
 
-  //   this.render(hbs`
-  //   {{one-form-simple
-  //     validations=fakeValidations
-  //     fields=fields
-  //     submit=(action "submitAction")
-  //   }}
-  //     `);
+    let submitBtn = this.$('button[type=submit]');
+    expect(
+      submitBtn.prop('disabled'),
+      'submit button is disabled if form is not valid'
+    ).to.be.true;
 
-  //   let submitBtn = this.$('button[type=submit]');
-  //   expect(
-  //     submitBtn.prop('disabled'),
-  //     'submit button is disabled if form is not valid'
-  //   ).to.be.true;
-
-  //   this.get('fakeValidations').set('errors', []);
-  //   this.get('fakeValidations').set('isValid', true);
-  //   wait().then(() => {
-  //     expect(
-  //       submitBtn.prop('disabled'),
-  //       'submit button is enabled if form is valid'
-  //     ).to.equal(false);
-  //     done();
-  //     submitBtn.click();
-  //     wait().then(() => {
-  //       expect(submitOccurred, 'submitAction was invoked').to.be.true;
-  //       done();
-  //     });
-  //   });
-  // });
+    this.get('fakeValidations').set('errors', []);
+    this.get('fakeValidations').set('isValid', true);
+    wait().then(() => {
+      expect(
+        submitBtn.prop('disabled'),
+        'submit button is enabled if form is valid'
+      ).to.equal(false);
+      submitBtn.click();
+      wait({ waitForTimers: false }).then(() => {
+        expect(submitOccurred, 'submitAction was invoked').to.be.true;
+        done();
+      });
+    });
+  });
 });
