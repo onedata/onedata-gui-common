@@ -1,18 +1,18 @@
 // Core variables and mixins
-// @import "bootstrap/variables";
+// @import "../bootstrap/variables";
 @import "onedata-gui-common/bootstrap-variables-config";
 
-@import "bootstrap/mixins";
+@import "../bootstrap/mixins";
 @import "onedata-gui-common/bootstrap-mixins-config";
 
 // Reset and dependencies
-@import "bootstrap/normalize";
-@import "bootstrap/print";
-@import "bootstrap/glyphicons";
+@import "../bootstrap/normalize";
+@import "../bootstrap/print";
+@import "../bootstrap/glyphicons";
 
 // Core CSS
-@import "bootstrap/scaffolding";
-@import "bootstrap/type";
+@import "../bootstrap/scaffolding";
+@import "../bootstrap/type";
 
 // TODO make contextual typography styles
 // additional typing styles, for sizes see variables
@@ -42,11 +42,11 @@
 // }
 
 
-@import "bootstrap/code";
-@import "bootstrap/grid";
-@import "bootstrap/tables";
+@import "../bootstrap/code";
+@import "../bootstrap/grid";
+@import "../bootstrap/tables";
 
-@import "bootstrap/forms";
+@import "../bootstrap/forms";
 .form-horizontal {
   .control-label {
     padding-right: $padding-large-horizontal;
@@ -84,7 +84,7 @@ label {
   }
 }
 
-@import "bootstrap/buttons";
+@import "../bootstrap/buttons";
 .btn {
   border-width: 2px;
   position: relative;
@@ -121,8 +121,8 @@ label {
 }
 
 // Components
-@import "bootstrap/component-animations";
-@import "bootstrap/dropdowns";
+@import "../bootstrap/component-animations";
+@import "../bootstrap/dropdowns";
 .dropdown-menu {
   padding: 0;
   margin: 0;
@@ -138,8 +138,8 @@ label {
     }
   }
 }
-@import "bootstrap/button-groups";
-@import "bootstrap/input-groups";
+@import "../bootstrap/button-groups";
+@import "../bootstrap/input-groups";
 
 .table {
   thead > tr > th {
@@ -150,28 +150,28 @@ label {
   }
 }
 
-@import "bootstrap/navs";
-@import "bootstrap/navbar";
-@import "bootstrap/breadcrumbs";
-@import "bootstrap/pagination";
-@import "bootstrap/pager";
-@import "bootstrap/labels";
-@import "bootstrap/badges";
-@import "bootstrap/jumbotron";
-@import "bootstrap/thumbnails";
-@import "bootstrap/alerts";
+@import "../bootstrap/navs";
+@import "../bootstrap/navbar";
+@import "../bootstrap/breadcrumbs";
+@import "../bootstrap/pagination";
+@import "../bootstrap/pager";
+@import "../bootstrap/labels";
+@import "../bootstrap/badges";
+@import "../bootstrap/jumbotron";
+@import "../bootstrap/thumbnails";
+@import "../bootstrap/alerts";
 .alert {
   position: relative;
   margin: $alert-padding 0;
   border-radius: 0;
 }
-@import "bootstrap/progress-bars";
-@import "bootstrap/media";
-@import "bootstrap/list-group";
-@import "bootstrap/panels";
-@import "bootstrap/responsive-embed";
-@import "bootstrap/wells";
-@import "bootstrap/close";
+@import "../bootstrap/progress-bars";
+@import "../bootstrap/media";
+@import "../bootstrap/list-group";
+@import "../bootstrap/panels";
+@import "../bootstrap/responsive-embed";
+@import "../bootstrap/wells";
+@import "../bootstrap/close";
 
 .progress {
   box-shadow: none;
@@ -182,10 +182,10 @@ label {
 }
 
 // Components w/ JavaScript
-@import "bootstrap/modals";
-@import "bootstrap/tooltip";
-@import "bootstrap/popovers";
-@import "bootstrap/carousel";
+@import "../bootstrap/modals";
+@import "../bootstrap/tooltip";
+@import "../bootstrap/popovers";
+@import "../bootstrap/carousel";
 
 .modal {
   &.in {
@@ -235,8 +235,8 @@ label {
 }
 
 // Utility classes
-@import "bootstrap/utilities";
-@import "bootstrap/responsive-utilities";
+@import "../bootstrap/utilities";
+@import "../bootstrap/responsive-utilities";
 
 .col-centered {
   @extend .center-block;
