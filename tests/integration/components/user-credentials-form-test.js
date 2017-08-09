@@ -20,7 +20,7 @@ describe('Integration | Component | user credentials form', function () {
     const USERNAME = 'Johnny';
     this.set('username', USERNAME);
 
-    this.render(hbs `{{user-credentials-form username=username}}`);
+    this.render(hbs`{{user-credentials-form username=username}}`);
 
     let form = new UserCredentialsFormHelper(this.$());
 
@@ -38,7 +38,7 @@ describe('Integration | Component | user credentials form', function () {
       const USERNAME = 'Johnny';
       this.set('username', USERNAME);
 
-      this.render(hbs `{{user-credentials-form username=username changingPassword=true}}`);
+      this.render(hbs`{{user-credentials-form username=username changingPassword=true}}`);
 
       let form = new UserCredentialsFormHelper(this.$());
 
@@ -56,6 +56,8 @@ describe('Integration | Component | user credentials form', function () {
       done();
     });
 
+  this.timeout(20000);
+
   it('submits current and new password', function (done) {
     const OLD_PASSWORD = 'one123456789';
     const NEW_PASSWORD = 'one987654321';
@@ -67,7 +69,7 @@ describe('Integration | Component | user credentials form', function () {
       submitted = true;
     });
 
-    this.render(hbs `
+    this.render(hbs`
     {{user-credentials-form
       username="Test"
       changingPassword=true
@@ -83,7 +85,7 @@ describe('Integration | Component | user credentials form', function () {
 
     wait().then(() => {
       this.$('button[type=submit]').click();
-      wait().then(() => {
+      wait({ waitForTimers: true }).then(() => {
         expect(submitted).to.be.true;
         done();
       });
@@ -94,7 +96,7 @@ describe('Integration | Component | user credentials form', function () {
     const OLD_PASSWORD = 'one123456789';
     const NEW_PASSWORD = 'one987654321';
 
-    this.render(hbs `
+    this.render(hbs`
     {{user-credentials-form
       username="Test"
       changingPassword=true
