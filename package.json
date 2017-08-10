@@ -23,10 +23,10 @@
   },
   "devDependencies": {
     "bootstrap-sass": "3.3.7",
-    "broccoli-asset-rev": "^2.4.5",
+    "broccoli-asset-rev": "2.5.0",
     "chai-jquery": "2.0.0",
-    "ember-ajax": "^3.0.0",
-    "ember-bootstrap": "1.0.0-rc.1",
+    "ember-bootstrap": "1.0.0-alpha.12",
+    "ember-browserify": "1.2.0",
     "ember-cli": "~2.14.2",
     "ember-cli-bootstrap-sassy": "0.5.6",
     "ember-cli-chai": "^0.4.2",
@@ -37,7 +37,7 @@
     "ember-cli-inject-live-reload": "^1.4.1",
     "ember-cli-mocha": "^0.14.4",
     "ember-cli-sass": "^7.0.0",
-    "ember-cli-shims": "^1.1.0",
+    "ember-cli-shims": "1.1.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-click-outside": "^0.1.9",
@@ -59,6 +59,7 @@
     "ember-resolver": "^4.0.0",
     "ember-responsive": "^2.0.4",
     "ember-side-menu": "0.0.14",
+    "ember-simple-auth": "^1.4.0",
     "ember-source": "~2.14.1",
     "ember-spin-button": "git+https://github.com/kliput/ember-spin-button.git#4ff0f820b2eafd00775bc81e408898f657112fd3",
     "ember-spin-spinner": "^0.3.1",
@@ -68,6 +69,7 @@
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
   },
+  "private": true,
   "ember-addon": {
     "configPath": "tests/dummy/config"
   }

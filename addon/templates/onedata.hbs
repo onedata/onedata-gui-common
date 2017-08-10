@@ -1,0 +1,13 @@
+{{#app-layout
+  changeTab=(action "mainMenuItemChanged")
+  manageAccount=(action "manageAccount")
+  changeResourceId=(action "changeResourceId")
+  appModel=model
+  as |section|
+}}
+  {{#if (eq section 'sidebar')}}
+    {{outlet 'sidebar'}}
+  {{else if (eq section 'content')}}
+    {{outlet 'content'}}
+  {{/if}}
+{{/app-layout}}
