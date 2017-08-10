@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-import FormHelper from 'onedata-gui-common/tests/helpers/form';
+import FormHelper from 'dummy/tests/helpers/form';
 
 class UserCredentialsFormHelper extends FormHelper {
   constructor($template) {

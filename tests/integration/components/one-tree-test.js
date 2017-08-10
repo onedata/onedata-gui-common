@@ -4,9 +4,9 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 
-import EventsBusStub from '../../helpers/events-bus-stub';
+import EventsBusStub from 'dummy/tests/helpers/events-bus-stub';
 
-describe('Integration | Component | one tree', function() {
+describe('Integration | Component | one tree', function () {
   setupComponentTest('one-tree', {
     integration: true
   });
@@ -18,7 +18,7 @@ describe('Integration | Component | one tree', function() {
     eventsBus.set('callbacks', []);
   });
 
-  it('renders content in a tree', function() {
+  it('renders content in a tree', function () {
     this.render(hbs`
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
@@ -36,7 +36,7 @@ describe('Integration | Component | one tree', function() {
     `);
     let tree = this.$('.one-tree-root');
     let treeDirectItems = tree.find('> .one-tree-list > .one-tree-item');
-    let subtreeDirectItems = 
+    let subtreeDirectItems =
       this.$(treeDirectItems[1]).find('> .one-tree > .one-tree-list > .one-tree-item');
     expect(treeDirectItems).to.have.length(2);
     expect(subtreeDirectItems).to.have.length(1);
@@ -45,7 +45,7 @@ describe('Integration | Component | one tree', function() {
     expect($(subtreeDirectItems[0]).text()).to.contain('item2.1');
   });
 
-  it('collapses/expands subtrees', function(done) {
+  it('collapses/expands subtrees', function (done) {
     this.render(hbs`
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
@@ -68,7 +68,7 @@ describe('Integration | Component | one tree', function() {
     });
   });
 
-  it('collapses children recursively when collapseRecursively==true', function(done) {
+  it('collapses children recursively when collapseRecursively==true', function (done) {
     this.render(hbs`
       {{#one-tree collapseRecursively=true as |tree|}}
         {{#tree.item as |item|}}
@@ -88,10 +88,10 @@ describe('Integration | Component | one tree', function() {
     `);
     let tree = this.$('.one-tree-root');
     let firstLevelItem = tree.find('> .one-tree-list > .one-tree-item');
-    let secondLevelItem = 
+    let secondLevelItem =
       firstLevelItem.find('> .one-tree > .one-tree-list > .one-tree-item');
     let secondLevelSubtree = secondLevelItem.find('> .one-tree');
-    
+
     firstLevelItem.find('> .one-tree-item-content').click();
     secondLevelItem.find('> .one-tree-item-content').click();
     wait().then(() => {
@@ -107,7 +107,7 @@ describe('Integration | Component | one tree', function() {
     });
   });
 
-  it('does not collapse children recursively', function(done) {
+  it('does not collapse children recursively', function (done) {
     this.render(hbs`
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
@@ -127,10 +127,10 @@ describe('Integration | Component | one tree', function() {
     `);
     let tree = this.$('.one-tree-root');
     let firstLevelItem = tree.find('> .one-tree-item');
-    let secondLevelItem = 
+    let secondLevelItem =
       firstLevelItem.find('> .one-tree > .one-tree-list > .one-tree-item');
     let secondLevelSubtree = secondLevelItem.find('> .one-tree');
-    
+
     firstLevelItem.find('> .one-tree-item-content').click();
     secondLevelItem.find('> .one-tree-item-content').click();
     wait().then(() => {
@@ -146,7 +146,7 @@ describe('Integration | Component | one tree', function() {
     });
   });
 
-  it('expands/collapses subtree after eventsBus trigger', function(done) {
+  it('expands/collapses subtree after eventsBus trigger', function (done) {
     let eventsBus = this.container.lookup('service:events-bus');
 
     this.render(hbs`
@@ -171,7 +171,7 @@ describe('Integration | Component | one tree', function() {
     });
   });
 
-  it('toggles subtree after eventsBus trigger', function(done) {
+  it('toggles subtree after eventsBus trigger', function (done) {
     let eventsBus = this.container.lookup('service:events-bus');
 
     this.render(hbs`
@@ -200,7 +200,7 @@ describe('Integration | Component | one tree', function() {
     });
   });
 
-  it('expands deeply nested subtree after eventsBus trigger', function(done) {
+  it('expands deeply nested subtree after eventsBus trigger', function (done) {
     let eventsBus = this.container.lookup('service:events-bus');
 
     this.render(hbs`
