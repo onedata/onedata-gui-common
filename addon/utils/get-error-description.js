@@ -14,7 +14,7 @@ const {
   Handlebars: { Utils: { escapeExpression } }
 } = Ember;
 
-/**§
+/**
  * Gets error details from error object that is returned on onepanel backend reject
  *
  * Additionally, it supports a plain object with ``message`` property

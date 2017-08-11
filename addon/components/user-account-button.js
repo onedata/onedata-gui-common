@@ -33,7 +33,7 @@ export default Component.extend(ClickOutside, {
   mobileMode: false,
 
   /**
-   * To implemnt for specific server-side implementation
+   * To implement for specific server-side implementation
    * @abstract
    */
   username: undefined,
