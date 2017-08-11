@@ -23,7 +23,7 @@ export default Ember.Component.extend({
    * @type {Function}
    */
   _showAction: null,
-  
+
   click() {
     invokeAction(this, '_showAction');
   }

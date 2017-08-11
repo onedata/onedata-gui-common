@@ -32,8 +32,8 @@ const {
   observer
 } = Ember;
 
-const { 
-  layoutConfig 
+const {
+  layoutConfig
 } = config;
 
 export default Ember.Component.extend({
@@ -97,7 +97,7 @@ export default Ember.Component.extend({
     } = this.getProperties('allFields', 'currentFieldsPrefix');
     let fields = [];
     currentFieldsPrefix.forEach(prefix => {
-      let prefixFields = allFields.filter(field => 
+      let prefixFields = allFields.filter(field =>
         field.get('name').startsWith(`${prefix}.`));
       fields = fields.concat(prefixFields);
     });
@@ -244,8 +244,8 @@ export default Ember.Component.extend({
         .filter(error => error.get('attribute') === prefix + field.get('name'));
       error = error.length > 0 ? error[0] : null;
       // show if is not optional or is optional, but not empty
-      let showValidation = field.get('optional') !== true || 
-        [undefined, null, ''].indexOf(allFieldsValues.get(field.get('name'))) === -1;
+      let showValidation = field.get('optional') !== true || [undefined, null, ''].indexOf(
+        allFieldsValues.get(field.get('name'))) === -1;
       if (field.get('changed') && showValidation) {
         field.setProperties({
           isValid: !error,

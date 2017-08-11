@@ -28,13 +28,13 @@ export default Ember.Service.extend({
    */
   getModelFor(type, id) {
     switch (type) {
-    case 'clusters':
-      return this.get('clusterManager').getDefaultRecord(id).get('promise');
-    case 'users':
-      return this.get('userManager').getUserDetails(id).get('promise');
+      case 'clusters':
+        return this.get('clusterManager').getDefaultRecord(id).get('promise');
+      case 'users':
+        return this.get('userManager').getUserDetails(id).get('promise');
 
-    default:
-      return new Promise((resolve, reject) => reject('No such model type: ' + type));
+      default:
+        return new Promise((resolve, reject) => reject('No such model type: ' + type));
     }
   },
 });

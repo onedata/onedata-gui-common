@@ -13,7 +13,7 @@ const {
   assert,
 } = Ember;
 
-export function concatClasses(params/*, hash*/) {
+export function concatClasses(params /*, hash*/ ) {
   let classes = '';
   params.forEach(param => {
     if (param) {

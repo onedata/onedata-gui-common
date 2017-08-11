@@ -11,7 +11,7 @@ import Ember from 'ember';
 
 const replaceRegex = new RegExp('\\.', 'g');
 
-export function dotToDash([ name ]/*, hash*/) {
+export function dotToDash([name] /*, hash*/ ) {
   return name.replace(replaceRegex, '-');
 }
 

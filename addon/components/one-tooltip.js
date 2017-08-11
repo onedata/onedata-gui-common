@@ -56,16 +56,16 @@ export default BsTooltip.extend({
 
     let offset = this._getArrowRelativeOffset();
     switch (arrowPlacement) {
-    case 'left':
-      offset += delta / 2;
-      /* falls through */
-    case 'right':
-      arrowElement.css('transform', `translateX(${offset}px)`);
-      break;
-    case 'top':
-    case 'bottom':
-      arrowElement.css('transform', `translateY(${offset}px)`);
-      break;
+      case 'left':
+        offset += delta / 2;
+        /* falls through */
+      case 'right':
+        arrowElement.css('transform', `translateX(${offset}px)`);
+        break;
+      case 'top':
+      case 'bottom':
+        arrowElement.css('transform', `translateY(${offset}px)`);
+        break;
     }
   },
 
@@ -80,14 +80,14 @@ export default BsTooltip.extend({
     let arrowPlacement = this.get('arrowPlacement');
     let arrowOffset = -this._getArrowRelativeOffset();
     switch (arrowPlacement) {
-    case 'left':
-    case 'right':
-      offset.left += arrowOffset;
-      break;
-    case 'top':
-    case 'bottom':
-      offset.top += arrowOffset;
-      break;
+      case 'left':
+      case 'right':
+        offset.left += arrowOffset;
+        break;
+      case 'top':
+      case 'bottom':
+        offset.top += arrowOffset;
+        break;
     }
 
     this._super(offset, placement);

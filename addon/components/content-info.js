@@ -74,7 +74,7 @@ export default Ember.Component.extend({
    * @type {string}
    */
   buttonClass: '',
-  
+
   /**
    * A function on click primary button.
    * The function should return Promise which indicated status of action.

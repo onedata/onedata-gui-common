@@ -295,7 +295,8 @@ export default Ember.Component.extend(ClickOutside, {
    * Handles changes of component visibility properties
    */
   _openAndActiveTriggerSelectorObserver: observer('open', 'activeTriggerSelector',
-    '_triggersConfiguration', function () {
+    '_triggersConfiguration',
+    function () {
       this.handleManualTriggering();
     }
   ),
@@ -430,7 +431,7 @@ export default Ember.Component.extend(ClickOutside, {
         if (conf.element.is($(event.currentTarget))) {
           if (_handleOpenClose) {
             this.set('_activeTriggerConfiguration', conf);
-            if (!_contentVisible && 
+            if (!_contentVisible &&
               invokeAction(this, 'onShow', conf.selector) !== false) {
               this.set('_contentVisible', true);
             }

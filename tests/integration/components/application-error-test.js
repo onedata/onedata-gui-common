@@ -12,12 +12,13 @@ describe('Integration | Component | application error', function () {
     this.set('model', {
       some: 'error',
     });
-    this.render(hbs`{{application-error error=model}}`);
+    this.render(hbs `{{application-error error=model}}`);
     expect(this.$('.show-error-details')).to.exist;
   });
 
-  it('does not render show details button when error property is not provided', function () {
-    this.render(hbs`{{application-error}}`);
-    expect(this.$('.show-error-details')).to.not.exist;
-  });
+  it('does not render show details button when error property is not provided',
+    function () {
+      this.render(hbs `{{application-error}}`);
+      expect(this.$('.show-error-details')).to.not.exist;
+    });
 });

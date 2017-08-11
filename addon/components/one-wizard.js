@@ -12,13 +12,13 @@ export default Ember.Component.extend({
   currentIndex: 0,
 
   steps: null,
-  stepsNumClassName: computed('steps', function() {
+  stepsNumClassName: computed('steps', function () {
     let steps = this.get('steps'),
       className = "steps-";
     className += steps !== null ? steps.length : 0;
     return className;
   }),
-  activeStepClassName: computed('currentIndex', function() {
+  activeStepClassName: computed('currentIndex', function () {
     return "step-active-" + (this.get('currentIndex') + 1);
   }),
 
@@ -26,7 +26,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
   },
 
-  currentStep: computed('steps.[]', 'currentIndex', function() {
+  currentStep: computed('steps.[]', 'currentIndex', function () {
     let {
       steps,
       currentIndex

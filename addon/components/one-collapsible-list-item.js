@@ -66,8 +66,7 @@ export default Ember.Component.extend({
       } else {
         if (opened !== undefined) {
           this.set('isActive', !!opened);
-        }
-        else {
+        } else {
           this.toggleProperty('isActive');
         }
       }

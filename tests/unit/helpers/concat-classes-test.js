@@ -18,4 +18,3 @@ describe('Unit | Helper | concat classes', function () {
     expect(result).to.be.equal('');
   });
 });
-

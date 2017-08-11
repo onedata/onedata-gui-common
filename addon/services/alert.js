@@ -6,7 +6,6 @@ function aliasToShow(type) {
   };
 }
 
-
 export default Ember.Service.extend({
   opened: false,
   type: null,

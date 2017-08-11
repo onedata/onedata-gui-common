@@ -20,13 +20,13 @@ describe('Integration | Component | one form simple', function () {
 
   beforeEach(function () {
     const FIELDS = [{
-      name: 'first',
-      type: 'text',
-    },
-    {
-      name: 'second',
-      type: 'text',
-    }
+        name: 'first',
+        type: 'text',
+      },
+      {
+        name: 'second',
+        type: 'text',
+      }
     ];
 
     const VALIDATIONS = Ember.Object.create({
@@ -43,7 +43,7 @@ describe('Integration | Component | one form simple', function () {
   });
 
   it('renders injected fields', function () {
-    this.render(hbs`
+    this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields
@@ -56,7 +56,7 @@ describe('Integration | Component | one form simple', function () {
   });
 
   it('renders errors after field change', function (done) {
-    this.render(hbs`
+    this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields
@@ -77,7 +77,7 @@ describe('Integration | Component | one form simple', function () {
   });
 
   it('renders errors after field looses its focus', function (done) {
-    this.render(hbs`
+    this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields
@@ -98,7 +98,7 @@ describe('Integration | Component | one form simple', function () {
   });
 
   it('reacts when field error changes', function (done) {
-    this.render(hbs`
+    this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields
@@ -125,7 +125,7 @@ describe('Integration | Component | one form simple', function () {
       return new Promise((resolve, reject) => reject());
     });
 
-    this.render(hbs`
+    this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields

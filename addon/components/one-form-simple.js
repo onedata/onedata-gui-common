@@ -119,7 +119,8 @@ export default OneForm.extend({
    */
   _formClasses: computed('_hasOnlyStatic', function () {
     let _hasOnlyStatic = this.get('_hasOnlyStatic'),
-      classes = 'col-xs-12 col-sm-10 col-md-8 col-lg-6 col-centered form-horizontal';
+      classes =
+      'col-xs-12 col-sm-10 col-md-8 col-lg-6 col-centered form-horizontal';
     if (_hasOnlyStatic) {
       classes += ' form-static';
     }

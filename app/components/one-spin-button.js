@@ -1,1 +1,1 @@
-export { default } from 'onedata-gui-common/components/one-spin-button'; 
+export { default } from 'onedata-gui-common/components/one-spin-button';

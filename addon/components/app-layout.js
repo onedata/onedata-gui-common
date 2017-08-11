@@ -51,25 +51,25 @@ export default Ember.Component.extend({
   currentTabId: computed.oneWay('mainMenu.currentItemId'),
   sidenavTabId: null,
   sidebarSecondaryItem: null,
-  mobileAppLayoutHeader: computed('mobileAppLayoutState', 'currentTabId', 
-    'sidebarSecondaryItem', function () {
-    let {
-      mobileAppLayoutState,
-      currentTabId,
-      sidebarSecondaryItem
-    } = this.getProperties(
-      'mobileAppLayoutState', 
-      'currentTabId', 
-      'sidebarSecondaryItem'
-    );
-    if (mobileAppLayoutState === MOBILE_APPLAYOUT_STATE.SIDEBAR ||
-      !sidebarSecondaryItem) {
-      return currentTabId;
-    }
-    else {
-      return sidebarSecondaryItem.label;
-    }
-  }),
+  mobileAppLayoutHeader: computed('mobileAppLayoutState', 'currentTabId',
+    'sidebarSecondaryItem',
+    function () {
+      let {
+        mobileAppLayoutState,
+        currentTabId,
+        sidebarSecondaryItem
+      } = this.getProperties(
+        'mobileAppLayoutState',
+        'currentTabId',
+        'sidebarSecondaryItem'
+      );
+      if (mobileAppLayoutState === MOBILE_APPLAYOUT_STATE.SIDEBAR ||
+        !sidebarSecondaryItem) {
+        return currentTabId;
+      } else {
+        return sidebarSecondaryItem.label;
+      }
+    }),
   mobileAppLayoutState: MOBILE_APPLAYOUT_STATE.SIDEBAR,
   showMobileSidebar: computed.equal('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR),
 

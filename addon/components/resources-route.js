@@ -7,5 +7,4 @@ export default Ember.Component.extend({
     'resources-route'
   ],
 
-  
 });

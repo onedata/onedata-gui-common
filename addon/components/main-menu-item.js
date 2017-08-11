@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   isActive: false,
   isSelected: false,
 
-  name: computed('item.id', function() {
+  name: computed('item.id', function () {
     let item = this.get('item');
     return capitalize(item.id);
   }),

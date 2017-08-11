@@ -19,7 +19,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('renders content in a tree', function () {
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -37,7 +37,8 @@ describe('Integration | Component | one tree', function () {
     let tree = this.$('.one-tree-root');
     let treeDirectItems = tree.find('> .one-tree-list > .one-tree-item');
     let subtreeDirectItems =
-      this.$(treeDirectItems[1]).find('> .one-tree > .one-tree-list > .one-tree-item');
+      this.$(treeDirectItems[1]).find(
+        '> .one-tree > .one-tree-list > .one-tree-item');
     expect(treeDirectItems).to.have.length(2);
     expect(subtreeDirectItems).to.have.length(1);
     expect($(treeDirectItems[0]).text()).to.contain('item1');
@@ -46,7 +47,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('collapses/expands subtrees', function (done) {
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -69,7 +70,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('collapses children recursively when collapseRecursively==true', function (done) {
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree collapseRecursively=true as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -108,7 +109,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('does not collapse children recursively', function (done) {
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -139,7 +140,8 @@ describe('Integration | Component | one tree', function () {
       wait().then(() => {
         firstLevelItem.find('> .one-tree-item-content').click();
         wait().then(() => {
-          expect(secondLevelSubtree).to.not.have.class('collapse-hidden');
+          expect(secondLevelSubtree).to.not.have.class(
+            'collapse-hidden');
           done();
         });
       });
@@ -149,7 +151,7 @@ describe('Integration | Component | one tree', function () {
   it('expands/collapses subtree after eventsBus trigger', function (done) {
     let eventsBus = this.container.lookup('service:events-bus');
 
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree key="root" as |tree|}}
         {{#tree.item key="item1" class="item1" as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -174,7 +176,7 @@ describe('Integration | Component | one tree', function () {
   it('toggles subtree after eventsBus trigger', function (done) {
     let eventsBus = this.container.lookup('service:events-bus');
 
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree key="root" as |tree|}}
         {{#tree.item key="item1" class="item1" as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -203,7 +205,7 @@ describe('Integration | Component | one tree', function () {
   it('expands deeply nested subtree after eventsBus trigger', function (done) {
     let eventsBus = this.container.lookup('service:events-bus');
 
-    this.render(hbs`
+    this.render(hbs `
       {{#one-tree key="root" as |tree|}}
         {{#tree.item class="item1" as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -227,7 +229,8 @@ describe('Integration | Component | one tree', function () {
     expect(childItem.find('> .one-tree')).to.have.class('collapse-hidden');
     eventsBus.trigger('one-tree:show', 'root', 'item11', true);
     wait().then(() => {
-      expect(parentItem.find('> .one-tree')).to.not.have.class('collapse-hidden');
+      expect(parentItem.find('> .one-tree')).to.not.have.class(
+        'collapse-hidden');
       expect(childItem.find('> .one-tree')).to.not.have.class('collapse-hidden');
       done();
     });

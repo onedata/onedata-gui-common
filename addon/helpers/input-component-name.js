@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
-export function inputComponentName([type]/*, hash*/) {
+export function inputComponentName([type] /*, hash*/ ) {
   switch (type) {
     // fix for Firefox issue: empty value, when an input has illegal characters
     case 'text':
-    // falls through
+      // falls through
     case 'number':
       return 'one-way-input';
     default:
