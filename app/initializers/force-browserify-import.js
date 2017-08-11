@@ -9,7 +9,6 @@
  */
 
 import 'npm:perfect-scrollbar';
-import 'npm:onepanel';
 
 export default {
   name: 'force-browserify-import',
