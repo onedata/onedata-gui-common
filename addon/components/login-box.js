@@ -15,7 +15,7 @@ const {
     service
   },
   computed,
-  computed: { 
+  computed: {
     alias,
     readOnly,
   },
@@ -44,7 +44,8 @@ export default Ember.Component.extend({
       onepanelServiceType
     } = this.getProperties('i18n', 'onepanelServiceType');
     return onepanelServiceType ?
-      'One' + i18n.t(`components.brandInfo.serviceType.${onepanelServiceType}`) : null;
+      'One' + i18n.t(`components.brandInfo.serviceType.${onepanelServiceType}`) :
+      null;
   }),
 
   actions: {

@@ -131,7 +131,6 @@ export default Ember.Component.extend({
     invokeAction(this, '_hasTreeNotify', false);
   },
 
-
   actions: {
     /**
      * Expands/collapses specified subtrees.
@@ -144,11 +143,13 @@ export default Ember.Component.extend({
         _isRoot,
         _activeSubtreeKeys,
       } = this.getProperties('_isRoot', '_activeSubtreeKeys');
-     
+
       if (_isRoot) {
-        let newActiveSubtreeKeys = _activeSubtreeKeys.filter(k => subtreeKeys.indexOf(k) === -1);
+        let newActiveSubtreeKeys = _activeSubtreeKeys.filter(k => subtreeKeys.indexOf(k) ===
+          -1);
         if (subtreeIsExpanded === undefined) {
-          subtreeIsExpanded = newActiveSubtreeKeys.length + subtreeKeys.length > _activeSubtreeKeys.length;
+          subtreeIsExpanded = newActiveSubtreeKeys.length + subtreeKeys.length >
+            _activeSubtreeKeys.length;
         }
         this.set('_activeSubtreeKeys', subtreeIsExpanded ?
           _activeSubtreeKeys.concat(subtreeKeys) : newActiveSubtreeKeys);

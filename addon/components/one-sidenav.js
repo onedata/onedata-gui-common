@@ -29,11 +29,11 @@ export default Ember.Component.extend({
   isOpened: false,
 
   style: htmlSafe(''),
-  
+
   init() {
     this._super(...arguments);
     let eventsBus = this.get('eventsBus');
-    
+
     eventsBus.on('one-sidenav:close', (selector) => {
       if (!selector || this.element.matches(selector)) {
         this.send('close');
@@ -49,11 +49,11 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     let coverSelector = this.get('coverSelector');
-    scheduleOnce('afterRender', this, function() {
+    scheduleOnce('afterRender', this, function () {
       this.set('$coverElement', $(coverSelector));
-      $(window).on('resize.' + this.elementId, () =>  this.changeSize());
+      $(window).on('resize.' + this.elementId, () => this.changeSize());
       this.changeSize();
-    });    
+    });
   },
 
   willDestroyElement() {
@@ -66,9 +66,9 @@ export default Ember.Component.extend({
     let width = open ? $coverElement.width() : 0;
     this.set('style', htmlSafe(`left: ${left}px; width: ${width}px;`));
     this.$('.sidenav-content-container').width(width);
-},
+  },
 
-  changeSize: observer('isOpened', function() {
+  changeSize: observer('isOpened', function () {
     this.updatePosition(this.get('isOpened'));
   }),
 

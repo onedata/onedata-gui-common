@@ -71,7 +71,7 @@ export default Component.extend({
    */
   popoverTrigger: 'click',
 
-  _resizeHandler: computed(function() {
+  _resizeHandler: computed(function () {
     return () => this.send('refresh');
   }),
 

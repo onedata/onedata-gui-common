@@ -92,7 +92,7 @@ export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
         globalCollapsibleToolbar,
         _internalDropdownOpened,
       } = this.getProperties('isGlobal', 'globalCollapsibleToolbar',
-          '_internalDropdownOpened');
+        '_internalDropdownOpened');
       if (!isGlobal) {
         return _internalDropdownOpened;
       } else {
@@ -123,9 +123,9 @@ export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
         fullModeClasses,
         minimizedModeClasses
       } = this.getProperties(
-          'isMinimized',
-          'fullModeClasses',
-          'minimizedModeClasses');
+        'isMinimized',
+        'fullModeClasses',
+        'minimizedModeClasses');
       return isMinimized ? minimizedModeClasses : fullModeClasses;
     }),
 

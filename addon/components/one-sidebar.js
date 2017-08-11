@@ -23,7 +23,7 @@ export default Ember.Component.extend({
 
   buttons: readOnly('resourcesModel.buttons'),
 
-  title: computed('resourcesModel.resourceType', function() {
+  title: computed('resourcesModel.resourceType', function () {
     let resourcesType = this.get('resourcesModel.resourceType');
     return resourcesType;
   }),

@@ -32,7 +32,7 @@ export default Ember.Component.extend({
    * @type {string}
    */
   imageText: '',
-  
+
   /**
    * CSS class for text element. It should handle with positioning if neccessary.
    * @type {string}

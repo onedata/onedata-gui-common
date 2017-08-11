@@ -16,7 +16,6 @@ const {
   computed,
 } = Ember;
 
-
 export default Ember.Component.extend({
   layout,
   classNames: ['one-collapsible-toolbar-item'],
@@ -85,8 +84,7 @@ export default Ember.Component.extend({
     let buttonSize = this.get('buttonSize');
     if (buttonSize.length > 0) {
       return 'btn-' + buttonSize;
-    }
-    else {
+    } else {
       return '';
     }
   }),

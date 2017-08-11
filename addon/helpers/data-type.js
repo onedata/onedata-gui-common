@@ -9,7 +9,7 @@
 
 import Ember from 'ember';
 
-export function dataType([ data ]/*, hash*/) {
+export function dataType([data] /*, hash*/ ) {
   return typeof data;
 }
 

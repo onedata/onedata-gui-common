@@ -78,7 +78,7 @@ export default Ember.Mixin.create({
    * @type {Window}
    */
   _window: window,
-  
+
   addOverflowDetectionListener() {
     let {
       overflowElement,
@@ -86,8 +86,8 @@ export default Ember.Mixin.create({
       overflowSiblingsElements,
       overflowDetectionDelay,
       _window
-    } = this.getProperties('overflowElement', 'overflowParentElement', 
-    'overflowSiblingsElements', 'overflowDetectionDelay', '_window');
+    } = this.getProperties('overflowElement', 'overflowParentElement',
+      'overflowSiblingsElements', 'overflowDetectionDelay', '_window');
     if (!overflowParentElement) {
       this.set('overflowParentElement', overflowElement.parent());
     }
@@ -104,7 +104,8 @@ export default Ember.Mixin.create({
   },
 
   removeOverflowDetectionListener() {
-    this.get('_window').removeEventListener('resize', this.get('_overflowDetectionListener'));
+    this.get('_window').removeEventListener('resize', this.get(
+      '_overflowDetectionListener'));
   },
 
   detectOverflow() {
@@ -115,30 +116,32 @@ export default Ember.Mixin.create({
       additionalOverflowMargin,
       minimumFullWindowSize,
       _window
-     } = this.getProperties('overflowElement', 'overflowParentElement',
+    } = this.getProperties('overflowElement', 'overflowParentElement',
       'overflowSiblingsElements', 'additionalOverflowMargin', 'minimumFullWindowSize',
       '_window');
-    
+
     if (minimumFullWindowSize && _window.innerWidth < minimumFullWindowSize) {
       this.set('hasOverflow', true);
       return;
     }
-    
+
     let elementWidth = overflowElement.outerWidth(true);
     if (overflowElement.is(':hidden')) {
       let previousCss = overflowElement.attr('style');
-      let newCss = previousCss + ';position: absolute !important; visibility: hidden !important; display: block !important;';
+      let newCss = previousCss +
+        ';position: absolute !important; visibility: hidden !important; display: block !important;';
       // shows element using standard display:block (but it is hidden from user)
       // after that we can measure its width as if it was visible and
       // then we fallback to previous styles
       overflowElement.attr('style', newCss);
-      elementWidth = overflowElement.outerWidth(true);   
+      elementWidth = overflowElement.outerWidth(true);
       overflowElement.attr('style', previousCss ? previousCss : '');
     }
     let parentWidth = overflowParentElement.width();
-    let siblingsWidth = overflowSiblingsElements.get().map(sibling => $(sibling).outerWidth(true))
+    let siblingsWidth = overflowSiblingsElements.get().map(sibling => $(sibling).outerWidth(
+        true))
       .reduce((prev, curr) => prev + curr, 0);
-    this.set('hasOverflow', 
+    this.set('hasOverflow',
       parentWidth - siblingsWidth < elementWidth + additionalOverflowMargin);
   }
 });

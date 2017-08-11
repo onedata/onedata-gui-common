@@ -67,7 +67,7 @@ export default function bytesToString(bytes, { iecFormat = false } = { iecFormat
     return '';
   } else {
     let [number, unit] =
-      (iecFormat ? bytesToStringIEC : bytesToStringSI)(bytes);
+    (iecFormat ? bytesToStringIEC : bytesToStringSI)(bytes);
     return `${Math.round(number * 10) / 10} ${unit}`;
   }
 }

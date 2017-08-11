@@ -11,7 +11,7 @@ export default Service.extend({
   on(eventName, callback) {
     this.get('callbacks').push(callback);
   },
-  
+
   off() {
     // TODO implement if necessary.
   },

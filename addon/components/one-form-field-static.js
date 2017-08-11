@@ -11,8 +11,8 @@ import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/one-form-field-static';
 import config from 'ember-get-config';
 
-const { 
-  layoutConfig 
+const {
+  layoutConfig
 } = config;
 
 const {

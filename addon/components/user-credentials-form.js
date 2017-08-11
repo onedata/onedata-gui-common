@@ -39,20 +39,20 @@ const SECRET_PASSWORD_FIELD = {
 };
 
 const CHANGE_PASSWORD_FIELDS = [{
-  name: 'currentPassword',
-  label: 'Current password',
-  type: 'password',
-},
-{
-  name: 'newPassword',
-  label: 'New password',
-  type: 'password',
-},
-{
-  name: 'newPasswordRetype',
-  label: 'Retype new password',
-  type: 'password',
-},
+    name: 'currentPassword',
+    label: 'Current password',
+    type: 'password',
+  },
+  {
+    name: 'newPassword',
+    label: 'New password',
+    type: 'password',
+  },
+  {
+    name: 'newPasswordRetype',
+    label: 'Retype new password',
+    type: 'password',
+  },
 ];
 
 function createValidations() {
@@ -132,8 +132,9 @@ export default OneForm.extend(Validations, {
   }),
 
   currentFieldsPrefix: computed('changingPassword', function () {
-    return this.get('changingPassword') ?
-      ['generic', 'change'] : ['generic', 'static'];
+    return this.get('changingPassword') ? ['generic', 'change'] : ['generic',
+      'static'
+    ];
   }),
 
   allFields: computed('usernameField', 'changePasswordFields', 'secretPasswordField',
@@ -143,10 +144,10 @@ export default OneForm.extend(Validations, {
         changePasswordFields,
         secretPasswordField,
       } = this.getProperties(
-          'usernameField',
-          'changePasswordFields',
-          'secretPasswordField'
-        );
+        'usernameField',
+        'changePasswordFields',
+        'secretPasswordField'
+      );
       return [usernameField, secretPasswordField, ...changePasswordFields];
     }),
 

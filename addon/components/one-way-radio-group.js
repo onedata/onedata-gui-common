@@ -24,7 +24,7 @@ export default Component.extend({
    * @type {string}
    */
   fieldName: '',
-  
+
   /**
    * Element ID for first rendered radio input
    * @type {string}

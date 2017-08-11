@@ -25,7 +25,7 @@ export default Ember.Component.extend({
     });
     // prevent from collapse animation on first render
     if (this.$().is('.dropdown-table-rows')) {
-      const tdList =  this.$('td:not(.row-header)');
+      const tdList = this.$('td:not(.row-header)');
       tdList.addClass('no-transition');
       run.next(() => tdList.removeClass('no-transition'));
     }

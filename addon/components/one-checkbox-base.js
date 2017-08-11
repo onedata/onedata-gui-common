@@ -2,7 +2,7 @@ import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/one-checkbox-base';
 import { invokeAction, invoke } from 'ember-invoke-action';
 
-const { 
+const {
   Component,
 } = Ember;
 

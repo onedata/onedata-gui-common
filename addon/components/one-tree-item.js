@@ -69,7 +69,7 @@ export default Ember.Component.extend({
     return _activeSubtreeKeys.indexOf(key) > -1;
   }),
 
-  _bulletIcon: computed('_isSubtreeExpanded', '_hasSubtree', function() {
+  _bulletIcon: computed('_isSubtreeExpanded', '_hasSubtree', function () {
     let {
       _isSubtreeExpanded,
       _hasSubtree
@@ -94,7 +94,7 @@ export default Ember.Component.extend({
         _areParentsExpanded
       } = this.getProperties('key', '_rootKey', '_areParentsExpanded');
 
-      assert('one-tree-item: Root tree key must be provided.', 
+      assert('one-tree-item: Root tree key must be provided.',
         selectedRootKey !== undefined);
 
       if (!_areParentsExpanded && subtreeIsExpanded !== false) {
@@ -107,7 +107,7 @@ export default Ember.Component.extend({
     };
   }),
 
-  _activeSubtreeKeysObserver: observer('_activeSubtreeKeys.[]', function() {
+  _activeSubtreeKeysObserver: observer('_activeSubtreeKeys.[]', function () {
     let {
       _activeSubtreeKeys,
       _parentKey,
@@ -162,7 +162,7 @@ export default Ember.Component.extend({
         key,
         _hasSubtree
       } = this.getProperties('_isSubtreeExpanded', 'key', '_hasSubtree');
-      
+
       if (!_hasSubtree) {
         return;
       }
@@ -170,7 +170,7 @@ export default Ember.Component.extend({
       if (!isArray(subtreeKeys) || typeof subtreeKeys === 'string') {
         subtreeKeys = [subtreeKeys];
       }
-      
+
       if (subtreeKeys.indexOf(key) === -1) {
         if (subtreeIsExpanded && !_isSubtreeExpanded) {
           subtreeKeys = subtreeKeys.concat(key);
