@@ -6,7 +6,8 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
   color: $main-text-color;
 
   .content-row.chart-row {
-    padding-top: 50px;
+    margin-top: -50px;
+    padding-top: 100px;
   }
 
   .content-row {
