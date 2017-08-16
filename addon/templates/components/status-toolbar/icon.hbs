@@ -1,0 +1,10 @@
+{{one-icon icon=icon class="one-icon-status"}}
+{{#if subIcon}}
+  {{one-icon class=(concat-classes "sub-status-icon" subIconClass) icon=subIcon}}
+{{/if}}
+{{#if (and enabled hint)}}
+  {{bs-tooltip
+    title=hint
+    placement="top"
+  }}
+{{/if}}

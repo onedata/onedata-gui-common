@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/one-checkbox-base';
 import { invokeAction, invoke } from 'ember-invoke-action';
 
 const {
@@ -16,7 +15,7 @@ const {
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Component.extend({
-  layout,
+  classNames: ['one-checkbox-base'],
   classNameBindings: ['isReadOnly:disabled:clickable', 'checked'],
   attributeBindings: ['dataOption:data-option'],
 

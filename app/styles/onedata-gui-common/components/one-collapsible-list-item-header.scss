@@ -38,6 +38,19 @@
     }
   }
 
+  &.header-fixed {
+    // override inline styles
+    cursor: not-allowed !important;
+    > *:not(.item-checkbox) {
+      opacity: 0.4;
+    }
+  }
+
+  .item-checkbox {
+    margin-bottom: -3px;
+    margin-right: 1.2em;
+  }
+
   .btn-toolbar {
     float: none;
     position: absolute;
