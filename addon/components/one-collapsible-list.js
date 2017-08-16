@@ -41,6 +41,7 @@ const {
   computed,
   run: {
     next,
+    debounce,
   },
   A,
 } = Ember;
@@ -66,10 +67,22 @@ export default Ember.Component.extend({
   selectionChanged: null,
 
   /**
+   * Filtered items change handler
+   * @type {Function}
+   */
+  filtrationChanged: () => {},
+
+  /**
    * List of selected item values
    * @type {Ember.Array.*}
    */
   _selectedItemValues: null,
+
+  /**
+   * List of item values available after filter
+   * @type {Ember.Array.*}
+   */
+  _filteredItemValues: null,
 
   /**
    * Selection values for all list items (used to "select all" action)
@@ -105,12 +118,23 @@ export default Ember.Component.extend({
     }
   ),
 
+  _filtrationChangedCallback: computed(function () {
+    return () => {
+      let {
+        filtrationChanged,
+        _availableItemValues
+      } = this.getProperties('filtrationChanged', '_availableItemValues');
+      filtrationChanged(_availableItemValues.toArray());
+    };
+  }),
+
   init() {
     this._super(...arguments);
 
     this.setProperties({
       _selectedItemValues: A(),
       _availableItemValues: A(),
+      _filteredItemValues: A(),
     });
   },
 
@@ -154,6 +178,7 @@ export default Ember.Component.extend({
             _availableItemValues.removeObject(itemValue);
             invoke(this, 'toggleItemSelection', itemValue, false);
           }
+          debounce(this, this.get('_filtrationChangedCallback'), 1);
         }
       });
     },
