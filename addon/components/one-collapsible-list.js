@@ -79,12 +79,6 @@ export default Ember.Component.extend({
   _selectedItemValues: null,
 
   /**
-   * List of item values available after filter
-   * @type {Ember.Array.*}
-   */
-  _filteredItemValues: null,
-
-  /**
    * Selection values for all list items (used to "select all" action)
    * @type {Ember.Array.*}
    */
@@ -134,7 +128,6 @@ export default Ember.Component.extend({
     this.setProperties({
       _selectedItemValues: A(),
       _availableItemValues: A(),
-      _filteredItemValues: A(),
     });
   },
 
