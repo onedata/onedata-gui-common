@@ -21,7 +21,7 @@
           }}
             {{#each providerActions as |providerAction|}}
             {{#dropdown.item
-              itemAction=providerAction.action
+              itemAction=(action providerAction.action provider)
               triggerClasses=providerAction.class
             }}
               {{providerAction.text}}
