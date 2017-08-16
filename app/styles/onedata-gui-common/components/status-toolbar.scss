@@ -8,10 +8,32 @@ $status-toolbar-height: 20px;
   // fully rounded corners
   border-radius: 999px;
   padding: 2px 18px;
-  .status-icon {
+  .status-toolbar-icon {
     float: left;
-  }
-  .status-icon + .status-icon:not(.hidden) {
-    margin-left: 8px;
+    position: relative;
+    & + .status-toolbar-icon:not(.hidden) {
+      margin-left: 8px;
+    }
+    // using camelCase because of status mapping from API
+    &.inProgress {
+      @extend .animated;
+      @extend .infinite;
+      @extend .semi-hinge;
+      @extend .pulse-mint;
+    }
+    &.done, &.waiting {
+      color: $color-one-mint;
+    }
+
+    &.not-clickable {
+      cursor: initial !important;
+    }
+    
+    .sub-status-icon {
+      position: absolute;
+      right: -15%;
+      bottom: 0;
+      font-size: 70%;
+    }
   }
 }

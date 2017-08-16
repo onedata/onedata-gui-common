@@ -160,25 +160,15 @@ input {
   font-size: 2em;
 }
 
-// adds a small circle icon to status-icon
-.sub-status-icon {
-  position: absolute !important;
-  right: -10px;
-  bottom: 6px !important;
-  font-size: 22px !important;
-  top: initial !important;
-  
-  &.status-icon-success {
-    color: $color-one-mint;
-  }
-}
-
 .collapse-animation {
   max-height: 99999em;
   opacity: 1;
   transition: $collapse-transition;
   &.collapse-small {
-    max-height: 70em;
+    max-height: 1000px;
+  }
+  &.collapse-medium {
+    max-height: 2500px;
   }
   &.collapse-hidden {
     max-height: 0;

@@ -1,6 +1,7 @@
 .one-checkbox {
   $checkbox-size: 16px;
   
+  display: inline-block;
   position: relative;
   width: $checkbox-size;
   height: $checkbox-size;
@@ -24,6 +25,10 @@
       font-size: $checkbox-size;
       text-align: center;
     }
+  }
+
+  &.disabled {
+    opacity: $disabled-opacity;
   }
 
   &:not(.checked) {

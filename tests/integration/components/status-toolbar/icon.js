@@ -3,8 +3,8 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration | Component | status icon', function () {
-  setupComponentTest('status-icon', {
+describe('Integration | Component | status toolbar/icon', function () {
+  setupComponentTest('status-toolbar/icon', {
     integration: true
   });
 
