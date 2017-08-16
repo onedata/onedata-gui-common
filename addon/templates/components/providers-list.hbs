@@ -1,0 +1,35 @@
+{{#one-collapsible-list filtrationChanged=(action "providersFilter") as |list|}}
+  {{list.header class="align-to-icon" isCollapsible=false title=title}}
+  {{#each providers as |provider|}}
+    {{#list.item isCollapsible=false selectionValue=provider click=(action "providerClick" provider) as |listItem|}}
+      {{#listItem.header}}
+        <span class="item-icon-container">
+          {{one-icon class="item-icon" icon="provider" color=provider.color}}
+          {{one-tooltip
+            title=provider.name
+            placement="top"
+            arrowPlacement="left"
+            triggerEvents="hover"
+          }}
+        </span>
+        <span class="one-label">{{provider.name}}</span>
+        {{#if providerActions.length}}
+          {{#one-collapsible-toolbar
+            isMinimized=true
+            toggleBtnClass="btn-menu-toggle provider-menu-toggle"
+            as |dropdown|
+          }}
+            {{#each providerActions as |providerAction|}}
+            {{#dropdown.item
+              itemAction=providerAction.action
+              triggerClasses=providerAction.class
+            }}
+              {{providerAction.text}}
+            {{/dropdown.item}}
+            {{/each}}
+          {{/one-collapsible-toolbar}}
+        {{/if}}
+      {{/listItem.header}}
+    {{/list.item}}
+  {{/each}}
+{{/one-collapsible-list}}
