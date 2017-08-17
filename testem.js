@@ -6,8 +6,7 @@ module.exports = {
   'disable_watching': true,
   'launch_in_ci': [
     'Firefox',
-    'Chrome',
-  ].concat(process.platform === 'darwin' ? ['Safari'] : []),
+  ],
   'launch_in_dev': [
     'Chrome',
   ],
