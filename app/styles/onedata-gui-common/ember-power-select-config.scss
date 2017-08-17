@@ -26,6 +26,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   transition: all 0.2s ease;
   min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
   word-wrap: break-word;
+  outline: none !important;
 
   &.ember-power-select-trigger--active:not([aria-expanded]) {
     @include box-shadow($control-box-shadow-focus);
