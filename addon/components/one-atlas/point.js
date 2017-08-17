@@ -60,6 +60,9 @@ export default Ember.Component.extend({
       longitude,
     } = this.getProperties('atlasWidth', 'longitude');
 
+    if (longitude < -180 || longitude > 180) {
+      longitude = 0;
+    }
     return ((longitude + 180) / 360) * atlasWidth;
   }),
 
@@ -73,6 +76,9 @@ export default Ember.Component.extend({
       latitude,
     } = this.getProperties('atlasHeight', 'latitude');
 
+    if (latitude < -90 || latitude > 90) {
+      latitude = 0;
+    }
     // Calculations based on https://en.wikipedia.org/wiki/Mercator_projection
     // article
     let ltr = latitude * (Math.PI / 180);
@@ -80,9 +86,27 @@ export default Ember.Component.extend({
     return (atlasHeight / 2) * (1 - y * (1 / 2.303412543));
   }),
 
+  _coordinatesValidatorObserver: observer('longitude', 'latitude', function () {
+    let {
+      longitude,
+      latitude,
+    } = this.getProperties('longitude', 'latitude');
+    if (longitude < -180 || longitude > 180) {
+      console.warn(`one-atlas/point: longitude out of range: ${longitude}`);
+    }
+    if (latitude < -90 || latitude > 90) {
+      console.warn(`one-atlas/point: latitude out of range: ${latitude}`);
+    }
+  }),
+
   _positionObserver: observer('_positionX', '_positionY', function () {
     this._applyPosition();
   }),
+
+  init() {
+    this._super(...arguments);
+    this._coordinatesValidatorObserver();
+  },
 
   didInsertElement() {
     this._super(...arguments);

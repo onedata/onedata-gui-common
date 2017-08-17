@@ -5,6 +5,7 @@ $webui-popover-offset: 4px;
   max-width: 28em;
   border-radius: $border-radius-small;
   font-size: $font-size-base;
+  padding: 0;
   .webui-popover-content {
     padding: $padding-base-vertical;
     overflow: initial;
