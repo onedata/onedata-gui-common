@@ -11,4 +11,10 @@ module.exports = {
   'launch_in_dev': [
     'Chrome',
   ],
+  // TODO: use only for CI on xvfb and dockerized env
+  'browser_args': {
+    'Chrome': [
+      '--no-sandbox'
+    ]
+  }
 };
