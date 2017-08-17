@@ -15,10 +15,14 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "ember try:each"
+    "test-try": "ember try:each",
+    "deps": "npm install && bower install",
+    "test-ci": "npm run deps && xvfb-run ember test -r xunit",
+    "test": "ember test",
+    "tdd": "ember test --server"
   },
   "dependencies": {
-    "ember-cli-babel": "^6.3.0",
+    "ember-cli-babel": "6.8.1",
     "ember-cli-htmlbars": "2.0.3"
   },
   "devDependencies": {
