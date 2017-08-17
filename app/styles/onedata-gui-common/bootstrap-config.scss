@@ -184,6 +184,11 @@ label {
 // Components w/ JavaScript
 @import "../bootstrap/modals";
 @import "../bootstrap/tooltip";
+
+.tooltip .tooltip-inner {
+  word-wrap: break-word;
+}
+
 @import "../bootstrap/popovers";
 @import "../bootstrap/carousel";
 

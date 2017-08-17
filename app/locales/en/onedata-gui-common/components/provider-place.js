@@ -1,0 +1,5 @@
+import drop from './provider-place/drop';
+
+export default {
+  drop,
+};

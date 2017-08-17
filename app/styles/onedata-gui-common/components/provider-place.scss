@@ -1,0 +1,204 @@
+$provider-place-circle-size: 64px;
+$color-provider-online: $color-one-mint;
+$color-provider-offline: $color-one-red;
+
+.provider-place {
+  position: relative;
+
+  &.online {
+    .circle {
+      border-color: $color-provider-online;
+      color: $color-provider-online;
+    }
+  }
+  
+  &.pending {
+    .circle {
+      @extend .animated;
+      @extend .infinite;
+      @extend .hinge;
+      @extend .pulse-red-mint;
+    }
+  }
+  
+  &.offline {
+    .circle {
+      border-color: $color-provider-offline;
+      color: $color-provider-offline;
+    }
+  }
+
+  .circle {
+    // initial size
+    width: $provider-place-circle-size;
+    height: $provider-place-circle-size;
+    font-size: ($provider-place-circle-size * 0.75);
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    background-color: white;
+    cursor: pointer;
+
+    .one-icon {
+      &::before {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        left: 50%;
+      }
+    }
+  }
+}
+
+// styles specific for popover
+.webui-popover-provider-place {
+  z-index: $zindex-tooltip - 1;
+  background-color: transparent;
+  .provider-place-drop {
+    width: 190px;
+    min-height: 50px;
+    overflow: hidden;
+    border-radius: $border-radius-base;
+    background-color: $color-one-white;
+  }
+}
+.provider-place-drop {
+  $drop-padding: $padding-xs-horizontal * 1.5;
+  font-size: $font-size-small;
+
+  // styles specific for modal
+  &.modal {
+    .modal-dialog {
+      .modal-content { 
+        padding: 0;
+        background-color: transparent;
+        .modal-body {
+          padding: 0;
+          overflow: hidden;
+          border-radius: $border-radius-base;
+          background-color: $color-one-white;
+        }
+      }
+    }
+  }
+
+  &.online .drop-title-bar {
+    background-color: $color-provider-online;
+  }
+  &.pending, &.offline {
+    .drop-title-bar {
+      background-color: $color-provider-offline;
+    }
+  }
+  &.offline {
+    .drop-body ul {
+      margin-bottom: 0;
+    }
+  }
+  .drop-title-bar {
+    height: 28px;
+    line-height: 28px;
+    padding: 0 $drop-padding;
+    color: $color-one-white;
+
+    .provider-label {
+      max-width: 120px;
+      font-weight: bold;
+    }
+    .provider-label-secondary {
+      position: absolute;
+      top: 0;
+      right: $drop-padding;
+      opacity: 0.5;
+    }
+  }
+
+  .drop-provider-host-container {
+    display: table;
+    width: 100%;
+    height: 28px;
+    padding-left: $drop-padding;
+    line-height: 28px;
+    background-color: $color-one-semiwhite;
+
+    .provider-host-text {
+      display: table-cell;
+      max-width: 150px;
+      padding: 0;
+      margin: 0;
+      border: none;
+      color: inherit;
+      background-color: inherit;
+    }
+    .provider-host-copy-btn {
+      position: relative;
+      display: table-cell;
+      width: 28px;
+      border-left: 1px solid $main-border-color;
+      line-height: inherit;
+      font-size: 28px;
+      text-align: center;
+      color: inherit;
+
+      &:hover {
+        background-color: darken($color-one-semiwhite, 20%);
+      }
+      .oneicon {
+        position: absolute;
+        width: 28px;
+        height: 28px;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+
+  .drop-body {
+    padding: $padding-base-horizontal / 2;
+    .btn {
+      width: 100%;
+    }
+    hr {
+      margin: 10px 0;
+      color: $main-border-color;
+    }
+    ul {
+      padding: 0;
+      li {
+        display: table;
+        width: 100%;
+        height: 22px;
+        line-height: 22px;
+        vertical-align: middle;
+        > * {
+          display: table-cell;
+        }
+        .space-icon {
+          position: relative;
+          top: 2px;
+          width: 20px;
+          padding-right: $drop-padding;
+          .oneicon {
+            font-size: 20px;
+            line-height: inherit;
+          }
+        }
+        .space-label {
+          max-width: 50px;
+          vertical-align: inherit;
+          font-size: 0.9em;
+        }
+        .space-size {
+          max-width: 50px;
+          padding-left: $padding-xs-horizontal;
+          overflow: hidden;
+          text-align: right;
+          text-overflow: clip;
+          vertical-align: inherit;
+          white-space: nowrap;
+          color: $color-one-light-gray;
+        }
+      }
+    }
+  }
+}

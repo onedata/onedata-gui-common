@@ -20,7 +20,7 @@ export default BsTooltip.extend({
    * Arrow position.
    * @type {string}
    * 
-   * For top and bottom tootip placement valid values are: left, right, center
+   * For top and bottom tooltip placement valid values are: left, right, center
    * For left and right tooltip placement valid values are: top, bottom, center
    */
   arrowPlacement: 'center',
@@ -40,20 +40,17 @@ export default BsTooltip.extend({
    * @param {boolean} isVertical 
    */
   replaceArrow(delta, dimension, isVertical) {
-    let {
-      overlayElement,
-      arrowPlacement,
-    } = this.getProperties(
-      'overlayElement',
-      'arrowPlacement'
-    );
-    let arrowElement = overlayElement.find('.tooltip-arrow');
-
-    // ember-bootstrap bugfix - arrowElement is different in each rerender
-    this.set('arrowElement', arrowElement);
-
     this._super(delta, dimension, isVertical);
 
+    let {
+      arrowElement,
+      arrowPlacement,
+    } = this.getProperties(
+      'arrowElement',
+      'arrowPlacement'
+    );
+    arrowElement = $(arrowElement);
+    
     let offset = this._getArrowRelativeOffset();
     switch (arrowPlacement) {
       case 'left':
@@ -103,6 +100,7 @@ export default BsTooltip.extend({
       'arrowPlacement',
       'arrowOffset'
     );
+    overlayElement = $(overlayElement);
     let offset;
     if (arrowPlacement === 'left' || arrowPlacement === 'right') {
       offset = overlayElement.width() / 2 - arrowOffset;

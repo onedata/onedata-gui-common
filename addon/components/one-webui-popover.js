@@ -54,6 +54,12 @@ export default Component.extend({
   padding: true,
 
   /**
+   * Popover style class name
+   * @type {string}
+   */
+  popoverStyle: null,
+
+  /**
    * Tells if multiple popovers are allowed.
    * @type {boolean}
    */

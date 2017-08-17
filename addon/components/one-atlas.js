@@ -32,22 +32,22 @@ export default Ember.Component.extend({
   classNames: ['one-atlas'],
 
   /**
-   * Component width/height ratio
-   * @type {number}
-   */
-  _sizeRatio: ATLAS_AR,
-
-  /**
    * Component width
    * @type {number}
    */
-  _width: 0,
+  width: 0,
 
   /**
    * Component height
    * @type {number}
    */
-  _height: 0,
+  height: 0,
+
+  /**
+   * Component width/height ratio
+   * @type {number}
+   */
+  _sizeRatio: ATLAS_AR,
 
   /**
    * Window property for testing purposes
@@ -101,8 +101,8 @@ export default Ember.Component.extend({
     }
 
     this.setProperties({
-      _width: newWidth,
-      _height: newHeight
+      width: newWidth,
+      height: newHeight
     });
     element.css({
       width: newWidth,

@@ -3,3 +3,9 @@
   inherit,
   $color-one-mint
 );
+
+@include animation-fg-color-change(
+  pulse-red-mint,
+  $color-one-red,
+  $color-one-mint
+);
