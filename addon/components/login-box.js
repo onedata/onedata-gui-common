@@ -17,7 +17,6 @@ const {
   computed,
   computed: {
     alias,
-    readOnly,
   },
 } = Ember;
 
@@ -26,7 +25,6 @@ export default Ember.Component.extend({
   classNames: ['login-box'],
 
   globalNotify: service(),
-  onepanelServer: service(),
   session: service(),
 
   isBusy: false,
@@ -36,16 +34,31 @@ export default Ember.Component.extend({
    */
   sessionHasExpired: alias('session.data.hasExpired'),
 
-  onepanelServiceType: readOnly('onepanelServer.serviceType'),
+  /**
+   * Class added to login-main-title element
+   * Can be used to display some secondary image
+   * @type {string}
+   */
+  loginMainTitleClass: '',
 
-  brandSubtitle: computed('onepanelServiceType', function () {
-    let {
-      i18n,
-      onepanelServiceType
-    } = this.getProperties('i18n', 'onepanelServiceType');
-    return onepanelServiceType ?
-      'One' + i18n.t(`components.brandInfo.serviceType.${onepanelServiceType}`) :
-      null;
+  /**
+   * Main title of login view
+   * Typically, should be overriden in subclasses
+   * Alternatively, locale: ``components.loginBox.brandTitle`` can be set
+   * @type {string}
+   */
+  brandTitle: computed(function () {
+    return this.get('i18n').t('components.loginBox.brandTitle');
+  }),
+
+  /**
+   * Subtitle of login view
+   * Typically, should be overriden in subclasses
+   * Alternatively, locale: ``components.loginBox.brandSubtitle`` can be set
+   * @type {string}
+   */
+  brandSubtitle: computed(function () {
+    return this.get('i18n').t('components.loginBox.brandSubtitle');
   }),
 
   actions: {

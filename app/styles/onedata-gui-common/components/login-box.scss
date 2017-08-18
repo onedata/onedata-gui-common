@@ -22,13 +22,6 @@
         background-position: left center;
         font-size: 22px;
         text-transform: capitalize;
-        &.zone {
-          background-image: url($root-url + 'assets/images/onezone-logo.svg');
-        }
-        &.provider {
-          background-image: url($root-url + 'assets/images/oneprovider-logo.svg');
-          background-size: 25px;
-        }
       }
       .login-main-subtitle {
         font-size: 22px;
@@ -59,6 +52,7 @@
   .login-logo {
     width: 100px;
     height: 100px;
+    // FIXME some generic login logo!
     background-image: url($root-url + 'assets/images/control-panel.svg');
     background-repeat: no-repeat;
     background-size: cover;

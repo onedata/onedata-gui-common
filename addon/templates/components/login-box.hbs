@@ -1,10 +1,14 @@
 <div class="container">
+   {{!--
+    TODO: login box should use login-box/header component for custom header 
+    instead of this row
+   --}}
   <div class="row">
     <div class="col-xs-12 col-user-profile-icon">
       <div class="login-logo"></div>
       <div class="login-titles">
-        <div class="login-main-title {{onepanelServiceType}}">{{brandSubtitle}}</div>
-        <div class="login-main-subtitle">{{t "components.loginBox.controlPanel"}}</div>
+        <div class="login-main-title {{loginMainTitleClass}}">{{brandTitle}}</div>
+        <div class="login-main-subtitle">{{brandSubtitle}}</div>
       </div>
     </div>
   </div>
@@ -12,7 +16,7 @@
     <div class="col-xs-12">
       <h4>{{t "components.loginBox.login"}}</h4>
       <div class="login-box-error-message {{if sessionHasExpired "active" ""}}">
-        Your session has expired
+        {{t "components.loginBox.sessionExpired"}}
       </div>
     </div>
   </div>
