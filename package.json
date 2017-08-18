@@ -19,7 +19,8 @@
     "deps": "npm install && bower install",
     "test-ci": "npm run deps && xvfb-run ember test -r xunit",
     "test": "ember test",
-    "tdd": "ember test --server"
+    "tdd": "ember test --server",
+    "clean": "rm -rf tmp dist node_modules bower_components .sass-cache tests/test-results.xml"
   },
   "dependencies": {
     "ember-cli-babel": "6.7.2",
