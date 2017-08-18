@@ -1,7 +1,7 @@
 {
   "name": "onedata-gui-common",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "1.0.0-alpha.1",
+  "description": "",
   "keywords": [
     "ember-addon"
   ],
@@ -11,7 +11,7 @@
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+  "repository": "https://git.plgrid.pl/projects/VFS/repos/ember-cli-onedata-common",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
@@ -22,18 +22,21 @@
     "tdd": "ember test --server"
   },
   "dependencies": {
-    "ember-cli-babel": "6.8.1",
+    "ember-cli-babel": "6.7.2",
     "ember-cli-htmlbars": "2.0.3"
   },
   "devDependencies": {
     "bootstrap-sass": "3.3.7",
     "broccoli-asset-rev": "2.5.0",
     "chai-jquery": "2.0.0",
-    "ember-bootstrap": "1.0.0-alpha.12",
+    "chartist-plugin-legend": "0.6.1",
+    "ember-bootstrap": "1.0.0-rc.1",
     "ember-browserify": "1.2.0",
     "ember-cli": "2.14.2",
     "ember-cli-bootstrap-sassy": "0.5.6",
     "ember-cli-chai": "0.4.2",
+    "ember-cli-chartist": "1.2.1",
+    "ember-cli-clipboard": "0.8.0",
     "ember-cli-dependency-checker": "2.0.1",
     "ember-cli-eslint": "4.2.0",
     "ember-cli-events-bus": "git+https://github.com/blia/ember-cli-events-bus.git#f0c80d024690338358afb1abd949b8a34e8f0169",
@@ -58,7 +61,7 @@
     "ember-notify": "5.2.1",
     "ember-one-way-controls": "2.0.1",
     "ember-perfect-scrollbar": "0.0.4",
-    "ember-power-select": "1.9.4",
+    "ember-power-select": "1.9.5",
     "ember-redirect": "4.1.0",
     "ember-resolver": "4.3.0",
     "ember-responsive": "2.0.4",
