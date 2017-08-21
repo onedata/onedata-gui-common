@@ -74,7 +74,7 @@ export default Ember.Component.extend({
       this.onLoginStarted();
       this.sendAction('authenticationStarted');
 
-      let loginCalling = session.authenticate('authenticator:onepanel-rest',
+      let loginCalling = session.authenticate('authenticator:application',
         username,
         password
       );
