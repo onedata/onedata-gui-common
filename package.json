@@ -1,7 +1,7 @@
 {
   "name": "onedata-gui-common",
-  "version": "1.0.0-alpha.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Common parts for building Onedata GUI front-ends",
   "keywords": [
     "ember-addon"
   ],
