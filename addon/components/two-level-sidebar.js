@@ -19,7 +19,8 @@ const {
   computed: {
     readOnly
   },
-  computed
+  computed,
+  isEmpty,
 } = Ember;
 
 export default Ember.Component.extend({
@@ -27,8 +28,6 @@ export default Ember.Component.extend({
   classNames: ['two-level-sidebar'],
 
   sidebar: service(),
-  onepanelServer: service(),
-  onepanelServiceType: readOnly('onepanelServer.serviceType'),
   eventsBus: service(),
 
   model: null,
@@ -47,6 +46,27 @@ export default Ember.Component.extend({
    */
   // TODO some generic icon
   firstLevelItemIcon: 'chceckbox-option',
+
+  /**
+   * To inject.
+   * Type of sidebar route (eg. clusters)
+   * Mandatory field!
+   * @abstract
+   * @type {string}
+   */
+  sidebarType: undefined,
+
+  init() {
+    this._super(...arguments);
+
+    // if we want to show second level items, we should have a sidebarType
+    if (!isEmpty(this.get('model.collection')) &&
+      !isEmpty(this.get('secondLevelItems')) &&
+      !this.get('sidebarType')
+    ) {
+      throw new Error('component:two-level-sidebar: sidebarType is not defined');
+    }
+  },
 
   resourceType: readOnly('model.resourceType'),
 

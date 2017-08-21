@@ -17,18 +17,16 @@
         {{/if}}
         <span class="one-label">{{item.name}}</span>
       {{else if (eq primarySection 'secondary')}}
-        {{!-- TODO resource type specific --}}
         {{!-- TODO isActive secondary --}}
         <ul class="one-list one-list-level-2">
           {{#each secondLevelItems as |sli|}}
             <li 
               class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}
               {{action "sidebarSecondaryItemSelected"}}>
-              {{!-- TODO only for clusters --}}
               {{#link-to
                 "onedata.sidebar.content.aspect"
-                "clusters"
-                "the-cluster"
+                sidebarType
+                item.id
                 sli.id
                 tagName="div"
                 class="item-header truncate"
