@@ -101,7 +101,7 @@ export default Ember.Component.extend({
   },
 
   updateTooltipText() {
-    let element = !this.get('widthBased') ? 
+    let element = !this.get('widthBased') ?
       this.$() : this.$().find('.truncated-string-content');
     this.set('tooltipText', element.text().trim());
   },

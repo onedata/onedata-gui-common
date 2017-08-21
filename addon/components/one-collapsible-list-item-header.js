@@ -47,8 +47,7 @@ export default Ember.Component.extend({
    * toggle event handler
    * @type {string}
    */
-  _clickDisabledElementsSelector: 
-    '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
+  _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
 
   click(event) {
     const selector = this.get('_clickDisabledElementsSelector');

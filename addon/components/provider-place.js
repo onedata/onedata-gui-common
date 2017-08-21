@@ -44,12 +44,12 @@ export default Ember.Component.extend({
    * Provider status
    * @type {computed.string}
    */
-  status: computed('provider.status', function() {
+  status: computed('provider.status', function () {
     let provider = this.get('provider');
     return get(provider, 'isStatusValid') ? get(provider, 'status') : 'pending';
   }),
 
-  atlasWidthObserver: observer('atlasWidth', function() {
+  atlasWidthObserver: observer('atlasWidth', function () {
     this._recalculateSize();
   }),
 
