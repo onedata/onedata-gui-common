@@ -3,6 +3,13 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import Ember from 'ember';
+
+const {
+  String: {
+    htmlSafe,
+  }
+} = Ember;
 
 describe('Integration | Component | one atlas', function () {
   setupComponentTest('one-atlas', {
@@ -24,12 +31,9 @@ describe('Integration | Component | one atlas', function () {
 
   it('scales up to parent size', function () {
     let size = 400;
-    this.setProperties({
-      parentWidth: size,
-      parentHeight: size,
-    });
+    this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.render(hbs `
-      <div style="width: {{parentWidth}}px; height: {{parentHeight}}px">
+      <div style={{parentStyle}}>
         {{one-atlas _window=_window}}
       </div>
     `);
@@ -44,12 +48,9 @@ describe('Integration | Component | one atlas', function () {
   it('fits to parent with horizontal layout', function () {
     let width = 400;
     let height = 40;
-    this.setProperties({
-      parentWidth: width,
-      parentHeight: height,
-    });
+    this.set('parentStyle', htmlSafe(`width: ${width}px; height: ${height}px`));
     this.render(hbs `
-      <div style="width: {{parentWidth}}px; height: {{parentHeight}}px">
+      <div style={{parentStyle}}>
         {{one-atlas _window=_window}}
       </div>
     `);
@@ -62,22 +63,16 @@ describe('Integration | Component | one atlas', function () {
 
   it('reacts to window resize', function (done) {
     let size = 400;
-    this.setProperties({
-      parentWidth: size,
-      parentHeight: size,
-    });
+    this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.render(hbs `
-      <div style="width: {{parentWidth}}px; height: {{parentHeight}}px">
+      <div style={{parentStyle}}>
         {{one-atlas _window=_window}}
       </div>
     `);
 
     let atlas = this.$('.one-atlas');
     size = size / 2;
-    this.setProperties({
-      parentWidth: size,
-      parentHeight: size,
-    });
+    this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.get('_window.resizeListener').call(null);
     wait().then(() => {
       expect(atlas.width()).to.be.equal(size);
@@ -90,12 +85,9 @@ describe('Integration | Component | one atlas', function () {
   it('displays Sydney point in the right down corner of the map',
     function (done) {
       let size = 400;
-      this.setProperties({
-        parentWidth: size,
-        parentHeight: size,
-      });
+      this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
       this.render(hbs `
-        <div style="width: {{parentWidth}}px; height: {{parentHeight}}px">
+        <div style={{parentStyle}}>
           {{#one-atlas _window=_window as |atlas|}}
             {{#atlas.point latitude=-33 longitude=151 class="sydney"}}
               s
