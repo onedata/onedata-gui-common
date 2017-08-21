@@ -41,6 +41,27 @@ Some projects using this addon should have also Makefile tasks named  ``push_one
 
 **Note:** this documentation section may be incomplete and serves as an overview.
 
+#### Installing dependencies for this addon in project
+
+In ``package.json`` of Ember app project:
+
+- add an ember addon in "ember-addon" path, eg.:
+```json
+"ember-addon": {
+  "paths": [
+    "lib/onedata-gui-common"
+  ]
+}
+```
+
+Then dependencies of the in-repo addon should be installed to the parent project.
+It is required as in this issue on Github: https://github.com/ember-cli/ember-cli/issues/4164
+To copy dependencies launch a script (requires Python ^2.7) from root of parent project repo:
+```
+./src/lib/onedata-gui-common/scripts/copy-deps-to-project.py
+```
+
+
 #### Routing and templates
 
 The addon has a util that configures standard onedata-gui app routes, example of usage:
