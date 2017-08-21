@@ -1,0 +1,81 @@
+$one-tree-indent: 45px;
+$one-tree-bullet-top: 13px;
+$one-tree-bullet-size: 17px;
+// all possible border-style values
+$one-tree-border-styles: none hidden dotted dashed solid double groove ridge inset outset;
+
+.one-tree {
+  background-color: $color-one-white;
+
+  @each $border-style in $one-tree-border-styles {
+    &.border-#{$border-style},
+    &.border-#{$border-style} .one-tree,
+    & .one-tree-list > li .one-tree.border-#{$border-style} {
+      > .one-tree-list {
+        border-left-style: $border-style;
+        > li:before {
+          border-top-style: $border-style;
+        }
+      }
+    }
+  }
+  .one-tree-list {
+    position: relative;
+    margin-left: $padding-base-horizontal;
+    padding: $padding-base-vertical 0 0 0;
+    border-left: 1px solid $main-border-color;
+    list-style-type: none;
+    background-color: inherit;
+
+    > li {
+      position: relative;
+      padding-left: $one-tree-indent;
+      background-color: inherit;
+
+      &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: $one-tree-bullet-top;
+        left: 0;
+        width: $one-tree-indent - $one-tree-bullet-size - 3px;
+        z-index: 1;
+        border-top: 1px solid $main-border-color;
+      }
+
+      &:last-child::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: $one-tree-bullet-top + 1px;
+        bottom: 0;
+        left: -2px;
+        width: 5px;
+        background-color: inherit;
+      }
+
+      &.has-subtree {
+        > .one-tree-item-content,
+        > .tree-circle {
+          @extend .clickable
+        }
+      }
+
+      > .tree-circle {
+        position: absolute;
+        left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal;
+        top: $one-tree-bullet-top + 2px;
+        transform: translateY(-50%);
+        background-color: inherit;
+        color: darken($main-border-color, 30%);
+        .one-icon {
+          font-size: $one-tree-bullet-size;
+        }
+      }
+
+      > .one-tree-item-content {
+        padding: $padding-small-vertical 0;
+      }
+    }
+  }
+}

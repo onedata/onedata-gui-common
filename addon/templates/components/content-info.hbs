@@ -1,0 +1,27 @@
+<div class="world-map light">
+  <div class="content-info-content-container">
+    <div class="row text-center">
+      <div class="col-xs-12">
+        <h1>{{header}}</h1>
+        {{#if subheader}}
+          <h2>{{subheader}}</h2>
+        {{/if}}
+        <p class="lead">{{text}}</p>
+      </div>
+    </div>
+    {{#if imagePath}}
+      {{one-image 
+        imagePath=imagePath 
+        imageTextClass=imageTextClass 
+        imageText=imageText}}
+    {{/if}}
+    <div class="row text-center">
+      <div class="col-xs-12">
+        {{#one-spin-button class=(concat "btn btn-primary " buttonClass) action=(action buttonAction)}}
+          {{buttonLabel}}
+        {{/one-spin-button}}
+      </div>
+    </div>
+  </div>
+  {{!-- TODO yield content --}}
+</div>

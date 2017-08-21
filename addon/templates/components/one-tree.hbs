@@ -1,0 +1,11 @@
+<ul class="one-tree-list">
+  {{yield (hash
+    item=(component 'one-tree-item' 
+      collapseRecursively=collapseRecursively
+      _showAction=(action "show")
+      _parentKey=key
+      _rootKey=(if _isRoot key _rootKey)
+      _areParentsExpanded=(and _areParentsExpanded _isExpanded)
+      _activeSubtreeKeys=_activeSubtreeKeys)
+  )}}
+</ul>

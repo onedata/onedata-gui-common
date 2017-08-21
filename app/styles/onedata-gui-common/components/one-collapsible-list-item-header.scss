@@ -1,0 +1,73 @@
+.one-collapsible-list-item-header {
+  border-bottom: 1px solid $main-border-color;
+  position: relative;
+  .toggle-icon {
+    display: none;
+    font-size: 1.7em;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    transition: transform .2s ease;
+  }
+  @include btn-toolbar-float-right();
+  &.toolbar-when-opened {
+    .btn-toolbar {
+      display: none;
+    }
+  }
+  &.opened {
+    .toggle-icon {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    .btn-toolbar {
+      display: block;
+    }
+  }
+  &.collapsible {
+    cursor: pointer;
+    &:hover {
+      background-color: $main-content-hover-background;
+    }
+    .toggle-icon {
+      display: block;
+    }
+    .btn-toolbar {
+      margin-right: 5em;
+    }
+  }
+
+  &.header-fixed {
+    // override inline styles
+    cursor: not-allowed !important;
+    > *:not(.item-checkbox) {
+      opacity: 0.4;
+    }
+  }
+
+  .item-checkbox {
+    margin-bottom: -3px;
+    margin-right: 1.2em;
+  }
+
+  .btn-toolbar {
+    float: none;
+    position: absolute;
+    right: 0;
+    top: 1.5em;
+  }
+  
+  .btn-menu-toggle {
+    @include vertical-align-middle();
+    right: $padding-small-horizontal + 1px;
+    padding: $collapsible-list-item-btn-toggle-padding*0.75 $collapsible-list-item-btn-toggle-padding;
+  }
+
+  .status-toolbar {
+    @include vertical-align-middle();
+    right:
+      2*$collapsible-list-item-btn-toggle-padding +
+        $collapsible-list-item-padding + 12px;
+  }
+}

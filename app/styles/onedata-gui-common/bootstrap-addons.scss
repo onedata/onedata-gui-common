@@ -1,0 +1,247 @@
+$input-bg-light: $color-one-white;
+$icon-btn-active-color: $color-one-red;
+
+@mixin btn-toolbar-float-right() {
+  .btn-toolbar {
+    text-align: right;
+    float: right;
+    margin-left: 0;
+    .btn {
+      float: none;
+      margin-left: 1.8em;
+      &:first-child {
+        margin-left: 0;
+      }
+      &.icon-btn {
+        margin-left: 1em;
+      }
+    }
+  }
+}
+
+@mixin icon-toggle-float-right() {
+  position: absolute;
+  right: $padding-base-horizontal;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'oneicons' !important;
+  font-size: 1.7em;
+  font-weight: bold;
+}
+
+.modal-content {
+  .btn-toolbar {
+    margin-top: $padding-large-horizontal;
+    text-align: center;
+    button {
+      margin-top: $padding-small-vertical;
+      float: none;
+    }
+  }
+}
+
+form {
+  .form-message {
+    padding-top: $padding-small-vertical;
+    text-align: right;
+    font-size: $font-size-small;
+  }
+  .has-error {
+    .form-message {
+      color: $state-danger-text;
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    .form-control-feedback {
+      // 5px from hard-coded value of bootstrap label bottom margin
+      margin-top: $line-height-computed + 5px;
+    }
+  }
+  .has-success .form-message {
+    color: $state-success-text;
+  }
+  .has-error.disabled,
+  .has-success.disabled {
+    .form-message,
+    .form-control-feedback {
+      display: none;
+    }
+  }
+}
+
+.form-group.group-with-tip {
+  @media (min-width: $screen-sm-min) {
+    .toggle-form-row {
+      .control-label .one-label-tip {
+        height: $line-height-computed;
+        line-height: $line-height-computed;
+      }
+    }
+    .control-label {
+      position: initial;
+      .one-label-tip {
+        position: absolute;
+        top: 0px;
+        height: $input-height-base;
+        line-height: $input-height-base;
+        right: -$padding-small-horizontal;
+        transform: translateX(100%);
+      }
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    .control-label {
+      .one-label-tip {
+        font-size: 90%;
+      }
+    }
+  }
+}
+
+.form-control-static {
+  min-height: 1em;
+}
+
+.form-group-light {
+  .input-group {
+    .form-control {
+      background-color: $input-bg-light;
+      border-color: $main-border-color;
+      @include box-shadow(none);
+    }
+    // TODO disabled?
+    .input-group-addon {
+      background-color: $input-bg-light;
+      .one-icon {
+        color: $main-border-color;
+      } // should be same as input box-shadow!
+      @include box-shadow(none);
+    }
+  }
+}
+
+.input-group.with-icon-addon {
+  position: relative;
+  .input-group-addon {
+    position: relative;
+    // focus on input changes its z-index from 1 to 3
+    z-index: 4;
+    height: $input-height-base;
+    min-width: $input-height-base;
+    border: 0;
+    background-color: transparent;
+    .one-icon {
+      font-size: 32px;
+      @include absolute-align-middle-center;
+    }
+  }
+  input {
+    $border-radius: $input-border-radius;
+    float: none;
+    position: absolute;
+    z-index: 1;
+    &:last-child {
+      left: 0;
+      padding-left: $input-height-base;
+      // duplicated inside last/first-child to avoid using !important
+      border-radius: $border-radius;
+    }
+    &:first-child {
+      right: 0;
+      padding-right: $input-height-base;
+      border-radius: $border-radius;
+    }
+  }
+}
+
+.form-group-sm .input-group.with-icon-addon {
+  .input-group-addon {
+    height: $input-height-small;
+    min-width: $input-height-small;
+    .one-icon {
+      font-size: 22px;
+      font-weight: bold;
+    }
+  }
+  input {
+    $border-radius: $input-border-radius-small;
+    &:last-child {
+      padding-left: $input-height-small;
+      // duplicated inside last/first-child to avoid using !important
+      border-radius: $border-radius;
+    }
+    &:first-child {
+      padding-right: $input-height-small;
+      border-radius: $border-radius;
+    }
+  }
+}
+
+.form-static .form-group {
+  margin-bottom: 0;
+}
+
+.icon-btn {
+  border: 0;
+  background-color: transparent;
+  height: 1em;
+  position: relative;
+  padding: 0;
+  color: $btn-default-bg;
+  &:hover,
+  &:active,
+  &:hover:active,
+  &:focus {
+    color: $btn-default-bg;
+    background-color: transparent;
+    border: 0;
+  }
+  .one-icon {
+    position: relative;
+    top: 0.1em;
+  }
+  &.btn-primary {
+    color: $btn-primary-bg;
+    background-color: transparent;
+    border: 0;
+    &:hover,
+    &:active,
+    &:hover:active,
+    &:focus {
+      color: $btn-primary-bg;
+    }
+  }
+  &.active,
+  &:active {
+    color: $icon-btn-active-color;
+  }
+}
+
+// TODO use bootstrap variables
+.row-spaced {
+  [class*="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
+    
+    &:first-of-type {
+      padding-left: 0;
+    }
+    &:last-of-type {
+      padding-right: 0;
+    }
+  }
+}
+
+.text-xs-center {
+  @media (max-width: $screen-xs-max) {
+    text-align: center;
+  }
+}
+
+.btn-group-addon {
+  display: inline-block;
+  margin: $padding-base-vertical $padding-base-horizontal;
+  &.btn-group-addon-sm {
+    margin: $padding-small-vertical $padding-small-horizontal;
+  }
+}

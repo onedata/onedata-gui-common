@@ -1,0 +1,33 @@
+.one-collapsible-toolbar {
+  &.minimized {
+    .collapsible-toolbar-toggle {
+      .icon-dot {
+        background-color: $main-text-color;
+        height: 0.4em;
+        width: 0.4em;
+        margin-bottom: 0.25em;
+        border-radius: 100%;
+      }
+    }
+  }
+  .collapsible-toolbar-buttons {
+    white-space: nowrap;
+  }
+}
+
+.btn-menu-toggle {
+  border: 1px solid transparent;
+  
+  &:hover {
+    background-color: $color-sidebar-item-bg;
+    border: 1px solid $color-one-list-item-separator;
+    border-radius: $border-radius-small;
+  }
+}
+
+.one-collapsible-toolbar-popover {
+  width: $mobile-menu-popover-width;
+  .dropdown-menu {
+    font-size: $font-size-base;
+  }
+}

@@ -1,0 +1,11 @@
+.one-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.one-list.one-list-level-2 .one-list-item {
+  .item-header {
+    padding-left: 50px;
+  }
+}

@@ -1,7 +1,6 @@
 /* eslint-env node */
 module.exports = {
-  scenarios: [
-    {
+  scenarios: [{
       name: 'ember-lts-2.8',
       bower: {
         dependencies: {

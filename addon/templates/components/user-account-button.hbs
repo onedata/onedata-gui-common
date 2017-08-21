@@ -1,0 +1,66 @@
+{{!-- TODO i18n --}}
+
+{{#if mobileMode}}
+  {{#one-collapsible-list as |list|}}
+    {{#list.item class="user-account-button" closeEventName='side-menu:close' as |listItem|}}
+      {{#listItem.header class=(concat menuItemClasses (if isActive " active" ""))}}
+        {{one-icon
+          class="user-profile-icon item-icon"
+          icon="user-profile"
+        }}
+        <span class="one-label">{{username}}</span>
+      {{/listItem.header}}
+      {{#listItem.content}}
+        {{#one-collapsible-list as |list|}}
+          {{#list.item isCollapsible=false as |listItem|}}
+            {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
+              Manage account
+            {{/listItem.header}}
+          {{/list.item}}
+          {{#list.item isCollapsible=false as |listItem|}}
+            {{#listItem.header click=(action "logout") class=(concat menuItemClasses " logout-action")}}
+              Logout
+            {{/listItem.header}}
+          {{/list.item}}
+        {{/one-collapsible-list}}
+      {{/listItem.content}}
+    {{/list.item}}
+  {{/one-collapsible-list}}
+{{else}}
+  <div class={{concat menuItemClasses (if isActive " active" "")}} {{action 'toggleMenu' bubbles=false}}>
+    <div class="item-header truncate">
+      {{one-icon
+        class="user-profile-icon item-icon"
+        icon="user-profile"
+      }}
+      <span class="one-label">{{username}}</span>
+      {{one-icon
+        class="user-toggle-icon"
+        icon=(if menuOpen "arrow-down" "arrow-up")
+      }}
+    </div>
+  </div>
+
+  {{#one-webui-popover
+    class="user-account-menu"
+    placement="top-left"
+    open=menuOpen
+    padding=false
+    triggerSelector=menuTriggerSelector
+    popoverStyle="user-account"
+    as |popover|
+  }}
+    <ul class="dropdown-menu">
+      <li>
+        <a class="manage-account-action clickable" {{action "manageAccount"}}>
+          Manage account
+        </a>
+      </li>
+      <li >
+        <a class="clickable" {{action "logout"}}>
+          Logout
+        </a>
+      </li>
+    </ul>
+  {{/one-webui-popover}}
+{{/if}}
