@@ -50,7 +50,7 @@ export default BsTooltip.extend({
       'arrowPlacement'
     );
     arrowElement = $(arrowElement);
-    
+
     let offset = this._getArrowRelativeOffset();
     switch (arrowPlacement) {
       case 'left':
