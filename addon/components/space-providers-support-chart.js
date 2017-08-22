@@ -21,6 +21,7 @@ const {
   computed,
   get,
   getProperties,
+  isArray,
 } = Ember;
 
 const INACTIVE_PROVIDER_OPACITY = 0.3;
@@ -91,13 +92,13 @@ export default Ember.Component.extend({
     } = getProperties(space, 'totalSize', 'supportSizes', 'providers');
 
     if (typeof totalSize !== 'number' || totalSize < 0 ||
-      !supportSizes || !Array.isArray(providers)) {
+      !supportSizes || !isArray(providers)) {
       return false;
     }
 
     let realTotalSize = 0;
     let errorOccurred = false;
-    _.each(_.keys(supportSizes), (providerId) => {
+    _.each(Object.keys(supportSizes), (providerId) => {
       let size = get(supportSizes, providerId);
       let provider = _.find(providers, { id: providerId });
       if (typeof size !== 'number' || size <= 0 || !provider) {
@@ -145,7 +146,7 @@ export default Ember.Component.extend({
     if (!supportSizes) {
       return [];
     } else if (!sort) {
-      return _.keys(supportSizes);
+      return Object.keys(supportSizes);
     } else {
       return _.chain(supportSizes)
         .map((support, id) => ({ support, id }))
@@ -237,7 +238,6 @@ export default Ember.Component.extend({
           hoverTransitionTime,
           _stylesRecomputeTimeoutId,
         } = this.getProperties(
-          'space',
           '_sortedProvidersIds',
           'providersColors',
           'hoveredProviderId',
@@ -249,9 +249,8 @@ export default Ember.Component.extend({
           return _.map(_sortedProvidersIds, (providerId) => {
             // isActive = is nothing or this provider hovered
             let isActive = hoveredProviderId === providerId;
-            let isLabelVisible = isActive ||
-              (!hoveredProviderId && this._getProviderPercentSize(providerId) >
-                0.15);
+            let isLabelVisible = isActive || (!hoveredProviderId && 
+              this._getProviderPercentSize(providerId) > 0.15);
             // actual values of label opacity and slice stroke-opacity are
             // remembered to save animation state through chart rerender
             return {
@@ -315,8 +314,10 @@ export default Ember.Component.extend({
       let parentGroup = $(event.target).parents('.ct-series');
       if (parentGroup.length) {
         // extract providerId from group class name `slice-provider-[providerId]`
-        let sliceClass = _.find(parentGroup.attr('class').split(' '),
-          (c) => c.startsWith('slice-provider-'));
+        let sliceClass = _.find(
+          parentGroup.attr('class').split(' '),
+          (c) => c.startsWith('slice-provider-')
+        );
         let providerId = sliceClass.substr('slice-provider-'.length);
         this.set('hoveredProviderId', providerId);
       } else {
