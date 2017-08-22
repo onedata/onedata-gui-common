@@ -6,6 +6,10 @@ const Router = Ember.Router.extend({
   rootURL: config.rootURL
 });
 
-Router.map(function () {});
+Router.map(function () {
+  this.route('index-dummy', { path: '/' }, function () {
+    this.route('component', { path: '/component/:componentName' });
+  })
+});
 
 export default Router;
