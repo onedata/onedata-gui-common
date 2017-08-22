@@ -29,7 +29,7 @@ describe('Integration | Component | providers list', function () {
 
   it('renders list of providers', function () {
     this.render(hbs `{{providers-list providers=providers}}`);
-    
+
     let list = this.$('.one-collapsible-list');
     expect(list.children()).to.have.length(4);
     let firstItem = $(list.children()[1]);
@@ -40,7 +40,7 @@ describe('Integration | Component | providers list', function () {
   it('sets icon colors according to provider object setting', function () {
     this.render(hbs `{{providers-list providers=providers}}`);
 
-    let firstItemIcon = 
+    let firstItemIcon =
       this.$('.one-collapsible-list-item:nth-child(2) .one-icon');
     expect(firstItemIcon.attr('style'))
       .to.contain(this.get('providers')[0].color);
@@ -73,7 +73,9 @@ describe('Integration | Component | providers list', function () {
     `);
     wait().then(() => {
       expect(providersFilterSpy).to.be.calledOnce;
-      expect(providersFilterSpy).to.be.calledWith(this.get('providers'));
+      expect(providersFilterSpy).to.be.calledWith(
+        sinon.match.array.deepEquals(this.get('providers'))
+      );
       done();
     });
   });
@@ -92,7 +94,7 @@ describe('Integration | Component | providers list', function () {
         fillIn('.search-bar', '1').then(() => {
           expect(providersFilterSpy).to.be.calledTwice;
           expect(providersFilterSpy).to.be.calledWith(
-            [this.get('providers')[0]]
+            sinon.match.array.deepEquals([this.get('providers')[0]])
           );
           done();
         });

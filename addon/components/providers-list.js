@@ -17,6 +17,7 @@ import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/providers-list';
 
 const {
+  computed,
   inject: {
     service,
   }
@@ -32,10 +33,12 @@ export default Ember.Component.extend({
    * Title used in list header.
    * @type {string}
    */
-  title: 'Providers',
+  title: computed(function () {
+    return this.get('i18n').t('components.providersList.providers');
+  }),
 
   /**
-   * Array of providers. ProviderDetails objects may include `color` property.
+   * Array of providers. ProviderDetails objects may include ``color`` property.
    * To inject.
    * @type {Array.Onezone.ProviderDetails}
    */

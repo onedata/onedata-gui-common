@@ -52,36 +52,38 @@ export default Ember.Component.extend({
    * toggle event handler
    * @type {string}
    */
-  _clickDisabledElementsSelector: 
+  _clickDisabledElementsSelector:
     '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
-  
+
   _clickHandlerObserver: observer('_isItemFixed', 'isCollapsible', function () {
     let {
       _isItemFixed,
       isCollapsible,
-      _clickDisabledElementsSelector: selector
     } = this.getProperties(
       '_isItemFixed',
-      'isCollapsible',
-      '_clickDisabledElementsSelector'
+      'isCollapsible'
     );
-    if (!_isItemFixed && isCollapsible) {
-      this.set('click', (event) => {
-        if ((event.target.matches && event.target.matches(selector)) ||
-          (event.target.msMatchesSelector && event.target.msMatchesSelector(selector))) {
-          event.stopPropagation();
-        } else {
-          invoke(this, 'toggle');
-        }
-      });
-    } else {
-      this.set('click', undefined);
-    }
+    this.set('click', !_isItemFixed && isCollapsible ? this._clickHandler :
+      undefined);
   }),
-  
+
   init() {
     this._super(...arguments);
     this._clickHandlerObserver();
+  },
+
+  /**
+   * Click handler for click() component method
+   * @param {Event} event 
+   */
+  _clickHandler(event) {
+    let selector = this.get('_clickDisabledElementsSelector');
+    if ((event.target.matches && event.target.matches(selector)) ||
+      (event.target.msMatchesSelector && event.target.msMatchesSelector(selector))) {
+      event.stopPropagation();
+    } else {
+      invoke(this, 'toggle');
+    }
   },
 
   actions: {
