@@ -112,16 +112,6 @@ export default Ember.Component.extend({
     }
   ),
 
-  _filtrationChangedCallback: computed(function () {
-    return () => {
-      let {
-        filtrationChanged,
-        _availableItemValues
-      } = this.getProperties('filtrationChanged', '_availableItemValues');
-      filtrationChanged(_availableItemValues.toArray());
-    };
-  }),
-
   init() {
     this._super(...arguments);
 
@@ -129,6 +119,17 @@ export default Ember.Component.extend({
       _selectedItemValues: A(),
       _availableItemValues: A(),
     });
+  },
+
+  /**
+   * Runs passed ``filtrationChanged`` action
+   */
+  _filtrationChanged() {
+    let {
+      filtrationChanged,
+      _availableItemValues
+    } = this.getProperties('filtrationChanged', '_availableItemValues');
+    filtrationChanged(_availableItemValues.toArray());
   },
 
   actions: {
@@ -171,7 +172,7 @@ export default Ember.Component.extend({
             _availableItemValues.removeObject(itemValue);
             invoke(this, 'toggleItemSelection', itemValue, false);
           }
-          debounce(this, this.get('_filtrationChangedCallback'), 1);
+          debounce(this, '_filtrationChanged', 1);
         }
       });
     },
