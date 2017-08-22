@@ -1,5 +1,9 @@
 /**
- * Unpack string with error from onepanel backend rejected request 
+ * Unpack string with error from backend rejected request
+ *
+ * Handles:
+ * - onepanel server response errors
+ * - plain object with `message` property
  *
  * @module utils/get-error-description
  * @author Jakub Liput
