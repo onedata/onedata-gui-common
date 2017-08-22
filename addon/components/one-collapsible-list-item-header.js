@@ -63,8 +63,10 @@ export default Ember.Component.extend({
       '_isItemFixed',
       'isCollapsible'
     );
-    this.set('click', !_isItemFixed && isCollapsible ? this._clickHandler :
-      undefined);
+    this.set(
+      'click', 
+      !_isItemFixed && isCollapsible ? this._clickHandler : undefined
+    );
   }),
 
   init() {
