@@ -2,7 +2,10 @@
   {{one-icon icon=_bulletIcon}}
 </div>
 {{yield (hash
-  content=(component 'one-tree-item-content' _showAction=(action "show" key))
+  content=(component 'one-tree-item-content' 
+    _showAction=(action "show" key)
+    _hasSubtree=_hasSubtree
+  )
   subtree=(component 'one-tree' 
     key=key
     collapseRecursively=collapseRecursively
@@ -13,4 +16,5 @@
     _areParentsExpanded=_areParentsExpanded
     _activeSubtreeKeys=_activeSubtreeKeys
     _hasTreeNotify=(action "hasTreeNotify"))
+  hasSubtree=_hasSubtree
 )}}

@@ -14,6 +14,11 @@ import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/one-tree-item-content';
 import { invokeAction } from 'ember-invoke-action';
 
+const {
+  observer,
+  on,
+} = Ember;
+
 export default Ember.Component.extend({
   layout,
   classNames: ['one-tree-item-content'],
@@ -24,7 +29,20 @@ export default Ember.Component.extend({
    */
   _showAction: null,
 
-  click() {
+  /**
+   * If true, item has a subtree
+   * @type {boolean}
+   */
+  _hasSubtree: false,
+
+  /**
+   * Toggles click handler.
+   */
+  _hasSubtreeObserver: on('init', observer('_hasSubtree', function () {
+    this.set('click', this.get('_hasSubtree') ? this._click : null);
+  })),
+
+  _click() {
     invokeAction(this, '_showAction');
-  }
+  },
 });

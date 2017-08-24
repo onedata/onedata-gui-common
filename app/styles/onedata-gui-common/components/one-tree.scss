@@ -30,6 +30,7 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
     > li {
       position: relative;
       padding-left: $one-tree-indent;
+      padding-bottom: $padding-base-vertical;
       background-color: inherit;
 
       &:before {
