@@ -16,6 +16,7 @@ import layout from 'onedata-gui-common/templates/components/one-collapsible-list
 
 export default OneCollapsibleListItemHeader.extend({
   layout,
+  tagName: 'li',
   classNames: ['one-collapsible-list-header'],
   classNameBindings: ['_isListCollapsed:collapsed:opened'],
 

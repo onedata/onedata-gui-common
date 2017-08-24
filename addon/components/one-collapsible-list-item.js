@@ -152,10 +152,12 @@ export default Ember.Component.extend({
         'selectionValue'
       );
       // Add/remove item value from list after filter
-      if (!_matchesSearchQuery && !_isSelected) {
-        invokeAction(this, '_notifyValue', selectionValue, false);
-      } else if (_matchesSearchQuery) {
-        invokeAction(this, '_notifyValue', selectionValue, true);
+      if (selectionValue !== null) {
+        if (!_matchesSearchQuery && !_isSelected) {
+          invokeAction(this, '_notifyValue', selectionValue, false);
+        } else if (_matchesSearchQuery) {
+          invokeAction(this, '_notifyValue', selectionValue, true);
+        }
       }
     }
   ),
