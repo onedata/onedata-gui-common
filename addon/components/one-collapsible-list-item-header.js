@@ -1,14 +1,10 @@
-import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/one-collapsible-list-item-header';
-import { invoke, invokeAction } from 'ember-invoke-action';
-
 /**
  * Item header class of the collapsible list. For example of use case see 
  * components/one-collapsible-list.js.
  * 
  * If toolbarWhenOpened == true then .btn-toolbar elements will be 
  * visible only if the list item is expanded.
- * isCollapsible == false hides the arrow icon on the right.
+ * isCollapsible == false disables collapse functionality.
  * 
  * Yields:
  * - toggleAction - action, that toggles list item visibility
@@ -18,6 +14,15 @@ import { invoke, invokeAction } from 'ember-invoke-action';
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
+import Ember from 'ember';
+import layout from 'onedata-gui-common/templates/components/one-collapsible-list-item-header';
+import { invoke, invokeAction } from 'ember-invoke-action';
+
+const {
+  observer,
+} = Ember;
+
 export default Ember.Component.extend({
   layout,
   tagName: 'div',
@@ -37,7 +42,7 @@ export default Ember.Component.extend({
   disableToggleIcon: false,
 
   /**
-   * If true, arrow icon will be visible
+   * If true, item can be collapsed
    * @type {boolean}
    */
   isCollapsible: true,
@@ -47,10 +52,34 @@ export default Ember.Component.extend({
    * toggle event handler
    * @type {string}
    */
-  _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
+  _clickDisabledElementsSelector:
+    '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
 
-  click(event) {
-    const selector = this.get('_clickDisabledElementsSelector');
+  _clickHandlerObserver: observer('_isItemFixed', 'isCollapsible', function () {
+    let {
+      _isItemFixed,
+      isCollapsible,
+    } = this.getProperties(
+      '_isItemFixed',
+      'isCollapsible'
+    );
+    this.set(
+      'click', 
+      !_isItemFixed && isCollapsible ? this._clickHandler : undefined
+    );
+  }),
+
+  init() {
+    this._super(...arguments);
+    this._clickHandlerObserver();
+  },
+
+  /**
+   * Click handler for click() component method
+   * @param {Event} event 
+   */
+  _clickHandler(event) {
+    let selector = this.get('_clickDisabledElementsSelector');
     if ((event.target.matches && event.target.matches(selector)) ||
       (event.target.msMatchesSelector && event.target.msMatchesSelector(selector))) {
       event.stopPropagation();
@@ -65,7 +94,7 @@ export default Ember.Component.extend({
      * @param {boolean} opened should item be opened or collapsed?
      */
     toggle(opened) {
-      if (!this.get('_isItemFixed')) {
+      if (!this.get('_isItemFixed') && this.get('isCollapsible')) {
         invokeAction(this, 'toggle', opened);
       }
     }

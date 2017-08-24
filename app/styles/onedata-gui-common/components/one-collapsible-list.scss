@@ -17,9 +17,10 @@
     .list-title {
       font-weight: bold;
       text-transform: uppercase;
-      &.align-to-icon {
-        margin-left: 6px;
-      }
+    }
+
+    &.align-to-icon .list-title {
+      margin-left: 6px;
     }
 
     &.collapsible {
@@ -47,9 +48,10 @@
       }
       .search-group {
         position: absolute;
-        top: 15px;
+        top: 50%;
         right: $padding-large-horizontal;
         width: $search-box-width;
+        transform: translateY(-50%);
       }
     }
 
