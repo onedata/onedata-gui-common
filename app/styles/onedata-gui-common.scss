@@ -59,6 +59,7 @@ $onedata-logo-margin-top: $content-col-padding;
 $onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $one-list-item-padding * 2 - $onedata-brand-info-height;
 
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
+$main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $collapse-transition: max-height .2s linear, padding .2s linear, opacity .2s linear;
 
@@ -113,3 +114,5 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-sidebar-toolbar-button';
 @import 'onedata-gui-common/components/one-atlas';
 @import 'onedata-gui-common/components/provider-place';
+@import 'onedata-gui-common/components/space-providers-support-chart';
+@import 'onedata-gui-common/components/providers-list';

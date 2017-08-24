@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { click } from 'ember-native-dom-helpers';
 
-describe('Integration | Component | status toolbar', function() {
+describe('Integration | Component | status toolbar', function () {
   setupComponentTest('status-toolbar', {
     integration: true
   });
