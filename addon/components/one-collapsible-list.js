@@ -41,6 +41,7 @@ const {
   computed,
   run: {
     next,
+    debounce,
   },
   A,
 } = Ember;
@@ -64,6 +65,12 @@ export default Ember.Component.extend({
    * @type {Function}
    */
   selectionChanged: null,
+
+  /**
+   * Filtered items change handler
+   * @type {Function}
+   */
+  filtrationChanged: () => {},
 
   /**
    * List of selected item values
@@ -114,6 +121,17 @@ export default Ember.Component.extend({
     });
   },
 
+  /**
+   * Runs passed ``filtrationChanged`` action
+   */
+  _filtrationChanged() {
+    let {
+      filtrationChanged,
+      _availableItemValues
+    } = this.getProperties('filtrationChanged', '_availableItemValues');
+    filtrationChanged(_availableItemValues.toArray());
+  },
+
   actions: {
     toggle(elementId) {
       if (this.get('accordionMode')) {
@@ -154,6 +172,7 @@ export default Ember.Component.extend({
             _availableItemValues.removeObject(itemValue);
             invoke(this, 'toggleItemSelection', itemValue, false);
           }
+          debounce(this, '_filtrationChanged', 1);
         }
       });
     },
