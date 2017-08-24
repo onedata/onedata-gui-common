@@ -12,6 +12,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 const {
   Route,
+  get,
 } = Ember;
 
 export default Route.extend(AuthenticatedRouteMixin, {
@@ -20,7 +21,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   afterModel(model) {
-    let firstItemId = model.get('mainMenuItems.firstObject').id;
+    let firstItemId = get(model, 'mainMenuItems')[0].id;
     this.controllerFor('onedata').send('mainMenuItemChanged', firstItemId);
   },
 });
