@@ -5,13 +5,13 @@
  *
  * An example:
  * ```
- * {{#promise-proxy-container proxy=someObjectPromiseProxy}}
- *   {{some-component model=someObjectPromiseProxy.content}} 
+ * {{#promise-proxy-container proxy=somePromiseObject}}
+ *   {{some-component model=somePromiseObject.content}} 
  * {{/promise-proxy-container}}
  * ```
  *
- * It will render loader (eg. spinner) if ``someObjectPromiseProxy`` is not settled.
- * It will render error message if ``someObjectPromiseProxy`` is rejected..
+ * It will render loader (eg. spinner) if ``somePromiseObject`` is not settled.
+ * It will render error message if ``somePromiseObject`` is rejected..
  * It will render ``some-component`` if promise has fulfilled.
  *
  * @module components/promise-proxy-container
@@ -32,7 +32,7 @@ export default Component.extend({
   tagName: '',
 
   /**
-   * @type {ObjectPromiseProxy}
+   * @type {PromiseObject}
    */
   proxy: null,
 });
