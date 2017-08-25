@@ -1,0 +1,22 @@
+<div class="row content-row header-row">
+  <h1>
+    Account management
+    <div class="btn-toolbar">
+      {{#bs-button
+        type=_changePasswordButtonType
+        class="btn-sm btn-change-password"
+        onClick=(action "toggleChangePassword")
+      }}
+        {{_changePasswordButtonLabel}}
+      {{/bs-button}}
+    </div>
+  </h1>
+</div>
+<div class="row content-row">
+  {{user-credentials-form
+    username=user.name
+    changingPassword=_changingPassword
+    submit=(action "submitChangePassword")
+    class=_changePasswordButtonClass
+  }}
+</div>
