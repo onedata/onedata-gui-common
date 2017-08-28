@@ -18,10 +18,11 @@ export default [
         field: {
           type: 'radio-group',
           options: [
-            { value: 'mb', label: 'MB' },
-            { value: 'gb', label: 'GB' },
-            { value: 'tb', label: 'TB' },
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
+            { value: '3', label: '3' },
           ],
+          defaultValue: '1',
         }
       },
       {
