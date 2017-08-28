@@ -2,7 +2,7 @@
   {{#item.content}}
     <label 
       for={{if _field._isField (concat "field-" _path)}} 
-      class="node-text {{if item.hasSubtree "clickable"}}">
+      class="node-text {{if item.hasSubtree "clickable"}} {{if _isFieldDisabled "disabled"}}">
       {{definition.text}}
     </label>
     {{#if _renderField}}
@@ -13,7 +13,8 @@
           value=(get values _path)
           inputChanged=(action inputValueChanged _path)
           focusedOut=(action inputFocusedOut _path)
-          inputId=(concat "field-" _path)}}
+          inputId=(concat "field-" _path)
+          disabled=_isFieldDisabled}}
         <div class="form-message">{{_field.message}}</div>
       {{/bsForm.group}}
     {{else if definition.allowSubtreeCheckboxSelect}}
@@ -25,7 +26,8 @@
             _path 
             (not _areNestedCheckboxesSelected)
           )
-          inputId=(concat "field-" _path)}}
+          inputId=(concat "field-" _path)
+          disabled=_isFieldDisabled}}
       {{/bsForm.group}}
     {{/if}}
   {{/item.content}}
@@ -40,6 +42,7 @@
           values=values
           fields=fields
           checkboxSelection=checkboxSelection
+          disabledFieldsPaths=disabledFieldsPaths
           inputValueChanged=inputValueChanged
           inputFocusedOut=inputFocusedOut
           selectNestedCheckboxes=selectNestedCheckboxes}}

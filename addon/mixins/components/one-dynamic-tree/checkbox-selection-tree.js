@@ -33,7 +33,8 @@ export default Ember.Mixin.create({
   _buildCheckboxSelectionTree() {
     let _fieldsTree = this.get('_fieldsTree');
     let buildNodeCheckboxesTree = (node) => {
-      if (node.get('_isField') && node.get('type') !== 'checkbox') {
+      if (node.get('_isField') && (node.get('type') !== 'checkbox' ||
+          this.isPathDisabled(node.get('name')))) {
         // field, but not checkbox
         return undefined;
       }
@@ -44,8 +45,7 @@ export default Ember.Mixin.create({
       if (node.get('_isField')) {
         // checkbox field
         return checkboxNode;
-      }
-      else {
+      } else {
         // possible parent of checkbox fields
         let checkboxSubnodes = Object.keys(node).reduce((subnodes, subnodeName) => {
           let _checkboxSubnodes = buildNodeCheckboxesTree(node.get(subnodeName));
@@ -112,7 +112,8 @@ export default Ember.Mixin.create({
 
       let changeCheckboxes = (node) => {
         if (node.get('_isField')) {
-          if (node.get('type') === 'checkbox') {
+          if (node.get('type') === 'checkbox' &&
+            !this.isPathDisabled(node.get('name'))) {
             let name = node.get('name');
             values.set(name, value);
             this._markFieldAsModified(name);

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import layout from '../../templates/components/one-dynamic-tree/node';
+import DisabledPaths from 'onedata-gui-common/mixins/components/one-dynamic-tree/disabled-paths';
 
 const {
   computed,
@@ -12,7 +13,7 @@ const {
 
 const CHECKBOX_SELECTION_PATH_REPLACE_REGEX = new RegExp('\\.', 'g');
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(DisabledPaths, {
   layout,
   tagName: '',
 
@@ -129,6 +130,14 @@ export default Ember.Component.extend({
       path += '.';
     }
     return path + definition.name;
+  }),
+
+  /**
+   * True if node field should be disabled
+   * @type {computed.boolean}
+   */
+  _isFieldDisabled: computed('_path', 'disabledFieldsPaths.[]', function () {
+    return this.isPathDisabled(this.get('_path'));
   }),
 
   /**

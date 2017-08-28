@@ -47,6 +47,9 @@
 
         .node-text {
           width: 100px;
+          &.disabled {
+            opacity: $disabled-opacity;
+          }
         }
         .form-group {
           margin-bottom: 0;

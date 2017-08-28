@@ -1,2 +1,5 @@
 <p>Is valid: {{_isValid}}</p>
-{{demo-components/one-dynamic-tree/tree-demo valuesChanged=(action "valuesChanged")}}
+<button {{action "toggleDisabledState"}}>Toggle disabled fields</button>
+{{demo-components/one-dynamic-tree/tree-demo 
+  disabledFieldsPaths=disabledFieldsPaths
+  valuesChanged=(action "valuesChanged")}}

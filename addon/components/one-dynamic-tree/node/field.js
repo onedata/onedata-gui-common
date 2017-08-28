@@ -24,6 +24,13 @@ export default Ember.Component.extend({
   value: null,
 
   /**
+   * If true, field is disabled.
+   * To inject.
+   * @type {boolean}
+   */
+  disabled: false,
+
+  /**
    * Input changed action.
    * @type {Function}
    */

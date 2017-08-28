@@ -4,7 +4,7 @@
     inputId=inputId
     checked=value
     update=(action "inputChanged")
-    disabled=disabled
+    isReadOnly=disabled
     onFocusOut=(action "focusedOut")
   }}
 {{else if (eq field.type "radio-group")}}
@@ -14,6 +14,7 @@
     value=value
     fieldName=field.name
     options=field.options
+    isReadOnly=disabled
     update=(action "inputChanged")
     onFocusOut=(action "focusedOut")
   }}

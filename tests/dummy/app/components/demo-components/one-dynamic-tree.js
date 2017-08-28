@@ -4,11 +4,19 @@ const {
   run: {
     next,
   },
+  A,
 } = Ember;
 
 export default Ember.Component.extend({
   _isValid: null,
   checked: false,
+
+  disabledFieldsPaths: null,
+
+  init() {
+    this._super(...arguments);
+    this.set('disabledFieldsPaths', A());
+  },
 
   actions: {
     valuesChanged(values, isValid) {
@@ -16,5 +24,13 @@ export default Ember.Component.extend({
       console.log(values)
       next(() => this.set('_isValid', isValid));
     },
+    toggleDisabledState() {
+      let disabledFieldsPaths = this.get('disabledFieldsPaths');
+      if (disabledFieldsPaths.get('length') > 0) {
+        disabledFieldsPaths.clear();
+      } else {
+        disabledFieldsPaths.pushObjects(['node3', 'node2.node22.node221']);
+      }
+    }
   }
 });
