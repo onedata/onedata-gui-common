@@ -13,7 +13,7 @@
           value=(get values _path)
           inputChanged=(action inputValueChanged _path)
           focusedOut=(action inputFocusedOut _path)
-          inputId=(concat "field-" _path)
+          inputId=(concat "field-" (dot-to-dash _path))
           disabled=_isFieldDisabled}}
         <div class="form-message">{{_field.message}}</div>
       {{/bsForm.group}}
@@ -23,7 +23,7 @@
           field=_selectCheckboxesField
           value=_areNestedCheckboxesSelected
           inputChanged=(action selectNestedCheckboxes 
-            _path 
+            (dot-to-dash _path)
             (not _areNestedCheckboxesSelected)
           )
           inputId=(concat "field-" _path)

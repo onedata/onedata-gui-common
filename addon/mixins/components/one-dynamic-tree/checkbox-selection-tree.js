@@ -78,6 +78,9 @@ export default Ember.Mixin.create({
     let values = this.get('values');
     if (!checkboxSelectionTree) {
       checkboxSelectionTree = this.get('_checkboxSelectionTree');
+      if (!checkboxSelectionTree) {
+        return;
+      }
     }
     let fillNode = (node, path) => {
       let value;

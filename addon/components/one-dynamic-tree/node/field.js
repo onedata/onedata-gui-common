@@ -9,6 +9,7 @@
  */
 
 import Ember from 'ember';
+import { dotToDash } from 'onedata-gui-common/helpers/dot-to-dash';
 import layout from '../../../templates/components/one-dynamic-tree/node/field';
 
 const {
@@ -59,7 +60,7 @@ export default Ember.Component.extend({
   inputClass: computed('field', function () {
     let field = this.get('field');
     
-    let classes = `field-${field.name}`;
+    let classes = `field-${dotToDash([field.name])}`;
     if (field.type !== 'radio-group') {
       classes += ' form-control';
     }

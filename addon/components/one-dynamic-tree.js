@@ -42,13 +42,13 @@
  * {{one-dynamic-tree definition=definition valuesChanged=(action "valuesChanged")}}
  * ```
  * 
- * In this case validator should point to: `values.node1.node.11`.
+ * In this case validator should point to: `values.node1.node11`.
  * Value of `node11` field is available through `valuesChanged` injected 
  * action as its first argument under the path `node1.node11`.
  * 
  * The component allows to temporarily disable some fields. It can be set 
  * through `disabledFieldsPaths` property. It is an Ember array with paths 
- * (strings) to fields, which should be disabled. It can an exact path or 
+ * (strings) to fields, which should be disabled. It can be an exact path or 
  * a path to a parent node. In the second case, all fields nested in that 
  * node will be disabled.
  * Disabled state means that:
