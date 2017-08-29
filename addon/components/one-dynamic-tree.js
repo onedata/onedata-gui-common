@@ -273,6 +273,24 @@ export default Ember.Component.extend(
       recalculateNodeErrors(_fieldsTree);
     },
 
+    /**
+     * Resets all disabled fields.
+     */
+    _resetDisabledFields() {
+      let resetNode = (node) => {
+        if (node.get('_isField')) {
+          if (this.isPathDisabled(node.get('name'))) {
+            this._resetField(node);
+          }
+        } else {
+          Object.keys(node).forEach((subnodeName) => {
+            resetNode(node.get(subnodeName));
+          });
+        }
+      }
+      resetNode(this.get('_fieldsTree'));
+    },
+
     actions: {
       /**
        * Changes a value in the values tree.
