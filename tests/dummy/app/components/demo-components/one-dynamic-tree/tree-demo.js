@@ -1,3 +1,10 @@
+/**
+ * @module components/demo-components/one-dynamic-tree/tree-demo
+ * @author Michal Borzecki
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import OneDynamicTree from 'dummy/components/one-dynamic-tree';
 import { buildValidations } from 'ember-cp-validations';
 import createFieldValidator from 'dummy/utils/create-field-validator';

@@ -1,3 +1,10 @@
+/**
+ * @module components/demo-components/one-dynamic-tree
+ * @author Michal Borzecki
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Ember from 'ember';
 
 const {
@@ -20,6 +27,7 @@ export default Ember.Component.extend({
 
   actions: {
     valuesChanged(values, isValid) {
+      // logs are for component demo purposes
       console.log('Tree values:');
       console.log(values)
       next(() => this.set('_isValid', isValid));

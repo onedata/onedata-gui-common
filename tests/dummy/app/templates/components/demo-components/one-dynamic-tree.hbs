@@ -1,5 +1,6 @@
-<p>Is valid: {{_isValid}}</p>
-<button {{action "toggleDisabledState"}}>Toggle disabled fields</button>
+<p>Is valid: {{_isValid}}<br>
+Actual tree values are listed in the browser console.</p>
+<p><button {{action "toggleDisabledState"}}>Toggle disabled fields</button></p>
 {{demo-components/one-dynamic-tree/tree-demo 
   disabledFieldsPaths=disabledFieldsPaths
   valuesChanged=(action "valuesChanged")}}

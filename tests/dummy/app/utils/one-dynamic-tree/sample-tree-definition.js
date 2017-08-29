@@ -1,3 +1,10 @@
+/**
+ * @module utils/one-dynamic-tree/sample-tree-definition
+ * @author Michal Borzecki
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 export default [
   {
     name: 'node1',
