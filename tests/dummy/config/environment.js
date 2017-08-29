@@ -46,7 +46,11 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
+<<<<<<< HEAD
     // empty
+=======
+    // empty 
+>>>>>>> VFS-3525 code-clean
   }
 
   return ENV;

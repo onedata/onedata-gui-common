@@ -15,8 +15,7 @@ export default Ember.Component.extend({
     totalSize: 0,
     // will be generated in init()
     supportSizes: {},
-    providers: [
-      {
+    providers: [{
         id: '1',
         name: 'provider1 very very very very very very very long name',
       },

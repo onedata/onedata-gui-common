@@ -5,12 +5,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-export default [
-  {
+export default [{
     name: 'node1',
     text: 'Node 1',
-    subtree: [
-      {
+    subtree: [{
         name: 'node11',
         text: 'Node 1.1',
         field: {
@@ -41,8 +39,7 @@ export default [
   {
     name: 'node2',
     text: 'Node 2',
-    subtree: [
-      {
+    subtree: [{
         name: 'node21',
         text: 'Node 2.1',
         field: {
@@ -55,15 +52,13 @@ export default [
       {
         name: 'node22',
         text: 'Node 2.2',
-        subtree: [
-          {
-            name: 'node221',
-            text: 'Node 2.2.1',
-            field: {
-              type: 'text',
-            },
-          }
-        ]
+        subtree: [{
+          name: 'node221',
+          text: 'Node 2.2.1',
+          field: {
+            type: 'text',
+          },
+        }]
       },
       {
         name: 'node23',
@@ -75,8 +70,7 @@ export default [
     name: 'node3',
     text: 'Node 3',
     allowSubtreeCheckboxSelect: true,
-    subtree: [
-      {
+    subtree: [{
         name: 'node31',
         text: 'Node 3.1',
         field: {
@@ -88,17 +82,15 @@ export default [
       {
         name: 'node32',
         text: 'Node 3.2',
-        subtree: [
-          {
-            name: 'node321',
-            text: 'Node 3.2.1',
-            field: {
-              type: 'checkbox',
-              defaultValue: false,
-              optional: true
-            },
-          }
-        ]
+        subtree: [{
+          name: 'node321',
+          text: 'Node 3.2.1',
+          field: {
+            type: 'checkbox',
+            defaultValue: false,
+            optional: true
+          },
+        }]
       },
     ],
   },

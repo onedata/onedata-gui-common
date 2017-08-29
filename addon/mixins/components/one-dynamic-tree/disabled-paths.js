@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
       if (path === disabledPath) {
         return true;
       } else {
-        let isDisabledPathPrefix = 
+        let isDisabledPathPrefix =
           path.startsWith(disabledPath) && path[disabledPath.length] === '.';
         return isDisabled || isDisabledPathPrefix;
       }

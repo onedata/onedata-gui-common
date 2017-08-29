@@ -1,6 +1,6 @@
 /**
- * A component used internally by the one-dynamic-tree component. For example of
- * tree usage, see one-dynamic-tree documentation.
+ * A component represents tree node, used internally by the one-dynamic-tree 
+ * component. For example of tree usage, see one-dynamic-tree documentation.
  * 
  * @module components/one-dynamic-tree/node
  * @author Michal Borzecki
@@ -96,7 +96,7 @@ export default Ember.Component.extend(DisabledPaths, {
   _areNestedCheckboxesSelected: null,
 
   /**
-   * Select all checkboxes field definition.
+   * 'Select all checkboxes' field definition.
    * @type {Ember.Object}
    */
   _selectCheckboxesField: computed('_path', function () {
@@ -111,11 +111,7 @@ export default Ember.Component.extend(DisabledPaths, {
    * @type {Ember.Object}
    */
   _field: computed('fields', '_path', function () {
-    let {
-      fields,
-      _path,
-    } = this.getProperties('fields', '_path');
-    return fields.get(_path);
+    return this.get(`fields.${this.get('_path')}`);
   }),
 
   /**
@@ -127,7 +123,7 @@ export default Ember.Component.extend(DisabledPaths, {
   }),
 
   /**
-   * Path to value in values property
+   * Path to value in `values` property
    * @type {computed.string}
    */
   _path: computed('definition', 'parentPath', function () {

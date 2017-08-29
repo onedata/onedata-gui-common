@@ -4,11 +4,11 @@
  * `definition` property comment.
  * 
  * On each input change the component emits changes and validation state using 
- * injected `valuesChanged` calling it like: 
+ * injected `valuesChanged`, calling it like: 
  * `valuesChanged(treeValues, isValid)` 
  * Passed treeValues object is a plain js object with a similar logical hierarchy 
  * like it is in the tree `definition`. It is a tree data structure where each 
- * objects' key is a subnode `name` property taken from `definition`. Leafs 
+ * object key is a subnode `name` property taken from `definition`. Leafs 
  * of that tree are values from tree fields. 
  * 
  * To support validation, a new component must be created that inherits from 
@@ -53,7 +53,7 @@
  * node will be disabled.
  * Disabled state means that:
  * * validation for fields is turned off (after path remove from 
- *   `disabledFieldsPaths` newly enabled fields are in state `unchanged` - 
+ *   `disabledFieldsPaths`, newly enabled fields are in state `unchanged` - 
  *   may be invalid, but error message is not shown until its content change),
  * * value of fields cannot be changed,
  * * toggles are not taken into account in 'select all' functionality 
@@ -62,7 +62,7 @@
  * 
  * The component provides 'select all' functionality through nodes' 
  * `allowSubtreeCheckboxSelect` property set to true. In that mode, node will 
- * have a toggle which state will change all nested not-disabled toggles. 
+ * have a toggle which state change will change all nested not-disabled toggles.
  * That toggle is set to true if and only if all nested not-disabled toggles 
  * are checked.
  * 
@@ -79,7 +79,7 @@
  * @property {string} text content of the node.
  * @property {boolean} [allowSubtreeCheckboxSelect=false] if true, node will have 
  * a toggle, that will select all nested toggles.
- * @property {TreeField} [field=null] form field
+ * @property {TreeField} [field=undefined] form field
  * @property {Array.TreeNode} subtree nested nodes
  */
 
@@ -92,7 +92,7 @@
  * @property {string} [example=undefined] example
  * @property {string} [tip=undefined] tip (displayed in tooltip)
  * @property {number} [step=undefined] step in number inputs
- * @property {Array.Object} [options=null] options for radio-group field
+ * @property {Array.Object} [options=undefined] options for radio-group field
  * Each option is an object with fields `value` and `label`.
  */
 
@@ -147,7 +147,8 @@ export default Ember.Component.extend(
           return [];
         }
 
-        // Return an error only if a corresponding field exists in the fields tree.
+        // Return an error only if a corresponding field exists in the fields tree
+        // and is not disabled.
         return validations.get('errors').filter((error) => {
           let path = error.get('attribute').substring('values.'.length);
           return !!_fieldsTree.get(path) && !this.isPathDisabled(path);
@@ -184,6 +185,10 @@ export default Ember.Component.extend(
 
     /**
      * Called when tree field value has changed.
+     * @param {boolean} [checkboxChanged=false] if true, value was changed 
+     * using toggle
+     * @param {boolean} [emitValues=true] if true, `valuesChanged` parent action
+     * will be invoked
      */
     valuesHaveChanged(checkboxChanged = false, emitValues = true) {
       let {
@@ -246,8 +251,9 @@ export default Ember.Component.extend(
           });
           error = error.length > 0 ? error[0] : null;
           // show if is not optional or is optional, but not empty
-          let showValidation = node.get('optional') !== true ||
-            [undefined, null, ''].indexOf(values.get(node.get('name'))) === -1;
+          let emptyValues = [undefined, null, ''];
+          let notEmpty = emptyValues.indexOf(values.get(node.get('name'))) === -1;
+          let showValidation = node.get('optional') !== true || notEmpty;
 
           if (['radio-group', 'checkbox'].indexOf(node.get('type')) === -1) {
             if (node.get('changed') && showValidation) {
@@ -299,18 +305,15 @@ export default Ember.Component.extend(
        */
       inputValueChanged(path, value) {
         this.changeValue(path, value);
-        // TODO remove
-        console.log(`Changed ${path} to ${value}`);
       },
 
       /**
-       * Marks an input as 'visited' after focus out event.
+       * Marks an input as 'changed' after focus out event.
        * @param {string} path Path to the value in the values tree.
        */
       inputFocusedOut(path) {
         this._markFieldAsModified(path);
         this.valuesHaveChanged(false, false)
-        console.log(`${path} focused out`);
       },
     }
   }

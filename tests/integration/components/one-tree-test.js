@@ -106,7 +106,8 @@ describe('Integration | Component | one tree', function () {
         wait().then(() => {
           firstLevelItem.find('> .one-tree-item-content').click();
           wait().then(() => {
-            expect(secondLevelSubtree).to.have.class('collapse-hidden');
+            expect(secondLevelSubtree)
+              .to.have.class('collapse-hidden');
             done();
           });
         });

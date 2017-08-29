@@ -9,8 +9,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   // fake providers
-  providers: [
-    {
+  providers: [{
       id: '1',
       name: 'provider1',
       color: '#4BD187',
@@ -28,8 +27,7 @@ export default Ember.Component.extend({
   ],
 
   // fake provider actions
-  providerActions: [
-    {
+  providerActions: [{
       text: 'Action',
       action: () => {},
       class: 'action1-trigger',

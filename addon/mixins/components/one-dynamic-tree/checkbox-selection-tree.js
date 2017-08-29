@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
     let buildNodeCheckboxesTree = (node) => {
       if (node.get('_isField') && (node.get('type') !== 'checkbox' ||
           this.isPathDisabled(node.get('name')))) {
-        // field, but not checkbox
+        // field, but not checkbox or disabled
         return undefined;
       }
       let checkboxNode = Ember.Object.create({
@@ -72,7 +72,8 @@ export default Ember.Mixin.create({
 
   /**
    * Recalculates selection tree state
-   * @param {Ember.Object} checkboxSelectionTree checkbox selection tree to fill
+   * @param {Ember.Object} [checkboxSelectionTree=undefined] checkbox selection
+   * tree to fill
    */
   _fillCheckboxSelectionTree(checkboxSelectionTree) {
     let values = this.get('values');

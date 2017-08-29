@@ -48,9 +48,7 @@ export default Component.extend({
 
     // Fix for Firefox to handle toggle change by 
     // label-click and keyboard change on active input
-    this.$('input').click((event) => {
-      event.stopImmediatePropagation();
-    });
+    this.$('input').click((event) => event.stopImmediatePropagation());
   },
 
   click() {

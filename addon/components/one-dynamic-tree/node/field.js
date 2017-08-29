@@ -1,6 +1,6 @@
 /**
- * A component used internally by the one-dynamic-tree component. For example of
- * tree usage, see one-dynamic-tree documentation.
+ * A component represents tree node field, used internally by the one-dynamic-tree
+ * component. For example of tree usage, see one-dynamic-tree documentation.
  * 
  * @module components/one-dynamic-tree/node/field
  * @author Michal Borzecki
@@ -59,7 +59,7 @@ export default Ember.Component.extend({
    */
   inputClass: computed('field', function () {
     let field = this.get('field');
-    
+
     let classes = `field-${dotToDash([field.name])}`;
     if (field.type !== 'radio-group') {
       classes += ' form-control';
@@ -73,20 +73,17 @@ export default Ember.Component.extend({
   actions: {
     /**
      * Notifies about change in input.
-     * @param {string} path Path to the value in the values tree.
      * @param {*} value Changed value.
      */
-    inputChanged() {
-      this.get('inputChanged')(...arguments);
+    inputChanged(value) {
+      this.get('inputChanged')(value);
     },
 
     /**
      * Notifies about an input focusOut event.
      */
     focusedOut() {
-      // prevents double render issue by scheduling focusout event handler on
-      // events' loop end
-      setTimeout(() => this.get('focusedOut')(), 0);
+      this.get('focusedOut')();
     }
   }
 });
