@@ -16,6 +16,7 @@ const {
   Component,
   inject: { service },
   computed,
+  get,
 } = Ember;
 
 const {
@@ -25,6 +26,7 @@ const {
 export default Component.extend({
   layout,
 
+  i18n: service(),
   onepanelServer: service(),
   globalNotify: service(),
 
@@ -40,11 +42,11 @@ export default Component.extend({
    */
   _changingPassword: false,
 
-  // TODO i18n  
   _changePasswordButtonLabel: computed('_changingPassword', function () {
+    let i18n = this.get('i18n');
     return this.get('_changingPassword') ?
-      'Cancel password change' :
-      'Change password';
+      i18n.t('components.contentUsers.cancelChangePassword') :
+      i18n.t('components.contentUsers.changePassword');
   }),
 
   _changePasswordButtonType: computed('_changingPassword', function () {
@@ -70,13 +72,19 @@ export default Component.extend({
     submitChangePassword({ currentPassword, newPassword }) {
       let {
         user,
+        i18n,
+        onepanelServer,
+        globalNotify,
       } = this.getProperties(
-        'user'
+        'user',
+        'i18n',
+        'onepanelServer',
+        'globalNotify'
       );
-      let changingPassword = this.get('onepanelServer').request(
+      let changingPassword = onepanelServer.request(
         'onepanel',
         'modifyUser',
-        user.get('id'),
+        get(user, 'id'),
         UserModifyRequest.constructFromObject({
           currentPassword,
           newPassword,
@@ -85,11 +93,16 @@ export default Component.extend({
 
       // TODO i18n
       changingPassword.catch(error => {
-        this.get('globalNotify').backendError('password change', error);
+        globalNotify.backendError(
+          i18n.t('components.contentUsers.passwordChangedSuccess'),
+          error
+        );
       });
 
       changingPassword.then(() => {
-        this.get('globalNotify').info(`Password changed sucessfully`);
+        globalNotify.info(
+          i18n.t('components.contentUsers.passwordChangedSuccess')
+        );
         this.set('_changingPassword', false);
       });
 
