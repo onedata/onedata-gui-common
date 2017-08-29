@@ -7,8 +7,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-// TODO i18n
-
 import Ember from 'ember';
 import TwoLevelSidebar from 'onedata-gui-common/components/two-level-sidebar';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';

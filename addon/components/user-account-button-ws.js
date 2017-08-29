@@ -1,9 +1,10 @@
 /**
- * Implements username for Onedata Websocket backend based GUIs
+ * Implements `user-account-button` for Onedata Websocket backend based GUIs
+ * - sets `username` from session data retrieved from Onedata Websocket session
  *
  * NOTE: requires onedata websocket managed session
  *
- * @module components/user-account-button
+ * @module components/user-account-button-ws
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -35,6 +36,7 @@ export default UserAccountButton.extend({
      * @override
      */
     manageAccount() {
+      // TODO implement
       this.get('globalNotify').error('Account settings not implemented yet');
     },
   },

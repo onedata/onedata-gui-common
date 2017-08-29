@@ -7,7 +7,7 @@
  * PromiseArray's content property. This makes it easy to create data bindings
  * with the PromiseArray that will be updated when the promise resolves.
  *
- * @module addon/utils/ember/promise-array
+ * @module utils/ember/promise-array
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

@@ -10,7 +10,7 @@
  *
  * Also used as: ObjectPromiseProxy somewhere in old code.
  *
- * @module addon/utils/ember/promise-object
+ * @module utils/ember/promise-object
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
