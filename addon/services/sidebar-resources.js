@@ -12,8 +12,9 @@ import Ember from 'ember';
 
 export default Ember.Service.extend({
   /**
+   * @abstract
    * @param {string} type
-   * @returns {Promise}
+   * @returns {Promise.Array.Record|PromiseArray.Record|PromiseObject.Array.Record}
    */
   getCollectionFor( /* type */ ) {
     throw new Error('service:sidebar-resources: not implemented')
