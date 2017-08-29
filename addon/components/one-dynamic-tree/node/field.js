@@ -1,3 +1,13 @@
+/**
+ * A component used internally by the one-dynamic-tree component. For example of
+ * tree usage, see one-dynamic-tree documentation.
+ * 
+ * @module components/one-dynamic-tree/node/field
+ * @author Michal Borzecki
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Ember from 'ember';
 import layout from '../../../templates/components/one-dynamic-tree/node/field';
 

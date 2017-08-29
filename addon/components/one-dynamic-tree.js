@@ -1,3 +1,101 @@
+/**
+ * A component that generates forms in the form of a tree using tree structure 
+ * definition in json format. For more information about definition format see 
+ * `definition` property comment.
+ * 
+ * On each input change the component emits changes and validation state using 
+ * injected `valuesChanged` calling it like: 
+ * `valuesChanged(treeValues, isValid)` 
+ * Passed treeValues object is a plain js object with a similar logical hierarchy 
+ * like it is in the tree `definition`. It is a tree data structure where each 
+ * objects' key is a subnode `name` property taken from `definition`. Leafs 
+ * of that tree are values from tree fields. 
+ * 
+ * To support validation, a new component must be created that inherits from 
+ * this one and uses a validations mixin. Each validator should point to a path
+ * like `values.path.to.the.field` - it is the same format that it was used 
+ * for treeValues passed to `valuesChanged`.
+ * 
+ * Example:
+ * Let definition looks like:
+ * ```
+ * definition: [
+ *   {
+ *     name: 'node1',
+ *     text: 'Node 1',
+ *     subtree: [
+ *       {
+ *         name: 'node11',
+ *         text: 'Node 1.1',
+ *         field: {
+ *           type: 'text',
+ *           defaultValue: 'someDefault',
+ *           tip: 'Some tip',
+ *         },
+ *       },
+ *     ],
+ *   },
+ * ]
+ * 
+ * ...
+ * 
+ * {{one-dynamic-tree definition=definition valuesChanged=(action "valuesChanged")}}
+ * ```
+ * 
+ * In this case validator should point to: `values.node1.node.11`.
+ * Value of `node11` field is available through `valuesChanged` injected 
+ * action as its first argument under the path `node1.node11`.
+ * 
+ * The component allows to temporarily disable some fields. It can be set 
+ * through `disabledFieldsPaths` property. It is an Ember array with paths 
+ * (strings) to fields, which should be disabled. It can an exact path or 
+ * a path to a parent node. In the second case, all fields nested in that 
+ * node will be disabled.
+ * Disabled state means that:
+ * * validation for fields is turned off (after path remove from 
+ *   `disabledFieldsPaths` newly enabled fields are in state `unchanged` - 
+ *   may be invalid, but error message is not shown until its content change),
+ * * value of fields cannot be changed,
+ * * toggles are not taken into account in 'select all' functionality 
+ *   (`allowSubtreeCheckboxSelect`)
+ * * node content has a lower opacity.
+ * 
+ * The component provides 'select all' functionality through nodes' 
+ * `allowSubtreeCheckboxSelect` property set to true. In that mode, node will 
+ * have a toggle which state will change all nested not-disabled toggles. 
+ * That toggle is set to true if and only if all nested not-disabled toggles 
+ * are checked.
+ * 
+ * @module components/one-dynamic-tree
+ * @author Michal Borzecki
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+/**
+ * @typedef {Object} TreeNode Node object of the one-dynamic-tree
+ * @property {string} name id-like property. It must be unique across
+ * level of subtree.
+ * @property {string} text content of the node.
+ * @property {boolean} [allowSubtreeCheckboxSelect=false] if true, node will have 
+ * a toggle, that will select all nested toggles.
+ * @property {TreeField} [field=null] form field
+ * @property {Array.TreeNode} subtree nested nodes
+ */
+
+/**
+ * @typedef {Object} TreeField Field object used in the TreeNode
+ * @property {string} type input type
+ * @property {boolean} [optional=false] if true, input can be empty
+ * @property {*} [defaultValue=undefined] default value for input
+ * @property {string} [placeholder=undefined] placeholder
+ * @property {string} [example=undefined] example
+ * @property {string} [tip=undefined] tip (displayed in tooltip)
+ * @property {number} [step=undefined] step in number inputs
+ * @property {Array.Object} [options=null] options for radio-group field
+ * Each option is an object with fields `value` and `label`.
+ */
+
 import Ember from 'ember';
 import layout from '../templates/components/one-dynamic-tree';
 import FieldsTree from 'onedata-gui-common/mixins/components/one-dynamic-tree/fields-tree';
@@ -9,7 +107,7 @@ const {
   computed,
   observer,
   on,
-  A
+  A,
 } = Ember;
 
 export default Ember.Component.extend(
@@ -18,9 +116,10 @@ export default Ember.Component.extend(
     classNames: ['one-dynamic-tree'],
 
     /**
-     * Tree definition.
+     * Tree definition. It is an array of nodes. Format of nodes can be found
+     * in TreeNode type definition.
      * To inject.
-     * @type {Array.object}
+     * @type {Array.TreeNode}
      */
     definition: [],
 
@@ -61,7 +160,7 @@ export default Ember.Component.extend(
      */
     _isValid: computed.empty('_errors'),
 
-    _fieldsObserver: on('init', 
+    _fieldsObserver: on('init',
       observer('_fieldsTree', 'disabledFieldsPaths.[]', function () {
         this._buildCheckboxSelectionTree();
         this._resetDisabledFields();
@@ -147,7 +246,8 @@ export default Ember.Component.extend(
           });
           error = error.length > 0 ? error[0] : null;
           // show if is not optional or is optional, but not empty
-          let showValidation = node.get('optional') !== true || [undefined, null, ''].indexOf(values.get(node.get('name'))) === -1;
+          let showValidation = node.get('optional') !== true ||
+            [undefined, null, ''].indexOf(values.get(node.get('name'))) === -1;
 
           if (['radio-group', 'checkbox'].indexOf(node.get('type')) === -1) {
             if (node.get('changed') && showValidation) {
