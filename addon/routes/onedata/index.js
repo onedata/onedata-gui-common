@@ -12,6 +12,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 const {
   Route,
+  get,
 } = Ember;
 
 export default Route.extend(AuthenticatedRouteMixin, {
@@ -20,7 +21,13 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   afterModel(model) {
-    let firstItemId = model.get('mainMenuItems.firstObject').id;
-    this.controllerFor('onedata').send('mainMenuItemChanged', firstItemId);
+    let mainMenuItems = get(model, 'mainMenuItems');
+    let firstItem = mainMenuItems[0];
+    if (mainMenuItems) {
+      let firstItemId = get(firstItem, 'id');
+      this.controllerFor('onedata').send('mainMenuItemChanged', firstItemId);
+    } else {
+      console.error('routes:index: empty collection of main menu items');
+    }
   },
 });

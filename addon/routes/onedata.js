@@ -8,7 +8,7 @@
  */
 
 import Ember from 'ember';
-import AppModel from 'onepanel-gui/utils/app-model';
+import AppModel from 'onedata-gui-common/utils/app-model';
 import config from 'ember-get-config';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import _object from 'lodash/object';
