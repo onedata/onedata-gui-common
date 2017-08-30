@@ -24,8 +24,12 @@
 
 /* global Chartist */
 
+import _ from 'lodash';
+
 const DEFAULT_LINE_LENGTH = '100';
 const DEFAULT_LINE_POINTER_LENGTH = '50%';
+
+let chartsIndex = [];
 
 export default function (options) {
   let defaultOptions = {
@@ -90,6 +94,31 @@ export default function (options) {
         });
       }
     });
+    chart.on('created', () => {
+      let chartRender = getChartRenderEntry(chart);
+      let lastActiveTooltipTarget = _.find(
+        chartRender.oldTooltipTargets,
+        (target) => !!$(target).attr('aria-describedby')
+      );
+      if (lastActiveTooltipTarget) {
+        lastActiveTooltipTarget = $(lastActiveTooltipTarget);
+        let lastTooltipId = lastActiveTooltipTarget.attr('aria-describedby');
+        if ($('#' + lastTooltipId).hasClass('in')) {
+          // tooltip was active while rerender. Try to activate tooltip, which is 
+          // rendered exactly in the same place
+          let dx = lastActiveTooltipTarget.attr('dx');
+          let dy = lastActiveTooltipTarget.attr('dy');
+          let newTarget = $(chart.container).find(`text[dx="${dx}"][dy="${dy}"]`);
+          newTarget.tooltip('show');
+        }
+      }
+      // remove all tooltips from the previous render
+      chartRender.oldTooltipTargets.forEach((target) =>
+        $('#' + $(target).attr('aria-describedby')).remove()
+      );
+      chartRender.oldTooltipTargets = chartRender.actualTooltipTargets;
+      chartRender.actualTooltipTargets = [];
+    });
   };
 }
 
@@ -132,7 +161,7 @@ function addText(
     textAttributes,
     'ct-pie-label-text ct-pie-label-text-top'
   );
-  clipText(textElement, chart.data.labels[data.index].topText, width);
+  clipText(textElement, chart.data.labels[data.index].topText, width, chart);
   labelGroup.append(textElement);
 
   textAttributes.dy = y + options.lineTextMargin;
@@ -143,11 +172,11 @@ function addText(
     textAttributes,
     'ct-pie-label-text ct-pie-label-text-bottom'
   );
-  clipText(textElement, chart.data.labels[data.index].bottomText, width);
+  clipText(textElement, chart.data.labels[data.index].bottomText, width, chart);
   labelGroup.append(textElement);
 }
 
-function clipText(textElement, text, width) {
+function clipText(textElement, text, width, chart) {
   // some padding for readability
   width -= 5;
   textElement.text(text);
@@ -168,9 +197,14 @@ function clipText(textElement, text, width) {
         lowerIndex = newIndex;
       }
     }
+
+    let chartRender = getChartRenderEntry(chart);
+    chartRender.actualTooltipTargets.push(textElement.getNode());
     $(textElement.getNode()).tooltip({
       container: 'body',
-      title: text
+      title: text,
+      animation: false,
+      placement: 'auto top',
     });
   }
 }
@@ -186,4 +220,22 @@ function autohideLabel(data, options, labelGroup) {
     $slice.mouseover(showLabel).mouseout(hideLabel);
     $labelGroup.mouseover(showLabel).mouseout(hideLabel);
   }
+}
+
+function getChartRenderEntry(chart) {
+  let node = chart.container;
+  let chartRender = _.find(chartsIndex, { node });
+  if (!chartRender) {
+    chartRender = {
+      node,
+      oldTooltipTargets: [],
+      actualTooltipTargets: [],
+    }
+    // remove not existing charts renders
+    chartsIndex = chartsIndex.filter((existingChartRender) => {
+      return jQuery.contains(document.documentElement, existingChartRender.node);
+    });
+    chartsIndex.push(chartRender);
+  }
+  return chartRender;
 }
