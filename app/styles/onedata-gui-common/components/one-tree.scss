@@ -1,4 +1,4 @@
-$one-tree-indent: 45px;
+$one-tree-indent: 35px;
 $one-tree-bullet-top: 13px;
 $one-tree-bullet-size: 17px;
 // all possible border-style values
@@ -21,11 +21,14 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
   }
   .one-tree-list {
     position: relative;
-    margin-left: $padding-base-horizontal;
     padding: $padding-base-vertical 0 0 0;
     border-left: 1px solid $main-border-color;
     list-style-type: none;
     background-color: inherit;
+
+    .one-tree {
+      margin-left: -($one-tree-bullet-size / 2 + $padding-xs-horizontal + 1px);
+    }
 
     > li {
       position: relative;

@@ -1,4 +1,7 @@
 .one-dynamic-tree {
+  $field-width: 150px;
+
+  max-width: 450px;
   .one-tree {
     .one-tree-list {
       > li {
@@ -28,31 +31,58 @@
           }
         }
 
-        .form-control-feedback {
-          height: 32px;
-          width: 32px;
-          margin-top: 0;
-          line-height: 32px;
-        }
 
-        .one-way-radio-group {
-          padding-left: 0;
-        }
+        .one-tree-item-content {
+          padding-right: $padding-xs-horizontal;
+          border-radius: $border-radius-small;
+          .node-text, .form-group {
+            display: table-cell;
+            vertical-align: top;
+          }
 
-        .node-text, .form-group {
-          display: inline-block;
-          width: 200px;
-          vertical-align: top;
-        }
+          .node-text {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            &.disabled {
+              opacity: $disabled-opacity;
+            }
+          }
+          .form-group {
+            min-width: $field-width;
+            width: $field-width;
+            margin-bottom: 0;
+            .form-control-feedback {
+              height: 32px;
+              width: 32px;
+              margin-top: 0;
+              line-height: 32px;
+            }
 
-        .node-text {
-          width: 100px;
-          &.disabled {
-            opacity: $disabled-opacity;
+            .one-way-radio-group {
+              padding-left: 0;
+              label {
+                display: block;
+              }
+            }
           }
         }
-        .form-group {
-          margin-bottom: 0;
+
+        &:not(.item-generic) {
+          padding-left: $one-tree-indent - $padding-xs-horizontal;
+          .one-tree-item-content {
+            padding-left: $padding-xs-horizontal;
+            &:hover {
+              background-color: $main-content-hover-background;
+            }
+            .node-text {
+              max-width: 0;
+            }
+            .form-message {
+              padding-top: 0;
+            }
+          }
         }
       }
     }
