@@ -1,6 +1,6 @@
 /**
  * Implements `user-account-button` for Onedata Websocket backend based GUIs
- * - sets `username` from session data retrieved from Onedata Websocket session
+ * - sets `username` from User record from Onedata Websocket
  *
  * NOTE: requires onedata websocket managed session
  *
@@ -17,19 +17,25 @@ import layout from 'onedata-gui-common/templates/components/user-account-button'
 
 const {
   inject: { service },
-  computed: { readOnly },
 } = Ember;
 
 export default UserAccountButton.extend({
   layout,
 
-  session: service(),
+  currentUser: service(),
   globalNotify: service(),
 
   /**
    * @override
    */
-  username: readOnly('session.data.authenticated.identity.user'),
+  username: null,
+
+  init() {
+    this._super(...arguments);
+    this.get('currentUser').getCurrentUserRecord().then(user => {
+      this.set('username', user.get('name'));
+    })
+  },
 
   actions: {
     /**
