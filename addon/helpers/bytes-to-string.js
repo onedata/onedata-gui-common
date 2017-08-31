@@ -11,7 +11,7 @@ import Ember from 'ember';
 import bytesToStringUtil from 'onedata-gui-common/utils/bytes-to-string';
 
 export function bytesToString([bytes], options) {
-  return bytesToStringUtil(bytes, options);
+  return bytesToStringUtil(bytes, Object.assign({ iecFormat: true }, options));
 }
 
 export default Ember.Helper.helper(bytesToString);
