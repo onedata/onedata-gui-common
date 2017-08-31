@@ -1,0 +1,10 @@
+<div style="height: 500px">
+  {{#one-atlas as |atlas|}}
+    {{#atlas.point latitude=provider.latitude longitude=provider.longitude}}
+      {{provider-place
+        provider=provider
+        atlasWidth=atlas.width
+        circleSizeScale=2}}
+    {{/atlas.point}}
+  {{/one-atlas}}
+</div>
