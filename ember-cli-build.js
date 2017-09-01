@@ -3,7 +3,7 @@
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 const sass = require('node-sass');
-const colors = require('./config/colors');
+const colors = require('./addon/colors').default;
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {

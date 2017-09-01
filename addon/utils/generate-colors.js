@@ -1,7 +1,7 @@
 /**
  * A function, which generates `n` colors using `baseColors` as a source data
  * for calculation. If `baseColors` argument is not provided, default application
- * color scheme is used (from config/colors).
+ * color scheme is used (from colors file).
  * 
  * @module utils/generate-colors
  * @author Michal Borzecki
@@ -11,12 +11,12 @@
 
 import _ from 'lodash';
 import Color from 'npm:color';
-import colors from '../../config/colors';
+import colors from 'onedata-gui-common/colors';
 
 const COLOR_CHANGE_PADDING = 0.2;
 
 export default function generateColors(n, baseColors) {
-  if (baseColors.length === 0) {
+  if (!baseColors || baseColors.length === 0) {
     baseColors = _.values(colors);
   }
   let nPerColor = Math.ceil(n / baseColors.length);
