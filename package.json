@@ -31,6 +31,7 @@
     "broccoli-asset-rev": "2.5.0",
     "chai-jquery": "2.0.0",
     "chartist-plugin-legend": "0.6.1",
+    "color": "2.0.0",
     "ember-bootstrap": "1.0.0-rc.1",
     "ember-browserify": "1.2.0",
     "ember-cli": "2.14.2",
