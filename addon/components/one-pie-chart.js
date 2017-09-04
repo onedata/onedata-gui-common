@@ -18,7 +18,7 @@
  * @property {string} color A color for series.
  */
 
- /* global Chartist */
+/* global Chartist */
 
 import Ember from 'ember';
 import layout from '../templates/components/one-pie-chart';
@@ -32,6 +32,9 @@ import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 const {
   computed,
   A,
+  run: {
+    debounce,
+  },
 } = Ember;
 
 const INACTIVE_SERIES_OPACITY = 0.3;
@@ -100,7 +103,9 @@ export default Ember.Component.extend({
    * @type {Function}
    */
   _windowResizeHandler: computed(function () {
-    return () => this._windowResized();
+    return () => {
+      debounce(this, this._windowResized, 100);
+    };
   }),
 
   /**
@@ -168,9 +173,10 @@ export default Ember.Component.extend({
           '_stylesRecomputeTimeoutId'
         );
         clearTimeout(_stylesRecomputeTimeoutId);
-        this.set('_stylesRecomputeTimeoutId', setTimeout(() =>
-          this.set('_chartCss', this.generateChartStyles()),
-          hoverTransitionTime * 1000));
+        this.set('_stylesRecomputeTimeoutId', setTimeout(
+          () => this.set('_chartCss', this.generateChartStyles()),
+          hoverTransitionTime * 1000
+        ));
         return this.generateChartStyles();
       },
       set(key, value) {
@@ -183,7 +189,8 @@ export default Ember.Component.extend({
    * Chartist data
    * @type {computed.Object}
    */
-  _chartData: computed('_chartDataLabels', '_chartDataSeries', '_chartCss', '_chartOptions',
+  _chartData: computed('_chartDataLabels', '_chartDataSeries', '_chartCss',
+    '_chartOptions',
     function () {
       return this.generateChartData();
     }
@@ -424,6 +431,6 @@ export default Ember.Component.extend({
    * Checks if the browser window has mobile width or not
    */
   _windowResized() {
-    this.set('_mobileMode', window.innerWidth < 768); 
+    this.set('_mobileMode', window.innerWidth < 768);
   }
 });

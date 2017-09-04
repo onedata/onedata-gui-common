@@ -126,7 +126,7 @@ export default function (options) {
 }
 
 function isPluginEnabled(chart) {
-  return !chart.options.disabledPlugins || 
+  return !chart.options.disabledPlugins ||
     chart.options.disabledPlugins.indexOf('pieLabels') === -1;
 }
 
@@ -241,7 +241,7 @@ function getChartRenderEntry(chart) {
     }
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
-      return jQuery.contains(document.documentElement, existingChartRender.node);
+      return $.contains(document.documentElement, existingChartRender.node);
     });
     chartsIndex.push(chartRender);
   }

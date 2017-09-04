@@ -8,6 +8,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/* eslint-env node */
 /* global exports */
 
 var colors = {
@@ -23,4 +24,5 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = colors;
+// colors assigned to `default` to allow ES import
+module.exports.default = colors;

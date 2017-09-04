@@ -215,7 +215,7 @@ export default function (options) {
 }
 
 function isPluginEnabled(chart) {
-  return !chart.options.disabledPlugins || 
+  return !chart.options.disabledPlugins ||
     chart.options.disabledPlugins.indexOf('tooltip') === -1;
 }
 

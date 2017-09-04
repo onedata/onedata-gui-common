@@ -2,8 +2,8 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
-const sass = require('node-sass');
 const colors = require('./addon/colors').default;
+const defineSassColors = require('./addon/utils/define-sass-colors');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
@@ -15,14 +15,6 @@ module.exports = function (defaults) {
         'app/styles/onedata-gui-common/components',
       ],
       onlyIncluded: false,
-      functions: Object.keys(colors).reduce(function (functions, colorName) {
-        functions['color-one-' + colorName] = function () {
-          return new sass.types.Color(
-            parseInt(colors[colorName].substring(1), 16) + 0xff000000
-          );
-        };
-        return functions;
-      }, {}),
     },
     // a "bootstrap" should be imported into app.scss
     'ember-cli-bootstrap-sassy': {
@@ -56,6 +48,8 @@ module.exports = function (defaults) {
     },
   });
 
+  defineSassColors(app, colors);
+
   /*
     This build file specifies the options for the dummy test app of this
     addon, located in `/tests/dummy`
@@ -71,7 +65,6 @@ module.exports = function (defaults) {
   ];
 
   BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));
-
 
   app.import('vendor/chartist-plugin-legend/chartist-plugin-legend.js');
 

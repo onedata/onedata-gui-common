@@ -25,7 +25,7 @@ export default function generateColors(n, baseColors) {
   for (let i = 0; i < n; i++) {
     let baseColor = baseColors[i % baseColors.length];
     let inColorIndex = Math.floor(i / baseColors.length);
-    let stepMultiply = (inColorIndex % 2 === 0) ? 
+    let stepMultiply = (inColorIndex % 2 === 0) ?
       -inColorIndex / 2 : Math.floor(inColorIndex / 2) + 1;
     let change = Math.abs(stepMultiply * colorChangeStep);
     let color = new Color(baseColor);
