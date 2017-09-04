@@ -1,0 +1,19 @@
+{{#if definition.length}}
+  {{#bs-form submitOnEnter=false as |form|}}  
+    {{#one-tree as |tree|}}
+      {{#each definition as |nodeDefinition|}}
+        {{one-dynamic-tree/node
+          definition=nodeDefinition
+          bsForm=form
+          parentTree=tree
+          values=values
+          fields=_fieldsTree
+          checkboxSelection=_checkboxSelectionTree
+          disabledFieldsPaths=disabledFieldsPaths
+          inputValueChanged=(action "inputValueChanged")
+          inputFocusedOut=(action "inputFocusedOut")
+          selectNestedCheckboxes=(action "selectNestedCheckboxes")}}
+      {{/each}}
+    {{/one-tree}}
+  {{/bs-form}}
+{{/if}}

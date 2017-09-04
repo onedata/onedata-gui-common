@@ -249,7 +249,7 @@ export default Ember.Component.extend({
           return _.map(_sortedProvidersIds, (providerId) => {
             // isActive = is nothing or this provider hovered
             let isActive = hoveredProviderId === providerId;
-            let isLabelVisible = isActive || (!hoveredProviderId && 
+            let isLabelVisible = isActive || (!hoveredProviderId &&
               this._getProviderPercentSize(providerId) > 0.15);
             // actual values of label opacity and slice stroke-opacity are
             // remembered to save animation state through chart rerender

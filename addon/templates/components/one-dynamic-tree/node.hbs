@@ -1,0 +1,52 @@
+{{#parentTree.item class=(concat "item-" (if _field._isField _field.type "generic")) as |item|}}
+  {{#item.content}}
+    <label 
+      for={{if _field._isField inputId}} 
+      class="node-text {{if item.hasSubtree "clickable"}} {{if _isFieldDisabled "disabled"}}">
+      {{definition.text}}
+    </label>
+    {{#if _renderField}}
+      {{#bsForm.group
+        validation=(if _field.isInvalid "error" (if _field.isValid "success"))}}
+        {{one-dynamic-tree/node/field 
+          field=_field
+          value=(get values _path)
+          inputChanged=(action inputValueChanged _path)
+          focusedOut=(action inputFocusedOut _path)
+          inputId=inputId
+          disabled=_isFieldDisabled}}
+        <div class="form-message">{{_field.message}}</div>
+      {{/bsForm.group}}
+    {{else if definition.allowSubtreeCheckboxSelect}}
+      {{#bsForm.group}}
+        {{one-dynamic-tree/node/field 
+          field=_selectCheckboxesField
+          value=_areNestedCheckboxesSelected
+          inputChanged=(action selectNestedCheckboxes 
+            (dot-to-dash _path)
+            (not _areNestedCheckboxesSelected)
+          )
+          inputId=inputId
+          disabled=_isFieldDisabled}}
+      {{/bsForm.group}}
+    {{/if}}
+  {{/item.content}}
+  {{#if definition.subtree}}
+    {{#item.subtree as |subtree|}}
+      {{#each definition.subtree as |subnodeDefinition|}}
+        {{one-dynamic-tree/node
+          definition=subnodeDefinition
+          bsForm=bsForm
+          parentTree=subtree
+          parentPath=_path
+          values=values
+          fields=fields
+          checkboxSelection=checkboxSelection
+          disabledFieldsPaths=disabledFieldsPaths
+          inputValueChanged=inputValueChanged
+          inputFocusedOut=inputFocusedOut
+          selectNestedCheckboxes=selectNestedCheckboxes}}
+      {{/each}}
+    {{/item.subtree}}
+  {{/if}}
+{{/parentTree.item}}
