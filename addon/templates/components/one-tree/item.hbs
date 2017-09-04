@@ -2,9 +2,9 @@
   {{one-icon icon=_bulletIcon}}
 </div>
 {{yield (hash
-  content=(component 'one-tree-item-content' 
+  content=(component 'one-tree/item/content' 
     _showAction=(action "show" key)
-    _hasSubtree=_hasSubtree
+    hasSubtree=_hasSubtree
   )
   subtree=(component 'one-tree' 
     key=key

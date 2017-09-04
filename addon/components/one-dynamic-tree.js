@@ -8,7 +8,7 @@
  * `valuesChanged(treeValues, isValid)` 
  * Passed treeValues object is a plain js object with a similar logical hierarchy 
  * like it is in the tree `definition`. It is a tree data structure where each 
- * object key is a subnode `name` property taken from `definition`. Leafs 
+ * object key is a subnode `name` property taken from `definition`. Leaves 
  * of that tree are values from tree fields. 
  * 
  * To support validation, a new component must be created that inherits from 
@@ -230,71 +230,82 @@ export default Ember.Component.extend(
     _recalculateErrors() {
       let {
         _fieldsTree,
-        values,
-        _errors,
         validations,
       } = this.getProperties(
         '_fieldsTree',
-        'values',
-        '_errors',
         'validations'
       );
 
       if (!validations) {
         return;
       }
+      this._recalculateNodeErrors(_fieldsTree);
+    },
 
-      let recalculateNodeErrors = (node) => {
-        if (node.get('_isField')) {
-          let error = _errors.filter((error) => {
-            return error.get('attribute') === 'values.' + node.get('name');
-          });
-          error = error.length > 0 ? error[0] : null;
-          // show if is not optional or is optional, but not empty
-          let emptyValues = [undefined, null, ''];
-          let notEmpty = emptyValues.indexOf(values.get(node.get('name'))) === -1;
-          let showValidation = node.get('optional') !== true || notEmpty;
+    /**
+     * Sets validation information for fields tree node
+     * @param {Ember.Object} node fields tree node
+     */
+    _recalculateNodeErrors(node) {
+      let {
+        values,
+        _errors,
+      } = this.getProperties(
+        'values',
+        '_errors',
+      );
+      if (node.get('_isField')) {
+        let error = _errors.filter((error) => {
+          return error.get('attribute') === 'values.' + node.get('name');
+        });
+        error = error.length > 0 ? error[0] : null;
+        // show if is not optional or is optional, but not empty
+        let emptyValues = [undefined, null, ''];
+        let notEmpty = emptyValues.indexOf(values.get(node.get('name'))) === -1;
+        let showValidation = node.get('optional') !== true || notEmpty;
 
-          if (['radio-group', 'checkbox'].indexOf(node.get('type')) === -1) {
-            if (node.get('changed') && showValidation) {
-              node.setProperties({
-                isValid: !error,
-                isInvalid: !!error,
-                message: error ? error.get('message') : ''
-              });
-            } else {
-              node.setProperties({
-                isValid: false,
-                isInvalid: false,
-                message: ''
-              });
-            }
+        if (['radio-group', 'checkbox'].indexOf(node.get('type')) === -1) {
+          if (node.get('changed') && showValidation) {
+            node.setProperties({
+              isValid: !error,
+              isInvalid: !!error,
+              message: error ? error.get('message') : ''
+            });
+          } else {
+            node.setProperties({
+              isValid: false,
+              isInvalid: false,
+              message: ''
+            });
           }
-        } else {
-          Object.keys(node).forEach((subnodeName) =>
-            recalculateNodeErrors(node.get(subnodeName))
-          );
         }
-      };
-      recalculateNodeErrors(_fieldsTree);
+      } else {
+        Object.keys(node).forEach((subnodeName) =>
+          this._recalculateNodeErrors(node.get(subnodeName))
+        );
+      }
     },
 
     /**
      * Resets all disabled fields.
      */
     _resetDisabledFields() {
-      let resetNode = (node) => {
-        if (node.get('_isField')) {
-          if (this.isPathDisabled(node.get('name'))) {
-            this._resetField(node);
-          }
-        } else {
-          Object.keys(node).forEach((subnodeName) => {
-            resetNode(node.get(subnodeName));
-          });
+      this._resetDisabledFieldsInNode(this.get('_fieldsTree'));
+    },
+
+    /**
+     * Resets disabled fields in node.
+     */
+    _resetDisabledFieldsInNode(node) {
+      if (node.get('_isField')) {
+        if (this.isPathDisabled(node.get('name'))) {
+          this._resetField(node);
         }
+      } else {
+        Object.keys(node).forEach((subnodeName) => {
+          this._resetDisabledFieldsInNode(node.get(subnodeName));
+        });
       }
-      resetNode(this.get('_fieldsTree'));
     },
 
     actions: {

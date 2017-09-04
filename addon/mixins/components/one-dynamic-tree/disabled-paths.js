@@ -25,14 +25,9 @@ export default Ember.Mixin.create({
    * @return {boolean} true if path is disabled, false otherwise
    */
   isPathDisabled(path) {
-    return this.get('disabledFieldsPaths').reduce((isDisabled, disabledPath) => {
-      if (path === disabledPath) {
-        return true;
-      } else {
-        let isDisabledPathPrefix =
-          path.startsWith(disabledPath) && path[disabledPath.length] === '.';
-        return isDisabled || isDisabledPathPrefix;
-      }
-    }, false);
+    return this.get('disabledFieldsPaths').some((disabledPath) =>
+      path === disabledPath ||
+      (path.startsWith(disabledPath) && path[disabledPath.length] === '.')
+    );
   },
 });

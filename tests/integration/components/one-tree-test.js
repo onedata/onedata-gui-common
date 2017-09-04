@@ -66,7 +66,6 @@ describe('Integration | Component | one tree', function () {
       tree.find('> .one-tree-list > .one-tree-item > .one-tree-item-content')
         .click();
       wait().then(() => {
-        console.log(subtree);
         expect(subtree).to.not.have.class('collapse-hidden');
         done();
       });

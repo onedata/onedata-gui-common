@@ -124,8 +124,8 @@ describe('Integration | Component | one dynamic tree', function () {
       {{one-dynamic-tree 
         definition=definition 
         disabledFieldsPaths=disabledPaths}}`);
-    expect(this.$('input[type="text"]')).to.have.attr('disabled');
-    expect(this.$('input[type="radio"]')).to.not.have.attr('disabled');
+    expect(this.$('.field-node1-node11')).to.be.disabled;
+    expect(this.$('.field-node1-node12 input[type="radio"]')).to.not.be.disabled;
   });
 
   it('disables nested field', function () {
@@ -134,8 +134,8 @@ describe('Integration | Component | one dynamic tree', function () {
       {{one-dynamic-tree 
         definition=definition 
         disabledFieldsPaths=disabledPaths}}`);
-    expect(this.$('input[type="text"]')).to.have.attr('disabled');
-    expect(this.$('input[type="radio"]')).to.have.attr('disabled');
+    expect(this.$('.field-node1-node11')).to.be.disabled;
+    expect(this.$('.field-node1-node12 input[type="radio"]')).to.be.disabled;
   });
 
   it('validates data', function (done) {
@@ -173,9 +173,8 @@ describe('Integration | Component | one dynamic tree', function () {
   });
 
   it('allows data change', function (done) {
+    let values = this.get('values');
     let newTextValue = 'text';
-    let newValues = this.get('values');
-    newValues.node1.node11 = newTextValue;
     let valuesChangedHandler = sinon.spy();
 
     this.on('valuesChanged', valuesChangedHandler);
@@ -184,14 +183,18 @@ describe('Integration | Component | one dynamic tree', function () {
         definition=definition
         valuesChanged=(action "valuesChanged")}}`);
 
+    expect(valuesChangedHandler).to.be.calledOnce;
+    expect(valuesChangedHandler.firstCall).calledWithExactly(values, true);
     fillIn('input[type="text"]', newTextValue).then(() => {
+      let newValues = this.get('values');
+      newValues.node1.node11 = newTextValue;
       expect(valuesChangedHandler).to.be.calledTwice;
       expect(valuesChangedHandler.secondCall).calledWithExactly(newValues, true);
       done();
     });
   });
 
-  it('marks \'select all\' toggle as unchecked when not all nested toggles are checked',
+  it('marks "select all" toggle as unchecked when not all nested toggles are checked',
     function () {
       this.render(hbs `
         {{one-dynamic-tree 
@@ -214,7 +217,7 @@ describe('Integration | Component | one dynamic tree', function () {
     });
   });
 
-  it('ignores disabled toggle state in \'select all\' toggle state',
+  it('ignores disabled toggle state in "select all" toggle state',
     function () {
       this.set('disabledPaths', A(['node2.node21']));
       this.render(hbs `
@@ -226,7 +229,7 @@ describe('Integration | Component | one dynamic tree', function () {
     }
   );
 
-  it('ignores disabled toggle on \'select all\' toggle change',
+  it('ignores disabled toggle on "select all" toggle change',
     function (done) {
       this.set('disabledPaths', A(['node2.node22']));
       this.render(hbs `
@@ -234,12 +237,14 @@ describe('Integration | Component | one dynamic tree', function () {
           definition=definition
           disabledFieldsPaths=disabledPaths}}`);
 
+      let node21Field = this.$('.field-node2-node21');
+      let node22Field = this.$('.field-node2-node22');
       click('.field-node2').then(() => {
-        expect(this.$('.field-node2-node21')).to.have.class('checked');
-        expect(this.$('.field-node2-node22')).to.have.class('checked');
+        expect(node21Field).to.have.class('checked');
+        expect(node22Field).to.have.class('checked');
         click('.field-node2').then(() => {
-          expect(this.$('.field-node2-node21')).to.not.have.class('checked');
-          expect(this.$('.field-node2-node22')).to.have.class('checked');
+          expect(node21Field).to.not.have.class('checked');
+          expect(node22Field).to.have.class('checked');
           done();
         });
       });

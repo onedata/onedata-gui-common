@@ -32,31 +32,38 @@ export default Ember.Mixin.create({
    * @param {boolean} useDefaults 
    */
   _buildEmptyValuesTree(definition, useDefaults = false) {
-    let prepareNodeValue = (node) => {
-      if (!node.subtree) {
-        if (node.field) {
-          return (useDefaults && node.field.defaultValue !== undefined) ?
-            node.field.defaultValue : null;
-        } else {
-          return undefined;
-        }
-      } else {
-        let values = Ember.Object.create();
-        node.subtree.forEach((subnode) => {
-          let subnodeValues = prepareNodeValue(subnode);
-          if (subnodeValues !== undefined) {
-            values.set(subnode.name, subnodeValues);
-          }
-        });
-        return Object.keys(values).length > 0 ? values : undefined;
-      }
-    }
     let tmpRoot = {
       name: '',
       subtree: definition
     };
-    let values = prepareNodeValue(tmpRoot)
+    let values = this._buildValuesNode(tmpRoot, useDefaults)
     return values;
+  },
+
+  /**
+   * Creates values tree node.
+   * @param {Object} node A node.
+   * @param {boolean} useDefaults Fill nodes with default values.
+   * @returns {Ember.Object} A values node.
+   */
+  _buildValuesNode(node, useDefaults) {
+    if (!node.subtree) {
+      if (node.field) {
+        return (useDefaults && node.field.defaultValue !== undefined) ?
+          node.field.defaultValue : null;
+      } else {
+        return undefined;
+      }
+    } else {
+      let values = Ember.Object.create();
+      node.subtree.forEach((subnode) => {
+        let subnodeValues = this._buildValuesNode(subnode, useDefaults);
+        if (subnodeValues !== undefined) {
+          values.set(subnode.name, subnodeValues);
+        }
+      });
+      return Object.keys(values).length > 0 ? values : undefined;
+    }
   },
 
   /**
@@ -88,17 +95,22 @@ export default Ember.Mixin.create({
    * @returns {Object} values as native object
    */
   dumpValues() {
-    let nodeToObject = (node) => {
-      if (typeOf(node) !== 'instance') {
-        return node;
-      } else {
-        let objectDump = {};
-        Object.keys(node).forEach((nodeKey) => {
-          objectDump[nodeKey] = nodeToObject(node.get(nodeKey));
-        });
-        return objectDump;
-      }
-    };
-    return nodeToObject(this.get('values'));
+    return this._dumpNodeValues(this.get('values'));
   },
+
+  /**
+   * Converts values node to tree of native objects.
+   * @returns {Object} values as native object
+   */
+  _dumpNodeValues(node) {
+    if (typeOf(node) !== 'instance') {
+      return node;
+    } else {
+      let objectDump = {};
+      Object.keys(node).forEach((nodeKey) => {
+        objectDump[nodeKey] = this._dumpNodeValues(node.get(nodeKey));
+      });
+      return objectDump;
+    }
+  }
 });

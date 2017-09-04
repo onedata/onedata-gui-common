@@ -11,6 +11,7 @@
 import Ember from 'ember';
 import layout from '../../templates/components/one-dynamic-tree/node';
 import DisabledPaths from 'onedata-gui-common/mixins/components/one-dynamic-tree/disabled-paths';
+import { dotToDash } from 'onedata-gui-common/helpers/dot-to-dash';
 
 const {
   computed,
@@ -94,6 +95,15 @@ export default Ember.Component.extend(DisabledPaths, {
    * @type {computed.boolean}
    */
   _areNestedCheckboxesSelected: null,
+
+  /**
+   * Input id.
+   * @type {computed.string}
+   */
+  inputId: computed('_path', function () {
+    let _path = this.get('_path');
+    return 'field-' + dotToDash([_path]);
+  }),
 
   /**
    * 'Select all checkboxes' field definition.

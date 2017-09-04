@@ -32,42 +32,47 @@ export default Ember.Mixin.create({
    */
   _buildCheckboxSelectionTree() {
     let _fieldsTree = this.get('_fieldsTree');
-    let buildNodeCheckboxesTree = (node) => {
-      if (node.get('_isField') && (node.get('type') !== 'checkbox' ||
-          this.isPathDisabled(node.get('name')))) {
-        // field, but not checkbox or disabled
-        return undefined;
-      }
-      let checkboxNode = Ember.Object.create({
-        value: undefined,
-        nodes: null,
-      });
-      if (node.get('_isField')) {
-        // checkbox field
-        return checkboxNode;
-      } else {
-        // possible parent of checkbox fields
-        let checkboxSubnodes = Object.keys(node).reduce((subnodes, subnodeName) => {
-          let _checkboxSubnodes = buildNodeCheckboxesTree(node.get(subnodeName));
-          if (_checkboxSubnodes) {
-            subnodes.set(subnodeName, _checkboxSubnodes);
-          }
-          return subnodes;
-        }, Ember.Object.create());
-
-        if (Object.keys(checkboxSubnodes).length > 0) {
-          // has some checkbox fields in deeper nodes
-          checkboxNode.set('nodes', checkboxSubnodes);
-          return checkboxNode;
-        } else {
-          // no checkbox fields in subtree
-          return undefined;
-        }
-      }
-    }
-    let checkboxSelectionTree = buildNodeCheckboxesTree(_fieldsTree);
+    let checkboxSelectionTree = this._buildNodeCheckboxesTree(_fieldsTree);
     this._fillCheckboxSelectionTree(checkboxSelectionTree);
     this.set('_checkboxSelectionTree', checkboxSelectionTree);
+  },
+
+  /**
+   * Creates tree with node checkboxes selection states
+   */
+  _buildNodeCheckboxesTree(node) {
+    if (node.get('_isField') && (node.get('type') !== 'checkbox' ||
+        this.isPathDisabled(node.get('name')))) {
+      // field, but not checkbox or disabled
+      return undefined;
+    }
+    let checkboxNode = Ember.Object.create({
+      value: undefined,
+      nodes: null,
+    });
+    if (node.get('_isField')) {
+      // checkbox field
+      return checkboxNode;
+    } else {
+      // possible parent of checkbox fields
+      let checkboxSubnodes = Object.keys(node).reduce((subnodes, subnodeName) => {
+        let _checkboxSubnodes =
+          this._buildNodeCheckboxesTree(node.get(subnodeName));
+        if (_checkboxSubnodes) {
+          subnodes.set(subnodeName, _checkboxSubnodes);
+        }
+        return subnodes;
+      }, Ember.Object.create());
+
+      if (Object.keys(checkboxSubnodes).length > 0) {
+        // has some checkbox fields in deeper nodes
+        checkboxNode.set('nodes', checkboxSubnodes);
+        return checkboxNode;
+      } else {
+        // no checkbox fields in subtree
+        return undefined;
+      }
+    }
   },
 
   /**
@@ -76,30 +81,54 @@ export default Ember.Mixin.create({
    * tree to fill
    */
   _fillCheckboxSelectionTree(checkboxSelectionTree) {
-    let values = this.get('values');
     if (!checkboxSelectionTree) {
       checkboxSelectionTree = this.get('_checkboxSelectionTree');
       if (!checkboxSelectionTree) {
         return;
       }
     }
-    let fillNode = (node, path) => {
-      let value;
-      if (!node.get('nodes')) {
-        // is checkbox
-        value = values.get(path);
-      } else {
-        // is checkbox parent
-        let subnodes = node.get('nodes');
-        value = Object.keys(subnodes).reduce((value, subnodeName) => {
-          let subnodePath = path ? `${path}.${subnodeName}` : subnodeName;
-          return value && fillNode(subnodes.get(subnodeName), subnodePath);
-        }, true);
-      }
-      node.set('value', value)
-      return value;
+    this._fillCheckboxSelectionTreeNode(checkboxSelectionTree, '', '');
+  },
+
+  _fillCheckboxSelectionTreeNode(node, path) {
+    let values = this.get('values');
+    let value;
+    if (!node.get('nodes')) {
+      // is checkbox
+      value = values.get(path);
+    } else {
+      // is checkbox parent
+      let subnodes = node.get('nodes');
+      value = Object.keys(subnodes).reduce((value, subnodeName) => {
+        let subnodePath = path ? `${path}.${subnodeName}` : subnodeName;
+        return value && this._fillCheckboxSelectionTreeNode(
+          subnodes.get(subnodeName), subnodePath
+        );
+      }, true);
     }
-    fillNode(checkboxSelectionTree, '', '');
+    node.set('value', value)
+    return value;
+  },
+
+  /**
+   * Selects/deselects all nested checkboxes in node.
+   * @param {Ember.Object} node A node.
+   * @param {boolean} value A value for checkboxes.
+   */
+  _changeCheckboxesState(node, value) {
+    let values = this.get('values');
+    if (node.get('_isField')) {
+      if (node.get('type') === 'checkbox' &&
+        !this.isPathDisabled(node.get('name'))) {
+        let name = node.get('name');
+        values.set(name, value);
+        this._markFieldAsModified(name);
+      }
+    } else {
+      Object.keys(node).forEach((subnodeName) => {
+        this._changeCheckboxesState(node.get(subnodeName), value);
+      });
+    }
   },
 
   actions: {
@@ -109,26 +138,8 @@ export default Ember.Mixin.create({
      * @param {boolean} value A value for checkboxes.
      */
     selectNestedCheckboxes(path, value) {
-      let {
-        values,
-        _fieldsTree,
-      } = this.getProperties('values', '_fieldsTree');
-
-      let changeCheckboxes = (node) => {
-        if (node.get('_isField')) {
-          if (node.get('type') === 'checkbox' &&
-            !this.isPathDisabled(node.get('name'))) {
-            let name = node.get('name');
-            values.set(name, value);
-            this._markFieldAsModified(name);
-          }
-        } else {
-          Object.keys(node).forEach((subnodeName) => {
-            changeCheckboxes(node.get(subnodeName));
-          });
-        }
-      }
-      changeCheckboxes(_fieldsTree.get(path));
+      let _fieldsTree = this.get('_fieldsTree');
+      this._changeCheckboxesState(_fieldsTree.get(path), value);
       this.valuesHaveChanged(true);
     }
   },

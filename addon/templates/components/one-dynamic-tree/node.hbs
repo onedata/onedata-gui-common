@@ -1,7 +1,7 @@
 {{#parentTree.item class=(concat "item-" (if _field._isField _field.type "generic")) as |item|}}
   {{#item.content}}
     <label 
-      for={{if _field._isField (concat "field-" _path)}} 
+      for={{if _field._isField inputId}} 
       class="node-text {{if item.hasSubtree "clickable"}} {{if _isFieldDisabled "disabled"}}">
       {{definition.text}}
     </label>
@@ -13,7 +13,7 @@
           value=(get values _path)
           inputChanged=(action inputValueChanged _path)
           focusedOut=(action inputFocusedOut _path)
-          inputId=(concat "field-" (dot-to-dash _path))
+          inputId=inputId
           disabled=_isFieldDisabled}}
         <div class="form-message">{{_field.message}}</div>
       {{/bsForm.group}}
@@ -26,7 +26,7 @@
             (dot-to-dash _path)
             (not _areNestedCheckboxesSelected)
           )
-          inputId=(concat "field-" _path)
+          inputId=inputId
           disabled=_isFieldDisabled}}
       {{/bsForm.group}}
     {{/if}}

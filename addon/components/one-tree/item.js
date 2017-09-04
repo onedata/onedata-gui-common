@@ -4,14 +4,14 @@
  * 
  * Can be used only as a contextual component yielded by one-tree.
  * 
- * @module components/one-tree-item
+ * @module components/one-tree/item
  * @author Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/one-tree-item';
+import layout from 'onedata-gui-common/templates/components/one-tree/item';
 
 import { invokeAction, invoke } from 'ember-invoke-action';
 
