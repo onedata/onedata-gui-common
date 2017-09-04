@@ -175,7 +175,7 @@ export default Ember.Component.extend({
         clearTimeout(_stylesRecomputeTimeoutId);
         this.set('_stylesRecomputeTimeoutId', setTimeout(
           () => {
-            if (!this.isDestroyed && this.isDestroying) {
+            if (!this.isDestroyed && !this.isDestroying) {
               this.set('_chartCss', this.generateChartStyles())
             }
           },
