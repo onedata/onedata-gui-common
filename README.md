@@ -61,6 +61,21 @@ To copy dependencies launch a script (requires Python ^2.7) from root of parent 
 ./src/lib/onedata-gui-common/scripts/copy-deps-to-project.py
 ```
 
+#### Setting up Sass
+
+The addon depends on some globally set Sass variables - main colors used in the application theme. 
+These variables needs to be injected using `ember-cli-build.js` configuration file.
+
+At the top of that file, add `require` statements to import the Sass setup function and colors configuration:
+```javascript
+const defineSassColors = require('./lib/onedata-gui-common/addon/utils/define-sass-colors');
+const colors = require('./lib/onedata-gui-common/addon/colors').default;
+```
+
+And then, after an `app` definition, paste:
+```javascript
+defineSassColors(app, colors);
+```
 
 #### Routing and templates
 

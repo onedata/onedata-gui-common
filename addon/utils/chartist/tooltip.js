@@ -29,6 +29,7 @@
  */
 
 /* global Chartist */
+import _ from 'lodash';
 import dynamicRound from 'onedata-gui-common/utils/dynamic-round';
 
 const TOOLTIP_HTML =
@@ -40,6 +41,8 @@ const TOOLTIP_HTML =
     <div class="chart-tooltip-arrow"></div>
   </div>
 `;
+
+let chartsIndex = [];
 
 export default function (options) {
   let defaultOptions = {
@@ -55,6 +58,8 @@ export default function (options) {
   return (chart) => {
     let tooltipNode,
       container = $(chart.container);
+
+    let chartEntry = getChartRenderEntry(chart);
 
     let prepareTooltip = function (tooltipData, data) {
       // title
@@ -83,6 +88,10 @@ export default function (options) {
     };
 
     chart.on('created', () => {
+      if (!isPluginEnabled(chart)) {
+        chartEntry.x = chartEntry.y = null;
+        return;
+      }
       tooltipNode = container.find('.chart-tooltip');
       if (tooltipNode.length === 0) {
         tooltipNode = $($.parseHTML(TOOLTIP_HTML));
@@ -90,11 +99,31 @@ export default function (options) {
         tooltipNode.css('transform',
           `translateY(-100%) translateY(${options.topOffset}px) translateX(-50%)`);
       } else {
-        tooltipNode.removeClass('active');
+        if (chartEntry.x !== null) {
+          let element = document.elementFromPoint(chartEntry.x, chartEntry.y);
+          let elementIndex = chartEntry.showCallbacksTargets.indexOf(element);
+          if (elementIndex > -1) {
+            chartEntry.showCallbacks[elementIndex](chartEntry.x, chartEntry.y);
+          } else {
+            chartEntry.x = chartEntry.y = null;
+            tooltipNode.removeClass('active');
+          }
+        } else {
+          tooltipNode.removeClass('active');
+        }
       }
+      $(chart.svg.getNode()).mousemove((event) => {
+        if (!$(event.target).parents('.ct-series').length) {
+          tooltipNode.removeClass('active');
+          chartEntry.x = chartEntry.y = null;
+        }
+      });
     });
 
     chart.on('draw', function (data) {
+      if (!isPluginEnabled(chart)) {
+        return;
+      }
       let tooltipData = chart.data.series.map(s => ({
         className: s.className,
         name: s.name,
@@ -161,19 +190,51 @@ export default function (options) {
           'no-padding');
         let tooltipData = data.series.tooltipElements;
         let sliceNode = $(data.element._node);
-        sliceNode.mousemove((event) => {
-          tooltipNode.css('top', (event.pageY - container.offset().top - 10) +
+        let showTooltip = (x, y) => {
+          tooltipNode.css('top', (y - container.offset().top - 10) +
             'px');
-          tooltipNode.css('left', (event.pageX - container.offset()
+          tooltipNode.css('left', (x - container.offset()
             .left) + 'px');
 
           prepareTooltip(tooltipData, data);
 
           tooltipNode.addClass('active');
-        }).mouseout(() => {
-          tooltipNode.removeClass('active');
-        });
+          chartEntry.x = x;
+          chartEntry.y = y;
+        }
+        sliceNode.mousemove((event) => showTooltip(event.pageX, event.pageY))
+          .mouseout(() => {
+            tooltipNode.removeClass('active');
+            chartEntry.x = chartEntry.y = null;
+          });
+        chartEntry.showCallbacksTargets.push(data.element.getNode());
+        chartEntry.showCallbacks.push(showTooltip);
       }
     });
   };
+}
+
+function isPluginEnabled(chart) {
+  return !chart.options.disabledPlugins ||
+    chart.options.disabledPlugins.indexOf('tooltip') === -1;
+}
+
+function getChartRenderEntry(chart) {
+  let node = chart.container;
+  let chartRender = _.find(chartsIndex, { node });
+  if (!chartRender) {
+    chartRender = {
+      node,
+      x: null,
+      y: null,
+      showCallbacksTargets: [],
+      showCallbacks: [],
+    }
+    // remove not existing charts renders
+    chartsIndex = chartsIndex.filter((existingChartRender) => {
+      return jQuery.contains(document.documentElement, existingChartRender.node);
+    });
+    chartsIndex.push(chartRender);
+  }
+  return chartRender;
 }
