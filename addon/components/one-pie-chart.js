@@ -18,12 +18,16 @@
  * @property {string} color A color for series.
  */
 
+ /* global Chartist */
+
 import Ember from 'ember';
 import layout from '../templates/components/one-pie-chart';
 import _ from 'lodash';
 import centeredText from 'onedata-gui-common/utils/chartist/centered-text';
 import pieLabels from 'onedata-gui-common/utils/chartist/pie-labels';
+import tooltip from 'onedata-gui-common/utils/chartist/tooltip'
 import customCss from 'onedata-gui-common/utils/chartist/custom-css';
+import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 
 const {
   computed,
@@ -80,10 +84,24 @@ export default Ember.Component.extend({
   activeSeriesId: null,
 
   /**
+   * If true, component is displayed using mobile configuration
+   * @type {boolean}
+   */
+  _mobileMode: false,
+
+  /**
    * Timeout id for styles recompute (see _chartCss property)
    * @type {number}
    */
   _stylesRecomputeTimeoutId: -1,
+
+  /**
+   * Window resize handler.
+   * @type {Function}
+   */
+  _windowResizeHandler: computed(function () {
+    return () => this._windowResized();
+  }),
 
   /**
    * Sorted data.
@@ -115,7 +133,7 @@ export default Ember.Component.extend({
    * Chartist options.
    * @type {computed.Object}
    */
-  _chartOptions: computed('_valuesSum', function () {
+  _chartOptions: computed('_valuesSum', '_mobileMode', function () {
     return this.generateChartOptions();
   }),
 
@@ -128,11 +146,11 @@ export default Ember.Component.extend({
   }),
 
   /**
-   * Chartist chart labels
+   * Chartist chart pie labels
    * @type {computed.Array.string}
    */
-  _chartDataLabels: computed('_sortedData.@each.label', function () {
-    return this.generateChartLabels();
+  _chartPieLabels: computed('_sortedData.@each.label', function () {
+    return this.generateChartPieLabels();
   }),
 
   /**
@@ -165,7 +183,7 @@ export default Ember.Component.extend({
    * Chartist data
    * @type {computed.Object}
    */
-  _chartData: computed('_chartDataLabels', '_chartDataSeries', '_chartCss',
+  _chartData: computed('_chartDataLabels', '_chartDataSeries', '_chartCss', '_chartOptions',
     function () {
       return this.generateChartData();
     }
@@ -173,6 +191,8 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+    $(window).on('resize', this.get('_windowResizeHandler'));
+    this._windowResized();
     this.$('.ct-chart').mousemove((event) => {
       let parentGroup = $(event.target).parents('.ct-series');
       if (parentGroup.length) {
@@ -191,6 +211,14 @@ export default Ember.Component.extend({
         }
       }
     });
+  },
+
+  willDestroyElement() {
+    try {
+      $(window).off('resize', this.get('_windowResizeHandler'));
+    } finally {
+      this._super(...arguments);
+    }
   },
 
   /**
@@ -218,8 +246,12 @@ export default Ember.Component.extend({
    * @returns {Object} Chartist options.
    */
   generateChartOptions() {
-    let _valuesSum = this.get('_valuesSum');
-    return {
+    let {
+      _mobileMode,
+      _valuesSum,
+      data,
+    } = this.getProperties('_mobileMode', '_valuesSum', 'data');
+    let optionsBase = {
       donut: true,
       donutWidth: '45%',
       showLabel: false,
@@ -228,12 +260,29 @@ export default Ember.Component.extend({
         centeredText({
           text: this.formatValue(_valuesSum),
         }),
+        tooltip({
+          chartType: 'pie',
+        }),
         pieLabels({
           hideLabelThresholdPercent: 0,
         }),
         customCss(),
+        Chartist.plugins.legend({
+          legendNames: _.map(data, 'label'),
+          className: 'not-clickable',
+          clickable: false,
+        }),
+        legendColors({
+          colors: _.map(data, 'color'),
+        }),
       ]
     };
+    if (_mobileMode) {
+      optionsBase.disabledPlugins = ['pieLabels'];
+    } else {
+      optionsBase.disabledPlugins = ['tooltip'];
+    }
+    return optionsBase;
   },
 
   /**
@@ -242,16 +291,19 @@ export default Ember.Component.extend({
    */
   generateChartData() {
     let {
-      _chartDataLabels,
+      _chartPieLabels,
       _chartDataSeries,
       _chartCss,
+      data,
     } = this.getProperties(
-      '_chartDataLabels',
+      '_chartPieLabels',
       '_chartDataSeries',
-      '_chartCss'
+      '_chartCss',
+      'data'
     );
     return {
-      labels: _chartDataLabels,
+      labels: _.map(data, 'label'),
+      pieLabels: _chartPieLabels,
       series: _chartDataSeries,
       customCss: _chartCss,
     };
@@ -267,6 +319,10 @@ export default Ember.Component.extend({
       return {
         data: series.get('value'),
         className: 'slice-id-' + series.get('id'),
+        tooltipElements: [{
+          name: 'Value',
+          value: this.formatValue(series.get('value')),
+        }],
       };
     });
   },
@@ -275,7 +331,7 @@ export default Ember.Component.extend({
    * Creates chartist labels for data object.
    * @returns {Array.Object} Chartist labels.
    */
-  generateChartLabels() {
+  generateChartPieLabels() {
     let _sortedData = this.get('_sortedData');
     return _sortedData.map((series) => {
       let className = 'label-id-' + series.get('id');
@@ -363,4 +419,11 @@ export default Ember.Component.extend({
   _getLabelOpacity(series) {
     return this.$('.label-id-' + series.get('id')).css('opacity');
   },
+
+  /**
+   * Checks if the browser window has mobile width or not
+   */
+  _windowResized() {
+    this.set('_mobileMode', window.innerWidth < 768); 
+  }
 });

@@ -47,7 +47,7 @@ export default function (options) {
         .text(options.text);
       let textWidth = textElement.width();
       let maxTextWidth =
-        normalizeSize(options.maxWidth, relativeSize, DEFAULT_MAX_WIDTH);
+        normalizeSize(options.maxWidth, relativeSize, DEFAULT_MAX_WIDTH) - 10;
       if (textWidth > maxTextWidth) {
         let scaleRatio = maxTextWidth / textWidth;
         textElement.getNode().style.fontSize = fontSize * scaleRatio + 'px';

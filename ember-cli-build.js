@@ -43,6 +43,17 @@ module.exports = function (defaults) {
       'importBootstrapFont': true,
       'bootstrapVersion': 3
     },
+    'ember-cli-chartist': {
+      'useCustomCSS': true
+    },
+    nodeAssets: {
+      'chartist-plugin-legend': {
+        vendor: {
+          include: ['chartist-plugin-legend.js'],
+        },
+        public: {},
+      },
+    },
   });
 
   /*
@@ -60,6 +71,9 @@ module.exports = function (defaults) {
   ];
 
   BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));
+
+
+  app.import('vendor/chartist-plugin-legend/chartist-plugin-legend.js');
 
   return app.toTree();
 };

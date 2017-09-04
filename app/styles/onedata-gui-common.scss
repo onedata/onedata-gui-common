@@ -32,6 +32,8 @@ $color-one-list-item-separator: $main-border-color;
 @import '_spin-button-base';
 
 @import 'onedata-gui-common/spin-button-overrides';
+@import 'chartist';
+@import 'onedata-gui-common/chartist-overrides';
 
 $mobile-top-height: 70px;
 $main-menu-width: 200px;

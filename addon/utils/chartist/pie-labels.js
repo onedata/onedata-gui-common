@@ -41,13 +41,16 @@ export default function (options) {
   options = Chartist.extend({}, defaultOptions, options);
   return (chart) => {
     chart.on('draw', (data) => {
+      if (!isPluginEnabled(chart)) {
+        return;
+      }
       if (data.type === 'slice') {
-        if (!chart.data.labels[data.index]) {
+        if (!chart.data.pieLabels[data.index]) {
           return;
         }
         let svg = chart.svg;
         let labelsGroup = getLabelsGroup(svg);
-        let additionalClasses = chart.data.labels[data.index].className;
+        let additionalClasses = chart.data.pieLabels[data.index].className;
         let labelGroup = svg.elem('g', {},
           'ct-pie-label ' + (additionalClasses ? additionalClasses : ''));
         labelsGroup.append(labelGroup);
@@ -122,6 +125,11 @@ export default function (options) {
   };
 }
 
+function isPluginEnabled(chart) {
+  return !chart.options.disabledPlugins || 
+    chart.options.disabledPlugins.indexOf('pieLabels') === -1;
+}
+
 function getLabelsGroup(svg) {
   let labelsGroup = svg.querySelector('.ct-pie-labels');
   if (!labelsGroup) {
@@ -161,7 +169,7 @@ function addText(
     textAttributes,
     'ct-pie-label-text ct-pie-label-text-top'
   );
-  clipText(textElement, chart.data.labels[data.index].topText, width, chart);
+  clipText(textElement, chart.data.pieLabels[data.index].topText, width, chart);
   labelGroup.append(textElement);
 
   textAttributes.dy = y + options.lineTextMargin;
@@ -172,7 +180,7 @@ function addText(
     textAttributes,
     'ct-pie-label-text ct-pie-label-text-bottom'
   );
-  clipText(textElement, chart.data.labels[data.index].bottomText, width, chart);
+  clipText(textElement, chart.data.pieLabels[data.index].bottomText, width, chart);
   labelGroup.append(textElement);
 }
 
