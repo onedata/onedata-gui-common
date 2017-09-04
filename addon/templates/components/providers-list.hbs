@@ -1,18 +1,26 @@
 {{#one-collapsible-list filtrationChanged=(action "providersFilter") as |list|}}
   {{list.header class="align-to-icon" isCollapsible=false title=title}}
-  {{#each providers as |provider|}}
-    {{#list.item isCollapsible=false selectionValue=provider click=(action "providerClick" provider) as |listItem|}}
+  {{#each providersData as |providerData|}}
+    {{#list.item isCollapsible=false selectionValue=providerData.provider click=(action "providerClick" providerData.provider) as |listItem|}}
       {{#listItem.header}}
-        <span class="item-icon-container">
-          {{one-icon class="item-icon" icon="provider" color=provider.color}}
-          {{one-tooltip
-            title=provider.name
-            placement="top"
-            arrowPlacement="left"
-            triggerEvents="hover"
-          }}
-        </span>
-        <span class="one-label">{{provider.name}}</span>
+        {{#truncated-string}}
+          <span class="item-icon-container">
+            {{one-icon class="item-icon" icon="provider" color=providerData.color}}
+          </span>
+          <span class="one-label">{{providerData.provider.name}}</span>
+        {{/truncated-string}}
+        {{#status-toolbar as |toolbar|}}
+          {{#if selectedSpace}}
+          {{toolbar.icon
+              icon="space"
+              hint=(t "components.providersList.supportedSpaces")
+              innerText=providerData.provider.spaces.length}}
+            {{toolbar.icon
+              icon="provider"
+              hint=(t "components.providersList.spaceSupportSize")
+              outerText=(bytes-to-string (get selectedSpace.supportSizes providerData.provider.id))}}
+          {{/if}}
+        {{/status-toolbar}}
         {{#if providerActions.length}}
           {{#one-collapsible-toolbar
             isMinimized=true
@@ -21,7 +29,7 @@
           }}
             {{#each providerActions as |providerAction|}}
             {{#dropdown.item
-              itemAction=(action providerAction.action provider)
+              itemAction=(action providerAction.action providerData.provider)
               triggerClasses=providerAction.class
             }}
               {{providerAction.text}}

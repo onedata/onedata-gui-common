@@ -1,7 +1,6 @@
 {{#unless isGlobal}}
   <div class="collapsible-toolbar-toggle{{unless isMinimized " hidden"}} {{toggleBtnClass}}"
     onClick={{disable-bubbling (action "toggleDropdown")}}>
-
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
@@ -12,7 +11,6 @@
   placement="bottom-left"
   padding=false
   triggerSelector=toggleSelector
-  multi=true
   open=dropdownOpened
   as |popover|
 }}

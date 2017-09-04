@@ -61,6 +61,24 @@ export default Ember.Component.extend({
   status: null,
 
   /**
+   * Text placed in the center of the icon
+   * @type {string}
+   */
+  innerText: null,
+
+  /**
+   * Text placed outside the icon
+   * @type {string}
+   */
+  outerText: null,
+
+  /**
+   * Outer text placement relative to icon (left or right)
+   * @type {string}
+   */
+  outerTextSide: 'right',
+
+  /**
    * Click action
    * @type {Function}
    */
