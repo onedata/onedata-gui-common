@@ -1,0 +1,90 @@
+.one-dynamic-tree {
+  $field-width: 150px;
+
+  max-width: 450px;
+  .one-tree {
+    .one-tree-list {
+      > li {
+        &.item-text {
+          $one-tree-bullet-top: 19px;
+
+          &:before {
+            top: $one-tree-bullet-top;
+          }
+
+          &:last-child::after {
+            top: $one-tree-bullet-top + 1px;
+          }
+
+          > .tree-circle {
+            top: $one-tree-bullet-top + 2px;
+          }
+
+          .node-text {
+            padding-top: 6px;
+          }
+        }
+
+        &.item-checkbox, &.item-radio-group {
+          .form-control-feedback {
+            display: none;
+          }
+        }
+
+
+        .one-tree-item-content {
+          padding-right: $padding-xs-horizontal;
+          border-radius: $border-radius-small;
+          .node-text, .form-group {
+            display: table-cell;
+            vertical-align: top;
+          }
+
+          .node-text {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            &.disabled {
+              opacity: $disabled-opacity;
+            }
+          }
+          .form-group {
+            min-width: $field-width;
+            width: $field-width;
+            margin-bottom: 0;
+            .form-control-feedback {
+              height: 32px;
+              width: 32px;
+              margin-top: 0;
+              line-height: 32px;
+            }
+
+            .one-way-radio-group {
+              padding-left: 0;
+              label {
+                display: block;
+              }
+            }
+          }
+        }
+
+        &:not(.item-generic) {
+          padding-left: $one-tree-indent - $padding-xs-horizontal;
+          .one-tree-item-content {
+            padding-left: $padding-xs-horizontal;
+            &:hover {
+              background-color: $main-content-hover-background;
+            }
+            .node-text {
+              max-width: 0;
+            }
+            .form-message {
+              padding-top: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -62,11 +62,14 @@ describe('Integration | Component | one tree', function () {
     let tree = this.$('.one-tree-root');
     let subtree = tree.find('.one-tree');
     expect(subtree).to.have.class('collapse-hidden');
-    tree.find('> .one-tree-list > .one-tree-item > .one-tree-item-content').click();
     wait().then(() => {
-      expect(subtree).to.not.have.class('collapse-hidden');
-      done();
-    });
+      tree.find('> .one-tree-list > .one-tree-item > .one-tree-item-content')
+        .click();
+      wait().then(() => {
+        expect(subtree).to.not.have.class('collapse-hidden');
+        done();
+      });
+    })
   });
 
   it('collapses children recursively when collapseRecursively==true', function (done) {
@@ -93,16 +96,19 @@ describe('Integration | Component | one tree', function () {
       firstLevelItem.find('> .one-tree > .one-tree-list > .one-tree-item');
     let secondLevelSubtree = secondLevelItem.find('> .one-tree');
 
-    firstLevelItem.find('> .one-tree-item-content').click();
-    secondLevelItem.find('> .one-tree-item-content').click();
     wait().then(() => {
-      expect(secondLevelSubtree).to.not.have.class('collapse-hidden');
       firstLevelItem.find('> .one-tree-item-content').click();
+      secondLevelItem.find('> .one-tree-item-content').click();
       wait().then(() => {
+        expect(secondLevelSubtree).to.not.have.class('collapse-hidden');
         firstLevelItem.find('> .one-tree-item-content').click();
         wait().then(() => {
-          expect(secondLevelSubtree).to.have.class('collapse-hidden');
-          done();
+          firstLevelItem.find('> .one-tree-item-content').click();
+          wait().then(() => {
+            expect(secondLevelSubtree)
+              .to.have.class('collapse-hidden');
+            done();
+          });
         });
       });
     });

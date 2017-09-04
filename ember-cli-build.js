@@ -2,6 +2,8 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+const colors = require('./addon/colors').default;
+const defineSassColors = require('./addon/utils/define-sass-colors');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
@@ -33,7 +35,20 @@ module.exports = function (defaults) {
       'importBootstrapFont': true,
       'bootstrapVersion': 3
     },
+    'ember-cli-chartist': {
+      'useCustomCSS': true
+    },
+    nodeAssets: {
+      'chartist-plugin-legend': {
+        vendor: {
+          include: ['chartist-plugin-legend.js'],
+        },
+        public: {},
+      },
+    },
   });
+
+  defineSassColors(app, colors);
 
   /*
     This build file specifies the options for the dummy test app of this
@@ -50,6 +65,8 @@ module.exports = function (defaults) {
   ];
 
   BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));
+
+  app.import('vendor/chartist-plugin-legend/chartist-plugin-legend.js');
 
   return app.toTree();
 };

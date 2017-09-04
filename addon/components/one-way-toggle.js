@@ -36,8 +36,9 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
     document.getSelection().removeAllRanges();
   },
 
-  click() {
+  click(event) {
     if (!this.get('_disableClick')) {
+      event.stopPropagation();
       invoke(this, 'toggle');
     }
   },

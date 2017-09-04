@@ -22,7 +22,10 @@
   </div>
   <div class="drop-provider-host-container">
     <input class="provider-host-text truncate {{concat provider.id "-host-input"}}" value={{provider.host}} readonly>
-     {{#copy-button tagName="div" success='copySuccess' error='copyError'
+     {{#copy-button
+        tagName="div"
+        success=(action "copySuccess")
+        error=(action "copyError")
         class="provider-host-copy-btn clickable"
         clipboardTarget=(concat (concat "." provider.id) "-host-input")}}
       {{one-icon tagName="div" icon="clipboard-copy"}}

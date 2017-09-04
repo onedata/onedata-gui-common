@@ -10,6 +10,7 @@
 
 import 'npm:perfect-scrollbar';
 import 'npm:round10';
+import 'npm:color';
 
 export default {
   name: 'force-browserify-import',

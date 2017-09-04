@@ -2,17 +2,22 @@
  * A component used by one-tree. It represents tree item content. Example of 
  * usage can be found in one-tree component comments.
  * 
- * Can be used only as a contextual component yielded by one-tree-item.
+ * Can be used only as a contextual component yielded by one-tree/item.
  * 
- * @module components/one-tree-item-content
+ * @module components/one-tree/item/content
  * @author Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/one-tree-item-content';
+import layout from 'onedata-gui-common/templates/components/one-tree/item/content';
 import { invokeAction } from 'ember-invoke-action';
+
+const {
+  observer,
+  on,
+} = Ember;
 
 export default Ember.Component.extend({
   layout,
@@ -24,7 +29,20 @@ export default Ember.Component.extend({
    */
   _showAction: null,
 
-  click() {
+  /**
+   * If true, item has a subtree
+   * @type {boolean}
+   */
+  hasSubtree: false,
+
+  /**
+   * Toggles click handler.
+   */
+  _hasSubtreeObserver: on('init', observer('hasSubtree', function () {
+    this.set('click', this.get('hasSubtree') ? this._click : null);
+  })),
+
+  _click() {
     invokeAction(this, '_showAction');
-  }
+  },
 });
