@@ -11,11 +11,13 @@
         {{/truncated-string}}
         {{#status-toolbar as |toolbar|}}
           {{#if selectedSpace}}
-          {{toolbar.icon
+            {{toolbar.icon
+              class="supported-spaces"
               icon="space"
               hint=(t "components.providersList.supportedSpaces")
               innerText=providerData.provider.spaces.length}}
             {{toolbar.icon
+              class="space-support-size"
               icon="provider"
               hint=(t "components.providersList.spaceSupportSize")
               outerText=(bytes-to-string (get selectedSpace.supportSizes providerData.provider.id))}}
