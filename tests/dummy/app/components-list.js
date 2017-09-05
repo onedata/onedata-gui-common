@@ -6,4 +6,5 @@ export default [
   'provider-place',
   'providers-list',
   'space-providers-support-chart',
+  'status-toolbar',
 ];

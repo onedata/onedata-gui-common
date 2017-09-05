@@ -33,5 +33,5 @@ import layout from 'onedata-gui-common/templates/components/status-toolbar';
 
 export default Ember.Component.extend({
   layout,
-  classNames: ['status-toolbar'],
+  classNames: ['status-toolbar', 'clearfix'],
 });

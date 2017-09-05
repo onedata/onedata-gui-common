@@ -38,11 +38,17 @@ export default Ember.Component.extend({
   }),
 
   /**
-   * Array of providers. ProviderDetails objects may include ``color`` property.
+   * Array of objects {provider, color}. 
    * To inject.
-   * @type {Array.Onezone.ProviderDetails}
+   * @type {Ember.Array.Object}
    */
-  providers: [],
+  providersData: null,
+
+  /**
+   * If set, list will show additional information about that space support size
+   * @type {Space}
+   */
+  selectedSpace: null,
 
   /**
    * Action called on providers filter.

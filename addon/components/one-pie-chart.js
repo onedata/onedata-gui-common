@@ -174,7 +174,11 @@ export default Ember.Component.extend({
         );
         clearTimeout(_stylesRecomputeTimeoutId);
         this.set('_stylesRecomputeTimeoutId', setTimeout(
-          () => this.set('_chartCss', this.generateChartStyles()),
+          () => {
+            if (!this.isDestroyed && !this.isDestroying) {
+              this.set('_chartCss', this.generateChartStyles())
+            }
+          },
           hoverTransitionTime * 1000
         ));
         return this.generateChartStyles();
