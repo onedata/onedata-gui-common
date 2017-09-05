@@ -194,8 +194,10 @@ export default Ember.Component.extend({
       _matchesSearchQuery,
     } = this.getProperties('_searchQuery', '_matchesSearchQuery');
     let headerTextElement = this.$('.one-collapsible-list-item-header');
-    let matches =
-      headerTextElement.text().toLowerCase().search(_searchQuery.trim()) > -1;
+    let oneLabel = headerTextElement.find('.one-label');
+    let targetElement = oneLabel.length ? oneLabel : headerTextElement;
+    let matches = targetElement.text().toLowerCase()
+      .search(_searchQuery.trim().toLowerCase()) > -1;
     if (matches !== _matchesSearchQuery && !matches) {
       invoke(this, 'toggle', false);
     }

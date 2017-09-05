@@ -81,8 +81,7 @@ describe('Integration | Component | provider place', function () {
     this.render(hbs `
       {{provider-place 
         provider=provider 
-        atlasWidth=atlasWidth}}`
-    );
+        atlasWidth=atlasWidth}}`);
     let prevWidth = parseFloat(this.$('.circle').css('width'));
     this.set('atlasWidth', 400);
     expect(parseFloat(this.$('.circle').css('width')))
@@ -92,8 +91,7 @@ describe('Integration | Component | provider place', function () {
   it('notifies about hostname copy to clipboard success', function (done) {
     this.render(hbs `
       {{provider-place 
-        provider=provider}}`
-    );
+        provider=provider}}`);
     click('.circle').then(() => {
       triggerCopyClick(this);
       expect(this.get('globalNotify.infoMessages')).to.have.length(1);
@@ -105,9 +103,8 @@ describe('Integration | Component | provider place', function () {
   it('notifies about hostname copy to clipboard error', function (done) {
     this.render(hbs `
       {{provider-place 
-        provider=provider}}`
-    );
-    click('.circle',).then(() => {
+        provider=provider}}`);
+    click('.circle').then(() => {
       triggerCopyClick(this, false);
       expect(this.get('globalNotify.infoMessages')).to.have.length(1);
       expect(this.get('globalNotify.infoMessages')).to.contain(COPY_ERROR_MSG);
@@ -118,18 +115,17 @@ describe('Integration | Component | provider place', function () {
   it('shows list of supported spaces', function (done) {
     this.render(hbs `
       {{provider-place 
-        provider=provider}}`
-    );
+        provider=provider}}`);
 
     let spaces = this.get('provider.spaces');
-    click('.circle',).then(() => {
+    click('.circle').then(() => {
       let drop = $('.provider-place-drop');
       expect(drop.find('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
-        expect(drop.text()).to.contain(space.name);
-      }),
-      expect(drop.text()).to.contain('1 MiB');
+          expect(drop.text()).to.contain(space.name);
+        }),
+        expect(drop.text()).to.contain('1 MiB');
       done();
     });
   });
