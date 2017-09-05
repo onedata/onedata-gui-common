@@ -1,4 +1,14 @@
-{{one-icon icon=icon class="one-icon-status"}}
+{{#if (and outerText (eq outerTextSide "left"))}}
+  <div class="outer-text">{{outerText}}</div>
+{{/if}}
+{{#one-icon icon=icon class="one-icon-status"}}
+  {{#if innerText}}
+    <div class="inner-text">{{innerText}}</div>
+  {{/if}}
+{{/one-icon}}
+{{#if (and outerText (eq outerTextSide "right"))}}
+  <div class="outer-text">{{outerText}}</div>
+{{/if}}
 {{#if subIcon}}
   {{one-icon class=(concat-classes "sub-status-icon" subIconClass) icon=subIcon}}
 {{/if}}

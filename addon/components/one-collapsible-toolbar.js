@@ -78,7 +78,7 @@ export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
    * CSS classes used in minimized mode (for a dropdown trigger)
    * @type {boolean}
    */
-  minimizedModeClasses: 'pull-right',
+  minimizedModeClasses: '',
 
   minimumFullWindowSize: 768,
 
@@ -198,6 +198,13 @@ export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
       this.set('dropdownOpened', false);
     },
     toggleDropdown() {
+      let toggle = this.$('.collapsible-toolbar-toggle');
+      let popoverOpened = toggle.attr('data-target') &&
+        $('#' + toggle.attr('data-target')).hasClass('in');
+      if (this.get('dropdownOpened') && !popoverOpened) {
+        // Popover has been closed from the outside. schedule its reopen
+        next(() => this.toggleProperty('dropdownOpened'));
+      }
       this.toggleProperty('dropdownOpened');
     }
   },

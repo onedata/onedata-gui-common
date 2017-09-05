@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Service.extend({
   infoMessages: [],
-  
+
   info(message) {
     this.get('infoMessages').push(message);
   },
