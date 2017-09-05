@@ -36,10 +36,41 @@ export default Ember.Component.extend({
   hasSubtree: false,
 
   /**
+   * Action called, when header content contains (or not) specified 
+   * search query.
+   * @type {Function}
+   */
+  itemFilteredOut: () => {},
+
+  /**
+   * Search query.
+   * @type {string}
+   */
+  searchQuery: '',
+
+  /**
    * Toggles click handler.
    */
   _hasSubtreeObserver: on('init', observer('hasSubtree', function () {
     this.set('click', this.get('hasSubtree') ? this._click : null);
+  })),
+
+  /**
+   * Performs filter query search
+   */
+  _searchQueryObserver: on('didInsertElement', observer('searchQuery', function () {
+    let {
+      searchQuery,
+      itemFilteredOut,
+    } = this.getProperties('searchQuery', 'itemFilteredOut');
+    let textElement = this.$();
+    let oneLabel = textElement.find('.one-label');
+    if (oneLabel.length) {
+      textElement = oneLabel;
+    }
+    let isNotFilteredOut = textElement.text().toLowerCase()
+      .search(searchQuery.toLowerCase().trim()) > -1;
+    itemFilteredOut(isNotFilteredOut);
   })),
 
   _click() {

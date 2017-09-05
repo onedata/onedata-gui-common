@@ -33,14 +33,32 @@ const {
 
 export default Ember.Component.extend({
   layout,
-  classNames: ['one-tree-item'],
-  classNameBindings: ['_hasSubtree:has-subtree'],
+  classNames: ['one-tree-item', 'collapse-animation', 'collapse-medium'],
+  classNameBindings: ['_hasSubtree:has-subtree', '_isFilteredOut:collapse-hidden'],
 
   tagName: 'li',
 
   eventsBus: service(),
 
   key: oneWay('elementId'),
+
+  /**
+   * Action called, when item changes its visibility after filter.
+   * @type {Function}
+   */
+  itemFilteredOut: () => {},
+
+  /**
+   * Action called on init/destroy.
+   * @type {Function}
+   */
+  itemRegister: () => {},
+
+  /**
+   * Search query.
+   * @type {string}
+   */
+  searchQuery: '',
 
   /**
    * Parent subtree key (will be null for root)
@@ -55,11 +73,43 @@ export default Ember.Component.extend({
   _hasSubtree: false,
 
   /**
+   * If true, item content does not match search query.
+   * @type {boolean}
+   */
+  _contentFilteredOut: false,
+
+  /**
+   * If true, subtree items does not match search query.
+   * @type {boolean}
+   */
+  _subtreeFilteredOut: false,
+
+  /**
    * Property used in _activeSubtreeKeys observer to compare with new 
    * _activeSubtreeKeys value.
    * @type {Array.*}
    */
   _activeSubtreeKeysOld: [],
+
+  /**
+   * If true, whole item is filtered out and is invisible.
+   * @type {computed.boolean}
+   */
+  _isFilteredOut: computed('_contentFilteredOut', '_subtreeFilteredOut',
+    '_hasSubtree',
+    function () {
+      let {
+        _contentFilteredOut,
+        _subtreeFilteredOut,
+        _hasSubtree,
+      } = this.getProperties(
+        '_contentFilteredOut',
+        '_subtreeFilteredOut',
+        '_hasSubtree'
+      );
+      return _contentFilteredOut && (!_hasSubtree || _subtreeFilteredOut);
+    }
+  ),
 
   _isSubtreeExpanded: computed('_activeSubtreeKeys.[]', 'key', function () {
     let {
@@ -131,25 +181,54 @@ export default Ember.Component.extend({
     this.set('_activeSubtreeKeysOld', _activeSubtreeKeys);
   }),
 
+  _filteredOutObserver: observer('_isFilteredOut', 'key', function () {
+    let {
+      _isFilteredOut,
+      key,
+      itemFilteredOut,
+    } = this.getProperties(
+      '_isFilteredOut',
+      'key',
+      'itemFilteredOut'
+    );
+    itemFilteredOut(key, !_isFilteredOut);
+  }),
+
   init() {
     this._super(...arguments);
 
     let {
       eventsBus,
-      _eventsBusShowHandler
-    } = this.getProperties('eventsBus', '_eventsBusShowHandler');
+      _eventsBusShowHandler,
+      itemRegister,
+      key,
+    } = this.getProperties(
+      'eventsBus',
+      '_eventsBusShowHandler',
+      'itemRegister',
+      'key'
+    );
 
     eventsBus.on('one-tree:show', _eventsBusShowHandler);
+    itemRegister(key, true);
   },
 
   willDestroyElement() {
     try {
       let {
         eventsBus,
-        _eventsBusShowHandler
-      } = this.getProperties('eventsBus', '_eventsBusShowHandler');
+        _eventsBusShowHandler,
+        itemRegister,
+        key,
+      } = this.getProperties(
+        'eventsBus',
+        '_eventsBusShowHandler',
+        'itemRegister',
+        'key'
+      );
 
       eventsBus.off('one-tree:show', _eventsBusShowHandler);
+      itemRegister(key, false);
     } finally {
       this._super(...arguments);
     }
@@ -180,6 +259,20 @@ export default Ember.Component.extend({
     },
     hasTreeNotify(hasSubtree) {
       this.set('_hasSubtree', hasSubtree);
+    },
+    itemFilteredOut(visible) {
+      next(() => {
+        if (!this.isDestroyed && !this.isDestroying) {
+          this.set('_contentFilteredOut', !visible)
+        }
+      });
+    },
+    subtreeFilteredOut(visible) {
+      next(() => {
+        if (!this.isDestroyed && !this.isDestroying) {
+          this.set('_subtreeFilteredOut', !visible);
+        }
+      });
     }
   }
 });
