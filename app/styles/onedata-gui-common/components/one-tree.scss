@@ -81,8 +81,8 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
 
       &.collapse-hidden {
         padding-bottom: 0;
-        margin-left: -2px;
         padding-left: $one-tree-indent + 2px;
+        margin-left: -2px;
         opacity: 1;
         &:before {
           display: none;

@@ -199,6 +199,9 @@ export default Ember.Component.extend({
     invokeAction(this, '_hasTreeNotify', false);
   },
 
+  /**
+   * Checks if tree should be visible to user
+   */
   _checkTreeVisibility() {
     if (this.isDestroyed || this.isDestroying) {
       return;

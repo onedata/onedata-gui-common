@@ -101,7 +101,7 @@ export default Ember.Component.extend({
   _activeSubtreeKeysOld: [],
 
   /**
-   * If true, whole item is filtered out and is invisible.
+   * If true, whole item should be filtered out.
    * @type {computed.boolean}
    */
   _isFilteredOut: computed('_contentFilteredOut', '_subtreeFilteredOut',
