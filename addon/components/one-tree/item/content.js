@@ -43,6 +43,12 @@ export default Ember.Component.extend({
   itemFilteredOut: () => {},
 
   /**
+   * If true, item subtree is filtered out
+   * @type {boolean}
+   */
+  isSubtreeFilteredOut: false,
+
+  /**
    * Search query.
    * @type {string}
    */
@@ -58,31 +64,40 @@ export default Ember.Component.extend({
   /**
    * Performs filter query search
    */
-  _searchQueryObserver: on('didInsertElement', observer('searchQuery', function () {
-    let {
-      searchQuery,
-      itemFilteredOut,
-    } = this.getProperties('searchQuery', 'itemFilteredOut');
-    searchQuery = searchQuery.trim();
-    // There is a priority of elements, where searchQuery should be searched:
-    // .tree-label or .one-label or the whole content
-    let textElement = this.$();
-    let treeLabel = textElement.find('.tree-label');
-    let oneLabel = textElement.find('.one-label');
-    if (treeLabel.length) {
-      textElement = treeLabel;
-    } else if (oneLabel.length) {
-      textElement = oneLabel;
-    }
-    let isNotFilteredOut = textElement.text().toLowerCase()
-      .search(searchQuery.toLowerCase()) > -1;
-    if (isNotFilteredOut && searchQuery.length > 0) {
-      textElement.addClass('semibold');
-    } else {
-      textElement.removeClass('semibold');
-    }
-    itemFilteredOut(isNotFilteredOut);
-  })),
+  _searchQueryObserver: on('didInsertElement', observer('searchQuery',
+    'isSubtreeFilteredOut',
+    function () {
+      let {
+        searchQuery,
+        itemFilteredOut,
+        isSubtreeFilteredOut,
+      } = this.getProperties(
+        'searchQuery',
+        'itemFilteredOut',
+        'isSubtreeFilteredOut'
+      );
+      searchQuery = searchQuery.trim();
+
+      // There is a priority of elements, where searchQuery should be searched:
+      // .tree-label or .one-label or the whole content
+      let textElement = this.$();
+      let treeLabel = textElement.find('.tree-label');
+      let oneLabel = textElement.find('.one-label');
+      if (treeLabel.length) {
+        textElement = treeLabel;
+      } else if (oneLabel.length) {
+        textElement = oneLabel;
+      }
+
+      let isNotFilteredOut = textElement.text().toLowerCase()
+        .indexOf(searchQuery.toLowerCase()) > -1;
+      if (searchQuery.length > 0 && !isSubtreeFilteredOut) {
+        textElement.addClass('semibold');
+      } else {
+        textElement.removeClass('semibold');
+      }
+      itemFilteredOut(isNotFilteredOut);
+    })),
 
   _click() {
     invokeAction(this, '_showAction');

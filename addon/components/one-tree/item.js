@@ -34,7 +34,10 @@ const {
 export default Ember.Component.extend({
   layout,
   classNames: ['one-tree-item', 'collapse-animation', 'collapse-medium'],
-  classNameBindings: ['_hasSubtree:has-subtree', '_isFilteredOut:collapse-hidden'],
+  classNameBindings: [
+    '_hasSubtree:has-subtree',
+    '_hiddenByFilter:collapse-hidden'
+  ],
 
   tagName: 'li',
 
@@ -61,6 +64,12 @@ export default Ember.Component.extend({
   searchQuery: '',
 
   /**
+   * If true, the filter is applied, but not matching items are not hidden
+   * @type {boolean}
+   */
+  disableFilter: false,
+
+  /**
    * Parent subtree key (will be null for root)
    * @type {*}
    */
@@ -82,7 +91,7 @@ export default Ember.Component.extend({
    * If true, subtree items does not match search query.
    * @type {boolean}
    */
-  _subtreeFilteredOut: false,
+  _subtreeFilteredOut: true,
 
   /**
    * Property used in _activeSubtreeKeys observer to compare with new 
@@ -111,6 +120,22 @@ export default Ember.Component.extend({
     }
   ),
 
+  /**
+   * If true, item is hidden (by filter operation).
+   * @type {computed.boolean}
+   */
+  _hiddenByFilter: computed('_isFilteredOut', 'disableFilter', function () {
+    let {
+      _isFilteredOut,
+      disableFilter,
+    } = this.getProperties('_isFilteredOut', 'disableFilter');
+    return _isFilteredOut && !disableFilter;
+  }),
+
+  /**
+   * If true, then item subtree is expanded.
+   * @type {computed.boolean}
+   */
   _isSubtreeExpanded: computed('_activeSubtreeKeys.[]', 'key', function () {
     let {
       _activeSubtreeKeys,
@@ -119,6 +144,10 @@ export default Ember.Component.extend({
     return _activeSubtreeKeys.indexOf(key) > -1;
   }),
 
+  /**
+   * Bullet icon name for item.
+   * @type {computed.string}
+   */
   _bulletIcon: computed('_isSubtreeExpanded', '_hasSubtree', function () {
     let {
       _isSubtreeExpanded,
@@ -136,6 +165,10 @@ export default Ember.Component.extend({
     }
   }),
 
+  /**
+   * Show handler for events-bus
+   * @type {computed.Function}
+   */
   _eventsBusShowHandler: computed(function () {
     return (selectedRootKey, subtreeKey, subtreeIsExpanded) => {
       let {

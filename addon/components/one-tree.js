@@ -101,6 +101,12 @@ export default Ember.Component.extend({
   searchQuery: '',
 
   /**
+   * If true, the filter is applied, but not matching items are not hidden
+   * @type {boolean}
+   */
+  disableFilter: false,
+
+  /**
    * Key for root tree. When tree is a root tree, then _rootKey = null.
    * @type {*}
    */
