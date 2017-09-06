@@ -241,4 +241,47 @@ describe('Integration | Component | one tree', function () {
       done();
     });
   });
+
+  it('filters items', function (done) {
+    this.render(hbs `
+      {{#one-tree searchQuery="item2" as |tree|}}
+        {{#tree.item class="item1" as |item|}}
+          {{#item.content}}item1aaa{{/item.content}}
+          {{#item.subtree as |subtree|}}
+            {{#subtree.item class="item11" as |subitem|}}
+              {{#subitem.content}}item1.1{{/subitem.content}}
+            {{/subtree.item}}
+          {{/item.subtree}}
+        {{/tree.item}}
+        {{#tree.item class="item2" as |item|}}
+          {{#item.content}}item2{{/item.content}}
+        {{/tree.item}}
+      {{/one-tree}}
+    `);
+
+    wait().then(() => {
+      expect(this.$('.item1')).to.have.class('collapse-hidden');
+      done();
+    });
+  });
+
+  it('does not filter nested items in items, that match', function (done) {
+    this.render(hbs `
+      {{#one-tree searchQuery="item1" as |tree|}}
+        {{#tree.item class="item1" as |item|}}
+          {{#item.content}}item1aaa{{/item.content}}
+          {{#item.subtree as |subtree|}}
+            {{#subtree.item class="item11" as |subitem|}}
+              {{#subitem.content}}abc{{/subitem.content}}
+            {{/subtree.item}}
+          {{/item.subtree}}
+        {{/tree.item}}
+      {{/one-tree}}
+    `);
+
+    wait().then(() => {
+      expect(this.$('.item11')).to.not.have.class('collapse-hidden');
+      done();
+    });
+  });
 });
