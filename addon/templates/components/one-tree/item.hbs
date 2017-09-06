@@ -12,7 +12,7 @@
     key=key
     collapseRecursively=collapseRecursively
     treeFilteredOut=(action "subtreeFilteredOut")
-    searchQuery=searchQuery
+    searchQuery=(if _contentFilteredOut searchQuery "")
     _isExpanded=_isSubtreeExpanded
     _showAction=(action "show")
     _parentKey=_parentKey

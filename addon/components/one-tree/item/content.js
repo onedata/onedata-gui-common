@@ -63,13 +63,24 @@ export default Ember.Component.extend({
       searchQuery,
       itemFilteredOut,
     } = this.getProperties('searchQuery', 'itemFilteredOut');
+    searchQuery = searchQuery.trim();
+    // There is a priority of elements, where searchQuery should be searched:
+    // .tree-label or .one-label or the whole content
     let textElement = this.$();
+    let treeLabel = textElement.find('.tree-label');
     let oneLabel = textElement.find('.one-label');
-    if (oneLabel.length) {
+    if (treeLabel.length) {
+      textElement = treeLabel;
+    } else if (oneLabel.length) {
       textElement = oneLabel;
     }
     let isNotFilteredOut = textElement.text().toLowerCase()
-      .search(searchQuery.toLowerCase().trim()) > -1;
+      .search(searchQuery.toLowerCase()) > -1;
+    if (isNotFilteredOut && searchQuery.length > 0) {
+      textElement.addClass('semibold');
+    } else {
+      textElement.removeClass('semibold');
+    }
     itemFilteredOut(isNotFilteredOut);
   })),
 

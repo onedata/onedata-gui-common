@@ -179,8 +179,6 @@ export default Ember.Component.extend({
       _filteredOutItemsKeys: A(),
       _directItemsKeys: A(),
     });
-
-    this._checkTreeVisibility();
   },
 
   didInsertElement() {
@@ -196,7 +194,7 @@ export default Ember.Component.extend({
   },
 
   _checkTreeVisibility() {
-    if (!this.isDestroyed && !this.isDestroying) {
+    if (this.isDestroyed || this.isDestroying) {
       return;
     }
     let {
@@ -260,9 +258,11 @@ export default Ember.Component.extend({
         if (!this.isDestroyed && !this.isDestroying) {
           if (keysIncludes && !exists) {
             _directItemsKeys.removeObject(itemKey);
+            this.send('itemFilteredOut', itemKey, true);
           } else if (!keysIncludes && exists) {
             _directItemsKeys.pushObject(itemKey);
           }
+          debounce(this, this._checkTreeVisibility, 1);
         }
       });
     },

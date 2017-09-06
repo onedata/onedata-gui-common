@@ -43,6 +43,10 @@ $table-item-border: 1px solid $main-border-color;
   text-overflow: ellipsis;
 }
 
+.semibold {
+  font-family: 'Open Sans Semibold';
+}
+
 .content-backdrop.sidenav-backdrop {
   // TODO: animation
   position: absolute;

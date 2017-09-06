@@ -25,6 +25,7 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
   .one-tree-list {
     position: relative;
     padding: 0;
+    transition: padding-top $collapse-transition-time linear;
     border-left: 1px solid $main-border-color;
     list-style-type: none;
     background-color: inherit;
