@@ -5,10 +5,16 @@
   content=(component 'one-tree/item/content' 
     _showAction=(action "show" key)
     hasSubtree=_hasSubtree
+    itemFilteredOut=(action "itemFilteredOut")
+    isSubtreeFilteredOut=_subtreeFilteredOut
+    searchQuery=searchQuery
   )
   subtree=(component 'one-tree' 
     key=key
     collapseRecursively=collapseRecursively
+    treeFilteredOut=(action "subtreeFilteredOut")
+    searchQuery=searchQuery
+    disableFilter=(or disableFilter (not _contentFilteredOut))
     _isExpanded=_isSubtreeExpanded
     _showAction=(action "show")
     _parentKey=_parentKey

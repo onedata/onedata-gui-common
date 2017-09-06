@@ -1,6 +1,6 @@
 {{#if definition.length}}
   {{#bs-form submitOnEnter=false as |form|}}  
-    {{#one-tree as |tree|}}
+    {{#one-tree searchQuery=searchQuery as |tree|}}
       {{#each definition as |nodeDefinition|}}
         {{one-dynamic-tree/node
           definition=nodeDefinition
