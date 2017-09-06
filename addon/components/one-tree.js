@@ -89,7 +89,8 @@ export default Ember.Component.extend({
   collapseRecursively: false,
 
   /**
-   * Action called, when all tree items are (not) filtered out.
+   * Action called, when all tree items are (not) filtered out. Signature:
+   * * isVisible {boolean} is tree visible (not filtered out)
    * @type {Function}
    */
   treeFilteredOut: () => {},

@@ -36,8 +36,9 @@ export default Ember.Component.extend({
   hasSubtree: false,
 
   /**
-   * Action called, when header content contains (or not) specified 
-   * search query.
+   * Action called, when header content contains (or not) specified. 
+   * search query. Signature:
+   * * isVisible {boolean} is item visible (not filtered out)
    * @type {Function}
    */
   itemFilteredOut: () => {},

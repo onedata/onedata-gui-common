@@ -70,7 +70,12 @@
         }
 
         &:not(.item-generic) {
+          padding-left: $one-tree-indent - $padding-xs-horizontal;
+          &.collapse-hidden {
+            padding-left: $one-tree-indent - $padding-xs-horizontal + 2px;
+          }
           .one-tree-item-content {
+            padding-left: $padding-xs-horizontal;
             &:hover {
               background-color: $main-content-hover-background;
             }

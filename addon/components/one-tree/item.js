@@ -46,13 +46,17 @@ export default Ember.Component.extend({
   key: oneWay('elementId'),
 
   /**
-   * Action called, when item changes its visibility after filter.
+   * Action called, when item changes its visibility after filter. Signature:
+   * * key {*} item key
+   * * isVisible {boolean} is item visible (not filtered out)
    * @type {Function}
    */
   itemFilteredOut: () => {},
 
   /**
-   * Action called on init/destroy.
+   * Action called on init/destroy. Signature:
+   * * key {*} item key
+   * * exists {boolean} item exists
    * @type {Function}
    */
   itemRegister: () => {},
