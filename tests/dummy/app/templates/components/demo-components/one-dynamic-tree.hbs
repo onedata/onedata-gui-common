@@ -1,6 +1,8 @@
+<p>Filter: {{one-way-text value=_searchQuery update=(action "search")}}</p>
 <p>Is valid: {{_isValid}}<br>
 Actual tree values are listed in the browser console.</p>
 <p><button {{action "toggleDisabledState"}}>Toggle disabled fields</button></p>
-{{demo-components/one-dynamic-tree/tree-demo 
+{{demo-components/one-dynamic-tree/tree-demo
+  searchQuery=_searchQuery
   disabledFieldsPaths=disabledFieldsPaths
   valuesChanged=(action "valuesChanged")}}

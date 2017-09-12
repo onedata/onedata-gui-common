@@ -1,0 +1,22 @@
+<p>Filter: {{one-way-text value=_searchQuery update=(action "search")}}</p>
+{{#one-tree searchQuery=_searchQuery as |root|}}
+  {{#each treeDefinition as |node|}}
+    {{#root.item as |rootItem|}}
+      {{#rootItem.content}}{{node.content}}{{/rootItem.content}}
+      {{#rootItem.subtree as |subtree|}}
+        {{#each node.subtree as |subnode|}}
+          {{#subtree.item as |subtreeItem|}}
+            {{#subtreeItem.content}}{{subnode.content}}{{/subtreeItem.content}}
+            {{#subtreeItem.subtree as |sub2tree|}}
+              {{#each subnode.subtree as |sub2node|}}
+                {{#sub2tree.item as |sub2treeItem|}}
+                  {{#sub2treeItem.content}}{{sub2node.content}}{{/sub2treeItem.content}}
+                {{/sub2tree.item}}
+              {{/each}}
+            {{/subtreeItem.subtree}}
+          {{/subtree.item}}
+        {{/each}}
+      {{/rootItem.subtree}}
+    {{/root.item}}
+  {{/each}}
+{{/one-tree}}

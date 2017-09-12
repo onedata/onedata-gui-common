@@ -19,9 +19,13 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
       }
     }
   }
+  &.has-items > .one-tree-list {
+    padding-top: 15px;
+  }
   .one-tree-list {
     position: relative;
-    padding: $padding-base-vertical 0 0 0;
+    padding: 0;
+    transition: padding-top $collapse-transition-time linear;
     border-left: 1px solid $main-border-color;
     list-style-type: none;
     background-color: inherit;
@@ -35,6 +39,7 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
       padding-left: $one-tree-indent;
       padding-bottom: $padding-base-vertical;
       background-color: inherit;
+      transition: $height-collapse-transition, padding-bottom $collapse-transition-time linear;
 
       &:before {
         content: '';
@@ -47,17 +52,23 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
         border-top: 1px solid $main-border-color;
       }
 
-      &:last-child {
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: $one-tree-bullet-top + 1px;
+        bottom: 0;
+        left: -2px;
+        width: 5px;
+        background-color: inherit;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      &:last-child, &.last {
         padding-bottom: 0px;
         &::after {
-          content: '';
-          display: block;
-          position: absolute;
-          top: $one-tree-bullet-top + 1px;
-          bottom: 0;
-          left: -2px;
-          width: 5px;
-          background-color: inherit;
+          opacity: 1;
         }
       }
 
@@ -65,6 +76,20 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
         > .one-tree-item-content,
         > .tree-circle {
           @extend .clickable
+        }
+      }
+
+      &.collapse-hidden {
+        padding-bottom: 0;
+        padding-left: $one-tree-indent + 2px;
+        margin-left: -2px;
+        opacity: 1;
+        &:before {
+          display: none;
+          left: 2px;
+        }
+        > .tree-circle {
+          left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal + 2px;
         }
       }
 
