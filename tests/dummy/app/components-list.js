@@ -3,6 +3,7 @@ export default [
   'one-atlas',
   'one-dynamic-tree',
   'one-pie-chart',
+  'one-tree',
   'provider-place',
   'providers-list',
   'resource-load-error',

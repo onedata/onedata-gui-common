@@ -2,7 +2,7 @@
   {{#item.content}}
     <label 
       for={{if _field._isField inputId}} 
-      class="node-text {{if item.hasSubtree "clickable"}} {{if _isFieldDisabled "disabled"}}">
+      class="node-text tree-label {{if item.hasSubtree "clickable"}} {{if _isFieldDisabled "disabled"}}">
       {{definition.text}}
     </label>
     {{#if _renderField}}
