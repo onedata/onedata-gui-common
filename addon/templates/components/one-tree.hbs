@@ -2,6 +2,10 @@
   {{yield (hash
     item=(component 'one-tree/item' 
       collapseRecursively=collapseRecursively
+      itemFilteredOut=(action "itemFilteredOut")
+      searchQuery=searchQuery
+      itemRegister=(action "itemRegister")
+      disableFilter=disableFilter
       _showAction=(action "show")
       _parentKey=key
       _rootKey=(if _isRoot key _rootKey)

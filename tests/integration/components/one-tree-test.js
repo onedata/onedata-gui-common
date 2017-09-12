@@ -241,4 +241,77 @@ describe('Integration | Component | one tree', function () {
       done();
     });
   });
+
+  it('filters items', function (done) {
+    this.render(hbs `
+      {{#one-tree searchQuery="item2" as |tree|}}
+        {{#tree.item class="item1" as |item|}}
+          {{#item.content}}item1aaa{{/item.content}}
+          {{#item.subtree as |subtree|}}
+            {{#subtree.item class="item11" as |subitem|}}
+              {{#subitem.content}}item1.1{{/subitem.content}}
+            {{/subtree.item}}
+          {{/item.subtree}}
+        {{/tree.item}}
+        {{#tree.item class="item2" as |item|}}
+          {{#item.content}}item2{{/item.content}}
+        {{/tree.item}}
+      {{/one-tree}}
+    `);
+
+    wait().then(() => {
+      expect(this.$('.item1')).to.have.class('collapse-hidden');
+      done();
+    });
+  });
+
+  it('does not filter nested items in items, that match', function (done) {
+    this.render(hbs `
+      {{#one-tree searchQuery="item1" as |tree|}}
+        {{#tree.item class="item1" as |item|}}
+          {{#item.content}}item1aaa{{/item.content}}
+          {{#item.subtree as |subtree|}}
+            {{#subtree.item class="item11" as |subitem|}}
+              {{#subitem.content}}abc{{/subitem.content}}
+            {{/subtree.item}}
+          {{/item.subtree}}
+        {{/tree.item}}
+      {{/one-tree}}
+    `);
+
+    wait().then(() => {
+      expect(this.$('.item11')).to.not.have.class('collapse-hidden');
+      done();
+    });
+  });
+
+  it('highlights parents of items matched by filter', function (done) {
+    this.render(hbs `
+      {{#one-tree searchQuery="item1" as |tree|}}
+        {{#tree.item class="item1" as |item|}}
+          {{#item.content}}item1{{/item.content}}
+          {{#item.subtree as |subtree|}}
+            {{#subtree.item class="item11" as |subitem|}}
+              {{#subitem.content}}item1a{{/subitem.content}}
+              {{#subitem.subtree as |sub2tree|}}
+                {{#sub2tree.item class="item111" as |sub2item|}}
+                  {{#sub2item.content}}abc{{/sub2item.content}}
+                {{/sub2tree.item}}
+              {{/subitem.subtree}}
+            {{/subtree.item}}
+          {{/item.subtree}}
+        {{/tree.item}}
+      {{/one-tree}}
+    `);
+
+    wait().then(() => {
+      expect(this.$('.item1 > .one-tree-item-content'))
+        .to.have.class('semibold');
+      expect(this.$('.item11 > .one-tree-item-content'))
+        .to.not.have.class('semibold');
+      expect(this.$('.item111 > .one-tree-item-content'))
+        .to.not.have.class('semibold');
+      done();
+    });
+  });
 });

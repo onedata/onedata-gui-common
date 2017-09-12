@@ -63,7 +63,9 @@ $onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $o
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
-$collapse-transition: max-height .2s linear, padding .2s linear, opacity .2s linear;
+$collapse-transition-time: .2s;
+$height-collapse-transition: max-height $collapse-transition-time linear;
+$collapse-transition: $height-collapse-transition, padding $collapse-transition-time linear, opacity $collapse-transition-time linear;
 
 $disabled-opacity: 0.6;
 

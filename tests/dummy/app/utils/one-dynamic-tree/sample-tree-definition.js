@@ -19,7 +19,7 @@ export default [{
       },
       {
         name: 'node12',
-        text: 'Node 1.2',
+        text: 'Node a1.2',
         field: {
           type: 'radio-group',
           options: [
@@ -54,10 +54,14 @@ export default [{
         text: 'Node 2.2',
         subtree: [{
           name: 'node221',
-          text: 'Node 2.2.1',
-          field: {
-            type: 'text',
-          },
+          text: 'Node 2.b',
+          subtree: [{
+            name: 'node2211',
+            text: 'Node 2.2b',
+            field: {
+              type: 'text',
+            },
+          }],
         }]
       },
       {

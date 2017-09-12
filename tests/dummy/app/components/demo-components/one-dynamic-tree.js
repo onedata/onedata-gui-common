@@ -17,6 +17,7 @@ const {
 export default Ember.Component.extend({
   _isValid: null,
   checked: false,
+  _searchQuery: '',
 
   disabledFieldsPaths: null,
 
@@ -39,6 +40,9 @@ export default Ember.Component.extend({
       } else {
         disabledFieldsPaths.pushObjects(['node3', 'node2.node22.node221']);
       }
+    },
+    search(query) {
+      this.set('_searchQuery', query);
     }
   }
 });

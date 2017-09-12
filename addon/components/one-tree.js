@@ -39,7 +39,7 @@
  * subtrees will be remembered between parent subtree expand/collapse cycles.
  * 
  * Note: keys used to identify tree components and items do not have to be strings.
- * Every value, that is not recognised as an empty value in JS, is good.
+ * Every value, that is not recognized as an empty value in JS, is good.
  *
  * @module components/one-tree
  * @author Michal Borzecki
@@ -52,16 +52,26 @@ import layout from 'onedata-gui-common/templates/components/one-tree';
 import { invokeAction } from 'ember-invoke-action';
 
 const {
+  computed,
   computed: {
     oneWay,
     empty,
+  },
+  A,
+  run: {
+    debounce,
+    next,
   },
 } = Ember;
 
 export default Ember.Component.extend({
   layout,
   classNames: ['one-tree', 'collapse-animation', 'collapse-small'],
-  classNameBindings: ['_isRoot:one-tree-root', '_isExpanded::collapse-hidden'],
+  classNameBindings: [
+    '_isRoot:one-tree-root',
+    '_isExpanded::collapse-hidden',
+    '_isFilteredOut::has-items',
+  ],
 
   /**
    * Key for this tree, used to determine at the root level if it 
@@ -79,6 +89,25 @@ export default Ember.Component.extend({
   collapseRecursively: false,
 
   /**
+   * Action called, when all tree items are (not) filtered out. Signature:
+   * * isVisible {boolean} is tree visible (not filtered out)
+   * @type {Function}
+   */
+  treeFilteredOut: () => {},
+
+  /**
+   * Query used for filtration.
+   * @type {string}
+   */
+  searchQuery: '',
+
+  /**
+   * If true, the filter is applied, but not matching items are not hidden
+   * @type {boolean}
+   */
+  disableFilter: false,
+
+  /**
    * Key for root tree. When tree is a root tree, then _rootKey = null.
    * @type {*}
    */
@@ -91,7 +120,7 @@ export default Ember.Component.extend({
   _showAction: null,
 
   /**
-   * Array of visible subtree keys. Keys must be uniqe at the root tree level 
+   * Array of visible subtree keys. Keys must be unique at the root tree level 
    * and can be of any type. Used by all trees, modified only by root. 
    * Injected by root tree through parent trees.
    * @type {Array.*}
@@ -104,6 +133,37 @@ export default Ember.Component.extend({
    * @type {boolean}
    */
   _areParentsExpanded: true,
+
+  /**
+   * Array of direct items keys.
+   * @type {Ember.Array.string}
+   */
+  _directItemsKeys: null,
+
+  /**
+   * Array of items keys, which are filtered out (not visible after filter).
+   * @type {Ember.Array.*}
+   */
+  _filteredOutItemsKeys: null,
+
+  /**
+   * If true, tree has no visible items
+   * @type {computed.boolean}
+   */
+  _isFilteredOut: computed('_directItemsKeys.[]', '_filteredOutItemsKeys.[]',
+    function () {
+      let {
+        _directItemsKeys,
+        _filteredOutItemsKeys,
+      } = this.getProperties('_directItemsKeys', '_filteredOutItemsKeys')
+      if (!_directItemsKeys || !_filteredOutItemsKeys) {
+        return true;
+      } else {
+        return _directItemsKeys.get('length') ===
+          _filteredOutItemsKeys.get('length');
+      }
+    }
+  ),
 
   /**
    * If true, tree will be expanded (but it can be still invisible, because some 
@@ -119,6 +179,15 @@ export default Ember.Component.extend({
    */
   _isRoot: empty('_rootKey'),
 
+  init() {
+    this._super(...arguments);
+
+    this.setProperties({
+      _filteredOutItemsKeys: A(),
+      _directItemsKeys: A(),
+    });
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -129,6 +198,34 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     invokeAction(this, '_hasTreeNotify', false);
+  },
+
+  /**
+   * Checks if tree should be visible to user
+   */
+  _checkTreeVisibility() {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+    let {
+      _filteredOutItemsKeys,
+      _directItemsKeys,
+      treeFilteredOut,
+    } = this.getProperties(
+      '_filteredOutItemsKeys',
+      '_directItemsKeys',
+      'treeFilteredOut'
+    );
+    let isNotFilteredOut =
+      _filteredOutItemsKeys.get('length') !== _directItemsKeys.get('length');
+    treeFilteredOut(isNotFilteredOut);
+
+    let itemsNodes = this.$('> .one-tree-list > .one-tree-item');
+    if (itemsNodes) {
+      itemsNodes.removeClass('last');
+      let visibleItemsNodes = itemsNodes.filter(':not(.collapse-hidden)');
+      visibleItemsNodes.last().addClass('last');
+    }
   },
 
   actions: {
@@ -156,6 +253,45 @@ export default Ember.Component.extend({
       } else {
         invokeAction(this, '_showAction', subtreeKeys, subtreeIsExpanded);
       }
+    },
+
+    /**
+     * (De)registers item
+     * @param {*} itemKey Item key
+     * @param {boolean} [exists=true] If true, item exists
+     */
+    itemRegister(itemKey, exists = true) {
+      let _directItemsKeys = this.get('_directItemsKeys');
+      let keysIncludes = _directItemsKeys.includes(itemKey);
+
+      next(() => {
+        if (!this.isDestroyed && !this.isDestroying) {
+          if (keysIncludes && !exists) {
+            _directItemsKeys.removeObject(itemKey);
+            this.send('itemFilteredOut', itemKey, true);
+          } else if (!keysIncludes && exists) {
+            _directItemsKeys.pushObject(itemKey);
+          }
+          debounce(this, this._checkTreeVisibility, 1);
+        }
+      });
+    },
+
+    /**
+     * Saves state of items visibility after filtration
+     * @param {*} itemKey Item key
+     * @param {boolean} [visible=false] Item visibility state
+     */
+    itemFilteredOut(itemKey, visible = false) {
+      let _filteredOutItemsKeys = this.get('_filteredOutItemsKeys');
+      let keysIncludes = _filteredOutItemsKeys.includes(itemKey);
+
+      if (keysIncludes && visible) {
+        _filteredOutItemsKeys.removeObject(itemKey);
+      } else if (!keysIncludes && !visible) {
+        _filteredOutItemsKeys.pushObject(itemKey);
+      }
+      debounce(this, this._checkTreeVisibility, 1);
     }
   }
 });
