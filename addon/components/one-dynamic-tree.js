@@ -131,6 +131,12 @@ export default Ember.Component.extend(
     valuesChanged: () => {},
 
     /**
+     * Filter string
+     * @type {string}
+     */
+    searchQuery: '',
+
+    /**
      * Array of error objects from ember-cp-validations.
      * @type {Array.Object}
      */
