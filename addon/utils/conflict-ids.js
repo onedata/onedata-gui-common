@@ -1,21 +1,19 @@
 /**
- * Utils for generating displayed ID conflicting names.
- *
+ * Util for generating displayed ID conflicting names.
+ * 
+ * Generate "minimal" resource IDs from full IDs
+ * for naming conflicting files/spaces/groups etc.
+ * 
  * NOTE: ported from ember-cli-onedata-common
  *
  * @module utils/conflict-ids
  * @author Jakub Liput
  * @copyright (C) 2016-2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
- */
-
-/**
- * Generate "minimal" resource IDs from full IDs
- * for naming conflicting files/spaces/groups etc.
- *  
- * @export
- * @param {String[]} ids
- * @returns {[String, String]} [minimal id for A, minimal id for B]
+ * 
+ * @function
+ * @param {Array<string>} ids
+ * @returns {[string, string]} [minimal id for A, minimal id for B]
  */
 export default function conflictIds(ids) {
   let maxLen = Math.max(...ids.map(name => name.length));
