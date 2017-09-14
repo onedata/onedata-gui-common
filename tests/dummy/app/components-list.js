@@ -6,6 +6,7 @@ export default [
   'one-tree',
   'provider-place',
   'providers-list',
+  'resource-load-error',
   'space-providers-support-chart',
   'status-toolbar',
 ];

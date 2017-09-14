@@ -45,6 +45,9 @@ $inline-alert-left-border-width: 60px;
       // Different heights for animation purposes
       max-height: 20em;
       margin-top: 10px;
+      &.sm-row, &.lg-row {
+        overflow: auto;
+      }
       &.sm-row {
         max-height: 5em;
       }
