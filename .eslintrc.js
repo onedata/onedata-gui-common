@@ -1,3 +1,5 @@
+/* eslint-env node */
+// TODO: add rules from other projects
 module.exports = {
   root: true,
   parserOptions: {
@@ -9,7 +11,6 @@ module.exports = {
     browser: true,
     es6: true,
     jquery: true,
-    embertest: true,
   },
   rules: {
     'no-console': 0,
