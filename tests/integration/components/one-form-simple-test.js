@@ -65,7 +65,7 @@ describe('Integration | Component | one form simple', function () {
       `);
 
     let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.next('.form-message');
+    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change')
       .to.be.empty;
     firstField.trigger('change');
@@ -86,7 +86,7 @@ describe('Integration | Component | one form simple', function () {
       `);
 
     let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.next('.form-message');
+    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change')
       .to.be.empty;
     firstField.blur();
@@ -108,7 +108,7 @@ describe('Integration | Component | one form simple', function () {
 
     const NEW_ERROR_MSG = 'error2!';
     let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.next('.form-message');
+    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
     firstField.blur();
     this.get('fakeValidations.errors')[0].set('message', NEW_ERROR_MSG);
     wait().then(() => {
