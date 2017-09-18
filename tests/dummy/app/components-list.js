@@ -9,5 +9,5 @@ export default [
   'resource-load-error',
   'space-providers-support-chart',
   'status-toolbar',
-  'support-size-table',
+  'support-size-info',
 ];

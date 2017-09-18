@@ -1,7 +1,7 @@
 /**
  * A component that shows support size information using a table.
  *
- * @module components/space-support-table
+ * @module components/space-support-info/table
  * @author Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -13,25 +13,35 @@
  * @property {number} supportSize A support size (in bytes).
  */
 
-
 import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/support-size-table';
+import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 
 const {
   computed,
   A,
+  inject: {
+    service,
+  },
 } = Ember;
 
 export default Ember.Component.extend({
   layout,
   classNames: ['support-size-table'],
 
+  i18n: service(),
+
   /**
    * Support data.
    * @type {Ember.Array.SupportSizeEntry}
    */
   data: null,
+
+  /**
+   * Message, that is shown when there is no data
+   * @type {string}
+   */
+  noDataToShowMessage: '',
 
   /**
    * Custom classes for ember-models-table addon.
@@ -51,11 +61,22 @@ export default Ember.Component.extend({
   }),
 
   /**
+   * Custom messages for ember-models-table addon.
+   * @type {Ember.Object}
+   */
+  _tableCustomMessages: computed('noDataToShowMessage', function () {
+    return Ember.Object.create({
+      noDataToShow: this.get('noDataToShowMessage'),
+    })
+  }),
+
+  /**
    * Header title for supporters column.
    * @type {computed.string}
    */
   supporterNameHeader: computed(function () {
-    return this.get('i18n').t('components.supportSizeTable.supporterNameHeader');
+    return this.get('i18n').t(
+      'components.supportSizeInfo.table.supporterNameHeader');
   }),
 
   /**
@@ -63,7 +84,7 @@ export default Ember.Component.extend({
    * @type {computed.string}
    */
   supporterSizeHeader: computed(function () {
-    return this.get('i18n').t('components.supportSizeTable.supportSizeHeader');
+    return this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
   }),
 
   /**
@@ -86,7 +107,7 @@ export default Ember.Component.extend({
    * Columns definition for table.
    * @type {computed.Array.Object}
    */
-  _columns: computed('supporterNameHeader', 'supporterSizeHeader', function() {
+  _columns: computed('supporterNameHeader', 'supporterSizeHeader', function () {
     let {
       supporterNameHeader,
       supporterSizeHeader,
@@ -95,7 +116,7 @@ export default Ember.Component.extend({
       propertyName: 'supporterName',
       title: supporterNameHeader,
       className: 'supporter-name-column',
-      component: 'support-size-table/truncated-cell',
+      component: 'support-size-info/table/truncated-cell',
     }, {
       propertyName: 'supportSize',
       title: supporterSizeHeader,
