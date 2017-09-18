@@ -138,7 +138,7 @@ export default Ember.Component.extend({
    * Chartist options.
    * @type {computed.Object}
    */
-  _chartOptions: computed('_valuesSum', '_mobileMode', function () {
+  _chartOptions: computed('_sortedData', '_valuesSum', '_mobileMode', function () {
     return this.generateChartOptions();
   }),
 
@@ -260,8 +260,8 @@ export default Ember.Component.extend({
     let {
       _mobileMode,
       _valuesSum,
-      data,
-    } = this.getProperties('_mobileMode', '_valuesSum', 'data');
+      _sortedData,
+    } = this.getProperties('_mobileMode', '_valuesSum', '_sortedData');
     let optionsBase = {
       donut: true,
       donutWidth: '45%',
@@ -279,12 +279,12 @@ export default Ember.Component.extend({
         }),
         customCss(),
         Chartist.plugins.legend({
-          legendNames: _.map(data, 'label'),
+          legendNames: _.map(_sortedData, 'label'),
           className: 'not-clickable',
           clickable: false,
         }),
         legendColors({
-          colors: _.map(data, 'color'),
+          colors: _.map(_sortedData, 'color'),
         }),
       ]
     };
@@ -305,15 +305,15 @@ export default Ember.Component.extend({
       _chartPieLabels,
       _chartDataSeries,
       _chartCss,
-      data,
+      _sortedData,
     } = this.getProperties(
       '_chartPieLabels',
       '_chartDataSeries',
       '_chartCss',
-      'data'
+      '_sortedData'
     );
     return {
-      labels: _.map(data, 'label'),
+      labels: _.map(_sortedData, 'label'),
       pieLabels: _chartPieLabels,
       series: _chartDataSeries,
       customCss: _chartCss,

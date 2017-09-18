@@ -47,7 +47,7 @@ export default Ember.Component.extend({
   tableHeaderTip: '',
 
   /**
-   * Title for table supporter name column.
+   * Title for supporter name table column.
    * To inject.
    * @type {string}
    */
@@ -79,8 +79,8 @@ export default Ember.Component.extend({
   }),
 
   /**
-   * Data for a supported spaces table
-   * @type computed.Ember.Array.SupportSizeEntry
+   * Data for a table
+   * @type {computed.Ember.Array.SupportSizeEntry}
    */
   supportTableData: computed('data', function () {
     let data = this.get('data');

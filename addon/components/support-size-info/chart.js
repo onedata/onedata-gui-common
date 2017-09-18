@@ -1,7 +1,7 @@
 /**
  * A component that shows support size information using a chart.
  *
- * @module components/space-support-info/table
+ * @module components/space-support-info/chart
  * @author Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -38,10 +38,10 @@ export default OnePieChart.extend({
     let chartDataSeries = this._super(...arguments);
     chartDataSeries.forEach((series, index) => {
       series.tooltipElements = [{
-        name: i18n.t('components.spaceSupportChart.supportSize'),
+        name: i18n.t('components.supportSizeInfo.chart.supportSize'),
         value: this.formatValue(_sortedData[index].value),
       }, {
-        name: i18n.t('components.spaceSupportChart.supportShare'),
+        name: i18n.t('components.supportSizeInfo.chart.supportShare'),
         value: Math.round(
           this.getSeriesPercentSize(_sortedData[index]) * 100
         ) + '%',
