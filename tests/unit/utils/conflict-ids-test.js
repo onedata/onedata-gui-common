@@ -3,7 +3,7 @@ import {
   describe,
   it
 } from 'mocha';
-import conflictIds from 'ember-cli-onedata-common/utils/conflict-ids';
+import conflictIds from 'onedata-gui-common/utils/conflict-ids';
 
 describe('conflictIds', function () {
   it('generates ids with length greater than 3 if both ids are completely different',
