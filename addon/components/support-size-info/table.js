@@ -61,22 +61,12 @@ export default Ember.Component.extend({
   }),
 
   /**
-   * Custom messages for ember-models-table addon.
-   * @type {Ember.Object}
-   */
-  _tableCustomMessages: computed('noDataToShowMessage', function () {
-    return Ember.Object.create({
-      noDataToShow: this.get('noDataToShowMessage'),
-    })
-  }),
-
-  /**
    * Header title for supporters column.
    * @type {computed.string}
    */
   supporterNameHeader: computed(function () {
-    return this.get('i18n').t(
-      'components.supportSizeInfo.table.supporterNameHeader');
+    return this.get('i18n')
+      .t('components.supportSizeInfo.table.supporterNameHeader');
   }),
 
   /**
@@ -85,6 +75,16 @@ export default Ember.Component.extend({
    */
   supporterSizeHeader: computed(function () {
     return this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
+  }),
+
+  /**
+   * Custom messages for ember-models-table addon.
+   * @type {Ember.Object}
+   */
+  _tableCustomMessages: computed('noDataToShowMessage', function () {
+    return Ember.Object.create({
+      noDataToShow: this.get('noDataToShowMessage'),
+    })
   }),
 
   /**
@@ -97,7 +97,8 @@ export default Ember.Component.extend({
     data.forEach((entry) => {
       processedData.pushObject(Ember.Object.create({
         supporterName: entry.get('supporterName'),
-        supportSize: bytesToString(entry.get('supportSize'), { iecFormat: true }),
+        supportSize: entry.get('supportSize'),
+        supportSizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),
       }));
     })
     return processedData;
@@ -118,9 +119,12 @@ export default Ember.Component.extend({
       className: 'supporter-name-column',
       component: 'support-size-info/table/truncated-cell',
     }, {
-      propertyName: 'supportSize',
+      propertyName: 'supportSizeStr',
       title: supporterSizeHeader,
       className: 'support-size-column',
+      sortedBy: 'supportSize',
+      sortDirection: 'desc',
+      sortPrecedence: 0,
     }];
   }),
 });
