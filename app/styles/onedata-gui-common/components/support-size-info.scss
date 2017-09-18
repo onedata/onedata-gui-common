@@ -1,0 +1,47 @@
+.support-size-info {
+  .component-header-row {
+    position: relative;
+    .support-size {
+      display: inline-block;
+      color: $color-one-blue-gray;
+    }
+    @media (min-width: 501px) {
+      padding-right: 150px;
+      .btn-group {
+        position: absolute;
+        right: 0;
+        top: 12px;
+      }
+    }
+    @media (max-width: 500px) {
+      .btn-group {
+        display: block;
+        margin-top: $padding-base-vertical;
+        .btn {
+          width: 50%;
+        }
+      }
+    }
+  }
+  .support-size-table {
+    table {
+      table-layout: fixed;
+      .table-header {
+        .oneicon {
+          position: relative;
+          top: 0.15em;
+          font-weight: bold;
+        }
+      }
+      .support-name-column {
+        width: 50%;
+      }
+    }
+  }
+  .row.chart-row {
+    max-width: 500px;
+    padding-top: 0;
+    padding: 0 2em;
+    margin: 30px auto;
+  }
+}

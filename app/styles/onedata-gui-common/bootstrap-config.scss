@@ -139,6 +139,25 @@ label {
   }
 }
 @import "../bootstrap/button-groups";
+.btn-group {
+  .btn.btn-default:not(.active) {
+    background-color: $color-one-white;
+    color: $color-one-default;
+    &:focus,
+    &.focus,
+    &:hover,
+    &:active,
+    &.active, {
+      background-color: lighten($color-one-default, 50%);
+    }
+  }
+  .btn + .btn {
+    margin-left: -2px;
+  }
+  .btn {
+    @include box-shadow(none);
+  }
+}
 @import "../bootstrap/input-groups";
 
 .table {

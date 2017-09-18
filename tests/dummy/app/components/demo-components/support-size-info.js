@@ -18,18 +18,24 @@ export default Ember.Component.extend({
   init() {
     this._super(...arguments);
 
-    this.set('data', A().pushObjects([
+    this.set('data', A([
       Ember.Object.create({
-        supporterName: 'Provider #1',
-        supportSize: 1048576,
+        id: '1',
+        label: 'Provider #1',
+        value: 1048576,
+        color: '#4BD187',
       }),
       Ember.Object.create({
-        supporterName: 'Provider #2',
-        supportSize: 2621440,
+        id: '2',
+        label: 'Provider #2',
+        value: 2621440,
+        color: '#3EA5F9',
       }),
       Ember.Object.create({
-        supporterName: 'Provider #3',
-        supportSize: 39321600,
+        id: '3',
+        label: 'Provider #3',
+        value: 39321600,
+        color: '#EE3F3F',
       })
     ]));
   },
