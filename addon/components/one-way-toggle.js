@@ -60,8 +60,8 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
     if (threeState) {
       return THREE_STATES_CLASSES[THREE_STATES.indexOf(checked)];
     } else {
-      return checked === THREE_STATES[THREE_STATES.length - 1] ? 
-        THREE_STATES_CLASSES[2]: THREE_STATES_CLASSES[0]; 
+      return checked === THREE_STATES[THREE_STATES.length - 1] ?
+        THREE_STATES_CLASSES[2] : THREE_STATES_CLASSES[0];
     }
   }),
 
@@ -144,9 +144,9 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
       'allowThreeStateToggle'
     );
     if (!isReadOnly) {
-      let statesLoop = threeState && allowThreeStateToggle ? 
-        THREE_STATES.concat(THREE_STATES[0]) :
-        [THREE_STATES[0], THREE_STATES[THREE_STATES.length - 1], THREE_STATES[0]];
+      let statesLoop = threeState && allowThreeStateToggle ?
+        THREE_STATES.concat(THREE_STATES[0]) : [THREE_STATES[0], THREE_STATES[
+          THREE_STATES.length - 1], THREE_STATES[0]];
       if (statesLoop.indexOf(checked) === -1) {
         checked = statesLoop[0];
       }
