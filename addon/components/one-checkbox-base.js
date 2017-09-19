@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import { invokeAction, invoke } from 'ember-invoke-action';
 
 const {
   Component,
@@ -16,7 +15,7 @@ const {
  */
 export default Component.extend({
   classNames: ['one-checkbox-base'],
-  classNameBindings: ['isReadOnly:disabled:clickable', 'checked'],
+  classNameBindings: ['isReadOnly:disabled:clickable'],
   attributeBindings: ['dataOption:data-option'],
 
   /**
@@ -43,29 +42,52 @@ export default Component.extend({
    */
   dataOption: null,
 
+  /**
+   * Action called on value change (with new value and component instance)
+   * @type {Function}
+   */
+  update: () => {},
+
+  /**
+   * Action called on input focus out
+   * @type {Function}
+   */
+  onFocusOut: () => {},
+
   didInsertElement() {
     this._super(...arguments);
 
-    // Fix for Firefox to handle toggle change by 
-    // label-click and keyboard change on active input
-    this.$('input').click((event) => event.stopImmediatePropagation());
+    this.$('input').change(() => this._toggle())
+      .focusout(() => this.get('onFocusOut')())
+      // Fix for Firefox to handle toggle change by 
+      // label-click and keyboard change on active input
+      .click((event) => event.stopImmediatePropagation());
   },
 
   click() {
-    invoke(this, 'toggle');
+    this._toggle();
+  },
+
+  /**
+   * Toggles checkbox value
+   */
+  _toggle() {
+    if (!this.get('isReadOnly')) {
+      this._update(!this.get('checked'));
+    }
+  },
+
+  /**
+   * Notifies about new value.
+   * @param {*} value new checkbox value 
+   */
+  _update(value) {
+    this.get('update')(value, this);
   },
 
   actions: {
-    /**
-     * Pass click handling to underlying one-way-checkbox
-     */
     toggle() {
-      if (!this.get('isReadOnly')) {
-        this.$('input').click();
-      }
-    },
-    updateHandler(value) {
-      invokeAction(this, 'update', value, this);
+      this._toggle();
     }
   }
 });
