@@ -24,7 +24,7 @@
           value=_areNestedCheckboxesSelected
           inputChanged=(action selectNestedCheckboxes 
             (dot-to-dash _path)
-            (not _areNestedCheckboxesSelected)
+            (if (eq _areNestedCheckboxesSelected 2) true (not _areNestedCheckboxesSelected))
           )
           inputId=inputId
           disabled=_isFieldDisabled}}

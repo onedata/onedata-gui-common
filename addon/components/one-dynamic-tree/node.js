@@ -113,6 +113,7 @@ export default Ember.Component.extend(DisabledPaths, {
     return Ember.Object.create({
       name: this.get('_path'),
       type: 'checkbox',
+      threeState: true,
     });
   }),
 
