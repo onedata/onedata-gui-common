@@ -67,6 +67,6 @@ export default Ember.Object.extend(Evented, {
   },
 
   notify() {
-    run(() => this.trigger('tick'));
+    run.later(() => this.trigger('tick'));
   }
 });
