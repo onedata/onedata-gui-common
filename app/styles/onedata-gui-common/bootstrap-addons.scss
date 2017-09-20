@@ -139,12 +139,13 @@ $icon-btn-active-color: $color-one-red;
 
 .input-group.with-icon-addon {
   position: relative;
+  width: 100%;
   .input-group-addon {
     position: relative;
     // focus on input changes its z-index from 1 to 3
     z-index: 4;
     height: $input-height-base;
-    min-width: $input-height-base;
+    width: $input-height-base;
     border: 0;
     background-color: transparent;
     .one-icon {
