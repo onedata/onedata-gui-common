@@ -1,5 +1,6 @@
 .one-dynamic-tree {
   $field-width: 11em;
+  $toggle-in-group-size-ratio: 0.85;
   max-width: 450px;
 
   @each $border-style in $one-tree-border-styles {
@@ -56,15 +57,20 @@
                 border-left-width: 0;
                 .one-tree-item {
                   padding-left: 0;
+                  padding-bottom: 0;
                   &::before, &::after {
                     display: none;
                   }
                   .one-tree-item-content {
                     padding-left: 0;
-                    font-size: 85%;
+                    font-size: $toggle-in-group-size-ratio * 100%;
                   }
                   .tree-circle {
                     display: none;
+                  }
+                  .form-group {
+                    width: $field-width * $toggle-in-group-size-ratio;
+                    min-width: $field-width *  $toggle-in-group-size-ratio;
                   }
                   .one-tree {
                     display: none;
@@ -80,7 +86,7 @@
             > .tree-item-content-container {
               padding-top: 10px;
               padding-bottom: 10px;
-              margin-right: $field-width - $toggle-width;
+              margin-right: $field-width - $toggle-width - 0.4em;
               border: 1px solid $main-border-color;
               background-color: $main-content-light-background;
               .tree-circle {
@@ -100,7 +106,7 @@
               .form-group {
                 width: $toggle-width + 2em;
                 min-width: $toggle-width + 2em;
-                padding-right: 6px;
+                padding-right: 0.4em;
                 text-align: right;
               }
             }
