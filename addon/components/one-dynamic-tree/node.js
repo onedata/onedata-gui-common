@@ -134,6 +134,22 @@ export default Ember.Component.extend(DisabledPaths, {
   }),
 
   /**
+   * If true, subtree select checkbox will be visible.
+   * @type {computed.boolean}
+   */
+  _allowSubtreeCheckboxSelect: computed(
+    '_renderField',
+    'definition.allowSubtreeCheckboxSelect',
+    function () {
+      let {
+        _renderField,
+        definition,
+      } = this.getProperties('_renderField', 'definition');
+      return !_renderField && definition.allowSubtreeCheckboxSelect;
+    }
+  ),
+
+  /**
    * Path to value in `values` property
    * @type {computed.string}
    */

@@ -1,5 +1,5 @@
 $one-tree-indent: 35px;
-$one-tree-bullet-top: 13px;
+$one-tree-bullet-top: 14px;
 $one-tree-bullet-size: 17px;
 // all possible border-style values
 $one-tree-border-styles: none hidden dotted dashed solid double groove ridge inset outset;
@@ -32,6 +32,7 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
 
     .one-tree {
       margin-left: -($one-tree-bullet-size / 2 + $padding-xs-horizontal + 1px);
+      background-color: inherit;
     }
 
     > li {
@@ -73,9 +74,11 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
       }
 
       &.has-subtree {
-        > .one-tree-item-content,
-        > .tree-circle {
-          @extend .clickable
+        > .tree-item-content-container {
+          > .one-tree-item-content,
+          > .tree-circle {
+            @extend .clickable
+          }
         }
       }
 
@@ -93,20 +96,20 @@ $one-tree-border-styles: none hidden dotted dashed solid double groove ridge ins
         }
       }
 
-      > .tree-circle {
-        position: absolute;
-        left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal;
-        top: $one-tree-bullet-top + 2px;
-        transform: translateY(-50%);
-        background-color: inherit;
-        color: darken($main-border-color, 30%);
-        .one-icon {
-          font-size: $one-tree-bullet-size;
-        }
-      }
-
-      > .one-tree-item-content {
+      > .tree-item-content-container {
         padding: $padding-small-vertical 0;
+        background-color: inherit;
+        > .tree-circle {
+          position: absolute;
+          left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal;
+          top: $one-tree-bullet-top + 2px;
+          transform: translateY(-50%);
+          background-color: inherit;
+          color: darken($main-border-color, 30%);
+          .one-icon {
+            font-size: $one-tree-bullet-size;
+          }
+        }
       }
     }
   }
