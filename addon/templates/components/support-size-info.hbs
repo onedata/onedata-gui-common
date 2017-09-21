@@ -1,0 +1,46 @@
+<div class="row content-row component-header-row">
+  <strong>{{header}}</strong>
+  {{#if (and (not dataError) totalSize)}}
+    <div class="support-size">
+      ({{t "components.supportSizeInfo.total"}} {{bytes-to-string totalSize}})
+    </div>
+  {{/if}}
+  {{#if _tipVisible}}
+    {{one-label-tip
+      title=(if (eq mode "chart") chartHeaderTip tableHeaderTip)
+      placement="top"
+    }}
+  {{/if}}
+  {{#if data.length}}
+    {{#bs-button-group
+      value=mode
+      type="radio"
+      onChange=(action "modeChanged") as |bg|
+    }}
+      {{#bg.button type="default" class="btn-sm chart-mode" value="chart"}}
+        {{t "components.supportSizeInfo.mode.chart"}}
+      {{/bg.button}}
+      {{#bg.button type="default" class="btn-sm table-mode" value="table"}}
+        {{t "components.supportSizeInfo.mode.table"}}
+      {{/bg.button}}
+    {{/bs-button-group}}
+  {{/if}}
+</div>
+{{#if (not dataError)}}
+  {{#if (or (eq mode "table") (eq data.length 0))}}
+    <div class="row content-row">
+      {{support-size-info/table
+        data=supportTableData
+        supporterNameHeader=supporterNameHeader
+        noDataToShowMessage=noDataToShowMessage}}
+    </div>
+  {{else}}
+    <div class="row chart-row content-row">
+      {{support-size-info/chart data=data sort=true}}
+    </div>
+  {{/if}}
+{{else}}
+  <div class="row content row">
+    {{resource-load-error reason=dataError}}
+  </div>
+{{/if}}
