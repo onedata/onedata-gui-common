@@ -23,9 +23,9 @@ export default [{
         field: {
           type: 'radio-group',
           options: [
-            { value: '1', label: '1' },
-            { value: '2', label: '2' },
-            { value: '3', label: '3' },
+            { value: '1', label: 'Option 1' },
+            { value: '2', label: 'Option 2' },
+            { value: '3', label: 'Option 3' },
           ],
           defaultValue: '1',
         }
