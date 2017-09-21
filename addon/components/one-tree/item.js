@@ -36,7 +36,8 @@ export default Ember.Component.extend({
   classNames: ['one-tree-item', 'collapse-animation', 'collapse-medium'],
   classNameBindings: [
     '_hasSubtree:has-subtree',
-    '_hiddenByFilter:collapse-hidden'
+    '_hiddenByFilter:collapse-hidden',
+    '_isSubtreeExpanded:subtree-expanded',
   ],
 
   tagName: 'li',

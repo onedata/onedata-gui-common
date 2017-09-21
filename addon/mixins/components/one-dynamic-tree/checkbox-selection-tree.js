@@ -101,10 +101,15 @@ export default Ember.Mixin.create({
       let subnodes = node.get('nodes');
       value = Object.keys(subnodes).reduce((value, subnodeName) => {
         let subnodePath = path ? `${path}.${subnodeName}` : subnodeName;
-        return value && this._fillCheckboxSelectionTreeNode(
+        let subnodeValue = this._fillCheckboxSelectionTreeNode(
           subnodes.get(subnodeName), subnodePath
         );
-      }, true);
+        if (value === null) {
+          return subnodeValue;
+        } else {
+          return value === subnodeValue ? value : 2;
+        }
+      }, null);
     }
     node.set('value', value)
     return value;

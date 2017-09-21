@@ -86,15 +86,11 @@ export default [{
       {
         name: 'node32',
         text: 'Node 3.2',
-        subtree: [{
-          name: 'node321',
-          text: 'Node 3.2.1',
-          field: {
-            type: 'checkbox',
-            defaultValue: false,
-            optional: true
-          },
-        }]
+        field: {
+          type: 'checkbox',
+          defaultValue: false,
+          optional: true
+        },
       },
     ],
   },
