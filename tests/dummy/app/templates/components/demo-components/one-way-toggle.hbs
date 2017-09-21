@@ -1,0 +1,22 @@
+<p>
+  <label for="toggle1">Standard toggle:</label>
+  {{one-way-toggle inputId="toggle1"
+    onFocusOut=(action "toggle1FocusOut")
+    checked=twoStateToggle
+    update=(action (mut twoStateToggle))}}
+    Value: {{twoStateToggle}}
+</p>
+<p>
+  <label for="toggle2">Three-state toggle:</label>
+  {{one-way-toggle
+    inputId="toggle2"
+    checked=threeStateToggle
+    threeState=true
+    allowThreeStateToggle=true
+    update=(action (mut threeStateToggle))}}
+    Value: {{threeStateToggle}}
+</p>
+<p>
+  <label for="toggle3">Disabled toggle:</label>
+  {{one-way-toggle inputId="toggle3" checked=disabledToggle isReadOnly=true}} Value: {{disabledToggle}}
+</p>
