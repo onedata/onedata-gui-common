@@ -56,8 +56,8 @@ export default Ember.Component.extend({
    * @type {Ember.Object}
    */
   _tableCustomIcons: Ember.Object.create({
-    'sort-asc': 'oneicon oneicon-arrow-down',
-    'sort-desc': 'oneicon oneicon-arrow-up',
+    'sort-asc': 'oneicon oneicon-arrow-up',
+    'sort-desc': 'oneicon oneicon-arrow-down',
   }),
 
   /**
