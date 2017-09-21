@@ -3,11 +3,7 @@ export default class ToggleHelper {
     this.$toggle = $toggle;
   }
 
-  getCheckbox() {
-    return this.$toggle.find('input[type=checkbox]');
-  }
-
   isChecked() {
-    return this.getCheckbox().prop('checked');
+    return this.$toggle.hasClass('checked');
   }
 }

@@ -13,4 +13,5 @@ import layout from 'onedata-gui-common/templates/components/one-checkbox';
 export default OneCheckboxBase.extend({
   layout,
   classNames: ['one-checkbox'],
+  classNameBindings: ['checked'],
 });
