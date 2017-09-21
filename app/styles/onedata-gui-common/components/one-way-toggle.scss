@@ -26,17 +26,27 @@ $toggle-size-base: 1.4em;
     position: absolute;
     z-index: -1;
 
-    &:focus + div::before {
+    &:focus + .one-way-toggle-control::before {
       @include box-shadow($control-box-shadow-focus);
       border: 1px solid $input-border-focus;
     }
+  }
 
-    &:checked + div {
+  &.checked {
+    .one-way-toggle-control {
       background-color: $brand-success;
+      &:before {
+        margin-left: $toggle-size-base;
+      }
     }
+  }
 
-    &:checked + div:before {
-      margin-left: $toggle-size-base;
+  &.maybe {
+    .one-way-toggle-control {
+      background-color: $color-one-yellow;
+      &:before {
+        margin-left: $toggle-size-base / 2;
+      }
     }
   }
 
