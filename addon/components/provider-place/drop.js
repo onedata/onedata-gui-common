@@ -23,6 +23,7 @@ const {
 export default Ember.Component.extend({
   layout,
   globalNotify: service(),
+  i18n: service(),
 
   /**
    * Spaces list sort order

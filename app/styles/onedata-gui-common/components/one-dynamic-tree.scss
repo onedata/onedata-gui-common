@@ -1,0 +1,230 @@
+.one-dynamic-tree {
+  @media (min-width: $screen-sm-min) {
+    $field-width: 11em;
+    $toggle-in-group-size-ratio: 0.85;
+    max-width: 350px;
+
+    @each $border-style in $one-tree-border-styles {
+      &.border-#{$border-style},
+      &.border-#{$border-style} .one-tree,
+      & .one-tree-list > li .one-tree.border-#{$border-style} {
+        > .one-tree-list {
+          border-left-style: $border-style;
+          > li:before {
+            border-top-style: $border-style;
+          }
+        }
+      }
+    }
+
+    .one-tree {
+      .one-tree-list {
+        > li {
+          &.item-text {
+            $one-tree-bullet-top: 19px;
+
+            &:before {
+              top: $one-tree-bullet-top;
+            }
+
+            &::after {
+              top: $one-tree-bullet-top + 1px;
+            }
+
+            > .tree-item-content-container > .tree-circle {
+              top: $one-tree-bullet-top + 2px;
+            }
+
+            .node-text {
+              padding-top: 6px;
+            }
+          }
+
+          &.item-checkbox, &.item-radio-group {
+            .form-control-feedback {
+              display: none;
+            }
+          }
+
+          &.has-checkbox-group {
+            padding-left: $one-tree-indent - 15px;
+            > .tree-item-content-container {
+              padding-left: 14px;
+              border: 1px solid transparent;
+              border-radius: $border-radius-small;
+              .one-tree {
+                margin-left: 0;
+                .one-tree-list {
+                  border-left-width: 0;
+                  .one-tree-item {
+                    padding-left: 0;
+                    padding-bottom: 0;
+                    &::before, &::after {
+                      display: none;
+                    }
+                    .one-tree-item-content {
+                      padding-left: 0;
+                      font-size: $toggle-in-group-size-ratio * 100%;
+                    }
+                    .tree-circle {
+                      display: none;
+                    }
+                    .form-group {
+                      width: $field-width * $toggle-in-group-size-ratio;
+                      min-width: $field-width *  $toggle-in-group-size-ratio;
+                    }
+                    .one-tree {
+                      display: none;
+                    }
+                  }
+                }
+              }
+            }
+            &.subtree-expanded {
+              &::before, &::after {
+                top: 20px;
+              }
+              > .tree-item-content-container {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                margin-right: $field-width - $toggle-width - 0.4em;
+                border: 1px solid $main-border-color;
+                background-color: $main-content-light-background;
+                .tree-circle {
+                  line-height: 0;
+                  top: 20px;
+                  left: 16px;
+                  border-radius: 100%;
+                  width: $one-tree-bullet-size / 2;
+                  height: $one-tree-bullet-size / 2;
+                  background-color: white;
+                  .one-icon {
+                    position: relative;
+                    top: -$one-tree-bullet-size / 4;
+                    left: -$one-tree-bullet-size / 4;
+                  }
+                }
+                .form-group {
+                  width: $toggle-width + 2em;
+                  min-width: $toggle-width + 2em;
+                  padding-right: $padding-small-horizontal;
+                  text-align: right;
+                }
+              }
+            }
+          }
+
+          .one-tree-item-content {
+            display: table-row;
+            padding-right: $padding-xs-horizontal;
+            border-radius: $border-radius-small;
+            .node-text, .form-group {
+              display: table-cell;
+              vertical-align: top;
+            }
+
+            .node-text {
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              &.disabled {
+                opacity: $disabled-opacity;
+              }
+            }
+            .form-group {
+              min-width: $field-width;
+              width: $field-width;
+              margin-bottom: 0;
+              .form-control-feedback {
+                height: 32px;
+                width: 32px;
+                margin-top: 0;
+                line-height: 32px;
+              }
+
+              .one-way-radio-group {
+                padding-left: 0;
+                label {
+                  display: block;
+                  & + label {
+                    padding-top: $padding-base-vertical;
+                  }
+                }
+              }
+            }
+          }
+
+          &:not(.item-generic) {
+            padding-left: $one-tree-indent - $padding-xs-horizontal;
+            &.collapse-hidden {
+              padding-left: $one-tree-indent - $padding-xs-horizontal + 2px;
+            }
+            .one-tree-item-content {
+              padding-left: $padding-xs-horizontal;
+              .node-text {
+                max-width: 0;
+              }
+              .form-message {
+                padding-top: 0;
+              }
+            }
+          }
+
+          &:not(.item-generic), &.has-checkbox-group:not(.subtree-expanded) {
+            .one-tree-item-content:hover {
+              background-color: $main-content-hover-background;
+            }
+          }
+          &.has-checkbox-group.subtree-expanded {
+            .one-tree-item-content:hover {
+              background-color: initial;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    label {
+      display: inline-block;
+      margin-bottom: 0;
+    }
+    .form-group {
+      margin-bottom: 0;
+      margin-top: $padding-base-vertical;
+      .form-control-feedback {
+        height: $input-height-small;
+        line-height: $input-height-small;
+        width: $input-height-small;
+        margin-top: 0;
+      }
+      .one-way-radio-group {
+        display: block;
+        padding-left: 0;
+        label {
+          display: block;
+          padding: $padding-base-vertical 0;
+          &:last-child {
+            padding-bottom: 0;
+          }
+          .one-way-radio-control {
+            margin-top: 0.2em;
+            margin-right: 0;
+            float: right;
+            font-size: 1.1em;
+          }
+          .one-label {
+            font-size: 90%;
+          }
+        }
+      }
+    }
+    .item-checkbox, .has-checkbox-group {
+      .form-group {
+        margin: 0;
+        float: right;
+      }
+    }
+  }
+}

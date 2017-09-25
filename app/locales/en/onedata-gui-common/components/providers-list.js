@@ -1,3 +1,5 @@
 export default {
-  title: 'Providers',
+  providers: 'Providers',
+  supportedSpaces: 'Supported spaces',
+  spaceSupportSize: 'Space support size',
 };

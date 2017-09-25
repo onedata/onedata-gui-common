@@ -52,21 +52,23 @@ export default Ember.Component.extend({
    * toggle event handler
    * @type {string}
    */
-  _clickDisabledElementsSelector:
-    '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
+  _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
 
   _clickHandlerObserver: observer('_isItemFixed', 'isCollapsible', function () {
     let {
       _isItemFixed,
       isCollapsible,
+      click,
     } = this.getProperties(
       '_isItemFixed',
-      'isCollapsible'
+      'isCollapsible',
+      'click',
     );
-    this.set(
-      'click', 
-      !_isItemFixed && isCollapsible ? this._clickHandler : undefined
-    );
+    if (click === this._clickHandler || !click) {
+      this.set(
+        'click', !_isItemFixed && isCollapsible ? this._clickHandler : undefined
+      );
+    }
   }),
 
   init() {

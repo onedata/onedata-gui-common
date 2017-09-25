@@ -139,6 +139,36 @@ label {
   }
 }
 @import "../bootstrap/button-groups";
+.btn-group {
+  .btn {
+    @include box-shadow(none);
+    border-color: $color-one-default;
+    & + .btn {
+      margin-left: -2px;
+    }
+    &.btn-default {
+      &:not(.active) {
+        background-color: $color-one-white;
+        color: $color-one-default;
+        &:focus,
+        &.focus,
+        &:hover,
+        &:active {
+          background-color: lighten($color-one-default, 50%);
+        }
+      }
+      &.active {
+        background-color: $color-one-default;
+        &:focus,
+        &.focus,
+        &:hover,
+        &:active {
+          background-color: darken($color-one-default, 7%);
+        }
+      }
+    }
+  }
+}
 @import "../bootstrap/input-groups";
 
 .table {

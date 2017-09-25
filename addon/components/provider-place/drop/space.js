@@ -9,10 +9,11 @@
  */
 
 import Ember from 'ember';
-
+import layout from 'onedata-gui-common/templates/components/provider-place/drop/space';
 import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
 
 export default Ember.Component.extend(ProviderSpace, {
+  layout,
   tagName: 'li',
   classNames: ['provider-place-drop-space']
 });

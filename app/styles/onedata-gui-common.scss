@@ -32,6 +32,8 @@ $color-one-list-item-separator: $main-border-color;
 @import '_spin-button-base';
 
 @import 'onedata-gui-common/spin-button-overrides';
+@import 'chartist';
+@import 'onedata-gui-common/chartist-overrides';
 
 $mobile-top-height: 70px;
 $main-menu-width: 200px;
@@ -61,7 +63,9 @@ $onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $o
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
-$collapse-transition: max-height .2s linear, padding .2s linear, opacity .2s linear;
+$collapse-transition-time: .2s;
+$height-collapse-transition: max-height $collapse-transition-time linear;
+$collapse-transition: $height-collapse-transition, padding $collapse-transition-time linear, opacity $collapse-transition-time linear;
 
 $disabled-opacity: 0.6;
 
@@ -114,5 +118,7 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-sidebar-toolbar-button';
 @import 'onedata-gui-common/components/one-atlas';
 @import 'onedata-gui-common/components/provider-place';
-@import 'onedata-gui-common/components/space-providers-support-chart';
+@import 'onedata-gui-common/components/one-pie-chart';
 @import 'onedata-gui-common/components/providers-list';
+@import 'onedata-gui-common/components/one-dynamic-tree';
+@import 'onedata-gui-common/components/support-size-info';

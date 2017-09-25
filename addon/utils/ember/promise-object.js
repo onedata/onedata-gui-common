@@ -8,7 +8,7 @@
  * it easy to create data bindings with the `PromiseObject` that will
  * be updated when the promise resolves.
  *
- * Also used as: ObjectPromiseProxy somewhere in old code.
+ * Also used as: PromiseObject somewhere in old code.
  *
  * @module utils/ember/promise-object
  * @author Jakub Liput

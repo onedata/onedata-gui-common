@@ -1,81 +1,200 @@
-$one-tree-indent: 45px;
-$one-tree-bullet-top: 13px;
+$one-tree-indent: 35px;
+$one-tree-bullet-top: 14px;
 $one-tree-bullet-size: 17px;
 // all possible border-style values
 $one-tree-border-styles: none hidden dotted dashed solid double groove ridge inset outset;
 
 .one-tree {
   background-color: $color-one-white;
+  .one-tree-list {
+    list-style-type: none;
+  }
 
-  @each $border-style in $one-tree-border-styles {
-    &.border-#{$border-style},
-    &.border-#{$border-style} .one-tree,
-    & .one-tree-list > li .one-tree.border-#{$border-style} {
-      > .one-tree-list {
-        border-left-style: $border-style;
-        > li:before {
-          border-top-style: $border-style;
+  @media (min-width: $screen-sm-min) {
+    @each $border-style in $one-tree-border-styles {
+      &.border-#{$border-style},
+      &.border-#{$border-style} .one-tree,
+      & .one-tree-list > li .one-tree.border-#{$border-style} {
+        > .one-tree-list {
+          border-left-style: $border-style;
+          > li:before {
+            border-top-style: $border-style;
+          }
+        }
+      }
+    }
+    &.has-items > .one-tree-list {
+      padding-top: 15px;
+    }
+    .one-tree-list {
+      position: relative;
+      padding: 0;
+      transition: padding-top $collapse-transition-time linear;
+      border-left: 1px solid $main-border-color;
+      background-color: inherit;
+
+      .one-tree {
+        margin-left: -($one-tree-bullet-size / 2 + $padding-xs-horizontal + 1px);
+        background-color: inherit;
+      }
+
+      > li {
+        position: relative;
+        padding-left: $one-tree-indent;
+        padding-bottom: $padding-base-vertical;
+        background-color: inherit;
+        transition: $height-collapse-transition, padding-bottom $collapse-transition-time linear;
+
+        &:before {
+          content: '';
+          display: block;
+          position: absolute;
+          top: $one-tree-bullet-top;
+          left: 0;
+          width: $one-tree-indent - $one-tree-bullet-size - 3px;
+          z-index: 1;
+          border-top: 1px solid $main-border-color;
+        }
+
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          top: $one-tree-bullet-top + 1px;
+          bottom: 0;
+          left: -2px;
+          width: 5px;
+          background-color: inherit;
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+
+        &:last-child, &.last {
+          padding-bottom: 0px;
+          &::after {
+            opacity: 1;
+          }
+        }
+
+        &.has-subtree {
+          > .tree-item-content-container {
+            > .one-tree-item-content,
+            > .tree-circle {
+              cursor: pointer;
+            }
+          }
+        }
+
+        &.collapse-hidden {
+          padding-bottom: 0;
+          padding-left: $one-tree-indent + 2px;
+          margin-left: -2px;
+          opacity: 1;
+          &:before {
+            display: none;
+            left: 2px;
+          }
+          > .tree-circle {
+            left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal + 2px;
+          }
+        }
+
+        > .tree-item-content-container {
+          padding: $padding-small-vertical 0;
+          background-color: inherit;
+          > .tree-circle {
+            position: absolute;
+            left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal;
+            top: $one-tree-bullet-top + 2px;
+            transform: translateY(-50%);
+            background-color: inherit;
+            color: darken($main-border-color, 30%);
+            .one-icon {
+              font-size: $one-tree-bullet-size;
+            }
+          }
         }
       }
     }
   }
-  .one-tree-list {
-    position: relative;
-    margin-left: $padding-base-horizontal;
-    padding: $padding-base-vertical 0 0 0;
-    border-left: 1px solid $main-border-color;
-    list-style-type: none;
-    background-color: inherit;
-
-    > li {
-      position: relative;
-      padding-left: $one-tree-indent;
-      background-color: inherit;
-
-      &:before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: $one-tree-bullet-top;
-        left: 0;
-        width: $one-tree-indent - $one-tree-bullet-size - 3px;
-        z-index: 1;
-        border-top: 1px solid $main-border-color;
-      }
-
-      &:last-child::after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: $one-tree-bullet-top + 1px;
-        bottom: 0;
-        left: -2px;
-        width: 5px;
-        background-color: inherit;
-      }
-
-      &.has-subtree {
-        > .one-tree-item-content,
-        > .tree-circle {
-          @extend .clickable
+  @media (max-width: $screen-xs-max) {
+    .-expanded-item-base {
+      > .tree-item-content-container {
+        > .one-tree-item-content {
+          border-bottom: 1px solid $main-border-color;
+          padding: $padding-large-horizontal $padding-large-vertical;
         }
       }
-
-      > .tree-circle {
-        position: absolute;
-        left: $one-tree-indent - $one-tree-bullet-size - $padding-xs-horizontal;
-        top: $one-tree-bullet-top + 2px;
-        transform: translateY(-50%);
-        background-color: inherit;
-        color: darken($main-border-color, 30%);
-        .one-icon {
-          font-size: $one-tree-bullet-size;
+    }
+    &.recently-expanded {
+      &.one-tree-root {
+        .one-tree-item-content {
+          padding-left: $padding-large-horizontal;
         }
       }
-
-      > .one-tree-item-content {
-        padding: $padding-small-vertical 0;
+      &.one-tree-root {
+        > .one-tree-list {
+          > .one-tree-item {
+            > .tree-item-content-container {
+              > .one-tree-item-content {
+                height: initial;
+                visibility: visible;
+                padding-left: $padding-large-horizontal * 1;
+                background-color: inherit;
+              }
+            }
+          }
+        }
       }
+      > .one-tree-list {
+        > .one-tree-item {
+          @extend  .-expanded-item-base;
+          > .tree-item-content-container {
+            > .one-tree-item-content {
+              height: initial;
+              visibility: visible;
+              padding-left: $padding-large-horizontal * 2;
+              background-color: $main-content-light-background;
+            }
+          }
+        }
+      }
+    }
+    .one-tree-item {
+      &.recently-expanded {
+        @extend .-expanded-item-base;
+        > .tree-item-content-container {
+          > .one-tree-item-content {
+            position: relative;
+            padding-left: $padding-large-horizontal * 2;
+            &::before {
+              content: $oneicon-arrow-right;
+              position: absolute;
+              display: block;
+              top: 50%;
+              left: 0.4em;
+              transform: translateY(-50%) rotate(180deg);
+              font-family: 'oneicons';
+              font-size: 1.8em;
+            }
+          }
+        }
+      }
+      &:not(.recently-expanded) {
+        > .tree-item-content-container {
+          > .one-tree-item-content {
+            height: 0;
+            visibility: hidden;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+    .tree-circle {
+      display: none;
+    }
+    .one-tree-list {
+      padding-left: 0;
     }
   }
 }

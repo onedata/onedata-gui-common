@@ -8,7 +8,6 @@
  */
 
 import Ember from 'ember';
-import Onepanel from 'npm:onepanel';
 
 import layout from 'onedata-gui-common/templates/components/content-users';
 
@@ -16,25 +15,13 @@ const {
   Component,
   inject: { service },
   computed,
-  get,
 } = Ember;
-
-const {
-  UserModifyRequest,
-} = Onepanel;
 
 export default Component.extend({
   layout,
 
   i18n: service(),
-  onepanelServer: service(),
   globalNotify: service(),
-
-  /**
-   * To inject.
-   * @type {OnepanelGui.UserDetails}
-   */
-  user: null,
 
   /**
    * If true, set credentials form to changingPassword mode
@@ -58,6 +45,17 @@ export default Component.extend({
       'btn-change-password-cancel' : 'btn-change-password-start';
   }),
 
+  /**
+   * @abstract
+   * Make an API call to change password of current user
+   *
+   * @param {object} { oldPassword: string, newPassword: string }
+   * @returns {Promise} an API call promise, resolve on success
+   */
+  _changePassword() {
+    throw new Error('not implemented');
+  },
+
   actions: {
     toggleChangePassword() {
       this.toggleProperty('_changingPassword');
@@ -65,33 +63,22 @@ export default Component.extend({
 
     /**
      * Make an API call to change password of current user
+     * and handles promise resolve, reject
      * 
      * @param {object} { oldPassword: string, newPassword: string }
-     * @returns {Promise} an API call promise
+     * @returns {Promise} an API call promise, resolves on change password success
      */
     submitChangePassword({ currentPassword, newPassword }) {
       let {
-        user,
         i18n,
-        onepanelServer,
         globalNotify,
       } = this.getProperties(
-        'user',
         'i18n',
-        'onepanelServer',
         'globalNotify'
       );
-      let changingPassword = onepanelServer.request(
-        'onepanel',
-        'modifyUser',
-        get(user, 'id'),
-        UserModifyRequest.constructFromObject({
-          currentPassword,
-          newPassword,
-        })
-      );
 
-      // TODO i18n
+      let changingPassword = this._changePassword({ currentPassword, newPassword });
+
       changingPassword.catch(error => {
         globalNotify.backendError(
           i18n.t('components.contentUsers.passwordChangedSuccess'),

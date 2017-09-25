@@ -1,4 +1,5 @@
 $toggle-size-base: 1.4em;
+$toggle-width: 2 * $toggle-size-base;
 
 .one-way-toggle {
   position: relative;
@@ -26,17 +27,27 @@ $toggle-size-base: 1.4em;
     position: absolute;
     z-index: -1;
 
-    &:focus + div::before {
+    &:focus + .one-way-toggle-control::before {
       @include box-shadow($control-box-shadow-focus);
       border: 1px solid $input-border-focus;
     }
+  }
 
-    &:checked + div {
+  &.checked {
+    .one-way-toggle-control {
       background-color: $brand-success;
+      &:before {
+        margin-left: $toggle-width / 2;
+      }
     }
+  }
 
-    &:checked + div:before {
-      margin-left: $toggle-size-base;
+  &.maybe {
+    .one-way-toggle-control {
+      background-color: $color-one-yellow;
+      &:before {
+        margin-left: $toggle-width / 4;
+      }
     }
   }
 
@@ -54,7 +65,7 @@ $toggle-size-base: 1.4em;
     display: inline-block;
     background-color: $color-one-light-gray;
     transition: background-color 0.2s ease;
-    width: $toggle-size-base * 2;
+    width: $toggle-width;
   }
 
   .one-way-toggle-control:before {

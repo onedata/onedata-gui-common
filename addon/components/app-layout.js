@@ -15,7 +15,7 @@ const {
   }
 } = Ember;
 
-const ObjectPromiseProxy = Ember.ObjectProxy.extend(Ember.PromiseProxyMixin);
+import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
 const MOBILE_APPLAYOUT_STATE = {
   CONTENT: 1,
@@ -80,7 +80,7 @@ export default Ember.Component.extend({
 
   /**
    * Creates a proxy model for floating sidebar based on selected sidenavTabId
-   * @type {ObjectPromiseProxy|null}
+   * @type {PromiseObject|null}
    */
   sidenavModel: computed('sidenavTabId', function () {
     let {
@@ -101,7 +101,7 @@ export default Ember.Component.extend({
         });
         gettingModel.catch(reject);
       });
-      return ObjectPromiseProxy.create({ promise });
+      return PromiseObject.create({ promise });
     } else {
       return null;
     }

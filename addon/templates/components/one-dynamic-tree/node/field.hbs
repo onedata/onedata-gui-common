@@ -1,0 +1,33 @@
+{{#if (eq field.type "checkbox")}}
+  {{one-way-toggle
+    class=inputClass
+    inputId=inputId
+    checked=value
+    update=(action "inputChanged")
+    isReadOnly=disabled
+    onFocusOut=(action "focusedOut")
+    threeState=field.threeState
+  }}
+{{else if (eq field.type "radio-group")}}
+  {{one-way-radio-group
+    class=inputClass
+    inputId=inputId
+    value=value
+    fieldName=field.name
+    options=field.options
+    isReadOnly=disabled
+    update=(action "inputChanged")
+    onFocusOut=(action "focusedOut")
+  }}
+{{else}}
+  {{component (input-component-name field.type)
+    id=inputId
+    value=value
+    class=inputClass
+    update=(action "inputChanged")
+    step=field.step
+    disabled=disabled
+    placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
+    focusOut=(action "focusedOut")
+  }}
+{{/if}}
