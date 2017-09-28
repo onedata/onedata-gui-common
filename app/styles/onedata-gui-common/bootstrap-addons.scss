@@ -245,3 +245,29 @@ form {
     margin: $padding-small-vertical $padding-small-horizontal;
   }
 }
+
+.nav-tabs {
+  li.disabled {
+    pointer-events: none;
+  }
+  .nav-link {
+    padding: $padding-large-vertical $padding-large-horizontal;
+    border-radius: $border-radius-small $border-radius-small 0 0;
+    font-weight: bold;
+    color: inherit;
+  }
+}
+
+.tab-content {
+  padding: $padding-base-vertical 0;
+  border: 1px solid $main-border-color;
+  border-top: 0;
+  background-color: $color-one-white;
+  .tab-pane {
+    position: relative;
+  }
+  .content-row {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
+}
