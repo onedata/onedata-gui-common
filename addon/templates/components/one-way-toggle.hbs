@@ -1,4 +1,4 @@
-<input type="checkbox" id={{inputId}} disabled={{isReadOnly}}>
+<input type="checkbox" id={{inputId}} disabled={{or isReadOnly _isInProgress}}>
 <div class="one-way-toggle-control"></div>
 {{#if isReadOnly}}
   <div class="one-way-toggle-readonly-icon">
@@ -9,4 +9,7 @@
       triggerEvents="hover"
     }}
   </div>
+{{/if}}
+{{#if _isInProgress}}
+  {{spin-spinner-block class="one-way-toggle-spinner" sizeClass="xxs"}}
 {{/if}}
