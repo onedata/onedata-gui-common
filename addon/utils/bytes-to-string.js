@@ -72,7 +72,9 @@ function bytesToStringSI(bytes) {
  * @param {Object} [options]
  * @param {Boolean} [options.iecFormat=false] If true, use IEC format: KiB, MiB, GiB
  */
-export default function bytesToString(bytes, { iecFormat = false, separated = false } = { iecFormat: false, separated: false }) {
+export default function bytesToString(
+  bytes, { iecFormat = false, separated = false } = { iecFormat: false, separated: false }
+) {
   if (!bytes && bytes !== 0) {
     return '';
   } else {
