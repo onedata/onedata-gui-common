@@ -2,6 +2,7 @@ import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/spin-spinner-block';
 
 const PREDEF_SIZES = {
+  xxs: 0.12,
   xs: 0.2,
   sm: 0.4,
   md: 0.8,

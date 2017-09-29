@@ -1,8 +1,6 @@
-import Ember from 'ember';
-
-const {
-  Component,
-} = Ember;
+import Component from '@ember/component';
+import { Promise } from 'rsvp';
+import { computed } from '@ember/object';
 
 /**
  * Creates a base for checkbox-like components using the one-way-checkbox component.
@@ -15,7 +13,10 @@ const {
  */
 export default Component.extend({
   classNames: ['one-checkbox-base'],
-  classNameBindings: ['isReadOnly:disabled:clickable'],
+  classNameBindings: [
+    '_disabled:disabled:clickable',
+    '_isInProgress:in-progress'
+  ],
   attributeBindings: ['dataOption:data-option'],
 
   /**
@@ -49,6 +50,26 @@ export default Component.extend({
   update: () => {},
 
   /**
+   * Set this flag to true to force toggle to be in progress state
+   * @type {boolean}
+   */
+  isInProgress: false,
+
+  _disabled: computed.or('_isInProgress', 'isReadOnly'),
+
+  /**
+   * Internal in progress state
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  _isInProgress: computed.or('isInProgress', '_updateInProgress'),
+
+  /**
+   * Flag set internally using promise that is returned by update action
+   * @type {boolean}
+   */
+  _updateInProgress: false,
+
+  /**
    * Action called on input focus out
    * @type {Function}
    */
@@ -79,10 +100,16 @@ export default Component.extend({
 
   /**
    * Notifies about new value.
-   * @param {*} value new checkbox value 
+   * @param {any} value new checkbox value
+   * @returns {any} result of injected update function
    */
   _update(value) {
-    this.get('update')(value, this);
+    const updateResult = this.get('update')(value, this);
+    if (updateResult instanceof Promise) {
+      this.set('_updateInProgress', true);
+      updateResult.finally(() => this.set('_updateInProgress', false));
+    }
+    return updateResult;
   },
 
   actions: {

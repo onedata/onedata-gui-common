@@ -113,6 +113,7 @@ export default Ember.Component.extend(DisabledPaths, {
     return Ember.Object.create({
       name: this.get('_path'),
       type: 'checkbox',
+      threeState: true,
     });
   }),
 
@@ -131,6 +132,22 @@ export default Ember.Component.extend(DisabledPaths, {
     let definition = this.get('definition');
     return !!(!definition.subtree && definition.field);
   }),
+
+  /**
+   * If true, subtree select checkbox will be visible.
+   * @type {computed.boolean}
+   */
+  _allowSubtreeCheckboxSelect: computed(
+    '_renderField',
+    'definition.allowSubtreeCheckboxSelect',
+    function () {
+      let {
+        _renderField,
+        definition,
+      } = this.getProperties('_renderField', 'definition');
+      return !_renderField && definition.allowSubtreeCheckboxSelect;
+    }
+  ),
 
   /**
    * Path to value in `values` property
