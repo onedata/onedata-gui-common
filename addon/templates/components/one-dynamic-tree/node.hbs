@@ -1,4 +1,7 @@
-{{#parentTree.item class=(concat "item-" (if _field._isField _field.type "generic")) as |item|}}
+{{#parentTree.item class=(concat-classes 
+  (concat "item-" (if _field._isField _field.type "generic")) 
+  (if _allowSubtreeCheckboxSelect "has-checkbox-group")
+) as |item|}}
   {{#item.content}}
     <label 
       for={{if _field._isField inputId}} 
@@ -17,14 +20,14 @@
           disabled=_isFieldDisabled}}
         <div class="form-message">{{_field.message}}</div>
       {{/bsForm.group}}
-    {{else if definition.allowSubtreeCheckboxSelect}}
+    {{else if _allowSubtreeCheckboxSelect}}
       {{#bsForm.group}}
         {{one-dynamic-tree/node/field 
           field=_selectCheckboxesField
           value=_areNestedCheckboxesSelected
           inputChanged=(action selectNestedCheckboxes 
             (dot-to-dash _path)
-            (not _areNestedCheckboxesSelected)
+            (if (eq _areNestedCheckboxesSelected 2) true (not _areNestedCheckboxesSelected))
           )
           inputId=inputId
           disabled=_isFieldDisabled}}

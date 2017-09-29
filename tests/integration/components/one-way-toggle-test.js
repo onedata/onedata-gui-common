@@ -3,10 +3,13 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { click } from 'ember-native-dom-helpers';
-import sinon from 'sinon';
+import sinon from 'sinon'; <<
+<< << < HEAD
 import { run } from '@ember/runloop';
 import wait from 'ember-test-helpers/wait';
-import { Promise } from 'rsvp';
+import { Promise } from 'rsvp'; ===
+=== = >>>
+>>> > d8565ca95a68b496d3844183e32180a02f4f5b2a
 
 describe('Integration | Component | one way toggle', function () {
   setupComponentTest('one-way-toggle', {
