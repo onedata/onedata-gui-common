@@ -1,4 +1,5 @@
 $toggle-size-base: 1.4em;
+$toggle-width: 2 * $toggle-size-base;
 
 .one-way-toggle {
   position: relative;
@@ -36,7 +37,7 @@ $toggle-size-base: 1.4em;
     .one-way-toggle-control {
       background-color: $brand-success;
       &:before {
-        margin-left: $toggle-size-base;
+        margin-left: $toggle-width / 2;
       }
     }
   }
@@ -45,7 +46,7 @@ $toggle-size-base: 1.4em;
     .one-way-toggle-control {
       background-color: $color-one-yellow;
       &:before {
-        margin-left: $toggle-size-base / 2;
+        margin-left: $toggle-width / 4;
       }
     }
   }
@@ -64,7 +65,7 @@ $toggle-size-base: 1.4em;
     display: inline-block;
     background-color: $color-one-light-gray;
     transition: background-color 0.2s ease;
-    width: $toggle-size-base * 2;
+    width: $toggle-width;
   }
 
   .one-way-toggle-control:before {
