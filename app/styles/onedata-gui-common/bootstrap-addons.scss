@@ -248,7 +248,10 @@ form {
 
 .nav-tabs {
   li.disabled {
-    pointer-events: none;
+    cursor: not-allowed !important;
+    > a {
+      pointer-events: none;
+    }
   }
   .nav-link {
     padding: $padding-large-vertical $padding-large-horizontal;
