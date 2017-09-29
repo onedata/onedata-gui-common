@@ -20,3 +20,12 @@
   <label for="toggle3">Disabled toggle:</label>
   {{one-way-toggle inputId="toggle3" checked=disabledToggle isReadOnly=true}} Value: {{disabledToggle}}
 </p>
+<p>
+  <label for="toggle4">Delayed toggle:</label>
+  {{one-way-toggle
+    inputId="toggle4"
+    checked=delayedToggle
+    update=(action "promisedToggle")
+  }}
+    Value: {{delayedToggle}}
+</p>

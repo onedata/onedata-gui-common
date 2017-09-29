@@ -2,4 +2,4 @@
   id=inputId 
   checked=checked 
   update=(action "toggle")
-  disabled=isReadOnly}}
+  disabled=(or isReadOnly _isInProgress)}}

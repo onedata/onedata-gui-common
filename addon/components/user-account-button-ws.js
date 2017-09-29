@@ -17,6 +17,7 @@ import layout from 'onedata-gui-common/templates/components/user-account-button'
 
 const {
   inject: { service },
+  get,
 } = Ember;
 
 export default UserAccountButton.extend({
@@ -33,7 +34,7 @@ export default UserAccountButton.extend({
   init() {
     this._super(...arguments);
     this.get('currentUser').getCurrentUserRecord().then(user => {
-      this.set('username', user.get('name'));
+      this.set('username', get(user, 'name'));
     })
   },
 

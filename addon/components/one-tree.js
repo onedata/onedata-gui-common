@@ -70,7 +70,9 @@ export default Ember.Component.extend({
   classNameBindings: [
     '_isRoot:one-tree-root',
     '_isExpanded::collapse-hidden',
+    '_isExpanded:tree-expanded',
     '_isFilteredOut::has-items',
+    '_wasRecentlyExpanded:recently-expanded',
   ],
 
   /**
@@ -106,6 +108,19 @@ export default Ember.Component.extend({
    * @type {boolean}
    */
   disableFilter: false,
+
+  /**
+   * Key of a subtree, that was expanded recently. Null means tree root.
+   * @type {*}
+   */
+  lastExpandedKey: null,
+
+  /**
+   * Action that sets lastExpandedKey at root tree level.
+   * Takes a key as an argument.
+   * @type {Function}
+   */
+  setLastExpandedKey: () => {},
 
   /**
    * Key for root tree. When tree is a root tree, then _rootKey = null.
@@ -145,6 +160,19 @@ export default Ember.Component.extend({
    * @type {Ember.Array.*}
    */
   _filteredOutItemsKeys: null,
+
+  /**
+   * If true, this tree was recently expanded.
+   * @type {computed.boolean}
+   */
+  _wasRecentlyExpanded: computed('key', 'lastExpandedKey', function () {
+    let {
+      key,
+      lastExpandedKey,
+      _isRoot,
+    } = this.getProperties('key', 'lastExpandedKey', '_isRoot');
+    return key === lastExpandedKey || (lastExpandedKey === null && _isRoot);
+  }),
 
   /**
    * If true, tree has no visible items
@@ -250,6 +278,9 @@ export default Ember.Component.extend({
         }
         this.set('_activeSubtreeKeys', subtreeIsExpanded ?
           _activeSubtreeKeys.concat(subtreeKeys) : newActiveSubtreeKeys);
+        if (subtreeIsExpanded) {
+          this.set('lastExpandedKey', subtreeKeys[subtreeKeys.length - 1]);
+        }
       } else {
         invokeAction(this, '_showAction', subtreeKeys, subtreeIsExpanded);
       }
@@ -292,6 +323,23 @@ export default Ember.Component.extend({
         _filteredOutItemsKeys.pushObject(itemKey);
       }
       debounce(this, this._checkTreeVisibility, 1);
+    },
+
+    setLastExpandedKey(itemKey) {
+      let {
+        _isRoot,
+        setLastExpandedKey,
+        key,
+      } = this.getProperties('_isRoot', 'setLastExpandedKey', 'key');
+      if (_isRoot) {
+        if (key === itemKey) {
+          this.set('lastExpandedKey', null);
+        } else {
+          this.set('lastExpandedKey', itemKey);
+        }
+      } else {
+        setLastExpandedKey(itemKey);
+      }
     }
   }
 });
