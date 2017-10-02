@@ -24,8 +24,22 @@
   <label for="toggle4">Delayed toggle:</label>
   {{one-way-toggle
     inputId="toggle4"
-    checked=delayedToggle
-    update=(action "promisedToggle")
+    checked=delayedToggle1
+    update=(action "promisedToggle" "delayedToggle1")
   }}
     Value: {{delayedToggle}}
 </p>
+<p>
+  <label for="toggle5">Delayed toggle (spinner on the left):</label>
+  <div style="width: 60px;display: inline-block;">
+    {{one-way-toggle
+      inputId="toggle5"
+      checked=delayedToggle2
+      spinnerSide="left"
+      update=(action "promisedToggle" "delayedToggle2")
+      class="pull-right"
+    }}
+  </div>
+    Value: {{delayedToggle2}}
+</p>
+

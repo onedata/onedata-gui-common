@@ -37,6 +37,13 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
       border-bottom: 0;
     }
 
+    &.no-padding-top {
+      padding-top: 0;
+    }
+    &.no-padding-bottom {
+      padding-bottom: 0;
+    }
+
     h1 {
       font-size: $font-size-base;
       font-weight: bold;
@@ -51,6 +58,9 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
       .btn-toolbar button {
         // vertical align floating toolbar
         margin-bottom: 0.3em;
+      }
+      .one-way-toggle {
+        margin-top: 0.3em;
       }
     }
 

@@ -14,19 +14,20 @@ export default Ember.Component.extend({
   twoStateToggle: false,
   threeStateToggle: 2,
   disabledToggle: true,
-  delayedToggle: false,
+  delayedToggle1: false,
+  delayedToggle2: false,
 
   actions: {
     toggle1FocusOut() {
       console.log('toggle1 focus out');
     },
-    promisedToggle() {
+    promisedToggle(property) {
       return new Promise(resolve => {
         run.later(() => {
-          this.toggleProperty('delayedToggle');
+          this.toggleProperty(property);
           resolve();
         }, 3000);
       });
-    }
+    },
   }
 });

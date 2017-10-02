@@ -96,6 +96,15 @@ $toggle-width: 2 * $toggle-size-base;
       transform: translateX(12px) translateY(-50%);
       top: 50%;
     }
+    &.spinner-left {
+      .spin-spinner-block {
+        right: initial;
+      }
+      .one-way-toggle-control {
+        position: relative;
+        right: -0.55 * $toggle-width;
+      }
+    }
   }
   
 
@@ -122,21 +131,3 @@ $toggle-width: 2 * $toggle-size-base;
     }
   }
 }
-
-// FIXME: to finish - magic
-// .one-way-toggle {
-//   &.right {
-//     .one-way-toggle-control {
-//       transform: translateX(0.54 * $toggle-width);
-//     }
-//   }
-  
-//   &.in-progress {
-//     width: 1.55 * $toggle-width;
-//     .spin-spinner-block {
-//       left: -1.54em;
-//       right: auto;
-//       transform: translateX(10px) translateY(-50%);
-//     }
-//   }
-// }
