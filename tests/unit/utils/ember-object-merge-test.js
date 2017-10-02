@@ -24,4 +24,28 @@ describe('Unit | Utility | ember object merge', function () {
     expect(get(a, 'one.three'), 'adds new nested property').to.equal(30);
     expect(get(a, 'one.four'), 'preserves old nested property').to.equal(4);
   });
+
+  it('merges deeply plain object property that is plain object itself', function () {
+    const a = EmberObject.create({
+      one: {
+        two: {
+          three: {
+            a: 1,
+          }
+        },
+      },
+    });
+    const b = EmberObject.create({
+      one: {
+        two: {
+          three: {
+            b: 2,
+          }
+        }
+      },
+    });
+    merge(a, b);
+    expect(get(a, 'one.two.three.a'), 'preserves very deep property').to.equal(1);
+    expect(get(a, 'one.two.three.b'), 'copies very deep property').to.equal(2);
+  });
 });
