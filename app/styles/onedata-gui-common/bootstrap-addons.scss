@@ -268,9 +268,14 @@ form {
   background-color: $color-one-white;
   .tab-pane {
     position: relative;
-  }
-  .content-row {
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+    .content-row {
+      @media (min-width: $screen-sm-min) {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+      }
+      h1 {
+        padding: 0;
+      }
+    }
   }
 }
