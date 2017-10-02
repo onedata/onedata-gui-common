@@ -1,6 +1,6 @@
 /**
  * An ArrayProxy that watches changes in source array and adds distinguishable
- * label to each object in that array using ``addConflictLabels`` function.
+ * label to each object in that array using `addConflictLabels` function.
  *
  * NOTE: ported from ember-cli-onedata-common
  *
@@ -65,7 +65,7 @@ export default ArrayProxy.extend({
     }
 
     /**
-     * Assigns a ``conflictLabel`` property for each record in array.
+     * Assigns a `conflictLabel` property for each record in array.
      * It distinguish a record within other records if there are multiple
      * records with the same name.
      */
