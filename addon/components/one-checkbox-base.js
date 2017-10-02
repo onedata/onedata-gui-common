@@ -15,7 +15,8 @@ export default Component.extend({
   classNames: ['one-checkbox-base'],
   classNameBindings: [
     '_disabled:disabled:clickable',
-    '_isInProgress:in-progress'
+    '_isInProgress:in-progress',
+    '_spinnerSideClass',
   ],
   attributeBindings: ['dataOption:data-option'],
 
@@ -54,6 +55,20 @@ export default Component.extend({
    * @type {boolean}
    */
   isInProgress: false,
+
+  /**
+   * Side, where spinner should be rendered. Values: right, left.
+   * @type {string}
+   */
+  spinnerSide: 'right',
+
+  /**
+   * Spinner side css class.
+   * @type {computed.string}
+   */
+  _spinnerSideClass: computed('spinnerSide', function () {
+    return this.get('spinnerSide') === 'left' ? 'spinner-left' : '';
+  }),
 
   _disabled: computed.or('_isInProgress', 'isReadOnly'),
 
