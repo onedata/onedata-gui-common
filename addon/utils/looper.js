@@ -2,10 +2,10 @@
  * An Ember class to maintain a single interval with an object
  *
  * Usage:
- * - set ``interval`` property (on create or whenever in runtime)
- * - bind ``tick`` event to any function to invoke on interval (``on('tick', function)``)
- * - remember to call ``stop`` method or ``destroy`` when want to stop interval
- * - ``interval`` can be always changed - it will start new interval timer and clear old
+ * - set `interval` property (on create or whenever in runtime)
+ * - bind `tick` event to any function to invoke on interval (`on('tick', function)`)
+ * - remember to call `stop` method or `destroy` when want to stop interval
+ * - `interval` can be always changed - it will start new interval timer and clear old
  *
  * @module utils/looper
  * @author Jakub Liput
