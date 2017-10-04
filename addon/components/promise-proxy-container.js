@@ -20,19 +20,24 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/promise-proxy-container';
+import { computed } from '@ember/object';
 
-const {
-  Component,
-} = Ember;
+import LoadingContainer from 'onedata-gui-common/components/loading-container';
+import layout from 'onedata-gui-common/templates/components/loading-container';
 
-export default Component.extend({
+export default LoadingContainer.extend({
   layout,
   tagName: '',
 
   /**
+   * @virtual
    * @type {PromiseObject}
    */
   proxy: null,
+
+  isLoaded: computed.reads('proxy.isFulfilled'),
+  isLoading: computed.reads('proxy.isPending'),
+  isError: computed.reads('proxy.isRejected'),
+  errorReason: computed.reads('proxy.reason'),
+
 });
