@@ -62,6 +62,10 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
       .one-way-toggle {
         margin-top: 0.3em;
       }
+      label {
+        display: inline-block;
+        font-weight: inherit;
+      }
     }
 
     .form-title {
