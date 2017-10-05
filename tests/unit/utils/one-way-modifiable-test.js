@@ -5,15 +5,14 @@ import EmberObject from '@ember/object';
 
 const SampleObject = EmberObject.extend({
   sourceProperty: 'source',
-  computedProperty: oneWayModifiable('sourceProperty', function () {
-    return this.get('sourceProperty') + '1';
-  })
+  computedProperty: oneWayModifiable('sourceProperty'),
 });
 
 describe('Unit | Utility | one way modifiable', function () {
   it('is computed', function () {
     let sampleObject = SampleObject.create();
-    expect(sampleObject.get('computedProperty')).to.be.equal('source1');
+    expect(sampleObject.get('computedProperty'))
+      .to.be.equal(sampleObject.get('sourceProperty'));
   });
 
   it('can be modified', function () {
@@ -30,14 +29,16 @@ describe('Unit | Utility | one way modifiable', function () {
 
   it('is updated after source change', function () {
     let sampleObject = SampleObject.create();
-    sampleObject.set('sourceProperty', 'src');
-    expect(sampleObject.get('computedProperty')).to.be.equal('src1');
+    const newValue = 'src';
+    sampleObject.set('sourceProperty', newValue);
+    expect(sampleObject.get('computedProperty')).to.be.equal(newValue);
   });
 
   it('forgets modification after source change', function () {
     let sampleObject = SampleObject.create();
+    const newValue = 'src';
     sampleObject.set('computedProperty', false)
-    sampleObject.set('sourceProperty', 'src');
-    expect(sampleObject.get('computedProperty')).to.be.equal('src1');
+    sampleObject.set('sourceProperty', newValue);
+    expect(sampleObject.get('computedProperty')).to.be.equal(newValue);
   });
 });
