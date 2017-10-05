@@ -60,10 +60,12 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
         margin-bottom: 0.3em;
       }
       .one-way-toggle {
-        margin-top: 0.3em;
+        font-size: $font-size-base;
+        margin-top: 0.5em;
       }
       label {
         display: inline-block;
+        margin: 0;
         font-weight: inherit;
       }
     }

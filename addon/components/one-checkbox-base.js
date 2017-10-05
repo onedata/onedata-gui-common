@@ -94,8 +94,7 @@ export default Component.extend({
     this._super(...arguments);
 
     this.$('input')
-      // TODO: check and fix one-checkbox
-      // .change(() => this._toggle())
+      .change(() => this._toggle())
       .focusout(() => this.get('onFocusOut')())
       // Fix for Firefox to handle toggle change by 
       // label-click and keyboard change on active input
