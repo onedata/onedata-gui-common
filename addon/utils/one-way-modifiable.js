@@ -10,12 +10,10 @@
 
 import { computed } from '@ember/object';
 
-export default function oneWayModifiable() {
-  const args = arguments;
-  const fields = Array.prototype.slice.call(args, 0, args.length - 1);
-  return computed(...fields, {
-    get(key) {
-      return args[fields.length].call(this, key);
+export default function oneWayModifiable(fieldName) {
+  return computed(fieldName, {
+    get() {
+      return this.get(fieldName);
     },
     set(key, value) {
       return value;
