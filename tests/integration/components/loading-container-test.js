@@ -3,12 +3,12 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration | Component | loading container', function() {
+describe('Integration | Component | loading container', function () {
   setupComponentTest('loading-container', {
     integration: true
   });
 
-  it('renders', function() {
+  it('renders', function () {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
     // Template block usage:
@@ -18,7 +18,7 @@ describe('Integration | Component | loading container', function() {
     //   {{/loading-container}}
     // `);
 
-    this.render(hbs`{{loading-container}}`);
+    this.render(hbs `{{loading-container}}`);
     expect(this.$()).to.have.length(1);
   });
 });
