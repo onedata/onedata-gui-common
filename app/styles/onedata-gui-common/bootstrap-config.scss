@@ -181,6 +181,13 @@ label {
 }
 
 @import "../bootstrap/navs";
+.nav {
+  > li.disabled {
+    > a {
+      color: $main-text-color-disabled;
+    }
+  }
+}
 @import "../bootstrap/navbar";
 @import "../bootstrap/breadcrumbs";
 @import "../bootstrap/pagination";
