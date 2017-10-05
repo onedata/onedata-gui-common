@@ -4,6 +4,6 @@
   {{#if isLoading}}
     {{spin-spinner-block sizeClass="md" class="middle-centered"}}
   {{else if isError}}
-    {{resource-load-error reason=errorReason}}
+    {{resource-load-error message=customErrorMessage reason=errorReason}}
   {{/if}}
 {{/if}}

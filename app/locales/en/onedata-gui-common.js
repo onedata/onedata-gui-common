@@ -6,6 +6,7 @@ import providerPlace from './onedata-gui-common/components/provider-place';
 import providersList from './onedata-gui-common/components/providers-list';
 import contentUsers from './onedata-gui-common/components/content-users';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
+import resourceLoadError from './onedata-gui-common/components/resource-load-error';
 
 const translations = {
   components: {
@@ -17,6 +18,7 @@ const translations = {
     providersList,
     contentUsers,
     supportSizeInfo,
+    resourceLoadError,
   },
 };
 
