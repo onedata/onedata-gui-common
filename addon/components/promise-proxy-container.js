@@ -10,9 +10,9 @@
  * {{/promise-proxy-container}}
  * ```
  *
- * It will render loader (eg. spinner) if ``somePromiseObject`` is not settled.
- * It will render error message if ``somePromiseObject`` is rejected..
- * It will render ``some-component`` if promise has fulfilled.
+ * It will render loader (eg. spinner) if `somePromiseObject` is not settled.
+ * It will render error message if `somePromiseObject` is rejected..
+ * It will render `some-component` if promise has fulfilled.
  *
  * @module components/promise-proxy-container
  * @author Jakub Liput
@@ -39,5 +39,4 @@ export default LoadingContainer.extend({
   isLoading: computed.reads('proxy.isPending'),
   isError: computed.reads('proxy.isRejected'),
   errorReason: computed.reads('proxy.reason'),
-
 });

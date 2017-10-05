@@ -12,6 +12,15 @@
   {{/promise-proxy-container}}
 </div>
 
+<div class="row"
+  style="position: relative; height: 200px; border: 1px solid red;">
+  {{#promise-proxy-container
+    customErrorMessage="The rejecting proxy failed."
+    proxy=rejectingProxy}}
+    Bad world
+  {{/promise-proxy-container}}
+</div>
+
 <div class="row">
   <button {{action "resetProxy"}}>Reset</button>
 </div>

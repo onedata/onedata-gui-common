@@ -11,6 +11,9 @@ export default Component.extend({
     return !this.get('isLoading') && !this.get('isError');
   }),
   isLoading: undefined,
-  isError: undefined,
+  isError: computed('errorReason', function () {
+    return this.get('errorReason') != null;
+  }),
   errorReason: undefined,
+  customErrorMessage: undefined,
 });
