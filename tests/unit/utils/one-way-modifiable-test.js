@@ -10,31 +10,31 @@ const SampleObject = EmberObject.extend({
   })
 });
 
-describe('Unit | Utility | one way modifiable', function() {
-  it('is computed', function() {
+describe('Unit | Utility | one way modifiable', function () {
+  it('is computed', function () {
     let sampleObject = SampleObject.create();
     expect(sampleObject.get('computedProperty')).to.be.equal('source1');
   });
 
-  it('can be modified', function() {
+  it('can be modified', function () {
     let sampleObject = SampleObject.create();
     sampleObject.set('computedProperty', false);
     expect(sampleObject.get('computedProperty')).to.be.false;
   });
 
-  it('does not change source after modification', function() {
+  it('does not change source after modification', function () {
     let sampleObject = SampleObject.create();
     sampleObject.set('computedProperty', false);
     expect(sampleObject.get('sourceProperty')).to.be.equal('source');
   });
 
-  it('is updated after source change', function() {
+  it('is updated after source change', function () {
     let sampleObject = SampleObject.create();
     sampleObject.set('sourceProperty', 'src');
     expect(sampleObject.get('computedProperty')).to.be.equal('src1');
   });
 
-  it('its modification is lost after source change', function() {
+  it('forgets modification after source change', function () {
     let sampleObject = SampleObject.create();
     sampleObject.set('computedProperty', false)
     sampleObject.set('sourceProperty', 'src');
