@@ -225,3 +225,9 @@ input {
 .conflict-at {
   opacity: 0.5;
 }
+
+// parent for spinner container - prevents to make to small row when loading
+.loadable-row {
+  position: relative;
+  min-height: 150px;
+}
