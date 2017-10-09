@@ -7,7 +7,7 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
   background-color: inherit;
   &.active {
     background-color: $main-content-hover-background;
-    .one-collapsible-list-item-header {
+    > .one-collapsible-list-item-header {
       background-color: $collapsible-list-item-header-opened;
       &:hover {
         background-color: $collapsible-list-item-header-opened-hover;
