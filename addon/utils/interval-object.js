@@ -1,3 +1,12 @@
+/**
+ * FIXME: jsdoc
+ *
+ * @module utils/interval-object
+ * @author Jakub Liput
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { computed } from '@ember/object';
 import ObjectProxy from '@ember/object/proxy';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';

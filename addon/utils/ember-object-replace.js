@@ -1,3 +1,12 @@
+/**
+ * FIXME: jsdoc
+ *
+ * @module utils/ember-object-replace
+ * @author Jakub Liput
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import _ from 'lodash';
 import { get, set } from '@ember/object';
 import plainCopy from 'onedata-gui-common/utils/plain-copy';

@@ -1,3 +1,13 @@
+/**
+ * Extends ember object with plain copy method - see `util:plain-copy` for
+ * details.
+ * 
+ * @module mixins/plainable
+ * @author Jakub Liput
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 // Original implementation: http://stackoverflow.com/a/15002755
 
 import Ember from 'ember';

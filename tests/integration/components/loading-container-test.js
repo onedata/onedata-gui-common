@@ -8,17 +8,28 @@ describe('Integration | Component | loading container', function () {
     integration: true
   });
 
-  it('renders', function () {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-    // Template block usage:
-    // this.render(hbs`
-    //   {{#loading-container}}
-    //     template content
-    //   {{/loading-container}}
-    // `);
+  it('renders yielded content if isLoading is false', function () {
+    this.render(hbs `{{#loading-container isLoading=false}}
+      <div class="some-content">Some content</div>
+    {{/loading-container}}
+    `);
+    expect(this.$('.some-content')).to.exist;
+  });
 
-    this.render(hbs `{{loading-container}}`);
-    expect(this.$()).to.have.length(1);
+  it('does not render yielded content if isLoading is true', function () {
+    this.render(hbs `{{#loading-container isLoading=true}}
+      <div class="some-content">Some content</div>
+    {{/loading-container}}
+    `);
+    expect(this.$('.some-content')).to.not.exist;
+  });
+
+  it('render erroReason if available', function () {
+    this.render(hbs `{{#loading-container errorReason="some reason"}}
+      <div class="some-content">Some content</div>
+    {{/loading-container}}
+    `);
+    expect(this.$('.some-content')).to.not.exist;
+    expect(this.$('.resource-load-error')).to.contain('some reason');
   });
 });

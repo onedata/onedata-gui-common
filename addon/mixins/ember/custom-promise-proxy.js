@@ -1,3 +1,25 @@
+/**
+ * A modification of `PromiseProxyMixin` class of Ember:
+ * https://github.com/emberjs/ember.js/tree/v2.16.0/packages/ember-runtime/lib/mixins/promise_proxy.js
+ *
+ * In contrast to original, it allows to change property that is used to store
+ * data resolved by injected promise (original allowed to use only `content`,
+ * and it was implemented in internal function).
+ *
+ * For example of usage see unit tests or `util:promise-updated-object`.
+ *
+ * @module mixins/ember/custom-promise-proxy
+ * @author Jakub Liput, EmberJS
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+/**
+ * Original code license: https://github.com/emberjs/ember.js/blob/v2.16.0/LICENSE
+ * Copyright (c) 2017 Yehuda Katz, Tom Dale and Ember.js contributors
+ * MIT License
+ */
+
 import { Error as EmberError } from 'ember-debug';
 import { computed, setProperties, get } from '@ember/object';
 import Mixin from '@ember/object/mixin';
