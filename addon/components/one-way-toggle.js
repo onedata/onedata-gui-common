@@ -17,6 +17,7 @@ const {
   run: {
     next,
   },
+  observer,
 } = Ember;
 
 const THREE_STATES = [false, 2, true];
@@ -77,6 +78,11 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
       checked,
     } = this.getProperties('_isInProgress', 'checked');
     return (checked === 2 && checked) || (_isInProgress ? !checked : checked);
+  }),
+
+  // FIXME: to remove
+  _cchanged: observer('_checked', function () {
+    console.log('_checked chaged:', this.get('_checked'));
   }),
 
   /**

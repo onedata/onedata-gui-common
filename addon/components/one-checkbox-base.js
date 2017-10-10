@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { Promise } from 'rsvp';
 import { computed } from '@ember/object';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 /**
  * Creates a base for checkbox-like components using the one-way-checkbox component.
@@ -123,7 +124,11 @@ export default Component.extend({
     const updateResult = this.get('update')(value, this);
     if (updateResult instanceof Promise) {
       this.set('_updateInProgress', true);
-      updateResult.finally(() => this.set('_updateInProgress', false));
+      updateResult.finally(() =>
+        safeExec(this, function finishCheckboxUpdate() {
+          this.set('_updateInProgress', false);
+        })
+      );
     }
     return updateResult;
   },
