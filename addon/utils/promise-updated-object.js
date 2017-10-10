@@ -1,4 +1,15 @@
-// import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
+/**
+ * Class similar to `DS.PromiseObject`, but used to create objects that have
+ * promise set multiple times (eg. when object is updated multiple times).
+ *
+ * For usage examples see unit tests.
+ *
+ * @module utils/promise-updated-object
+ * @author Jakub Liput
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import CustomPromiseMixin from 'onedata-gui-common/mixins/ember/custom-promise-proxy';
 import ObjectProxy from '@ember/object/proxy';
 import { observer } from '@ember/object';
