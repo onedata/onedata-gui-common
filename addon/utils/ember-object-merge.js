@@ -1,5 +1,6 @@
 /**
- * FIXME: jsdoc
+ * Copy properites from source to destination EmberObject, overwriting
+ * properties that are both in source and desitination.
  *
  * @module utils/ember-object-merge
  * @author Jakub Liput

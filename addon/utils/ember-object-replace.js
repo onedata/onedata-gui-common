@@ -1,5 +1,9 @@
 /**
- * FIXME: jsdoc
+ * Replace properites of destination EmberObject with properties
+ * of source object.
+ * It will remove all properties of destination that are not present in source!
+ * If property value is equals deeply in source and destination then leave original
+ * value - this prevents changing object references in properties.
  *
  * @module utils/ember-object-replace
  * @author Jakub Liput
