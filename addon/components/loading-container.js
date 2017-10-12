@@ -12,7 +12,7 @@
  *
  * It will render loader (eg. spinner) if `loadingState` is true.
  * It will render error message if `backendError` is non-empty string
- * It will render `some-component` if above conditions are not meet.
+ * It will render `some-component` if above conditions are not met.
  *
  * @module components/loading-container
  * @author Jakub Liput
