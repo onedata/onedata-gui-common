@@ -43,6 +43,12 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
     &.no-padding-bottom {
       padding-bottom: 0;
     }
+    &.extra-padding-top {
+      padding-top: 2 * $content-row-vertical-padding;
+    }
+    &.extra-padding-bottom {
+      padding-bottom: 2 * $content-row-vertical-padding;
+    }
 
     h1 {
       font-size: $font-size-base;
