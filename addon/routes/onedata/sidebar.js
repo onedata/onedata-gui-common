@@ -39,7 +39,8 @@ export default Ember.Route.extend({
         let gettingCollection = sidebarResources.getCollectionFor(type);
         gettingCollection
           .then(proxyCollection => {
-            return Promise.all(proxyCollection);
+            return proxyCollection.get('store') ? proxyCollection :
+              Promise.all(proxyCollection);
           })
           .then(collection => {
             resolve({

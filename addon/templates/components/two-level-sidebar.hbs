@@ -23,19 +23,28 @@
             <li 
               class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}
               {{action "sidebarSecondaryItemSelected"}}>
-              {{#link-to
-                "onedata.sidebar.content.aspect"
-                sidebarType
-                item.id
-                sli.id
-                tagName="div"
-                class="item-header truncate"
-              }}
-                {{#if sli.icon}}
-                  {{one-icon icon=sli.icon}} 
-                {{/if}}
-                <span class="one-label">{{sli.label}}</span>
-              {{/link-to}}
+              {{#if sli.withoutRoute}}
+                <div class="item-header truncate">
+                  {{#if sli.component}}
+                    {{component sli.component item=(hash
+                      definition=sli
+                      contentComponent=(component 'two-level-sidebar/item-content' item=sli))}}
+                  {{else}}
+                    {{two-level-sidebar/item-content item=sli}}
+                  {{/if}}
+                </div>
+              {{else}}
+                {{#link-to
+                  "onedata.sidebar.content.aspect"
+                  sidebarType
+                  item.id
+                  sli.id
+                  tagName="div"
+                  class="item-header truncate"
+                }}
+                  {{two-level-sidebar/item-content item=sli}}
+                {{/link-to}}
+              {{/if}}
             </li>
           {{/each}}
         </ul>

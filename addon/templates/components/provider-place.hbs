@@ -1,6 +1,17 @@
 <div class="circle">
   {{one-icon icon="provider"}}
 </div>
-{{provider-place/drop 
-  provider=provider 
-  dropTrigger=(concat (concat "#" elementId) " .circle")}}
+{{#if renderDrop}}
+  {{#one-switchable-popover-modal
+    activeTriggerSelector=(concat (concat "#" elementId) " .circle")
+    triggersConfiguration=(concat (concat "#" elementId) " .circle")
+    popoverPlacement=(if (gt provider.longitude 0) "left" "right")
+    popoverPadding=false
+    popoverStyle="provider-place"
+    popoverClass="popover-provider-place"
+    componentClass=(concat-classes "provider-place-drop" provider.status)
+    open=active
+    as |ospm|}}
+    {{provider-place/drop provider=provider class="outside-content"}}
+  {{/one-switchable-popover-modal}}
+{{/if}}

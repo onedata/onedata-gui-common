@@ -66,6 +66,14 @@ $color-provider-offline: $color-one-red;
   $drop-padding: $padding-xs-horizontal * 1.5;
   font-size: $font-size-small;
 
+  &.outside-content {
+    .drop-body {
+      .btn {
+        @extend .btn-sm;
+      }
+    }
+  }
+
   // styles specific for modal
   &.modal {
     .modal-dialog {

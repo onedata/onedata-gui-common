@@ -18,6 +18,17 @@
       .one-icon {
         font-size: $menu-icon-font-size;
       }
+      .status-toolbar {
+        position: absolute;
+        right: $padding-large-horizontal;
+        top: 50%;
+        transform: translateY(-50%);
+        .one-icon {
+          font-size: 1em;
+          margin: 0;
+          top: initial;
+        }
+      }
     }
     &.search-bar-item .item-header:hover {
       background-color: initial;
