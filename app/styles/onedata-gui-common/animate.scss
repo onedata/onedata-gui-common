@@ -36,6 +36,11 @@
   animation-duration: 2s;
 }
 
+.animated.slow {
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+}
+
 .animated.very-slow {
   -webkit-animation-duration: 4s;
   animation-duration: 4s;
