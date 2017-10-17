@@ -85,12 +85,13 @@ export default Ember.Route.extend({
   },
 
   actions: {
-    error(error, transition) {
-      const resourceType = transition.params['onedata.sidebar'].type;
+    error() {
+      this._super(...arguments);
       let mainMenu = this.get('mainMenu');
-      // FIXME: broken state of menu item
-      mainMenu.currentItemIdChanged(resourceType);
-      mainMenu.set('isFailedItem', true);
+      mainMenu.setProperties({
+        isFailedItem: true,
+        isLoadingItem: false,
+      });
     },
   }
 });

@@ -45,6 +45,17 @@ export default Ember.Route.extend({
   eventsBus: service(),
   contentResources: service(),
 
+  beforeModel(transition) {
+    const resourceId = transition.params['onedata.sidebar.content'].resourceId;
+    const {
+      sidebar,
+      eventsBus,
+    } = this.getProperties('sidebar', 'eventsBus');
+    sidebar.changeItems(0, resourceId);
+    sidebar.set('isLoadingItem', true);
+    eventsBus.trigger('one-sidenav:close', '#sidenav-sidebar');
+  },
+
   model({ resourceId }) {
     // TODO: validate and use resourceType
     let {
@@ -66,13 +77,9 @@ export default Ember.Route.extend({
     }
   },
 
-  afterModel({ resourceId }) {
+  afterModel() {
     let sidebar = this.get('sidebar');
-    // TODO only if this is content with sidebar with item
-    sidebar.changeItems(0, resourceId);
-    // TODO get properties
-    // TODO transition promise wait before hide sidenav
-    this.get('eventsBus').trigger('one-sidenav:close', '#sidenav-sidebar');
+    sidebar.set('isLoadingItem', false);
   },
 
   renderTemplate() {
@@ -81,5 +88,13 @@ export default Ember.Route.extend({
       into: 'onedata',
       outlet: 'content'
     });
+  },
+
+  actions: {
+    error() {
+      this._super(...arguments);
+      let sidebar = this.get('sidebar');
+      sidebar.set('isLoadingItem', false);
+    },
   },
 });

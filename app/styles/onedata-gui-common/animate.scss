@@ -66,6 +66,13 @@
   }
 }
 
+@mixin animation-text-color-change($name, $c1, $c2) {
+    @include pulse-keyframes($name, color, $c1, $c2);
+    .#{$name} {
+        animation-name: #{$name};
+    }
+}
+
 @mixin animation-fg-color-change($name, $c1, $c2) {
   @include pulse-keyframes($name, color border-color, $c1, $c2);
   .#{$name} {
