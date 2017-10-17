@@ -12,7 +12,8 @@ const {
   },
   String: {
     htmlSafe
-  }
+  },
+  get,
 } = Ember;
 
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
@@ -91,16 +92,17 @@ export default Ember.Component.extend({
     let resourceType = sidenavTabId;
 
     if (resourceType != null) {
-      let gettingModel = sidebarResources.getCollectionFor(resourceType);
-      let promise = new Promise((resolve, reject) => {
-        gettingModel.then(collection => {
-          resolve({
+      const promise = sidebarResources.getCollectionFor(resourceType)
+        .then(collection => {
+          return Promise.all(collection.map(i => get(i, 'promise')))
+            .then(() => collection)
+        })
+        .then(collection => {
+          return {
             resourceType,
             collection
-          });
+          };
         });
-        gettingModel.catch(reject);
-      });
       return PromiseObject.create({ promise });
     } else {
       return null;
