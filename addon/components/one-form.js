@@ -213,7 +213,7 @@ export default Ember.Component.extend({
       currentFields,
       allFields,
       allFieldsValues
-    } = this.getProperties('currentFields','allFields', 'allFieldsValues');
+    } = this.getProperties('currentFields', 'allFields', 'allFieldsValues');
     let fields = currentFields;
     if (prefixes) {
       fields = [];
