@@ -27,8 +27,6 @@ export default Route.extend(AuthenticatedRouteMixin, {
   model() {
     let mainMenuItems = A(onedataTabs).map(item => _object.assign({}, item, { disabled: false }));
 
-    return new Promise((resolve) => {
-      resolve(AppModel.create({ mainMenuItems }));
-    });
+    return Promise.resolve(AppModel.create({ mainMenuItems }));
   },
 });
