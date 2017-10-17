@@ -117,6 +117,9 @@ $icon-btn-active-color: $color-one-red;
 
 .form-control-static {
   min-height: 1em;
+  .field-suffix {
+    color: $color-one-light-gray;
+  }
 }
 
 .form-group-light {

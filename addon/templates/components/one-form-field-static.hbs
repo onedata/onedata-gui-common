@@ -15,7 +15,7 @@
       {{#if fakePassword}}
         {{fake-password}}
       {{else}}
-        {{value}}
+        {{value}}{{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
       {{/if}}
     {{/if}}
   </span>
