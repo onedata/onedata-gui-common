@@ -32,6 +32,15 @@ export default Ember.Route.extend({
   sidebar: service(),
   sidebarResources: service(),
 
+  beforeModel(transition) {
+    const resourceType = transition.params['onedata.sidebar'].type;
+    if (resourceType) {
+      let mainMenu = this.get('mainMenu');
+      mainMenu.currentItemIdChanged(resourceType);
+      mainMenu.set('isLoadingItem', true);
+    }
+  },
+
   model({ type }) {
     let sidebarResources = this.get('sidebarResources');
     return new Promise((resolve, reject) => {
@@ -55,10 +64,9 @@ export default Ember.Route.extend({
     });
   },
 
-  afterModel(model) {
-    let { resourceType } = model;
+  afterModel() {
     let mainMenu = this.get('mainMenu');
-    mainMenu.currentItemIdChanged(resourceType);
+    mainMenu.set('isLoadingItem', false);
   },
 
   renderTemplate(controller, model) {
@@ -75,4 +83,14 @@ export default Ember.Route.extend({
       model
     });
   },
+
+  actions: {
+    error(error, transition) {
+      const resourceType = transition.params['onedata.sidebar'].type;
+      let mainMenu = this.get('mainMenu');
+      // FIXME: broken state of menu item
+      mainMenu.currentItemIdChanged(resourceType);
+      mainMenu.set('isFailedItem', true);
+    },
+  }
 });

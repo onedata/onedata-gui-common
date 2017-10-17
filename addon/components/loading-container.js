@@ -29,6 +29,13 @@ export default Component.extend({
   layout,
   tagName: '',
 
+  /**
+   * If true, spinner will be absolutely centered, otherwise it will fill
+   * the parent block to centerize itself
+   * @type {boolean}
+   */
+  absoluteCentered: true,
+
   isLoaded: computed('isLoading', 'isError', function () {
     return !this.get('isLoading') && !this.get('isError');
   }),
@@ -38,4 +45,10 @@ export default Component.extend({
   }),
   errorReason: undefined,
   customErrorMessage: undefined,
+
+  _spinnerBlockClass: computed('absoluteCentered', function () {
+    return this.get('absoluteCentered') ?
+      'absolute-middle-centered' :
+      'fill-middle-centered';
+  })
 });
