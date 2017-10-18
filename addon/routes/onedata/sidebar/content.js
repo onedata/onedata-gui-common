@@ -92,9 +92,9 @@ export default Ember.Route.extend({
 
   actions: {
     error() {
-      this._super(...arguments);
       let sidebar = this.get('sidebar');
       sidebar.set('isLoadingItem', false);
+      return true;
     },
   },
 });
