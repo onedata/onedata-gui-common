@@ -14,11 +14,14 @@ import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
 
 const {
   computed,
+  inject: { service },
 } = Ember;
 
 export default Ember.Component.extend({
   layout,
-  classNames: ['application-error', 'fixed-center'],
+  classNames: ['application-error'],
+
+  i18n: service(),
 
   showDetails: false,
 
@@ -28,6 +31,17 @@ export default Ember.Component.extend({
    * @type {object}
    */
   error: null,
+
+  /**
+   * @virtual
+   * One of: default, internal
+   */
+  messageType: 'default',
+
+  message: computed('messageType', function () {
+    const messageType = this.get('messageType');
+    return this.get('i18n').t(`components.applicationError.messages.${messageType}`)
+  }),
 
   /**
    * Displayed error details generated from reason error object

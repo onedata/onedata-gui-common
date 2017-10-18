@@ -86,12 +86,12 @@ export default Ember.Route.extend({
 
   actions: {
     error() {
-      this._super(...arguments);
       let mainMenu = this.get('mainMenu');
       mainMenu.setProperties({
         isFailedItem: true,
         isLoadingItem: false,
       });
+      return true;
     },
   }
 });
