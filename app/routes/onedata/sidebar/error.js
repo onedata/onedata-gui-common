@@ -1,5 +1,5 @@
 /**
- * Renders errir message in content
+ * Renders error message in content
  *
  * @module routes/onedata/sidebar/error
  * @author Jakub Liput
