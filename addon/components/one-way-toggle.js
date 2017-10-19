@@ -80,8 +80,8 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
   },
 
   click(event) {
+    event.stopPropagation();
     if (!this.get('_disableClick')) {
-      event.stopPropagation();
       this._toggle();
     }
   },

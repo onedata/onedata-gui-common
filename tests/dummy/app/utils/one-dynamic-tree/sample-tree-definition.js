@@ -23,9 +23,9 @@ export default [{
         field: {
           type: 'radio-group',
           options: [
-            { value: '1', label: '1' },
-            { value: '2', label: '2' },
-            { value: '3', label: '3' },
+            { value: '1', label: 'Option 1' },
+            { value: '2', label: 'Option 2' },
+            { value: '3', label: 'Option 3' },
           ],
           defaultValue: '1',
         }
@@ -86,15 +86,11 @@ export default [{
       {
         name: 'node32',
         text: 'Node 3.2',
-        subtree: [{
-          name: 'node321',
-          text: 'Node 3.2.1',
-          field: {
-            type: 'checkbox',
-            defaultValue: false,
-            optional: true
-          },
-        }]
+        field: {
+          type: 'checkbox',
+          defaultValue: false,
+          optional: true
+        },
       },
     ],
   },
