@@ -36,7 +36,9 @@ export default Ember.Component.extend({
   classNames: ['one-tree-item', 'collapse-animation', 'collapse-medium'],
   classNameBindings: [
     '_hasSubtree:has-subtree',
-    '_hiddenByFilter:collapse-hidden'
+    '_hiddenByFilter:collapse-hidden',
+    '_isSubtreeExpanded:subtree-expanded',
+    '_wasRecentlyExpanded:recently-expanded',
   ],
 
   tagName: 'li',
@@ -74,6 +76,19 @@ export default Ember.Component.extend({
   disableFilter: false,
 
   /**
+   * Key of a subtree, that was expanded recently. Null means root-tree.
+   * @type {*}
+   */
+  lastExpandedKey: null,
+
+  /**
+   * Action that sets lastExpandedKey at root tree level.
+   * Takes a key as an argument.
+   * @type {Function}
+   */
+  setLastExpandedKey: () => {},
+
+  /**
    * Parent subtree key (will be null for root)
    * @type {*}
    */
@@ -103,6 +118,18 @@ export default Ember.Component.extend({
    * @type {Array.*}
    */
   _activeSubtreeKeysOld: [],
+
+  /**
+   * If true, this tree was recently expanded.
+   * @type {computed.boolean}
+   */
+  _wasRecentlyExpanded: computed('key', 'lastExpandedKey', function () {
+    let {
+      key,
+      lastExpandedKey,
+    } = this.getProperties('key', 'lastExpandedKey');
+    return key === lastExpandedKey;
+  }),
 
   /**
    * If true, whole item should be filtered out.
@@ -276,8 +303,18 @@ export default Ember.Component.extend({
       let {
         _isSubtreeExpanded,
         key,
-        _hasSubtree
-      } = this.getProperties('_isSubtreeExpanded', 'key', '_hasSubtree');
+        _hasSubtree,
+        _areParentsExpanded,
+        setLastExpandedKey,
+        _parentKey,
+      } = this.getProperties(
+        '_isSubtreeExpanded',
+        'key',
+        '_hasSubtree',
+        '_areParentsExpanded',
+        'setLastExpandedKey',
+        '_parentKey'
+      );
 
       if (!_hasSubtree) {
         return;
@@ -285,6 +322,10 @@ export default Ember.Component.extend({
 
       if (!isArray(subtreeKeys) || typeof subtreeKeys === 'string') {
         subtreeKeys = [subtreeKeys];
+        if (_areParentsExpanded && _isSubtreeExpanded &&
+          subtreeIsExpanded !== false) {
+          setLastExpandedKey(_parentKey);
+        }
       }
 
       if (subtreeKeys.indexOf(key) === -1) {
