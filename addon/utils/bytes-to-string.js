@@ -71,14 +71,23 @@ function bytesToStringSI(bytes) {
  * 
  * @param {Number} bytes
  * @param {Object} [options]
- * @param {Boolean} [options.iecFormat=false] If true, use IEC format: KiB, MiB, GiB
+ * @param {Boolean} [options.iecFormat=true] If true, use IEC format: KiB, MiB, GiB
  * @param {Boolean} [options.separated=false] If true, instead of string, 
  * object with fields: number {number}, multiplicator {number}, unit {string}
  * will be returned.
+ * @returns {string|object}
  */
-export default function bytesToString(
-  bytes, { iecFormat = false, separated = false } = { iecFormat: false, separated: false }
-) {
+export default function bytesToString(bytes, options = {}) {
+  let iecFormat = options.iecFormat;
+  let separated = options.separated;
+
+  if (iecFormat === undefined) {
+    iecFormat = true;
+  }
+  if (separated === undefined) {
+    separated = false;
+  }
+
   if (!bytes && bytes !== 0) {
     return '';
   } else {
@@ -90,7 +99,7 @@ export default function bytesToString(
         number,
         multiplicator,
         unit,
-      }
+      };
     } else {
       return `${number} ${unit}`;
     }
