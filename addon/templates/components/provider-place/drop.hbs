@@ -4,9 +4,11 @@
   {{/truncated-string}}
   {{#unless provider.isOnline}}
     <div class="provider-label-secondary">
-      {{#if (eq provider.status "offline")}}
+      {{#if (eq provider.status "online")}}
+        {{t "components.providerPlace.drop.online"}}
+      {{else if (eq provider.status "offline")}}
         {{t "components.providerPlace.drop.offline"}}
-      {{else if (eq provider.status "pending")}}
+      {{else}}
         {{t "components.providerPlace.drop.pending"}}
       {{/if}}
     </div>  
@@ -28,11 +30,15 @@
   {{!-- <div class="provider-location">
     {{provider.location}}
   </div> --}}
-  <ul>
+  {{#one-collapsible-list as |list|}}
     {{#each _spacesSorted as |space|}}
-      {{provider-place/drop/space space=space providerId=provider.id}}
+    {{#list.item isCollapsible=false as |item|}}
+      {{#item.header}}
+        {{provider-place/drop/space space=space providerId=provider.id}}
+      {{/item.header}}
+    {{/list.item}}
     {{/each}} 
-  </ul>
+  {{/one-collapsible-list}}
   {{#unless (eq provider.status "offline")}}
     <hr>
     {{#if (eq provider.status "online")}}

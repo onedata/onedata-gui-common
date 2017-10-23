@@ -1,4 +1,5 @@
 export default {
+  online: 'online',
   offline: 'offline',
   pending: 'verifying...',
   goToFiles: 'Go to your files',
