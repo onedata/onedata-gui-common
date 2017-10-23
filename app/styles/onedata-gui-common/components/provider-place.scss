@@ -50,162 +50,244 @@ $color-provider-offline: $color-one-red;
   }
 }
 
-// styles specific for popover
-.webui-popover-provider-place {
-  z-index: $zindex-tooltip - 1;
-  background-color: transparent;
-  .provider-place-drop {
+.provider-place-drop {
+  &.in-content {
+    &.pending {
+      .drop-title-bar {
+        background-color: $color-one-light-gray;
+      }
+    }
+    &.online {
+      .drop-title-bar {
+        background-color: $color-one-mint;
+      }
+    }
+    &.offline {
+      .drop-title-bar {
+        background-color: $color-one-red;
+      }
+    }
+    .one-collapsible-list-item-header {
+      padding-right: 100px;
+    }
+    .provider-place-drop-space {
+      display: inline-block;
+    }
+    .space-label {
+      display: inline;
+      overflow: initial;
+      text-overflow: initial;
+    }
+    .space-size {
+      position: absolute;
+      right: $padding-large-vertical;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 90%;
+    }
+    hr {
+      display: none;
+    }
+    .drop-title-bar {
+      position: relative;
+      padding: $padding-large-horizontal $padding-large-vertical;
+      color: $color-one-white;
+      .provider-label {
+        font-weight: bold;
+      }
+      .provider-label-secondary {
+        position: absolute;
+        top: 50%;
+        right: $padding-large-horizontal;
+        transform: translateY(-50%);
+        font-size: 90%;
+      }
+    }
+    .drop-provider-host-container {
+      position: relative;
+      padding: $padding-large-horizontal $padding-large-vertical;
+      border-top: 1px solid $main-border-color;
+      border-bottom: 1px solid $main-border-color;
+      .provider-host-text {
+        height: $line-height-computed;
+        width: 100%;
+        padding: 0;
+        padding-right: 70px;
+      }
+      .provider-host-copy-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 60px;
+        border-left: 1px solid $main-border-color;
+        line-height: inherit;
+        text-align: center;
+        color: inherit;
+        font-size: 40px;
+  
+        &:hover {
+          background-color: darken($color-one-semiwhite, 20%);
+        }
+        .oneicon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-50%);
+        }
+      }
+    }
+  }
+  &.outside-content {
+    $drop-padding: $padding-xs-horizontal * 1.5;
     width: 190px;
     min-height: 50px;
     overflow: hidden;
     border-radius: $border-radius-base;
     background-color: $color-one-white;
-  }
-}
-.provider-place-drop {
-  $drop-padding: $padding-xs-horizontal * 1.5;
-  font-size: $font-size-small;
+    font-size: $font-size-small;
 
-  &.outside-content {
-    .drop-body {
-      .btn {
-        @extend .btn-sm;
+    &.outside-content {
+      .drop-body {
+        .btn {
+          @extend .btn-sm;
+        }
       }
     }
-  }
 
-  // styles specific for modal
-  &.modal {
-    .modal-dialog {
-      .modal-content { 
+    &.online .drop-title-bar {
+      background-color: $color-provider-online;
+    }
+    &.pending, &.offline {
+      .drop-title-bar {
+        background-color: $color-provider-offline;
+      }
+    }
+    &.offline {
+      .drop-body ul {
+        margin-bottom: 0;
+      }
+    }
+    .drop-title-bar {
+      height: 28px;
+      line-height: 28px;
+      padding: 0 $drop-padding;
+      color: $color-one-white;
+
+      .provider-label {
+        max-width: 120px;
+        font-weight: bold;
+      }
+      .provider-label-secondary {
+        position: absolute;
+        top: 0;
+        right: $drop-padding;
+        opacity: 0.5;
+      }
+    }
+
+    .drop-provider-host-container {
+      display: table;
+      width: 100%;
+      height: 28px;
+      padding-left: $drop-padding;
+      line-height: 28px;
+      background-color: $color-one-semiwhite;
+
+      .provider-host-text {
+        display: table-cell;
         padding: 0;
-        background-color: transparent;
-        .modal-body {
+        margin: 0;
+        max-width: 150px;
+      }
+      .provider-host-copy-btn {
+        position: relative;
+        display: table-cell;
+        width: 28px;
+        line-height: inherit;
+        font-size: 28px;
+
+        &:hover {
+          background-color: darken($color-one-semiwhite, 20%);
+        }
+        .oneicon {
+          position: absolute;
+          width: 28px;
+          height: 28px;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
+
+    .drop-body {
+      padding: $padding-base-horizontal / 2;
+      .btn {
+        width: 100%;
+      }
+      hr {
+        margin: 10px 0;
+        color: $main-border-color;
+      }
+      ul {
+        padding: 0;
+        .one-collapsible-list-item-header {
           padding: 0;
-          overflow: hidden;
-          border-radius: $border-radius-base;
-          background-color: $color-one-white;
+          border-bottom: 0;
+        }
+        .provider-place-drop-space {
+          display: table;
+          width: 100%;
+          height: 22px;
+          line-height: 22px;
+          vertical-align: middle;
+          > * {
+            display: table-cell;
+          }
+          .space-icon {
+            position: relative;
+            top: 2px;
+            width: 20px;
+            padding-right: $drop-padding;
+            .oneicon {
+              top: initial;
+              font-size: 20px;
+              line-height: inherit;
+            }
+          }
+          .space-label {
+            max-width: 50px;
+            vertical-align: inherit;
+            font-size: 0.9em;
+          }
+          .space-size {
+            max-width: 50px;
+            padding-left: $padding-xs-horizontal;
+            overflow: hidden;
+            text-align: right;
+            text-overflow: clip;
+            vertical-align: inherit;
+            white-space: nowrap;
+            color: $color-one-light-gray;
+          }
         }
       }
     }
   }
 
-  &.online .drop-title-bar {
-    background-color: $color-provider-online;
-  }
-  &.pending, &.offline {
-    .drop-title-bar {
-      background-color: $color-provider-offline;
-    }
-  }
-  &.offline {
-    .drop-body ul {
-      margin-bottom: 0;
-    }
-  }
-  .drop-title-bar {
-    height: 28px;
-    line-height: 28px;
-    padding: 0 $drop-padding;
-    color: $color-one-white;
-
-    .provider-label {
-      max-width: 120px;
-      font-weight: bold;
-    }
-    .provider-label-secondary {
-      position: absolute;
-      top: 0;
-      right: $drop-padding;
-      opacity: 0.5;
-    }
-  }
-
   .drop-provider-host-container {
-    display: table;
-    width: 100%;
-    height: 28px;
-    padding-left: $drop-padding;
-    line-height: 28px;
-    background-color: $color-one-semiwhite;
-
     .provider-host-text {
-      display: table-cell;
-      max-width: 150px;
-      padding: 0;
-      margin: 0;
       border: none;
       color: inherit;
       background-color: inherit;
     }
     .provider-host-copy-btn {
-      position: relative;
-      display: table-cell;
-      width: 28px;
       border-left: 1px solid $main-border-color;
-      line-height: inherit;
-      font-size: 28px;
       text-align: center;
       color: inherit;
 
       &:hover {
         background-color: darken($color-one-semiwhite, 20%);
-      }
-      .oneicon {
-        position: absolute;
-        width: 28px;
-        height: 28px;
-        top: 0;
-        left: 0;
-      }
-    }
-  }
-
-  .drop-body {
-    padding: $padding-base-horizontal / 2;
-    .btn {
-      width: 100%;
-    }
-    hr {
-      margin: 10px 0;
-      color: $main-border-color;
-    }
-    ul {
-      padding: 0;
-      li {
-        display: table;
-        width: 100%;
-        height: 22px;
-        line-height: 22px;
-        vertical-align: middle;
-        > * {
-          display: table-cell;
-        }
-        .space-icon {
-          position: relative;
-          top: 2px;
-          width: 20px;
-          padding-right: $drop-padding;
-          .oneicon {
-            font-size: 20px;
-            line-height: inherit;
-          }
-        }
-        .space-label {
-          max-width: 50px;
-          vertical-align: inherit;
-          font-size: 0.9em;
-        }
-        .space-size {
-          max-width: 50px;
-          padding-left: $padding-xs-horizontal;
-          overflow: hidden;
-          text-align: right;
-          text-overflow: clip;
-          vertical-align: inherit;
-          white-space: nowrap;
-          color: $color-one-light-gray;
-        }
       }
     }
   }

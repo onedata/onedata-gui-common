@@ -48,6 +48,12 @@ export default Ember.Component.extend({
   firstLevelItemIcon: 'chceckbox-option',
 
   /**
+   * Name of custom component used to render first level items.
+   * @type {string}
+   */
+  firstLevelItemComponent: undefined,
+
+  /**
    * To inject.
    * Type of sidebar route (eg. clusters)
    * Mandatory field!

@@ -14,6 +14,6 @@ import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
 
 export default Ember.Component.extend(ProviderSpace, {
   layout,
-  tagName: 'li',
+  tagName: 'div',
   classNames: ['provider-place-drop-space']
 });
