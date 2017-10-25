@@ -49,6 +49,7 @@ export default Ember.Component.extend({
 
   /**
    * Name of custom component used to render first level items.
+   * If equals `undefined`, then default item layout is used.
    * @type {string}
    */
   firstLevelItemComponent: undefined,

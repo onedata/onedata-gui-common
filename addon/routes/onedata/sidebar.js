@@ -9,6 +9,7 @@
 
 import Ember from 'ember';
 import config from 'ember-get-config';
+import isRecord from 'onedata-gui-common/utils/is-record';
 
 const {
   inject: {
@@ -39,7 +40,7 @@ export default Ember.Route.extend({
         let gettingCollection = sidebarResources.getCollectionFor(type);
         gettingCollection
           .then(proxyCollection => {
-            return proxyCollection.get('store') ? proxyCollection :
+            return isRecord(proxyCollection) ? proxyCollection :
               Promise.all(proxyCollection);
           })
           .then(collection => {
