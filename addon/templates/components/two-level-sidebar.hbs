@@ -12,10 +12,14 @@
       isActive=(eq primaryItemId item.id)
       as |primarySection|}}
       {{#if (eq primarySection 'header')}}
-        {{#if firstLevelItemIcon}}
-          {{one-icon icon=firstLevelItemIcon}} 
+        {{#if firstLevelItemComponent}}
+          {{component firstLevelItemComponent item=item}}
+        {{else}}
+          {{#if firstLevelItemIcon}}
+            {{one-icon icon=firstLevelItemIcon}} 
+          {{/if}}
+          <span class="one-label">{{item.name}}</span>
         {{/if}}
-        <span class="one-label">{{item.name}}</span>
       {{else if (eq primarySection 'secondary')}}
         {{!-- TODO isActive secondary --}}
         <ul class="one-list one-list-level-2">
@@ -23,19 +27,30 @@
             <li 
               class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}
               {{action "sidebarSecondaryItemSelected"}}>
-              {{#link-to
-                "onedata.sidebar.content.aspect"
-                sidebarType
-                item.id
-                sli.id
-                tagName="div"
-                class="item-header truncate"
-              }}
-                {{#if sli.icon}}
-                  {{one-icon icon=sli.icon}} 
-                {{/if}}
-                <span class="one-label">{{sli.label}}</span>
-              {{/link-to}}
+              {{#if sli.withoutRoute}}
+                <div class="item-header truncate">
+                  {{#if sli.component}}
+                    {{component sli.component item=sli}}
+                  {{else}}
+                    {{two-level-sidebar/item-content item=sli}}
+                  {{/if}}
+                </div>
+              {{else}}
+                {{#link-to
+                  "onedata.sidebar.content.aspect"
+                  sidebarType
+                  item.id
+                  sli.id
+                  tagName="div"
+                  class="item-header truncate"
+                }}
+                  {{#if sli.component}}
+                    {{component sli.component item=sli}}
+                  {{else}}
+                    {{two-level-sidebar/item-content item=sli}}
+                  {{/if}}
+                {{/link-to}}
+              {{/if}}
             </li>
           {{/each}}
         </ul>
