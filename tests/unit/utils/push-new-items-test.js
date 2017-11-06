@@ -26,12 +26,12 @@ describe('Unit | Utility | push new items', function () {
         const orig = createArray(arrayType, [
           { a: 1 },
           a2,
-          { a: 3 },
+          { a: 3, b: 'x' },
           { a: 99 },
         ]);
         const update = createArray(arrayType, [
           { a: 2 },
-          { a: 3, b: 'x' },
+          { a: 3, b: 'y', c: 'z' },
           { a: 4, b: 'x' },
         ]);
 
@@ -43,9 +43,7 @@ describe('Unit | Utility | push new items', function () {
         expect(_.find(result, { a: 1 })).to.deep.equal({ a: 1 });
         expect(_.find(result, { a: 2 }), 'do not replace reference')
           .to.equal(a2);
-        expect(_.filter(result, { a: 2 })).to.have.lengthOf(1);
-        expect(_.find(result, { a: 3 })).to.deep.equal({ a: 3, b: 'x' });
-        expect(_.filter(result, { a: 3 })).to.have.lengthOf(1);
+        expect(_.find(result, { a: 3 })).to.deep.equal({ a: 3, b: 'y', c: 'z' });
         expect(_.find(result, { a: 4 })).to.deep.equal({ a: 4, b: 'x' });
         expect(_.find(result, { a: 99 })).to.deep.equal({ a: 99 });
       });
