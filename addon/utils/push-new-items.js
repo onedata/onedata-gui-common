@@ -13,7 +13,8 @@
 import _ from 'lodash';
 
 export default function pushNewItems(orig, update, compare) {
-  const pushFun = orig.pushObject ? 'pushObject' : 'push';
+  const isEmberArray = !!orig.pushObject;
+  const pushFun = isEmberArray ? 'pushObject' : 'push';
 
   _.forEach(update, uitem => {
     const matchItemIndex = _.findIndex(orig, oitem => compare(oitem, uitem));
@@ -21,6 +22,9 @@ export default function pushNewItems(orig, update, compare) {
       const matchItem = orig[matchItemIndex];
       if (!_.isEqual(matchItem, uitem)) {
         orig[matchItemIndex] = uitem;
+        if (isEmberArray) {
+          orig.arrayContentDidChange();
+        }
       }
     } else {
       orig[pushFun](uitem);
