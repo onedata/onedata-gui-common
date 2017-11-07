@@ -66,6 +66,7 @@ $toggle-width: 2 * $toggle-size-base;
     background-color: $color-one-light-gray;
     transition: background-color 0.2s ease;
     width: $toggle-width;
+    vertical-align: top;
   }
 
   .one-way-toggle-control:before {
@@ -87,6 +88,26 @@ $toggle-width: 2 * $toggle-size-base;
     font-size: 120%;
     vertical-align: top;
   }
+  
+  &.in-progress {
+    width: 1.55 * $toggle-width;
+    .spin-spinner-block {
+      position: absolute;
+      right: 0.55 * $toggle-width;
+      transform: translateX(12px);
+      top: 45%;
+    }
+    &.spinner-left {
+      .spin-spinner-block {
+        right: initial;
+      }
+      .one-way-toggle-control {
+        position: relative;
+        right: -0.55 * $toggle-width;
+      }
+    }
+  }
+  
 
   div.clickable::before {
     cursor: pointer;

@@ -130,7 +130,7 @@ input {
   }
   .item-table-content-cell {
     .row {
-      margin: 0 2em;
+      margin: 0 $padding-large-horizontal;
       padding-left: 0;
       word-wrap: break-word;
       @media screen and (max-width: $screen-md) {
@@ -191,17 +191,25 @@ input {
 
 /// A class to display short information text with icon
 .one-info-label {
+  $-info-icon-size: 26px;
   .one-icon {
     vertical-align: middle;
-    font-size: 22px;
-    padding-right: 8px;
+    line-height: $-info-icon-size;
+    font-size: $-info-icon-size;
+    &.oneicon-checkbox-filled {
+      color: $color-one-mint;
+    }    
     &.oneicon-sign-info {
       color: $color-one-azure;
     }    
   }
+  .one-icon + label, label + .one-icon {
+    padding-left: 8px;
+  }
   label {
     display: inline;
     vertical-align: middle;
+    line-height: $-info-icon-size;
   }
 }
 
@@ -224,4 +232,10 @@ input {
 }
 .conflict-at {
   opacity: 0.5;
+}
+
+// parent for spinner container - prevents to make to small row when loading
+.loadable-row {
+  position: relative;
+  min-height: 150px;
 }

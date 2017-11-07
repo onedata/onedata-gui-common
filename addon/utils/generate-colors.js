@@ -32,5 +32,5 @@ export default function generateColors(n, baseColors) {
     let newColor = stepMultiply < 0 ? color.darken(change) : color.lighten(change);
     generatedColors.push(newColor.hex());
   }
-  return _.shuffle(generatedColors);
+  return generatedColors;
 }
