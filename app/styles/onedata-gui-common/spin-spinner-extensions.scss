@@ -25,8 +25,17 @@ $spinner-container-base-size: 120px;
     margin-right: auto;
   }
 
-  &.middle-centered {
+  &.absolute-middle-centered {
     @include absolute-align-middle-center();
+  }
+
+  &.fill-middle-centered {
+    @include fill-align-middle-center();
+  }
+
+  // DEPRECATED: backward compatible
+  &.middle-centered {
+    @extend .absolute-middle-centered;
   }
 
   .spinner-logo {

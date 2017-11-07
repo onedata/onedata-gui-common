@@ -11,4 +11,19 @@
 
 import Ember from 'ember';
 
-export default Ember.Object.extend({});
+export default Ember.Object.extend({
+  /**
+   * Collection of objects representing main menu items
+   * To configure main menu items, add `onedataTabs` key to App config like this:
+   * ```
+   * onedataTabs: [
+   *   { id: 'clusters', icon: 'menu-clusters' },
+   * ]
+   * ```
+   * Each object has also optional `disabled` property for showing main menu
+   * items as disabled.
+   * @virtual
+   * @type {Ember.Array}
+   */
+  mainMenuItems: undefined,
+});

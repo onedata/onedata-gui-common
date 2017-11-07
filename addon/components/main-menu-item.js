@@ -16,12 +16,16 @@ export default Ember.Component.extend({
     'isActive:active',
     'isSelected:selected',
     'isDisabled:disabled:enabled',
-    'isDisabled::clickable'
+    'isDisabled::clickable',
+    'isLoading:loading',
+    'isFailed:failed',
   ],
 
   item: null,
   isActive: false,
   isSelected: false,
+  isLoading: false,
+  isFailed: false,
 
   name: computed('item.id', function () {
     let item = this.get('item');
