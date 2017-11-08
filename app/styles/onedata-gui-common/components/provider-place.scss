@@ -17,7 +17,7 @@ $color-provider-offline: $color-one-red;
       @extend .animated;
       @extend .infinite;
       @extend .hinge;
-      @extend .pulse-red-mint;
+      @extend .pulse-mint-gray;
     }
   }
   
@@ -158,7 +158,12 @@ $color-provider-offline: $color-one-red;
     &.online .drop-title-bar {
       background-color: $color-provider-online;
     }
-    &.pending, &.offline {
+    &.pending {
+      .drop-title-bar {
+        background-color: $color-one-light-gray;
+      }
+    } 
+    &.offline {
       .drop-title-bar {
         background-color: $color-provider-offline;
       }
