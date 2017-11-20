@@ -28,9 +28,31 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   word-wrap: break-word;
   outline: none !important;
 
+  &[aria-disabled=true] {
+    background-color: $input-bg;
+    opacity: 0.6;
+  }
+
   &.ember-power-select-trigger--active:not([aria-expanded]) {
     @include box-shadow($control-box-shadow-focus);
     border: 1px solid $input-border-focus;
+  }
+
+  &.small {
+    padding: $padding-small-vertical + 1px $padding-xs-horizontal;
+    padding-right: 2em;
+    min-height: 21px;
+
+    .ember-power-select-status-icon {
+      right: 1.7em;
+      top: 0.45em;
+      margin: initial;
+      font-size: 1.1em;
+      font-weight: bold;
+      &:before {
+        content: $oneicon-arrow-down;
+      }
+    }
   }
 
   .ember-power-select-status-icon {
@@ -66,6 +88,13 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
 
 .ember-power-select-dropdown {
   box-shadow: 0 0 5px #ccc;
+
+  &.small {
+    .ember-power-select-option {
+      padding: $padding-small-vertical + 1px $padding-xs-horizontal;
+      min-height: 21px;
+    }
+  }
 
   .ember-power-select-options[role="listbox"] {
     max-height: 600px;

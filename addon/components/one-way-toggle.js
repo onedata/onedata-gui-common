@@ -2,7 +2,7 @@
  * Creates toggle-like checkbox component. Allows to use three-state selection.
  *
  * @module components/one-way-toggle.js
- * @author Michał Borzęcki
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -21,6 +21,8 @@ const {
 
 const THREE_STATES = [false, 2, true];
 const THREE_STATES_CLASSES = ['', 'maybe', 'checked'];
+
+// TODO: handle three state in progress
 
 export default OneCheckboxBase.extend(RecognizerMixin, {
   layout,
@@ -52,17 +54,29 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    * Checked class name
    * @type {computed.string}
    */
-  _checkedClass: computed('checked', 'threeState', function () {
+  _checkedClass: computed('_checked', 'threeState', function () {
     let {
-      checked,
+      _checked,
       threeState,
-    } = this.getProperties('checked', 'threeState');
+    } = this.getProperties('_checked', 'threeState');
     if (threeState) {
-      return THREE_STATES_CLASSES[THREE_STATES.indexOf(checked)];
+      return THREE_STATES_CLASSES[THREE_STATES.indexOf(_checked)];
     } else {
-      return checked === THREE_STATES[THREE_STATES.length - 1] ?
+      return _checked === THREE_STATES[THREE_STATES.length - 1] ?
         THREE_STATES_CLASSES[2] : THREE_STATES_CLASSES[0];
     }
+  }),
+
+  /**
+   * A displayed checkbox state
+   * @type {boolean|number} true, false or 2 ("in middle")
+   */
+  _checked: computed('_isInProgress', 'checked', function () {
+    const {
+      _isInProgress,
+      checked,
+    } = this.getProperties('_isInProgress', 'checked');
+    return (checked === 2 && checked) || (_isInProgress ? !checked : checked);
   }),
 
   /**
@@ -74,14 +88,20 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
     return inputId ? inputId + '-toggle' : '';
   }),
 
+  /**
+   * Internal lock of toggle
+   * @type {boolean}
+   */
+  _lockToggle: computed.or('isReadOnly', '_isInProgress'),
+
   mouseDown() {
     // prevent from selected text drag-n-drop while panMove
     document.getSelection().removeAllRanges();
   },
 
   click(event) {
+    event.stopPropagation();
     if (!this.get('_disableClick')) {
-      event.stopPropagation();
       this._toggle();
     }
   },
@@ -133,17 +153,17 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    */
   _toggle() {
     let {
-      isReadOnly,
+      _lockToggle,
       checked,
       threeState,
       allowThreeStateToggle,
     } = this.getProperties(
-      'isReadOnly',
+      '_lockToggle',
       'checked',
       'threeState',
       'allowThreeStateToggle'
     );
-    if (!isReadOnly) {
+    if (!_lockToggle) {
       let statesLoop = threeState && allowThreeStateToggle ?
         THREE_STATES.concat(THREE_STATES[0]) : [THREE_STATES[0], THREE_STATES[
           THREE_STATES.length - 1], THREE_STATES[0]];

@@ -1,9 +1,0 @@
-{{#if proxy.isFulfilled}}
-  {{yield}}
-{{else}}
-  {{#if proxy.isPending}}
-    {{spin-spinner-block sizeClass="md" class="middle-centered"}}
-  {{else if proxy.isRejected}}
-    {{resource-load-error reason=proxy.reason}}
-  {{/if}}
-{{/if}}

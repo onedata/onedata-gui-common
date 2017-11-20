@@ -10,9 +10,9 @@
  * {{/promise-proxy-container}}
  * ```
  *
- * It will render loader (eg. spinner) if ``somePromiseObject`` is not settled.
- * It will render error message if ``somePromiseObject`` is rejected..
- * It will render ``some-component`` if promise has fulfilled.
+ * It will render loader (eg. spinner) if `somePromiseObject` is not settled.
+ * It will render error message if `somePromiseObject` is rejected..
+ * It will render `some-component` if promise has fulfilled.
  *
  * @module components/promise-proxy-container
  * @author Jakub Liput
@@ -20,19 +20,23 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/promise-proxy-container';
+import { computed } from '@ember/object';
 
-const {
-  Component,
-} = Ember;
+import LoadingContainer from 'onedata-gui-common/components/loading-container';
+import layout from 'onedata-gui-common/templates/components/loading-container';
 
-export default Component.extend({
+export default LoadingContainer.extend({
   layout,
   tagName: '',
 
   /**
+   * @virtual
    * @type {PromiseObject}
    */
   proxy: null,
+
+  isLoaded: computed.reads('proxy.isFulfilled'),
+  isLoading: computed.reads('proxy.isPending'),
+  isError: computed.reads('proxy.isRejected'),
+  errorReason: computed.reads('proxy.reason'),
 });

@@ -9,3 +9,15 @@
   $color-one-red,
   $color-one-mint
 );
+
+@include animation-bg-color-change(
+  pulse-bg-one-main,
+  $color-one-main,
+  darken($color-one-main, 30%)
+);
+
+@include animation-text-color-change(
+  pulse-red-text-color,
+  $color-one-red,
+  darken($color-one-red, 30%)
+);

@@ -28,4 +28,13 @@
       display: none;
     }
   }
+
+  &.loading-item {
+    .one-list-item.active > .item-header {
+      @extend .animated;
+      @extend .infinite;
+      @extend .slow;
+      @extend .pulse-red-text-color;
+    }
+  }
 }

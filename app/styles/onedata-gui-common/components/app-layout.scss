@@ -310,6 +310,14 @@ $onedata-logo-width: 150px;
           display: none;
         }
       }
+      &.loading {
+        >.item-header {
+          @extend .animated;
+          @extend .infinite;
+          @extend .slow;
+          @extend .pulse-bg-one-main;
+        }
+      }
       &:hover {
         >.item-header {
           @include main-menu-item-gradient(0.15, 0);

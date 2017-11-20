@@ -33,6 +33,16 @@ describe('Unit | Utility | safe method execution', function () {
       expect(result).to.be.undefined;
       done();
     });
+  });
 
+  it('allows to use function instead of method name', function () {
+    const testObject = EmberObject.create({
+      something: 1,
+    });
+    const result = safeMethodExecution(testObject, function (x, y) {
+      return this.get('something') + x + y;
+    }, 10, 20);
+
+    expect(result).to.be.equal(31);
   });
 });

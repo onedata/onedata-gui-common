@@ -1,5 +1,5 @@
 $mobile-horizontal-content-padding: $padding-large-horizontal;
-$content-row-vertical-padding: $padding-large-vertical;
+$content-row-vertical-padding: $padding-base-vertical;
 $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height - $content-col-padding;
 
 .main-content {
@@ -37,6 +37,19 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
       border-bottom: 0;
     }
 
+    &.no-padding-top {
+      padding-top: 0;
+    }
+    &.no-padding-bottom {
+      padding-bottom: 0;
+    }
+    &.extra-padding-top {
+      padding-top: 2 * $content-row-vertical-padding;
+    }
+    &.extra-padding-bottom {
+      padding-bottom: 2 * $content-row-vertical-padding;
+    }
+
     h1 {
       font-size: $font-size-base;
       font-weight: bold;
@@ -51,6 +64,15 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
       .btn-toolbar button {
         // vertical align floating toolbar
         margin-bottom: 0.3em;
+      }
+      .one-way-toggle {
+        font-size: $font-size-base;
+        margin-top: 0.5em;
+      }
+      label {
+        display: inline-block;
+        margin: 0;
+        font-weight: inherit;
       }
     }
 
