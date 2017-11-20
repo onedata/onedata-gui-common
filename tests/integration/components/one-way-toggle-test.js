@@ -4,6 +4,9 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import { run } from '@ember/runloop';
+import wait from 'ember-test-helpers/wait';
+import { Promise } from 'rsvp';
 
 describe('Integration | Component | one way toggle', function () {
   setupComponentTest('one-way-toggle', {
@@ -156,22 +159,76 @@ describe('Integration | Component | one way toggle', function () {
     }
   );
 
-  it('cannot be changed when isReadOnly=true', function (done) {
+  it('disables toggle until update promise is resolved', function (done) {
     this.set('checked', false);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = (value) => {
+      return new Promise(resolve => {
+        run.later(() => {
+          this.set('checked', value);
+          resolve();
+        }, 100);
+      });
+    };
+
     this.on('update', updateHandler);
 
     this.render(hbs `
       {{one-way-toggle
         checked=checked
-        isReadOnly=true
         update=(action "update")}}
     `);
 
-    click('.one-way-toggle').then(() => {
-      expect(this.$('.one-way-toggle')).to.not.have.class('checked');
-      expect(updateHandler).to.be.notCalled;
-      done();
+    const $oneWayToggle = this.$('.one-way-toggle');
+
+    $('.one-way-toggle').click();
+
+    wait({ waitForTimers: false }).then(() => {
+      expect($oneWayToggle, 'disable right after click')
+        .to.have.class('disabled');
+      expect($oneWayToggle, 'check right after click')
+        .to.have.class('checked');
+      // should fire after updateHandler resolve
+      wait().then(() => {
+        expect($oneWayToggle, 'enabled after action resolve')
+          .to.not.have.class('disabled');
+        expect($oneWayToggle, 'checked after action resolve')
+          .to.have.class('checked');
+        done();
+      });
     });
   });
+
+  it('cannot be toggled when in progress', function (done) {
+    this.set('checked', false);
+    const updateHandler = (value) => {
+      return new Promise(resolve => {
+        run.later(() => {
+          this.set('checked', value);
+          resolve();
+        }, 100);
+      });
+    };
+
+    this.on('update', updateHandler);
+
+    this.render(hbs `
+      {{one-way-toggle
+        checked=checked
+        update=(action "update")}}
+    `);
+
+    const $oneWayToggle = this.$('.one-way-toggle');
+
+    $('.one-way-toggle').click();
+
+    run.later(() => {
+      $('.one-way-toggle').click();
+      run.later(() => {
+        expect($oneWayToggle, 'checked after action resolve')
+          .to.have.class('checked');
+        done();
+      }, 200);
+    }, 50);
+  });
+
 });

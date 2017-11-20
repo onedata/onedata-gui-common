@@ -16,11 +16,16 @@ import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
 const {
   Component,
   computed,
+  inject: {
+    service,
+  },
 } = Ember;
 
 export default Component.extend({
   layout,
   classNames: ['alert', 'alert-danger', 'alert-promise-error', 'resource-load-error'],
+
+  i18n: service(),
 
   /**
    * Action to invoke on alert panel close.
@@ -40,8 +45,10 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     if (!this.get('message')) {
-      // TODO i18n
-      this.set('message', 'Sorry, but this resource didn\'t load properly.');
+      this.set(
+        'message',
+        this.get('i18n').t('components.resourceLoadError.defaultErrorMessage')
+      );
     }
   },
 

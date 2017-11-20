@@ -194,13 +194,14 @@ describe('Integration | Component | one dynamic tree', function () {
     });
   });
 
-  it('marks "select all" toggle as unchecked when not all nested toggles are checked',
+  it(
+    'marks "select all" toggle as semi-checked when not all nested toggles are checked',
     function () {
       this.render(hbs `
         {{one-dynamic-tree 
           definition=definition}}`);
 
-      expect(this.$('.field-node2')).to.not.have.class('checked');
+      expect(this.$('.field-node2')).to.have.class('maybe');
     }
   );
 

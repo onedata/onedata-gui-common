@@ -26,6 +26,9 @@ export default Ember.Component.extend({
   currentItemId: null,
   sidenavItemId: null,
 
+  isLoadingItem: computed.reads('mainMenu.isLoadingItem'),
+  isFailedItem: computed.reads('mainMenu.isFailedItem'),
+
   sidenavOpened: computed('sidenavItemId', function () {
     return this.get('sidenavItemId') != null;
   }).readOnly(),

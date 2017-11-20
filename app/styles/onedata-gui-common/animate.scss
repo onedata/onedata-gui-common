@@ -36,6 +36,11 @@
   animation-duration: 2s;
 }
 
+.animated.slow {
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+}
+
 .animated.very-slow {
   -webkit-animation-duration: 4s;
   animation-duration: 4s;
@@ -59,6 +64,13 @@
       }
     }
   }
+}
+
+@mixin animation-text-color-change($name, $c1, $c2) {
+    @include pulse-keyframes($name, color, $c1, $c2);
+    .#{$name} {
+        animation-name: #{$name};
+    }
 }
 
 @mixin animation-fg-color-change($name, $c1, $c2) {

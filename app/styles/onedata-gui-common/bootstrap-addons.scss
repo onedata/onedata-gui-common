@@ -266,3 +266,43 @@ $icon-btn-active-color: $color-one-red;
     margin: $padding-small-vertical $padding-small-horizontal;
   }
 }
+
+.nav-tabs {
+  li.disabled {
+    cursor: not-allowed !important;
+    > a {
+      pointer-events: none;
+    }
+  }
+  .nav-link {
+    padding: $padding-large-vertical $padding-large-horizontal;
+    border-radius: $border-radius-small $border-radius-small 0 0;
+    font-weight: bold;
+    color: inherit;
+  }
+}
+
+.tab-content {
+  padding: $padding-base-vertical 0;
+  border: 1px solid $main-border-color;
+  border-top: 0;
+  background-color: $color-one-white;
+  .tab-pane {
+    position: relative;
+    margin-left: $padding-large-horizontal;
+    margin-right: $padding-large-horizontal;
+    @media (max-width: $screen-xs-max) {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .content-row {
+      @media (min-width: $screen-sm-min) {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+      }
+      h1 {
+        padding: 0;
+      }
+    }
+  }
+}
