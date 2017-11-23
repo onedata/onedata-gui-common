@@ -28,6 +28,8 @@ const {
  * @property {string} [example=undefined]
  * @property {string} [tip=undefined]
  * @property {number} [step=undefined] step in number inputs
+ * @property {string} [rightText=undefined] text that will be shown on
+ * the right side of the input
  */
 
 export default Ember.Component.extend({
