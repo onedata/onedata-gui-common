@@ -22,6 +22,8 @@ const {
 
 export default Ember.Component.extend({
   layout,
+  classNames: 'provider-place-drop',
+  classNameBindings: ['provider.status'],
   globalNotify: service(),
   i18n: service(),
 
@@ -35,7 +37,7 @@ export default Ember.Component.extend({
    * Sorted array of spaces
    * @type {Array.Onezone.SpaceDetails}
    */
-  _spacesSorted: sort('provider.spaces', '_spacesSorting'),
+  _spacesSorted: sort('provider.spaceList.list', '_spacesSorting'),
 
   actions: {
     copySuccess() {

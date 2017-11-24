@@ -41,6 +41,12 @@ export default Ember.Component.extend({
   circleSizeScale: 1,
 
   /**
+   * If true, drop is rendered after circle click
+   * @type {boolean}
+   */
+  renderDrop: true,
+
+  /**
    * Provider status
    * @type {computed.string}
    */

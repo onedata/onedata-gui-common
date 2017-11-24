@@ -410,6 +410,9 @@ export default Ember.Component.extend(ClickOutside, {
    * @param {jQuery.Event} event 
    */
   onTriggerClick(event) {
+    if (this.isDestroyed) {
+      return;
+    }
     let {
       _triggersConfiguration,
       _activeTriggerConfiguration,
@@ -461,6 +464,10 @@ export default Ember.Component.extend(ClickOutside, {
    * _activeTriggerConfiguration
    */
   recomputeRenderMode() {
+    if (this.isDestroyed) {
+      return;
+    }
+
     let {
       switchBreakpoint,
       _activeTriggerConfiguration,
