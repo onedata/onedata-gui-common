@@ -50,18 +50,20 @@ describe('Integration | Component | provider place', function () {
       id: '1',
       status: 'online',
       isStatusValid: true,
-      spaces: [{
-        name: 'space1',
-        supportSizes: {
-          '1': 1048576,
-        },
-      }, {
-        name: 'space2',
-        supportSizes: {
-          '1': 1048576,
-          '2': 2097152,
-        }
-      }],
+      spaceList: {
+        list: [{
+          name: 'space1',
+          supportSizes: {
+            '1': 1048576,
+          },
+        }, {
+          name: 'space2',
+          supportSizes: {
+            '1': 1048576,
+            '2': 2097152,
+          }
+        }]
+      },
     });
   });
 
@@ -117,15 +119,15 @@ describe('Integration | Component | provider place', function () {
       {{provider-place 
         provider=provider}}`);
 
-    let spaces = this.get('provider.spaces');
+    let spaces = this.get('provider.spaceList.list');
     click('.circle').then(() => {
       let drop = $('.provider-place-drop');
       expect(drop.find('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
-          expect(drop.text()).to.contain(space.name);
-        }),
-        expect(drop.text()).to.contain('1 MiB');
+        expect(drop.text()).to.contain(space.name);
+      }),
+      expect(drop.text()).to.contain('1 MiB');
       done();
     });
   });

@@ -6,17 +6,39 @@
     font-family: 'Open Sans';
   }
 
+  .one-list-wrapper {
+    border-bottom: 1px solid $color-one-list-item-separator;
+  }
+
   .one-list-item {
     &.active {
       background-color: $color-sidebar-item-bg;
     }
-    .item-header {
-      border-bottom: 1px solid $color-one-list-item-separator;
+    .item-header { 
       &:hover {
         background-color: $color-sidebar-item-active-bg;
       }
       .one-icon {
         font-size: $menu-icon-font-size;
+      }
+      .status-toolbar {
+        position: absolute;
+        right: $one-list-item-padding * 0.75;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0px 7px 0 5px;
+        font-size: 13pt;
+        .one-icon {
+          font-size: 1em;
+          margin: 0;
+          margin-right: -0.2em;
+          top: 0.1em;
+        }
+        .outer-text {
+          top: -0.5em;
+          line-height: 0;
+          vertical-align: baseline;
+        }
       }
     }
     &.search-bar-item .item-header:hover {

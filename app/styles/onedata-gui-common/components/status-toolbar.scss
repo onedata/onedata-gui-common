@@ -9,7 +9,7 @@ $status-toolbar-height: 20px;
   border: 1px solid $color-one-list-item-separator;
   // fully rounded corners
   border-radius: 999px;
-  padding: 2px 18px;
+  padding: 2px $padding-small-horizontal;
   .status-toolbar-icon {
     float: left;
     position: relative;
