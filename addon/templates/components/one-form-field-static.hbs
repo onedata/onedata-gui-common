@@ -6,10 +6,17 @@
     {{/if}}
   </label>
   <span class={{concat (concat (concat "form-control-static one-form-field-static field-" (dot-to-dash field.name)) " ") layoutConfig.formInputColumns}}>
-    {{#if fakePassword}}
-      {{fake-password}}
+    {{#if (eq (data-type value) "boolean")}}
+      {{one-way-toggle
+        checked=value
+        isReadOnly=true
+      }}
     {{else}}
-      {{value}}
+      {{#if fakePassword}}
+        {{fake-password}}
+      {{else}}
+        {{value}}{{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
+      {{/if}}
     {{/if}}
   </span>
 </div>

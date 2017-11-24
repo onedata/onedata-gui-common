@@ -40,7 +40,7 @@ $icon-btn-active-color: $color-one-red;
   }
 }
 
-form {
+.form-horizontal {
   .form-message {
     padding-top: $padding-small-vertical;
     text-align: right;
@@ -55,6 +55,23 @@ form {
     .form-control-feedback {
       // 5px from hard-coded value of bootstrap label bottom margin
       margin-top: $line-height-computed + 5px;
+    }
+  }
+  .input-group {
+    table-layout: fixed;
+    width: 100%;
+    input + .input-group-addon {
+      width: 50%;
+    }
+  }
+  .has-feedback {
+    .input-group {
+      .form-control {
+        padding-right: $padding-large-horizontal;
+      }
+      .form-control + .input-group-addon {
+        padding-right: $input-height-base - 2px;
+      }
     }
   }
   .has-success .form-message {
@@ -100,6 +117,9 @@ form {
 
 .form-control-static {
   min-height: 1em;
+  .field-suffix {
+    color: $color-one-light-gray;
+  }
 }
 
 .form-group-light {
@@ -122,12 +142,13 @@ form {
 
 .input-group.with-icon-addon {
   position: relative;
+  width: 100%;
   .input-group-addon {
     position: relative;
     // focus on input changes its z-index from 1 to 3
     z-index: 4;
     height: $input-height-base;
-    min-width: $input-height-base;
+    width: $input-height-base;
     border: 0;
     background-color: transparent;
     .one-icon {

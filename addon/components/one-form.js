@@ -211,19 +211,20 @@ export default Ember.Component.extend({
   resetFormValues(prefixes) {
     let {
       currentFields,
-      formValues
-    } = this.getProperties('currentFields', 'formValues');
+      allFields,
+      allFieldsValues
+    } = this.getProperties('currentFields', 'allFields', 'allFieldsValues');
     let fields = currentFields;
     if (prefixes) {
       fields = [];
       prefixes.forEach(prefix => {
-        fields = fields.concat(currentFields.filter(
+        fields = fields.concat(allFields.filter(
           field => field.get('name').startsWith(prefix)
         ));
       });
     }
     fields.forEach(field => {
-      formValues.set(field.get('name'), field.get('defaultValue'));
+      allFieldsValues.set(field.get('name'), field.get('defaultValue'));
       this._resetField(field);
     });
   },
