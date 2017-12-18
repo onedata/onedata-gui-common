@@ -107,7 +107,7 @@ export default Ember.Component.extend({
     element.css({
       width: newWidth,
       height: newHeight,
-      backgroundSize: `${newWidth} ${newHeight}`,
+      backgroundSize: `${newWidth}px ${newHeight}px`,
     });
   },
 });
