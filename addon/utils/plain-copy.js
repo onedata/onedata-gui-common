@@ -16,9 +16,9 @@ import { get } from '@ember/object';
 // TODO: WARNING this function does not clone object deeply, 
 // it will just return always a plain object
 
-function emberObjPlainCopy(emberObj) {
+function emberObjPlainCopy(emberObj, deep = true) {
   var props = Object.keys(emberObj);
-  var proto = emberObj.constructor.prototype;
+  var proto = Object.getPrototypeOf(emberObj);
   for (let p in proto) {
     if (proto.hasOwnProperty(p) && typeof (emberObj[p]) !== 'function') {
       props.push(p);
@@ -26,16 +26,17 @@ function emberObjPlainCopy(emberObj) {
   }
   var copy = {};
   props.forEach(function (p) {
-    copy[p] = plainCopy(get(emberObj, p));
+    const value = get(emberObj, p);
+    copy[p] = deep ? plainCopy(value) : value;
   }, emberObj);
   return copy;
 }
 
-export default function plainCopy(obj) {
+export default function plainCopy(obj, deep = true) {
   if (isArray(obj)) {
-    return obj.map(plainCopy);
+    return deep ? obj.map(plainCopy) : obj;
   } else if (obj && (typeof obj === 'object')) {
-    return emberObjPlainCopy(obj);
+    return emberObjPlainCopy(obj, deep);
   } else {
     return obj;
   }
