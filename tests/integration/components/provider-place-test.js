@@ -125,9 +125,9 @@ describe('Integration | Component | provider place', function () {
       expect(drop.find('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
-        expect(drop.text()).to.contain(space.name);
-      }),
-      expect(drop.text()).to.contain('1 MiB');
+          expect(drop.text()).to.contain(space.name);
+        }),
+        expect(drop.text()).to.contain('1 MiB');
       done();
     });
   });
