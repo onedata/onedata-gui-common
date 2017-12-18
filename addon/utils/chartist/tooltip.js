@@ -96,8 +96,10 @@ export default function (options) {
       if (tooltipNode.length === 0) {
         tooltipNode = $($.parseHTML(TOOLTIP_HTML));
         container.append(tooltipNode);
-        tooltipNode.css('transform',
-          `translateY(-100%) translateY(${options.topOffset}px) translateX(-50%)`);
+        tooltipNode.css({
+          'transform': `translateY(-100%) translateX(-50%)`,
+          'marginTop': `${options.topOffset}px`,
+        });
       } else {
         if (chartEntry.x !== null) {
           let element = document.elementFromPoint(chartEntry.x, chartEntry.y);
