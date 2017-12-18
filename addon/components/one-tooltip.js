@@ -14,8 +14,12 @@
  */
 
 import BsTooltip from 'ember-bootstrap/components/bs-tooltip';
+import { inject } from '@ember/service';
+import { observer } from '@ember/object';
 
 export default BsTooltip.extend({
+  scrollState: inject(),
+
   /**
    * Arrow position.
    * @type {string}
@@ -30,6 +34,20 @@ export default BsTooltip.extend({
    * @type {number}
    */
   arrowOffset: 20,
+
+  /**
+   * Hides tooltip on page scroll
+   */
+  _scrollStateObserver: observer('scrollState.lastScrollEvent', function () {
+    if (this.get('inDom')) {
+      this.hide();
+    }
+  }),
+
+  init() {
+    this._super(...arguments);
+    this.get('scrollState');
+  },
 
   /**
    * Adds to bs-tooltip arrow implementation translateX/Y property to place it 
