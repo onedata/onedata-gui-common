@@ -47,6 +47,7 @@ export default Ember.Component.extend({
   eventsBus: service(),
   sideMenu: service(),
   globalCollapsibleToolbar: service(),
+  scrollState: service(),
 
   // TODO: too much relations: we got mainMenuItemChanged event
   currentTabId: computed.oneWay('mainMenu.currentItemId'),
@@ -190,6 +191,9 @@ export default Ember.Component.extend({
     },
     globalCollapsibleToolbarToggle() {
       this.toggleProperty('globalCollapsibleToolbar.isDropdownOpened');
+    },
+    scrollOccurred(event) {
+      this.get('scrollState').scrollOccurred(event);
     },
   }
 });
