@@ -23,7 +23,10 @@
 <div id="main-menu-container" 
   class="col-in-app-layout col-main-menu hidden-xs hidden-sm full-height disable-user-select {{if sidenavTabId "sidenav-opened"}}" 
   {{action "closeSidenav" bubbles=true}}>
-{{#perfect-scrollbar-element tagName="div" class="main-menu-content"}}
+{{#perfect-scrollbar-element
+  tagName="div"
+  class="main-menu-content"
+  onScroll=(action "scrollOccurred")}}
   <div class="row row-onedata-logo full-width">
     <div class="onedata-logo"></div>
     {{brand-info}}
@@ -42,7 +45,11 @@
     {{user-account-button isActive=(eq mainMenu.currentItemId "users") manageAccount=(action "manageAccount")}}
   </div>
 </div>
-{{#perfect-scrollbar-element tagName="div" id="col-sidebar" class=colSidebarClass}}
+{{#perfect-scrollbar-element
+  tagName="div"
+  id="col-sidebar"
+  class=colSidebarClass
+  onScroll=(action "scrollOccurred")}}
   {{yield 'sidebar'}}
 {{/perfect-scrollbar-element}}
 
@@ -97,6 +104,7 @@
     
     {{#perfect-scrollbar-element
       class=colContentClass
+      onScroll=(action "scrollOccurred")
     }}
       {{yield 'content'}}
     {{/perfect-scrollbar-element}}
