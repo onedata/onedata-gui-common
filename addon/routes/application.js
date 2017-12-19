@@ -10,7 +10,7 @@ const FAVICON_HTML =
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/manifest.json">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ee3f3f">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#363636">
   `;
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
