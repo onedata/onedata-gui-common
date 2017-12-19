@@ -9,7 +9,6 @@
 
 import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/resource-load-error';
-import { invokeAction } from 'ember-invoke-action';
 
 import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
 
@@ -57,7 +56,7 @@ export default Component.extend({
       this.toggleProperty('showDetails');
     },
     close() {
-      invokeAction(this, 'onClose');
+      this.get('onClose')();
     }
   }
 });

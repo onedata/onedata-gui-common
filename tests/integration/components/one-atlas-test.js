@@ -89,9 +89,11 @@ describe('Integration | Component | one atlas', function () {
       this.render(hbs `
         <div style={{parentStyle}}>
           {{#one-atlas _window=_window as |atlas|}}
-            {{#atlas.point latitude=-33 longitude=151 class="sydney"}}
-              s
-            {{/atlas.point}}
+            {{#atlas.position latitude=-33 longitude=151 as |position|}}
+              {{#position.point class="sydney"}}
+                s
+              {{/position.point}}
+            {{/atlas.position}}
           {{/one-atlas}}
         </div>
       `);

@@ -19,9 +19,9 @@ import { setProperties } from '@ember/object';
  * @param {Ember.Object} source 
  * @returns {Ember.Object} returns source with modified properties
  */
-export default function emberObjectMerge(dest, source) {
-  const destData = plainCopy(dest);
-  const sourceData = plainCopy(source);
+export default function emberObjectMerge(dest, source, deep = true) {
+  const destData = plainCopy(dest, deep);
+  const sourceData = plainCopy(source, deep);
   setProperties(dest, _.merge(destData, sourceData));
   return dest;
 }

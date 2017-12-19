@@ -1,4 +1,5 @@
 export default [
+  'bezier-curve',
   'name-conflict',
   'one-atlas',
   'one-dynamic-tree',
