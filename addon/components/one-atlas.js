@@ -1,12 +1,25 @@
 /**
  * A world map component, on which other components can be placed according 
- * to spcified latitude and longitude. Yields hash with "point" component.
+ * to specified latitude and longitude. Yields hash with "position" component
+ * that allows to use x and y computed from given lat./long.
  * Example:
  * ```
  * {{#one-atlas as |atlas|}}
- *   {{#atlas.point latitude=35 longitude=139}}Tokyo{{/atlas.point}}
- *   {{#atlas.point latitude=50.7 longitude=20}}Cracow{{/atlas.point}}
- *   {{#atlas.point latitude=40.7 longitude=-74}}New York City{{/atlas.point}}
+ *   {{#atlas.position latitude=35 longitude=139 as |position|}}
+ *     {{#position.point}}
+ *       Tokyo
+ *     {{/position.point}}
+ *   {{/atlas.position}}
+ *   {{#atlas.position latitude=50.7 longitude=20 as |position|}}
+ *     {{#position.point}}
+ *       Cracow
+ *     {{/position.point}}
+ *   {{/atlas.position}}
+ *   {{#atlas.position latitude=40.7 longitude=-74 as |position|}}
+ *     {{#position.point}}
+ *       New York
+ *     {{/position.point}}
+ *   {{/atlas.position}}
  * {{/one-atlas}}
  * ```
  * 
