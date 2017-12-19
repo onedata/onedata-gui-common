@@ -1,6 +1,7 @@
 /**
- * A one-atlas point component. Represents a place in a map, which 
- * should be specified with latitude and longitude properties.
+ * A one-atlas point component. Represents a place in a map with given x and y.
+ * Typically, point is yielded from `one-atlas/position` component with
+ * injected `positionX` and `positionY`.
  * Example of use can be found in one-atlas component.
  * 
  * @module components/one-atlas/point
