@@ -1,17 +1,5 @@
 <div class="container">
-   {{!--
-    TODO: login box should use login-box/header component for custom header 
-    instead of this row
-   --}}
-  <div class="row">
-    <div class="col-xs-12 col-user-profile-icon">
-      <div class="login-logo"></div>
-      <div class="login-titles">
-        <div class="login-main-title {{loginMainTitleClass}}">{{brandTitle}}</div>
-        <div class="login-main-subtitle">{{brandSubtitle}}</div>
-      </div>
-    </div>
-  </div>
+  {{login-box/header}}
   <div class="row row-login-header text-center">
     <div class="col-xs-12">
       <h4>{{t "components.loginBox.login"}}</h4>

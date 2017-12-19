@@ -1,0 +1,43 @@
+/**
+ * A login-box header component
+ *
+ * @module components/login-box/header
+ * @author Michal Borzecki, Jakub Liput
+ * @copyright (C) 2017 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+import Ember from 'ember';
+import layout from '../../templates/components/login-box/header';
+import { computed } from '@ember/object';
+
+export default Ember.Component.extend({
+  layout,
+
+  /**
+   * Class added to login-main-title element
+   * Can be used to display some secondary image
+   * @type {string}
+   */
+  loginMainTitleClass: '',
+
+  /**
+   * Main title of login view
+   * Typically, should be overriden in subclasses
+   * Alternatively, locale: ``components.loginBox.header.brandTitle`` can be set
+   * @type {string}
+   */
+  brandTitle: computed(function () {
+    return this.get('i18n').t('components.loginBox.header.brandTitle');
+  }),
+
+  /**
+   * Subtitle of login view
+   * Typically, should be overriden in subclasses
+   * Alternatively, locale: ``components.loginBox.header.brandSubtitle`` can be set
+   * @type {string}
+   */
+  brandSubtitle: computed(function () {
+    return this.get('i18n').t('components.loginBox.header.brandSubtitle');
+  }),
+});

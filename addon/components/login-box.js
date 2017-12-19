@@ -14,7 +14,6 @@ const {
   inject: {
     service
   },
-  computed,
   computed: {
     alias,
   },
@@ -33,33 +32,6 @@ export default Ember.Component.extend({
    * True, if previous session has expired
    */
   sessionHasExpired: alias('session.data.hasExpired'),
-
-  /**
-   * Class added to login-main-title element
-   * Can be used to display some secondary image
-   * @type {string}
-   */
-  loginMainTitleClass: '',
-
-  /**
-   * Main title of login view
-   * Typically, should be overriden in subclasses
-   * Alternatively, locale: ``components.loginBox.brandTitle`` can be set
-   * @type {string}
-   */
-  brandTitle: computed(function () {
-    return this.get('i18n').t('components.loginBox.brandTitle');
-  }),
-
-  /**
-   * Subtitle of login view
-   * Typically, should be overriden in subclasses
-   * Alternatively, locale: ``components.loginBox.brandSubtitle`` can be set
-   * @type {string}
-   */
-  brandSubtitle: computed(function () {
-    return this.get('i18n').t('components.loginBox.brandSubtitle');
-  }),
 
   actions: {
     authenticationStarted() {
