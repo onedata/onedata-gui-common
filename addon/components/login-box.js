@@ -10,6 +10,7 @@
 import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/login-box';
 import EmberObject from '@ember/object';
+import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 
 const {
   inject: {
@@ -64,11 +65,11 @@ export default Ember.Component.extend({
 
     authenticationSuccess() {
       this.get('globalNotify').info('Authentication succeeded!');
-      this.set('isBusy', false);
+      safeMethodExecution(this, 'set', 'isBusy', false);
     },
 
     authenticationFailure() {
-      this.set('isBusy', false);
+      safeMethodExecution(this, 'set', 'isBusy', false);
     }
   }
 });

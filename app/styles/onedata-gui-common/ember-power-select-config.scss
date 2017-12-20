@@ -27,6 +27,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
   word-wrap: break-word;
   outline: none !important;
+  color: $main-text-color;
 
   &[aria-disabled=true] {
     background-color: $input-bg;
@@ -87,7 +88,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
 }
 
 .ember-power-select-dropdown {
-  box-shadow: 0 0 5px #ccc;
+  box-shadow: none;
 
   &.small {
     .ember-power-select-option {
@@ -107,8 +108,15 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     overflow: hidden;
     word-wrap: break-word;
 
+    &[aria-current="true"] {
+      color: $color-one-white;
+    }
+
     &::last-child {
       border-bottom: 0;
     }
+  }
+  .ember-power-select-search-input {
+    padding: 6px;
   }
 }

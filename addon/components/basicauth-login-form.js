@@ -9,7 +9,7 @@
 
 import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/basicauth-login-form';
-import { invokeAction } from 'ember-invoke-action';
+import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 
 const {
   inject: {
@@ -30,6 +30,8 @@ export default Ember.Component.extend({
   isDisabled: false,
   areCredentialsInvalid: false,
 
+  backButtonAction: undefined,
+
   didInsertElement() {
     this._super(...arguments);
     this.$('.login-username').focus();
@@ -43,23 +45,25 @@ export default Ember.Component.extend({
     console.debug(
       `component:basicauth-login-form: Credentials provided for ${username} are valid`
     );
-    invokeAction(this, 'authenticationSuccess', {
+    this.get('authenticationSuccess')({
       username,
       password
     });
-    this.set('isDisabled', false);
+    safeMethodExecution(this, 'set', 'isDisabled', false);
   },
 
   onLoginFailure(username, password) {
     console.debug(
       `component:basicauth-login-form: Credentials provided for ${username} are invalid`
     );
-    this.sendAction('authenticationFailure', {
+    this.get('authenticationFailure')({
       username,
       password
     });
-    this.set('isDisabled', false);
-    this.set('areCredentialsInvalid', true);
+    safeMethodExecution(this, 'setProperties', {
+      isDisabled: false,
+      areCredentialsInvalid: true,
+    });
   },
 
   onInitClientError(error) {
@@ -83,6 +87,12 @@ export default Ember.Component.extend({
       loginCalling.catch(() => this.onLoginFailure(username, password));
 
       return loginCalling;
+    },
+    backAction() {
+      const backButtonAction = this.get('backButtonAction');
+      if (backButtonAction) {
+        backButtonAction();
+      }
     }
   }
 });
