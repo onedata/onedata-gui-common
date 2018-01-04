@@ -15,4 +15,59 @@ $error-message-margin: 15px;
       opacity: 1;
     }
   }
+  .input-group.with-icon-addon {
+    position: relative;
+    .input-group-addon {
+      position: relative;
+      top: 1px;
+      padding: 4px 5px;
+      // focus on input changes its z-index from 1 to 3
+      z-index: 4;
+      height: $input-height-base - 2px;
+      min-width: $input-height-base;
+      border: 0;
+      border-right: 1px solid $input-border;
+      background-color: transparent;
+      .one-icon {
+        font-size: 32px ;
+      }
+    }
+    input {
+      $border-radius: $input-border-radius;
+      // height: 44px;
+      float: none;
+      position: absolute;
+      z-index: 1;
+      &:last-child {
+        left: 0;
+        padding-left: 57px;
+        border-radius: $border-radius;
+      }
+    }
+  }
+  .has-error .input-group.with-icon-addon .input-group-addon {
+    border-right: 1px solid $state-danger-text;
+  }
+  .btn {
+    padding: 10px 40px;
+    margin-bottom: 5px;
+    .spin-button-spinner {
+      height: 0;
+      width: 0;
+    }
+    &.back-button {
+      background-color: $btn-default-bg;
+      border-color: $btn-default-bg;
+      .one-icon::before {
+        display: inline-block;
+        position: relative;
+        top: -2px;
+        margin-left: -2 * $padding-xs-horizontal;
+        margin-right: $padding-xs-horizontal;
+        transform: rotate(-180deg);
+        font-size: 17pt;
+        line-height: 0;
+      }
+    }
+  }
 }

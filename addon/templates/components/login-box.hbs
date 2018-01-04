@@ -1,38 +1,33 @@
 <div class="container">
-   {{!--
-    TODO: login box should use login-box/header component for custom header 
-    instead of this row
-   --}}
-  <div class="row">
-    <div class="col-xs-12 col-user-profile-icon">
-      <div class="login-logo"></div>
-      <div class="login-titles">
-        <div class="login-main-title {{loginMainTitleClass}}">{{brandTitle}}</div>
-        <div class="login-main-subtitle">{{brandSubtitle}}</div>
+  {{#if errorMessage}}
+    {{!-- TODO error screen --}}
+    {{errorMessage}}
+  {{else if isLoading}}
+    {{!-- TODO loading --}}
+  {{else}}
+    {{login-box/header model=headerModel}}
+    <div class="row row-login-header text-center">
+      <div class="col-xs-12">
+        <h4>{{t "components.loginBox.login"}}</h4>
+        <div class="login-box-error-message {{if sessionHasExpired "active" ""}}">
+          {{t "components.loginBox.sessionExpired"}}
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row row-login-header text-center">
-    <div class="col-xs-12">
-      <h4>{{t "components.loginBox.login"}}</h4>
-      <div class="login-box-error-message {{if sessionHasExpired "active" ""}}">
-        {{t "components.loginBox.sessionExpired"}}
+    {{!--<div class="row text-center">
+      <div class="col-xs-12">
+        {{t "components.loginBox.newAccountWillBeCreated"}}
       </div>
-    </div>
-  </div>
-  {{!--<div class="row text-center">
-    <div class="col-xs-12">
-      {{t "components.loginBox.newAccountWillBeCreated"}}
-    </div>
-  </div>--}}
-  {{!-- TODO remove .additional-bottom-margin after icons resize --}}
-  <div class="row additional-bottom-margin">
-    <div class="col-xs-10 col-sm-8 col-md-6 col-lg-4 col-centered">
-        {{basicauth-login-form
-          authenticationSuccess="authenticationSuccess"
-          authenticationFailure="authenticationFailure"
-          authenticationStarted="authenticationStarted"
+    </div>--}}
+    {{!-- TODO remove .additional-bottom-margin after icons resize --}}
+    <div class="row additional-bottom-margin">
+      <div class="col-xs-10 col-centered">
+        {{login-box/login-form-container
+          authenticationSuccess=(action "authenticationSuccess")
+          authenticationFailure=(action "authenticationFailure")
+          authenticationStarted=(action "authenticationStarted")
         }}
+      </div>
     </div>
-  </div>
+  {{/if}}
 </div>

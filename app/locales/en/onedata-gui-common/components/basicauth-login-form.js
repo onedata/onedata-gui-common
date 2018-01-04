@@ -1,3 +1,4 @@
 export default {
-  signIn: 'Sign in'
+  signIn: 'Sign in',
+  back: 'Back',
 };
