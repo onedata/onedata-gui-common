@@ -2,8 +2,8 @@
  * A form that is used to login with username and password 
  *
  * @module components/basicauth-login-form
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michal Borzecki
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -30,6 +30,12 @@ export default Ember.Component.extend({
   isDisabled: false,
   areCredentialsInvalid: false,
 
+  /**
+   * Action called on 'back' button click. If not defined, back button will
+   * not be visible.
+   * @virtual optional
+   * @type {function}
+   */
   backButtonAction: undefined,
 
   didInsertElement() {

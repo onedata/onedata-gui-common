@@ -7,12 +7,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
-import layout from '../../templates/components/login-box/header';
+import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { inject } from '@ember/service';
+import layout from '../../templates/components/login-box/header';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
+
+  i18n: inject(),
 
   /**
    * Class added to login-main-title element

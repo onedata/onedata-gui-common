@@ -2,31 +2,23 @@
  * A component when available login options should be presented
  *
  * @module components/login-box
- * @author Jakub Liput
+ * @author Jakub Liput Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject, { computed } from '@ember/object';
+import { inject } from '@ember/service';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
-import EmberObject from '@ember/object';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 
-const {
-  inject: {
-    service
-  },
-  computed: {
-    alias,
-  },
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['login-box'],
 
-  globalNotify: service(),
-  session: service(),
+  globalNotify: inject(),
+  session: inject(),
 
   /**
    * Description for error (if occurred).
@@ -51,7 +43,7 @@ export default Ember.Component.extend({
   /**
    * True, if previous session has expired
    */
-  sessionHasExpired: alias('session.data.hasExpired'),
+  sessionHasExpired: computed.alias('session.data.hasExpired'),
 
   init() {
     this._super(...arguments);

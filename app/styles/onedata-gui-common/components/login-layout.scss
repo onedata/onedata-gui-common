@@ -18,6 +18,10 @@
   .login-box-container {
     margin-top: 100px;
     width: 100%;
+
+    // in some magic way it fixes hide animation from animate.css
+    transform: translate(0);
+    
     @media (min-height: 750px) {
       @include absolute-align-middle-center();
       transform: translateX(-50%) translateY(-50%) translateY(-50px);
