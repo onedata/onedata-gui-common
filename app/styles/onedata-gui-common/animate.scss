@@ -46,6 +46,11 @@
   animation-duration: 4s;
 }
 
+.animated.short-delay {
+  -webkit-animation-delay: 0.33s;
+  animation-delay: 0.33s;
+}
+
 @mixin pulse-keyframes($name, $attributes, $val1, $val2) {
   @keyframes #{$name} {
     0% {
