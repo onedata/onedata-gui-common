@@ -120,3 +120,11 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     padding: 6px;
   }
 }
+
+.ember-power-select-search-input {
+  border-radius: $input-border-radius;
+  &:focus {
+    outline: 0;
+    border: 1px solid $input-border-focus;
+  }
+}
