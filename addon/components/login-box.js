@@ -2,7 +2,7 @@
  * A component when available login options should be presented
  *
  * @module components/login-box
- * @author Jakub Liput Michal Borzecki
+ * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
