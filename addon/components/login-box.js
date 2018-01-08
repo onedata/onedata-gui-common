@@ -2,64 +2,53 @@
  * A component when available login options should be presented
  *
  * @module components/login-box
- * @author Jakub Liput
+ * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject, { computed } from '@ember/object';
+import { inject } from '@ember/service';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
+import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 
-const {
-  inject: {
-    service
-  },
-  computed,
-  computed: {
-    alias,
-  },
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['login-box'],
 
-  globalNotify: service(),
-  session: service(),
+  globalNotify: inject(),
+  session: inject(),
+
+  /**
+   * Description for error (if occurred).
+   * @type {string|undefined}
+   */
+  errorMessage: undefined,
+
+  /**
+   * If true, data necessary to render login-box is still loading
+   * @type {boolean}
+   */
+  isLoading: false,
+
+  /**
+   * Data object passed to the login-box header component
+   * @type {EmberObject}
+   */
+  headerModel: undefined,
 
   isBusy: false,
 
   /**
    * True, if previous session has expired
    */
-  sessionHasExpired: alias('session.data.hasExpired'),
+  sessionHasExpired: computed.alias('session.data.hasExpired'),
 
-  /**
-   * Class added to login-main-title element
-   * Can be used to display some secondary image
-   * @type {string}
-   */
-  loginMainTitleClass: '',
-
-  /**
-   * Main title of login view
-   * Typically, should be overriden in subclasses
-   * Alternatively, locale: ``components.loginBox.brandTitle`` can be set
-   * @type {string}
-   */
-  brandTitle: computed(function () {
-    return this.get('i18n').t('components.loginBox.brandTitle');
-  }),
-
-  /**
-   * Subtitle of login view
-   * Typically, should be overriden in subclasses
-   * Alternatively, locale: ``components.loginBox.brandSubtitle`` can be set
-   * @type {string}
-   */
-  brandSubtitle: computed(function () {
-    return this.get('i18n').t('components.loginBox.brandSubtitle');
-  }),
+  init() {
+    this._super(...arguments);
+    this.set('headerModel', EmberObject.create({}));
+  },
 
   actions: {
     authenticationStarted() {
@@ -68,11 +57,11 @@ export default Ember.Component.extend({
 
     authenticationSuccess() {
       this.get('globalNotify').info('Authentication succeeded!');
-      this.set('isBusy', false);
+      safeMethodExecution(this, 'set', 'isBusy', false);
     },
 
     authenticationFailure() {
-      this.set('isBusy', false);
+      safeMethodExecution(this, 'set', 'isBusy', false);
     }
   }
 });
