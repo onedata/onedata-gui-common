@@ -18,6 +18,8 @@ const {
   inject: {
     service,
   },
+  computed,
+  get,
 } = Ember;
 
 export default Ember.Component.extend({
@@ -33,11 +35,26 @@ export default Ember.Component.extend({
    */
   _spacesSorting: ['isDefault:desc', 'name'],
 
+  _spaceList: computed.reads('provider.spaceList'),
+
   /**
    * Sorted array of spaces
    * @type {Array.Onezone.SpaceDetails}
    */
-  _spacesSorted: sort('provider.spaceList.list', '_spacesSorting'),
+  _spacesSorted: sort('_spaceList.list', '_spacesSorting'),
+
+  _spacesLoaded: computed(
+    '_spaceList.isLoaded',
+    '_spaceList.list.isFulfilled',
+    function () {
+      const _spaceList = this.get('_spaceList');
+      return !!(
+        _spaceList &&
+        get(_spaceList, 'isLoaded') &&
+        get(_spaceList, 'list.isFulfilled')
+      );
+    }
+  ),
 
   actions: {
     copySuccess() {

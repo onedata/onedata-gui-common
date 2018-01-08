@@ -10,6 +10,7 @@
 import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/application-error';
 
+import i18n from 'onedata-gui-common/mixins/components/i18n';
 import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
 
 const {
@@ -17,11 +18,13 @@ const {
   inject: { service },
 } = Ember;
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(i18n, {
   layout,
   classNames: ['application-error'],
 
   i18n: service(),
+
+  i18nPrefix: 'components.applicationError.',
 
   showDetails: false,
 
@@ -30,7 +33,7 @@ export default Ember.Component.extend({
    * An object with error details, that should be parseable by getErrorDetails
    * @type {object}
    */
-  error: null,
+  error: undefined,
 
   /**
    * @virtual
@@ -39,8 +42,7 @@ export default Ember.Component.extend({
   messageType: 'default',
 
   message: computed('messageType', function () {
-    const messageType = this.get('messageType');
-    return this.get('i18n').t(`components.applicationError.messages.${messageType}`)
+    return this.t('messages.' + this.get('messageType'));
   }),
 
   /**
@@ -49,7 +51,19 @@ export default Ember.Component.extend({
    */
   _reasonDetails: computed('error', function () {
     let error = this.get('error');
-    return error && getErrorDetails(error);
+    if (error != null && typeof error === 'object') {
+      try {
+        return JSON.stringify(error);
+      } catch (e) {
+        if (e instanceof TypeError) {
+          return error;
+        } else {
+          throw error;
+        }
+      }
+    } else {
+      return error && getErrorDetails(error);
+    }
   }),
 
   actions: {
