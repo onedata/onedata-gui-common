@@ -3,7 +3,7 @@
  *
  * @module components/login-box/header
  * @author Michal Borzecki, Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -27,7 +27,7 @@ export default Component.extend({
   /**
    * Main title of login view
    * Typically, should be overriden in subclasses
-   * Alternatively, locale: ``components.loginBox.header.brandTitle`` can be set
+   * Alternatively, locale: `components.loginBox.header.brandTitle` can be set
    * @type {string}
    */
   brandTitle: computed(function () {
@@ -37,7 +37,7 @@ export default Component.extend({
   /**
    * Subtitle of login view
    * Typically, should be overriden in subclasses
-   * Alternatively, locale: ``components.loginBox.header.brandSubtitle`` can be set
+   * Alternatively, locale: `components.loginBox.header.brandSubtitle` can be set
    * @type {string}
    */
   brandSubtitle: computed(function () {

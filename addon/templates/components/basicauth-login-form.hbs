@@ -40,14 +40,14 @@
         {{#if backButtonAction}}
           <button type="button" class="btn btn-warning back-button" {{action "backAction"}}>
             {{one-icon icon="arrow-right"}}
-            {{t 'components.basicauthLoginForm.back'}}
+            {{t "components.basicauthLoginForm.back"}}
           </button>
         {{/if}}
         {{#one-spin-button class="btn btn-primary"
           buttonStyle="expand-left"
           action=(action "submitLogin" username password)
         }}
-          {{t 'components.basicauthLoginForm.signIn'}}
+          {{t "components.basicauthLoginForm.signIn"}}
         {{/one-spin-button}}
       </div>
     {{/bs-form}}    
