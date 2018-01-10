@@ -7,6 +7,7 @@ import providersList from './onedata-gui-common/components/providers-list';
 import contentUsers from './onedata-gui-common/components/content-users';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
+import emptyCollectionSidebar from './onedata-gui-common/components/empty-collection-sidebar';
 
 const translations = {
   components: {
@@ -19,6 +20,7 @@ const translations = {
     contentUsers,
     supportSizeInfo,
     resourceLoadError,
+    emptyCollectionSidebar,
   },
 };
 

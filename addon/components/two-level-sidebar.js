@@ -63,6 +63,13 @@ export default Ember.Component.extend({
    */
   sidebarType: undefined,
 
+  /**
+   * If true and sidebar collection is empty, button that creates new item
+   * will be visible.
+   * @type {boolean}
+   */
+  showCreateOnEmpty: true,
+
   init() {
     this._super(...arguments);
 
