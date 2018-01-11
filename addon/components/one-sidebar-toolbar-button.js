@@ -16,4 +16,12 @@ export default Ember.Component.extend({
   title: readOnly('buttonModel.title'),
   icon: readOnly('buttonModel.icon'),
   action: readOnly('buttonModel.action'),
+  tip: readOnly('buttonModel.tip'),
+
+  click() {
+    const action = this.get('action');
+    if (action) {
+      action();
+    }
+  }
 });
