@@ -31,22 +31,30 @@ export default Ember.Component.extend({
 
   /**
    * Spaces list sort order
-   * @type {Array.string}
+   * @type {Array<string>}
    */
   _spacesSorting: ['isDefault:desc', 'name'],
 
+  /**
+   * One-way alias to space list record
+   * @type {Ember.Computed<models/SpaceList>}
+   */
   _spaceList: computed.reads('provider.spaceList'),
 
   /**
    * Sorted array of spaces
-   * @type {Array.Onezone.SpaceDetails}
+   * @type {Array<models/Space>}
    */
   _spacesSorted: sort('_spaceList.list', '_spacesSorting'),
 
+  /**
+   * True if data for each space of provider is loaded (eg. support info)
+   * @type {Ember.Computed<boolean>}
+   */
   _spacesLoaded: computed(
     '_spaceList.isLoaded',
     '_spaceList.list.isFulfilled',
-    function () {
+    function _getSpacesLoaded() {
       const _spaceList = this.get('_spaceList');
       return !!(
         _spaceList &&

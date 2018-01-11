@@ -27,7 +27,12 @@ export default Mixin.create({
    */
   i18n: undefined,
 
-  _prefix: computed('i18nPrefix', function () {
+  /**
+   * Generates ready-to-use translation prefix (adds dot if lacks, etc.)
+   * Should not be changed - instead set `i18nPrefix`.
+   * @type {Ember.Computed<string>}
+   */
+  tPrefix: computed('i18nPrefix', function getTPrefix() {
     /** @type {string} */
     const i18nPrefix = this.get('i18nPrefix');
     if (i18nPrefix) {
@@ -35,7 +40,7 @@ export default Mixin.create({
     } else {
       return '';
     }
-  }),
+  }).readOnly(),
 
   /**
    * Translate text using i18n service, using optional i18nPrefix
@@ -45,8 +50,8 @@ export default Mixin.create({
   t(translationKey) {
     const {
       i18n,
-      _prefix,
-    } = this.getProperties('i18n', '_prefix');
-    return i18n.t(_prefix + translationKey);
+      tPrefix,
+    } = this.getProperties('i18n', 'tPrefix');
+    return i18n.t(tPrefix + translationKey);
   },
 });

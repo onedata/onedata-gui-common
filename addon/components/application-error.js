@@ -10,7 +10,7 @@
 import Ember from 'ember';
 import layout from 'onedata-gui-common/templates/components/application-error';
 
-import i18n from 'onedata-gui-common/mixins/components/i18n';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
 
 const {
@@ -18,7 +18,7 @@ const {
   inject: { service },
 } = Ember;
 
-export default Ember.Component.extend(i18n, {
+export default Ember.Component.extend(I18n, {
   layout,
   classNames: ['application-error'],
 
