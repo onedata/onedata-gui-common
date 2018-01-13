@@ -21,6 +21,7 @@ const {
   },
   computed,
   isEmpty,
+  get,
 } = Ember;
 
 export default Ember.Component.extend({
@@ -89,6 +90,21 @@ export default Ember.Component.extend({
   primaryItemId: computed('sidebar.itemPath.[]', function () {
     return this.get('sidebar.itemPath').objectAt(0);
   }),
+
+  primaryItem: computed(
+    'primaryItemId',
+    'model.collection.[]',
+    function getPrimaryItem() {
+      const {
+        model,
+        primaryItemId,
+      } = this.getProperties('model', 'primaryItemId');
+      return _.find(
+        get(model, 'collection').toArray(),
+        item => get(item, 'id') === primaryItemId
+      );
+    }
+  ),
 
   secondaryItemId: computed('sidebar.itemPath.[]', function () {
     return this.get('sidebar.itemPath').objectAt(1);

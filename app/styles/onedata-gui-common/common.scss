@@ -235,6 +235,10 @@ input {
 .loadable-row {
   position: relative;
   min-height: 150px;
+  
+  &.sm {
+    min-height: 50px;
+  }
 }
 
 .loading-more-row {
