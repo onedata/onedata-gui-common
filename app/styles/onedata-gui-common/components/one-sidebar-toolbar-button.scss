@@ -7,6 +7,9 @@
   line-height: 32px;
   text-align: center;
   font-size: 40px;
+  &:hover {
+    color: $color-one-red;
+  }
   .one-icon {
     position: absolute;
     top: 50%;
