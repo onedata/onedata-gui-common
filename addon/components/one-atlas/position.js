@@ -15,7 +15,7 @@ import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-atlas/position';
 
 export default Component.extend({
-  layout,  
+  layout,
   tagName: '',
 
   /**
