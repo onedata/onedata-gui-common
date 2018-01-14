@@ -279,7 +279,7 @@ $color-provider-offline: $color-one-red;
       }
     }
   }
-
+  
   .drop-provider-host-container {
     .provider-host-text {
       border: none;
@@ -295,5 +295,9 @@ $color-provider-offline: $color-one-red;
         background-color: darken($color-one-semiwhite, 20%);
       }
     }
+  }
+  
+  .spaces-list {
+    color: $color-one-dark-gray;
   }
 }

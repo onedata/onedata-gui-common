@@ -46,23 +46,27 @@ describe('Integration | Component | provider place', function () {
       }
     });
 
+    const spaces = [{
+      name: 'space1',
+      supportSizes: {
+        '1': 1048576,
+      },
+    }, {
+      name: 'space2',
+      supportSizes: {
+        '1': 1048576,
+        '2': 2097152,
+      }
+    }];
+    spaces.isFulfilled = true;
+
     this.set('provider', {
-      id: '1',
+      entityId: '1',
       status: 'online',
       isStatusValid: true,
       spaceList: {
-        list: [{
-          name: 'space1',
-          supportSizes: {
-            '1': 1048576,
-          },
-        }, {
-          name: 'space2',
-          supportSizes: {
-            '1': 1048576,
-            '2': 2097152,
-          }
-        }]
+        isLoaded: true,
+        list: spaces,
       },
     });
   });

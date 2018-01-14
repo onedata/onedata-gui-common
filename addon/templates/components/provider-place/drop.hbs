@@ -15,13 +15,13 @@
   {{/unless}}
 </div>
 <div class="drop-provider-host-container">
-  <input class="provider-host-text truncate {{concat "host-input-" provider.id}}" value={{provider.host}} readonly>
+  <input class="provider-host-text truncate {{concat "host-input-" provider.entityId}}" value={{provider.host}} readonly>
     {{#copy-button
       tagName="div"
       success=(action "copySuccess")
       error=(action "copyError")
       class="provider-host-copy-btn clickable"
-      clipboardTarget=(concat ".host-input-" provider.id)}}
+      clipboardTarget=(concat ".host-input-" provider.entityId)}}
     {{one-icon tagName="div" icon="clipboard-copy"}}
   {{/copy-button}}
 </div>
@@ -30,26 +30,26 @@
   {{!-- <div class="provider-location">
     {{provider.location}}
   </div> --}}
-  {{#one-collapsible-list as |list|}}
-    {{#each _spacesSorted as |space|}}
-    {{#list.item isCollapsible=false as |item|}}
-      {{#item.header}}
-        {{provider-place/drop/space space=space providerId=provider.id}}
-      {{/item.header}}
-    {{/list.item}}
-    {{/each}} 
-  {{/one-collapsible-list}}
+  <div class="row loadable-row sm spaces-list">
+    {{#loading-container isLoading=(not _spacesLoaded) sizeClass="sm"}}
+      {{#one-collapsible-list as |list|}}
+        {{#each _spacesSorted as |space|}}
+        {{#list.item isCollapsible=false as |item|}}
+          {{#item.header}}
+            {{provider-place/drop/space space=space providerId=provider.entityId}}
+          {{/item.header}}
+        {{/list.item}}
+        {{/each}} 
+      {{/one-collapsible-list}}
+    {{/loading-container}}
+  </div>
   {{#unless (eq provider.status "offline")}}
     <hr>
     {{#if (eq provider.status "online")}}
-      {{!-- TODO button below is only a placeholder. Link-to needs to be fixed --}}
-      {{!-- {{#link-to "onezone.provider-redirect" provider.id
+      {{#link-to "onedata.sidebar.content.aspect" "redirect"
         class="btn btn-sm btn-go-to-files btn-primary"}}
         {{t "components.providerPlace.drop.goToFiles"}}
-      {{/link-to}} --}}
-      <button class="btn btn-go-to-files btn-primary">
-        {{t "components.providerPlace.drop.goToFiles"}}
-      </button>
+      {{/link-to}}
     {{else if (eq provider.status "pending")}}
       {{#bs-button type="primary" disabled=true class="btn-go-to-files"}}
         {{t "components.providerPlace.drop.pending"}}

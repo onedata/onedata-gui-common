@@ -74,7 +74,8 @@
         <div class="visible-xs-block">{{mobileAppLayoutHeader}}</div>
       </div>
     </div>
-    <div class="pull-right {{if globalCollapsibleToolbar.isToggleVisible "" " hidden"}}{{if showMobileSidebar " hidden-xs"}}">
+    <div class="pull-right {{if globalCollapsibleToolbar.isToggleVisible "" " hidden"}}
+      {{if (and showMobileSidebar (not globalCollapsibleToolbar.showInMobileSidebar)) " hidden-xs"}}">
       <button type="button" 
         class="navbar-toggle collapsible-toolbar-toggle collapsible-toolbar-global-toggle"
         onClick={{disable-bubbling (action "globalCollapsibleToolbarToggle")}}>
