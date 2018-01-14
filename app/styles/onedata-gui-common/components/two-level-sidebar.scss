@@ -18,8 +18,13 @@
       &:hover {
         background-color: $color-sidebar-item-active-bg;
       }
-      .one-icon {
+      > .one-icon {
+        position: absolute;
+        top: 0.55em;
         font-size: $menu-icon-font-size;
+      }
+      > .one-icon + * {
+        padding-left: 3.5em;
       }
       .status-toolbar {
         position: absolute;

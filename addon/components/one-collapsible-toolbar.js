@@ -149,11 +149,17 @@ export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
     this._super(...arguments);
     let {
       isGlobal,
+      showInMobileSidebar,
       globalCollapsibleToolbar,
-    } = this.getProperties('isGlobal', 'globalCollapsibleToolbar');
+    } = this.getProperties(
+      'isGlobal',
+      'globalCollapsibleToolbar',
+      'showInMobileSidebar'
+    );
     if (isGlobal) {
       globalCollapsibleToolbar.set('isToggleVisible', true);
     }
+    globalCollapsibleToolbar.set('showInMobileSidebar', !!showInMobileSidebar);
     next(this, () => {
       if (this.isDestroyed || this.isDestroying) {
         return;
@@ -173,10 +179,16 @@ export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
     let {
       isGlobal,
       globalCollapsibleToolbar,
-    } = this.getProperties('isGlobal', 'globalCollapsibleToolbar');
+      showInMobileSidebar,
+    } = this.getProperties(
+      'isGlobal',
+      'globalCollapsibleToolbar',
+      'showInMobileSidebar'
+    );
     if (isGlobal) {
       globalCollapsibleToolbar.set('isToggleVisible', false);
     }
+    globalCollapsibleToolbar.set('showInMobileSidebar', !!showInMobileSidebar);
     this.removeClickOutsideListener();
     this.removeOverflowDetectionListener();
   },
