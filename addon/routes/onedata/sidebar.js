@@ -47,7 +47,6 @@ export default Ember.Route.extend({
     return new Promise((resolve, reject) => {
       if (isValidTab) {
         let gettingCollection = sidebarResources.getCollectionFor(type);
-        const buttons = sidebarResources.getButtonsFor(type);
         gettingCollection
           .then(proxyCollection => {
             return isRecord(proxyCollection) ? proxyCollection :
@@ -57,7 +56,6 @@ export default Ember.Route.extend({
             resolve({
               resourceType: type,
               collection,
-              buttons,
             });
           })
           .catch(reject);
