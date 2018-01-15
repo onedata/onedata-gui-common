@@ -102,7 +102,6 @@ export default Ember.Component.extend({
           return {
             resourceType,
             collection,
-            buttons: sidebarResources.getButtonsFor(resourceType),
           };
         });
       return PromiseObject.create({ promise });
