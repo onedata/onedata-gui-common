@@ -2,7 +2,7 @@
 
 {{#if isCollectionEmpty}}
 
-  {{empty-collection-sidebar resourceType=resourceType}}
+  {{empty-collection-sidebar resourceType=resourceType showCreateButton=showCreateOnEmpty}}
 
 {{else}}
 
@@ -18,7 +18,9 @@
           {{#if firstLevelItemIcon}}
             {{one-icon icon=firstLevelItemIcon}} 
           {{/if}}
-          <span class="one-label">{{item.name}}</span>
+          {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
+            <span class="one-label">{{item.name}}</span>
+          {{/truncated-string}}
         {{/if}}
       {{else if (eq primarySection 'secondary')}}
         {{!-- TODO isActive secondary --}}

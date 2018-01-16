@@ -55,7 +55,7 @@ export default Ember.Route.extend({
           .then(collection => {
             resolve({
               resourceType: type,
-              collection
+              collection,
             });
           })
           .catch(reject);
