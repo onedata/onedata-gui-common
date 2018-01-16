@@ -8,12 +8,21 @@
  */
 
 import Ember from 'ember';
+import _ from 'lodash';
+import config from 'ember-get-config';
+import { get } from '@ember/object';
 
-// TODO copied from content route
+// TODO: copied from content route
+// FIXME: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
   'empty',
   'new',
+  'join',
 ];
+
+const {
+  onedataTabs
+} = config;
 
 function isSpecialResourceId(id) {
   return SPECIAL_IDS.indexOf(id) !== -1;
@@ -25,8 +34,18 @@ export default Ember.Route.extend({
   },
 
   redirect({ resourceId }) {
+    const sidebarModel = this.modelFor('onedata.sidebar');
+    /** @type {object} */
+    const tabModel = _.find(
+      onedataTabs,
+      t => get(t, 'id') === sidebarModel.resourceType
+    );
+
+    /** @type {string} */
+    const defaultAspect = tabModel && tabModel.defaultAspect || 'index';
+
     if (!isSpecialResourceId(resourceId)) {
-      this.transitionTo('onedata.sidebar.content.aspect', 'index');
+      this.transitionTo('onedata.sidebar.content.aspect', defaultAspect);
     }
   },
 

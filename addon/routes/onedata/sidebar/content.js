@@ -31,9 +31,11 @@ const {
   },
 } = Ember;
 
+// FIXME: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
   'empty',
   'new',
+  'join',
 ];
 
 function isSpecialResourceId(id) {

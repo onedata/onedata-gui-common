@@ -58,6 +58,15 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
       letter-spacing: $letter-spacing-base;
       margin: 0;
 
+      &.normal-case {
+        text-transform: none;
+      }
+
+      // FIXME: experimental
+      &.with-menu {
+        padding-right: 56px;
+      }
+            
       &+p {
         margin-top: 0.7em;
       }

@@ -48,6 +48,7 @@ export default Ember.Component.extend({
   sideMenu: service(),
   globalCollapsibleToolbar: service(),
   scrollState: service(),
+  router: service(),
 
   // TODO: too much relations: we got mainMenuItemChanged event
   currentTabId: computed.oneWay('mainMenu.currentItemId'),
@@ -72,7 +73,12 @@ export default Ember.Component.extend({
         return sidebarSecondaryItem.label;
       }
     }),
-  mobileAppLayoutState: MOBILE_APPLAYOUT_STATE.SIDEBAR,
+
+  mobileAppLayoutState: computed('router.currentRouteName', function () {
+    const name = this.get('router.currentRouteName');
+    return name === 'onedata.sidebar.index' ? MOBILE_APPLAYOUT_STATE.SIDEBAR :
+      MOBILE_APPLAYOUT_STATE.CONTENT;
+  }),
   showMobileSidebar: computed.equal('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR),
 
   sidenavContentComponent: computed('sidenavTabId', function () {
@@ -136,7 +142,6 @@ export default Ember.Component.extend({
       }
     });
     eventsBus.on('sidebar:select', (sidebarSecondaryItem) => {
-      this.set('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.CONTENT);
       this.$('.col-content').scrollTop(0);
       this.set('sidebarSecondaryItem', sidebarSecondaryItem);
     });
@@ -176,11 +181,10 @@ export default Ember.Component.extend({
       let sideMenu = this.get('sideMenu');
       sideMenu.close();
       this.set('sidenavTabId', null);
-      this.set('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR);
       return invokeAction(this, 'changeTab', itemId);
     },
     showMobileSidebar() {
-      return this.set('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR);
+      this.get('router').transitionTo('onedata.sidebar.index');
     },
     manageAccount() {
       invoke(this, 'mobileMenuItemChanged', 'users');

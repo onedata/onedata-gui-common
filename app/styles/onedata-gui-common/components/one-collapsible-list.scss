@@ -54,17 +54,5 @@
         transform: translateY(-50%);
       }
     }
-
-    @media (max-width: $mobile-view-breakpoint - 1px) {
-      .list-header-content {
-        right: $padding-base-horizontal;
-      }
-      .search-group {
-        margin: 0;
-        .input-group {
-          margin-top: $padding-large-horizontal;
-        }
-      }
-    }
   }
 }
