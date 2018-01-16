@@ -23,5 +23,8 @@
   {{/truncated-string}}
   <span class="action-icons">
     {{one-icon icon="rename" class="edit-icon" click=(action "startEdition")}}
+    {{#if editHint}}
+      {{one-tooltip title=editHint placement="bottom"}}
+    {{/if}}
   </span>
 {{/if}}

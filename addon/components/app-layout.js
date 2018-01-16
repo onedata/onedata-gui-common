@@ -39,6 +39,7 @@ export default Component.extend({
   sideMenu: service(),
   globalCollapsibleToolbar: service(),
   scrollState: service(),
+  router: service(),
 
   // TODO: too much relations: we got mainMenuItemChanged event
   currentTabId: oneWay('mainMenu.currentItemId'),
@@ -127,7 +128,6 @@ export default Component.extend({
       }
     });
     eventsBus.on('sidebar:select', (sidebarSecondaryItem) => {
-      this.set('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.CONTENT);
       this.$('.col-content').scrollTop(0);
       this.set('sidebarSecondaryItem', sidebarSecondaryItem);
     });
@@ -167,11 +167,10 @@ export default Component.extend({
       let sideMenu = this.get('sideMenu');
       sideMenu.close();
       this.set('sidenavTabId', null);
-      this.set('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR);
       return invokeAction(this, 'changeTab', itemId);
     },
     showMobileSidebar() {
-      return this.set('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR);
+      this.get('router').transitionTo('onedata.sidebar.index');
     },
     manageAccount() {
       invoke(this, 'mobileMenuItemChanged', 'users');

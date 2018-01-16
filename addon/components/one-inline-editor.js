@@ -27,6 +27,12 @@ export default Component.extend({
   value: undefined,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  editHint: undefined,
+
+  /**
    * Values used by input while edition.
    * @type {string}.
    */

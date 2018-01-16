@@ -341,6 +341,7 @@ $screen-phone:               $screen-xs-min !default;
 // Small screen / tablet
 //** Deprecated `$screen-sm` as of v3.0.1
 $screen-sm:                  768px !default;
+$screen-sm:                  def-screenSm() + 0px;
 $screen-sm-min:              $screen-sm !default;
 //** Deprecated `$screen-tablet` as of v3.0.1
 $screen-tablet:              $screen-sm-min !default;
@@ -348,7 +349,7 @@ $screen-tablet:              $screen-sm-min !default;
 // Medium screen / desktop
 //** Deprecated `$screen-md` as of v3.0.1
 $screen-md:                  992px !default;
-$screen-md:                  1320px;
+$screen-md:                  def-screenMd() + 0px;
 $screen-md-min:              $screen-md !default;
 //** Deprecated `$screen-desktop` as of v3.0.1
 $screen-desktop:             $screen-md-min !default;
@@ -356,7 +357,7 @@ $screen-desktop:             $screen-md-min !default;
 // Large screen / wide desktop
 //** Deprecated `$screen-lg` as of v3.0.1
 $screen-lg:                  1200px !default;
-$screen-lg:                  1680px;
+$screen-lg:                  def-screenLg() + 0px;
 $screen-lg-min:              $screen-lg !default;
 //** Deprecated `$screen-lg-desktop` as of v3.0.1
 $screen-lg-desktop:          $screen-lg-min !default;
@@ -390,16 +391,19 @@ $grid-float-breakpoint-max: ($grid-float-breakpoint - 1) !default;
 
 // Small screen / tablet
 $container-tablet:             (720px + $grid-gutter-width) !default;
+$container-tablet:             (500px + $grid-gutter-width);
 //** For `$screen-sm-min` and up.
 $container-sm:                 $container-tablet !default;
 
 // Medium screen / desktop
 $container-desktop:            (940px + $grid-gutter-width) !default;
+$container-desktop:            (740px + $grid-gutter-width);
 //** For `$screen-md-min` and up.
 $container-md:                 $container-desktop !default;
 
 // Large screen / wide desktop
 $container-large-desktop:      (1140px + $grid-gutter-width) !default;
+$container-large-desktop:      (740px + $grid-gutter-width);
 //** For `$screen-lg-min` and up.
 $container-lg:                 $container-large-desktop !default;
 

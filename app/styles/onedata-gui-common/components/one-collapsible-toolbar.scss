@@ -1,11 +1,12 @@
 .one-collapsible-toolbar {
   &.minimized {
     .collapsible-toolbar-toggle {
+      // FIXME: these styles are the same as in dots in toolbar
       .icon-dot {
         background-color: $main-text-color;
-        height: 0.4em;
-        width: 0.4em;
-        margin-bottom: 0.25em;
+        height: 4px;
+        width: 4px;
+        margin-bottom: 4px;
         border-radius: 100%;
       }
     }
@@ -30,4 +31,24 @@
   .dropdown-menu {
     font-size: $font-size-base;
   }
+}
+
+// FIXME: experimental styles
+.with-menu {
+  .collapsible-toolbar-toggle {
+    position: absolute;
+    // FIXME: temporary hack
+    transform: translateY(6px);
+    right: 0;
+    top: 0;
+    width: 30px;
+    padding: 8px;
+    margin: 16px;
+  }
+
+  .icon-dot {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
 }

@@ -25,9 +25,11 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
 
+// FIXME: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
   'empty',
   'new',
+  'join',
 ];
 
 function isSpecialResourceId(id) {
