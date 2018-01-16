@@ -1,0 +1,47 @@
+.one-inline-editor {
+  &:hover {
+    .one-label {
+      border: 1px solid $main-border-color;
+    }
+  }
+  &.while-edition, &:hover {
+    .action-icons {
+      visibility: visible;
+    }
+  }
+  .action-icons {
+    visibility: hidden;
+    font-size: 170%;
+    vertical-align: middle;
+    .one-icon {
+      position: relative;
+      top: 2px;
+    }
+  }
+  .form-control, .one-label {
+    display: inline-block;
+    width: 20em;
+    vertical-align: middle;
+  }
+  .one-label {
+    border: 1px solid transparent;
+    border-radius: $input-border-radius;
+    padding: $padding-base-vertical $padding-base-horizontal;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .save-icon:hover, .edit-icon:hover {
+    color: $color-one-mint;
+  }
+  .cancel-icon:hover {
+    color: $color-one-red;
+  }
+  .spin-spinner-block {
+    position: relative;
+    top: -2px;
+    left: 2px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
