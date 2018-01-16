@@ -7,6 +7,7 @@ import providersList from './onedata-gui-common/components/providers-list';
 import contentUsers from './onedata-gui-common/components/content-users';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
+import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
 
 const translations = {
   components: {
@@ -19,6 +20,7 @@ const translations = {
     contentUsers,
     supportSizeInfo,
     resourceLoadError,
+    oneInlineEditor,
   },
 };
 

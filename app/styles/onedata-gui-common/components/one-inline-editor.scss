@@ -44,4 +44,7 @@
     display: inline-block;
     vertical-align: middle;
   }
+  .empty-value {
+    color: $main-text-color-disabled;
+  }
 }

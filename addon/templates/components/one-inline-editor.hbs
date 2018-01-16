@@ -15,7 +15,11 @@
   </span>
 {{else}}
   {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
-    {{value}}
+    {{#if value}}
+      {{value}}
+    {{else}}
+      <span class="empty-value">{{t "components.oneInlineEditor.notSet"}}</span>
+    {{/if}}
   {{/truncated-string}}
   <span class="action-icons">
     {{one-icon icon="rename" class="edit-icon" click=(action "startEdition")}}
