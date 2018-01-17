@@ -101,7 +101,7 @@ export default Ember.Component.extend({
         .then(collection => {
           return {
             resourceType,
-            collection
+            collection,
           };
         });
       return PromiseObject.create({ promise });

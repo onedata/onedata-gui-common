@@ -28,12 +28,20 @@ export default Ember.Component.extend({
   ],
 
   sidebar: service(),
+  sidebarResources: service(),
 
   resourcesModel: null,
 
   currentItemId: readOnly('sidebar.currentItemId'),
 
-  buttons: readOnly('resourcesModel.buttons'),
+  /**
+   * @type {Ember.ComputedProperty<Array<object>>}
+   */
+  buttons: computed('resourcesModel.resourceType', function () {
+    const sidebarResources = this.get('sidebarResources');
+    const resourcesType = this.get('resourcesModel.resourceType');
+    return sidebarResources.getButtonsFor(resourcesType);
+  }),
 
   /**
    * If true, level-0 item should present a loading state

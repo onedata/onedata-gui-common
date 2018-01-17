@@ -13,4 +13,5 @@ export default Ember.Service.extend({
   isToggleVisible: false,
   toggleClassName: 'collapsible-toolbar-global-toggle',
   isDropdownOpened: false,
+  showInMobileSidebar: false,
 });
