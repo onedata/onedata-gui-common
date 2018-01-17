@@ -18,7 +18,7 @@ import { Promise } from 'rsvp';
 export default Component.extend({
   layout,
   classNames: ['one-inline-editor'],
-  classNameBindings: ['_inEditionMode:while-edition'],
+  classNameBindings: ['_inEditionMode:editor:static', '_whileSaving:saving'],
 
   /**
    * Input value (before edition).

@@ -1,27 +1,35 @@
 .one-inline-editor {
+  position: relative;
   &:hover {
     .one-label {
       border: 1px solid $main-border-color;
     }
   }
-  &.while-edition, &:hover {
+  &.static, &.editor.saving {
+    padding-right: 30px;
+  }
+  &.editor {
+    padding-right: 55px;
+  }
+  &.editor, &:hover {
     .action-icons {
       visibility: visible;
     }
   }
   .action-icons {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
     visibility: hidden;
     font-size: 170%;
-    vertical-align: middle;
     .one-icon {
       position: relative;
       top: 2px;
     }
   }
   .form-control, .one-label {
-    display: inline-block;
-    width: 20em;
-    vertical-align: middle;
+    display: block;
   }
   .one-label {
     border: 1px solid transparent;
@@ -37,14 +45,19 @@
   .cancel-icon:hover {
     color: $color-one-red;
   }
-  .spin-spinner-block {
-    position: relative;
-    top: -2px;
-    left: 2px;
-    display: inline-block;
-    vertical-align: middle;
-  }
   .empty-value {
     color: $main-text-color-disabled;
+  }
+  @media (max-width: $screen-xs-max) {
+    &.static, &.editor.saving {
+      padding-right: 40px;
+    }
+    &.editor {
+      padding-right: 75px;
+    }
+    .action-icons {
+      font-size: 250%;
+      visibility: visible;
+    }
   }
 }
