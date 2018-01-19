@@ -1,5 +1,5 @@
 /**
- * And editor component with "read" mode. At the beginning it displays `value`
+ * An editor component with "read" mode. At the beginning it displays `value`
  * as plain text. After click (direct on text or via 'start edition' button)
  * it changes to editor which triggers `onSave` action on edition approval.
  *
@@ -13,7 +13,7 @@ import Component from '@ember/component';
 import { next } from '@ember/runloop';
 import layout from '../templates/components/one-inline-editor';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { Promise } from 'rsvp';
+import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 export default Component.extend({
   layout,
@@ -50,9 +50,7 @@ export default Component.extend({
    * @param {string} newValue
    * @returns {Promise}
    */
-  onSave: () => new Promise(() => {
-    throw new Error('Not implemented')
-  }),
+  onSave: notImplementedReject,
 
   actions: {
     startEdition() {
