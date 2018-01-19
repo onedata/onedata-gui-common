@@ -3,6 +3,7 @@ export default [
   'name-conflict',
   'one-atlas',
   'one-dynamic-tree',
+  'one-inline-editor',
   'one-pie-chart',
   'one-tree',
   'one-way-toggle',
