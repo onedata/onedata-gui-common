@@ -1,0 +1,27 @@
+{{#if _inEditionMode}}
+  {{one-way-input _inputValue
+    disabled=_whileSaving
+    class="form-control"
+    update=(action (mut _inputValue))
+    onenter=(action "saveEdition")
+    onescape=(action "cancelEdition")}}
+  <span class="action-icons">
+    {{#if _whileSaving}}
+      {{spin-spinner-block sizeClass="xs"}}
+    {{else}}
+      {{one-icon icon="checked" class="save-icon" click=(action "saveEdition")}}
+      {{one-icon icon="ban-left" class="cancel-icon" click=(action "cancelEdition")}}
+    {{/if}}
+  </span>
+{{else}}
+  {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
+    {{#if value}}
+      {{value}}
+    {{else}}
+      <span class="empty-value">{{t "components.oneInlineEditor.notSet"}}</span>
+    {{/if}}
+  {{/truncated-string}}
+  <span class="action-icons">
+    {{one-icon icon="rename" class="edit-icon" click=(action "startEdition")}}
+  </span>
+{{/if}}
