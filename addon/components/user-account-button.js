@@ -7,18 +7,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
+import { on } from '@ember/object/evented';
+import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
 import { invokeAction } from 'ember-invoke-action';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
-
-const {
-  Component,
-  inject: { service },
-  computed,
-  on,
-  run: { next },
-} = Ember;
 
 export default Component.extend(ClickOutside, {
   layout,

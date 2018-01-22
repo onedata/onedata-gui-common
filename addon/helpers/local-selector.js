@@ -7,10 +7,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 export function localSelector([elementId, origSelector]) {
   return `#${elementId} ${origSelector}`;
 }
 
-export default Ember.Helper.helper(localSelector);
+export default helper(localSelector);

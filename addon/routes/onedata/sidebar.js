@@ -7,18 +7,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
+
+import { inject as service } from '@ember/service';
+import { Promise } from 'rsvp';
 import config from 'ember-get-config';
 import isRecord from 'onedata-gui-common/utils/is-record';
-
-const {
-  inject: {
-    service
-  },
-  RSVP: {
-    Promise
-  }
-} = Ember;
 
 const {
   onedataTabs
@@ -28,7 +22,7 @@ function isValidTab(tabName) {
   return onedataTabs.map(({ id }) => id).indexOf(tabName) !== -1;
 }
 
-export default Ember.Route.extend({
+export default Route.extend({
   mainMenu: service(),
   sidebar: service(),
   sidebarResources: service(),

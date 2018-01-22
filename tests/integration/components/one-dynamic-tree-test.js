@@ -1,3 +1,5 @@
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import {
   expect
 } from 'chai';
@@ -16,11 +18,6 @@ import {
   fillIn
 } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import Ember from 'ember';
-
-const {
-  A,
-} = Ember;
 
 const ERROR_MSG = 'error!';
 
@@ -102,9 +99,9 @@ describe('Integration | Component | one dynamic tree', function () {
         node22: true,
       }
     });
-    this.set('validations', Ember.Object.create({
+    this.set('validations', EmberObject.create({
       errors: [
-        Ember.Object.create({
+        EmberObject.create({
           attribute: 'values.node1.node11',
           message: ERROR_MSG
         })

@@ -5,16 +5,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-const {
-  run: {
-    next,
-  },
-  A,
-} = Ember;
+import { next } from '@ember/runloop';
+import { A } from '@ember/array';
 
-export default Ember.Component.extend({
+export default Component.extend({
   _isValid: null,
   checked: false,
   _searchQuery: '',

@@ -7,15 +7,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
-const {
-  inject: {
-    service
-  },
-} = Ember;
+import { inject as service } from '@ember/service';
 
-export default Ember.Route.extend({
+export default Route.extend({
   sidebar: service(),
 
   /**

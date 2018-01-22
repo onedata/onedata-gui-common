@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 const replaceRegex = new RegExp('\\.', 'g');
 
@@ -15,4 +15,4 @@ export function dotToDash([name] /*, hash*/ ) {
   return name.replace(replaceRegex, '-');
 }
 
-export default Ember.Helper.helper(dotToDash);
+export default helper(dotToDash);

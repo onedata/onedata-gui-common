@@ -1,16 +1,9 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { notEmpty } from '@ember/object/computed';
+import { observer, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-list-item';
 import { invoke, invokeAction } from 'ember-invoke-action';
-const {
-  computed,
-  computed: {
-    notEmpty
-  },
-  observer,
-  inject: {
-    service,
-  },
-} = Ember;
 
 /**
  * Item class of the collapsible list. For example of use case see 
@@ -24,7 +17,7 @@ const {
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'li',
   classNames: ['one-collapsible-list-item', 'collapse-animation', 'collapse-medium'],

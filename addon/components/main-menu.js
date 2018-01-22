@@ -1,18 +1,11 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { readOnly, reads } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/main-menu';
 
-const {
-  computed,
-  computed: {
-    readOnly
-  },
-  inject: {
-    service
-  }
-} = Ember;
-
 // singleton
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   mainMenu: service(),
   eventsBus: service(),
@@ -26,8 +19,8 @@ export default Ember.Component.extend({
   currentItemId: null,
   sidenavItemId: null,
 
-  isLoadingItem: computed.reads('mainMenu.isLoadingItem'),
-  isFailedItem: computed.reads('mainMenu.isFailedItem'),
+  isLoadingItem: reads('mainMenu.isLoadingItem'),
+  isFailedItem: reads('mainMenu.isFailedItem'),
 
   sidenavOpened: computed('sidenavItemId', function () {
     return this.get('sidenavItemId') != null;

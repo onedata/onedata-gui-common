@@ -20,16 +20,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
-const {
-  inject: {
-    service
-  },
-  RSVP: {
-    Promise
-  },
-} = Ember;
+import { inject as service } from '@ember/service';
+import { Promise } from 'rsvp';
 
 const SPECIAL_IDS = [
   'empty',
@@ -40,7 +34,7 @@ function isSpecialResourceId(id) {
   return SPECIAL_IDS.indexOf(id) !== -1;
 }
 
-export default Ember.Route.extend({
+export default Route.extend({
   sidebar: service(),
   eventsBus: service(),
   contentResources: service(),

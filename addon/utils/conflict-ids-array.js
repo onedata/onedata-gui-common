@@ -10,15 +10,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import ArrayProxy from '@ember/array/proxy';
+
+import { observer } from '@ember/object';
+import { isArray } from '@ember/array';
 
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
-
-const {
-  ArrayProxy,
-  observer,
-  isArray,
-} = Ember;
 
 export default ArrayProxy.extend({
   /**

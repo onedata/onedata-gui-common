@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 export function matchQuery([label, query] /*, hash*/ ) {
   return !query || new RegExp(query, 'i').test(label);
 }
 
-export default Ember.Helper.helper(matchQuery);
+export default helper(matchQuery);

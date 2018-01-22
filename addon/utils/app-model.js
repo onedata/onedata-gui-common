@@ -9,9 +9,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject from '@ember/object';
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   /**
    * Collection of objects representing main menu items
    * To configure main menu items, add `onedataTabs` key to App config like this:

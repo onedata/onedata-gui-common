@@ -1,14 +1,8 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/side-menu';
 import { PerfectScrollbarMixin } from 'ember-perfect-scrollbar';
 import EmberSideMenu from 'ember-side-menu/components/side-menu';
-
-const {
-  inject: {
-    service,
-  },
-  observer,
-} = Ember;
 
 export default EmberSideMenu.extend(PerfectScrollbarMixin, {
   layout,

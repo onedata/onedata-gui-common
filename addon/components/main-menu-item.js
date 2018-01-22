@@ -1,14 +1,9 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { capitalize } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';
 
-const {
-  computed,
-  String: {
-    capitalize
-  }
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'li',
   classNames: ['main-menu-item', 'one-list-item'],

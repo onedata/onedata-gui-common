@@ -7,17 +7,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
+
+import { A } from '@ember/array';
+import { Promise } from 'rsvp';
 import AppModel from 'onedata-gui-common/utils/app-model';
 import config from 'ember-get-config';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import _object from 'lodash/object';
-
-const {
-  Route,
-  A,
-  RSVP: { Promise },
-} = Ember;
 
 const {
   onedataTabs

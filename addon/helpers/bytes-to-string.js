@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 import _ from 'lodash';
 import bytesToStringUtil from 'onedata-gui-common/utils/bytes-to-string';
 
@@ -15,4 +15,4 @@ export function bytesToString([bytes], options) {
   return bytesToStringUtil(bytes, _.assign({ iecFormat: true }, options));
 }
 
-export default Ember.Helper.helper(bytesToString);
+export default helper(bytesToString);

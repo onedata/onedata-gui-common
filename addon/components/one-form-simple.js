@@ -21,19 +21,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { merge } from '@ember/polyfills';
+
+import ObjectProxy from '@ember/object/proxy';
+import { assert } from '@ember/debug';
+import { readOnly } from '@ember/object/computed';
+import EmberObject, { observer, computed } from '@ember/object';
+import { on } from '@ember/object/evented';
+import { Promise } from 'rsvp';
 import layout from 'onedata-gui-common/templates/components/one-form-simple';
 import OneForm from 'onedata-gui-common/components/one-form';
 import { invoke, invokeAction } from 'ember-invoke-action';
-
-const {
-  assert,
-  computed,
-  computed: { readOnly },
-  observer,
-  on,
-  RSVP: { Promise },
-} = Ember;
 
 export default OneForm.extend({
   layout,
@@ -49,7 +47,7 @@ export default OneForm.extend({
    * @abstract
    * @type {Ember.Object}
    */
-  values: Ember.Object.create(),
+  values: EmberObject.create(),
 
   currentFieldsPrefix: ['main'],
 
@@ -58,7 +56,7 @@ export default OneForm.extend({
    * @type {Array.EmberObject}
    */
   allFields: computed('fields', function () {
-    let fields = this.get('fields').map(f => Ember.Object.create(f));
+    let fields = this.get('fields').map(f => EmberObject.create(f));
     fields.filter(field => !field.get('name').startsWith('main.'))
       .forEach(field => field.set('name', 'main.' + field.get('name')));
     return fields;
@@ -68,7 +66,7 @@ export default OneForm.extend({
 
   allFieldsValues: computed('_values', function () {
     let values = this.get('_values');
-    return Ember.Object.create({
+    return EmberObject.create({
       main: values,
     });
   }),
@@ -149,9 +147,9 @@ export default OneForm.extend({
   },
 
   _getValuesClone() {
-    let valuesProperty = Ember.ObjectProxy.detectInstance(this.get('values')) ?
+    let valuesProperty = ObjectProxy.detectInstance(this.get('values')) ?
       'values.content' : 'values';
-    return Ember.merge(Ember.Object.create(), this.get(valuesProperty));
+    return merge(EmberObject.create(), this.get(valuesProperty));
   },
 
   updateValues() {

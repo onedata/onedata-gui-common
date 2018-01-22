@@ -14,13 +14,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
 
-const {
-  computed,
-} = Ember;
+import EmberObject, { computed } from '@ember/object';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * Tree fields.
    * @type {Ember.Object}
@@ -59,7 +57,7 @@ export default Ember.Mixin.create({
       let name = parentName + (parentName ? '.' : '') + node.name;
       if (!node.subtree) {
         if (node.field) {
-          let field = Ember.Object.create(node.field);
+          let field = EmberObject.create(node.field);
           field.setProperties({
             _isField: true,
             name: name,
@@ -71,7 +69,7 @@ export default Ember.Mixin.create({
           return undefined;
         }
       } else {
-        let fields = Ember.Object.create();
+        let fields = EmberObject.create();
         node.subtree.forEach((subnode) => {
           let subnodeFields = prepareNodeFields(subnode, name);
           if (subnodeFields !== undefined) {

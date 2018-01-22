@@ -5,17 +5,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-const {
-  computed,
-  computed: {
-    oneWay,
-  },
-  A,
-} = Ember;
+import { computed } from '@ember/object';
+import { oneWay } from '@ember/object/computed';
+import { A } from '@ember/array';
 
-export default Ember.Component.extend({
+export default Component.extend({
   // fake spaces
   spaces: A([{
     name: 'space1',

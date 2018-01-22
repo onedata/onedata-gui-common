@@ -23,20 +23,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { empty } from '@ember/object/computed';
+
+import Component from '@ember/component';
+import EmberObject, { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form';
 import config from 'ember-get-config';
-
-const {
-  computed,
-  observer
-} = Ember;
 
 const {
   layoutConfig
 } = config;
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   layoutConfig,
 
@@ -125,7 +123,7 @@ export default Ember.Component.extend({
       allFieldsValues,
       currentFieldsPrefix
     } = this.getProperties('allFieldsValues', 'currentFieldsPrefix');
-    let values = Ember.Object.create({});
+    let values = EmberObject.create({});
     currentFieldsPrefix
       .forEach(prefix => values.set(prefix, allFieldsValues.get(prefix)));
     return values;
@@ -152,7 +150,7 @@ export default Ember.Component.extend({
   /**
    * Validity status of values from the selected prefix.
    */
-  isValid: computed.empty('errors'),
+  isValid: empty('errors'),
 
   currentFieldsPrefixObserver: observer('currentFieldsPrefix', function () {
     this.recalculateErrors();

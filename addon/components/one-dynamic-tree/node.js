@@ -8,23 +8,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { readOnly } from '@ember/object/computed';
+import EmberObject, { observer, computed } from '@ember/object';
+import { on } from '@ember/object/evented';
 import layout from '../../templates/components/one-dynamic-tree/node';
 import DisabledPaths from 'onedata-gui-common/mixins/components/one-dynamic-tree/disabled-paths';
 import { dotToDash } from 'onedata-gui-common/helpers/dot-to-dash';
 
-const {
-  computed,
-  computed: {
-    readOnly,
-  },
-  observer,
-  on,
-} = Ember;
-
 const CHECKBOX_SELECTION_PATH_REPLACE_REGEX = new RegExp('\\.', 'g');
 
-export default Ember.Component.extend(DisabledPaths, {
+export default Component.extend(DisabledPaths, {
   layout,
   tagName: '',
 
@@ -110,7 +105,7 @@ export default Ember.Component.extend(DisabledPaths, {
    * @type {Ember.Object}
    */
   _selectCheckboxesField: computed('_path', function () {
-    return Ember.Object.create({
+    return EmberObject.create({
       name: this.get('_path'),
       type: 'checkbox',
       threeState: true,

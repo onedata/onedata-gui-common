@@ -1,30 +1,23 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
+import { scheduleOnce } from '@ember/runloop';
+import { htmlSafe } from '@ember/string';
+import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidenav';
 import PerfectScrollbar from 'npm:perfect-scrollbar';
-
-const {
-  inject,
-  run: {
-    scheduleOnce
-  },
-  String: {
-    htmlSafe
-  },
-  observer
-} = Ember;
 
 // TODO debug PerfectScrollbar and consider using PerfectScrollbarMixin
 
 /**
  * Based on: https://www.w3schools.com/howto/howto_js_sidenav.asp
  */
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['one-sidenav', 'sidenav'],
   classNameBindings: ['isOpened:in'],
   attributeBindings: ['style'],
 
-  eventsBus: inject.service(),
+  eventsBus: service(),
 
   isOpened: false,
 

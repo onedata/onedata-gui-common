@@ -20,7 +20,9 @@
  * MIT License
  */
 
-import { Error as EmberError } from 'ember-debug';
+import { not, or } from '@ember/object/computed';
+
+import EmberError from '@ember/error';
 import { computed, setProperties, get } from '@ember/object';
 import Mixin from '@ember/object/mixin';
 
@@ -46,7 +48,7 @@ export default Mixin.create({
     @default true
     @public
   */
-  isPending: computed.not('isSettled').readOnly(),
+  isPending: not('isSettled').readOnly(),
 
   /**
     Once the proxied promise has settled this will become `true`.
@@ -54,7 +56,7 @@ export default Mixin.create({
     @default false
     @public
   */
-  isSettled: computed.or('isRejected', 'isFulfilled').readOnly(),
+  isSettled: or('isRejected', 'isFulfilled').readOnly(),
 
   /**
     Will become `true` if the proxied promise is rejected.

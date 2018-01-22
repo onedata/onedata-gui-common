@@ -20,7 +20,11 @@
 
 /* global Chartist */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
+import { A } from '@ember/array';
+import { debounce } from '@ember/runloop';
 import layout from '../templates/components/one-pie-chart';
 import _ from 'lodash';
 import centeredText from 'onedata-gui-common/utils/chartist/centered-text';
@@ -29,18 +33,10 @@ import tooltip from 'onedata-gui-common/utils/chartist/tooltip'
 import customCss from 'onedata-gui-common/utils/chartist/custom-css';
 import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 
-const {
-  computed,
-  A,
-  run: {
-    debounce,
-  },
-} = Ember;
-
 const INACTIVE_SERIES_OPACITY = 0.3;
 const SERIES_HOVER_TRANSITION_TIME = 0.3;
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['one-pie-chart'],
   classNameBindings: ['_valuesSum::zero-chart'],

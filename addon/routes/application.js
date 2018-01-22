@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
@@ -13,7 +13,7 @@ const FAVICON_HTML =
 <meta name="theme-color" content="#363636">
   `;
 
-export default Ember.Route.extend(ApplicationRouteMixin, {
+export default Route.extend(ApplicationRouteMixin, {
   beforeModel() {
     this._super(...arguments);
     this.addFavicon();

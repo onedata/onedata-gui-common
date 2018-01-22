@@ -1,14 +1,11 @@
+import EmberObject from '@ember/object';
+import { A } from '@ember/array';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
-import Ember from 'ember';
-
-const {
-  A,
-} = Ember;
 
 describe('Integration | Component | support size info', function () {
   setupComponentTest('support-size-info', {
@@ -17,13 +14,13 @@ describe('Integration | Component | support size info', function () {
 
   beforeEach(function () {
     this.set('data', A([
-      Ember.Object.create({
+      EmberObject.create({
         id: '1',
         label: 'Provider1',
         value: 1048576,
         color: 'red',
       }),
-      Ember.Object.create({
+      EmberObject.create({
         id: '2',
         label: 'Provider2',
         value: 1048576,

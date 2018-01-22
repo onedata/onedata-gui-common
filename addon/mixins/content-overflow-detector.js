@@ -15,13 +15,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
 
-const {
-  run,
-} = Ember;
+import { run } from '@ember/runloop';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * Element, whose overflow is being checked
    * To inject.
