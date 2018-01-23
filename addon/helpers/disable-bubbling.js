@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 export function disableBubbling([action]) {
   return function (event) {
@@ -15,4 +15,4 @@ export function disableBubbling([action]) {
     return action(event);
   };
 }
-export default Ember.Helper.helper(disableBubbling);
+export default helper(disableBubbling);

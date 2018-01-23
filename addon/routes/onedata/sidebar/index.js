@@ -7,19 +7,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
-const {
-  inject: { service },
-  get,
-} = Ember;
+import { inject as service } from '@ember/service';
+import { get } from '@ember/object';
 
 function getDefaultResourceId(collection) {
   let defaultResource = collection.objectAt(0);
   return get(defaultResource, 'id');
 }
 
-export default Ember.Route.extend({
+export default Route.extend({
   globalNotify: service(),
 
   model() {

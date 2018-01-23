@@ -8,15 +8,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
 import { dotToDash } from 'onedata-gui-common/helpers/dot-to-dash';
 import layout from '../../../templates/components/one-dynamic-tree/node/field';
 
-const {
-  computed,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: '',
 

@@ -1,11 +1,7 @@
+import { run } from '@ember/runloop';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import Ember from 'ember';
 import Looper from 'onedata-gui-common/utils/looper';
-
-const {
-  run
-} = Ember;
 
 describe('Unit | Utility | looper', function () {
   it('invokes registered events in given interval', function (done) {

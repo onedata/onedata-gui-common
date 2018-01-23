@@ -7,9 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Service from '@ember/service';
 
-export default Ember.Service.extend({
+export default Service.extend({
   isToggleVisible: false,
   toggleClassName: 'collapsible-toolbar-global-toggle',
   isDropdownOpened: false,

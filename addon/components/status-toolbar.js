@@ -28,10 +28,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/status-toolbar';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['status-toolbar', 'clearfix'],
 });

@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Service from '@ember/service';
 
 function aliasToShow(type) {
   return function (message, options) {
@@ -6,7 +6,7 @@ function aliasToShow(type) {
   };
 }
 
-export default Ember.Service.extend({
+export default Service.extend({
   opened: false,
   type: null,
   text: null,

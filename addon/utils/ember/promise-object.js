@@ -16,11 +16,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import ObjectProxy from '@ember/object/proxy';
 
-const {
-  ObjectProxy,
-  PromiseProxyMixin,
-} = Ember;
+import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 
 export default ObjectProxy.extend(PromiseProxyMixin);

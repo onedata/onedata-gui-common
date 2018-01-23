@@ -13,14 +13,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { set, get } from '@ember/object';
+
 import conflictIds from 'onedata-gui-common/utils/conflict-ids';
 import _ from 'lodash';
-
-const {
-  get,
-  set,
-} = Ember;
 
 /**
  * Assigns a `conflictLabel` property for each record in array.

@@ -31,21 +31,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { debounce, next } from '@ember/runloop';
+import { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-switchable-popover-modal';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import { invokeAction, invoke } from 'ember-invoke-action';
+import $ from 'jquery';
 
-const {
-  computed,
-  run: {
-    next,
-    debounce,
-  },
-  observer,
-} = Ember;
-
-export default Ember.Component.extend(ClickOutside, {
+export default Component.extend(ClickOutside, {
   layout,
   /**
    * Status of component visibility. If not boolean, then component 
@@ -194,7 +189,7 @@ export default Ember.Component.extend(ClickOutside, {
    * used after each _triggersConfiguration change.
    * @type {Array.Object}
    */
-  _triggersConfigurationOld: [],
+  _triggersConfigurationOld: Object.freeze([]),
 
   /**
    * Property for testing purposes

@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import $ from 'jquery';
 
 describe('Integration | Component | one collapsible toolbar', function () {
   setupComponentTest('one-collapsible-toolbar', {

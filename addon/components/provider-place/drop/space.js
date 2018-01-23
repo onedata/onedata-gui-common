@@ -8,11 +8,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop/space';
 import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
 
-export default Ember.Component.extend(ProviderSpace, {
+export default Component.extend(ProviderSpace, {
   layout,
   tagName: 'div',
   classNames: ['provider-place-drop-space']

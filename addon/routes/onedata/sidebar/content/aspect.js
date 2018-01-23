@@ -7,25 +7,20 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
-const {
-  inject: {
-    service
-  },
-  Route,
-} = Ember;
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
   sidebar: service(),
 
   /**
-   * @param {object} { aspectId: string } - aspectId is a name of some "aspect"
+   * @param {object} { aspect_id: string } - aspect_id is a name of some "aspect"
    *  of resource to present. E.g. it can be storages (aspect) list view
    *  for cluster (resource)
    * @returns {object} { resource: Model, aspectId: string }
    */
-  model({ aspectId }) {
+  model({ aspect_id: aspectId }) {
     let { resource } = this.modelFor('onedata.sidebar.content');
     return { resource, aspectId };
   },

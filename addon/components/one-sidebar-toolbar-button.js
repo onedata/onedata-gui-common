@@ -7,8 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { readOnly } from '@ember/object/computed';
 import Component from '@ember/component';
-import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar-toolbar-button';
 
 export default Component.extend({
@@ -24,22 +24,22 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  title: computed.readOnly('buttonModel.title'),
+  title: readOnly('buttonModel.title'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  icon: computed.readOnly('buttonModel.icon'),
+  icon: readOnly('buttonModel.icon'),
 
   /**
    * @type {Ember.ComputedProperty<function>}
    */
-  action: computed.readOnly('buttonModel.action'),
+  action: readOnly('buttonModel.action'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  tip: computed.readOnly('buttonModel.tip'),
+  tip: readOnly('buttonModel.tip'),
 
   click() {
     const action = this.get('action');

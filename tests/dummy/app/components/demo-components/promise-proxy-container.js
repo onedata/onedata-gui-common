@@ -5,12 +5,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import { Promise } from 'rsvp';
 import { run } from '@ember/runloop';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
-export default Ember.Component.extend({
+export default Component.extend({
   resolvingProxy: undefined,
   rejectingProxy: undefined,
 

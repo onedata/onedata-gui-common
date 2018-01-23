@@ -10,10 +10,10 @@
 
 // Original implementation: http://stackoverflow.com/a/15002755
 
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
 import plainCopy from 'onedata-gui-common/utils/plain-copy';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   plainCopy: function () {
     return plainCopy(this);
   },

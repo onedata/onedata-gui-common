@@ -5,16 +5,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   // fake names
-  nonConflictName: {
+  nonConflictName: Object.freeze({
     name: 'someName',
-  },
+  }),
 
-  conflictName: {
+  conflictName: Object.freeze({
     name: 'someName',
     conflictLabel: 'conflictLabel',
-  },
+  }),
 });

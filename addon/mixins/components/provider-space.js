@@ -7,17 +7,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
 
-const {
-  computed,
-  computed: {
-    alias,
-  },
-  get,
-} = Ember;
+import { alias } from '@ember/object/computed';
+import { get, computed } from '@ember/object';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * Provider ID
    * To inject.

@@ -7,24 +7,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { inject as service } from '@ember/service';
+import { readOnly, equal } from '@ember/object/computed';
+import { isEmpty } from '@ember/utils';
+import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
 import { invokeAction } from 'ember-invoke-action';
 import _ from 'lodash';
 
-const {
-  inject: {
-    service
-  },
-  computed: {
-    readOnly
-  },
-  computed,
-  isEmpty,
-  get,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['two-level-sidebar'],
 
@@ -85,7 +78,7 @@ export default Ember.Component.extend({
 
   resourceType: readOnly('model.resourceType'),
 
-  isCollectionEmpty: computed.equal('model.collection.length', 0),
+  isCollectionEmpty: equal('model.collection.length', 0),
 
   primaryItemId: computed('sidebar.itemPath.[]', function () {
     return this.get('sidebar.itemPath').objectAt(0);

@@ -7,17 +7,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { or } from '@ember/object/computed';
+
+import { computed } from '@ember/object';
+import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-way-toggle';
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
-
-const {
-  computed,
-  run: {
-    next,
-  },
-} = Ember;
 
 const THREE_STATES = [false, 2, true];
 const THREE_STATES_CLASSES = ['', 'maybe', 'checked'];
@@ -92,7 +88,7 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    * Internal lock of toggle
    * @type {boolean}
    */
-  _lockToggle: computed.or('isReadOnly', '_isInProgress'),
+  _lockToggle: or('isReadOnly', '_isInProgress'),
 
   mouseDown() {
     // prevent from selected text drag-n-drop while panMove

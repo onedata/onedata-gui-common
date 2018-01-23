@@ -25,6 +25,7 @@
 /* global Chartist */
 
 import _ from 'lodash';
+import $ from 'jquery';
 
 const DEFAULT_LINE_LENGTH = '100';
 const DEFAULT_LINE_POINTER_LENGTH = '50%';
