@@ -26,7 +26,7 @@ export default Component.extend({
    * Spaces list sort order
    * @type {Array<string>}
    */
-  _spacesSorting: ['isDefault:desc', 'name'],
+  _spacesSorting: Object.freeze(['isDefault:desc', 'name']),
 
   /**
    * One-way alias to space list record
@@ -44,9 +44,7 @@ export default Component.extend({
    * True if data for each space of provider is loaded (eg. support info)
    * @type {Ember.Computed<boolean>}
    */
-  _spacesLoaded: computed(
-    '_spaceList.isLoaded',
-    '_spaceList.list.isFulfilled',
+  _spacesLoaded: computed('_spaceList.{isLoaded,list.isFulfilled}',
     function _getSpacesLoaded() {
       const _spaceList = this.get('_spaceList');
       return !!(

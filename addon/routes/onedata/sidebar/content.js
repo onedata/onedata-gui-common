@@ -40,7 +40,7 @@ export default Route.extend({
   contentResources: service(),
 
   beforeModel(transition) {
-    const resourceId = transition.params['onedata.sidebar.content'].resourceId;
+    const resourceId = transition.params['onedata.sidebar.content'].resource_id;
     const {
       sidebar,
       eventsBus,
@@ -50,7 +50,7 @@ export default Route.extend({
     eventsBus.trigger('one-sidenav:close', '#sidenav-sidebar');
   },
 
-  model({ resourceId }) {
+  model({ resource_id: resourceId }) {
     // TODO: validate and use resourceType
     let {
       resourceType

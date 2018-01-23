@@ -25,9 +25,16 @@ export default Component.extend({
   itemId: readOnly('item.id'),
   isActive: false,
 
+  /**
+   * @type {function}
+   * @param {string} itemId
+   * @returns {undefined}
+   */
+  changePrimaryItemId: () => {},
+
   actions: {
     changePrimaryItemId(itemId) {
-      this.sendAction('changePrimaryItemId', itemId);
+      this.get('changePrimaryItemId')(itemId);
     }
   }
 });

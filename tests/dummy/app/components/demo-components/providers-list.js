@@ -62,7 +62,7 @@ export default Component.extend({
   selectedSpace: oneWay('spaces.firstObject'),
 
   // fake provider actions
-  providerActions: [{
+  providerActions: Object.freeze([{
       text: 'Action',
       action: () => {},
       class: 'action1-trigger',
@@ -72,5 +72,5 @@ export default Component.extend({
       action: () => {},
       class: 'action2-trigger',
     },
-  ],
+  ]),
 });

@@ -38,6 +38,7 @@ import { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-switchable-popover-modal';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import { invokeAction, invoke } from 'ember-invoke-action';
+import $ from 'jquery';
 
 export default Component.extend(ClickOutside, {
   layout,
@@ -188,7 +189,7 @@ export default Component.extend(ClickOutside, {
    * used after each _triggersConfiguration change.
    * @type {Array.Object}
    */
-  _triggersConfigurationOld: [],
+  _triggersConfigurationOld: Object.freeze([]),
 
   /**
    * Property for testing purposes

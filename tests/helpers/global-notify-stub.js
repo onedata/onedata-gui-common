@@ -1,7 +1,12 @@
 import Service from '@ember/service';
 
 export default Service.extend({
-  infoMessages: [],
+  infoMessages: undefined,
+
+  init() {
+    this._super(...arguments);
+    this.set('infoMessages', []);
+  },
 
   info(message) {
     this.get('infoMessages').push(message);

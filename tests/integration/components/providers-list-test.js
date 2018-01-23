@@ -7,6 +7,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import _ from 'lodash';
+import $ from 'jquery';
 
 describe('Integration | Component | providers list', function () {
   setupComponentTest('providers-list', {

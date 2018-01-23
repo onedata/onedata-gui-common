@@ -27,7 +27,6 @@ import ObjectProxy from '@ember/object/proxy';
 import { assert } from '@ember/debug';
 import { readOnly } from '@ember/object/computed';
 import EmberObject, { observer, computed } from '@ember/object';
-import { on } from '@ember/object/evented';
 import { Promise } from 'rsvp';
 import layout from 'onedata-gui-common/templates/components/one-form-simple';
 import OneForm from 'onedata-gui-common/components/one-form';
@@ -49,7 +48,7 @@ export default OneForm.extend({
    */
   values: EmberObject.create(),
 
-  currentFieldsPrefix: ['main'],
+  currentFieldsPrefix: Object.freeze(['main']),
 
   /**
    * Will be initialized from injected ``fields``
@@ -156,9 +155,9 @@ export default OneForm.extend({
     this.notifyPropertyChange('_values');
   },
 
-  isValidChanged: on('init', observer('isValid', function () {
+  isValidChanged: observer('isValid', function () {
     invoke(this, 'allValidChanged', this.get('isValid'));
-  })),
+  }),
 
   actions: {
     /**

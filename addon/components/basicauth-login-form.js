@@ -34,6 +34,12 @@ export default Component.extend({
    */
   backButtonAction: undefined,
 
+  /**
+   * @type {function}
+   * @returns {undefined}
+   */
+  authenticationStarted: () => {},
+
   didInsertElement() {
     this._super(...arguments);
     this.$('.login-username').focus();
@@ -78,7 +84,7 @@ export default Component.extend({
     submitLogin(username, password) {
       let session = this.get('session');
       this.onLoginStarted();
-      this.sendAction('authenticationStarted');
+      this.get('authenticationStarted')();
 
       let loginCalling = session.authenticate('authenticator:application',
         username,

@@ -19,6 +19,13 @@ export default Component.extend({
   currentItemId: null,
   sidenavItemId: null,
 
+  /**
+   * @type {function}
+   * @param {string} id
+   * @return {undefined}
+   */
+  itemClicked: () => {},
+
   isLoadingItem: reads('mainMenu.isLoadingItem'),
   isFailedItem: reads('mainMenu.isFailedItem'),
 
@@ -32,7 +39,7 @@ export default Component.extend({
     itemClicked({
       id
     }) {
-      this.sendAction('itemClicked', id);
+      this.get('itemClicked')(id);
     }
   }
 });

@@ -110,7 +110,7 @@ export default Component.extend({
    * While validation all values from these prefixes are being checked.
    * Example: ``['group1', 'group2']``
    */
-  currentFieldsPrefix: [],
+  currentFieldsPrefix: Object.freeze([]),
 
   /**
    * Values of fields in current prefixes. Used in html form.

@@ -9,7 +9,7 @@ import Component from '@ember/component';
 
 export default Component.extend({
   // fake provider
-  provider: {
+  provider: Object.freeze({
     id: '1',
     name: 'provider1',
     status: 'online',
@@ -29,5 +29,5 @@ export default Component.extend({
         '2': 2097152,
       }
     }],
-  },
+  }),
 });

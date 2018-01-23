@@ -8,7 +8,7 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  treeDefinition: [{
+  treeDefinition: Object.freeze([{
       content: 'Node 1',
       subtree: [{
         content: 'Node 1.1',
@@ -76,7 +76,7 @@ export default Component.extend({
         }]
       }]
     }
-  ],
+  ]),
 
   _searchQuery: '',
 

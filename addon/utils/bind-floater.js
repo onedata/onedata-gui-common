@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /**
  * Makes an element fixed positioned, with coordinates (left, top) of its parent.
  *

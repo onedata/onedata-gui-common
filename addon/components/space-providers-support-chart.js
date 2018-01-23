@@ -34,7 +34,7 @@ export default OnePieChart.extend({
    * To inject.
    * @type {Object}
    */
-  providersColors: {},
+  providersColors: Object.freeze({}),
 
   /**
    * Data for OnePieChart

@@ -12,6 +12,7 @@ import Component from '@ember/component';
 
 import { scheduleOnce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/truncated-string';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,

@@ -18,6 +18,7 @@ import {
   fillIn
 } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import $ from 'jquery';
 
 const ERROR_MSG = 'error!';
 

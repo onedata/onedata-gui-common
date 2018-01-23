@@ -72,7 +72,7 @@ export default Component.extend({
    * callback as an argument.
    * @type {Array.Object}
    */
-  providerActions: [],
+  providerActions: Object.freeze([]),
 
   init() {
     this._super(...arguments);

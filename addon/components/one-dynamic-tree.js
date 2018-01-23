@@ -100,7 +100,6 @@ import { empty } from '@ember/object/computed';
 
 import Component from '@ember/component';
 import { observer, computed } from '@ember/object';
-import { on } from '@ember/object/evented';
 import { A } from '@ember/array';
 import layout from '../templates/components/one-dynamic-tree';
 import FieldsTree from 'onedata-gui-common/mixins/components/one-dynamic-tree/fields-tree';
@@ -119,7 +118,7 @@ export default Component.extend(
      * To inject.
      * @type {Array.TreeNode}
      */
-    definition: [],
+    definition: Object.freeze([]),
 
     /**
      * Values changed action. It will get tree values 
@@ -165,13 +164,11 @@ export default Component.extend(
      */
     _isValid: empty('_errors'),
 
-    _fieldsObserver: on('init',
-      observer('_fieldsTree', 'disabledFieldsPaths.[]', function () {
-        this._buildCheckboxSelectionTree();
-        this._resetDisabledFields();
-        this.valuesHaveChanged();
-      })
-    ),
+    _fieldsObserver: observer('_fieldsTree', 'disabledFieldsPaths.[]', function () {
+      this._buildCheckboxSelectionTree();
+      this._resetDisabledFields();
+      this.valuesHaveChanged();
+    }),
 
     _valuesPrepareObserver: observer('definition', function () {
       let definition = this.get('definition');
@@ -185,6 +182,7 @@ export default Component.extend(
         this.set('disabledFieldsPaths', A());
       }
       this.reset();
+      this._fieldsObserver();
     },
 
     /**

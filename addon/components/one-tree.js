@@ -132,7 +132,7 @@ export default Component.extend({
    * Injected by root tree through parent trees.
    * @type {Array.*}
    */
-  _activeSubtreeKeys: [],
+  _activeSubtreeKeys: Object.freeze([]),
 
   /**
    * If true, all parent trees are expanded and visible to user. 

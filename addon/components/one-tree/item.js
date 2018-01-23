@@ -108,7 +108,7 @@ export default Component.extend({
    * _activeSubtreeKeys value.
    * @type {Array.*}
    */
-  _activeSubtreeKeysOld: [],
+  _activeSubtreeKeysOld: Object.freeze([]),
 
   /**
    * If true, this tree was recently expanded.

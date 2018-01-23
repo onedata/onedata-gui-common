@@ -50,7 +50,7 @@ export default Component.extend({
    * List of selected list items
    * @type {Array.*}
    */
-  _selectedItemValues: [],
+  _selectedItemValues: Object.freeze([]),
 
   /**
    * If true, item has a checkbox

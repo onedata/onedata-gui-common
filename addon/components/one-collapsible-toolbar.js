@@ -38,6 +38,7 @@ import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import ContentOverflowDetector from 'onedata-gui-common/mixins/content-overflow-detector';
+import $ from 'jquery';
 
 export default Component.extend(ClickOutside, ContentOverflowDetector, {
   layout,

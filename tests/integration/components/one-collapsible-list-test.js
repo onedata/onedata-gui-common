@@ -5,6 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import $ from 'jquery';
 
 describe('Integration | Component | one collapsible list', function () {
   setupComponentTest('one-collapsible-list', {

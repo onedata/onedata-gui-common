@@ -75,6 +75,7 @@
     "ember-spin-button": "git+https://github.com/kliput/ember-spin-button.git#4ff0f820b2eafd00775bc81e408898f657112fd3",
     "ember-spin-spinner": "0.3.3",
     "ember-truth-helpers": "2.0.0",
+    "eslint-plugin-ember": "5.0.3",
     "loader.js": "4.6.0",
     "round10": "1.0.3",
     "sinon": "4.2.0",

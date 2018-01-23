@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+import $ from 'jquery';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 

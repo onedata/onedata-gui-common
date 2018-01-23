@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-image';
+import $ from 'jquery';
 
 /**
  * Inserts an image with optional - dynamicly sized - text.

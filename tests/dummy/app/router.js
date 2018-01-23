@@ -8,7 +8,7 @@ const Router = EmberRouter.extend({
 
 Router.map(function () {
   this.route('index-dummy', { path: '/' }, function () {
-    this.route('component', { path: '/component/:componentName' });
+    this.route('component', { path: '/component/:component_name' });
   })
 });
 

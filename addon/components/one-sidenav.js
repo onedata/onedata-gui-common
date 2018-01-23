@@ -5,6 +5,7 @@ import { htmlSafe } from '@ember/string';
 import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidenav';
 import PerfectScrollbar from 'npm:perfect-scrollbar';
+import $ from 'jquery';
 
 // TODO debug PerfectScrollbar and consider using PerfectScrollbarMixin
 
@@ -20,6 +21,12 @@ export default Component.extend({
   eventsBus: service(),
 
   isOpened: false,
+
+  /**
+   * @type {function}
+   * @return {undefined}
+   */
+  closed: () => {},
 
   style: htmlSafe(''),
 
@@ -77,7 +84,7 @@ export default Component.extend({
 
     close() {
       this.set('isOpened', false);
-      this.sendAction('closed');
+      this.get('closed')();
       scheduleOnce(
         'afterRender',
         this,

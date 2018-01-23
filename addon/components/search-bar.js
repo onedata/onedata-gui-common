@@ -12,7 +12,14 @@ export default Component.extend({
   // TODO translate
   placeholder: 'Search...',
 
+  /**
+   * @type {function}
+   * @param {string} searchQuery
+   * @returns {undefined}
+   */
+  search: () => {},
+
   input() {
-    this.sendAction('search', this.element.value);
+    this.get('search')(this.element.value);
   }
 });

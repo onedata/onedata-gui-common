@@ -32,6 +32,7 @@ import pieLabels from 'onedata-gui-common/utils/chartist/pie-labels';
 import tooltip from 'onedata-gui-common/utils/chartist/tooltip'
 import customCss from 'onedata-gui-common/utils/chartist/custom-css';
 import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
+import $ from 'jquery';
 
 const INACTIVE_SERIES_OPACITY = 0.3;
 const SERIES_HOVER_TRANSITION_TIME = 0.3;
@@ -253,17 +254,13 @@ export default Component.extend({
    * Options for centered text chartist plugin.
    * @type {Object}
    */
-  centeredTextOptions: {
-    text: '',
-  },
+  centeredTextOptions: undefined,
 
   /**
    * Options for legend colors chartist plugin.
    * @type {Object}
    */
-  legendColorsOptions: {
-    colors: [],
-  },
+  legendColorsOptions: undefined,
 
   /**
    * Creates chartist options object.
@@ -283,6 +280,12 @@ export default Component.extend({
       'centeredTextOptions',
       'legendColorsOptions'
     );
+    if (!centeredTextOptions) {
+      this.set('centeredTextOptions', centeredTextOptions = { text: '' });
+    }
+    if (!legendColorsOptions) {
+      this.set('legendColorsOptions', legendColorsOptions = { colors: [] });
+    }
     centeredTextOptions.text = this.formatValue(_valuesSum);
     legendColorsOptions.colors = _.map(_sortedData, 'color');
     let optionsBase = {

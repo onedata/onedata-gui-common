@@ -22,6 +22,13 @@ export default Component.extend({
   isLoading: false,
   isFailed: false,
 
+  /**
+   * @type {function}
+   * @param {string} item
+   * @returns {undefined}
+   */
+  itemClicked: () => {},
+
   name: computed('item.id', function () {
     let item = this.get('item');
     return capitalize(item.id);
@@ -30,7 +37,7 @@ export default Component.extend({
   click() {
     if (!this.get('isDisabled')) {
       let item = this.get('item');
-      this.sendAction('itemClicked', item);
+      this.get('itemClicked')(item);
       return false;
     }
   }
