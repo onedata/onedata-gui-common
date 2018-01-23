@@ -109,6 +109,10 @@ export default Ember.Mixin.create({
   },
 
   detectOverflow() {
+    if (this.isDestroyed) {
+      return;
+    }
+
     let {
       overflowElement,
       overflowParentElement,
@@ -116,9 +120,14 @@ export default Ember.Mixin.create({
       additionalOverflowMargin,
       minimumFullWindowSize,
       _window
-    } = this.getProperties('overflowElement', 'overflowParentElement',
-      'overflowSiblingsElements', 'additionalOverflowMargin', 'minimumFullWindowSize',
-      '_window');
+    } = this.getProperties(
+      'overflowElement',
+      'overflowParentElement',
+      'overflowSiblingsElements',
+      'additionalOverflowMargin',
+      'minimumFullWindowSize',
+      '_window'
+    );
 
     if (minimumFullWindowSize && _window.innerWidth < minimumFullWindowSize) {
       this.set('hasOverflow', true);
