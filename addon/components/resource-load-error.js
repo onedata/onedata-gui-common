@@ -7,18 +7,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/resource-load-error';
 
 import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
-
-const {
-  Component,
-  computed,
-  inject: {
-    service,
-  },
-} = Ember;
 
 export default Component.extend({
   layout,

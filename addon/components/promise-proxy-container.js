@@ -20,7 +20,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 
 import LoadingContainer from 'onedata-gui-common/components/loading-container';
 import layout from 'onedata-gui-common/templates/components/loading-container';
@@ -35,8 +35,8 @@ export default LoadingContainer.extend({
    */
   proxy: null,
 
-  isLoaded: computed.reads('proxy.isFulfilled'),
-  isLoading: computed.reads('proxy.isPending'),
-  isError: computed.reads('proxy.isRejected'),
-  errorReason: computed.reads('proxy.reason'),
+  isLoaded: reads('proxy.isFulfilled'),
+  isLoading: reads('proxy.isPending'),
+  isError: reads('proxy.isRejected'),
+  errorReason: reads('proxy.reason'),
 });

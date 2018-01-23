@@ -9,16 +9,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { readOnly } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/one-list-primary-item';
 
-const {
-  computed: {
-    readOnly
-  },
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'li',
   classNames: ['one-list-item', 'clickable'],
@@ -29,9 +25,16 @@ export default Ember.Component.extend({
   itemId: readOnly('item.id'),
   isActive: false,
 
+  /**
+   * @type {function}
+   * @param {string} itemId
+   * @returns {undefined}
+   */
+  changePrimaryItemId: () => {},
+
   actions: {
     changePrimaryItemId(itemId) {
-      this.sendAction('changePrimaryItemId', itemId);
+      this.get('changePrimaryItemId')(itemId);
     }
   }
 });

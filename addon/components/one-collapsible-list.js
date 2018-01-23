@@ -32,21 +32,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
+import { debounce, next } from '@ember/runloop';
+import { A } from '@ember/array';
 import { invoke, invokeAction } from 'ember-invoke-action';
 
 import layout from 'onedata-gui-common/templates/components/one-collapsible-list';
 
-const {
-  computed,
-  run: {
-    next,
-    debounce,
-  },
-  A,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'ul',
   classNames: ['one-collapsible-list'],

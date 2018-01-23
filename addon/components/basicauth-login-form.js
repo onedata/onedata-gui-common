@@ -7,17 +7,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/basicauth-login-form';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 
-const {
-  inject: {
-    service
-  }
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['basicauth-login-form'],
 
@@ -37,6 +33,12 @@ export default Ember.Component.extend({
    * @type {function}
    */
   backButtonAction: undefined,
+
+  /**
+   * @type {function}
+   * @returns {undefined}
+   */
+  authenticationStarted: () => {},
 
   didInsertElement() {
     this._super(...arguments);
@@ -82,7 +84,7 @@ export default Ember.Component.extend({
     submitLogin(username, password) {
       let session = this.get('session');
       this.onLoginStarted();
-      this.sendAction('authenticationStarted');
+      this.get('authenticationStarted')();
 
       let loginCalling = session.authenticate('authenticator:application',
         username,

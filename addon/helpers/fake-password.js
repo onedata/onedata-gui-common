@@ -7,11 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
-const {
-  String: { htmlSafe },
-} = Ember;
+import { htmlSafe } from '@ember/string';
 
 const PASSWORD_DOT = '&#9679';
 
@@ -19,4 +17,4 @@ export function fakePassword([dotsCount = 5] /*, hash*/ ) {
   return htmlSafe(PASSWORD_DOT.repeat(dotsCount));
 }
 
-export default Ember.Helper.helper(fakePassword);
+export default helper(fakePassword);

@@ -8,13 +8,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
-import layout from '../templates/components/bezier-curve';
+import Component from '@ember/component';
 
-const {
-  Component,
-  computed,
-} = Ember;
+import { computed } from '@ember/object';
+import layout from '../templates/components/bezier-curve';
 
 const {
   sqrt,

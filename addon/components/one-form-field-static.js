@@ -7,17 +7,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
 import layout from 'onedata-gui-common/templates/components/one-form-field-static';
 import config from 'ember-get-config';
 
 const {
   layoutConfig
 } = config;
-
-const {
-  Component,
-} = Ember;
 
 export default Component.extend({
   layout,

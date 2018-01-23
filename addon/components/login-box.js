@@ -7,7 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
+
+import EmberObject from '@ember/object';
 import { inject } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
@@ -43,7 +45,7 @@ export default Component.extend({
   /**
    * True, if previous session has expired
    */
-  sessionHasExpired: computed.alias('session.data.hasExpired'),
+  sessionHasExpired: alias('session.data.hasExpired'),
 
   init() {
     this._super(...arguments);

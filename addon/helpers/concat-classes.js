@@ -7,11 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
-const {
-  assert,
-} = Ember;
+import { assert } from '@ember/debug';
 
 export function concatClasses(params /*, hash*/ ) {
   let classes = '';
@@ -25,4 +23,4 @@ export function concatClasses(params /*, hash*/ ) {
   return classes.trim();
 }
 
-export default Ember.Helper.helper(concatClasses);
+export default helper(concatClasses);

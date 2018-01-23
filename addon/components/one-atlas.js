@@ -29,18 +29,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
 
 import layout from 'onedata-gui-common/templates/components/one-atlas';
-
-const {
-  computed,
-} = Ember;
 
 // Atlas image aspect ratio - needed when recomputing new atlas size
 const ATLAS_AR = 1.361111111112;
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['one-atlas'],
 

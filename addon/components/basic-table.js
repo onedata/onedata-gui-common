@@ -1,9 +1,6 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/basic-table';
-
-const {
-  run
-} = Ember;
 
 /**
  * Creates a table element which uses JQuery Basic Table to handle with small devices.
@@ -13,7 +10,7 @@ const {
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'table',
   classNames: ['basic-table', 'no-resize'],

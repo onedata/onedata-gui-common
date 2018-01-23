@@ -5,12 +5,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-const {
-  Component,
-  String: { htmlSafe },
-} = Ember;
+import { htmlSafe } from '@ember/string';
 
 export default Component.extend({
   tagName: 'svg',

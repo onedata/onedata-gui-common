@@ -1,15 +1,7 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import { readOnly } from '@ember/object/computed';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/alert-global';
-
-const {
-  inject: {
-    service
-  },
-  computed: {
-    readOnly
-  },
-  Component,
-} = Ember;
 
 /**
  * A singleton component that is used by ``alert`` service.

@@ -13,16 +13,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject, { observer } from '@ember/object';
 
-const {
-  observer,
-  on,
-  Evented,
-  run,
-} = Ember;
+import Evented, { on } from '@ember/object/evented';
+import { run } from '@ember/runloop';
 
-export default Ember.Object.extend(Evented, {
+export default EmberObject.extend(Evented, {
   _intervalId: null,
 
   interval: null,

@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 import componentsList from 'dummy/components-list';
 
-export default Ember.Route.extend({
+export default Route.extend({
   model() {
     return {
       components: componentsList,

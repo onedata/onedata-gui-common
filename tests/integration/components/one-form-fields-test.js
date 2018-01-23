@@ -1,8 +1,8 @@
+import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 describe('Integration | Component | one form fields', function () {
   setupComponentTest('one-form-fields', {
@@ -15,7 +15,7 @@ describe('Integration | Component | one form fields', function () {
     ];
 
     this.set('fields', fields);
-    this.set('formValues', Ember.Object.create({}));
+    this.set('formValues', EmberObject.create({}));
 
     this.render(hbs `
     {{#bs-form as |form|}}
@@ -35,7 +35,7 @@ describe('Integration | Component | one form fields', function () {
     ];
 
     this.set('fields', fields);
-    this.set('formValues', Ember.Object.create({}));
+    this.set('formValues', EmberObject.create({}));
 
     this.render(hbs `
     {{#bs-form as |form|}}
@@ -57,7 +57,7 @@ describe('Integration | Component | one form fields', function () {
     ];
 
     this.set('fields', fields);
-    this.set('formValues', Ember.Object.create({
+    this.set('formValues', EmberObject.create({
       one: VALUE,
     }));
 
@@ -79,7 +79,7 @@ describe('Integration | Component | one form fields', function () {
     ];
 
     this.set('fields', fields);
-    this.set('formValues', Ember.Object.create({
+    this.set('formValues', EmberObject.create({
       one: VALUE
     }));
 

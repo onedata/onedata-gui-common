@@ -5,11 +5,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
+export default Component.extend({
   // fake provider
-  provider: {
+  provider: Object.freeze({
     id: '1',
     name: 'provider1',
     status: 'online',
@@ -29,5 +29,5 @@ export default Ember.Component.extend({
         '2': 2097152,
       }
     }],
-  },
+  }),
 });

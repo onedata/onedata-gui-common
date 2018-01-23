@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/search-bar';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'input',
   classNames: ['search-bar'],
@@ -12,7 +12,14 @@ export default Ember.Component.extend({
   // TODO translate
   placeholder: 'Search...',
 
+  /**
+   * @type {function}
+   * @param {string} searchQuery
+   * @returns {undefined}
+   */
+  search: () => {},
+
   input() {
-    this.sendAction('search', this.element.value);
+    this.get('search')(this.element.value);
   }
 });
