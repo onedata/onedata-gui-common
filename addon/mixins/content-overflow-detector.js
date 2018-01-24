@@ -19,6 +19,7 @@ import Mixin from '@ember/object/mixin';
 
 import { run } from '@ember/runloop';
 import $ from 'jquery';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Mixin.create({
   /**
@@ -93,7 +94,7 @@ export default Mixin.create({
     if (!overflowSiblingsElements) {
       this.set('overflowSiblingsElements', overflowElement.siblings());
     }
-    let detectOverflowFunction = () => this.detectOverflow();
+    let detectOverflowFunction = () => safeExec(this, 'detectOverflow');
     let overflowDetectionListener = () => {
       run.debounce(overflowElement, detectOverflowFunction, overflowDetectionDelay);
     };
