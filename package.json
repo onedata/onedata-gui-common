@@ -63,7 +63,7 @@
     "ember-models-table": "1.13.0",
     "ember-notify": "5.2.1",
     "ember-one-way-controls": "2.0.1",
-    "ember-perfect-scrollbar": "0.0.6",
+    "ember-perfect-scrollbar": "0.0.4",
     "ember-power-select": "1.9.5",
     "ember-redirect": "5.1.0",
     "ember-resolver": "4.5.0",
@@ -77,6 +77,7 @@
     "ember-truth-helpers": "2.0.0",
     "eslint-plugin-ember": "5.0.3",
     "loader.js": "4.6.0",
+    "perfect-scrollbar": "0.8.1",
     "round10": "1.0.3",
     "sinon": "4.2.0",
     "sinon-chai": "2.14.0"
