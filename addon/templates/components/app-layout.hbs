@@ -70,8 +70,8 @@
     </div>
     <div class="pull-left">
       <div class="tab-name" {{action "showMobileSidebar"}}>
-        <div class="visible-sm-block">{{currentTabId}}</div>
-        <div class="visible-xs-block">{{mobileAppLayoutHeader}}</div>
+        <div class="visible-sm-block">{{navigationState.globalBarSidebarTitle}}</div>
+        <div class="visible-xs-block">{{navigationState.globalBarActiveTitle}}</div>
       </div>
     </div>
     <div class="pull-right {{if globalCollapsibleToolbar.isToggleVisible "" " hidden"}}

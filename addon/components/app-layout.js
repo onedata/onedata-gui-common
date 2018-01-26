@@ -18,11 +18,6 @@ const {
 
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
-const MOBILE_APPLAYOUT_STATE = {
-  CONTENT: 1,
-  SIDEBAR: 2,
-};
-
 /**
  * Makes layout for whole application in authorized mode.
  *
@@ -49,37 +44,13 @@ export default Ember.Component.extend({
   globalCollapsibleToolbar: service(),
   scrollState: service(),
   router: service(),
+  navigationState: service(),
 
   // TODO: too much relations: we got mainMenuItemChanged event
   currentTabId: computed.oneWay('mainMenu.currentItemId'),
   sidenavTabId: null,
   sidebarSecondaryItem: null,
-  mobileAppLayoutHeader: computed('mobileAppLayoutState', 'currentTabId',
-    'sidebarSecondaryItem',
-    function () {
-      let {
-        mobileAppLayoutState,
-        currentTabId,
-        sidebarSecondaryItem
-      } = this.getProperties(
-        'mobileAppLayoutState',
-        'currentTabId',
-        'sidebarSecondaryItem'
-      );
-      if (mobileAppLayoutState === MOBILE_APPLAYOUT_STATE.SIDEBAR ||
-        !sidebarSecondaryItem) {
-        return currentTabId;
-      } else {
-        return sidebarSecondaryItem.label;
-      }
-    }),
-
-  mobileAppLayoutState: computed('router.currentRouteName', function () {
-    const name = this.get('router.currentRouteName');
-    return name === 'onedata.sidebar.index' ? MOBILE_APPLAYOUT_STATE.SIDEBAR :
-      MOBILE_APPLAYOUT_STATE.CONTENT;
-  }),
-  showMobileSidebar: computed.equal('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR),
+  showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavContentComponent: computed('sidenavTabId', function () {
     let sidenavTabId = this.get('sidenavTabId');
