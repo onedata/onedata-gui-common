@@ -50,6 +50,7 @@ export default Ember.Component.extend({
   currentTabId: computed.oneWay('mainMenu.currentItemId'),
   sidenavTabId: null,
   sidebarSecondaryItem: null,
+  globalMenuOpened: false,
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavContentComponent: computed('sidenavTabId', function () {
@@ -170,5 +171,10 @@ export default Ember.Component.extend({
     scrollOccurred(event) {
       this.get('scrollState').scrollOccurred(event);
     },
+    toggleGlobalMenu(opened) {
+      if (opened !== this.get('globalMenuOpened')) {
+        this.set('globalMenuOpened', opened);
+      }
+    }
   }
 });

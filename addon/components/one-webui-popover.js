@@ -77,6 +77,13 @@ export default Component.extend({
    */
   popoverTrigger: 'click',
 
+  /**
+   * @type {functions}
+   * @param {boolean} opened is popover opened
+   * @return {undefined}
+   */
+  onToggle: () => {},
+
   _resizeHandler: computed(function () {
     return () => this.send('refresh');
   }),
@@ -97,6 +104,10 @@ export default Component.extend({
     } else if (open === false) {
       this._popover('hide');
     }
+  }),
+
+  _isPopoverVisibleObserver: observer('_isPopoverVisible', function () {
+    this.get('onToggle')(this.get('_isPopoverVisible'));
   }),
 
   _isPopoverVisible: false,

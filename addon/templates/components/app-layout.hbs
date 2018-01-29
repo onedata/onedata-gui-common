@@ -74,16 +74,25 @@
         <div class="visible-xs-block">{{navigationState.globalBarActiveTitle}}</div>
       </div>
     </div>
-    <div class="pull-right {{if globalCollapsibleToolbar.isToggleVisible "" " hidden"}}
-      {{if (and showMobileSidebar (not globalCollapsibleToolbar.showInMobileSidebar)) " hidden-xs"}}">
+    <div class="pull-right global-menu-toggle-container {{if navigationState.showGlobalMenuTrigger "" " hidden"}}">
       <button type="button" 
-        class="navbar-toggle collapsible-toolbar-toggle collapsible-toolbar-global-toggle"
-        onClick={{disable-bubbling (action "globalCollapsibleToolbarToggle")}}>
+        class="navbar-toggle global-menu-toggle collapsible-toolbar-toggle collapsible-toolbar-global-toggle"
+        {{action "toggleGlobalMenu" (not globalMenuOpened)}}>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
     </div>
+    {{#one-webui-popover
+      class="global-menu"
+      padding=false
+      triggerSelector=".global-menu-toggle"
+      open=globalMenuOpened
+      onToggle=(action "toggleGlobalMenu")}}
+      {{#click-outside action=(action "toggleGlobalMenu" false) except-selector=".global-menu-toggle-container"}}
+        {{actions-popover-content actionsArray=navigationState.globalMenuActions actionClicked=(action "toggleGlobalMenu" false)}}
+      {{/click-outside}}
+    {{/one-webui-popover}}
   </div>
   <div class="row row-app full-height">
     {{#one-sidenav open=sidenavSidebarOpen id="sidenav-sidebar"

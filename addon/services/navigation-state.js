@@ -1,15 +1,31 @@
 import Service, { inject as service } from '@ember/service';
-import EmberObject from '@ember/object';
-import computed, { reads } from '@ember/object/computed';
+import EmberObject, { computed } from '@ember/object';
+import { reads, gt } from '@ember/object/computed';
 
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { reject } from 'rsvp';
 
+/**
+ * @typedef {object} Action
+ * @property {function} action
+ * @property {string} class
+ * @property {string} title
+ */
+
 export default Service.extend(I18n, {
+  sidebarResources: service(),
   contentResources: service(),
   router: service(),
   i18n: service(),
+  media: service(),
+
+  /**
+   * Array of actions predefined for active aspect.
+   * @virtual
+   * @type {Array<Action>}
+   */
+  aspectActions: Object.freeze([]),
 
   /**
    * @override
@@ -69,17 +85,23 @@ export default Service.extend(I18n, {
    * @type {string|undefined}
    */
   activeContentLevel: computed('activeAspect', function () {
-    const router = this.get('router');
-    if (router.get('currentRouteName') === 'onedata.sidebar.index') {
-      return 'sidebar';
-    } else {
-      const aspect = this.get('activeAspect');
-      if (aspect) {
-        return aspect === 'index' ? 'index' : 'aspect';
-      }
-      else {
-        return undefined;
-      }
+    const {
+      router,
+      activeAspect,
+    } = this.getProperties('router', 'activeAspect');
+    const currentRouteName = router.get('currentRouteName');
+    switch (currentRouteName) {
+      case 'onedata.sidebar.index':
+        return 'sidebar';
+      case 'onedata.sidebar.content.index':
+        return 'contentIndex';
+      default:
+        if (activeAspect) {
+          return activeAspect === 'index' ? 'index' : 'aspect';
+        }
+        else {
+          return undefined;
+        }
     }
   }),
 
@@ -95,15 +117,60 @@ export default Service.extend(I18n, {
   }),
 
   /**
-   * Specifies if global menu trigger buttons should be visible.
-   * @type {Ember.ComputedProperty<EmberObject>}
+   * @type {Ember.ComputedProperty<Array<Action>>}
    */
-  showGlobalMenu: computed(function () {
-    return EmberObject.create({
-      sidebar: false,
-      content: false,
-    });
+  resourceTypeActions: computed('activeResourceType', function () {
+    const {
+      sidebarResources,
+      activeResourceType,
+    } = this.getProperties('sidebarResources', 'activeResourceType');
+    return sidebarResources.getButtonsFor(activeResourceType);
   }),
+
+  /**
+   * @type {Ember.ComputedProperty<Array<Action>>}
+   */
+  globalMenuActions: computed(
+    'resourceTypeActions',
+    'aspectActions',
+    'activeContentLevel',
+    'media.isTablet',
+    function () {
+      const {
+        resourceTypeActions,
+        aspectActions,
+        activeContentLevel,
+        media,
+      } = this.getProperties(
+        'resourceTypeActions',
+        'aspectActions',
+        'activeContentLevel',
+        'media'
+      );
+      switch (activeContentLevel) {
+        case 'sidebar':
+        case 'contentIndex':
+          return resourceTypeActions;
+        case 'index':
+        case 'aspect':
+          if (media.get('isTablet') &&
+            (resourceTypeActions.length || aspectActions.length)) {
+            const separatorItem = EmberObject.create({ separator: true });
+            return resourceTypeActions.concat([separatorItem, ...aspectActions]);
+          } else {
+            return aspectActions;
+          }
+        default:
+          return [];
+      }
+    }
+  ),
+
+  /**
+   * Specifies if global menu trigger button should be visible.
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  showGlobalMenuTrigger: gt('globalMenuActions.length', 0),
 
   /**
    * Global bar title for sidebar.
@@ -152,6 +219,7 @@ export default Service.extend(I18n, {
       );
       switch (activeContentLevel) {
         case 'sidebar':
+        case 'contentIndex':
           return globalBarSidebarTitle;
         case 'index':
           return globalBarIndexTitle;
