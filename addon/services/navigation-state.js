@@ -28,6 +28,11 @@ export default Service.extend(I18n, {
   aspectActions: Object.freeze([]),
 
   /**
+   * @type {string}
+   */
+  aspectActionsTitle: undefined,
+
+  /**
    * @override
    */
   i18nPrefix: 'tabs',
@@ -133,17 +138,20 @@ export default Service.extend(I18n, {
   globalMenuActions: computed(
     'resourceTypeActions',
     'aspectActions',
+    'aspectActionsTitle',
     'activeContentLevel',
     'media.isTablet',
     function () {
       const {
         resourceTypeActions,
         aspectActions,
+        aspectActionsTitle,
         activeContentLevel,
         media,
       } = this.getProperties(
         'resourceTypeActions',
         'aspectActions',
+        'aspectActionsTitle',
         'activeContentLevel',
         'media'
       );
@@ -155,8 +163,15 @@ export default Service.extend(I18n, {
         case 'aspect':
           if (media.get('isTablet') &&
             (resourceTypeActions.length || aspectActions.length)) {
-            const separatorItem = EmberObject.create({ separator: true });
-            return resourceTypeActions.concat([separatorItem, ...aspectActions]);
+              let actions = resourceTypeActions;
+              if (aspectActions.length) {
+                const separatorItem = EmberObject.create({
+                  separator: true,
+                  title: aspectActionsTitle,
+                });
+                actions = actions.concat([separatorItem, ...aspectActions])
+              }
+            return actions;
           } else {
             return aspectActions;
           }

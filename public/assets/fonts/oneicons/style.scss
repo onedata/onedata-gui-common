@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: 'oneicons';
-  src:  url('#{$icomoon-font-path}/oneicons.eot?r181db');
-  src:  url('#{$icomoon-font-path}/oneicons.eot?r181db#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/oneicons.ttf?r181db') format('truetype'),
-    url('#{$icomoon-font-path}/oneicons.woff?r181db') format('woff'),
-    url('#{$icomoon-font-path}/oneicons.svg?r181db#oneicons') format('svg');
+  src:  url('#{$icomoon-font-path}/oneicons.eot?ncrz96');
+  src:  url('#{$icomoon-font-path}/oneicons.eot?ncrz96#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/oneicons.ttf?ncrz96') format('truetype'),
+    url('#{$icomoon-font-path}/oneicons.woff?ncrz96') format('woff'),
+    url('#{$icomoon-font-path}/oneicons.svg?ncrz96#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -194,6 +194,11 @@
 .oneicon-inbox {
   &:before {
     content: $oneicon-inbox;
+  }
+}
+.oneicon-join-space {
+  &:before {
+    content: $oneicon-join-space;
   }
 }
 .oneicon-join {

@@ -2,11 +2,21 @@
   .one-icon {
     position: relative;
     top: 0.3em;
-    margin-right: 0.2em;
-    font-size: 170%;
+    margin-right: 0.3em;
+    font-size: 190%;
     line-height: 0;
   }
   .separator {
-    padding: 0;
+    border-top: 0;
+    font-size: 80%;
+    a {
+      padding: 0.3em 0.7em;
+      text-transform: uppercase;
+      color: $main-text-color-disabled;
+      background-color: #f7f7f7;
+    }
+    & + li {
+      border-top: 0;
+    }
   }
 }
