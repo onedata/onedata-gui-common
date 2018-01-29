@@ -41,7 +41,6 @@ export default Ember.Component.extend({
   sidebarResources: service(),
   eventsBus: service(),
   sideMenu: service(),
-  globalCollapsibleToolbar: service(),
   scrollState: service(),
   router: service(),
   navigationState: service(),
@@ -164,9 +163,6 @@ export default Ember.Component.extend({
     },
     changeResourceId() {
       return invokeAction(this, 'changeResourceId', ...arguments);
-    },
-    globalCollapsibleToolbarToggle() {
-      this.toggleProperty('globalCollapsibleToolbar.isDropdownOpened');
     },
     scrollOccurred(event) {
       this.get('scrollState').scrollOccurred(event);

@@ -1,29 +1,29 @@
-{{#unless isGlobal}}
+{{#if showMinimized}}
   <div class="collapsible-toolbar-toggle{{unless isMinimized " hidden"}} {{toggleBtnClass}}"
     onClick={{disable-bubbling (action "toggleDropdown")}}>
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
   </div>
-{{/unless}}
-{{#one-webui-popover
-  class=(concat "one-collapsible-toolbar-popover popover-" elementId)
-  placement="bottom-left"
-  padding=false
-  triggerSelector=toggleSelector
-  open=dropdownOpened
-  as |popover|
-}}
-  <ul class="dropdown-menu">
-    {{yield (hash 
-      item=(component 'one-collapsible-toolbar-item' 
-        tagName="li"
-        isMinimized=true
-        closeDropdown=(action "closeDropdown")
-      )
-    )}}
-  </ul>
-{{/one-webui-popover}}
+  {{#one-webui-popover
+    class=(concat "one-collapsible-toolbar-popover popover-" elementId)
+    placement="bottom-left"
+    padding=false
+    triggerSelector=(concat "#" (concat elementId " .collapsible-toolbar-toggle"))
+    open=dropdownOpened
+    as |popover|
+  }}
+    <ul class="dropdown-menu">
+      {{yield (hash 
+        item=(component 'one-collapsible-toolbar-item' 
+          tagName="li"
+          isMinimized=true
+          closeDropdown=(action "closeDropdown")
+        )
+      )}}
+    </ul>
+  {{/one-webui-popover}}
+{{/if}}
 
 <span class="collapsible-toolbar-buttons {{if isMinimized "hidden"}}">
   {{yield (hash 
