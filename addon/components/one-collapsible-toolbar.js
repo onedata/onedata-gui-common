@@ -31,9 +31,6 @@ const {
   computed: {
     oneWay,
   },
-  // inject: {
-  //   service
-  // },
   run: {
     next,
   },

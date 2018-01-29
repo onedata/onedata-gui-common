@@ -1,3 +1,17 @@
+/**
+ * A global state of page navigation. Accumulates data about active content and
+ * aspect, generates proper global bar titles, active content level and manages
+ * global actions.
+ * 
+ * To provide custom actions for aspect, aspectActions and aspectActionsTitle
+ * should be changed (and changes should be later reverted!).
+ *
+ * @module services/navigation-state
+ * @author Michal Borzecki
+ * @copyright (C) 2018 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Service, { inject as service } from '@ember/service';
 import EmberObject, { computed } from '@ember/object';
 import { reads, gt } from '@ember/object/computed';
@@ -29,6 +43,7 @@ export default Service.extend(I18n, {
 
   /**
    * @type {string}
+   * @virtual
    */
   aspectActionsTitle: undefined,
 
@@ -61,14 +76,14 @@ export default Service.extend(I18n, {
     const {
       activeResourceId,
       activeResourceType,
-    } = this.getProperties('activeResourceId','activeResourceType');
+    } = this.getProperties('activeResourceId', 'activeResourceType');
 
     const promise = activeResourceId ?
       this.get('contentResources').getModelFor(
         activeResourceType,
         activeResourceId
       ) : reject();
-      return PromiseObject.create({ promise });
+    return PromiseObject.create({ promise });
   }),
 
   /**
@@ -103,22 +118,10 @@ export default Service.extend(I18n, {
       default:
         if (activeAspect) {
           return activeAspect === 'index' ? 'index' : 'aspect';
-        }
-        else {
+        } else {
           return undefined;
         }
     }
-  }),
-
-  /**
-   * DOM selectors to global menu trigger buttons.
-   * @type {Ember.ComputedProperty<EmberObject>}
-   */
-  globalMenuSelector: computed(function () {
-    return EmberObject.create({
-      sidebar: '.global-sidebar-menu',
-      content: '.global-content-menu',
-    });
   }),
 
   /**
@@ -163,14 +166,14 @@ export default Service.extend(I18n, {
         case 'aspect':
           if (media.get('isTablet') &&
             (resourceTypeActions.length || aspectActions.length)) {
-              let actions = resourceTypeActions;
-              if (aspectActions.length) {
-                const separatorItem = EmberObject.create({
-                  separator: true,
-                  title: aspectActionsTitle,
-                });
-                actions = actions.concat([separatorItem, ...aspectActions])
-              }
+            let actions = resourceTypeActions;
+            if (aspectActions.length) {
+              const separatorItem = EmberObject.create({
+                separator: true,
+                title: aspectActionsTitle,
+              });
+              actions = actions.concat([separatorItem, ...aspectActions])
+            }
             return actions;
           } else {
             return aspectActions;
