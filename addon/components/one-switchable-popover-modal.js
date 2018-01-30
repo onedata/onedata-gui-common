@@ -171,6 +171,11 @@ export default Ember.Component.extend(ClickOutside, {
   onShown: null,
 
   /**
+   * @type {number}
+   */
+  modalTransitionDuration: 300,
+
+  /**
    * If true, popover/modal will be visible to user
    */
   _contentVisible: false,
