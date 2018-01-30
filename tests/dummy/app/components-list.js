@@ -5,6 +5,7 @@ export default [
   'one-dynamic-tree',
   'one-inline-editor',
   'one-pie-chart',
+  'one-space-indicator',
   'one-tree',
   'one-way-toggle',
   'promise-proxy-container',

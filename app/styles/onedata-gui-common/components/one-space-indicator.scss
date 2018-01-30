@@ -1,0 +1,29 @@
+.one-space-indicator {
+  position: relative;
+  height: 50px;
+  .total-space-bar {
+    position: absolute;
+    @include fill-container();
+    background-color: black;
+    opacity: 0.1;
+  }
+  .occupied-space-bar {
+    position: absolute;
+    @include fill-container();
+    background-color: $color-one-mint;
+    &::before {
+      $gradient-size: 8px;
+      content: '';
+      display: block;
+      position: absolute;
+      @include fill-container();
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1) $gradient-size,
+        transparent $gradient-size,
+        transparent $gradient-size * 2
+      );
+    }
+  }
+}
