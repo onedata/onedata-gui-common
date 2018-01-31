@@ -11,10 +11,15 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import layout from '../templates/components/one-space-indicator';
+import { gt } from '@ember/object/computed';
 
 export default Component.extend({
   layout,
   classNames: ['one-space-indicator'],
+  classNameBindings: [
+    '_hasWarningUsage:warning-usage',
+    '_hasCriticalUsage:critical-usage',
+  ],
 
   /**
    * @virtual
@@ -43,8 +48,8 @@ export default Component.extend({
     const {
       occupiedSize,
       _isTotalSizeValid,
-     } = this.getProperties('occupiedSize', '_isTotalSizeValid');
-    return _isTotalSizeValid && typeof occupiedSize === 'number'&&
+    } = this.getProperties('occupiedSize', '_isTotalSizeValid');
+    return _isTotalSizeValid && typeof occupiedSize === 'number' &&
       occupiedSize >= 0;
   }),
 
@@ -57,32 +62,54 @@ export default Component.extend({
       totalSize,
       occupiedSize,
     } = this.getProperties('_isOccupiedSizeValid', 'totalSize', 'occupiedSize');
-    
-    return _isOccupiedSizeValid ?
-      (Math.min(occupiedSize, totalSize) / totalSize) * 100 : undefined;
+
+    return _isOccupiedSizeValid ? (occupiedSize / totalSize) * 100 : undefined;
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  _hasWarningUsage: computed('_occupiedPercents', function () {
+    const _occupiedPercents = this.get('_occupiedPercents');
+    return _occupiedPercents > 90 && _occupiedPercents < 100;
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  _hasCriticalUsage: gt('_occupiedPercents', 100),
+
+  /**
+   * @type {Ember.ComputedProperty<number|undefined>}
+   */
+  _occupiedPercentsNormalized: computed('_occupiedPercents', function () {
+    const _occupiedPercents = this.get('_occupiedPercents');
+    return _occupiedPercents === undefined ?
+      undefined : Math.min(_occupiedPercents, 100);
   }),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  _occupiedSpaceBarStyle: computed('_occupiedPercents', function () {
-    const _occupiedPercents = this.get('_occupiedPercents');
+  _occupiedSpaceBarStyle: computed('_occupiedPercentsNormalized', function () {
+    const _occupiedPercentsNormalized = this.get('_occupiedPercentsNormalized');
     return htmlSafe(
-      _occupiedPercents === undefined ? '' : `width: ${_occupiedPercents}%`
+      _occupiedPercentsNormalized === undefined ?
+      '' : `width: ${_occupiedPercentsNormalized}%`
     );
   }),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  _occupiedSpaceLabelStyle: computed('_occupiedPercents', function () {
-    const _occupiedPercents = this.get('_occupiedPercents');
-    const labelMargin = 15;
-    if (_occupiedPercents !== undefined) {
-      const translateX = 
-        _occupiedPercents > labelMargin ? -100 : 0;
+  _occupiedSpaceLabelStyle: computed('_occupiedPercentsNormalized', function () {
+    const _occupiedPercentsNormalized = this.get('_occupiedPercentsNormalized');
+    const labelMargin = 20;
+    if (_occupiedPercentsNormalized !== undefined) {
+      const translateX =
+        _occupiedPercentsNormalized > labelMargin ? -100 : 0;
       return htmlSafe(
-        `left: ${_occupiedPercents}%; transform: translateX(${translateX}%);`
+        `left: ${_occupiedPercentsNormalized}%; transform: translateX(${translateX}%);`
       );
     } else {
       return htmlSafe('');

@@ -8,7 +8,7 @@
   <div class="occupied-space-bar bar" style={{_occupiedSpaceBarStyle}}></div>
   {{#if _isOccupiedSizeValid}}
     <span class="bar-label occupied-space" style={{_occupiedSpaceLabelStyle}}>
-      {{bytes-to-string (if (lt occupiedSize totalSize) occupiedSize totalSize)}}
+      {{bytes-to-string occupiedSize}}
     </span>
   {{/if}}
 {{/if}}
