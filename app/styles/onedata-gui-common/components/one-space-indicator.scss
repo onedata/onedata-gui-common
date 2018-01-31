@@ -1,15 +1,19 @@
 .one-space-indicator {
+  $space-for-text: 15px;
   position: relative;
-  height: 50px;
-  .total-space-bar {
+  height: 50px + 2 * $space-for-text;
+  .bar {
     position: absolute;
-    @include fill-container();
+    top: $space-for-text;
+    bottom: $space-for-text;
+    left: 0;
+    right: 0;
+  }
+  .total-space-bar {
     background-color: black;
     opacity: 0.1;
   }
   .occupied-space-bar {
-    position: absolute;
-    @include fill-container();
     background-color: $color-one-mint;
     &::before {
       $gradient-size: 8px;
@@ -25,5 +29,18 @@
         transparent $gradient-size * 2
       );
     }
+  }
+  .bar-label {
+    position: absolute;
+    font-size: 80%;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .total-space {
+    right: 0;
+    bottom: 0;
+  }
+  .occupied-space {
+    color: $color-one-mint;
   }
 }
