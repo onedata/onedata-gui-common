@@ -71,7 +71,7 @@ export default Component.extend({
    */
   _hasWarningUsage: computed('_occupiedPercents', function () {
     const _occupiedPercents = this.get('_occupiedPercents');
-    return _occupiedPercents > 90 && _occupiedPercents < 100;
+    return _occupiedPercents > 90 && _occupiedPercents <= 100;
   }),
 
   /**
