@@ -19,13 +19,22 @@
     {{/if}}
     {{#if hasBlock}}
       <div class="row row-yield">
-        {{yield}}
+        {{yield (hash
+            buttonAction=(action _buttonAction)
+            actionInProgress=_actionInProgress
+          )
+        }}
       </div>
     {{/if}}
-    {{#if buttonAction}}
+    {{#if _showButton}}
       <div class="row text-center">
         <div class="col-xs-12">
-          {{#one-spin-button class=(concat "btn btn-primary " buttonClass) action=(action buttonAction)}}
+          {{#one-spin-button
+            class=(concat "btn btn-primary btn-content-info " buttonClass)
+            action=(action _buttonAction)
+            inFlight=_actionInProgress
+            disabled=buttonDisabled
+          }}
             {{buttonLabel}}
           {{/one-spin-button}}
         </div>
