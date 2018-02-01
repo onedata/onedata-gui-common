@@ -281,10 +281,10 @@ export default Component.extend({
       'legendColorsOptions'
     );
     if (!centeredTextOptions) {
-      this.set('centeredTextOptions', centeredTextOptions = { text: '' });
+      centeredTextOptions = this.set('centeredTextOptions', { text: '' });
     }
     if (!legendColorsOptions) {
-      this.set('legendColorsOptions', legendColorsOptions = { colors: [] });
+      legendColorsOptions = this.set('legendColorsOptions', { colors: [] });
     }
     centeredTextOptions.text = this.formatValue(_valuesSum);
     legendColorsOptions.colors = _.map(_sortedData, 'color');
