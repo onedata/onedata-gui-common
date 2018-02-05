@@ -32,12 +32,29 @@ $spinner-container-base-size: 120px;
   &.fill-middle-centered {
     @include fill-align-middle-center();
   }
-
+  
+  &.inline-centered {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+  }
+  
   // DEPRECATED: backward compatible
   &.middle-centered {
     @extend .absolute-middle-centered;
   }
-
+  
+  &.description-bottom {
+    margin-top: 1em;
+  }
+  
+  &.description-bottom.middle-centered + p.loading-info {
+    text-align: center;
+    font-size: 1.2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+  
   .spinner-logo {
     background-size: 30%;
   }
