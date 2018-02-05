@@ -8,12 +8,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import { invokeAction } from 'ember-invoke-action';
 
 import layout from 'onedata-gui-common/templates/components/status-toolbar/icon';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['status-toolbar-icon'],
   classNameBindings: [

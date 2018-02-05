@@ -8,21 +8,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { sort, reads } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 
-const {
-  computed: {
-    sort,
-  },
-  inject: {
-    service,
-  },
-  computed,
-  get,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: 'provider-place-drop',
   classNameBindings: ['provider.status'],
@@ -33,13 +26,13 @@ export default Ember.Component.extend({
    * Spaces list sort order
    * @type {Array<string>}
    */
-  _spacesSorting: ['isDefault:desc', 'name'],
+  _spacesSorting: Object.freeze(['isDefault:desc', 'name']),
 
   /**
    * One-way alias to space list record
    * @type {Ember.Computed<models/SpaceList>}
    */
-  _spaceList: computed.reads('provider.spaceList'),
+  _spaceList: reads('provider.spaceList'),
 
   /**
    * Sorted array of spaces
@@ -51,9 +44,7 @@ export default Ember.Component.extend({
    * True if data for each space of provider is loaded (eg. support info)
    * @type {Ember.Computed<boolean>}
    */
-  _spacesLoaded: computed(
-    '_spaceList.isLoaded',
-    '_spaceList.list.isFulfilled',
+  _spacesLoaded: computed('_spaceList.{isLoaded,list.isFulfilled}',
     function _getSpacesLoaded() {
       const _spaceList = this.get('_spaceList');
       return !!(

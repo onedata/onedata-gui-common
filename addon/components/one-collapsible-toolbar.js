@@ -21,22 +21,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
+import { oneWay } from '@ember/object/computed';
+import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import ContentOverflowDetector from 'onedata-gui-common/mixins/content-overflow-detector';
+import $ from 'jquery';
 
-const {
-  computed,
-  computed: {
-    oneWay,
-  },
-  run: {
-    next,
-  },
-} = Ember;
-
-export default Ember.Component.extend(ClickOutside, ContentOverflowDetector, {
+export default Component.extend(ClickOutside, ContentOverflowDetector, {
   layout,
   classNames: ['one-collapsible-toolbar'],
   classNameBindings: ['stateClasses', 'isMinimized:minimized'],

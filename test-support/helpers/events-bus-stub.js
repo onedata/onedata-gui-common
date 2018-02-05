@@ -1,12 +1,13 @@
-import Ember from 'ember';
-
-const {
-  Service
-} = Ember;
+import Service from '@ember/service';
 
 export default Service.extend({
   // Should be cleared out before each test
-  callbacks: [],
+  callbacks: undefined,
+
+  init() {
+    this._super(...arguments);
+    this.set('callbacks', []);
+  },
 
   on(eventName, callback) {
     this.get('callbacks').push(callback);

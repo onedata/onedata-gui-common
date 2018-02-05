@@ -3,6 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 
 const CONTENT_TEXT = 'contentText';
 const WINDOW_WIDTH_LG = 1000;

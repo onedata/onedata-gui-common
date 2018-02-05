@@ -18,9 +18,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject from '@ember/object';
 
-export default Ember.Mixin.create({
+import Mixin from '@ember/object/mixin';
+
+export default Mixin.create({
   /**
    * Tree of checkbox selection state.
    * @type {Ember.Object}
@@ -46,7 +48,7 @@ export default Ember.Mixin.create({
       // field, but not checkbox or disabled
       return undefined;
     }
-    let checkboxNode = Ember.Object.create({
+    let checkboxNode = EmberObject.create({
       value: undefined,
       nodes: null,
     });
@@ -62,7 +64,7 @@ export default Ember.Mixin.create({
           subnodes.set(subnodeName, _checkboxSubnodes);
         }
         return subnodes;
-      }, Ember.Object.create());
+      }, EmberObject.create());
 
       if (Object.keys(checkboxSubnodes).length > 0) {
         // has some checkbox fields in deeper nodes

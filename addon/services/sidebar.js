@@ -7,17 +7,15 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Service from '@ember/service';
 
-const {
-  A,
-  computed
-} = Ember;
+import { A } from '@ember/array';
+import { computed } from '@ember/object';
 
 /**
  * Global control over sidebar
  */
-export default Ember.Service.extend({
+export default Service.extend({
   /**
    * Set to true if level-0 item is loading it's view
    * @type {boolean}

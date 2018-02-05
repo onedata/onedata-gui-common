@@ -6,6 +6,7 @@ import { click } from 'ember-native-dom-helpers';
 import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard';
 import GlobalNotifyStub from '../../helpers/global-notify-stub';
 import I18nStub from '../../helpers/i18n-stub';
+import $ from 'jquery';
 
 const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';

@@ -1,7 +1,7 @@
+import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
-import Ember from 'ember';
 import _object from 'lodash/object';
 
 const ERROR_MSG = 'error!';
@@ -13,23 +13,23 @@ describe('Unit | Component | one form', function () {
 
   beforeEach(function () {
     const FIELDS = {
-      main: [Ember.Object.create({
+      main: [EmberObject.create({
         name: 'main.first',
         type: 'text',
       })],
-      another: [Ember.Object.create({
+      another: [EmberObject.create({
         name: 'another.second',
         type: 'text',
       })]
     };
     const ALL_FIELDS = _object.values(FIELDS).reduce((a, b) => a.concat(b));
-    const ALL_FIELDS_VALUES = Ember.Object.create({
-      main: Ember.Object.create({ first: null }),
-      another: Ember.Object.create({ second: null }),
+    const ALL_FIELDS_VALUES = EmberObject.create({
+      main: EmberObject.create({ first: null }),
+      another: EmberObject.create({ second: null }),
     });
-    const VALIDATIONS = Ember.Object.create({
+    const VALIDATIONS = EmberObject.create({
       errors: [
-        Ember.Object.create({
+        EmberObject.create({
           attribute: 'allFieldsValues.main.first',
           message: ERROR_MSG
         })

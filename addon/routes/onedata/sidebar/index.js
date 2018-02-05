@@ -8,8 +8,9 @@
  */
 
 import Route from '@ember/routing/route';
+
+import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
-import { inject } from '@ember/service';
 import { observer } from '@ember/object';
 
 function getDefaultResourceId(collection) {
@@ -18,8 +19,8 @@ function getDefaultResourceId(collection) {
 }
 
 export default Route.extend({
-  globalNotify: inject(),
-  media: inject(),
+  globalNotify: service(),
+  media: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');

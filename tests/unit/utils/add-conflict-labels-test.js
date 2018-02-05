@@ -1,11 +1,7 @@
+import { get } from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import addConflictLabels from 'onedata-gui-common/utils/add-conflict-labels';
-
-import Ember from 'ember';
-const {
-  get,
-} = Ember;
 
 describe('Unit | Utility | add conflict labels', function () {
   it('adds conflictLabel to array records of the same name', function () {

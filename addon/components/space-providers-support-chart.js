@@ -7,18 +7,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject, {
+  getProperties,
+  get,
+  computed
+} from '@ember/object';
+
+import { A, isArray } from '@ember/array';
 import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import OnePieChart from 'onedata-gui-common/components/one-pie-chart';
-
-const {
-  computed,
-  get,
-  getProperties,
-  isArray,
-  A,
-} = Ember;
 
 export default OnePieChart.extend({
   classNames: ['space-providers-support-chart'],
@@ -36,7 +34,7 @@ export default OnePieChart.extend({
    * To inject.
    * @type {Object}
    */
-  providersColors: {},
+  providersColors: Object.freeze({}),
 
   /**
    * Data for OnePieChart
@@ -48,7 +46,7 @@ export default OnePieChart.extend({
       providersColors,
     } = this.getProperties('space', 'providersColors');
     let supportSizes = get(space, 'supportSizes');
-    return A(_.map(Object.keys(supportSizes), (providerId) => (Ember.Object.create({
+    return A(_.map(Object.keys(supportSizes), (providerId) => (EmberObject.create({
       id: String(providerId),
       label: get(
         _.find(get(space, 'providers'), { id: providerId }),

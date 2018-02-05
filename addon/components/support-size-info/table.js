@@ -13,19 +13,15 @@
  * @property {number} supportSize A support size (in bytes).
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import EmberObject, { computed } from '@ember/object';
+import { A } from '@ember/array';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 
-const {
-  computed,
-  A,
-  inject: {
-    service,
-  },
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['support-size-table'],
 
@@ -47,7 +43,7 @@ export default Ember.Component.extend({
    * Custom classes for ember-models-table addon.
    * @type {Ember.Object}
    */
-  _tableCustomClasses: Ember.Object.create({
+  _tableCustomClasses: EmberObject.create({
     table: 'table table-striped table-condensed',
   }),
 
@@ -55,7 +51,7 @@ export default Ember.Component.extend({
    * Custom icons for ember-models-table addon.
    * @type {Ember.Object}
    */
-  _tableCustomIcons: Ember.Object.create({
+  _tableCustomIcons: EmberObject.create({
     'sort-asc': 'oneicon oneicon-arrow-up',
     'sort-desc': 'oneicon oneicon-arrow-down',
   }),
@@ -82,9 +78,9 @@ export default Ember.Component.extend({
    * @type {Ember.Object}
    */
   _tableCustomMessages: computed('noDataToShowMessage', function () {
-    return Ember.Object.create({
+    return EmberObject.create({
       noDataToShow: this.get('noDataToShowMessage'),
-    })
+    });
   }),
 
   /**
@@ -95,7 +91,7 @@ export default Ember.Component.extend({
     let data = this.get('data');
     let processedData = A();
     data.forEach((entry) => {
-      processedData.pushObject(Ember.Object.create({
+      processedData.pushObject(EmberObject.create({
         supporterName: entry.get('supporterName'),
         supportSize: entry.get('supportSize'),
         supportSizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),

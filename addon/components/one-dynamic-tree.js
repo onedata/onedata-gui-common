@@ -96,21 +96,18 @@
  * Each option is an object with fields `value` and `label`.
  */
 
-import Ember from 'ember';
+import { empty } from '@ember/object/computed';
+
+import Component from '@ember/component';
+import { observer, computed } from '@ember/object';
+import { A } from '@ember/array';
 import layout from '../templates/components/one-dynamic-tree';
 import FieldsTree from 'onedata-gui-common/mixins/components/one-dynamic-tree/fields-tree';
 import ValuesTree from 'onedata-gui-common/mixins/components/one-dynamic-tree/values-tree';
 import CheckboxSelectionTree from 'onedata-gui-common/mixins/components/one-dynamic-tree/checkbox-selection-tree';
 import DisabledPaths from 'onedata-gui-common/mixins/components/one-dynamic-tree/disabled-paths';
 
-const {
-  computed,
-  observer,
-  on,
-  A,
-} = Ember;
-
-export default Ember.Component.extend(
+export default Component.extend(
   ValuesTree, FieldsTree, CheckboxSelectionTree, DisabledPaths, {
     layout,
     classNames: ['one-dynamic-tree'],
@@ -121,7 +118,7 @@ export default Ember.Component.extend(
      * To inject.
      * @type {Array.TreeNode}
      */
-    definition: [],
+    definition: Object.freeze([]),
 
     /**
      * Values changed action. It will get tree values 
@@ -165,15 +162,13 @@ export default Ember.Component.extend(
     /**
      * Validity status of tree values.
      */
-    _isValid: computed.empty('_errors'),
+    _isValid: empty('_errors'),
 
-    _fieldsObserver: on('init',
-      observer('_fieldsTree', 'disabledFieldsPaths.[]', function () {
-        this._buildCheckboxSelectionTree();
-        this._resetDisabledFields();
-        this.valuesHaveChanged();
-      })
-    ),
+    _fieldsObserver: observer('_fieldsTree', 'disabledFieldsPaths.[]', function () {
+      this._buildCheckboxSelectionTree();
+      this._resetDisabledFields();
+      this.valuesHaveChanged();
+    }),
 
     _valuesPrepareObserver: observer('definition', function () {
       let definition = this.get('definition');
@@ -187,6 +182,7 @@ export default Ember.Component.extend(
         this.set('disabledFieldsPaths', A());
       }
       this.reset();
+      this._fieldsObserver();
     },
 
     /**

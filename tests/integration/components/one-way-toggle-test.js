@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import { run } from '@ember/runloop';
 import wait from 'ember-test-helpers/wait';
 import { Promise } from 'rsvp';
+import $ from 'jquery';
 
 describe('Integration | Component | one way toggle', function () {
   setupComponentTest('one-way-toggle', {

@@ -11,12 +11,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { htmlSafe } from '@ember/string';
 import Ember from 'ember';
-
-const {
-  String: { htmlSafe },
-  Handlebars: { Utils: { escapeExpression } }
-} = Ember;
 
 /**
  * Gets error details from error object that is returned on onepanel backend reject
@@ -33,5 +29,5 @@ export default function getErrorDescription(error) {
     error.message ||
     error;
 
-  return htmlSafe(escapeExpression(details));
+  return htmlSafe(Ember.Handlebars.Utils.escapeExpression(details));
 }

@@ -11,6 +11,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import $ from 'jquery';
+
 export default function (options) {
   return (chart) => {
     chart.on('created', () => {

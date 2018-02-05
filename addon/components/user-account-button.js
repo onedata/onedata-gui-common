@@ -7,18 +7,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
+import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
 import { invokeAction } from 'ember-invoke-action';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
-
-const {
-  Component,
-  inject: { service },
-  computed,
-  on,
-  run: { next },
-} = Ember;
 
 export default Component.extend(ClickOutside, {
   layout,
@@ -50,13 +46,18 @@ export default Component.extend(ClickOutside, {
     }
   }),
 
-  _attachClickOutsideHandler: on('didInsertElement', function () {
+  didInsertElement() {
+    this._super(...arguments);
     next(this, this.addClickOutsideListener);
-  }),
+  },
 
-  _removeClickOutsideHandler: on('willDestroyElement', function () {
-    this.removeClickOutsideListener();
-  }),
+  willDestroyElement() {
+    try {
+      this.removeClickOutsideListener();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   clickOutside() {
     this.set('menuOpen', false);

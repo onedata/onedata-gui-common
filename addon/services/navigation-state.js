@@ -256,7 +256,8 @@ export default Service.extend(I18n, {
    * @returns {string|undefined}
    */
   _getRouteParam(path, paramName) {
-    const router = this.get('router');
+    // must work with internal router to get information about route params
+    const router = this.get('router._router');
     if (router.get('currentRouteName').startsWith(path)) {
       const routeParams = router.get('targetState.routerJsState.params');
       const pathParams = routeParams[path];

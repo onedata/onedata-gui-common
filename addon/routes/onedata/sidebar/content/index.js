@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 import _ from 'lodash';
 import config from 'ember-get-config';
 import { get } from '@ember/object';
@@ -28,7 +28,7 @@ function isSpecialResourceId(id) {
   return SPECIAL_IDS.indexOf(id) !== -1;
 }
 
-export default Ember.Route.extend({
+export default Route.extend({
   model() {
     return this.modelFor('onedata.sidebar.content');
   },

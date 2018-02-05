@@ -10,16 +10,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-tree/item/content';
 import { invokeAction } from 'ember-invoke-action';
 
-const {
-  observer,
-  on,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['one-tree-item-content'],
 
@@ -58,15 +55,14 @@ export default Ember.Component.extend({
   /**
    * Toggles click handler.
    */
-  _hasSubtreeObserver: on('init', observer('hasSubtree', function () {
+  _hasSubtreeObserver: observer('hasSubtree', function () {
     this.set('click', this.get('hasSubtree') ? this._click : null);
-  })),
+  }),
 
   /**
    * Performs filter query search
    */
-  _searchQueryObserver: on('didInsertElement', observer('searchQuery',
-    'isSubtreeFilteredOut',
+  _searchQueryObserver: observer('searchQuery', 'isSubtreeFilteredOut',
     function () {
       let {
         searchQuery,
@@ -98,7 +94,18 @@ export default Ember.Component.extend({
         textElement.removeClass('semibold');
       }
       itemFilteredOut(isNotFilteredOut);
-    })),
+    }
+  ),
+
+  init() {
+    this._super(...arguments);
+    this._hasSubtreeObserver();
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this._searchQueryObserver();
+  },
 
   _click() {
     invokeAction(this, '_showAction');

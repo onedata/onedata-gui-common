@@ -15,7 +15,7 @@
   {{main-menu
     appModel=appModel
     currentItemId=currentTabId
-    itemClicked="mobileMenuItemChanged"
+    itemClicked=(action "mobileMenuItemChanged")
   }}
 {{/side-menu}}
 {{content-backdrop}}
@@ -36,7 +36,7 @@
       appModel=appModel
       sidenavItemId=sidenavTabId
       currentItemId=currentTabId
-      itemClicked="mainMenuItemClicked"
+      itemClicked=(action "mainMenuItemClicked")
     }}
   </div>
 {{/perfect-scrollbar-element}}

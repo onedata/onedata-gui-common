@@ -1,9 +1,9 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/perfect-scrollbar-element';
 
 import { PerfectScrollbarMixin } from 'ember-perfect-scrollbar';
 
-export default Ember.Component.extend(PerfectScrollbarMixin, {
+export default Component.extend(PerfectScrollbarMixin, {
   layout,
 
   /**

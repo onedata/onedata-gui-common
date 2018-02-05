@@ -15,13 +15,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Mixin from '@ember/object/mixin';
 
-const {
-  run,
-} = Ember;
+import { run } from '@ember/runloop';
+import $ from 'jquery';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * Element, whose overflow is being checked
    * To inject.
@@ -94,7 +94,7 @@ export default Ember.Mixin.create({
     if (!overflowSiblingsElements) {
       this.set('overflowSiblingsElements', overflowElement.siblings());
     }
-    let detectOverflowFunction = () => this.detectOverflow();
+    let detectOverflowFunction = () => safeExec(this, 'detectOverflow');
     let overflowDetectionListener = () => {
       run.debounce(overflowElement, detectOverflowFunction, overflowDetectionDelay);
     };

@@ -7,11 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
-
-const {
-  Controller,
-} = Ember;
+import Controller from '@ember/controller';
 
 export default Controller.extend({
   actions: {
