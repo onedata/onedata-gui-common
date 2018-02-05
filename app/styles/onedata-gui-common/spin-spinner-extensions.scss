@@ -48,11 +48,10 @@ $spinner-container-base-size: 120px;
     margin-top: 1em;
   }
   
-  &.description-bottom.middle-centered + p.loading-info {
+  &.description-bottom.inline-centered + p.loading-info {
     text-align: center;
     font-size: 1.2em;
     padding-top: 1em;
-    padding-bottom: 1em;
   }
   
   .spinner-logo {
