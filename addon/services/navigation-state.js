@@ -17,8 +17,6 @@ import EmberObject, { computed } from '@ember/object';
 import { reads, gt } from '@ember/object/computed';
 
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import { reject } from 'rsvp';
 
 /**
  * @typedef {object} Action
@@ -29,7 +27,6 @@ import { reject } from 'rsvp';
 
 export default Service.extend(I18n, {
   sidebarResources: service(),
-  contentResources: service(),
   router: service(),
   i18n: service(),
   media: service(),
@@ -56,55 +53,25 @@ export default Service.extend(I18n, {
    * Type of resource, that will be rendered.
    * @type {string}
    */
-  activeResourceType: computed('router.{currentURL,currentRouteName}', function () {
-    return this._getRouteParam('onedata.sidebar', 'type');
-  }),
+  activeResourceType: undefined,
 
   /**
-   * Active resource id used to render content.
-   * @type {string|undefined}
-   */
-  activeResourceId: computed('router.{currentURL,currentRouteName}', function () {
-    return this._getRouteParam('onedata.sidebar.content', 'resourceId');
-  }),
-
-  /**
-   * Active resource promise proxy used to render content.
-   * @type {PromiseObject<object>}
-   */
-  activeResourceProxy: computed('activeResourceType', 'activeResourceId', function () {
-    const {
-      activeResourceId,
-      activeResourceType,
-    } = this.getProperties('activeResourceId', 'activeResourceType');
-
-    const promise = activeResourceId ?
-      this.get('contentResources').getModelFor(
-        activeResourceType,
-        activeResourceId
-      ) : reject();
-    return PromiseObject.create({ promise });
-  }),
-
-  /**
-   * Active resource used to render content.
+   * Active resource used  to render content.
    * @type {object|undefined}
    */
-  activeResource: reads('activeResourceProxy.content'),
+  activeResource: undefined,
 
   /**
    * Active aspect of resource.
-   * @type {string}
+   * @type {string|undefined}
    */
-  activeAspect: computed('router.{currentURL,currentRouteName}', function () {
-    return this._getRouteParam('onedata.sidebar.content.aspect', 'aspectId');
-  }),
+  activeAspect: undefined,
 
   /**
    * One of: 'sidebar', 'index', 'aspect', undefined.
    * @type {string|undefined}
    */
-  activeContentLevel: computed('activeAspect', function () {
+  activeContentLevel: computed('activeAspect', 'router.currentRouteName', function () {
     const {
       router,
       activeAspect,
@@ -115,12 +82,10 @@ export default Service.extend(I18n, {
         return 'sidebar';
       case 'onedata.sidebar.content.index':
         return 'contentIndex';
+      case 'onedata.sidebar.content.aspect':
+        return activeAspect === 'index' ? 'index' : 'aspect';
       default:
-        if (activeAspect) {
-          return activeAspect === 'index' ? 'index' : 'aspect';
-        } else {
-          return undefined;
-        }
+        return undefined;
     }
   }),
 
@@ -248,22 +213,4 @@ export default Service.extend(I18n, {
       }
     }
   ),
-
-  /**
-   * Returns param for given route path
-   * @param {string} path 
-   * @param {string} paramName 
-   * @returns {string|undefined}
-   */
-  _getRouteParam(path, paramName) {
-    // must work with internal router to get information about route params
-    const router = this.get('router._router');
-    if (router.get('currentRouteName').startsWith(path)) {
-      const routeParams = router.get('targetState.routerJsState.params');
-      const pathParams = routeParams[path];
-      return pathParams ? pathParams[paramName] : undefined;
-    } else {
-      return undefined;
-    }
-  }
 });

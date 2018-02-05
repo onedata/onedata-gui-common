@@ -26,6 +26,7 @@ export default Route.extend({
   mainMenu: service(),
   sidebar: service(),
   sidebarResources: service(),
+  navigationState: service(),
 
   beforeModel(transition) {
     const resourceType = transition.params['onedata.sidebar'].type;
@@ -60,9 +61,9 @@ export default Route.extend({
     });
   },
 
-  afterModel() {
-    let mainMenu = this.get('mainMenu');
-    mainMenu.set('isLoadingItem', false);
+  afterModel(model) {
+    this.set('mainMenu.isLoadingItem', false);
+    this.set('navigationState.activeResourceType', model.resourceType);
   },
 
   renderTemplate(controller, model) {

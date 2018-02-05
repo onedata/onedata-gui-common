@@ -13,6 +13,7 @@ import { inject as service } from '@ember/service';
 
 export default Route.extend({
   sidebar: service(),
+  navigationState: service(),
 
   /**
    * @param {object} { aspect_id: string } - aspect_id is a name of some "aspect"
@@ -29,6 +30,7 @@ export default Route.extend({
   afterModel({ aspectId }) {
     let sidebar = this.get('sidebar');
     sidebar.changeItems(1, aspectId);
+    this.set('navigationState.activeAspect', aspectId);
   },
 
   renderTemplate(controller, model) {

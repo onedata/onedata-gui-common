@@ -11,38 +11,38 @@ describe('Integration | Component | actions popover content', function () {
   });
 
   beforeEach(function () {
-      this.set('a', [{
-        action: () => {},
-        title: 'action1',
-        icon: 'space',
-        class: 'someClass',
-      }, {
-        title: 'header',
-        separator: true,
-      }]);
-    }),
+    this.set('acts', [{
+      action: () => {},
+      title: 'action1',
+      icon: 'space',
+      class: 'someClass',
+    }, {
+      title: 'header',
+      separator: true,
+    }]);
+  });
 
-    it('renders actions', function (done) {
-      const actions = this.get('a');
-      const action = actions[0];
-      action.action = sinon.spy();
-      this.render(hbs `{{actions-popover-content actionsArray=a}}`);
+  it('renders actions', function (done) {
+    const actions = this.get('acts');
+    const action = actions[0];
+    action.action = sinon.spy();
+    this.render(hbs `{{actions-popover-content actionsArray=acts}}`);
 
-      const actionItem = this.$('li:first-child');
-      expect(actionItem).to.exist;
-      expect(actionItem.find('a')).to.have.class(action.class);
-      expect(actionItem.find(`.oneicon-${action.icon}`)).to.exist;
-      expect(actionItem.find('.one-label').text().trim()).to.equal(action.title);
-      click(actionItem.find('a')[0]).then(() => {
-        expect(action.action).to.be.calledOnce;
-        done();
-      });
+    const actionItem = this.$('li:first-child');
+    expect(actionItem).to.exist;
+    expect(actionItem.find('a')).to.have.class(action.class);
+    expect(actionItem.find(`.oneicon-${action.icon}`)).to.exist;
+    expect(actionItem.find('.one-label').text().trim()).to.equal(action.title);
+    click(actionItem.find('a')[0]).then(() => {
+      expect(action.action).to.be.calledOnce;
+      done();
     });
+  });
 
   it('renders header', function () {
-    const actions = this.get('a');
+    const actions = this.get('acts');
     const header = actions[1];
-    this.render(hbs `{{actions-popover-content actionsArray=a}}`);
+    this.render(hbs `{{actions-popover-content actionsArray=acts}}`);
 
     const actionItem = this.$('li:last-child');
     expect(actionItem).to.exist;
@@ -54,7 +54,7 @@ describe('Integration | Component | actions popover content', function () {
     const clickSpy = sinon.spy();
     this.on('actionClicked', clickSpy);
     this.render(hbs `{{actions-popover-content
-      actionsArray=a
+      actionsArray=acts
       actionClicked=(action "actionClicked")}}
     `);
 

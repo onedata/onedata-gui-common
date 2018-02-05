@@ -40,6 +40,7 @@ export default Route.extend({
   sidebar: service(),
   eventsBus: service(),
   contentResources: service(),
+  navigationState: service(),
 
   beforeModel(transition) {
     const resourceId = transition.params['onedata.sidebar.content'].resource_id;
@@ -73,9 +74,9 @@ export default Route.extend({
     }
   },
 
-  afterModel() {
-    let sidebar = this.get('sidebar');
-    sidebar.set('isLoadingItem', false);
+  afterModel(model) {
+    this.set('sidebar.isLoadingItem', false);
+    this.set('navigationState.activeResource', model.resource);
   },
 
   renderTemplate() {
