@@ -1,4 +1,18 @@
-// FIXME: jsdoc
+/**
+ * Invokes function that returns Promise multiple times until it resolves.
+ * 
+ * If the promise always rejects within some `limit` counts, the result
+ * promise rejects.
+ * 
+ * If the promise resolves for first time - the result promise resolves.
+ * 
+ * For usage examples see tests.
+ * 
+ * @module utils/try-until-resolve
+ * @author Jakub Liput
+ * @copyright (C) 2018 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 export default function tryUntilResolve(fun, limit, interval = 1) {
   const promise = fun();
