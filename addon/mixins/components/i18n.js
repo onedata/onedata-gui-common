@@ -54,4 +54,11 @@ export default Mixin.create({
     } = this.getProperties('i18n', 'tPrefix');
     return i18n.t(tPrefix + translationKey);
   },
+
+  /**
+   * Alias to `t` method.
+   */
+  tt() {
+    return this.t(...arguments);
+  },
 });
