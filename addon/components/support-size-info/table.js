@@ -48,7 +48,7 @@ export default Ember.Component.extend({
    * @type {Ember.Object}
    */
   _tableCustomClasses: Ember.Object.create({
-    table: 'table table-striped table-condensed',
+    table: 'table table-condensed',
   }),
 
   /**
