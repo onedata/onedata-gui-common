@@ -1,5 +1,9 @@
 $table-item-border: 1px solid $main-border-color;
 
+h5 {
+  font-weight: bold;
+}
+
 .vertical-align-middle {
   @include vertical-align-middle();
 }
@@ -239,6 +243,10 @@ input {
   &.sm {
     min-height: 50px;
   }
+  
+  &.lg {
+    min-height: 100px;
+  }
 }
 
 .loading-more-row {
@@ -305,3 +313,28 @@ a {
   }
 }
 
+.col-image {
+  padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+}
+
+.token-textarea {
+  width: 100%;
+  height: 120px;
+  margin-top: $padding-base-vertical;
+  margin-bottom: $padding-base-vertical;
+  font-family: monospace;
+}
+@media (max-width: $screen-xs-max) {
+  padding: $padding-large-vertical $padding-large-horizontal;
+  .token-textarea {
+    height: 200px;
+  }
+}
+
+.btn {
+  .oneicon {
+    position: relative;
+    left: -0.2em;
+    font-size: 2em;
+  }
+}

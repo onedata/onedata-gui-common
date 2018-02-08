@@ -222,7 +222,7 @@ $input-bg:                       #fff !default;
 $input-bg:                       darken($color-one-white, 2%);
 //** `<input disabled>` background color
 $input-bg-disabled:              $gray-lighter !default;
-$input-bg-disabled:              darken($color-one-white, 2%);
+$input-bg-disabled:              darken($color-one-white, 3%);
 
 //** Text color for `<input>`s
 $input-color:                    $gray !default;
