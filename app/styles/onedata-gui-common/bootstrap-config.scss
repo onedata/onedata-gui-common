@@ -218,6 +218,10 @@ label {
   }
 }
 
+.progress-bar-unknown {
+  background-color: transparentize($brand-primary, $amount: 0.8);
+}
+
 // Components w/ JavaScript
 @import "../bootstrap/modals";
 @import "../bootstrap/tooltip";
