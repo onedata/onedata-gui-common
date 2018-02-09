@@ -20,6 +20,7 @@ const {
  * @typedef {Object} FieldType
  * @property {string} name
  * @property {string} type
+ * @property {boolean} [disabled=undefined]
  * @property {boolean} [optional=undefined]
  * @property {*} [defaultValue=undefined]
  * @property {string} [label=undefined]
@@ -29,7 +30,23 @@ const {
  * @property {string} [tip=undefined]
  * @property {number} [step=undefined] step in number inputs
  * @property {string} [rightText=undefined] text that will be shown on
- * the right side of the input
+ *   the right side of the input
+ * @property {number|object} [lt=undefined] 'lower than' bounding for number
+ *   validator. May be a number or an object in format 
+ *   `{
+ *      [property]: string,
+ *      [number]: number
+ *    }`
+ *   where `property` is a name of some model property, which value should be used 
+ *   as an upper bound. If `number` is also provided, then value 
+ *   max(property-value, number) will be used. If property is not provided,
+ *   then value falls back to number property.
+ * @property {number|object} [lte=undefined] 'lower than or equal' bounding for
+ *   number validator. For more information see description of `lt`.
+ * @property {number|object} [gt=undefined] 'greater than' bounding for
+ *   number validator. For more information see description of `lt`.
+ * @property {number|object} [gte=undefined] 'greater than or equal' bounding for
+ *   number validator. For more information see description of `lt`.
  */
 
 export default Ember.Component.extend({
