@@ -29,7 +29,7 @@ describe('Integration | Component | one space indicator', function () {
     this.render(hbs `{{one-space-indicator totalSize=2048 occupiedSize=-10}}`);
 
     expect(this.$('.occupied-space-bar')).to.not.exist;
-    expect(this.$('.total-space').text().trim()).to.equal('2 KiB');
+    expect(this.$('.total-space')).to.not.exist;
     expect(this.$('.occupied-space')).to.not.exist;
   });
 

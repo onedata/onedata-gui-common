@@ -1,14 +1,12 @@
-<div class="total-space-bar bar"></div>
-{{#if _isTotalSizeValid}}
+{{#if _isDataValid}}
+  <div class="total-space-bar bar"></div>
   <span class="bar-label total-space">
     {{bytes-to-string totalSize}}
   </span>
-{{/if}}
-{{#if _isOccupiedSizeValid}}
   <div class="occupied-space-bar bar" style={{_occupiedSpaceBarStyle}}></div>
-  {{#if _isOccupiedSizeValid}}
-    <span class="bar-label occupied-space" style={{_occupiedSpaceLabelStyle}}>
-      {{bytes-to-string occupiedSize}}
-    </span>
-  {{/if}}
+  <span class="bar-label occupied-space" style={{_occupiedSpaceLabelStyle}}>
+    {{bytes-to-string occupiedSize}}
+  </span>
+{{else}}
+  {{resource-load-error message=incorrectDataMessage}}
 {{/if}}

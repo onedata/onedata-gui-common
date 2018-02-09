@@ -34,6 +34,11 @@ export default Component.extend({
   occupiedSize: undefined,
 
   /**
+   * @type {string|undefined}
+   */
+  incorrectDataMessage: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   _isTotalSizeValid: computed('totalSize', function () {
@@ -44,26 +49,27 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isOccupiedSizeValid: computed('_isTotalSizeValid', 'occupiedSize', function () {
-    const {
-      occupiedSize,
-      _isTotalSizeValid,
-    } = this.getProperties('occupiedSize', '_isTotalSizeValid');
-    return _isTotalSizeValid && typeof occupiedSize === 'number' &&
-      occupiedSize >= 0;
+  _isOccupiedSizeValid: computed('occupiedSize', function () {
+    const occupiedSize = this.get('occupiedSize');
+    return typeof occupiedSize === 'number' && occupiedSize >= 0;
   }),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  _isDataValid: computed.and('_isTotalSizeValid', '_isOccupiedSizeValid'),
 
   /**
    * @type {Ember.ComputedProperty<number|undefined>}
    */
-  _occupiedPercents: computed('_isOccupiedSizeValid', function () {
+  _occupiedPercents: computed('_isDataValid', function () {
     const {
-      _isOccupiedSizeValid,
+      _isDataValid,
       totalSize,
       occupiedSize,
-    } = this.getProperties('_isOccupiedSizeValid', 'totalSize', 'occupiedSize');
+    } = this.getProperties('_isDataValid', 'totalSize', 'occupiedSize');
 
-    return _isOccupiedSizeValid ? (occupiedSize / totalSize) * 100 : undefined;
+    return _isDataValid ? (occupiedSize / totalSize) * 100 : undefined;
   }),
 
   /**
