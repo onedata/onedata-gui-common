@@ -1,8 +1,6 @@
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 
-import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
-
 function aliasToShow(type) {
   return function (message, options) {
     return this.show(type, message, options);
@@ -25,6 +23,7 @@ function aliasToShow(type) {
 export default Service.extend({
   notify: service(),
   alert: service(),
+  errorExtractor: service(),
 
   info: aliasToShow('info'),
   success: aliasToShow('success'),
@@ -33,7 +32,7 @@ export default Service.extend({
 
   // TODO i18n  
   backendError(message, error) {
-    let reason = getErrorDetails(error);
+    const reason = this.get('errorExtractor').getMessage(error);
 
     let finalMessage =
       `<p><strong>We are sorry, but ${message} failed!</strong></p>`;

@@ -2,8 +2,8 @@
  * A resource loading error message intended to use on whole application screen
  *
  * @module components/application-error
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michal Borzecki
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,13 +14,13 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/application-error';
 
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
 
 export default Component.extend(I18n, {
   layout,
   classNames: ['application-error'],
 
   i18n: service(),
+  errorExtractor: service(),
 
   i18nPrefix: 'components.applicationError.',
 
@@ -48,20 +48,11 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   _reasonDetails: computed('error', function () {
-    let error = this.get('error');
-    if (error != null && typeof error === 'object') {
-      try {
-        return JSON.stringify(error);
-      } catch (e) {
-        if (e instanceof TypeError) {
-          return error;
-        } else {
-          throw error;
-        }
-      }
-    } else {
-      return error && getErrorDetails(error);
-    }
+    const {
+      error,
+      errorExtractor,
+    } = this.getProperties('error', 'errorExtractor');
+    return error && errorExtractor.getMessage(error);
   }),
 
   actions: {

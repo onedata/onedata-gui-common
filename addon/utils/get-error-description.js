@@ -6,8 +6,8 @@
  * - plain object with `message` property
  *
  * @module utils/get-error-description
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michal Borzecki
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -26,8 +26,17 @@ import Ember from 'ember';
 export default function getErrorDescription(error) {
   let details = error && error.response && error.response.body &&
     (error.response.body.description || error.response.body.error) ||
-    error.message ||
+    error && error.message ||
     error;
+  if (typeof details === 'object') {
+    try {
+      details = JSON.stringify(error);
+    } catch (e) {
+      if (!(e instanceof TypeError)) {
+        throw error;
+      }
+    }
+  }
 
   return htmlSafe(Ember.Handlebars.Utils.escapeExpression(details));
 }
