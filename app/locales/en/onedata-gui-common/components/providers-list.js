@@ -1,5 +1,7 @@
 export default {
   providers: 'Providers',
-  supportedSpaces: 'Supported spaces',
-  spaceSupportSize: 'Space support size',
+  providerItem: {
+    supportedSpaces: 'Number of supported spaces: {{count}}',
+    spaceSupportSize: 'Support provided: {{size}}',
+  },
 };

@@ -3,42 +3,15 @@
   {{#each providersData as |providerData|}}
     {{#list.item isCollapsible=false selectionValue=providerData.provider click=(action "providerClick" providerData.provider) as |listItem|}}
       {{#listItem.header}}
-        {{#truncated-string}}
-          <span class="item-icon-container">
-            {{one-icon class="item-icon" icon="provider" color=providerData.color}}
-          </span>
-          <span class="one-label">{{providerData.provider.name}}</span>
-        {{/truncated-string}}
-        {{#status-toolbar as |toolbar|}}
-          {{#if selectedSpace}}
-            {{toolbar.icon
-              class="supported-spaces"
-              icon="space"
-              hint=(t "components.providersList.supportedSpaces")
-              innerText=providerData.provider.spaces.length}}
-            {{toolbar.icon
-              class="space-support-size"
-              icon="provider"
-              hint=(t "components.providersList.spaceSupportSize")
-              outerText=(bytes-to-string (get selectedSpace.supportSizes providerData.provider.id))}}
-          {{/if}}
-        {{/status-toolbar}}
-        {{#if providerActions.length}}
-          {{#one-collapsible-toolbar
-            isMinimized=true
-            toggleBtnClass="btn-menu-toggle provider-menu-toggle"
-            as |dropdown|
-          }}
-            {{#each providerActions as |providerAction|}}
-            {{#dropdown.item
-              itemAction=(action providerAction.action providerData.provider)
-              triggerClasses=providerAction.class
-            }}
-              {{providerAction.text}}
-            {{/dropdown.item}}
-            {{/each}}
-          {{/one-collapsible-toolbar}}
-        {{/if}}
+        {{providers-list/provider-item
+          listItem=listItem
+          color=providerData.color
+          provider=providerData.provider
+          providerActions=providerActions
+          selectedSpace=selectedSpace
+          showSelectedSpaceSupportSize=showSelectedSpaceSupportSize
+          showSupportedSpacesCount=showSupportedSpacesCount
+        }}
       {{/listItem.header}}
     {{/list.item}}
   {{/each}}
