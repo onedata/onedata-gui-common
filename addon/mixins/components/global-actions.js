@@ -11,6 +11,7 @@ import Mixin from '@ember/object/mixin';
 import { inject } from '@ember/service';
 import { observer } from '@ember/object';
 import { next } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Mixin.create({
   navigationState: inject(),
@@ -49,7 +50,7 @@ export default Mixin.create({
 
   willDestroyElement() {
     next(() => {
-      this.get('navigationState').setProperties({
+      safeExec(this.get('navigationState'), 'setProperties', {
         aspectActions: [],
         aspectActionsTitle: undefined,
       });

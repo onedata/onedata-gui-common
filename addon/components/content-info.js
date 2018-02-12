@@ -24,7 +24,8 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/content-info';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
-import { computed, trySet } from '@ember/object';
+import { computed } from '@ember/object';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 const defaultButtonAction = notImplementedReject;
 
@@ -105,14 +106,14 @@ export default Component.extend({
       const actionResult = this.get('buttonAction')();
       if (actionResult.finally) {
         return actionResult.finally(() =>
-          trySet(this, '_actionInProgress', false)
+          safeExec(this, 'set', '_actionInProgress', false)
         );
       } else {
         this.set('_actionInProgress');
         return actionResult;
       }
     } catch (error) {
-      trySet(this, '_actionInProgress', false);
+      safeExec(this, 'set', '_actionInProgress', false);
       throw error;
     }
   },
