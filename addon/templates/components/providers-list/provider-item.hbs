@@ -6,7 +6,7 @@
 {{/truncated-string}}
 
 {{#if _renderStatus}}
-  {{#status-toolbar as |toolbar|}}
+  {{#status-toolbar class=(unless providerActions.length "push-right") as |toolbar|}}
     {{#if showSupportedSpacesCount}}
       {{toolbar.icon
         class="supported-spaces"

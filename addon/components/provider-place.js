@@ -8,14 +8,14 @@
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { htmlSafe } from '@ember/string';
 
-import { get, observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/provider-place';
 
 export default Component.extend({
   layout,
   classNames: ['provider-place'],
-  classNameBindings: ['status'],
 
   /**
    * A provider model that will be represented on map
@@ -31,31 +31,29 @@ export default Component.extend({
   atlasWidth: 0,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  hint: undefined,
+
+  /**
    * Scale factor for circle size
    * @type {number} 
    */
   circleSizeScale: 1,
 
   /**
-   * If true, drop is rendered after circle click
-   * @type {boolean}
+   * Circle color
+   * @type {string}
    */
-  renderDrop: true,
+  circleColor: undefined,
 
-  /**
-   * Provider status
-   * @type {computed.string}
-   */
-  status: computed('provider.status', function () {
-    let provider = this.get('provider');
-    return get(provider, 'isStatusValid') ? get(provider, 'status') : 'pending';
+  circleStyles: computed('circleColor', function () {
+    const circleColor = this.get('circleColor');
+    return htmlSafe(`color: ${circleColor};`);
   }),
 
-  atlasWidthObserver: observer('atlasWidth', function () {
-    this._recalculateSize();
-  }),
-
-  didInsertElement() {
+  didRender() {
     this._super(...arguments);
     this._recalculateSize();
   },

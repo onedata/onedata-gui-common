@@ -37,59 +37,73 @@ export default OnePieChart.extend({
   providersColors: Object.freeze({}),
 
   /**
+   * @virtual 
+   * @type {Array<models/Provider>}
+   */
+  providers: undefined,
+
+  /**
    * Data for OnePieChart
    * @type {computed.Ember.Array.PieChartSeries}
    */
-  data: computed('space.supportSizes', 'providersColors', function () {
-    let {
-      space,
-      providersColors,
-    } = this.getProperties('space', 'providersColors');
-    let supportSizes = get(space, 'supportSizes');
-    return A(_.map(Object.keys(supportSizes), (providerId) => (EmberObject.create({
-      id: String(providerId),
-      label: get(
-        _.find(get(space, 'providers'), { id: providerId }),
-        'name'
-      ),
-      value: supportSizes[providerId],
-      color: get(providersColors, providerId),
-    }))));
-  }),
+  data: computed(
+    'space.supportSizes',
+    'providersColors',
+    'providers.@each.entityId',
+    function () {
+      let {
+        space,
+        providersColors,
+        providers,
+      } = this.getProperties('space', 'providersColors', 'providers');
+      let supportSizes = get(space, 'supportSizes');
+      return A(_.map(Object.keys(supportSizes), (providerId) => (EmberObject.create({
+        id: String(providerId),
+        label: get(
+          _.find(providers, p => get(p, 'entityId') === providerId),
+          'name'
+        ),
+        value: supportSizes[providerId],
+        color: get(providersColors, providerId),
+      }))));
+    }),
 
   /**
    * If true, space object is valid and can be used as a data source for a chart.
    * @type {computed.boolean}
    */
-  isDataValid: computed('space', function () {
-    let space = this.get('space');
-    if (!space) {
-      return false;
-    }
-    let {
-      totalSize,
-      supportSizes,
-      providers
-    } = getProperties(space, 'totalSize', 'supportSizes', 'providers');
-
-    if (typeof totalSize !== 'number' || totalSize < 0 ||
-      !supportSizes || !isArray(providers)) {
-      return false;
-    }
-
-    let realTotalSize = 0;
-    let errorOccurred = false;
-    _.each(Object.keys(supportSizes), (providerId) => {
-      let size = get(supportSizes, providerId);
-      let provider = _.find(providers, { id: providerId });
-      if (typeof size !== 'number' || size <= 0 || !provider) {
-        errorOccurred = true;
-      } else {
-        realTotalSize += size;
+  isDataValid: computed(
+    'space.{totalSize,supportSizes}',
+    'providers.@each.entityId',
+    function () {
+      let space = this.get('space');
+      if (!space) {
+        return false;
       }
-    });
-    return !errorOccurred && realTotalSize === totalSize;
-  }),
+      let {
+        totalSize,
+        supportSizes,
+      } = getProperties(space, 'totalSize', 'supportSizes');
+      const providers = this.get('providers');
+
+      if (typeof totalSize !== 'number' || totalSize < 0 ||
+        !supportSizes || !isArray(providers)) {
+        return false;
+      }
+
+      let realTotalSize = 0;
+      let errorOccurred = false;
+      _.each(Object.keys(supportSizes), (providerId) => {
+        let size = get(supportSizes, providerId);
+        let provider = _.find(providers, p => get(p, 'entityId') === providerId);
+        if (typeof size !== 'number' || size <= 0 || !provider) {
+          errorOccurred = true;
+        } else {
+          realTotalSize += size;
+        }
+      });
+      return !errorOccurred && realTotalSize === totalSize;
+    }),
 
   /**
    * Returns size as a string.
