@@ -25,6 +25,7 @@
     color: $main-text-color;
     &.active {
       opacity: 1; 
+      overflow: auto;
       // Different heights for animation purposes
       max-height: 20em;
       margin-top: 10px;

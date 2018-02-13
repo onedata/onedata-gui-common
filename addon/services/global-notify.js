@@ -17,7 +17,7 @@ function aliasToShow(type) {
  *
  * @module services/global-notify
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Service.extend({
@@ -38,7 +38,9 @@ export default Service.extend({
       `<p><strong>We are sorry, but ${message} failed!</strong></p>`;
 
     if (reason) {
-      finalMessage += `<p><strong>The reason of failure:</strong><br>${reason}</p>`;
+      finalMessage +=
+        `<p><strong>The reason of failure:</strong>
+        <div class="error-reason">${reason}</div></p>`;
     } else {
       finalMessage += `<p>Unfortunately, error details are unavailable</p>`;
     }

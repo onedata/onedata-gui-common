@@ -11,7 +11,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { htmlSafe } from '@ember/string';
+import { htmlSafe, isHTMLSafe } from '@ember/string';
 import Ember from 'ember';
 
 /**
@@ -28,7 +28,7 @@ export default function getErrorDescription(error) {
     (error.response.body.description || error.response.body.error) ||
     error && error.message ||
     error;
-  if (typeof details === 'object') {
+  if (typeof details === 'object' && !isHTMLSafe(details)) {
     try {
       details = JSON.stringify(error);
     } catch (e) {
