@@ -17,6 +17,7 @@ import { A, isArray } from '@ember/array';
 import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import OnePieChart from 'onedata-gui-common/components/one-pie-chart';
+import { reads, and } from '@ember/object/computed';
 
 export default OnePieChart.extend({
   classNames: ['space-providers-support-chart'],
@@ -38,9 +39,14 @@ export default OnePieChart.extend({
 
   /**
    * @virtual 
-   * @type {Array<models/Provider>}
+   * @type {PromiseArray<models/Provider>}
    */
-  providers: undefined,
+  providers: reads('space.providerList.list'),
+
+  providersProxyLoaded: and(
+    'space.providerList.isLoaded',
+    'space.providerList.list.isFulfilled'
+  ),
 
   /**
    * Data for OnePieChart
@@ -50,22 +56,32 @@ export default OnePieChart.extend({
     'space.supportSizes',
     'providersColors',
     'providers.@each.entityId',
-    function () {
-      let {
-        space,
-        providersColors,
-        providers,
-      } = this.getProperties('space', 'providersColors', 'providers');
-      let supportSizes = get(space, 'supportSizes');
-      return A(_.map(Object.keys(supportSizes), (providerId) => (EmberObject.create({
-        id: String(providerId),
-        label: get(
-          _.find(providers, p => get(p, 'entityId') === providerId),
-          'name'
-        ),
-        value: supportSizes[providerId],
-        color: get(providersColors, providerId),
-      }))));
+    'providersProxyLoaded',
+    function getData() {
+      if (this.get('providersProxyLoaded')) {
+        let {
+          space,
+          providersColors,
+        } = this.getProperties('space', 'providersColors');
+        let supportSizes = get(space, 'supportSizes');
+        const providers = this.get('providers');
+        return A(
+          _.map(Object.keys(supportSizes), providerId => {
+            const provider = _.find(
+              providers.toArray(),
+              p => get(p, 'entityId') === providerId
+            );
+            return EmberObject.create({
+              id: String(providerId),
+              label: get(provider, 'name'),
+              value: get(supportSizes, providerId),
+              color: get(providersColors, providerId),
+            });
+          })
+        );
+      } else {
+        return A();
+      }
     }),
 
   /**
@@ -75,35 +91,41 @@ export default OnePieChart.extend({
   isDataValid: computed(
     'space.{totalSize,supportSizes}',
     'providers.@each.entityId',
+    'providersProxyLoaded',
     function () {
-      let space = this.get('space');
-      if (!space) {
-        return false;
-      }
-      let {
-        totalSize,
-        supportSizes,
-      } = getProperties(space, 'totalSize', 'supportSizes');
-      const providers = this.get('providers');
-
-      if (typeof totalSize !== 'number' || totalSize < 0 ||
-        !supportSizes || !isArray(providers)) {
-        return false;
-      }
-
-      let realTotalSize = 0;
-      let errorOccurred = false;
-      _.each(Object.keys(supportSizes), (providerId) => {
-        let size = get(supportSizes, providerId);
-        let provider = _.find(providers, p => get(p, 'entityId') === providerId);
-        if (typeof size !== 'number' || size <= 0 || !provider) {
-          errorOccurred = true;
-        } else {
-          realTotalSize += size;
+      if (this.get('providersProxyLoaded')) {
+        let space = this.get('space');
+        if (!space) {
+          return false;
         }
-      });
-      return !errorOccurred && realTotalSize === totalSize;
-    }),
+        let {
+          totalSize,
+          supportSizes,
+        } = getProperties(space, 'totalSize', 'supportSizes');
+        const providers = this.get('providers');
+
+        if (typeof totalSize !== 'number' || totalSize < 0 ||
+          !supportSizes || !isArray(providers)) {
+          return false;
+        }
+
+        let realTotalSize = 0;
+        let errorOccurred = false;
+        _.each(Object.keys(supportSizes), (providerId) => {
+          let size = get(supportSizes, providerId);
+          let provider = _.find(providers, p => get(p, 'entityId') === providerId);
+          if (typeof size !== 'number' || size <= 0 || !provider) {
+            errorOccurred = true;
+          } else {
+            realTotalSize += size;
+          }
+        });
+        return !errorOccurred && realTotalSize === totalSize;
+      } else {
+        return undefined;
+      }
+    }
+  ),
 
   /**
    * Returns size as a string.

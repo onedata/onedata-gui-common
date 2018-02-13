@@ -33,10 +33,13 @@ export default Mixin.create({
         globalActionsTitle,
         globalActions,
       } = this.getProperties('globalActions', 'globalActionsTitle');
-      this.get('navigationState').setProperties({
-        aspectActions: globalActions,
-        aspectActionsTitle: globalActionsTitle,
-      });
+      const navigationState = this.get('navigationState');
+      if (!navigationState.isDestroyed) {
+        navigationState.setProperties({
+          aspectActions: globalActions,
+          aspectActionsTitle: globalActionsTitle,
+        });
+      }
     }
   ),
 
@@ -49,10 +52,13 @@ export default Mixin.create({
 
   willDestroyElement() {
     next(() => {
-      this.get('navigationState').setProperties({
-        aspectActions: [],
-        aspectActionsTitle: undefined,
-      });
+      const navigationState = this.get('navigationState');
+      if (!navigationState.isDestroyed) {
+        navigationState.setProperties({
+          aspectActions: [],
+          aspectActionsTitle: undefined,
+        });
+      }
     });
     this._super(...arguments);
   }
