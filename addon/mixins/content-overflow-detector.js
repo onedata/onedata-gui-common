@@ -11,7 +11,7 @@
  * 
  * @module mixins/content-overflow-detector
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -109,6 +109,10 @@ export default Mixin.create({
   },
 
   detectOverflow() {
+    if (this.isDestroyed) {
+      return;
+    }
+
     let {
       overflowElement,
       overflowParentElement,
@@ -116,9 +120,14 @@ export default Mixin.create({
       additionalOverflowMargin,
       minimumFullWindowSize,
       _window
-    } = this.getProperties('overflowElement', 'overflowParentElement',
-      'overflowSiblingsElements', 'additionalOverflowMargin', 'minimumFullWindowSize',
-      '_window');
+    } = this.getProperties(
+      'overflowElement',
+      'overflowParentElement',
+      'overflowSiblingsElements',
+      'additionalOverflowMargin',
+      'minimumFullWindowSize',
+      '_window'
+    );
 
     if (minimumFullWindowSize && _window.innerWidth < minimumFullWindowSize) {
       this.set('hasOverflow', true);
