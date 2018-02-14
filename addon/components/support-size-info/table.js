@@ -43,7 +43,7 @@ export default Component.extend({
    * Custom classes for ember-models-table addon.
    * @type {Ember.Object}
    */
-  _tableCustomClasses: Ember.Object.create({
+  _tableCustomClasses: EmberObject.create({
     table: 'table table-striped table-condensed',
   }),
 
