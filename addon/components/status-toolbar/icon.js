@@ -9,6 +9,7 @@
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import { invokeAction } from 'ember-invoke-action';
 
 import layout from 'onedata-gui-common/templates/components/status-toolbar/icon';
@@ -83,6 +84,14 @@ export default Component.extend({
    * @type {Function}
    */
   clickAction: null,
+
+  _innerTextPresent: computed('innerText', function getInnerTextPresent() {
+    return this.get('innerText') != null;
+  }),
+
+  _outerTextPresent: computed('outerText', function getOuterTextPresent() {
+    return this.get('outerText') != null;
+  }),
 
   click() {
     invokeAction(this, 'clickAction');
