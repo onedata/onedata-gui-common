@@ -10,15 +10,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { reads } from '@ember/object/computed';
+
+import { inject as service } from '@ember/service';
 
 import UserAccountButton from 'onedata-gui-common/components/user-account-button';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
-
-const {
-  inject: { service },
-  computed,
-} = Ember;
 
 export default UserAccountButton.extend({
   layout,
@@ -33,7 +30,7 @@ export default UserAccountButton.extend({
   /**
    * @override
    */
-  username: computed.reads('user.name'),
+  username: reads('user.name'),
 
   init() {
     this._super(...arguments);

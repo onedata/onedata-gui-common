@@ -5,10 +5,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
-  treeDefinition: [{
+export default Component.extend({
+  treeDefinition: Object.freeze([{
       content: 'Node 1',
       subtree: [{
         content: 'Node 1.1',
@@ -76,7 +76,7 @@ export default Ember.Component.extend({
         }]
       }]
     }
-  ],
+  ]),
 
   _searchQuery: '',
 

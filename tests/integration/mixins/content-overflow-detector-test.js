@@ -1,16 +1,11 @@
+import EmberObject from '@ember/object';
+import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-import Ember from 'ember';
 import ContentOverflowDetectorMixin from 'onedata-gui-common/mixins/content-overflow-detector';
-
-const {
-  String: {
-    htmlSafe,
-  },
-} = Ember;
 
 const PARENT_WIDTH = 1000;
 const ELEMENT_WIDTH = 500;
@@ -41,7 +36,7 @@ describe('Integration | Mixin | content overflow detector', function () {
 
   it('detects overflow', function () {
     let ContentOverflowDetectorObject =
-      Ember.Object.extend(ContentOverflowDetectorMixin);
+      EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
     this.render(hbs `
@@ -68,7 +63,7 @@ describe('Integration | Mixin | content overflow detector', function () {
 
   it('takes additionalOverflowMargin into account', function () {
     let ContentOverflowDetectorObject =
-      Ember.Object.extend(ContentOverflowDetectorMixin);
+      EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
     this.render(hbs `
@@ -90,7 +85,7 @@ describe('Integration | Mixin | content overflow detector', function () {
 
   it('reacts to window resize', function (done) {
     let ContentOverflowDetectorObject =
-      Ember.Object.extend(ContentOverflowDetectorMixin);
+      EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
     this.render(hbs `
@@ -122,7 +117,7 @@ describe('Integration | Mixin | content overflow detector', function () {
 
   it('takes minimumFullWindowSize into account', function (done) {
     let ContentOverflowDetectorObject =
-      Ember.Object.extend(ContentOverflowDetectorMixin);
+      EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
     this.render(hbs `

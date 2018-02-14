@@ -1,8 +1,6 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-way-radio-group';
 import { invokeAction } from 'ember-invoke-action';
-
-const { Component } = Ember;
 
 /**
  * Creates radio inputs group based one the one-toggle-radio component.

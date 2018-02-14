@@ -7,16 +7,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import EmberObject, { computed } from '@ember/object';
+import { A } from '@ember/array';
 import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/support-size-info';
 
-const {
-  computed,
-  A,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['support-size-info'],
 
@@ -84,7 +82,7 @@ export default Ember.Component.extend({
    */
   supportTableData: computed('data', function () {
     let data = this.get('data');
-    return A(data.map((series) => Ember.Object.create({
+    return A(data.map((series) => EmberObject.create({
       supporterName: series.get('label'),
       supportSize: series.get('value'),
     })));

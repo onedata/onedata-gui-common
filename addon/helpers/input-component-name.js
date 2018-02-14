@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 export function inputComponentName([type] /*, hash*/ ) {
   switch (type) {
@@ -12,4 +12,4 @@ export function inputComponentName([type] /*, hash*/ ) {
   }
 }
 
-export default Ember.Helper.helper(inputComponentName);
+export default helper(inputComponentName);

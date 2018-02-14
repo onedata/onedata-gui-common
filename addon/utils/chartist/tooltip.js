@@ -30,6 +30,7 @@
 
 /* global Chartist */
 import _ from 'lodash';
+import $ from 'jquery';
 import dynamicRound from 'onedata-gui-common/utils/dynamic-round';
 
 const TOOLTIP_HTML =

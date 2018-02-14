@@ -10,28 +10,19 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { assert } from '@ember/debug';
+import { oneWay } from '@ember/object/computed';
+import { observer, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+import { next } from '@ember/runloop';
+import { isArray } from '@ember/array';
 import layout from 'onedata-gui-common/templates/components/one-tree/item';
 
 import { invokeAction, invoke } from 'ember-invoke-action';
 
-const {
-  assert,
-  computed,
-  computed: {
-    oneWay,
-  },
-  observer,
-  inject: {
-    service,
-  },
-  run: {
-    next,
-  },
-  isArray,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['one-tree-item', 'collapse-animation', 'collapse-medium'],
   classNameBindings: [
@@ -117,7 +108,7 @@ export default Ember.Component.extend({
    * _activeSubtreeKeys value.
    * @type {Array.*}
    */
-  _activeSubtreeKeysOld: [],
+  _activeSubtreeKeysOld: Object.freeze([]),
 
   /**
    * If true, this tree was recently expanded.

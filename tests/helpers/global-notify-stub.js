@@ -1,7 +1,12 @@
-import Ember from 'ember';
+import Service from '@ember/service';
 
-export default Ember.Service.extend({
-  infoMessages: [],
+export default Service.extend({
+  infoMessages: undefined,
+
+  init() {
+    this._super(...arguments);
+    this.set('infoMessages', []);
+  },
 
   info(message) {
     this.get('infoMessages').push(message);

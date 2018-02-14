@@ -5,17 +5,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
-const {
-  computed,
-  computed: {
-    oneWay,
-  },
-  A,
-} = Ember;
+import { computed } from '@ember/object';
+import { oneWay } from '@ember/object/computed';
+import { A } from '@ember/array';
 
-export default Ember.Component.extend({
+export default Component.extend({
   // fake spaces
   spaces: A([{
     name: 'space1',
@@ -66,7 +62,7 @@ export default Ember.Component.extend({
   selectedSpace: oneWay('spaces.firstObject'),
 
   // fake provider actions
-  providerActions: [{
+  providerActions: Object.freeze([{
       text: 'Action',
       action: () => {},
       class: 'action1-trigger',
@@ -76,5 +72,5 @@ export default Ember.Component.extend({
       action: () => {},
       class: 'action2-trigger',
     },
-  ],
+  ]),
 });

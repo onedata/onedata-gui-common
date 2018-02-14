@@ -1,10 +1,10 @@
+import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 
-import Ember from 'ember';
+import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | promise proxy container', function () {
   setupComponentTest('promise-proxy-container', {
@@ -13,7 +13,7 @@ describe('Integration | Component | promise proxy container', function () {
 
   it('renders error alert if promise has been rejected', function (done) {
     let rejectReason = 'some reason';
-    let fakeProxy = Ember.Object.create({
+    let fakeProxy = EmberObject.create({
       isSettled: true,
       ifFulfilled: false,
       isRejected: true,
@@ -33,7 +33,7 @@ describe('Integration | Component | promise proxy container', function () {
 
   it('shows error details when clicking on show details', function (done) {
     let rejectReason = 'some reason';
-    let fakeProxy = Ember.Object.create({
+    let fakeProxy = EmberObject.create({
       isSettled: true,
       ifFulfilled: false,
       isRejected: true,

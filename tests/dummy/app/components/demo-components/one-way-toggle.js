@@ -5,11 +5,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import { Promise } from 'rsvp';
 import { run } from '@ember/runloop';
 
-export default Ember.Component.extend({
+export default Component.extend({
   // values for toggles
   twoStateToggle: false,
   threeStateToggle: 2,

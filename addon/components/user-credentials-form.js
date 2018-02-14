@@ -9,7 +9,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject, { computed } from '@ember/object';
+
+import { readOnly } from '@ember/object/computed';
+import { htmlSafe } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/user-credentials-form';
 import OneForm from 'onedata-gui-common/components/one-form';
 import { validator, buildValidations } from 'ember-cp-validations';
@@ -17,12 +20,6 @@ import { invokeAction } from 'ember-invoke-action';
 import createFieldValidator from 'onedata-gui-common/utils/create-field-validator';
 
 const PASSWORD_DOT = '&#9679';
-
-const {
-  computed,
-  computed: { readOnly },
-  String: { htmlSafe },
-} = Ember;
 
 // TODO i18n
 
@@ -94,7 +91,7 @@ export default OneForm.extend(Validations, {
    * @type {FieldType}
    */
   usernameField: computed(() => {
-    let field = Ember.Object.create(USERNAME_FIELD);
+    let field = EmberObject.create(USERNAME_FIELD);
     field.set('name', 'generic.' + field.get('name'));
     return field;
   }).readOnly(),
@@ -103,7 +100,7 @@ export default OneForm.extend(Validations, {
    * @type {FieldType}
    */
   secretPasswordField: computed(() => {
-    let field = Ember.Object.create(SECRET_PASSWORD_FIELD);
+    let field = EmberObject.create(SECRET_PASSWORD_FIELD);
     field.set('name', 'static.' + field.get('name'));
     return field;
   }).readOnly(),
@@ -112,19 +109,19 @@ export default OneForm.extend(Validations, {
    * @type {Array.FieldType}
    */
   changePasswordFields: computed(() => CHANGE_PASSWORD_FIELDS.map(f => {
-    let field = Ember.Object.create(f);
+    let field = EmberObject.create(f);
     field.set('name', 'change.' + field.get('name'));
     return field;
   })).readOnly(),
 
-  allFieldsValues: Ember.Object.create({
-    generic: Ember.Object.create({
+  allFieldsValues: EmberObject.create({
+    generic: EmberObject.create({
       username: null,
     }),
-    static: Ember.Object.create({
+    static: EmberObject.create({
       secretPassword: htmlSafe(PASSWORD_DOT.repeat(5)),
     }),
-    change: Ember.Object.create({
+    change: EmberObject.create({
       currentPassword: null,
       newPassword: null,
       newPasswordRetype: null,

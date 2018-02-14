@@ -9,13 +9,10 @@
 
 // TODO i18n
 
-import Ember from 'ember';
-import layout from 'onedata-gui-common/templates/components/brand-info';
+import Component from '@ember/component';
 
-const {
-  Component,
-  computed,
-} = Ember;
+import { computed } from '@ember/object';
+import layout from 'onedata-gui-common/templates/components/brand-info';
 
 export default Component.extend({
   layout,

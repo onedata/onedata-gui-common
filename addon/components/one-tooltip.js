@@ -16,6 +16,7 @@
 import BsTooltip from 'ember-bootstrap/components/bs-tooltip';
 import { inject } from '@ember/service';
 import { observer } from '@ember/object';
+import $ from 'jquery';
 
 export default BsTooltip.extend({
   scrollState: inject(),

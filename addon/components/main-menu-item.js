@@ -1,14 +1,9 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { capitalize } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';
 
-const {
-  computed,
-  String: {
-    capitalize
-  }
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'li',
   classNames: ['main-menu-item', 'one-list-item'],
@@ -27,6 +22,13 @@ export default Ember.Component.extend({
   isLoading: false,
   isFailed: false,
 
+  /**
+   * @type {function}
+   * @param {string} item
+   * @returns {undefined}
+   */
+  itemClicked: () => {},
+
   name: computed('item.id', function () {
     let item = this.get('item');
     return capitalize(item.id);
@@ -35,7 +37,7 @@ export default Ember.Component.extend({
   click() {
     if (!this.get('isDisabled')) {
       let item = this.get('item');
-      this.sendAction('itemClicked', item);
+      this.get('itemClicked')(item);
       return false;
     }
   }

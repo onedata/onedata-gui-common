@@ -1,13 +1,7 @@
-import Ember from 'ember';
+import Service, { inject as service } from '@ember/service';
+import { htmlSafe } from '@ember/string';
 
 import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
-
-const {
-  inject: {
-    service
-  },
-  String: { htmlSafe },
-} = Ember;
 
 function aliasToShow(type) {
   return function (message, options) {
@@ -28,7 +22,7 @@ function aliasToShow(type) {
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export default Ember.Service.extend({
+export default Service.extend({
   notify: service(),
   alert: service(),
 

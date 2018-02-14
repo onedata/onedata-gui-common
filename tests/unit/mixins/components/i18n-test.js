@@ -1,9 +1,9 @@
+import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import Ember from 'ember';
 import ComponentsI18nMixin from 'onedata-gui-common/mixins/components/i18n';
 
-const i18nStub = Ember.Object.create({
+const i18nStub = EmberObject.create({
   t(key) {
     return `_${key}_`;
   },
@@ -12,7 +12,7 @@ const i18nStub = Ember.Object.create({
 describe('Unit | Mixin | components/i18n', function () {
 
   it('adds t method to component that uses i18n service and prefix', function () {
-    const ComponentsI18nObject = Ember.Object.extend(ComponentsI18nMixin, {
+    const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
       i18n: i18nStub,
       i18nPrefix: 'component.test.',
     });
@@ -24,7 +24,7 @@ describe('Unit | Mixin | components/i18n', function () {
   });
 
   it('supports prefix without dot on end', function () {
-    const ComponentsI18nObject = Ember.Object.extend(ComponentsI18nMixin, {
+    const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
       i18n: i18nStub,
       i18nPrefix: 'component.test1',
     });
@@ -36,7 +36,7 @@ describe('Unit | Mixin | components/i18n', function () {
   });
 
   it('supports lack of prefix', function () {
-    const ComponentsI18nObject = Ember.Object.extend(ComponentsI18nMixin, {
+    const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
       i18n: i18nStub,
     });
     const subject = ComponentsI18nObject.create();

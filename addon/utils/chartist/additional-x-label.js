@@ -13,6 +13,7 @@
  */
 
 /* global Chartist */
+import $ from 'jquery';
 
 export default function (options) {
   let defaultOptions = {

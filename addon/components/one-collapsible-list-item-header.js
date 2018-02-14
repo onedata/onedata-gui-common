@@ -15,15 +15,13 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-list-item-header';
 import { invoke, invokeAction } from 'ember-invoke-action';
 
-const {
-  observer,
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'div',
   classNames: ['one-collapsible-list-item-header', 'row', 'list-header-row', 'truncate'],

@@ -1,15 +1,10 @@
+import EmberObject from '@ember/object';
+import { Promise } from 'rsvp';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
-
-const {
-  RSVP: {
-    Promise,
-  },
-} = Ember;
 
 const ERROR_MSG = 'error!';
 
@@ -29,9 +24,9 @@ describe('Integration | Component | one form simple', function () {
       }
     ];
 
-    const VALIDATIONS = Ember.Object.create({
+    const VALIDATIONS = EmberObject.create({
       errors: [
-        Ember.Object.create({
+        EmberObject.create({
           attribute: 'allFieldsValues.main.first',
           message: ERROR_MSG
         })

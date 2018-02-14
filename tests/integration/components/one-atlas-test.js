@@ -1,15 +1,9 @@
+import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-import Ember from 'ember';
-
-const {
-  String: {
-    htmlSafe,
-  }
-} = Ember;
 
 describe('Integration | Component | one atlas', function () {
   setupComponentTest('one-atlas', {

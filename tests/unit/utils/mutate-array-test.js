@@ -1,16 +1,11 @@
+import { A } from '@ember/array';
+import EmberObject, { get } from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import Ember from 'ember';
 import mutateArray from 'onedata-gui-common/utils/mutate-array';
 import sinon from 'sinon';
 
 import _ from 'lodash';
-
-const {
-  get,
-  A,
-  Object: EmberObject,
-} = Ember;
 
 function createArray(type, content) {
   switch (type) {

@@ -1,13 +1,8 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { alias } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/main-content';
 
-const {
-  computed: {
-    alias
-  }
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['main-content'],
 

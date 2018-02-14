@@ -9,7 +9,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+
+import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/spin-spinner-block';
 
 const PREDEF_SIZES = {
@@ -20,11 +22,7 @@ const PREDEF_SIZES = {
   lg: 1.2
 };
 
-const {
-  computed
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'div',
   classNames: ['spin-spinner-block', 'spinner-container'],

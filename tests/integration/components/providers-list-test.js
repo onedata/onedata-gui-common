@@ -1,3 +1,4 @@
+import { A } from '@ember/array';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
@@ -5,12 +6,8 @@ import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import Ember from 'ember';
 import _ from 'lodash';
-
-const {
-  A,
-} = Ember;
+import $ from 'jquery';
 
 describe('Integration | Component | providers list', function () {
   setupComponentTest('providers-list', {

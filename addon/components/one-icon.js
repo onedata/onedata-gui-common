@@ -1,10 +1,6 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-icon';
-
-const {
-  computed,
-  observer
-} = Ember;
 
 /**
  * Inserts a icon from oneicons font.
@@ -14,7 +10,7 @@ const {
  * @copyright (C) 2016-2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: 'span',
   classNames: ['one-icon', 'oneicon'],

@@ -1,3 +1,4 @@
+import { or } from '@ember/object/computed';
 import Component from '@ember/component';
 import { Promise } from 'rsvp';
 import { computed } from '@ember/object';
@@ -71,13 +72,13 @@ export default Component.extend({
     return this.get('spinnerSide') === 'left' ? 'spinner-left' : '';
   }),
 
-  _disabled: computed.or('_isInProgress', 'isReadOnly'),
+  _disabled: or('_isInProgress', 'isReadOnly'),
 
   /**
    * Internal in progress state
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isInProgress: computed.or('isInProgress', '_updateInProgress'),
+  _isInProgress: or('isInProgress', '_updateInProgress'),
 
   /**
    * Flag set internally using promise that is returned by update action

@@ -7,10 +7,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 export function dataType([data] /*, hash*/ ) {
   return typeof data;
 }
 
-export default Ember.Helper.helper(dataType);
+export default helper(dataType);

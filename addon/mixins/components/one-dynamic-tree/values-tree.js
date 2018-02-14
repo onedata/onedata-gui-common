@@ -13,13 +13,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import EmberObject from '@ember/object';
 
-const {
-  typeOf
-} = Ember;
+import Mixin from '@ember/object/mixin';
+import { typeOf } from '@ember/utils';
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   /**
    * Values tree.
    * @type {Ember.Object}
@@ -55,7 +54,7 @@ export default Ember.Mixin.create({
         return undefined;
       }
     } else {
-      let values = Ember.Object.create();
+      let values = EmberObject.create();
       node.subtree.forEach((subnode) => {
         let subnodeValues = this._buildValuesNode(subnode, useDefaults);
         if (subnodeValues !== undefined) {

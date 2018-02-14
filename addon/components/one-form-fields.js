@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-form-fields';
 import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
@@ -49,7 +49,7 @@ const {
  *   number validator. For more information see description of `lt`.
  */
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   tagName: '',
   layoutConfig,

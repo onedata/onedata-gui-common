@@ -1,20 +1,11 @@
-import Ember from 'ember';
+import { oneWay, equal } from '@ember/object/computed';
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+import { Promise } from 'rsvp';
+import { htmlSafe } from '@ember/string';
+import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import { invokeAction, invoke } from 'ember-invoke-action';
-
-const {
-  inject: {
-    service
-  },
-  computed,
-  RSVP: {
-    Promise
-  },
-  String: {
-    htmlSafe
-  },
-  get,
-} = Ember;
 
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
@@ -38,7 +29,7 @@ const MOBILE_APPLAYOUT_STATE = {
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
   classNames: ['app-layout'],
 
@@ -50,7 +41,7 @@ export default Ember.Component.extend({
   scrollState: service(),
 
   // TODO: too much relations: we got mainMenuItemChanged event
-  currentTabId: computed.oneWay('mainMenu.currentItemId'),
+  currentTabId: oneWay('mainMenu.currentItemId'),
   sidenavTabId: null,
   sidebarSecondaryItem: null,
   mobileAppLayoutHeader: computed('mobileAppLayoutState', 'currentTabId',
@@ -73,7 +64,7 @@ export default Ember.Component.extend({
       }
     }),
   mobileAppLayoutState: MOBILE_APPLAYOUT_STATE.SIDEBAR,
-  showMobileSidebar: computed.equal('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR),
+  showMobileSidebar: equal('mobileAppLayoutState', MOBILE_APPLAYOUT_STATE.SIDEBAR),
 
   sidenavContentComponent: computed('sidenavTabId', function () {
     let sidenavTabId = this.get('sidenavTabId');

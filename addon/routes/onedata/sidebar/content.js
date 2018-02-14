@@ -20,16 +20,10 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Ember from 'ember';
+import Route from '@ember/routing/route';
 
-const {
-  inject: {
-    service
-  },
-  RSVP: {
-    Promise
-  },
-} = Ember;
+import { inject as service } from '@ember/service';
+import { Promise } from 'rsvp';
 
 const SPECIAL_IDS = [
   'empty',
@@ -40,13 +34,13 @@ function isSpecialResourceId(id) {
   return SPECIAL_IDS.indexOf(id) !== -1;
 }
 
-export default Ember.Route.extend({
+export default Route.extend({
   sidebar: service(),
   eventsBus: service(),
   contentResources: service(),
 
   beforeModel(transition) {
-    const resourceId = transition.params['onedata.sidebar.content'].resourceId;
+    const resourceId = transition.params['onedata.sidebar.content'].resource_id;
     const {
       sidebar,
       eventsBus,
@@ -56,7 +50,7 @@ export default Ember.Route.extend({
     eventsBus.trigger('one-sidenav:close', '#sidenav-sidebar');
   },
 
-  model({ resourceId }) {
+  model({ resource_id: resourceId }) {
     // TODO: validate and use resourceType
     let {
       resourceType
