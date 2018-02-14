@@ -74,7 +74,9 @@ describe('Integration | Component | provider place', function () {
 
   it('shows provider status', function () {
     this.render(hbs `{{provider-place provider=provider}}`);
-    expect(this.$('.provider-place')).to.have.class('online');
+    const $providerPlace = this.$('.provider-place');
+    expect($providerPlace).to.exist;
+    expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
   });
 
   it('shows provider status as "pending" if isStatusValid==false', function () {
