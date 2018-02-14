@@ -21,7 +21,7 @@
               inputId=(concat parentView.elementId (concat "-" field.name))
               checked=(get formValues field.name)
               update=(action "inputChanged" field.name)
-              isReadOnly=disabled
+              isReadOnly=(or disabled field.disabled)
               onFocusOut=(action "onFocusOut" field)
             }}
           {{else if (eq field.type "radio-group")}}
@@ -32,6 +32,7 @@
               fieldName=field.name
               options=field.options
               update=(action "inputChanged" field.name)
+              isReadOnly=(or disabled field.disabled)
               onFocusOut=(action "onFocusOut" field)
             }}
           {{/if}}
@@ -47,7 +48,7 @@
         inputId=(concat parentView.elementId (concat "-" field.name))
         field=field
         value=(get formValues field.name)
-        disabled=disabled
+        disabled=(or disabled field.disabled)
         inputChanged=(action "inputChanged")
         onFocusOut=(action "onFocusOut" field)
       }}
