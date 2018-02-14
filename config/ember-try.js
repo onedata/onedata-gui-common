@@ -1,3 +1,4 @@
+/* eslint-env node */
 module.exports = {
   scenarios: [{
       name: 'ember-lts-2.12',
