@@ -6,12 +6,12 @@
  * - plain object with `message` property
  *
  * @module utils/get-error-description
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michal Borzecki
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { htmlSafe } from '@ember/string';
+import { htmlSafe, isHTMLSafe } from '@ember/string';
 import Ember from 'ember';
 
 /**
@@ -21,13 +21,31 @@ import Ember from 'ember';
  *
  * @export
  * @param {object|string} error
- * @return {Ember.String.htmlSafe}
+ * @return {object}
  */
 export default function getErrorDescription(error) {
   let details = error && error.response && error.response.body &&
     (error.response.body.description || error.response.body.error) ||
-    error.message ||
+    error && error.message ||
     error;
+  let errorJson;
+  let message;
+  if (typeof details === 'object' && !isHTMLSafe(details)) {
+    try {
+      errorJson = htmlSafe(Ember.Handlebars.Utils.escapeExpression(
+        JSON.stringify(error)
+      ));
+    } catch (e) {
+      if (!(e instanceof TypeError)) {
+        throw error;
+      }
+    }
+  } else {
+    message = htmlSafe(Ember.Handlebars.Utils.escapeExpression(details));
+  }
 
-  return htmlSafe(Ember.Handlebars.Utils.escapeExpression(details));
+  return {
+    message,
+    errorJsonString: errorJson,
+  };
 }

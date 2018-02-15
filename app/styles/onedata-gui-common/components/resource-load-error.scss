@@ -42,18 +42,14 @@ $inline-alert-left-border-width: 60px;
     color: $main-text-color;
     &.active {
       opacity: 1; 
-      // Different heights for animation purposes
       max-height: 20em;
       margin-top: 10px;
-      &.sm-row, &.lg-row {
-        overflow: auto;
-      }
-      &.sm-row {
-        max-height: 5em;
-      }
-      &.lg-row {
-        max-height: 50em;
-      }
+      overflow: auto;
+    }
+    .error-json {
+      max-height: 15em;
+      overflow: auto;
+      word-wrap: break-word;
     }
   }
 
