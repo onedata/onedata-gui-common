@@ -21,22 +21,31 @@ import Ember from 'ember';
  *
  * @export
  * @param {object|string} error
- * @return {Ember.String.htmlSafe}
+ * @return {object}
  */
 export default function getErrorDescription(error) {
   let details = error && error.response && error.response.body &&
     (error.response.body.description || error.response.body.error) ||
     error && error.message ||
     error;
+  let errorJson;
+  let message;
   if (typeof details === 'object' && !isHTMLSafe(details)) {
     try {
-      details = JSON.stringify(error);
+      errorJson = htmlSafe(Ember.Handlebars.Utils.escapeExpression(
+        JSON.stringify(error)
+      ));
     } catch (e) {
       if (!(e instanceof TypeError)) {
         throw error;
       }
     }
+  } else {
+    message = htmlSafe(Ember.Handlebars.Utils.escapeExpression(details));
   }
 
-  return htmlSafe(Ember.Handlebars.Utils.escapeExpression(details));
+  return {
+    message,
+    errorJsonString: errorJson,
+  };
 }

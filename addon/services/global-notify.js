@@ -32,15 +32,22 @@ export default Service.extend({
 
   // TODO i18n  
   backendError(message, error) {
-    const reason = this.get('errorExtractor').getMessage(error);
+    const reason = error && this.get('errorExtractor').getMessage(error);
 
     let finalMessage =
       `<p><strong>We are sorry, but ${message} failed!</strong></p>`;
 
     if (reason) {
-      finalMessage +=
-        `<p><strong>The reason of failure:</strong>
-        <div class="error-reason">${reason}</div></p>`;
+      finalMessage += '<p><strong>The reason of failure:</strong></p>';
+      if (reason.message) {
+        finalMessage += `<p>${reason.message}</p>`;
+        if (reason.errorJsonString) {
+          finalMessage += '<br>';
+        }
+      }
+      if (reason.errorJsonString) {
+        finalMessage += `<div class="error-json">${reason.errorJsonString}</div>`;
+      }
     } else {
       finalMessage += `<p>Unfortunately, error details are unavailable</p>`;
     }

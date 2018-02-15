@@ -7,7 +7,15 @@
   <a role="button" class="promise-error-show-details"{{action "toggleShowDetails"}}>
     {{if showDetails "Hide" "Show"}}&nbsp;details...
   </a>
-  <div class="error-details lg-row {{if showDetails "active"}}">
-    {{_reasonDetails}}
+  <div class="error-details {{if showDetails "active"}}">
+    {{#if _reasonDetails.message}}
+      <p>{{_reasonDetails.message}}</p>
+    {{/if}}
+    {{#if (and _reasonDetails.message _reasonDetails.errorJsonString)}}
+      <br>
+    {{/if}}
+    {{#if _reasonDetails.errorJsonString}}
+      <div class="error-json">{{_reasonDetails.errorJsonString}}</div>
+    {{/if}}
   </div>
 {{/if}}

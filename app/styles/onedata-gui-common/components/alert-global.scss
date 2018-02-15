@@ -24,8 +24,9 @@ $alert-global-header-height: 70px;
   .modal-footer {
     padding-top: 0;
   }
-  .error-reason {
-    max-height: 10em;
+  .error-json {
+    max-height: 6em;
     overflow: auto;
+    word-wrap: break-word;
   }
 }
