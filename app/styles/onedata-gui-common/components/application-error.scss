@@ -17,6 +17,10 @@
     font-size: $-base-app-error-size-lg / 8;
   }
 
+  .error-row {
+    width: 80%;
+  }
+
   .error-details {
     max-height: 0;
     margin-top: 0;
@@ -25,15 +29,14 @@
     color: $main-text-color;
     &.active {
       opacity: 1; 
-      // Different heights for animation purposes
-      max-height: 20em;
+      overflow: auto;
+      max-height: 10em;
       margin-top: 10px;
-      &.sm-row {
-        max-height: 5em;
-      }
-      &.lg-row {
-        max-height: 50em;
-      }
+    }
+    .error-json {
+      max-height: 6em;
+      overflow: auto;
+      word-wrap: break-word;
     }
   }
 

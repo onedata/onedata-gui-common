@@ -1,8 +1,6 @@
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 
-import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
-
 function aliasToShow(type) {
   return function (message, options) {
     return this.show(type, message, options);
@@ -19,12 +17,13 @@ function aliasToShow(type) {
  *
  * @module services/global-notify
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Service.extend({
   notify: service(),
   alert: service(),
+  errorExtractor: service(),
 
   info: aliasToShow('info'),
   success: aliasToShow('success'),
@@ -33,13 +32,22 @@ export default Service.extend({
 
   // TODO i18n  
   backendError(message, error) {
-    let reason = getErrorDetails(error);
+    const reason = error && this.get('errorExtractor').getMessage(error);
 
     let finalMessage =
       `<p><strong>We are sorry, but ${message} failed!</strong></p>`;
 
     if (reason) {
-      finalMessage += `<p><strong>The reason of failure:</strong><br>${reason}</p>`;
+      finalMessage += '<p><strong>The reason of failure:</strong></p>';
+      if (reason.message) {
+        finalMessage += `<p>${reason.message}</p>`;
+        if (reason.errorJsonString) {
+          finalMessage += '<br>';
+        }
+      }
+      if (reason.errorJsonString) {
+        finalMessage += `<div class="error-json">${reason.errorJsonString}</div>`;
+      }
     } else {
       finalMessage += `<p>Unfortunately, error details are unavailable</p>`;
     }

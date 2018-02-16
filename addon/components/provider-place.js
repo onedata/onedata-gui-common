@@ -66,7 +66,7 @@ export default Component.extend({
 
   circleStyles: computed('circleColor', function () {
     const circleColor = this.get('circleColor');
-    return htmlSafe(`color: ${circleColor};`);
+    return htmlSafe(`color: ${circleColor}; border-color: ${circleColor};`);
   }),
 
   atlasWidthObserver: observer('atlasWidth', function () {

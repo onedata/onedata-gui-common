@@ -41,7 +41,7 @@ export default OnePieChart.extend({
    * @virtual 
    * @type {PromiseArray<models/Provider>}
    */
-  providers: reads('space.providerList.list'),
+  providers: reads('space.providerList.list.content'),
 
   providersProxyLoaded: and(
     'space.providerList.isLoaded',
@@ -102,7 +102,7 @@ export default OnePieChart.extend({
           totalSize,
           supportSizes,
         } = getProperties(space, 'totalSize', 'supportSizes');
-        const providers = this.get('providers');
+        const providers = this.get('providers')
 
         if (typeof totalSize !== 'number' || totalSize < 0 ||
           !supportSizes || !isArray(providers)) {
@@ -113,7 +113,10 @@ export default OnePieChart.extend({
         let errorOccurred = false;
         _.each(Object.keys(supportSizes), (providerId) => {
           let size = get(supportSizes, providerId);
-          let provider = _.find(providers, p => get(p, 'entityId') === providerId);
+          let provider = _.find(
+            providers.toArray(),
+            p => get(p, 'entityId') === providerId
+          );
           if (typeof size !== 'number' || size <= 0 || !provider) {
             errorOccurred = true;
           } else {
