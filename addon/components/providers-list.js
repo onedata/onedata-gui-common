@@ -8,8 +8,8 @@
  *   see property comment for more details)
  *
  * @module components/providers-list.js
- * @author Michał Borzęcki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -45,6 +45,18 @@ export default Component.extend({
    * @type {Space}
    */
   selectedSpace: null,
+
+  /**
+   * If set to true, show support size provided for selected space
+   * @type {boolean}
+   */
+  showSelectedSpaceSupportSize: true,
+
+  /**
+   * If set to true, show total supported spaces count
+   * @type {boolean}
+   */
+  showSupportedSpacesCount: true,
 
   /**
    * Action called on providers filter.

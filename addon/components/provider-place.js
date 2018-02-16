@@ -3,13 +3,14 @@
  * 
  * @module components/provider-place
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
+import { computed, get, observer } from '@ember/object';
+import { htmlSafe } from '@ember/string';
 
-import { get, observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/provider-place';
 
 export default Component.extend({
@@ -31,10 +32,22 @@ export default Component.extend({
   atlasWidth: 0,
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  hint: undefined,
+
+  /**
    * Scale factor for circle size
    * @type {number} 
    */
   circleSizeScale: 1,
+
+  /**
+   * Circle color
+   * @type {string}
+   */
+  circleColor: undefined,
 
   /**
    * If true, drop is rendered after circle click
@@ -51,11 +64,16 @@ export default Component.extend({
     return get(provider, 'isStatusValid') ? get(provider, 'status') : 'pending';
   }),
 
+  circleStyles: computed('circleColor', function () {
+    const circleColor = this.get('circleColor');
+    return htmlSafe(`color: ${circleColor};`);
+  }),
+
   atlasWidthObserver: observer('atlasWidth', function () {
     this._recalculateSize();
   }),
 
-  didInsertElement() {
+  didRender() {
     this._super(...arguments);
     this._recalculateSize();
   },

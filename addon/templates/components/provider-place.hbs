@@ -1,5 +1,8 @@
-<div class="circle">
+<div style={{circleStyles}} class="circle">
   {{one-icon icon="provider"}}
+  {{#if hint}}
+    {{bs-tooltip placement="bottom" title=hint}}
+  {{/if}}
 </div>
 {{#if renderDrop}}
   {{#one-switchable-popover-modal

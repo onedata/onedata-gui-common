@@ -34,10 +34,13 @@ export default Mixin.create({
         globalActionsTitle,
         globalActions,
       } = this.getProperties('globalActions', 'globalActionsTitle');
-      this.get('navigationState').setProperties({
-        aspectActions: globalActions,
-        aspectActionsTitle: globalActionsTitle,
-      });
+      const navigationState = this.get('navigationState');
+      if (!navigationState.isDestroyed) {
+        navigationState.setProperties({
+          aspectActions: globalActions,
+          aspectActionsTitle: globalActionsTitle,
+        });
+      }
     }
   ),
 

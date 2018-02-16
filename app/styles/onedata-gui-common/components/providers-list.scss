@@ -36,6 +36,9 @@
         border-bottom-width: 0;
         .status-toolbar {
           right: 48px;
+          &.push-right {
+            right: 0;
+          }
         }
         .btn-menu-toggle {
           right: 0;
