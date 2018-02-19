@@ -9,6 +9,7 @@ $color-main-menu-item-gradient-base: $color-main-menu-fg-base;
 }
 
 $onedata-logo-width: 150px;
+$mobile-resource-name-height: 20px;
 
 .onedata-logo {
   width: $onedata-logo-width;
@@ -63,40 +64,90 @@ $onedata-logo-width: 150px;
       width: auto;
     }
     .navbar-toggle {
-      width: 40px;
-      margin: 16px;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: $mobile-top-height;
+      text-align: center;
+      margin: 0px;
+      border: 0;
       &.toggle-back {
-        transform: rotateY(180deg);
-        span {
-          position: relative;
-          top: -0.2em;
-          right: 0.2em;
-          font-size: 2.2em;
+        width: 25%;
+        .one-icon {
+          position: absolute;
+          top: 50%;
+          left: $padding-small-vertical;
+          transform: translateY(-50%) rotateY(180deg);
+          font-size: 0.9em;
+          font-weight: bold;
+        }
+        .sidebar-title {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 1.5em;
+          right: 0;
+          line-height: $mobile-top-height;
+          font-size: 0.9em;
+          text-transform: capitalize;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: left;
         }
       }
       &.global-menu-toggle  {
+        position: absolute;
+        right: 0;
+        left: initial;
         width: 30px;
-        padding: 8px;
         .icon-bar {
           border-radius: 100%;
-          width: 4px;
-          height: 4px;
+          width: 3px;
+          height: 3px;
           margin-left: auto;
           margin-right: auto;
         }
       }
       .icon-bar {
+        margin-left: auto;
+        margin-right: auto;
         background-color: $color-one-white;
         border-radius: 0;
       }
     }
     .tab-name {
-      text-transform: capitalize;
+      position: absolute;
+      top: 0;
+      left: 25%;
+      right: 25%;
+      padding: 0 $padding-small-horizontal;
       line-height: $mobile-top-height;
-      font-size: 1.5em;
-      margin-left: 10px;
-      margin-right: 10px;
+      font-size: 0.9em;
+      font-weight: bold;
+      text-align: center;
+      text-transform: capitalize;
+      .one-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
+  }
+  .resource-name-row {
+    position: absolute;
+    top: $mobile-top-height;
+    left: 0;
+    right: 0;
+    height: $mobile-resource-name-height;
+    padding: 0 $padding-small-horizontal;
+    background-color: $color-one-semiwhite;
+    line-height: $mobile-resource-name-height;
+    text-align: center;
+    font-size: 0.8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   .side-menu {
     background-color: $color-sidebar-background;
@@ -161,6 +212,9 @@ $onedata-logo-width: 150px;
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       padding-left: $sidebar-menu-width;
+    }
+    @media (max-width: $screen-xs-max) {
+      padding-top: $mobile-top-height + $mobile-resource-name-height;
     }
   }
   .col-in-app-layout {

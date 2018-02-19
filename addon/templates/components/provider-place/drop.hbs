@@ -1,6 +1,7 @@
 <div class="drop-title-bar">
   {{#truncated-string class="provider-label"}}
-    {{provider.name}}
+    <span class="hidden-xs">{{provider.name}}</span>
+    <span class="hidden-sm hidden-md hidden-lg">{{t "components.providerPlace.drop.status"}}</span>
   {{/truncated-string}}
   {{#unless provider.isOnline}}
     <div class="provider-label-secondary">
@@ -45,15 +46,17 @@
   </div>
   {{#unless (eq provider.status "offline")}}
     <hr>
-    {{#if (eq provider.status "online")}}
-      {{#link-to "onedata.sidebar.content.aspect" "redirect"
-        class="btn btn-sm btn-go-to-files btn-primary"}}
-        {{t "components.providerPlace.drop.goToFiles"}}
-      {{/link-to}}
-    {{else if (eq provider.status "pending")}}
-      {{#bs-button type="primary" disabled=true class="btn-go-to-files"}}
-        {{t "components.providerPlace.drop.pending"}}
-      {{/bs-button}}
-    {{/if}} 
+    <div class="btn-container">
+      {{#if (eq provider.status "online")}}
+        {{#link-to "onedata.sidebar.content.aspect" "redirect"
+          class="btn btn-sm btn-go-to-files btn-primary"}}
+          {{t "components.providerPlace.drop.goToFiles"}}
+        {{/link-to}}
+      {{else if (eq provider.status "pending")}}
+        {{#bs-button type="primary" disabled=true class="btn-go-to-files"}}
+          {{t "components.providerPlace.drop.pending"}}
+        {{/bs-button}}
+      {{/if}}
+    </div>
   {{/unless}}
 </div>

@@ -12,6 +12,7 @@ const i18nTranslations = {
   tabs: {
     spaces: {
       aspects: {
+        index: 'Index',
         testAspect: 'test aspect',
       },
     }
@@ -115,7 +116,7 @@ describe('Unit | Service | navigation state', function () {
     service.set('activeResource', resource);
     service.set('activeAspect', 'index');
     service.get('globalBarActiveTitle');
-    expect(service.get('globalBarActiveTitle')).to.equal(resourceName);
+    expect(service.get('globalBarActiveTitle')).to.equal('Index');
   });
 
   it('prepares global bar title for aspect content level', function () {

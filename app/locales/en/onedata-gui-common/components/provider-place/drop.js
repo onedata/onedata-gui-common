@@ -1,4 +1,5 @@
 export default {
+  status: 'Status',
   online: 'online',
   offline: 'offline',
   pending: 'verifying...',

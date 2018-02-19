@@ -186,18 +186,15 @@ export default Service.extend(I18n, {
   globalBarActiveTitle: computed(
     'activeContentLevel',
     'globalBarSidebarTitle',
-    'globalBarIndexTitle',
     'globalBarAspectTitle',
     function () {
       const {
         activeContentLevel,
         globalBarSidebarTitle,
-        globalBarIndexTitle,
         globalBarAspectTitle,
       } = this.getProperties(
         'activeContentLevel',
         'globalBarSidebarTitle',
-        'globalBarIndexTitle',
         'globalBarAspectTitle'
       );
       switch (activeContentLevel) {
@@ -205,7 +202,6 @@ export default Service.extend(I18n, {
         case 'contentIndex':
           return globalBarSidebarTitle;
         case 'index':
-          return globalBarIndexTitle;
         case 'aspect':
           return globalBarAspectTitle;
         default:
