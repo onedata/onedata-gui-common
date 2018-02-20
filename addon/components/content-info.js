@@ -104,12 +104,12 @@ export default Component.extend({
     this.set('_actionInProgress', true);
     try {
       const actionResult = this.get('buttonAction')();
-      if (actionResult.finally) {
+      if (actionResult && actionResult.finally) {
         return actionResult.finally(() =>
           safeExec(this, 'set', '_actionInProgress', false)
         );
       } else {
-        this.set('_actionInProgress');
+        this.set('_actionInProgress', false);
         return actionResult;
       }
     } catch (error) {
