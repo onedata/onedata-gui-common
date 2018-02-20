@@ -56,6 +56,7 @@ export default Route.extend({
   model({ resource_id: resourceId }) {
     // TODO: validate and use resourceType
     let {
+      collection,
       resourceType
     } = this.modelFor('onedata.sidebar');
 
@@ -68,6 +69,7 @@ export default Route.extend({
         gettingResource.then(resource => resolve({
           resourceId,
           resource,
+          collection,
         }));
         gettingResource.catch(reject);
       });

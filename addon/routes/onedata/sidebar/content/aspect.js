@@ -22,8 +22,8 @@ export default Route.extend({
    * @returns {object} { resource: Model, aspectId: string }
    */
   model({ aspect_id: aspectId }) {
-    let { resource } = this.modelFor('onedata.sidebar.content');
-    return { resource, aspectId };
+    const contentModel = this.modelFor('onedata.sidebar.content');
+    return Object.assign({ aspectId }, contentModel);
   },
 
   // TODO validate aspect of resource with afterModel

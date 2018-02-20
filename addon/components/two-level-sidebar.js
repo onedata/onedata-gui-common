@@ -34,7 +34,7 @@ export default Component.extend({
 
   sorting: Object.freeze(['name']),
 
-  sortedCollection: sort('model.collection', 'sorting'),
+  sortedCollection: sort('model.collection.list', 'sorting'),
 
   /**
    * Should sidebar:select event be triggered after primary item selection?
@@ -78,7 +78,7 @@ export default Component.extend({
     this._super(...arguments);
 
     // if we want to show second level items, we should have a sidebarType
-    if (!isEmpty(this.get('model.collection')) &&
+    if (!isEmpty(this.get('sortedCollection')) &&
       !isEmpty(this.get('secondLevelItems')) &&
       !this.get('sidebarType')
     ) {
@@ -88,7 +88,7 @@ export default Component.extend({
 
   resourceType: readOnly('model.resourceType'),
 
-  isCollectionEmpty: equal('model.collection.length', 0),
+  isCollectionEmpty: equal('sortedCollection.length', 0),
 
   primaryItemId: computed('sidebar.itemPath.[]', function () {
     return this.get('sidebar.itemPath').objectAt(0);
@@ -96,7 +96,7 @@ export default Component.extend({
 
   primaryItem: computed(
     'primaryItemId',
-    'model.collection.[]',
+    'model.collection.list.[]',
     function getPrimaryItem() {
       const {
         model,

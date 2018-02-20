@@ -14,7 +14,6 @@ import { helper } from '@ember/component/helper';
 
 function _invoke(action, event) {
   const keyCode = event.keyCode;
-  console.log(arguments[0]);
   if (keyCode === 13 && typeof action === 'function') {
     event.stopPropagation();
     return action();

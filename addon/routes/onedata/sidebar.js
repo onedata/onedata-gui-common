@@ -39,26 +39,23 @@ export default Route.extend({
 
   model({ type }) {
     let sidebarResources = this.get('sidebarResources');
-    return new Promise((resolve, reject) => {
-      if (isValidTab) {
-        let gettingCollection = sidebarResources.getCollectionFor(type);
-        gettingCollection
-          .then(proxyCollection => {
-            return isRecord(proxyCollection) ? proxyCollection :
-              Promise.all(proxyCollection);
-          })
-          .then(collection => {
-            resolve({
-              resourceType: type,
-              collection,
-            });
-          })
-          .catch(reject);
-        gettingCollection.catch(reject);
-      } else {
-        reject({ error: 'invalid onedata tab name' });
-      }
-    });
+    if (isValidTab(type)) {
+      return sidebarResources.getCollectionFor(type)
+        .then(proxyCollection => {
+          return isRecord(proxyCollection) ?
+            proxyCollection :
+            // FIXME: simulate list records in onepanel (containers for lists)
+            Promise.all(proxyCollection);
+        })
+        .then(collection => {
+          return {
+            resourceType: type,
+            collection,
+          };
+        });
+    } else {
+      return Promise.reject({ error: 'invalid onedata tab name' });
+    }
   },
 
   afterModel(model) {

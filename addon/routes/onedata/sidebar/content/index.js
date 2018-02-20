@@ -45,7 +45,10 @@ export default Route.extend({
     const defaultAspect = tabModel && tabModel.defaultAspect || 'index';
 
     if (!isSpecialResourceId(resourceId)) {
-      this.transitionTo('onedata.sidebar.content.aspect', defaultAspect);
+      this.transitionTo(
+        'onedata.sidebar.content.aspect',
+        defaultAspect
+      );
     }
   },
 

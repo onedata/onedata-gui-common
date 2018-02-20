@@ -1,9 +1,8 @@
 import { oneWay } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { Promise } from 'rsvp';
 import { htmlSafe } from '@ember/string';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import { invokeAction, invoke } from 'ember-invoke-action';
 
@@ -62,10 +61,6 @@ export default Component.extend({
 
     if (resourceType != null) {
       const promise = sidebarResources.getCollectionFor(resourceType)
-        .then(collection => {
-          return Promise.all(collection.map(i => get(i, 'promise')))
-            .then(() => collection)
-        })
         .then(collection => {
           return {
             resourceType,
