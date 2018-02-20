@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 
 import { inject as service } from '@ember/service';
-import { readOnly, equal } from '@ember/object/computed';
+import { readOnly, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
@@ -24,7 +24,17 @@ export default Component.extend({
   sidebar: service(),
   eventsBus: service(),
 
+  /**
+   * @type {Object}
+   * @namespace
+   * @property {Ember.Array} collection
+   * @property {string} resourceType
+   */
   model: null,
+
+  sorting: Object.freeze(['name']),
+
+  sortedCollection: sort('model.collection', 'sorting'),
 
   /**
    * Should sidebar:select event be triggered after primary item selection?

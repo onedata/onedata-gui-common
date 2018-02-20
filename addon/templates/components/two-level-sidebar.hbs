@@ -6,12 +6,12 @@
 
 {{else}}
 
-  {{#one-list-wrapper items=model.collection as |item|}}
+  {{#one-list-wrapper items=sortedCollection as |item|}}
     {{#one-list-primary-item item=item
       changePrimaryItemId=(action "changePrimaryItemId")
       isActive=(eq primaryItemId item.id)
       as |primarySection|}}
-      {{#if (eq primarySection 'header')}}
+      {{#if (eq primarySection "header")}}
         {{#if firstLevelItemComponent}}
           {{component firstLevelItemComponent item=item}}
         {{else}}
@@ -22,7 +22,7 @@
             <span class="one-label">{{item.name}}</span>
           {{/truncated-string}}
         {{/if}}
-      {{else if (eq primarySection 'secondary')}}
+      {{else if (eq primarySection "secondary")}}
         {{!-- TODO isActive secondary --}}
         <ul class="one-list one-list-level-2">
           {{#each secondLevelItems as |sli|}}
