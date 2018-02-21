@@ -19,7 +19,7 @@
             {{one-icon icon=firstLevelItemIcon}} 
           {{/if}}
           {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
-            <span class="one-label">{{item.name}}</span>
+            {{name-conflict item=item tagName="span" class="one-label"}}
           {{/truncated-string}}
         {{/if}}
       {{else if (eq primarySection "secondary")}}

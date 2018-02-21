@@ -162,12 +162,6 @@ export default Service.extend(I18n, {
   globalBarSidebarTitle: reads('activeResourceType'),
 
   /**
-   * Global bar title for content index.
-   * @type {Ember.ComputedProperty<string>}
-   */
-  globalBarIndexTitle: reads('activeResource.name'),
-
-  /**
    * Global bar title for content aspect.
    * @type {Ember.ComputedProperty<string>}
    */
