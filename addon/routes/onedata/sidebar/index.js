@@ -3,7 +3,7 @@
  *
  * @module routes/onedata/sidebar/index
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,8 +13,8 @@ import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { observer } from '@ember/object';
 
-function getDefaultResourceId(collection) {
-  let defaultResource = collection.objectAt(0);
+function getDefaultResourceId(list) {
+  let defaultResource = list.objectAt(0);
   return get(defaultResource, 'id');
 }
 
@@ -42,8 +42,9 @@ export default Route.extend({
   }),
 
   redirectToDefault({ resourceType, collection }) {
-    let resourceIdToRedirect =
-      collection.length > 0 ? getDefaultResourceId(collection) : 'empty';
+    const list = get(collection, 'list');
+    let resourceIdToRedirect = get(list, 'length') > 0 ?
+      getDefaultResourceId(list) : 'empty';
     if (resourceIdToRedirect != null) {
       this.transitionTo(`onedata.sidebar.content`, resourceType, resourceIdToRedirect);
     } else {
