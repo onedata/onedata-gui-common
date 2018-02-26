@@ -19,7 +19,8 @@ const {
 } = config;
 
 function isValidTab(tabName) {
-  return onedataTabs.map(({ id }) => id).indexOf(tabName) !== -1;
+  return onedataTabs.map(({ id }) => id).indexOf(tabName) !== -1 ||
+    tabName === 'users';
 }
 
 export default Route.extend({
@@ -42,7 +43,7 @@ export default Route.extend({
     if (isValidTab(type)) {
       return sidebarResources.getCollectionFor(type)
         .then(proxyCollection => {
-          return isRecord(proxyCollection) ?
+          return isRecord(proxyCollection) || proxyCollection.list ?
             proxyCollection :
             // FIXME: simulate list records in onepanel (containers for lists)
             Promise.all(proxyCollection);
