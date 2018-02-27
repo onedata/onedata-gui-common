@@ -306,3 +306,21 @@ $icon-btn-active-color: $color-one-red;
     }
   }
 }
+
+.table:not(.bt) {
+  tr {
+    td:first-child {
+      position: relative;
+      padding-left: 16px;
+    }
+  }
+}
+
+.table.table-striped {
+  tr:hover {
+    td {
+      //override table-striped style
+      background-color: $main-content-hover-background !important;
+    }
+  }
+}
