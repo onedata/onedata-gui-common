@@ -24,6 +24,9 @@ $color-sidebar-item-bg: $color-one-gray-sand;
 $color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
 $color-one-list-item-separator: $main-border-color;
 
+$main-content-hover-background: lighten($color-one-semiwhite, 3%);
+$main-content-light-background: lighten($color-one-semiwhite, 5%);
+
 @import 'onedata-gui-common/bootstrap-config';
 @import 'onedata-gui-common/bootstrap-addons';
 
@@ -59,9 +62,6 @@ $onedata-logo-height: 35px;
 $onedata-brand-info-height: 30px;
 $onedata-logo-margin-top: $content-col-padding;
 $onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $one-list-item-padding * 2 - $onedata-brand-info-height;
-
-$main-content-hover-background: lighten($color-one-semiwhite, 3%);
-$main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $collapse-transition-time: .2s;
 $height-collapse-transition: max-height $collapse-transition-time linear;

@@ -244,3 +244,9 @@ input {
 .loading-more-row {
   height: 80px;
 }
+
+.table.table-middle-align {
+  td {
+    vertical-align: middle;
+  }
+}
