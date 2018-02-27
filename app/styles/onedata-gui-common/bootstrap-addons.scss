@@ -268,10 +268,28 @@ $icon-btn-active-color: $color-one-red;
 }
 
 .nav-tabs {
+  li, li.active {
+    > a {
+      &,
+      &:hover,
+      &:focus {
+        border-top: 4px solid transparent;
+      }
+    }
+  }
   li.disabled {
     cursor: not-allowed !important;
     > a {
       pointer-events: none;
+    }
+  }
+  li.active {
+    > a {
+      &,
+      &:hover,
+      &:focus {
+        border-top-color: $color-one-blue-gray;
+      }
     }
   }
   .nav-link {
@@ -280,6 +298,7 @@ $icon-btn-active-color: $color-one-red;
     font-weight: bold;
     color: inherit;
   }
+  
 }
 
 .tab-content {
@@ -304,6 +323,16 @@ $icon-btn-active-color: $color-one-red;
         padding: 0;
       }
     }
+  }
+}
+
+.only-tab-bar {
+  .tab-content {
+    border: none;
+  }
+  .tab-pane {
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
