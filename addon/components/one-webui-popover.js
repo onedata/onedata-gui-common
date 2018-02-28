@@ -21,11 +21,12 @@ import Component from '@ember/component';
 
 import { assert } from '@ember/debug';
 import { computed, observer } from '@ember/object';
-import { run, scheduleOnce } from '@ember/runloop';
+import { run, scheduleOnce, next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-webui-popover';
 import { invoke, invokeAction } from 'ember-invoke-action';
 import $ from 'jquery';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend({
   layout,
@@ -149,8 +150,8 @@ export default Component.extend({
       padding,
       container: document.body,
       multi,
-      onShow: () => this.set('_isPopoverVisible', true),
-      onHide: () => this.set('_isPopoverVisible', false),
+      onShow: () => safeExec(this, 'set', '_isPopoverVisible', true),
+      onHide: () => safeExec(this, 'set', '_isPopoverVisible', false),
     });
 
     window.addEventListener('resize', _resizeHandler);
@@ -160,7 +161,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this._popover('destroy');
+    next(() => this._popover('destroy'));
     let _resizeHandler = this.get('_resizeHandler');
 
     this._deregisterEventsBus();

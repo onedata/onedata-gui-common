@@ -61,15 +61,22 @@ describe('Integration | Component | provider place', function () {
     }];
     spaces.isFulfilled = true;
 
-    this.set('provider', {
+    const provider = {
       entityId: '1',
+      name: 'provider1',
       status: 'online',
       isStatusValid: true,
       spaceList: {
         isLoaded: true,
         list: spaces,
       },
-    });
+    };
+
+    this.set('provider', provider);
+    this.set('providers', [
+      provider,
+      Object.assign({}, provider, { name: 'provider2' })
+    ]);
   });
 
   it('shows provider status', function () {
@@ -79,10 +86,10 @@ describe('Integration | Component | provider place', function () {
     expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
   });
 
-  it('shows provider status as "pending" if isStatusValid==false', function () {
+  it('shows provider status as "offline" if isStatusValid==false', function () {
     this.set('provider.isStatusValid', false);
     this.render(hbs `{{provider-place provider=provider}}`);
-    expect(this.$('.provider-place')).to.have.class('pending');
+    expect(this.$('.provider-place')).to.have.class('offline');
   });
 
   it('resizes with parent one-atlas component', function () {
@@ -135,6 +142,20 @@ describe('Integration | Component | provider place', function () {
           expect(drop.text()).to.contain(space.name);
         }),
         expect(drop.text()).to.contain('1 MiB');
+      done();
+    });
+  });
+
+  it('shows multiple providers if necessary', function (done) {
+    this.render(hbs `
+      {{provider-place 
+        provider=providers}}`);
+
+    click('.circle').then(() => {
+      const dropContainer = $('.provider-place-drop-container');
+      expect(dropContainer.find('.providers-place-list-item'))
+        .to.have.length(2);
+      expect(dropContainer.find('.providers-place-list-item.active')).to.exist;
       done();
     });
   });
