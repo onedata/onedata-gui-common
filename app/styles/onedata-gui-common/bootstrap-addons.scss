@@ -51,10 +51,12 @@ $icon-btn-active-color: $color-one-red;
       color: $state-danger-text;
     }
   }
-  @media (max-width: $screen-xs-max) {
-    .form-control-feedback {
-      // 5px from hard-coded value of bootstrap label bottom margin
-      margin-top: $line-height-computed + 5px;
+  &:not(.without-labels) {
+    @media (max-width: $screen-xs-max) {
+      .form-control-feedback {
+        // 5px from hard-coded value of bootstrap label bottom margin
+        margin-top: $line-height-computed + 5px;
+      }
     }
   }
   .input-group {
