@@ -8,28 +8,23 @@ describe('Unit | Utility | clusterize providers by coordinates', function () {
       { latitude: -4, longitude: 3.4 },
       { latitude: 0, longitude: 0 },
       { latitude: 1, longitude: 2 },
-      { latitude: 3, longitude: 10 },
+      { latitude: 3, longitude: 4 },
       { latitude: 20, longitude: 30 },
     ];
 
-    const result = clusterizeProvidersByCoordinates(providers, 5, 5);
-    expect(result.length).to.equal(4);
-    expect(result[0].providers.length).to.equal(1);
-    expect(result[1].providers.length).to.equal(2);
-    expect(result[2].providers.length).to.equal(1);
-    expect(result[3].providers.length).to.equal(1);
-    expect(result[0].latitude).to.equal(-4);
-    expect(result[0].longitude).to.equal(3.4);
-    expect(result[1].latitude).to.equal(2.5);
-    expect(result[1].longitude).to.equal(2.5);
-    expect(result[2].latitude).to.equal(3);
-    expect(result[2].longitude).to.equal(10);
-    expect(result[3].latitude).to.equal(20);
-    expect(result[3].longitude).to.equal(30);
-    expect(result[0].providers[0]).to.equal(providers[0]);
-    expect(result[1].providers[0]).to.equal(providers[1]);
-    expect(result[1].providers[1]).to.equal(providers[2]);
-    expect(result[2].providers[0]).to.equal(providers[3]);
-    expect(result[3].providers[0]).to.equal(providers[4]);
+    const result = clusterizeProvidersByCoordinates(providers, 10, 10);
+    expect(result).to.have.lengthOf(3);
+    [
+      { len: 2, prov: [providers[0], providers[1]], lat: -2, long: 1.7 },
+      { len: 2, prov: [providers[2], providers[3]], lat: 2, long: 3 },
+      { len: 1, prov: [providers[4]], lat: 20, long: 30 },
+    ].forEach((expected, i) => {
+      expect(result[i].providers).to.have.lengthOf(expected.len);
+      expected.prov.forEach(provider =>
+        expect(result[i].providers).to.include(provider)
+      );
+      expect(result[i].latitude).to.equal(expected.lat);
+      expect(result[i].longitude).to.equal(expected.long);
+    });
   });
 });

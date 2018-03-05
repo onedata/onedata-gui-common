@@ -1,7 +1,10 @@
 /**
- * Clusterizes providers according to theirs coordinates. It divides map into
- * squares latitudeDelta x longitudeDelta and groups providers that are in
- * the same square. Returns array of objects in format:
+ * Clusterizes providers according to theirs coordinates. For each provider:
+ * * it searches for square latitudeDelta x longitudeDelta, where provider can be placed
+ * * if square does not exist, create new square with latitude and longitude of the square center the same as provider coordinates
+ * * add provider to the square
+ * After all, each square coordinates are transformed to average coordinates of all providers in that square.
+ * Returns array of objects in format:
  * `
  * {
  *   latitude {number}
@@ -9,9 +12,6 @@
  *   providers {Array<object>}
  * }
  * `
- * where latitude and longitude are coordinates of the center of the analyzed
- * square or, if there is only one provider in the square, coordinates of that
- * provider.
  *
  * @module utils/clusterize-providers-by-coordinates
  * @author Michal Borzecki
@@ -30,8 +30,8 @@ import _ from 'lodash';
 
 export default function clusterizeProvidersByCoordinates(
   providers,
-  latitudeDelta = 5,
-  longitudeDelta = 5
+  latitudeDelta = 10,
+  longitudeDelta = 10
 ) {
   const usedSquares = [];
   providers.forEach(provider => {
@@ -39,21 +39,18 @@ export default function clusterizeProvidersByCoordinates(
       latitude,
       longitude,
     } = getProperties(provider, 'latitude', 'longitude');
-    const squareLatitude = Math.min(
-      Math.floor(latitude / latitudeDelta) * latitudeDelta,
-      90 - latitudeDelta
-    );
-    const squareLongitude = Math.min(
-      Math.floor(longitude / longitudeDelta) * longitudeDelta,
-      180 - longitudeDelta
-    );
     let square = _.find(
-      usedSquares, { latitude: squareLatitude, longitude: squareLongitude }
+      usedSquares,
+      ({ latitude: squareLatitude, longitude: squareLongitude }) =>
+      latitude >= squareLatitude - latitudeDelta / 2 &&
+      latitude < squareLatitude + latitudeDelta / 2 &&
+      longitude >= squareLongitude - longitudeDelta / 2 &&
+      longitude < squareLongitude + longitudeDelta / 2
     );
     if (!square) {
       square = {
-        latitude: squareLatitude,
-        longitude: squareLongitude,
+        latitude,
+        longitude,
         providers: [],
       };
       usedSquares.push(square);
@@ -61,13 +58,12 @@ export default function clusterizeProvidersByCoordinates(
     square.providers.push(provider);
   });
   usedSquares.forEach(square => {
-    if (square.providers.length === 1) {
-      square.latitude = get(square.providers[0], 'latitude')
-      square.longitude = get(square.providers[0], 'longitude')
-    } else {
-      square.latitude += latitudeDelta / 2;
-      square.longitude += longitudeDelta / 2;
-    }
+    square.latitude =
+      _.sumBy(square.providers, provider => get(provider, 'latitude')) /
+      square.providers.length;
+    square.longitude =
+      _.sumBy(square.providers, provider => get(provider, 'longitude')) /
+      square.providers.length;
   });
   return usedSquares;
 }

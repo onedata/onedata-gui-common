@@ -2,17 +2,17 @@
   {{#truncated-string class="provider-label"}}
     <span class="hidden-xs">
       {{#one-icon icon="provider" class="state-indicator"}}
-        {{one-tooltip title=(t (if (eq provider.status "online") "components.providerPlace.drop.online" "components.providerPlace.drop.offline"))}}
+        {{one-tooltip title=(tt this (if (eq provider.status "online") "online" "offline"))}}
       {{/one-icon}}
       {{#truncated-string}}{{provider.name}}{{/truncated-string}}
     </span>
-    <span class="hidden-sm hidden-md hidden-lg">{{t "components.providerPlace.drop.status"}}</span>
+    <span class="hidden-sm hidden-md hidden-lg">{{tt this "status"}}</span>
   {{/truncated-string}}
   <div class="provider-label-secondary hidden-sm hidden-md hidden-lg">
     {{#if (eq provider.status "online")}}
-      {{t "components.providerPlace.drop.online"}}
+      {{tt this "online"}}
     {{else}}
-      {{t "components.providerPlace.drop.offline"}}
+      {{tt this "offline"}}
     {{/if}}
   </div>  
 </div>
@@ -49,7 +49,7 @@
       {{#if (eq provider.status "online")}}
         {{#link-to "onedata.sidebar.content.aspect" "redirect"
           class="btn btn-sm btn-go-to-files btn-primary"}}
-          {{t "components.providerPlace.drop.goToFiles"}}
+          {{tt this "goToFiles"}}
         {{/link-to}}
       {{/if}}
     </div>

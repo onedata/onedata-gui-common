@@ -14,31 +14,32 @@
     popoverClass="popover-provider-place"
     componentClass=(concat-classes "provider-place-drop-container" status mode)
     open=active
+    onShow=(action "show")
     as |ospm|}}
     {{#if (eq mode "multi")}}
-    <div class="providers-place-list-container">
-      <div class="providers-place-list-title">Providers</div>
-      <div class="form-group-sm form-group-light search-group">
-        <div class="input-group with-icon-addon">
-          {{search-bar search=(action "newQuery") class="form-control"}}
-          <div class="input-group-addon">
-            {{one-icon icon="search"}}
+      <div class="providers-place-list-container">
+        <div class="providers-place-list-title">{{tt this "providers"}}</div>
+        <div class="form-group-sm form-group-light search-group">
+          <div class="input-group with-icon-addon">
+            {{search-bar search=(action "newQuery") class="form-control"}}
+            <div class="input-group-addon">
+              {{one-icon icon="search"}}
+            </div>
           </div>
         </div>
+        {{#perfect-scrollbar-element tagName="ul" class="providers-place-list"}}
+          {{#each filteredProvidersArray as |provider|}}
+            <li
+              class="providers-place-list-item {{if (eq provider selectedProvider) "active"}}"
+              data-provider={{provider.id}}
+              {{action "selectProvider" provider}}>
+              {{one-icon icon="provider" class=(if provider.isStatusValid (concat provider.status "-icon") "offline-icon")}}
+              {{#truncated-string}}{{provider.name}}{{/truncated-string}}
+            </li>
+          {{/each}}
+        {{/perfect-scrollbar-element}}
       </div>
-      {{#perfect-scrollbar-element tagName="ul" class="providers-place-list"}}
-        {{#each filteredProvidersArray as |provider|}}
-          <li
-            class="providers-place-list-item {{if (eq provider selectedProvider) "active"}}"
-            data-provider={{provider.id}}
-            {{action "selectProvider" provider}}>
-            {{one-icon icon="provider" class=(if provider.isStatusValid (concat provider.status "-icon") "offline-icon")}}
-            {{#truncated-string}}{{provider.name}}{{/truncated-string}}
-          </li>
-        {{/each}}
-      {{/perfect-scrollbar-element}}
-    </div>
-    {{provider-place/drop provider=selectedProvider class="outside-content"}}
+      {{provider-place/drop provider=selectedProvider class="outside-content"}}
     {{else}}
       {{provider-place/drop provider=providersArray.[0] class="outside-content"}}
     {{/if}}

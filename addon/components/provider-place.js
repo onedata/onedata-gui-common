@@ -9,18 +9,27 @@
 
 import Component from '@ember/component';
 import { computed, get, observer, getProperties } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import { A, isArray } from '@ember/array';
 import { next } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 
 import layout from 'onedata-gui-common/templates/components/provider-place';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['provider-place'],
   classNameBindings: ['status'],
+
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.providerPlace',
 
   /**
    * A provider model that will be represented on map
@@ -54,6 +63,11 @@ export default Component.extend({
   circleColor: undefined,
 
   /**
+   * @type {boolean}
+   */
+  active: false,
+
+  /**
    * If true, drop is rendered after circle click
    * @type {boolean}
    */
@@ -69,6 +83,12 @@ export default Component.extend({
    * @type {Onezone.ProviderDetails}
    */
   selectedProvider: undefined,
+
+  /**
+   * @type {function}
+   * @return {undefined}
+   */
+  showTriggered: () => {},
 
   /**
    * @type {function}
@@ -213,5 +233,8 @@ export default Component.extend({
     selectProvider(provider) {
       this.get('providerSelectedAction')(provider);
     },
+    show() {
+      this.get('showTriggered')();
+    }
   },
 });
