@@ -9,6 +9,7 @@ import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
 import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
 import emptyCollectionSidebar from './onedata-gui-common/components/empty-collection-sidebar';
+import oneTile from './onedata-gui-common/components/one-tile';
 
 const translations = {
   components: {
@@ -23,6 +24,7 @@ const translations = {
     resourceLoadError,
     oneInlineEditor,
     emptyCollectionSidebar,
+    oneTile,
   },
 };
 

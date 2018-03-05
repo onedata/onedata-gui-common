@@ -13,7 +13,7 @@
       as |primarySection|}}
       {{#if (eq primarySection "header")}}
         {{#if firstLevelItemComponent}}
-          {{component firstLevelItemComponent item=item}}
+          {{component firstLevelItemComponent item=item sidebar=this}}
         {{else}}
           {{#if firstLevelItemIcon}}
             {{one-icon icon=firstLevelItemIcon}} 
@@ -32,9 +32,9 @@
               {{#if sli.withoutRoute}}
                 <div class="item-header truncate">
                   {{#if sli.component}}
-                    {{component sli.component item=sli}}
+                    {{component sli.component item=sli sidebar=this}}
                   {{else}}
-                    {{two-level-sidebar/item-content item=sli}}
+                    {{two-level-sidebar/item-content item=sli sidebar=this}}
                   {{/if}}
                 </div>
               {{else}}
@@ -47,9 +47,9 @@
                   class="item-header truncate"
                 }}
                   {{#if sli.component}}
-                    {{component sli.component item=sli}}
+                    {{component sli.component item=sli sidebar=this}}
                   {{else}}
-                    {{two-level-sidebar/item-content item=sli}}
+                    {{two-level-sidebar/item-content item=sli sidebar=this}}
                   {{/if}}
                 {{/link-to}}
               {{/if}}

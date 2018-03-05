@@ -1,9 +1,19 @@
 .one-pie-chart {
   position: relative;
 
+  &.hide-legend {
+    .ct-legend {
+      display: none;
+    }
+  }
+  
   @media (min-width: $screen-sm-min) {
     padding-top: 40%;
 
+    &.hide-legend {
+      padding-top: 90%;
+    }
+    
     .ct-chart {
       position: absolute;
       height: initial;
