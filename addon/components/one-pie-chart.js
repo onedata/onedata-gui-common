@@ -40,7 +40,11 @@ const SERIES_HOVER_TRANSITION_TIME = 0.3;
 export default Component.extend({
   layout,
   classNames: ['one-pie-chart'],
-  classNameBindings: ['_valuesSum::zero-chart', 'disableLegend:hide-legend'],
+  classNameBindings: [
+    '_valuesSum::zero-chart',
+    'hideLegend:hide-legend',
+    'forceMobile:force-mobile'
+  ],
 
   /**
    * Data for a chart.
@@ -77,7 +81,7 @@ export default Component.extend({
    * If true, the legend will not be displayed even if in mobile mode
    * @type {boolean}
    */
-  disableLegend: false,
+  hideLegend: false,
 
   /**
    * Css opacity value of inactive (not hovered) slice.
@@ -291,7 +295,6 @@ export default Component.extend({
       centeredTextOptions,
       legendColorsOptions,
     } = this.getProperties(
-      'disableLegend',
       'mobileMode',
       '_valuesSum',
       '_sortedData',

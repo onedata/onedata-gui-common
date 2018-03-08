@@ -2,39 +2,42 @@
   position: relative;
 
   &.hide-legend {
-    .ct-legend {
+    .ct-legend-inside {
       display: none;
     }
   }
   
-  @media (min-width: $screen-sm-min) {
-    padding-top: 40%;
-
-    &.hide-legend {
-      padding-top: 90%;
+  .ct-chart {
+    height: initial;
+    .ct-legend.ct-legend-inside {
+      position: initial;
     }
-    
-    .ct-chart {
-      position: absolute;
-      height: initial;
-      @include fill-container();
+    svg {
+      min-height: 200px;
+    }
+  }
+  
+  &:not(.force-mobile) {
+    @media (min-width: $screen-sm-min) {
+      padding-top: 40%;
 
-      .ct-legend {
-        display: none;
+      .ct-chart {
+        position: absolute;
+        height: initial;
+        @include fill-container();
+  
+        .ct-legend {
+          display: none;
+        }
+        
+        svg {
+          min-height: initial;
+        }
       }
     }
   }
-  @media (max-width: $screen-xs-max) {
-    .ct-chart {
-      height: initial;
-      .ct-legend.ct-legend-inside {
-        position: initial;
-      }
-      svg {
-        min-height: 200px;
-      }
-    }
-  }
+  
+  
 
   .ct-chart {
     margin-bottom: 0;

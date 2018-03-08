@@ -18,9 +18,11 @@ import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import OnePieChart from 'onedata-gui-common/components/one-pie-chart';
 import { reads, and } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 
 export default OnePieChart.extend({
   classNames: ['space-providers-support-chart'],
+  i18n: service(),
 
   /**
    * Space.
@@ -129,6 +131,29 @@ export default OnePieChart.extend({
       }
     }
   ),
+
+  /**
+   * @override
+   */
+  generateChartDataSeries() {
+    let {
+      _sortedData,
+      i18n,
+    } = this.getProperties('_sortedData', 'i18n');
+    let chartDataSeries = this._super(...arguments);
+    chartDataSeries.forEach((series, index) => {
+      series.tooltipElements = [{
+        name: i18n.t('components.supportSizeInfo.chart.supportSize'),
+        value: this.formatValue(_sortedData[index].value),
+      }, {
+        name: i18n.t('components.supportSizeInfo.chart.supportShare'),
+        value: Math.round(
+          this.getSeriesPercentSize(_sortedData[index]) * 100
+        ) + '%',
+      }];
+    });
+    return chartDataSeries;
+  },
 
   /**
    * Returns size as a string.
