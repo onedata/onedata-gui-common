@@ -8,7 +8,7 @@
  */
 
 import Route from '@ember/routing/route';
-
+import EmberObject, { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
 import config from 'ember-get-config';
@@ -43,10 +43,9 @@ export default Route.extend({
     if (isValidTab(type)) {
       return sidebarResources.getCollectionFor(type)
         .then(proxyCollection => {
-          return isRecord(proxyCollection) || proxyCollection.list ?
+          return isRecord(proxyCollection) || get(proxyCollection, 'list') ?
             proxyCollection :
-            // FIXME: simulate list records in onepanel (containers for lists)
-            Promise.all(proxyCollection);
+            Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
         })
         .then(collection => {
           return {
