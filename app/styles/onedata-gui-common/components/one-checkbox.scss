@@ -11,7 +11,7 @@
   &.checked {
     border: 1px solid $color-one-mint;
     &::after {  
-      content: $oneicon-checked;
+      @include oneicon-content($oneicon-checked);
       font-family: 'oneicons';
       position: absolute;
       top: 0;

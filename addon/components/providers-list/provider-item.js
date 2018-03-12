@@ -1,4 +1,11 @@
-// FIXME: jsdoc
+/**
+ * Providers sidebar item representing single provider visible for current user
+ *
+ * @module components/providers-list/provider-item
+ * @author Jakub Liput
+ * @copyright (C) 2018 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
 import Component from '@ember/component';
 import { computed, get } from '@ember/object';

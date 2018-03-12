@@ -13,7 +13,7 @@ import config from 'ember-get-config';
 import { get } from '@ember/object';
 
 // TODO: copied from content route
-// FIXME: refactor to create route-, or application-specific special ids
+// TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
   'empty',
   'new',

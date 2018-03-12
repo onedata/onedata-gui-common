@@ -16,7 +16,7 @@ $inline-alert-left-border-width: 60px;
     font-weight: bold;
   }
   &.alert-danger:before {
-    content: $oneicon-checkbox-x;
+    @include oneicon-content($oneicon-checkbox-x);
     color: $color-one-white;
   }
   .error-close {

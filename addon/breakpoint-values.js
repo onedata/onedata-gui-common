@@ -1,5 +1,5 @@
 /**
- * FIXME: jsdoc
+ * Global definitions of breakpoints that are used both in JS and SCSS
  *
  * @module breakpoint-values
  * @author Jakub Liput

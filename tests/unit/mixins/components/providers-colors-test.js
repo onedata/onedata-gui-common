@@ -5,7 +5,7 @@ import { A } from '@ember/array';
 import ComponentsProvidersColorsMixin from 'onedata-gui-common/mixins/components/providers-colors';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import Promise from 'rsvp';
+import { Promise } from 'rsvp';
 import wait from 'ember-test-helpers/wait';
 
 describe('Unit | Mixin | components/providers colors', function () {

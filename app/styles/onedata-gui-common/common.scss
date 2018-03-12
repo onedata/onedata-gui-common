@@ -90,6 +90,10 @@ input.light {
   }
 }
 
+@mixin oneicon-content($glyph) {
+  content: unquote("\"#{$glyph}\"");
+}
+
 input {
   border-color: $color-one-list-item-separator;
 }
@@ -270,7 +274,7 @@ ul.info, ol.info {
     list-style: none; /* Disable the normal item numbering */
   }
 
-  li:before {
+  li::before {
     position: absolute;
     top: 1px;
     left: -50px;
@@ -292,17 +296,17 @@ ul.info, ol.info {
 ol.info {
   counter-reset: li; /* Initiate a counter */
   
-  li:before {
+  li::before {
     content:counter(li); /* Use the counter as content */
     counter-increment: li; /* Increment the counter by 1 */
   }
 }
 
 ul.info {
-  li:before {
+  li::before {
+    @include oneicon-content($oneicon-arrow-right);
     font-family: 'oneicons' !important;
     font-weight: bold;
-    content: $oneicon-arrow-right;
   }
 }
 

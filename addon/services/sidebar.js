@@ -29,5 +29,6 @@ export default Service.extend({
   changeItems(level, ...items) {
     let itemPath = this.get('itemPath');
     itemPath.replace(level, itemPath.length - level, items);
+    itemPath.arrayContentDidChange(level);
   }
 });
