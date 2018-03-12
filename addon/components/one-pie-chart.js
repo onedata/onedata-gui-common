@@ -336,7 +336,6 @@ export default Component.extend({
     } else {
       optionsBase.disabledPlugins = ['tooltip'];
     }
-    // FIXME: use hide on element
     return optionsBase;
   },
 
