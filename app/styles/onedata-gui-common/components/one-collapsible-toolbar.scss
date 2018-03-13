@@ -1,7 +1,6 @@
 .one-collapsible-toolbar {
   &.minimized {
     .collapsible-toolbar-toggle {
-      // FIXME: these styles are the same as in dots in toolbar
       .icon-dot {
         background-color: $main-text-color;
         height: 4px;
@@ -33,11 +32,9 @@
   }
 }
 
-// FIXME: experimental styles
 .with-menu {
   .collapsible-toolbar-toggle {
     position: absolute;
-    // FIXME: temporary hack
     transform: translateY(6px);
     right: 0;
     top: 0;

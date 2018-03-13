@@ -13,12 +13,31 @@ describe('Unit | Utility | ember/computed pipe', function () {
     };
     const cls = EmberObject.extend({
       foo: 'bar',
-      newFoo: emberComputedPipe(addOne, addTwo, 'foo'),
+      newFoo: emberComputedPipe('foo', addOne, addTwo),
     });
     const obj = cls.create();
 
     const result = get(obj, 'newFoo');
 
     expect(result).to.equal('bar12');
+  });
+
+  it('invokes methods on provided property', function () {
+    const cls = EmberObject.extend({
+      prefix: 'p',
+      foo: 'bar',
+      addOne(s) {
+        return this.get('prefix') + s + '1';
+      },
+      addTwo(s) {
+        return this.get('prefix') + s + '2';
+      },
+      newFoo: emberComputedPipe('foo', 'addOne', 'addTwo'),
+    });
+    const obj = cls.create();
+
+    const result = get(obj, 'newFoo');
+
+    expect(result).to.equal('ppbar12');
   });
 });
