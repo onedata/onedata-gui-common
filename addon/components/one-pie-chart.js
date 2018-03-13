@@ -22,7 +22,7 @@
 
 import Component from '@ember/component';
 
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { A } from '@ember/array';
 import { debounce } from '@ember/runloop';
 import layout from '../templates/components/one-pie-chart';
@@ -150,7 +150,7 @@ export default Component.extend({
    * @type {computed.number}
    */
   _valuesSum: computed('data.@each.value', function () {
-    return this.get('data').reduce((sum, series) => sum + series.get('value'), 0);
+    return this.get('data').reduce((sum, series) => sum + get(series, 'value'), 0);
   }),
 
   /**

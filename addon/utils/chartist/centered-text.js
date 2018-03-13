@@ -11,7 +11,7 @@
  *
  * @module utils/chartist/centered-text
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -27,14 +27,14 @@ export default function (options) {
     maxWidth: DEFAULT_MAX_WIDTH,
     class: '',
   };
-  options = Chartist.extend({}, defaultOptions, options);
   return (chart) => {
     chart.on('created', () => {
+      const funOptions = Chartist.extend({}, defaultOptions, options);
       let svg = chart.svg;
       let relativeSize = Math.min(svg.width(), svg.height());
 
       let fontSize =
-        normalizeSize(options.fontSize, relativeSize, DEFAULT_FONT_SIZE);
+        normalizeSize(funOptions.fontSize, relativeSize, DEFAULT_FONT_SIZE);
 
       let textAttributes = {
         'dx': svg.width() / 2,
@@ -44,10 +44,10 @@ export default function (options) {
       };
 
       let textElement = svg.elem('text', textAttributes, 'ct-centered-text')
-        .text(options.text);
+        .text(funOptions.text);
       let textWidth = textElement.width();
       let maxTextWidth =
-        normalizeSize(options.maxWidth, relativeSize, DEFAULT_MAX_WIDTH) - 10;
+        normalizeSize(funOptions.maxWidth, relativeSize, DEFAULT_MAX_WIDTH) - 10;
       if (textWidth > maxTextWidth) {
         let scaleRatio = maxTextWidth / textWidth;
         textElement.getNode().style.fontSize = fontSize * scaleRatio + 'px';
