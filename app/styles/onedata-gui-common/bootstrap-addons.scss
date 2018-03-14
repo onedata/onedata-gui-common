@@ -51,10 +51,12 @@ $icon-btn-active-color: $color-one-red;
       color: $state-danger-text;
     }
   }
-  @media (max-width: $screen-xs-max) {
-    .form-control-feedback {
-      // 5px from hard-coded value of bootstrap label bottom margin
-      margin-top: $line-height-computed + 5px;
+  &:not(.without-labels) {
+    @media (max-width: $screen-xs-max) {
+      .form-control-feedback {
+        // 5px from hard-coded value of bootstrap label bottom margin
+        margin-top: $line-height-computed + 5px;
+      }
     }
   }
   .input-group {
@@ -268,10 +270,28 @@ $icon-btn-active-color: $color-one-red;
 }
 
 .nav-tabs {
+  li, li.active {
+    > a {
+      &,
+      &:hover,
+      &:focus {
+        border-top: 4px solid transparent;
+      }
+    }
+  }
   li.disabled {
     cursor: not-allowed !important;
     > a {
       pointer-events: none;
+    }
+  }
+  li.active {
+    > a {
+      &,
+      &:hover,
+      &:focus {
+        border-top-color: $color-one-blue-gray;
+      }
     }
   }
   .nav-link {
@@ -280,6 +300,7 @@ $icon-btn-active-color: $color-one-red;
     font-weight: bold;
     color: inherit;
   }
+  
 }
 
 .tab-content {
@@ -303,6 +324,34 @@ $icon-btn-active-color: $color-one-red;
       h1 {
         padding: 0;
       }
+    }
+  }
+}
+
+.only-tab-bar {
+  .tab-content {
+    border: none;
+  }
+  .tab-pane {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.table:not(.bt) {
+  tr {
+    td:first-child {
+      position: relative;
+      padding-left: 16px;
+    }
+  }
+}
+
+.table.table-striped {
+  tr:hover {
+    td {
+      //override table-striped style
+      background-color: $main-content-hover-background !important;
     }
   }
 }

@@ -27,4 +27,24 @@ describe('Unit | Utility | bytes to string', function () {
     let result = bytesToString(1251111, { iecFormat: false });
     expect(result).to.be.equal('1.3 MB');
   });
+
+  it('supports format option with iec', function () {
+    let result = bytesToString(1073741824, { format: 'iec' });
+    expect(result).to.be.equal('1 GiB');
+  });
+
+  it('can convert to bit', function () {
+    let result = bytesToString(1, { format: 'bit' });
+    expect(result).to.be.equal('8 b');
+  });
+
+  it('can convert to kbit', function () {
+    let result = bytesToString(8000, { format: 'bit' });
+    expect(result).to.be.equal('64 kb');
+  });
+
+  it('can convert to Mbit', function () {
+    let result = bytesToString(625000, { format: 'bit' });
+    expect(result).to.be.equal('5 Mb');
+  });
 });
