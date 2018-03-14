@@ -3,7 +3,7 @@
  *
  * @module utils/bytes-to-string
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2016-2017 ACK CYFRONET AGH
+ * @copyright (C) 2016-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -66,15 +66,14 @@ function bytesToStringSI(bytes) {
 }
 
 function byteBitUnit(unit) {
-  let newUnit = unit;
   if (unit[0] === 'B') {
     return 'b';
   } else if (unit[0] === 'K') {
-    newUnit = 'kb';
+    // kilo is an exception when the first letter is small
+    return 'kb';
   } else {
-    newUnit = unit[0] + 'b';
+    return unit[0] + 'b';
   }
-  return `${newUnit}it`;
 }
 
 function bytesToStringBit(bytes) {
