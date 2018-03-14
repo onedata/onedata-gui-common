@@ -30,6 +30,7 @@ const SPECIAL_IDS = [
   'empty',
   'new',
   'join',
+  'notSelected',
 ];
 
 function isSpecialResourceId(id) {
@@ -61,7 +62,7 @@ export default Route.extend({
     } = this.modelFor('onedata.sidebar');
 
     if (isSpecialResourceId(resourceId)) {
-      return { resourceId };
+      return { resourceId, collection };
     } else {
       return new Promise((resolve, reject) => {
         let gettingResource = this.get('contentResources')

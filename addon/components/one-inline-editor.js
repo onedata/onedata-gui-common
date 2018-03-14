@@ -60,11 +60,13 @@ export default Component.extend({
 
   actions: {
     startEdition() {
-      this.setProperties({
-        _inputValue: this.get('value'),
-        _inEditionMode: true,
+      next(() => {
+        safeExec(this, 'setProperties', {
+          _inputValue: this.get('value'),
+          _inEditionMode: true,
+        });
+        next(() => safeExec(this, () => this.$('input').focus().select()))
       });
-      next(() => safeExec(this, () => this.$('input').focus().select()));
     },
     cancelEdition() {
       this.set('_inEditionMode', false);

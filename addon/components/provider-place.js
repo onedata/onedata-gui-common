@@ -86,12 +86,6 @@ export default Component.extend(I18n, {
 
   /**
    * @type {function}
-   * @return {undefined}
-   */
-  showTriggered: () => {},
-
-  /**
-   * @type {function}
    * @param {Onezone.ProviderDetails} provider
    * @return {undefined}
    */
@@ -233,8 +227,5 @@ export default Component.extend(I18n, {
     selectProvider(provider) {
       this.get('providerSelectedAction')(provider);
     },
-    show() {
-      this.get('showTriggered')();
-    }
   },
 });

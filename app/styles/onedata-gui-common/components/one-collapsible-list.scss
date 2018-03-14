@@ -54,5 +54,12 @@
         transform: translateY(-50%);
       }
     }
+
+    @media (max-width: $mobile-view-breakpoint - 1) {
+      .search-group {
+        margin-bottom: 0;
+        margin-top: $padding-base-vertical;
+      }
+    }
   }
 }

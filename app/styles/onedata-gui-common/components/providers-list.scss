@@ -31,9 +31,13 @@
         border-top-width: 0;
       }
       .one-collapsible-list-item-header {
-        padding-left: 0;
-        padding-right: 160px;
+        padding-left: 2.8em;
+        padding-right: 100px;
         border-bottom-width: 0;
+        .item-icon-container {
+          position: absolute;
+          left: 0;
+        }
         .status-toolbar {
           right: 48px;
           &.push-right {
