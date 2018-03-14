@@ -10,15 +10,20 @@
  */
 
 import Component from '@ember/component';
-import { next } from '@ember/runloop';
+import { run, next } from '@ember/runloop';
+import { observer } from '@ember/object';
+import { inject as service } from '@ember/service';
 import layout from '../templates/components/one-inline-editor';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,
   classNames: ['one-inline-editor'],
   classNameBindings: ['_inEditionMode:editor:static', '_whileSaving:saving'],
+
+  eventsBus: service(),
 
   /**
    * Input value (before edition).
@@ -58,6 +63,57 @@ export default Component.extend({
    */
   onSave: notImplementedReject,
 
+  /**
+   * Automatically set to true if the component is rendered in one-collapsible-toolbar
+   * @type {boolean}
+   */
+  isInToolbar: false,
+
+  resizeOnEdit: observer('_inEditionMode', function resizeOnEdit() {
+    if (this.get('_inEditionMode')) {
+      this.resizeToFit();
+    } else {
+      this.resetSize();
+    }
+  }),
+
+  didInsertElement() {
+    const isInToolbar = (this.$().parent().find('.one-collapsible-toolbar').length > 0);
+    this.set('isInToolbar', isInToolbar);
+
+    if (isInToolbar) {
+      $(window).on(`resize.${this.element.id}`, () => {
+        run(() => {
+          if (this.get('_inEditionMode')) {
+            this.resizeToFit();
+          }
+        });
+      });
+    }
+  },
+
+  willDestroyElement() {
+    if (this.get('isInToolbar')) {
+      run(() => {
+        $(window).off(`resize.${this.element.id}`);
+      });
+    }
+  },
+
+  resizeToFit() {
+    const parentWidth = this.$().parent().width();
+    const $toolbar = this.$().parent().find('.one-collapsible-toolbar:not(.minimized)');
+    const toolbarWidth = $toolbar.width() || 0;
+    const paddingRight = parseFloat(
+      window.getComputedStyle(this.element)['padding-right']
+    );
+    this.$().width(parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0));
+  },
+
+  resetSize() {
+    this.$().width('auto');
+  },
+
   actions: {
     startEdition() {
       next(() => {
@@ -79,7 +135,14 @@ export default Component.extend({
       this.set('_whileSaving', true);
       onSave(_inputValue)
         .then(() => safeExec(this, 'set', '_inEditionMode', false))
-        .finally(() => safeExec(this, 'set', '_whileSaving', false));
+        .finally(() => safeExec(this, 'set', '_whileSaving', false))
+        .finally(() => {
+          if (this.get('isInToolbar')) {
+            next(() => {
+              this.get('eventsBus').trigger('one-inline-editor:resize');
+            });
+          }
+        });
     },
   },
 });

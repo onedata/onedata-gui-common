@@ -26,6 +26,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { oneWay } from '@ember/object/computed';
 import { next } from '@ember/runloop';
+import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import ContentOverflowDetector from 'onedata-gui-common/mixins/content-overflow-detector';
@@ -35,6 +36,8 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   layout,
   classNames: ['one-collapsible-toolbar'],
   classNameBindings: ['stateClasses', 'isMinimized:minimized'],
+
+  eventsBus: service(),
 
   /**
    * Optional to inject.
@@ -97,12 +100,17 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       overflowSiblingsElements: this.$().siblings()
     });
     this.addOverflowDetectionListener();
+    this.get('eventsBus').on(
+      'one-inline-editor:resize',
+      () => this.get('_overflowDetectionListener')()
+    );
   },
 
   didDestroyElement() {
     this._super(...arguments);
     this.removeClickOutsideListener();
     this.removeOverflowDetectionListener();
+    this.get('eventsBus').off('one-inline-editor:resize');
   },
 
   clickOutside(event) {

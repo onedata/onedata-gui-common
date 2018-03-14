@@ -312,6 +312,10 @@ $mobile-resource-name-height: 20px;
     // TODO similar 30px
     padding: $content-col-padding;
 
+    @media (max-width: $screen-sm-max) {
+      padding: $padding-large-horizontal;
+    }
+    
     @media (max-width: $screen-xs-max) {
       padding: 0px;
     }

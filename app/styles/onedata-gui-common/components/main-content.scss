@@ -1,6 +1,7 @@
 $mobile-horizontal-content-padding: $padding-large-horizontal;
 $content-row-vertical-padding: $padding-base-vertical;
 $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height - $content-col-padding;
+$content-header-row-mobile-height: $content-header-row-height - 9px;
 
 .main-content {
   color: $main-text-color;
@@ -13,10 +14,10 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
   .content-row {
     border-bottom: 1px solid $main-border-color;
     padding: $content-row-vertical-padding 0;
-
-    @media screen and (min-width: $screen-sm-min) {
-      &.header-row {
-        height: $content-header-row-height;
+    
+    &.header-row {
+      height: $content-header-row-mobile-height;
+      @media (min-width: $screen-sm-min) {
         padding-top: 0;
         h1 {
           font-size: $content-header-font-size;
@@ -30,7 +31,11 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
           }
         }
       }
+      @media (min-width: $screen-md-min) {
+        height: $content-header-row-height;
+      }
     }
+    
 
     &.no-border,
     &:last-child:not(.has-border) {
@@ -60,10 +65,6 @@ $content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height 
 
       &.normal-case {
         text-transform: none;
-      }
-
-      &.with-menu {
-        padding-right: 56px;
       }
             
       &+p {

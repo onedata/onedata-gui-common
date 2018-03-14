@@ -75,10 +75,12 @@
 // TODO: style improvements in mobile mode
 .content-row.header-row {
   .one-inline-editor {
+    margin-top: -7px;
+    max-width: 100%;
+    
     @media screen and (min-width: $screen-sm-min) {
       display: inline-block;
       .one-label {
-        display: inline;
         margin-right: 0;
         padding: $padding-base-vertical/2 $padding-base-horizontal/2;
         margin-left: -$padding-base-horizontal/2;
@@ -89,6 +91,10 @@
         margin-left: -$padding-base-horizontal/2;
         margin-top: -$padding-base-vertical;
       }
+      
+      // &.editor {
+      //   display: block;
+      // }
     }
     @media screen and (max-width: $screen-xs-max) {
       .one-label, .form-control {
