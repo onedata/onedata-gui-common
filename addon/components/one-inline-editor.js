@@ -38,6 +38,12 @@ export default Component.extend({
   editHint: undefined,
 
   /**
+   * If true, the value will be trimmed before saving
+   * @type {boolean}
+   */
+  trimString: true,
+
+  /**
    * Values used by input while edition.
    * @type {string}.
    */
@@ -131,12 +137,19 @@ export default Component.extend({
       const {
         _inputValue,
         onSave,
-      } = this.getProperties('_inputValue', 'onSave');
+        trimString,
+      } = this.getProperties('_inputValue', 'onSave', 'trimString');
+      const preparedInputValue = trimString ? _inputValue.trim() : _inputValue;
       this.set('_whileSaving', true);
-      onSave(_inputValue)
-        .then(() => safeExec(this, 'set', '_inEditionMode', false))
-        .finally(() => safeExec(this, 'set', '_whileSaving', false))
+      onSave(preparedInputValue)
+        .then(() => {
+          safeExec(this, 'setProperties', {
+            _inEditionMode: false,
+            _inputValue: preparedInputValue,
+          });
+        })
         .finally(() => {
+          safeExec(this, 'set', '_whileSaving', false);
           if (this.get('isInToolbar')) {
             next(() => {
               this.get('eventsBus').trigger('one-inline-editor:resize');

@@ -40,4 +40,16 @@ describe('Unit | Utility | ember/computed pipe', function () {
 
     expect(result).to.equal('ppbar12');
   });
+
+  it('handles no functions at all', function () {
+    const cls = EmberObject.extend({
+      foo: 'bar',
+      newFoo: emberComputedPipe('foo'),
+    });
+    const obj = cls.create();
+
+    const result = get(obj, 'newFoo');
+
+    expect(result).to.equal('bar');
+  });
 });

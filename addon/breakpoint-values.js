@@ -20,5 +20,5 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-// colors assigned to `default` to allow ES import
+// breakpoints assigned to `default` to allow ES import
 module.exports.default = breakpoints;
