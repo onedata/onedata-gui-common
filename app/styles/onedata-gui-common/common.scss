@@ -346,3 +346,9 @@ a {
 .truncated-string.before-status {
   padding-right: 100px;
 }
+
+.table.table-middle-align {
+  td {
+    vertical-align: middle;
+  }
+}
