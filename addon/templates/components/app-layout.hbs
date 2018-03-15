@@ -9,42 +9,16 @@
     </div>
   </div>
   {{user-account-button 
-    isActive=(eq mainMenu.currentItemId "users") 
+    isActive=(eq navigationState.activeResourceType "users") 
     manageAccount=(action "manageAccount")
     mobileMode=true}}
   {{main-menu
-    appModel=appModel
-    currentItemId=currentTabId
+    items=appModel.mainMenuItems
     itemClicked=(action "mobileMenuItemChanged")
   }}
 {{/side-menu}}
 {{content-backdrop}}
-
-<div id="main-menu-container" 
-  class="col-in-app-layout col-main-menu hidden-xs hidden-sm full-height disable-user-select {{if sidenavTabId "sidenav-opened"}}" 
-  {{action "closeSidenav" bubbles=true}}>
-{{#perfect-scrollbar-element
-  tagName="div"
-  class="main-menu-content"
-  onScroll=(action "scrollOccurred")}}
-  <div class="row row-onedata-logo full-width">
-    <div class="onedata-logo"></div>
-    {{brand-info}}
-  </div>
-  <div class="row row-main-menu full-width">
-    {{main-menu
-      appModel=appModel
-      sidenavItemId=sidenavTabId
-      currentItemId=currentTabId
-      itemClicked=(action "mainMenuItemClicked")
-    }}
-  </div>
-{{/perfect-scrollbar-element}}
-  <div class="row row-account-button">
-    <div class="groove-border"></div>
-    {{user-account-button isActive=(eq mainMenu.currentItemId "users") manageAccount=(action "manageAccount")}}
-  </div>
-</div>
+{{main-menu-column mainMenuItems=appModel.mainMenuItems}}
 {{#perfect-scrollbar-element
   tagName="div"
   id="col-sidebar"
@@ -62,11 +36,12 @@
         <span class="icon-bar"></span>
       </button>
     {{/side-menu-toggle}}
-    <button {{action 'showMobileSidebar'}} type="button" 
-      class="navbar-toggle toggle-back hidden-sm{{if showMobileSidebar " hidden-xs"}}">
+    {{#link-to "onedata.sidebar.index"
+      tagName="buton"
+      class=(concat-classes "navbar-toggle toggle-back hidden-sm" (if showMobileSidebar "hidden-xs"))}}
       {{one-icon icon="arrow-right"}}
       <div class="sidebar-title">{{navigationState.globalBarSidebarTitle}}</div>
-    </button>
+    {{/link-to}}
     <div class="tab-name">
       <div class="visible-sm-block one-label">{{navigationState.globalBarSidebarTitle}}</div>
       <div class="visible-xs-block one-label">{{navigationState.globalBarActiveTitle}}</div>
@@ -94,10 +69,8 @@
     {{name-conflict item=navigationState.activeResource tagName="span"}}
   </div>
   <div class="row row-app full-height">
-    {{#one-sidenav open=sidenavSidebarOpen id="sidenav-sidebar"
-      coverSelector="#col-sidebar" model=sidenavModel.content
-      closed=(action "sidenavClosed")
-    }}
+    {{#one-sidenav opened=sidenavResouceType id="sidenav-sidebar"
+      coverSelector="#col-sidebar" model=sidenavModel.content}}
       {{#promise-proxy-container proxy=sidenavModel}}
         {{component sidenavContentComponent
           model=sidenavModel.content
@@ -107,12 +80,12 @@
     {{/one-sidenav}}
         
     {{content-backdrop class="sidenav-backdrop"
-      progress=(if sidenavSidebarOpen 100 0)
-      click=(action "closeSidenav" bubbles=true)
+      progress=(if sidenavResouceType 100 0)
+      click=(action (mut navigationState.globalSidenavResourceType) null bubbles=true)
     }}
     
     {{#perfect-scrollbar-element
-      class=colContentClass
+      class="col-in-app-layout col-content col-xs-12 full-height"
       onScroll=(action "scrollOccurred")
     }}
       {{yield "content"}}

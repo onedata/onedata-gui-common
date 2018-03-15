@@ -72,6 +72,7 @@ $mobile-resource-name-height: 20px;
       text-align: center;
       margin: 0px;
       border: 0;
+      cursor: pointer;
       &.toggle-back {
         width: 25%;
         .one-icon {
@@ -342,7 +343,7 @@ $mobile-resource-name-height: 20px;
   padding-bottom: $one-list-item-line-height;
 }
 .col-main-menu {
-  &.sidenav-opened {
+  .main-menu.sidenav-opened {
     .one-list-item.main-menu-item.enabled {
       &.active > .item-header {
         background-color: #666161;

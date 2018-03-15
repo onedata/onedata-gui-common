@@ -39,7 +39,6 @@ function isSpecialResourceId(id) {
 
 export default Route.extend({
   sidebar: service(),
-  eventsBus: service(),
   contentResources: service(),
   navigationState: service(),
 
@@ -47,11 +46,11 @@ export default Route.extend({
     const resourceId = transition.params['onedata.sidebar.content'].resource_id;
     const {
       sidebar,
-      eventsBus,
-    } = this.getProperties('sidebar', 'eventsBus');
+      navigationState,
+    } = this.getProperties('sidebar', 'navigationState');
     sidebar.changeItems(0, resourceId);
     sidebar.set('isLoadingItem', true);
-    eventsBus.trigger('one-sidenav:close', '#sidenav-sidebar');
+    navigationState.set('globalSidenavResourceType', null);
   },
 
   model({ resource_id: resourceId }) {

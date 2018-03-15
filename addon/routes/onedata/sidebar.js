@@ -2,8 +2,8 @@
  * TODO: documentation
  *
  * @module routes/onedata/sidebar
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michal Borzecki
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -33,7 +33,6 @@ export default Route.extend({
     const resourceType = transition.params['onedata.sidebar'].type;
     if (resourceType) {
       let mainMenu = this.get('mainMenu');
-      mainMenu.currentItemIdChanged(resourceType);
       mainMenu.set('isLoadingItem', true);
     }
   },

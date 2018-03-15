@@ -10,8 +10,6 @@
 import Service from '@ember/service';
 
 export default Service.extend({
-  currentItemId: null,
-
   /**
    * Set to true, if the currentItem is in loading state (the corresponding page
    * is not loaded yet).
@@ -25,8 +23,4 @@ export default Service.extend({
    * @type {boolean}
    */
   isFailedItem: false,
-
-  currentItemIdChanged(id) {
-    this.set('currentItemId', id);
-  },
 });

@@ -68,6 +68,12 @@ export default Service.extend(I18n, {
   activeAspect: undefined,
 
   /**
+   * Resource type used by global sidenav
+   * @type {string|undefined}
+   */
+  globalSidenavResourceType: undefined,
+
+  /**
    * One of: 'sidebar', 'index', 'aspect', undefined.
    * @type {string|undefined}
    */
