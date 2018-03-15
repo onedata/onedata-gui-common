@@ -20,7 +20,6 @@ export default Component.extend({
     'navigationState.globalSidenavResourceType:sidenav-opened',
   ],
 
-  mainMenu: service(),
   navigationState: service(),
 
   /**
@@ -38,12 +37,12 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isLoadingItem: reads('mainMenu.isLoadingItem'),
+  isLoadingItem: reads('navigationState.isActiveResourceCollectionLoading'),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isFailedItem: reads('mainMenu.isFailedItem'),
+  isFailedItem: reads('navigationState.hasActiveResourceCollectionLoadingFailed'),
 
   /**
    * @type {Ember.ComputedProperty<string>}

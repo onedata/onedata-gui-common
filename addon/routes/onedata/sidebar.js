@@ -24,22 +24,23 @@ function isValidTab(tabName) {
 }
 
 export default Route.extend({
-  mainMenu: service(),
   sidebarResources: service(),
   navigationState: service(),
 
   beforeModel(transition) {
     const resourceType = transition.params['onedata.sidebar'].type;
     if (resourceType) {
-      let mainMenu = this.get('mainMenu');
-      mainMenu.set('isLoadingItem', true);
+      this.get('navigationState').setProperties({
+        isActiveResourceCollectionLoading: true,
+        hasActiveResourceCollectionLoadingFailed: false,
+        activeResourceCollection: undefined,
+      });
     }
   },
 
   model({ type }) {
-    let sidebarResources = this.get('sidebarResources');
     if (isValidTab(type)) {
-      return sidebarResources.getCollectionFor(type)
+      return this.get('sidebarResources').getCollectionFor(type)
         .then(proxyCollection => {
           return isRecord(proxyCollection) || get(proxyCollection, 'list') ?
             proxyCollection :
@@ -57,8 +58,11 @@ export default Route.extend({
   },
 
   afterModel(model) {
-    this.set('mainMenu.isLoadingItem', false);
-    this.set('navigationState.activeResourceType', model.resourceType);
+    this.get('navigationState').setProperties({
+      activeResourceType: model.resourceType,
+      activeResourceCollection: model.collection,
+      isActiveResourceCollectionLoading: false,
+    });
   },
 
   renderTemplate(controller, model) {
@@ -78,12 +82,11 @@ export default Route.extend({
 
   actions: {
     error() {
-      let mainMenu = this.get('mainMenu');
-      mainMenu.setProperties({
-        isFailedItem: true,
-        isLoadingItem: false,
+      this.get('navigationState').setProperties({
+        hasActiveResourceCollectionLoadingFailed: true,
+        isActiveResourceCollectionLoading: false,
       });
       return true;
     },
-  }
+  } 
 });

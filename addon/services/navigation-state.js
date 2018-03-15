@@ -56,6 +56,24 @@ export default Service.extend(I18n, {
   activeResourceType: undefined,
 
   /**
+   * Array of resources related to activeResourceType.
+   * @type {Array<object>|undefined}
+   */
+  activeResourceCollection: undefined,
+
+  /**
+   * True, if activeResourceCollection is loading.
+   * @type {booleand}
+   */
+  isActiveResourceCollectionLoading: false,
+
+  /**
+   * True, if error occurred while activeResourceCollection loading.
+   * @type {booleand}
+   */
+  hasActiveResourceCollectionLoadingFailed: false,
+
+  /**
    * Active resource id used to render content.
    * @type {object|undefined}
    */
