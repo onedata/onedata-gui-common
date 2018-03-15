@@ -24,6 +24,9 @@ $color-sidebar-item-bg: $color-one-gray-sand;
 $color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
 $color-one-list-item-separator: $main-border-color;
 
+$main-content-hover-background: lighten($color-one-semiwhite, 3%);
+$main-content-light-background: lighten($color-one-semiwhite, 5%);
+
 @import 'onedata-gui-common/bootstrap-config';
 @import 'onedata-gui-common/bootstrap-addons';
 
@@ -126,3 +129,4 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-inline-editor';
 @import 'onedata-gui-common/components/actions-popover-content';
 @import 'onedata-gui-common/components/one-tile';
+@import 'onedata-gui-common/components/one-space-indicator';

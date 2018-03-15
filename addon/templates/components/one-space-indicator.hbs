@@ -1,0 +1,12 @@
+{{#if _isDataValid}}
+  <div class="total-space-bar bar"></div>
+  <span class="bar-label total-space">
+    {{bytes-to-string totalSize}}
+  </span>
+  <div class="occupied-space-bar bar" style={{_occupiedSpaceBarStyle}}></div>
+  <span class="bar-label occupied-space" style={{_occupiedSpaceLabelStyle}}>
+    {{bytes-to-string occupiedSize}}
+  </span>
+{{else}}
+  {{resource-load-error message=incorrectDataMessage}}
+{{/if}}

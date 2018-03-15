@@ -51,10 +51,29 @@ $icon-btn-active-color: $color-one-red;
       color: $state-danger-text;
     }
   }
-  @media (max-width: $screen-xs-max) {
-    .form-control-feedback {
-      // 5px from hard-coded value of bootstrap label bottom margin
-      margin-top: $line-height-computed + 5px;
+  &:not(.without-labels) {
+    @media (max-width: $screen-xs-max) {
+      .form-control-feedback {
+        // 5px from hard-coded value of bootstrap label bottom margin
+        margin-top: $line-height-computed + 5px;
+      }
+    }
+  }
+  .input-group {
+    table-layout: fixed;
+    width: 100%;
+    input + .input-group-addon {
+      width: 50%;
+    }
+  }
+  .has-feedback {
+    .input-group {
+      .form-control {
+        padding-right: $padding-large-horizontal;
+      }
+      .form-control + .input-group-addon {
+        padding-right: $input-height-base - 2px;
+      }
     }
   }
   .input-group {
@@ -333,5 +352,23 @@ $icon-btn-active-color: $color-one-red;
   .tab-pane {
     margin-left: 0;
     margin-right: 0;
+  }
+}
+
+.table:not(.bt) {
+  tr {
+    td:first-child {
+      position: relative;
+      padding-left: 16px;
+    }
+  }
+}
+
+.table.table-striped {
+  tr:hover {
+    td {
+      //override table-striped style
+      background-color: $main-content-hover-background !important;
+    }
   }
 }

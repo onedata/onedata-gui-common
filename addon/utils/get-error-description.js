@@ -24,9 +24,9 @@ import Ember from 'ember';
  * @return {object}
  */
 export default function getErrorDescription(error) {
-  let details = error && error.response && error.response.body &&
-    (error.response.body.description || error.response.body.error) ||
-    error && error.message ||
+  const details = error && error.response && error.response.body &&
+    parseRest(error.response.body) ||
+    error.message ||
     error;
   let errorJson;
   let message;
@@ -48,4 +48,45 @@ export default function getErrorDescription(error) {
     message,
     errorJsonString: errorJson,
   };
+}
+
+function parseRest(body) {
+  return isSimpleRestError(body) ? simpleRestError(body) : complexRestError(body);
+}
+
+function isSimpleRestError(body) {
+  const { hosts } = body;
+
+  return !!(hosts && typeof hosts === 'object' && Object.keys(hosts).length === 1);
+}
+
+function simpleRestError(body) {
+  const { hosts } = body;
+  return body.hosts[Object.keys(hosts)[0]].description;
+}
+
+function complexRestError(body) {
+  const {
+    error,
+    description,
+    'module': errModule,
+    'function': errFunction,
+    hosts,
+  } = body;
+
+  let str = `${error}`;
+  if (description) {
+    str += `: ${description.replace(/\.$/, '')}. `;
+  }
+  if (errFunction && errModule) {
+    `Appeared in function ${errFunction} in module ${errModule}. `;
+  }
+  if (hosts && typeof hosts === 'object') {
+    for (const hostname in hosts) {
+      const { error: hostError, description: hostDescription } = hosts[hostname];
+      str +=
+        `Service on host ${hostname} failed with ${hostError}: ${hostDescription.replace(/\.$/, '')}. `;
+    }
+  }
+  return str;
 }
