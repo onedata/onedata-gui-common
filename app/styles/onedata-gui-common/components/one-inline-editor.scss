@@ -76,7 +76,11 @@
 .content-row.header-row {
   .one-inline-editor {
     margin-top: -7px;
-    max-width: 100%;
+    max-width: calc(100% - 35px);
+
+    @media screen and (max-width: $screen-sm-max) {
+      max-width: 100%
+    }
     
     @media screen and (min-width: $screen-sm-min) {
       display: inline-block;
