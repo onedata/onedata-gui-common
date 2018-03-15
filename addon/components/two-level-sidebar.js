@@ -21,8 +21,8 @@ export default Component.extend({
   layout,
   classNames: ['two-level-sidebar'],
 
-  sidebar: service(),
   eventsBus: service(),
+  navigationState: service(),
 
   /**
    * @type {Object}
@@ -90,9 +90,7 @@ export default Component.extend({
 
   isCollectionEmpty: equal('sortedCollection.length', 0),
 
-  primaryItemId: computed('sidebar.itemPath.[]', function () {
-    return this.get('sidebar.itemPath').objectAt(0);
-  }),
+  primaryItemId: readOnly('navigationState.activeResourceId'),
 
   primaryItem: computed(
     'primaryItemId',
@@ -109,9 +107,7 @@ export default Component.extend({
     }
   ),
 
-  secondaryItemId: computed('sidebar.itemPath.[]', function () {
-    return this.get('sidebar.itemPath').objectAt(1);
-  }),
+  secondaryItemId: readOnly('navigationState.activeAspect'),
 
   secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
     let {

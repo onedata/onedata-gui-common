@@ -25,7 +25,6 @@ function isValidTab(tabName) {
 
 export default Route.extend({
   mainMenu: service(),
-  sidebar: service(),
   sidebarResources: service(),
   navigationState: service(),
 

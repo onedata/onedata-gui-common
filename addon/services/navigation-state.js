@@ -56,7 +56,19 @@ export default Service.extend(I18n, {
   activeResourceType: undefined,
 
   /**
-   * Active resource used  to render content.
+   * Active resource id used to render content.
+   * @type {object|undefined}
+   */
+  activeResourceId: undefined,
+
+  /**
+   * If true, then activeResource is loading.
+   * @type {boolean}
+   */
+  isActiveResourceLoading: false,
+
+  /**
+   * Active resource used to render content.
    * @type {object|undefined}
    */
   activeResource: undefined,
