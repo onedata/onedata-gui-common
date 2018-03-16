@@ -63,18 +63,24 @@ To copy dependencies launch a script (requires Python ^2.7) from root of parent 
 
 #### Setting up Sass
 
-The addon depends on some globally set Sass variables - main colors used in the application theme. 
-These variables needs to be injected using `ember-cli-build.js` configuration file.
+The addon depends on some globally set Sass variables - main colors used in the
+application theme and window size breakpoints. These variables needs to be injected 
+using `ember-cli-build.js` configuration file.
 
-At the top of that file, add `require` statements to import the Sass setup function and colors configuration:
+At the top of that file, add `require` statements to import the Sass setup functions and configurations:
 ```javascript
 const defineSassColors = require('./lib/onedata-gui-common/addon/utils/define-sass-colors');
 const colors = require('./lib/onedata-gui-common/addon/colors').default;
+const defineSassBreakpoints = require(
+  './lib/onedata-gui-common/addon/utils/define-sass-breakpoints'
+);
+const breakpointValues = require('./lib/onedata-gui-common/addon/breakpoint-values').default;
 ```
 
 And then, after an `app` definition, paste:
 ```javascript
 defineSassColors(app, colors);
+defineSassBreakpoints(app, breakpointValues);
 ```
 
 #### Routing and templates

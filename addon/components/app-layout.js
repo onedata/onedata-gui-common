@@ -2,9 +2,10 @@ import { oneWay } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
-import { computed } from '@ember/object';
+import EmberObject, { computed, get } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import { invokeAction, invoke } from 'ember-invoke-action';
+import isRecord from 'onedata-gui-common/utils/is-record';
 
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
@@ -61,12 +62,21 @@ export default Component.extend({
 
     if (resourceType != null) {
       const promise = sidebarResources.getCollectionFor(resourceType)
-        .then(collection => {
-          return {
-            resourceType,
-            collection,
-          };
-        });
+        .then(proxyCollection => {
+        if (isRecord(proxyCollection)) {
+          return proxyCollection;
+        } else if (get(proxyCollection, 'list')) {
+          return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
+        } else {
+          return Promise.all(proxyCollection).then(list => EmberObject.create({ list }))
+        }
+      })
+      .then(collection => {
+        return {
+          resourceType,
+          collection,
+        };
+      });
       return PromiseObject.create({ promise });
     } else {
       return null;

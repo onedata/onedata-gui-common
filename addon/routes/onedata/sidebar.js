@@ -43,9 +43,13 @@ export default Route.extend({
     if (isValidTab(type)) {
       return sidebarResources.getCollectionFor(type)
         .then(proxyCollection => {
-          return isRecord(proxyCollection) || get(proxyCollection, 'list') ?
-            proxyCollection :
-            Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
+          if (isRecord(proxyCollection)) {
+            return proxyCollection;
+          } else if (get(proxyCollection, 'list')) {
+            return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
+          } else {
+            return Promise.all(proxyCollection).then(list => EmberObject.create({ list }))
+          }
         })
         .then(collection => {
           return {
