@@ -1,12 +1,14 @@
 <div class="world-map light">
-  <div class="content-info-content-container">
+  <div class="container content-info-content-container">
     <div class="row text-center">
       <div class="col-xs-12">
         <h1>{{header}}</h1>
         {{#if subheader}}
           <h2>{{subheader}}</h2>
         {{/if}}
-        <p class="lead">{{text}}</p>
+        {{#if text}}
+          <p class="lead">{{text}}</p>
+        {{/if}}
       </div>
     </div>
     {{#if imagePath}}
@@ -15,13 +17,28 @@
         imageTextClass=imageTextClass 
         imageText=imageText}}
     {{/if}}
-    <div class="row text-center">
-      <div class="col-xs-12">
-        {{#one-spin-button class=(concat "btn btn-primary " buttonClass) action=(action buttonAction)}}
-          {{buttonLabel}}
-        {{/one-spin-button}}
+    {{#if hasBlock}}
+      <div class="row row-yield">
+        {{yield (hash
+            buttonAction=(action _buttonAction)
+            actionInProgress=_actionInProgress
+          )
+        }}
       </div>
-    </div>
+    {{/if}}
+    {{#if _showButton}}
+      <div class="row text-center">
+        <div class="col-xs-12">
+          {{#one-spin-button
+            class=(concat "btn btn-primary btn-content-info " buttonClass)
+            action=(action _buttonAction)
+            inFlight=_actionInProgress
+            disabled=buttonDisabled
+          }}
+            {{buttonLabel}}
+          {{/one-spin-button}}
+        </div>
+      </div>
+    {{/if}}
   </div>
-  {{!-- TODO yield content --}}
 </div>

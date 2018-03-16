@@ -1,0 +1,16 @@
+{{#each actionsArray as |act|}}
+  <li class={{if act.separator "separator"}}>
+    {{#if act.separator}}
+      <a>
+        <span class="one-label">{{act.title}}</span>
+      </a>
+    {{else}}
+      <a class="clickable {{act.class}}" onClick={{action "triggerAction" act.action}}>
+        {{#if act.icon}}
+          {{one-icon icon=act.icon}}
+        {{/if}}
+        <span class="one-label">{{act.title}}</span>
+      </a>
+    {{/if}}
+  </li>
+{{/each}}

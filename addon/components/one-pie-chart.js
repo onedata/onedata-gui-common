@@ -5,7 +5,7 @@
  *
  * @module components/one-pie-chart
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -22,7 +22,7 @@
 
 import Component from '@ember/component';
 
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { A } from '@ember/array';
 import { debounce } from '@ember/runloop';
 import layout from '../templates/components/one-pie-chart';
@@ -40,7 +40,11 @@ const SERIES_HOVER_TRANSITION_TIME = 0.3;
 export default Component.extend({
   layout,
   classNames: ['one-pie-chart'],
-  classNameBindings: ['_valuesSum::zero-chart'],
+  classNameBindings: [
+    '_valuesSum::zero-chart',
+    'hideLegend:hide-legend',
+    'forceMobile:force-mobile'
+  ],
 
   /**
    * Data for a chart.
@@ -67,6 +71,19 @@ export default Component.extend({
   sortDescending: true,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  forceMobile: false,
+
+  /**
+   * @virtual optional
+   * If true, the legend will not be displayed even if in mobile mode
+   * @type {boolean}
+   */
+  hideLegend: false,
+
+  /**
    * Css opacity value of inactive (not hovered) slice.
    * @type {number}
    */
@@ -89,6 +106,10 @@ export default Component.extend({
    * @type {boolean}
    */
   _mobileMode: false,
+
+  mobileMode: computed('_mobileMode', 'forceMobile', function () {
+    return this.get('forceMobile') || this.get('_mobileMode');
+  }).readOnly(),
 
   /**
    * Timeout id for styles recompute (see _chartCss property)
@@ -129,14 +150,14 @@ export default Component.extend({
    * @type {computed.number}
    */
   _valuesSum: computed('data.@each.value', function () {
-    return this.get('data').reduce((sum, series) => sum + series.get('value'), 0);
+    return this.get('data').reduce((sum, series) => sum + get(series, 'value'), 0);
   }),
 
   /**
    * Chartist options.
    * @type {computed.Object}
    */
-  _chartOptions: computed('_sortedData', '_valuesSum', '_mobileMode', function () {
+  _chartOptions: computed('_sortedData', '_valuesSum', 'mobileMode', function () {
     return this.generateChartOptions();
   }),
 
@@ -268,13 +289,13 @@ export default Component.extend({
    */
   generateChartOptions() {
     let {
-      _mobileMode,
+      mobileMode,
       _valuesSum,
       _sortedData,
       centeredTextOptions,
       legendColorsOptions,
     } = this.getProperties(
-      '_mobileMode',
+      'mobileMode',
       '_valuesSum',
       '_sortedData',
       'centeredTextOptions',
@@ -310,7 +331,7 @@ export default Component.extend({
         legendColors(legendColorsOptions),
       ]
     };
-    if (_mobileMode) {
+    if (mobileMode) {
       optionsBase.disabledPlugins = ['pieLabels'];
     } else {
       optionsBase.disabledPlugins = ['tooltip'];

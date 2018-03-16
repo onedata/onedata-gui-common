@@ -1,21 +1,3 @@
 {{#each buttons as |button|}}
   {{one-sidebar-toolbar-button buttonModel=button class=button.class}}
 {{/each}}
-{{#if buttons.length}}
-  {{#one-collapsible-toolbar
-    isMinimized=true
-    toggleBtnClass="btn-menu-toggle"
-    isGlobal=true
-    showInMobileSidebar=true
-    as |dropdown|
-  }}
-    {{#each buttons as |button|}}
-      {{#dropdown.item
-        itemAction=button.action
-        triggerClass=button.class
-      }}
-        {{button.title}}
-      {{/dropdown.item}}
-    {{/each}}
-  {{/one-collapsible-toolbar}}
-{{/if}}

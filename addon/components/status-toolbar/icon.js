@@ -4,11 +4,12 @@
  *
  * @module components/status-toolbar/icon
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import { invokeAction } from 'ember-invoke-action';
 
 import layout from 'onedata-gui-common/templates/components/status-toolbar/icon';
@@ -83,6 +84,14 @@ export default Component.extend({
    * @type {Function}
    */
   clickAction: null,
+
+  _innerTextPresent: computed('innerText', function getInnerTextPresent() {
+    return this.get('innerText') != null;
+  }),
+
+  _outerTextPresent: computed('outerText', function getOuterTextPresent() {
+    return this.get('outerText') != null;
+  }),
 
   click() {
     invokeAction(this, 'clickAction');

@@ -1,6 +1,3 @@
-import Component from '@ember/component';
-import layout from 'onedata-gui-common/templates/components/content-info';
-
 /**
  * A component for predefined, usually nearly full-screen messages - content fillers.
  * Uses one-image to show a placeholder image.
@@ -20,9 +17,18 @@ import layout from 'onedata-gui-common/templates/components/content-info';
  * 
  * @module components/content-info
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
+import Component from '@ember/component';
+import layout from 'onedata-gui-common/templates/components/content-info';
+import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
+import { computed } from '@ember/object';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+
+const defaultButtonAction = notImplementedReject;
+
 export default Component.extend({
   layout,
   classNames: ['content-info'],
@@ -80,5 +86,35 @@ export default Component.extend({
    * The function should return Promise which indicated status of action.
    * @type {Function}
    */
-  buttonAction: null,
+  buttonAction: defaultButtonAction,
+
+  /**
+   * If true, the action button is disabled
+   * @type {boolean}
+   */
+  buttonDisabled: false,
+
+  _actionInProgress: false,
+
+  _showButton: computed(function _getShowButton() {
+    return this.get('buttonAction') !== defaultButtonAction;
+  }),
+
+  _buttonAction() {
+    this.set('_actionInProgress', true);
+    try {
+      const actionResult = this.get('buttonAction')();
+      if (actionResult && actionResult.finally) {
+        return actionResult.finally(() =>
+          safeExec(this, 'set', '_actionInProgress', false)
+        );
+      } else {
+        this.set('_actionInProgress', false);
+        return actionResult;
+      }
+    } catch (error) {
+      safeExec(this, 'set', '_actionInProgress', false);
+      throw error;
+    }
+  },
 });

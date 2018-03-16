@@ -21,15 +21,25 @@
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    visibility: hidden;
     font-size: 170%;
     .one-icon {
       position: relative;
       top: 2px;
     }
   }
+  &:hover {
+    .edit-icon {
+      opacity: 1;
+    }
+  }
+  .edit-icon {
+    opacity: 0.5;
+  }
   .form-control, .one-label {
     display: block;
+  }
+  .form-control {
+    font-size: inherit;
   }
   .one-label {
     border: 1px solid transparent;
@@ -61,3 +71,46 @@
     }
   }
 }
+
+// TODO: style improvements in mobile mode
+.content-row.header-row {
+  .one-inline-editor {
+    margin-top: -7px;
+    max-width: calc(100% - 35px);
+
+    @media screen and (max-width: $screen-sm-max) {
+      max-width: 100%
+    }
+    
+    @media screen and (min-width: $screen-sm-min) {
+      display: inline-block;
+      .one-label {
+        margin-right: 0;
+        padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+        margin-left: -$padding-base-horizontal/2;
+      }
+      .form-control {
+        display: inline-block;
+        padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+        margin-left: -$padding-base-horizontal/2;
+        margin-top: -$padding-base-vertical;
+      }
+      
+      // &.editor {
+      //   display: block;
+      // }
+    }
+    @media screen and (max-width: $screen-xs-max) {
+      .one-label, .form-control {
+        height: 57px;
+      }
+      .form-control {
+        line-height: inherit;
+      }
+    }
+    .form-control {
+      letter-spacing: inherit;
+    }
+  }
+}
+

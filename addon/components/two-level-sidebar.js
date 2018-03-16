@@ -3,14 +3,14 @@
  *
  * @module components/two-level-sidebar
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 
 import { inject as service } from '@ember/service';
-import { readOnly, equal } from '@ember/object/computed';
+import { readOnly, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
@@ -24,7 +24,17 @@ export default Component.extend({
   sidebar: service(),
   eventsBus: service(),
 
+  /**
+   * @type {Object}
+   * @namespace
+   * @property {Ember.Array} collection
+   * @property {string} resourceType
+   */
   model: null,
+
+  sorting: Object.freeze(['name']),
+
+  sortedCollection: sort('model.collection.list', 'sorting'),
 
   /**
    * Should sidebar:select event be triggered after primary item selection?
@@ -68,7 +78,7 @@ export default Component.extend({
     this._super(...arguments);
 
     // if we want to show second level items, we should have a sidebarType
-    if (!isEmpty(this.get('model.collection')) &&
+    if (!isEmpty(this.get('sortedCollection')) &&
       !isEmpty(this.get('secondLevelItems')) &&
       !this.get('sidebarType')
     ) {
@@ -78,7 +88,7 @@ export default Component.extend({
 
   resourceType: readOnly('model.resourceType'),
 
-  isCollectionEmpty: equal('model.collection.length', 0),
+  isCollectionEmpty: equal('sortedCollection.length', 0),
 
   primaryItemId: computed('sidebar.itemPath.[]', function () {
     return this.get('sidebar.itemPath').objectAt(0);
@@ -86,7 +96,7 @@ export default Component.extend({
 
   primaryItem: computed(
     'primaryItemId',
-    'model.collection.[]',
+    'model.collection.list.[]',
     function getPrimaryItem() {
       const {
         model,

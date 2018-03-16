@@ -1,0 +1,15 @@
+<h1 class="tile-title">
+  <span class="one-label">
+    {{title}}
+  </span>
+  {{#if aspect}}
+    {{#link-to "onedata.sidebar.content.aspect" aspect class="more-link"}}
+      {{t "components.oneTile.more"}} &raquo;
+    {{/link-to}}
+  {{/if}}
+</h1>
+<div class="tile-content">
+  <div class="tile-content-inner">
+    {{yield}}
+  </div>
+</div>

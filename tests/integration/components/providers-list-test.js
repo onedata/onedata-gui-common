@@ -8,6 +8,8 @@ import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import _ from 'lodash';
 import $ from 'jquery';
+import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import { Promise } from 'rsvp';
 
 describe('Integration | Component | providers list', function () {
   setupComponentTest('providers-list', {
@@ -15,7 +17,7 @@ describe('Integration | Component | providers list', function () {
   });
 
   beforeEach(function () {
-    let spaces = A([{
+    const spaces = A([{
       name: 'space1',
       supportSizes: {
         '1': 2097152,
@@ -29,29 +31,34 @@ describe('Integration | Component | providers list', function () {
         '2': 2097152,
         '3': 1048576,
       }
-    }])
+    }]);
+    const spaceList = PromiseObject.create({
+      promise: Promise.resolve({
+        list: spaces,
+      }),
+    });
     this.setProperties({
       providersData: A([{
           provider: {
-            id: '1',
+            entityId: '1',
             name: 'provider1',
-            spaces,
+            spaceList,
           },
           color: 'red'
         },
         {
           provider: {
-            id: '2',
+            entityId: '1',
             name: 'provider2',
-            spaces,
+            spaceList,
           },
           color: 'green'
         },
         {
           provider: {
-            id: '3',
+            entityId: '1',
             name: 'provider3',
-            spaces,
+            spaceList,
           },
           color: 'yellow'
         },
@@ -79,7 +86,7 @@ describe('Integration | Component | providers list', function () {
       .to.contain(this.get('providersData')[0].color);
   });
 
-  it('triggers provider clicked action', function (done) {
+  it('triggers provider clicked action', function () {
     let providerClickedSpy = sinon.spy();
     this.on('providerClicked', providerClickedSpy);
 
@@ -88,30 +95,28 @@ describe('Integration | Component | providers list', function () {
         providersData=providersData
         providerClickAction=(action "providerClicked")}}
     `);
-    click('.one-collapsible-list-item:nth-child(2)').then(() => {
+    return click('.one-collapsible-list-item:nth-child(2)').then(() => {
       expect(providerClickedSpy).to.be.calledOnce;
       expect(providerClickedSpy).to.be.calledWith(this.get('providersData')[0].provider);
-      done();
     });
   });
 
-  it('triggers providers filter state changed action on init', function (done) {
+  it('triggers providers filter state changed action on init', function () {
     let providersFilterSpy = sinon.spy();
     this.on('providersFilter', providersFilterSpy);
 
     this.render(hbs `
-      {{providers-list 
-        providersData=providersData
-        providersFilterAction=(action "providersFilter")}}
-    `);
-    wait().then(() => {
+        {{providers-list 
+          providersData=providersData
+          providersFilterAction=(action "providersFilter")}}
+      `);
+    return wait().then(() => {
       expect(providersFilterSpy).to.be.calledOnce;
       expect(providersFilterSpy).to.be.calledWith(
         sinon.match.array.deepEquals(
           _.map(this.get('providersData'), 'provider')
         )
       );
-      done();
     });
   });
 
@@ -121,10 +126,10 @@ describe('Integration | Component | providers list', function () {
       this.on('providersFilter', providersFilterSpy);
 
       this.render(hbs `
-        {{providers-list 
-          providersData=providersData
-          providersFilterAction=(action "providersFilter")}}
-      `);
+            {{providers-list 
+              providersData=providersData
+              providersFilterAction=(action "providersFilter")}}
+          `);
       wait().then(() => {
         fillIn('.search-bar', '1').then(() => {
           expect(providersFilterSpy).to.be.calledTwice;
@@ -146,10 +151,10 @@ describe('Integration | Component | providers list', function () {
     }]);
 
     this.render(hbs `
-      {{providers-list 
-        providersData=providersData
-        providerActions=actions}}
-    `);
+            {{providers-list 
+              providersData=providersData
+              providerActions=actions}}
+          `);
     click('.one-collapsible-list-item:nth-child(2) .provider-menu-toggle').then(() => {
       click('.action-trigger').then(() => {
         expect(actionSpy).to.be.calledOnce;
@@ -161,13 +166,18 @@ describe('Integration | Component | providers list', function () {
 
   it('shows information about supported spaces', function () {
     this.render(hbs `
-      {{providers-list 
-        providersData=providersData
-        selectedSpace=selectedSpace
-      }}
-    `);
-    let firstProviderItem = this.$('.one-collapsible-list-item:nth-child(2)');
-    expect(firstProviderItem.find('.supported-spaces')).to.contain('2');
-    expect(firstProviderItem.find('.space-support-size')).to.contain('2 MiB');
+              {{providers-list 
+                providersData=providersData
+                selectedSpace=selectedSpace
+              }}
+            `);
+    return wait().then(() => {
+      const firstProviderItem = this.$(
+        '.one-collapsible-list-item:nth-child(2)'
+      );
+      expect(firstProviderItem.find('.supported-spaces')).to.contain('2');
+      expect(firstProviderItem.find('.space-support-size')).to.contain('2 MiB');
+    });
+
   });
 });

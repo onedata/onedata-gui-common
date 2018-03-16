@@ -4,7 +4,7 @@
  *
  * @module colors
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,12 +12,12 @@
 /* global exports */
 
 var colors = {
-  'mint': '#4BD187',
-  'red': '#EE3F3F',
-  'azure': '#3EA5F9',
-  'violet': '#8549D4',
-  'yellow': '#F7AA04',
-  'blue': '#3B5998',
+  azure: '#3EA5F9',
+  fuchsia: '#D010B9',
+  teal: '#08B7B5',
+  orange: '#FF854D',
+  violet: '#8549D4',
+  yellow: '#F7AA04',
 };
 
 Object.defineProperty(exports, "__esModule", {

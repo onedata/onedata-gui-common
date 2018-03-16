@@ -16,7 +16,7 @@
  *
  * @module routes/onedata/sidebar/content
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -25,9 +25,12 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
 
+// TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
   'empty',
   'new',
+  'join',
+  'notSelected',
 ];
 
 function isSpecialResourceId(id) {
@@ -38,6 +41,7 @@ export default Route.extend({
   sidebar: service(),
   eventsBus: service(),
   contentResources: service(),
+  navigationState: service(),
 
   beforeModel(transition) {
     const resourceId = transition.params['onedata.sidebar.content'].resource_id;
@@ -53,11 +57,12 @@ export default Route.extend({
   model({ resource_id: resourceId }) {
     // TODO: validate and use resourceType
     let {
+      collection,
       resourceType
     } = this.modelFor('onedata.sidebar');
 
     if (isSpecialResourceId(resourceId)) {
-      return { resourceId };
+      return { resourceId, collection };
     } else {
       return new Promise((resolve, reject) => {
         let gettingResource = this.get('contentResources')
@@ -65,15 +70,16 @@ export default Route.extend({
         gettingResource.then(resource => resolve({
           resourceId,
           resource,
+          collection,
         }));
         gettingResource.catch(reject);
       });
     }
   },
 
-  afterModel() {
-    let sidebar = this.get('sidebar');
-    sidebar.set('isLoadingItem', false);
+  afterModel(model) {
+    this.set('sidebar.isLoadingItem', false);
+    this.set('navigationState.activeResource', model.resource);
   },
 
   renderTemplate() {

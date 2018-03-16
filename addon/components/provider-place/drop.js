@@ -4,7 +4,7 @@
  * 
  * @module components/provider-place-drop
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,13 +14,19 @@ import { sort, reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: 'provider-place-drop',
   classNameBindings: ['provider.status'],
   globalNotify: service(),
   i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.providerPlace.drop',
 
   /**
    * Spaces list sort order
@@ -57,21 +63,11 @@ export default Component.extend({
 
   actions: {
     copySuccess() {
-      let {
-        i18n,
-        globalNotify
-      } = this.getProperties('i18n', 'globalNotify');
-
-      globalNotify.info(i18n.t('components.providerPlace.drop.hostnameCopySuccess'));
+      this.get('globalNotify').info(this.t('hostnameCopySuccess'));
     },
 
     copyError() {
-      let {
-        i18n,
-        globalNotify
-      } = this.getProperties('i18n', 'globalNotify');
-
-      globalNotify.info(i18n.t('components.providerPlace.drop.hostnameCopyError'));
+      this.get('globalNotify').info(this.t('hostnameCopyError'));
     }
   }
 });

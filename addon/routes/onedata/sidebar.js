@@ -3,12 +3,12 @@
  *
  * @module routes/onedata/sidebar
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Route from '@ember/routing/route';
-
+import EmberObject, { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
 import config from 'ember-get-config';
@@ -19,13 +19,15 @@ const {
 } = config;
 
 function isValidTab(tabName) {
-  return onedataTabs.map(({ id }) => id).indexOf(tabName) !== -1;
+  return onedataTabs.map(({ id }) => id).indexOf(tabName) !== -1 ||
+    tabName === 'users';
 }
 
 export default Route.extend({
   mainMenu: service(),
   sidebar: service(),
   sidebarResources: service(),
+  navigationState: service(),
 
   beforeModel(transition) {
     const resourceType = transition.params['onedata.sidebar'].type;
@@ -38,31 +40,27 @@ export default Route.extend({
 
   model({ type }) {
     let sidebarResources = this.get('sidebarResources');
-    return new Promise((resolve, reject) => {
-      if (isValidTab) {
-        let gettingCollection = sidebarResources.getCollectionFor(type);
-        gettingCollection
-          .then(proxyCollection => {
-            return isRecord(proxyCollection) ? proxyCollection :
-              Promise.all(proxyCollection);
-          })
-          .then(collection => {
-            resolve({
-              resourceType: type,
-              collection,
-            });
-          })
-          .catch(reject);
-        gettingCollection.catch(reject);
-      } else {
-        reject({ error: 'invalid onedata tab name' });
-      }
-    });
+    if (isValidTab(type)) {
+      return sidebarResources.getCollectionFor(type)
+        .then(proxyCollection => {
+          return isRecord(proxyCollection) || get(proxyCollection, 'list') ?
+            proxyCollection :
+            Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
+        })
+        .then(collection => {
+          return {
+            resourceType: type,
+            collection,
+          };
+        });
+    } else {
+      return Promise.reject({ error: 'invalid onedata tab name' });
+    }
   },
 
-  afterModel() {
-    let mainMenu = this.get('mainMenu');
-    mainMenu.set('isLoadingItem', false);
+  afterModel(model) {
+    this.set('mainMenu.isLoadingItem', false);
+    this.set('navigationState.activeResourceType', model.resourceType);
   },
 
   renderTemplate(controller, model) {

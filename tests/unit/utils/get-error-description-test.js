@@ -25,6 +25,6 @@ describe('Unit | Utility | get error description', function () {
 
     const result = getErrorDescription(error);
 
-    expect(result).to.match(/^Server encountered an unexpected error.$/);
+    expect(result.message).to.match(/^Server encountered an unexpected error.$/);
   });
 });
