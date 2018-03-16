@@ -37,12 +37,6 @@ export default Component.extend({
   sortedCollection: sort('model.collection.list', 'sorting'),
 
   /**
-   * Should sidebar:select event be triggered after primary item selection?
-   * @type {boolean}
-   */
-  triggerEventOnPrimaryItemSelection: false,
-
-  /**
    * Name of oneicon that should be displayed for each first-level element
    * To inject.
    * 
@@ -120,13 +114,7 @@ export default Component.extend({
   actions: {
     changePrimaryItemId(itemId) {
       let resourceType = this.get('resourceType');
-      if (this.get('triggerEventOnPrimaryItemSelection')) {
-        this.get('eventsBus').trigger('sidebar:select');
-      }
       return invokeAction(this, 'changeResourceId', resourceType, itemId);
     },
-    sidebarSecondaryItemSelected() {
-      this.get('eventsBus').trigger('sidebar:select', this.get('secondaryItem'));
-    }
   },
 });

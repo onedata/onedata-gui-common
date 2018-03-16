@@ -26,9 +26,7 @@
         {{!-- TODO isActive secondary --}}
         <ul class="one-list one-list-level-2">
           {{#each secondLevelItems as |sli|}}
-            <li 
-              class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}
-              {{action "sidebarSecondaryItemSelected"}}>
+            <li class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}>
               {{#if sli.withoutRoute}}
                 <div class="item-header truncate">
                   {{#if sli.component}}
