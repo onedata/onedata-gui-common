@@ -4,7 +4,7 @@
  * 
  * @module components/provider-place/drop/space
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,6 +14,6 @@ import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
 
 export default Component.extend(ProviderSpace, {
   layout,
-  tagName: 'div',
+  tagName: 'li',
   classNames: ['provider-place-drop-space']
 });

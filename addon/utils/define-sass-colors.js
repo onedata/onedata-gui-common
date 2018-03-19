@@ -15,7 +15,7 @@ module.exports = function (app, colors) {
   if (!app.options.sassOptions) {
     app.options.sassOptions = {};
   }
-  let sassOptions = app.options.sassOptions;
+  const sassOptions = app.options.sassOptions;
   if (!sassOptions.functions) {
     sassOptions.functions = {};
   }

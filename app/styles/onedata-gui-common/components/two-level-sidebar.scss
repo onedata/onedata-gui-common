@@ -33,16 +33,17 @@
         transform: translateY(-50%);
         padding: 0px 7px 0 5px;
         font-size: 13pt;
+        .one-icon, .outer-text {
+          top: -0.1em;
+          vertical-align: middle;
+        }
         .one-icon {
           font-size: 1em;
           margin: 0;
           margin-right: -0.2em;
-          top: 0.1em;
         }
         .outer-text {
-          top: -0.5em;
           line-height: 0;
-          vertical-align: baseline;
         }
       }
     }

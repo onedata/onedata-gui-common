@@ -3,9 +3,9 @@
     .collapsible-toolbar-toggle {
       .icon-dot {
         background-color: $main-text-color;
-        height: 0.4em;
-        width: 0.4em;
-        margin-bottom: 0.25em;
+        height: 4px;
+        width: 4px;
+        margin-bottom: 4px;
         border-radius: 100%;
       }
     }
@@ -27,7 +27,35 @@
 
 .one-collapsible-toolbar-popover {
   width: $mobile-menu-popover-width;
-  .dropdown-menu {
-    font-size: $font-size-base;
+}
+
+.with-menu {
+  .collapsible-toolbar-toggle {
+    position: absolute;
+    transform: translateY(6px);
+    right: 0;
+    top: 0;
+    width: 30px;
+    padding: 8px;
+    margin: 16px;
+    cursor: pointer;
   }
+
+  @media (min-width: $screen-md-min) {
+    .collapsible-toolbar-toggle {
+      margin: 24px;
+    }
+  }
+
+  @media (max-width: $screen-sm-max) {
+    .collapsible-toolbar-toggle {
+      display: none;
+    }
+  }
+
+  .icon-dot {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
 }

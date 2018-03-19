@@ -1,0 +1,12 @@
+{{#one-collapsible-toolbar as |dropdown|}}
+  {{#each actionsArray as |act|}}
+    {{#dropdown.item
+      buttonStyle=act.buttonStyle
+      triggerClasses=act.class
+      itemAction=act.action
+    }}
+      {{one-icon icon=act.icon}}
+      <span class="text">{{act.title}}</span>
+    {{/dropdown.item}}
+  {{/each}}
+{{/one-collapsible-toolbar}}

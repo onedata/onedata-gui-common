@@ -1,5 +1,14 @@
+import breakpointValues from 'onedata-gui-common/breakpoint-values';
+
+const {
+  screenSm,
+  screenMd,
+  screenLg,
+} = breakpointValues;
+
 export default {
-  mobile: '(max-width: 767px)',
-  tablet: '(min-width: 768px) and (max-width: 991px)',
-  desktop: '(min-width: 992px) and (max-width: 1200px)'
+  mobile: `(max-width: ${screenSm}px)`,
+  tablet: `(min-width: ${screenSm}px) and (max-width: ${screenMd}px)`,
+  desktop: `(min-width: ${screenMd}px)`,
+  md: `(min-width: ${screenMd}px) and (max-width: ${screenLg}px)`
 };

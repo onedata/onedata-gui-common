@@ -51,7 +51,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
       font-size: 1.1em;
       font-weight: bold;
       &:before {
-        content: $oneicon-arrow-down;
+        @include oneicon-content($oneicon-arrow-down);
       }
     }
   }
@@ -66,7 +66,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     font-size: 1.7em;
     font-weight: bold;
     &:before {
-      content: $oneicon-arrow-down;
+      @include oneicon-content($oneicon-arrow-down);
     }
   }
 
@@ -81,7 +81,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     .ember-power-select-status-icon {
       transform: none;
       &:before {
-        content: $oneicon-arrow-up;
+        @include oneicon-content($oneicon-arrow-up);
       }
     }
   }

@@ -38,7 +38,7 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 @import 'chartist';
 @import 'onedata-gui-common/chartist-overrides';
 
-$mobile-top-height: 70px;
+$mobile-top-height: 55px;
 $main-menu-width: 200px;
 $sidebar-menu-width: 250px;
 $sidebar-menu-width-lg: 325px;
@@ -62,6 +62,9 @@ $onedata-logo-height: 35px;
 $onedata-brand-info-height: 30px;
 $onedata-logo-margin-top: $content-col-padding;
 $onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $one-list-item-padding * 2 - $onedata-brand-info-height;
+
+$main-content-hover-background: lighten($color-one-semiwhite, 3%);
+$main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $collapse-transition-time: .2s;
 $height-collapse-transition: max-height $collapse-transition-time linear;
@@ -124,4 +127,6 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-dynamic-tree';
 @import 'onedata-gui-common/components/support-size-info';
 @import 'onedata-gui-common/components/one-inline-editor';
+@import 'onedata-gui-common/components/actions-popover-content';
+@import 'onedata-gui-common/components/one-tile';
 @import 'onedata-gui-common/components/one-space-indicator';

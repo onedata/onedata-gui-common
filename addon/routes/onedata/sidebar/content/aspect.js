@@ -3,7 +3,7 @@
  *
  * @module routes/onedata/sidebar/content/option
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,6 +13,7 @@ import { inject as service } from '@ember/service';
 
 export default Route.extend({
   sidebar: service(),
+  navigationState: service(),
 
   /**
    * @param {object} { aspect_id: string } - aspect_id is a name of some "aspect"
@@ -21,14 +22,15 @@ export default Route.extend({
    * @returns {object} { resource: Model, aspectId: string }
    */
   model({ aspect_id: aspectId }) {
-    let { resource } = this.modelFor('onedata.sidebar.content');
-    return { resource, aspectId };
+    const contentModel = this.modelFor('onedata.sidebar.content');
+    return Object.assign({ aspectId }, contentModel);
   },
 
   // TODO validate aspect of resource with afterModel
   afterModel({ aspectId }) {
     let sidebar = this.get('sidebar');
     sidebar.changeItems(1, aspectId);
+    this.set('navigationState.activeAspect', aspectId);
   },
 
   renderTemplate(controller, model) {

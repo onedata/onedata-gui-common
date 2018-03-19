@@ -27,7 +27,7 @@
  *
  * @module components/one-switchable-popover-modal
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -164,6 +164,11 @@ export default Component.extend(ClickOutside, {
    * @type {Function}
    */
   onShown: null,
+
+  /**
+   * @type {number}
+   */
+  modalTransitionDuration: 300,
 
   /**
    * If true, popover/modal will be visible to user

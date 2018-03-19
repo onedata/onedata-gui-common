@@ -1,10 +1,11 @@
+{{!-- TODO: add support for route links --}}
 {{#if isMinimized}}
 <a class="minimized-item clickable {{triggerClasses}}" onClick={{action "runAction" false}}>
   {{yield}}
 </a>
 {{else}}
   {{#if (eq buttonType "bs")}}
-    {{#bs-button class=(concat triggerClasses (concat " btn " buttonSizeClass)) type=buttonStyle onClick=(action "runAction" true)}}
+    {{#bs-button class=(concat triggerClasses (concat " btn " buttonSizeClass)) type=buttonStyle onClick=(action "runAction" true) bubble=true}}
       {{yield}}
     {{/bs-button}}
   {{/if}}

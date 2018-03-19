@@ -6,23 +6,23 @@
 
 {{else}}
 
-  {{#one-list-wrapper items=model.collection as |item|}}
+  {{#one-list-wrapper items=sortedCollection as |item|}}
     {{#one-list-primary-item item=item
       changePrimaryItemId=(action "changePrimaryItemId")
       isActive=(eq primaryItemId item.id)
       as |primarySection|}}
-      {{#if (eq primarySection 'header')}}
+      {{#if (eq primarySection "header")}}
         {{#if firstLevelItemComponent}}
-          {{component firstLevelItemComponent item=item}}
+          {{component firstLevelItemComponent item=item sidebar=this}}
         {{else}}
           {{#if firstLevelItemIcon}}
             {{one-icon icon=firstLevelItemIcon}} 
           {{/if}}
           {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
-            <span class="one-label">{{item.name}}</span>
+            {{name-conflict item=item tagName="span" class="one-label"}}
           {{/truncated-string}}
         {{/if}}
-      {{else if (eq primarySection 'secondary')}}
+      {{else if (eq primarySection "secondary")}}
         {{!-- TODO isActive secondary --}}
         <ul class="one-list one-list-level-2">
           {{#each secondLevelItems as |sli|}}
@@ -32,9 +32,9 @@
               {{#if sli.withoutRoute}}
                 <div class="item-header truncate">
                   {{#if sli.component}}
-                    {{component sli.component item=sli}}
+                    {{component sli.component item=sli sidebar=this}}
                   {{else}}
-                    {{two-level-sidebar/item-content item=sli}}
+                    {{two-level-sidebar/item-content item=sli sidebar=this}}
                   {{/if}}
                 </div>
               {{else}}
@@ -47,9 +47,9 @@
                   class="item-header truncate"
                 }}
                   {{#if sli.component}}
-                    {{component sli.component item=sli}}
+                    {{component sli.component item=sli sidebar=this}}
                   {{else}}
-                    {{two-level-sidebar/item-content item=sli}}
+                    {{two-level-sidebar/item-content item=sli sidebar=this}}
                   {{/if}}
                 {{/link-to}}
               {{/if}}

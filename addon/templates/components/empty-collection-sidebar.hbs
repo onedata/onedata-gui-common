@@ -3,19 +3,17 @@
     <div class="row">
       <div class="col-xs-12">
         {{!-- TODO translate resource name --}}
-        <p>{{t 'components.emptyCollectionSidebar.noResources' resourceType=resourceType}}</p>
+        <p>{{tt this "noResources" resourceType=resourceType}}</p>
       </div>
     </div>
-    {{#if showCreateOnEmpty}}
-      <div class="row">
-        <div class="col-xs-12">
-          {{#link-to "onedata.sidebar.content" resourceType "new"
-            class="btn btn-default"
-          }}
-            {{t 'components.emptyCollectionSidebar.createNew'}}
-          {{/link-to}}
-        </div>  
-      </div>
-    {{/if}}
+    <div class="row">
+      <div class="col-xs-12">
+        {{#link-to "onedata.sidebar.content" resourceType "empty"
+          class="btn btn-default hide-sm-active"
+        }}
+          {{tt this "getStarted"}}
+        {{/link-to}}
+      </div>  
+    </div>
   </li>
 </ul>

@@ -32,6 +32,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         triggersConfiguration=".trigger"}}
         {{contentText}}
       {{/one-switchable-popover-modal}}
@@ -49,6 +50,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         _window=_window
         popoverClass="popover-element"
         modalClass="modal-element"
@@ -89,6 +91,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         triggersConfiguration=".trigger"
         onShow=(action "onShow")
         onShown=(action "onShown")}}
@@ -116,6 +119,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         triggersConfiguration=".trigger"
         onHide=(action "onHide")
         onHidden=(action "onHidden")}}
@@ -138,6 +142,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         triggersConfiguration=".trigger:popover"}}
         {{contentText}}
@@ -160,6 +165,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       <div class="container">
         <button class="trigger">Trigger</button>
         {{#one-switchable-popover-modal
+          modalTransitionDuration=0
           popoverClass="popover-element"
           triggersConfiguration=".trigger:popover"}}
           {{contentText}}
@@ -182,6 +188,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       <div class="container">
         <button class="trigger">Trigger</button>
         {{#one-switchable-popover-modal
+          modalTransitionDuration=0
           popoverClass="popover-element"
           triggersConfiguration=".trigger:popover"}}
           <button class="content-button">Click me</button>
@@ -203,6 +210,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         modalClass="modal-element"
         triggersConfiguration=".trigger:modal"}}
         {{contentText}}
@@ -225,6 +233,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         modalClass="modal-element"
         triggersConfiguration=".trigger:modal"}}
         <button class="content-button">Click me</button>
@@ -246,6 +255,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         modalClass="modal-element"
         triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"}}
@@ -270,6 +280,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         modalClass="modal-element"
         componentClass="component-element"
@@ -294,6 +305,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         triggersConfiguration=".trigger:popover"
         open=open
@@ -321,6 +333,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         triggersConfiguration=".trigger:popover"
         onHide=(action "onHide")}}
@@ -343,6 +356,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         triggersConfiguration=".trigger:popover"
         onShow=(action "onShow")}}
@@ -367,6 +381,7 @@ describe('Integration | Component | one switchable popover modal', function () {
         <button class="trigger-popover">Trigger1</button>
         <button class="trigger-modal">Trigger2</button>
         {{#one-switchable-popover-modal
+          modalTransitionDuration=0
           popoverClass="popover-element"
           modalClass="modal-element"
           triggersConfiguration=".trigger-modal:modal;.trigger-popover:popover"
@@ -394,6 +409,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         popoverClass="popover-element"
         modalClass="modal-element"
         triggersConfiguration=triggersConfiguration}}
@@ -424,6 +440,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     this.render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
+        modalTransitionDuration=0
         triggersConfiguration=".trigger"
         onShow=(action "onShow")}}
         {{contentText}}

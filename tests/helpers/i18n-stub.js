@@ -5,7 +5,9 @@ export default Service.extend({
 
   init() {
     this._super(...arguments);
-    this.set('translations', {});
+    if (!this.get('translations')) {
+      this.set('translations', {});
+    }
   },
 
   t(path) {

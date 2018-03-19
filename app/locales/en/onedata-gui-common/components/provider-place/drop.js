@@ -1,7 +1,7 @@
 export default {
-  online: 'online',
-  offline: 'offline',
-  pending: 'verifying...',
+  status: 'Status',
+  online: 'Online',
+  offline: 'Offline',
   goToFiles: 'Go to your files',
   goToFilesErrorMessage: 'Could not fetch URL of selected provider',
   hostnameCopySuccess: 'Provider hostname copied to clipboard',

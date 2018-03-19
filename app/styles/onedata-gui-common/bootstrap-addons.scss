@@ -76,6 +76,23 @@ $icon-btn-active-color: $color-one-red;
       }
     }
   }
+  .input-group {
+    table-layout: fixed;
+    width: 100%;
+    input + .input-group-addon {
+      width: 50%;
+    }
+  }
+  .has-feedback {
+    .input-group {
+      .form-control {
+        padding-right: $padding-large-horizontal;
+      }
+      .form-control + .input-group-addon {
+        padding-right: $input-height-base - 2px;
+      }
+    }
+  }
   .has-success .form-message {
     color: $state-success-text;
   }

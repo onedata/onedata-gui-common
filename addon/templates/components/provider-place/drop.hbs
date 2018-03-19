@@ -1,59 +1,57 @@
 <div class="drop-title-bar">
   {{#truncated-string class="provider-label"}}
-    {{provider.name}}
+    <span class="hidden-xs">
+      {{#one-icon icon="provider" class="state-indicator"}}
+        {{one-tooltip title=(tt this (if (eq provider.status "online") "online" "offline"))}}
+      {{/one-icon}}
+      {{#truncated-string}}{{provider.name}}{{/truncated-string}}
+    </span>
+    <span class="hidden-sm hidden-md hidden-lg">{{tt this "status"}}</span>
   {{/truncated-string}}
-  {{#unless provider.isOnline}}
-    <div class="provider-label-secondary">
-      {{#if (eq provider.status "online")}}
-        {{t "components.providerPlace.drop.online"}}
-      {{else if (eq provider.status "offline")}}
-        {{t "components.providerPlace.drop.offline"}}
-      {{else}}
-        {{t "components.providerPlace.drop.pending"}}
-      {{/if}}
-    </div>  
-  {{/unless}}
+  <div class="provider-label-secondary hidden-sm hidden-md hidden-lg">
+    {{#if (eq provider.status "online")}}
+      {{tt this "online"}}
+    {{else}}
+      {{tt this "offline"}}
+    {{/if}}
+  </div>  
 </div>
 <div class="drop-provider-host-container">
   <input class="provider-host-text truncate {{concat "host-input-" provider.entityId}}" value={{provider.host}} readonly>
+  <div class="provider-host-copy-btn-container">
     {{#copy-button
       tagName="div"
       success=(action "copySuccess")
       error=(action "copyError")
       class="provider-host-copy-btn clickable"
       clipboardTarget=(concat ".host-input-" provider.entityId)}}
-    {{one-icon tagName="div" icon="clipboard-copy"}}
-  {{/copy-button}}
+      {{one-icon tagName="div" icon="clipboard-copy"}}
+    {{/copy-button}}
+  </div>
 </div>
 <div class="drop-body">
   {{!-- TODO: location name - get it from Google Maps API --}}
   {{!-- <div class="provider-location">
     {{provider.location}}
   </div> --}}
-  <div class="row loadable-row sm spaces-list">
+  {{#perfect-scrollbar-element tagName="div" class="loadable-row sm spaces-list"}}
     {{#loading-container isLoading=(not _spacesLoaded) sizeClass="sm"}}
-      {{#one-collapsible-list as |list|}}
+      <ul class="spaces-items">
         {{#each _spacesSorted as |space|}}
-        {{#list.item isCollapsible=false as |item|}}
-          {{#item.header}}
-            {{provider-place/drop/space space=space providerId=provider.entityId}}
-          {{/item.header}}
-        {{/list.item}}
+          {{provider-place/drop/space space=space providerId=provider.entityId}}
         {{/each}} 
-      {{/one-collapsible-list}}
+      </ul>
     {{/loading-container}}
-  </div>
+  {{/perfect-scrollbar-element}}
   {{#unless (eq provider.status "offline")}}
     <hr>
-    {{#if (eq provider.status "online")}}
-      {{#link-to "onedata.sidebar.content.aspect" "redirect"
-        class="btn btn-sm btn-go-to-files btn-primary"}}
-        {{t "components.providerPlace.drop.goToFiles"}}
-      {{/link-to}}
-    {{else if (eq provider.status "pending")}}
-      {{#bs-button type="primary" disabled=true class="btn-go-to-files"}}
-        {{t "components.providerPlace.drop.pending"}}
-      {{/bs-button}}
-    {{/if}} 
+    <div class="btn-container">
+      {{#if (eq provider.status "online")}}
+        {{#link-to "onedata.sidebar.content.aspect" "redirect"
+          class="btn btn-sm btn-go-to-files btn-primary"}}
+          {{tt this "goToFiles"}}
+        {{/link-to}}
+      {{/if}}
+    </div>
   {{/unless}}
 </div>

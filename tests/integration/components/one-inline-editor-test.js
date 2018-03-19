@@ -45,20 +45,6 @@ describe('Integration | Component | one inline editor', function () {
     })
   });
 
-  it('allows to cancel edition', function (done) {
-    const value = 'asdf';
-    this.set('value', value);
-    this.render(hbs `{{one-inline-editor value=value}}`);
-    click('.one-label').then(() => {
-      fillIn('input', 'anotherValue').then(() => {
-        click('.cancel-icon').then(() => {
-          expect(this.$('.one-label').text().trim()).to.equal(value);
-          done();
-        });
-      });
-    })
-  });
-
   it('saves edited value', function (done) {
     const value = 'asdf';
     this.set('value', value);

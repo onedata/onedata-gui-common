@@ -127,4 +127,26 @@ describe('Unit | Utility | add conflict labels', function () {
     expect(get(records[1], 'conflictLabel')).to.be.not.ok;
   });
 
+  it('leaves available longer conflictLabel if comparing different sets', function () {
+    const a = {
+      id: 'xxxxa1',
+      name: 'One',
+    };
+    const b = {
+      id: 'xxxxb1',
+      name: 'One',
+    };
+    const c = {
+      id: 'xxxxb2',
+      name: 'One',
+    };
+
+    addConflictLabels([b, c]);
+    addConflictLabels([a, b]);
+
+    expect(get(a, 'conflictLabel')).to.be.equal('xxxxa');
+    expect(get(b, 'conflictLabel')).to.be.equal('xxxxb1');
+    expect(get(c, 'conflictLabel')).to.be.equal('xxxxb2');
+  });
+
 });

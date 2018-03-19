@@ -129,9 +129,9 @@ label {
   font-family: "Open Sans Semibold";
   font-size: 90%;
   li {
-    border-bottom: 1px solid $main-border-color;
-    &:last-child {
-      border-bottom: 0;
+    border-top: 1px solid $main-border-color;
+    &:first-child {
+      border-top: 0;
     }
     a {
       padding: $padding-base-vertical * 0.8;

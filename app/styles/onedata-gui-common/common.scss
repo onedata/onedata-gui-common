@@ -1,5 +1,9 @@
 $table-item-border: 1px solid $main-border-color;
 
+h5 {
+  font-weight: bold;
+}
+
 .vertical-align-middle {
   @include vertical-align-middle();
 }
@@ -84,6 +88,10 @@ input.light {
   @each $attr in $attributes {
     #{$attr}: $color;
   }
+}
+
+@mixin oneicon-content($glyph) {
+  content: unquote("\"#{$glyph}\"");
 }
 
 input {
@@ -198,10 +206,10 @@ input {
     font-size: $-info-icon-size;
     &.oneicon-checkbox-filled {
       color: $color-one-mint;
-    }    
+    }
     &.oneicon-sign-info {
       color: $color-one-azure;
-    }    
+    }
   }
   .one-icon + label, label + .one-icon {
     padding-left: 8px;
@@ -239,10 +247,104 @@ input {
   &.sm {
     min-height: 50px;
   }
+  
+  &.lg {
+    min-height: 100px;
+  }
 }
 
 .loading-more-row {
   height: 80px;
+}
+
+@media (min-width: $screen-sm-min) {
+  .active.hide-sm-active {
+    display: none;
+  }
+}
+
+ul.info, ol.info {
+  margin-left: 0; /* Remove the default left margin */
+  margin-top: 20px;
+  padding-left: 0; /* Remove the default left padding */
+
+  li {
+    position: relative; /* Create a positioning context */
+    margin: 0 0 28px 52px; /* Give each list item a left margin to make room for the numbers */
+    list-style: none; /* Disable the normal item numbering */
+  }
+
+  li::before {
+    position: absolute;
+    top: 1px;
+    left: -50px;
+    width: 1.8em;
+    height: 1.8em;
+    padding: 1px;
+    // pull down number
+    padding-top: 3px;
+    font-size: 0.8em;
+    border: none;
+    color: #fff;
+    background: $color-one-mint;
+    border-radius: 4px;
+    text-align: center;
+  }
+}
+
+// based on: http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ol.info {
+  counter-reset: li; /* Initiate a counter */
+  
+  li::before {
+    content:counter(li); /* Use the counter as content */
+    counter-increment: li; /* Increment the counter by 1 */
+  }
+}
+
+ul.info {
+  li::before {
+    @include oneicon-content($oneicon-arrow-right);
+    font-family: 'oneicons' !important;
+    font-weight: bold;
+  }
+}
+
+a {
+  color: $color-one-mint;
+  &:hover {
+    color: darken($color-one-mint, 20%);
+  }
+}
+
+.col-image {
+  padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+}
+
+.token-textarea {
+  width: 100%;
+  height: 120px;
+  margin-top: $padding-base-vertical;
+  margin-bottom: $padding-base-vertical;
+  font-family: monospace;
+}
+@media (max-width: $screen-xs-max) {
+  padding: $padding-large-vertical $padding-large-horizontal;
+  .token-textarea {
+    height: 200px;
+  }
+}
+
+.btn {
+  .oneicon {
+    position: relative;
+    left: -0.2em;
+    font-size: 2em;
+  }
+}
+
+.truncated-string.before-status {
+  padding-right: 100px;
 }
 
 .table.table-middle-align {

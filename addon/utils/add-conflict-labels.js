@@ -9,7 +9,7 @@
  *
  * @module utils/add-conflict-labels
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -58,7 +58,7 @@ function groupConflictingRecords(records, conflictProperty) {
 
 /**
  * For collection of conflicting records, compute its conflict label
- * and assing to each record
+ * and assign to each record
  * @param {object[]|Ember.Object[]} conflictingRecords 
  * @param {string} diffProperty an object property that is used for computing label
  * @param {string} defaultId 
@@ -66,12 +66,21 @@ function groupConflictingRecords(records, conflictProperty) {
 function assignConflictLabels(conflictingRecords, diffProperty, defaultId) {
   if (conflictingRecords.length > 1) {
     let conflictLabels = conflictIds(_.map(conflictingRecords, r => get(r, diffProperty)));
+    // removing conflict labels for defaultId
     for (let i = 0; i < conflictingRecords.length; i += 1) {
       let record = conflictingRecords[i];
-      set(record, 'conflictLabel', get(record, diffProperty) === defaultId ? null :
-        conflictLabels[i]);
+      const currentConflictLabel = get(record, 'conflictLabel');
+      if (currentConflictLabel) {
+        if (conflictLabels[i] !== null && conflictLabels[i] > currentConflictLabel.length) {
+          set(record, 'conflictLabel', conflictLabels[i]);
+        }
+      } else {
+        set(
+          record,
+          'conflictLabel',
+          get(record, diffProperty) === defaultId ? null : conflictLabels[i]
+        );
+      }
     }
-  } else if (conflictingRecords.length === 1) {
-    set(conflictingRecords[0], 'conflictLabel', null);
   }
 }
