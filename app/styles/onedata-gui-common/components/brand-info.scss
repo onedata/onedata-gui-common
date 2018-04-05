@@ -1,4 +1,12 @@
 .brand-info {
-  color: $color-one-white;
-  font-size: 12px;
+  position: fixed;
+  bottom: 0;
+  width: inherit;
+  padding: 0 $one-list-item-padding;
+  line-height: $one-list-item-line-height;
+  text-transform: uppercase;
+  border-top: 1px solid $main-border-color;
+  border-right: 1px solid $main-border-color;
+  background-color: inherit;
+  z-index: 10;
 }

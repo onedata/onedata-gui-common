@@ -5,7 +5,6 @@
   <div class="side-menu-header">
     <div class="row row-onedata-logo full-width">
       <div class="onedata-logo"></div>
-      {{brand-info}}
     </div>
   </div>
   {{user-account-button 
@@ -25,7 +24,9 @@
   class=colSidebarClass
   onScroll=(action "scrollOccurred")}}
   {{yield 'sidebar'}}
+  {{brand-info}}
 {{/perfect-scrollbar-element}}
+<div class="col-sidenav-cover"></div>
 
 <div class="container-fluid app-grid full-height">
   <div class="row row-mobile-menu visible-xs-block visible-sm-block disable-user-select">
@@ -70,7 +71,7 @@
   </div>
   <div class="row row-app full-height">
     {{#one-sidenav opened=sidenavResouceType id="sidenav-sidebar"
-      coverSelector="#col-sidebar" model=sidenavModel.content}}
+      coverSelector=".col-sidenav-cover" model=sidenavModel.content}}
       {{#promise-proxy-container proxy=sidenavModel}}
         {{component sidenavContentComponent
           model=sidenavModel.content

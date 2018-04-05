@@ -2,15 +2,15 @@
  * A button that allows to invoke various actions for current user account 
  *
  * @module components/user-account-button
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michal Borzecki
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
 import { invokeAction } from 'ember-invoke-action';
@@ -23,6 +23,13 @@ export default Component.extend(ClickOutside, {
 
   session: service(),
   globalNotify: service(),
+
+  /**
+   * @type {function}
+   * @param {boolean} opened
+   * @returns {undefined}
+   */
+  onMenuOpened: () => {},
 
   menuOpen: false,
 
@@ -44,6 +51,10 @@ export default Component.extend(ClickOutside, {
     } else {
       return 'one-list-item enabled clickable main-menu-item user-account-button-main';
     }
+  }),
+
+  menuOpenObserver: observer('menuOpen', function () {
+    this.get('onMenuOpened')(this.get('menuOpen'));
   }),
 
   didInsertElement() {

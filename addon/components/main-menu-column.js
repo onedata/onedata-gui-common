@@ -9,6 +9,8 @@
 
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
+import { observer } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import layout from '../templates/components/main-menu-column';
 
 export default Component.extend({
@@ -22,7 +24,10 @@ export default Component.extend({
     'full-height',
     'disable-user-select',
   ],
-  classNameBindings: ['sidenavTabId:sidenav-opened'],
+  classNameBindings: [
+    'sidenavTabId:sidenav-opened',
+    'isExpanded:expanded:collapsed',
+  ],
 
   scrollState: service(),
   navigationState: service(),
@@ -33,8 +38,38 @@ export default Component.extend({
    */
   mainMenuItems: null,
 
+  /**
+   * @type {boolean}
+   */
+  userAccountPopoverOpened: false,
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  isExpanded: reads('navigationState.mainMenuColumnExpanded'),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  isExpandedObserver: observer('isExpanded', function isExpandedObserver () {
+    if (!this.get('isExpanded')) {
+      const mainMenuContainer = this.$('.main-menu-content');
+      if (mainMenuContainer.scrollTop()) {
+        mainMenuContainer.animate({ scrollTop: 0 }, 200);
+      }
+    }
+  }),
+
   click() {
     this.send('closeSidenav');
+  },
+
+  mouseEnter() {
+    this.set('navigationState.isMainMenuColumnHovered', true);
+  },
+
+  mouseLeave() {
+    this.set('navigationState.isMainMenuColumnHovered', false);
   },
 
   actions: {
@@ -60,5 +95,8 @@ export default Component.extend({
     manageAccount() {
       this.get('router').transitionTo('onedata.sidebar', 'users');
     },
+    userAccountPopoverOpened(opened) {
+      this.set('navigationState.isMainMenuColumnActive', opened);
+    }
   },
 });
