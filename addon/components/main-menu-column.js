@@ -51,7 +51,7 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isExpandedObserver: observer('isExpanded', function isExpandedObserver () {
+  isExpandedObserver: observer('isExpanded', function isExpandedObserver() {
     if (!this.get('isExpanded')) {
       const mainMenuContainer = this.$('.main-menu-content');
       if (mainMenuContainer.scrollTop()) {
@@ -78,10 +78,11 @@ export default Component.extend({
       const {
         activeResourceType,
         globalSidenavResourceType,
-      } = navigationState.getProperties('activeResourceType', 'globalSidenavResourceType');
+      } = navigationState.getProperties('activeResourceType',
+        'globalSidenavResourceType');
       if ((!globalSidenavResourceType && activeResourceType !== itemId) ||
         (globalSidenavResourceType && globalSidenavResourceType !== itemId)) {
-         this.set('navigationState.globalSidenavResourceType', itemId); 
+        this.set('navigationState.globalSidenavResourceType', itemId);
       } else {
         this.set('navigationState.globalSidenavResourceType', null);
       }
