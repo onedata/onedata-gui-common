@@ -15,11 +15,12 @@ import { oneWay } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
-import { computed, observer } from '@ember/object';
+import EmberObject, { computed, observer, get } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import { invokeAction, invoke } from 'ember-invoke-action';
-
+import isRecord from 'onedata-gui-common/utils/is-record';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
@@ -52,6 +53,15 @@ export default Component.extend({
     const resourceType = sidenavResouceType;
     if (resourceType != null) {
       const promise = sidebarResources.getCollectionFor(resourceType)
+        .then(proxyCollection => {
+          if (isRecord(proxyCollection)) {
+            return proxyCollection;
+          } else if (get(proxyCollection, 'list')) {
+            return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
+          } else {
+            return Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
+          }
+        })
         .then(collection => {
           return {
             resourceType,
