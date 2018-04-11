@@ -17,7 +17,7 @@
  *
  * @module components/one-collapsible-toolbar
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -100,6 +100,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       overflowSiblingsElements: this.$().siblings()
     });
     this.addOverflowDetectionListener();
+    this.get('_overflowDetectionListener')();
     this.get('eventsBus').on(
       'one-inline-editor:resize',
       () => this.get('_overflowDetectionListener')()
@@ -130,13 +131,6 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       this.set('dropdownOpened', false);
     },
     toggleDropdown() {
-      let toggle = this.$('.collapsible-toolbar-toggle');
-      let popoverOpened = toggle.attr('data-target') &&
-        $('#' + toggle.attr('data-target')).hasClass('in');
-      if (this.get('dropdownOpened') && !popoverOpened) {
-        // Popover has been closed from the outside. schedule its reopen
-        next(() => this.toggleProperty('dropdownOpened'));
-      }
       this.toggleProperty('dropdownOpened');
     }
   },

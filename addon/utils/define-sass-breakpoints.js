@@ -1,5 +1,5 @@
 /**
- * An util, that injects application colors to ember sass configuration.
+ * An util, that injects application breakpoints to ember sass configuration.
  *
  * @module utils/define-sass-breakpoints
  * @author Jakub Liput

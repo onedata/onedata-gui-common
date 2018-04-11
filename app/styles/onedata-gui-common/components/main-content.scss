@@ -111,6 +111,15 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         margin: 0;
         padding: 0;
       }
+      
+      &.compact {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        .form-group {
+          margin-top: 0px;
+          margin-bottom: 0px;
+        }
+      }
     }
 
     @include btn-toolbar-float-right();

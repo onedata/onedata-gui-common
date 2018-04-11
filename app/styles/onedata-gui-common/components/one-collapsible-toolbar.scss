@@ -27,9 +27,6 @@
 
 .one-collapsible-toolbar-popover {
   width: $mobile-menu-popover-width;
-  .dropdown-menu {
-    font-size: $font-size-base;
-  }
 }
 
 .with-menu {
@@ -41,6 +38,19 @@
     width: 30px;
     padding: 8px;
     margin: 16px;
+    cursor: pointer;
+  }
+
+  @media (min-width: $screen-md-min) {
+    .collapsible-toolbar-toggle {
+      margin: 24px;
+    }
+  }
+
+  @media (max-width: $screen-sm-max) {
+    .collapsible-toolbar-toggle {
+      display: none;
+    }
   }
 
   .icon-dot {

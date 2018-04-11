@@ -16,14 +16,13 @@ export default function emberComputedPipe() {
   const functions = Array.prototype.slice.call(arguments, 1, arguments.length);
   const key = arguments[0];
   return computed(key, function () {
-    let buf = this.get(key);
-    functions.forEach(fun => {
+    const value = this.get(key);
+    return functions.reduce((currentValue, fun) => {
       if (typeof fun === 'function') {
-        buf = fun(buf);
+        return fun(currentValue);
       } else if (typeof fun === 'string') {
-        buf = this[fun](buf);
+        return this[fun](currentValue);
       }
-    });
-    return buf;
+    }, value);
   });
 }
