@@ -245,6 +245,8 @@ $mobile-resource-name-height: 20px;
     }
 
     .onedata-logo {
+      position: relative;
+      top: 6px;
       height: initial;
       background-image: none;
       margin-left: $one-list-item-padding * 1.25;
