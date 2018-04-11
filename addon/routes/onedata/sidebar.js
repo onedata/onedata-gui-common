@@ -2,7 +2,7 @@
  * TODO: documentation
  *
  * @module routes/onedata/sidebar
- * @author Jakub Liput
+ * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -24,31 +24,30 @@ function isValidTab(tabName) {
 }
 
 export default Route.extend({
-  mainMenu: service(),
-  sidebar: service(),
   sidebarResources: service(),
   navigationState: service(),
 
   beforeModel(transition) {
     const resourceType = transition.params['onedata.sidebar'].type;
     if (resourceType) {
-      let mainMenu = this.get('mainMenu');
-      mainMenu.currentItemIdChanged(resourceType);
-      mainMenu.set('isLoadingItem', true);
+      this.get('navigationState').setProperties({
+        isActiveResourceCollectionLoading: true,
+        hasActiveResourceCollectionLoadingFailed: false,
+        activeResourceCollection: undefined,
+      });
     }
   },
 
   model({ type }) {
-    let sidebarResources = this.get('sidebarResources');
     if (isValidTab(type)) {
-      return sidebarResources.getCollectionFor(type)
+      return this.get('sidebarResources').getCollectionFor(type)
         .then(proxyCollection => {
           if (isRecord(proxyCollection)) {
             return proxyCollection;
           } else if (get(proxyCollection, 'list')) {
             return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
           } else {
-            return Promise.all(proxyCollection).then(list => EmberObject.create({ list }))
+            return Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
           }
         })
         .then(collection => {
@@ -63,8 +62,11 @@ export default Route.extend({
   },
 
   afterModel(model) {
-    this.set('mainMenu.isLoadingItem', false);
-    this.set('navigationState.activeResourceType', model.resourceType);
+    this.get('navigationState').setProperties({
+      activeResourceType: model.resourceType,
+      activeResourceCollection: model.collection,
+      isActiveResourceCollectionLoading: false,
+    });
   },
 
   renderTemplate(controller, model) {
@@ -84,10 +86,9 @@ export default Route.extend({
 
   actions: {
     error() {
-      let mainMenu = this.get('mainMenu');
-      mainMenu.setProperties({
-        isFailedItem: true,
-        isLoadingItem: false,
+      this.get('navigationState').setProperties({
+        hasActiveResourceCollectionLoadingFailed: true,
+        isActiveResourceCollectionLoading: false,
       });
       return true;
     },

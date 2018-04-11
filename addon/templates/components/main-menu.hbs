@@ -6,6 +6,6 @@
     isFailed=(and isFailedItem (eq currentItemId item.id))
     isLoading=(and isLoadingItem (eq currentItemId item.id))
     isActive=(eq currentItemId item.id)
-    isSelected=(eq sidenavItemId item.id)
+    isSelected=(eq navigationState.globalSidenavResourceType item.id)
   }}
 {{/each}}

@@ -21,8 +21,8 @@ export default Component.extend({
   layout,
   classNames: ['two-level-sidebar'],
 
-  sidebar: service(),
   eventsBus: service(),
+  navigationState: service(),
 
   /**
    * @type {Object}
@@ -35,12 +35,6 @@ export default Component.extend({
   sorting: Object.freeze(['name']),
 
   sortedCollection: sort('model.collection.list', 'sorting'),
-
-  /**
-   * Should sidebar:select event be triggered after primary item selection?
-   * @type {boolean}
-   */
-  triggerEventOnPrimaryItemSelection: false,
 
   /**
    * Name of oneicon that should be displayed for each first-level element
@@ -90,9 +84,7 @@ export default Component.extend({
 
   isCollectionEmpty: equal('sortedCollection.length', 0),
 
-  primaryItemId: computed('sidebar.itemPath.[]', function () {
-    return this.get('sidebar.itemPath').objectAt(0);
-  }),
+  primaryItemId: readOnly('navigationState.activeResourceId'),
 
   primaryItem: computed(
     'primaryItemId',
@@ -109,9 +101,7 @@ export default Component.extend({
     }
   ),
 
-  secondaryItemId: computed('sidebar.itemPath.[]', function () {
-    return this.get('sidebar.itemPath').objectAt(1);
-  }),
+  secondaryItemId: readOnly('navigationState.activeAspect'),
 
   secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
     let {
@@ -124,13 +114,7 @@ export default Component.extend({
   actions: {
     changePrimaryItemId(itemId) {
       let resourceType = this.get('resourceType');
-      if (this.get('triggerEventOnPrimaryItemSelection')) {
-        this.get('eventsBus').trigger('sidebar:select');
-      }
       return invokeAction(this, 'changeResourceId', resourceType, itemId);
     },
-    sidebarSecondaryItemSelected() {
-      this.get('eventsBus').trigger('sidebar:select', this.get('secondaryItem'));
-    }
   },
 });

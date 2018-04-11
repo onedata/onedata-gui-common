@@ -22,7 +22,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
     let firstItem = mainMenuItems[0];
     if (mainMenuItems) {
       let firstItemId = get(firstItem, 'id');
-      this.controllerFor('onedata').send('mainMenuItemChanged', firstItemId);
+      this.transitionTo('onedata.sidebar', firstItemId)
     } else {
       console.error('routes:index: empty collection of main menu items');
     }

@@ -40,8 +40,11 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $mobile-top-height: 55px;
 $main-menu-width: 200px;
-$sidebar-menu-width: 250px;
-$sidebar-menu-width-lg: 325px;
+$main-menu-collapsed-width: 63px;
+$main-menu-expand-delta: $main-menu-width - $main-menu-collapsed-width;
+$sidebar-menu-width-sm: 250px;
+$sidebar-menu-width-md: 250px + $main-menu-expand-delta;
+$sidebar-menu-width-lg: 325px + $main-menu-expand-delta;
 $menu-icon-font-size: 2.5em;
 $mobile-menu-popover-width: 240px;
 
@@ -61,7 +64,7 @@ $content-header-font-size: 1.25em;
 $onedata-logo-height: 35px;
 $onedata-brand-info-height: 30px;
 $onedata-logo-margin-top: $content-col-padding;
-$onedata-logo-margin-bottom: $onedata-logo-margin-top + $input-height-small + $one-list-item-padding * 2 - $onedata-brand-info-height;
+$onedata-logo-margin-bottom: $onedata-logo-margin-top + $one-list-item-padding;
 
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
@@ -129,4 +132,5 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-inline-editor';
 @import 'onedata-gui-common/components/actions-popover-content';
 @import 'onedata-gui-common/components/one-tile';
+@import 'onedata-gui-common/components/one-animated-logo';
 @import 'onedata-gui-common/components/one-space-indicator';

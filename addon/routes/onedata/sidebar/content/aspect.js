@@ -12,7 +12,6 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({
-  sidebar: service(),
   navigationState: service(),
 
   /**
@@ -28,8 +27,6 @@ export default Route.extend({
 
   // TODO validate aspect of resource with afterModel
   afterModel({ aspectId }) {
-    let sidebar = this.get('sidebar');
-    sidebar.changeItems(1, aspectId);
     this.set('navigationState.activeAspect', aspectId);
   },
 

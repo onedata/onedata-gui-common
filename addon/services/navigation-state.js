@@ -13,8 +13,10 @@
  */
 
 import Service, { inject as service } from '@ember/service';
-import EmberObject, { computed } from '@ember/object';
-import { reads, gt } from '@ember/object/computed';
+import EmberObject, { computed, observer } from '@ember/object';
+import { reads, gt, or } from '@ember/object/computed';
+import { later, cancel } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
@@ -56,7 +58,37 @@ export default Service.extend(I18n, {
   activeResourceType: undefined,
 
   /**
-   * Active resource used  to render content.
+   * Array of resources related to activeResourceType.
+   * @type {Array<object>|undefined}
+   */
+  activeResourceCollection: undefined,
+
+  /**
+   * True, if activeResourceCollection is loading.
+   * @type {booleand}
+   */
+  isActiveResourceCollectionLoading: false,
+
+  /**
+   * True, if error occurred while activeResourceCollection loading.
+   * @type {booleand}
+   */
+  hasActiveResourceCollectionLoadingFailed: false,
+
+  /**
+   * Active resource id used to render content.
+   * @type {object|undefined}
+   */
+  activeResourceId: undefined,
+
+  /**
+   * If true, then activeResource is loading.
+   * @type {boolean}
+   */
+  isActiveResourceLoading: false,
+
+  /**
+   * Active resource used to render content.
    * @type {object|undefined}
    */
   activeResource: undefined,
@@ -66,6 +98,48 @@ export default Service.extend(I18n, {
    * @type {string|undefined}
    */
   activeAspect: undefined,
+
+  /**
+   * Resource type used by global sidenav
+   * @type {string|undefined}
+   */
+  globalSidenavResourceType: undefined,
+
+  /**
+   * If true, global sidenav is closing
+   * @type {boolean}
+   */
+  isGlobalSidenavClosing: false,
+
+  /**
+   * True, if desktop version of main menu is hovered by user.
+   * @type {boolean}
+   */
+  isMainMenuColumnHovered: false,
+
+  /**
+   * True, if desktop version of main menu is somehow active (e.g. when popover
+   * inside main menu is opened).
+   * @type {boolean}
+   */
+  isMainMenuColumnActive: false,
+
+  /**
+   * Timer id used to change isGlobalSidenavClosing property
+   * @type {any}
+   */
+  _isGlobalSidenavClosingTimer: undefined,
+
+  /**
+   * If true, desktop version of main menu is expanded.
+   * @type {boolean}
+   */
+  mainMenuColumnExpanded: or(
+    'isMainMenuColumnHovered',
+    'isMainMenuColumnActive',
+    'globalSidenavResourceType',
+    'isGlobalSidenavClosing'
+  ),
 
   /**
    * One of: 'sidebar', 'index', 'aspect', undefined.
@@ -203,4 +277,36 @@ export default Service.extend(I18n, {
       }
     }
   ),
+
+  globalSidenavResourceTypeObserver: observer(
+    'globalSidenavResourceType',
+    function () {
+      const {
+        globalSidenavResourceType,
+        _isGlobalSidenavClosingTimer,
+      } = this.getProperties(
+        'globalSidenavResourceType',
+        '_isGlobalSidenavClosingTimer'
+      );
+      if (globalSidenavResourceType) {
+        this.set('isGlobalSidenavClosing', false);
+        if (_isGlobalSidenavClosingTimer !== undefined) {
+          cancel(_isGlobalSidenavClosingTimer);
+          this.set('_isGlobalSidenavClosingTimer', undefined);
+        }
+      } else {
+        this.setProperties({
+          isGlobalSidenavClosing: true,
+          _isGlobalSidenavClosingTimer: later(this, '_globalSidebarClosed', 200),
+        });
+      }
+    }
+  ),
+
+  _globalSidebarClosed() {
+    safeExec(this, 'setProperties', {
+      isGlobalSidenavClosing: false,
+      _isGlobalSidenavClosingTimer: undefined,
+    });
+  },
 });
