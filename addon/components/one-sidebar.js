@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 
 import { computed } from '@ember/object';
-import { readOnly, reads } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 
@@ -21,12 +21,10 @@ export default Component.extend({
     'isLoadingItem:loading-item'
   ],
 
-  sidebar: service(),
+  navigationState: service(),
   sidebarResources: service(),
 
   resourcesModel: null,
-
-  currentItemId: readOnly('sidebar.currentItemId'),
 
   /**
    * @type {Ember.ComputedProperty<Array<object>>}
@@ -41,7 +39,7 @@ export default Component.extend({
    * If true, level-0 item should present a loading state
    * @type {boolean}
    */
-  isLoadingItem: reads('sidebar.isLoadingItem'),
+  isLoadingItem: reads('navigationState.isActiveResourceLoading'),
 
   title: computed('resourcesModel.resourceType', function () {
     let resourcesType = this.get('resourcesModel.resourceType');

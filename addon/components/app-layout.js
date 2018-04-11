@@ -1,14 +1,3 @@
-import { oneWay } from '@ember/object/computed';
-import Component from '@ember/component';
-import { inject as service } from '@ember/service';
-import { htmlSafe } from '@ember/string';
-import EmberObject, { computed, get } from '@ember/object';
-import layout from 'onedata-gui-common/templates/components/app-layout';
-import { invokeAction, invoke } from 'ember-invoke-action';
-import isRecord from 'onedata-gui-common/utils/is-record';
-
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-
 /**
  * Makes layout for whole application in authorized mode.
  *
@@ -16,72 +5,73 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
  * "sidebar" or "content" strings for placing a content for these particular
  * parts of view.
  *
- * Invokes actions passed as parameters:
- * - changeTab(itemId: string) - when a content route should be changed
- *
  * @module components/app-layout
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
+import { oneWay } from '@ember/object/computed';
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+import { htmlSafe } from '@ember/string';
+import EmberObject, { computed, observer, get } from '@ember/object';
+import layout from 'onedata-gui-common/templates/components/app-layout';
+import { invokeAction, invoke } from 'ember-invoke-action';
+import isRecord from 'onedata-gui-common/utils/is-record';
+import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
 
-  mainMenu: service(),
   sidebarResources: service(),
-  eventsBus: service(),
   sideMenu: service(),
   scrollState: service(),
   router: service(),
   navigationState: service(),
 
-  // TODO: too much relations: we got mainMenuItemChanged event
-  currentTabId: oneWay('mainMenu.currentItemId'),
-  sidenavTabId: null,
-  sidebarSecondaryItem: null,
   globalMenuOpened: false,
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
-  sidenavContentComponent: computed('sidenavTabId', function () {
-    let sidenavTabId = this.get('sidenavTabId');
-    return `sidebar-${sidenavTabId}`;
+  sidenavResouceType: oneWay('navigationState.globalSidenavResourceType'),
+
+  sidenavContentComponent: computed('sidenavResouceType', function () {
+    return `sidebar-${this.get('sidenavResouceType')}`;
   }),
 
   /**
-   * Creates a proxy model for floating sidebar based on selected sidenavTabId
+   * Creates a proxy model for floating sidebar based on sidenavResouceType
    * @type {PromiseObject|null}
    */
-  sidenavModel: computed('sidenavTabId', function () {
-    let {
-      sidenavTabId,
+  sidenavModel: computed('sidenavResouceType', function () {
+    const {
+      sidenavResouceType,
       sidebarResources
-    } = this.getProperties('sidenavTabId', 'sidebarResources');
+    } = this.getProperties('sidenavResouceType', 'sidebarResources');
 
-    let resourceType = sidenavTabId;
-
+    const resourceType = sidenavResouceType;
     if (resourceType != null) {
       const promise = sidebarResources.getCollectionFor(resourceType)
         .then(proxyCollection => {
-        if (isRecord(proxyCollection)) {
-          return proxyCollection;
-        } else if (get(proxyCollection, 'list')) {
-          return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
-        } else {
-          return Promise.all(proxyCollection).then(list => EmberObject.create({ list }))
-        }
-      })
-      .then(collection => {
-        return {
-          resourceType,
-          collection,
-        };
-      });
+          if (isRecord(proxyCollection)) {
+            return proxyCollection;
+          } else if (get(proxyCollection, 'list')) {
+            return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
+          } else {
+            return Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
+          }
+        })
+        .then(collection => {
+          return {
+            resourceType,
+            collection,
+          };
+        });
       return PromiseObject.create({ promise });
     } else {
       return null;
     }
-
   }),
 
   colSidebarClass: computed('showMobileSidebar', function () {
@@ -92,70 +82,20 @@ export default Component.extend({
     return htmlSafe(`${base} ${xsClass}`);
   }),
 
-  colContentClass: 'col-in-app-layout col-content col-xs-12 full-height',
-
-  init() {
-    this._super(...arguments);
-    const eventsBus = this.get('eventsBus');
-    eventsBus.on('one-sidenav:open', (selector) => {
-      if (selector === '#sidenav-sidebar') {
-        this.set('sidenavSidebarOpen', true);
-      }
-    });
-    eventsBus.on('one-sidenav:close', (selector) => {
-      if (selector === '#sidenav-sidebar') {
-        this.set('sidenavSidebarOpen', false);
-        this.set('sidenavTabId', null);
-      }
-    });
-    eventsBus.on('sidebar:select', (sidebarSecondaryItem) => {
+  contentScrollResetObserver: observer(
+    'navigationState.{activeResourceType,activeResource,activeAspect}',
+    function contentScrollResetObserver() {
       this.$('.col-content').scrollTop(0);
-      this.set('sidebarSecondaryItem', sidebarSecondaryItem);
-    });
-  },
-
-  didInsertElement() {
-    this.$('.col-content').on('scroll', () => {
-      this.get('eventsBus').trigger('one-webui-popover:update');
-    });
-  },
+    }
+  ),
 
   actions: {
-    // TODO IMPORTANT: who is receiver of eventsBus' one-sidenav:open/close?
-    closeSidenav() {
-      this.get('eventsBus').trigger('one-sidenav:close', '#sidenav-sidebar');
-    },
-    sidenavClosed() {
-      this.set('sidenavItemId', null);
-    },
-    // TODO IMPORTANT: inconsistent depedencies between component:main-menu, service:main-menu and component:app-layout
-    mainMenuItemClicked(itemId) {
-      let {
-        sidenavTabId,
-        currentTabId
-      } = this.getProperties('sidenavTabId', 'currentTabId');
-      let shouldOpen = (
-        (!sidenavTabId && currentTabId !== itemId) ||
-        (!!sidenavTabId && sidenavTabId !== itemId)
-      );
-      let action = (shouldOpen ? 'open' : 'close');
-      this.get('eventsBus').trigger('one-sidenav:' + action, '#sidenav-sidebar');
-      if (shouldOpen) {
-        this.set('sidenavTabId', itemId);
-      }
-    },
     mobileMenuItemChanged(itemId) {
-      let sideMenu = this.get('sideMenu');
-      sideMenu.close();
-      this.set('sidenavTabId', null);
-      return invokeAction(this, 'changeTab', itemId);
-    },
-    showMobileSidebar() {
-      this.get('router').transitionTo('onedata.sidebar.index');
+      this.get('sideMenu').close();
+      return this.get('router').transitionTo('onedata.sidebar', itemId);
     },
     manageAccount() {
       invoke(this, 'mobileMenuItemChanged', 'users');
-      return invokeAction(this, 'manageAccount');
     },
     changeResourceId() {
       return invokeAction(this, 'changeResourceId', ...arguments);

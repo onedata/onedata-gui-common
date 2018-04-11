@@ -22,18 +22,6 @@ $mobile-resource-name-height: 20px;
   margin-right: auto;
 }
 
-.brand-info {
-  margin-left: auto;
-  margin-right: auto;
-  height: $onedata-brand-info-height;
-  width: $onedata-logo-width;
-  line-height: $onedata-brand-info-height;
-  vertical-align: middle;
-  text-transform: uppercase;
-  font-family: "Open Sans Semibold";
-  color: $color-main-menu-fg-default;
-}
-
 // needs: $mobile-top-height
 // needs: $main-menu-width
 .app-layout {
@@ -43,10 +31,10 @@ $mobile-resource-name-height: 20px;
     position: relative;
     padding-left: 0;
     @media (min-width: $screen-md-min) {
-      padding-left: $main-menu-width + $sidebar-menu-width;
+      padding-left: $main-menu-collapsed-width + $sidebar-menu-width-md;
     }
     @media (min-width: $screen-lg-min) {
-      padding-left: $main-menu-width + $sidebar-menu-width-lg;
+      padding-left: $main-menu-collapsed-width + $sidebar-menu-width-lg;
     }
   }
   .row-mobile-menu {
@@ -72,6 +60,7 @@ $mobile-resource-name-height: 20px;
       text-align: center;
       margin: 0px;
       border: 0;
+      cursor: pointer;
       &.toggle-back {
         width: 25%;
         .one-icon {
@@ -212,7 +201,7 @@ $mobile-resource-name-height: 20px;
       padding-top: $mobile-top-height;
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-      padding-left: $sidebar-menu-width;
+      padding-left: $sidebar-menu-width-sm;
     }
     @media (max-width: $screen-xs-max) {
       padding-top: $mobile-top-height + $mobile-resource-name-height;
@@ -222,39 +211,53 @@ $mobile-resource-name-height: 20px;
     position: relative;
   }
   .col-main-menu {
-    z-index: 1;
+    z-index: 1001;
     position: absolute;
     background: $color-main-menu-bg;
     color: $color-main-menu-fg-default;
     width: $main-menu-width;
+    overflow: hidden;
+    transition: width $collapse-transition-time linear;
+    .main-menu-item {
+      .item-header {
+        transition: padding-left linear $collapse-transition-time, padding-right linear $collapse-transition-time;
+      }
+      .one-label {
+        opacity: 1;
+        transition: opacity linear $collapse-transition-time;
+      }
+    }
+
+    &.collapsed {
+      width: $main-menu-collapsed-width;
+      .onedata-logo {
+        margin-left: $padding-base-horizontal - 4px;
+      }
+      .main-menu-item {
+        .item-header {
+          padding-left: $padding-small-horizontal;
+          padding-right: $padding-small-horizontal;
+        }
+        .one-label {
+          opacity: 0;
+        }
+      }
+    }
+
+    .onedata-logo {
+      position: relative;
+      top: 6px;
+      height: initial;
+      background-image: none;
+      margin-left: $one-list-item-padding * 1.25;
+      transition: margin-left linear $collapse-transition-time;
+    }
 
     .main-menu-content {
       position: absolute;
       @include fill-container();
       bottom: $one-list-item-line-height;
       background-color: inherit;
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 280px;
-        left: -150px;
-        right: -230px;
-        transform: rotate(-90deg);
-        height: 90px;
-        opacity: .1;
-        background-image: url($root-url + 'assets/images/logo.svg');
-        background-position: bottom left;
-        background-repeat: no-repeat;
-        background-size: contain;
-        @media (max-height: 600px) {
-          display: none;
-        }
-        @media (max-height: 850px) {
-          bottom: 300px;
-          right: -260px;
-          height: 50px;
-        }
-      }
     }
     .row-onedata-logo {
       position: relative;
@@ -275,11 +278,24 @@ $mobile-resource-name-height: 20px;
       font-size: 3.2rem;
     }
   }
+  .col-sidenav-cover {
+    position: absolute;
+    z-index: -1000;
+    @media (min-width: $screen-sm-min) {
+      position: absolute;
+      left: $main-menu-width;
+      width: $sidebar-menu-width-md - $main-menu-expand-delta;
+    }
+    @media (min-width: $screen-lg-min) {
+      width: $sidebar-menu-width-lg - $main-menu-expand-delta;
+    }
+  }
   .col-sidebar {
     z-index: $zindex-navbar;
     background: $color-sidebar-background;
     // TODO same as sidenav
     border-right: 1px solid $color-one-list-item-separator;
+    padding-bottom: $one-list-item-line-height;
     @media (max-width: $screen-xs-max) {
       position: absolute;
       top: 0;
@@ -288,12 +304,17 @@ $mobile-resource-name-height: 20px;
     }
     @media (min-width: $screen-sm-min) {
       position: absolute;
-      left: $main-menu-width;
-      width: $sidebar-menu-width;
+      left: $main-menu-collapsed-width;
+      width: $sidebar-menu-width-sm;
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       left: 0px;
       padding-top: $mobile-top-height;
+    }
+    @media (min-width: $screen-md-min) {
+      position: absolute;
+      left: $main-menu-collapsed-width;
+      width: $sidebar-menu-width-md;
     }
     @media (min-width: $screen-lg-min) {
       width: $sidebar-menu-width-lg;
@@ -342,7 +363,7 @@ $mobile-resource-name-height: 20px;
   padding-bottom: $one-list-item-line-height;
 }
 .col-main-menu {
-  &.sidenav-opened {
+  .main-menu.sidenav-opened {
     .one-list-item.main-menu-item.enabled {
       &.active > .item-header {
         background-color: #666161;

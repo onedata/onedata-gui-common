@@ -19,7 +19,5 @@ export default TwoLevelSidebar.extend({
 
   firstLevelItemIcon: 'user',
 
-  triggerEventOnPrimaryItemSelection: true,
-
   secondLevelItems: computed(() => []).readOnly(),
 });

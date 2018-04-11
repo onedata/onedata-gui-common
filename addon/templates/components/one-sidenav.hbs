@@ -1,5 +1,7 @@
-{{#one-sidebar resourcesModel=model}}
-  <div class="sidenav-content-container">
-    {{yield}}
-  </div>
-{{/one-sidebar}}
+{{#perfect-scrollbar-element suppressScrollX=true}}
+  {{#one-sidebar resourcesModel=model}}
+    <div class="sidenav-content-container">
+      {{yield}}
+    </div>
+  {{/one-sidebar}}
+{{/perfect-scrollbar-element}}
