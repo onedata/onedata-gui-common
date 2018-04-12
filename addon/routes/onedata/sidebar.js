@@ -8,11 +8,9 @@
  */
 
 import Route from '@ember/routing/route';
-import EmberObject, { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
 import config from 'ember-get-config';
-import isRecord from 'onedata-gui-common/utils/is-record';
 
 const {
   onedataTabs
@@ -40,22 +38,7 @@ export default Route.extend({
 
   model({ type }) {
     if (isValidTab(type)) {
-      return this.get('sidebarResources').getCollectionFor(type)
-        .then(proxyCollection => {
-          if (isRecord(proxyCollection)) {
-            return proxyCollection;
-          } else if (get(proxyCollection, 'list')) {
-            return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
-          } else {
-            return Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
-          }
-        })
-        .then(collection => {
-          return {
-            resourceType: type,
-            collection,
-          };
-        });
+      return this.get('sidebarResources').getSidebarModelFor(type);
     } else {
       return Promise.reject({ error: 'invalid onedata tab name' });
     }
