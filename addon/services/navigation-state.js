@@ -65,19 +65,19 @@ export default Service.extend(I18n, {
 
   /**
    * True, if activeResourceCollection is loading.
-   * @type {booleand}
+   * @type {boolean}
    */
   isActiveResourceCollectionLoading: false,
 
   /**
    * True, if error occurred while activeResourceCollection loading.
-   * @type {booleand}
+   * @type {boolean}
    */
   hasActiveResourceCollectionLoadingFailed: false,
 
   /**
    * Active resource id used to render content.
-   * @type {object|undefined}
+   * @type {string|undefined}
    */
   activeResourceId: undefined,
 

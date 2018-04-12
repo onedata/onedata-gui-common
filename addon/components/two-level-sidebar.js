@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 
 import { inject as service } from '@ember/service';
-import { readOnly, equal, sort } from '@ember/object/computed';
+import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
@@ -80,11 +80,11 @@ export default Component.extend({
     }
   },
 
-  resourceType: readOnly('model.resourceType'),
+  resourceType: reads('model.resourceType'),
 
   isCollectionEmpty: equal('sortedCollection.length', 0),
 
-  primaryItemId: readOnly('navigationState.activeResourceId'),
+  primaryItemId: reads('navigationState.activeResourceId'),
 
   primaryItem: computed(
     'primaryItemId',
@@ -101,7 +101,7 @@ export default Component.extend({
     }
   ),
 
-  secondaryItemId: readOnly('navigationState.activeAspect'),
+  secondaryItemId: reads('navigationState.activeAspect'),
 
   secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
     let {
