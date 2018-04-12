@@ -78,8 +78,10 @@ export default Component.extend({
       const {
         activeResourceType,
         globalSidenavResourceType,
-      } = navigationState.getProperties('activeResourceType',
-        'globalSidenavResourceType');
+      } = navigationState.getProperties(
+        'activeResourceType',
+        'globalSidenavResourceType'
+      );
       if ((!globalSidenavResourceType && activeResourceType !== itemId) ||
         (globalSidenavResourceType && globalSidenavResourceType !== itemId)) {
         this.set('navigationState.globalSidenavResourceType', itemId);
