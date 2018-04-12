@@ -38,20 +38,16 @@ function isSpecialResourceId(id) {
 }
 
 export default Route.extend({
-  sidebar: service(),
-  eventsBus: service(),
   contentResources: service(),
   navigationState: service(),
 
   beforeModel(transition) {
     const resourceId = transition.params['onedata.sidebar.content'].resource_id;
-    const {
-      sidebar,
-      eventsBus,
-    } = this.getProperties('sidebar', 'eventsBus');
-    sidebar.changeItems(0, resourceId);
-    sidebar.set('isLoadingItem', true);
-    eventsBus.trigger('one-sidenav:close', '#sidenav-sidebar');
+    this.get('navigationState').setProperties({
+      activeResourceId: resourceId,
+      isActiveResourceLoading: false,
+      globalSidenavResourceType: null,
+    });
   },
 
   model({ resource_id: resourceId }) {
@@ -78,8 +74,10 @@ export default Route.extend({
   },
 
   afterModel(model) {
-    this.set('sidebar.isLoadingItem', false);
-    this.set('navigationState.activeResource', model.resource);
+    this.get('navigationState').setProperties({
+      activeResource: model.resource,
+      isActiveResourceLoading: false,
+    });
   },
 
   renderTemplate() {
@@ -92,8 +90,7 @@ export default Route.extend({
 
   actions: {
     error() {
-      let sidebar = this.get('sidebar');
-      sidebar.set('isLoadingItem', false);
+      this.set('navigationState.isActiveResourceLoading', false);
       return true;
     },
   },

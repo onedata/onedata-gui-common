@@ -12,7 +12,7 @@
  * ``triggerSelector`` property.
  *
  * @module components/one-webui-popover
- * @author Jakub Liput
+ * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -32,7 +32,7 @@ export default Component.extend({
   layout,
   classNames: ['one-webui-popover', 'webui-popover-content'],
 
-  eventsBus: service(),
+  scrollState: service(),
 
   triggerSelector: null,
 
@@ -84,6 +84,13 @@ export default Component.extend({
     return () => this.send('refresh');
   }),
 
+  _scrollObserver: observer(
+    'scrollState.lastScrollEvent',
+    function _scrollObserver() {
+      invoke(this, 'refresh');
+    }
+  ),
+
   init() {
     this._super(...arguments);
     let open = this.get('open');
@@ -128,7 +135,6 @@ export default Component.extend({
       'popoverStyle',
       'padding',
       'elementId',
-      'eventsBus',
       'multi',
       '_resizeHandler'
     );
@@ -155,7 +161,6 @@ export default Component.extend({
     });
 
     window.addEventListener('resize', _resizeHandler);
-    this._registerEventsBus();
   },
 
   willDestroyElement() {
@@ -163,31 +168,7 @@ export default Component.extend({
 
     next(() => this._popover('destroy'));
     let _resizeHandler = this.get('_resizeHandler');
-
-    this._deregisterEventsBus();
     window.removeEventListener('resize', _resizeHandler);
-  },
-
-  _onUpdateEvent: computed(function () {
-    return (selector) => {
-      if (!selector || this.$().is(selector)) {
-        invoke(this, 'refresh');
-      }
-    };
-  }),
-
-  _registerEventsBus() {
-    this.get('eventsBus').on(
-      'one-webui-popover:update',
-      this.get('_onUpdateEvent')
-    );
-  },
-
-  _deregisterEventsBus() {
-    this.get('eventsBus').off(
-      'one-webui-popover:update',
-      this.get('_onUpdateEvent')
-    );
   },
 
   _popover() {

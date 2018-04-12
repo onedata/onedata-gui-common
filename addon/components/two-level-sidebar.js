@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 
 import { inject as service } from '@ember/service';
-import { readOnly, equal, sort } from '@ember/object/computed';
+import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
@@ -21,8 +21,8 @@ export default Component.extend({
   layout,
   classNames: ['two-level-sidebar'],
 
-  sidebar: service(),
   eventsBus: service(),
+  navigationState: service(),
 
   /**
    * @type {Object}
@@ -35,12 +35,6 @@ export default Component.extend({
   sorting: Object.freeze(['name']),
 
   sortedCollection: sort('model.collection.list', 'sorting'),
-
-  /**
-   * Should sidebar:select event be triggered after primary item selection?
-   * @type {boolean}
-   */
-  triggerEventOnPrimaryItemSelection: false,
 
   /**
    * Name of oneicon that should be displayed for each first-level element
@@ -86,13 +80,11 @@ export default Component.extend({
     }
   },
 
-  resourceType: readOnly('model.resourceType'),
+  resourceType: reads('model.resourceType'),
 
   isCollectionEmpty: equal('sortedCollection.length', 0),
 
-  primaryItemId: computed('sidebar.itemPath.[]', function () {
-    return this.get('sidebar.itemPath').objectAt(0);
-  }),
+  primaryItemId: reads('navigationState.activeResourceId'),
 
   primaryItem: computed(
     'primaryItemId',
@@ -109,9 +101,7 @@ export default Component.extend({
     }
   ),
 
-  secondaryItemId: computed('sidebar.itemPath.[]', function () {
-    return this.get('sidebar.itemPath').objectAt(1);
-  }),
+  secondaryItemId: reads('navigationState.activeAspect'),
 
   secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
     let {
@@ -124,13 +114,7 @@ export default Component.extend({
   actions: {
     changePrimaryItemId(itemId) {
       let resourceType = this.get('resourceType');
-      if (this.get('triggerEventOnPrimaryItemSelection')) {
-        this.get('eventsBus').trigger('sidebar:select');
-      }
       return invokeAction(this, 'changeResourceId', resourceType, itemId);
     },
-    sidebarSecondaryItemSelected() {
-      this.get('eventsBus').trigger('sidebar:select', this.get('secondaryItem'));
-    }
   },
 });

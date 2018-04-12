@@ -5,8 +5,8 @@
   top: 0;
   bottom: 0;
   background-color: $color-one-white;
-  overflow-x: hidden;
-  transition: 0.2s;
+  overflow: hidden;
+  transition: $collapse-transition-time;
 
   // initial size
   left: 0;
@@ -14,5 +14,9 @@
 
   &.in {
     border-right: 1px solid $color-one-list-item-separator;
+  }
+  .ps-container {
+    position: absolute;
+    @include fill-container();
   }
 }
