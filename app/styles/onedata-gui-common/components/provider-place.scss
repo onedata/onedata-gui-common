@@ -61,15 +61,19 @@ $popover-provider-list-width: 190px;
       position: relative;
       padding: $padding-large-horizontal;
       padding-right: 100px;
+      padding-left: 65px;
       border-bottom: 1px solid $main-border-color;
+    }
+    .space-icon {
+      position: absolute;
+      left: $padding-large-horizontal;
     }
     .spaces-items {
       padding: 0;
     }
     .space-label {
-      display: inline;
-      overflow: initial;
-      text-overflow: initial;
+      display: inline-block;
+      max-width: 100%;
     }
     .space-size {
       position: absolute;
