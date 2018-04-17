@@ -30,7 +30,7 @@ const SPECIAL_IDS = [
   'empty',
   'new',
   'join',
-  'notSelected',
+  'not-selected',
 ];
 
 function isSpecialResourceId(id) {
