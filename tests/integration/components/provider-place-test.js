@@ -7,6 +7,7 @@ import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard'
 import GlobalNotifyStub from '../../helpers/global-notify-stub';
 import I18nStub from '../../helpers/i18n-stub';
 import $ from 'jquery';
+import EmberObject from '@ember/object';
 
 const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
@@ -61,17 +62,18 @@ describe('Integration | Component | provider place', function () {
     }];
     spaces.isFulfilled = true;
 
-    const provider = {
+    const provider = EmberObject.create({
       entityId: '1',
       name: 'provider1',
       status: 'online',
       isStatusValid: true,
-      spaceList: {
+      spaceList: EmberObject.create({
         isLoaded: true,
-        list: spaces,
-      },
-    };
+        list: Promise.resolve(spaces),
+      }),
+    });
 
+    this.set('spaces', spaces);
     this.set('provider', provider);
     this.set('providers', [
       provider,
@@ -133,7 +135,7 @@ describe('Integration | Component | provider place', function () {
       {{provider-place 
         provider=provider}}`);
 
-    let spaces = this.get('provider.spaceList.list');
+    let spaces = this.get('spaces');
     click('.circle').then(() => {
       let drop = $('.provider-place-drop');
       expect(drop.find('.provider-place-drop-space'))

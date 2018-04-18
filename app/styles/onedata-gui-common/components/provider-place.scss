@@ -316,6 +316,10 @@ $popover-provider-list-width: 190px;
   .spaces-list {
     color: $color-one-dark-gray;
   }
+
+  .resource-load-error {
+    white-space: initial;
+  }
 }
 
 .webui-popover-provider-place {
