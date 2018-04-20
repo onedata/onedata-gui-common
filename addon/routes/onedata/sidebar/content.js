@@ -24,6 +24,7 @@ import Route from '@ember/routing/route';
 
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
+import { get } from '@ember/object';
 
 // TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
@@ -56,8 +57,12 @@ export default Route.extend({
       collection,
       resourceType
     } = this.modelFor('onedata.sidebar');
-
+    
     if (isSpecialResourceId(resourceId)) {
+      if (resourceId === 'empty' && get(collection, 'list.length')) {
+        this.transitionTo('onedata.sidebar.index');
+        return;
+      }
       return { resourceId, collection };
     } else {
       return new Promise((resolve, reject) => {
