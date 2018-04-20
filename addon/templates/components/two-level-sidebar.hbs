@@ -15,7 +15,7 @@
         {{#link-to
           "onedata.sidebar.content.index"
           sidebarType
-          item.id
+          (model-routable-id item)
         }}
           {{#if firstLevelItemComponent}}
             {{component firstLevelItemComponent item=item sidebar=this}}
@@ -36,7 +36,7 @@
               {{#link-to
                 "onedata.sidebar.content.aspect"
                 sidebarType
-                item.id
+                (model-routable-id item)
                 sli.id
                 class="item-header truncate"
               }}
