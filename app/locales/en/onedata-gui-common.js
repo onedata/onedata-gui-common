@@ -11,6 +11,10 @@ import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
 import emptyCollectionSidebar from './onedata-gui-common/components/empty-collection-sidebar';
 import oneTile from './onedata-gui-common/components/one-tile';
 
+import login from './onedata-gui-common/routes/login';
+
+import guiUtils from './onedata-gui-common/services/gui-utils';
+
 const translations = {
   components: {
     basicauthLoginForm,
@@ -25,6 +29,12 @@ const translations = {
     oneInlineEditor,
     emptyCollectionSidebar,
     oneTile,
+  },
+  routes: {
+    login,
+  },
+  services: {
+    guiUtils,
   },
 };
 

@@ -10,15 +10,14 @@ describe('Unit | Utility | try until resolve', function () {
       repeater();
       return Promise.reject('error');
     };
-
-    const result = tryUntilResolve(fun, 10, 1);
-
-    setTimeout(() => {
-      expect(repeater.callCount).to.equal(10);
-      result.catch(error => {
-        expect(error).to.equal('error');
+    let errorOccurred = false;
+    tryUntilResolve(fun, 10, 1)
+      .catch(() =>
+        errorOccurred = true
+      ).then(() => {
+        expect(errorOccurred).to.be.true;
+        expect(repeater.callCount).to.equal(10);
         done();
       });
-    }, 100);
   });
 });
