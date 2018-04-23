@@ -2,6 +2,9 @@
   font-size: 13px;
   font-family: 'Open Sans Semibold';
 
+  .active > .item-header > a, .active > a {
+    color: $color-one-red;
+  }
   a {
     color: $main-text-color;
   }
