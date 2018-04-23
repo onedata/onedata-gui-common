@@ -12,9 +12,9 @@ import Helper from '@ember/component/helper';
 import { inject } from '@ember/service';
 
 export default Helper.extend({
-  contentResources: inject(),
+  guiUtils: inject(),
 
   compute(params) {
-    return this.get('contentResources').getRoutableIdFor(params[0]);
+    return this.get('guiUtils').getRoutableIdFor(params[0]);
   }
 });

@@ -20,7 +20,7 @@ function getDefaultResource(list) {
 export default Route.extend({
   globalNotify: service(),
   media: service(),
-  contentResources: service(),
+  guiUtils: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');
@@ -42,10 +42,10 @@ export default Route.extend({
   }),
 
   redirectToDefault({ resourceType, collection }) {
-    const contentResources = this.get('contentResources');
+    const guiUtils = this.get('guiUtils');
     const list = get(collection, 'list');
     let resourceIdToRedirect = get(list, 'length') > 0 ?
-    contentResources.getRoutableIdFor(getDefaultResource(list)) : 'empty';
+    guiUtils.getRoutableIdFor(getDefaultResource(list)) : 'empty';
     if (resourceIdToRedirect != null) {
       this.transitionTo(`onedata.sidebar.content`, resourceType, resourceIdToRedirect);
     } else {

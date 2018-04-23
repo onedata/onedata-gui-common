@@ -11,6 +11,7 @@ import Service from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject } from '@ember/service';
 import { computed } from '@ember/object';
+import modelRoutableId from 'onedata-gui-common/utils/model-routable-id';
 
 export default Service.extend(I18n, {
   i18n: inject(),
@@ -35,4 +36,12 @@ export default Service.extend(I18n, {
    * @type {string}
    */
   guiName: '',
+
+  /**
+   * @param {object|string} model
+   * @returns {string}
+   */
+  getRoutableIdFor(model) {
+    return modelRoutableId(model);
+  }
 });

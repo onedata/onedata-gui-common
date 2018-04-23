@@ -8,7 +8,6 @@
  */
 
 import Service from '@ember/service';
-import modelRoutableId from 'onedata-gui-common/utils/model-routable-id';
 
 export default Service.extend({
   /**
@@ -18,12 +17,4 @@ export default Service.extend({
   getModelFor( /* type, id */ ) {
     throw new Error('service:content-resources: not implemented')
   },
-
-  /**
-   * @param {object|string} model
-   * @returns {string}
-   */
-  getRoutableIdFor(model) {
-    return modelRoutableId(model);
-  }
 });

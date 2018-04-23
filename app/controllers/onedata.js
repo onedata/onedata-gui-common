@@ -11,16 +11,16 @@ import Controller from '@ember/controller';
 import { inject } from '@ember/service';
 
 export default Controller.extend({
-  contentResources: inject(),
+  guiUtils: inject(),
 
   actions: {
     changeResourceId(resourceType, itemId) {
-      const contentResources = this.get('contentResources');
+      const guiUtils = this.get('guiUtils');
       // TODO: a loader for clicked sidebar item can be done here by usin transition as a promise
       return this.transitionToRoute(
         'onedata.sidebar.content',
         resourceType,
-        contentResources.getRoutableId(itemId)
+        guiUtils.getRoutableId(itemId)
       );
     }
   }
