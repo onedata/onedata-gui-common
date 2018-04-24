@@ -79,8 +79,10 @@ export default Route.extend({
           gettingResource.catch(reject);
         });
       } else {
-        return Promise.reject({
-          message:`Cannot find resource with id ${resourceId}.`
+        return Promise.resolve({
+          resourceId: null,
+          resource: null,
+          collection,
         });
       }
     }

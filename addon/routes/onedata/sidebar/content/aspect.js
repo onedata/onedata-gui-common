@@ -11,8 +11,20 @@ import Route from '@ember/routing/route';
 
 import { inject as service } from '@ember/service';
 
+const notFoundAspect = 'not-found';
+
 export default Route.extend({
   navigationState: service(),
+
+  beforeModel(transition) {
+    const contentModel = this.modelFor('onedata.sidebar.content');
+    const aspect = transition.params['onedata.sidebar.content.aspect'].aspect_id;
+    if (!contentModel.resource) {
+      this.transitionTo('onedata.sidebar.content.aspect', 'not-found');
+    } else if (aspect === notFoundAspect) {
+      this.transitionTo('onedata.sidebar.content.aspect', 'index');
+    }
+  },
 
   /**
    * @param {object} { aspect_id: string } - aspect_id is a name of some "aspect"
@@ -33,7 +45,9 @@ export default Route.extend({
   renderTemplate(controller, model) {
     const { resourceType } = this.modelFor('onedata.sidebar');
     const { aspectId } = model;
-    const templateName = `tabs.${resourceType}.${aspectId}`;
+    const templateName = model.aspectId === notFoundAspect ?
+      '-resource-not-found' :
+      `tabs.${resourceType}.${aspectId}`;
     try {
       this.render(templateName, {
         into: 'onedata.sidebar.content',

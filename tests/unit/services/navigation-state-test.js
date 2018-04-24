@@ -96,7 +96,7 @@ describe('Unit | Service | navigation state', function () {
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.index');
     service.set('activeResourceType', 'spaces');
-    expect(service.get('globalBarActiveTitle')).to.equal('spaces');
+    expect(service.get('globalBarActiveTitle')).to.equal('Spaces');
   });
 
   it('prepares global bar title for contentIndex level', function () {
@@ -105,7 +105,7 @@ describe('Unit | Service | navigation state', function () {
     router.set('currentRouteName', 'onedata.sidebar.content.index');
     service.set('activeResourceType', 'spaces');
     service.set('activeResource', resource);
-    expect(service.get('globalBarActiveTitle')).to.equal('spaces');
+    expect(service.get('globalBarActiveTitle')).to.equal('Spaces');
   });
 
   it('prepares global bar title for index level', function () {

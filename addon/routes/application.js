@@ -73,7 +73,10 @@ export default Route.extend(ApplicationRouteMixin, {
         tokens.push(get(activeResource, 'name'));
         break;
       case 'aspect':
-        tokens.push(get(activeResource, 'name'), globalBarAspectTitle);
+        tokens.push(
+          activeResource ? get(activeResource, 'name') : null,
+          globalBarAspectTitle
+        );
         break;
     }
     return tokens;
