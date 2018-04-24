@@ -9,7 +9,6 @@
 
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import { Promise } from 'rsvp';
 import config from 'ember-get-config';
 
 const {
@@ -21,27 +20,32 @@ function isValidTab(tabName) {
     tabName === 'users';
 }
 
+function getDefaultTab() {
+  return (onedataTabs[0] || {}).id;
+}
+
 export default Route.extend({
   sidebarResources: service(),
   navigationState: service(),
 
   beforeModel(transition) {
     const resourceType = transition.params['onedata.sidebar'].type;
-    if (resourceType) {
-      this.get('navigationState').setProperties({
-        isActiveResourceCollectionLoading: true,
-        hasActiveResourceCollectionLoadingFailed: false,
-        activeResourceCollection: undefined,
-      });
+    if (!isValidTab(resourceType)) {
+      console.warn(
+        `Failed to render ${resourceType} resource type. ` +
+        `Redirecting to default resource type...`
+      );
+      this.transitionTo('onedata.sidebar', getDefaultTab());
     }
+    this.get('navigationState').setProperties({
+      isActiveResourceCollectionLoading: true,
+      hasActiveResourceCollectionLoadingFailed: false,
+      activeResourceCollection: undefined,
+    });
   },
 
   model({ type }) {
-    if (isValidTab(type)) {
-      return this.get('sidebarResources').getSidebarModelFor(type);
-    } else {
-      return Promise.reject({ error: 'invalid onedata tab name' });
-    }
+    return this.get('sidebarResources').getSidebarModelFor(type);
   },
 
   afterModel(model) {

@@ -31,12 +31,18 @@ export default Route.extend({
   },
 
   renderTemplate(controller, model) {
-    let { resourceType } = this.modelFor('onedata.sidebar');
-    let { aspectId } = model;
-    this.render(`tabs.${resourceType}.${aspectId}`, {
-      into: 'onedata.sidebar.content',
-      outlet: 'main-content'
-    });
+    const { resourceType } = this.modelFor('onedata.sidebar');
+    const { aspectId } = model;
+    const templateName = `tabs.${resourceType}.${aspectId}`;
+    try {
+      this.render(templateName, {
+        into: 'onedata.sidebar.content',
+        outlet: 'main-content'
+      });
+    } catch (error) {
+      console.warn(`Failed to render ${aspectId} aspect template: ${templateName}`);
+      console.warn(error);
+      this.transitionTo('onedata.sidebar.content.aspect', 'index');
+    }
   },
-
 });
