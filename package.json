@@ -40,6 +40,7 @@
     "ember-cli-chartist": "1.2.1",
     "ember-cli-clipboard": "0.8.1",
     "ember-cli-dependency-checker": "2.1.0",
+    "ember-cli-document-title": "0.4.0",
     "ember-cli-eslint": "4.2.3",
     "ember-cli-events-bus": "git+https://github.com/blia/ember-cli-events-bus.git#f0c80d024690338358afb1abd949b8a34e8f0169",
     "ember-cli-htmlbars-inline-precompile": "1.0.2",

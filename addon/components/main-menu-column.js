@@ -95,9 +95,6 @@ export default Component.extend({
     scrollOccurred(event) {
       this.get('scrollState').scrollOccurred(event);
     },
-    manageAccount() {
-      this.get('router').transitionTo('onedata.sidebar', 'users');
-    },
     userAccountPopoverOpened(opened) {
       this.set('navigationState.isMainMenuColumnActive', opened);
     }

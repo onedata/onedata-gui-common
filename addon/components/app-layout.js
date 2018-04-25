@@ -51,7 +51,7 @@ export default Component.extend({
 
     const resourceType = sidenavResouceType;
     if (resourceType != null) {
-      return PromiseObject.create({ 
+      return PromiseObject.create({
         promise: sidebarResources.getSidebarModelFor(resourceType),
       });
     } else {

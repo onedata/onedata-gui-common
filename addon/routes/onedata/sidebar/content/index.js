@@ -18,7 +18,7 @@ const SPECIAL_IDS = [
   'empty',
   'new',
   'join',
-  'notSelected',
+  'not-selected',
 ];
 
 const {
