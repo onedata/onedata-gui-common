@@ -1,5 +1,5 @@
 /**
- * Component, that show info "Resource not found".
+ * Component that show info "Resource not found".
  *
  * @module components/resource-not-found
  * @author Michal Borzecki

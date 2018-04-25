@@ -40,7 +40,7 @@ export default Component.extend(I18n, {
    */
   _spaceListError: null,
 
-    /**
+  /**
    * True if data for each space of provider is loaded (eg. support info)
    * @type {Ember.Computed<boolean>}
    */

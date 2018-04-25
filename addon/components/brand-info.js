@@ -16,7 +16,7 @@ import layout from 'onedata-gui-common/templates/components/brand-info';
 export default Component.extend({
   layout,
   classNames: ['brand-info'],
-  
+
   guiUtils: inject(),
 
   /**

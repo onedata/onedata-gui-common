@@ -56,7 +56,7 @@ export default Route.extend({
       collection,
       resourceType
     } = this.modelFor('onedata.sidebar');
-    
+
     if (isSpecialResourceId(resourceId)) {
       if (resourceId === 'empty' && get(collection, 'list.length')) {
         this.transitionTo('onedata.sidebar.index');
@@ -113,10 +113,9 @@ export default Route.extend({
     let modelId;
     if (isRecord(collection)) {
       modelId = collection.hasMany('list').ids().indexOf(resourceId) > -1 ?
-        resourceId :
-        null;
+        resourceId : null;
     } else {
-      let model = get(collection, 'list')
+      const model = get(collection, 'list')
         .filter(model => get(model, 'id') === resourceId)[0];
       if (model) {
         modelId = get(model, 'id');
@@ -124,7 +123,7 @@ export default Route.extend({
     }
     return modelId;
   },
-  
+
   actions: {
     error() {
       this.set('navigationState.isActiveResourceLoading', false);
