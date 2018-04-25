@@ -1,12 +1,37 @@
 .brand-info {
+  $icon-size: 20px;
+  $icon-left-offset: 6px;
+
   position: fixed;
   bottom: 0;
+  height: $one-list-item-line-height;
   width: inherit;
-  padding: 0 $one-list-item-padding;
-  line-height: $one-list-item-line-height;
-  text-transform: uppercase;
-  border-top: 1px solid $main-border-color;
   border-right: 1px solid $main-border-color;
-  background-color: inherit;
+  background-color: $color-sidebar-item-bg;
   z-index: 10;
+
+  .brand-info-container {
+    position: absolute;
+    left: $one-list-item-padding;
+    right: $one-list-item-padding;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-left: $icon-size + $padding-xs-horizontal + $icon-left-offset;
+  }
+
+  .brand-icon {
+    position: absolute;
+    left: $icon-left-offset;
+    top: 0;
+    width: $icon-size;
+  }
+
+  .brand-name {
+    font-weight: bold;
+  }
+
+  .brand-type-version {
+    font-size: 90%;
+    margin-top: 1px;
+  }
 }

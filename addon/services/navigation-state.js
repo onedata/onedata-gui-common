@@ -14,9 +14,10 @@
 
 import Service, { inject as service } from '@ember/service';
 import EmberObject, { computed, observer } from '@ember/object';
-import { reads, gt, or } from '@ember/object/computed';
+import { gt, or } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import _ from 'lodash';
 
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
@@ -233,7 +234,9 @@ export default Service.extend(I18n, {
    * Global bar title for sidebar.
    * @type {Ember.ComputedProperty<string>}
    */
-  globalBarSidebarTitle: reads('activeResourceType'),
+  globalBarSidebarTitle: computed('activeResourceType', function () {
+    return _.upperFirst(this.get('activeResourceType'));
+  }),
 
   /**
    * Global bar title for content aspect.
@@ -244,7 +247,8 @@ export default Service.extend(I18n, {
       activeResourceType,
       activeAspect,
     } = this.getProperties('activeResourceType', 'activeAspect');
-    return this.t(`${activeResourceType}.aspects.${activeAspect}`);
+    return activeResourceType && activeAspect ?
+      this.t(`${activeResourceType}.aspects.${_.camelCase(activeAspect)}`) : '';
   }),
 
   /**

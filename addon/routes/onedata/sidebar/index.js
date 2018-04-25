@@ -13,14 +13,14 @@ import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { observer } from '@ember/object';
 
-function getDefaultResourceId(list) {
-  let defaultResource = list.objectAt(0);
-  return get(defaultResource, 'id');
+function getDefaultResource(list) {
+  return list.objectAt(0);
 }
 
 export default Route.extend({
   globalNotify: service(),
   media: service(),
+  guiUtils: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');
@@ -42,9 +42,10 @@ export default Route.extend({
   }),
 
   redirectToDefault({ resourceType, collection }) {
+    const guiUtils = this.get('guiUtils');
     const list = get(collection, 'list');
     let resourceIdToRedirect = get(list, 'length') > 0 ?
-      getDefaultResourceId(list) : 'empty';
+      guiUtils.getRoutableIdFor(getDefaultResource(list)) : 'empty';
     if (resourceIdToRedirect != null) {
       this.transitionTo(`onedata.sidebar.content`, resourceType, resourceIdToRedirect);
     } else {
