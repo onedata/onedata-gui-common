@@ -44,10 +44,11 @@ export default Route.extend({
   navigationState: service(),
 
   beforeModel() {
-    this.get('navigationState').setProperties({
-      isActiveResourceLoading: false,
-      globalSidenavResourceType: null,
-    });
+    const navigationState = this.get('navigationState');
+    if (navigationState.get('globalSidenavResourceType')) {
+      navigationState.set('globalSidenavResourceType', null);
+    }
+    navigationState.set('isActiveResourceLoading', false);
   },
 
   model({ resource_id: resourceId }) {
