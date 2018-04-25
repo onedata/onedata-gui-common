@@ -38,6 +38,20 @@ export default Service.extend(I18n, {
   guiName: '',
 
   /**
+   * Version of gui.
+   * @virtual
+   * @type {string}
+   */
+  guiVersion: '',
+
+  /**
+   * Location of gui icon.
+   * @virtual
+   * @type {string}
+   */
+  guiIcon: '',
+
+  /**
    * @param {object|string} model
    * @returns {string}
    */
