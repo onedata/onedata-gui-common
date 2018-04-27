@@ -63,23 +63,20 @@ export default Route.extend(ApplicationRouteMixin, {
       'activeResource',
       'globalBarAspectTitle'
     );
-    const tokens = [];
     switch (activeContentLevel) {
       case 'sidebar':
       case 'contentIndex':
-        tokens.push(_.upperFirst(activeResourceType));
-        break;
+        return [_.upperFirst(activeResourceType)];
       case 'index':
-        tokens.push(get(activeResource, 'name'));
-        break;
+        return [get(activeResource, 'name')];
       case 'aspect':
-        tokens.push(
+        return [
           activeResource ? get(activeResource, 'name') : null,
           globalBarAspectTitle
-        );
-        break;
+        ];
+      default:
+        return [];
     }
-    return tokens;
   },
 
   actions: {

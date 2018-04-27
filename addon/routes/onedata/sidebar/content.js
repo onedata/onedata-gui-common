@@ -44,10 +44,11 @@ export default Route.extend({
   navigationState: service(),
 
   beforeModel() {
-    this.get('navigationState').setProperties({
-      isActiveResourceLoading: false,
-      globalSidenavResourceType: null,
-    });
+    const navigationState = this.get('navigationState');
+    if (navigationState.get('globalSidenavResourceType')) {
+      navigationState.set('globalSidenavResourceType', null);
+    }
+    navigationState.set('isActiveResourceLoading', false);
   },
 
   model({ resource_id: resourceId }) {
@@ -61,9 +62,10 @@ export default Route.extend({
       if (resourceId === 'empty' && get(collection, 'list.length')) {
         this.transitionTo('onedata.sidebar.index');
         return;
+      } else {
+        this.set('navigationState.activeResourceId', resourceId);
+        return { resourceId, collection };
       }
-      this.set('navigationState.activeResourceId', resourceId);
-      return { resourceId, collection };
     } else {
       const existingResourceId = this.availableResourceId(resourceId, collection);
       this.set('navigationState.activeResourceId', existingResourceId);
