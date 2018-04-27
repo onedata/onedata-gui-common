@@ -20,7 +20,7 @@ export default Controller.extend({
       return this.transitionToRoute(
         'onedata.sidebar.content',
         resourceType,
-        guiUtils.getRoutableId(itemId)
+        guiUtils.getRoutableIdFor(itemId)
       );
     }
   }

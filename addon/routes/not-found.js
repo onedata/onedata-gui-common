@@ -8,17 +8,7 @@
  */
 
 import Route from '@ember/routing/route';
-import { inject } from '@ember/service';
-import config from 'ember-get-config';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
 
-export default Route.extend({
-  session: inject(),
-
-  beforeModel() {
-    const emberSimpleAuth = config['ember-simple-auth'];
-    const route = this.get('session.isAuthenticated') ?
-      emberSimpleAuth.routeIfAlreadyAuthenticated :
-      emberSimpleAuth.authenticationRoute;
-    this.transitionTo(route);
-  },
-});
+export default Route.extend(AuthenticatedRouteMixin, UnauthenticatedRouteMixin);

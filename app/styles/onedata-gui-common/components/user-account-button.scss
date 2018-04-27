@@ -9,7 +9,7 @@
     }
   }
   .manage-account-action {
-    span, a {
+    &.one-list-item .header-content-container, a {
       display: block;
     }
     a {

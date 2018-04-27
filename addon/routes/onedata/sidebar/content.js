@@ -62,9 +62,10 @@ export default Route.extend({
       if (resourceId === 'empty' && get(collection, 'list.length')) {
         this.transitionTo('onedata.sidebar.index');
         return;
+      } else {
+        this.set('navigationState.activeResourceId', resourceId);
+        return { resourceId, collection };
       }
-      this.set('navigationState.activeResourceId', resourceId);
-      return { resourceId, collection };
     } else {
       const existingResourceId = this.availableResourceId(resourceId, collection);
       this.set('navigationState.activeResourceId', existingResourceId);

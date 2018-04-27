@@ -116,6 +116,9 @@ $mobile-resource-name-height: 20px;
       font-size: 0.9em;
       font-weight: bold;
       text-align: center;
+      &::first-letter {
+        text-transform: uppercase;
+      }
       .one-label {
         overflow: hidden;
         text-overflow: ellipsis;

@@ -36,12 +36,14 @@ export default Route.extend({
         `Redirecting to default resource type...`
       );
       this.transitionTo('onedata.sidebar', getDefaultTab());
+      return;
+    } else {
+      this.get('navigationState').setProperties({
+        isActiveResourceCollectionLoading: true,
+        hasActiveResourceCollectionLoadingFailed: false,
+        activeResourceCollection: undefined,
+      });
     }
-    this.get('navigationState').setProperties({
-      isActiveResourceCollectionLoading: true,
-      hasActiveResourceCollectionLoadingFailed: false,
-      activeResourceCollection: undefined,
-    });
   },
 
   model({ type }) {
