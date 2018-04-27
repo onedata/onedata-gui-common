@@ -8,7 +8,7 @@
 {{#if (and isCollapsible (not disableToggleIcon))}}
   {{one-icon class="toggle-icon" icon="arrow-down"}}
 {{/if}}
-<span>
+<span class="header-content-container">
   {{yield (hash
     toggleAction=(action "toggle")
   )}}

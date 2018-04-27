@@ -1,5 +1,6 @@
 /**
- * Provides data specific for gui, that uses onedata-gui-common.
+ * Provides data and implementation of utils specific for gui,
+ * that uses onedata-gui-common.
  *
  * @module services/gui-utils
  * @author Michal Borzecki
