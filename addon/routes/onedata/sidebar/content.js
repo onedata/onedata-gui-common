@@ -43,7 +43,8 @@ export default Route.extend({
   contentResources: service(),
   navigationState: service(),
 
-  beforeModel() {
+  beforeModel(transition) {
+    this.set('navigationState.queryParams', get(transition, 'queryParams'));
     const navigationState = this.get('navigationState');
     if (navigationState.get('globalSidenavResourceType')) {
       navigationState.set('globalSidenavResourceType', null);
