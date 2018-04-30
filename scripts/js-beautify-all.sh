@@ -1,3 +1,2 @@
 #!/bin/bash
-git ls-files | grep '.*\.js$' | xargs js-beautify -r
-
+git ls-files | grep -vE '/?vendor/' | grep '.*\.js$' | xargs js-beautify -r

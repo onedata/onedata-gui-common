@@ -66,7 +66,13 @@ module.exports = function (defaults) {
 
   BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));
 
-  app.import('vendor/chartist-plugin-legend/chartist-plugin-legend.js');
+  const VENDOR_ASSETS = [
+    'chartist-plugin-legend/chartist-plugin-legend.js',
+    'jvectormap/jquery-jvectormap-2.0.3.min.js',
+    'jvectormap/jquery-jvectormap-world-mill.js',
+  ];
+
+  VENDOR_ASSETS.forEach(path => app.import('vendor/' + path));
 
   return app.toTree();
 };

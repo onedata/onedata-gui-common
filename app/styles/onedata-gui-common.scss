@@ -79,6 +79,7 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/common';
 @import 'onedata-gui-common/spin-spinner-extensions';
 @import 'onedata-gui-common/ember-power-select-config';
+@import 'onedata-gui-common/jvectormap';
 
 // Components
 
@@ -133,3 +134,4 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-tile';
 @import 'onedata-gui-common/components/one-animated-logo';
 @import 'onedata-gui-common/components/one-space-indicator';
+@import 'onedata-gui-common/components/one-map';
