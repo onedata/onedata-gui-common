@@ -76,15 +76,25 @@ export default Component.extend({
    */
   _containerHeight: 0,
 
+  /**
+   * @type {Ember.ComputedProperty<object>}
+   */
   _initialState: computed('initialState', function () {
     const defaultState = {
       lat: 0,
       lng: 0,
-      scale: 0,
+      scale: 1,
       x: 0,
       y: 0,
     };
-    return _.assign(defaultState, this.get('initialState'));
+    const resultState = _.assign(defaultState, this.get('initialState'));
+    // 0.0001 value is a fix for jvectormap. Library checks if lat and lng
+    // values are truthy. Of course 0 values are falsy and they breaks down
+    // map focus. So zeros are converted to zero-like truthy values (0.0001).
+    resultState.lat = Math.min(90, Math.max(-90, resultState.lat) || 0.0001);
+    resultState.lng = Math.min(180, Math.max(-180, resultState.lng) || 0.0001);
+    resultState.scale = Math.min(8, Math.max(1, resultState.scale) || 1);
+    return resultState;
   }),
 
   didInsertElement() {
@@ -115,6 +125,11 @@ export default Component.extend({
     }
   },
 
+  /**
+   * Handles map viewport change event.
+   * @param {JQuery.Event} event 
+   * @param {number} scale 
+   */
   _handleViewportChange(event, scale) {
     const {
       triggerWindowEventName,

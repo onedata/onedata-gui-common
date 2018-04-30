@@ -13,7 +13,6 @@
 .jvectormap-tip {
   position: absolute;
   display: none;
-  border: solid 1px #CDCDCD;
   border-radius: 3px;
   background: #292929;
   color: white;
@@ -139,4 +138,5 @@
   fill: $color-one-dark-blue;
   stroke: $color-one-dark-blue;
   stroke-width: 0.5;
+  cursor: initial;
 }
