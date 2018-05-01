@@ -97,6 +97,12 @@ export default Component.extend({
     return resultState;
   }),
 
+  /**
+   * Window object for test purposes
+   * @type {Window}
+   */
+  _window: window,
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -135,10 +141,12 @@ export default Component.extend({
       triggerWindowEventName,
       $mapContainer,
       onViewportChange,
+      _window,
     } = this.getProperties(
       'triggerWindowEventName',
       '$mapContainer',
-      'onViewportChange'
+      'onViewportChange',
+      '_window'
     );
     const _mapInstance = $mapContainer.vectorMap('get', 'mapObject');
     const {
@@ -160,7 +168,7 @@ export default Component.extend({
       _containerWidth: _mapInstance.width,
     });
     if (triggerWindowEventName) {
-      window.dispatchEvent(new Event(triggerWindowEventName));
+      _window.dispatchEvent(new Event(triggerWindowEventName));
     }
     onViewportChange(calculatedEvent);
   }
