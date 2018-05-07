@@ -8,6 +8,14 @@
       padding-right: 35px;
     }
   }
+  .manage-account-action {
+    &.one-list-item .header-content-container, a {
+      display: block;
+    }
+    a {
+      color: $main-text-color;
+    }
+  }
   .user-account-button-main {
     &::after {
       @include top-line(none)

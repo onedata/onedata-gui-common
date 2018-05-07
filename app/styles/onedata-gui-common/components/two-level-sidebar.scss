@@ -2,6 +2,13 @@
   font-size: 13px;
   font-family: 'Open Sans Semibold';
 
+  .active > .item-header > a, .active > a {
+    color: $color-one-red;
+  }
+  a {
+    color: $main-text-color;
+  }
+
   input {
     font-family: 'Open Sans';
   }
@@ -14,16 +21,16 @@
     &.active {
       background-color: $color-sidebar-item-bg;
     }
-    .item-header { 
+    .item-header {
       &:hover {
         background-color: $color-sidebar-item-active-bg;
       }
-      > .one-icon {
+      .sidebar-item-icon {
         position: absolute;
         top: 0.55em;
         font-size: $menu-icon-font-size;
       }
-      > .one-icon + * {
+      .sidebar-item-icon + * {
         padding-left: 3.5em;
       }
       .status-toolbar {

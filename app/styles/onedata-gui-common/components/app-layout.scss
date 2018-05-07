@@ -116,7 +116,9 @@ $mobile-resource-name-height: 20px;
       font-size: 0.9em;
       font-weight: bold;
       text-align: center;
-      text-transform: capitalize;
+      &::first-letter {
+        text-transform: uppercase;
+      }
       .one-label {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -165,9 +167,6 @@ $mobile-resource-name-height: 20px;
         .onedata-logo {
           margin-left: $one-list-item-padding;
           margin-top: $one-list-item-padding;
-        }
-        .brand-info {
-          margin-left: $one-list-item-padding;
         }
       }
     }

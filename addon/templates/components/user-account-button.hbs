@@ -16,7 +16,9 @@
         {{#one-collapsible-list as |list|}}
           {{#list.item isCollapsible=false as |listItem|}}
             {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
-              Manage account
+              {{#link-to "onedata.sidebar" "users"}}
+                Manage account
+              {{/link-to}}
             {{/listItem.header}}
           {{/list.item}}
           {{#list.item isCollapsible=false as |listItem|}}
@@ -52,13 +54,14 @@
     padding=false
     triggerSelector=menuTriggerSelector
     popoverStyle="user-account"
+    multi=true
     as |popover|
   }}
     <ul class="dropdown-menu">
       <li>
-        <a class="manage-account-action clickable" {{action "manageAccount"}}>
+        {{#link-to "onedata.sidebar" "users" class="manage-account-action clickable" click=(action "manageAccount")}}
           Manage account
-        </a>
+        {{/link-to}}
       </li>
       <li >
         <a class="clickable" {{action "logout"}}>

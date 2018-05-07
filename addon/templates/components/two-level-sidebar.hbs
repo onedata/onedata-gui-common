@@ -12,45 +12,40 @@
       isActive=(eq primaryItemId item.id)
       as |primarySection|}}
       {{#if (eq primarySection "header")}}
-        {{#if firstLevelItemComponent}}
-          {{component firstLevelItemComponent item=item sidebar=this}}
-        {{else}}
-          {{#if firstLevelItemIcon}}
-            {{one-icon icon=firstLevelItemIcon}} 
-          {{/if}}
-          {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
-            {{name-conflict item=item tagName="span" class="one-label"}}
-          {{/truncated-string}}
+        {{#link-to
+          "onedata.sidebar.content.index"
+          sidebarType
+          (model-routable-id item)
+        }}
+          {{#if firstLevelItemComponent}}
+            {{component firstLevelItemComponent item=item sidebar=this}}
+          {{else}}
+            {{#if firstLevelItemIcon}}
+              {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}} 
+            {{/if}}
+            {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
+              {{name-conflict item=item tagName="span" class="one-label"}}
+            {{/truncated-string}}
         {{/if}}
+        {{/link-to}}
       {{else if (eq primarySection "secondary")}}
         {{!-- TODO isActive secondary --}}
         <ul class="one-list one-list-level-2">
           {{#each secondLevelItems as |sli|}}
             <li class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}>
-              {{#if sli.withoutRoute}}
-                <div class="item-header truncate">
-                  {{#if sli.component}}
-                    {{component sli.component item=sli sidebar=this}}
-                  {{else}}
-                    {{two-level-sidebar/item-content item=sli sidebar=this}}
-                  {{/if}}
-                </div>
-              {{else}}
-                {{#link-to
-                  "onedata.sidebar.content.aspect"
-                  sidebarType
-                  item.id
-                  sli.id
-                  tagName="div"
-                  class="item-header truncate"
-                }}
-                  {{#if sli.component}}
-                    {{component sli.component item=sli sidebar=this}}
-                  {{else}}
-                    {{two-level-sidebar/item-content item=sli sidebar=this}}
-                  {{/if}}
-                {{/link-to}}
-              {{/if}}
+              {{#link-to
+                "onedata.sidebar.content.aspect"
+                sidebarType
+                (model-routable-id item)
+                sli.id
+                class="item-header truncate"
+              }}
+                {{#if sli.component}}
+                  {{component sli.component item=sli sidebar=this}}
+                {{else}}
+                  {{two-level-sidebar/item-content item=sli sidebar=this iconClass="sidebar-item-icon"}}
+                {{/if}}
+              {{/link-to}}
             </li>
           {{/each}}
         </ul>

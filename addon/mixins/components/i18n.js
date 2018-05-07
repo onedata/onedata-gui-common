@@ -45,14 +45,15 @@ export default Mixin.create({
   /**
    * Translate text using i18n service, using optional i18nPrefix
    * @param {string} translationKey
+   * @param {object} placeholders
    * @returns {string} string translated by 18n service 
    */
-  t(translationKey) {
+  t(translationKey, placeholders = {}) {
     const {
       i18n,
       tPrefix,
     } = this.getProperties('i18n', 'tPrefix');
-    return i18n.t(tPrefix + translationKey);
+    return i18n.t(tPrefix + translationKey, placeholders);
   },
 
   /**
