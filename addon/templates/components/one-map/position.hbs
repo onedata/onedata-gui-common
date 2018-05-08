@@ -1,0 +1,7 @@
+{{#if useContainerElement}}
+  <div class="map-position-container" style={{_positionContainerStyle}}>
+    {{yield x y}}
+  </div>
+{{else}}
+  {{yield x y}}
+{{/if}}
