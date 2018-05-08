@@ -18,7 +18,8 @@ function getRelativePosition($parent, $child) {
 function isElementVisible(context, $child) {
   const $parent = context.$('svg');
   const relativePosition = getRelativePosition($parent, $child);
-  return relativePosition.top >= 0 && relativePosition.left >= 0 &&
+  // -1 because of some subpixel malfunctions
+  return relativePosition.top > -1 && relativePosition.left > -1 &&
     relativePosition.left + $child.width() <= $parent.width() &&
     relativePosition.top + $child.height() < $parent.height();
 }
