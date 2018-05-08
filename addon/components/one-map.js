@@ -23,6 +23,7 @@ import layout from '../templates/components/one-map';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
 import _ from 'lodash';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
   layout,
@@ -37,9 +38,11 @@ export default Component.extend({
 
   /**
    * @type {Function}
-   * @param {object} event
+   * @param {object} event Object with fields { event, scale, lat, lng }
+   *  event field is the source event triggered by map. Scale, lat and lng are
+   *  the actual state of the map.
    */
-  onViewportChange: () => {},
+  onViewportChange: notImplementedIgnore,
 
   /**
    * Initial state, that will be applied to the first map render
@@ -118,6 +121,19 @@ export default Component.extend({
           safeExec(this, '_handleViewportChange', event, scale),
       }).vectorMap('get', 'mapObject')
     );
+    // Redirect wheel event from non-map elements to the map container to
+    // handle zoom-in/out
+    const scrollRedirectHandler = (event) => {
+      const target = $(event.target);
+      const properTargetSelector = '.jvectormap-container';
+      if (!target.closest(properTargetSelector).length) {
+        const origEvent = event.originalEvent;
+        const newEvent = new origEvent.constructor(origEvent.type, origEvent);
+        $mapContainer.find(properTargetSelector)[0].dispatchEvent(newEvent);
+        return false;
+      }
+    };
+    this.$().on('wheel', scrollRedirectHandler);
   },
 
   willDestroyElement() {

@@ -116,6 +116,13 @@ export default Component.extend({
   _isPopoverVisible: false,
   _debounceTimerEnabled: false,
 
+  /**
+   * Window event, which occurrence will trigger temporary closing the popover
+   * and then rerender. Can be used to temporary close the popover when elements
+   * around it changes dynamically and the placement of the popover trigger is
+   * not constant.
+   * @type {string}
+   */
   windowEvent: 'resize',
 
   didInsertElement() {

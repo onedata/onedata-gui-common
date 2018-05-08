@@ -154,7 +154,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       expect($('.in .popover-element')).to.exist;
       this.$('.trigger').click();
       wait().then(() => {
-        expect($('.fade-out .popover-element')).to.exist;
+        expect($('.out .popover-element')).to.exist;
         done();
       });
     });
@@ -177,7 +177,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     wait().then(() => {
       this.$('.container').click();
       wait().then(() => {
-        expect($('.fade-out .popover-element')).to.exist;
+        expect($('.out .popover-element')).to.exist;
         done();
       });
     });
