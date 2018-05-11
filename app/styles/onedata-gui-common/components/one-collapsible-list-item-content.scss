@@ -4,6 +4,7 @@
   max-height: 0;
   transition: $collapse-transition;
   border-bottom: 0;
+  background-color: $main-content-hover-background;
   &.opened {
     max-height: 2500px;
     opacity: 1;
