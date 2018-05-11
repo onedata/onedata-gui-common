@@ -46,12 +46,29 @@
   {{#unless (eq provider.status "offline")}}
     <hr>
     <div class="btn-container">
-      {{#if (eq provider.status "online")}}
-        {{#link-to "onedata.sidebar.content.aspect" "redirect"
-          class="btn btn-sm btn-go-to-files btn-primary"}}
-          {{tt this "goToFiles"}}
-        {{/link-to}}
-      {{/if}}
+      <div class="row row-btn">
+        {{#one-spin-button
+          class="btn btn-sm btn-toggle-default btn-default"
+          action=(action "toggleDefaultProvider")
+        }}
+          {{one-icon icon=(if isDefaultProvider "home" "home-outline")}}
+          <span class="text">
+            {{tt this (if isDefaultProvider "unsetDefault" "setDefault")}}
+          </span>
+        {{/one-spin-button}}
+      </div>
+      <div class="row row-btn">
+        {{#if (eq provider.status "online")}}
+          {{#link-to "onedata.sidebar.content.aspect" "redirect"
+            class="btn btn-sm btn-go-to-files btn-primary"}}
+            {{one-icon icon="provider"}}
+            <span class="text">
+              {{tt this "goToFiles"}}
+            </span>
+          {{/link-to}}
+        {{/if}}
+      </div>
     </div>
+    
   {{/unless}}
 </div>

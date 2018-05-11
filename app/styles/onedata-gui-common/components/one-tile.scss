@@ -105,6 +105,20 @@ $-tile-content-padding: 4px;
     .tile-content-inner {
       position: relative;
       height: 100%;
+      .main-figure {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateY(14px);
+
+        img.main-image {
+          max-width: 100%;
+        }
+        .one-label {
+          display: block;
+          padding-top: 20px;
+          font-weight: bold;
+        }
+      }
     }
   }
 

@@ -11,23 +11,48 @@
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import UserProxyMixin from 'onedata-gui-websocket-client/mixins/user-proxy';
 
-export default Component.extend(I18n, {
+export default Component.extend(I18n, UserProxyMixin, {
   layout,
   classNames: 'provider-place-drop',
   classNameBindings: ['provider.status'],
   globalNotify: service(),
   i18n: service(),
+  currentUser: service(),
+
+  /**
+   * @virtual
+   * @type {models.Provider}
+   */
+  provider: undefined,
 
   /**
    * @override
    */
   i18nPrefix: 'components.providerPlace.drop',
+
+  /**
+   * @type {Ember.ComputedProperty<boolean|undefined>}
+   */
+  isDefaultProvider: computed(
+    'userProxy.content.defaultProviderId',
+    'provider.id',
+    function getIsDefaultProvider() {
+      const {
+        userProxy,
+        provider,
+      } = this.getProperties('userProxy', 'provider');
+      const user = get(userProxy, 'content');
+      return user &&
+        get(user, 'defaultProviderId') === get(provider, 'entityId');
+    },
+  ),
 
   /**
    * Spaces list sort order
@@ -77,6 +102,14 @@ export default Component.extend(I18n, {
 
     copyError() {
       this.get('globalNotify').info(this.t('hostnameCopyError'));
-    }
+    },
+
+    toggleDefaultProvider() {
+      const isDefaultProvider = this.get('isDefaultProvider');
+      return this.get('userProxy')
+        .then(user => user.setDefaultProviderId(
+          isDefaultProvider ? null : this.get('provider.entityId')
+        ));
+    },
   }
 });
