@@ -13,7 +13,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 
 import Mixin from '@ember/object/mixin';
 import { typeOf } from '@ember/utils';
@@ -35,7 +35,8 @@ export default Mixin.create({
       name: '',
       subtree: definition
     };
-    let values = this._buildValuesNode(tmpRoot, useDefaults)
+    const overrideValues = this.get('overrideValues');
+    let values = this._buildValuesNode(tmpRoot, useDefaults, overrideValues)
     return values;
   },
 
@@ -43,20 +44,30 @@ export default Mixin.create({
    * Creates values tree node.
    * @param {Object} node A node.
    * @param {boolean} useDefaults Fill nodes with default values.
+   * @param {Object} overrideValues If passed, it will be used as a source of
+   *   default values instead of tree definition.
    * @returns {Ember.Object} A values node.
    */
-  _buildValuesNode(node, useDefaults) {
+  _buildValuesNode(node, useDefaults, overrideValues) {
     if (!node.subtree) {
       if (node.field) {
-        return (useDefaults && node.field.defaultValue !== undefined) ?
-          node.field.defaultValue : null;
+        if (useDefaults) {
+          if (overrideValues !== undefined) {
+            return overrideValues;
+          } else {
+            return node.field.defaultValue !== undefined ?
+            node.field.defaultValue : null;
+          }
+        } else {
+          return undefined;
+        }
       } else {
         return undefined;
       }
     } else {
       let values = EmberObject.create();
       node.subtree.forEach((subnode) => {
-        let subnodeValues = this._buildValuesNode(subnode, useDefaults);
+        let subnodeValues = this._buildValuesNode(subnode, useDefaults, get(overrideValues || {}, subnode.name));
         if (subnodeValues !== undefined) {
           values.set(subnode.name, subnodeValues);
         }
