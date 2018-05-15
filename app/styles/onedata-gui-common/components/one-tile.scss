@@ -107,6 +107,8 @@ $-tile-content-padding: 4px;
       height: 100%;
       .main-figure {
         position: absolute;
+        left: 0;
+        right: 0;
         top: 50%;
         transform: translateY(-50%) translateY(14px);
 

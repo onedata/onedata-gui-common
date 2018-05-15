@@ -35,7 +35,7 @@ export default Route.extend({
     const sidebarType = transition.params['onedata.sidebar'].type;
     const tab = _.find(onedataTabs, t => t.id === sidebarType);
     if (!this.get('media.isMobile')) {
-      if (tab.allowIndex) {
+      if (tab && tab.allowIndex) {
         this.transitionTo('onedata.sidebar.content', 'not-selected');
       } else {
         this.redirectToDefault(model);

@@ -18,11 +18,11 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   afterModel(model) {
-    let mainMenuItems = get(model, 'mainMenuItems');
+    const mainMenuItems = get(model, 'mainMenuItems');
     if (mainMenuItems) {
-      let defaultItem = _.find(mainMenuItems, i => get(i, 'isDefault')) ||
+      const defaultItem = _.find(mainMenuItems, i => get(i, 'isDefault')) ||
         mainMenuItems[0];
-      let defaultItemId = get(defaultItem, 'id');
+      const defaultItemId = get(defaultItem, 'id');
       this.transitionTo('onedata.sidebar', defaultItemId);
     } else {
       console.error('routes:index: empty collection of main menu items');
