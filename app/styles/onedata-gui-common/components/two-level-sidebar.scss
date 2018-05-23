@@ -5,7 +5,7 @@
   .active > .item-header > a, .active > a {
     color: $color-one-red;
   }
-  a {
+  a:not(.btn) {
     color: $main-text-color;
   }
 

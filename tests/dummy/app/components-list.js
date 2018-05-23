@@ -4,6 +4,7 @@ export default [
   'one-atlas',
   'one-dynamic-tree',
   'one-inline-editor',
+  'one-map',
   'one-pie-chart',
   'one-space-indicator',
   'one-tree',
