@@ -116,6 +116,15 @@ export default Component.extend({
   _isPopoverVisible: false,
   _debounceTimerEnabled: false,
 
+  /**
+   * Window event, which occurrence will trigger temporary closing the popover
+   * and then rerender. Can be used to temporary close the popover when elements
+   * around it changes dynamically and the placement of the popover trigger is
+   * not constant.
+   * @type {string}
+   */
+  windowEvent: 'resize',
+
   didInsertElement() {
     let {
       triggerSelector,
@@ -126,7 +135,8 @@ export default Component.extend({
       elementId,
       padding,
       multi,
-      _resizeHandler
+      _resizeHandler,
+      windowEvent,
     } = this.getProperties(
       'triggerSelector',
       'animation',
@@ -136,7 +146,8 @@ export default Component.extend({
       'padding',
       'elementId',
       'multi',
-      '_resizeHandler'
+      '_resizeHandler',
+      'windowEvent'
     );
     let $triggerElement = $(triggerSelector);
 
@@ -160,15 +171,18 @@ export default Component.extend({
       onHide: () => safeExec(this, 'set', '_isPopoverVisible', false),
     });
 
-    window.addEventListener('resize', _resizeHandler);
+    window.addEventListener(windowEvent, _resizeHandler);
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
     next(() => this._popover('destroy'));
-    let _resizeHandler = this.get('_resizeHandler');
-    window.removeEventListener('resize', _resizeHandler);
+    const {
+      _resizeHandler,
+      windowEvent,
+    } = this.getProperties('_resizeHandler', 'windowEvent');
+    window.removeEventListener(windowEvent, _resizeHandler);
   },
 
   _popover() {

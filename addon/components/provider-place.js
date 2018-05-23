@@ -8,7 +8,7 @@
  */
 
 import Component from '@ember/component';
-import { computed, get, observer, getProperties } from '@ember/object';
+import { computed, get, observer } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import { A, isArray } from '@ember/array';
@@ -149,24 +149,9 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {string}
    */
-  popoverPlacement: computed(
-    'providersArray.[0].{latitude,longitude}',
-    function popoverPlacement() {
-      const {
-        latitude,
-        longitude,
-      } = getProperties(
-        this.get('providersArray').objectAt(0),
-        'latitude',
-        'longitude'
-      );
-      const hAlign = longitude > 0 ? 'left' : 'right';
-      const vAlign = latitude > 45 ? 'bottom' : latitude > -45 ? undefined : 'top';
-      return vAlign ? `${hAlign}-${vAlign}` : hAlign;
-    }
-  ),
+  popoverPlacement: 'left',
 
   atlasWidthObserver: observer('atlasWidth', function () {
     this._recalculateSize();

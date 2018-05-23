@@ -39,6 +39,7 @@ import layout from 'onedata-gui-common/templates/components/one-switchable-popov
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import { invokeAction, invoke } from 'ember-invoke-action';
 import $ from 'jquery';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend(ClickOutside, {
   layout,
@@ -109,6 +110,11 @@ export default Component.extend(ClickOutside, {
    * @type {string}
    */
   popoverClass: '',
+
+  /**
+   * @type {string}
+   */
+  popoverWindowEvent: 'resize',
 
   /**
    * Modal class
@@ -342,7 +348,7 @@ export default Component.extend(ClickOutside, {
 
     // bind neccessary event listeners
     this.bindTriggerListeners();
-    next(this, this.addClickOutsideListener);
+    next(this, () => safeExec(this, 'addClickOutsideListener'));
     this.get('_window').addEventListener('resize', _windowResizeHandler);
 
     this.handleManualTriggering();
