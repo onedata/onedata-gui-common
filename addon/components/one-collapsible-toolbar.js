@@ -66,7 +66,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
 
   minimumFullWindowSize: 768,
 
-  isMinimized: oneWay('hasOverflow'),
+  isMinimized: undefined,
 
   dropdownOpened: false,
 
@@ -84,7 +84,15 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
         'fullModeClasses',
         'minimizedModeClasses');
       return isMinimized ? minimizedModeClasses : fullModeClasses;
-    }),
+    }
+  ),
+
+  init() {
+    this._super(...arguments);
+    if (this.get('isMinimized') === undefined) {
+      this.set('isMinimized', oneWay('hasOverflow'));
+    }
+  },
 
   didInsertElement() {
     this._super(...arguments);

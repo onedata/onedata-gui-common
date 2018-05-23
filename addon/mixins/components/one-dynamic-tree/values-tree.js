@@ -78,26 +78,29 @@ export default Mixin.create({
 
   /**
    * Copies values from actual values to treeTo. Nodes values are copied only if
-   * node structure is the same in both trees.
+   * node structure is the same in both trees. treeTo must be an Ember.Object.
+   * @param {Object|Ember.Object} treeFrom
    * @param {Ember.Object} treeTo 
    */
-  _mergeValuesTrees(treeTo) {
+  _mergeValuesTrees(treeFrom, treeTo) {
+    const objectTypes = ['instance', 'object'];
     let copyValues = (nodeTo, nodeFrom) => {
       Object.keys(nodeFrom).forEach((subnodeName) => {
-        let subnodeToValue = nodeTo.get(subnodeName);
-        let subnodeFromValue = nodeFrom.get(subnodeName);
+        let subnodeToValue = get(nodeTo, subnodeName);
+        let subnodeFromValue = get(nodeFrom, subnodeName);
         if (subnodeToValue !== undefined) {
-          if (typeOf(subnodeToValue) === 'instance' &&
-            typeOf(subnodeFromValue) === 'instance') {
+          if (objectTypes.indexOf(typeOf(subnodeToValue)) !== -1 &&
+            objectTypes.indexOf(typeOf(subnodeFromValue)) !== -1) {
             copyValues(subnodeToValue, subnodeFromValue);
-          } else if (typeOf(subnodeToValue) !== 'instance' &&
-            typeOf(subnodeFromValue) !== 'instance') {
+          } else if (objectTypes.indexOf(typeOf(subnodeToValue)) === -1 &&
+          objectTypes.indexOf(typeOf(subnodeFromValue)) === -1) {
             nodeTo.set(subnodeName, subnodeFromValue);
           }
         }
       });
     }
-    copyValues(treeTo, this.get('values'));
+    copyValues(treeTo, treeFrom);
+    return treeTo;
   },
 
   /**

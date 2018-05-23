@@ -171,7 +171,6 @@ describe('Integration | Component | one dynamic tree', function () {
   });
 
   it('allows data change', function (done) {
-    let values = this.get('values');
     let newTextValue = 'text';
     let valuesChangedHandler = sinon.spy();
 
@@ -181,13 +180,11 @@ describe('Integration | Component | one dynamic tree', function () {
         definition=definition
         valuesChanged=(action "valuesChanged")}}`);
 
-    expect(valuesChangedHandler).to.be.calledOnce;
-    expect(valuesChangedHandler.firstCall).calledWithExactly(values, true);
     fillIn('input[type="text"]', newTextValue).then(() => {
       let newValues = this.get('values');
       newValues.node1.node11 = newTextValue;
-      expect(valuesChangedHandler).to.be.calledTwice;
-      expect(valuesChangedHandler.secondCall).calledWithExactly(newValues, true);
+      expect(valuesChangedHandler).to.be.calledOnce;
+      expect(valuesChangedHandler.firstCall).calledWithExactly(newValues, true);
       done();
     });
   });

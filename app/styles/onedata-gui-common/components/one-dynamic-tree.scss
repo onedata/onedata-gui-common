@@ -170,17 +170,6 @@
               }
             }
           }
-
-          &:not(.item-generic), &.has-checkbox-group:not(.subtree-expanded) {
-            .one-tree-item-content:hover {
-              background-color: $main-content-hover-background;
-            }
-          }
-          &.has-checkbox-group.subtree-expanded {
-            .one-tree-item-content:hover {
-              background-color: initial;
-            }
-          }
         }
       }
     }
@@ -226,5 +215,10 @@
         float: right;
       }
     }
+  }
+
+  .modified-node-label {
+    color: $color-one-blue-gray;
+    font-style: italic;
   }
 }

@@ -55,7 +55,10 @@
     float: none;
     position: absolute;
     right: 0;
-    top: 1.5em;
+    top: 1.2em;
+    .btn {
+      margin-left: $padding-xs-horizontal;
+    }
   }
   
   .btn-menu-toggle {

@@ -190,9 +190,18 @@ export default Component.extend(
     }),
 
     _valuesPrepareObserver: observer('definition', 'overrideValues', function () {
-      let definition = this.get('definition');
-      let newValuesTree = this._buildEmptyValuesTree(definition);
-      this.set('values', this._mergeValuesTrees(newValuesTree));
+      const {
+        definition,
+        overrideValues,
+      } = this.getProperties('definition', 'overrideValues');
+      const newValuesTree = overrideValues || this._buildEmptyValuesTree(definition);
+      this.set('values', this._mergeValuesTrees(newValuesTree, this.get('values')));
+      this.valuesHaveChanged(true, false);
+    }),
+
+    _compareValuesObserver: observer('compareValues', function () {
+      const valuesDump = this.dumpValues();
+      this._updateModificationTree(valuesDump);
     }),
 
     init() {
