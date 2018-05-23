@@ -11,20 +11,19 @@
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { computed, get } from '@ember/object';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import UserProxyMixin from 'onedata-gui-websocket-client/mixins/user-proxy';
 
-export default Component.extend(I18n, UserProxyMixin, {
+export default Component.extend(I18n, {
   layout,
   classNames: 'provider-place-drop',
   classNameBindings: ['provider.status'],
   globalNotify: service(),
   i18n: service(),
-  currentUser: service(),
+  guiUtils: service(),
 
   /**
    * @virtual
@@ -41,16 +40,10 @@ export default Component.extend(I18n, UserProxyMixin, {
    * @type {Ember.ComputedProperty<boolean|undefined>}
    */
   isDefaultProvider: computed(
-    'userProxy.content.defaultProviderId',
-    'provider.id',
+    'guiUtils.defaultProviderId',
+    'provider.entityId',
     function getIsDefaultProvider() {
-      const {
-        userProxy,
-        provider,
-      } = this.getProperties('userProxy', 'provider');
-      const user = get(userProxy, 'content');
-      return user &&
-        get(user, 'defaultProviderId') === get(provider, 'entityId');
+      return this.get('guiUtils.defaultProviderId') === this.get('provider.entityId');
     },
   ),
 
@@ -106,10 +99,8 @@ export default Component.extend(I18n, UserProxyMixin, {
 
     toggleDefaultProvider() {
       const isDefaultProvider = this.get('isDefaultProvider');
-      return this.get('userProxy')
-        .then(user => user.setDefaultProviderId(
-          isDefaultProvider ? null : this.get('provider.entityId')
-        ));
+      return this.get('guiUtils')
+        .setDefaultProviderId(isDefaultProvider ? null : this.get('provider.entityId'));
     },
   }
 });
