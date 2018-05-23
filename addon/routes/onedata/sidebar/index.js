@@ -8,10 +8,15 @@
  */
 
 import Route from '@ember/routing/route';
-
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import { observer } from '@ember/object';
+import _ from 'lodash';
+import config from 'ember-get-config';
+
+const {
+  onedataTabs
+} = config;
 
 function getDefaultResource(list) {
   return list.objectAt(0);
@@ -26,9 +31,15 @@ export default Route.extend({
     return this.modelFor('onedata.sidebar');
   },
 
-  afterModel(model /*, transition*/ ) {
+  afterModel(model, transition) {
+    const sidebarType = transition.params['onedata.sidebar'].type;
+    const tab = _.find(onedataTabs, t => t.id === sidebarType);
     if (!this.get('media.isMobile')) {
-      this.redirectToDefault(model);
+      if (tab && tab.allowIndex) {
+        this.transitionTo('onedata.sidebar.content', 'not-selected');
+      } else {
+        this.redirectToDefault(model);
+      }
     }
   },
 

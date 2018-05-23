@@ -52,12 +52,14 @@ export default Route.extend({
     navigationState.set('isActiveResourceLoading', false);
   },
 
-  model({ resource_id: resourceId }) {
+  model({ resource_id: resourceId }, transition) {
     // TODO: validate and use resourceType
     let {
       collection,
       resourceType
     } = this.modelFor('onedata.sidebar');
+
+    const queryParams = get(transition, 'queryParams');
 
     if (isSpecialResourceId(resourceId)) {
       if (resourceId === 'empty' && get(collection, 'list.length')) {
@@ -65,7 +67,7 @@ export default Route.extend({
         return;
       } else {
         this.set('navigationState.activeResourceId', resourceId);
-        return { resourceId, collection };
+        return { resourceId, collection, queryParams };
       }
     } else {
       const existingResourceId = this.availableResourceId(resourceId, collection);
@@ -78,6 +80,7 @@ export default Route.extend({
             resourceId: existingResourceId,
             resource,
             collection,
+            queryParams,
           }));
           gettingResource.catch(reject);
         });
@@ -86,6 +89,7 @@ export default Route.extend({
           resourceId: null,
           resource: null,
           collection,
+          queryParams,
         });
       }
     }

@@ -52,6 +52,8 @@ export default Component.extend({
    */
   firstLevelItemComponent: undefined,
 
+  queryParams: undefined,
+
   /**
    * To inject.
    * Type of sidebar route (eg. clusters)
@@ -85,6 +87,8 @@ export default Component.extend({
   isCollectionEmpty: equal('sortedCollection.length', 0),
 
   primaryItemId: reads('navigationState.activeResourceId'),
+
+  activeResourceType: reads('navigationState.activeResourceType'),
 
   primaryItem: computed(
     'primaryItemId',

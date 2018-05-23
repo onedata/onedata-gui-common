@@ -3,6 +3,7 @@ $color-provider-online: $color-one-mint;
 $color-provider-offline: $color-one-red;
 $popover-provider-details-width: 220px;
 $popover-provider-list-width: 190px;
+$provider-place-drop-height: 306px;
 
 .provider-place {
   position: relative;
@@ -45,7 +46,9 @@ $popover-provider-list-width: 190px;
 }
 
 .provider-place-drop {
-  height: 250px;
+  $-btn-container-height: 62px;
+
+  height: $provider-place-drop-height;
   &.in-content {
     &.online {
       .drop-title-bar {
@@ -133,10 +136,7 @@ $popover-provider-list-width: 190px;
           transform: translateX(-50%) translateY(-50%);
         }
       }
-    }
-    .btn-container {
-      margin-bottom: $padding-base-horizontal;
-    }
+    }    
   }
   &.outside-content {
     $drop-padding: $padding-xs-horizontal * 1.5;
@@ -241,7 +241,6 @@ $popover-provider-list-width: 190px;
     }
 
     .drop-body {
-      $btn-container-height: 30px;
       hr {
         margin: 10px 0;
         color: $main-border-color;
@@ -249,7 +248,7 @@ $popover-provider-list-width: 190px;
       .spaces-list {
         position: absolute;
         top: 70px + $padding-large-vertical;
-        bottom: 2 * $padding-base-vertical + $btn-container-height;
+        bottom: 2 * $padding-large-vertical+$-btn-container-height;
         left: $padding-large-vertical;
         right: $padding-large-vertical;
       }
@@ -287,11 +286,19 @@ $popover-provider-list-width: 190px;
       }
       .btn-container {
         position: absolute;
-        bottom: $padding-large-vertical;
+        bottom: $padding-base-horizontal;
         left: $padding-large-vertical;
         right: $padding-large-vertical;
-        max-height: $btn-container-height;
         text-align: right;
+
+        .row-btn {
+          &:not(:last-of-type) {
+            padding-bottom: 8px;
+          }
+          .btn {
+            width: 160px;
+          }
+        }
       }
     }
   }
@@ -338,7 +345,7 @@ $popover-provider-list-width: 190px;
 
 .popover-provider-place {
   position: relative;
-  height: 250px;
+  height: $provider-place-drop-height;
   white-space: nowrap;
   background-color: $color-one-semiwhite;
   font-size: $font-size-small;
