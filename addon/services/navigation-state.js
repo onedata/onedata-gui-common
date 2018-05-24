@@ -126,6 +126,21 @@ export default Service.extend(I18n, {
   isMainMenuColumnActive: false,
 
   /**
+   * Height of the global bar
+   * @type {Ember.ComputedProperty<number>}
+   */
+  globalBarHeight: computed('media.{isDesktop,isTablet,isMobile}', function () {
+    const media = this.get('media');
+    if (media.get('isMobile')) {
+      return 75;
+    } else if (media.get('isTablet')) {
+      return 55;
+    } else {
+      return 0;
+    }
+  }),
+
+  /**
    * Timer id used to change isGlobalSidenavClosing property
    * @type {any}
    */

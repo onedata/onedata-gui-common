@@ -64,12 +64,24 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
    */
   minimizedModeClasses: '',
 
+  /**
+   * @type {number}
+   */
   minimumFullWindowSize: 768,
 
+  /**
+   * @type {boolean}
+   */
   isMinimized: undefined,
 
+  /**
+   * @type {boolean}
+   */
   dropdownOpened: false,
 
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
   stateClasses: computed(
     'isMinimized',
     'fullModeClasses',

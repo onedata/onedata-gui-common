@@ -18,6 +18,11 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       .header-row {
         margin-top: $content-col-padding;
       }
+      @media (max-width: $screen-sm-max) {
+        .header-row {
+          margin-top: $padding-large-horizontal;
+        }
+      }
     }
   }
 
