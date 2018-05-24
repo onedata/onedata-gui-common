@@ -93,7 +93,7 @@
                 .tree-circle {
                   line-height: 0;
                   top: 20px;
-                  left: 16px;
+                  left: 31px;
                   border-radius: 100%;
                   width: $one-tree-bullet-size / 2;
                   height: $one-tree-bullet-size / 2;
@@ -218,7 +218,6 @@
   }
 
   .modified-node-label {
-    color: $color-one-blue-gray;
-    font-style: italic;
+    font-weight: bold;
   }
 }
