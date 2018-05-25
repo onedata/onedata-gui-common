@@ -266,7 +266,8 @@ describe('Integration | Component | one dynamic tree', function () {
       treeValues.node1.node11 = overrideValue;
       this.set('overrideValues', treeValues);
       wait().then(() => {
-        expect(this.$('.field-node1-node11').val()).to.be.equal(overrideValue);
+        expect(this.$('.field-node1-node11').val())
+          .to.be.equal(overrideValue);
         done();
       });
     });

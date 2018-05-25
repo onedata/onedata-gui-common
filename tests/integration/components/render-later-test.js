@@ -10,7 +10,7 @@ describe('Integration | Component | render later', function () {
   });
 
   it('does not render content for falsy trigger value', function () {
-    this.render(hbs`
+    this.render(hbs `
       {{#render-later triggerRender=false}}
         <div class="test"></div>
       {{/render-later}}
@@ -19,7 +19,7 @@ describe('Integration | Component | render later', function () {
   });
 
   it('renders content for truthy trigger value', function () {
-    this.render(hbs`
+    this.render(hbs `
       {{#render-later triggerRender=true}}
         <div class="test"></div>
       {{/render-later}}
@@ -29,7 +29,7 @@ describe('Integration | Component | render later', function () {
 
   it('renders content after trigger set to truthy value', function () {
     this.set('trigger', false);
-    this.render(hbs`
+    this.render(hbs `
       {{#render-later triggerRender=trigger}}
         <div class="test"></div>
       {{/render-later}}
@@ -42,7 +42,7 @@ describe('Integration | Component | render later', function () {
 
   it('does not change render state after trigger set to falsy value', function () {
     this.set('trigger', true);
-    this.render(hbs`
+    this.render(hbs `
       {{#render-later triggerRender=trigger}}
         <div class="test"></div>
       {{/render-later}}

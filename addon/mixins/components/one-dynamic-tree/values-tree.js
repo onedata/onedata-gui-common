@@ -56,7 +56,7 @@ export default Mixin.create({
             return overrideValues;
           } else {
             return node.field.defaultValue !== undefined ?
-            node.field.defaultValue : null;
+              node.field.defaultValue : null;
           }
         } else {
           return undefined;
@@ -67,7 +67,8 @@ export default Mixin.create({
     } else {
       let values = EmberObject.create();
       node.subtree.forEach((subnode) => {
-        let subnodeValues = this._buildValuesNode(subnode, useDefaults, get(overrideValues || {}, subnode.name));
+        let subnodeValues = this._buildValuesNode(subnode, useDefaults, get(
+          overrideValues || {}, subnode.name));
         if (subnodeValues !== undefined) {
           values.set(subnode.name, subnodeValues);
         }
@@ -93,7 +94,7 @@ export default Mixin.create({
             objectTypes.indexOf(typeOf(subnodeFromValue)) !== -1) {
             copyValues(subnodeToValue, subnodeFromValue);
           } else if (objectTypes.indexOf(typeOf(subnodeToValue)) === -1 &&
-          objectTypes.indexOf(typeOf(subnodeFromValue)) === -1) {
+            objectTypes.indexOf(typeOf(subnodeFromValue)) === -1) {
             nodeTo.set(subnodeName, subnodeFromValue);
           }
         }
