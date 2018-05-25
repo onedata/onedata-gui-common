@@ -1,0 +1,10 @@
+.one-map {
+  &, .one-map-container {
+    @include fill-container();
+    position: absolute;
+  }
+  .map-position-container {
+    position: absolute;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}

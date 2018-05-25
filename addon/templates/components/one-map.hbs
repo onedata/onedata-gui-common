@@ -1,0 +1,9 @@
+<div class="one-map-container"></div>
+{{yield (hash
+  position=(component "one-map/position"
+    mapInstance=_mapInstance
+    lastViewportChangeEvent=_lastViewportChangeEvent
+  )
+  height=_containerHeight
+  width=_containerWidth
+)}}

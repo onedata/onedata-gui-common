@@ -53,6 +53,11 @@ export default Service.extend(I18n, {
   i18nPrefix: 'tabs',
 
   /**
+   * @type {object}
+   */
+  queryParams: Object.freeze({}),
+
+  /**
    * Type of resource, that will be rendered.
    * @type {string}
    */
