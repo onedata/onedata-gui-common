@@ -5,6 +5,8 @@
       padding: $onedata-logo-margin-top $one-list-item-padding;
       line-height: $onedata-logo-height;
       font-family: 'Open Sans Semibold';
+      // fix to make first one-list item border the bottom border of sidebar heading
+      margin-bottom: -1px;
     }
     @media (max-width: $screen-sm-max) {
       display: none;
