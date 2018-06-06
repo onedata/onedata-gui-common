@@ -289,12 +289,11 @@ $mobile-resource-name-height: 20px;
       width: $sidebar-menu-width-lg - $main-menu-expand-delta;
     }
   }
-  .col-sidebar {
-    z-index: $zindex-navbar;
+  #sidenav-sidebar {
+    transition: left linear $collapse-transition-time, width linear $collapse-transition-time;
+  }
+  .col-sidebar, #sidenav-sidebar {
     background: $color-sidebar-background;
-    // TODO same as sidenav
-    border-right: 1px solid $color-one-list-item-separator;
-    padding-bottom: $one-list-item-line-height;
     @media (max-width: $screen-xs-max) {
       position: absolute;
       top: 0;
@@ -304,7 +303,6 @@ $mobile-resource-name-height: 20px;
     @media (min-width: $screen-sm-min) {
       position: absolute;
       left: $main-menu-collapsed-width;
-      width: $sidebar-menu-width-sm;
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
       left: 0px;
@@ -313,11 +311,27 @@ $mobile-resource-name-height: 20px;
     @media (min-width: $screen-md-min) {
       position: absolute;
       left: $main-menu-collapsed-width;
+      &.with-place-for-menu {
+        left: $main-menu-width;
+      }
+    }
+  }
+  .col-sidebar, #sidenav-sidebar.in {
+    @media (min-width: $screen-sm-min) {
+      width: $sidebar-menu-width-sm;
+    }
+    @media (min-width: $screen-md-min) {
       width: $sidebar-menu-width-md;
     }
     @media (min-width: $screen-lg-min) {
       width: $sidebar-menu-width-lg;
     }
+  }
+  .col-sidebar {
+    z-index: $zindex-navbar;
+    padding-bottom: $one-list-item-line-height;
+    border-right: 1px solid $color-one-list-item-separator;
+    transition: left linear $collapse-transition-time;
   }
   .row-heading .col-title {
     // TODO: similar to one-list-item

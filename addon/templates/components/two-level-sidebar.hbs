@@ -6,16 +6,19 @@
 
 {{else}}
 
+  {{yield}}
+
   {{#one-list-wrapper items=sortedCollection as |item|}}
     {{#one-list-primary-item item=item
       changePrimaryItemId=(action "changePrimaryItemId")
-      isActive=(eq primaryItemId item.id)
+      isActive=(and (eq activeResourceType resourceType) (eq primaryItemId item.id))
       as |primarySection|}}
       {{#if (eq primarySection "header")}}
         {{#link-to
           "onedata.sidebar.content.index"
           sidebarType
           (model-routable-id item)
+          (query-params-hash queryParams)
         }}
           {{#if firstLevelItemComponent}}
             {{component firstLevelItemComponent item=item sidebar=this}}
