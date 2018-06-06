@@ -23,11 +23,29 @@ export default Component.extend(I18n, {
   classNameBindings: ['provider.status'],
   globalNotify: service(),
   i18n: service(),
+  guiUtils: service(),
+
+  /**
+   * @virtual
+   * @type {models.Provider}
+   */
+  provider: undefined,
 
   /**
    * @override
    */
   i18nPrefix: 'components.providerPlace.drop',
+
+  /**
+   * @type {Ember.ComputedProperty<boolean|undefined>}
+   */
+  isDefaultProvider: computed(
+    'guiUtils.defaultProviderId',
+    'provider.entityId',
+    function getIsDefaultProvider() {
+      return this.get('guiUtils.defaultProviderId') === this.get('provider.entityId');
+    },
+  ),
 
   /**
    * Spaces list sort order
@@ -77,6 +95,12 @@ export default Component.extend(I18n, {
 
     copyError() {
       this.get('globalNotify').info(this.t('hostnameCopyError'));
-    }
+    },
+
+    toggleDefaultProvider() {
+      const isDefaultProvider = this.get('isDefaultProvider');
+      return this.get('guiUtils')
+        .setDefaultProviderId(isDefaultProvider ? null : this.get('provider.entityId'));
+    },
   }
 });
