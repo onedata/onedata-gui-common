@@ -1,12 +1,13 @@
 .one-sidebar {
   .row-heading {
     position: relative;
+    border-bottom: 1px solid $color-one-list-item-separator;
+
     .col-title {
       padding: $onedata-logo-margin-top $one-list-item-padding;
-      line-height: $onedata-logo-height;
+      // -1px is a place for border
+      line-height: $onedata-logo-height - 1px;
       font-family: 'Open Sans Semibold';
-      // fix to make first one-list item border the bottom border of sidebar heading
-      margin-bottom: -1px;
     }
     @media (max-width: $screen-sm-max) {
       display: none;
