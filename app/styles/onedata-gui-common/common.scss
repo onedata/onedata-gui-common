@@ -352,3 +352,16 @@ a {
     vertical-align: middle;
   }
 }
+
+.row-btn-spacing {
+  .btn:first-of-type {
+    margin-right: 10px;
+  }
+}
+
+.form-group + span.row-btn-spacing {
+  margin-left: 10px;
+  .btn-sm {
+    margin-top: -2px;
+  }
+}

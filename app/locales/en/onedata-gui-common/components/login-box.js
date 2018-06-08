@@ -2,6 +2,6 @@ import header from './login-box/header';
 
 export default {
   header,
-  login: 'login',
+  login: 'Login',
   sessionExpired: 'Your session has expired',
 };
