@@ -3,4 +3,9 @@
   .search-bar-item {
     padding-top: $form-group-margin-bottom;
   }
+  &.no-top-border {
+    > .one-list > .one-list-item:first-child::after {
+      display: none;
+    }
+  }
 }
