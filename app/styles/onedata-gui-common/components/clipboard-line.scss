@@ -1,5 +1,5 @@
 .clipboard-line {
-  $-clipboard-line-height: 46px;
+  $-clipboard-line-height: $input-height-base;
   display: table;
   width: 100%;
   .clipboard-line-input {
