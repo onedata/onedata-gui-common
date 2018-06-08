@@ -21,7 +21,7 @@
 {{#perfect-scrollbar-element
   tagName="div"
   id="col-sidebar"
-  class=colSidebarClass
+  class=(concat colSidebarClass (if navigationState.mainMenuColumnExpanded " with-place-for-menu"))
   onScroll=(action "scrollOccurred")}}
   {{yield 'sidebar'}}
   {{brand-info}}
@@ -70,8 +70,10 @@
     {{name-conflict item=navigationState.activeResource tagName="span"}}
   </div>
   <div class="row row-app full-height">
-    {{#one-sidenav opened=sidenavResouceType id="sidenav-sidebar"
-      coverSelector=".col-sidenav-cover" model=sidenavModel.content}}
+    {{#one-sidenav opened=sidenavResouceType
+      id="sidenav-sidebar"
+      class=(if navigationState.mainMenuColumnExpanded "with-place-for-menu")
+      model=sidenavModel.content}}
       {{#promise-proxy-container proxy=sidenavModel}}
         {{component sidenavContentComponent
           model=sidenavModel.content
