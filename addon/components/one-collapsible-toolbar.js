@@ -24,7 +24,7 @@
 import Component from '@ember/component';
 
 import { computed } from '@ember/object';
-import { oneWay } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
@@ -102,7 +102,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   init() {
     this._super(...arguments);
     if (this.get('isMinimized') === undefined) {
-      this.set('isMinimized', oneWay('hasOverflow'));
+      this.set('isMinimized', reads('hasOverflow'));
     }
   },
 
