@@ -1,3 +1,12 @@
+/**
+ * An inline input with copy to clipboard button
+ *
+ * @module components/clipboard-line
+ * @author Jakub Liput
+ * @copyright (C) 2018 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../templates/components/clipboard-line';
 import { computed } from '@ember/object';
