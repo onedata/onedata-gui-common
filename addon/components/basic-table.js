@@ -3,6 +3,7 @@ import { run, debounce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/basic-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
+import 'npm:basictable';
 
 /**
  * Creates a table element which uses JQuery Basic Table to handle with small devices.
@@ -51,8 +52,7 @@ export default Component.extend({
   },
 
   _reinitializeBasictable() {
-    this.$().basictable('destroy');
-    this._initBasictable();
+    this.$().basictable('setup');
   },
 
   _updateState() {
