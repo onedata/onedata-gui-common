@@ -1,9 +1,12 @@
 .one-sidebar {
   .row-heading {
     position: relative;
+    border-bottom: 1px solid $color-one-list-item-separator;
+
     .col-title {
       padding: $onedata-logo-margin-top $one-list-item-padding;
-      line-height: $onedata-logo-height;
+      // -1px is a place for border
+      line-height: $onedata-logo-height - 1px;
       font-family: 'Open Sans Semibold';
     }
     @media (max-width: $screen-sm-max) {
