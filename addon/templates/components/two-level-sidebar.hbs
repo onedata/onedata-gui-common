@@ -8,7 +8,7 @@
 
   {{yield}}
 
-  {{#one-list-wrapper items=sortedCollection as |item|}}
+  {{#one-list-wrapper items=sortedCollection class="no-top-border" as |item|}}
     {{#one-list-primary-item item=item
       changePrimaryItemId=(action "changePrimaryItemId")
       isActive=(and (eq activeResourceType resourceType) (eq primaryItemId item.id))
