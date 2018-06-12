@@ -11,6 +11,21 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     padding-bottom: 0;
   }
 
+  .sticky-element-container .sticky-element {
+    background-color: $color-one-white;
+    z-index: $zindex-navbar;
+    &.sticky-element--sticky {
+      .header-row {
+        margin-top: $content-col-padding;
+      }
+      @media (max-width: $screen-sm-max) {
+        .header-row {
+          margin-top: $padding-large-horizontal;
+        }
+      }
+    }
+  }
+
   .content-row {
     border-bottom: 1px solid $main-border-color;
     padding: $content-row-vertical-padding 0;
@@ -70,9 +85,16 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       &+p {
         margin-top: 0.7em;
       }
-      .btn-toolbar button {
-        // vertical align floating toolbar
-        margin-bottom: 0.3em;
+      .btn-toolbar {
+        &.with-place-for-dots {
+          @media (min-width: $screen-md-min) {
+            margin-right: 50px;
+          }
+        }
+        button {
+          // vertical align floating toolbar
+          margin-bottom: 0.3em;
+        }
       }
       .one-way-toggle {
         font-size: $font-size-base;
@@ -164,7 +186,9 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
 
   @media screen and (max-width: $screen-xs-max) {
     .content-row {
-      border-bottom: 0;
+      &:not(.has-border) {
+        border-bottom: 0;
+      }
 
       p,
       h1,

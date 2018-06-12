@@ -13,7 +13,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 
 import Mixin from '@ember/object/mixin';
 import { typeOf } from '@ember/utils';
@@ -35,28 +35,42 @@ export default Mixin.create({
       name: '',
       subtree: definition
     };
-    let values = this._buildValuesNode(tmpRoot, useDefaults)
-    return values;
+    const overrideValues = this.get('overrideValues');
+    return this._buildValuesNode(tmpRoot, useDefaults, overrideValues);
   },
 
   /**
    * Creates values tree node.
    * @param {Object} node A node.
    * @param {boolean} useDefaults Fill nodes with default values.
+   * @param {Object} overrideValues If passed, it will be used as a source of
+   *   default values instead of tree definition.
    * @returns {Ember.Object} A values node.
    */
-  _buildValuesNode(node, useDefaults) {
+  _buildValuesNode(node, useDefaults, overrideValues) {
     if (!node.subtree) {
       if (node.field) {
-        return (useDefaults && node.field.defaultValue !== undefined) ?
-          node.field.defaultValue : null;
+        if (useDefaults) {
+          if (overrideValues !== undefined) {
+            return overrideValues;
+          } else {
+            return node.field.defaultValue !== undefined ?
+              node.field.defaultValue : null;
+          }
+        } else {
+          return undefined;
+        }
       } else {
         return undefined;
       }
     } else {
       let values = EmberObject.create();
       node.subtree.forEach((subnode) => {
-        let subnodeValues = this._buildValuesNode(subnode, useDefaults);
+        let subnodeValues = this._buildValuesNode(
+          subnode,
+          useDefaults,
+          get(overrideValues || {}, subnode.name)
+        );
         if (subnodeValues !== undefined) {
           values.set(subnode.name, subnodeValues);
         }
@@ -67,26 +81,35 @@ export default Mixin.create({
 
   /**
    * Copies values from actual values to treeTo. Nodes values are copied only if
-   * node structure is the same in both trees.
+   * node structure is the same in both trees. treeTo must be an Ember.Object.
+   * @param {Object|Ember.Object} treeFrom
    * @param {Ember.Object} treeTo 
    */
-  _mergeValuesTrees(treeTo) {
-    let copyValues = (nodeTo, nodeFrom) => {
-      Object.keys(nodeFrom).forEach((subnodeName) => {
-        let subnodeToValue = nodeTo.get(subnodeName);
-        let subnodeFromValue = nodeFrom.get(subnodeName);
-        if (subnodeToValue !== undefined) {
-          if (typeOf(subnodeToValue) === 'instance' &&
-            typeOf(subnodeFromValue) === 'instance') {
-            copyValues(subnodeToValue, subnodeFromValue);
-          } else if (typeOf(subnodeToValue) !== 'instance' &&
-            typeOf(subnodeFromValue) !== 'instance') {
-            nodeTo.set(subnodeName, subnodeFromValue);
-          }
+  _mergeValuesTrees(treeFrom, treeTo) {
+    this._mergeValuesNodeCopy(treeTo, treeFrom);
+    return treeTo;
+  },
+
+  /**
+   * Copies (merges) values from passed node to another.
+   * @param {Object|Ember.Object} treeFrom
+   * @param {Ember.Object} treeTo 
+   */
+  _mergeValuesNodeCopy(nodeTo, nodeFrom) {
+    const objectTypes = ['instance', 'object'];
+    Object.keys(nodeFrom).forEach((subnodeName) => {
+      let subnodeToValue = get(nodeTo, subnodeName);
+      let subnodeFromValue = get(nodeFrom, subnodeName);
+      if (subnodeToValue !== undefined) {
+        if (objectTypes.indexOf(typeOf(subnodeToValue)) !== -1 &&
+          objectTypes.indexOf(typeOf(subnodeFromValue)) !== -1) {
+          this._mergeValuesNodeCopy(subnodeToValue, subnodeFromValue);
+        } else if (objectTypes.indexOf(typeOf(subnodeToValue)) === -1 &&
+          objectTypes.indexOf(typeOf(subnodeFromValue)) === -1) {
+          nodeTo.set(subnodeName, subnodeFromValue);
         }
-      });
-    }
-    copyValues(treeTo, this.get('values'));
+      }
+    });
   },
 
   /**

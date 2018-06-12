@@ -20,4 +20,9 @@
       border-top: 0;
     }
   }
+  .disabled {
+    a {
+      pointer-events: none;
+    }
+  }
 }

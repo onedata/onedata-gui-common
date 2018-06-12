@@ -4,6 +4,8 @@
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 const colors = require('./addon/colors').default;
 const defineSassColors = require('./addon/utils/define-sass-colors');
+const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
+const breakpointValues = require('./addon/breakpoint-values').default;
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
@@ -49,6 +51,7 @@ module.exports = function (defaults) {
   });
 
   defineSassColors(app, colors);
+  defineSassBreakpoints(app, breakpointValues);
 
   /*
     This build file specifies the options for the dummy test app of this
