@@ -24,4 +24,9 @@ export default Component.extend({
    * @type {boolean|undefined}
    */
   isMinimized: undefined,
+
+  /**
+   * @type {number}
+   */
+  minimumFullWindowSize: 768,
 });
