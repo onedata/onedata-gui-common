@@ -17,7 +17,7 @@
   {{#truncated-string tagName="span" class="one-label" click=(action "startEdition")}}
     {{#if value}}
       {{value}}
-    {{else}}
+    {{else if showEmptyInfo}}
       <span class="empty-value">{{t "components.oneInlineEditor.notSet"}}</span>
     {{/if}}
   {{/truncated-string}}

@@ -1,9 +1,13 @@
-{{#one-collapsible-toolbar isMinimized=isMinimized as |dropdown|}}
+{{#one-collapsible-toolbar
+  isMinimized=isMinimized
+  dropdownPlacement=dropdownPlacement
+  as |dropdown|}}
   {{#each actionsArray as |act|}}
     {{#dropdown.item
       buttonStyle=act.buttonStyle
       triggerClasses=act.class
       itemAction=act.action
+      class=(if act.disabled "disabled")
     }}
       {{one-icon icon=act.icon}}
       <span class="text">{{act.title}}</span>

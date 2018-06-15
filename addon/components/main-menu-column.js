@@ -12,6 +12,7 @@ import { inject as service } from '@ember/service';
 import { observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from '../templates/components/main-menu-column';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,
@@ -58,6 +59,8 @@ export default Component.extend({
         mainMenuContainer.animate({ scrollTop: 0 }, 200);
       }
     }
+    // simulate scroll event to rerender all popovers
+    this.get('scrollState').scrollOccurred($.Event('ps-scroll-y'));
   }),
 
   click() {

@@ -11,17 +11,22 @@
 
 import Component from '@ember/component';
 import { run, next } from '@ember/runloop';
-import { observer } from '@ember/object';
+import { observer, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/one-inline-editor';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import $ from 'jquery';
 
 export default Component.extend({
   layout,
   classNames: ['one-inline-editor'],
-  classNameBindings: ['_inEditionMode:editor:static', '_whileSaving:saving'],
+  classNameBindings: [
+    '_inEditionMode:editor:static',
+    '_whileSaving:saving',
+    'controlledManually:manual'
+  ],
 
   eventsBus: service(),
 
@@ -32,16 +37,32 @@ export default Component.extend({
   value: undefined,
 
   /**
+   * If set, state of the editor will change only on this property change
+   * @type {boolean|undefined}
+   */
+  isEditing: undefined,
+
+  /**
    * @virtual optional
    * @type {string}
    */
   editHint: undefined,
 
   /**
+   * @type {boolean}
+   */
+  editOnClick: true,
+
+  /**
    * If true, the value will be trimmed before saving
    * @type {boolean}
    */
   trimString: true,
+
+  /**
+   * @type {boolean}
+   */
+  showEmptyInfo: true,
 
   /**
    * Values used by input while edition.
@@ -70,10 +91,25 @@ export default Component.extend({
   onSave: notImplementedReject,
 
   /**
+   * Action called when user wants to start/close editor.
+   * @type {Function}
+   * @param {string} state if true, user wants to open editor, otherwise close
+   * @returns {undefined}
+   */
+  onEdit: notImplementedIgnore,
+
+  /**
    * Automatically set to true if the component is rendered in one-collapsible-toolbar
    * @type {boolean}
    */
   isInToolbar: false,
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  controlledManually: computed('isEditing', function () {
+    return typeof this.get('isEditing') === 'boolean';
+  }),
 
   resizeOnEdit: observer('_inEditionMode', function resizeOnEdit() {
     if (this.get('_inEditionMode')) {
@@ -83,11 +119,17 @@ export default Component.extend({
     }
   }),
 
-  didInsertElement() {
-    const isInToolbar = (this.$().parent().find('.one-collapsible-toolbar').length > 0);
-    this.set('isInToolbar', isInToolbar);
+  isEditingObserver: observer('isEditing', function () {
+    const isEditing = this.get('isEditing');
+    if (isEditing === true) {
+      this.startEdition();
+    } else if (isEditing === false) {
+      this.stopEdition();
+    }
+  }),
 
-    if (isInToolbar) {
+  didInsertElement() {
+    if (this.get('isInToolbar')) {
       $(window).on(`resize.${this.element.id}`, () => {
         run(() => {
           if (this.get('_inEditionMode')) {
@@ -107,46 +149,77 @@ export default Component.extend({
   },
 
   resizeToFit() {
-    const parentWidth = this.$().parent().width();
-    const $toolbar = this.$().parent().find('.one-collapsible-toolbar:not(.minimized)');
-    const toolbarWidth = $toolbar.width() || 0;
-    const paddingRight = parseFloat(
-      window.getComputedStyle(this.element)['padding-right']
-    );
-    this.$().width(parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0));
+    if (this.get('isInToolbar')) {
+      const parentWidth = this.$().parent().width();
+      const $toolbar = this.$().parent().find('.one-collapsible-toolbar:not(.minimized)');
+      const toolbarWidth = $toolbar.width() || 0;
+      const paddingRight = parseFloat(
+        window.getComputedStyle(this.element)['padding-right']
+      );
+      this.$().width(parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0));
+    }
   },
 
   resetSize() {
-    this.$().width('auto');
+    if (this.get('isInToolbar')) {
+      this.$().width('auto');
+    }
+  },
+
+  startEdition() {
+    next(() => {
+      safeExec(this, 'setProperties', {
+        _inputValue: this.get('value'),
+        _inEditionMode: true,
+      });
+      next(() => safeExec(this, () => this.$('input').focus().select()))
+    });
+  },
+
+  stopEdition() {
+    safeExec(this, 'set', '_inEditionMode', false);
   },
 
   actions: {
     startEdition() {
-      next(() => {
-        safeExec(this, 'setProperties', {
-          _inputValue: this.get('value'),
-          _inEditionMode: true,
-        });
-        next(() => safeExec(this, () => this.$('input').focus().select()))
-      });
+      const {
+        editOnClick,
+        onEdit,
+        controlledManually,
+      } = this.getProperties('editOnClick', 'onEdit', 'controlledManually');
+      if (editOnClick) {
+        onEdit(true);
+        if (!controlledManually) {
+          this.startEdition();
+        }
+      }
     },
     cancelEdition() {
-      this.set('_inEditionMode', false);
+      this.get('onEdit')(false);
+      if (!this.get('controlledManually')) {
+        this.stopEdition();
+      }
     },
     saveEdition() {
       const {
         _inputValue,
         onSave,
         trimString,
-      } = this.getProperties('_inputValue', 'onSave', 'trimString');
+        controlledManually,
+      } = this.getProperties(
+        '_inputValue',
+        'onSave',
+        'trimString',
+        'controlledManually'
+      );
       const preparedInputValue = trimString ? _inputValue.trim() : _inputValue;
       this.set('_whileSaving', true);
       onSave(preparedInputValue)
         .then(() => {
-          safeExec(this, 'setProperties', {
-            _inEditionMode: false,
-            _inputValue: preparedInputValue,
-          });
+          if (!controlledManually) {
+            this.stopEdition();
+          }
+          safeExec(this, 'set', '_inputValue', preparedInputValue);
         })
         .finally(() => {
           safeExec(this, 'set', '_whileSaving', false);

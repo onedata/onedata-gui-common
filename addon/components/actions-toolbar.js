@@ -24,4 +24,9 @@ export default Component.extend({
    * @type {boolean|undefined}
    */
   isMinimized: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  dropdownPlacement: 'bottom-left',
 });

@@ -7,7 +7,7 @@
   </div>
   {{#one-webui-popover
     class=(concat "one-collapsible-toolbar-popover popover-" elementId)
-    placement="bottom-left"
+    placement=dropdownPlacement
     padding=false
     triggerSelector=(concat "#" (concat elementId " .collapsible-toolbar-toggle"))
     open=dropdownOpened

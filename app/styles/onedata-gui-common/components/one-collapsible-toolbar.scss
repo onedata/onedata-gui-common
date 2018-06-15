@@ -7,6 +7,9 @@
         width: 4px;
         margin-bottom: 4px;
         border-radius: 100%;
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }
@@ -39,12 +42,6 @@
     width: 30px;
     padding: 8px;
     cursor: pointer;
-  }
-
-  @media (min-width: $screen-md-min) {
-    .collapsible-toolbar-toggle {
-      margin-top: $padding-xs-vertical;
-    }
   }
 
   @media (max-width: $screen-sm-max) {

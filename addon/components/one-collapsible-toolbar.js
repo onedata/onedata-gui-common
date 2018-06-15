@@ -80,6 +80,11 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   dropdownOpened: false,
 
   /**
+   * @type {string}
+   */
+  dropdownPlacement: 'bottom-left',
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   stateClasses: computed(

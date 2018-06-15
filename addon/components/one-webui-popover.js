@@ -98,6 +98,8 @@ export default Component.extend({
       this.set('popoverTrigger', 'manual');
       scheduleOnce('afterRender', () => this.triggerOpen());
     }
+    // update scroll observer
+    this.get('scrollState.lastScrollEvent');
   },
 
   triggerOpen: observer('open', function () {
