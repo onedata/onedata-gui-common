@@ -7,7 +7,7 @@
   }
 
   .list-header-row {
-    padding: $padding-large-horizontal $padding-large-vertical;
+    padding: $padding-large-horizontal 2 * $padding-large-horizontal $padding-large-horizontal $padding-large-vertical;
   }
 
   .one-collapsible-list-header {
