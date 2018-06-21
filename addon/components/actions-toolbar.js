@@ -9,6 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/actions-toolbar';
+import breakpointValues from 'onedata-gui-common/breakpoint-values';
 
 export default Component.extend({
   layout,
@@ -28,5 +29,5 @@ export default Component.extend({
   /**
    * @type {number}
    */
-  minimumFullWindowSize: 768,
+  minimumFullWindowSize: breakpointValues.screenSm,
 });
