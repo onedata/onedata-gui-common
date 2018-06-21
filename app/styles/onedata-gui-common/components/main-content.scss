@@ -13,7 +13,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
 
   .sticky-element-container .sticky-element {
     background-color: $color-one-white;
-    z-index: $zindex-navbar;
+    z-index: 10;
     &.sticky-element--sticky {
       .header-row {
         margin-top: $content-col-padding;
