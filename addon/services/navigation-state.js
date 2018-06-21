@@ -228,11 +228,14 @@ export default Service.extend(I18n, {
             (resourceTypeActions.length || aspectActions.length)) {
             let actions = resourceTypeActions;
             if (aspectActions.length) {
-              const separatorItem = EmberObject.create({
-                separator: true,
-                title: aspectActionsTitle,
-              });
-              actions = actions.concat([separatorItem, ...aspectActions])
+              if (actions.length > 0) {
+                const separatorItem = EmberObject.create({
+                  separator: true,
+                  title: aspectActionsTitle,
+                });
+                actions = actions.concat([separatorItem]);
+              }
+              actions = actions.concat(aspectActions);
             }
             return actions;
           } else {

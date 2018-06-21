@@ -186,7 +186,9 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
 
   @media screen and (max-width: $screen-xs-max) {
     .content-row {
-      border-bottom: 0;
+      &:not(.has-border) {
+        border-bottom: 0;
+      }
 
       p,
       h1,
