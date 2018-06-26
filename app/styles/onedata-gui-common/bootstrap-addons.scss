@@ -363,12 +363,3 @@ $icon-btn-active-color: $color-one-red;
     }
   }
 }
-
-.table.table-striped {
-  tr:hover {
-    td {
-      //override table-striped style
-      background-color: $main-content-hover-background !important;
-    }
-  }
-}
