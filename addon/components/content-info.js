@@ -103,7 +103,7 @@ export default Component.extend({
   _buttonAction() {
     this.set('_actionInProgress', true);
     try {
-      const actionResult = this.get('buttonAction')();
+      const actionResult = this.buttonAction();
       if (actionResult && actionResult.finally) {
         return actionResult.finally(() =>
           safeExec(this, 'set', '_actionInProgress', false)

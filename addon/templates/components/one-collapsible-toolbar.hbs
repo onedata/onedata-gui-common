@@ -1,5 +1,5 @@
 {{#if showMinimized}}
-  <div class="collapsible-toolbar-toggle{{unless isMinimized " hidden"}} {{toggleBtnClass}}"
+  <div class="collapsible-toolbar-toggle{{unless isInternallyMinimized " hidden"}} {{toggleBtnClass}}"
     onClick={{disable-bubbling (action "toggleDropdown")}}>
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
@@ -25,7 +25,7 @@
   {{/one-webui-popover}}
 {{/if}}
 
-<span class="collapsible-toolbar-buttons {{if isMinimized "hidden"}}">
+<span class="collapsible-toolbar-buttons {{if isInternallyMinimized "hidden"}}">
   {{yield (hash 
     item=(component 'one-collapsible-toolbar-item' isMinimized=false
     ))}}

@@ -24,7 +24,6 @@
 import Component from '@ember/component';
 
 import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
 import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
@@ -35,7 +34,7 @@ import $ from 'jquery';
 export default Component.extend(ClickOutside, ContentOverflowDetector, {
   layout,
   classNames: ['one-collapsible-toolbar'],
-  classNameBindings: ['stateClasses', 'isMinimized:minimized'],
+  classNameBindings: ['stateClasses', 'isInternallyMinimized:minimized'],
 
   eventsBus: service(),
 
@@ -83,33 +82,38 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
    * @type {string}
    */
   dropdownPlacement: 'bottom-left',
+  
+  /**
+   * Combined value of isMinimized and hasOverflow
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  isInternallyMinimized: computed('isMinimized', 'hasOverflow', function () {
+    const {
+      isMinimized,
+      hasOverflow,
+    } = this.getProperties('isMinimized', 'hasOverflow');
+    return isMinimized === undefined ? hasOverflow : isMinimized;
+  }),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
   stateClasses: computed(
-    'isMinimized',
+    'isInternallyMinimized',
     'fullModeClasses',
     'minimizedModeClasses',
     function () {
       let {
-        isMinimized,
+        isInternallyMinimized,
         fullModeClasses,
         minimizedModeClasses
       } = this.getProperties(
-        'isMinimized',
+        'isInternallyMinimized',
         'fullModeClasses',
         'minimizedModeClasses');
-      return isMinimized ? minimizedModeClasses : fullModeClasses;
+      return isInternallyMinimized ? minimizedModeClasses : fullModeClasses;
     }
   ),
-
-  init() {
-    this._super(...arguments);
-    if (this.get('isMinimized') === undefined) {
-      this.set('isMinimized', reads('hasOverflow'));
-    }
-  },
 
   didInsertElement() {
     this._super(...arguments);
