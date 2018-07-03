@@ -32,6 +32,16 @@ export default Component.extend({
   dropdownPlacement: 'bottom-left',
 
   /**
+   * @type {string}
+   */
+  toolbarClasses: 'btn-toolbar',
+
+  /**
+   * @type {string}
+   */
+  toolbarToggleClasses: '',
+
+  /**
    * @type {number}
    */
   minimumFullWindowSize: breakpointValues.screenSm,

@@ -151,7 +151,9 @@ export default Component.extend({
   resizeToFit() {
     if (this.get('isInToolbar')) {
       const parentWidth = this.$().parent().width();
-      const $toolbar = this.$().parent().find('.one-collapsible-toolbar:not(.minimized)');
+      const $toolbar = this.$().parent().find(
+        '.one-collapsible-toolbar:not(.minimized)'
+      );
       const toolbarWidth = $toolbar.width() || 0;
       const paddingRight = parseFloat(
         window.getComputedStyle(this.element)['padding-right']
