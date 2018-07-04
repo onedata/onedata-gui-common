@@ -1,6 +1,7 @@
 .one-collapsible-toolbar {
   &.minimized {
     .collapsible-toolbar-toggle {
+      cursor: pointer;
       .icon-dot {
         background-color: $main-text-color;
         height: 4px;

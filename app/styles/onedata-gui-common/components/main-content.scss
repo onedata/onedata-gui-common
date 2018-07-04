@@ -18,11 +18,38 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       .header-row {
         margin-top: $content-col-padding;
       }
+      .content-search {
+        right: 0;
+      }
       @media (max-width: $screen-sm-max) {
         .header-row {
           margin-top: $padding-large-horizontal;
         }
       }
+    }
+  }
+
+  .content-search {
+    position: absolute;
+    top: $content-col-padding + $padding-xs-vertical;
+    right: $content-col-padding;
+    width: 200px;
+    background-color: $color-one-white;
+    @media (min-width: $screen-md-min) {
+      &.with-place-for-dots {
+        transform: translateX(-40px);
+      }
+    }
+    @media (max-width: $screen-sm-max) {
+      right: $padding-large-horizontal;
+      top: $padding-large-horizontal + $padding-xs-vertical;
+    }
+    @media (max-width: $screen-xs-max) {
+      position: static;
+      margin-bottom: 0;
+      width: 100%;
+      padding: $padding-small-horizontal;
+      border-bottom: 1px solid $main-border-color;
     }
   }
 

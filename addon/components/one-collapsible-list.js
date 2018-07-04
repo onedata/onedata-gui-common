@@ -45,7 +45,7 @@ export default Component.extend({
   layout,
   tagName: 'ul',
   classNames: ['one-collapsible-list'],
-  classNameBindings: ['_searchQuery:filtered-list'],
+  classNameBindings: ['searchQuery:filtered-list'],
   accordionMode: false,
   activeElementId: '',
 
@@ -89,7 +89,7 @@ export default Component.extend({
    * String, that is used for list items filtering
    * @type {string}
    */
-  _searchQuery: '',
+  searchQuery: '',
 
   /**
    * If true, all items are selected
@@ -196,7 +196,7 @@ export default Component.extend({
       }
     },
     search(query) {
-      this.set('_searchQuery', query);
+      this.set('searchQuery', query);
     }
   }
 });
