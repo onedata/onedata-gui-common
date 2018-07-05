@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'oneicons';
-  src:  url('fonts/oneicons.eot?2f9a2h');
-  src:  url('fonts/oneicons.eot?2f9a2h#iefix') format('embedded-opentype'),
-    url('fonts/oneicons.ttf?2f9a2h') format('truetype'),
-    url('fonts/oneicons.woff?2f9a2h') format('woff'),
-    url('fonts/oneicons.svg?2f9a2h#oneicons') format('svg');
+  src:  url('fonts/oneicons.eot?gaq10s');
+  src:  url('fonts/oneicons.eot?gaq10s#iefix') format('embedded-opentype'),
+    url('fonts/oneicons.ttf?gaq10s') format('truetype'),
+    url('fonts/oneicons.woff?gaq10s') format('woff'),
+    url('fonts/oneicons.svg?gaq10s#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -148,195 +148,192 @@
 .oneicon-lock:before {
   content: "\e928";
 }
-.oneicon-members:before {
+.oneicon-menu-clusters:before {
   content: "\e929";
 }
-.oneicon-menu-clusters:before {
+.oneicon-menu-collection:before {
   content: "\e92a";
 }
-.oneicon-menu-collection:before {
+.oneicon-menu-data:before {
   content: "\e92b";
 }
-.oneicon-menu-data:before {
+.oneicon-menu-groups:before {
   content: "\e92c";
 }
-.oneicon-menu-groups:before {
+.oneicon-menu-links:before {
   content: "\e92d";
 }
-.oneicon-menu-links:before {
+.oneicon-menu-providers:before {
   content: "\e92e";
 }
-.oneicon-menu-providers:before {
+.oneicon-menu-recent:before {
   content: "\e92f";
 }
-.oneicon-menu-recent:before {
+.oneicon-menu-shared:before {
   content: "\e930";
 }
-.oneicon-menu-shared:before {
+.oneicon-menu-token:before {
   content: "\e931";
 }
-.oneicon-menu-token:before {
+.oneicon-menu-trash:before {
   content: "\e932";
 }
-.oneicon-menu-trash:before {
+.oneicon-metadata:before {
   content: "\e933";
 }
-.oneicon-metadata:before {
+.oneicon-move-down:before {
   content: "\e934";
 }
-.oneicon-move-down:before {
+.oneicon-move-up:before {
   content: "\e935";
 }
-.oneicon-move-up:before {
+.oneicon-node:before {
   content: "\e936";
 }
-.oneicon-node:before {
+.oneicon-overview:before {
   content: "\e937";
 }
-.oneicon-overview:before {
+.oneicon-parents:before {
   content: "\e938";
 }
-.oneicon-parents:before {
+.oneicon-password-change:before {
   content: "\e939";
 }
-.oneicon-password-change:before {
+.oneicon-provider-add:before {
   content: "\e93a";
 }
-.oneicon-provider-add:before {
+.oneicon-provider-default:before {
   content: "\e93b";
 }
-.oneicon-provider-default:before {
+.oneicon-provider-home:before {
   content: "\e93c";
 }
-.oneicon-provider-home:before {
+.oneicon-provider:before {
   content: "\e93d";
 }
-.oneicon-provider:before {
+.oneicon-providers-outline:before {
   content: "\e93e";
 }
-.oneicon-providers-outline:before {
+.oneicon-providers:before {
   content: "\e93f";
 }
-.oneicon-providers:before {
+.oneicon-remove:before {
   content: "\e940";
 }
-.oneicon-remove:before {
+.oneicon-rename:before {
   content: "\e941";
 }
-.oneicon-rename:before {
+.oneicon-search:before {
   content: "\e942";
 }
-.oneicon-search:before {
+.oneicon-settings-circle-filled:before {
   content: "\e943";
 }
-.oneicon-settings-circle-filled:before {
+.oneicon-settings:before {
   content: "\e944";
 }
-.oneicon-settings:before {
+.oneicon-share-collection:before {
   content: "\e945";
 }
-.oneicon-share-collection:before {
+.oneicon-share:before {
   content: "\e946";
 }
-.oneicon-share:before {
+.oneicon-sign-error:before {
   content: "\e947";
 }
-.oneicon-sign-error:before {
+.oneicon-sign-info:before {
   content: "\e948";
 }
-.oneicon-sign-info:before {
+.oneicon-sign-question:before {
   content: "\e949";
 }
-.oneicon-sign-question:before {
+.oneicon-sign-warning:before {
   content: "\e94a";
 }
-.oneicon-sign-warning:before {
+.oneicon-social-dropbox:before {
   content: "\e94b";
 }
-.oneicon-social-dropbox:before {
+.oneicon-social-egi:before {
   content: "\e94c";
 }
-.oneicon-social-egi:before {
+.oneicon-social-facebook:before {
   content: "\e94d";
 }
-.oneicon-social-facebook:before {
+.oneicon-social-github:before {
   content: "\e94e";
 }
-.oneicon-social-github:before {
+.oneicon-social-google:before {
   content: "\e94f";
 }
-.oneicon-social-google:before {
+.oneicon-social-indigo:before {
   content: "\e950";
 }
-.oneicon-social-indigo:before {
+.oneicon-social-plgrid:before {
   content: "\e951";
 }
-.oneicon-social-plgrid:before {
+.oneicon-social-rhea:before {
   content: "\e952";
 }
-.oneicon-social-rhea:before {
+.oneicon-space-add:before {
   content: "\e953";
 }
-.oneicon-space-add:before {
+.oneicon-space-default:before {
   content: "\e954";
 }
-.oneicon-space-default:before {
+.oneicon-space-empty:before {
   content: "\e955";
 }
-.oneicon-space-empty:before {
+.oneicon-space-error:before {
   content: "\e956";
 }
-.oneicon-space-error:before {
+.oneicon-space-home:before {
   content: "\e957";
 }
-.oneicon-space-home:before {
+.oneicon-space-import-provider:before {
   content: "\e958";
 }
-.oneicon-space-import-provider:before {
+.oneicon-space-import:before {
   content: "\e959";
 }
-.oneicon-space-import:before {
+.oneicon-space-join:before {
   content: "\e95a";
 }
-.oneicon-space-join:before {
+.oneicon-space-reload:before {
   content: "\e95b";
 }
-.oneicon-space-reload:before {
+.oneicon-space:before {
   content: "\e95c";
 }
-.oneicon-space:before {
+.oneicon-star-empty:before {
   content: "\e95d";
 }
-.oneicon-star-empty:before {
+.oneicon-star:before {
   content: "\e95e";
 }
-.oneicon-star:before {
+.oneicon-support:before {
   content: "\e95f";
 }
-.oneicon-support:before {
+.oneicon-tokens:before {
   content: "\e960";
 }
-.oneicon-tokens:before {
+.oneicon-update:before {
   content: "\e961";
 }
-.oneicon-update:before {
+.oneicon-upload:before {
   content: "\e962";
 }
-.oneicon-upload:before {
+.oneicon-user-add:before {
   content: "\e963";
 }
-.oneicon-user-add:before {
+.oneicon-user-profile:before {
   content: "\e964";
 }
-.oneicon-user-profile:before {
+.oneicon-user:before {
   content: "\e965";
 }
-.oneicon-user:before {
+.oneicon-view-grid:before {
   content: "\e966";
 }
-.oneicon-view-grid:before {
-  content: "\e967";
-}
 .oneicon-view-list:before {
-  content: "\e968";
+  content: "\e967";
 }
