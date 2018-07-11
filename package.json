@@ -27,6 +27,7 @@
     "ember-cli-htmlbars": "2.0.3"
   },
   "devDependencies": {
+    "basictable": "git+https://github.com/kliput/basictable.git#f26107155103dbe7e924a3c9e150022087106cb4",
     "bootstrap-sass": "3.3.7",
     "broccoli-asset-rev": "2.6.0",
     "chai-jquery": "2.0.0",

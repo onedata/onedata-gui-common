@@ -27,7 +27,7 @@
       </div>
     {{/if}}
     {{#if _showButton}}
-      <div class="row text-center">
+      <div class="row text-center {{unless (or text imagePath hasBlock) "row-button-margin-top"}}">
         <div class="col-xs-12">
           {{#one-spin-button
             class=(concat "btn btn-primary btn-content-info " buttonClass)
