@@ -1,0 +1,21 @@
+.clipboard-line {
+  $-clipboard-line-height: $input-height-base;
+  display: table;
+  width: 100%;
+  .clipboard-line-input {
+    display: table-cell;
+    vertical-align: top;
+    input[type=text] {
+      height: $-clipboard-line-height;
+    }
+  }
+  .clipboard-line-btn {
+    display: table-cell;
+    vertical-align: top;
+    width: 100px;
+    padding-left: 20px;
+    .copy-btn {
+      height: $-clipboard-line-height;
+    }
+  }
+}

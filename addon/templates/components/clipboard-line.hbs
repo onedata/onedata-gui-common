@@ -1,0 +1,18 @@
+<div class="clipboard-line-input">
+  <input
+    type="text"
+    class="clipboard-input form-control"
+    value={{value}}
+    readonly
+  >
+</div>
+<div class="clipboard-line-btn">
+  {{#copy-button
+    success=(action "copySuccess")
+    error=(action "copyError")
+    class="btn btn-primary"
+    clipboardTarget=(concat "#" elementId " .clipboard-input")
+  }}
+    {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
+  {{/copy-button}}
+</div>
