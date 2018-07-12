@@ -113,7 +113,7 @@ export default Component.extend({
 
   resizeOnEdit: observer('_inEditionMode', function resizeOnEdit() {
     if (this.get('_inEditionMode')) {
-      this.resizeToFit();
+      this.resizeToFitToolbar();
     } else {
       this.resetSize();
     }
@@ -133,7 +133,7 @@ export default Component.extend({
       $(window).on(`resize.${this.element.id}`, () => {
         run(() => {
           if (this.get('_inEditionMode')) {
-            this.resizeToFit();
+            this.resizeToFitToolbar();
           }
         });
       });
@@ -148,7 +148,7 @@ export default Component.extend({
     }
   },
 
-  resizeToFit() {
+  resizeToFitToolbar() {
     if (this.get('isInToolbar')) {
       const parentWidth = this.$().parent().width();
       const $toolbar = this.$().parent().find(

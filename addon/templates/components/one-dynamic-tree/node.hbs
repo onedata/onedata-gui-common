@@ -3,9 +3,11 @@
   (if _allowSubtreeCheckboxSelect "has-checkbox-group")
 ) as |item|}}
   {{#item.content}}
-    <label 
-      for={{if _field._isField (concat parentView.elementId inputId)}} 
-      class={{concat-classes "node-text tree-label" (if item.hasSubtree "clickable") (if _isFieldDisabled "disabled") (if modificationState.isModified "modified-node-label")}}>
+    <label class={{concat-classes
+      "node-text tree-label"
+      (if item.hasSubtree "clickable")
+      (if _isFieldDisabled "disabled")
+      (if modificationState.isModified "modified-node-label")}}>
       {{definition.text}}
     </label>
     {{#if _renderField}}

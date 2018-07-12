@@ -12,11 +12,13 @@
 <div class="list-header-content collapse-animation collapse-small {{if _isListCollapsed "collapse-hidden"}}">
   {{yield}}
 </div>
-<div class="form-group form-group-sm form-group-light search-group collapse-animation collapse-small {{if _isListCollapsed "collapse-hidden"}}">
-  <div class="input-group with-icon-addon">
-    {{search-bar search=(action search) class="form-control"}}
-    <div class="input-group-addon">
-      {{one-icon icon="search"}}
+{{#if searchVisible}}
+  <div class="form-group form-group-sm form-group-light search-group collapse-animation collapse-small {{if _isListCollapsed "collapse-hidden"}}">
+    <div class="input-group with-icon-addon">
+      {{search-bar search=(action search) class="form-control"}}
+      <div class="input-group-addon">
+        {{one-icon icon="search"}}
+      </div>
     </div>
   </div>
-</div>
+{{/if}}

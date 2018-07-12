@@ -64,7 +64,6 @@
   .one-collapsible-toolbar {
     @include vertical-align-middle();
     right: $one-list-item-padding - $padding-small-horizontal;
-    
   }
   .collapsible-toolbar-toggle {
     padding: $padding-base-vertical $padding-small-horizontal;

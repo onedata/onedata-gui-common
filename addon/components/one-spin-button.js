@@ -25,8 +25,8 @@ export default SpinButton.extend({
    * @override 
    */
   set() {
-    safeExec(this, () => {
-      this._super(...arguments);
-    });
+    return safeExec(this, () =>
+      this._super(...arguments)
+    );
   },
 });

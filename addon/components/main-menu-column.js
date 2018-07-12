@@ -65,9 +65,9 @@ export default Component.extend({
     if (lastIsExpandedValue !== isExpanded) {
       this.set('lastIsExpandedValue', isExpanded);
       if (!this.get('isExpanded')) {
-        const mainMenuContainer = this.$('.main-menu-content');
-        if (mainMenuContainer.scrollTop()) {
-          mainMenuContainer.animate({ scrollTop: 0 }, 200);
+        const $mainMenuContainer = this.$('.main-menu-content');
+        if ($mainMenuContainer.scrollTop()) {
+          $mainMenuContainer.animate({ scrollTop: 0 }, 200);
         }
       }
       // simulate scroll event to rerender all popovers

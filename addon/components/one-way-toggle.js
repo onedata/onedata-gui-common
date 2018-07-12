@@ -40,6 +40,12 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
   allowThreeStateToggle: false,
 
   /**
+   * If true, shows 'lock' icon when toogle is readonly.
+   * @type {boolean}
+   */
+  showLockForReadOnly: true,
+
+  /**
    * If true, click action handler will be disabled
    * (used by pan event handlers)
    * @type {boolean}

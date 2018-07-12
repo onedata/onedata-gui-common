@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: 'oneicons';
-  src:  url('#{$icomoon-font-path}/oneicons.eot?gaq10s');
-  src:  url('#{$icomoon-font-path}/oneicons.eot?gaq10s#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/oneicons.ttf?gaq10s') format('truetype'),
-    url('#{$icomoon-font-path}/oneicons.woff?gaq10s') format('woff'),
-    url('#{$icomoon-font-path}/oneicons.svg?gaq10s#oneicons') format('svg');
+  src:  url('#{$icomoon-font-path}/oneicons.eot?gril89');
+  src:  url('#{$icomoon-font-path}/oneicons.eot?gril89#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/oneicons.ttf?gril89') format('truetype'),
+    url('#{$icomoon-font-path}/oneicons.woff?gril89') format('woff'),
+    url('#{$icomoon-font-path}/oneicons.svg?gril89#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -41,6 +41,11 @@
     content: $oneicon-arrow-down; 
   }
 }
+.oneicon-arrow-left {
+  &:before {
+    content: $oneicon-arrow-left; 
+  }
+}
 .oneicon-arrow-right {
   &:before {
     content: $oneicon-arrow-right; 
@@ -60,6 +65,11 @@
 .oneicon-ban-left {
   &:before {
     content: $oneicon-ban-left; 
+  }
+}
+.oneicon-certificate {
+  &:before {
+    content: $oneicon-certificate; 
   }
 }
 .oneicon-checkbox-check {
@@ -225,6 +235,11 @@
 .oneicon-leave-space {
   &:before {
     content: $oneicon-leave-space; 
+  }
+}
+.oneicon-lock-checked {
+  &:before {
+    content: $oneicon-lock-checked; 
   }
 }
 .oneicon-lock {
@@ -490,6 +505,21 @@
 .oneicon-space {
   &:before {
     content: $oneicon-space; 
+  }
+}
+.oneicon-square-empty {
+  &:before {
+    content: $oneicon-square-empty; 
+  }
+}
+.oneicon-square-minus-empty {
+  &:before {
+    content: $oneicon-square-minus-empty; 
+  }
+}
+.oneicon-square-plus-empty {
+  &:before {
+    content: $oneicon-square-plus-empty; 
   }
 }
 .oneicon-star-empty {
