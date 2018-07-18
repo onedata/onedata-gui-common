@@ -20,6 +20,7 @@ const {
  * @typedef {Object} FieldType
  * @property {string} name
  * @property {string} type
+ * @property {string} [format=undefined] special string formatting for static fields
  * @property {boolean} [disabled=undefined]
  * @property {boolean} [optional=undefined]
  * @property {*} [defaultValue=undefined]
