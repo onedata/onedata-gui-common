@@ -136,6 +136,7 @@ $icon-btn-active-color: $color-one-red;
 
 .form-control-static {
   min-height: 1em;
+  word-break: break-all;
   .field-suffix {
     color: $color-one-light-gray;
   }

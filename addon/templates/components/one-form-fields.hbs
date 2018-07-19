@@ -41,7 +41,7 @@
     {{else if (eq field.type "static")}}
       {{one-form-field-static
         field=field
-        value=(one-form-field-formatter (get formValues field.name) field.format)
+        value=(get formValues field.name)
       }}
     {{else}}
       {{one-form-field
