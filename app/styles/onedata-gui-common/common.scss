@@ -372,6 +372,7 @@ a {
 
 .modal-info-content {
   position: relative;
+  padding-top: 1em;
   .modal-info-icon {
     position: absolute;
     top: 0;
@@ -385,5 +386,12 @@ a {
   }
   .modal-info-text {
     padding-left: 96px;
+  }
+}
+
+.alert-simple-info {
+  .alert-simple-info-btn {
+    margin-top: 20px;
+    text-align: right;
   }
 }
