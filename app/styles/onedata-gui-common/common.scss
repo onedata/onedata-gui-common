@@ -369,3 +369,21 @@ a {
     margin-top: -2px;
   }
 }
+
+.modal-info-content {
+  position: relative;
+  .modal-info-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    .one-icon {
+      font-size: 70px;
+      @include absolute-align-middle-center;
+    }
+  }
+  .modal-info-text {
+    padding-left: 96px;
+  }
+}
