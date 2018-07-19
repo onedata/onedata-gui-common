@@ -10,16 +10,21 @@
 import { helper } from '@ember/component/helper';
 import moment from 'moment';
 
-const certFormatter = 'YYYY-MM-DD [at] H:mm ([UTC]Z)';
+export const certFormatter = 'YYYY-MM-DD [at] H:mm ([UTC]Z)';
+
+const blanks = {
+  cert: 'never',
+};
 
 const formatters = {
   default: certFormatter,
   cert: certFormatter,
 };
 
-export function dateFormat([inputDate], { formatArg, timezoneArg } = {}) {
-  const format = formatArg || 'default';
-  const timezone = timezoneArg || null;
+export function dateFormat([inputDate], { format, timezone, blank } = {}) {
+  format = format || 'default';
+  timezone = timezone || null;
+  blank = blank || blanks[format] || '';
   if (inputDate) {
     /** @type {moment.Moment} */
     let dateMoment;
@@ -28,7 +33,7 @@ export function dateFormat([inputDate], { formatArg, timezoneArg } = {}) {
     } else {
       dateMoment = moment(inputDate);
       if (!dateMoment.isValid()) {
-        return '';
+        return blank;
       }
     }
     if (timezone) {
@@ -37,7 +42,7 @@ export function dateFormat([inputDate], { formatArg, timezoneArg } = {}) {
     const formatter = formatters[format] || formatters['default'];
     return dateMoment.format(formatter);
   } else {
-    return '';
+    return blank;
   }
 }
 

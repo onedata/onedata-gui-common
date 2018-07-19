@@ -11,11 +11,11 @@ import { helper } from '@ember/component/helper';
 import { dateFormat } from './date-format';
 
 export function oneFormFieldFormatter([value, format] /*, hash*/ ) {
-  let formatter;
   if (format === 'date') {
-    formatter = dateFormat;
+    return dateFormat([value], { format: 'cert' });
+  } else {
+    return value;
   }
-  return formatter ? formatter([value]) : value;
 }
 
 export default helper(oneFormFieldFormatter);

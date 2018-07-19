@@ -29,4 +29,11 @@ describe('Integration | Helper | date format', function () {
 
     expect(this.$().text().trim()).to.equal('2022-05-18 at 8:50 (UTC+00:00)');
   });
+
+  it('renders special string for unparseable date or null in cert format', function () {
+    this.set('inputDate', '');
+    this.render(hbs `{{date-format inputDate format="cert"}}`);
+
+    expect(this.$().text().trim()).to.equal('never');
+  });
 });
