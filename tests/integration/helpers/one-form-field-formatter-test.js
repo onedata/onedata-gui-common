@@ -17,4 +17,12 @@ describe('Integration | Helper | one form field formatter', function () {
 
     expect(this.$().text().trim()).to.equal(moment(date).format(certFormatter));
   });
+
+  it('accepts lack of format', function () {
+    const date = '2022-05-18T08:50:00+00:00';
+    this.set('date', date);
+    this.render(hbs `{{one-form-field-formatter date}}`);
+
+    expect(this.$().text().trim()).to.equal(date);
+  });
 });

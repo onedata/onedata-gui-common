@@ -37,7 +37,7 @@ export function dateFormat([inputDate], { format, timezone, blank } = {}) {
       }
     }
     if (timezone) {
-      dateMoment = dateMoment.zone(timezone);
+      dateMoment = dateMoment.utcOffset(timezone);
     }
     const formatter = formatters[format] || formatters['default'];
     return dateMoment.format(formatter);
