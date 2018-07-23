@@ -1,0 +1,10 @@
+// in condensed form, toggles looks bad if they have to small height
+.form-horizontal-condensed {
+  .toggle-form-row {
+    padding-top: $padding-base-vertical + 1;
+    padding-bottom: $padding-base-vertical + 1;
+    .one-label-tip {
+      padding-top: $padding-base-vertical + 1; 
+    }
+  }  
+}
