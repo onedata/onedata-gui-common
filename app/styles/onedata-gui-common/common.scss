@@ -393,6 +393,15 @@ a {
       }
     }
   }
+  @media (max-width: $screen-xs-max) {
+    .modal-info-icon {
+      display: none;
+    }
+    .modal-info-text {
+      padding-left: 0px;
+      text-align: center;
+    }
+  }
 }
 
 .alert-simple-info {

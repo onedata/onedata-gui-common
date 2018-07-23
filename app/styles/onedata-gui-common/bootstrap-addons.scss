@@ -33,9 +33,14 @@ $icon-btn-active-color: $color-one-red;
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
-    button {
+    button, .btn {
       margin-top: $padding-small-vertical;
       float: none;
+    }
+    @media (max-width: $screen-xs-max) {
+      .btn {
+        width: 100%;
+      }
     }
   }
 }
