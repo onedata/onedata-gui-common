@@ -8,9 +8,16 @@
  */
 
 import Route from '@ember/routing/route';
+import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
+import config from 'ember-get-config';
+import _ from 'lodash';
 
 const notFoundAspect = 'not-found';
+
+const {
+  onedataTabs
+} = config;
 
 export default Route.extend({
   navigationState: service(),
@@ -53,9 +60,12 @@ export default Route.extend({
         outlet: 'main-content'
       });
     } catch (error) {
-      console.warn(`Failed to render ${aspectId} aspect template: ${templateName}`);
-      console.warn(error);
-      this.transitionTo('onedata.sidebar.content.aspect', 'index');
+      const tabSettings = _.find(
+        onedataTabs,
+        t => get(t, 'id') === resourceType
+      );
+      const defaultAspect = tabSettings.defaultAspect || 'index';
+      this.transitionTo('onedata.sidebar.content.aspect', defaultAspect);
     }
   },
 });

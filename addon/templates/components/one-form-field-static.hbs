@@ -15,7 +15,8 @@
       {{#if fakePassword}}
         {{fake-password}}
       {{else}}
-        {{value}}{{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
+        {{one-form-field-formatter value field.format}}
+        {{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
       {{/if}}
     {{/if}}
   </span>

@@ -1,5 +1,5 @@
 {{#each actionsArray as |act|}}
-  <li class={{if act.separator "separator"}}>
+  <li class={{concat-classes (if act.separator "separator") (if act.disabled "disabled")}}>
     {{#if act.separator}}
       <a>
         <span class="one-label">{{act.title}}</span>

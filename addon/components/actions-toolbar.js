@@ -9,6 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/actions-toolbar';
+import breakpointValues from 'onedata-gui-common/breakpoint-values';
 
 export default Component.extend({
   layout,
@@ -18,4 +19,15 @@ export default Component.extend({
    * @type {Array<AspectAction>}
    */
   actionsArray: Object.freeze([]),
+
+  /**
+   * If set, it will control state of toolbar collapse
+   * @type {boolean|undefined}
+   */
+  isMinimized: undefined,
+
+  /**
+   * @type {number}
+   */
+  minimumFullWindowSize: breakpointValues.screenSm,
 });

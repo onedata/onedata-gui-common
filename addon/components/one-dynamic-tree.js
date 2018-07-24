@@ -121,6 +121,19 @@ export default Component.extend(
     definition: Object.freeze([]),
 
     /**
+     * Values used for comparison to mark nodes as (not)modified
+     * @type {Object|undefined}
+     */
+    compareValues: undefined,
+
+    /**
+     * Values used to fill tree form elements. On each change of this property 
+     * all tree values will be refreshed with new values.
+     * @type {object}
+     */
+    overrideValues: undefined,
+
+    /**
      * Values changed action. It will get tree values 
      * and validation state as arguments.
      * @type {Function}
@@ -132,6 +145,12 @@ export default Component.extend(
      * @type {string}
      */
     searchQuery: '',
+
+    /**
+     * Modification state of the tree values
+     * @type {Object}
+     */
+    _modificationTree: Object.freeze({}),
 
     /**
      * Array of error objects from ember-cp-validations.
@@ -167,13 +186,22 @@ export default Component.extend(
     _fieldsObserver: observer('_fieldsTree', 'disabledFieldsPaths.[]', function () {
       this._buildCheckboxSelectionTree();
       this._resetDisabledFields();
-      this.valuesHaveChanged();
+      this.valuesHaveChanged(false, false);
     }),
 
-    _valuesPrepareObserver: observer('definition', function () {
-      let definition = this.get('definition');
-      let newValuesTree = this._buildEmptyValuesTree(definition);
-      this.set('values', this._mergeValuesTrees(newValuesTree));
+    _valuesPrepareObserver: observer('definition', 'overrideValues', function () {
+      const {
+        definition,
+        overrideValues,
+      } = this.getProperties('definition', 'overrideValues');
+      const newValuesTree = overrideValues || this._buildEmptyValuesTree(definition);
+      this.set('values', this._mergeValuesTrees(newValuesTree, this.get('values')));
+      this.valuesHaveChanged(true, false);
+    }),
+
+    _compareValuesObserver: observer('compareValues', function () {
+      const valuesDump = this.dumpValues();
+      this._updateModificationTree(valuesDump);
     }),
 
     init() {
@@ -201,6 +229,8 @@ export default Component.extend(
       if (checkboxChanged) {
         this._fillCheckboxSelectionTree();
       }
+      const valuesDump = this.dumpValues();
+      this._updateModificationTree(valuesDump);
       if (emitValues) {
         valuesChanged(this.dumpValues(), _isValid);
       }
@@ -308,6 +338,44 @@ export default Component.extend(
           this._resetDisabledFieldsInNode(node.get(subnodeName));
         });
       }
+    },
+
+    /**
+     * Updates modification tree to mark nodes as modified
+     * @param {Object} values 
+     */
+    _updateModificationTree(values) {
+      const compareValues = this.get('compareValues');
+      const modificationTree = {
+        nodes: {},
+      };
+      modificationTree.isModified =
+        this._updateModificationTreeNode(values, compareValues || {}, modificationTree);
+      this.set('_modificationTree', modificationTree);
+    },
+
+    _updateModificationTreeNode(node, compareNode, modificationNode) {
+      let isModified = false;
+      Object.keys(node).forEach(nodeKey => {
+        const nodeValue = node[nodeKey];
+        const compareValue = compareNode[nodeKey];
+        const modificationSubnode = {
+          nodes: {},
+        };
+        modificationNode.nodes[nodeKey] = modificationSubnode;
+        if (typeof nodeValue !== 'object' || nodeValue === null) {
+          modificationSubnode.isModified = compareValue === undefined ?
+            false : nodeValue !== compareValue;
+        } else {
+          modificationSubnode.isModified = this._updateModificationTreeNode(
+            nodeValue,
+            compareValue || {},
+            modificationSubnode
+          );
+        }
+        isModified = isModified || modificationSubnode.isModified;
+      });
+      return isModified;
     },
 
     actions: {
