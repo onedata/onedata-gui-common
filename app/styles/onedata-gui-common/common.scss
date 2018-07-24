@@ -369,3 +369,44 @@ a {
     margin-top: -2px;
   }
 }
+
+.modal-info-content {
+  position: relative;
+  margin-top: 1em;
+  min-height: 70px;
+  .modal-info-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    .one-icon {
+      font-size: 60px;
+      @include absolute-align-middle-center;
+    }
+  }
+  .modal-info-text {
+    padding-left: 96px;
+    &.short-text {
+      @media (min-width: $screen-sm-min) {
+        @include vertical-align-middle;
+      }
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    .modal-info-icon {
+      display: none;
+    }
+    .modal-info-text {
+      padding-left: 0px;
+      text-align: center;
+    }
+  }
+}
+
+.alert-simple-info {
+  .alert-simple-info-btn {
+    margin-top: 20px;
+    text-align: right;
+  }
+}
