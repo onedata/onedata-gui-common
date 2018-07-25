@@ -17,6 +17,8 @@ import _ from 'lodash';
 export default Component.extend(I18n, {
   layout,
   classNames: ['clipboard-line'],
+  classNameBindings: ['size'],
+
   globalNotify: service(),
   i18n: service(),
 
@@ -27,6 +29,18 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   value: '',
+
+  /**
+   * @virtual
+   * @type {string}
+   */
+  label: '',
+
+  /**
+   * @virtual opional
+   * @type {string}
+   */
+  size: undefined,
 
   /**
    * Override this to get custom notifications like: "<textType> successfully copied..."

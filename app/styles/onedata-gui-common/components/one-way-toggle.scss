@@ -12,6 +12,7 @@ $toggle-width: 2 * $toggle-size-base;
     background-color: inherit;
     border: 0;
     box-shadow: none;
+    white-space: nowrap;
     // padding and width properties to override bootstrap form-control styles
     padding: 0;
     width: auto;

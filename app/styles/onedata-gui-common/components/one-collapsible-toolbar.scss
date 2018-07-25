@@ -30,20 +30,20 @@
 }
 
 .with-menu {
+  position: relative;
   .collapsible-toolbar-toggle {
     position: absolute;
-    transform: translateY(6px);
+    transform: translateY(-50%);
     right: 0;
-    top: 0;
+    top: 50%;
     width: 30px;
     padding: 8px;
-    margin: 16px;
     cursor: pointer;
   }
 
   @media (min-width: $screen-md-min) {
     .collapsible-toolbar-toggle {
-      margin: 24px;
+      margin-top: $padding-xs-vertical;
     }
   }
 

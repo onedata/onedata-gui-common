@@ -171,7 +171,6 @@ describe('Integration | Component | one dynamic tree', function () {
   });
 
   it('allows data change', function (done) {
-    let values = this.get('values');
     let newTextValue = 'text';
     let valuesChangedHandler = sinon.spy();
 
@@ -181,13 +180,11 @@ describe('Integration | Component | one dynamic tree', function () {
         definition=definition
         valuesChanged=(action "valuesChanged")}}`);
 
-    expect(valuesChangedHandler).to.be.calledOnce;
-    expect(valuesChangedHandler.firstCall).calledWithExactly(values, true);
     fillIn('input[type="text"]', newTextValue).then(() => {
       let newValues = this.get('values');
       newValues.node1.node11 = newTextValue;
-      expect(valuesChangedHandler).to.be.calledTwice;
-      expect(valuesChangedHandler.secondCall).calledWithExactly(newValues, true);
+      expect(valuesChangedHandler).to.be.calledOnce;
+      expect(valuesChangedHandler.firstCall).calledWithExactly(newValues, true);
       done();
     });
   });
@@ -249,4 +246,56 @@ describe('Integration | Component | one dynamic tree', function () {
       });
     }
   );
+
+  it('allows to override tree values', function (done) {
+    let treeValues;
+    this.set('overrideValues', undefined);
+    this.on('valuesChanged', (values) => {
+      if (!treeValues) {
+        treeValues = values;
+      }
+    });
+    this.render(hbs `
+      {{one-dynamic-tree 
+        definition=definition
+        overrideValues=overrideValues
+        valuesChanged=(action "valuesChanged")}}
+    `);
+    const overrideValue = 'override';
+    fillIn('.field-node1-node11', 'test').then(() => {
+      treeValues.node1.node11 = overrideValue;
+      this.set('overrideValues', treeValues);
+      wait().then(() => {
+        expect(this.$('.field-node1-node11').val())
+          .to.be.equal(overrideValue);
+        done();
+      });
+    });
+  });
+
+  it('shows modification state', function (done) {
+    let treeValues;
+    this.set('compareValues', undefined);
+    this.on('valuesChanged', (values) => {
+      if (!treeValues) {
+        treeValues = values;
+      }
+    });
+    this.render(hbs `
+      {{one-dynamic-tree 
+        definition=definition
+        compareValues=compareValues
+        valuesChanged=(action "valuesChanged")}}
+    `);
+    const compareValue = 'compare';
+    fillIn('.field-node1-node11', 'test').then(() => {
+      expect(this.$('.modified-node-label')).to.not.exist;
+      treeValues.node1.node11 = compareValue;
+      this.set('compareValues', treeValues);
+      wait().then(() => {
+        expect(this.$('.modified-node-label')).to.exist;
+        done();
+      });
+    });
+  });
 });

@@ -47,4 +47,12 @@ export default Component.extend({
    * @type {string}
    */
   triggerEvents: 'hover',
+
+  /**
+   * In mobile mode, it's better to not propagate click event from tip.
+   * @param {Event} clickEvent 
+   */
+  click(clickEvent) {
+    clickEvent.preventDefault();
+  },
 });

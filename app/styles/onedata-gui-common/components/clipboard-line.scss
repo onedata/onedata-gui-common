@@ -1,21 +1,40 @@
 .clipboard-line {
-  $-clipboard-line-height: $input-height-base;
   display: table;
   width: 100%;
-  .clipboard-line-input {
+  
+  @mixin clipboard-line-element {
     display: table-cell;
-    vertical-align: top;
+    vertical-align: middle;
+  }
+  
+  .clipboard-line-label {
+    @include clipboard-line-element();
+    padding-right: 20px;
+    // as small as possible
+    width: 1px;
+  }
+  .clipboard-line-input {
+    @include clipboard-line-element();
     input[type=text] {
-      height: $-clipboard-line-height;
+      height: $input-height-base;
     }
   }
   .clipboard-line-btn {
-    display: table-cell;
-    vertical-align: top;
+    @include clipboard-line-element();
     width: 100px;
     padding-left: 20px;
     .copy-btn {
-      height: $-clipboard-line-height;
+      height: $input-height-base;
+    }
+  }
+  
+  &.sm {
+    .clipboard-line-input input[type=text] {
+      height: $input-height-small;
+      line-height: $line-height-small;
+    }
+    .clipboard-line-btn .copy-btn {
+      height: $input-height-small;
     }
   }
 }

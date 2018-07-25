@@ -4,8 +4,8 @@
 ) as |item|}}
   {{#item.content}}
     <label 
-      for={{if _field._isField inputId}} 
-      class="node-text tree-label {{if item.hasSubtree "clickable"}} {{if _isFieldDisabled "disabled"}}">
+      for={{if _field._isField (concat parentView.elementId inputId)}} 
+      class={{concat-classes "node-text tree-label" (if item.hasSubtree "clickable") (if _isFieldDisabled "disabled") (if modificationState.isModified "modified-node-label")}}>
       {{definition.text}}
     </label>
     {{#if _renderField}}
@@ -16,7 +16,7 @@
           value=(get values _path)
           inputChanged=(action inputValueChanged _path)
           focusedOut=(action inputFocusedOut _path)
-          inputId=inputId
+          inputId=(concat parentView.elementId inputId)
           disabled=_isFieldDisabled}}
         <div class="form-message">{{_field.message}}</div>
       {{/bsForm.group}}
@@ -29,7 +29,7 @@
             (dot-to-dash _path)
             (if (eq _areNestedCheckboxesSelected 2) true (not _areNestedCheckboxesSelected))
           )
-          inputId=inputId
+          inputId=(concat parentView.elementId inputId)
           disabled=_isFieldDisabled}}
       {{/bsForm.group}}
     {{/if}}
@@ -44,6 +44,7 @@
           parentPath=_path
           values=values
           fields=fields
+          modificationState=(get (get modificationState "nodes") subnodeDefinition.name)
           checkboxSelection=checkboxSelection
           disabledFieldsPaths=disabledFieldsPaths
           inputValueChanged=inputValueChanged

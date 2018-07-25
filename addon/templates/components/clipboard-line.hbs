@@ -1,3 +1,8 @@
+{{#if label}}
+  <div class="clipboard-line-label">
+    <strong>{{label}}</strong>
+  </div>
+{{/if}}
 <div class="clipboard-line-input">
   <input
     type="text"
@@ -10,7 +15,7 @@
   {{#copy-button
     success=(action "copySuccess")
     error=(action "copyError")
-    class="btn btn-primary"
+    class=(concat "btn btn-primary " (if size (concat "btn-" size)))
     clipboardTarget=(concat "#" elementId " .clipboard-input")
   }}
     {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
