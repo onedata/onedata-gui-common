@@ -13,11 +13,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-<<<<<<< HEAD
-import EmberObject from '@ember/object';
-=======
 import EmberObject, { get } from '@ember/object';
->>>>>>> be7df1354f9f5c41bd6069d21e38a6344928457e
 
 import Mixin from '@ember/object/mixin';
 import { typeOf } from '@ember/utils';
