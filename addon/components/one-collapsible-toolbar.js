@@ -24,7 +24,6 @@
 import Component from '@ember/component';
 
 import { computed } from '@ember/object';
-import { oneWay } from '@ember/object/computed';
 import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
