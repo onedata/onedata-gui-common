@@ -65,6 +65,11 @@ export default Component.extend({
   showEmptyInfo: true,
 
   /**
+   * @type {string}
+   */
+  inputClasses: '',
+
+  /**
    * Values used by input while edition.
    * @type {string}.
    */
@@ -127,6 +132,13 @@ export default Component.extend({
       this.stopEdition();
     }
   }),
+
+  init() {
+    this._super(...arguments);
+    if (this.get('isEditing')) {
+      this.isEditingObserver();
+    }
+  },
 
   didInsertElement() {
     if (this.get('isInToolbar')) {

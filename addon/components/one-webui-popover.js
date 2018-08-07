@@ -41,7 +41,7 @@ export default Component.extend({
   /**
    * Values: auto, top, right, bottom, left, top-right, top-left, bottom-right,
    *  bottom-left, auto-top, auto-right, auto-bottom, auto-left, horizontal,
-   *  vertical
+   *  vertical, context-menu
    * @type {string}
    */
   placement: 'auto',
@@ -72,6 +72,17 @@ export default Component.extend({
    * @type {string}
    */
   popoverTrigger: 'click',
+
+  /**
+   * If true, popover will have an arrow
+   * @type {boolean}
+   */
+  arrow: true,
+
+  /**
+   * @type {WebuiPopover}
+   */
+  popoverInstance: undefined,
 
   /**
    * @type {functions}
@@ -132,22 +143,22 @@ export default Component.extend({
       triggerSelector,
       animation,
       popoverTrigger,
-      placement,
       popoverStyle,
       elementId,
       padding,
       multi,
+      arrow,
       _resizeHandler,
       windowEvent,
     } = this.getProperties(
       'triggerSelector',
       'animation',
       'popoverTrigger',
-      'placement',
       'popoverStyle',
       'padding',
       'elementId',
       'multi',
+      'arrow',
       '_resizeHandler',
       'windowEvent'
     );
@@ -164,14 +175,17 @@ export default Component.extend({
       url: `#${elementId}`,
       animation,
       trigger: popoverTrigger,
-      placement,
+      placement: this.getPlacement(),
       style: popoverStyle,
       padding,
       container: document.body,
       multi,
-      onShow: () => safeExec(this, 'set', '_isPopoverVisible', true),
-      onHide: () => safeExec(this, 'set', '_isPopoverVisible', false),
+      arrow,
+      onShow: () => this.onShow(),
+      onHide: () => this.onHide(),
     });
+
+    this.set('popoverInstance', $triggerElement.data('plugin_webuiPopover'));
 
     window.addEventListener(windowEvent, _resizeHandler);
   },
@@ -189,6 +203,86 @@ export default Component.extend({
 
   _popover() {
     this.get('$triggerElement').webuiPopover(...arguments);
+  },
+
+  /**
+   * @returns {undefined}
+   */
+  onShow() {
+    safeExec(this, 'set', '_isPopoverVisible', true);
+    this.fixPosition();
+  },
+
+  /**
+   * @returns {undefined}
+   */
+  onHide() {
+    safeExec(this, 'set', '_isPopoverVisible', false);
+    this.unfixPosition();
+  },
+
+  /**
+   * Returns popover placement
+   * @returns {string|Function}
+   */
+  getPlacement() {
+    const placement = this.get('placement');
+    return placement === 'context-menu' ? contextMenuPlacement : placement;
+  },
+
+  /**
+   * Fixes popover position in special cases
+   * @returns {undefined} 
+   */
+  fixPosition() {
+    if (this.get('placement') === 'context-menu') {
+      // if context-menu placement is active, popover with ...-top placement
+      // needs to be positioned using bottom css property instead of top
+      const popoverInstance = this.get('popoverInstance');
+      const $popover = popoverInstance.$target;
+      if ($popover.is('.left-top, .right-top')) {
+        const containerHeight = popoverInstance.options.container.innerHeight();
+        const popoverHeight = $popover.outerHeight();
+        const popoverTop = parseFloat($popover.css('top'));
+        const popoverBottom = containerHeight - popoverTop - popoverHeight;
+        $popover.css({
+          top: 'initial',
+          bottom: `${popoverBottom}px`,
+        });
+        const $arrow = $popover.find('.webui-arrow');
+        let arrowTop = $arrow.css('top');
+        if (arrowTop !== 'initial') {
+          arrowTop = parseFloat(arrowTop);
+          const arrowBottom =
+            $popover.innerHeight() - arrowTop - $arrow.outerHeight() / 2;
+          $arrow.css({
+            top: 'initial',
+            bottom: `${arrowBottom}px`,
+          });
+        }
+      }
+    }
+  },
+
+  /**
+   * Rolls back fixes introduced by `fixPosition` method
+   * @returns {undefined} 
+   */
+  unfixPosition() {
+    if (this.get('placement') === 'context-menu') {
+      const popoverInstance = this.get('popoverInstance');
+      const $popover = popoverInstance.$target;
+      if ($popover.is('.left-top, .right-top')) {
+        const containerHeight = popoverInstance.options.container.innerHeight();
+        const popoverHeight = $popover.outerHeight();
+        const popoverBottom = parseFloat($popover.css('bottom'));
+        const popoverTop = containerHeight - popoverBottom - popoverHeight;
+        $popover.css({
+          top: `${popoverTop}px`,
+          bottom: `initial`,
+        });
+      }
+    }
   },
 
   _debounceResizeRefresh() {
@@ -230,6 +324,40 @@ export default Component.extend({
         run.debounce(this, this._debounceResizeRefresh, 500);
       }
     },
+    reposition() {
+      const popoverInstance = this.get('popoverInstance');
+      const oldAnimation = popoverInstance.options.animation;
+      // suppress animation for the time of reposition
+      popoverInstance.options.animation = null;
+      this._popover('displayContent');
+      popoverInstance.options.animation = oldAnimation;
+    },
   },
-
 });
+
+/**
+ * Calculated placement dedicated for context menu popovers. It must be prepared
+ * manually, because there is no suitable standard placement. Placement calculated
+ * below is equivalent to: right-top|right-bottom|left-top|left-bottom
+ * (or horizontal placement without Y-central position).
+ * 
+ * Code inspired by `getPlacement` method from:
+ * https://github.com/sandywalker/webui-popover/blob/master/src/jquery.webui-popover.js
+ * 
+ * `this` context is a WebuiPopover object
+ * 
+ * @type {function}
+ * @returns {string}
+ */
+export function contextMenuPlacement() {
+  const pos = this.getElementPosition();
+  const container = this.options.container;
+  const clientWidth = container.innerWidth();
+  const clientHeight = container.innerHeight();
+  const scrollTop = container.scrollTop();
+  const scrollLeft = container.scrollLeft();
+  const pageX = Math.max(0, pos.left - scrollLeft);
+  const pageY = Math.max(0, pos.top - scrollTop);
+  let placement = pageX < clientWidth / 2 ? 'right-' : 'left-';
+  return placement + (pageY < clientHeight / 2 ? 'bottom' : 'top');
+}

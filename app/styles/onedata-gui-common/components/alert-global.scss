@@ -18,7 +18,7 @@ $alert-global-header-height: 70px;
     }
   }
   .modal-body {
-    margin-top: $alert-global-header-height;
+    margin-top: $alert-global-header-height + $modal-title-padding;
     padding: 4em 0;
   }
   .modal-footer {

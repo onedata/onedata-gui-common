@@ -1,16 +1,48 @@
 {{#each actionsArray as |act|}}
-  <li class={{concat-classes (if act.separator "separator") (if act.disabled "disabled")}}>
+  <li class={{concat-classes
+    (if act.separator "separator")
+    (if act.disabled "disabled")
+    (if (eq nestedActionsOpened act) "expanded")
+    }}>
     {{#if act.separator}}
       <a>
         <span class="one-label">{{act.title}}</span>
       </a>
     {{else}}
-      <a class="clickable {{act.class}}" onClick={{action "triggerAction" act.action}}>
+      <a class="clickable {{act.class}} {{concat elementId "-" act.class}}" onClick={{if act.nestedActions
+        (action "toggleNestedActions" act (not-eq nestedActionsOpened act))
+        (action "triggerAction" act)
+      }}>
         {{#if act.icon}}
           {{one-icon icon=act.icon}}
         {{/if}}
         <span class="one-label">{{act.title}}</span>
       </a>
+      {{#if act.nestedActions}}
+        {{#if nestedActionsInPopover}}
+          {{#one-webui-popover
+            class=(concat act.class "-nested-actions")
+            padding=false
+            popoverStyle="with-nested-dropdown"
+            triggerSelector=(concat "." elementId "-" act.class)
+            open=(eq nestedActionsOpened act)
+            onToggle=(action "toggleNestedActions" act)
+            multi=true
+            placement="context-menu"}}
+            {{#click-outside action=(action "toggleNestedActions" act false) except-selector=(concat "." elementId "-" act.class)}}
+              {{actions-popover-content actionsArray=act.nestedActions actionClicked=actionClicked}}
+            {{/click-outside}}
+          {{/one-webui-popover}}
+        {{else}}
+          {{actions-popover-content
+            actionsArray=act.nestedActions
+            actionClicked=actionClicked
+            class=(concat-classes
+              "nested-actions collapse-animation"
+              (if (eq nestedActionsOpened act) "collapse-small" "collapse-hidden")
+            )}}
+        {{/if}}
+      {{/if}}
     {{/if}}
   </li>
 {{/each}}

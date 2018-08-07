@@ -11,6 +11,7 @@
 // https://github.com/kliput/ember-spin-button/tree/master-onedata
 import SpinButton from 'ember-spin-button/components/spin-button';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { or } from '@ember/object/computed';
 
 export default SpinButton.extend({
   /**
@@ -20,6 +21,16 @@ export default SpinButton.extend({
 
   startDelay: 0,
   buttonStyle: 'expand-left',
+
+  /**
+   * @type {boolean}
+   */
+  buttonDisabled: false,
+
+  /**
+   * @override
+   */
+  disabled: or('inFlight', 'buttonDisabled'),
 
   /**
    * @override 

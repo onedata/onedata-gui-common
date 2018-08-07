@@ -1,7 +1,7 @@
 {{#if _inEditionMode}}
   {{one-way-input _inputValue
     disabled=_whileSaving
-    class="form-control"
+    class=(concat-classes "form-control" inputClasses)
     update=(action (mut _inputValue))
     onenter=(action "saveEdition")
     onescape=(action "cancelEdition")}}

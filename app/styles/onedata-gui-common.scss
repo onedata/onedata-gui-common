@@ -47,7 +47,7 @@ $sidebar-menu-width-sm: 250px;
 $sidebar-menu-width-md: 250px + $main-menu-expand-delta;
 $sidebar-menu-width-lg: 325px + $main-menu-expand-delta;
 $menu-icon-font-size: 2.5em;
-$mobile-menu-popover-width: 240px;
+$mobile-menu-popover-width: 200px;
 
 $zindex-layer-1-2-overlay: $zindex-modal-background;
 $zindex-layer-1-max: $zindex-layer-1-2-overlay - 1;
@@ -84,6 +84,7 @@ $disabled-opacity: 0.6;
 
 // Components
 
+@import 'onedata-gui-common/components/one-webui-popover';
 @import 'onedata-gui-common/components/login-layout';
 @import 'onedata-gui-common/components/app-layout';
 @import 'onedata-gui-common/components/alert-global';
@@ -112,7 +113,6 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-collapsible-list-item-content';
 @import 'onedata-gui-common/components/brand-info';
 @import 'onedata-gui-common/components/user-account-button';
-@import 'onedata-gui-common/components/one-webui-popover';
 @import 'onedata-gui-common/components/resource-load-error';
 @import 'onedata-gui-common/components/one-image';
 @import 'onedata-gui-common/components/one-label-tip';

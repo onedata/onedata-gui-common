@@ -30,5 +30,13 @@ export default Service.extend({
       extractorFunction,
     } = this.getProperties('i18n', 'extractorFunction');
     return extractorFunction(error, i18n);
-  }
+  },
+
+  /**
+   * @param {any} error
+   * @returns {string} 
+   */
+  getType( /* error */ ) {
+    return 'error';
+  },
 });
