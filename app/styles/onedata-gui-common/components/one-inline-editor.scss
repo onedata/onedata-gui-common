@@ -70,6 +70,14 @@
       visibility: visible;
     }
   }
+  &.manual {
+    .edit-icon {
+      display: none;
+    }
+    &.static {
+      padding-right: 0;
+    }
+  }
 }
 
 // TODO: style improvements in mobile mode

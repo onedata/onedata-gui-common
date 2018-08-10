@@ -28,7 +28,7 @@
     .world-map {
       top: $content-header-row-height + $content-col-padding;
       @media (max-width: $screen-xs-max) {
-        top: $content-header-row-height;
+        top: 0;
       }
     }
   }

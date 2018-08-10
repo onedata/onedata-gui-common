@@ -4,8 +4,10 @@ $inline-alert-left-border-width: 60px;
   // Padding for "close" button
   padding-right: 2em;
   background-color: transparent;
-  border: 1px solid $color-one-danger;
+  border-style: solid;
+  border-width: 1px;
   border-left-width: $inline-alert-left-border-width;
+  text-align: left;
   &:before {
     position: absolute;
     left: -$inline-alert-left-border-width / 2;
@@ -14,10 +16,20 @@ $inline-alert-left-border-width: 60px;
     font-family: 'oneicons';
     font-size: 2.5em;
     font-weight: bold;
+    color: $color-one-white;
+  }
+  &.alert-warning {
+    border-color: $color-one-warning;
+    &::before {
+      font-weight: normal;
+      @include oneicon-content($oneicon-no-view);
+    }
+  }
+  &.alert-danger {
+    border-color: $color-one-danger;
   }
   &.alert-danger:before {
     @include oneicon-content($oneicon-checkbox-x);
-    color: $color-one-white;
   }
   .error-close {
     position: absolute;

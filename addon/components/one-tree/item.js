@@ -178,12 +178,12 @@ export default Component.extend({
 
     if (_hasSubtree) {
       if (_isSubtreeExpanded) {
-        return 'checkbox-minus';
+        return 'square-minus-empty';
       } else {
-        return 'add';
+        return 'square-plus-empty';
       }
     } else {
-      return 'checkbox-empty';
+      return 'square-empty';
     }
   }),
 

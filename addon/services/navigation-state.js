@@ -13,7 +13,7 @@
  */
 
 import Service, { inject as service } from '@ember/service';
-import EmberObject, { computed, observer } from '@ember/object';
+import EmberObject, { computed, observer, get } from '@ember/object';
 import { gt, or } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -329,6 +329,19 @@ export default Service.extend(I18n, {
       }
     }
   ),
+
+  /**
+   * Resolves to true if activeResourceCollections contains model with passed
+   * entityId
+   * @param {string} entityId 
+   * @returns {boolean}
+   */
+  resourceCollectionContainsEntityId(entityId) {
+    return get(this.get('activeResourceCollection'), 'list')
+      .then(list =>
+        list.map(m => get(m, 'entityId')).indexOf(entityId) === -1
+      );
+  },
 
   _globalSidebarClosed() {
     safeExec(this, 'setProperties', {

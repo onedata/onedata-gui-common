@@ -43,8 +43,7 @@ export default Mixin.create({
    * Creates tree with node checkboxes selection states
    */
   _buildNodeCheckboxesTree(node) {
-    if (node.get('_isField') && (node.get('type') !== 'checkbox' ||
-        this.isPathDisabled(node.get('name')))) {
+    if (node.get('_isField') && (node.get('type') !== 'checkbox')) {
       // field, but not checkbox or disabled
       return undefined;
     }

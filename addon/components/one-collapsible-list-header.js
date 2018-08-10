@@ -45,6 +45,12 @@ export default OneCollapsibleListItemHeader.extend({
    */
   search: null,
 
+  /**
+   * If false, search input will be hidden
+   * @type {boolean}
+   */
+  searchVisible: true,
+
   init() {
     this._super(...arguments);
 

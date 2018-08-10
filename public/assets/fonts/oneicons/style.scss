@@ -1,19 +1,19 @@
 @import "variables";
 
 @font-face {
-  font-family: 'oneicons';
-  src:  url('#{$icomoon-font-path}/oneicons.eot?ov3hm9');
-  src:  url('#{$icomoon-font-path}/oneicons.eot?ov3hm9#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/oneicons.ttf?ov3hm9') format('truetype'),
-    url('#{$icomoon-font-path}/oneicons.woff?ov3hm9') format('woff'),
-    url('#{$icomoon-font-path}/oneicons.svg?ov3hm9#oneicons') format('svg');
+  font-family: '#{$icomoon-font-family}';
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?rja7qf') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?rja7qf') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?rja7qf##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="oneicon-"], [class*=" oneicon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'oneicons' !important;
+  font-family: '#{$icomoon-font-family}' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -167,6 +167,11 @@
     content: $oneicon-folder; 
   }
 }
+.oneicon-globe-cursor {
+  &:before {
+    content: $oneicon-globe-cursor; 
+  }
+}
 .oneicon-group-add {
   &:before {
     content: $oneicon-group-add; 
@@ -237,6 +242,11 @@
     content: $oneicon-leave-space; 
   }
 }
+.oneicon-link-external {
+  &:before {
+    content: $oneicon-link-external; 
+  }
+}
 .oneicon-lock-checked {
   &:before {
     content: $oneicon-lock-checked; 
@@ -292,6 +302,11 @@
     content: $oneicon-menu-token; 
   }
 }
+.oneicon-menu-transfers {
+  &:before {
+    content: $oneicon-menu-transfers; 
+  }
+}
 .oneicon-menu-trash {
   &:before {
     content: $oneicon-menu-trash; 
@@ -312,6 +327,11 @@
     content: $oneicon-move-up; 
   }
 }
+.oneicon-no-view {
+  &:before {
+    content: $oneicon-no-view; 
+  }
+}
 .oneicon-node {
   &:before {
     content: $oneicon-node; 
@@ -330,6 +350,11 @@
 .oneicon-password-change {
   &:before {
     content: $oneicon-password-change; 
+  }
+}
+.oneicon-permissions {
+  &:before {
+    content: $oneicon-permissions; 
   }
 }
 .oneicon-provider-add {
@@ -505,6 +530,21 @@
 .oneicon-space {
   &:before {
     content: $oneicon-space; 
+  }
+}
+.oneicon-square-empty {
+  &:before {
+    content: $oneicon-square-empty; 
+  }
+}
+.oneicon-square-minus-empty {
+  &:before {
+    content: $oneicon-square-minus-empty; 
+  }
+}
+.oneicon-square-plus-empty {
+  &:before {
+    content: $oneicon-square-plus-empty; 
   }
 }
 .oneicon-star-empty {

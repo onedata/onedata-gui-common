@@ -1,0 +1,31 @@
+{{#bs-modal
+  class=modalClass
+  open=opened
+  onShown=onShown
+  onHide=close
+  backdropClose=(not processing)
+  as |modal|
+}}
+  {{#modal.header}}
+    <h1>{{headerText}}</h1>
+  {{/modal.header}}
+  {{#modal.body class=(if textCenter "text-center")}}
+    {{#if (has-block)}}
+      {{yield}}
+    {{else}}
+      {{messageText}}
+    {{/if}}
+  {{/modal.body}}
+  {{#modal.footer class="btn-toolbar"}}
+    {{#bs-button disabled=processing onClick=close}}
+      {{cancelButtonText}}
+    {{/bs-button}}
+    {{#one-spin-button
+      action=proceed
+      class=proceedButtonClass
+      disabled=proceedDisabled
+    }}
+      {{proceedButtonText}}
+    {{/one-spin-button}}
+  {{/modal.footer}}
+{{/bs-modal}}

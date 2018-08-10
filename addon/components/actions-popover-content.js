@@ -15,6 +15,8 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/actions-popover-content';
+import { get } from '@ember/object';
+import { scheduleOnce } from '@ember/runloop';
 
 export default Component.extend({
   layout,
@@ -27,15 +29,46 @@ export default Component.extend({
   actionsArray: Object.freeze([]),
 
   /**
+   * @type {*}
+   */
+  actionsArg: undefined,
+
+  /**
    * @type {function}
    * @return {undefined}
    */
   actionClicked: () => {},
 
-  actions: {
-    triggerAction(action) {
-      action();
-      this.get('actionClicked')();
+  /**
+   * If true, nested actions will be rendered in popover instead of nested list
+   * @type {boolean}
+   */
+  nestedActionsInPopover: false,
+
+  /**
+   * @type {Action|null}
+   */
+  nestedActionsOpened: null,
+
+  toggleNestedActions(item, isOpened) {
+    if (item === null) {
+      item = this.get('nestedActionsOpened');
     }
+    const nestedActionsOpened = this.get('nestedActionsOpened');
+    if (isOpened && nestedActionsOpened !== item) {
+      this.set('nestedActionsOpened', item);
+    } else if (!isOpened && nestedActionsOpened === item) {
+      this.set('nestedActionsOpened', null);
+    }
+  },
+
+  actions: {
+    triggerAction(item) {
+      get(item, 'action')(this.get('actionsArg'));
+      this.get('actionClicked')();
+    },
+    toggleNestedActions(item, isOpened) {
+      scheduleOnce('afterRender', this, 'toggleNestedActions', item, isOpened);
+    },
   }
 });

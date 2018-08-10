@@ -257,6 +257,17 @@ label {
             display: none;
           }
         }
+
+        .modal-body {
+          padding: 0 $modal-inner-padding;
+          &:first-child {
+            padding-top: $modal-inner-padding;
+          }
+          &:last-child {
+            padding-bottom: $modal-inner-padding;
+          }
+        }
+
         .modal-footer {
           text-align: center;
         }
