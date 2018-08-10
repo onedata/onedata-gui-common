@@ -61,10 +61,6 @@ $webui-popover-offset: 4px;
     @include webui-popover-dropdown();
   }
 
-  &.webui-popover-with-nested-dropdown {
-    @include webui-popover-dropdown();
-  }
-
   .webui-popover-content {
     padding: $padding-base-vertical;
     overflow: initial;

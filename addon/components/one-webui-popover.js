@@ -358,6 +358,6 @@ export function contextMenuPlacement() {
   const scrollLeft = container.scrollLeft();
   const pageX = Math.max(0, pos.left - scrollLeft);
   const pageY = Math.max(0, pos.top - scrollTop);
-  let placement = pageX < clientWidth / 2 ? 'right-' : 'left-';
+  const placement = pageX < clientWidth / 2 ? 'right-' : 'left-';
   return placement + (pageY < clientHeight / 2 ? 'bottom' : 'top');
 }

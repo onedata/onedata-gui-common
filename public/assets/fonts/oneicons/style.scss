@@ -1,19 +1,19 @@
 @import "variables";
 
 @font-face {
-  font-family: 'oneicons';
-  src:  url('#{$icomoon-font-path}/oneicons.eot?wjr25g');
-  src:  url('#{$icomoon-font-path}/oneicons.eot?wjr25g#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/oneicons.ttf?wjr25g') format('truetype'),
-    url('#{$icomoon-font-path}/oneicons.woff?wjr25g') format('woff'),
-    url('#{$icomoon-font-path}/oneicons.svg?wjr25g#oneicons') format('svg');
+  font-family: '#{$icomoon-font-family}';
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?rja7qf') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?rja7qf') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?rja7qf##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="oneicon-"], [class*=" oneicon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'oneicons' !important;
+  font-family: '#{$icomoon-font-family}' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -167,6 +167,11 @@
     content: $oneicon-folder; 
   }
 }
+.oneicon-globe-cursor {
+  &:before {
+    content: $oneicon-globe-cursor; 
+  }
+}
 .oneicon-group-add {
   &:before {
     content: $oneicon-group-add; 
@@ -237,6 +242,11 @@
     content: $oneicon-leave-space; 
   }
 }
+.oneicon-link-external {
+  &:before {
+    content: $oneicon-link-external; 
+  }
+}
 .oneicon-lock-checked {
   &:before {
     content: $oneicon-lock-checked; 
@@ -290,6 +300,11 @@
 .oneicon-menu-token {
   &:before {
     content: $oneicon-menu-token; 
+  }
+}
+.oneicon-menu-transfers {
+  &:before {
+    content: $oneicon-menu-transfers; 
   }
 }
 .oneicon-menu-trash {

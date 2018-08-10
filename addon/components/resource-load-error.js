@@ -76,6 +76,17 @@ export default Component.extend(I18n, {
     );
   }),
 
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  showReasonPanel: computed('reason', 'type', function showReasonPanel() {
+    const {
+      reason,
+      type,
+    } = this.getProperties('reason', 'type');
+    return reason && type !== 'forbidden';
+  }),
+
   init() {
     this._super(...arguments);
     if (!this.get('message')) {
