@@ -33,9 +33,14 @@ $icon-btn-active-color: $color-one-red;
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
-    button {
+    button, .btn {
       margin-top: $padding-small-vertical;
       float: none;
+    }
+    @media (max-width: $screen-xs-max) {
+      .btn {
+        width: 100%;
+      }
     }
   }
 }
@@ -136,6 +141,7 @@ $icon-btn-active-color: $color-one-red;
 
 .form-control-static {
   min-height: 1em;
+  word-break: break-all;
   .field-suffix {
     color: $color-one-light-gray;
   }
@@ -364,11 +370,8 @@ $icon-btn-active-color: $color-one-red;
   }
 }
 
-.table.table-striped {
-  tr:hover {
-    td {
-      //override table-striped style
-      background-color: $main-content-hover-background !important;
-    }
+.form-horizontal-condensed {
+  .form-group {
+    margin-bottom: 0px;
   }
 }
