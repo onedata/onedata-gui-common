@@ -213,15 +213,14 @@ describe('Integration | Component | one dynamic tree', function () {
     });
   });
 
-  it('ignores disabled toggle state in "select all" toggle state',
+  it('does not ignore disabled toggle state in "select all" toggle state',
     function () {
       this.set('disabledPaths', A(['node2.node21']));
       this.render(hbs `
         {{one-dynamic-tree 
           definition=definition
           disabledFieldsPaths=disabledPaths}}`);
-
-      expect(this.$('.field-node2')).to.have.class('checked');
+      expect(this.$('.field-node2')).to.have.class('maybe');
     }
   );
 

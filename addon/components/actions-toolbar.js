@@ -27,6 +27,21 @@ export default Component.extend({
   isMinimized: undefined,
 
   /**
+   * @type {boolean}
+   */
+  dropdownPlacement: 'bottom-left',
+
+  /**
+   * @type {string}
+   */
+  toolbarClasses: 'btn-toolbar',
+
+  /**
+   * @type {string}
+   */
+  toolbarToggleClasses: '',
+
+  /**
    * @type {number}
    */
   minimumFullWindowSize: breakpointValues.screenSm,

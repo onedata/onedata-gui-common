@@ -24,14 +24,21 @@ import { invoke, invokeAction } from 'ember-invoke-action';
 export default Component.extend({
   layout,
   tagName: 'div',
-  classNames: ['one-collapsible-list-item-header', 'row', 'list-header-row', 'truncate'],
+  classNames: ['one-collapsible-list-item-header', 'row', 'list-header-row'],
   classNameBindings: [
+    'truncate',
     'isOpened:opened',
     'isCollapsible:collapsible',
     'toolbarWhenOpened:toolbar-when-opened',
     'disableToggleIcon:disable-toggle-icon',
     '_isItemFixed:header-fixed'
   ],
+
+  /**
+   * If true, text inside will be truncated with `truncate` css class.
+   * @type {boolean}
+   */
+  truncate: true,
 
   /**
    * If true, do not render toggle icon even if header if isCollapsible

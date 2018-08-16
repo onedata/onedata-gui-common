@@ -11,6 +11,7 @@ import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
 import emptyCollectionSidebar from './onedata-gui-common/components/empty-collection-sidebar';
 import oneTile from './onedata-gui-common/components/one-tile';
 import resourceNotFound from './onedata-gui-common/components/resource-not-found';
+import proceedProcessModal from './onedata-gui-common/components/proceed-process-modal';
 import clipboardLine from './onedata-gui-common/components/clipboard-line';
 
 import login from './onedata-gui-common/routes/login';
@@ -32,6 +33,7 @@ const translations = {
     emptyCollectionSidebar,
     oneTile,
     resourceNotFound,
+    proceedProcessModal,
     clipboardLine,
   },
   routes: {

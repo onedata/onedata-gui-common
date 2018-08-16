@@ -12,6 +12,7 @@ import { inject as service } from '@ember/service';
 import { observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from '../templates/components/main-menu-column';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,
@@ -49,14 +50,28 @@ export default Component.extend({
   isExpanded: reads('navigationState.mainMenuColumnExpanded'),
 
   /**
+   * @type {boolean}
+   */
+  lastIsExpandedValue: false,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   isExpandedObserver: observer('isExpanded', function isExpandedObserver() {
-    if (!this.get('isExpanded')) {
-      const mainMenuContainer = this.$('.main-menu-content');
-      if (mainMenuContainer.scrollTop()) {
-        mainMenuContainer.animate({ scrollTop: 0 }, 200);
+    const {
+      lastIsExpandedValue,
+      isExpanded,
+    } = this.getProperties('lastIsExpandedValue', 'isExpanded');
+    if (lastIsExpandedValue !== isExpanded) {
+      this.set('lastIsExpandedValue', isExpanded);
+      if (!this.get('isExpanded')) {
+        const $mainMenuContainer = this.$('.main-menu-content');
+        if ($mainMenuContainer.scrollTop()) {
+          $mainMenuContainer.animate({ scrollTop: 0 }, 200);
+        }
       }
+      // simulate scroll event to rerender all popovers
+      this.get('scrollState').scrollOccurred($.Event('ps-scroll-y'));
     }
   }),
 

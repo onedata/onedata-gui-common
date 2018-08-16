@@ -25,4 +25,23 @@
       pointer-events: none;
     }
   }
+
+  .expanded {
+    background-color: lighten($color-one-semiblack, 7%);
+  }
+  .nested-actions {
+    border-radius: 0;
+    li {
+      background-color: $color-one-dark-gray;
+    }
+    a {
+      padding-left: $padding-base-vertical;
+      padding-right: $padding-base-vertical;
+    }
+  }
+  
+  // nested popover
+  .webui-popover-content {
+    display: none;
+  }
 }

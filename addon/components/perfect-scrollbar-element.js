@@ -22,14 +22,20 @@ export default Component.extend(PerfectScrollbarMixin, {
   suppressScrollX: false,
 
   /**
+   * @type {boolean}
+   */
+  suppressScrollY: false,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  perfectScrollbarOptions: computed('suppressScrollX', function () {
-    const suppressScrollX = this.get('suppressScrollX');
-    return {
-      suppressScrollX,
-    };
-  }),
+  perfectScrollbarOptions: computed(
+    'suppressScrollX',
+    'suppressScrollY',
+    function () {
+      return this.getProperties('suppressScrollX', 'suppressScrollY');
+    }
+  ),
 
   /**
    * Scroll event handler

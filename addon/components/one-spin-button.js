@@ -10,6 +10,7 @@
 // NOTE: as of 27.03.2017 it requires usage of custom fork:
 // https://github.com/kliput/ember-spin-button/tree/master-onedata
 import SpinButton from 'ember-spin-button/components/spin-button';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default SpinButton.extend({
   /**
@@ -19,4 +20,13 @@ export default SpinButton.extend({
 
   startDelay: 0,
   buttonStyle: 'expand-left',
+
+  /**
+   * @override 
+   */
+  set() {
+    return safeExec(this, () =>
+      this._super(...arguments)
+    );
+  },
 });
