@@ -4,6 +4,11 @@ h5 {
   font-weight: bold;
 }
 
+strong {
+  font-weight: normal;
+  font-family: "Open Sans Semibold";
+}
+
 .vertical-align-middle {
   @include vertical-align-middle();
 }
