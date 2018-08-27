@@ -375,3 +375,9 @@ $icon-btn-active-color: $color-one-red;
     margin-bottom: 0px;
   }
 }
+
+label.align-left {
+  display: inline-block;
+  padding-right: $padding-base-vertical;
+  text-align: left;
+}
