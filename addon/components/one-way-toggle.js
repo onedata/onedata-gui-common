@@ -84,12 +84,14 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    * A displayed checkbox state
    * @type {boolean|number} true, false or 2 ("in middle")
    */
-  _checked: computed('_isInProgress', 'checked', function () {
+  _checked: computed('_isInProgress', 'checked', '_checkedWaitState', function () {
     const {
       _isInProgress,
       checked,
-    } = this.getProperties('_isInProgress', 'checked');
-    return (checked === 2 && checked) || (_isInProgress ? !checked : checked);
+      _checkedWaitState,
+    } = this.getProperties('_isInProgress', 'checked', '_checkedWaitState');
+    return (checked === 2 && checked) ||
+      (_isInProgress ? _checkedWaitState : checked);
   }),
 
   /**
