@@ -1,5 +1,9 @@
 $toggle-size-base: 1.4em;
 $toggle-width: 2 * $toggle-size-base;
+$one-way-toggle-control-color-active: $brand-primary;
+$one-way-toggle-control-color-maybe: $color-one-yellow;
+$toggle-disabled-desaturation: 20%;
+$toggle-color-transition: background-color 0.2s ease, opacity 0.2s ease;
 
 .one-way-toggle {
   position: relative;
@@ -36,19 +40,27 @@ $toggle-width: 2 * $toggle-size-base;
 
   &.checked {
     .one-way-toggle-control {
-      background-color: $brand-success;
+      background-color: $one-way-toggle-control-color-active;
       &:before {
         margin-left: $toggle-width / 2;
       }
+    }
+    &.disabled .one-way-toggle-control {
+      background-color: desaturate($one-way-toggle-control-color-active, $toggle-disabled-desaturation);
+      transition: $toggle-color-transition;
     }
   }
 
   &.maybe {
     .one-way-toggle-control {
-      background-color: $color-one-yellow;
+      background-color: $one-way-toggle-control-color-maybe;
       &:before {
         margin-left: $toggle-width / 4;
       }
+    }
+    &.disabled .one-way-toggle-control {
+      background-color: desaturate($one-way-toggle-control-color-maybe, $toggle-disabled-desaturation);
+      transition: $toggle-color-transition;
     }
   }
 
@@ -65,7 +77,7 @@ $toggle-width: 2 * $toggle-size-base;
   .one-way-toggle-control {
     display: inline-block;
     background-color: $color-one-light-gray;
-    transition: background-color 0.2s ease;
+    transition: $toggle-color-transition;
     width: $toggle-width;
     vertical-align: top;
   }

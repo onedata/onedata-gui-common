@@ -14,6 +14,7 @@ import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-way-toggle';
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
+import { inject as service } from '@ember/service';
 
 const THREE_STATES = [false, 2, true];
 const THREE_STATES_CLASSES = ['', 'maybe', 'checked'];
@@ -25,6 +26,8 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
   classNames: ['one-way-toggle'],
   classNameBindings: ['_checkedClass', '_toggleClassFromId'],
   recognizers: 'pan',
+
+  i18n: service(),
 
   /**
    * If true, toggle can have three states of selection
@@ -44,6 +47,14 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    * @type {boolean}
    */
   showLockForReadOnly: true,
+
+  /**
+   * A text that will be shown in locked hint (if locked).
+   * @type {Ember.ComputedProperty<string>}
+   */
+  lockHint: computed(function lockHint() {
+    return this.get('i18n').t('components.oneWayToggle.locked')
+  }),
 
   /**
    * If true, click action handler will be disabled

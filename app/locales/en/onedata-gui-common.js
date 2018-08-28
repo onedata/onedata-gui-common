@@ -13,6 +13,7 @@ import oneTile from './onedata-gui-common/components/one-tile';
 import resourceNotFound from './onedata-gui-common/components/resource-not-found';
 import proceedProcessModal from './onedata-gui-common/components/proceed-process-modal';
 import clipboardLine from './onedata-gui-common/components/clipboard-line';
+import oneWayToggle from './onedata-gui-common/components/one-way-toggle';
 
 import login from './onedata-gui-common/routes/login';
 
@@ -35,6 +36,7 @@ const translations = {
     resourceNotFound,
     proceedProcessModal,
     clipboardLine,
+    oneWayToggle,
   },
   routes: {
     login,
