@@ -1,12 +1,20 @@
 /**
- * FIXME: doc
+ * Creates mixin that will add methods and properties that provide data
+ * got from some promise.
  * 
+ * You should provide `fetch` method or implement `fetchName` method in object
+ * that will return Promise that resolves data.
+ * 
+ * Properties and methods added to object:
+ * 
+ * ```
  * updateDataProxy(): Promise<T>
- * fetchData(): Promise<T>
+ * fetchData(): Promise<T> // implement or provide `fetch`
  * dataProxy: PromiseObject<T>
  * data: T
+ * ```
  * 
- * @module mixin-factories/data-proxy
+ * @module utils/create-data-proxy-mixin
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -19,16 +27,23 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
-export default function dataProxy(name, fetch = notImplementedReject) {
+export default function createDataProxyMixin(name, fetch = notImplementedReject) {
   return Mixin.create({
     [`update${classify(name)}Proxy`](reload = false) {
       const promise = this[`fetch${classify(name)}`]();
       const proxyProperty = `${camelize(name)}Proxy`;
       if (reload) {
-        return promise.then(content => {
-          safeExec(this, 'set', `${proxyProperty}.content`, content);
-          return this.get(proxyProperty);
-        });
+        return promise
+          .catch(error => {
+            safeExec(this, 'set', `${proxyProperty}.content`, undefined);
+            safeExec(this, 'set', `${proxyProperty}.reason`, error);
+            throw error;
+          })
+          .then(content => {
+            safeExec(this, 'set', `${proxyProperty}.content`, content);
+            safeExec(this, 'set', `${proxyProperty}.reason`, undefined);
+            return this.get(proxyProperty);
+          });
       } else {
         return safeExec(
           this,
