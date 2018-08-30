@@ -61,7 +61,6 @@ module.exports = function (defaults) {
 
   const NODE_ASSETS = [
     'chartist-plugin-legend/chartist-plugin-legend.js',
-    'jquery.scrollto/jquery.scrollTo.min.js',
     'input-tokenizer/tokenizer.min.js',
   ];
 
