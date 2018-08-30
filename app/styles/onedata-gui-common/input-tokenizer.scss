@@ -1,0 +1,103 @@
+/**
+ * File based on:
+ * Example styling for tokenizer plugin.
+ * Prefix may be overriden with 'namespace' option.
+ * Don McCurdy, 2013.
+ */
+
+ /* The apparent input */
+.tknz-wrapper {
+  @extend .form-control;
+  height: 48px;
+  padding: 10px;
+  overflow: auto;
+}
+
+/* Apparent input in active state */
+.tknz-focus { 
+  @extend .form-control:focus;
+}
+
+/* Label for the field */
+.tknz-wrapper-label { 
+  display: none;
+  float: left;
+  margin: 5px 5px 0 2px;
+}
+
+/* The actual input */
+.tknz-input {
+  margin-top: 2px;
+  margin-left: 5px;
+  width: auto;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+.tknz-input-wrapper {
+  padding-top: 4px;
+}
+
+/* An individual token */
+.tknz-token {
+  float: left;
+  padding: 2px 2px 2px 5px;
+  margin: 0 2px;
+  
+  border-radius: 3px;
+  border: 1px solid #d9d9d9;
+  background-color: #ededed;
+  box-sizing: border-box;
+  
+  cursor: normal;
+}
+
+/* Token's label */
+.tknz-token-label {
+  word-break: break-word;
+}
+
+/* Delete button for token */
+.tknz-token-x {
+  top: 0;
+  position: relative;
+  padding-left: 6px;
+  padding-right: 4px;
+  cursor: pointer;
+}
+.tknz-token-x:hover {
+  color: $color-one-danger;
+}
+
+// TODO: Autosuggest styles - copied from original plugin but will look bad
+// in our app
+
+/* Autosuggest modal */
+.tknz-suggest {
+ position: absolute;
+ top: 27px;
+ left: 5px;
+ background-color: #fff;
+ box-shadow: 1px 1px 3px rgba(120,120,120, 0.3);
+}
+
+.tknz-suggest ul {
+ list-style: none;
+ margin: 0px;
+ padding: 0px;
+ text-align: left;
+}
+
+.tknz-suggest-li {
+color: #000;
+padding: 0px 5px;
+}
+
+.tknz-suggest-li:nth-child(2n) {
+ background-color: #f0f0f0;
+}
+
+.tknz-suggest-li.tknz-sel {
+ color: #fff;
+ background-color: #5c7db7;
+}
