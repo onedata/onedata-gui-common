@@ -424,3 +424,11 @@ a {
 .space {
   margin-right: 0.3em;
 }
+
+h1 .header-addon {
+  margin-left: 10px;
+  text-transform: none;
+  font-size: 90%;
+  font-weight: normal;
+  color: $color-one-dark-gray;
+}
