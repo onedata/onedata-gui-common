@@ -2,3 +2,11 @@
   {{one-icon class=iconClass icon=item.icon}} 
 {{/if}}
 <span class="one-label">{{item.label}}</span>
+{{#if item.warningMessage}}
+  {{one-icon class="warning-icon" icon="sign-warning"}}
+  {{one-tooltip
+    title=item.warningMessage
+    triggerElement=".warning-icon"
+    triggerEvent="hover"
+  }}
+{{/if}}
