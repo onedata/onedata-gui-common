@@ -338,9 +338,7 @@ export default Service.extend(I18n, {
    */
   resourceCollectionContainsEntityId(entityId) {
     return get(this.get('activeResourceCollection'), 'list')
-      .then(list =>
-        list.map(m => get(m, 'entityId')).indexOf(entityId) !== -1
-      );
+      .then(list => !!list.findBy('entityId', entityId));
   },
 
   _globalSidebarClosed() {
