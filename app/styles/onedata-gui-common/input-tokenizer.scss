@@ -8,9 +8,12 @@
  /* The apparent input */
 .tknz-wrapper {
   @extend .form-control;
-  height: 48px + 24px;
+  height: 48px;
   padding: 10px;
   overflow: auto;
+  &.double {
+    height: 48px + 24px;
+  }
 }
 
 /* Apparent input in active state */
