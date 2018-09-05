@@ -59,17 +59,15 @@ export default Service.extend({
    * Main method for reporting some information to user
    * @param {string} type one of: error, info
    */
-  show(type, message) {
+  show(type, message, options) {
     switch (type) {
       case 'error':
         console.error('global-notify: Error reported: ' + message);
-        this.get('alert').show(type, message);
-        break;
+        return this.get('alert').show(type, message, options);
       case 'warning':
       case 'info':
       case 'success':
-        this.get('notify').show(type, message);
-        break;
+        return this.get('notify').show(type, message, options);
       default:
         break;
     }
