@@ -51,12 +51,12 @@ describe('Unit | Utility | create data proxy mixin', function () {
     const mixin = createDataProxyMixin('world', fetch);
     const obj = EmberObject.extend(mixin, {}).create();
 
-    obj.getWorldProxy(true);
+    obj.getWorldProxy();
     return wait()
       .then(() => {
         expect(fetch).to.be.calledOnce;
         expect(get(obj, 'world')).to.equal(1);
-        obj.getWorldProxy(true);
+        obj.getWorldProxy({ reload: true });
       })
       .then(() => {
         expect(fetch).to.be.calledTwice;
@@ -69,11 +69,38 @@ describe('Unit | Utility | create data proxy mixin', function () {
 
     const mixin = createDataProxyMixin('world', fetch);
     const obj = EmberObject.extend(mixin, {}).create();
-    obj.updateWorldProxy(false, 1, 2);
+    obj.updateWorldProxy({ fetchArgs: [1, 2] });
 
     return wait().then(() => {
       expect(fetch).to.be.calledOnce;
       expect(fetch).to.be.calledWith(1, 2);
+    });
+  });
+
+  it('supports using one proxy as a source of data for another proxy', function () {
+    const fetchOriginal = sinon.stub()
+      .onFirstCall().resolves(1)
+      .onSecondCall().resolves(2);
+    const mixinOriginal = createDataProxyMixin('world', fetchOriginal);
+    const objOriginal = EmberObject.extend(mixinOriginal, {}).create();
+    const fetchUsingProxy = function fetchUsingProxy() {
+      return objOriginal.getWorldProxy({ reload: true });
+    };
+
+    const mixinUsingProxy = createDataProxyMixin('world', fetchUsingProxy);
+    const obj = EmberObject.extend(mixinUsingProxy, {}).create();
+    obj.updateWorldProxy();
+
+    return wait().then(() => {
+      expect(fetchOriginal).to.be.calledOnce;
+      expect(get(objOriginal, 'world'), 'first original').to.equal(1);
+      expect(get(obj, 'world'), 'first proxied').to.equal(1);
+      obj.updateWorldProxy();
+      return wait().then(() => {
+        expect(fetchOriginal).to.be.calledTwice;
+        expect(get(objOriginal, 'world'), 'second original').to.equal(2);
+        expect(get(obj, 'world'), 'second proxied').to.equal(2);
+      });
     });
   });
 });

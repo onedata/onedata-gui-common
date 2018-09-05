@@ -40,14 +40,19 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default function createDataProxyMixin(name, fetch = notImplementedReject) {
+  const updateDataProxyName = `update${classify(name)}Proxy`;
+  const fetchDataName = `fetch${classify(name)}`;
+  const dataProxyName = `${camelize(name)}Proxy`;
+  const getDataProxyName = `get${classify(name)}Proxy`;
+
   return Mixin.create({
     /**
      * If `replace` is true, do not create new ProxyObject, but
      * replace content, so `isPending` of the ProxyObject will not be changed
      */
-    [`update${classify(name)}Proxy`](replace = false, ...fetchArgs) {
-      const promise = this[`fetch${classify(name)}`](...fetchArgs);
-      const proxyProperty = `${camelize(name)}Proxy`;
+    [updateDataProxyName]({ replace = false, fetchArgs = [] } = {}) {
+      const promise = this[fetchDataName](...fetchArgs);
+      const proxyProperty = dataProxyName;
       if (replace && this.get(`${proxyProperty}.content`)) {
         return promise
           .catch(error => {
@@ -58,30 +63,31 @@ export default function createDataProxyMixin(name, fetch = notImplementedReject)
           .then(content => {
             safeExec(this, 'set', `${proxyProperty}.content`, content);
             safeExec(this, 'set', `${proxyProperty}.reason`, undefined);
-            return this.get(proxyProperty);
+            return content;
           });
       } else {
-        return safeExec(
+        safeExec(
           this,
           'set',
           proxyProperty,
           PromiseObject.create({ promise })
         );
+        return promise;
       }
     },
 
-    [`fetch${classify(name)}`]: fetch,
+    [fetchDataName]: fetch,
 
-    [`${camelize(name)}Proxy`]: null,
+    [dataProxyName]: null,
 
-    [name]: reads(`${camelize(name)}Proxy.content`),
+    [name]: reads(`${dataProxyName}.content`),
 
-    [`get${classify(name)}Proxy`](reload = false, ...args) {
+    [getDataProxyName]({ reload = false, fetchArgs = [] } = {}) {
       const dataProxy = this.get(`${camelize(name)}Proxy`);
       if (!reload && dataProxy) {
         return dataProxy;
       } else {
-        return this[`update${classify(name)}Proxy`](true, ...args);
+        return this[updateDataProxyName]({ replace: true, fetchArgs });
       }
     },
   });
