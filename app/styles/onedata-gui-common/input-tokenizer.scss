@@ -8,7 +8,7 @@
  /* The apparent input */
 .tknz-wrapper {
   @extend .form-control;
-  height: 48px;
+  height: 48px + 24px;
   padding: 10px;
   overflow: auto;
 }
@@ -74,30 +74,49 @@
 
 /* Autosuggest modal */
 .tknz-suggest {
- position: absolute;
- top: 27px;
- left: 5px;
- background-color: #fff;
- box-shadow: 1px 1px 3px rgba(120,120,120, 0.3);
+  position: absolute;
+  top: 27px;
+  left: 5px;
+  background-color: #fff;
+  box-shadow: 1px 1px 3px rgba(120,120,120, 0.3);
 }
 
 .tknz-suggest ul {
- list-style: none;
- margin: 0px;
- padding: 0px;
- text-align: left;
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
 }
 
 .tknz-suggest-li {
-color: #000;
-padding: 0px 5px;
+  color: #000;
+  padding: 0px 5px;
 }
 
 .tknz-suggest-li:nth-child(2n) {
- background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .tknz-suggest-li.tknz-sel {
- color: #fff;
- background-color: #5c7db7;
+  color: #fff;
+  background-color: #5c7db7;
 }
+
+.one-input-tokenizer {
+  position: relative;
+  
+  &.disabled, &:disabled {
+    .tknz-token {
+      pointer-events: none;
+      color: lighten($main-text-color, 30%);
+    }
+  }
+  
+  &.busy {
+    .input-busy-spinner {
+      right: 0;
+      left: unset;
+    } 
+  }
+}
+

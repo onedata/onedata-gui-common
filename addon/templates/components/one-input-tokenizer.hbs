@@ -1,5 +1,9 @@
 <input
   id={{inputId}}
   class="{{inputClass}}"
+  disabled={{if internalDisabled "disabled" ""}}
   type="text"
 >
+{{#if isBusy}}
+  {{spin-spinner-block sizeClass="xs" class="absolute-middle-centered input-busy-spinner"}}
+{{/if}}

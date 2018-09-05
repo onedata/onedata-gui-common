@@ -9,6 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/one-input-tokenizer';
+import { or } from '@ember/object/computed';
 import { computed, observer } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -17,6 +18,10 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 export default Component.extend({
   layout,
   classNames: ['form-group', 'one-input-tokenizer'],
+  classNameBindings: [
+    'internalDisabled:disabled',
+    'isBusy:busy',
+  ],
 
   initialValue: undefined,
 
@@ -34,8 +39,17 @@ export default Component.extend({
   tokensChanged: notImplementedIgnore,
   inputChanged: notImplementedIgnore,
 
+  internalDisabled: or('disabled', 'isBusy'),
+
   inputId: computed('elementId', function inputId() {
     return this.get('elementId') + '-input-tokenizer'
+  }),
+
+  internalDisabledChanged: observer('internalDisabled', function internalDisabledChanged() {
+    const internalDisabled = this.get('internalDisabled');
+    if (!internalDisabled) {
+      scheduleOnce('afterRender', () => this.$('.tknz-input').focus());
+    }
   }),
 
   newEntryChanged() {
