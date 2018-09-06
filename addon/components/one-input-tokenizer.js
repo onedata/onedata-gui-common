@@ -31,13 +31,20 @@ export default Component.extend({
 
   isBusy: false,
 
-  isNewEntryValid: true,
-  isInputValid: true,
+  /**
+   * @virtual
+   * @type {string}
+   */
+  inputValue: '',
 
-  newEntry: undefined,
+  /**
+   * @virtual
+   * @type {Array<string>}
+   */
+  tokens: Object.freeze([]),
 
   tokensChanged: notImplementedWarn,
-  inputChanged: notImplementedWarn,
+  inputValueChanged: notImplementedWarn,
 
   internalDisabled: or('disabled', 'isBusy'),
 
@@ -84,8 +91,6 @@ export default Component.extend({
     return this.$(`#${this.get('inputId')}`);
   },
 
-  tokens: Object.freeze([]),
-
   tokensObserver: observer('tokens.[]', function tokensObserver() {
     const $tokenizer = this.getTokenInput();
     $tokenizer.tokenizer('empty');
@@ -95,8 +100,8 @@ export default Component.extend({
     scheduleOnce('afterRender', () => this.adjustHeight());
   }),
 
-  inputObserver: observer('input', function inputObserver() {
-    this.getTokenInput().val(this.get('input'));
+  inputObserver: observer('inputValue', function inputObserver() {
+    this.getTokenInput().val(this.get('inputValue'));
   }),
 
   initInputTokenizer() {
@@ -112,8 +117,8 @@ export default Component.extend({
       },
     });
 
-    $tokenInput.on('input', event => {
-      this.get('inputChanged')(event.currentTarget.value);
+    $tokenInput.on('inputValue', event => {
+      this.get('inputValueChanged')(event.currentTarget.value);
     });
 
     // prevent invoking "back" in Firefox when pressing backspace
