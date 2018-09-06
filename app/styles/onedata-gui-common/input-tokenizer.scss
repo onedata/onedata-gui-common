@@ -8,6 +8,7 @@
  /* The apparent input */
 .tknz-wrapper {
   @extend .form-control;
+  position: relative;
   height: 48px;
   padding: 10px;
   overflow: auto;
@@ -39,6 +40,10 @@
 }
 .tknz-input-wrapper {
   padding-top: 4px;
+}
+
+.tknz-list {
+  display: inline;
 }
 
 /* An individual token */

@@ -11,9 +11,9 @@ import Component from '@ember/component';
 import layout from '../templates/components/one-input-tokenizer';
 import { or } from '@ember/object/computed';
 import { computed, observer } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
-import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { scheduleOnce, debounce } from '@ember/runloop';
+import notImplementedWarn from 'onedata-gui-common/utils/not-implemented-ignore';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,
@@ -36,8 +36,8 @@ export default Component.extend({
 
   newEntry: undefined,
 
-  tokensChanged: notImplementedIgnore,
-  inputChanged: notImplementedIgnore,
+  tokensChanged: notImplementedWarn,
+  inputChanged: notImplementedWarn,
 
   internalDisabled: or('disabled', 'isBusy'),
 
@@ -52,10 +52,6 @@ export default Component.extend({
     }
   }),
 
-  newEntryChanged() {
-    safeExec(this, 'set', 'newEntry', event.currentTarget.value);
-  },
-
   init() {
     this._super(...arguments);
   },
@@ -63,6 +59,25 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this.initInputTokenizer();
+    $(window).on(`resize.${this.elementId}`, () => debounce(this, 'adjustHeight', 100));
+    scheduleOnce('afterRender', () => this.adjustHeight());
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    $(window).off(`.${this.elementId}`);
+  },
+
+  // TODO: currently only makes input larger, not smaller
+  adjustHeight() {
+    /** @type {HTMLElement} */
+    const inputWrapper = this.$('.tknz-input-wrapper')[0];
+    /** @type {HTMLElement} */
+    const wrapper = this.$('.tknz-wrapper')[0];
+    if (inputWrapper.offsetTop + inputWrapper.offsetHeight > wrapper.offsetHeight) {
+      const currentHeight = parseInt(window.getComputedStyle(wrapper).height);
+      $(wrapper).css('height', currentHeight + 24 + 'px');
+    }
   },
 
   getTokenInput() {
@@ -77,6 +92,7 @@ export default Component.extend({
     this.get('tokens').forEach(token => {
       $tokenizer.tokenizer('push', token);
     });
+    scheduleOnce('afterRender', () => this.adjustHeight());
   }),
 
   inputObserver: observer('input', function inputObserver() {
@@ -84,7 +100,9 @@ export default Component.extend({
   }),
 
   initInputTokenizer() {
-    this.getTokenInput().tokenizer({
+    const $tokenInput = this.getTokenInput();
+
+    $tokenInput.tokenizer({
       placeholder: this.get('placeholder'),
       separators: [',', ';', ' '],
       label: '',
@@ -94,8 +112,15 @@ export default Component.extend({
       },
     });
 
-    this.getTokenInput().on('input', event => {
+    $tokenInput.on('input', event => {
       this.get('inputChanged')(event.currentTarget.value);
+    });
+
+    // prevent invoking "back" in Firefox when pressing backspace
+    this.$().on('keydown', event => {
+      if (event.which === 8) {
+        event.stopPropagation();
+      }
     });
 
     scheduleOnce('afterRender', () => {
