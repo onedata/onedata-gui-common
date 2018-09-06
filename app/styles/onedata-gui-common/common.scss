@@ -432,3 +432,16 @@ h1 .header-addon {
   font-weight: normal;
   opacity: 0.6;
 }
+
+@media (max-width: $screen-xs-max) {
+  .btn-container {
+    text-align: center;
+    .btn {
+      min-width: 280px;
+    }
+  }
+}
+
+.subheader-text {
+  padding-bottom: $padding-large-vertical;
+}
