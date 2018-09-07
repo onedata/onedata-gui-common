@@ -10,6 +10,7 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import layout from '../templates/components/proceed-process-modal';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
@@ -18,6 +19,8 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 export default Component.extend(I18n, {
   tagName: '',
   layout,
+
+  i18n: service(),
 
   /**
    * @override
