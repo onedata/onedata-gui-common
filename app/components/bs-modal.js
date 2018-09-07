@@ -7,9 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { computed, get } from '@ember/object';
-import { getOwner } from '@ember/application';
+import { computed } from '@ember/object';
 import BsModal from 'ember-bootstrap/components/bs-modal';
+import config from 'ember-get-config';
 
 export default BsModal.extend({
   /**
@@ -17,7 +17,6 @@ export default BsModal.extend({
    */
   fade: computed(function () {
     // disables fade in test environment
-    // (then getOwner(this).application === undefined)
-    return !!get(getOwner(this), 'application');
+    return config.environment !== 'test';
   }),
 });
