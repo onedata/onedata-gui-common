@@ -66,20 +66,26 @@ export default OnePieChart.extend({
           providersColors,
         } = this.getProperties('space', 'providersColors');
         let supportSizes = get(space, 'supportSizes');
-        const providers = this.get('providers');
+        const providers = this.get('providers').toArray();
         return A(
-          _.map(Object.keys(supportSizes), providerId => {
+          Object.keys(supportSizes).map(providerId => {
             const provider = _.find(
               providers.toArray(),
               p => get(p, 'entityId') === providerId
             );
-            return EmberObject.create({
-              id: String(providerId),
-              label: get(provider, 'name'),
+            return {
               value: get(supportSizes, providerId),
-              color: get(providersColors, providerId),
-            });
+              providerId,
+              provider,
+            };
           })
+          .filter(({ provider }) => provider)
+          .map(({ provider, providerId, value }) => EmberObject.create({
+            id: String(providerId),
+            label: get(provider, 'name'),
+            value,
+            color: get(providersColors, providerId),
+          }))
         );
       } else {
         return A();
