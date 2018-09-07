@@ -433,6 +433,10 @@ h1 .header-addon {
   opacity: 0.6;
 }
 
+textarea + .btn-container {
+  padding-top: 10px;
+}
+
 @media (max-width: $screen-xs-max) {
   .btn-container {
     text-align: center;
