@@ -1,5 +1,5 @@
 /**
- * File based on:
+ * File based on: https://github.com/donmccurdy/input-tokenizer/blob/master/input_style.css
  * Example styling for tokenizer plugin.
  * Prefix may be overriden with 'namespace' option.
  * Don McCurdy, 2013.
@@ -52,9 +52,9 @@
   padding: 2px 2px 2px 5px;
   margin: 0 2px;
   
-  border-radius: 3px;
-  border: 1px solid #d9d9d9;
-  background-color: #ededed;
+  border-radius: $token-border-radius;
+  border: $token-border;
+  background-color: $color-token-bg;
   box-sizing: border-box;
   
   cursor: normal;

@@ -59,9 +59,18 @@ export default Component.extend({
     }
   }),
 
-  init() {
-    this._super(...arguments);
-  },
+  tokensObserver: observer('tokens.[]', function tokensObserver() {
+    const $tokenizer = this.getTokenInput();
+    $tokenizer.tokenizer('empty');
+    this.get('tokens').forEach(token => {
+      $tokenizer.tokenizer('push', token);
+    });
+    scheduleOnce('afterRender', () => this.adjustHeight());
+  }),
+
+  inputObserver: observer('inputValue', function inputObserver() {
+    this.getTokenInput().val(this.get('inputValue'));
+  }),
 
   didInsertElement() {
     this._super(...arguments);
@@ -91,19 +100,6 @@ export default Component.extend({
     return this.$(`#${this.get('inputId')}`);
   },
 
-  tokensObserver: observer('tokens.[]', function tokensObserver() {
-    const $tokenizer = this.getTokenInput();
-    $tokenizer.tokenizer('empty');
-    this.get('tokens').forEach(token => {
-      $tokenizer.tokenizer('push', token);
-    });
-    scheduleOnce('afterRender', () => this.adjustHeight());
-  }),
-
-  inputObserver: observer('inputValue', function inputObserver() {
-    this.getTokenInput().val(this.get('inputValue'));
-  }),
-
   initInputTokenizer() {
     const $tokenInput = this.getTokenInput();
 
@@ -117,7 +113,7 @@ export default Component.extend({
       },
     });
 
-    $tokenInput.on('inputValue', event => {
+    $tokenInput.on('input', event => {
       this.get('inputValueChanged')(event.currentTarget.value);
     });
 

@@ -37,11 +37,6 @@ export default Component.extend({
 
   timeFromNow: undefined,
 
-  updateTime() {
-    const timeFromNow = this.get('dateMoment').fromNow()
-    safeExec(this, 'set', 'timeFromNow', timeFromNow);
-  },
-
   init() {
     this._super(...arguments);
     const timeUpdater = this.set('timeUpdater', new Looper({
@@ -61,5 +56,10 @@ export default Component.extend({
     } finally {
       this._super(...arguments);
     }
+  },
+
+  updateTime() {
+    const timeFromNow = this.get('dateMoment').fromNow()
+    safeExec(this, 'set', 'timeFromNow', timeFromNow);
   },
 });
