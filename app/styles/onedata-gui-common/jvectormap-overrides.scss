@@ -5,6 +5,7 @@
   font-size: 2em;
   line-height: 20px;
   background: $color-one-dark-blue;
+  border: 1px solid $color-one-white;
 }
 
 .jvectormap-zoomin, .jvectormap-zoomout {
@@ -24,7 +25,7 @@
   fill: $color-one-dark-blue;
   fill-opacity: 1;
   stroke: $color-one-dark-blue;
-  stroke-width: 0.5;
+  stroke-width: 0.2;
   cursor: initial;
 }
 
