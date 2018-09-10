@@ -95,8 +95,10 @@
   
   .warning-icon {
     @include vertical-align-middle;
-    right: 10px;
-    font-size: 26px;
+    right: $padding-large-horizontal;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
     color: $color-one-warning;
   }
 }
