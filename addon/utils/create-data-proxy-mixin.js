@@ -10,20 +10,20 @@
  * 
  * ```
  * // creates proxy using `fetchData` or replaces content of proxy
- * updateDataProxy(replace: boolean, ...fetchArgs): Promise<T>
+ * updatePropertyNameProxy({ replace: boolean, fetchArgs: Array }): Promise<T>
  * 
  * // implement or provide `fetch`, do actual data fetching
- * fetchData(...fetchArgs): Promise<T>
+ * fetchPropertyName(fetchArgs): Promise<T>
  * 
  * // PromiseObject with data, can be undefined if `updateDataProxy` or
  * // `getDataProxy` was not invoked yet
- * dataProxy: PromiseObject<T>
+ * propertyNameProxy: PromiseObject<T>
  * 
  * // object with data, can be undefined if data not yet fetched or rejected
- * data: T
+ * PropertyName: T
  * 
  * // returns dataProxy or creates it when not created yet
- * getDataProxy(reload: boolean, ...fetchArgs): PromiseObject<T>
+ * getPropertyNameProxy({ reload: boolean, fetchArgs: Array }): PromiseObject<T>
  * ```
  * 
  * @module utils/create-data-proxy-mixin
@@ -58,11 +58,15 @@ export default function createDataProxyMixin(name, fetch = notImplementedReject)
           .catch(error => {
             safeExec(this, 'set', `${proxyProperty}.content`, undefined);
             safeExec(this, 'set', `${proxyProperty}.reason`, error);
+            safeExec(this, 'set', `${proxyProperty}.isFulfilled`, false);
+            safeExec(this, 'set', `${proxyProperty}.isRejected`, true);
             throw error;
           })
           .then(content => {
             safeExec(this, 'set', `${proxyProperty}.content`, content);
             safeExec(this, 'set', `${proxyProperty}.reason`, undefined);
+            safeExec(this, 'set', `${proxyProperty}.isFulfilled`, true);
+            safeExec(this, 'set', `${proxyProperty}.isRejected`, false);
             return content;
           });
       } else {
