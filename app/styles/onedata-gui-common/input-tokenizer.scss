@@ -48,16 +48,7 @@
 
 /* An individual token */
 .tknz-token {
-  float: left;
-  padding: 2px 2px 2px 5px;
-  margin: 0 2px;
-  
-  border-radius: $token-border-radius;
-  border: $token-border;
-  background-color: $color-token-bg;
-  box-sizing: border-box;
-  
-  cursor: normal;
+  @extend .tag;
 }
 
 /* Token's label */

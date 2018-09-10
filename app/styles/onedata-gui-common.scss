@@ -27,12 +27,6 @@ $color-sidebar-item-bg: $color-one-gray-sand;
 $color-sidebar-item-active-bg: darken($color-sidebar-item-bg, 3%);
 $color-one-list-item-separator: $main-border-color;
 
-$color-token-border: #d9d9d9;
-$color-token-bg: #ededed;
-
-$token-border: 1px solid $color-token-border;
-$token-border-radius: 3px;
-
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 

@@ -66,6 +66,8 @@ strong {
 }
 
 .disable-user-select {
+  @include vendor-prefix(user-select, none);
+  cursor: default;
   > * {
     @include vendor-prefix(user-select, none);
     cursor: default;
