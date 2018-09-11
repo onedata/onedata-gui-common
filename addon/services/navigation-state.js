@@ -369,7 +369,7 @@ export default Service.extend(I18n, {
    */
   resourceCollectionContainsId(id) {
     return get(this.get('activeResourceCollection'), 'list')
-      .then(list => list.map(m => get(m, 'id')).indexOf(id) !== -1);
+      .then(list => !!list.findBy('id', id));
   },
 
   _globalSidebarClosed() {

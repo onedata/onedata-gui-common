@@ -121,6 +121,9 @@ export default Component.extend({
           safeExec(this, '_handleViewportChange', event, scale),
       }).vectorMap('get', 'mapObject')
     );
+
+    this._delayViewportChangeTransform();
+
     // Redirect wheel event from non-map elements to the map container to
     // handle zoom-in/out
     const scrollRedirectHandler = (event) => {
@@ -145,6 +148,20 @@ export default Component.extend({
     } finally {
       this._super(...arguments);
     }
+  },
+
+  /**
+   * Moves map transform processing to the next runloop frame
+   * @returns {undefined}
+   */
+  _delayViewportChangeTransform() {
+    /** @type {jvm.SVGCanvasElement} */
+    const canvas = this.get('_mapInstance.canvas');
+    const oldApplyTransformParams = canvas.applyTransformParams.bind(canvas);
+    const newApplyTransformParams = (...args) => {
+      setTimeout(() => oldApplyTransformParams(...args), 0);
+    } 
+    canvas.applyTransformParams = newApplyTransformParams;
   },
 
   /**
