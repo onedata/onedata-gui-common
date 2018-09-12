@@ -12,12 +12,11 @@
   >
 </div>
 <div class="clipboard-line-btn">
-  {{#copy-button
-    success=(action "copySuccess")
-    error=(action "copyError")
+  {{#one-copy-button
     class=(concat "btn btn-primary " (if size (concat "btn-" size)))
-    clipboardTarget=(concat "#" elementId " .clipboard-input")
+    parentElementId=elementId
+    localTarget=".clipboard-input"
   }}
     {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
-  {{/copy-button}}
+  {{/one-copy-button}}
 </div>

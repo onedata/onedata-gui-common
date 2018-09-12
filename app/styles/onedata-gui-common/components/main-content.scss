@@ -217,11 +217,21 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         border-bottom: 0;
       }
 
+      // TODO: using selector p, h1, and others without > causes problems
+      // when trying to use p, h1, etc. inside other elements
       p,
       h1,
       form,
       .inner-row-content {
         padding: 0 $mobile-horizontal-content-padding;
+        
+        // resetting internal paddings
+        p,
+        h1,
+        form,
+        .inner-row-content {
+          padding: initial;
+        }
       }
 
       h1 {

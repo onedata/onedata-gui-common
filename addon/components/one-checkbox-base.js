@@ -75,6 +75,13 @@ export default Component.extend({
   _disabled: or('_isInProgress', 'isReadOnly'),
 
   /**
+   * A state of check shown when waiting for promise to resolve.
+   * Ignores completely check changes when promise is waiting to resolve.
+   * @type {boolean|number}
+   */
+  _checkedWaitState: undefined,
+
+  /**
    * Internal in progress state
    * @type {Ember.ComputedProperty<boolean>}
    */
@@ -124,10 +131,16 @@ export default Component.extend({
   _update(value) {
     const updateResult = this.get('update')(value, this);
     if (updateResult instanceof Promise) {
-      this.set('_updateInProgress', true);
+      this.setProperties({
+        _updateInProgress: true,
+        _checkedWaitState: !this.get('checked'),
+      });
       updateResult.finally(() =>
         safeExec(this, function finishCheckboxUpdate() {
-          this.set('_updateInProgress', false);
+          this.setProperties({
+            _updateInProgress: false,
+            _checkedWaitState: undefined,
+          });
         })
       );
     }

@@ -40,6 +40,7 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 @import 'onedata-gui-common/spin-button-overrides';
 @import 'chartist';
 @import 'onedata-gui-common/chartist-overrides';
+@import 'onedata-gui-common/input-tokenizer';
 
 $mobile-top-height: 55px;
 $main-menu-width: 200px;

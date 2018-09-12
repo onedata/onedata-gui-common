@@ -4,6 +4,11 @@ h5 {
   font-weight: bold;
 }
 
+strong {
+  font-weight: normal;
+  font-family: "Open Sans Semibold";
+}
+
 .vertical-align-middle {
   @include vertical-align-middle();
 }
@@ -61,6 +66,8 @@ h5 {
 }
 
 .disable-user-select {
+  @include vendor-prefix(user-select, none);
+  cursor: default;
   > * {
     @include vendor-prefix(user-select, none);
     cursor: default;
@@ -413,4 +420,34 @@ a {
     margin-top: 20px;
     text-align: right;
   }
+}
+
+// just to simulate space <span class="space"></span>
+.space {
+  margin-right: 0.3em;
+}
+
+h1 .header-addon {
+  margin-left: 10px;
+  text-transform: none;
+  font-size: 90%;
+  font-weight: normal;
+  opacity: 0.6;
+}
+
+textarea + .btn-container {
+  padding-top: 10px;
+}
+
+@media (max-width: $screen-xs-max) {
+  .btn-container {
+    text-align: center;
+    .btn {
+      min-width: 280px;
+    }
+  }
+}
+
+.subheader-text {
+  padding-bottom: $padding-large-vertical;
 }

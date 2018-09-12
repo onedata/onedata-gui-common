@@ -59,17 +59,27 @@ export default Service.extend({
    * Main method for reporting some information to user
    * @param {string} type one of: error, info
    */
-  show(type, message) {
+  show(type, message, options = {}) {
+    const notifyMessage = typeof message === 'object' ? message : { html: message };
+    let messageBody = notifyMessage.html;
+    let messageIcon = '';
+    if (notifyMessage.oneTitle) {
+      messageBody =
+        `<strong class="title">${notifyMessage.oneTitle}</strong><br><span class="text">${messageBody}</span>`;
+    }
+    if (notifyMessage.oneIcon) {
+      messageIcon =
+        `<div class="message-icon"><span class="oneicon one-icon oneicon-${notifyMessage.oneIcon}"></span></div>`;
+    }
+    notifyMessage.html = `${messageIcon}<div class="message-body">${messageBody}</div>`;
     switch (type) {
       case 'error':
-        console.error('global-notify: Error reported: ' + message);
-        this.get('alert').show(type, message);
-        break;
+        console.error('global-notify: Error reported: ' + notifyMessage.html);
+        return this.get('alert').show(type, notifyMessage, options);
       case 'warning':
       case 'info':
       case 'success':
-        this.get('notify').show(type, message);
-        break;
+        return this.get('notify').show(type, notifyMessage, options);
       default:
         break;
     }
