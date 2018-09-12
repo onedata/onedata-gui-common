@@ -199,6 +199,7 @@ export default Component.extend(I18n, {
     let width = atlasWidth * 0.02 * circleSizeScale;
 
     this.$().find('.circle').css({
+      borderWidth: (width / 15) + 'px',
       fontSize: width * 0.75 + 'px',
       width: width + 'px',
       height: width + 'px',
