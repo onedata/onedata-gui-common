@@ -16,3 +16,20 @@
     }
   }
 }
+
+.spin-button.with-addon {
+  padding-left: 0;
+  padding-right: 0;
+  .spin-button-label {
+    width: 100%;
+    display: inline-block;
+  }
+  &.in-flight {
+    .btn-img-addon {
+      display: none;
+    }
+    .spin-button-label {
+      margin-left: -52px;
+    }
+  }
+}
