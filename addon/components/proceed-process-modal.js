@@ -84,12 +84,6 @@ export default Component.extend(I18n, {
   textCenter: true,
 
   /**
-   * Modal fade animation
-   * @type {boolean}
-   */
-  fade: true,
-
-  /**
    * Modal header text.
    * @type {Ember.ComputedString<string>}
    */

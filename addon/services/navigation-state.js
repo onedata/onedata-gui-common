@@ -349,10 +349,9 @@ export default Service.extend(I18n, {
         'isActiveResourceIdSpecial',
         'activeResourceCollection'
       );
-      if (activeResourceId && activeResourceCollection && (
-        !isActiveResourceIdSpecial ||
-        (isActiveResourceIdSpecial && activeResourceId === 'empty')
-      )) {
+      const isEmptyOrNotSpecial = !isActiveResourceIdSpecial ||
+        (isActiveResourceIdSpecial && activeResourceId === 'empty');
+      if (activeResourceId && activeResourceCollection && isEmptyOrNotSpecial) {
         this.resourceCollectionContainsId(activeResourceId).then(contains => {
           if (!contains) {
             this.get('router').transitionTo('onedata.sidebar');
