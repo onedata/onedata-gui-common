@@ -1,5 +1,6 @@
 export default [
   'bezier-curve',
+  'hr-label',
   'name-conflict',
   'one-atlas',
   'one-dynamic-tree',
