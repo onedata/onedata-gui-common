@@ -33,6 +33,7 @@
     "chai-jquery": "2.0.0",
     "chartist-plugin-legend": "0.6.1",
     "color": "2.0.1",
+    "contrast": "1.0.1",
     "ember-bootstrap": "1.2.0",
     "ember-browserify": "1.2.1",
     "ember-cli": "2.18.0",

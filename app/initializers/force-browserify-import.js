@@ -12,6 +12,7 @@ import 'npm:perfect-scrollbar';
 import 'npm:round10';
 import 'npm:color';
 import 'npm:basictable';
+import 'npm:contrast';
 
 export default {
   name: 'force-browserify-import',
