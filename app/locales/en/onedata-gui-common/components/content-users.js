@@ -1,3 +1,5 @@
+// FIXME: this will be re/moved
+
 export default {
   accountManagement: 'Account management',
   changePassword: 'Change password',
