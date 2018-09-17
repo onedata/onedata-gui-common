@@ -30,6 +30,8 @@ $color-one-list-item-separator: $main-border-color;
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
+$large-social-box-size: 50px;
+
 @import 'onedata-gui-common/bootstrap-config';
 @import 'onedata-gui-common/bootstrap-addons';
 
@@ -142,3 +144,4 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/clipboard-line';
 @import 'onedata-gui-common/components/one-form-fields';
 @import 'onedata-gui-common/components/hr-label';
+@import 'onedata-gui-common/components/content-users';
