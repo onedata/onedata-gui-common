@@ -12,7 +12,8 @@ import emptyCollectionSidebar from './onedata-gui-common/components/empty-collec
 import oneTile from './onedata-gui-common/components/one-tile';
 import resourceNotFound from './onedata-gui-common/components/resource-not-found';
 import proceedProcessModal from './onedata-gui-common/components/proceed-process-modal';
-import clipboardLine from './onedata-gui-common/components/clipboard-line';
+import oneCopyButton from './onedata-gui-common/components/one-copy-button';
+import oneWayToggle from './onedata-gui-common/components/one-way-toggle';
 
 import login from './onedata-gui-common/routes/login';
 
@@ -34,7 +35,8 @@ const translations = {
     oneTile,
     resourceNotFound,
     proceedProcessModal,
-    clipboardLine,
+    oneCopyButton,
+    oneWayToggle,
   },
   routes: {
     login,
