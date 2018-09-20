@@ -23,7 +23,7 @@
     "clean": "rm -rf tmp dist node_modules bower_components .sass-cache tests/test-results.xml"
   },
   "dependencies": {
-    "ember-cli-babel": "6.11.0",
+    "ember-cli-babel": "6.17.2",
     "ember-cli-htmlbars": "2.0.3"
   },
   "devDependencies": {
