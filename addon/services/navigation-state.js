@@ -88,6 +88,13 @@ export default Service.extend(I18n, {
   activeResourceId: undefined,
 
   /**
+   * If true, then activeResourceId is a special id not related to any model.
+   * Examples: 'empty', 'new'
+   * @type {boolean}
+   */
+  isActiveResourceIdSpecial: false,
+
+  /**
    * If true, then activeResource is loading.
    * @type {boolean}
    */
@@ -330,15 +337,38 @@ export default Service.extend(I18n, {
     }
   ),
 
+  activeResourceCollectionObserver: observer(
+    'activeResourceCollection.list.[]',
+    function () {
+      const {
+        activeResourceId,
+        isActiveResourceIdSpecial,
+        activeResourceCollection,
+      } = this.getProperties(
+        'activeResourceId',
+        'isActiveResourceIdSpecial',
+        'activeResourceCollection'
+      );
+      const isEmptyOrNotSpecial = !isActiveResourceIdSpecial ||
+        (isActiveResourceIdSpecial && activeResourceId === 'empty');
+      if (activeResourceId && activeResourceCollection && isEmptyOrNotSpecial) {
+        this.resourceCollectionContainsId(activeResourceId).then(contains => {
+          if (!contains) {
+            this.get('router').transitionTo('onedata.sidebar');
+          }
+        });
+      }
+    }
+  ),
+
   /**
-   * Resolves to true if activeResourceCollections contains model with passed
-   * entityId
-   * @param {string} entityId 
+   * Resolves to true if activeResourceCollections contains model with passed id
+   * @param {string} id 
    * @returns {boolean}
    */
-  resourceCollectionContainsEntityId(entityId) {
+  resourceCollectionContainsId(id) {
     return get(this.get('activeResourceCollection'), 'list')
-      .then(list => !!list.findBy('entityId', entityId));
+      .then(list => !!list.findBy('id', id));
   },
 
   _globalSidebarClosed() {

@@ -24,7 +24,7 @@ import Route from '@ember/routing/route';
 
 import { inject as service } from '@ember/service';
 import { Promise } from 'rsvp';
-import { get } from '@ember/object';
+import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
 
 // TODO: refactor to create route-, or application-specific special ids
@@ -44,12 +44,16 @@ export default Route.extend({
   navigationState: service(),
 
   beforeModel(transition) {
-    this.set('navigationState.queryParams', get(transition, 'queryParams'));
     const navigationState = this.get('navigationState');
     if (navigationState.get('globalSidenavResourceType')) {
       navigationState.set('globalSidenavResourceType', null);
     }
-    navigationState.set('isActiveResourceLoading', false);
+    setProperties(navigationState, {
+      queryParams: get(transition, 'queryParams'),
+      activeResourceId: undefined,
+      isActiveResourceIdSpecial: false,
+      isActiveResourceLoading: false,
+    });
   },
 
   model({ resource_id: resourceId }, transition) {
@@ -59,14 +63,18 @@ export default Route.extend({
       resourceType
     } = this.modelFor('onedata.sidebar');
 
+    const navigationState = this.get('navigationState');
     const queryParams = get(transition, 'queryParams');
 
     if (isSpecialResourceId(resourceId)) {
+      setProperties(navigationState, {
+        isActiveResourceIdSpecial: true,
+        activeResourceId: resourceId,
+      });
       if (resourceId === 'empty' && get(collection, 'list.length')) {
         this.transitionTo('onedata.sidebar.index');
         return;
       } else {
-        this.set('navigationState.activeResourceId', resourceId);
         return { resourceId, collection, queryParams };
       }
     } else {

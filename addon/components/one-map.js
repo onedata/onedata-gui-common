@@ -160,7 +160,7 @@ export default Component.extend({
     const oldApplyTransformParams = canvas.applyTransformParams.bind(canvas);
     const newApplyTransformParams = (...args) => {
       setTimeout(() => oldApplyTransformParams(...args), 0);
-    } 
+    }
     canvas.applyTransformParams = newApplyTransformParams;
   },
 
