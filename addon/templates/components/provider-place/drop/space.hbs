@@ -2,6 +2,13 @@
   {{one-icon icon=_iconName class="item-icon"}}
 </div>
 {{#truncated-string class="space-label"}}
-  {{name-conflict item=space}}
+  {{#link-to
+    "provider-redirect"
+    providerId
+    (query-params space_id=space.entityId)
+    class="space-redirect-link"
+  }}
+    {{name-conflict item=space}}
+  {{/link-to}}
 {{/truncated-string}}
 <div class="space-size">{{bytes-to-string _supportSize}}</div> 

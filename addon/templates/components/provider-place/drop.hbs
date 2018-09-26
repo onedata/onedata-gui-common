@@ -59,8 +59,9 @@
       </div>
       <div class="row row-btn">
         {{#if (eq provider.status "online")}}
-          {{#link-to "onedata.sidebar.content.aspect" "redirect"
-            class="btn btn-sm btn-go-to-files btn-primary"}}
+          {{#link-to "provider-redirect" provider.entityId
+            class="btn btn-sm btn-go-to-files btn-primary"
+          }}
             {{one-icon icon="provider"}}
             <span class="text">
               {{tt this "goToFiles"}}

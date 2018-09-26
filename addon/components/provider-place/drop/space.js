@@ -15,5 +15,18 @@ import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
 export default Component.extend(ProviderSpace, {
   layout,
   tagName: 'li',
-  classNames: ['provider-place-drop-space']
+  classNames: ['provider-place-drop-space'],
+
+  /**
+   * @virtual
+   * EntityId of provider
+   * @type {string}
+   */
+  providerId: undefined,
+
+  /**
+   * @virtual
+   * @type {models.Space}
+   */
+  space: undefined,
 });
