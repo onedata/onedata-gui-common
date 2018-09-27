@@ -49,11 +49,13 @@ describe('Integration | Component | provider place', function () {
     });
 
     const spaces = [{
+      id: 'space1',
       name: 'space1',
       supportSizes: {
         '1': 1048576,
       },
     }, {
+      id: 'space2',
       name: 'space2',
       supportSizes: {
         '1': 1048576,
@@ -63,6 +65,7 @@ describe('Integration | Component | provider place', function () {
     spaces.isFulfilled = true;
 
     const provider = EmberObject.create({
+      id: '1',
       entityId: '1',
       name: 'provider1',
       status: 'online',
@@ -77,7 +80,7 @@ describe('Integration | Component | provider place', function () {
     this.set('provider', provider);
     this.set('providers', [
       provider,
-      Object.assign({}, provider, { name: 'provider2' })
+      Object.assign({}, provider, { id: '2', name: 'provider2' })
     ]);
   });
 
