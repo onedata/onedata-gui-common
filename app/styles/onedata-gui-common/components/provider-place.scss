@@ -51,7 +51,7 @@ $provider-place-drop-height: 306px;
   height: $provider-place-drop-height;
   
   // TODO: experimental style
-  .space-redirect-link {
+  .space-redirect-link:not(:hover) {
     color: $main-text-color;
   }
   
