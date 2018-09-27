@@ -9,16 +9,17 @@ $-tile-content-padding: 4px;
   
   padding: $-tile-padding;
   margin-top: $-tile-spacing;
-  margin-right: $-tile-spacing;
+  margin-right: $-tile-spacing / 2;
+  margin-left: $-tile-spacing / 2;
   width: $-tile-size;
   height: $-tile-size;
   
   &.x2 {
-    width: $-tile-size * 2;
+    width: $-tile-size * 2 + $-tile-spacing;
   }
 
   &.x4 {
-    width: $-tile-size * 4;
+    width: $-tile-size * 4 + 3 * $-tile-spacing;
   }
   
   h1.tile-title, .more-link {
@@ -43,28 +44,21 @@ $-tile-content-padding: 4px;
   }
 }
 
-@media (max-width: $screen-md-max) {
-  .one-tile {
-    @include one-tile-sizes(300px);
-  }
+.one-tile {
+  @include one-tile-sizes(300px);
 }
 
-@media (min-width: $screen-lg-min) {
-  .one-tile {
-    @include one-tile-sizes(600px);
-  }
-}
-
-@media (max-width: $screen-xs-max) {
-  .one-tile-container {
-    padding-left: $-tile-spacing;
-    padding-right: $-tile-spacing;
+.one-tile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  @media (min-width: $screen-sm-min) {
+    margin-right: -$-tile-spacing / 2;
+    margin-left: -$-tile-spacing / 2;
   }
 }
 
 .one-tile {  
-  display: inline-block;
-  vertical-align: top;
   position: relative;
 
   background-color: #fff;
@@ -77,10 +71,6 @@ $-tile-content-padding: 4px;
     .more-link {
       @extend a:hover;
     }
-  }
-  
-  &:last-of-type {
-    margin-right: 0px;
   }
   
   h1.tile-title, .more-link {
