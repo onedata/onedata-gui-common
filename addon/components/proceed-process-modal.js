@@ -60,6 +60,11 @@ export default Component.extend(I18n, {
   modalClass: 'proceed-modal',
 
   /**
+   * @type {string}
+   */
+  modalIcon: null,
+
+  /**
    * Classes assigned to the proceed button
    * @type {string}
    */
@@ -81,7 +86,7 @@ export default Component.extend(I18n, {
    * If true, content text will be centered.
    * @type {boolean}
    */
-  textCenter: true,
+  textCenter: false,
 
   /**
    * Modal header text.

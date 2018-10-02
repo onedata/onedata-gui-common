@@ -7,7 +7,12 @@
   as |modal|
 }}
   {{#modal.header}}
-    <h1>{{headerText}}</h1>
+    <h1 class={{unless textCenter "text-left"}}>
+      {{#if modalIcon}}
+        {{one-icon icon=modalIcon}}
+      {{/if}}
+      <span class="one-label">{{headerText}}</span>
+    </h1>
   {{/modal.header}}
   {{#modal.body class=(if textCenter "text-center")}}
     {{#if (has-block)}}

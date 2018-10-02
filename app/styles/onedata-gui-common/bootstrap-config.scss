@@ -252,7 +252,9 @@ label {
 
         .modal-header {
           text-align: center;
-          
+          span {
+            vertical-align: middle;
+          }
           .close {
             display: none;
           }
@@ -273,12 +275,14 @@ label {
         }
 
         h1 {
-            font-size: $font-size-base * 1.5;
-            font-family: 'Open Sans Semibold';
-            letter-spacing: $letter-spacing-base;
-            margin-bottom: 1em;
-            text-transform: uppercase;
+          font-size: $font-size-base * 1.4;
+          font-family: 'Open Sans Semibold';
+          letter-spacing: $letter-spacing-base;
+          margin-bottom: 1em;
+          text-transform: uppercase;
+          &:not(.text-left) {
             text-align: center;
+          }
         }
       }
     }

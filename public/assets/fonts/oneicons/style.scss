@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rx6iz0');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rx6iz0#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?rx6iz0') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?rx6iz0') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?rx6iz0##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?1ww4mh');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?1ww4mh#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?1ww4mh') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?1ww4mh') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?1ww4mh##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -432,14 +432,29 @@
     content: $oneicon-sign-error; 
   }
 }
+.oneicon-sign-info-rounded {
+  &:before {
+    content: $oneicon-sign-info-rounded; 
+  }
+}
 .oneicon-sign-info {
   &:before {
     content: $oneicon-sign-info; 
   }
 }
+.oneicon-sign-question-rounded {
+  &:before {
+    content: $oneicon-sign-question-rounded; 
+  }
+}
 .oneicon-sign-question {
   &:before {
     content: $oneicon-sign-question; 
+  }
+}
+.oneicon-sign-warning-rounded {
+  &:before {
+    content: $oneicon-sign-warning-rounded; 
   }
 }
 .oneicon-sign-warning {
