@@ -244,6 +244,11 @@ $token-border-radius: 3px;
   margin-bottom: 0;
 }
 
+.inline-label {
+  display: inline-block;
+  margin-right: $padding-base-horizontal;
+}
+
 .icon-btn {
   border: 0;
   background-color: transparent;
