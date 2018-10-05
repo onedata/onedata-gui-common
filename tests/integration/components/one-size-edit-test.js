@@ -1,0 +1,72 @@
+import { expect } from 'chai';
+import { describe, it } from 'mocha';
+import { setupComponentTest } from 'ember-mocha';
+import hbs from 'htmlbars-inline-precompile';
+import wait from 'ember-test-helpers/wait';
+import sinon from 'sinon';
+import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper'
+import { click, fillIn } from 'ember-native-dom-helpers';
+
+class SizeUnitSelectHelper extends EmberPowerSelectHelper {
+  constructor() {
+    super('.size-unit-select-group');
+  }
+}
+
+describe('Integration | Component | one size edit', function () {
+  setupComponentTest('one-size-edit', {
+    integration: true
+  });
+
+  it('displays size number and unit in display mode', function () {
+    this.set('value', 3 * Math.pow(1024, 3));
+    this.render(hbs `{{one-size-edit value=value}}`);
+    expect(this.$('.size-number-input').val(), 'size number').to.equal('3 GiB');
+  });
+
+  it('sets the size number and selector to proper size unit when editing',
+    function (done) {
+      this.set('value', 3 * Math.pow(1024, 3));
+      this.render(hbs `{{one-size-edit value=value forceStartEdit=true}}`);
+      wait().then(() => {
+        setTimeout(() => {
+          expect(this.$('.size-number-input').val(), 'size number')
+            .to.equal('3');
+          expect(this.$(
+                '.size-unit-select-group .ember-power-select-selected-item').text(),
+              'size unit select')
+            .to.match(/GiB/);
+          done();
+        }, 0);
+      });
+    }
+  );
+
+  it('submits the bytes value to provided onSave action', function (done) {
+    this.set('value', 1 * Math.pow(1024, 2));
+    const onSave = sinon.stub().resolves();
+    this.set('onSave', onSave);
+    this.render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
+
+    wait().then(() => {
+      setTimeout(() => {
+        fillIn('.size-number-input', '2');
+        const select = new SizeUnitSelectHelper();
+        // option 1: MiB, option 2: GiB
+        select.selectOption(2, () => {
+          expect(
+            this.$(
+              '.size-unit-select-group .ember-power-select-selected-item'
+            ).text(),
+            'size unit select'
+          ).to.match(/GiB/);
+          click('.btn-save').then(() => {
+            expect(onSave).to.be.calledOnce;
+            expect(onSave).to.be.calledWith(2 * Math.pow(1024, 3));
+            done();
+          });
+        });
+      }, 0);
+    });
+  });
+});

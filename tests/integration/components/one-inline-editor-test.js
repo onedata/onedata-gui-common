@@ -72,4 +72,19 @@ describe('Integration | Component | one inline editor', function () {
       });
     });
   });
+
+  it('sends onInputValueChanged action with current value', function () {
+    const value = 'asdf';
+    this.set('value', value);
+    const onInputChanged = sinon.spy();
+    this.on('onInputValueChanged', onInputChanged)
+    this.render(hbs `{{one-inline-editor value=value onInputValueChanged=(action "onInputValueChanged")}}`);
+    return click('.one-label').then(() => {
+      return fillIn('input', 'anotherValue').then(() => {
+        expect(onInputChanged).to.be.calledTwice;
+        expect(onInputChanged).to.be.calledWith('asdf');
+        expect(onInputChanged).to.be.calledWith('anotherValue');
+      });
+    })
+  });
 });

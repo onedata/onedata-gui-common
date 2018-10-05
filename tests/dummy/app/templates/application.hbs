@@ -1,3 +1,7 @@
-<div class="container-fluid">
- {{outlet}}
+<div class="app-layout" style="overflow: auto; padding-bottom: 40px;">
+  {{outlet}}
 </div>
+
+{{ember-notify messageStyle='bootstrap' closeAfter=5000}}
+
+{{alert-global}}

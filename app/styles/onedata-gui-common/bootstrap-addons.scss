@@ -56,16 +56,17 @@ $token-border-radius: 3px;
   }
 }
 
+.has-error {
+  .form-message {
+    color: $state-danger-text;
+  }
+}
+
 .form-horizontal {
   .form-message {
     padding-top: $padding-small-vertical;
     text-align: right;
     font-size: $font-size-small;
-  }
-  .has-error {
-    .form-message {
-      color: $state-danger-text;
-    }
   }
   &:not(.without-labels) {
     @media (max-width: $screen-xs-max) {
@@ -176,6 +177,20 @@ $token-border-radius: 3px;
   }
 }
 
+.input-group {
+  .input-group-btn .btn {
+    height: $input-height-base;
+    font-size: $font-size-base;
+    // FIXME: experimental style, consult design
+    border: 1px solid $input-border;
+    border-left: none;
+  }
+  &.input-group-sm .input-group-btn .btn {
+    height: $input-height-small;
+    font-size: $font-size-small;
+  }
+}
+
 .input-group.with-icon-addon {
   position: relative;
   width: 100%;
@@ -211,7 +226,8 @@ $token-border-radius: 3px;
   }
 }
 
-.form-group-sm .input-group.with-icon-addon {
+.form-group-sm .input-group.with-icon-addon,
+.input-group.input-group-sm.with-icon-addon {
   .input-group-addon {
     height: $input-height-small;
     min-width: $input-height-small;
@@ -410,5 +426,39 @@ label.align-left {
   }
   &.bg-danger {
     @include tag-bg-color($brand-danger);
+  }
+}
+
+.input-group-basic-dropdown {  
+  display: table-cell;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+  .ember-basic-dropdown {
+    .ember-power-select-trigger {
+      height: $input-height-base;
+      border-left: none;
+      border-radius: 0;
+    }
+    .ember-basic-dropdown-content--left {
+      left: -1px;
+    }
+  }
+}
+
+.input-group-sm {
+  .input-group-basic-dropdown {
+    .ember-basic-dropdown {
+      .ember-power-select-trigger {
+        height: $input-height-small;
+        line-height: $input-height-small - 12px;
+        padding-left: $input-height-small - 16px;
+        padding-right: $input-height-small - 8px;
+        border-radius: 0;
+      }
+      .ember-basic-dropdown-content {
+        @extend .small;
+      }
+    }
   }
 }

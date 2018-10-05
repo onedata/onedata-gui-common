@@ -1,0 +1,41 @@
+.one-inline-editor.one-size-edit {
+  // space for validation message
+  padding-bottom: 1.6em;
+  width: 340px;
+  .form-message {
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+  }
+  &.input-group-sm {
+    width: 250px;
+    .btn-confirm-choose {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
+  &.static, &.editor, &.editor.saving {
+    padding-right: 0;
+  }
+  .btn-confirm-choose {
+    padding-left: 27px;
+    padding-right: 27px;
+  }
+  .size-number-input {
+    display: table-cell;
+    max-width: 100%;
+  }
+  .btn .oneicon {
+    left: 0;
+  }
+  .btn-save {
+    &.in-flight {
+      .spin-button-label {
+        color: transparent;
+      }
+      .spin-button-spinner {
+        left: 50%;
+      }
+    }
+  }
+}
