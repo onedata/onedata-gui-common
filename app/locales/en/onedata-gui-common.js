@@ -1,4 +1,5 @@
 import basicauthLoginForm from './onedata-gui-common/components/basicauth-login-form';
+import alertGlobal from './onedata-gui-common/components/alert-global';
 import loginBox from './onedata-gui-common/components/login-box';
 import oneFormFields from './onedata-gui-common/components/one-form-fields';
 import applicationError from './onedata-gui-common/components/application-error';
@@ -22,6 +23,7 @@ import guiUtils from './onedata-gui-common/services/gui-utils';
 const translations = {
   components: {
     basicauthLoginForm,
+    alertGlobal,
     loginBox,
     oneFormFields,
     applicationError,

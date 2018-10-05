@@ -248,10 +248,9 @@ label {
 
       .modal-content {
         box-shadow: none;
-        padding: 0em 3em 1em 3em;
+        padding: 0em 2em 1em 2em;
 
         .modal-header {
-          text-align: center;
           span {
             vertical-align: middle;
           }
@@ -271,7 +270,7 @@ label {
         }
 
         .modal-footer {
-          text-align: center;
+          text-align: right;
         }
 
         h1 {
@@ -280,9 +279,6 @@ label {
           letter-spacing: $letter-spacing-base;
           margin-bottom: 1em;
           text-transform: uppercase;
-          &:not(.text-left) {
-            text-align: center;
-          }
         }
       }
     }
