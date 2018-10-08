@@ -1,3 +1,8 @@
+$collapsible-list-item-padding: $padding-large-horizontal;
+$collapsible-list-item-btn-toggle-padding: 12px;
+$collapsible-list-item-header-opened: darken($main-content-hover-background, 5%);
+$collapsible-list-item-header-opened-hover: darken($main-content-hover-background, 9%);
+
 .one-collapsible-list {
   list-style-type: none;
   padding-left: 0;
@@ -8,6 +13,14 @@
 
   .list-header-row {
     padding: $padding-large-horizontal 2 * $padding-large-horizontal $padding-large-horizontal $padding-large-vertical;
+  }
+
+  .one-collapsible-list-header, .one-collapsible-list-item-header {
+    .btn-menu-toggle {
+      @include vertical-align-middle();
+      right: $padding-small-horizontal + 1px;
+      padding: $collapsible-list-item-btn-toggle-padding*0.75 $collapsible-list-item-btn-toggle-padding;
+    }
   }
 
   .one-collapsible-list-header {
@@ -37,14 +50,9 @@
       }
     }
 
-    .list-header-content {
-      position: absolute;
-      top: 16px;
-    }
-
     @media (min-width: $mobile-view-breakpoint) {
       .list-header-content {
-        right: ($search-box-width + $padding-base-horizontal + $padding-small-horizontal);
+        right: 0;
       }
       .search-group {
         position: absolute;

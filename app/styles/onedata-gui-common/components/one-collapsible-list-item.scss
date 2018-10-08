@@ -1,8 +1,3 @@
-$collapsible-list-item-padding: $padding-large-horizontal;
-$collapsible-list-item-btn-toggle-padding: 12px;
-$collapsible-list-item-header-opened: darken($main-content-hover-background, 5%);
-$collapsible-list-item-header-opened-hover: darken($main-content-hover-background, 9%);
-
 .one-collapsible-list-item {
   background-color: inherit;
   &.active {
