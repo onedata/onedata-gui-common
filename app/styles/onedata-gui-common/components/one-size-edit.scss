@@ -1,4 +1,5 @@
 .one-inline-editor.one-size-edit {
+  $-btn-modify-width: 144px;
   // space for validation message
   padding-bottom: 1.6em;
   width: 340px;
@@ -8,18 +9,25 @@
     width: 200%;
   }
   &.input-group-sm {
+    $-sm-btn-modify-width: 94px;
     width: 250px;
+    .btn-modify {
+      width: $-sm-btn-modify-width;
+    }
     .btn-confirm-choose {
-      padding-left: 15px;
-      padding-right: 15px;
+      padding: 0;
+      width: $-sm-btn-modify-width/2;
     }
   }
   &.static, &.editor, &.editor.saving {
     padding-right: 0;
   }
+  .btn-modify {
+    width: $-btn-modify-width;
+  }
   .btn-confirm-choose {
-    padding-left: 27px;
-    padding-right: 27px;
+    padding: 0;
+    width: $-btn-modify-width/2;
   }
   .size-number-input {
     display: table-cell;
