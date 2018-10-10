@@ -39,6 +39,7 @@
     {{#one-spin-button
       class="btn btn-primary btn-confirm-choose btn-save"
       action=(action "saveEdition")
+      disabled=hasError
       inFlight=_whileSaving
     }}
       {{one-icon icon="checked"}}

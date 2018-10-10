@@ -33,7 +33,7 @@ export default Component.extend({
 
   /**
    * @virtual optional
-   * Use "sm" from small input and button, otherwise will use default sizes
+   * Use "sm" for small input and button, otherwise will use default sizes
    * @type {string}
    */
   size: undefined,

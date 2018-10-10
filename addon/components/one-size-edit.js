@@ -14,7 +14,7 @@ import OneInlineEditor from 'onedata-gui-common/components/one-inline-editor';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { validator, buildValidations } from 'ember-cp-validations';
-import { and } from '@ember/object/computed';
+import { reject } from 'rsvp';
 
 const validations = buildValidations({
   _inputValue: [
@@ -27,7 +27,7 @@ export default OneInlineEditor.extend(I18n, validations, {
   layout,
 
   classNames: ['one-size-edit', 'input-group', 'form-group'],
-  classNameBindings: ['sizeClass', 'hasError:has-error'],
+  classNameBindings: ['sizeClass', 'hasError'],
 
   i18nPrefix: 'components.oneSizeEdit',
 
@@ -69,7 +69,9 @@ export default OneInlineEditor.extend(I18n, validations, {
    * True if there is validation error of entered size
    * @type {ComputedProperty<boolean>}
    */
-  hasError: and('_inEditionMode', 'validationMessage'),
+  hasError: computed('_inEditionMode', 'validationMessage', function hasError() {
+    return !!(this.get('_inEditionMode') && this.get('validationMessage'));
+  }),
 
   /**
    * A validation message to display below size edit field
@@ -104,7 +106,6 @@ export default OneInlineEditor.extend(I18n, validations, {
    */
   displayedInputValue: computed(
     '_inEditionMode',
-    'separatedInputValue',
     'selectedSupportSizeUnit',
     '_inputValue',
     'value',
@@ -150,6 +151,7 @@ export default OneInlineEditor.extend(I18n, validations, {
   ),
 
   didInsertElement() {
+    this._super(...arguments);
     if (this.get('forceStartEdit')) {
       this.send('startEdition');
     }
@@ -195,13 +197,12 @@ export default OneInlineEditor.extend(I18n, validations, {
     /**
      * @override
      */
-    endEdition() {
-      this._super(...arguments);
-      this.setProperties({
-        editing: false,
-        _inputValue: undefined,
-        selectedSupportSizeUnit: undefined,
-      });
+    saveEdition() {
+      if (this.get('hasError')) {
+        return reject();
+      } else {
+        return this._super(...arguments);
+      }
     },
     inputOnKeyUp(keyEvent) {
       switch (keyEvent.keyCode) {

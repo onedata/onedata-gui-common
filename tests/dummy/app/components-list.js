@@ -1,5 +1,6 @@
 export default [
   'bezier-curve',
+  'input-group',
   'name-conflict',
   'one-atlas',
   'one-clipboard-line',
@@ -19,5 +20,4 @@ export default [
   'space-providers-support-chart',
   'status-toolbar',
   'support-size-info',
-  'other',
 ];

@@ -83,15 +83,15 @@ export default Component.extend({
    * whole bar to be shrinked.
    * @type {Ember.ComputedProperty<number>}
    */
-  displayedTotalSize: computed('currentTotalSize', 'newTotalSize', function displayedTotalSize() {
+  displayedTotalSize: computed('currentTotalSize', 'normalizedNewTotalSize', function displayedTotalSize() {
     const {
       currentTotalSize,
-      newTotalSize,
-    } = this.getProperties('currentTotalSize', 'newTotalSize');
-    if (newTotalSize == null || newTotalSize < currentTotalSize) {
+      normalizedNewTotalSize,
+    } = this.getProperties('currentTotalSize', 'normalizedNewTotalSize');
+    if (normalizedNewTotalSize == null || normalizedNewTotalSize < currentTotalSize) {
       return currentTotalSize;
     } else {
-      return newTotalSize;
+      return normalizedNewTotalSize;
     }
   }),
 
@@ -121,26 +121,26 @@ export default Component.extend({
    */
   _newOccupiedPercents: computed(
     '_isDataValid',
-    '_barOccupiedPercents',
     'occupiedSize',
-    'newTotalSize',
+    'normalizedNewTotalSize',
     'currentTotalSize',
     function _newOccupiedPercents() {
       const {
         _isDataValid,
         occupiedSize,
-        newTotalSize,
+        normalizedNewTotalSize,
         currentTotalSize,
       } = this.getProperties(
         '_isDataValid',
         'occupiedSize',
-        'newTotalSize',
+        'normalizedNewTotalSize',
         'currentTotalSize',
       );
 
       if (_isDataValid) {
-        if (newTotalSize != null) {
-          return newTotalSize > 0 ? 100 * (occupiedSize / newTotalSize) : Number.POSITIVE_INFINITY;
+        if (normalizedNewTotalSize != null) {
+          return normalizedNewTotalSize > 0 ?
+            100 * (occupiedSize / normalizedNewTotalSize) : Number.POSITIVE_INFINITY;
         } else {
           return 100 * occupiedSize / currentTotalSize;
         }
@@ -172,19 +172,20 @@ export default Component.extend({
   _currentTotalPercents: computed(
     '_isDataValid',
     'currentTotalSize',
-    'newTotalSize',
+    'normalizedNewTotalSize',
     function _currentTotalPercents() {
       const {
         _isDataValid,
         currentTotalSize,
-        newTotalSize,
-      } = this.getProperties('_isDataValid', 'currentTotalSize', 'newTotalSize');
+        normalizedNewTotalSize,
+      } = this.getProperties('_isDataValid', 'currentTotalSize',
+        'normalizedNewTotalSize');
 
       if (_isDataValid) {
-        if (newTotalSize == null) {
+        if (normalizedNewTotalSize == null) {
           return 100;
         } else {
-          return (currentTotalSize / newTotalSize) * 100;
+          return (currentTotalSize / normalizedNewTotalSize) * 100;
         }
       }
     }
@@ -202,6 +203,15 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<boolean>}
    */
   _hasCriticalUsage: gt('_newOccupiedPercents', 100),
+
+  /**
+   * Always positive newTotalSize
+   * @type {ComputedProperty<number>}
+   */
+  normalizedNewTotalSize: computed('newTotalSize', function normalizedNewTotalSize() {
+    const newTotalSize = this.get('newTotalSize')
+    return newTotalSize && Math.max(newTotalSize, 0);
+  }),
 
   /**
    * @type {Ember.ComputedProperty<number|undefined>}
@@ -225,8 +235,8 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<string>}
    */
   _occupiedSpaceBarStyle: computed('_barOccupiedPercentsNormalized', function () {
-    const _barOccupiedPercentsNormalized = this.get(
-      '_barOccupiedPercentsNormalized');
+    const _barOccupiedPercentsNormalized =
+      this.get('_barOccupiedPercentsNormalized');
     return htmlSafe(
       _barOccupiedPercentsNormalized === undefined ?
       '' : `width: ${_barOccupiedPercentsNormalized}%`
@@ -255,8 +265,8 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<string>}
    */
   _currentTotalSpaceLabelStyle: computed('_currentTotalPercentsNormalized', function () {
-    const _currentTotalPercentsNormalized = this.get(
-      '_currentTotalPercentsNormalized');
+    const _currentTotalPercentsNormalized =
+      this.get('_currentTotalPercentsNormalized');
     const labelMargin = 20;
     if (_currentTotalPercentsNormalized !== undefined) {
       const translateX =
@@ -274,19 +284,18 @@ export default Component.extend({
    */
   _newTotalSpaceBarStyle: computed(
     '_currentTotalPercentsNormalized',
-    'newTotalSize',
+    'normalizedNewTotalSize',
     'currentTotalSize',
     function _newTotalSpaceBarStyle() {
       const {
         _currentTotalPercentsNormalized,
-        newTotalSize,
+        normalizedNewTotalSize,
         currentTotalSize,
       } = this.getProperties(
         '_currentTotalPercentsNormalized',
-        'newTotalSize',
+        'normalizedNewTotalSize',
         'currentTotalSize',
       );
-      const normalizedNewTotalSize = newTotalSize >= 0 ? newTotalSize : 0;
       const sizeDiff = normalizedNewTotalSize - currentTotalSize;
       if (sizeDiff > 0) {
         return htmlSafe(
@@ -308,23 +317,24 @@ export default Component.extend({
    * @type {ComputedProperty<boolean|undefined>}
    */
   _newTotalSpaceExpandClass: computed(
-    'newTotalSize',
+    'normalizedNewTotalSize',
     'currentTotalSize',
     'minShowArrowFraction',
     function _newTotalSpaceExpandClass() {
       const {
         currentTotalSize,
-        newTotalSize,
+        normalizedNewTotalSize,
         minShowArrowFraction,
       } = this.getProperties(
         'currentTotalSize',
-        'newTotalSize',
+        'normalizedNewTotalSize',
         'minShowArrowFraction'
       );
-      const expandDiff = Math.abs(newTotalSize - currentTotalSize) / currentTotalSize;
-      if (newTotalSize != null) {
+      const expandDiff = Math.abs(normalizedNewTotalSize - currentTotalSize) /
+        currentTotalSize;
+      if (normalizedNewTotalSize != null) {
         let classes =
-          `new-total-space-expand new-total-space-expand-${currentTotalSize < newTotalSize ? 'right' : 'left'}`;
+          `new-total-space-expand new-total-space-expand-${currentTotalSize < normalizedNewTotalSize ? 'right' : 'left'}`;
         if (expandDiff > minShowArrowFraction) {
           classes +=
             ` new-total-space-expand-arrow`;

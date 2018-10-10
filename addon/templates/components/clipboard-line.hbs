@@ -4,7 +4,6 @@
   </div>
 {{/if}}
 
-{{!-- FIXME: experimental style, but works only for sm --}}
 <div class="input-group {{if size (concat "input-group-" size)}}">
   <input
     type="text"
@@ -22,21 +21,3 @@
   {{/one-copy-button}}
   </div>
 </div>
-
-{{!-- <div class="clipboard-line-input">
-  <input
-    type="text"
-    class="clipboard-input form-control"
-    value={{value}}
-    readonly
-  >
-</div>
-<div class="clipboard-line-btn">
-  {{#one-copy-button
-    class=(concat "btn btn-" (or btnType "primary") " " (if size (concat "btn-" size)))
-    parentElementId=elementId
-    localTarget=".clipboard-input"
-  }}
-    {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
-  {{/one-copy-button}}
-</div> --}}

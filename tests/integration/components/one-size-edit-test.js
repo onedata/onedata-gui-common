@@ -6,6 +6,7 @@ import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper'
 import { click, fillIn } from 'ember-native-dom-helpers';
+import { next } from '@ember/runloop';
 
 class SizeUnitSelectHelper extends EmberPowerSelectHelper {
   constructor() {
@@ -29,7 +30,7 @@ describe('Integration | Component | one size edit', function () {
       this.set('value', 3 * Math.pow(1024, 3));
       this.render(hbs `{{one-size-edit value=value forceStartEdit=true}}`);
       wait().then(() => {
-        setTimeout(() => {
+        next(() => {
           expect(this.$('.size-number-input').val(), 'size number')
             .to.equal('3');
           expect(this.$(
@@ -37,7 +38,7 @@ describe('Integration | Component | one size edit', function () {
               'size unit select')
             .to.match(/GiB/);
           done();
-        }, 0);
+        });
       });
     }
   );
@@ -49,7 +50,7 @@ describe('Integration | Component | one size edit', function () {
     this.render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
 
     wait().then(() => {
-      setTimeout(() => {
+      next(() => {
         fillIn('.size-number-input', '2');
         const select = new SizeUnitSelectHelper();
         // option 1: MiB, option 2: GiB
