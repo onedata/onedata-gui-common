@@ -143,14 +143,11 @@ export default Component.extend({
         _availableItemValues,
       } = this.getProperties('_selectedItemValues', '_availableItemValues');
       let isOnList = _selectedItemValues.includes(itemValue);
-      if (selectionState === undefined) {
-        if ((selectionState === undefined || selectionState === false) &&
-          isOnList) {
-          _selectedItemValues.removeObject(itemValue);
-        } else if ((selectionState === undefined || selectionState === true) &&
-          !isOnList && _availableItemValues.includes(itemValue)) {
-          _selectedItemValues.pushObject(itemValue);
-        }
+      if (!selectionState && isOnList) {
+        _selectedItemValues.removeObject(itemValue);
+      } else if ((selectionState === undefined || selectionState === true) &&
+        !isOnList && _availableItemValues.includes(itemValue)) {
+        _selectedItemValues.pushObject(itemValue);
       }
       invokeAction(this, 'selectionChanged', _selectedItemValues.toArray());
     },

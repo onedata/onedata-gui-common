@@ -50,6 +50,12 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
       }
     }
 
+    &.collapsed {
+      .collapsible-toolbar-toggle {
+        pointer-events: none;
+      }
+    }
+
     @media (min-width: $mobile-view-breakpoint) {
       .list-header-content {
         right: 0;
@@ -61,12 +67,35 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
         width: $search-box-width;
         transform: translateY(-50%);
       }
+      &.with-place-for-dots {
+        .search-group {
+          margin-right: 40px;
+        }
+      }
     }
 
     @media (max-width: $mobile-view-breakpoint - 1) {
       .search-group {
         margin-bottom: 0;
         margin-top: $padding-base-vertical;
+        margin-right: -$padding-large-horizontal;
+      }
+      .collapsible-toolbar-toggle {
+        top: 10px;
+        transform: none;
+      }
+    }
+  }
+
+  @media(min-width: $screen-sm-min) {
+    .one-collapsible-list-item .one-collapsible-list-item-header {
+      .collapsible-toolbar-toggle {
+        display: none;
+      }
+      &:hover, .one-collapsible-toolbar.dropdown-opened {
+        .collapsible-toolbar-toggle {
+          display: block;
+        }
       }
     }
   }

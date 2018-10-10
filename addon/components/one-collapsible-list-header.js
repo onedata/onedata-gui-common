@@ -18,7 +18,7 @@ export default OneCollapsibleListItemHeader.extend({
   layout,
   tagName: 'li',
   classNames: ['one-collapsible-list-header'],
-  classNameBindings: ['_isListCollapsed:collapsed:opened'],
+  classNameBindings: ['_isListCollapsed:collapsed:opened', 'withPlaceForDots'],
 
   /**
    * To inject.
@@ -50,6 +50,12 @@ export default OneCollapsibleListItemHeader.extend({
    * @type {boolean}
    */
   searchVisible: true,
+
+  /**
+   * If true, header includes "dots menu" and `with-place-for-dots` class is added
+   * @type {boolean}
+   */
+  withPlaceForDots: false,
 
   init() {
     this._super(...arguments);
