@@ -5,7 +5,7 @@
  * Set `aspect` property for use as a link.
  *
  * @module components/one-tile
- * @author Jakub Liput
+ * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -21,7 +21,7 @@ import { debounce } from '@ember/runloop';
 export default Component.extend({
   layout,
   classNames: ['one-tile'],
-  classNameBindings: ['isLink:one-tile-link', 'xClass'],
+  classNameBindings: ['isLink:one-tile-link', 'sizeClass'],
 
   router: service(),
 
@@ -59,9 +59,10 @@ export default Component.extend({
   x4Breakpoint: null,
 
   /**
+   * Tile size class related to x2 and x4 sizes.
    * @type {string}
    */
-  xClass: '',
+  sizeClass: '',
 
   /**
    * Window object (for testing purposes only)
@@ -110,7 +111,7 @@ export default Component.extend({
     const {
       windowResizeHandler,
       _window,
-    } = this.getProperties('onScroll', 'windowResizeHandler', '_window');
+    } = this.getProperties('windowResizeHandler', '_window');
 
     _window.addEventListener('resize', windowResizeHandler);
   },
@@ -140,14 +141,14 @@ export default Component.extend({
         _window
       } = this.getProperties('x2Breakpoint', 'x4Breakpoint', '_window');
       const windowWidth = _window.innerWidth;
-      let xClass = '';
-      if (x4Breakpoint !== null && windowWidth >= x4Breakpoint) {
-        xClass = 'x4';
-      } else if (x2Breakpoint !== null && windowWidth >= x2Breakpoint) {
-        xClass = 'x2';
+      let sizeClass = '';
+      if (x4Breakpoint != null && windowWidth >= x4Breakpoint) {
+        sizeClass = 'x4';
+      } else if (x2Breakpoint != null && windowWidth >= x2Breakpoint) {
+        sizeClass = 'x2';
       }
-      if (this.get('xClass') !== xClass) {
-        this.set('xClass', xClass);
+      if (this.get('sizeClass') !== sizeClass) {
+        this.set('sizeClass', sizeClass);
         _window.dispatchEvent(new Event('resize'));
       }
     }
