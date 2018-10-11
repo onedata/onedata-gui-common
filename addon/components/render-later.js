@@ -24,20 +24,43 @@ export default Component.extend({
   triggerRender: false,
 
   /**
+   * Property, which acts as a reset of render state. Once set to new value,
+   * `triggerRender` will be copied directly to the `render` field.
+   * @type {boolean}
+   */
+  resetRender: false,
+
+  /**
    * If true then inner content is rendered.
    * @type {boolean}
    */
   render: false,
 
-  triggerRenderObserver: observer('triggerRender', function () {
-    const {
-      triggerRender,
-      render,
-    } = this.getProperties('triggerRender', 'render');
-    if (!render && triggerRender) {
-      this.set('render', true);
+  triggerRenderObserver: observer(
+    'triggerRender',
+    function triggerRenderObserver () {
+      const {
+        triggerRender,
+        render,
+      } = this.getProperties('triggerRender', 'render');
+      if (!render && triggerRender) {
+        this.set('render', true);
+      }
     }
-  }),
+  ),
+
+  resetRenderObserver: observer(
+    'resetRender',
+    function resetRenderObserver() {
+      const {
+        triggerRender,
+        render,
+      } = this.getProperties('triggerRender', 'render');
+      if (!!triggerRender !== render) {
+        this.set('render', !!triggerRender);
+      }
+    }
+  ),
 
   init() {
     this._super(...arguments);
