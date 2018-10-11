@@ -2,11 +2,10 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?rja7qf') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?rja7qf') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?rja7qf##{$icomoon-font-family}') format('svg');
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?odm11l') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?odm11l') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?odm11l##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -44,6 +43,11 @@
 .oneicon-arrow-left {
   &:before {
     content: $oneicon-arrow-left; 
+  }
+}
+.oneicon-arrow-right-full {
+  &:before {
+    content: $oneicon-arrow-right-full; 
   }
 }
 .oneicon-arrow-right {
@@ -255,6 +259,11 @@
 .oneicon-lock {
   &:before {
     content: $oneicon-lock; 
+  }
+}
+.oneicon-membership {
+  &:before {
+    content: $oneicon-membership; 
   }
 }
 .oneicon-menu-clusters {
