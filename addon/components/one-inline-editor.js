@@ -18,6 +18,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import $ from 'jquery';
+import { Promise, resolve } from 'rsvp';
 
 export default Component.extend({
   layout,
@@ -104,6 +105,14 @@ export default Component.extend({
   onEdit: notImplementedIgnore,
 
   /**
+   * Action called the _inputValue is changed.
+   * @type {Function}
+   * @param {string} value
+   * @returns {undefined}
+   */
+  onInputValueChanged: notImplementedIgnore,
+
+  /**
    * Automatically set to true if the component is rendered in one-collapsible-toolbar
    * @type {boolean}
    */
@@ -131,6 +140,10 @@ export default Component.extend({
     } else if (isEditing === false) {
       this.stopEdition();
     }
+  }),
+
+  inputValueChangedObserver: observer('_inputValue', function inputValueChangedObserver() {
+    this.get('onInputValueChanged')(this.get('_inputValue'));
   }),
 
   init() {
@@ -181,12 +194,25 @@ export default Component.extend({
   },
 
   startEdition() {
-    next(() => {
-      safeExec(this, 'setProperties', {
-        _inputValue: this.get('value'),
-        _inEditionMode: true,
+    return new Promise((resolve, reject) => {
+      next(() => {
+        try {
+          safeExec(this, 'setProperties', {
+            _inputValue: this.get('value'),
+            _inEditionMode: true,
+          });
+          next(() => {
+            try {
+              safeExec(this, () => this.$('input').focus().select());
+            } catch (error) {
+              reject(error);
+            }
+            resolve();
+          });
+        } catch (error) {
+          reject(error);
+        }
       });
-      next(() => safeExec(this, () => this.$('input').focus().select()))
     });
   },
 
@@ -204,8 +230,12 @@ export default Component.extend({
       if (editOnClick) {
         onEdit(true);
         if (!controlledManually) {
-          this.startEdition();
+          return this.startEdition();
+        } else {
+          return resolve();
         }
+      } else {
+        return resolve();
       }
     },
     cancelEdition() {
