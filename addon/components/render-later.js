@@ -38,7 +38,7 @@ export default Component.extend({
 
   triggerRenderObserver: observer(
     'triggerRender',
-    function triggerRenderObserver () {
+    function triggerRenderObserver() {
       const {
         triggerRender,
         render,

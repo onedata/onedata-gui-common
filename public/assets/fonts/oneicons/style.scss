@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?s6bseh');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?s6bseh#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?s6bseh') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?s6bseh') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?s6bseh##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?axr1ic');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?axr1ic#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?axr1ic') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?axr1ic') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?axr1ic##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -347,6 +347,11 @@
     content: $oneicon-node; 
   }
 }
+.oneicon-organization {
+  &:before {
+    content: $oneicon-organization; 
+  }
+}
 .oneicon-overview {
   &:before {
     content: $oneicon-overview; 
@@ -405,6 +410,11 @@
 .oneicon-rename {
   &:before {
     content: $oneicon-rename; 
+  }
+}
+.oneicon-role-holders {
+  &:before {
+    content: $oneicon-role-holders; 
   }
 }
 .oneicon-search {
@@ -592,9 +602,19 @@
     content: $oneicon-support; 
   }
 }
+.oneicon-team {
+  &:before {
+    content: $oneicon-team; 
+  }
+}
 .oneicon-tokens {
   &:before {
     content: $oneicon-tokens; 
+  }
+}
+.oneicon-unit {
+  &:before {
+    content: $oneicon-unit; 
   }
 }
 .oneicon-update {
