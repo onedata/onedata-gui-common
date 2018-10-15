@@ -41,6 +41,12 @@ $token-border-radius: 3px;
 }
 
 .modal-content {
+  .modal-header {
+    .one-icon {
+      font-size: 1.7em;
+      margin-right: $padding-base-horizontal;
+    }
+  }
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
@@ -251,6 +257,11 @@ $token-border-radius: 3px;
 
 .form-static .form-group {
   margin-bottom: 0;
+}
+
+.inline-label {
+  display: inline-block;
+  margin-right: $padding-base-horizontal;
 }
 
 .icon-btn {
