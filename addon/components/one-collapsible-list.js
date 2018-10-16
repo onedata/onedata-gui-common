@@ -83,7 +83,7 @@ export default Component.extend({
    * If true, list is collapsed
    * @type {boolean}
    */
-  _isListCollapsed: false,
+  isListCollapsed: false,
 
   /**
    * String, that is used for list items filtering
@@ -187,9 +187,9 @@ export default Component.extend({
     },
     collapseList(visibility) {
       if (visibility === undefined) {
-        this.toggleProperty('_isListCollapsed');
+        this.toggleProperty('isListCollapsed');
       } else {
-        this.set('_isListCollapsed', visibility);
+        this.set('isListCollapsed', visibility);
       }
     },
     search(query) {
