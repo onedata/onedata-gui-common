@@ -3,20 +3,21 @@
     <strong>{{label}}</strong>
   </div>
 {{/if}}
-<div class="clipboard-line-input">
+
+<div class="input-group {{if size (concat "input-group-" size)}}">
   <input
     type="text"
     class="clipboard-input form-control"
     value={{value}}
     readonly
   >
-</div>
-<div class="clipboard-line-btn">
-  {{#one-copy-button
-    class=(concat "btn btn-primary " (if size (concat "btn-" size)))
-    parentElementId=elementId
-    localTarget=".clipboard-input"
-  }}
+  <div class="input-group-btn">
+    {{#one-copy-button
+      class=(concat "btn btn-" (or btnType "default"))
+      parentElementId=elementId
+      localTarget=".clipboard-input"
+    }}
     {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
   {{/one-copy-button}}
+  </div>
 </div>
