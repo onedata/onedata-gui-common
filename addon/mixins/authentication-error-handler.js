@@ -23,9 +23,6 @@ export default Mixin.create({
     const cookies = this.get('cookies');
     const authenticationErrorReason = cookies.read(authenticationErrorReasonKey);
     const authenticationErrorState = cookies.read(authenticationErrorStateKey);
-    // FIXME: mocked
-    // const authenticationErrorReason = 'hello';
-    // const authenticationErrorState = 'tests1';
     const errors = {
       authenticationErrorReason,
       authenticationErrorState,

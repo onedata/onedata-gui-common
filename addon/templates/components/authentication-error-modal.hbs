@@ -1,0 +1,37 @@
+{{#bs-modal
+  class="authentication-error-modal"
+  open=opened
+  onHide=close
+  backdropClose=false
+  as |modal|
+}}
+  {{#modal.header}}
+    <h1>
+      {{one-icon icon="sign-warning-rounded"}}
+      <span class="one-label">
+        {{t "components.authenticationErrorModal.title"}}
+      </span>
+    </h1>
+  {{/modal.header}}
+  {{#modal.body class=(if textCenter "text-center")}}
+    <div class="row row-authentication-error-message-text">
+      <div class="authentication-error-message-text">
+        {{authenticationErrorText}} {{if showErrorContactInfo (t "mixins.authenticationErrorMessage.contactInfo")}}
+      </div>
+    </div>
+    {{#if showErrorContactInfo}}
+      <div class="row row-authentication-error-state-input-copy">
+        {{one-clipboard-line
+          value=authenticationErrorState
+          class="authentication-error-state-input-copy light"
+          btnType="primary"
+        }}
+      </div>
+    {{/if}}
+  {{/modal.body}}
+  {{#modal.footer class="btn-toolbar"}}
+    {{#bs-button onClick=modal.close}}
+      {{t "components.authenticationErrorModal.close"}}
+    {{/bs-button}}
+  {{/modal.footer}}
+{{/bs-modal}}

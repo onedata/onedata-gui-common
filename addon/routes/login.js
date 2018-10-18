@@ -17,6 +17,7 @@ export default Route.extend(
     i18nPrefix: 'routes.login',
 
     setupController(controller) {
+      this._super(...arguments);
       controller.setProperties(this.consumeAuthenticationError());
     },
 
