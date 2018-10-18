@@ -30,6 +30,14 @@ export default Component.extend({
   tagName: '',
 
   /**
+   * @virtual optional
+   * If provided and tag name is not empty, set the class of additional spinner
+   * container when loading.
+   * @type {string}
+   */
+  loadingClass: '',
+
+  /**
    * If true, spinner will be absolutely centered, otherwise it will fill
    * the parent block to centerize itself
    * @type {boolean}

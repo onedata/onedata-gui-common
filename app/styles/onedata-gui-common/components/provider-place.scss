@@ -49,6 +49,12 @@ $provider-place-drop-height: 306px;
   $-btn-container-height: 62px;
 
   height: $provider-place-drop-height;
+  
+  // TODO: experimental style
+  .space-redirect-link:not(:hover) {
+    color: $main-text-color;
+  }
+  
   &.in-content {
     &.online {
       .drop-title-bar {

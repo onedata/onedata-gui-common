@@ -248,11 +248,12 @@ label {
 
       .modal-content {
         box-shadow: none;
-        padding: 0em 3em 1em 3em;
+        padding: 0em 2em 1em 2em;
 
         .modal-header {
-          text-align: center;
-          
+          .one-icon {
+            vertical-align: middle;
+          }
           .close {
             display: none;
           }
@@ -269,16 +270,15 @@ label {
         }
 
         .modal-footer {
-          text-align: center;
+          text-align: right;
         }
 
         h1 {
-            font-size: $font-size-base * 1.5;
-            font-family: 'Open Sans Semibold';
-            letter-spacing: $letter-spacing-base;
-            margin-bottom: 1em;
-            text-transform: uppercase;
-            text-align: center;
+          font-size: $font-size-base * 1.4;
+          font-family: 'Open Sans Semibold';
+          letter-spacing: $letter-spacing-base;
+          margin-bottom: 1em;
+          text-transform: uppercase;
         }
       }
     }

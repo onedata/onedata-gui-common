@@ -9,20 +9,15 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/clipboard-line';
-import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
-import _ from 'lodash';
 
-export default Component.extend(I18n, {
+export default Component.extend({
   layout,
   classNames: ['clipboard-line'],
   classNameBindings: ['size'],
 
   globalNotify: service(),
   i18n: service(),
-
-  i18nPrefix: 'components.clipboardLine',
 
   /**
    * @virtual
@@ -37,34 +32,16 @@ export default Component.extend(I18n, {
   label: '',
 
   /**
-   * @virtual opional
+   * @virtual optional
+   * Use "sm" for small input and button, otherwise will use default sizes
    * @type {string}
    */
   size: undefined,
 
   /**
-   * Override this to get custom notifications like: "<textType> successfully copied..."
-   * @type {Ember.ComputedProperty<string>|string}
+   * @virtual optional
+   * Eg. default, primary, danger...
+   * @type {string}
    */
-  textType: computed(function () {
-    return this.t('defaultTextType');
-  }),
-
-  actions: {
-    copySuccess() {
-      this.get('globalNotify').info(this.t(
-        'copySuccess', {
-          textType: _.startCase(this.get('textType')),
-        }
-      ));
-    },
-
-    copyError() {
-      this.get('globalNotify').info(this.t(
-        'copyError', {
-          textType: this.get('textType'),
-        }
-      ));
-    },
-  },
+  btnType: undefined,
 });

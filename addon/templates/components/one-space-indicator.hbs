@@ -1,12 +1,19 @@
 {{#if _isDataValid}}
-  <div class="total-space-bar bar"></div>
-  <span class="bar-label total-space">
-    {{bytes-to-string totalSize}}
+  <div class="current-total-space-bar bar"></div>
+  <span class="bar-label current-total-space" style={{_currentTotalSpaceLabelStyle}}>
+    {{bytes-to-string currentTotalSize}}
   </span>
   <div class="occupied-space-bar bar" style={{_occupiedSpaceBarStyle}}></div>
+  {{#unless (eq newTotalSize undefined)}}
+    <div class="new-total-space-bar bar" style={{_newTotalSpaceBarStyle}}>
+      {{#if _newTotalSpaceExpandClass}}
+        <div class="new-total-space-expand {{_newTotalSpaceExpandClass}}"></div>
+      {{/if}}
+    </div>
+  {{/unless}}
   <span class="bar-label occupied-space" style={{_occupiedSpaceLabelStyle}}>
     {{bytes-to-string occupiedSize}}
   </span>
 {{else}}
-  {{resource-load-error message=incorrectDataMessage}}
+  {{resource-load-error reason=incorrectDataMessage}}
 {{/if}}

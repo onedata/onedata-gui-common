@@ -40,6 +40,7 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 @import 'onedata-gui-common/spin-button-overrides';
 @import 'chartist';
 @import 'onedata-gui-common/chartist-overrides';
+@import 'onedata-gui-common/input-tokenizer';
 
 $mobile-top-height: 55px;
 $main-menu-width: 200px;
@@ -140,3 +141,4 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-map';
 @import 'onedata-gui-common/components/clipboard-line';
 @import 'onedata-gui-common/components/one-form-fields';
+@import 'onedata-gui-common/components/one-size-edit';

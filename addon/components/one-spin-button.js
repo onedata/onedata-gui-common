@@ -21,6 +21,11 @@ export default SpinButton.extend({
   startDelay: 0,
   buttonStyle: 'expand-left',
 
+  didInsertElement() {
+    this._super(...arguments);
+    this.inFlightDidChange();
+  },
+
   /**
    * @override 
    */
