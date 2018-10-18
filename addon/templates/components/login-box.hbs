@@ -1,11 +1,35 @@
 <div class="container">
-  {{#if errorMessage}}
-    {{!-- TODO error screen --}}
-    {{errorMessage}}
+  {{login-box/header model=headerModel}}
+  {{#if showAuthenticationError}}
+    <h1>
+      {{one-icon icon="sign-warning-rounded" class="login-warning-icon"}}
+      {{t "mixins.authenticationErrorMessage.title"}}
+    </h1>
+    <div class="container-fluid authentication-error-message">
+      <div class="row login-forms-row">
+        <div class="authentication-error-message-text">
+          {{authenticationErrorText}} {{if showErrorContactInfo (t "mixins.authenticationErrorMessage.contactInfo")}}
+        </div>
+        {{#if showErrorContactInfo}}
+          {{one-clipboard-line
+            value=authenticationErrorState
+            class="authentication-error-state-input-copy light"
+          }}
+        {{/if}}
+        <div class="col-xs-12 text-center authentication-error-message-buttons">
+          <button type="button" class="btn btn-primary back-button" {{action "backFromError"}}>
+            {{one-icon icon="arrow-right"}}
+            {{t "mixins.authenticationErrorMessage.backToLogin"}}
+          </button>
+        </div>
+      </div>
+    </div>
   {{else if isLoading}}
-    {{!-- TODO loading --}}
+    {{spin-spinner-block
+      sizeClass="lg"
+      class="absolute-middle-centered"
+    }}
   {{else}}
-    {{login-box/header model=headerModel}}
     <div class="row row-login-header text-center">
       <div class="col-xs-12">
         <h4>{{t "components.loginBox.login"}}</h4>
