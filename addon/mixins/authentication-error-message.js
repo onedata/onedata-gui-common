@@ -1,5 +1,5 @@
 /**
- * Adds a translated `authenticationErrorText` base on authentication error code
+ * Adds a translated `authenticationErrorText` based on authentication error code
  *
  * @module mixins/authentication-error-message
  * @author Jakub Liput

@@ -31,12 +31,14 @@ export default Component.extend({
 
   /**
    * @virtual
+   * See: `mixin:authentication-error-hander#authenticationErrorReason`
    * @type {string}
    */
   authenticationErrorReason: undefined,
 
   /**
    * @virtual
+   * See: `mixin:authentication-error-hander#authenticationErrorState`
    * @type {string}
    */
   authenticationErrorState: undefined,

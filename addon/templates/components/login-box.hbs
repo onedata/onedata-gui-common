@@ -3,7 +3,7 @@
   {{#if showAuthenticationError}}
     <h1>
       {{one-icon icon="sign-warning-rounded" class="login-warning-icon"}}
-      {{t "mixins.authenticationErrorMessage.title"}}
+      {{t "components.loginBox.errorTitle"}}
     </h1>
     <div class="container-fluid authentication-error-message">
       <div class="row login-forms-row">
@@ -20,7 +20,7 @@
         <div class="col-xs-12 text-center authentication-error-message-buttons">
           <button type="button" class="btn btn-default back-button" {{action "backFromError"}}>
             {{one-icon icon="arrow-right"}}
-            {{t "mixins.authenticationErrorMessage.backToLogin"}}
+            {{t "components.loginBox.errorBackToLogin"}}
           </button>
         </div>
       </div>
