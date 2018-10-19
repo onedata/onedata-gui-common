@@ -14,10 +14,11 @@
           {{one-clipboard-line
             value=authenticationErrorState
             class="authentication-error-state-input-copy light"
+            btnType="primary"
           }}
         {{/if}}
         <div class="col-xs-12 text-center authentication-error-message-buttons">
-          <button type="button" class="btn btn-primary back-button" {{action "backFromError"}}>
+          <button type="button" class="btn btn-default back-button" {{action "backFromError"}}>
             {{one-icon icon="arrow-right"}}
             {{t "mixins.authenticationErrorMessage.backToLogin"}}
           </button>
