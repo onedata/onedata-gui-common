@@ -25,7 +25,7 @@ describe('Unit | Service | app storage', function () {
       value: undefined,
 
       appStorageObserver: observer('appStorage.data.testData', function () {
-        this.set('value',  this.get('appStorage').getData('testData'));
+        this.set('value', this.get('appStorage').getData('testData'));
       }),
 
       init() {

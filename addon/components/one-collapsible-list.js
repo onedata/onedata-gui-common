@@ -34,7 +34,7 @@
 
 import Component from '@ember/component';
 
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
 import { A } from '@ember/array';
 import { invoke, invokeAction } from 'ember-invoke-action';
@@ -68,6 +68,14 @@ export default Component.extend({
   filtrationChanged: () => {},
 
   /**
+   * List collapse state change handler
+   * @type {Function}
+   * @param {boolean} isCollapsed
+   * @returns {undefined}
+   */
+  listCollapsed: () => {},
+
+  /**
    * List of selected item values
    * @type {Ember.Array.*}
    */
@@ -92,6 +100,12 @@ export default Component.extend({
   searchQuery: '',
 
   /**
+   * If changed, triggers selection reset. Value of this property is not important
+   * @type {any}
+   */
+  resetSelectionTrigger: undefined,
+
+  /**
    * If true, all items are selected
    * @type {computed.boolean}
    */
@@ -106,6 +120,12 @@ export default Component.extend({
         _availableItemValues.length !== 0;
     }
   ),
+
+  resetSelectionTriggerObserver: observer(
+    'resetSelectionTrigger',
+    function resetSelectionTriggerObserver() {
+      this.get('_selectedItemValues').clear();
+    }),
 
   init() {
     this._super(...arguments);
@@ -191,6 +211,7 @@ export default Component.extend({
       } else {
         this.set('isListCollapsed', visibility);
       }
+      this.get('listCollapsed')(this.get('isListCollapsed'));
     },
     search(query) {
       this.set('searchQuery', query);
