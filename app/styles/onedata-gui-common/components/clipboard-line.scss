@@ -27,6 +27,14 @@
       height: $input-height-base;
     }
   }
+
+  .without-text {
+    padding-left: $padding-base-horizontal;
+    padding-right: $padding-base-horizontal;
+    .one-icon {
+      margin-right: -0.6em;
+    }
+  }
   
   &.sm {
     .clipboard-line-input input[type=text] {

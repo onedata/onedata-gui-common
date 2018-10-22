@@ -13,11 +13,14 @@
   >
   <div class="input-group-btn">
     {{#one-copy-button
-      class=(concat "btn btn-" (or btnType "default"))
+      class=(concat-classes "btn" (concat "btn-" (or btnType "default")) (unless showText "without-text"))
       parentElementId=elementId
       localTarget=".clipboard-input"
     }}
-    {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
-  {{/one-copy-button}}
+      {{one-icon icon="clipboard-copy"}}
+      {{#if showText}}
+        {{tt this "copyBtn"}}
+      {{/if}}
+    {{/one-copy-button}}
   </div>
 </div>

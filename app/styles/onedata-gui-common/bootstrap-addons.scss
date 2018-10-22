@@ -399,11 +399,9 @@ $token-border-radius: 3px;
 }
 
 .table:not(.bt) {
-  tr {
-    td:first-child {
-      position: relative;
-      padding-left: 16px;
-    }
+  td:first-child {
+    position: relative;
+    padding-left: 16px;
   }
 }
 
