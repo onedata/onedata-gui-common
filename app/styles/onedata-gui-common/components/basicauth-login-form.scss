@@ -58,16 +58,6 @@ $error-message-margin: 15px;
     &.back-button {
       background-color: $btn-default-bg;
       border-color: $btn-default-bg;
-      .one-icon::before {
-        display: inline-block;
-        position: relative;
-        top: -2px;
-        margin-left: -2 * $padding-xs-horizontal;
-        margin-right: $padding-xs-horizontal;
-        transform: rotate(-180deg);
-        font-size: 17pt;
-        line-height: 0;
-      }
     }
   }
 }
