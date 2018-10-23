@@ -16,6 +16,9 @@ import proceedProcessModal from './onedata-gui-common/components/proceed-process
 import oneCopyButton from './onedata-gui-common/components/one-copy-button';
 import oneWayToggle from './onedata-gui-common/components/one-way-toggle';
 import oneSizeEdit from './onedata-gui-common/components/one-size-edit';
+import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
+
+import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 
 import login from './onedata-gui-common/routes/login';
 
@@ -41,6 +44,10 @@ const translations = {
     oneCopyButton,
     oneWayToggle,
     oneSizeEdit,
+    authenticationErrorModal
+  },
+  mixins: {
+    authenticationErrorMessage,
   },
   routes: {
     login,
