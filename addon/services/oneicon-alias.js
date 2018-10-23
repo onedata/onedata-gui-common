@@ -1,11 +1,11 @@
 /**
  * A service that translates string pair (context, keyword) into valid oneicon
  * icon name. If (context, keyword) is not defined, then keyword is used as the
- * result.
+ * result. When context is ommitted, special `__global` context is used.
  * 
  * It is created as a service to allow extending with custom names mapping.
  *
- * @module services/oneicon-name-translator
+ * @module services/oneicon-alias
  * @author Michal Borzecki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -14,7 +14,7 @@
 import Service from '@ember/service';
 
 const namesDictionary = {
-  group: {
+  __global: {
     role_holders: 'role-holders',
   },
 };
@@ -36,7 +36,8 @@ export default Service.extend({
    * }
    * ```
    * Only `context.keyword` path must be unique. Keywords and icon names can duplicate
-   * between contexts. 
+   * between contexts. `__global` context is special and is used when context
+   * is ommitted.
    * @type {Object}
    */
   namesDictionary,
@@ -44,11 +45,15 @@ export default Service.extend({
   /**
    * Looks for icon name in `namesDictionary.${context}.${keyword}`. Returns
    * `keyword` if corresponding mapping does not exist.
-   * @param {string} context 
+   * @param {string} context or keyword if there was only one argument
    * @param {string} keyword 
    * @returns {string} oneicon icon name
    */
   getName(context, keyword) {
+    if (keyword === undefined) {
+      keyword = context;
+      context = '__global';
+    }
     const name = this.get(`namesDictionary.${context}.${keyword}`);
     return name || keyword;
   },
