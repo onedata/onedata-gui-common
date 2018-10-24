@@ -23,6 +23,7 @@ export default Route.extend({
   navigationState: service(),
 
   beforeModel(transition) {
+    this.get('navigationState').updateQueryParams(transition);
     const contentModel = this.modelFor('onedata.sidebar.content');
     const aspect = transition.params['onedata.sidebar.content.aspect'].aspect_id;
     if (!contentModel.resource) {

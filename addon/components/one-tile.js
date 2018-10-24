@@ -103,6 +103,27 @@ export default Component.extend(I18n, {
   }),
 
   /**
+   * Prepared link-to helper arguments
+   * @type {Ember.ComputedProperty<Array<any>>}
+   */
+  linkToParams: computed('route', 'routeQueryParams', function () {
+    const {
+      route,
+      routeQueryParams,
+      aspect,
+    } = this.getProperties('route', 'routeQueryParams', 'aspect');
+    // emulate `query-params` helper result
+    const queryParamsObject = routeQueryParams ? {
+      isQueryParams: true,
+      values: routeQueryParams,
+    } : undefined;
+    
+    const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
+    return queryParamsObject ? 
+      routeElements.concat(queryParamsObject) : routeElements;
+  }),
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   moreText: computed(function moreText() {
@@ -140,15 +161,11 @@ export default Component.extend(I18n, {
           route,
           routeQueryParams,
         } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
-        
-        if (route) {
-          router.transitionTo(
-            ...route,
-            routeQueryParams ? { queryParams: routeQueryParams } : undefined
-          );
-        } else {
-          router.transitionTo('onedata.sidebar.content.aspect', aspect);
+        let transitionToArgs = route ? route : ['onedata.sidebar.content.aspect', aspect];
+        if (routeQueryParams) {
+          transitionToArgs.push({ queryParams: routeQueryParams })
         }
+        router.transitionTo(...transitionToArgs);
       }
     }
     this.scaleUp();

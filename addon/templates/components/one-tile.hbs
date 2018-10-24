@@ -2,15 +2,9 @@
   <span class="one-label">
     {{title}}
   </span>
-  {{#if route}}
-    {{#link-to params=(if routeQueryParams (append route (hash isQueryParams=true values=routeQueryParams)) route) class="more-link"}}
-      {{moreText}} &raquo;
-    {{/link-to}}
-  {{else if aspect}}
-    {{#link-to "onedata.sidebar.content.aspect" aspect class="more-link"}}
-      {{moreText}} &raquo;
-    {{/link-to}}
-  {{/if}}
+  {{#link-to params=linkToParams class="more-link"}}
+    {{moreText}} &raquo;
+  {{/link-to}}
 </h1>
 <div class="tile-content">
   <div class="tile-content-inner">
