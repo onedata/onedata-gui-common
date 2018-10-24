@@ -17,9 +17,6 @@ const namesDictionary = {
   __global: {
     role_holders: 'role-holders',
   },
-  resourceInfo: {
-    group: 'groups',
-  },
 };
 
 export default Service.extend({
