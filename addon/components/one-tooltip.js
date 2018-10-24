@@ -17,6 +17,7 @@ import BsTooltip from 'ember-bootstrap/components/bs-tooltip';
 import { inject } from '@ember/service';
 import { observer } from '@ember/object';
 import $ from 'jquery';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default BsTooltip.extend({
   scrollState: inject(),
@@ -48,6 +49,16 @@ export default BsTooltip.extend({
   init() {
     this._super(...arguments);
     this.get('scrollState');
+  },
+
+  /**
+   * Bugfix: surrounds `_show` method with `safeExec` to avoid
+   * "set on destoryed object" error.
+   * @override
+   */
+  _show() {
+    const args = arguments;
+    safeExec(this, () => this._super(...args));
   },
 
   /**
