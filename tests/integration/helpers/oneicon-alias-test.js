@@ -6,23 +6,23 @@ import Service from '@ember/service';
 import { registerService, lookupService } from '../../helpers/stub-service';
 import sinon from 'sinon';
 
-const OneiconNameTranslatorStub = Service.extend({
+const oneiconAliasStub = Service.extend({
   getName(context, keyword) {
     return keyword;
   },
 });
 
 describe('Integration | Helper | oneicon name translator', function () {
-  setupComponentTest('oneicon-name-translator', {
+  setupComponentTest('oneicon-alias', {
     integration: true,
   });
 
   beforeEach(function () {
-    registerService(this, 'oneicon-name-translator', OneiconNameTranslatorStub);
+    registerService(this, 'oneicon-alias', oneiconAliasStub);
   });
 
   it('translates keyword into name', function () {
-    const translatorService = lookupService(this, 'oneicon-name-translator');
+    const translatorService = lookupService(this, 'oneicon-alias');
     const spy = sinon.spy(translatorService, 'getName');
 
     const context = 'example-context';
@@ -32,7 +32,7 @@ describe('Integration | Helper | oneicon name translator', function () {
       keyword,
     });
 
-    this.render(hbs `{{oneicon-name-translator context keyword}}`);
+    this.render(hbs `{{oneicon-alias context keyword}}`);
 
     expect(this.$().text().trim()).to.equal(keyword);
     expect(spy).to.be.calledOnce;

@@ -187,8 +187,23 @@ $token-border-radius: 3px;
   .input-group-btn .btn {
     height: $input-height-base;
     font-size: $font-size-base;
-    border: 1px solid $input-border;
     border-left: none;
+    
+    &.btn-primary {
+      @include input-btn-variant($btn-primary-border); 
+    }
+    &.btn-info {
+      @include input-btn-variant($btn-info-border); 
+    }
+    &.btn-default {
+      @include input-btn-variant($btn-default-border); 
+    }
+    &.btn-danger {
+      @include input-btn-variant($btn-danger-border); 
+    }
+    &.btn-warning {
+      @include input-btn-variant($btn-warning-border); 
+    }
   }
   &.input-group-sm .input-group-btn .btn {
     height: $input-height-small;
