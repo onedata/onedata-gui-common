@@ -118,6 +118,10 @@ export default Component.extend(I18n, {
       values: routeQueryParams,
     } : undefined;
     
+    if (!route && !aspect) {
+      return null;
+    }
+
     const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
     return queryParamsObject ? 
       routeElements.concat(queryParamsObject) : routeElements;

@@ -2,9 +2,11 @@
   <span class="one-label">
     {{title}}
   </span>
-  {{#link-to params=linkToParams class="more-link"}}
-    {{moreText}} &raquo;
-  {{/link-to}}
+  {{#if linkToParams}}
+    {{#link-to params=linkToParams class="more-link"}}
+      {{moreText}} &raquo;
+    {{/link-to}}
+  {{/if}}
 </h1>
 <div class="tile-content">
   <div class="tile-content-inner">
