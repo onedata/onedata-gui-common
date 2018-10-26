@@ -82,6 +82,11 @@ export default Component.extend({
    */
   _matchesSearchQuery: true,
 
+  /**
+   * @type {any}
+   */
+  oldSelectionValue: null,
+
   _isItemCollapsed: computed('_isListCollapsed', '_matchesSearchQuery',
     '_isSelected',
     function () {
@@ -155,6 +160,23 @@ export default Component.extend({
     }
   ),
 
+  selectionValueObserver: observer(
+    'selectionValue',
+    function selectionValueObserver() {
+      const {
+        oldSelectionValue,
+        selectionValue,
+      } = this.getProperties('oldSelectionValue', 'selectionValue');
+      if (oldSelectionValue !== selectionValue && oldSelectionValue) {
+        invokeAction(this, '_notifyValue', oldSelectionValue, false);
+      }
+      if (selectionValue) {
+        invokeAction(this, '_notifyValue', selectionValue, true);
+      }
+      this.set('oldSelectionValue', selectionValue);
+    }
+  ),
+
   init() {
     this._super(...arguments);
     let {
@@ -166,6 +188,7 @@ export default Component.extend({
       eventsBus.on(closeEventName, () => this.set('isActive', false));
     }
     if (selectionValue !== null) {
+      this.set('oldSelectionValue', selectionValue);
       invokeAction(this, '_notifyValue', selectionValue, true);
     }
   },
@@ -213,7 +236,10 @@ export default Component.extend({
       }
     },
     toggleSelection() {
-      invokeAction(this, 'toggleItemSelection', this.get('selectionValue'));
+      const selectionValue = this.get('selectionValue');
+      if (selectionValue !== null) {
+        invokeAction(this, 'toggleItemSelection', this.get('selectionValue'));
+      }
     }
   }
 });
