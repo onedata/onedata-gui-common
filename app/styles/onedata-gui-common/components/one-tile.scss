@@ -65,7 +65,7 @@ $-tile-content-padding: 4px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.31);
 
   &.one-tile-link:hover {
-    background-color: $color-one-semiwhite;
+    background-color: lighten($color-one-semiwhite, 3%);
     cursor: pointer;
     
     .more-link {
