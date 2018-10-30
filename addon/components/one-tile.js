@@ -18,6 +18,7 @@ import { computed, observer } from '@ember/object';
 import { debounce } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
+import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default Component.extend(I18n, {
   layout,
@@ -40,7 +41,7 @@ export default Component.extend(I18n, {
 
   /**
    * Route specification used to generate a link related to this tile. It has
-   * a higher priority that `aspect` property.
+   * a higher priority than `aspect` property.
    * @type {Array<string>}
    */
   route: undefined,
@@ -93,7 +94,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isLink: computed('isLink', 'aspect', 'route', function () {
+  _isLink: computed('isLink', 'aspect', 'route', function _isLink() {
     const {
       isLink,
       aspect,
@@ -106,7 +107,7 @@ export default Component.extend(I18n, {
    * Prepared link-to helper arguments
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  linkToParams: computed('route', 'routeQueryParams', function () {
+  linkToParams: computed('route', 'routeQueryParams', function linkToParams() {
     const {
       route,
       routeQueryParams,
@@ -117,22 +118,20 @@ export default Component.extend(I18n, {
       isQueryParams: true,
       values: routeQueryParams,
     } : undefined;
-    
+
     if (!route && !aspect) {
       return null;
     }
 
     const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
-    return queryParamsObject ? 
+    return queryParamsObject ?
       routeElements.concat(queryParamsObject) : routeElements;
   }),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  moreText: computed(function moreText() {
-    return this.t('more');
-  }),
+  moreText: computedT('more'),
 
   /**
    * @type {Ember.ComputedProperty<Function>}
@@ -165,7 +164,8 @@ export default Component.extend(I18n, {
           route,
           routeQueryParams,
         } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
-        let transitionToArgs = route ? route : ['onedata.sidebar.content.aspect', aspect];
+        const transitionToArgs = route ?
+          route : ['onedata.sidebar.content.aspect', aspect];
         if (routeQueryParams) {
           transitionToArgs.push({ queryParams: routeQueryParams })
         }

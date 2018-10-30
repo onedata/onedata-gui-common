@@ -58,7 +58,7 @@ export default BsTooltip.extend({
    */
   _show() {
     const args = arguments;
-    safeExec(this, () => this._super(...args));
+    return safeExec(this, () => this._super(...args));
   },
 
   /**
