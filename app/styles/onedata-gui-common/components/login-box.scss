@@ -1,4 +1,11 @@
 .login-box {  
+  h1, .row-login-header h4 {
+    text-align: center;
+    font-family: 'Open Sans Semibold';
+    font-size: 28px;
+    letter-spacing: $letter-spacing-base;
+  }
+  
   .col-user-profile-icon {
     > div {
       display: inline-block;
@@ -60,11 +67,6 @@
   }
   .row-login-header {
     margin-bottom: 30px;
-    h4 {
-      font-family: 'Open Sans Semibold';
-      font-size: 28px;
-      letter-spacing: $letter-spacing-base;
-    }
   }
   // TODO: remove class after icons resize
   .additional-bottom-margin {
@@ -82,5 +84,69 @@
       opacity: 1;
     }
   }
+  
+  .login-warning-icon {
+    position: relative;
+    top: 6px;
+    left: 0;
+    padding-right: 20px;
+    font-size: 1.1em;
+  }
+  
+  .back-button {
+    .one-icon {
+      top: 0.25em;
+    }
+    .one-icon::before {
+      display: inline-block;
+      position: relative;
+      top: -2px;
+      margin-left: -2 * $padding-xs-horizontal;
+      margin-right: $padding-xs-horizontal;
+      transform: rotate(-180deg);
+      font-size: 17pt;
+      line-height: 0;
+    }
+  }
 
+  .authentication-error-message {
+    max-width: 820px;
+    
+    .login-form-container.always-visible {
+      margin-top: 0;
+    }
+    
+    .authentication-error-message-text {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      text-align: center;
+      font-size: 1.2em;
+    }
+    
+    .authentication-error-state-input-copy {
+      position: relative;
+      padding-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 500px;
+    }
+    
+    .authentication-error-buttons {
+      font-size: 14px;
+      .back-button {
+        @extend .btn-success;
+      }
+    }
+    
+    .btn-login-error-copy {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      padding: 0;
+      color: darken($brand-primary, 20%) !important;
+      &:hover {
+        color: darken($brand-primary, 30%) !important;
+      }
+    }
+  }
 }

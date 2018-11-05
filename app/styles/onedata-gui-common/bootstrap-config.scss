@@ -143,13 +143,15 @@ label {
   .btn {
     @include box-shadow(none);
     border-color: $color-one-default;
+    border-width: 1px;
     & + .btn {
       margin-left: -2px;
     }
     &.btn-default {
       &:not(.active) {
         background-color: $color-one-white;
-        color: $color-one-default;
+        color: $main-text-color;
+        border-color: $main-border-color;
         &:focus,
         &.focus,
         &:hover,

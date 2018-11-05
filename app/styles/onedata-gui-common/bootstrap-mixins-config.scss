@@ -57,3 +57,7 @@ $btn-active-boxshadow-size: 0 0 7px;
     }
   }
 }
+
+@mixin input-btn-variant($border-color) {
+  border: 1px solid darken($border-color, 10%);
+}
