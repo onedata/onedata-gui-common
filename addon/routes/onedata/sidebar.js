@@ -42,6 +42,7 @@ export default Route.extend({
         isActiveResourceCollectionLoading: true,
         hasActiveResourceCollectionLoadingFailed: false,
         activeResourceCollection: undefined,
+        activeResourceId: undefined,
       });
     }
   },

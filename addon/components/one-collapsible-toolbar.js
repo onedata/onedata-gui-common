@@ -34,7 +34,11 @@ import $ from 'jquery';
 export default Component.extend(ClickOutside, ContentOverflowDetector, {
   layout,
   classNames: ['one-collapsible-toolbar'],
-  classNameBindings: ['stateClasses', 'isInternallyMinimized:minimized'],
+  classNameBindings: [
+    'stateClasses',
+    'isInternallyMinimized:minimized',
+    'dropdownOpened',
+  ],
 
   eventsBus: service(),
 

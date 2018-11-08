@@ -1,5 +1,3 @@
-{{!-- TODO i18n --}}
-
 {{#bs-modal
   class="alert-global"
   open=open
@@ -7,7 +5,10 @@
   as |modal|
 }}
   {{#modal.header}}
-    <h1>Error</h1>
+    <h1>
+      {{one-icon icon="sign-error-rounded"}}
+      <span class="one-label">{{tt this "error"}}</span>
+    </h1>
   {{/modal.header}}
   {{#modal.body}}
     {{text}}
@@ -17,7 +18,7 @@
       onClick=(action modal.close)
       class="btn-danger"
     }}
-      Close
+      {{tt this "close"}}
     {{/bs-button}}
   {{/modal.footer}}
 {{/bs-modal}}

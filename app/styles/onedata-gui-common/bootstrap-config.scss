@@ -143,13 +143,15 @@ label {
   .btn {
     @include box-shadow(none);
     border-color: $color-one-default;
+    border-width: 1px;
     & + .btn {
       margin-left: -2px;
     }
     &.btn-default {
       &:not(.active) {
         background-color: $color-one-white;
-        color: $color-one-default;
+        color: $main-text-color;
+        border-color: $main-border-color;
         &:focus,
         &.focus,
         &:hover,
@@ -248,11 +250,12 @@ label {
 
       .modal-content {
         box-shadow: none;
-        padding: 0em 3em 1em 3em;
+        padding: 0em 2em 1em 2em;
 
         .modal-header {
-          text-align: center;
-          
+          .one-icon {
+            vertical-align: middle;
+          }
           .close {
             display: none;
           }
@@ -269,16 +272,15 @@ label {
         }
 
         .modal-footer {
-          text-align: center;
+          text-align: right;
         }
 
         h1 {
-            font-size: $font-size-base * 1.5;
-            font-family: 'Open Sans Semibold';
-            letter-spacing: $letter-spacing-base;
-            margin-bottom: 1em;
-            text-transform: uppercase;
-            text-align: center;
+          font-size: $font-size-base * 1.4;
+          font-family: 'Open Sans Semibold';
+          letter-spacing: $letter-spacing-base;
+          margin-bottom: 1em;
+          text-transform: uppercase;
         }
       }
     }

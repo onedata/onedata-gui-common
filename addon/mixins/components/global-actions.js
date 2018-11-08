@@ -10,7 +10,7 @@
 import Mixin from '@ember/object/mixin';
 import { inject } from '@ember/service';
 import { observer } from '@ember/object';
-import { next } from '@ember/runloop';
+import { scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Mixin.create({
@@ -46,13 +46,11 @@ export default Mixin.create({
 
   init() {
     this._super(...arguments);
-    next(() => {
-      this.globalActionsObserver();
-    });
+    scheduleOnce('afterRender', this, 'globalActionsObserver');
   },
 
   willDestroyElement() {
-    next(() => {
+    scheduleOnce('afterRender', this, () => {
       safeExec(this.get('navigationState'), 'setProperties', {
         aspectActions: [],
         aspectActionsTitle: undefined,

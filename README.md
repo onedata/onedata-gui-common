@@ -9,6 +9,7 @@ and other EmberJS application resources as well as static resources (images, fon
 Onedata web front-ends using 3-column layout. Currently used by:
 - ``onepanel-gui``
 - ``onezone-gui``
+- ``oneprovider-gui``
 
 ## Versioning
 
@@ -16,26 +17,7 @@ Currently this addon is not versioned due to its dynamic nature.
 
 ## Usage in projects
 
-Use this repo as a subtree in Ember application ``lib`` directory, which in case of Onedata apps is placed in: ``src/lib/``.
-
-### Updating addon code
-
-To update addon:
-
-- add a remote: ``git remote add onedata-gui-common ssh://git@git.plgrid.pl:7999/vfs/onedata-gui-common.git``
-- pull recent changes: ``git subtree pull --squash --prefix=src/lib/onedata-gui-common onedata-gui-common develop`` (you can use other branch name than ``develop``)
-
-Some projects using this addon should have also Makefile tasks named ``pull_onedata_gui_common``.
-
-### Modifying addon code in projects that use it
-
-If you want to modify this addon from specific Onedata project, after pulling recent version of addon, do from project's root:
-
-- make changes in ``src/lib/onedata-gui-common`` and commit them
-- push changes to project's repo: ``git push``
-- push changes to addon repo: ``git subtree push --squash --prefix=src/lib/onedata-gui-common onedata-gui-common <branch_name>``
-
-Some projects using this addon should have also Makefile tasks named  ``push_onedata_gui_common``.
+Use this repo as a submodule in Ember application ``lib`` directory, which in case of Onedata apps is placed in: ``src/lib/``.
 
 ### Initializing project with addon
 
@@ -111,7 +93,6 @@ You should use standard application template and route shipped with this addon:
 ```javascript
 export { default } from 'onedata-gui-common/templates/application';
 ```
-
 
 
 #### Authentication

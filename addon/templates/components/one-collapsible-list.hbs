@@ -5,7 +5,7 @@
     _isCheckboxActive=(gt _availableItemValues.length 0)
     _isSelected=_areAllItemsSelected
     toggle=(action "collapseList")
-    _isListCollapsed=_isListCollapsed
+    _isListCollapsed=isListCollapsed
     search=(action "search")
   )
   item=(component "one-collapsible-list-item" 
@@ -16,7 +16,7 @@
     _selectedItemValues=_selectedItemValues
     _hasCheckbox=hasCheckboxes
     _notifyValue=(action "notifyValue")
-    _isListCollapsed=_isListCollapsed
+    _isListCollapsed=isListCollapsed
     _searchQuery=searchQuery
   )
 )}}

@@ -60,12 +60,6 @@
       margin-left: $padding-xs-horizontal;
     }
   }
-  
-  .btn-menu-toggle {
-    @include vertical-align-middle();
-    right: $padding-small-horizontal + 1px;
-    padding: $collapsible-list-item-btn-toggle-padding*0.75 $collapsible-list-item-btn-toggle-padding;
-  }
 
   .status-toolbar {
     @include vertical-align-middle();

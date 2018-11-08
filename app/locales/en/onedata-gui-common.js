@@ -1,4 +1,5 @@
 import basicauthLoginForm from './onedata-gui-common/components/basicauth-login-form';
+import alertGlobal from './onedata-gui-common/components/alert-global';
 import loginBox from './onedata-gui-common/components/login-box';
 import oneFormFields from './onedata-gui-common/components/one-form-fields';
 import applicationError from './onedata-gui-common/components/application-error';
@@ -14,6 +15,10 @@ import resourceNotFound from './onedata-gui-common/components/resource-not-found
 import proceedProcessModal from './onedata-gui-common/components/proceed-process-modal';
 import oneCopyButton from './onedata-gui-common/components/one-copy-button';
 import oneWayToggle from './onedata-gui-common/components/one-way-toggle';
+import oneSizeEdit from './onedata-gui-common/components/one-size-edit';
+import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
+
+import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 
 import login from './onedata-gui-common/routes/login';
 
@@ -22,6 +27,7 @@ import guiUtils from './onedata-gui-common/services/gui-utils';
 const translations = {
   components: {
     basicauthLoginForm,
+    alertGlobal,
     loginBox,
     oneFormFields,
     applicationError,
@@ -37,6 +43,11 @@ const translations = {
     proceedProcessModal,
     oneCopyButton,
     oneWayToggle,
+    oneSizeEdit,
+    authenticationErrorModal
+  },
+  mixins: {
+    authenticationErrorMessage,
   },
   routes: {
     login,
