@@ -72,6 +72,10 @@ $-tile-content-padding: 4px;
       @extend a:hover;
     }
   }
+
+  &.one-tile-link .resource-load-error .promise-error-show-details {
+    display: none;
+  }
   
   h1.tile-title, .more-link {
     padding: 0px;
