@@ -371,6 +371,17 @@ export default Service.extend(I18n, {
       .then(list => !!list.findBy('id', id));
   },
 
+  /**
+   * Updates queryParams if those available in transition are different than actual
+   * @param {Transition} transition 
+   */
+  updateQueryParams(transition) {
+    const queryParams = get(transition, 'queryParams');
+    if (!_.isEqual(queryParams, this.get('queryParams'))) {
+      this.set('queryParams', _.assign({}, queryParams));
+    }
+  },
+
   _globalSidebarClosed() {
     safeExec(this, 'setProperties', {
       isGlobalSidenavClosing: false,

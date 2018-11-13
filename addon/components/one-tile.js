@@ -15,21 +15,42 @@ import layout from '../templates/components/one-tile';
 
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
-import { and } from '@ember/object/computed';
 import { debounce } from '@ember/runloop';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import $ from 'jquery';
+import computedT from 'onedata-gui-common/utils/computed-t';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['one-tile'],
   classNameBindings: ['isLink:one-tile-link', 'sizeClass'],
 
+  i18n: service(),
   router: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneTile',
 
   /**
    * If set, the tile will be a link to some aspect of currently loaded resource
    * @type {string}
    */
   aspect: undefined,
+
+  /**
+   * Route specification used to generate a link related to this tile. It has
+   * a higher priority than `aspect` property.
+   * @type {Array<string>}
+   */
+  route: undefined,
+
+  /**
+   * Query params for route specified in `route`
+   * @type {Object|undefined}
+   */
+  routeQueryParams: undefined,
 
   /**
    * If true, whole tile is a pseudo-link to aspect.
@@ -73,7 +94,44 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isLink: and('isLink', 'aspect'),
+  _isLink: computed('isLink', 'aspect', 'route', function _isLink() {
+    const {
+      isLink,
+      aspect,
+      route,
+    } = this.getProperties('isLink', 'aspect', 'route');
+    return isLink && (aspect || route);
+  }),
+
+  /**
+   * Prepared link-to helper arguments
+   * @type {Ember.ComputedProperty<Array<any>>}
+   */
+  linkToParams: computed('route', 'routeQueryParams', function linkToParams() {
+    const {
+      route,
+      routeQueryParams,
+      aspect,
+    } = this.getProperties('route', 'routeQueryParams', 'aspect');
+    // emulate `query-params` helper result
+    const queryParamsObject = routeQueryParams ? {
+      isQueryParams: true,
+      values: routeQueryParams,
+    } : undefined;
+
+    if (!route && !aspect) {
+      return null;
+    }
+
+    const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
+    return queryParamsObject ?
+      routeElements.concat(queryParamsObject) : routeElements;
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  moreText: computedT('more'),
 
   /**
    * @type {Ember.ComputedProperty<Function>}
@@ -94,12 +152,24 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     if (this.get('_isLink')) {
-      this.click = function click() {
+      this.click = function click(event) {
+        // do not redirect if "more" link has been clicked
+        if ($(event.target).closest('.more-link').length) {
+          return;
+        }
+
         const {
           router,
           aspect,
-        } = this.getProperties('router', 'aspect');
-        router.transitionTo('onedata.sidebar.content.aspect', aspect);
+          route,
+          routeQueryParams,
+        } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
+        const transitionToArgs = route ?
+          route : ['onedata.sidebar.content.aspect', aspect];
+        if (routeQueryParams) {
+          transitionToArgs.push({ queryParams: routeQueryParams })
+        }
+        router.transitionTo(...transitionToArgs);
       }
     }
     this.scaleUp();
