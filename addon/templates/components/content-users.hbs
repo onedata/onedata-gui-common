@@ -6,32 +6,56 @@
   </h1>
 </div>
 <div class="content-row">
-  <h1>{{tt this "login"}}</h1>
-  <div class="indented-row" style="margin-left: 40px; padding-top: 12px; padding-bottom: 12px;">
-    {{user.name}}
+  {{!-- FIXME: implement mobile style --}}
+  <h1>{{tt this "credentials"}}</h1>
+  <div class="indented-row credentials-row credentials-row-login">
+    <div class="row-label">
+      {{tt this "login"}}
+    </div>
+    <div class="row-value">
+      {{user.name}}
+    </div>
+  </div>
+  <div class="indented-row credentials-row credentials-row-password">
+    <div class="row-label">
+      {{tt this "password"}}
+    </div>
+    <div class="row-value">
+      <input type="text" class="form-control" disabled=true value={{fake-password}}>
+    </div>
+  </div>
+  <div class="indented-row credentials-row credentials-row-password">
+    <div class="row-value">
+      {{#bs-button
+        type="default"
+        class="btn-sm"
+      }}
+        {{tt this "changePassword"}}
+      {{/bs-button}}
+      {{!-- FIXME: implement changing password --}}
+    </div>
   </div>
 </div>
-<div class="content-row">
-  {{!-- FIXME: bad design? --}}
-  <h1>{{tt this "changePassword"}}</h1>
-  {{!-- <div class="indented-row">
+{{!-- <div class="content-row">
+  <div class="indented-row">
     {{user-credentials-form
       username=user.name
       changingPassword=_changingPassword
       submit=(action "submitChangePassword")
       class=_changePasswordButtonClass
     }}
-  </div> --}}
-</div>
-<div class="content-row">
-  <h1>{{tt this "linkedAccounts"}}</h1>
-  <ul class="indented-row linked-accounts-list">
-    {{!-- FIXME: _loadingLinkedAccount or proxy that loads? --}}
-    {{#promise-proxy-container
-      proxy=onezoneAccountProxy
-    }}
-      {{#if onezoneAccount}}
-      {{!-- FIXME: style colors --}}
+  </div>
+</div> --}}
+
+{{#if canBeLinked}}
+  <div class="content-row">
+    <h1>{{tt this "linkedAccounts"}}</h1>
+    <ul class="indented-row linked-accounts-list">
+      {{!-- FIXME: _loadingLinkedAccount or proxy that loads? --}}
+      {{#promise-proxy-container
+        proxy=onezoneAccountProxy
+      }}
+        {{!-- FIXME: style colors --}}
         {{social-box
           authId="onezone"
           iconPath="assets/images/auth-providers/onezone.svg"
@@ -48,25 +72,7 @@
             {{/truncated-string}}
           </div>
         </li>
-      {{else}}
-        <li class="linked-account full-social-icon content-row add-account">
-          {{#social-box
-            authId="add"
-            socialIconStyle=""
-            aStyle=""
-            class="social-box-linked-account"
-            click=(action "linkOnezoneAccount")
-          }}
-            <span class="plus-icon">+</span>
-          {{/social-box}}
-          <div class="account-description">
-            {{!-- class name FIXME: --}}
-            <div class="show-dropdown-description">
-              {{tt this "linkOnezoneAccount"}}
-            </div>
-          </div>
-        </li>
-      {{/if}}
-    {{/promise-proxy-container}}
-  </ul>
-</div>
+      {{/promise-proxy-container}}
+    </ul>
+  </div>
+{{/if}}

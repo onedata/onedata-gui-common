@@ -11,7 +11,7 @@ import { helper } from '@ember/component/helper';
 
 import { htmlSafe } from '@ember/string';
 
-const PASSWORD_DOT = '&#9679';
+const PASSWORD_DOT = '●';
 
 export function fakePassword([dotsCount = 5] /*, hash*/ ) {
   return htmlSafe(PASSWORD_DOT.repeat(dotsCount));
