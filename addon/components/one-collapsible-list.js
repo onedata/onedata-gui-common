@@ -34,7 +34,7 @@
 
 import Component from '@ember/component';
 
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
 import { A } from '@ember/array';
 import { invoke, invokeAction } from 'ember-invoke-action';
@@ -68,6 +68,14 @@ export default Component.extend({
   filtrationChanged: () => {},
 
   /**
+   * List collapse state change handler
+   * @type {Function}
+   * @param {boolean} isCollapsed
+   * @returns {undefined}
+   */
+  listCollapsed: () => {},
+
+  /**
    * List of selected item values
    * @type {Ember.Array.*}
    */
@@ -83,13 +91,19 @@ export default Component.extend({
    * If true, list is collapsed
    * @type {boolean}
    */
-  _isListCollapsed: false,
+  isListCollapsed: false,
 
   /**
    * String, that is used for list items filtering
    * @type {string}
    */
   searchQuery: '',
+
+  /**
+   * If changed, triggers selection reset. Value of this property is not important
+   * @type {any}
+   */
+  resetSelectionTrigger: undefined,
 
   /**
    * If true, all items are selected
@@ -106,6 +120,12 @@ export default Component.extend({
         _availableItemValues.length !== 0;
     }
   ),
+
+  resetSelectionTriggerObserver: observer(
+    'resetSelectionTrigger',
+    function resetSelectionTriggerObserver() {
+      this.get('_selectedItemValues').clear();
+    }),
 
   init() {
     this._super(...arguments);
@@ -143,14 +163,11 @@ export default Component.extend({
         _availableItemValues,
       } = this.getProperties('_selectedItemValues', '_availableItemValues');
       let isOnList = _selectedItemValues.includes(itemValue);
-      if (selectionState === undefined) {
-        if ((selectionState === undefined || selectionState === false) &&
-          isOnList) {
-          _selectedItemValues.removeObject(itemValue);
-        } else if ((selectionState === undefined || selectionState === true) &&
-          !isOnList && _availableItemValues.includes(itemValue)) {
-          _selectedItemValues.pushObject(itemValue);
-        }
+      if (!selectionState && isOnList) {
+        _selectedItemValues.removeObject(itemValue);
+      } else if ((selectionState === undefined || selectionState === true) &&
+        !isOnList && _availableItemValues.includes(itemValue)) {
+        _selectedItemValues.pushObject(itemValue);
       }
       invokeAction(this, 'selectionChanged', _selectedItemValues.toArray());
     },
@@ -190,10 +207,11 @@ export default Component.extend({
     },
     collapseList(visibility) {
       if (visibility === undefined) {
-        this.toggleProperty('_isListCollapsed');
+        this.toggleProperty('isListCollapsed');
       } else {
-        this.set('_isListCollapsed', visibility);
+        this.set('isListCollapsed', visibility);
       }
+      this.get('listCollapsed')(this.get('isListCollapsed'));
     },
     search(query) {
       this.set('searchQuery', query);

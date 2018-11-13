@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?rja7qf#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?rja7qf') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?rja7qf') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?rja7qf##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?jdrvxs');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?jdrvxs#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?jdrvxs') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?jdrvxs') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?jdrvxs##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -36,6 +36,11 @@
     content: $oneicon-add; 
   }
 }
+.oneicon-arrow-circle-down {
+  &:before {
+    content: $oneicon-arrow-circle-down; 
+  }
+}
 .oneicon-arrow-down {
   &:before {
     content: $oneicon-arrow-down; 
@@ -44,6 +49,11 @@
 .oneicon-arrow-left {
   &:before {
     content: $oneicon-arrow-left; 
+  }
+}
+.oneicon-arrow-right-full {
+  &:before {
+    content: $oneicon-arrow-right-full; 
   }
 }
 .oneicon-arrow-right {
@@ -257,6 +267,11 @@
     content: $oneicon-lock; 
   }
 }
+.oneicon-membership {
+  &:before {
+    content: $oneicon-membership; 
+  }
+}
 .oneicon-menu-clusters {
   &:before {
     content: $oneicon-menu-clusters; 
@@ -337,6 +352,11 @@
     content: $oneicon-node; 
   }
 }
+.oneicon-organization {
+  &:before {
+    content: $oneicon-organization; 
+  }
+}
 .oneicon-overview {
   &:before {
     content: $oneicon-overview; 
@@ -397,6 +417,11 @@
     content: $oneicon-rename; 
   }
 }
+.oneicon-role-holders {
+  &:before {
+    content: $oneicon-role-holders; 
+  }
+}
 .oneicon-search {
   &:before {
     content: $oneicon-search; 
@@ -422,9 +447,19 @@
     content: $oneicon-share; 
   }
 }
+.oneicon-sign-error-rounded {
+  &:before {
+    content: $oneicon-sign-error-rounded; 
+  }
+}
 .oneicon-sign-error {
   &:before {
     content: $oneicon-sign-error; 
+  }
+}
+.oneicon-sign-info-rounded {
+  &:before {
+    content: $oneicon-sign-info-rounded; 
   }
 }
 .oneicon-sign-info {
@@ -432,9 +467,19 @@
     content: $oneicon-sign-info; 
   }
 }
+.oneicon-sign-question-rounded {
+  &:before {
+    content: $oneicon-sign-question-rounded; 
+  }
+}
 .oneicon-sign-question {
   &:before {
     content: $oneicon-sign-question; 
+  }
+}
+.oneicon-sign-warning-rounded {
+  &:before {
+    content: $oneicon-sign-warning-rounded; 
   }
 }
 .oneicon-sign-warning {
@@ -562,9 +607,19 @@
     content: $oneicon-support; 
   }
 }
+.oneicon-team {
+  &:before {
+    content: $oneicon-team; 
+  }
+}
 .oneicon-tokens {
   &:before {
     content: $oneicon-tokens; 
+  }
+}
+.oneicon-unit {
+  &:before {
+    content: $oneicon-unit; 
   }
 }
 .oneicon-update {

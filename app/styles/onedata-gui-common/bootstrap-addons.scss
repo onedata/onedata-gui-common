@@ -41,6 +41,12 @@ $token-border-radius: 3px;
 }
 
 .modal-content {
+  .modal-header {
+    .one-icon {
+      font-size: 1.7em;
+      margin-right: $padding-base-horizontal;
+    }
+  }
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
@@ -56,16 +62,17 @@ $token-border-radius: 3px;
   }
 }
 
+.has-error {
+  .form-message {
+    color: $state-danger-text;
+  }
+}
+
 .form-horizontal {
   .form-message {
     padding-top: $padding-small-vertical;
     text-align: right;
     font-size: $font-size-small;
-  }
-  .has-error {
-    .form-message {
-      color: $state-danger-text;
-    }
   }
   &:not(.without-labels) {
     @media (max-width: $screen-xs-max) {
@@ -176,6 +183,34 @@ $token-border-radius: 3px;
   }
 }
 
+.input-group {
+  .input-group-btn .btn {
+    height: $input-height-base;
+    font-size: $font-size-base;
+    border-left: none;
+    
+    &.btn-primary {
+      @include input-btn-variant($btn-primary-border); 
+    }
+    &.btn-info {
+      @include input-btn-variant($btn-info-border); 
+    }
+    &.btn-default {
+      @include input-btn-variant($btn-default-border); 
+    }
+    &.btn-danger {
+      @include input-btn-variant($btn-danger-border); 
+    }
+    &.btn-warning {
+      @include input-btn-variant($btn-warning-border); 
+    }
+  }
+  &.input-group-sm .input-group-btn .btn {
+    height: $input-height-small;
+    font-size: $font-size-small;
+  }
+}
+
 .input-group.with-icon-addon {
   position: relative;
   width: 100%;
@@ -211,7 +246,8 @@ $token-border-radius: 3px;
   }
 }
 
-.form-group-sm .input-group.with-icon-addon {
+.form-group-sm .input-group.with-icon-addon,
+.input-group.input-group-sm.with-icon-addon {
   .input-group-addon {
     height: $input-height-small;
     min-width: $input-height-small;
@@ -236,6 +272,11 @@ $token-border-radius: 3px;
 
 .form-static .form-group {
   margin-bottom: 0;
+}
+
+.inline-label {
+  display: inline-block;
+  margin-right: $padding-base-horizontal;
 }
 
 .icon-btn {
@@ -421,5 +462,39 @@ label.align-left {
     padding: 4px 3px 4px 0;
     
     border-right: 1px solid rgba(255,255,255,0.3);
+  }
+}
+    
+.input-group-basic-dropdown {  
+  display: table-cell;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+  .ember-basic-dropdown {
+    .ember-power-select-trigger {
+      height: $input-height-base;
+      border-left: none;
+      border-radius: 0;
+    }
+    .ember-basic-dropdown-content--left {
+      left: -1px;
+    }
+  }
+}
+
+.input-group-sm {
+  .input-group-basic-dropdown {
+    .ember-basic-dropdown {
+      .ember-power-select-trigger {
+        height: $input-height-small;
+        line-height: $input-height-small - 12px;
+        padding-left: $input-height-small - 16px;
+        padding-right: $input-height-small - 8px;
+        border-radius: 0;
+      }
+      .ember-basic-dropdown-content {
+        @extend .small;
+      }
+    }
   }
 }

@@ -9,7 +9,7 @@
 
 import { alias } from '@ember/object/computed';
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { inject } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
@@ -21,12 +21,28 @@ export default Component.extend({
 
   globalNotify: inject(),
   session: inject(),
+  navigationState: inject(),
 
   /**
-   * Description for error (if occurred).
-   * @type {string|undefined}
+   * Current status of showing authentication error message, as the message
+   * can be discarded by clicking on back button.
+   * @type {boolean}
    */
-  errorMessage: undefined,
+  showAuthenticationError: false,
+
+  /**
+   * @virtual
+   * See: `mixin:authentication-error-hander#authenticationErrorReason`
+   * @type {string}
+   */
+  authenticationErrorReason: undefined,
+
+  /**
+   * @virtual
+   * See: `mixin:authentication-error-hander#authenticationErrorState`
+   * @type {string}
+   */
+  authenticationErrorState: undefined,
 
   /**
    * If true, data necessary to render login-box is still loading
@@ -47,9 +63,17 @@ export default Component.extend({
    */
   sessionHasExpired: alias('session.data.hasExpired'),
 
+  // FIXME: use of this flag is temporary, cookie maybe?
+  authFor: computed('navigationState.queryParams.auth_for', function authFor() {
+    return this.get('navigationState.queryParams.auth_for');
+  }),
+
   init() {
     this._super(...arguments);
     this.set('headerModel', EmberObject.create({}));
+    if (this.get('authenticationErrorReason')) {
+      this.set('showAuthenticationError', true);
+    }
   },
 
   actions: {
@@ -64,6 +88,10 @@ export default Component.extend({
 
     authenticationFailure() {
       safeMethodExecution(this, 'set', 'isBusy', false);
-    }
+    },
+
+    backFromError() {
+      this.set('showAuthenticationError', false);
+    },
   }
 });

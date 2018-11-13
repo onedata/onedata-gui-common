@@ -1,0 +1,67 @@
+{{#if _inEditionMode}}
+  <input
+    type="text"
+    class="form-control size-number-input {{inputClasses}}"
+    value={{or tmpDisplayedInputValue displayedInputValue}}
+    oninput={{action "updateInputValue" value="target.value"}}
+    onkeyup={{action "inputOnKeyUp"}}
+    disabled={{_whileSaving}}
+  >
+  {{#if validationMessage}}
+    <div class="form-message">{{validationMessage}}</div>
+  {{/if}}
+{{else}}
+  <input
+    type="text"
+    class="form-control size-number-input {{inputClasses}}"
+    value={{displayedInputValue}}
+    readonly=true
+  >
+{{/if}}
+
+{{#if _inEditionMode}}
+  <span class="input-group-basic-dropdown size-unit-select-group">
+    {{#power-select
+      triggerClass=size
+      dropdownClass=size
+      disabled=_whileSaving
+      options=sizeUnits
+      selected=selectedSupportSizeUnit
+      onchange=(action "updateSelectedSupportSizeUnit")
+      searchEnabled=false
+      renderInPlace=true
+      as |unit|
+    }}
+      {{unit.name}}
+    {{/power-select}}
+  </span>
+  <span class="input-group-btn">
+    {{#one-spin-button
+      class="btn btn-primary btn-confirm-choose btn-save"
+      action=(action "saveEdition")
+      disabled=hasError
+      inFlight=_whileSaving
+    }}
+      {{one-icon icon="checked"}}
+    {{/one-spin-button}}
+    {{#bs-button
+      type="default"
+      onClick=(action "cancelEdition")
+      class="btn-confirm-choose btn-cancel"
+      disabled=_whileSaving
+    }}
+      {{one-icon icon="ban-left"}}
+    {{/bs-button}}
+  </span>
+{{else}}
+  <span class="input-group-btn">
+    {{#bs-button
+      type="default"
+      class="btn-modify"
+      onClick=(action "startEdition")
+    }}
+      {{one-icon icon="rename"}}
+      <span class="btn-label">{{tt this "modify"}}</span>
+    {{/bs-button}}
+  </span>
+{{/if}}

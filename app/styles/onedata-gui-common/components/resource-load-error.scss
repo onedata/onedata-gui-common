@@ -3,7 +3,7 @@ $inline-alert-left-border-width: 60px;
 .alert-promise-error {
   // Padding for "close" button
   padding-right: 2em;
-  background-color: transparent;
+  background-color: $color-one-white;
   border-style: solid;
   border-width: 1px;
   border-left-width: $inline-alert-left-border-width;

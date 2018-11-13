@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/perfect-scrollbar-element';
-
+import { debounce } from '@ember/runloop';
 import { PerfectScrollbarMixin } from 'ember-perfect-scrollbar';
 
 export default Component.extend(PerfectScrollbarMixin, {
@@ -27,6 +27,18 @@ export default Component.extend(PerfectScrollbarMixin, {
   suppressScrollY: false,
 
   /**
+   * Scroll event handler
+   * @type {function}
+   */
+  onScroll: () => {},
+
+  /**
+   * Window object (for testing purposes only)
+   * @type {Window}
+   */
+  _window: window,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
   perfectScrollbarOptions: computed(
@@ -38,15 +50,25 @@ export default Component.extend(PerfectScrollbarMixin, {
   ),
 
   /**
-   * Scroll event handler
-   * @type {function}
+   * @type {Ember.ComputedProperty<Function>}
    */
-  onScroll: () => {},
+  windowResizeHandler: computed(function windowResizeHandler() {
+    // Using internal PerfectScrollbarMixin method to update scrollbar on
+    // window resize
+    return () => debounce(this, this._resizePerfectScrollbar, 100);
+  }),
 
   didInsertElement() {
     this._super(...arguments);
 
-    const onScroll = this.get('onScroll');
+    const {
+      onScroll,
+      windowResizeHandler,
+      _window,
+    } = this.getProperties('onScroll', 'windowResizeHandler', '_window');
+
+    _window.addEventListener('resize', windowResizeHandler);
+
     this.$()
       .on('ps-scroll-y', onScroll)
       .on('ps-scroll-x', onScroll);
@@ -54,7 +76,14 @@ export default Component.extend(PerfectScrollbarMixin, {
 
   willDestroyElement() {
     try {
-      const onScroll = this.get('onScroll');
+      const {
+        onScroll,
+        windowResizeHandler,
+        _window,
+      } = this.getProperties('onScroll', 'windowResizeHandler', '_window');
+
+      _window.removeEventListener('resize', windowResizeHandler);
+
       this.$()
         .off('ps-scroll-y', onScroll)
         .off('ps-scroll-x', onScroll);

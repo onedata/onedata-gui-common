@@ -1,28 +1,9 @@
-$alert-global-header-height: 70px;
-
 .alert-global {
-  text-align: center;
   .modal-content {
     overflow: hidden;
   }
   .modal-header {
-    position: absolute;
-    left: 0;
-    right: 0;
-    padding: 0;
-    h1 {
-      margin: 0;
-      line-height: $alert-global-header-height;
-      background-color: $color-one-danger;
-      color: $color-one-white;
-    }
-  }
-  .modal-body {
-    margin-top: $alert-global-header-height + $modal-title-padding;
-    padding: 4em 0;
-  }
-  .modal-footer {
-    padding-top: 0;
+    color: $color-one-danger;
   }
   .error-json {
     max-height: 6em;

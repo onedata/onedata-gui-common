@@ -3,9 +3,16 @@
   appModel=model
   as |section|
 }}
-  {{#if (eq section 'sidebar')}}
-    {{outlet 'sidebar'}}
-  {{else if (eq section 'content')}}
-    {{outlet 'content'}}
+  {{#if (eq section "sidebar")}}
+    {{outlet "sidebar"}}
+  {{else if (eq section "content")}}
+    {{outlet "content"}}
   {{/if}}
 {{/app-layout}}
+
+{{authentication-error-modal
+  opened=authenticationErrorOpened
+  close=(action (mut authenticationErrorOpened) false)
+  authenticationErrorReason=authenticationErrorReason
+  authenticationErrorState=authenticationErrorState
+}}

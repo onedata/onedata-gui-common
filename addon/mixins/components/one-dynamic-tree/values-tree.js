@@ -75,7 +75,7 @@ export default Mixin.create({
           values.set(subnode.name, subnodeValues);
         }
       });
-      return Object.keys(values).length > 0 ? values : undefined;
+      return values;
     }
   },
 

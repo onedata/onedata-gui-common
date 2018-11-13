@@ -52,4 +52,26 @@ describe('Integration | Component | render later', function () {
       expect(this.$('.test')).to.exist;
     });
   });
+
+  it('resets render state', function () {
+    this.setProperties({
+      trigger: 'whatever',
+      resetTrigger: 'whatever2',
+    });
+    this.render(hbs `
+      {{#render-later triggerRender=trigger resetRender=resetTrigger}}
+        <div class="test"></div>
+      {{/render-later}}
+    `);
+    this.set('trigger', 'whatever3');
+    return wait().then(() => {
+      this.setProperties({
+        trigger: false,
+        resetTrigger: 'whatever3',
+      });
+      return wait().then(() => {
+        expect(this.$('.test')).to.not.exist;
+      });
+    });
+  });
 });
