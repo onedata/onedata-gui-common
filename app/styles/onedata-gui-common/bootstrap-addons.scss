@@ -391,15 +391,6 @@ $token-border-radius: 3px;
       margin-left: 0;
       margin-right: 0;
     }
-    .content-row {
-      @media (min-width: $screen-sm-min) {
-        margin-left: 0px !important;
-        margin-right: 0px !important;
-      }
-      h1 {
-        padding: 0;
-      }
-    }
   }
 }
 
