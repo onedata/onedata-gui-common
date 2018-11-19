@@ -58,6 +58,29 @@
   .radio-inline {
     padding-top: 0;
   }
+  .form-group-sm {
+    .form-control {
+      padding-left: $padding-small-horizontal;
+    }
+    .form-control-feedback {
+      width: $input-height-small;
+      height: $input-height-small;
+      line-height: $input-height-small;
+    }
+    margin-bottom: $padding-small-vertical;
+  }
+  @media (min-width: $screen-sm-min) {
+    .form-group-sm {
+      .control-label {
+        padding-top: $padding-small-vertical + 3px;
+      }
+      .toggle-form-row {
+        .control-label {
+          padding-top: 2px;
+        }
+      }
+    }
+  }
 }
 .has-success input[disabled],
 .has-error input[disabled] {

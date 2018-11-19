@@ -3,7 +3,13 @@
 {{#each fields as |field|}}
   {{#bsForm.group 
     validation=(if field.isInvalid "error" (if field.isValid "success")) 
-    class=(concat-classes "col-xs-12" (if disabled "disabled") (if field.tip "group-with-tip") field.cssClass (if field.rightText "has-right-text"))}}
+    class=(concat-classes
+      "col-xs-12"
+      (concat field.type "-input")
+      (if disabled "disabled")
+      (if field.tip "group-with-tip")
+      field.cssClass
+      (if field.rightText "has-right-text"))}}
     {{#if (or (eq field.type "checkbox") (eq field.type "radio-group"))}}
       <div class="row toggle-form-row">
         {{#if (not field.nolabel)}}
