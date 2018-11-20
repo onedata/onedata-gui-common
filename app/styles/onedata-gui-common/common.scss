@@ -194,6 +194,11 @@ input {
     overflow: hidden !important;
     opacity: 0 !important;
   }
+  &.collapse-hidden.collapse-blurred {
+    opacity: 0.4 !important;
+    pointer-events: none;
+    user-select: none;
+  }
 }
 
 .item-icon-container {
