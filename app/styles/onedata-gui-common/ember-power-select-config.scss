@@ -156,6 +156,11 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
 }
 
 .form-group {
+  &.has-success {
+    .ember-power-select-trigger:not([aria-expanded]) {
+      border: 1px solid $color-one-success;
+    }
+  }
   &.has-error {
     .ember-power-select-trigger:not([aria-expanded]) {
       border: 1px solid $color-one-danger;

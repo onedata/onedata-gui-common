@@ -11,6 +11,7 @@
         options=(map-by "value" field.options)
         selected=value
         onchange=(action "inputChanged" field.name)
+        onblur=(action "onFocusOut")
         searchEnabled=false
         renderInPlace=true
         as |optionValue|
