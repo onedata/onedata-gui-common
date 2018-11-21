@@ -51,18 +51,16 @@
   <div class="content-row">
     <h1>{{tt this "linkedAccounts"}}</h1>
     <ul class="indented-row linked-accounts-list">
-      {{!-- FIXME: _loadingLinkedAccount or proxy that loads? --}}
       {{#promise-proxy-container
         proxy=onezoneAccountProxy
       }}
-        {{!-- FIXME: style colors --}}
-        {{social-box
-          authId="onezone"
-          iconPath="assets/images/auth-providers/onezone.svg"
-          iconBackgroundColor="#EC4145"
-          class="social-box-zone-account"
-        }}
         <li class="linked-account full-social-icon content-row onezone-account">
+          {{social-box
+            authId="onezone"
+            iconPath="assets/images/auth-providers/onezone.svg"
+            iconBackgroundColor="#EC4145"
+            class="social-box-zone-account"
+          }}
           <div class="account-description">
             {{#truncated-string class="account-type"}}
               {{onezoneAccount.zoneName}} ({{onezoneAccount.hostname}})
