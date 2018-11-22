@@ -385,8 +385,8 @@ $token-border-radius: 3px;
   background-color: $color-one-white;
   .tab-pane {
     position: relative;
-    margin-left: $padding-large-horizontal;
-    margin-right: $padding-large-horizontal;
+    margin-left: $padding-base-vertical;
+    margin-right: $padding-base-vertical;
     @media (max-width: $screen-xs-max) {
       margin-left: 0;
       margin-right: 0;
