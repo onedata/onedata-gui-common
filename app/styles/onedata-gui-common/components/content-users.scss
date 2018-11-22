@@ -56,7 +56,6 @@
     .indented-row {
       margin-left: 20px;
     }
-    // FIXME: question to design
     .user-image {
       margin-left: -$padding-xs-horizontal;
       font-size: 150px;
@@ -67,15 +66,25 @@
       vertical-align: middle;
       max-width: 270px;
     }
-    .linked-accounts-list {
+    .linked-accounts-list, .credentials-row {
       margin-left: 40px;
+    }
+    .credentials-row {
+      position: relative;
+      height: 50px;
+      .row-label {
+        @include vertical-align-middle;
+      }
+      .row-value {
+        padding-left: 130px;
+        @include vertical-align-middle;
+      }
     }
   }
   @media (max-width: $screen-xs-max) {
     .indented-row {
       padding: 0 $mobile-horizontal-content-padding;
     }
-    // FIXME: question to design
     .user-image {
       display: none;
     }
