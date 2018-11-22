@@ -1,10 +1,9 @@
 @font-face {
   font-family: 'oneicons';
-  src:  url('fonts/oneicons.eot?jdrvxs');
-  src:  url('fonts/oneicons.eot?jdrvxs#iefix') format('embedded-opentype'),
-    url('fonts/oneicons.ttf?jdrvxs') format('truetype'),
-    url('fonts/oneicons.woff?jdrvxs') format('woff'),
-    url('fonts/oneicons.svg?jdrvxs#oneicons') format('svg');
+  src:
+    url('fonts/oneicons.ttf?v7y22q') format('truetype'),
+    url('fonts/oneicons.woff?v7y22q') format('woff'),
+    url('fonts/oneicons.svg?v7y22q#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
