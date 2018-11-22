@@ -65,12 +65,16 @@ $-tile-content-padding: 4px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.31);
 
   &.one-tile-link:hover {
-    background-color: $color-one-semiwhite;
+    background-color: lighten($color-one-semiwhite, 3%);
     cursor: pointer;
     
     .more-link {
       @extend a:hover;
     }
+  }
+
+  &.one-tile-link .resource-load-error .promise-error-show-details {
+    display: none;
   }
   
   h1.tile-title, .more-link {
@@ -84,7 +88,6 @@ $-tile-content-padding: 4px;
   .more-link {
     display: inline-block;
     position: absolute;
-    width: 70px;
     text-transform: none;
     text-align: right;
     font-weight: normal;

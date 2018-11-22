@@ -5,5 +5,9 @@
   success=success
   error=error
 }}
-  {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
+  {{#if hasBlock}}
+    {{yield}}
+  {{else}}
+    {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
+  {{/if}}
 {{/copy-button}}

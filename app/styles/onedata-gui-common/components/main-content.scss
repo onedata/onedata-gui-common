@@ -115,7 +115,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       .btn-toolbar {
         &.with-place-for-dots {
           @media (min-width: $screen-md-min) {
-            margin-right: 50px;
+            margin-right: 20px;
           }
         }
         button {
