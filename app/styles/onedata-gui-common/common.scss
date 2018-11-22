@@ -451,3 +451,14 @@ textarea + .btn-container {
 .subheader-text {
   padding-bottom: $padding-large-vertical;
 }
+
+@for $i from 1 through 10 {
+  $pxNumber: $i * 100;
+  .min-height-#{$pxNumber} {
+    min-height: $pxNumber * 1px;
+  }
+}
+
+.relative {
+  position: relative;
+}
