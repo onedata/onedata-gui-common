@@ -1,7 +1,7 @@
 export default function onedataRouterSetup(routerClass, router, setup = {}) {
   routerClass.reopen({
     location: 'hash',
-    rootURL: '/',
+    rootURL: null,
   });
 
   router.route('onedata', function () {
