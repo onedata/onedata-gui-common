@@ -1,6 +1,6 @@
 // should be same as rootURL in environment.js
 // TODO maybe use https://github.com/davidpett/ember-cli-sass-variables
-$root-url: '/' !default;
+$root-url: './' !default;
 
 html,
 body {

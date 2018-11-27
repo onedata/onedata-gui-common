@@ -14,7 +14,7 @@ $mobile-resource-name-height: 20px;
 .onedata-logo {
   width: $onedata-logo-width;
   height: $onedata-logo-height;
-  background-image: url($root-url + 'assets/images/logo.svg');
+  background-image: url($root-url + 'images/logo.svg');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -156,7 +156,7 @@ $mobile-resource-name-height: 20px;
       right: 0;
       height: $sidemenu-header-height + $one-list-item-line-height;
       z-index: -1;
-      background-image: url($root-url + 'assets/images/main-background.jpg');
+      background-image: url($root-url + 'images/main-background.jpg');
       background-repeat: no-repeat;
       background-size: cover;
       background-position-x: center;

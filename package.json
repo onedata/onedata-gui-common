@@ -75,6 +75,7 @@
     "ember-redirect": "5.1.0",
     "ember-resolver": "4.5.0",
     "ember-responsive": "2.0.5",
+    "ember-root-url": "0.2.0",
     "ember-side-menu": "0.0.15",
     "ember-simple-auth": "1.4.2",
     "ember-sinon": "1.0.1",
