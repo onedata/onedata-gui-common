@@ -17,6 +17,7 @@ import oneCopyButton from './onedata-gui-common/components/one-copy-button';
 import oneWayToggle from './onedata-gui-common/components/one-way-toggle';
 import oneSizeEdit from './onedata-gui-common/components/one-size-edit';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
+import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 
@@ -44,7 +45,8 @@ const translations = {
     oneCopyButton,
     oneWayToggle,
     oneSizeEdit,
-    authenticationErrorModal
+    authenticationErrorModal,
+    sidebarClusters,
   },
   mixins: {
     authenticationErrorMessage,

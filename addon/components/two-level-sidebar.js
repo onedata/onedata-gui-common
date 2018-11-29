@@ -52,6 +52,8 @@ export default Component.extend({
    */
   firstLevelItemComponent: undefined,
 
+  secondLevelItemsComponent: 'two-level-sidebar/second-level-items',
+
   queryParams: undefined,
 
   /**
