@@ -24,6 +24,8 @@ export default TwoLevelSidebar.extend(I18n, {
 
   firstLevelItemComponent: 'sidebar-clusters/cluster-item',
 
+  secondLevelItemsComponent: 'sidebar-clusters/second-level-items',
+
   /**
    * @implements TwoLevelSidebar
    */

@@ -11,6 +11,8 @@ export default SecondLevelItems.extend(I18n, {
 
   item: undefined,
 
+  clusterType: reads('item.type'),
+
   overviewItem: computed(function overviewItem() {
     return {
       id: 'overview',
@@ -69,8 +71,6 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
-  clusterType: reads('item.type'),
-
   clusterSecondLevelItems: computed(
     'clusterType',
     'dnsItem',
@@ -121,6 +121,6 @@ export default SecondLevelItems.extend(I18n, {
     this._super(...arguments);
     // overwrite injected property
     this.set('secondLevelItems', reads('clusterSecondLevelItems'));
-    console.log(this.get('secondLevelItems'));
+    console.log(this.get('item'));
   },
 });
