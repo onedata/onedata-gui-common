@@ -5,8 +5,17 @@ $radio-dot-size: $radio-size-base * 0.5;
   position: relative;
   display: inline-block;
 
-  @media (max-width: $screen-xs-max) {
-    padding-left: 2em;
+  &.form-control {
+    height: initial;
+    padding-left: 0;
+    padding-bottom: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    box-shadow: none;
+    &.no-label {
+      padding-top: 0;
+    }
   }
 
   .radio-inline {
@@ -14,6 +23,10 @@ $radio-dot-size: $radio-size-base * 0.5;
     padding-right: 2em;
     vertical-align: top;
     margin-left: 0;
+  }
+
+  .radio-inline:last-child {
+    padding-right: 0;
   }
 
   input[type="radio"] {

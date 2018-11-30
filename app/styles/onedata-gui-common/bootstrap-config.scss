@@ -48,6 +48,9 @@
 
 @import "../bootstrap/forms";
 .form-horizontal {
+  .form-group {
+    position: relative;
+  }
   .control-label {
     padding-right: $padding-large-horizontal;
     font-family: 'Open Sans Semibold';
