@@ -126,6 +126,12 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       .one-way-toggle {
         font-size: $font-size-base;
         margin-top: 0.5em;
+        &.toggle-right-side {
+          @media (min-width: $screen-sm-min) {
+            margin-top: -4px;
+            margin-left: $padding-small-horizontal;
+          }
+        }
       }
       label {
         display: inline-block;

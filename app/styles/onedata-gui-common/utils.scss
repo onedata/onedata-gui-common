@@ -53,6 +53,13 @@
   #{$name}: #{$argument};
 }
 
+@mixin horizontal-align-middle() {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 @mixin vertical-align-middle() {
   position: absolute;
   top: 50%;

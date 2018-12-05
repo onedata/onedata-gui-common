@@ -2,6 +2,7 @@ export default [
   'bezier-curve',
   'input-group',
   'name-conflict',
+  'nav-tabs',
   'one-atlas',
   'one-clipboard-line',
   'one-dynamic-tree',
