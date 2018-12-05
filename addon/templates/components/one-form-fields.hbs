@@ -3,7 +3,7 @@
 {{#each fields as |field index|}}
   {{#unless (and (eq field.type "static") (or (eq (get formValues field.name) undefined) (eq (get formValues field.name) "")))}}
     {{#bsForm.group 
-      validation=(if field.isInvalid "error" (if field.isValid "success")) 
+      validation=(if (not-eq field.type "radio-group") (if field.isInvalid "error" (if field.isValid "success"))) 
       class=(concat-classes
         "col-xs-12"
         (if disabled "disabled")
