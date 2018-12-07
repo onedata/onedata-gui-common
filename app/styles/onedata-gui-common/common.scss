@@ -147,10 +147,8 @@ input {
     .row {
       margin: 0 $padding-large-horizontal;
       padding-left: 0;
+      border-bottom: $table-item-border;
       word-wrap: break-word;
-      @media screen and (max-width: $screen-md) {
-        border-bottom: $table-item-border;
-      }
     }
   }
 }
@@ -193,6 +191,11 @@ input {
     padding: 0 !important;
     overflow: hidden !important;
     opacity: 0 !important;
+  }
+  &.collapse-hidden.collapse-blurred {
+    opacity: 0.4 !important;
+    pointer-events: none;
+    user-select: none;
   }
 }
 

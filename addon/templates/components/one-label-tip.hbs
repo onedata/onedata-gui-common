@@ -1,8 +1,20 @@
-{{one-icon icon=icon}}
-{{one-tooltip
-  class="one-label-tooltip"
-  title=title
-  placement=placement
-  arrowPlacement=arrowPlacement
-  triggerEvents=triggerEvents
-}}
+{{#one-icon icon=icon}}
+  {{#if hasBlock}}
+    {{#one-tooltip
+      class="one-label-tooltip"
+      placement=placement
+      arrowPlacement=arrowPlacement
+      triggerEvents=triggerEvents
+    }}
+      {{yield}}
+    {{/one-tooltip}}
+  {{else}}
+    {{one-tooltip
+      class="one-label-tooltip"
+      title=title
+      placement=placement
+      arrowPlacement=arrowPlacement
+      triggerEvents=triggerEvents
+    }}
+  {{/if}}
+{{/one-icon}}

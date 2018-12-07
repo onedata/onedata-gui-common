@@ -29,7 +29,12 @@ const {
  * @property {string} [placeholder=undefined]
  * @property {string} [example=undefined]
  * @property {string} [tip=undefined]
+ * @property {boolean} [notEditable=undefined] if true, field cannot be edited
+ *   after switch from the form "show" mode to the "edition" mode
  * @property {number} [step=undefined] step in number inputs
+ * @property {Array<Object>} [options=undefined] array of options for inputs like
+ *   radio-group. Each option has fields: value, label
+ * @property {string} [message=undefined] field message (typically an error message)
  * @property {string} [rightText=undefined] text that will be shown on
  *   the right side of the input
  * @property {number|object} [lt=undefined] 'lower than' bounding for number

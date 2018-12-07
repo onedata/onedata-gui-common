@@ -32,6 +32,7 @@ import pieLabels from 'onedata-gui-common/utils/chartist/pie-labels';
 import tooltip from 'onedata-gui-common/utils/chartist/tooltip'
 import customCss from 'onedata-gui-common/utils/chartist/custom-css';
 import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
 
 const INACTIVE_SERIES_OPACITY = 0.3;
@@ -490,6 +491,6 @@ export default Component.extend({
    * Checks if the browser window has mobile width or not
    */
   _windowResized() {
-    this.set('_mobileMode', window.innerWidth < 768);
+    safeExec(this, 'set', '_mobileMode', window.innerWidth < 768);
   }
 });
