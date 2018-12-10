@@ -493,3 +493,26 @@ label.align-left {
 .text-normal {
   font-weight: normal;
 }
+
+.alert {
+  &.with-icon {
+    padding-left: 50px;
+  }
+
+  .alert-icon {
+    position: absolute;
+    top: 25px;
+    left: 10px;
+    font-size: 34px;
+    line-height: 0;
+  }
+  &.alert-info .alert-icon {
+    color: $color-one-info;
+  }
+  &.alert-warning .alert-icon {
+    color: adjust-hue($color-one-warning, -6%);
+  }
+  &.alert-danger .alert-icon {
+    color: $color-one-danger;
+  }
+}

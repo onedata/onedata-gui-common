@@ -569,8 +569,10 @@ $state-info-border:              darken(adjust-hue($state-info-bg, -10), 7%) !de
 $state-info-border:              lighten($color-one-info, 10%);
 
 $state-warning-text:             #8a6d3b !default;
-$state-warning-bg:               #fcf8e3 !default;
+$state-warning-text:             darken($color-one-warning, 35%);
+$state-warning-bg:               lighten($color-one-warning, 32%);
 $state-warning-border:           darken(adjust-hue($state-warning-bg, -10), 5%) !default;
+$state-warning-border:           $color-one-warning;
 
 $state-danger-text:              #a94442 !default;
 $state-danger-text:              $color-one-danger;
@@ -691,7 +693,6 @@ $modal-sm:                    300px !default;
 //## Define alert colors, border radius, and padding.
 
 $alert-padding:               15px !default;
-$alert-padding:               12px;
 $alert-border-radius:         $border-radius-base !default;
 $alert-link-font-weight:      bold !default;
 
