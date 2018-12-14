@@ -94,13 +94,14 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isLink: computed('isLink', 'aspect', 'route', function _isLink() {
+  _isLink: computed('isLink', 'aspect', 'route', 'customLink', function _isLink() {
     const {
       isLink,
       aspect,
       route,
-    } = this.getProperties('isLink', 'aspect', 'route');
-    return isLink && (aspect || route);
+      customLink,
+    } = this.getProperties('isLink', 'aspect', 'route', 'customLink');
+    return isLink && (aspect || route || customLink);
   }),
 
   /**
@@ -151,12 +152,14 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-    if (this.get('_isLink')) {
+    if (this.get('_isLink') && !this.get('customLink')) {
       this.click = function click(event) {
         // do not redirect if "more" link has been clicked
         if ($(event.target).closest('.more-link').length) {
           return;
         }
+
+        // FIXME: if customLink, then use window.location = customLink
 
         const {
           router,
