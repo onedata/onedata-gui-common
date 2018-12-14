@@ -50,6 +50,9 @@
       display: none;
     }
   }
+  @media (min-width: $screen-md-min) {
+    padding-right: 30px;
+  }
 
   .icon-dot {
     margin-left: auto;

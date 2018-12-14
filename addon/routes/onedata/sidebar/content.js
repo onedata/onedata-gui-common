@@ -49,8 +49,8 @@ export default Route.extend({
     if (navigationState.get('globalSidenavResourceType')) {
       navigationState.set('globalSidenavResourceType', null);
     }
+    navigationState.updateQueryParams(transition);
     setProperties(navigationState, {
-      queryParams: get(transition, 'queryParams'),
       activeResourceId: undefined,
       isActiveResourceIdSpecial: false,
       isActiveResourceLoading: false,
