@@ -1,5 +1,7 @@
+import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
+import _ from 'lodash';
 
 function aliasToShow(type) {
   return function (message, options) {
@@ -29,6 +31,8 @@ export default Service.extend({
   success: aliasToShow('success'),
   warning: aliasToShow('warning'),
   error: aliasToShow('error'),
+  warningAlert: aliasToShow('warning-alert'),
+  errorAlert: aliasToShow('error-alert'),
 
   // TODO i18n  
   backendError(message, error) {
@@ -74,7 +78,12 @@ export default Service.extend({
     notifyMessage.html = `${messageIcon}<div class="message-body">${messageBody}</div>`;
     switch (type) {
       case 'error':
+      case 'error-alert':
+      case 'warning-alert':
         console.error('global-notify: Error reported: ' + notifyMessage.html);
+        if (_.endsWith(type, '-alert')) {
+          type = type.substring(0, get(type, 'length') - '-alert'.length)
+        }
         return this.get('alert').show(type, notifyMessage, options);
       case 'warning':
       case 'info':
