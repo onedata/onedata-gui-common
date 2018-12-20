@@ -48,6 +48,12 @@ export default Component.extend({
    */
   update: null,
 
+  /**
+   * If true, all labels will have `radio-inline` class (to display them in the one line)
+   * @type {boolean}
+   */
+  radioInline: true,
+
   actions: {
     updateHandler(value) {
       invokeAction(this, 'update', value, this);
