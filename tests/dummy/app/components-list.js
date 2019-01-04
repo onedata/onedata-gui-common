@@ -17,6 +17,7 @@ export default [
   'promise-proxy-container',
   'provider-place',
   'providers-list',
+  'providers-map-tile',
   'resource-load-error',
   'space-providers-support-chart',
   'status-toolbar',

@@ -1,0 +1,24 @@
+{{#one-tile
+  title=(tt this "title")
+  class="providers-map-tile"
+  isScalable=true}}
+  {{#promise-proxy-container proxy=providersProxy}}
+    <div class="map-container">
+      {{#one-atlas class="providers-map" as |atlas|}}
+        {{#each providersProxy as |provider|}}
+          {{#atlas.position latitude=provider.latitude longitude=provider.longitude as |position|}}
+            {{#position.point}}
+              {{provider-place
+                provider=provider
+                atlasWidth=atlas.width
+                circleSizeScale=2
+                circleColor=(get providersColors (model-routable-id provider))
+                hint=provider.name
+                renderDrop=false}}
+            {{/position.point}}
+          {{/atlas.position}}
+        {{/each}}
+      {{/one-atlas}}
+    </div>
+  {{/promise-proxy-container}}
+{{/one-tile}}

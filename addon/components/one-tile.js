@@ -15,7 +15,7 @@ import layout from '../templates/components/one-tile';
 
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
@@ -222,7 +222,7 @@ export default Component.extend(I18n, {
       }
       if (this.get('sizeClass') !== sizeClass) {
         this.set('sizeClass', sizeClass);
-        _window.dispatchEvent(new Event('resize'));
+        next(() => _window.dispatchEvent(new Event('resize')));
       }
     }
   },
