@@ -16,6 +16,7 @@ export default [
   'one-way-toggle',
   'promise-proxy-container',
   'provider-place',
+  'provider-spaces-support-chart',
   'providers-list',
   'providers-map-tile',
   'resource-load-error',
