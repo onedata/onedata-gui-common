@@ -3,5 +3,5 @@
   {{name-conflict item=item tagName="span" class="one-label"}}
 {{/truncated-string}}
 {{#truncated-string class="after-icon domain sidebar-item-title-lower"}}
-  {{item.domain}}
+  {{or item.domain (t "components.sidebarClusters.clusterItem.domainNameNotAvailable")}}
 {{/truncated-string}}
