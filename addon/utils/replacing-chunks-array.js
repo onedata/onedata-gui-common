@@ -107,13 +107,6 @@ export default ArraySlice.extend({
    */
   _isReloading: false,
 
-  // sourceArrayChanged: observer('sourceArray.[]', function sourceArrayChanged() {
-  //   const sourceArray = this.get('sourceArray');
-  //   const sortFun = this.get('sortFun');
-  //   sourceArray.sort(sortFun);
-  //   this.startEndChanged();
-  // }),
-
   startEndChanged: observer(
     '_start',
     '_end',

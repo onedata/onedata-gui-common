@@ -98,6 +98,14 @@ export default ArrayProxy.extend({
     this.set('_endCache', _end);
   }),
 
+  init() {
+    this._super(...arguments);
+    // activate observers
+    this.getProperties('_start', '_end');
+    this._startChanged();
+    this._endChanged();
+  },
+
   /**
    * @override 
    */
@@ -172,13 +180,5 @@ export default ArrayProxy.extend({
     );
     const translatedIndex = _start + index;
     return translatedIndex > _end ? -1 : translatedIndex;
-  },
-
-  init() {
-    this._super(...arguments);
-    // activate observers
-    this.getProperties('_start', '_end');
-    this._startChanged();
-    this._endChanged();
   },
 });

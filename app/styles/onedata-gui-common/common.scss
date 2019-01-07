@@ -489,3 +489,8 @@ textarea + .btn-container {
   margin-left: $padding-small-horizontal;
   top: -2px;
 }
+
+// TODO: An ugly hack for bug in ember-hammertime
+textarea[style^="touch-action: manipulation"] {
+  cursor: inherit !important;
+}

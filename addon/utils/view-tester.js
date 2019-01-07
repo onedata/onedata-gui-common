@@ -1,7 +1,6 @@
 /**
  * Instance of this class is bound to some `$container`.
  * We can now test if some child element is visible in viewport.
- * Remember to use `.destroy()` when watcher is not needed!
  *
  * @module utils/view-tester
  * @author Jakub Liput
@@ -16,8 +15,7 @@ export default class ViewTester {
    * @param {HTMLElement} container 
    */
   constructor($container) {
-    this.containerTop = $container.offset().top;
-    this.containerBottom = this.containerTop + $container[0].clientHeight;
+    this.$container = $container;
   }
 
   /**
@@ -27,7 +25,12 @@ export default class ViewTester {
     const elemTop = $(elem).offset().top;
     const elemBottom = elemTop + elem.offsetHeight;
 
-    return (elemTop <= this.containerBottom) && (elemBottom >= this.containerTop);
+    // NOTE: if there are problems with performance, move container offset
+    // evaluation to constructor and invoke when window is resized
+    const containerTop = this.$container.offset().top;
+    const containerBottom = containerTop + this.$container[0].clientHeight;
+
+    return (elemTop <= containerBottom) && (elemBottom >= containerTop);
   }
 
   /**

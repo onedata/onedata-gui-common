@@ -32,6 +32,11 @@ export default Mixin.create({
    */
   formSendDebounceTime: formSendDebounceTime,
 
+  /**
+   * @type {string}
+   * One of: '', 'modified', 'saving', 'saved'.
+   * Used for displaying information about auto save progress.
+   */
   formStatus: '',
 
   /**
@@ -138,7 +143,6 @@ export default Mixin.create({
     let {
       formFieldsErrors,
       formFieldsModified: modified,
-      formData,
       sourceFieldNames,
     } = this.getProperties(
       'formFieldsErrors',
@@ -148,11 +152,8 @@ export default Mixin.create({
     );
     let isValid = true;
     sourceFieldNames.forEach(fieldName => {
-      const isModified = modified.get(fieldName + 'Number') ||
-        modified.get(fieldName + 'Enabled') ||
-        modified.get(fieldName + 'Unit');
-      if (formData.get(fieldName + 'Enabled') && isModified &&
-        formFieldsErrors[fieldName]) {
+      const isModified = get(modified, fieldName)
+      if (isModified && formFieldsErrors[fieldName]) {
         isValid = false;
       }
     });
