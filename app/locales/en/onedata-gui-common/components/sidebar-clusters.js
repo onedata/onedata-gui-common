@@ -10,6 +10,7 @@ export default {
   },
   dnsWarning: 'Some problems with your DNS configuration have been detected',
   clusterItem: {
-    domainNameNotAvailable: '(domain name not available)'
+    domainNameNotAvailable: '(domain name not available)',
+    nameNotAvailable: '(name not available)',
   },
 };

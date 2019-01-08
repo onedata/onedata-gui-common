@@ -43,9 +43,4 @@ export default Component.extend(I18n, {
         return 'menu-clusters';
     }
   }),
-
-  init() {
-    this._super(...arguments);
-    console.log(this.get('item'));
-  },
 });
