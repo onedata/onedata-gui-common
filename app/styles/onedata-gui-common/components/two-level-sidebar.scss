@@ -31,9 +31,24 @@
         position: absolute;
         top: 0.55em;
         font-size: $menu-icon-font-size;
+        + *,
+        + .sidebar-item-title-upper + .sidebar-item-title-lower {
+          padding-left: 3.5em;
+        }
       }
-      .sidebar-item-icon + * {
-        padding-left: 3.5em;
+      .sidebar-item-title-upper,
+      .sidebar-item-title-lower {
+        position: relative;
+        line-height: $one-list-item-line-height / 2;
+      }
+      
+      .sidebar-item-title-upper {
+        bottom: -5px;
+      }
+      
+      .sidebar-item-title-lower {
+        top: -5px;
+        opacity: 0.5;
       }
       .status-toolbar {
         position: absolute;

@@ -1,4 +1,7 @@
 {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
-{{#truncated-string class="after-icon before-status"}}
+{{#truncated-string class="after-icon name sidebar-item-title-upper"}}
   {{name-conflict item=item tagName="span" class="one-label"}}
+{{/truncated-string}}
+{{#truncated-string class="after-icon domain sidebar-item-title-lower"}}
+  {{or item.domain (t "components.sidebarClusters.clusterItem.domainNameNotAvailable")}}
 {{/truncated-string}}
