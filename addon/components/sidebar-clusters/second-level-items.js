@@ -1,7 +1,7 @@
 import SecondLevelItems from 'onedata-gui-common/components/two-level-sidebar/second-level-items';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar/second-level-items';
 import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { reads, equal } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default SecondLevelItems.extend(I18n, {
@@ -10,6 +10,8 @@ export default SecondLevelItems.extend(I18n, {
   i18nPrefix: 'components.sidebarClusters.secondLevelItems',
 
   item: undefined,
+
+  isNotDeployedCluster: equal('item.id', 'new'),
 
   clusterType: reads('item.type'),
 
@@ -72,6 +74,7 @@ export default SecondLevelItems.extend(I18n, {
   }),
 
   clusterSecondLevelItems: computed(
+    'isNotDeployedCluster',
     'clusterType',
     'dnsItem',
     'certificateItem',
@@ -81,39 +84,42 @@ export default SecondLevelItems.extend(I18n, {
     'storagesItem',
     'spacesItem',
     function () {
-      const {
-        clusterType,
-        dnsItem,
-        certificateItem,
-        nodesItem,
-        overviewItem,
-        providerItem,
-        storagesItem,
-        spacesItem,
-      } = this.getProperties(
-        'clusterType',
-        'cluster',
-        'dnsItem',
-        'certificateItem',
-        'nodesItem',
-        'overviewItem',
-        'providerItem',
-        'storagesItem',
-        'spacesItem',
-      );
-      const commonItems = [
-        overviewItem,
-        nodesItem,
-        dnsItem,
-        certificateItem,
-      ];
-
-      return clusterType === 'onezone' ? commonItems : [
-        ...commonItems,
-        providerItem,
-        storagesItem,
-        spacesItem,
-      ];
+      if (this.get('isNotDeployedCluster')) {
+        return [];
+      } else {
+        const {
+          clusterType,
+          dnsItem,
+          certificateItem,
+          nodesItem,
+          overviewItem,
+          providerItem,
+          storagesItem,
+          spacesItem,
+        } = this.getProperties(
+          'clusterType',
+          'cluster',
+          'dnsItem',
+          'certificateItem',
+          'nodesItem',
+          'overviewItem',
+          'providerItem',
+          'storagesItem',
+          'spacesItem',
+        );
+        const commonItems = [
+          overviewItem,
+          nodesItem,
+          dnsItem,
+          certificateItem,
+        ];
+        return clusterType === 'onezone' ? commonItems : [
+          ...commonItems,
+          providerItem,
+          storagesItem,
+          spacesItem,
+        ];
+      }
     }
   ),
 
