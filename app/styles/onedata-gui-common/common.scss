@@ -56,6 +56,10 @@ strong {
   font-family: 'Open Sans Semibold';
 }
 
+.break-word {
+  word-wrap: break-word;
+}
+
 .content-backdrop.sidenav-backdrop {
   // TODO: animation
   position: absolute;
@@ -326,6 +330,13 @@ a {
   color: $color-one-mint;
   &:hover {
     color: darken($color-one-mint, 20%);
+  }
+  &.black {
+    color: $main-text-color;
+    text-decoration: underline;
+    &:hover {
+      color: darken($color-one-mint, 20%);
+    }
   }
 }
 
