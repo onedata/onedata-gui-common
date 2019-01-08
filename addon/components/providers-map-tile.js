@@ -11,6 +11,7 @@ import Component from '@ember/component';
 import layout from '../templates/components/providers-map-tile';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import ProvidersColors from 'onedata-gui-common/mixins/components/providers-colors';
+import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default Component.extend(I18n, ProvidersColors, {
   layout,
@@ -25,4 +26,19 @@ export default Component.extend(I18n, ProvidersColors, {
    * @type {PromiseArray<Provider>}
    */
   providersProxy: null,
+
+  /**
+   * @type {string|undefined}
+   */
+  customLink: undefined,
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  title: computedT('title'),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  moreText: computedT('moreText'),
 });
