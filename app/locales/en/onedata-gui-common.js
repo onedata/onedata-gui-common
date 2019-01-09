@@ -26,6 +26,7 @@ import authenticationErrorMessage from './onedata-gui-common/mixins/authenticati
 import login from './onedata-gui-common/routes/login';
 
 import guiUtils from './onedata-gui-common/services/gui-utils';
+import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 const translations = {
   components: {
@@ -60,6 +61,7 @@ const translations = {
   },
   services: {
     guiUtils,
+    clusterActions,
   },
 };
 
