@@ -22,6 +22,7 @@ const {
  * @property {string} type
  * @property {string} [format=undefined] special string formatting for static fields
  * @property {boolean} [disabled=undefined]
+ * @property {boolean} [hidden=undefined]
  * @property {boolean} [optional=undefined]
  * @property {*} [defaultValue=undefined]
  * @property {string} [label=undefined]
