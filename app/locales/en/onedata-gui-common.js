@@ -19,6 +19,7 @@ import clipboardLine from './onedata-gui-common/components/clipboard-line';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
 import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 import providersMapTile from './onedata-gui-common/components/providers-map-tile';
+import userAccountButton from './onedata-gui-common/components/user-account-button';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 
@@ -49,6 +50,7 @@ const translations = {
     sidebarClusters,
     clipboardLine,
     providersMapTile,
+    userAccountButton
   },
   mixins: {
     authenticationErrorMessage,
