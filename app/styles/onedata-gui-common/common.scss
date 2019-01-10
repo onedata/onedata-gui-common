@@ -517,4 +517,7 @@ textarea + .btn-container {
   }
 }
 
-
+// An ugly hack for bug in ember-hammertime
+textarea[style^="touch-action: manipulation"] {
+  cursor: inherit !important;
+}
