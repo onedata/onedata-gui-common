@@ -41,6 +41,14 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
+  credentialsItem: computed(function credentialsItem() {
+    return {
+      id: 'credentials',
+      label: this.t('credentials'),
+      icon: 'user',
+    };
+  }),
+
   nodesItem: computed(function nodesItem() {
     return {
       id: 'nodes',
@@ -78,6 +86,7 @@ export default SecondLevelItems.extend(I18n, {
     'clusterType',
     'dnsItem',
     'certificateItem',
+    'credentialsItem',
     'nodesItem',
     'overviewItem',
     'providerItem',
@@ -91,6 +100,7 @@ export default SecondLevelItems.extend(I18n, {
           clusterType,
           dnsItem,
           certificateItem,
+          credentialsItem,
           nodesItem,
           overviewItem,
           providerItem,
@@ -101,6 +111,7 @@ export default SecondLevelItems.extend(I18n, {
           'cluster',
           'dnsItem',
           'certificateItem',
+          'credentialsItem',
           'nodesItem',
           'overviewItem',
           'providerItem',
@@ -112,6 +123,7 @@ export default SecondLevelItems.extend(I18n, {
           nodesItem,
           dnsItem,
           certificateItem,
+          credentialsItem,
         ];
         return clusterType === 'onezone' ? commonItems : [
           ...commonItems,

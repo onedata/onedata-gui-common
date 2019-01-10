@@ -29,6 +29,7 @@ export default Component.extend({
   scrollState: service(),
   router: service(),
   navigationState: service(),
+  guiUtils: service(),
 
   globalMenuOpened: false,
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
@@ -80,7 +81,9 @@ export default Component.extend({
       return this.get('router').transitionTo('onedata.sidebar', itemId);
     },
     manageAccount() {
-      invoke(this, 'mobileMenuItemChanged', 'users');
+      if (!this.get('guiUtils.manageAccountExternalLink')) {
+        invoke(this, 'mobileMenuItemChanged', 'users');
+      }
     },
     changeResourceId() {
       return invokeAction(this, 'changeResourceId', ...arguments);

@@ -70,6 +70,13 @@ export default Service.extend(I18n, {
   setDefaultProviderId: notImplementedReject,
 
   /**
+   * External link to manage account. If not needed (manage account is a
+   * local aspect), then it should be empty.
+   * @type {string|undefined}
+   */
+  manageAccountExternalLink: undefined,
+
+  /**
    * @param {object|string} model
    * @returns {string}
    */

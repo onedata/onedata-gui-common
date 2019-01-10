@@ -5,7 +5,6 @@ import oneFormFields from './onedata-gui-common/components/one-form-fields';
 import applicationError from './onedata-gui-common/components/application-error';
 import providerPlace from './onedata-gui-common/components/provider-place';
 import providersList from './onedata-gui-common/components/providers-list';
-import contentUsers from './onedata-gui-common/components/content-users';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
 import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
@@ -20,6 +19,7 @@ import clipboardLine from './onedata-gui-common/components/clipboard-line';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
 import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 import providersMapTile from './onedata-gui-common/components/providers-map-tile';
+import userAccountButton from './onedata-gui-common/components/user-account-button';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 
@@ -37,7 +37,6 @@ const translations = {
     applicationError,
     providerPlace,
     providersList,
-    contentUsers,
     supportSizeInfo,
     resourceLoadError,
     oneInlineEditor,
@@ -52,6 +51,7 @@ const translations = {
     sidebarClusters,
     clipboardLine,
     providersMapTile,
+    userAccountButton
   },
   mixins: {
     authenticationErrorMessage,

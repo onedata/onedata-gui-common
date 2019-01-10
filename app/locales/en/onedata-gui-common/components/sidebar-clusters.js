@@ -4,6 +4,7 @@ export default {
     nodes: 'Nodes',
     dns: 'DNS setup',
     certificate: 'Web certificate',
+    credentials: 'Credentials',
     provider: 'Provider',
     storages: 'Storages',
     spaces: 'Spaces',
