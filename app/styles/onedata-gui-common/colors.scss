@@ -21,5 +21,9 @@ $color-one-danger: $color-one-red;
 $color-one-success-dark: #3c763d;
 
 $main-text-color: $color-one-dark-gray;
+$main-text-color-inactive: lighten($main-text-color, 15%);
 $main-text-color-disabled: lighten($main-text-color, 35%);
 $main-border-color: darken($color-one-semiwhite, 10%);
+
+// TODO: a color for future use
+$main-tabbed-content-background: #FCFCFC;

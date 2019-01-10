@@ -1,0 +1,86 @@
+
+<div class="container">
+  <div class="row row-content">
+    <h3>Oldschool</h3>
+    {{#bs-tab customTabs=true class="bs-tab-onedata bs-tab-oldschool" as |tab|}}
+      {{#bs-nav type="tabs" as |nav|}}
+        {{#nav.item active=(bs-eq tab.activeId "pane11")}}
+          <a href="#pane11" class="nav-link" role="tab" {{action tab.select "pane11"}}>Tab 1</a>
+        {{/nav.item}}
+        {{#nav.item active=(bs-eq tab.activeId "pane12")}}
+          <a href="#pane12" class="nav-link" role="tab" {{action tab.select "pane12"}}>Tab 2</a>
+        {{/nav.item}}
+        {{#nav.item class="disabled" active=(bs-eq tab.activeId "pane13")}}
+          <a href="#pane13" class="nav-link" role="tab" {{action tab.select "pane13"}}>Tab 3</a>
+        {{/nav.item}}
+      {{/bs-nav}}
+      <div class="tab-content">
+        {{#tab.pane elementId="pane11" title="Hello"}}
+          <div class="row content-row">
+            Some content
+          </div>
+        {{/tab.pane}}
+        {{#tab.pane elementId="pane12" title="World"}}
+          <div class="row content-row">
+            Other content
+          </div>
+        {{/tab.pane}}
+        {{#tab.pane elementId="pane13" title="Disabled"}}
+          <div class="row content-row">
+            No content
+          </div>
+        {{/tab.pane}}        
+      </div>
+    {{/bs-tab}}
+  </div>
+  <div class="row row-content">
+    <h3>Modern</h3>
+    {{#bs-tab customTabs=true class="bs-tab-onedata bs-tab-modern" as |tab|}}
+      {{#bs-nav type="tabs" as |nav|}}
+        {{#nav.item active=(bs-eq tab.activeId "pane21")}}
+          <a href="#pane21" class="nav-link" role="tab" {{action tab.select "pane21"}}>Tab 1</a>
+        {{/nav.item}}
+        {{#nav.item active=(bs-eq tab.activeId "pane22")}}
+          <a href="#pane12" class="nav-link" role="tab" {{action tab.select "pane22"}}>Tab 2</a>
+        {{/nav.item}}
+        {{#nav.item class="disabled" active=(bs-eq tab.activeId "pane23")}}
+          <a href="#pane23" class="nav-link" role="tab" {{action tab.select "pane23"}}>Tab 3</a>
+        {{/nav.item}}
+      {{/bs-nav}}
+      <div class="tab-content">
+        {{#tab.pane elementId="pane21" title="Hello"}}
+          <div class="row content-row">
+            Some content
+          </div>
+        {{/tab.pane}}
+        {{#tab.pane elementId="pane22" title="World"}}
+          <div class="row content-row">
+            Other content
+          </div>
+        {{/tab.pane}}
+        {{#tab.pane elementId="pane23" title="Disabled"}}
+          <div class="row content-row">
+            No content
+          </div>
+        {{/tab.pane}}        
+      </div>
+    {{/bs-tab}}
+  </div>
+  <div class="row row-content">
+    <h3>Without class</h3>
+    {{#bs-tab as |tab|}}
+      {{#tab.pane title="Hello"}}
+        <div class="row content-row">
+          Some content
+        </div>
+      {{/tab.pane}}
+      {{#tab.pane title="World"}}
+        <div class="row content-row">
+          Other content
+        </div>
+      {{/tab.pane}}
+    {{/bs-tab}}
+  </div>
+</div>
+  
+

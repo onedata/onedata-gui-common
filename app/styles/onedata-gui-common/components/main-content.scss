@@ -126,6 +126,12 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       .one-way-toggle {
         font-size: $font-size-base;
         margin-top: 0.5em;
+        &.toggle-right-side {
+          @media (min-width: $screen-sm-min) {
+            margin-top: -4px;
+            margin-left: $padding-small-horizontal;
+          }
+        }
       }
       label {
         display: inline-block;
@@ -212,6 +218,20 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
   }
 
   @media screen and (max-width: $screen-xs-max) {
+    @mixin -reset-internal-padding() {
+      // resetting internal paddings
+      p,
+      h1,
+      form,
+      .inner-row-content {
+        padding: initial;
+      }
+    }
+    
+    .tab-content .content-row {   
+      @include -reset-internal-padding();
+    }
+    
     .content-row {
       &:not(.has-border) {
         border-bottom: 0;
@@ -225,13 +245,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       .inner-row-content {
         padding: 0 $mobile-horizontal-content-padding;
         
-        // resetting internal paddings
-        p,
-        h1,
-        form,
-        .inner-row-content {
-          padding: initial;
-        }
+        @include -reset-internal-padding();
       }
 
       h1 {

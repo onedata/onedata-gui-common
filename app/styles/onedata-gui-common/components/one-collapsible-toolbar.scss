@@ -58,5 +58,30 @@
     margin-left: auto;
     margin-right: auto;
   }
+}
 
+.with-back {
+  .resource-name {
+    padding-left: 68px;
+  }
+  .content-back-link {
+    font-size: 28px;
+    position: absolute;
+    top: 50%;
+    color: inherit;
+    transform: translateY(-50%) translateY(2px);
+    .content-back-arrow-icon {
+      padding-left: 8px;
+      font-size: 20px;
+      position: relative;
+      top: -4px;
+      transition: padding-left 0.1s linear;
+    }
+    &:hover {
+      .content-back-arrow-icon {
+        padding-left: 4px;
+        transition: padding-left 0.1s linear;
+      }
+    }
+  }
 }

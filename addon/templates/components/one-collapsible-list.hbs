@@ -4,14 +4,14 @@
     _hasCheckbox=hasCheckboxes
     _isCheckboxActive=(gt _availableItemValues.length 0)
     _isSelected=_areAllItemsSelected
-    toggle=(action "collapseList")
+    toggle=(if toggleAction toggleAction (action "collapseList"))
     _isListCollapsed=isListCollapsed
     search=(action "search")
   )
   item=(component "one-collapsible-list-item" 
     accordionMode=accordionMode
     activeElementId=activeElementId
-    toggle=(action "toggle")
+    toggle=(if toggleAction toggleAction (action "toggle"))
     toggleItemSelection=(action "toggleItemSelection")
     _selectedItemValues=_selectedItemValues
     _hasCheckbox=hasCheckboxes

@@ -344,64 +344,126 @@ $token-border-radius: 3px;
   }
 }
 
-.nav-tabs {
-  li, li.active {
-    > a {
-      &,
-      &:hover,
-      &:focus {
-        border-top: 4px solid transparent;
+/// bs-tab styles
+
+// base style for onedata - use with one of below classes
+.bs-tab-onedata {
+  .nav-tabs {
+    li.disabled {
+      cursor: not-allowed !important;
+      > a {
+        pointer-events: none;
+        color: $main-text-color-disabled;
       }
     }
   }
-  li.disabled {
-    cursor: not-allowed !important;
-    > a {
-      pointer-events: none;
-    }
-  }
-  li.active {
-    > a {
-      &,
-      &:hover,
-      &:focus {
-        border-top-color: $color-one-blue-gray;
-      }
-    }
-  }
-  .nav-link {
+  .tab-content {
     padding: $padding-large-vertical $padding-large-horizontal;
-    border-radius: $border-radius-small $border-radius-small 0 0;
-    font-weight: bold;
-    color: inherit;
+    background-color: $color-one-white;
+    .tab-pane {
+      position: relative;
+      @media (max-width: $screen-xs-max) {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .content-row {
+        @media (min-width: $screen-sm-min) {
+          margin-left: 0px;
+          margin-right: 0px;
+        }
+        h1 {
+          padding: 0;
+        }
+      }
+    }
+    .tab-pane.no-padding {
+      @media (min-width: $screen-sm-min) {
+        margin-left: -$padding-large-horizontal;
+        margin-left: -$padding-large-horizontal;
+      }
+      .content-row {
+        @media (min-width: $screen-sm-min) {
+          margin-left: $padding-large-horizontal;
+          margin-right: $padding-large-horizontal;
+        }
+      }
+    }
   }
-  
 }
 
-.tab-content {
-  padding: $padding-base-vertical 0;
-  border: 1px solid $main-border-color;
-  border-top: 0;
-  background-color: $color-one-white;
-  .tab-pane {
-    position: relative;
-    margin-left: $padding-large-horizontal;
-    margin-right: $padding-large-horizontal;
-    @media (max-width: $screen-xs-max) {
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .content-row {
-      @media (min-width: $screen-sm-min) {
-        margin-left: 0px !important;
-        margin-right: 0px !important;
+
+.bs-tab-oldschool {
+  .nav-tabs {
+    li {
+      > a {
+        padding: $padding-large-vertical $padding-large-horizontal;
+        border-radius: $border-radius-small $border-radius-small 0 0;
+        font-weight: bold;
+        color: $main-text-color-inactive;
       }
-      h1 {
-        padding: 0;
+    }
+    li, li.active {
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          border-top: 4px solid transparent;
+        }
+      }
+    }
+    li.active {
+      > a {
+        color: $main-text-color;
+        &,
+        &:hover,
+        &:focus {
+          border-top-color: $color-one-blue-gray;
+        }
+      }
+    }
+  }
+  
+  .tab-content {
+    border: 1px solid $main-border-color;
+    border-top: 0;
+  }
+}
+
+.bs-tab-modern {
+  .nav-tabs {
+    border-bottom: 0;
+    li {
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          background: transparent;
+          border-top: none;
+          border-left: 0;
+          border-right: 0;
+          border-bottom: 4px solid transparent;
+          font-weight: bold;
+          color: $main-text-color-inactive;
+        }
+        &:hover {
+          border-bottom-color: lighten($color-one-blue-gray, 25);
+        }
+      }
+    }
+    li.active {
+      > a {
+        border-bottom-color: $color-one-blue-gray;
+        color: $main-text-color;
+      }
+    }
+    li.disabled {
+      > a {
+        color: $main-text-color-disabled;
       }
     }
   }
 }
+
 
 .only-tab-bar {
   .tab-content {

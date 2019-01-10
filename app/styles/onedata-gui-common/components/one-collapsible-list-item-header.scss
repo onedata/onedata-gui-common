@@ -27,9 +27,6 @@
   }
   &.collapsible {
     cursor: pointer;
-    &:hover {
-      background-color: $main-content-hover-background;
-    }
     .toggle-icon {
       display: block;
     }
@@ -37,7 +34,11 @@
       margin-right: 5em;
     }
   }
-
+  &.hoverable, &.collapsible:not(.non-hoverable) {
+    &:hover {
+      background-color: $main-content-hover-background;
+    }
+  }
   &.header-fixed {
     // override inline styles
     cursor: not-allowed !important;

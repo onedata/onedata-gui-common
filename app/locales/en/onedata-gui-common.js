@@ -20,6 +20,7 @@ import clipboardLine from './onedata-gui-common/components/clipboard-line';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
+import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
 
 import login from './onedata-gui-common/routes/login';
 
@@ -50,6 +51,9 @@ const translations = {
   },
   mixins: {
     authenticationErrorMessage,
+    components: {
+      autoSaveForm,
+    },
   },
   routes: {
     login,
