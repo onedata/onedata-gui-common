@@ -14,19 +14,21 @@
       {{/listItem.header}}
       {{#listItem.content}}
         {{#one-collapsible-list as |list|}}
-          {{#list.item isCollapsible=false as |listItem|}}
-            {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
-              {{#if guiUtils.manageAccountExternalLink}}
-                <a href={{guiUtils.manageAccountExternalLink}}>
-                  {{tt this "manageAccount"}}
-                </a>
-              {{else}}
-                {{#link-to "onedata.sidebar" "users"}}
-                  {{tt this "manageAccount"}}
-                {{/link-to}}
-              {{/if}}
-            {{/listItem.header}}
-          {{/list.item}}
+          {{#unless disableManageAccount}}
+            {{#list.item isCollapsible=false as |listItem|}}
+              {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
+                {{#if guiUtils.manageAccountExternalLink}}
+                  <a href={{guiUtils.manageAccountExternalLink}}>
+                    {{tt this "manageAccount"}}
+                  </a>
+                {{else}}
+                  {{#link-to "onedata.sidebar" "users"}}
+                    {{tt this "manageAccount"}}
+                  {{/link-to}}
+                {{/if}}
+              {{/listItem.header}}
+            {{/list.item}}
+          {{/unless}}
           {{#list.item isCollapsible=false as |listItem|}}
             {{#listItem.header click=(action "logout") class=(concat menuItemClasses " logout-action")}}
               {{tt this "logout"}}
@@ -64,17 +66,25 @@
     as |popover|
   }}
     <ul class="dropdown-menu">
-      <li>
-        {{#if guiUtils.manageAccountExternalLink}}
-          <a href={{guiUtils.manageAccountExternalLink}} class="manage-account-action clickable" click={{action "manageAccount"}}>
-            {{tt this "manageAccount"}}
+      {{#if standaloneOnepanel}}
+        <li>
+          <a href={{onezoneGui.clusterUrlInOnepanel}}>
+            {{tt this "visitViaOnezone"}}
           </a>
-        {{else}}
-          {{#link-to "onedata.sidebar" "users" class="manage-account-action clickable" click=(action "manageAccount")}}
-            {{tt this "manageAccount"}}
-          {{/link-to}}
-        {{/if}}
-      </li>
+        </li>
+      {{else}}
+        <li>
+          {{#if guiUtils.manageAccountExternalLink}}
+            <a href={{guiUtils.manageAccountExternalLink}} class="manage-account-action clickable" click={{action "manageAccount"}}>
+              {{tt this "manageAccount"}}
+            </a>
+          {{else}}
+            {{#link-to "onedata.sidebar" "users" class="manage-account-action clickable" click=(action "manageAccount")}}
+              {{tt this "manageAccount"}}
+            {{/link-to}}
+          {{/if}}
+        </li>
+      {{/if}}
       <li>
         <a class="clickable" {{action "logout"}}>
           {{tt this "logout"}}
