@@ -256,10 +256,11 @@ $provider-place-drop-height: 306px;
         top: 70px + $padding-large-vertical;
         bottom: 2 * $padding-large-vertical+$-btn-container-height;
         left: $padding-large-vertical;
-        right: $padding-large-vertical;
+        right: $padding-large-vertical - 10px;
       }
       .spaces-items {
         list-style-type: none;
+        margin-right: 10px;
         padding: 0;
         .one-collapsible-list-item-header {
           padding: 0;
