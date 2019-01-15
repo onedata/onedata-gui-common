@@ -30,6 +30,7 @@ import isRecord from 'onedata-gui-common/utils/is-record';
 // TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
   'empty',
+  'add',
   'new',
   'join',
   'not-selected',

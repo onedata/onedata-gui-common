@@ -1,57 +1,59 @@
 {{!-- TODO make some helper for generating input ids --}}
 
 {{#each fields as |field|}}
-  {{#bsForm.group 
-    validation=(if field.isInvalid "error" (if field.isValid "success")) 
-    class=(concat-classes "col-xs-12" (if disabled "disabled") (if field.tip "group-with-tip") field.cssClass (if field.rightText "has-right-text"))}}
-    {{#if (or (eq field.type "checkbox") (eq field.type "radio-group"))}}
-      <div class="row toggle-form-row">
-        {{#if (not field.nolabel)}}
-          <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label text-right " layoutConfig.formToggleLabelColumns}}>
-            {{field.label}}:
-            {{#if field.tip}}
-              {{one-label-tip title=field.tip}}
-            {{/if}}
-          </label>
-        {{/if}}
-        <div class={{if field.nolabel layoutConfig.formSubmitColumns layoutConfig.formToggleInputColumns}}>
-          {{#if (eq field.type "checkbox")}}
-            {{one-way-toggle
-              class=(concat "form-control toggle-field-" (dot-to-dash field.name))
-              inputId=(concat parentView.elementId (concat "-" field.name))
-              checked=(get formValues field.name)
-              update=(action "inputChanged" field.name)
-              isReadOnly=(or disabled field.disabled)
-              onFocusOut=(action "onFocusOut" field)
-            }}
-          {{else if (eq field.type "radio-group")}}
-            {{one-way-radio-group
-              class=(concat "field-" (dot-to-dash field.name))
-              inputId=(concat parentView.elementId (concat "-" field.name))
-              value=(get formValues field.name)
-              fieldName=field.name
-              options=field.options
-              update=(action "inputChanged" field.name)
-              isReadOnly=(or disabled field.disabled)
-              onFocusOut=(action "onFocusOut" field)
-            }}
+  {{#unless field.hidden}}
+    {{#bsForm.group 
+      validation=(if field.isInvalid "error" (if field.isValid "success")) 
+      class=(concat-classes "col-xs-12" (if disabled "disabled") (if field.tip "group-with-tip") field.cssClass (if field.rightText "has-right-text"))}}
+      {{#if (or (eq field.type "checkbox") (eq field.type "radio-group"))}}
+        <div class="row toggle-form-row">
+          {{#if (not field.nolabel)}}
+            <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label text-right " layoutConfig.formToggleLabelColumns}}>
+              {{field.label}}:
+              {{#if field.tip}}
+                {{one-label-tip title=field.tip}}
+              {{/if}}
+            </label>
           {{/if}}
+          <div class={{if field.nolabel layoutConfig.formSubmitColumns layoutConfig.formToggleInputColumns}}>
+            {{#if (eq field.type "checkbox")}}
+              {{one-way-toggle
+                class=(concat "form-control toggle-field-" (dot-to-dash field.name))
+                inputId=(concat parentView.elementId (concat "-" field.name))
+                checked=(get formValues field.name)
+                update=(action "inputChanged" field.name)
+                isReadOnly=(or disabled field.disabled)
+                onFocusOut=(action "onFocusOut" field)
+              }}
+            {{else if (eq field.type "radio-group")}}
+              {{one-way-radio-group
+                class=(concat "field-" (dot-to-dash field.name))
+                inputId=(concat parentView.elementId (concat "-" field.name))
+                value=(get formValues field.name)
+                fieldName=field.name
+                options=field.options
+                update=(action "inputChanged" field.name)
+                isReadOnly=(or disabled field.disabled)
+                onFocusOut=(action "onFocusOut" field)
+              }}
+            {{/if}}
+          </div>
         </div>
-      </div>
-    {{else if (eq field.type "static")}}
-      {{one-form-field-static
-        field=field
-        value=(get formValues field.name)
-      }}
-    {{else}}
-      {{one-form-field
-        inputId=(concat parentView.elementId (concat "-" field.name))
-        field=field
-        value=(get formValues field.name)
-        disabled=(or disabled field.disabled)
-        inputChanged=(action "inputChanged")
-        onFocusOut=(action "onFocusOut" field)
-      }}
-    {{/if}}
-  {{/bsForm.group}}
+      {{else if (eq field.type "static")}}
+        {{one-form-field-static
+          field=field
+          value=(get formValues field.name)
+        }}
+      {{else}}
+        {{one-form-field
+          inputId=(concat parentView.elementId (concat "-" field.name))
+          field=field
+          value=(get formValues field.name)
+          disabled=(or disabled field.disabled)
+          inputChanged=(action "inputChanged")
+          onFocusOut=(action "onFocusOut" field)
+        }}
+      {{/if}}
+    {{/bsForm.group}}
+  {{/unless}}
 {{/each}}

@@ -29,28 +29,18 @@
             {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
               {{name-conflict item=item tagName="span" class="one-label"}}
             {{/truncated-string}}
-        {{/if}}
+          {{/if}}
         {{/link-to}}
       {{else if (eq primarySection "secondary")}}
-        {{!-- TODO isActive secondary --}}
+        {{!-- TODO isActive secondary --}}        
         <ul class="one-list one-list-level-2">
-          {{#each secondLevelItems as |sli|}}
-            <li class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}>
-              {{#link-to
-                "onedata.sidebar.content.aspect"
-                sidebarType
-                (model-routable-id item)
-                sli.id
-                class="item-header truncate"
-              }}
-                {{#if sli.component}}
-                  {{component sli.component item=sli sidebar=this}}
-                {{else}}
-                  {{two-level-sidebar/item-content item=sli sidebar=this iconClass="sidebar-item-icon"}}
-                {{/if}}
-              {{/link-to}}
-            </li>
-          {{/each}}
+          {{component secondLevelItemsComponent
+            item=item
+            secondaryItemId=secondaryItemId
+            sidebar=this
+            secondLevelItems=secondLevelItems
+            sidebarType=sidebarType
+          }}
         </ul>
       {{/if}}
     {{/one-list-primary-item}}
