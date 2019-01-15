@@ -24,6 +24,7 @@
                 update=(action "inputChanged" field.name)
                 isReadOnly=(or disabled field.disabled)
                 onFocusOut=(action "onFocusOut" field)
+                lockHint=field.lockHint
               }}
             {{else if (eq field.type "radio-group")}}
               {{one-way-radio-group
