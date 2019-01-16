@@ -356,8 +356,8 @@ a {
   font-family: monospace;
 }
 @media (max-width: $screen-xs-max) {
-  padding: $padding-large-vertical $padding-large-horizontal;
   .token-textarea {
+    padding: $padding-large-vertical $padding-large-horizontal;
     height: 200px;
   }
 }

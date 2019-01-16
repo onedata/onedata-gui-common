@@ -32,8 +32,8 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $large-social-box-size: 50px;
 
-@import 'onedata-gui-common/bootstrap-config';
-@import 'onedata-gui-common/bootstrap-addons';
+@import 'bootstrap-config';
+@import 'bootstrap-addons';
 
 // Addons
 @import 'side-menu';
@@ -84,8 +84,9 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/custom-animations';
 @import 'onedata-gui-common/common';
 @import 'onedata-gui-common/spin-spinner-extensions';
-@import 'onedata-gui-common/ember-power-select-config';
 @import 'onedata-gui-common/jvectormap-overrides';
+
+@import 'ember-power-select-config';
 
 // Components
 

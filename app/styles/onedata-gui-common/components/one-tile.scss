@@ -69,7 +69,7 @@ $-tile-content-padding: 4px;
     cursor: pointer;
     
     .more-link {
-      @extend a:hover;
+      @extend a, :hover;
     }
   }
 
