@@ -1,7 +1,7 @@
 import SecondLevelItems from 'onedata-gui-common/components/two-level-sidebar/second-level-items';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar/second-level-items';
 import { computed } from '@ember/object';
-import { reads, equal } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default SecondLevelItems.extend(I18n, {
@@ -11,7 +11,7 @@ export default SecondLevelItems.extend(I18n, {
 
   item: undefined,
 
-  isNotDeployedCluster: equal('item.id', 'new'),
+  isNotDeployedCluster: reads('item.isNotDeployed'),
 
   clusterType: reads('item.type'),
 
