@@ -30,6 +30,11 @@ export default Component.extend(I18n, ProvidersColors, {
   /**
    * @type {string|undefined}
    */
+  aspect: undefined,
+
+  /**
+   * @type {string|undefined}
+   */
   customLink: undefined,
 
   /**
