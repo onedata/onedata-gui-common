@@ -1,4 +1,7 @@
 <div class="item-header">
   {{one-icon icon=item.icon}}  
   <span class="one-label">{{item.id}}</span>
+  {{#if item.tip}}
+    {{one-tooltip title=item.tip placement="right" delayShow=200}}
+  {{/if}}
 </div>
