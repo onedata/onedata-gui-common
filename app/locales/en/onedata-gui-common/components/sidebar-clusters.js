@@ -8,8 +8,9 @@ export default {
     provider: 'Provider',
     storages: 'Storages',
     spaces: 'Spaces',
+    dnsWarning: 'Some problems with your DNS configuration have been detected',
+    webCertWarning: 'Some problems with your web certificate have been detected',
   },
-  dnsWarning: 'Some problems with your DNS configuration have been detected',
   clusterItem: {
     domainNameNotAvailable: '(domain name not available)',
     nameNotAvailable: '(name not available)',

@@ -30,6 +30,4 @@ export default TwoLevelSidebar.extend(I18n, {
    * @implements TwoLevelSidebar
    */
   sidebarType: 'clusters',
-
-  dnsValid: true,
 });

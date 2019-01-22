@@ -15,6 +15,10 @@ export default SecondLevelItems.extend(I18n, {
 
   clusterType: reads('item.type'),
 
+  dnsValid: true,
+
+  webCertValid: true,
+
   overviewItem: computed(function overviewItem() {
     return {
       id: 'overview',
@@ -33,11 +37,13 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
-  certificateItem: computed(function certificateItem() {
+  certificateItem: computed('webCertValid', function certificateItem() {
     return {
       id: 'certificate',
       label: this.t('certificate'),
       icon: 'certificate',
+      warningMessage: this.get('webCertValid') === false ?
+        this.t('webCertWarning') : undefined,
     };
   }),
 
@@ -138,7 +144,7 @@ export default SecondLevelItems.extend(I18n, {
   init() {
     this._super(...arguments);
     // overwrite injected property
-    this.set('secondLevelItems', reads('clusterSecondLevelItems'));
+    this.set('internalSecondLevelItems', reads('clusterSecondLevelItems'));
     console.log(this.get('item'));
   },
 });

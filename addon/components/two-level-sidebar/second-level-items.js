@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/two-level-sidebar/second-level-items';
 
 export default Component.extend({
@@ -10,6 +11,11 @@ export default Component.extend({
   sidebar: undefined,
   secondLevelItems: undefined,
   sidebarType: undefined,
+
+  /**
+   * @type {Ember.ComputedProperty<Array<Object>>}
+   */
+  internalSecondLevelItems: reads('secondLevelItems'),
 
   init() {
     this._super(...arguments);
