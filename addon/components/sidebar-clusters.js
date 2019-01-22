@@ -19,6 +19,11 @@ export default TwoLevelSidebar.extend(I18n, {
 
   i18nPrefix: 'components.sidebarClusters',
 
+  /**
+   * @override
+   */
+  sorting: Object.freeze(['type:desc', 'name']),
+
   // TODO this will not work in generic multi-clusters menu  
   cluster: reads('model.collection.list.firstObject'),
 
