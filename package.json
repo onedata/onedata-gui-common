@@ -82,7 +82,7 @@
     "ember-source": "2.18.2",
     "ember-spin-button": "git+https://github.com/kliput/ember-spin-button.git#0b6427903ee7cc5e7ce7115367c66dd94e9e2a2f",
     "ember-spin-spinner": "0.3.3",
-    "ember-sticky-element": "0.2.2",
+    "ember-sticky-element": "0.2.3",
     "ember-truth-helpers": "2.0.0",
     "eslint-plugin-ember": "5.0.3",
     "input-tokenizer": "1.3.2",

@@ -16,8 +16,12 @@
         {{#one-collapsible-list as |list|}}
           {{#unless disableManageAccount}}
             {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
-                {{#if guiUtils.manageAccountExternalLink}}
+              {{#listItem.header click=(unless standaloneOnepanel (action "manageAccount")) class=(concat menuItemClasses " manage-account-action")}}
+                {{#if standaloneOnepanel}}
+                  <a href={{onezoneGui.clusterUrlInOnepanel}}>
+                    {{tt this "visitViaOnezone"}}
+                  </a>
+                {{else if guiUtils.manageAccountExternalLink}}
                   <a href={{guiUtils.manageAccountExternalLink}}>
                     {{tt this "manageAccount"}}
                   </a>
