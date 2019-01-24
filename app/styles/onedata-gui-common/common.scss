@@ -529,11 +529,18 @@ textarea[style^="touch-action: manipulation"] {
 .inline-icon-container {
   display: inline-block;
   position: relative;
-  width: 1.8em;
+  width: 1.6em;
   height: 1em;
   .oneicon {
-    @include vertical-align-middle();
+    position: absolute;
+    top: 50%;
     left: 0;
-    font-size: 200%;
+    transform: translateY(-50%) translateY(2px);
+    font-size: 180%;
+  }
+  &.sm {
+    .oneicon {
+      font-size: 130%;
+    }
   }
 }
