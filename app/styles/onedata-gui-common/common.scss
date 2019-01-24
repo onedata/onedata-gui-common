@@ -525,3 +525,15 @@ textarea + .btn-container {
 textarea[style^="touch-action: manipulation"] {
   cursor: inherit !important;
 }
+
+.inline-icon-container {
+  display: inline-block;
+  position: relative;
+  width: 1.8em;
+  height: 1em;
+  .oneicon {
+    @include vertical-align-middle();
+    left: 0;
+    font-size: 200%;
+  }
+}
