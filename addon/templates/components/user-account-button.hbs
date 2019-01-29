@@ -14,25 +14,21 @@
       {{/listItem.header}}
       {{#listItem.content}}
         {{#one-collapsible-list as |list|}}
-          {{#unless disableManageAccount}}
+          {{#if guiUtils.manageAccountText}}
             {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(unless standaloneOnepanel (action "manageAccount")) class=(concat menuItemClasses " manage-account-action")}}
-                {{#if standaloneOnepanel}}
-                  <a href={{onezoneGui.clusterUrlInOnepanel}}>
-                    {{tt this "visitViaOnezone"}}
-                  </a>
-                {{else if guiUtils.manageAccountExternalLink}}
+              {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
+                {{#if guiUtils.manageAccountExternalLink}}
                   <a href={{guiUtils.manageAccountExternalLink}}>
-                    {{tt this "manageAccount"}}
+                    {{guiUtils.manageAccountText}}
                   </a>
                 {{else}}
                   {{#link-to "onedata.sidebar" "users"}}
-                    {{tt this "manageAccount"}}
+                    {{guiUtils.manageAccountText}}
                   {{/link-to}}
                 {{/if}}
               {{/listItem.header}}
             {{/list.item}}
-          {{/unless}}
+          {{/if}}
           {{#list.item isCollapsible=false as |listItem|}}
             {{#listItem.header click=(action "logout") class=(concat menuItemClasses " logout-action")}}
               {{tt this "logout"}}
@@ -70,21 +66,15 @@
     as |popover|
   }}
     <ul class="dropdown-menu">
-      {{#if standaloneOnepanel}}
-        <li>
-          <a href={{onezoneGui.clusterUrlInOnepanel}}>
-            {{tt this "visitViaOnezone"}}
-          </a>
-        </li>
-      {{else}}
+      {{#if guiUtils.manageAccountText}}
         <li>
           {{#if guiUtils.manageAccountExternalLink}}
             <a href={{guiUtils.manageAccountExternalLink}} class="manage-account-action clickable" click={{action "manageAccount"}}>
-              {{tt this "manageAccount"}}
+              {{guiUtils.manageAccountText}}
             </a>
           {{else}}
             {{#link-to "onedata.sidebar" "users" class="manage-account-action clickable" click=(action "manageAccount")}}
-              {{tt this "manageAccount"}}
+              {{guiUtils.manageAccountText}}
             {{/link-to}}
           {{/if}}
         </li>

@@ -77,6 +77,14 @@ export default Service.extend(I18n, {
   manageAccountExternalLink: undefined,
 
   /**
+   * Text used as a label for 'manage account' item in menu. If empty, this item will be hidden.
+   * @type {Ember.ComputedProperty<string>}
+   */
+  manageAccountText: computed(function manageAccountText() {
+    return this.get('i18n').t('components.userAccountButton.manageAccount');
+  }),
+
+  /**
    * @param {object|string} model
    * @returns {string}
    */
