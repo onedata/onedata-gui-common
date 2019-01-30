@@ -22,6 +22,7 @@ import providersMapTile from './onedata-gui-common/components/providers-map-tile
 import userAccountButton from './onedata-gui-common/components/user-account-button';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
+import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
 
 import login from './onedata-gui-common/routes/login';
 
@@ -55,6 +56,9 @@ const translations = {
   },
   mixins: {
     authenticationErrorMessage,
+    components: {
+      autoSaveForm,
+    },
   },
   routes: {
     login,

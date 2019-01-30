@@ -2,7 +2,7 @@
   <strong>{{header}}</strong>
   {{#if (and (not dataError) totalSize)}}
     <div class="support-size">
-      ({{t "components.supportSizeInfo.total"}} {{bytes-to-string totalSize}})
+      ({{tt this "total"}} {{bytes-to-string totalSize}})
     </div>
   {{/if}}
   {{#if _tipVisible}}
@@ -18,10 +18,10 @@
       onChange=(action "modeChanged") as |bg|
     }}
       {{#bg.button type="default" class="btn-sm chart-mode" value="chart"}}
-        {{t "components.supportSizeInfo.mode.chart"}}
+        {{tt this "mode.chart"}}
       {{/bg.button}}
       {{#bg.button type="default" class="btn-sm table-mode" value="table"}}
-        {{t "components.supportSizeInfo.mode.table"}}
+        {{tt this "mode.table"}}
       {{/bg.button}}
     {{/bs-button-group}}
   {{/if}}

@@ -27,9 +27,6 @@
   }
   &.collapsible {
     cursor: pointer;
-    &:hover {
-      background-color: $main-content-hover-background;
-    }
     .toggle-icon {
       display: block;
     }
@@ -37,7 +34,11 @@
       margin-right: 5em;
     }
   }
-
+  &.hoverable, &.collapsible:not(.non-hoverable) {
+    &:hover {
+      background-color: $main-content-hover-background;
+    }
+  }
   &.header-fixed {
     // override inline styles
     cursor: not-allowed !important;
@@ -66,5 +67,15 @@
     right:
       2*$collapsible-list-item-btn-toggle-padding +
         $collapsible-list-item-padding + 12px;
+  }
+  
+  .form-state {
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 9pt;
+    text-transform: none;
+    color: $color-one-light-gray;
+    font-weight: normal;
+    white-space: nowrap;
   }
 }

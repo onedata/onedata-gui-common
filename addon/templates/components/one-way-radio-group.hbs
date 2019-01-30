@@ -1,5 +1,5 @@
 {{#each options as |option index|}}
-  <label class="radio-inline{{if isReadOnly " disabled" " clickable"}}">
+  <label class="{{if radioInline "radio-inline"}}{{if isReadOnly " disabled" " clickable"}}">
     {{one-way-radio value
       class=(concat "field-" (concat (dot-to-dash fieldName) (concat "-" option.value)))
       id=(if (eq index 0) inputId null)

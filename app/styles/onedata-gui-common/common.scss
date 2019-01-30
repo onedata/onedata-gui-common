@@ -9,6 +9,10 @@ strong {
   font-family: "Open Sans Semibold";
 }
 
+.horizontal-align-middle {
+  @include horizontal-align-middle();
+}
+
 .vertical-align-middle {
   @include vertical-align-middle();
 }
@@ -348,6 +352,11 @@ a {
   padding: $padding-large-vertical*2 $padding-large-horizontal*2;
 }
 
+.code-textarea {
+  font-family: monospace;
+  resize: none; 
+}
+
 .token-textarea {
   width: 100%;
   height: 120px;
@@ -472,51 +481,21 @@ textarea + .btn-container {
   padding-bottom: $padding-large-vertical;
 }
 
-// FIXME: new styles ported from onezone-gui - make them common
-.resource-info-tile {
-  .table {
-    table-layout: fixed;
-    tr {
-      .property-name {
-        padding-left: 0;
-      }
-      td {
-        padding-top: 2 * $table-condensed-cell-padding;
-        padding-bottom: 2 * $table-condensed-cell-padding;
-        border-top: 0;
-      }
-    }
+.one-infinite-list {
+  thead th {
+    text-align: center;
+    padding-bottom: 10px;
   }
-  .property-name {
-    width: 85px;
-    font-family: 'Open Sans Semibold';
+  
+  .first-row td {
+    height: 0;
+    padding: 0;
+    margin: 0;
   }
-  .resource-name {
-    $-v-correction: 9px;
-    $-h-correction: 8px;
-    margin-top: -$-v-correction;
-    margin-bottom: -$-v-correction;
-    margin-left: -$-h-correction;
-    .one-label, .form-control {
-      padding: $-h-correction;
-      height: auto;
-    }
-  }
-  .clipboard-line {
-    margin-top: -5px;
-  }
-  .creator {
-    position: relative;
-    &.has-icon {
-      padding-left: 2em;
-    }
-    &.special {
-      font-style: italic;
-    }
-    .one-icon {
-      @include vertical-align-middle();
-      left: 0;
-      font-size: 1.7em;
+  
+  .data-row {
+    td {
+      height: 44px;
     }
   }
 }
@@ -543,4 +522,9 @@ textarea[style^="touch-action: manipulation"] {
       font-size: 130%;
     }
   }
+}
+  
+.btn-inline-after-text {
+  margin-left: $padding-small-horizontal;
+  top: -2px;
 }

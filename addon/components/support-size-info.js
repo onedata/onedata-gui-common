@@ -3,7 +3,7 @@
  *
  * @module components/support-size-info
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,10 +13,14 @@ import EmberObject, { computed } from '@ember/object';
 import { A } from '@ember/array';
 import _ from 'lodash';
 import layout from 'onedata-gui-common/templates/components/support-size-info';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['support-size-info'],
+
+  /** @override */
+  i18nPrefix: 'components.supportSizeInfo',
 
   /**
    * Data to display.

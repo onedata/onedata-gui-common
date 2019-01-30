@@ -3,6 +3,7 @@ export default [
   'hr-label',
   'input-group',
   'name-conflict',
+  'nav-tabs',
   'one-atlas',
   'one-clipboard-line',
   'one-dynamic-tree',
