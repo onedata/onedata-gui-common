@@ -82,5 +82,7 @@ function assignConflictLabels(conflictingRecords, diffProperty, defaultId) {
         );
       }
     }
+  } else if (conflictingRecords.length === 1) {
+    set(conflictingRecords[0], 'conflictLabel', undefined);
   }
 }
