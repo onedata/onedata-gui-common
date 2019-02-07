@@ -8,7 +8,7 @@
  */
 
 export const defaultIconBackgroundColor = '#333';
-export const defaultIconPath = '/assets/images/auth-providers/default.svg';
+export const defaultIconPath = '/oz/onezone/assets/images/auth-providers/default.svg';
 export const darkFgColor = '#555C73';
 export const lightFgColor = '#FFF';
 
