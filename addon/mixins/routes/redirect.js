@@ -36,6 +36,7 @@ export default Mixin.create({
    * @param {Transition} transition 
    */
   beforeModel(transition) {
+    const superResult = this._super(...arguments);
     if (this.isRedirectingTransition(transition)) {
       if (transition.queryParams.back_forward) {
         console.debug(
@@ -55,5 +56,6 @@ export default Mixin.create({
         }
       }
     }
+    return superResult;
   },
 });

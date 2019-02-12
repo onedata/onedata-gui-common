@@ -45,6 +45,7 @@ export default Route.extend({
   navigationState: service(),
 
   beforeModel(transition) {
+    const superResult = this._super(...arguments);
     const navigationState = this.get('navigationState');
     if (navigationState.get('globalSidenavResourceType')) {
       navigationState.set('globalSidenavResourceType', null);
@@ -55,6 +56,7 @@ export default Route.extend({
       isActiveResourceIdSpecial: false,
       isActiveResourceLoading: false,
     });
+    return superResult;
   },
 
   model({ resource_id: resourceId }, transition) {
