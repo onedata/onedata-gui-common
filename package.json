@@ -51,7 +51,7 @@
     "ember-cli-mocha": "0.14.4",
     "ember-cli-moment-shim": "3.5.0",
     "ember-cli-node-assets": "0.2.2",
-    "ember-cli-sass": "7.1.7",
+    "ember-cli-sass": "10.0.0",
     "ember-cli-shims": "1.2.0",
     "ember-cli-sri": "2.1.1",
     "ember-cli-uglify": "2.0.0",
@@ -89,7 +89,7 @@
     "loader.js": "4.6.0",
     "perfect-scrollbar": "0.8.1",
     "round10": "1.0.3",
-    "sass": "1.16.0",
+    "sass": "1.17.0",
     "sinon": "4.2.0",
     "sinon-chai": "2.14.0"
   },

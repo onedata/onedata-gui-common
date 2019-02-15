@@ -33,7 +33,7 @@
   {{else}}
     <div class="row row-login-header text-center">
       <div class="col-xs-12">
-        <h4>{{t (concat "components.loginBox." (if authFor "loginExternal" "login"))}}</h4>
+        <h4>{{t "components.loginBox.login"}}</h4>
         <div class="login-box-error-message {{if sessionHasExpired "active" ""}}">
           {{t "components.loginBox.sessionExpired"}}
         </div>

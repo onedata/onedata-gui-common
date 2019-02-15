@@ -10,7 +10,10 @@ const breakpointValues = require('./addon/breakpoint-values').default;
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
-    sassOptions: {
+    'ember-cli-babel': {
+      includePolyfill: true,
+    },
+    'sassOptions': {
       includePaths: [
         'app/styles',
         'app/styles/onedata-gui-common',
