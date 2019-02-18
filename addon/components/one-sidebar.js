@@ -23,6 +23,7 @@ export default Component.extend({
 
   navigationState: service(),
   sidebarResources: service(),
+  i18n: service(),
 
   resourcesModel: null,
 
@@ -41,8 +42,12 @@ export default Component.extend({
    */
   isLoadingItem: reads('navigationState.isActiveResourceLoading'),
 
-  title: computed('resourcesModel.resourceType', function () {
-    let resourcesType = this.get('resourcesModel.resourceType');
-    return resourcesType;
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  title: computed('resourcesModel.resourceType', function title() {
+    const resourcesType = this.get('resourcesModel.resourceType');
+    return resourcesType ?
+      this.get('i18n').t(`tabs.${resourcesType}.menuItem`) : '';
   }),
 });
