@@ -20,6 +20,7 @@ import authenticationErrorModal from './onedata-gui-common/components/authentica
 import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 import providersMapTile from './onedata-gui-common/components/providers-map-tile';
 import userAccountButton from './onedata-gui-common/components/user-account-button';
+import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -52,7 +53,10 @@ const translations = {
     sidebarClusters,
     clipboardLine,
     providersMapTile,
-    userAccountButton
+    userAccountButton,
+    alerts: {
+      endpointError,
+    },
   },
   mixins: {
     authenticationErrorMessage,
