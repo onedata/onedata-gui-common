@@ -16,9 +16,4 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<Array<Object>>}
    */
   internalSecondLevelItems: reads('secondLevelItems'),
-
-  init() {
-    this._super(...arguments);
-    console.log(this.get('secondLevelItems'));
-  }
 });

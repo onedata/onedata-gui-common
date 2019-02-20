@@ -34,6 +34,11 @@ export default Component.extend(I18n, {
    */
   text: readOnly('alert.text'),
 
+  /**
+   * @type {Ember.ComputedProperty<Object>}
+   */
+  options: readOnly('alert.options'),
+
   actions: {
     onHide() {
       this.set('alert.opened', false);

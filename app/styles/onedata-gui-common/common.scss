@@ -297,7 +297,7 @@ ul.info, ol.info {
     margin: 0 0 28px 52px; /* Give each list item a left margin to make room for the numbers */
     list-style: none; /* Disable the normal item numbering */
   }
-
+  
   li::before {
     position: absolute;
     top: 1px;
@@ -313,6 +313,18 @@ ul.info, ol.info {
     background: $color-one-mint;
     border-radius: 4px;
     text-align: center;
+  }
+  
+  &.info-condensed {
+    li {
+      margin-bottom: 12px;
+    }
+  }
+  
+  &.info-gray {
+    li::before {
+      background: $color-one-light-gray;
+    }
   }
 }
 

@@ -19,6 +19,14 @@ export default Mixin.create({
   },
 
   /**
+   * Some routes using this mixin can be redirecting only conditionally
+   * or in some way internally, so this property can be overriden.
+   */
+  isRedirectingTransition( /* transition */ ) {
+    return true;
+  },
+
+  /**
    * If the page was reached using back/forward in browser, the `back-forward`
    * instance initializer should set `back_forward` query param flag to true.
    * If we reached this route from back/forward, then we should prevent
@@ -28,22 +36,26 @@ export default Mixin.create({
    * @param {Transition} transition 
    */
   beforeModel(transition) {
-    if (transition.queryParams.back_forward) {
-      console.debug(
-        'redirection route: detected back/forward - preventing redirect'
-      );
-      delete transition.queryParams.back_forward;
-      const hashBeforeRedirect = sessionStorage.getItem('hash-before-redirect');
-      sessionStorage.clear('hash-before-redirect');
-      transition.abort();
-      window.location.replace(hashBeforeRedirect || '#/');
-    } else {
-      const currentHash = window.location.hash;
-      if (this.checkComeFromOtherRoute(currentHash)) {
-        sessionStorage.setItem('hash-before-redirect', currentHash);
-      } else {
+    const superResult = this._super(...arguments);
+    if (this.isRedirectingTransition(transition)) {
+      if (transition.queryParams.back_forward) {
+        console.debug(
+          'redirection route: detected back/forward - preventing redirect'
+        );
+        delete transition.queryParams.back_forward;
+        const hashBeforeRedirect = sessionStorage.getItem('hash-before-redirect');
         sessionStorage.clear('hash-before-redirect');
+        transition.abort();
+        window.location.replace(hashBeforeRedirect || '#/');
+      } else {
+        const currentHash = window.location.hash;
+        if (this.checkComeFromOtherRoute(currentHash)) {
+          sessionStorage.setItem('hash-before-redirect', currentHash);
+        } else {
+          sessionStorage.clear('hash-before-redirect');
+        }
       }
     }
+    return superResult;
   },
 });

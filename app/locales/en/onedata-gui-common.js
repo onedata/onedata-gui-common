@@ -21,6 +21,7 @@ import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 import providersMapTile from './onedata-gui-common/components/providers-map-tile';
 import userAccountButton from './onedata-gui-common/components/user-account-button';
 import jsonEditor from './onedata-gui-common/components/json-editor';
+import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -55,6 +56,9 @@ const translations = {
     providersMapTile,
     userAccountButton,
     jsonEditor,
+    alerts: {
+      endpointError,
+    },
   },
   mixins: {
     authenticationErrorMessage,

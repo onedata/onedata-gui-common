@@ -159,7 +159,7 @@ export default Component.extend(I18n, {
           return;
         }
 
-        // FIXME: if customLink, then use window.location = customLink
+        // TODO: if customLink, then use window.location = customLink
 
         const {
           router,

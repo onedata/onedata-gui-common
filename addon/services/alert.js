@@ -16,8 +16,13 @@ export default Service.extend({
   warning: aliasToShow('warning'),
   error: aliasToShow('error'),
 
-  show(type, text) {
+  show(type, text, options = {}) {
     // TODO type is now ignored
-    this.setProperties({ type, text, opened: true });
+    this.setProperties({
+      type,
+      text,
+      opened: true,
+      options,
+    });
   },
 });

@@ -270,6 +270,15 @@
     max-width: 400px;
     margin: 0 auto;
   }
+  .fading-login-method-container {
+    &.fadeOut {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+    }
+  }
   .basicauth-login-form-container {
     &.fadeOut {
       position: absolute;
@@ -328,5 +337,13 @@
   .no-login-methods {
     margin-top: $padding-large-horizontal;
     text-align: center;
+  }
+  
+  .text-link {
+    text-decoration: underline;
+    color: $color-one-white;
+    &:hover {
+      color: $color-one-mint;
+    }
   }
 }

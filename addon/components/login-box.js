@@ -9,7 +9,7 @@
 
 import { alias } from '@ember/object/computed';
 
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import { inject } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
@@ -62,11 +62,6 @@ export default Component.extend({
    * True, if previous session has expired
    */
   sessionHasExpired: alias('session.data.hasExpired'),
-
-  // FIXME: use of this flag is temporary, cookie maybe?
-  authFor: computed('navigationState.queryParams.auth_for', function authFor() {
-    return this.get('navigationState.queryParams.auth_for');
-  }),
 
   init() {
     this._super(...arguments);
