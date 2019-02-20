@@ -23,10 +23,17 @@ export default Component.extend(I18n, {
   value: '',
 
   /**
-   * Set by `onChange` action
-   * @type {boolean}
+   * @type {Ember.ComputedProperty<boolean>}
    */
-  isValid: undefined,
+  isValid: computed('value', function isValid() {
+    const value = this.get('value');
+    try {
+      JSON.parse(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }),
 
   /**
    * @type {boolean}
@@ -83,10 +90,6 @@ export default Component.extend(I18n, {
       } catch (e) {
         isValid = false;
       }
-      this.setProperties({
-        value,
-        isValid,
-      });
       onChange({
         value,
         parsedValue,

@@ -2,6 +2,7 @@ export default [
   'bezier-curve',
   'hr-label',
   'input-group',
+  'json-editor',
   'name-conflict',
   'nav-tabs',
   'one-atlas',
