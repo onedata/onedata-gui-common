@@ -4,6 +4,7 @@
   onkeydown={{invoke-on-enter onEnter}}
   placeholder={{placeholder}}
   disabled={{disabled}}
+  spellcheck="false"
   class="form-control json-editor-textarea {{inputClassName}}"></textarea>
 {{#if (and isErrorMsgVisible (eq isValid false))}}
   <div class="form-message text-right">{{tt this "errorMsg"}}</div>
