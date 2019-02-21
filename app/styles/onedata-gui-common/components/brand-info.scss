@@ -1,6 +1,7 @@
 .brand-info {
   $icon-size: 20px;
   $icon-left-offset: 6px;
+  $brand-info-shadow-height: 12px;
 
   position: fixed;
   bottom: 0;
@@ -9,7 +10,20 @@
   border-right: 1px solid $main-border-color;
   background-color: $color-sidebar-item-bg;
   z-index: 10;
+    
+  &::before {
+    position: absolute;
+    top: -$brand-info-shadow-height;
+    height: $brand-info-shadow-height;
+    background: linear-gradient(to bottom, transparent, #00000011);
+    content: ' ';
+    width: 100%;
+  }
 
+  &::after {
+    @include top-line(1px solid $color-one-list-item-separator);
+  }
+  
   .brand-info-container {
     @include vertical-align-middle();
     left: $one-list-item-padding;
@@ -17,6 +31,15 @@
     padding-left: $icon-size + $padding-xs-horizontal + $icon-left-offset;
   }
 
+  @media (max-width: $screen-sm-max) {
+    .brand-name {
+      font-size: 90%;
+    }
+    .brand-type-version {
+      font-size: 80%;
+    }
+  }
+  
   .brand-icon {
     position: absolute;
     left: $icon-left-offset;
