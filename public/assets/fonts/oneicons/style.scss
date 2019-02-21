@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?wgbdwa') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?wgbdwa') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?wgbdwa##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?9ib1r') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?9ib1r') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?9ib1r##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -33,6 +33,11 @@
 .oneicon-add {
   &:before {
     content: $oneicon-add; 
+  }
+}
+.oneicon-arrow-circle-down {
+  &:before {
+    content: $oneicon-arrow-circle-down; 
   }
 }
 .oneicon-arrow-down {
@@ -71,6 +76,11 @@
     content: $oneicon-ban-left; 
   }
 }
+.oneicon-ceph {
+  &:before {
+    content: $oneicon-ceph; 
+  }
+}
 .oneicon-certificate {
   &:before {
     content: $oneicon-certificate; 
@@ -84,6 +94,11 @@
 .oneicon-checkbox-empty {
   &:before {
     content: $oneicon-checkbox-empty; 
+  }
+}
+.oneicon-checkbox-filled-warning {
+  &:before {
+    content: $oneicon-checkbox-filled-warning; 
   }
 }
 .oneicon-checkbox-filled-x {
@@ -251,6 +266,11 @@
     content: $oneicon-leave-space; 
   }
 }
+.oneicon-light-bulb {
+  &:before {
+    content: $oneicon-light-bulb; 
+  }
+}
 .oneicon-link-external {
   &:before {
     content: $oneicon-link-external; 
@@ -274,6 +294,61 @@
 .oneicon-membership {
   &:before {
     content: $oneicon-membership; 
+  }
+}
+.oneicon-menu-clusters {
+  &:before {
+    content: $oneicon-menu-clusters; 
+  }
+}
+.oneicon-menu-collection {
+  &:before {
+    content: $oneicon-menu-collection; 
+  }
+}
+.oneicon-menu-data {
+  &:before {
+    content: $oneicon-menu-data; 
+  }
+}
+.oneicon-menu-groups {
+  &:before {
+    content: $oneicon-menu-groups; 
+  }
+}
+.oneicon-menu-links {
+  &:before {
+    content: $oneicon-menu-links; 
+  }
+}
+.oneicon-menu-providers {
+  &:before {
+    content: $oneicon-menu-providers; 
+  }
+}
+.oneicon-menu-recent {
+  &:before {
+    content: $oneicon-menu-recent; 
+  }
+}
+.oneicon-menu-shared {
+  &:before {
+    content: $oneicon-menu-shared; 
+  }
+}
+.oneicon-menu-token {
+  &:before {
+    content: $oneicon-menu-token; 
+  }
+}
+.oneicon-menu-transfers {
+  &:before {
+    content: $oneicon-menu-transfers; 
+  }
+}
+.oneicon-menu-trash {
+  &:before {
+    content: $oneicon-menu-trash; 
   }
 }
 .oneicon-metadata {
@@ -309,6 +384,11 @@
 .oneicon-onezone {
   &:before {
     content: $oneicon-onezone; 
+  }
+}
+.oneicon-organization {
+  &:before {
+    content: $oneicon-organization; 
   }
 }
 .oneicon-overview {
@@ -371,6 +451,11 @@
     content: $oneicon-rename; 
   }
 }
+.oneicon-role-holders {
+  &:before {
+    content: $oneicon-role-holders; 
+  }
+}
 .oneicon-search {
   &:before {
     content: $oneicon-search; 
@@ -396,9 +481,19 @@
     content: $oneicon-share; 
   }
 }
+.oneicon-sign-error-rounded {
+  &:before {
+    content: $oneicon-sign-error-rounded; 
+  }
+}
 .oneicon-sign-error {
   &:before {
     content: $oneicon-sign-error; 
+  }
+}
+.oneicon-sign-info-rounded {
+  &:before {
+    content: $oneicon-sign-info-rounded; 
   }
 }
 .oneicon-sign-info {
@@ -406,9 +501,19 @@
     content: $oneicon-sign-info; 
   }
 }
+.oneicon-sign-question-rounded {
+  &:before {
+    content: $oneicon-sign-question-rounded; 
+  }
+}
 .oneicon-sign-question {
   &:before {
     content: $oneicon-sign-question; 
+  }
+}
+.oneicon-sign-warning-rounded {
+  &:before {
+    content: $oneicon-sign-warning-rounded; 
   }
 }
 .oneicon-sign-warning {
@@ -536,9 +641,19 @@
     content: $oneicon-support; 
   }
 }
+.oneicon-team {
+  &:before {
+    content: $oneicon-team; 
+  }
+}
 .oneicon-tokens {
   &:before {
     content: $oneicon-tokens; 
+  }
+}
+.oneicon-unit {
+  &:before {
+    content: $oneicon-unit; 
   }
 }
 .oneicon-update {
