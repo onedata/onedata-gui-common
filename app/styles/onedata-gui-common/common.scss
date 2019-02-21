@@ -375,6 +375,9 @@ a {
   margin-top: $padding-base-vertical;
   margin-bottom: $padding-base-vertical;
   font-family: monospace;
+  &.no-resize {
+    resize: none;
+  }
 }
 @media (max-width: $screen-xs-max) {
   .token-textarea {
