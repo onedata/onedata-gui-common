@@ -66,6 +66,9 @@
         transform: translateY(-50%);
         padding: 0px 7px 0 5px;
         font-size: 13pt;
+        &.with-place-for-dots {
+          right: 45px;
+        }
         .one-icon, .outer-text {
           top: -0.1em;
           vertical-align: middle;

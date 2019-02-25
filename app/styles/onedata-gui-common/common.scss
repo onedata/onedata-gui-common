@@ -395,8 +395,13 @@ a {
   }
 }
 
-.truncated-string.before-status {
-  padding-right: 100px;
+.truncated-string {
+  &.before-status {
+    padding-right: 100px;
+    &.with-place-for-dots {
+      padding-right: 145px;
+    }
+  }
 }
 
 .table.table-middle-align {
