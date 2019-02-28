@@ -25,6 +25,7 @@ export default Component.extend(ClickOutside, I18n, {
   session: service(),
   globalNotify: service(),
   guiUtils: service(),
+  i18n: service(),
 
   /**
    * @override
@@ -95,7 +96,7 @@ export default Component.extend(ClickOutside, I18n, {
       let loggingOut = session.invalidate();
       loggingOut.then(() => window.location.reload());
       loggingOut.catch(error => {
-        this.get('globalNotify').backendError('logging out', error);
+        this.get('globalNotify').backendError(this.t('loggingOut'), error);
       });
       loggingOut.finally(() => this.set('menuOpen', false));
       return loggingOut;

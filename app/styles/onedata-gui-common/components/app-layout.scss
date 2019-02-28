@@ -193,6 +193,17 @@ $mobile-resource-name-height: 20px;
     position: absolute;
     bottom: 0;
     width: $main-menu-width;
+    
+    .groove-border {
+      position: relative;
+      top: 1px;
+    }
+    
+    @include before-top-shadow($shadow-alpha: 0.2);
+    
+    &::before {
+      top: -7px;
+    }
   }
   
   .row-app {
@@ -355,20 +366,6 @@ $mobile-resource-name-height: 20px;
     }
   }
 }
-
-// TODO gradient as on design - needs additional covering element
-// @mixin main-menu-item-gradient($opacity) {
-//   &::before {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     bottom: 0;
-//     right: 0;
-//     opacity: $opacity;
-//     // NOTICE changing menu background will mess up this color
-//     background: linear-gradient(90deg, #7E8EDA 0%, rgba(255,255,255,0) 100%); 
-//   }
-// }
 
 /// Desktop main menu styles
 .main-menu {

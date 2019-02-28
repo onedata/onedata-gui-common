@@ -11,14 +11,7 @@
   background-color: $color-sidebar-item-bg;
   z-index: 10;
     
-  &::before {
-    position: absolute;
-    top: -$brand-info-shadow-height;
-    height: $brand-info-shadow-height;
-    background: linear-gradient(to bottom, transparent, #00000011);
-    content: ' ';
-    width: 100%;
-  }
+  @include before-top-shadow();
 
   &::after {
     @include top-line(1px solid $color-one-list-item-separator);
