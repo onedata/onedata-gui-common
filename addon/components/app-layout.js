@@ -7,11 +7,11 @@
  *
  * @module components/app-layout
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { reads } from '@ember/object/computed';
+import { reads, not } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
@@ -23,6 +23,7 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
+  classNameBindings: ['withBottomBar:with-bottom-bar'],
 
   sidebarResources: service(),
   sideMenu: service(),
@@ -30,11 +31,19 @@ export default Component.extend({
   router: service(),
   navigationState: service(),
   guiUtils: service(),
+  deploymentManager: service(),
+  media: service(),
 
   globalMenuOpened: false,
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
+
+  /**
+   * Deployment manager's installationDetails should be available always
+   * in `onedata` routes because it is blocking `onedata` model.
+   */
+  isDeploying: not('deploymentManager.installationDetails.isInitialized'),
 
   sidenavContentComponent: computed('sidenavResouceType', function () {
     return `sidebar-${this.get('sidenavResouceType')}`;
@@ -60,13 +69,49 @@ export default Component.extend({
     }
   }),
 
-  colSidebarClass: computed('showMobileSidebar', function () {
-    let showMobileSidebar = this.get('showMobileSidebar');
-    let base =
+  withBottomBar: computed(
+    'isDeploying',
+    'media.{isDesktop,isTablet}',
+    function withBottomBar() {
+      return this.get('isDeploying') && (
+        this.get('media.isDesktop') || this.get('media.isTablet')
+      )
+    }
+  ),
+
+  colSidebarClass: computed('showMobileSidebar', 'withBottomBar', function colSidebarClass() {
+    const showMobileSidebar = this.get('showMobileSidebar');
+    const base =
       'col-sidebar full-height disable-user-select';
-    let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
-    return htmlSafe(`${base} ${xsClass}`);
+    let finalClass;
+    if (this.get('withBottomBar')) {
+      finalClass = `${base} hidden`;
+    } else {
+      let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
+      finalClass = `${base} ${xsClass}`;
+    }
+    return htmlSafe(finalClass);
   }),
+
+  colMainMenuClass: computed('withBottomBar', function colMainMenuClass() {
+
+  }),
+
+  appGridClass: 'container-fluid app-grid full-height',
+
+  rowAppClass: 'row row-app full-height',
+
+  // FIXME: maybe to remove below
+
+  // appGridClass: computed('isDeploying', function appGridClass() {
+  //   const base = 'container-fluid app-grid full-height';
+  //   return this.get('isDeploying') ? `${base} full-width` : base;
+  // }),
+
+  // rowAppClass: computed('isDeploying', function rowAppClass() {
+  //   const base = 'row row-app full-height';
+  //   return this.get('isDeploying') ? `${base} full-width` : base;
+  // }),
 
   contentScrollResetObserver: observer(
     'navigationState.{activeResourceType,activeResource,activeAspect}',

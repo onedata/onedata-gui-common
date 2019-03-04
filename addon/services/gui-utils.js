@@ -70,6 +70,14 @@ export default Service.extend(I18n, {
   setDefaultProviderId: notImplementedReject,
 
   /**
+   * Full procedure of logout from GUI.
+   * The success result should be showing unauthenticated login screen.
+   * @type {function}
+   * @returns {Promise}
+   */
+  logout: notImplementedReject,
+
+  /**
    * External link to manage account. If not needed (manage account is a
    * local aspect), then it should be empty.
    * @type {string|undefined}

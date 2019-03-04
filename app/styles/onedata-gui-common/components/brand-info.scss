@@ -2,10 +2,11 @@
   $icon-size: 20px;
   $icon-left-offset: 6px;
   $brand-info-shadow-height: 12px;
+  $brand-info-height: $one-list-item-line-height !default;
 
   position: fixed;
   bottom: 0;
-  height: $one-list-item-line-height;
+  height: $brand-info-height;
   width: inherit;
   border-right: 1px solid $main-border-color;
   background-color: $color-sidebar-item-bg;
@@ -49,5 +50,24 @@
     margin-top: 2px;
     margin-bottom: -2px;
     white-space: nowrap;
+  }
+
+  .brand-logout {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    .brand-logout-icon {
+      font-size: 32px;
+    }
+    .brand-logout-text {
+      position: relative;
+      top: -10px;
+      padding-right: 2px;
+      padding-left: 10px;
+    }
+  }
+  
+  &.full-width {
+    width: 100%;
   }
 }

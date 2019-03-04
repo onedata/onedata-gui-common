@@ -10,6 +10,7 @@ $color-main-menu-item-gradient-base: $color-main-menu-fg-base;
 
 $onedata-logo-width: 150px;
 $mobile-resource-name-height: 20px;
+$brand-info-height: $one-list-item-line-height;
 
 .onedata-logo {
   width: $onedata-logo-width;
@@ -27,6 +28,22 @@ $mobile-resource-name-height: 20px;
 .app-layout {
   position: absolute;
   @include fill-container();
+  
+  &.with-bottom-bar {
+    .app-grid {
+      padding-left: 0;
+    }
+    .row-app {
+      padding-left: 0;
+    }
+    .col-content {
+      padding-bottom: $content-col-padding + $brand-info-height;
+    }
+    .col-main-menu {
+      display: none !important;
+    }
+  }
+  
   .app-grid {
     position: relative;
     padding-left: 0;

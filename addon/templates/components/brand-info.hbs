@@ -10,5 +10,11 @@
   {{#truncated-string class="brand-text brand-type-version"}}
     <span class="brand-type">{{guiType}}</span>
     <span class="brand-version">{{guiVersion}}</span>
+    {{#if showLogout}}
+      <div class="brand-logout clickable" {{action "logout"}}>
+        {{one-icon class="brand-logout-icon" icon="logout"}}
+        <span class="brand-logout-text">{{tt this "logout"}}</span>
+      </div>
+    {{/if}}
   {{/truncated-string}}
 </div>
