@@ -31,19 +31,22 @@ export default Component.extend({
   router: service(),
   navigationState: service(),
   guiUtils: service(),
-  deploymentManager: service(),
   media: service(),
 
   globalMenuOpened: false,
+
+  withBottomBar: false,
+
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
 
+  // FIXME: this should be specific to 
   /**
    * Deployment manager's installationDetails should be available always
    * in `onedata` routes because it is blocking `onedata` model.
    */
-  isDeploying: not('deploymentManager.installationDetails.isInitialized'),
+  // isDeploying: not('deploymentManager.installationDetails.isInitialized'),
 
   sidenavContentComponent: computed('sidenavResouceType', function () {
     return `sidebar-${this.get('sidenavResouceType')}`;
@@ -69,15 +72,17 @@ export default Component.extend({
     }
   }),
 
-  withBottomBar: computed(
-    'isDeploying',
-    'media.{isDesktop,isTablet}',
-    function withBottomBar() {
-      return this.get('isDeploying') && (
-        this.get('media.isDesktop') || this.get('media.isTablet')
-      )
-    }
-  ),
+  // FIXME: this should be specific to Onepanel
+
+  // withBottomBar: computed(
+  //   'isDeploying',
+  //   'media.{isDesktop,isTablet}',
+  //   function withBottomBar() {
+  //     return this.get('isDeploying') && (
+  //       this.get('media.isDesktop') || this.get('media.isTablet')
+  //     )
+  //   }
+  // ),
 
   colSidebarClass: computed('showMobileSidebar', 'withBottomBar', function colSidebarClass() {
     const showMobileSidebar = this.get('showMobileSidebar');
