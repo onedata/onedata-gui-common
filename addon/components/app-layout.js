@@ -11,7 +11,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { reads, not } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
@@ -32,21 +32,19 @@ export default Component.extend({
   navigationState: service(),
   guiUtils: service(),
   media: service(),
+  onepanelServer: service(),
 
   globalMenuOpened: false,
 
   withBottomBar: false,
 
+  appGridClass: 'container-fluid app-grid full-height',
+
+  rowAppClass: 'row row-app full-height',
+
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
-
-  // FIXME: this should be specific to 
-  /**
-   * Deployment manager's installationDetails should be available always
-   * in `onedata` routes because it is blocking `onedata` model.
-   */
-  // isDeploying: not('deploymentManager.installationDetails.isInitialized'),
 
   sidenavContentComponent: computed('sidenavResouceType', function () {
     return `sidebar-${this.get('sidenavResouceType')}`;
@@ -72,18 +70,6 @@ export default Component.extend({
     }
   }),
 
-  // FIXME: this should be specific to Onepanel
-
-  // withBottomBar: computed(
-  //   'isDeploying',
-  //   'media.{isDesktop,isTablet}',
-  //   function withBottomBar() {
-  //     return this.get('isDeploying') && (
-  //       this.get('media.isDesktop') || this.get('media.isTablet')
-  //     )
-  //   }
-  // ),
-
   colSidebarClass: computed('showMobileSidebar', 'withBottomBar', function colSidebarClass() {
     const showMobileSidebar = this.get('showMobileSidebar');
     const base =
@@ -97,26 +83,6 @@ export default Component.extend({
     }
     return htmlSafe(finalClass);
   }),
-
-  colMainMenuClass: computed('withBottomBar', function colMainMenuClass() {
-
-  }),
-
-  appGridClass: 'container-fluid app-grid full-height',
-
-  rowAppClass: 'row row-app full-height',
-
-  // FIXME: maybe to remove below
-
-  // appGridClass: computed('isDeploying', function appGridClass() {
-  //   const base = 'container-fluid app-grid full-height';
-  //   return this.get('isDeploying') ? `${base} full-width` : base;
-  // }),
-
-  // rowAppClass: computed('isDeploying', function rowAppClass() {
-  //   const base = 'row row-app full-height';
-  //   return this.get('isDeploying') ? `${base} full-width` : base;
-  // }),
 
   contentScrollResetObserver: observer(
     'navigationState.{activeResourceType,activeResource,activeAspect}',
