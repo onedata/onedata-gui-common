@@ -1,5 +1,5 @@
 // SCSS utils
-$top-shadow-height: 10px;
+$top-shadow-height: 6px;
 
 @mixin fill-container() {
   top: 0;
@@ -85,7 +85,7 @@ $top-shadow-height: 10px;
   cursor: pointer;
 }
 
-@mixin before-top-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.1) {
+@mixin before-top-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
   &::before {
     position: absolute;
     top: -$top-shadow-height;
