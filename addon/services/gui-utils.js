@@ -4,19 +4,21 @@
  *
  * @module services/gui-utils
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import modelRoutableId from 'onedata-gui-common/utils/model-routable-id';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 export default Service.extend(I18n, {
-  i18n: inject(),
+  i18n: service(),
+  globalNotify: service(),
+  session: service(),
 
   /**
    * @override
@@ -70,14 +72,6 @@ export default Service.extend(I18n, {
   setDefaultProviderId: notImplementedReject,
 
   /**
-   * Full procedure of logout from GUI.
-   * The success result should be showing unauthenticated login screen.
-   * @type {function}
-   * @returns {Promise}
-   */
-  logout: notImplementedReject,
-
-  /**
    * External link to manage account. If not needed (manage account is a
    * local aspect), then it should be empty.
    * @type {string|undefined}
@@ -98,5 +92,21 @@ export default Service.extend(I18n, {
    */
   getRoutableIdFor(model) {
     return modelRoutableId(model);
-  }
+  },
+
+  /**
+   * Full procedure of logout from GUI.
+   * The success result should be showing unauthenticated login screen.
+   * @returns {Promise}
+   */
+  logout() {
+    let session = this.get('session');
+    let loggingOut = session.invalidate();
+    loggingOut.then(() => window.location.reload());
+    loggingOut.catch(error => {
+      this.get('globalNotify').backendError(this.t('loggingOut'), error);
+    });
+    loggingOut.finally(() => this.set('menuOpen', false));
+    return loggingOut;
+  },
 });

@@ -31,8 +31,6 @@ export default Component.extend({
   router: service(),
   navigationState: service(),
   guiUtils: service(),
-  media: service(),
-  onepanelServer: service(),
 
   globalMenuOpened: false,
 
