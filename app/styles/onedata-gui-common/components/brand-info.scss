@@ -23,6 +23,7 @@
     left: $one-list-item-padding;
     right: $one-list-item-padding;
     padding-left: $icon-size + $padding-xs-horizontal + $icon-left-offset;
+    user-select: text;
   }
 
   @media (max-width: $screen-sm-max) {
