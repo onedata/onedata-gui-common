@@ -1,9 +1,11 @@
 <textarea
+  id={{inputId}}
   value={{value}}
   oninput={{action "onChange" value="target.value"}}
   onkeydown={{invoke-on-enter onEnter}}
   placeholder={{placeholder}}
   disabled={{disabled}}
+  readonly={{readonly}}
   spellcheck="false"
   class="form-control json-editor-textarea {{inputClassName}}"></textarea>
 {{#if (and isErrorMsgVisible (eq isValid false))}}

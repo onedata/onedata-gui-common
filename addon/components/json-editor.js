@@ -23,17 +23,19 @@ export default Component.extend(I18n, {
   value: '',
 
   /**
-   * @type {Ember.ComputedProperty<boolean>}
+   * @type {string}
    */
-  isValid: computed('value', function isValid() {
-    const value = this.get('value');
-    try {
-      JSON.parse(value);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }),
+  pladeholder: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  disabled: false,
+
+  /**
+   * @type {boolean}
+   */
+  readonly: false,
 
   /**
    * @type {boolean}
@@ -46,6 +48,11 @@ export default Component.extend(I18n, {
   isErrorMsgVisible: true,
 
   /**
+   * @type {boolean}
+   */
+  acceptEmptyString: false,
+
+  /**
    * @type {Function}
    * @param {Object} change
    * @param {string} change.value
@@ -54,6 +61,33 @@ export default Component.extend(I18n, {
    * @returns {undefined}
    */
   onChange: notImplementedIgnore,
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  inputId: computed('elementId', function () {
+    return this.get('elementId') + '-textarea';
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  isValid: computed('value', 'acceptEmptyString', function isValid() {
+    const {
+      value,
+      acceptEmptyString,
+    } = this.getProperties('value', 'acceptEmptyString');
+    if (acceptEmptyString && value === '') {
+      return true;
+    } else {
+      try {
+        JSON.parse(value);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  }),
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -82,13 +116,20 @@ export default Component.extend(I18n, {
 
   actions: {
     onChange(value) {
-      const onChange = this.get('onChange');
+      const {
+        onChange,
+        acceptEmptyString,
+      } = this.getProperties('onChange', 'acceptEmptyString');
       let isValid = true;
       let parsedValue;
-      try {
-        parsedValue = JSON.parse(value);
-      } catch (e) {
-        isValid = false;
+      if (acceptEmptyString && value === '') {
+        parsedValue = null;
+      } else {
+        try {
+          parsedValue = JSON.parse(value);
+        } catch (e) {
+          isValid = false;
+        }
       }
       onChange({
         value,
