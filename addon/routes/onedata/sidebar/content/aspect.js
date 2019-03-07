@@ -33,7 +33,21 @@ export default Route.extend({
     const contentModel = this.modelFor('onedata.sidebar.content');
     const aspect = transition.params['onedata.sidebar.content.aspect'].aspect_id;
     if (!contentModel.resource) {
-      this.transitionTo('onedata.sidebar.content.aspect', 'not-found');
+      if (contentModel.error) {
+        // TODO: this is now very custom code, consider making generic forbidden
+        // and resource-specific forbidden
+        if (contentModel.error.id === 'forbidden' &&
+          this.modelFor('onedata.sidebar').resourceType === 'clusters') {
+          throw {
+            isOnedataCustomError: true,
+            type: 'no-cluster-permissions'
+          };
+        } else {
+          throw contentModel.error;
+        }
+      } else {
+        this.transitionTo('onedata.sidebar.content.aspect', 'not-found');
+      }
     } else if (aspect === notFoundAspect) {
       this.transitionTo('onedata.sidebar.content.aspect', 'index');
     }

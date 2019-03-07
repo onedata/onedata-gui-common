@@ -23,9 +23,11 @@
 import Route from '@ember/routing/route';
 
 import { inject as service } from '@ember/service';
-import { Promise } from 'rsvp';
+import { Promise, resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
+import gri from 'onedata-gui-websocket-client/utils/gri';
+import { underscore } from '@ember/string';
 
 // TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
@@ -96,12 +98,26 @@ export default Route.extend({
           gettingResource.catch(reject);
         });
       } else {
-        return Promise.resolve({
-          resourceId: null,
-          resource: null,
-          collection,
-          queryParams,
-        });
+        const presumableGri = this.findOutGri(resourceId, resourceType);
+        return (presumableGri ?
+            this.get('contentResources').getModelFor(resourceType, presumableGri) :
+            resolve(null)
+          )
+          .then(record => {
+            // this is resource that shouldn't be fetched,
+            // because we do not have it on a list anyway
+            return { record };
+          })
+          .catch(error => ({ error }))
+          .then(({ error }) => {
+            return Promise.resolve({
+              resourceId: null,
+              resource: null,
+              collection,
+              queryParams,
+              error,
+            });
+          });
       }
     }
   },
@@ -140,6 +156,21 @@ export default Route.extend({
       }
     }
     return modelId;
+  },
+
+  findOutGri(resourceId, resourceType) {
+    const entityType = underscore(resourceType).replace(/s$/, '');
+    if (entityType) {
+      return gri({
+        entityId: resourceId,
+        entityType,
+        aspect: 'instance',
+        scope: 'protected',
+      });
+    } else {
+      return null;
+    }
+
   },
 
   actions: {
