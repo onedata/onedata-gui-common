@@ -26,8 +26,6 @@ import { inject as service } from '@ember/service';
 import { Promise, resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
-import gri from 'onedata-gui-websocket-client/utils/gri';
-import { underscore } from '@ember/string';
 
 // TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
@@ -98,7 +96,7 @@ export default Route.extend({
           gettingResource.catch(reject);
         });
       } else {
-        const presumableGri = this.findOutGri(resourceId, resourceType);
+        const presumableGri = this.findOutResourceId(resourceId, resourceType);
         return (presumableGri ?
             this.get('contentResources').getModelFor(resourceType, presumableGri) :
             resolve(null)
@@ -158,19 +156,8 @@ export default Route.extend({
     return modelId;
   },
 
-  findOutGri(resourceId, resourceType) {
-    const entityType = underscore(resourceType).replace(/s$/, '');
-    if (entityType) {
-      return gri({
-        entityId: resourceId,
-        entityType,
-        aspect: 'instance',
-        scope: 'protected',
-      });
-    } else {
-      return null;
-    }
-
+  findOutResourceId(resourceId /* , resourceType */ ) {
+    return resourceId;
   },
 
   actions: {
