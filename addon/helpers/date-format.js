@@ -32,6 +32,8 @@ export function dateFormat([inputDate], { format, timezone, blank } = {}) {
     let dateMoment;
     if (typeof inputDate === 'object' && inputDate instanceof moment) {
       dateMoment = inputDate;
+    } else if (typeof inputDate === 'number') {
+      dateMoment = moment.unix(inputDate);
     } else {
       dateMoment = moment(inputDate);
       if (!dateMoment.isValid()) {
