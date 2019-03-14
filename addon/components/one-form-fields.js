@@ -31,6 +31,8 @@ const {
  * @property {string} [example=undefined]
  * @property {string} [tip=undefined]
  * @property {number} [step=undefined] step in number inputs
+ * @property {Array<Object>} [options=undefined] array of options for inputs like
+ *   radio-group. Each option has fields: value, label
  * @property {string} [rightText=undefined] text that will be shown on
  *     the right side of the input
  * @property {string} [lockHint=undefined] text that wille be shown in tooltip
