@@ -44,7 +44,7 @@ export default Mixin.create({
         );
         delete transition.queryParams.back_forward;
         const hashBeforeRedirect = sessionStorage.getItem('hash-before-redirect');
-        sessionStorage.clear('hash-before-redirect');
+        sessionStorage.removeItem('hash-before-redirect');
         transition.abort();
         window.location.replace(hashBeforeRedirect || '#/');
       } else {
@@ -52,7 +52,7 @@ export default Mixin.create({
         if (this.checkComeFromOtherRoute(currentHash)) {
           sessionStorage.setItem('hash-before-redirect', currentHash);
         } else {
-          sessionStorage.clear('hash-before-redirect');
+          sessionStorage.removeItem('hash-before-redirect');
         }
       }
     }
