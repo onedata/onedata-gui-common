@@ -16,13 +16,13 @@ export default Route.extend({
     const template = errorType ? `errors/${errorType}` : '-internal-error';
     try {
       this.render(template, {
-        into: 'onedata',
-        outlet: 'content',
+        into: 'onedata.sidebar.content',
+        outlet: 'main-content',
       });
     } catch (error) {
       this.render('-internal-error', {
-        into: 'onedata',
-        outlet: 'content',
+        into: 'onedata.sidebar.content',
+        outlet: 'main-content',
       });
     }
   },

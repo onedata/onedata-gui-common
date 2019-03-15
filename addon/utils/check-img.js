@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { Promise } from 'rsvp';
+
 export default function checkImg(url) {
   const img = document.body.appendChild(document.createElement('img'));
   img.classList.add('hidden');

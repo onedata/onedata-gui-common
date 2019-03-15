@@ -20,6 +20,7 @@ export default Component.extend(I18n, {
   tagName: '',
 
   i18n: service(),
+  router: service(),
 
   /**
    * @override
@@ -43,4 +44,28 @@ export default Component.extend(I18n, {
         return 'menu-clusters';
     }
   }),
+
+  // TODO: unfinished code for deregister in menu of cluster item
+  // - should be presented only for Oneprovider clusters
+  // - should be also available in Onepanel menu
+
+  // deregisterAction: computed(function deregisterAction() {
+  //   return {
+  //     action: () => this.get('router').transitionTo(
+  //       'onedata.sidebar.content.aspect',
+  //       'clusters',
+  //       this.get('cluster.entityId'),
+  //       'deregister'
+  //     ),
+  //     title: this.t('deregister'),
+  //     class: 'deregister-oneprovider-action',
+  //     icon: 'remove',
+  //   };
+  // }),
+
+  // itemActions: computed('deregisterAction', function itemActions() {
+  //   return [
+  //     this.get('deregisterAction'),
+  //   ];
+  // }),
 });
