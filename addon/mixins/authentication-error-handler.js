@@ -37,8 +37,8 @@ export default Mixin.create({
       authenticationErrorReason,
       authenticationErrorState,
     };
-    cookies.clear(authenticationErrorReasonKey);
-    cookies.clear(authenticationErrorStateKey);
+    cookies.clear(authenticationErrorReasonKey, { path: '/' });
+    cookies.clear(authenticationErrorStateKey, { path: '/' });
     return errors;
   },
 });
