@@ -47,7 +47,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   padding-right: 3em;
   transition: all 0.2s ease;
   min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
-  word-wrap: break-word;
+  white-space: nowrap;
   outline: none !important;
   color: $main-text-color;
 
