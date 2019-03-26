@@ -98,6 +98,14 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
+  membersItem: computed(function membersItem() {
+    return {
+      id: 'members',
+      label: this.t('members'),
+      icon: 'group',
+    };
+  }),
+
   clusterSecondLevelItems: computed(
     'isNotDeployedCluster',
     'clusterType',
@@ -109,6 +117,7 @@ export default SecondLevelItems.extend(I18n, {
     'providerItem',
     'storagesItem',
     'spacesItem',
+    'membersItem',
     function () {
       if (this.get('isNotDeployedCluster')) {
         return [];
@@ -123,6 +132,7 @@ export default SecondLevelItems.extend(I18n, {
           providerItem,
           storagesItem,
           spacesItem,
+          membersItem,
         } = this.getProperties(
           'clusterType',
           'cluster',
@@ -134,6 +144,7 @@ export default SecondLevelItems.extend(I18n, {
           'providerItem',
           'storagesItem',
           'spacesItem',
+          'membersItem'
         );
         const commonItems = [
           overviewItem,
@@ -141,6 +152,7 @@ export default SecondLevelItems.extend(I18n, {
           dnsItem,
           certificateItem,
           credentialsItem,
+          membersItem,
         ];
         return clusterType === 'onezone' ? commonItems : [
           ...commonItems,

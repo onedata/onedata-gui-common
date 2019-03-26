@@ -8,6 +8,7 @@ export default {
     provider: 'Provider',
     storages: 'Storages',
     spaces: 'Spaces',
+    members: 'Members',
   },
   clusterItem: {
     domainNameNotAvailable: '(domain name not available)',
