@@ -219,7 +219,7 @@ $brand-info-height: $one-list-item-line-height;
     @include before-top-shadow($shadow-alpha: 0.2);
     
     &::before {
-      top: -5px;
+      top: -4px;
     }
   }
   
