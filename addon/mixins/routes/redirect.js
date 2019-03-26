@@ -46,7 +46,11 @@ export default Mixin.create({
         const hashBeforeRedirect = sessionStorage.getItem('hash-before-redirect');
         sessionStorage.removeItem('hash-before-redirect');
         transition.abort();
-        window.location.replace(hashBeforeRedirect || '#/');
+        if (history && history.back) {
+          history.back();
+        } else {
+          window.location.replace(hashBeforeRedirect || '#/');
+        }
       } else {
         const currentHash = window.location.hash;
         if (this.checkComeFromOtherRoute(currentHash)) {
