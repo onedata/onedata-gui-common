@@ -12,6 +12,7 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/basicauth-login-form';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
   layout,
@@ -35,10 +36,25 @@ export default Component.extend({
   backButtonAction: undefined,
 
   /**
-   * @type {function}
+   * @virtual
+   * @type {Function}
    * @returns {undefined}
    */
-  authenticationStarted: () => {},
+  authenticationStarted: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Function}
+   * @returns {undefined}
+   */
+  authenticationSuccess: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Function}
+   * @returns {undefined}
+   */
+  authenticatinFailure: notImplementedIgnore,
 
   didInsertElement() {
     this._super(...arguments);
