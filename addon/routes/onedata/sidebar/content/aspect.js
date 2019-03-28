@@ -32,12 +32,12 @@ export default Route.extend({
     this.get('navigationState').updateQueryParams(transition);
     const contentModel = this.modelFor('onedata.sidebar.content');
     const aspect = transition.params['onedata.sidebar.content.aspect'].aspect_id;
+    const resourceType = this.modelFor('onedata.sidebar').resourceType;
     if (!contentModel.resource) {
-      if (contentModel.error) {
+      if (contentModel.error && !isNotFoundError(contentModel.error)) {
         // TODO: this is now very custom code, consider making generic forbidden
         // and resource-specific forbidden
-        if (contentModel.error.id === 'forbidden' &&
-          this.modelFor('onedata.sidebar').resourceType === 'clusters') {
+        if (contentModel.error.id === 'forbidden' && resourceType === 'clusters') {
           throw {
             isOnedataCustomError: true,
             type: 'no-cluster-permissions'
@@ -90,3 +90,9 @@ export default Route.extend({
     }
   },
 });
+
+// FIXME: to test in real env
+function isNotFoundError(error) {
+  return get(error, 'id') === 'notFound' ||
+    get(error, 'errors.firstObject.status') === '404';
+}
