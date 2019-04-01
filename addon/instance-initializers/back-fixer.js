@@ -8,17 +8,19 @@
  */
 
 import $ from 'jquery';
+import { next } from '@ember/runloop';
 
 export function initialize(applicationInstance) {
   // Fix for Firefox
-  window.onunload = function () {};
+  window.addEventListener('unload', function () {});
 
   // Hack to not use Safari cache
   const browser = applicationInstance.lookup('service:browser');
   const isSafari = browser.get('browser.browserCode') === 'safari';
   if (isSafari) {
     $(window).bind('pagehide', function () {
-      setTimeout(() => window.location.reload(), 0);
+      window.onedataIsReloadingApp = 1;
+      next(() => window.location.reload());
     });
   }
 }
