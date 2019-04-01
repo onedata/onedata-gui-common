@@ -96,15 +96,18 @@ export default Route.extend({
           gettingResource.catch(reject);
         });
       } else {
+        // if the resource to load is not present on the list,
+        // try to guess it's ID and try to fetch it to detect why it isn't
+        // available - eg. because of forbidden error that should be passed
+        // to route model
         const presumableGri = this.findOutResourceId(resourceId, resourceType);
         return (presumableGri ?
             this.get('contentResources').getModelFor(resourceType, presumableGri) :
             resolve(null)
           )
-          .then(record => {
-            // this is resource that shouldn't be fetched,
+          .then(( /* record */ ) => {
+            // this is resource that shouldn't be presented to user,
             // because we do not have it on a list anyway
-            return { record };
           })
           .catch(error => ({ error }))
           .then(({ error }) => {

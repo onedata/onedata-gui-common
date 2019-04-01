@@ -23,11 +23,13 @@ export default Component.extend(I18n, ProvidersColors, {
   i18nPrefix: 'components.providersMapTile',
 
   /**
+   * @virtual
    * @type {PromiseArray<Provider>}
    */
   providersProxy: null,
 
   /**
+   * @virtual
    * @type {string|undefined}
    */
   aspect: undefined,

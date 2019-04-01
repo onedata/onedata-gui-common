@@ -34,6 +34,13 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.oneTile',
 
   /**
+   * @virtual optional
+   * If provided, it will be the `href` of "more" link in tile
+   * @type {string}
+   */
+  customLink: undefined,
+
+  /**
    * If set, the tile will be a link to some aspect of currently loaded resource
    * @type {string}
    */
@@ -124,7 +131,9 @@ export default Component.extend(I18n, {
       return null;
     }
 
-    const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
+    const routeElements = route ? route : ['onedata.sidebar.content.aspect',
+      aspect
+    ];
     return queryParamsObject ?
       routeElements.concat(queryParamsObject) : routeElements;
   }),
