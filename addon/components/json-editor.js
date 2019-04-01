@@ -95,17 +95,28 @@ export default Component.extend(I18n, {
   bootstrapClasses: computed(
     'useBootstrapClasses',
     'isValid',
+    'disabled',
+    'readonly',
     function bootstrapClasses() {
       const {
         useBootstrapClasses,
         isValid,
-      } = this.getProperties('useBootstrapClasses', 'isValid');
+        disabled,
+        readonly,
+      } = this.getProperties(
+        'useBootstrapClasses',
+        'isValid',
+        'disabled',
+        'readonly'
+      );
       if (useBootstrapClasses) {
         let classes = 'form-group';
-        if (isValid === true) {
-          classes += ' has-success';
-        } else if (isValid === false) {
-          classes += ' has-error';
+        if (!disabled && !readonly) {
+          if (isValid === true) {
+            classes += ' has-success';
+          } else if (isValid === false) {
+            classes += ' has-error';
+          }
         }
         return classes;
       } else {
