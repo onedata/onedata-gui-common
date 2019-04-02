@@ -110,7 +110,8 @@ export default Route.extend({
             // because we do not have it on a list anyway
           })
           .catch(error => ({ error }))
-          .then(({ error }) => {
+          .then(data => {
+            const error = data && data.error;
             return Promise.resolve({
               resourceId: null,
               resource: null,
