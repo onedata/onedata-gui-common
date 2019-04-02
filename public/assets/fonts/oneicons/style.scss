@@ -2,11 +2,10 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?63i4k9');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?63i4k9#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?63i4k9') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?63i4k9') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?63i4k9##{$icomoon-font-family}') format('svg');
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?9ib1r') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?9ib1r') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?9ib1r##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -285,6 +284,11 @@
 .oneicon-lock {
   &:before {
     content: $oneicon-lock; 
+  }
+}
+.oneicon-logout {
+  &:before {
+    content: $oneicon-logout; 
   }
 }
 .oneicon-membership {
@@ -685,6 +689,11 @@
 .oneicon-view-list {
   &:before {
     content: $oneicon-view-list; 
+  }
+}
+.oneicon-x {
+  &:before {
+    content: $oneicon-x; 
   }
 }
 

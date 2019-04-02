@@ -53,4 +53,8 @@ export default Service.extend({
     });
     return set(pathElement, lastPathElementName, value);
   },
+
+  removeData(key) {
+    return this.setData(key, undefined);
+  },
 });

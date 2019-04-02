@@ -35,7 +35,7 @@ const {
  *   radio-group. Each option has fields: value, label
  * @property {string} [rightText=undefined] text that will be shown on
  *     the right side of the input
- * @property {string} [lockHint=undefined] text that wille be shown in tooltip
+ * @property {string} [lockHint=undefined] text that will be shown in tooltip
  *     after hovering locked icon (works only on disabled elements)
  * @property {number|object} [lt=undefined] 'lower than' bounding for number
  *   validator. May be a number or an object in format 

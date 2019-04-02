@@ -41,8 +41,9 @@ export default Route.extend(ApplicationRouteMixin, {
     return tokens.join(' – ');
   },
 
-  beforeModel() {
+  beforeModel(transition) {
     this._super(...arguments);
+    this.set('navigationState.queryParams', get(transition, 'queryParams'));
     this.addFavicon();
   },
 

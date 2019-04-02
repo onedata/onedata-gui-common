@@ -16,6 +16,7 @@ import layout from 'onedata-gui-common/templates/components/user-account-button'
 import { invokeAction } from 'ember-invoke-action';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend(ClickOutside, I18n, {
   layout,
@@ -25,6 +26,7 @@ export default Component.extend(ClickOutside, I18n, {
   session: service(),
   globalNotify: service(),
   guiUtils: service(),
+  i18n: service(),
 
   /**
    * @override
@@ -91,14 +93,9 @@ export default Component.extend(ClickOutside, I18n, {
       this.set('menuOpen', false);
     },
     logout() {
-      let session = this.get('session');
-      let loggingOut = session.invalidate();
-      loggingOut.then(() => window.location.reload());
-      loggingOut.catch(error => {
-        this.get('globalNotify').backendError('logging out', error);
-      });
-      loggingOut.finally(() => this.set('menuOpen', false));
-      return loggingOut;
+      return this.get('guiUtils').logout().finally(() =>
+        safeExec(this, 'set', 'menuOpen', false)
+      );
     },
   },
 });

@@ -1,6 +1,4 @@
-// should be same as rootURL in environment.js
-// TODO maybe use https://github.com/davidpett/ember-cli-sass-variables
-$root-url: './' !default;
+$root-url: './';
 
 html,
 body {
@@ -151,4 +149,5 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/providers-map-tile';
 @import 'onedata-gui-common/components/resource-info-tile';
 @import 'onedata-gui-common/components/auto-save-form';
+@import 'onedata-gui-common/components/one-icon-tagged';
 @import 'onedata-gui-common/components/json-editor';

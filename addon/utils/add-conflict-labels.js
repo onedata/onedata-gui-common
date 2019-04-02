@@ -37,6 +37,8 @@ export default function addConflictLabels(
   conflictPropertyMap.forEach(conflictingRecords => {
     assignConflictLabels(conflictingRecords, diffProperty, defaultId);
   });
+
+  return records;
 }
 
 /**

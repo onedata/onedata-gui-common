@@ -8,6 +8,7 @@ export default [
   'one-atlas',
   'one-clipboard-line',
   'one-dynamic-tree',
+  'one-icon-tagged',
   'one-inline-editor',
   'one-map',
   'one-pie-chart',
