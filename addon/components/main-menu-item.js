@@ -1,3 +1,12 @@
+/**
+ * Single main menu item
+ * 
+ * @module components/main-menu-item
+ * @author Jakub Liput
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';

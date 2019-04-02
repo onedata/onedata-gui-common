@@ -10,7 +10,7 @@
 import { alias } from '@ember/object/computed';
 
 import EmberObject from '@ember/object';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
@@ -19,9 +19,8 @@ export default Component.extend({
   layout,
   classNames: ['login-box'],
 
-  globalNotify: inject(),
-  session: inject(),
-  navigationState: inject(),
+  globalNotify: service(),
+  session: service(),
 
   /**
    * Current status of showing authentication error message, as the message
