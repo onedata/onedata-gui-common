@@ -526,7 +526,9 @@ export default Component.extend(ClickOutside, {
   actions: {
     close() {
       if (invokeAction(this, 'onHide') !== false && this.get('_handleOpenClose')) {
-        this.set('_contentVisible', false);
+        safeExec(this, () => {
+          this.set('_contentVisible', false);
+        })
       }
     },
     onModalHide() {
