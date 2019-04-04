@@ -1,0 +1,8 @@
+{{#one-icon icon=icon}}
+  {{#if (eq shadowType "icon")}}
+    {{one-icon class="one-icon-tag one-icon-tag-shadow" icon=tagIcon}}
+  {{else if (eq shadowType "circle")}}
+    <div class="one-icon-tag-circle"></div>
+  {{/if}}
+  {{one-icon class="one-icon-tag one-icon-tag-icon" icon=tagIcon}}
+{{/one-icon}}

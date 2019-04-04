@@ -1,4 +1,6 @@
 // SCSS utils
+$top-shadow-height: 6px;
+
 @mixin fill-container() {
   top: 0;
   right: 0;
@@ -81,4 +83,16 @@
 
 @mixin clickable() {
   cursor: pointer;
+}
+
+@mixin before-top-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+  &::before {
+    position: absolute;
+    top: -$top-shadow-height;
+    height: $top-shadow-height;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, $shadow-alpha));
+    content: ' ';
+    width: 100%;
+    z-index: 1002;
+  }
 }

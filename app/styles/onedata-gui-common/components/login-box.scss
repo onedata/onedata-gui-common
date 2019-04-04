@@ -60,7 +60,7 @@
     width: 100px;
     height: 100px;
     // TODO some generic login logo!
-    background-image: url($root-url + 'assets/images/control-panel.svg');
+    background-image: url($root-url + 'images/control-panel.svg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: center;
@@ -147,6 +147,203 @@
       &:hover {
         color: darken($brand-primary, 30%) !important;
       }
+    }
+  }
+}
+
+.login-icon-box {
+  position: relative;
+  border-radius: $border-radius-large;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none !important;
+  user-select: none;
+
+  &:hover {
+    color: white;
+  }
+
+  .one-icon {
+    line-height: inherit;
+  }
+  
+  &.more {
+    background-color: white;
+    color: $color-one-dark-gray;
+    font-weight: bold;    
+    &:hover {
+      color: $color-one-dark-gray;
+    }
+    &::before {
+      content: '\B7\B7\B7';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      font-weight: normal;
+      font-size: 42px;
+      letter-spacing: -1.1px;
+    }
+  }
+}
+
+.social-box {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  cursor: default !important;
+  a {
+    color: $color-one-white;
+  }
+  &.disabled {
+    opacity: 0.3;
+    a {
+      cursor: default;
+    }
+  }
+  .social-icon-image {
+    width: 100%;
+    height: 100%;
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+}
+
+.login-box, .full-social-icon {
+  .login-icon-box {
+    display: inline-block;
+    height: $large-social-box-size;
+    width: $large-social-box-size;
+    line-height: $large-social-box-size;
+    font-size: 35px;
+    cursor: pointer;
+
+    .loader {
+      // position hack
+      position: absolute;
+      top: 23px;
+      left: 30px;
+      font-size: 40px;
+      max-width: 40px;
+      width: 40px;
+      color: rgba(white, 0.5);
+    }
+  }
+}
+
+.login-box {
+  .login-header {
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 100px;
+    color: $color-one-white;
+    font-weight: bold;
+
+    @media(max-height: 600px) {
+      margin-bottom: 50px;
+    }
+  }
+
+  .row-login-header {
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    margin: 0px 20px 20px 20px;
+    font-size: 12pt;
+    font-family: 'Open Sans Semibold';
+    text-align: center;
+    .subtitle-tip {
+      position: relative;
+      top: 2px;
+      left: 2px;
+      opacity: 0.8;
+      font-size: 90%;
+    }
+  }
+
+  .login-form-container {
+    position: relative;
+    min-height: 250px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .fading-login-method-container {
+    &.fadeOut {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+    }
+  }
+  .basicauth-login-form-container {
+    &.fadeOut {
+      position: absolute;
+    }
+  }
+  .authorizers-select-container {
+    &.fadeOut {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+    }
+    .authorizers-dropdown {
+      .ember-power-select-trigger {
+        .social-box {
+          left: 100px;
+        }
+      }
+      position: relative;
+      opacity: 0;
+      margin-top: 10px;
+      .ember-power-select-trigger[aria-expanded] {
+        color: $color-one-white;
+        & ~ .dropdown-label {
+          color: $color-one-white;
+        }
+     }
+    }
+    .dropdown-label {
+      position: absolute;
+      top: 1px;
+      height: $input-height-base - 2px;
+      padding: 0 15px;
+      line-height: $input-height-base - 2px;
+      border-right: 1px solid $input-border;
+      z-index: 2;
+      color: $main-text-color;
+    }
+    .ember-power-select-trigger {
+      min-height: 45px;
+      padding: 11px 40px 11px 110px;
+      .social-box-component {
+        left: 94px;
+      }
+      .ember-power-select-selected-item {
+        padding-left: 35px;
+      }
+    }
+  }
+  .buttons-list {
+    font-size: 32px;
+    text-align: center;
+  }
+
+  .no-login-methods {
+    margin-top: $padding-large-horizontal;
+    text-align: center;
+  }
+  
+  .text-link {
+    text-decoration: underline;
+    color: $color-one-white;
+    &:hover {
+      color: $color-one-mint;
     }
   }
 }

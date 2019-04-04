@@ -18,10 +18,6 @@ const {
   onedataTabs
 } = config;
 
-function getDefaultResource(list) {
-  return list.objectAt(0);
-}
-
 export default Route.extend({
   globalNotify: service(),
   media: service(),
@@ -52,11 +48,15 @@ export default Route.extend({
     }
   }),
 
+  getDefaultResource(list) {
+    return list.objectAt(0);
+  },
+
   redirectToDefault({ resourceType, collection }) {
     const guiUtils = this.get('guiUtils');
     const list = get(collection, 'list');
     let resourceIdToRedirect = get(list, 'length') > 0 ?
-      guiUtils.getRoutableIdFor(getDefaultResource(list)) : 'empty';
+      guiUtils.getRoutableIdFor(this.getDefaultResource(list, resourceType)) : 'empty';
     if (resourceIdToRedirect != null) {
       this.transitionTo(`onedata.sidebar.content`, resourceType, resourceIdToRedirect);
     } else {

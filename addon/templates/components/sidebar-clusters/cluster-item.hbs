@@ -1,0 +1,17 @@
+{{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
+{{#truncated-string class="after-icon name sidebar-item-title-upper"}}
+  {{#if item.name}}
+    {{name-conflict item=item tagName="span" class="one-label"}}
+  {{else}}
+    {{t "components.sidebarClusters.clusterItem.nameNotAvailable"}}
+  {{/if}}  
+{{/truncated-string}}
+{{#truncated-string class="after-icon domain sidebar-item-title-lower"}}
+  {{or item.domain (t "components.sidebarClusters.clusterItem.domainNameNotAvailable")}}
+{{/truncated-string}}
+{{!-- TODO: add context menu to this item --}}
+{{!-- {{actions-toolbar
+  isMinimized=true
+  dropdownPlacement="auto"
+  actionsArray=itemActions
+}} --}}

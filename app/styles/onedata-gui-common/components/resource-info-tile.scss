@@ -1,0 +1,48 @@
+.resource-info-tile {
+  .table {
+    table-layout: fixed;
+    tr {
+      .property-name {
+        padding-left: 0;
+      }
+      td {
+        padding-top: 2 * $table-condensed-cell-padding;
+        padding-bottom: 2 * $table-condensed-cell-padding;
+        border-top: 0;
+        word-break: break-word;
+      }
+    }
+  }
+  .property-name {
+    width: 85px;
+    font-family: 'Open Sans Semibold';
+  }
+  .resource-name {
+    $-v-correction: 9px;
+    $-h-correction: 8px;
+    margin-top: -$-v-correction;
+    margin-bottom: -$-v-correction;
+    margin-left: -$-h-correction;
+    .one-label, .form-control {
+      padding: $-h-correction;
+      height: auto;
+    }
+  }
+  .clipboard-line {
+    margin-top: -5px;
+  }
+  .creator {
+    position: relative;
+    &.has-icon {
+      padding-left: 2em;
+    }
+    &.special {
+      font-style: italic;
+    }
+    .one-icon {
+      @include vertical-align-middle();
+      left: 0;
+      font-size: 1.7em;
+    }
+  }
+}

@@ -1,9 +1,12 @@
 import Mixin from '@ember/object/mixin';
 import { get, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 import _ from 'lodash';
 import generateColors from 'onedata-gui-common/utils/generate-colors';
 
 export default Mixin.create({
+  guiUtils: service(),
+
   /**
    * @virtual
    * @type {PromiseArray<models/Provider>}
@@ -15,11 +18,16 @@ export default Mixin.create({
    * @type {Ember.ComputedProperty<Object>}
    */
   providersColors: computed(
-    'providersProxy.{content.@each.entityId,isFulfilled}',
+    'providersProxy.{content.@each.id,isFulfilled}',
     function getProvidersColors() {
-      const providersProxy = this.get('providersProxy');
+      const {
+        providersProxy,
+        guiUtils,
+      } = this.getProperties('providersProxy', 'guiUtils');
       if (get(providersProxy, 'isFulfilled')) {
-        const providerIds = get(providersProxy, 'content').mapBy('entityId').sort();
+        const providerIds = get(providersProxy, 'content')
+          .map(p => guiUtils.getRoutableIdFor(p))
+          .sort();
         const colors = generateColors(providerIds.length);
         return _.zipObject(providerIds, colors);
       }

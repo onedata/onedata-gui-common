@@ -1,6 +1,4 @@
-// should be same as rootURL in environment.js
-// TODO maybe use https://github.com/davidpett/ember-cli-sass-variables
-$root-url: '/' !default;
+$root-url: './';
 
 html,
 body {
@@ -30,8 +28,10 @@ $color-one-list-item-separator: $main-border-color;
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
-@import 'onedata-gui-common/bootstrap-config';
-@import 'onedata-gui-common/bootstrap-addons';
+$large-social-box-size: 50px;
+
+@import 'bootstrap-config';
+@import 'bootstrap-addons';
 
 // Addons
 @import 'side-menu';
@@ -82,8 +82,9 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/custom-animations';
 @import 'onedata-gui-common/common';
 @import 'onedata-gui-common/spin-spinner-extensions';
-@import 'onedata-gui-common/ember-power-select-config';
 @import 'onedata-gui-common/jvectormap-overrides';
+
+@import 'ember-power-select-config';
 
 // Components
 
@@ -141,6 +142,11 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-map';
 @import 'onedata-gui-common/components/clipboard-line';
 @import 'onedata-gui-common/components/one-form-fields';
+@import 'onedata-gui-common/components/hr-label';
+@import 'onedata-gui-common/components/content-users';
 @import 'onedata-gui-common/components/one-size-edit';
 @import 'onedata-gui-common/components/authentication-error-modal';
+@import 'onedata-gui-common/components/providers-map-tile';
+@import 'onedata-gui-common/components/resource-info-tile';
 @import 'onedata-gui-common/components/auto-save-form';
+@import 'onedata-gui-common/components/one-icon-tagged';
