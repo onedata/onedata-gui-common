@@ -4,6 +4,7 @@ import layout from '../templates/components/json-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
+import { isEmpty } from '@ember/utils';
 
 export default Component.extend(I18n, {
   layout,
@@ -77,7 +78,7 @@ export default Component.extend(I18n, {
       value,
       acceptEmptyString,
     } = this.getProperties('value', 'acceptEmptyString');
-    if (acceptEmptyString && value === '') {
+    if (acceptEmptyString && isEmpty(value)) {
       return true;
     } else {
       try {
