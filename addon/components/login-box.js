@@ -31,7 +31,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * See: `mixin:authentication-error-hander#authenticationErrorReason`
+   * See: `mixin:authentication-error-handler#authenticationErrorReason`
    * @type {string}
    */
   authenticationErrorReason: undefined,
