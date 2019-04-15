@@ -30,6 +30,11 @@ export default SecondLevelItems.extend(I18n, {
   item: undefined,
 
   /**
+   * @type {Ember.ComputedProperty<Object>}
+   */
+  cluster: reads('item'),
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   clusterType: reads('item.type'),

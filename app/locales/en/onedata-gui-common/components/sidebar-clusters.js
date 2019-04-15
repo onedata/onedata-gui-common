@@ -6,6 +6,7 @@ export default {
     certificate: 'Web certificate',
     credentials: 'Credentials',
     provider: 'Provider',
+    ceph: 'Ceph',
     storages: 'Storages',
     spaces: 'Spaces',
     members: 'Members',
