@@ -16,4 +16,10 @@
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
   }
+  &.disabled {
+    color: $main-text-color-disabled;
+    &:hover {
+      color: $main-text-color-disabled;
+    }
+  }
 }

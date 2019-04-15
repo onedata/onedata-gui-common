@@ -3,7 +3,7 @@
  *
  * @module components/user-account-button
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,14 +15,23 @@ import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
 import { invokeAction } from 'ember-invoke-action';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
-export default Component.extend(ClickOutside, {
+export default Component.extend(ClickOutside, I18n, {
   layout,
   classNames: ['user-account-button'],
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
   session: service(),
   globalNotify: service(),
+  guiUtils: service(),
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.userAccountButton',
 
   /**
    * @type {function}
@@ -84,14 +93,9 @@ export default Component.extend(ClickOutside, {
       this.set('menuOpen', false);
     },
     logout() {
-      let session = this.get('session');
-      let loggingOut = session.invalidate();
-      loggingOut.then(() => window.location.reload());
-      loggingOut.catch(error => {
-        this.get('globalNotify').backendError('logging out', error);
-      });
-      loggingOut.finally(() => this.set('menuOpen', false));
-      return loggingOut;
+      return this.get('guiUtils').logout().finally(() =>
+        safeExec(this, 'set', 'menuOpen', false)
+      );
     },
   },
 });

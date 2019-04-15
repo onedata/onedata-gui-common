@@ -7,11 +7,21 @@
   {{#modal.header}}
     <h1>
       {{one-icon icon="sign-error-rounded"}}
-      <span class="one-label">{{tt this "error"}}</span>
+      <span class="one-label">
+        {{#if options.header}}
+          {{options.header}}
+        {{else}}
+          {{tt this "error"}}
+        {{/if}}
+      </span>
     </h1>
   {{/modal.header}}
   {{#modal.body}}
-    {{text}}
+    {{#if options.componentName}}
+      {{component options.componentName options=options}}
+    {{else}}
+      {{text}}
+    {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
     {{#bs-button

@@ -34,15 +34,17 @@
   {{!-- <div class="provider-location">
     {{provider.location}}
   </div> --}}
-  {{#perfect-scrollbar-element tagName="div" class="loadable-row sm spaces-list"}}
-    {{#loading-container isLoading=_spacesLoading sizeClass="sm" errorReason=_spaceListError}}
-      <ul class="spaces-items">
-        {{#each _spacesSorted as |space|}}
-          {{provider-place/drop/space space=space providerId=(model-routable-id provider.id)}}
-        {{/each}} 
-      </ul>
-    {{/loading-container}}
-  {{/perfect-scrollbar-element}}
+  <div class="loadable-row sm spaces-list">
+    {{#perfect-scrollbar-element class="full-height relative"}}
+      {{#loading-container isLoading=_spacesLoading sizeClass="sm" errorReason=_spaceListError}}
+        <ul class="spaces-items">
+          {{#each _spacesSorted as |space|}}
+            {{provider-place/drop/space space=space providerId=(model-routable-id provider.id)}}
+          {{/each}} 
+        </ul>
+      {{/loading-container}}
+    {{/perfect-scrollbar-element}}
+  </div>
   {{#unless (eq provider.status "offline")}}
     <hr>
     <div class="btn-container">

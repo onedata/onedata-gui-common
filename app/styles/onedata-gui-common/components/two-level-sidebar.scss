@@ -1,6 +1,7 @@
 .two-level-sidebar {
   font-size: 13px;
   font-family: 'Open Sans Semibold';
+  padding-bottom: 20px;
 
   .active > .item-header > a, .active > a {
     > .sidebar-item-icon, .truncated-string, .status-toolbar {
@@ -22,6 +23,10 @@
   .one-list-item {
     &.active {
       background-color: $color-sidebar-item-bg;
+      
+      .item-header a .sidebar-item-title-lower {
+        opacity: 1;
+      }
     }
     .item-header {
       &:hover {
@@ -31,10 +36,30 @@
         position: absolute;
         top: 0.55em;
         font-size: $menu-icon-font-size;
+        + *,
+        + .sidebar-item-title-upper + .sidebar-item-title-lower {
+          padding-left: 3.5em;
+        }
       }
-      .sidebar-item-icon + * {
-        padding-left: 3.5em;
+      
+      a {
+        .sidebar-item-title-upper,
+        .sidebar-item-title-lower {
+          position: relative;
+          line-height: $one-list-item-line-height / 2;
+        }
+        .sidebar-item-title-upper {
+          bottom: -7px;
+        }
+        .sidebar-item-title-lower {
+          color: $main-text-color;
+          font-family: 'Open Sans';
+          opacity: 0.5;
+          top: -7px;
+        }
       }
+      
+      
       .status-toolbar {
         position: absolute;
         right: $one-list-item-padding * 0.75;

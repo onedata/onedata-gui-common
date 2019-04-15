@@ -11,6 +11,8 @@ import { helper } from '@ember/component/helper';
 import moment from 'moment';
 
 export const certFormatter = 'YYYY-MM-DD [at] H:mm ([UTC]Z)';
+export const reportFormatter = 'D MMM YYYY H:mm:ss';
+export const dateWithMinutesFormatter = 'D MMM YYYY H:mm';
 
 const blanks = {
   cert: 'never',
@@ -19,6 +21,8 @@ const blanks = {
 const formatters = {
   default: certFormatter,
   cert: certFormatter,
+  report: reportFormatter,
+  dateWithMinutes: dateWithMinutesFormatter,
 };
 
 export function dateFormat([inputDate], { format, timezone, blank } = {}) {
@@ -30,6 +34,8 @@ export function dateFormat([inputDate], { format, timezone, blank } = {}) {
     let dateMoment;
     if (typeof inputDate === 'object' && inputDate instanceof moment) {
       dateMoment = inputDate;
+    } else if (typeof inputDate === 'number') {
+      dateMoment = moment.unix(inputDate);
     } else {
       dateMoment = moment(inputDate);
       if (!dateMoment.isValid()) {

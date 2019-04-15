@@ -6,6 +6,10 @@
     {{#link-to params=linkToParams class="more-link"}}
       {{moreText}} &raquo;
     {{/link-to}}
+  {{else if customLink}}
+    <a href={{customLink}} class="more-link">
+      {{moreText}} &raquo;
+    </a>
   {{/if}}
 </h1>
 <div class="tile-content">

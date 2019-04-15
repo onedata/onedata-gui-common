@@ -15,7 +15,7 @@ import layout from '../templates/components/one-tile';
 
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
@@ -32,6 +32,13 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.oneTile',
+
+  /**
+   * @virtual optional
+   * If provided, it will be the `href` of "more" link in tile
+   * @type {string}
+   */
+  customLink: undefined,
 
   /**
    * If set, the tile will be a link to some aspect of currently loaded resource
@@ -94,13 +101,14 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isLink: computed('isLink', 'aspect', 'route', function _isLink() {
+  _isLink: computed('isLink', 'aspect', 'route', 'customLink', function _isLink() {
     const {
       isLink,
       aspect,
       route,
-    } = this.getProperties('isLink', 'aspect', 'route');
-    return isLink && (aspect || route);
+      customLink,
+    } = this.getProperties('isLink', 'aspect', 'route', 'customLink');
+    return isLink && (aspect || route || customLink);
   }),
 
   /**
@@ -123,7 +131,9 @@ export default Component.extend(I18n, {
       return null;
     }
 
-    const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
+    const routeElements = route ? route : ['onedata.sidebar.content.aspect',
+      aspect
+    ];
     return queryParamsObject ?
       routeElements.concat(queryParamsObject) : routeElements;
   }),
@@ -151,12 +161,14 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-    if (this.get('_isLink')) {
+    if (this.get('_isLink') && !this.get('customLink')) {
       this.click = function click(event) {
         // do not redirect if "more" link has been clicked
         if ($(event.target).closest('.more-link').length) {
           return;
         }
+
+        // TODO: if customLink, then use window.location = customLink
 
         const {
           router,
@@ -219,7 +231,7 @@ export default Component.extend(I18n, {
       }
       if (this.get('sizeClass') !== sizeClass) {
         this.set('sizeClass', sizeClass);
-        _window.dispatchEvent(new Event('resize'));
+        next(() => _window.dispatchEvent(new Event('resize')));
       }
     }
   },

@@ -9,6 +9,10 @@ strong {
   font-family: "Open Sans Semibold";
 }
 
+.horizontal-align-middle {
+  @include horizontal-align-middle();
+}
+
 .vertical-align-middle {
   @include vertical-align-middle();
 }
@@ -54,6 +58,14 @@ strong {
 
 .semibold {
   font-family: 'Open Sans Semibold';
+}
+
+.relative {
+  position: relative;
+}
+
+.break-word {
+  word-wrap: break-word;
 }
 
 .content-backdrop.sidenav-backdrop {
@@ -107,10 +119,10 @@ input {
 
 .world-map {
   &.light {
-    background-image: url($root-url + 'assets/images/world-map-light.svg');
+    background-image: url($root-url + 'images/world-map-light.svg');
   }
   &.dark {
-    background-image: url($root-url + 'assets/images/world-map-dark.svg');
+    background-image: url($root-url + 'images/world-map-dark.svg');
   }
 }
 
@@ -232,7 +244,7 @@ input {
 }
 
 .od-logo-short-dark {
-  background-image: url(/assets/images/logo-short-dark.svg);
+  background-image: url($root-url + "images/logo-short-dark.svg");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
@@ -283,7 +295,7 @@ ul.info, ol.info {
     margin: 0 0 28px 52px; /* Give each list item a left margin to make room for the numbers */
     list-style: none; /* Disable the normal item numbering */
   }
-
+  
   li::before {
     position: absolute;
     top: 1px;
@@ -299,6 +311,18 @@ ul.info, ol.info {
     background: $color-one-mint;
     border-radius: 4px;
     text-align: center;
+  }
+  
+  &.info-condensed {
+    li {
+      margin-bottom: 12px;
+    }
+  }
+  
+  &.info-gray {
+    li::before {
+      background: $color-one-light-gray;
+    }
   }
 }
 
@@ -325,10 +349,22 @@ a {
   &:hover {
     color: darken($color-one-mint, 20%);
   }
+  &.black {
+    color: $main-text-color;
+    text-decoration: underline;
+    &:hover {
+      color: darken($color-one-mint, 20%);
+    }
+  }
 }
 
 .col-image {
   padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+}
+
+.code-textarea {
+  font-family: monospace;
+  resize: none; 
 }
 
 .token-textarea {
@@ -337,10 +373,13 @@ a {
   margin-top: $padding-base-vertical;
   margin-bottom: $padding-base-vertical;
   font-family: monospace;
+  &.no-resize {
+    resize: none;
+  }
 }
 @media (max-width: $screen-xs-max) {
-  padding: $padding-large-vertical $padding-large-horizontal;
   .token-textarea {
+    padding: $padding-large-vertical $padding-large-horizontal;
     height: 200px;
   }
 }
@@ -462,6 +501,50 @@ textarea + .btn-container {
   }
 }
 
-.relative {
+.one-infinite-list {
+  thead th {
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  
+  .first-row td {
+    height: 0;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .data-row {
+    td {
+      height: 44px;
+    }
+  }
+}
+
+// An ugly hack for bug in ember-hammertime
+textarea[style^="touch-action: manipulation"] {
+  cursor: inherit !important;
+}
+
+.inline-icon-container {
+  display: inline-block;
   position: relative;
+  width: 1.6em;
+  height: 1em;
+  .oneicon {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%) translateY(2px);
+    font-size: 180%;
+  }
+  &.sm {
+    .oneicon {
+      font-size: 130%;
+    }
+  }
+}
+  
+.btn-inline-after-text {
+  margin-left: $padding-small-horizontal;
+  top: -2px;
 }

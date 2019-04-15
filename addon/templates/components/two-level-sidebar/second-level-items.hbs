@@ -1,0 +1,18 @@
+{{#each internalSecondLevelItems as |sli|}}
+  <li class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}>
+    {{#link-to
+      "onedata.sidebar.content.aspect"
+      sidebarType
+      (model-routable-id item)
+      sli.id
+      (query-params options="")
+      class="item-header truncate"
+    }}
+      {{#if sli.component}}
+        {{component sli.component item=sli sidebar=sidebar}}
+      {{else}}
+        {{two-level-sidebar/item-content item=sli sidebar=sidebar iconClass="sidebar-item-icon"}}
+      {{/if}}
+    {{/link-to}}
+  </li>
+{{/each}}

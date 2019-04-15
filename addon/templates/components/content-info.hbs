@@ -6,8 +6,14 @@
         {{#if subheader}}
           <h2>{{subheader}}</h2>
         {{/if}}
-        {{#if text}}
-          <p class="lead">{{text}}</p>
+        {{#if (or text textTemplate)}}
+          <p class="lead">
+            {{#if textTemplate}}
+              {{partial textTemplate}}
+            {{else}}
+              {{text}}
+            {{/if}}
+          </p>
         {{/if}}
       </div>
     </div>

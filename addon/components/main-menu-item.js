@@ -1,7 +1,16 @@
+/**
+ * Single main menu item
+ * 
+ * @module components/main-menu-item
+ * @author Jakub Liput
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { capitalize } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
   layout,
@@ -16,6 +25,8 @@ export default Component.extend({
     'isFailed:failed',
   ],
 
+  i18n: service(),
+
   item: null,
   isActive: false,
   isSelected: false,
@@ -29,9 +40,15 @@ export default Component.extend({
    */
   itemClicked: () => {},
 
-  name: computed('item.id', function () {
-    let item = this.get('item');
-    return capitalize(item.id);
+  /**
+   * @type {Ember.ComputerProperty<string>}
+   */
+  name: computed('item.id', function name() {
+    const {
+      item,
+      i18n,
+    } = this.getProperties('item', 'i18n');
+    return i18n.t(`tabs.${item.id}.menuItem`);
   }),
 
   click() {

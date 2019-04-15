@@ -1,0 +1,96 @@
+// formally this is a component mixin, but don't want to make separate directory
+
+.auto-save-form {
+  $-form-second-breakpoint: 450px;
+  .form-control, .static-condition-unit {
+    display: inline-block;
+    width: 4.5em;
+    padding: $padding-xs-horizontal;
+    text-align: center;
+    vertical-align: top;
+    margin-bottom: 4px;
+  }
+  .static-condition-unit {
+    text-align: left;
+    &.disabled {
+      color: $color-one-light-gray;
+    }
+  }
+  .condition-hint {
+    margin-right: 4px;
+  }
+  .control-label {
+    padding-top: $padding-base-vertical / 2;
+    text-align: left;
+    &.disabled {
+      color: $color-one-light-gray;
+    }
+  }
+  h1 {
+    position: relative;
+    .form-state {
+      font-size: 9pt;
+      text-transform: none;
+      color: $color-one-light-gray;
+      font-weight: normal;
+      white-space: nowrap;
+    }
+  }
+  .form {
+    display: table;
+    @media (max-width: $screen-xs-max) {
+      padding: 0 $padding-large-horizontal;
+    }
+    @media (max-width: $-form-second-breakpoint) {
+      display: block;
+    }
+    .form-group {
+      position: relative;
+      margin-bottom: $padding-small-vertical;
+
+      .toggle-column, .hint-column {
+        line-height: 36px;
+      }
+      .toggle-column {
+        padding-right: 8px;
+      }
+      
+      @media (min-width: $-form-second-breakpoint + 1px) { 
+        display: table-row;
+        width: 100%;
+        .label-column, .fields-column, .toggle-column, .hint-column {
+          display: table-cell;
+          vertical-align: top;
+        }
+        .fields-column {
+          padding: 0 $padding-small-horizontal/2 0 $padding-large-horizontal;
+        }
+      }
+      @media (max-width: $-form-second-breakpoint) {
+        .label-column, .fields-column, .toggle-column, .hint-column {
+          vertical-align: top;
+        }
+        .label-column {
+          text-align: left;
+        }
+        .label-column, .fields-column {
+          padding-left: 36px;
+        }
+        .hint-column {
+          position: absolute;
+          right: 0.5em;
+          top: 1.5em;
+        }
+        .toggle-column {
+          position: absolute;
+          top: 1.5em;
+          left: 0;
+        }
+      }
+    }
+  }
+  .ember-basic-dropdown {
+    display: inline-block;
+    margin-left: $padding-small-vertical;
+  }
+}

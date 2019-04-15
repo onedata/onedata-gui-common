@@ -195,9 +195,16 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      let selectionValue = this.get('selectionValue');
+      const {
+        closeEventName,
+        selectionValue,
+        eventsBus,
+      } = this.getProperties('closeEventName', 'selectionValue', 'eventsBus');
       if (selectionValue !== null) {
         invokeAction(this, '_notifyValue', selectionValue, false);
+      }
+      if (closeEventName) {
+        eventsBus.off(closeEventName);
       }
     } finally {
       this._super(...arguments);

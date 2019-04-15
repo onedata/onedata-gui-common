@@ -7,10 +7,12 @@ import Service from '@ember/service';
 import EmberObject from '@ember/object';
 
 const testAspect = 'testAspect';
+const spacesItemName = 'Spaces Item';
 
 const i18nTranslations = {
   tabs: {
     spaces: {
+      menuItem: spacesItemName,
       aspects: {
         index: 'Index',
         testAspect: 'test aspect',
@@ -96,7 +98,7 @@ describe('Unit | Service | navigation state', function () {
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.index');
     service.set('activeResourceType', 'spaces');
-    expect(service.get('globalBarActiveTitle')).to.equal('Spaces');
+    expect(service.get('globalBarActiveTitle')).to.equal(spacesItemName);
   });
 
   it('prepares global bar title for contentIndex level', function () {
@@ -105,7 +107,7 @@ describe('Unit | Service | navigation state', function () {
     router.set('currentRouteName', 'onedata.sidebar.content.index');
     service.set('activeResourceType', 'spaces');
     service.set('activeResource', resource);
-    expect(service.get('globalBarActiveTitle')).to.equal('Spaces');
+    expect(service.get('globalBarActiveTitle')).to.equal(spacesItemName);
   });
 
   it('prepares global bar title for index level', function () {

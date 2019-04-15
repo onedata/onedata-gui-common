@@ -1,7 +1,7 @@
 {{!-- TODO make some helper for generating input ids --}}
 
-{{#each fields as |field index|}}
-  {{#unless (and (eq field.type "static") (or (eq (get formValues field.name) undefined) (eq (get formValues field.name) "")))}}
+{{#each fields as |field|}}
+  {{#unless (or field.hidden (and (eq field.type "static") (or (eq (get formValues field.name) undefined) (eq (get formValues field.name) ""))))}}
     {{#bsForm.group 
       validation=(if (not-eq field.type "radio-group") (if field.isInvalid "error" (if field.isValid "success"))) 
       class=(concat-classes
@@ -14,7 +14,8 @@
         (if field.rightText "has-right-text")
         (if field.message "has-message")
         (if (eq field.type "radio-group") "no-feedback")
-      )}}
+      )
+    }}
       {{#if (eq field.type "checkbox")}}
         <div class="row toggle-form-row">
           {{#if (not field.nolabel)}}
@@ -33,6 +34,7 @@
               update=(action "inputChanged" field.name)
               isReadOnly=(or disabled field.disabled)
               onFocusOut=(action "onFocusOut" field)
+              lockHint=field.lockHint
             }}
           </div>
         </div>

@@ -7,7 +7,7 @@
  *
  * @module components/app-layout
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -23,14 +23,23 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
+  classNameBindings: ['withBottomBar:with-bottom-bar'],
 
   sidebarResources: service(),
   sideMenu: service(),
   scrollState: service(),
   router: service(),
   navigationState: service(),
+  guiUtils: service(),
 
   globalMenuOpened: false,
+
+  withBottomBar: false,
+
+  appGridClass: 'container-fluid app-grid full-height',
+
+  rowAppClass: 'row row-app full-height',
+
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
@@ -59,12 +68,18 @@ export default Component.extend({
     }
   }),
 
-  colSidebarClass: computed('showMobileSidebar', function () {
-    let showMobileSidebar = this.get('showMobileSidebar');
-    let base =
+  colSidebarClass: computed('showMobileSidebar', 'withBottomBar', function colSidebarClass() {
+    const showMobileSidebar = this.get('showMobileSidebar');
+    const base =
       'col-sidebar full-height disable-user-select';
-    let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
-    return htmlSafe(`${base} ${xsClass}`);
+    let finalClass;
+    if (this.get('withBottomBar')) {
+      finalClass = `${base} hidden`;
+    } else {
+      let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
+      finalClass = `${base} ${xsClass}`;
+    }
+    return htmlSafe(finalClass);
   }),
 
   contentScrollResetObserver: observer(
@@ -80,7 +95,9 @@ export default Component.extend({
       return this.get('router').transitionTo('onedata.sidebar', itemId);
     },
     manageAccount() {
-      invoke(this, 'mobileMenuItemChanged', 'users');
+      if (!this.get('guiUtils.manageAccountExternalLink')) {
+        invoke(this, 'mobileMenuItemChanged', 'users');
+      }
     },
     changeResourceId() {
       return invokeAction(this, 'changeResourceId', ...arguments);

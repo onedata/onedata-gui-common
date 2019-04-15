@@ -5,7 +5,6 @@ import oneFormFields from './onedata-gui-common/components/one-form-fields';
 import applicationError from './onedata-gui-common/components/application-error';
 import providerPlace from './onedata-gui-common/components/provider-place';
 import providersList from './onedata-gui-common/components/providers-list';
-import contentUsers from './onedata-gui-common/components/content-users';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
 import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
@@ -18,12 +17,19 @@ import oneWayToggle from './onedata-gui-common/components/one-way-toggle';
 import oneSizeEdit from './onedata-gui-common/components/one-size-edit';
 import clipboardLine from './onedata-gui-common/components/clipboard-line';
 import authenticationErrorModal from './onedata-gui-common/components/authentication-error-modal';
+import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
+import providersMapTile from './onedata-gui-common/components/providers-map-tile';
+import userAccountButton from './onedata-gui-common/components/user-account-button';
+import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
+import brandInfo from './onedata-gui-common/components/brand-info';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
+import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
 
 import login from './onedata-gui-common/routes/login';
 
 import guiUtils from './onedata-gui-common/services/gui-utils';
+import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 const translations = {
   components: {
@@ -34,7 +40,6 @@ const translations = {
     applicationError,
     providerPlace,
     providersList,
-    contentUsers,
     supportSizeInfo,
     resourceLoadError,
     oneInlineEditor,
@@ -45,17 +50,28 @@ const translations = {
     oneCopyButton,
     oneWayToggle,
     oneSizeEdit,
-    clipboardLine,
     authenticationErrorModal,
+    sidebarClusters,
+    clipboardLine,
+    providersMapTile,
+    userAccountButton,
+    brandInfo,
+    alerts: {
+      endpointError,
+    },
   },
   mixins: {
     authenticationErrorMessage,
+    components: {
+      autoSaveForm,
+    },
   },
   routes: {
     login,
   },
   services: {
     guiUtils,
+    clusterActions,
   },
 };
 

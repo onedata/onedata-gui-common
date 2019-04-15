@@ -8,7 +8,6 @@
  */
 
 import { or } from '@ember/object/computed';
-
 import { computed } from '@ember/object';
 import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-way-toggle';
@@ -50,10 +49,14 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
 
   /**
    * A text that will be shown in locked hint (if locked).
-   * @type {Ember.ComputedProperty<string>}
+   * If not provided, default text will be used.
+   * @type {string|ComputedProperty<string>}
    */
-  lockHint: computed(function lockHint() {
-    return this.get('i18n').t('components.oneWayToggle.locked')
+  lockHint: undefined,
+
+  _lockHint: computed('lockHint', function _lockHint() {
+    return this.get('lockHint') ||
+      this.get('i18n').t('components.oneWayToggle.locked');
   }),
 
   /**

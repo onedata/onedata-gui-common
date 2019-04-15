@@ -12,4 +12,10 @@
     opacity: 1;
     border-bottom: 1px solid $main-border-color;
   }
+  &.internal-padding {
+    .content-row {
+      padding-left: $padding-large-horizontal;
+      padding-right: $padding-large-horizontal;
+    }
+  }
 }
