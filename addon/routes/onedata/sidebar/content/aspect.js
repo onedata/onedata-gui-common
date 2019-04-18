@@ -91,7 +91,7 @@ export default Route.extend({
   },
 });
 
-// FIXME: to test in real env
+// TODO: fix the generic not found error page
 function isNotFoundError(error) {
   return get(error, 'id') === 'notFound' ||
     get(error, 'errors.firstObject.status') === '404';

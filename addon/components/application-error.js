@@ -24,8 +24,6 @@ export default Component.extend(I18n, {
 
   i18nPrefix: 'components.applicationError.',
 
-  showDetails: false,
-
   /**
    * To inject.
    * An object with error details, that should be parseable by getErrorDetails
@@ -54,10 +52,4 @@ export default Component.extend(I18n, {
     } = this.getProperties('error', 'errorExtractor');
     return error && errorExtractor.getMessage(error);
   }),
-
-  actions: {
-    toggleShowDetails() {
-      this.toggleProperty('showDetails');
-    },
-  },
 });

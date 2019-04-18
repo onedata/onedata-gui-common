@@ -357,7 +357,9 @@ $brand-info-height: $one-list-item-line-height;
   }
   .col-sidebar {
     z-index: $zindex-navbar;
-    padding-bottom: $one-list-item-line-height;
+    top: 0;
+    bottom: $one-list-item-line-height;
+    height: auto;
     border-right: 1px solid $color-one-list-item-separator;
     transition: left linear $collapse-transition-time;
   }
