@@ -18,6 +18,11 @@
       }}
         {{get (find-by "value" optionValue field.options) "label"}}
       {{/power-select}}
+    {{else if (eq field.type "clipboard-line")}}
+      {{one-clipboard-line
+        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        value=value
+        showText=false}}
     {{else}}
       <div class={{if field.rightText "input-group"}}>
         {{component (input-component-name field.type)
