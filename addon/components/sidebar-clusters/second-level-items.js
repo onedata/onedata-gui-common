@@ -29,6 +29,8 @@ export default SecondLevelItems.extend(I18n, {
    */
   item: undefined,
 
+  isEmergencyOnepanel: false,
+
   /**
    * @type {Ember.ComputedProperty<string>}
    */
@@ -55,14 +57,6 @@ export default SecondLevelItems.extend(I18n, {
       id: 'certificate',
       label: this.t('certificate'),
       icon: 'certificate',
-    };
-  }),
-
-  credentialsItem: computed(function credentialsItem() {
-    return {
-      id: 'credentials',
-      label: this.t('credentials'),
-      icon: 'user',
     };
   }),
 
@@ -106,8 +100,18 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
+  credentialsItem: computed(function credentialsItem() {
+    return {
+      id: 'credentials',
+      label: this.t('credentials'),
+      icon: 'key',
+    };
+  }),
+
   clusterSecondLevelItems: computed(
     'isNotDeployedCluster',
+    'isLocalCluster',
+    'isEmergencyOnepanel',
     'clusterType',
     'dnsItem',
     'certificateItem',
@@ -118,8 +122,17 @@ export default SecondLevelItems.extend(I18n, {
     'storagesItem',
     'spacesItem',
     'membersItem',
-    function () {
-      if (this.get('isNotDeployedCluster')) {
+    function clusterSecondLevelItems() {
+      const {
+        isNotDeployedCluster,
+        isLocalCluster,
+        isEmergencyOnepanel,
+      } = this.getProperties(
+        'isNotDeployedCluster',
+        'isLocalCluster',
+        'isEmergencyOnepanel'
+      );
+      if (isNotDeployedCluster || !isLocalCluster) {
         return [];
       } else {
         const {
@@ -151,15 +164,18 @@ export default SecondLevelItems.extend(I18n, {
           nodesItem,
           dnsItem,
           certificateItem,
-          credentialsItem,
           membersItem,
         ];
-        return clusterType === 'onezone' ? commonItems : [
+        const items = clusterType === 'onezone' ? commonItems : [
           ...commonItems,
           providerItem,
           storagesItem,
           spacesItem,
         ];
+        if (isEmergencyOnepanel) {
+          items.push(credentialsItem);
+        }
+        return items;
       }
     }
   ),

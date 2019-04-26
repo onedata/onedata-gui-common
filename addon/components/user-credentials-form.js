@@ -23,12 +23,6 @@ const PASSWORD_DOT = '&#9679';
 
 // TODO i18n
 
-const USERNAME_FIELD = {
-  name: 'username',
-  label: 'Username',
-  type: 'static',
-};
-
 const SECRET_PASSWORD_FIELD = {
   name: 'secretPassword',
   label: 'Password',
@@ -90,15 +84,6 @@ export default OneForm.extend(Validations, {
   /**
    * @type {FieldType}
    */
-  usernameField: computed(() => {
-    let field = EmberObject.create(USERNAME_FIELD);
-    field.set('name', 'generic.' + field.get('name'));
-    return field;
-  }).readOnly(),
-
-  /**
-   * @type {FieldType}
-   */
   secretPasswordField: computed(() => {
     let field = EmberObject.create(SECRET_PASSWORD_FIELD);
     field.set('name', 'static.' + field.get('name'));
@@ -134,18 +119,16 @@ export default OneForm.extend(Validations, {
     ];
   }),
 
-  allFields: computed('usernameField', 'changePasswordFields', 'secretPasswordField',
-    function () {
-      let {
-        usernameField,
+  allFields: computed('changePasswordFields', 'secretPasswordField',
+    function allFields() {
+      const {
         changePasswordFields,
         secretPasswordField,
       } = this.getProperties(
-        'usernameField',
         'changePasswordFields',
         'secretPasswordField'
       );
-      return [usernameField, secretPasswordField, ...changePasswordFields];
+      return [secretPasswordField, ...changePasswordFields];
     }),
 
   submitEnabled: readOnly('validations.isValid'),
