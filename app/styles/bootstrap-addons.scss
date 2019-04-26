@@ -70,7 +70,7 @@ $token-border-radius: 3px;
 
 .form-horizontal {
   .form-message {
-    padding-top: $padding-small-vertical;
+    padding: $padding-small-vertical 0;
     text-align: right;
     font-size: $font-size-small;
   }
@@ -126,16 +126,26 @@ $token-border-radius: 3px;
       display: none;
     }
   }
+  .form-group {
+    @media (max-width: $screen-xs-max) {
+      .form-control-feedback {
+        top: initial;
+        bottom: 0;
+      }
+      &.has-message .form-control-feedback  {
+        margin-bottom: $line-height-computed + $padding-small-vertical;
+      }
+    }
+    &.no-feedback {
+      .form-control-feedback {
+        display: none;
+      }
+    }
+  }
 }
 
 .form-group.group-with-tip {
   @media (min-width: $screen-sm-min) {
-    .toggle-form-row {
-      .control-label .one-label-tip {
-        height: $line-height-computed;
-        line-height: $line-height-computed;
-      }
-    }
     .control-label {
       position: initial;
       .one-label-tip {
@@ -330,9 +340,12 @@ $token-border-radius: 3px;
   }
 }
 
-.text-xs-center {
-  @media (max-width: $screen-xs-max) {
+@media (max-width: $screen-xs-max) {
+  .text-xs-center {
     text-align: center;
+  }
+  .text-xs-right {
+    text-align: right;
   }
 }
 

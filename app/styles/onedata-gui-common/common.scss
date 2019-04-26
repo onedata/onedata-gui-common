@@ -159,10 +159,8 @@ input {
     .row {
       margin: 0 $padding-large-horizontal;
       padding-left: 0;
+      border-bottom: $table-item-border;
       word-wrap: break-word;
-      @media screen and (max-width: $screen-md) {
-        border-bottom: $table-item-border;
-      }
     }
   }
 }
