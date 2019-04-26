@@ -4,7 +4,7 @@ export default {
     nodes: 'Nodes',
     dns: 'DNS setup',
     certificate: 'Web certificate',
-    credentials: 'Root password',
+    rootPassword: 'Root password',
     provider: 'Provider',
     storages: 'Storages',
     spaces: 'Spaces',
