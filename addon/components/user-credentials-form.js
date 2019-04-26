@@ -4,8 +4,8 @@
  * See ``changingPassword`` property to set 
  *
  * @module 
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -73,8 +73,6 @@ export default OneForm.extend(Validations, {
   layout,
   classNames: ['user-credentials-form'],
 
-  username: null,
-
   /**
    * If true, show form fields and button for chane current password
    * @type {boolean}
@@ -100,9 +98,6 @@ export default OneForm.extend(Validations, {
   })).readOnly(),
 
   allFieldsValues: EmberObject.create({
-    generic: EmberObject.create({
-      username: null,
-    }),
     static: EmberObject.create({
       secretPassword: htmlSafe(PASSWORD_DOT.repeat(5)),
     }),
@@ -114,9 +109,7 @@ export default OneForm.extend(Validations, {
   }),
 
   currentFieldsPrefix: computed('changingPassword', function () {
-    return this.get('changingPassword') ? ['generic', 'change'] : ['generic',
-      'static'
-    ];
+    return this.get('changingPassword') ? ['change'] : ['static'];
   }),
 
   allFields: computed('changePasswordFields', 'secretPasswordField',
@@ -135,7 +128,6 @@ export default OneForm.extend(Validations, {
 
   init() {
     this._super(...arguments);
-    this.set('formValues.generic.username', this.get('username'));
     this.prepareFields();
   },
 

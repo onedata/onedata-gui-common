@@ -16,20 +16,13 @@ describe('Integration | Component | user credentials form', function () {
     integration: true
   });
 
-  it('shows username and secret password field by default', function () {
-    const USERNAME = 'Johnny';
-    this.set('username', USERNAME);
-
+  it('shows secret password field by default', function () {
     this.render(hbs `{{user-credentials-form username=username}}`);
 
     let form = new UserCredentialsFormHelper(this.$());
 
-    expect(form.getInput('generic-username'), 'username field exists ')
-      .to.exist;
     expect(form.getInput('static-secretPassword'), 'secret password field exists')
       .to.exist;
-    expect(form.getInput('generic-username'), 'username field contains username')
-      .to.contain(USERNAME);
   });
 
   it(
@@ -38,12 +31,10 @@ describe('Integration | Component | user credentials form', function () {
       const USERNAME = 'Johnny';
       this.set('username', USERNAME);
 
-      this.render(hbs `{{user-credentials-form username=username changingPassword=true}}`);
+      this.render(hbs `{{user-credentials-form changingPassword=true}}`);
 
       let form = new UserCredentialsFormHelper(this.$());
 
-      expect(form.getInput('generic-username'), 'username field')
-        .to.exist;
       expect(form.getInput('static-secretPassword'), 'secret pass field')
         .to.not.exist;
       expect(form.getInput('change-currentPassword'), 'current password field')
@@ -71,7 +62,6 @@ describe('Integration | Component | user credentials form', function () {
 
     this.render(hbs `
     {{user-credentials-form
-      username="Test"
       changingPassword=true
       submit=(action "submit")
     }}
@@ -96,12 +86,7 @@ describe('Integration | Component | user credentials form', function () {
     const OLD_PASSWORD = 'one123456789';
     const NEW_PASSWORD = 'one987654321';
 
-    this.render(hbs `
-    {{user-credentials-form
-      username="Test"
-      changingPassword=true
-    }}
-    `);
+    this.render(hbs `{{user-credentials-form changingPassword=true}}`);
 
     let form = new UserCredentialsFormHelper(this.$());
 
