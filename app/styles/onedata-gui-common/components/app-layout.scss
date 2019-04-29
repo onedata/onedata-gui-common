@@ -37,7 +37,7 @@ $brand-info-height: $one-list-item-line-height;
       padding-left: 0;
     }
     .col-content {
-      padding-bottom: $content-col-padding + $brand-info-height;
+      height: calc(100% - #{$brand-info-height});
     }
     .col-main-menu {
       display: none !important;
@@ -373,6 +373,7 @@ $brand-info-height: $one-list-item-line-height;
     font-size: $content-header-font-size;
   }
   .col-content {
+    height: 100%;
     // TODO similar 30px
     padding: $content-col-padding;
 
