@@ -29,6 +29,9 @@ export default SecondLevelItems.extend(I18n, {
    */
   item: undefined,
 
+  /**
+   * @type {boolean}
+   */
   isEmergencyOnepanel: false,
 
   /**

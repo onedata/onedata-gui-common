@@ -71,7 +71,14 @@ export default Component.extend(I18n, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.$('.login-username').focus();
+
+    const withoutUsername = this.get('withoutUsername');
+
+    if (withoutUsername) {
+      this.$('.login-lock').focus();
+    } else {
+      this.$('.login-username').focus();
+    }
   },
 
   onLoginStarted() {
