@@ -18,30 +18,27 @@ import OneForm from 'onedata-gui-common/components/one-form';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { invokeAction } from 'ember-invoke-action';
 import createFieldValidator from 'onedata-gui-common/utils/create-field-validator';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { get, set } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 const PASSWORD_DOT = '&#9679';
 
-// TODO i18n
-
 const SECRET_PASSWORD_FIELD = {
   name: 'secretPassword',
-  label: 'Password',
   type: 'static',
 };
 
 const CHANGE_PASSWORD_FIELDS = [{
     name: 'currentPassword',
-    label: 'Current password',
     type: 'password',
   },
   {
     name: 'newPassword',
-    label: 'New password',
     type: 'password',
   },
   {
     name: 'newPasswordRetype',
-    label: 'Retype new password',
     type: 'password',
   },
 ];
@@ -53,10 +50,11 @@ function createValidations() {
       createFieldValidator(field);
     switch (field.name) {
       case 'newPasswordRetype':
-        // TODO i18n    
         thisValidations.push(validator('confirmation', {
           on: 'allFieldsValues.change.newPassword',
-          message: 'Retyped password does not match'
+          message: function message() {
+            return get(this.get('model').t('retypedNotMatch'), 'string');
+          },
         }));
         break;
 
@@ -69,9 +67,17 @@ function createValidations() {
 
 const Validations = buildValidations(createValidations());
 
-export default OneForm.extend(Validations, {
+export default OneForm.extend(Validations, I18n, {
   layout,
   classNames: ['user-credentials-form'],
+
+  i18n: service(),
+
+  /**
+   * One of `password`, `passphrase`
+   * @type {string}
+   */
+  type: 'password',
 
   /**
    * If true, show form fields and button for chane current password
@@ -80,22 +86,32 @@ export default OneForm.extend(Validations, {
   changingPassword: false,
 
   /**
+   * @override
+   */
+  i18nPrefix: computed('type', function i18nPrefix() {
+    const type = this.get('type');
+    return `components.userCredentialsForm.${type}`;
+  }),
+
+  /**
    * @type {FieldType}
    */
-  secretPasswordField: computed(() => {
-    let field = EmberObject.create(SECRET_PASSWORD_FIELD);
+  secretPasswordField: computed(function secretPasswordField() {
+    let field = EmberObject.create(this.prepareField(SECRET_PASSWORD_FIELD));
     field.set('name', 'static.' + field.get('name'));
     return field;
-  }).readOnly(),
+  }),
 
   /**
    * @type {Array.FieldType}
    */
-  changePasswordFields: computed(() => CHANGE_PASSWORD_FIELDS.map(f => {
-    let field = EmberObject.create(f);
-    field.set('name', 'change.' + field.get('name'));
-    return field;
-  })).readOnly(),
+  changePasswordFields: computed(function () {
+    return CHANGE_PASSWORD_FIELDS.map(f => {
+      let field = EmberObject.create(this.prepareField(f));
+      field.set('name', 'change.' + field.get('name'));
+      return field;
+    });
+  }),
 
   allFieldsValues: EmberObject.create({
     static: EmberObject.create({
@@ -129,6 +145,12 @@ export default OneForm.extend(Validations, {
   init() {
     this._super(...arguments);
     this.prepareFields();
+  },
+
+  prepareField(field) {
+    const name = get(field, 'name');
+    set(field, 'label', this.t(name));
+    return field;
   },
 
   actions: {

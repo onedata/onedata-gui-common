@@ -17,7 +17,7 @@ describe('Integration | Component | user credentials form', function () {
   });
 
   it('shows secret password field by default', function () {
-    this.render(hbs `{{user-credentials-form username=username}}`);
+    this.render(hbs `{{user-credentials-form}}`);
 
     let form = new UserCredentialsFormHelper(this.$());
 
@@ -28,9 +28,6 @@ describe('Integration | Component | user credentials form', function () {
   it(
     'shows old password, new password and retype new password fields in change password mode',
     function (done) {
-      const USERNAME = 'Johnny';
-      this.set('username', USERNAME);
-
       this.render(hbs `{{user-credentials-form changingPassword=true}}`);
 
       let form = new UserCredentialsFormHelper(this.$());

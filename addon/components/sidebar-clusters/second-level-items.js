@@ -103,10 +103,10 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
-  rootPasswordItem: computed(function rootPasswordItem() {
+  emergencyPassphraseItem: computed(function emergencyPassphraseItem() {
     return {
-      id: 'root-password',
-      label: this.t('rootPassword'),
+      id: 'emergency-passphrase',
+      label: this.t('emergencyPassphrase'),
       icon: 'key',
     };
   }),
@@ -118,7 +118,7 @@ export default SecondLevelItems.extend(I18n, {
     'clusterType',
     'dnsItem',
     'certificateItem',
-    'rootPasswordItem',
+    'emergencyPassphraseItem',
     'nodesItem',
     'overviewItem',
     'providerItem',
@@ -142,7 +142,7 @@ export default SecondLevelItems.extend(I18n, {
           clusterType,
           dnsItem,
           certificateItem,
-          rootPasswordItem,
+          emergencyPassphraseItem,
           nodesItem,
           overviewItem,
           providerItem,
@@ -154,7 +154,7 @@ export default SecondLevelItems.extend(I18n, {
           'cluster',
           'dnsItem',
           'certificateItem',
-          'rootPasswordItem',
+          'emergencyPassphraseItem',
           'nodesItem',
           'overviewItem',
           'providerItem',
@@ -176,7 +176,7 @@ export default SecondLevelItems.extend(I18n, {
           spacesItem,
         ];
         if (isEmergencyOnepanel) {
-          items.push(rootPasswordItem);
+          items.push(emergencyPassphraseItem);
         }
         return items;
       }
