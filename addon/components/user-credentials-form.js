@@ -17,6 +17,7 @@ import layout from 'onedata-gui-common/templates/components/user-credentials-for
 import OneForm from 'onedata-gui-common/components/one-form';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { invokeAction } from 'ember-invoke-action';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import createFieldValidator from 'onedata-gui-common/utils/create-field-validator';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { get, set } from '@ember/object';
@@ -69,7 +70,7 @@ const Validations = buildValidations(createValidations());
 
 export default OneForm.extend(Validations, I18n, {
   layout,
-  classNames: ['user-credentials-form'],
+  classNames: ['user-credentials-form', 'row'],
 
   i18n: service(),
 
@@ -84,6 +85,22 @@ export default OneForm.extend(Validations, I18n, {
    * @type {boolean}
    */
   changingPassword: false,
+
+  /**
+   * @type {boolean}
+   */
+  centered: true,
+
+  /**
+   * @type {boolean}
+   */
+  showCancel: false,
+
+  /**
+   * @type {Function}
+   * @returns {undefined}
+   */
+  cancel: notImplementedIgnore,
 
   /**
    * @override
@@ -161,6 +178,11 @@ export default OneForm.extend(Validations, I18n, {
           newPassword: this.get('formValues.change.newPassword'),
         });
       }
+    },
+
+    cancel() {
+      const cancel = this.get('cancel');
+      cancel();
     },
 
     startChangePassword() {

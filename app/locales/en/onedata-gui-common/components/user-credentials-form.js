@@ -5,7 +5,7 @@ export default {
     newPassword: 'New passphrase',
     newPasswordRetype: 'Retype new passphrase',
     retypedNotMatch: 'Retyped passhrase does not match',
-    confirmChange: 'Confirm passphrase change',
+    confirmChange: 'Change',
   },
   password: {
     secretPassword: 'Password',
@@ -13,6 +13,6 @@ export default {
     newPassword: 'New password',
     newPasswordRetype: 'Retype new password',
     retypedNotMatch: 'Retyped password does not match',
-    confirmChange: 'Confirm password change',
+    confirmChange: 'Change',
   }
 };
