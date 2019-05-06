@@ -4,5 +4,5 @@ export default {
   signIn: 'Sign in',
   back: 'Back',
   invalidCredentials: 'Invalid username and/or password.',
-  invalidCredentialsOnlyPassword: 'Invalid password.',
+  invalidCredentialsOnlyPassphrase: 'Invalid passphrase.',
 };

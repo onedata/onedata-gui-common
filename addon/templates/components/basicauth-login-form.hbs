@@ -34,7 +34,7 @@
         </div>
       {{/form.group}}
       <div class="login-error-message{{if areCredentialsInvalid " active" ""}}">
-        {{tt this (concat "invalidCredentials" (if withoutUsername "OnlyPassword" ""))}}
+        {{tt this (concat "invalidCredentials" (if withoutUsername "OnlyPassphrase" ""))}}
       </div>
       <div class="row text-center">
         {{#if backButtonAction}}

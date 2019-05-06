@@ -4,7 +4,7 @@ export default {
     currentPassword: 'Current pasphrase',
     newPassword: 'New passphrase',
     newPasswordRetype: 'Retype new passphrase',
-    retypedNotMatch: 'Retyped passhrase does not match',
+    retypedNotMatch: 'Retyped passphrase does not match',
     confirmChange: 'Change',
   },
   password: {
@@ -14,5 +14,6 @@ export default {
     newPasswordRetype: 'Retype new password',
     retypedNotMatch: 'Retyped password does not match',
     confirmChange: 'Change',
-  }
+  },
+  cancel: 'Cancel',
 };

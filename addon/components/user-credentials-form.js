@@ -122,7 +122,7 @@ export default OneForm.extend(Validations, I18n, {
   /**
    * @type {Array.FieldType}
    */
-  changePasswordFields: computed(function () {
+  changePasswordFields: computed(function changePasswordFields() {
     return CHANGE_PASSWORD_FIELDS.map(f => {
       let field = EmberObject.create(this.prepareField(f));
       field.set('name', 'change.' + field.get('name'));
