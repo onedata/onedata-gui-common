@@ -9,9 +9,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
-
-import { readOnly } from '@ember/object/computed';
+import EmberObject, { computed, observer } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/user-credentials-form';
 import OneForm from 'onedata-gui-common/components/one-form';
@@ -30,10 +28,12 @@ const SECRET_PASSWORD_FIELD = {
   type: 'static',
 };
 
-const CHANGE_PASSWORD_FIELDS = [{
-    name: 'currentPassword',
-    type: 'password',
-  },
+const VERIFY_PASSWORD_FIELD = {
+  name: 'currentPassword',
+  type: 'password',
+};
+
+const CHANGE_PASSWORD_FIELDS = [
   {
     name: 'newPassword',
     type: 'password',
@@ -45,7 +45,11 @@ const CHANGE_PASSWORD_FIELDS = [{
 ];
 
 function createValidations() {
-  let validations = {};
+  const validations = {};
+
+  validations['allFieldsValues.verify.' + get(VERIFY_PASSWORD_FIELD, 'name')] =
+    createFieldValidator(VERIFY_PASSWORD_FIELD);
+  
   CHANGE_PASSWORD_FIELDS.forEach(field => {
     let thisValidations = validations['allFieldsValues.change.' + field.name] =
       createFieldValidator(field);
@@ -79,6 +83,12 @@ export default OneForm.extend(Validations, I18n, {
    * @type {string}
    */
   type: 'password',
+
+  /**
+   * If true, user will be asked for current password
+   * @type {boolean}
+   */
+  verifyCurrentPassword: true,
 
   /**
    * If true, show form fields and button for chane current password
@@ -120,6 +130,15 @@ export default OneForm.extend(Validations, I18n, {
   }),
 
   /**
+   * @type {FieldType}
+   */
+  verifyPasswordField: computed(function verifyPasswordField() {
+    const field = EmberObject.create(this.prepareField(VERIFY_PASSWORD_FIELD));
+    field.set('name', 'verify.' + field.get('name'));
+    return field;
+  }),
+
+  /**
    * @type {Array.FieldType}
    */
   changePasswordFields: computed(function changePasswordFields() {
@@ -130,34 +149,76 @@ export default OneForm.extend(Validations, I18n, {
     });
   }),
 
-  allFieldsValues: EmberObject.create({
-    static: EmberObject.create({
-      secretPassword: htmlSafe(PASSWORD_DOT.repeat(5)),
-    }),
-    change: EmberObject.create({
-      currentPassword: null,
-      newPassword: null,
-      newPasswordRetype: null,
-    }),
+  /**
+   * @override
+   */
+  allFieldsValues: computed(function allFieldsValues() {
+    return EmberObject.create({
+      static: EmberObject.create({
+        secretPassword: htmlSafe(PASSWORD_DOT.repeat(5)),
+      }),
+      verify: EmberObject.create({
+        currentPassword: null,
+      }),
+      change: EmberObject.create({
+        newPassword: null,
+        newPasswordRetype: null,
+      }),
+    });
   }),
 
-  currentFieldsPrefix: computed('changingPassword', function () {
-    return this.get('changingPassword') ? ['change'] : ['static'];
+  /**
+   * @override
+   */
+  currentFieldsPrefix: computed(
+    'changingPassword',
+    'verifyCurrentPassword',
+    function currentFieldsPrefix() {
+    const {
+      changingPassword,
+      verifyCurrentPassword,
+    } = this.getProperties('changingPassword', 'verifyCurrentPassword');
+    if (changingPassword) {
+      if (verifyCurrentPassword) {
+        return ['verify', 'change'];
+      } else {
+        return ['change'];
+      }
+    } else {
+      return ['static'];
+    }
   }),
 
-  allFields: computed('changePasswordFields', 'secretPasswordField',
+  /**
+   * @override
+   */
+  allFields: computed(
+    'changePasswordFields',
+    'secretPasswordField',
+    'verifyPasswordField',
     function allFields() {
       const {
         changePasswordFields,
         secretPasswordField,
+        verifyPasswordField,
       } = this.getProperties(
         'changePasswordFields',
-        'secretPasswordField'
+        'secretPasswordField',
+        'verifyPasswordField'
       );
-      return [secretPasswordField, ...changePasswordFields];
-    }),
+      return [secretPasswordField, verifyPasswordField, ...changePasswordFields];
+    }
+  ),
 
-  submitEnabled: readOnly('validations.isValid'),
+  changingPasswordObserver: observer(
+    'changingPassword',
+    function changingPasswordObserver() {
+      const changingPassword = this.get('changingPassword');
+      if (changingPassword) {
+        this.resetFormValues(['verify', 'change']);
+      }
+    }
+  ),
 
   init() {
     this._super(...arguments);
@@ -172,11 +233,22 @@ export default OneForm.extend(Validations, I18n, {
 
   actions: {
     submit() {
-      if (this.get('submitEnabled')) {
-        return invokeAction(this, 'submit', {
-          currentPassword: this.get('formValues.change.currentPassword'),
+      const {
+        isValid,
+        verifyCurrentPassword,
+      } = this.getProperties('isValid', 'verifyCurrentPassword')
+      if (isValid) {
+        const values = {
           newPassword: this.get('formValues.change.newPassword'),
-        });
+        };
+        if (verifyCurrentPassword) {
+          set(
+            values,
+            'currentPassword',
+            this.get('formValues.verify.currentPassword')
+          );
+        }
+        return invokeAction(this, 'submit', values);
       }
     },
 
