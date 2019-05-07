@@ -8,7 +8,7 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';
 import { inject as service } from '@ember/service';
 
@@ -26,6 +26,7 @@ export default Component.extend({
   ],
 
   i18n: service(),
+  router: service(),
 
   item: null,
   isActive: false,
@@ -51,11 +52,21 @@ export default Component.extend({
     return i18n.t(`tabs.${item.id}.menuItem`);
   }),
 
-  click() {
+  /**
+   * @param {MouseEvent} clickEvent 
+   */
+  click(clickEvent) {
     if (!this.get('isDisabled')) {
-      let item = this.get('item');
-      this.get('itemClicked')(item);
+      const item = this.get('item');
+      if (clickEvent.ctrlKey || clickEvent.metaKey || clickEvent.shiftKey) {
+        window.open(
+          this.get('router').urlFor('onedata.sidebar', get(item, 'id')),
+          '_blank'
+        );
+      } else {
+        this.get('itemClicked')(item);
+      }
       return false;
     }
-  }
+  },
 });
