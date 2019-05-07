@@ -42,6 +42,9 @@ $brand-info-height: $one-list-item-line-height;
     .col-main-menu {
       display: none !important;
     }
+    .content-info-content-container {
+      padding-bottom: $brand-info-height;
+    }
   }
   
   .app-grid {
