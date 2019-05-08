@@ -14,7 +14,6 @@ import { htmlSafe } from '@ember/string';
 import layout from 'onedata-gui-common/templates/components/user-credentials-form';
 import OneForm from 'onedata-gui-common/components/one-form';
 import { validator, buildValidations } from 'ember-cp-validations';
-import { invokeAction } from 'ember-invoke-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import createFieldValidator from 'onedata-gui-common/utils/create-field-validator';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -57,7 +56,7 @@ function createValidations() {
       case 'newPasswordRetype':
         thisValidations.push(validator('confirmation', {
           on: 'allFieldsValues.change.newPassword',
-          message: function message() {
+          message() {
             return get(this.get('model').t('retypedNotMatch'), 'string');
           },
         }));
@@ -107,6 +106,7 @@ export default OneForm.extend(Validations, I18n, {
   showCancel: false,
 
   /**
+   * @virtual
    * @type {Function}
    * @returns {undefined}
    */
@@ -236,7 +236,8 @@ export default OneForm.extend(Validations, I18n, {
       const {
         isValid,
         verifyCurrentPassword,
-      } = this.getProperties('isValid', 'verifyCurrentPassword')
+        submit,
+      } = this.getProperties('isValid', 'verifyCurrentPassword', 'submit');
       if (isValid) {
         const values = {
           newPassword: this.get('formValues.change.newPassword'),
@@ -248,13 +249,12 @@ export default OneForm.extend(Validations, I18n, {
             this.get('formValues.verify.currentPassword')
           );
         }
-        return invokeAction(this, 'submit', values);
+        return submit(values);
       }
     },
 
     cancel() {
-      const cancel = this.get('cancel');
-      cancel();
+      this.get('cancel')();
     },
 
     startChangePassword() {
