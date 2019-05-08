@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { observer } from '@ember/object';
 import { run, debounce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/basic-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -21,6 +22,19 @@ export default Component.extend({
   breakpoint: 1200,
 
   _isMobile: undefined,
+
+  /**
+   * Trigger property to run basictable setup
+   * @type {undefined}
+   */
+  setupTrigger: undefined,
+
+  setupTriggerObserver: observer(
+    'setupTrigger',
+    function setupTriggerObserver() {
+      this._reinitializeBasictable();
+    }
+  ),
 
   didInsertElement() {
     this._super(...arguments);
@@ -52,7 +66,9 @@ export default Component.extend({
   },
 
   _reinitializeBasictable() {
-    this.$().basictable('setup');
+    if (this.get('element')) {
+      this.$().basictable('setup');
+    }
   },
 
   _updateState() {
