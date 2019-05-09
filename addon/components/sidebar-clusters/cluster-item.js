@@ -28,11 +28,22 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.sidebarClusters.clusterItem',
 
   /**
+   * @virtual
+   * @type {Cluster}
+   */
+  item: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<models/Cluster>}
    */
   cluster: reads('item'),
 
   type: reads('cluster.type'),
+
+  /**
+   * TODO: should be implemented in backend or by checking "img availability"
+   */
+  offline: false,
 
   firstLevelItemIcon: computed('type', function firstLevelItemIcon() {
     switch (this.get('type')) {
