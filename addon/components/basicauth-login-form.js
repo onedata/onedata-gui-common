@@ -38,7 +38,7 @@ export default Component.extend(I18n, {
    * @virtual optional
    * @type {boolean}
    */
-  withoutUsername: false,
+  passphraseMode: false,
 
   /**
    * Action called on 'back' button click. If not defined, back button will
@@ -72,9 +72,9 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    const withoutUsername = this.get('withoutUsername');
+    const passphraseMode = this.get('passphraseMode');
 
-    if (withoutUsername) {
+    if (passphraseMode) {
       this.$('.login-lock').focus();
     } else {
       this.$('.login-username').focus();

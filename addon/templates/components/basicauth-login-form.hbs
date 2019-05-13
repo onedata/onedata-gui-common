@@ -5,7 +5,7 @@
       formLayout="horizontal"
       as |form|
     }}
-      {{#unless withoutUsername}}
+      {{#unless passphraseMode}}
         {{#form.group class=(if areCredentialsInvalid "has-error")}}
           <div class="input-group with-icon-addon">
             <div class="input-group-addon">
@@ -28,13 +28,13 @@
           {{one-way-password password
             class="form-control login-lock"
             update=(action (mut password))
-            placeholder=(tt this "password")
+            placeholder=(tt this (if passphraseMode "passphrase" "password"))
             disabled=isDisabled
           }}
         </div>
       {{/form.group}}
       <div class="login-error-message{{if areCredentialsInvalid " active" ""}}">
-        {{tt this (concat "invalidCredentials" (if withoutUsername "OnlyPassphrase" ""))}}
+        {{tt this (concat "invalidCredentials" (if passphraseMode "OnlyPassphrase" ""))}}
       </div>
       <div class="row text-center">
         {{#if backButtonAction}}

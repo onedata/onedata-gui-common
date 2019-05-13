@@ -36,6 +36,9 @@ const CHANGE_PASSWORD_FIELDS = [
   {
     name: 'newPassword',
     type: 'password',
+    length: {
+      min: 8,
+    },
   },
   {
     name: 'newPasswordRetype',
