@@ -104,11 +104,6 @@ export default OneForm.extend(Validations, I18n, {
   centered: true,
 
   /**
-   * @type {boolean}
-   */
-  showCancel: false,
-
-  /**
    * @virtual
    * @type {Function}
    * @returns {undefined}
