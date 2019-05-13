@@ -1,5 +1,5 @@
 {{#each internalSecondLevelItems as |sli|}}
-  <li class={{concat "one-list-item clickable " (if (eq secondaryItemId sli.id) "active" "")}}>
+  <li class={{concat-classes "one-list-item clickable" (if (eq secondaryItemId sli.id) "active") (concat "item-" sli.id)}}>
     {{#link-to
       "onedata.sidebar.content.aspect"
       sidebarType
