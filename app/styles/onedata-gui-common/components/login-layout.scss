@@ -29,13 +29,18 @@
     }
   }
   .login-service-version {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    font-size: 11pt;
     text-align: right;
     padding: 10px;
     padding-right: 20px;
     color: rgba(white, 0.5);
+    @media (max-height: 640px) {
+      position: static;
+      margin-top: -50px;
+    }
+    @media (min-height: 641px) {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+    }
   }
 }
