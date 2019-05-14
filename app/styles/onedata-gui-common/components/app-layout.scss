@@ -374,7 +374,7 @@ $brand-info-height: $one-list-item-line-height;
     font-size: $content-header-font-size;
   }
   .col-content {
-    // TODO similar 30px
+    height: 100%;
     padding: $content-col-padding;
 
     @media (max-width: $screen-sm-max) {
