@@ -23,7 +23,6 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
-  classNameBindings: ['withBottomBar:with-bottom-bar'],
 
   sidebarResources: service(),
   sideMenu: service(),
