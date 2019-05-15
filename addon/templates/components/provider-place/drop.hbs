@@ -4,7 +4,7 @@
       {{#one-icon icon="provider" class="state-indicator"}}
         {{one-tooltip title=(tt this (if (eq provider.status "online") "online" "offline"))}}
       {{/one-icon}}
-      {{#truncated-string}}{{provider.name}}{{/truncated-string}}
+      {{#truncated-string}}{{name-conflict item=provider tagName="span"}}{{/truncated-string}}
     </span>
     <span class="hidden-sm hidden-md hidden-lg">{{tt this "status"}}</span>
   {{/truncated-string}}

@@ -34,7 +34,7 @@
               data-provider={{provider.id}}
               {{action "selectProvider" provider}}>
               {{one-icon icon="provider" class=(if provider.isStatusValid (concat provider.status "-icon") "offline-icon")}}
-              {{#truncated-string}}{{provider.name}}{{/truncated-string}}
+              {{#truncated-string}}{{name-conflict item=provider tagName="span"}}{{/truncated-string}}
             </li>
           {{/each}}
         {{/perfect-scrollbar-element}}
