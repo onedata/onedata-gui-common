@@ -13,7 +13,6 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/basicauth-login-form';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { not, or } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -57,8 +56,6 @@ export default Component.extend({
    */
   authenticationFailure: notImplementedIgnore,
 
-  submitIsDisabled: or('isDisabled', not('username'), not('password')),
-
   didInsertElement() {
     this._super(...arguments);
     this.$('.login-username').focus();
@@ -101,26 +98,23 @@ export default Component.extend({
 
   actions: {
     submitLogin(username, password) {
-      // TODO: in root password branch, remember to allow only password!
-      if (!this.get('submitIsDisabled')) {
-        const {
-          session,
-          authenticationStarted,
-        } = this.getProperties('session', 'authenticationStarted');
+      const {
+        session,
+        authenticationStarted,
+      } = this.getProperties('session', 'authenticationStarted');
 
-        this.onLoginStarted();
-        authenticationStarted();
+      this.onLoginStarted();
+      authenticationStarted();
 
-        const loginCalling = session.authenticate('authenticator:application',
-          username,
-          password
-        );
+      const loginCalling = session.authenticate('authenticator:application',
+        username,
+        password
+      );
 
-        loginCalling.then(() => this.onLoginSuccess(username, password));
-        loginCalling.catch(() => this.onLoginFailure(username, password));
+      loginCalling.then(() => this.onLoginSuccess(username, password));
+      loginCalling.catch(() => this.onLoginFailure(username, password));
 
-        return loginCalling;
-      }
+      return loginCalling;
     },
     backAction() {
       const backButtonAction = this.get('backButtonAction');
