@@ -548,3 +548,18 @@ textarea[style^="touch-action: manipulation"] {
   margin-left: $padding-small-horizontal;
   top: -2px;
 }
+
+.row-understand-notice {
+  position: relative;
+  padding: $padding-base-vertical 0;
+  .one-checkbox-understand {
+    position: absolute;
+    left: 2px;
+    @include vertical-align-middle();
+  }
+  .text-understand {
+    vertical-align: middle;
+    padding-left: 28px;
+    color: $color-one-red;
+  }
+}
