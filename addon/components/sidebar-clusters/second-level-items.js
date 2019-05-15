@@ -30,11 +30,6 @@ export default SecondLevelItems.extend(I18n, {
   item: undefined,
 
   /**
-   * @type {boolean}
-   */
-  isEmergencyOnepanel: false,
-
-  /**
    * @type {Ember.ComputedProperty<string>}
    */
   clusterType: reads('item.type'),
@@ -103,22 +98,10 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
-  emergencyPassphraseItem: computed(function emergencyPassphraseItem() {
-    return {
-      id: 'emergency-passphrase',
-      label: this.t('emergencyPassphrase'),
-      icon: 'key',
-    };
-  }),
-
   clusterSecondLevelItems: computed(
-    'isNotDeployedCluster',
-    'isLocalCluster',
-    'isEmergencyOnepanel',
     'clusterType',
     'dnsItem',
     'certificateItem',
-    'emergencyPassphraseItem',
     'nodesItem',
     'overviewItem',
     'providerItem',
@@ -127,41 +110,30 @@ export default SecondLevelItems.extend(I18n, {
     'membersItem',
     function clusterSecondLevelItems() {
       const {
-        isNotDeployedCluster,
-        isLocalCluster,
-        isEmergencyOnepanel,
+        clusterType,
+        dnsItem,
+        certificateItem,
+        nodesItem,
+        overviewItem,
+        providerItem,
+        storagesItem,
+        spacesItem,
+        membersItem,
       } = this.getProperties(
-        'isNotDeployedCluster',
-        'isLocalCluster',
-        'isEmergencyOnepanel'
+        'clusterType',
+        'cluster',
+        'dnsItem',
+        'certificateItem',
+        'nodesItem',
+        'overviewItem',
+        'providerItem',
+        'storagesItem',
+        'spacesItem',
+        'membersItem'
       );
-      if (isNotDeployedCluster || !isLocalCluster) {
+      if (!clusterType) {
         return [];
       } else {
-        const {
-          clusterType,
-          dnsItem,
-          certificateItem,
-          emergencyPassphraseItem,
-          nodesItem,
-          overviewItem,
-          providerItem,
-          storagesItem,
-          spacesItem,
-          membersItem,
-        } = this.getProperties(
-          'clusterType',
-          'cluster',
-          'dnsItem',
-          'certificateItem',
-          'emergencyPassphraseItem',
-          'nodesItem',
-          'overviewItem',
-          'providerItem',
-          'storagesItem',
-          'spacesItem',
-          'membersItem'
-        );
         const commonItems = [
           overviewItem,
           nodesItem,
@@ -175,9 +147,6 @@ export default SecondLevelItems.extend(I18n, {
           storagesItem,
           spacesItem,
         ];
-        if (isEmergencyOnepanel) {
-          items.push(emergencyPassphraseItem);
-        }
         return items;
       }
     }
