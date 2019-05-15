@@ -23,7 +23,6 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
-  classNameBindings: ['withBottomBar:with-bottom-bar'],
 
   sidebarResources: service(),
   sideMenu: service(),
@@ -68,19 +67,23 @@ export default Component.extend({
     }
   }),
 
-  colSidebarClass: computed('showMobileSidebar', 'withBottomBar', function colSidebarClass() {
-    const showMobileSidebar = this.get('showMobileSidebar');
-    const base =
-      'col-sidebar full-height disable-user-select';
-    let finalClass;
-    if (this.get('withBottomBar')) {
-      finalClass = `${base} hidden`;
-    } else {
-      let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
-      finalClass = `${base} ${xsClass}`;
+  colSidebarClass: computed(
+    'showMobileSidebar',
+    'withBottomBar',
+    function colSidebarClass() {
+      const showMobileSidebar = this.get('showMobileSidebar');
+      const base =
+        'col-sidebar full-height disable-user-select';
+      let finalClass;
+      if (this.get('withBottomBar')) {
+        finalClass = `${base} hidden`;
+      } else {
+        let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
+        finalClass = `${base} ${xsClass}`;
+      }
+      return htmlSafe(finalClass);
     }
-    return htmlSafe(finalClass);
-  }),
+  ),
 
   contentScrollResetObserver: observer(
     'navigationState.{activeResourceType,activeResource,activeAspect}',

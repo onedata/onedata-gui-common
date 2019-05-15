@@ -13,6 +13,7 @@ import { get } from '@ember/object';
 import { observer } from '@ember/object';
 import _ from 'lodash';
 import config from 'ember-get-config';
+import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const {
   onedataTabs
@@ -22,6 +23,7 @@ export default Route.extend({
   globalNotify: service(),
   media: service(),
   guiUtils: service(),
+  sidebarResources: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');
@@ -48,8 +50,11 @@ export default Route.extend({
     }
   }),
 
-  getDefaultResource(list) {
-    return list.objectAt(0);
+  getDefaultResource(list, resourceType) {
+    return sortByProperties(
+      list,
+      this.get('sidebarResources').getItemsSortingFor(resourceType)
+    )[0];
   },
 
   redirectToDefault({ resourceType, collection }) {

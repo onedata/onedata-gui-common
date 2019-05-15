@@ -32,9 +32,13 @@ export default Service.extend({
         if (isRecord(proxyCollection)) {
           return proxyCollection;
         } else if (get(proxyCollection, 'list')) {
-          return Promise.all(get(proxyCollection, 'list')).then(() => proxyCollection);
+          return Promise.all(get(proxyCollection, 'list')).then(() =>
+            proxyCollection
+          );
         } else {
-          return Promise.all(proxyCollection).then(list => EmberObject.create({ list }));
+          return Promise.all(proxyCollection).then(list =>
+            EmberObject.create({ list })
+          );
         }
       }).then(collection => {
         return {
@@ -42,5 +46,17 @@ export default Service.extend({
           collection,
         };
       });
-  }
+  },
+
+  /**
+   * @param {string} resourceType 
+   * @returns {Array<string>}
+   */
+  getItemsSortingFor(resourceType) {
+    if (resourceType === 'clusters') {
+      return ['type:desc', 'name'];
+    } else {
+      return ['name'];
+    }
+  },
 });

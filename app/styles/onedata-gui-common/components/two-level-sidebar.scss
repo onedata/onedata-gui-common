@@ -59,7 +59,6 @@
         }
       }
       
-      
       .status-toolbar {
         position: absolute;
         right: $one-list-item-padding * 0.75;
@@ -83,6 +82,25 @@
     }
     &.search-bar-item .item-header:hover {
       background-color: initial;
+    }
+    
+    &.active .one-icon-tagged {
+      &.item-error {
+        .one-icon-tagged-main {
+          color: inactive-color($brand-danger);
+        }
+      }
+    }
+    
+    .one-icon-tagged {
+      &.item-error {
+        .one-icon-tag-icon {
+          color: $brand-danger;
+        }
+        .one-icon-tagged-main {
+          color: $main-text-color-disabled;
+        }
+      }
     }
   }
 

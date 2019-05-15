@@ -1,4 +1,9 @@
-{{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
+{{one-icon-tagged
+  class=(concat "sidebar-item-icon" (if offline " item-error"))
+  icon=firstLevelItemIcon
+  tagIcon=(if offline "x")
+  shadowType="none"
+}}
 {{#truncated-string class="after-icon name sidebar-item-title-upper"}}
   {{#if item.name}}
     {{name-conflict item=item tagName="span" class="one-label"}}
