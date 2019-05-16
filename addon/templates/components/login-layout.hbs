@@ -4,4 +4,18 @@
 <div class="login-box-container">
   {{yield}}
 </div>
-<div class="login-service-version">{{tt this "version"}} {{version}}</div>
+<div class="login-service-version">
+  <span class="login-service-version-string">
+    <span>{{tt this "version"}}</span>
+    <span class="version">{{versionDetails.serviceVersion}}</span>
+  </span>
+  <span class="login-service-version-hint">
+    <div class="inline-icon-container">
+      {{one-icon icon="sign-info-rounded" class="login-service-version-more-icon"}}
+    </div>
+    {{#one-tooltip}}
+      <strong>{{tt this "versionBuild"}}:</strong>
+      <span class="version-build">{{versionDetails.serviceBuildVersion}}</span>
+    {{/one-tooltip}}
+  </span>
+</div>

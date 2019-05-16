@@ -43,4 +43,10 @@ $screen-fixed-service-version-height-min: 640px !default;
       position: static;
     }
   }
+  .login-service-version-hint {
+    margin-left: 6px;
+    .login-service-version-more-icon {
+      font-size: 18px;
+    }
+  }
 }
