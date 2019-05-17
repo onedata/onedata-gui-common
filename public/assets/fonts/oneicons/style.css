@@ -1,9 +1,10 @@
 @font-face {
   font-family: 'oneicons';
-  src:
-    url('fonts/oneicons.ttf?9ib1r') format('truetype'),
-    url('fonts/oneicons.woff?9ib1r') format('woff'),
-    url('fonts/oneicons.svg?9ib1r#oneicons') format('svg');
+  src:  url('fonts/oneicons.eot?et3kyu');
+  src:  url('fonts/oneicons.eot?et3kyu#iefix') format('embedded-opentype'),
+    url('fonts/oneicons.ttf?et3kyu') format('truetype'),
+    url('fonts/oneicons.woff?et3kyu') format('woff'),
+    url('fonts/oneicons.svg?et3kyu#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -153,34 +154,34 @@
 .oneicon-inbox:before {
   content: "\e92a";
 }
-.oneicon-join-plug:before {
+.oneicon-index:before {
   content: "\e92b";
 }
-.oneicon-join-space:before {
+.oneicon-join-plug:before {
   content: "\e92c";
 }
-.oneicon-join:before {
+.oneicon-join-space:before {
   content: "\e92d";
 }
-.oneicon-key:before {
+.oneicon-join:before {
   content: "\e92e";
 }
-.oneicon-leave-space:before {
+.oneicon-key:before {
   content: "\e92f";
 }
-.oneicon-light-bulb:before {
+.oneicon-leave-space:before {
   content: "\e930";
 }
-.oneicon-link-external:before {
+.oneicon-light-bulb:before {
   content: "\e931";
 }
-.oneicon-lock-checked:before {
+.oneicon-link-external:before {
   content: "\e932";
 }
-.oneicon-lock:before {
+.oneicon-lock-checked:before {
   content: "\e933";
 }
-.oneicon-logout:before {
+.oneicon-lock:before {
   content: "\e934";
 }
 .oneicon-membership:before {
@@ -422,7 +423,4 @@
 }
 .oneicon-view-list:before {
   content: "\e984";
-}
-.oneicon-x:before {
-  content: "\e985";
 }

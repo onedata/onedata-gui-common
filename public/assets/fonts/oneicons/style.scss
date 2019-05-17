@@ -2,10 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?9ib1r') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?9ib1r') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?9ib1r##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?et3kyu');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?et3kyu#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?et3kyu') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?et3kyu') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?et3kyu##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -241,6 +242,11 @@
     content: $oneicon-inbox; 
   }
 }
+.oneicon-index {
+  &:before {
+    content: $oneicon-index; 
+  }
+}
 .oneicon-join-plug {
   &:before {
     content: $oneicon-join-plug; 
@@ -284,11 +290,6 @@
 .oneicon-lock {
   &:before {
     content: $oneicon-lock; 
-  }
-}
-.oneicon-logout {
-  &:before {
-    content: $oneicon-logout; 
   }
 }
 .oneicon-membership {
@@ -689,11 +690,6 @@
 .oneicon-view-list {
   &:before {
     content: $oneicon-view-list; 
-  }
-}
-.oneicon-x {
-  &:before {
-    content: $oneicon-x; 
   }
 }
 
