@@ -34,6 +34,7 @@ const SPECIAL_IDS = [
   'new',
   'join',
   'not-selected',
+  'null',
 ];
 
 function isSpecialResourceId(id) {
@@ -74,7 +75,8 @@ export default Route.extend({
         isActiveResourceIdSpecial: true,
         activeResourceId: resourceId,
       });
-      if (resourceId === 'empty' && get(collection, 'list.length')) {
+      if (resourceId === 'null' ||
+        (resourceId === 'empty' && get(collection, 'list.length'))) {
         this.transitionTo('onedata.sidebar.index');
         return;
       } else {
@@ -108,6 +110,7 @@ export default Route.extend({
           .then(( /* record */ ) => {
             // this is resource that shouldn't be presented to user,
             // because we do not have it on a list anyway
+            return { error: { id: 'forbidden' } };
           })
           .catch(error => ({ error }))
           .then(data => {
