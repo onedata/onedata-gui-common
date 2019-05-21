@@ -51,7 +51,6 @@ export default Component.extend({
     return i18n.t(`tabs.${item.id}.menuItem`);
   }),
 
-
   click() {
     if (!this.get('isDisabled')) {
       let item = this.get('item');
