@@ -11,6 +11,7 @@
 import EmberObject, { get } from '@ember/object';
 import Service from '@ember/service';
 import isRecord from 'onedata-gui-common/utils/is-record';
+import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 
 export default Service.extend({
   /**
@@ -27,17 +28,18 @@ export default Service.extend({
    * @param {string} resourceType 
    */
   getSidebarModelFor(resourceType) {
-    return this.getCollectionFor(resourceType)
-      .then(proxyCollection => {
-        if (isRecord(proxyCollection)) {
-          return proxyCollection;
-        } else if (get(proxyCollection, 'list')) {
-          return Promise.all(get(proxyCollection, 'list')).then(() =>
-            proxyCollection
+    const collectionProxy = this.getCollectionFor(resourceType);
+    return collectionProxy
+      .then(collection => {
+        if (isRecord(collection)) {
+          return collection;
+        } else if (get(collection, 'list')) {
+          return Promise.all(get(collection, 'list')).then(() =>
+            collection
           );
         } else {
-          return Promise.all(proxyCollection).then(list =>
-            EmberObject.create({ list })
+          return Promise.all(collection).then(() =>
+            EmberObject.create({ list: collectionProxy })
           );
         }
       }).then(collection => {
