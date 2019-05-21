@@ -34,15 +34,13 @@
     <div class="row row-login-header text-center">
       <div class="col-xs-12">
         <h4>{{t "components.loginBox.login"}}</h4>
-        <div class="login-box-error-message {{if sessionHasExpired "active" ""}}">
-          {{t "components.loginBox.sessionExpired"}}
-        </div>
       </div>
     </div>
     {{!-- TODO remove .additional-bottom-margin after icons resize --}}
     <div class="row additional-bottom-margin">
       <div class="col-xs-10 col-centered">
         {{login-box/login-form-container
+          sessionHasExpired=sessionHasExpired
           authenticationSuccess=(action "authenticationSuccess")
           authenticationFailure=(action "authenticationFailure")
           authenticationStarted=(action "authenticationStarted")

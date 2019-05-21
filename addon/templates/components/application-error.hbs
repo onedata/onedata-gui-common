@@ -1,28 +1,27 @@
-<div class="row absolute-align-middle-center error-row">
-  {{one-icon tagName="div" icon="sign-warning" class="application-error-icon"}}
-  <div class="application-error-message">
-    {{message}}
+{{#if error.isOnedataCustomError}}
+  {{partial (concat "errors/" error.type)}}
+{{else}}
+  <div class="row absolute-align-middle-center error-row">
+    {{one-icon tagName="div" icon="sign-warning" class="application-error-icon"}}
+    <div class="application-error-message">
+      {{message}}
+    </div>
+    {{#if error}}
+      <div class="error-details active">
+        {{#if _reasonDetails.message}}
+          <p>{{_reasonDetails.message}}</p>
+        {{/if}}
+        {{#if (and _reasonDetails.message _reasonDetails.errorJsonString)}}
+          <br>
+        {{/if}}
+        {{#if _reasonDetails.errorJsonString}}
+          <div class="error-json">{{_reasonDetails.errorJsonString}}</div>
+        {{/if}}
+      </div>
+    {{else}}
+      <div class="application-error-show-more">
+        {{t "components.applicationError.noDetails"}}
+      </div>
+    {{/if}}
   </div>
-  {{#if error}}
-    <div class="application-error-show-more">
-      <a role="button" tabindex="0" class="show-error-details" {{action "toggleShowDetails"}}>
-        {{t (concat "components.applicationError." (if showDetails "hideDetails" "showDetails"))}}
-      </a>
-    </div>
-    <div class="error-details {{if showDetails "active"}}">
-      {{#if _reasonDetails.message}}
-        <p>{{_reasonDetails.message}}</p>
-      {{/if}}
-      {{#if (and _reasonDetails.message _reasonDetails.errorJsonString)}}
-        <br>
-      {{/if}}
-      {{#if _reasonDetails.errorJsonString}}
-        <div class="error-json">{{_reasonDetails.errorJsonString}}</div>
-      {{/if}}
-    </div>
-  {{else}}
-    <div class="application-error-show-more">
-      {{t "components.applicationError.noDetails"}}
-    </div>
-  {{/if}}
-</div>
+{{/if}}  

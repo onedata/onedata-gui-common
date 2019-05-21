@@ -1,3 +1,5 @@
+$screen-fixed-service-version-height-min: 640px !default;
+
 .login-layout {
   position: absolute;
   top: 0;
@@ -24,8 +26,21 @@
     
     @media (min-height: 750px) {
       @include absolute-align-middle-center();
-      transform: translateX(-50%) translateY(-50%) translateY(-50px);
       margin-top: 0;
+    }
+  }
+  .login-service-version {
+    text-align: right;
+    padding: 10px;
+    padding-right: 20px;
+    color: rgba(white, 0.5);
+    @media (min-height: $screen-fixed-service-version-height-min) {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+    }
+    @media (max-height: $screen-fixed-service-version-height-min - 1px) {
+      position: static;
     }
   }
 }

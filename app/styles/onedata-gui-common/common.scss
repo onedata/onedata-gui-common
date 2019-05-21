@@ -360,8 +360,9 @@ a {
   }
 }
 
-.col-image {
-  padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+.col-vertical-middle-absolute-right {
+  @include vertical-align-middle();
+  right: 0;
 }
 
 .code-textarea {

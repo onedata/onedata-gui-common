@@ -46,6 +46,7 @@
         {{#one-spin-button class="btn btn-primary"
           buttonStyle="expand-left"
           action=(action "submitLogin" username password)
+          disabled=submitIsDisabled
         }}
           {{t "components.basicauthLoginForm.signIn"}}
         {{/one-spin-button}}
