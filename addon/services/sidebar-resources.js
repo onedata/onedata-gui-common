@@ -12,6 +12,7 @@ import EmberObject, { get } from '@ember/object';
 import Service from '@ember/service';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
+import { resolve } from 'rsvp';
 
 export default Service.extend({
   /**
@@ -38,8 +39,16 @@ export default Service.extend({
             collection
           );
         } else {
+          let collectionList;
+          if (collectionProxy instanceof PromiseArray) {
+            collectionList = collectionProxy;
+          } else {
+            collectionList = PromiseArray.create({
+              promise: resolve(collectionProxy)
+            })
+          }
           return Promise.all(collection).then(() =>
-            EmberObject.create({ list: collectionProxy })
+            EmberObject.create({ list: collectionList })
           );
         }
       }).then(collection => {

@@ -92,8 +92,9 @@ export default function createDataProxyMixin(name, options) {
       get() {
         return this[getDataProxyName]();
       },
-      set() {
-        throw new Error(`Data proxy property is read only: ${dataProxyName}`);
+      set(key, value) {
+        // you should not do that, but we do not deny this
+        return this.set(internalDataProxyName, value);
       }
     }),
 
