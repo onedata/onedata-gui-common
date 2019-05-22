@@ -58,14 +58,6 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
-  credentialsItem: computed(function credentialsItem() {
-    return {
-      id: 'credentials',
-      label: this.t('credentials'),
-      icon: 'user',
-    };
-  }),
-
   nodesItem: computed(function nodesItem() {
     return {
       id: 'nodes',
@@ -107,59 +99,55 @@ export default SecondLevelItems.extend(I18n, {
   }),
 
   clusterSecondLevelItems: computed(
-    'isNotDeployedCluster',
     'clusterType',
     'dnsItem',
     'certificateItem',
-    'credentialsItem',
     'nodesItem',
     'overviewItem',
     'providerItem',
     'storagesItem',
     'spacesItem',
     'membersItem',
-    function () {
-      if (this.get('isNotDeployedCluster')) {
+    function clusterSecondLevelItems() {
+      const {
+        clusterType,
+        dnsItem,
+        certificateItem,
+        nodesItem,
+        overviewItem,
+        providerItem,
+        storagesItem,
+        spacesItem,
+        membersItem,
+      } = this.getProperties(
+        'clusterType',
+        'cluster',
+        'dnsItem',
+        'certificateItem',
+        'nodesItem',
+        'overviewItem',
+        'providerItem',
+        'storagesItem',
+        'spacesItem',
+        'membersItem'
+      );
+      if (!clusterType) {
         return [];
       } else {
-        const {
-          clusterType,
-          dnsItem,
-          certificateItem,
-          credentialsItem,
-          nodesItem,
-          overviewItem,
-          providerItem,
-          storagesItem,
-          spacesItem,
-          membersItem,
-        } = this.getProperties(
-          'clusterType',
-          'cluster',
-          'dnsItem',
-          'certificateItem',
-          'credentialsItem',
-          'nodesItem',
-          'overviewItem',
-          'providerItem',
-          'storagesItem',
-          'spacesItem',
-          'membersItem'
-        );
         const commonItems = [
           overviewItem,
           nodesItem,
           dnsItem,
           certificateItem,
-          credentialsItem,
           membersItem,
         ];
-        return clusterType === 'onezone' ? commonItems : [
+        const items = clusterType === 'onezone' ? commonItems : [
           ...commonItems,
           providerItem,
           storagesItem,
           spacesItem,
         ];
+        return items;
       }
     }
   ),

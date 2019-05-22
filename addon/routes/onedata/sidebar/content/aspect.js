@@ -12,6 +12,7 @@ import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
 import _ from 'lodash';
+import { getOwner } from '@ember/application';
 
 const notFoundAspect = 'not-found';
 
@@ -74,12 +75,12 @@ export default Route.extend({
     const templateName = model.aspectId === notFoundAspect ?
       '-resource-not-found' :
       `tabs.${resourceType}.${aspectId}`;
-    try {
+    if (getOwner(this).lookup(`template:${templateName}`)) {
       this.render(templateName, {
         into: 'onedata.sidebar.content',
         outlet: 'main-content'
       });
-    } catch (error) {
+    } else {
       const tabSettings = _.find(
         onedataTabs,
         t => get(t, 'id') === resourceType
