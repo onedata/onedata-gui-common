@@ -22,6 +22,7 @@ import providersMapTile from './onedata-gui-common/components/providers-map-tile
 import userAccountButton from './onedata-gui-common/components/user-account-button';
 import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
 import brandInfo from './onedata-gui-common/components/brand-info';
+import userCredentialsForm from './onedata-gui-common/components/user-credentials-form';
 import loginLayout from './onedata-gui-common/components/login-layout';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
@@ -57,6 +58,7 @@ const translations = {
     providersMapTile,
     userAccountButton,
     brandInfo,
+    userCredentialsForm,
     loginLayout,
     alerts: {
       endpointError,

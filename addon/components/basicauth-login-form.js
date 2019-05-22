@@ -13,20 +13,33 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/basicauth-login-form';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { not, or } from 'ember-awesome-macros';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { not, or, and } from 'ember-awesome-macros';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['basicauth-login-form'],
 
   session: service(),
   globalNotify: service(),
 
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.basicauthLoginForm',
+
   username: '',
   password: '',
 
   isDisabled: false,
   areCredentialsInvalid: false,
+
+  /**
+   * If true, do not render, validate and use username field.
+   * @virtual optional
+   * @type {boolean}
+   */
+  passphraseMode: false,
 
   /**
    * Action called on 'back' button click. If not defined, back button will
@@ -57,11 +70,18 @@ export default Component.extend({
    */
   authenticationFailure: notImplementedIgnore,
 
-  submitIsDisabled: or('isDisabled', not('username'), not('password')),
+  submitIsDisabled: or('isDisabled', and(not('passphraseMode'), not('username')), not('password')),
 
   didInsertElement() {
     this._super(...arguments);
-    this.$('.login-username').focus();
+
+    const passphraseMode = this.get('passphraseMode');
+
+    if (passphraseMode) {
+      this.$('.login-lock').focus();
+    } else {
+      this.$('.login-username').focus();
+    }
   },
 
   onLoginStarted() {
@@ -101,7 +121,6 @@ export default Component.extend({
 
   actions: {
     submitLogin(username, password) {
-      // TODO: in root password branch, remember to allow only password!
       if (!this.get('submitIsDisabled')) {
         const {
           session,
@@ -111,10 +130,10 @@ export default Component.extend({
         this.onLoginStarted();
         authenticationStarted();
 
-        const loginCalling = session.authenticate('authenticator:application',
+        const loginCalling = session.authenticate('authenticator:application', {
           username,
           password
-        );
+        });
 
         loginCalling.then(() => this.onLoginSuccess(username, password));
         loginCalling.catch(() => this.onLoginFailure(username, password));

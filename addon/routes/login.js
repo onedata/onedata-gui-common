@@ -22,6 +22,6 @@ export default Route.extend(
     },
 
     titleToken: computed(function () {
-      return this.t('login');
+      return this.t('signIn');
     }),
   });
