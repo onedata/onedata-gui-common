@@ -10,7 +10,7 @@
   {{#truncated-string class="brand-text brand-type-version"}}
     <span class="brand-type">{{guiType}}</span>
     <span class="brand-version">{{softwareVersionDetails.serviceVersion}}</span>
-    {{#if showLogout}}\
+    {{#if showLogout}}
       <div class="brand-logout clickable" {{action "logout"}}>
         {{one-icon class="brand-logout-icon" icon="logout"}}
         <span class="brand-logout-text">{{tt this "logout"}}</span>
@@ -19,9 +19,10 @@
   {{/truncated-string}}
 </div>
 <div class="brand-info-version-hint">
-  {{one-icon icon="sign-info-rounded" class="brand-info-version-more-icon"}}
-  {{#one-tooltip}}
-    <strong>{{tt this "build"}}:</strong>
-    <span class="version-build">{{softwareVersionDetails.serviceBuildVersion}}</span>
-  {{/one-tooltip}}
+  {{#one-icon icon="sign-info-rounded" class="brand-info-version-more-icon"}}
+    {{#one-tooltip}}
+      <strong>{{tt this "build"}}:</strong>
+      <span class="version-build">{{softwareVersionDetails.serviceBuildVersion}}</span>
+    {{/one-tooltip}}
+  {{/one-icon}}
 </div>

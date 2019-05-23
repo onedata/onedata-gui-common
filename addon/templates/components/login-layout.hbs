@@ -11,11 +11,12 @@
   </span>
   <span class="login-service-version-hint">
     <div class="inline-icon-container">
-      {{one-icon icon="sign-info-rounded" class="login-service-version-more-icon"}}
+      {{#one-icon icon="sign-info-rounded" class="login-service-version-more-icon"}}
+        {{#one-tooltip}}
+          <strong>{{tt this "versionBuild"}}:</strong>
+          <span class="version-build">{{softwareVersionDetails.serviceBuildVersion}}</span>
+        {{/one-tooltip}}
+      {{/one-icon}}
     </div>
-    {{#one-tooltip}}
-      <strong>{{tt this "versionBuild"}}:</strong>
-      <span class="version-build">{{softwareVersionDetails.serviceBuildVersion}}</span>
-    {{/one-tooltip}}
   </span>
 </div>

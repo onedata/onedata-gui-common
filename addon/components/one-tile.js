@@ -173,10 +173,6 @@ export default Component.extend(I18n, {
   moreText: computedT('more'),
 
   /**
-   */
-  footerLinkText: undefined,
-
-  /**
    * @type {Ember.ComputedProperty<Function>}
    */
   windowResizeHandler: computed(function windowResizeHandler() {
