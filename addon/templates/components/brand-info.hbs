@@ -7,16 +7,18 @@
       {{guiName}}
     {{/truncated-string}}
   {{/if}}
-  {{#truncated-string class="brand-text brand-type-version"}}
-    <span class="brand-type">{{guiType}}</span>
-    <span class="brand-version">{{softwareVersionDetails.serviceVersion}}</span>
+  <div class="brand-text brand-type-version">
+    {{#truncated-string class="truncate-brand-text"}}
+      <span class="brand-type">{{guiType}}</span>
+      <span class="brand-version">{{softwareVersionDetails.serviceVersion}}</span>
+    {{/truncated-string}}
     {{#if showLogout}}
       <div class="brand-logout clickable" {{action "logout"}}>
         {{one-icon class="brand-logout-icon" icon="logout"}}
         <span class="brand-logout-text">{{tt this "logout"}}</span>
       </div>
     {{/if}}
-  {{/truncated-string}}
+  </div>
 </div>
 <div class="brand-info-version-hint">
   {{#one-icon icon="sign-info-rounded" class="brand-info-version-more-icon"}}
