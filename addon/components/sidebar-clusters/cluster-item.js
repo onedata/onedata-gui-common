@@ -58,7 +58,11 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-    this.get('cluster').updateIsOnlineProxy();
+    const cluster = this.get('cluster');
+    // if this is new cluster (not a real cluster), skip updateIsOnlineProxy
+    if (cluster.updateIsOnlineProxy) {
+      cluster.updateIsOnlineProxy();
+    }
   },
 
   // TODO: unfinished code for deregister in menu of cluster item
