@@ -19,8 +19,9 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import $ from 'jquery';
 import { Promise, resolve } from 'rsvp';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['one-inline-editor'],
   classNameBindings: [
@@ -29,7 +30,13 @@ export default Component.extend({
     'controlledManually:manual'
   ],
 
+  i18n: service(),
   eventsBus: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneInlineEditor',
 
   /**
    * Input value (before edition).
@@ -117,6 +124,13 @@ export default Component.extend({
    * @type {boolean}
    */
   isInToolbar: false,
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  staticPlaceholder: computed(function staticPlaceholder() {
+    return this.t('notSet');
+  }),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}

@@ -38,7 +38,6 @@ $brand-info-height: $one-list-item-line-height;
     }
     .col-content {
       height: calc(100% - #{$brand-info-height});
-      padding-bottom: $content-col-padding + $brand-info-height;
     }
     .col-main-menu {
       display: none !important;

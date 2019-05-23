@@ -1,5 +1,5 @@
 import { validator } from 'ember-cp-validations';
-import { computed } from '@ember/object';
+import { computed, getProperties } from '@ember/object';
 
 const comparableValues = {
   lt: (property, number) => Math.min(property, number),
@@ -44,11 +44,18 @@ function getValidatorCompareValue(validatorValue, operator) {
  */
 export default function createFieldValidator(field) {
   let validations = [];
-  if (!field.optional && field.type !== 'static') {
+  const {
+    type: fieldType,
+    length: textLength,
+  } = getProperties(field, 'type', 'length');
+  if (!field.optional && fieldType !== 'static') {
     validations.push(validator('presence', {
       presence: true,
       ignoreBlank: true,
     }));
+  }
+  if (['text', 'password'].includes(fieldType) && textLength) {
+    validations.push(validator('length', textLength));
   }
   if (field.type === 'number') {
     validations.push(validator('number', {
