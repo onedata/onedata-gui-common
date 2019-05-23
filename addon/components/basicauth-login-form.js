@@ -126,10 +126,10 @@ export default Component.extend(I18n, {
       this.onLoginStarted();
       authenticationStarted();
 
-      const loginCalling = session.authenticate('authenticator:application',
+      const loginCalling = session.authenticate('authenticator:application', {
         username,
         password
-      );
+      });
 
       loginCalling.then(() => this.onLoginSuccess(username, password));
       loginCalling.catch(() => this.onLoginFailure(username, password));
