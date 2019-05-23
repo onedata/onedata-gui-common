@@ -45,9 +45,9 @@
       {{/loading-container}}
     {{/perfect-scrollbar-element}}
   </div>
-  {{#unless (eq provider.status "offline")}}
-    <hr>
-    <div class="btn-container">
+  <hr>
+  <div class="btn-container">
+    {{#if provider.online}}
       <div class="row row-btn">
         {{#one-spin-button
           class="btn btn-sm btn-toggle-default btn-default"
@@ -71,7 +71,12 @@
           {{/link-to}}
         {{/if}}
       </div>
-    </div>
-    
-  {{/unless}}
+    {{else}}
+      <div class="row row-btn">
+        <div class="btn btn-danger no-pointer-events offline-badge">
+          {{tt this "offline"}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
 </div>

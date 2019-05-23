@@ -23,9 +23,9 @@ export default Component.extend(I18n, {
   guiUtils: service(),
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * @type {ComputedProperty<object>}
    */
-  guiVersion: reads('guiUtils.guiVersion'),
+  softwareVersionDetails: reads('guiUtils.softwareVersionDetails'),
 
   /**
    * @type {Ember.ComputedProperty<string>}

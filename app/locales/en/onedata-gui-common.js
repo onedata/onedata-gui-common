@@ -33,6 +33,9 @@ import login from './onedata-gui-common/routes/login';
 import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
+import noPermissions from './onedata-gui-common/errors/no-permissions';
+import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
+
 const translations = {
   components: {
     basicauthLoginForm,
@@ -76,6 +79,10 @@ const translations = {
   services: {
     guiUtils,
     clusterActions,
+  },
+  errors: {
+    noPermissions,
+    noClusterPermissions,
   },
 };
 

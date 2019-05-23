@@ -36,12 +36,11 @@ export default Route.extend({
     const resourceType = this.modelFor('onedata.sidebar').resourceType;
     if (!contentModel.resource) {
       if (contentModel.error && !isNotFoundError(contentModel.error)) {
-        // TODO: this is now very custom code, consider making generic forbidden
-        // and resource-specific forbidden
-        if (contentModel.error.id === 'forbidden' && resourceType === 'clusters') {
+        if (contentModel.error.id === 'forbidden') {
           throw {
             isOnedataCustomError: true,
-            type: 'no-cluster-permissions'
+            type: resourceType === 'clusters' ?
+              'no-cluster-permissions' : 'no-permissions'
           };
         } else {
           throw contentModel.error;

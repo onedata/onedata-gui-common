@@ -72,6 +72,10 @@ strong {
   word-wrap: break-word;
 }
 
+.no-pointer-events {
+  pointer-events: none;
+}
+
 .content-backdrop.sidenav-backdrop {
   // TODO: animation
   position: absolute;

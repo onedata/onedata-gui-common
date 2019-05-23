@@ -16,11 +16,15 @@
  * fetchPropertyName(fetchArgs): Promise<T>
  * 
  * // PromiseObject with data, can be undefined if `updateDataProxy` or
- * // `getDataProxy` was not invoked yet
- * propertyNameProxy: PromiseObject<T>
+ * // `getDataProxy` was not invoked yet; PLEASE DO NOT USE IT DIRECTLY,
+ * // use `propertyNameProxy` (without underscore) instead
+ * _propertyNameProxy: PromiseObject<T>
+ * 
+ * // get PromiseObject with data, and initialize it if getting first time
+ * propertyNameProxy: ComputedProperty<PromiseObject<T>>
  * 
  * // object with data, can be undefined if data not yet fetched or rejected
- * PropertyName: T
+ * propertyName: T
  * 
  * // returns dataProxy or creates it when not created yet
  * getPropertyNameProxy({ reload: boolean, fetchArgs: Array }): PromiseObject<T>
@@ -28,22 +32,37 @@
  * 
  * @module utils/create-data-proxy-mixin
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Mixin from '@ember/object/mixin';
 import { classify, camelize } from '@ember/string';
 import { reads } from '@ember/object/computed';
+import { computed, set } from '@ember/object';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
-export default function createDataProxyMixin(name, fetch = notImplementedReject) {
+export default function createDataProxyMixin(name, options) {
   const updateDataProxyName = `update${classify(name)}Proxy`;
   const fetchDataName = `fetch${classify(name)}`;
   const dataProxyName = `${camelize(name)}Proxy`;
+  const internalDataProxyName = `_${dataProxyName}`;
   const getDataProxyName = `get${classify(name)}Proxy`;
+
+  let _options;
+  if (typeof options === 'function') {
+    _options = { fetch: options };
+  } else if (!options) {
+    _options = {};
+  } else {
+    _options = Object.assign({}, options);
+  }
+  if (!_options.fetch) {
+    _options.fetch = notImplementedReject;
+  }
 
   return Mixin.create({
     /**
@@ -52,44 +71,41 @@ export default function createDataProxyMixin(name, fetch = notImplementedReject)
      */
     [updateDataProxyName]({ replace = false, fetchArgs = [] } = {}) {
       const promise = this[fetchDataName](...fetchArgs);
-      const proxyProperty = dataProxyName;
-      if (replace && this.get(`${proxyProperty}.content`)) {
-        return promise
-          .catch(error => {
-            safeExec(this, 'set', `${proxyProperty}.content`, undefined);
-            safeExec(this, 'set', `${proxyProperty}.reason`, error);
-            safeExec(this, 'set', `${proxyProperty}.isFulfilled`, false);
-            safeExec(this, 'set', `${proxyProperty}.isRejected`, true);
-            throw error;
-          })
-          .then(content => {
-            safeExec(this, 'set', `${proxyProperty}.content`, content);
-            safeExec(this, 'set', `${proxyProperty}.reason`, undefined);
-            safeExec(this, 'set', `${proxyProperty}.isFulfilled`, true);
-            safeExec(this, 'set', `${proxyProperty}.isRejected`, false);
-            return content;
-          });
+      if (replace && this.get(`${internalDataProxyName}.content`)) {
+        const proxy = this.get(internalDataProxyName);
+        set(proxy, 'promise', promise);
+        return proxy;
       } else {
-        safeExec(
+        return safeExec(
           this,
           'set',
-          proxyProperty,
-          PromiseObject.create({ promise })
+          internalDataProxyName,
+          (_options.type === 'array' ? PromiseArray : PromiseObject)
+          .create({ promise })
         );
-        return promise;
       }
     },
 
-    [fetchDataName]: fetch,
+    [fetchDataName]: _options.fetch,
 
-    [dataProxyName]: null,
+    [dataProxyName]: computed(internalDataProxyName, {
+      get() {
+        return this[getDataProxyName]();
+      },
+      set(key, value) {
+        // you should not do that, but we do not deny this
+        return this.set(internalDataProxyName, value);
+      }
+    }),
+
+    [internalDataProxyName]: null,
 
     [name]: reads(`${dataProxyName}.content`),
 
     [getDataProxyName]({ reload = false, fetchArgs = [] } = {}) {
-      const dataProxy = this.get(`${camelize(name)}Proxy`);
-      if (!reload && dataProxy) {
-        return dataProxy;
+      const internalDataProxy = this.get(internalDataProxyName);
+      if (!reload && internalDataProxy) {
+        return internalDataProxy;
       } else {
         return this[updateDataProxyName]({ replace: true, fetchArgs });
       }

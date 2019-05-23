@@ -14,7 +14,6 @@ import layout from 'onedata-gui-common/templates/components/basicauth-login-form
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { not, or, and } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -70,8 +69,6 @@ export default Component.extend(I18n, {
    */
   authenticationFailure: notImplementedIgnore,
 
-  submitIsDisabled: or('isDisabled', and(not('passphraseMode'), not('username')), not('password')),
-
   didInsertElement() {
     this._super(...arguments);
 
@@ -121,25 +118,23 @@ export default Component.extend(I18n, {
 
   actions: {
     submitLogin(username, password) {
-      if (!this.get('submitIsDisabled')) {
-        const {
-          session,
-          authenticationStarted,
-        } = this.getProperties('session', 'authenticationStarted');
+      const {
+        session,
+        authenticationStarted,
+      } = this.getProperties('session', 'authenticationStarted');
 
-        this.onLoginStarted();
-        authenticationStarted();
+      this.onLoginStarted();
+      authenticationStarted();
 
-        const loginCalling = session.authenticate('authenticator:application', {
-          username,
-          password
-        });
+      const loginCalling = session.authenticate('authenticator:application', {
+        username,
+        password
+      });
 
-        loginCalling.then(() => this.onLoginSuccess(username, password));
-        loginCalling.catch(() => this.onLoginFailure(username, password));
+      loginCalling.then(() => this.onLoginSuccess(username, password));
+      loginCalling.catch(() => this.onLoginFailure(username, password));
 
-        return loginCalling;
-      }
+      return loginCalling;
     },
     backAction() {
       const backButtonAction = this.get('backButtonAction');

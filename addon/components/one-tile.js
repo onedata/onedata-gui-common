@@ -23,7 +23,11 @@ import computedT from 'onedata-gui-common/utils/computed-t';
 export default Component.extend(I18n, {
   layout,
   classNames: ['one-tile'],
-  classNameBindings: ['isLink:one-tile-link', 'sizeClass'],
+  classNameBindings: [
+    'isLink:one-tile-link',
+    'footerText:with-footer',
+    'sizeClass'
+  ],
 
   i18n: service(),
   router: service(),
@@ -58,6 +62,26 @@ export default Component.extend(I18n, {
    * @type {Object|undefined}
    */
   routeQueryParams: undefined,
+
+  /**
+   * If provided, the tile will have separate footer section with text or link.
+   * Use `footerLinkToParams` to set the link.
+   * @type {string}
+   */
+  footerText: undefined,
+
+  /**
+   * If `footerText` is provided, this is an icon to display on the left
+   * of the text.
+   * @type {string}
+   */
+  footerTextIcon: undefined,
+
+  /**
+   * Array of parameters for footer `link-to` helper.
+   * @type {Array<string|object>}
+   */
+  footerLinkToParams: Object.freeze([]),
 
   /**
    * If true, whole tile is a pseudo-link to aspect.
@@ -115,28 +139,33 @@ export default Component.extend(I18n, {
    * Prepared link-to helper arguments
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  linkToParams: computed('route', 'routeQueryParams', function linkToParams() {
-    const {
-      route,
-      routeQueryParams,
-      aspect,
-    } = this.getProperties('route', 'routeQueryParams', 'aspect');
-    // emulate `query-params` helper result
-    const queryParamsObject = routeQueryParams ? {
-      isQueryParams: true,
-      values: routeQueryParams,
-    } : undefined;
+  linkToParams: computed(
+    'route',
+    'routeQueryParams',
+    'aspect',
+    function linkToParams() {
+      const {
+        route,
+        routeQueryParams,
+        aspect,
+      } = this.getProperties('route', 'routeQueryParams', 'aspect');
+      // emulate `query-params` helper result
+      const queryParamsObject = routeQueryParams ? {
+        isQueryParams: true,
+        values: routeQueryParams,
+      } : undefined;
 
-    if (!route && !aspect) {
-      return null;
+      if (!route && !aspect) {
+        return null;
+      }
+
+      const routeElements = route ? route : ['onedata.sidebar.content.aspect',
+        aspect
+      ];
+      return queryParamsObject ?
+        routeElements.concat(queryParamsObject) : routeElements;
     }
-
-    const routeElements = route ? route : ['onedata.sidebar.content.aspect',
-      aspect
-    ];
-    return queryParamsObject ?
-      routeElements.concat(queryParamsObject) : routeElements;
-  }),
+  ),
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -161,29 +190,7 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-    if (this.get('_isLink') && !this.get('customLink')) {
-      this.click = function click(event) {
-        // do not redirect if "more" link has been clicked
-        if ($(event.target).closest('.more-link').length) {
-          return;
-        }
-
-        // TODO: if customLink, then use window.location = customLink
-
-        const {
-          router,
-          aspect,
-          route,
-          routeQueryParams,
-        } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
-        const transitionToArgs = route ?
-          route : ['onedata.sidebar.content.aspect', aspect];
-        if (routeQueryParams) {
-          transitionToArgs.push({ queryParams: routeQueryParams })
-        }
-        router.transitionTo(...transitionToArgs);
-      }
-    }
+    this.initBindMainLink();
     this.scaleUp();
   },
 
@@ -211,6 +218,32 @@ export default Component.extend(I18n, {
     }
   },
 
+  initBindMainLink() {
+    if (this.get('_isLink') && !this.get('customLink')) {
+      this.tileMainClick = function tileMainClick(clickEvent) {
+        // do not redirect if "more" or footer link has been clicked
+        if ($(clickEvent.target).closest('.more-link').length) {
+          return;
+        }
+
+        // TODO: if customLink, then use window.location = customLink
+
+        const {
+          router,
+          aspect,
+          route,
+          routeQueryParams,
+        } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
+        const transitionToArgs = route ?
+          route : ['onedata.sidebar.content.aspect', aspect];
+        if (routeQueryParams) {
+          transitionToArgs.push({ queryParams: routeQueryParams })
+        }
+        router.transitionTo(...transitionToArgs);
+      }
+    }
+  },
+
   /**
    * Sets tile scale according to breakpoints and window size
    * @returns {undefined}
@@ -234,5 +267,11 @@ export default Component.extend(I18n, {
         next(() => _window.dispatchEvent(new Event('resize')));
       }
     }
+  },
+
+  actions: {
+    tileMainClick(clickEvent) {
+      return this.tileMainClick(clickEvent);
+    },
   },
 });
