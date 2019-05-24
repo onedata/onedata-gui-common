@@ -7,7 +7,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-
 import Mixin from '@ember/object/mixin';
 import { computed } from '@ember/object';
 import { debounce, scheduleOnce } from '@ember/runloop';

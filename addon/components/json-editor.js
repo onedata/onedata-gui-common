@@ -7,7 +7,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from '../templates/components/json-editor';
@@ -76,7 +75,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  inputId: computed('elementId', function () {
+  inputId: computed('elementId', function inputId() {
     return this.get('elementId') + '-textarea';
   }),
 
