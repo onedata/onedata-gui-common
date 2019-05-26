@@ -1,0 +1,47 @@
+.ember-notify {
+  &.alert-success {
+    border-color: $alert-success-border;
+    .close {
+      color: $alert-success-text;
+      &:hover,
+      &:active,
+      &:focus {
+        color: lighten($alert-success-text, 20%);
+      }
+    }
+  }
+  &.alert-info {
+    border-color: $alert-info-border;
+    .close {
+      color: $alert-info-text;
+      &:hover,
+      &:active,
+      &:focus {
+        color: lighten($alert-info-text, 20%);
+      }
+    }
+  }
+  .close {
+    opacity: 1;
+  }
+  .message-icon {
+    .one-icon {
+      @include vertical-align-middle;
+      padding-left: 4px;
+      font-size: 48px;
+    }
+  }
+  .message-icon + .message-body {
+    padding-left: 70px;
+  }
+}
+.ember-notify-default .ember-notify {
+  width: 700px;
+  @media (max-width: $screen-md-max) {
+    width: 500px;
+  }
+  @media (max-width: $screen-xs-max) {
+    width: 100%;
+    float: right;
+  }
+}

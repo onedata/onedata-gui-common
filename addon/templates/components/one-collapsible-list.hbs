@@ -1,0 +1,22 @@
+{{yield (hash 
+  header=(component "one-collapsible-list-header"
+    toggleSelection=(action "toggleAllItemsSelection")
+    _hasCheckbox=hasCheckboxes
+    _isCheckboxActive=(gt _availableItemValues.length 0)
+    _isSelected=_areAllItemsSelected
+    toggle=(if toggleAction toggleAction (action "collapseList"))
+    _isListCollapsed=isListCollapsed
+    search=(action "search")
+  )
+  item=(component "one-collapsible-list-item" 
+    accordionMode=accordionMode
+    activeElementId=activeElementId
+    toggle=(if toggleAction toggleAction (action "toggle"))
+    toggleItemSelection=(action "toggleItemSelection")
+    _selectedItemValues=_selectedItemValues
+    _hasCheckbox=hasCheckboxes
+    _notifyValue=(action "notifyValue")
+    _isListCollapsed=isListCollapsed
+    _searchQuery=searchQuery
+  )
+)}}

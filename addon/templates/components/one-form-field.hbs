@@ -1,0 +1,26 @@
+<div class="row">
+  <label for={{inputId}} class={{concat "control-label " layoutConfig.formLabelColumns}}>
+    {{concat field.label (if field.optional (concat " " (t "components.oneFormFields.optional") ""))}}:
+    {{#if field.tip}}
+      {{one-label-tip title=field.tip}}
+    {{/if}}
+  </label>
+  <div class={{layoutConfig.formInputColumns}}>
+    <div class={{if field.rightText "input-group"}}>
+      {{component (input-component-name field.type)
+        id=inputId
+        value=value
+        class=(concat "form-control one-form-field field-" (dot-to-dash field.name))
+        update=(action "inputChanged" field.name)
+        step=field.step
+        disabled=disabled
+        placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
+        focusOut=(action "onFocusOut")
+      }}
+      {{#if field.rightText}}
+        {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
+      {{/if}}
+    </div>
+    <div class="form-message">{{field.message}}</div>
+  </div>
+</div>

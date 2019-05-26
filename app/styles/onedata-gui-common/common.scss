@@ -1,0 +1,496 @@
+$table-item-border: 1px solid $main-border-color;
+
+h5 {
+  font-weight: bold;
+}
+
+strong {
+  font-weight: normal;
+  font-family: "Open Sans Semibold";
+}
+
+.horizontal-align-middle {
+  @include horizontal-align-middle();
+}
+
+.vertical-align-middle {
+  @include vertical-align-middle();
+}
+
+.absolute-align-middle-center {
+  @include absolute-align-middle-center();
+}
+
+.full-height {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.no-transition {
+  transition: none !important;
+}
+
+.clickable {
+  @include clickable();
+}
+
+.scrollable {
+  overflow: auto;
+}
+
+.transparent {
+  opacity: 0;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.semibold {
+  font-family: 'Open Sans Semibold';
+}
+
+.content-backdrop.sidenav-backdrop {
+  // TODO: animation
+  position: absolute;
+  @include fill-container();
+  margin-left: $main-menu-width;
+
+  z-index: $zindex-layer-1-2-overlay;
+}
+
+.disable-user-select {
+  @include vendor-prefix(user-select, none);
+  cursor: default;
+  > * {
+    @include vendor-prefix(user-select, none);
+    cursor: default;
+  }
+}
+
+$btn-bg-color: $color-one-white;
+
+// TODO color not defined
+$input-bg-color: #F9F9F9;
+// TODO color not defined
+$input-border-color: #CDCDCD;
+
+.btn {
+  outline: none !important;
+}
+
+input.light {
+  height: 38px;
+  background-color: $color-one-white !important;
+}
+
+// TODO use for generation fb and bg
+@mixin one-fg-styles($attributes, $color) {
+  @each $attr in $attributes {
+    #{$attr}: $color;
+  }
+}
+
+@mixin oneicon-content($glyph) {
+  content: unquote("\"#{$glyph}\"");
+}
+
+input {
+  border-color: $color-one-list-item-separator;
+}
+
+.world-map {
+  &.light {
+    background-image: url($root-url + 'assets/images/world-map-light.svg');
+  }
+  &.dark {
+    background-image: url($root-url + 'assets/images/world-map-dark.svg');
+  }
+}
+
+// TODO this should be separate component
+
+.item-table {
+  width: 100%;
+  table-layout: fixed;
+  tr:not(:last-of-type) {
+    border-bottom: $table-item-border;
+    &.no-border {
+      border-bottom: 0;
+    }
+  }
+  .item-table-cell {
+    padding-bottom: $padding-large-vertical;
+  }
+  .item-table-img-cell {
+    height: 120px;
+    position: relative;
+    width: 33%;
+    .background-container {
+      position: absolute;
+      top: 20px;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background-repeat: no-repeat;
+      background-size: 100px;
+      background-position: center center;
+    }
+  }
+  .item-table-content-cell {
+    .row {
+      margin: 0 $padding-large-horizontal;
+      padding-left: 0;
+      word-wrap: break-word;
+      @media screen and (max-width: $screen-md) {
+        border-bottom: $table-item-border;
+      }
+    }
+  }
+}
+@media screen and (max-width: $screen-sm-max) {
+  .item-table {
+    .item-table-img-cell {
+      display: none;
+    }
+  }
+}
+
+.groove-border {
+  width: 100%;
+  height: 0px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.item-icon {
+  display: inline-block;
+  position: relative;
+  top: 0.3em;
+  margin-right: 0.6em;
+  line-height: 0;
+  font-size: 2em;
+}
+
+.collapse-animation {
+  max-height: 99999em;
+  opacity: 1;
+  transition: $collapse-transition;
+  &.collapse-small {
+    max-height: 1000px;
+  }
+  &.collapse-medium {
+    max-height: 2500px;
+  }
+  &.collapse-hidden {
+    max-height: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+  }
+  &.collapse-hidden.collapse-blurred {
+    opacity: 0.4 !important;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.item-icon-container {
+  display: inline-block;
+  margin-right: 0.6em;
+  .item-icon {
+    margin-right: 0;
+  }
+}
+
+/// A class to display short information text with icon
+.one-info-label {
+  $-info-icon-size: 26px;
+  .one-icon {
+    vertical-align: middle;
+    line-height: $-info-icon-size;
+    font-size: $-info-icon-size;
+    &.oneicon-checkbox-filled {
+      color: $color-one-mint;
+    }
+    &.oneicon-sign-info {
+      color: $color-one-azure;
+    }
+  }
+  .one-icon + label, label + .one-icon {
+    padding-left: 8px;
+  }
+  label {
+    display: inline;
+    vertical-align: middle;
+    line-height: $-info-icon-size;
+  }
+}
+
+.od-logo-short-dark {
+  background-image: url(/assets/images/logo-short-dark.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+
+.fill-middle-centered {
+  @include fill-align-middle-center();
+}
+
+.conflict-label {
+  opacity: 0.75;
+}
+.conflict-at {
+  opacity: 0.5;
+}
+
+// parent for spinner container - prevents to make to small row when loading
+.loadable-row {
+  position: relative;
+  min-height: 150px;
+  
+  &.sm {
+    min-height: 50px;
+  }
+  
+  &.lg {
+    min-height: 100px;
+  }
+}
+
+.loading-more-row {
+  height: 80px;
+}
+
+@media (min-width: $screen-sm-min) {
+  .active.hide-sm-active {
+    display: none;
+  }
+}
+
+ul.info, ol.info {
+  margin-left: 0; /* Remove the default left margin */
+  margin-top: 20px;
+  padding-left: 0; /* Remove the default left padding */
+
+  li {
+    position: relative; /* Create a positioning context */
+    margin: 0 0 28px 52px; /* Give each list item a left margin to make room for the numbers */
+    list-style: none; /* Disable the normal item numbering */
+  }
+
+  li::before {
+    position: absolute;
+    top: 1px;
+    left: -50px;
+    width: 1.8em;
+    height: 1.8em;
+    padding: 1px;
+    // pull down number
+    padding-top: 3px;
+    font-size: 0.8em;
+    border: none;
+    color: #fff;
+    background: $color-one-mint;
+    border-radius: 4px;
+    text-align: center;
+  }
+}
+
+// based on: http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
+ol.info {
+  counter-reset: li; /* Initiate a counter */
+  
+  li::before {
+    content:counter(li); /* Use the counter as content */
+    counter-increment: li; /* Increment the counter by 1 */
+  }
+}
+
+ul.info {
+  li::before {
+    @include oneicon-content($oneicon-arrow-right);
+    font-family: 'oneicons' !important;
+    font-weight: bold;
+  }
+}
+
+a {
+  color: $color-one-mint;
+  &:hover {
+    color: darken($color-one-mint, 20%);
+  }
+}
+
+.col-image {
+  padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+}
+
+.code-textarea {
+  font-family: monospace;
+  resize: none; 
+}
+
+.token-textarea {
+  width: 100%;
+  height: 120px;
+  margin-top: $padding-base-vertical;
+  margin-bottom: $padding-base-vertical;
+  font-family: monospace;
+}
+@media (max-width: $screen-xs-max) {
+  padding: $padding-large-vertical $padding-large-horizontal;
+  .token-textarea {
+    height: 200px;
+  }
+}
+
+.input-top-description {
+  margin-bottom: $padding-large-vertical;
+}
+
+.btn {
+  .oneicon {
+    position: relative;
+    left: -0.2em;
+    font-size: 2em;
+  }
+}
+
+.truncated-string.before-status {
+  padding-right: 100px;
+}
+
+.table.table-middle-align {
+  td {
+    vertical-align: middle;
+  }
+}
+
+.property-label {
+  padding-right: 10px;
+}
+
+.row-btn-spacing {
+  .btn:first-of-type {
+    margin-right: 10px;
+  }
+}
+
+.form-group + span.row-btn-spacing {
+  margin-left: 10px;
+  .btn-sm {
+    margin-top: -2px;
+  }
+}
+
+.modal-info-content {
+  position: relative;
+  margin-top: 1em;
+  min-height: 70px;
+  .modal-info-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    .one-icon {
+      font-size: 60px;
+      @include absolute-align-middle-center;
+    }
+  }
+  .modal-info-text {
+    padding-left: 96px;
+    &.short-text {
+      @media (min-width: $screen-sm-min) {
+        @include vertical-align-middle;
+      }
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    .modal-info-icon {
+      display: none;
+    }
+    .modal-info-text {
+      padding-left: 0px;
+      text-align: center;
+    }
+  }
+}
+
+.alert-simple-info {
+  .alert-simple-info-btn {
+    margin-top: 20px;
+    text-align: right;
+  }
+}
+
+// just to simulate space <span class="space"></span>
+.space {
+  margin-right: 0.3em;
+}
+
+h1 .header-addon {
+  margin-left: 10px;
+  text-transform: none;
+  font-size: 90%;
+  font-weight: normal;
+  opacity: 0.6;
+}
+
+textarea + .btn-container {
+  padding-top: 10px;
+}
+
+@media (max-width: $screen-xs-max) {
+  .btn-container {
+    text-align: center;
+    .btn {
+      min-width: 280px;
+    }
+  }
+}
+
+.subheader-text {
+  padding-bottom: $padding-large-vertical;
+}
+
+.one-infinite-list {
+  thead th {
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  
+  .first-row td {
+    height: 0;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .data-row {
+    td {
+      height: 44px;
+    }
+  }
+}
+
+.btn-inline-after-text {
+  margin-left: $padding-small-horizontal;
+  top: -2px;
+}
+
+// TODO: An ugly hack for bug in ember-hammertime
+textarea[style^="touch-action: manipulation"] {
+  cursor: inherit !important;
+}

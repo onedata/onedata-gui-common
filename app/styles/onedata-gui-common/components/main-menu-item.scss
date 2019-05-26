@@ -1,0 +1,15 @@
+.main-menu-item {
+  text-transform: uppercase;
+  // TODO: tmp
+  font-family: 'Open Sans Semibold';
+  font-size: 13px;
+  letter-spacing: $letter-spacing-base;
+  white-space: nowrap;
+  
+  .one-icon {
+    position: relative;
+    top: 0.33em;
+    margin-right: 0.4em;
+    font-size: $menu-icon-font-size;
+  }
+}

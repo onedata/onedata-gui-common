@@ -1,0 +1,48 @@
+.clipboard-line {
+  display: table;
+  width: 100%;
+  
+  @mixin clipboard-line-element {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  
+  .clipboard-line-label {
+    @include clipboard-line-element();
+    padding-right: 20px;
+    // as small as possible
+    width: 1px;
+  }
+  .clipboard-line-input {
+    @include clipboard-line-element();
+    input[type=text] {
+      height: $input-height-base;
+    }
+  }
+  .clipboard-line-btn {
+    @include clipboard-line-element();
+    width: 100px;
+    padding-left: 20px;
+    .copy-btn {
+      height: $input-height-base;
+    }
+  }
+
+  .without-text {
+    padding-left: $padding-base-horizontal;
+    padding-right: $padding-base-horizontal;
+    .one-icon {
+      margin-right: -0.6em;
+    }
+  }
+  
+  &.sm {
+    .clipboard-line-input input[type=text] {
+      height: $input-height-small;
+      line-height: $line-height-small;
+    }
+    .clipboard-line-btn .copy-btn {
+      height: $input-height-small;
+    }
+  }
+}

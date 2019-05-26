@@ -1,0 +1,26 @@
+.support-os-head {
+  font-weight: bold;
+  padding-bottom: 16px;
+}
+.support-os {
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+  margin-bottom: 16px;
+  width: 140px;
+  @media (max-width: $screen-sm-max) {
+    width: 130px; 
+  }
+  @media (min-width: $screen-lg-min) {
+    width: 150px;
+  }
+  img {
+    width: 64px;
+    height: 64px;
+    margin: 10px;
+  }
+  .support-os-name {
+    display: block;
+  }
+}
+

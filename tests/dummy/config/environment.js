@@ -1,21 +1,23 @@
 /* eslint-env node */
 'use strict';
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'dummy',
     environment,
     rootURL: '/',
-    locationType: 'auto',
+    locationType: 'hash',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
       },
       EXTEND_PROTOTYPES: {
+        String: true,
+        Array: true,
         // Prevent Ember Data from overriding Date.parse.
-        Date: false
-      }
+        Date: false,
+      },
     },
 
     APP: {
@@ -44,7 +46,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    // empty
   }
 
   return ENV;

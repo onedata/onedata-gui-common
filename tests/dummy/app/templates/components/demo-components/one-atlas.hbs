@@ -1,0 +1,9 @@
+<div style="height: 500px">
+  {{#one-atlas as |atlas|}}
+    {{#atlas.position latitude=-10 longitude=-10 as |position|}}
+      {{#position.point}}
+        <span class="text-danger">text at<br>(-10,-10)</span>
+      {{/position.point}}
+    {{/atlas.position}}
+  {{/one-atlas}}
+</div>

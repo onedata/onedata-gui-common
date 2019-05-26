@@ -1,0 +1,13 @@
+{{#copy-button
+  class=class
+  parentElementId=elementId
+  clipboardTarget=clipboardTarget
+  success=success
+  error=error
+}}
+  {{#if hasBlock}}
+    {{yield}}
+  {{else}}
+    {{one-icon icon="clipboard-copy"}} {{tt this "copyBtn"}}
+  {{/if}}
+{{/copy-button}}

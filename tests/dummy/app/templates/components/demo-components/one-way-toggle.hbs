@@ -1,0 +1,45 @@
+<p>
+  <label for="toggle1">Standard toggle:</label>
+  {{one-way-toggle inputId="toggle1"
+    onFocusOut=(action "toggle1FocusOut")
+    checked=twoStateToggle
+    update=(action (mut twoStateToggle))}}
+    Value: {{twoStateToggle}}
+</p>
+<p>
+  <label for="toggle2">Three-state toggle:</label>
+  {{one-way-toggle
+    inputId="toggle2"
+    checked=threeStateToggle
+    threeState=true
+    allowThreeStateToggle=true
+    update=(action (mut threeStateToggle))}}
+    Value: {{threeStateToggle}}
+</p>
+<p>
+  <label for="toggle3">Disabled toggle:</label>
+  {{one-way-toggle inputId="toggle3" checked=disabledToggle isReadOnly=true}} Value: {{disabledToggle}}
+</p>
+<p>
+  <label for="toggle4">Delayed toggle:</label>
+  {{one-way-toggle
+    inputId="toggle4"
+    checked=delayedToggle1
+    update=(action "promisedToggle" "delayedToggle1")
+  }}
+    Value: {{delayedToggle}}
+</p>
+<p>
+  <label for="toggle5">Delayed toggle (spinner on the left):</label>
+  <div style="width: 60px;display: inline-block;">
+    {{one-way-toggle
+      inputId="toggle5"
+      checked=delayedToggle2
+      spinnerSide="left"
+      update=(action "promisedToggle" "delayedToggle2")
+      class="pull-right"
+    }}
+  </div>
+    Value: {{delayedToggle2}}
+</p>
+

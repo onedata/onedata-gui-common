@@ -1,0 +1,60 @@
+$spinner-container-base-size: 120px;
+
+@mixin spinner-container-size-class($name, $size) {
+  &.#{$name} {
+    width: $size*$spinner-container-base-size;
+    height: $size*$spinner-container-base-size;
+
+    .spinner-logo {
+      width: $size*$spinner-container-base-size;
+      height: $size*$spinner-container-base-size;
+    }
+  }
+}
+
+.spinner-container {
+  position: relative;
+  
+  @include spinner-container-size-class(xs, 0.2);
+  @include spinner-container-size-class(sm, 0.4);
+  @include spinner-container-size-class(md, 0.8);
+  @include spinner-container-size-class(lg, 1.2);
+  
+  &.centered {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &.absolute-middle-centered {
+    @include absolute-align-middle-center();
+  }
+
+  &.fill-middle-centered {
+    @include fill-align-middle-center();
+  }
+  
+  &.inline-centered {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+  }
+  
+  // DEPRECATED: backward compatible
+  &.middle-centered {
+    @extend .absolute-middle-centered;
+  }
+  
+  &.description-bottom {
+    margin-top: 1em;
+  }
+  
+  &.description-bottom.inline-centered + p.loading-info {
+    text-align: center;
+    font-size: 1.2em;
+    padding-top: 1em;
+  }
+  
+  .spinner-logo {
+    background-size: 30%;
+  }
+}

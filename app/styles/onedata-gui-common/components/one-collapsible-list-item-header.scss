@@ -1,0 +1,81 @@
+.one-collapsible-list-item-header {
+  border-bottom: 1px solid $main-border-color;
+  position: relative;
+  .toggle-icon {
+    display: none;
+    font-size: 1.7em;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    transition: transform .2s ease;
+  }
+  @include btn-toolbar-float-right();
+  &.toolbar-when-opened {
+    .btn-toolbar {
+      display: none;
+    }
+  }
+  &.opened {
+    .toggle-icon {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    .btn-toolbar {
+      display: block;
+    }
+  }
+  &.collapsible {
+    cursor: pointer;
+    .toggle-icon {
+      display: block;
+    }
+    .btn-toolbar {
+      margin-right: 5em;
+    }
+  }
+  &.hoverable, &.collapsible:not(.non-hoverable) {
+    &:hover {
+      background-color: $main-content-hover-background;
+    }
+  }
+  &.header-fixed {
+    // override inline styles
+    cursor: not-allowed !important;
+    > *:not(.item-checkbox) {
+      opacity: 0.4;
+    }
+  }
+
+  .item-checkbox {
+    margin-bottom: -3px;
+    margin-right: 1.2em;
+  }
+
+  .btn-toolbar {
+    float: none;
+    position: absolute;
+    right: 0;
+    top: 1.2em;
+    .btn {
+      margin-left: $padding-xs-horizontal;
+    }
+  }
+
+  .status-toolbar {
+    @include vertical-align-middle();
+    right:
+      2*$collapsible-list-item-btn-toggle-padding +
+        $collapsible-list-item-padding + 12px;
+  }
+  
+  .form-state {
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 9pt;
+    text-transform: none;
+    color: $color-one-light-gray;
+    font-weight: normal;
+    white-space: nowrap;
+  }
+}

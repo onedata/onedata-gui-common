@@ -1,0 +1,110 @@
+.one-space-indicator {
+  $space-for-text: 15px;
+  position: relative;
+  min-height: 50px + 2 * $space-for-text;
+  .bar {
+    position: absolute;
+    top: $space-for-text;
+    bottom: $space-for-text;
+    left: 0;
+    right: 0;
+  }
+  .new-total-space-bar {
+    background-color: rgba($color-one-info, 0.2);
+  }
+  .new-total-space-expand {
+    $-new-total-space-expand-color: rgba($color-one-info, 0.6);
+    $-new-total-space-expand-border: 2px solid $-new-total-space-expand-color;
+    $-new-total-space-expand-arrow-padding: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    &.new-total-space-expand-arrow {
+      &::after {
+        position: absolute;
+        top: 50%;
+        color: $-new-total-space-expand-color;
+        font-size: 40px;
+        content: $oneicon-arrow-right-full;
+        font-family: 'oneicons';
+      }
+      &.new-total-space-expand-left {
+        &::after {
+          left: $-new-total-space-expand-arrow-padding;
+          transform: translateY(-50%) rotate(180deg);
+        }
+      }
+      &.new-total-space-expand-right {
+        &::after {
+          right: $-new-total-space-expand-arrow-padding;
+          transform: translateY(-50%);
+        }
+      }
+    }
+    &.new-total-space-expand-left {
+      border-right: $-new-total-space-expand-border;
+      left: 0;
+      &::after {
+        left: $-new-total-space-expand-arrow-padding;
+        transform: translateY(-50%) rotate(180deg);
+      }
+    }
+    &.new-total-space-expand-right {
+      border-right: $-new-total-space-expand-border;
+      right: 0;
+      &::after {
+        right: $-new-total-space-expand-arrow-padding;
+        transform: translateY(-50%);
+      }
+    }
+  }
+  .current-total-space-bar {
+    background-color: black;
+    opacity: 0.1;
+  }
+  .occupied-space-bar {
+    background-color: $color-one-mint;
+    &::before {
+      $gradient-size: 8px;
+      content: '';
+      display: block;
+      position: absolute;
+      @include fill-container();
+      background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1) $gradient-size,
+        transparent $gradient-size,
+        transparent $gradient-size * 2
+      );
+    }
+  }
+  .bar-label {
+    position: absolute;
+    font-size: 80%;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .current-total-space {
+    bottom: 0;
+  }
+  .occupied-space {
+    color: $color-one-mint;
+  }
+  &.critical-usage {
+    .occupied-space-bar {
+      background-color: $color-one-red;
+    }
+    .occupied-space {
+      color: $color-one-red;
+    }
+  }
+  &.warning-usage {
+    .occupied-space-bar {
+      background-color: $color-one-yellow;
+    }
+    .occupied-space {
+      color: $color-one-yellow;
+    }
+  }
+}

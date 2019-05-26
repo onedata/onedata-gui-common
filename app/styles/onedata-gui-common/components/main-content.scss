@@ -1,0 +1,263 @@
+$mobile-horizontal-content-padding: $padding-large-horizontal;
+$content-row-vertical-padding: $padding-base-vertical;
+$content-header-row-height: $onedata-logo-margin-top * 2 + $onedata-logo-height - $content-col-padding;
+$content-header-row-mobile-height: $content-header-row-height - 9px;
+
+.main-content {
+  color: $main-text-color;
+
+  .content-row.chart-row {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .sticky-element-container .sticky-element {
+    background-color: $color-one-white;
+    z-index: 10;
+    &.sticky-element--sticky {
+      .header-row {
+        margin-top: $content-col-padding;
+      }
+      .content-search {
+        right: 0;
+      }
+      @media (max-width: $screen-sm-max) {
+        .header-row {
+          margin-top: $padding-large-horizontal;
+        }
+      }
+    }
+  }
+
+  .content-search {
+    position: absolute;
+    top: $content-col-padding + $padding-xs-vertical;
+    right: $content-col-padding;
+    width: 200px;
+    background-color: $color-one-white;
+    @media (min-width: $screen-md-min) {
+      &.with-place-for-dots {
+        transform: translateX(-40px);
+      }
+    }
+    @media (max-width: $screen-sm-max) {
+      right: $padding-large-horizontal;
+      top: $padding-large-horizontal + $padding-xs-vertical;
+    }
+    @media (max-width: $screen-xs-max) {
+      position: static;
+      margin-bottom: 0;
+      width: 100%;
+      padding: $padding-small-horizontal;
+      border-bottom: 1px solid $main-border-color;
+    }
+  }
+
+  .content-row {
+    border-bottom: 1px solid $main-border-color;
+    padding: $content-row-vertical-padding 0;
+    
+    &.header-row {
+      height: $content-header-row-mobile-height;
+      @media (min-width: $screen-sm-min) {
+        padding-top: 0;
+        h1 {
+          font-size: $content-header-font-size;
+          font-family: 'Open Sans Semibold';
+          line-height: $onedata-logo-height;
+          font-weight: normal;
+          .btn-toolbar button {
+            // resets font size to its default for normal content. 
+            // 85% is from font-size for .btn-sm (hard-coded in bootstrap config)
+            font-size: (1em / $content-header-font-size) * 85%;
+          }
+        }
+      }
+      @media (min-width: $screen-md-min) {
+        height: $content-header-row-height;
+      }
+    }
+    
+
+    &.no-border,
+    &:last-child:not(.has-border) {
+      border-bottom: 0;
+    }
+
+    &.no-padding-top {
+      padding-top: 0;
+    }
+    &.no-padding-bottom {
+      padding-bottom: 0;
+    }
+    &.extra-padding-top {
+      padding-top: 2 * $content-row-vertical-padding;
+    }
+    &.extra-padding-bottom {
+      padding-bottom: 2 * $content-row-vertical-padding;
+    }
+
+    h1 {
+      font-size: $font-size-base;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 2.5;
+      letter-spacing: $letter-spacing-base;
+      margin: 0;
+
+      &.normal-case {
+        text-transform: none;
+      }
+            
+      &+p {
+        margin-top: 0.7em;
+      }
+      .btn-toolbar {
+        &.with-place-for-dots {
+          @media (min-width: $screen-md-min) {
+            margin-right: 20px;
+          }
+        }
+        button {
+          // vertical align floating toolbar
+          margin-bottom: 0.3em;
+        }
+      }
+      .one-way-toggle {
+        font-size: $font-size-base;
+        margin-top: 0.5em;
+        &.toggle-right-side {
+          @media (min-width: $screen-sm-min) {
+            margin-top: -4px;
+            margin-left: $padding-small-horizontal;
+          }
+        }
+      }
+      label {
+        display: inline-block;
+        margin: 0;
+        font-weight: inherit;
+      }
+    }
+
+    .form-title {
+      margin-top: $content-row-vertical-padding;
+      text-align: center;
+    }
+
+    .form-section-title {
+      margin-top: $content-row-vertical-padding;
+      margin-bottom: $content-row-vertical-padding * 2;
+      text-align: center;
+      font-size: $font-size-base;
+      font-family: 'Open Sans Semibold';
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+    
+    .form-description {
+      text-align: center;
+    }
+
+    form {
+      margin-top: 2 * $content-row-vertical-padding;
+      margin-bottom: 2 * $content-row-vertical-padding;
+      form {
+        margin: 0;
+        padding: 0;
+      }
+      
+      &.compact {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        .form-group {
+          margin-top: 0px;
+          margin-bottom: 0px;
+        }
+      }
+    }
+
+    @include btn-toolbar-float-right();
+
+    // TODO temporary style, to be designed better
+    &.nested-row {
+      &:first-of-type {
+        margin-top: $content-row-vertical-padding*0.75;
+      }
+      
+      padding: 0;
+      padding-top: $content-row-vertical-padding*0.75;
+      padding-left: $content-row-vertical-padding;
+      border-bottom: none;
+      
+      strong {
+        font-weight: normal;
+        font-family: 'Open Sans Semibold'
+      }
+    }
+  }
+
+  .row {
+    // needs to be set for animation purposes
+    max-height: 99999em;
+    opacity: 1;
+    transition: $collapse-transition;
+    &.row-small {
+      max-height: 100em;
+    }
+    &.row-medium {
+      max-height: 150em;
+    }
+    &.row-hidden {
+      max-height: 0;
+      padding: 0;
+      overflow: hidden;
+      opacity: 0;
+      border: 0;
+    }
+  }
+
+  @media screen and (max-width: $screen-xs-max) {
+    @mixin -reset-internal-padding() {
+      // resetting internal paddings
+      p,
+      h1,
+      form,
+      .inner-row-content {
+        padding: initial;
+      }
+    }
+    
+    .tab-content .content-row {   
+      @include -reset-internal-padding();
+    }
+    
+    .content-row {
+      &:not(.has-border) {
+        border-bottom: 0;
+      }
+
+      // TODO: using selector p, h1, and others without > causes problems
+      // when trying to use p, h1, etc. inside other elements
+      p,
+      h1,
+      form,
+      .inner-row-content {
+        padding: 0 $mobile-horizontal-content-padding;
+        
+        @include -reset-internal-padding();
+      }
+
+      h1 {
+        font-size: $font-size-base * 0.9;
+      }
+
+      .btn-toolbar {
+        .btn {
+          font-size: 0.85em;
+          margin-left: 0.8em;
+        }
+      }
+    }
+  }
+}

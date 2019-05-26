@@ -1,0 +1,152 @@
+// above bootstrap modal
+$ember-basic-dropdown-content-z-index: $zindex-modal+1;
+
+$ember-power-select-border-color: $input-border;
+$ember-power-select-number-of-visible-options: 10;
+$ember-power-select-background-color: $input-bg;
+$ember-power-select-highlighted-background: $color-one-info;
+$ember-power-select-highlighted-color: white;
+$ember-power-select-trigger-default-border-radius: $input-border-radius;
+$ember-power-select-trigger-ltr-padding: $padding-base-vertical;
+$ember-power-select-line-height: $line-height-computed;
+$ember-power-select-opened-border-radius: 0;
+$ember-power-select-dropdown-default-border-radius: $input-border-radius;
+$ember-power-select-selected-background: $ember-power-select-background-color;
+
+@import '../ember-power-select';
+@import '../ember-power-select/themes/bootstrap';
+
+.ember-power-select-selected-item, .ember-power-select-placeholder {
+  margin-left: 0;
+}
+
+.ember-basic-dropdown {
+  .option-container {
+    position: relative;
+  
+    .one-icon {
+      @include vertical-align-middle();
+      font-size: 28px;
+    }
+    .one-icon + .text {
+      padding-left: 34px;
+    }
+  }
+  .ember-power-select-selected-item .option-container {
+    .one-icon {
+      left: -10px;
+    }
+    .one-icon + .text {
+      padding-left: 24px;
+    }
+  }
+}
+
+.ember-power-select-trigger {
+  padding-left: $padding-large-horizontal;
+  padding-right: 3em;
+  transition: all 0.2s ease;
+  min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
+  word-wrap: break-word;
+  outline: none !important;
+  color: $main-text-color;
+
+  &[aria-disabled=true] {
+    background-color: $input-bg;
+    opacity: 0.6;
+  }
+
+  &.ember-power-select-trigger--active:not([aria-expanded]) {
+    @include box-shadow($control-box-shadow-focus);
+    border: 1px solid $input-border-focus;
+  }
+
+  &.small {
+    padding: $padding-small-vertical + 1px $padding-xs-horizontal;
+    padding-right: 2em;
+    min-height: 21px;
+
+    .ember-power-select-status-icon {
+      right: 1.7em;
+      top: 0.45em;
+      margin: initial;
+      font-size: 1.1em;
+      font-weight: bold;
+      &:before {
+        @include oneicon-content($oneicon-arrow-down);
+      }
+    }
+  }
+
+  .ember-power-select-status-icon {
+    font-family: 'oneicons' !important;
+    border: 0;
+    transform: none;
+    right: 1.7em;
+    top: 0.55em;
+    margin: initial;
+    font-size: 1.7em;
+    font-weight: bold;
+    &:before {
+      @include oneicon-content($oneicon-arrow-down);
+    }
+  }
+
+  &:not([aria-expanded]) {
+    @include box-shadow($control-box-shadow);
+  }
+
+  &[aria-expanded="true"] {
+    color: white;
+    background-color: $color-one-info;
+
+    .ember-power-select-status-icon {
+      transform: none;
+      &:before {
+        @include oneicon-content($oneicon-arrow-up);
+      }
+    }
+  }
+}
+
+.ember-power-select-dropdown {
+  box-shadow: none;
+
+  &.small {
+    .ember-power-select-option {
+      padding: $padding-small-vertical + 1px $padding-xs-horizontal;
+      min-height: 21px;
+    }
+  }
+
+  .ember-power-select-options[role="listbox"] {
+    max-height: 600px;
+  }
+
+  .ember-power-select-option {
+    border-bottom: 1px solid $input-border;
+    padding: $padding-base-vertical;
+    min-height: $line-height-computed + 2 * $padding-base-vertical;
+    overflow: hidden;
+    word-wrap: break-word;
+    
+    &[aria-current="true"] {
+      color: $color-one-white;
+    }
+
+    &::last-child {
+      border-bottom: 0;
+    }
+  }
+  .ember-power-select-search-input {
+    padding: 6px;
+  }
+}
+
+.ember-power-select-search-input {
+  border-radius: $input-border-radius;
+  &:focus {
+    outline: 0;
+    border: 1px solid $input-border-focus;
+  }
+}

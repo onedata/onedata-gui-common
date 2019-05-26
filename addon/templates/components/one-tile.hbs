@@ -1,0 +1,15 @@
+<h1 class="tile-title">
+  <span class="one-label">
+    {{title}}
+  </span>
+  {{#if linkToParams}}
+    {{#link-to params=linkToParams class="more-link"}}
+      {{moreText}} &raquo;
+    {{/link-to}}
+  {{/if}}
+</h1>
+<div class="tile-content">
+  <div class="tile-content-inner">
+    {{yield (hash sizeClass=sizeClass)}}
+  </div>
+</div>

@@ -1,0 +1,63 @@
+$error-message-margin: 15px;
+
+.basicauth-login-form {
+  .form-group {
+    margin-bottom: $form-group-margin-bottom * 1.5;
+  }
+  .login-error-message {
+    margin-top: -$error-message-margin;
+    margin-bottom: $error-message-margin;
+    max-height: 0;
+    opacity: 0;
+    transition: $collapse-transition;
+    &.active {
+      max-height: 3em;
+      opacity: 1;
+    }
+  }
+  .input-group.with-icon-addon {
+    position: relative;
+    .input-group-addon {
+      position: relative;
+      top: 1px;
+      padding: 4px 5px;
+      // focus on input changes its z-index from 1 to 3
+      z-index: 4;
+      height: $input-height-base - 2px;
+      min-width: $input-height-base;
+      border: 0;
+      border-right: 1px solid $input-border;
+      background-color: transparent;
+      .one-icon {
+        font-size: 32px ;
+      }
+    }
+    input {
+      $border-radius: $input-border-radius;
+      // height: 44px;
+      float: none;
+      position: absolute;
+      z-index: 1;
+      &:last-child {
+        left: 0;
+        padding-left: 57px;
+        border-radius: $border-radius;
+      }
+    }
+  }
+  .has-error .input-group.with-icon-addon .input-group-addon {
+    border-right: 1px solid $state-danger-text;
+  }
+  .btn {
+    padding: 10px 40px;
+    margin-bottom: 5px;
+    .spin-button-spinner {
+      height: 0;
+      width: 0;
+    }
+    &.back-button {
+      background-color: $btn-default-bg;
+      border-color: $btn-default-bg;
+    }
+  }
+}

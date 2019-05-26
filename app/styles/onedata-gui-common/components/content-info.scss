@@ -1,0 +1,86 @@
+.content-info {
+  $-content-margin: 2.5em;
+  
+  // scroll-breakpoint-[number] toggles between two modes:
+  // - centered horizontally and vertically (on large screens) 
+  // - normally positiononed with scroll (on small screens)
+  // Mode changes when screen is [number]px high.
+  // On mobile screens we need more space (we have less space horizontally),
+  // so scroll-breakpoint is "magnified"
+  @for $i from 1 to 20 {
+    $size: $i * 100;
+    &.scroll-breakpoint-#{$size} .content-info-content-container {
+      @media (max-width: $screen-xs-max) {
+        @media (min-height: $size * 1.2px) {
+          @include absolute-align-middle-center();
+          padding: $padding-large-horizontal
+        }
+      }
+      @media (min-width: $screen-sm-min) {
+        @media (min-height: $size * 1px) {
+          @include absolute-align-middle-center();
+          padding: $padding-large-horizontal
+        }
+      }
+    }
+  }
+  &.preserve-header {
+    .world-map {
+      top: $content-header-row-height + $content-col-padding;
+      @media (max-width: $screen-xs-max) {
+        top: 0;
+      }
+    }
+  }
+  .world-map {
+    position: absolute;
+    @include fill-container();
+    padding: $padding-large-horizontal;
+    overflow: auto;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  h1, h2, p {
+    letter-spacing: $letter-spacing-base;
+  }
+  h1 {
+    margin-bottom: 1em;
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 27pt;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: 12pt;
+    text-transform: uppercase;
+    margin-bottom: 0.8em;
+  }
+  p.lead {
+    margin-bottom: $-content-margin;
+    font-size: 13pt;
+  }
+  .row-yield {
+    margin-bottom: $-content-margin;
+  }
+  .one-image {
+    margin-bottom: 30px;
+    .image {
+      max-width: 80%;
+      max-height: 240px;
+    }
+  }
+  .btn-primary {
+    font-size: 130%;
+  }
+  .row-button-margin-top {
+    margin-top: 2em;
+  }
+  
+  @media (max-width: $screen-sm-max) {
+    .content-info-content-container.container {
+      max-width: 740px;
+      width: 100%;
+    }
+  }
+}

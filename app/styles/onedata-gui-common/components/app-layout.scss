@@ -1,0 +1,455 @@
+$color-main-menu-fg-base: $color-one-white;
+$color-main-menu-fg-active: $color-main-menu-fg-base;
+$color-main-menu-fg-default: rgba($color-main-menu-fg-base, 0.9);
+$color-main-menu-fg-disabled: rgba($color-main-menu-fg-base, 0.5);
+
+$color-main-menu-item-gradient-base: $color-main-menu-fg-base;
+@mixin main-menu-item-gradient($opacity-left, $opacity-right) {
+  background: linear-gradient(90deg, rgba($color-main-menu-item-gradient-base, $opacity-left), rgba($color-main-menu-item-gradient-base, $opacity-right));
+}
+
+$onedata-logo-width: 150px;
+$mobile-resource-name-height: 20px;
+
+.onedata-logo {
+  width: $onedata-logo-width;
+  height: $onedata-logo-height;
+  background-image: url($root-url + 'assets/images/logo.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// needs: $mobile-top-height
+// needs: $main-menu-width
+.app-layout {
+  position: absolute;
+  @include fill-container();
+  .app-grid {
+    position: relative;
+    padding-left: 0;
+    @media (min-width: $screen-md-min) {
+      padding-left: $main-menu-collapsed-width + $sidebar-menu-width-md;
+    }
+    @media (min-width: $screen-lg-min) {
+      padding-left: $main-menu-collapsed-width + $sidebar-menu-width-lg;
+    }
+  }
+  .row-mobile-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: $mobile-top-height;
+    z-index: $zindex-navbar;
+    // TODO: the same as col-main-menu?
+    background-color: $color-main-menu-bg;
+    color: $color-one-white;
+    .side-menu-toggle {
+      display: inline-block;
+      height: 100%;
+    }
+    .navbar-toggle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: $mobile-top-height;
+      text-align: center;
+      margin: 0px;
+      border: 0;
+      cursor: pointer;
+      &.toggle-back {
+        width: 25%;
+        .one-icon {
+          position: absolute;
+          top: 50%;
+          left: $padding-small-vertical;
+          transform: translateY(-50%) rotateY(180deg);
+          font-size: 0.9em;
+          font-weight: bold;
+        }
+        .sidebar-title {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 1.5em;
+          right: 0;
+          line-height: $mobile-top-height;
+          font-size: 0.9em;
+          text-transform: capitalize;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: left;
+        }
+      }
+      &.global-menu-toggle  {
+        position: absolute;
+        right: 0;
+        left: initial;
+        margin-right: 2px;
+        width: 30px;
+        .icon-bar {
+          border-radius: 100%;
+          width: 3px;
+          height: 3px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+      .icon-bar {
+        margin-left: auto;
+        margin-right: auto;
+        background-color: $color-one-white;
+        border-radius: 0;
+      }
+    }
+    .tab-name {
+      position: absolute;
+      top: 0;
+      left: 25%;
+      right: 25%;
+      padding: 0 $padding-small-horizontal;
+      line-height: $mobile-top-height;
+      font-size: 0.9em;
+      font-weight: bold;
+      text-align: center;
+      &::first-letter {
+        text-transform: uppercase;
+      }
+      .one-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+  .resource-name-row {
+    position: absolute;
+    top: $mobile-top-height;
+    left: 0;
+    right: 0;
+    height: $mobile-resource-name-height;
+    padding: 0 $padding-small-horizontal;
+    background-color: $color-one-semiwhite;
+    line-height: $mobile-resource-name-height;
+    text-align: center;
+    font-size: 0.8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .side-menu {
+    background-color: $color-sidebar-background;
+
+    // override side-menu default style
+    ul > li {
+      line-height: 64px;
+    }
+
+    .side-menu-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: $sidemenu-header-height + $one-list-item-line-height;
+      z-index: -1;
+      background-image: url($root-url + 'assets/images/main-background.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position-x: center;
+    }
+    .side-menu-header {
+      height: $sidemenu-header-height;
+      .row-onedata-logo {
+        .onedata-logo {
+          margin-left: $one-list-item-padding;
+          margin-top: $one-list-item-padding;
+        }
+      }
+    }
+    .one-list-item.main-menu-item {
+      color: $main-text-color;
+      &.active {
+        background-color: $color-sidebar-item-active-bg;
+      }
+      &.disabled {
+        color: rgba($main-text-color, 0.5);
+      }
+      &::after {
+        @include top-line(none);
+      }
+      &:last-of-type {
+        &::after {
+          @include bottom-line(none);
+        }
+      }
+    }
+  }
+  
+  .row-account-button {
+    position: absolute;
+    bottom: 0;
+    width: $main-menu-width;
+  }
+  
+  .row-app {
+    @media (max-width: $screen-sm-max) {
+      padding-top: $mobile-top-height;
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      padding-left: $sidebar-menu-width-sm;
+    }
+    @media (max-width: $screen-xs-max) {
+      padding-top: $mobile-top-height + $mobile-resource-name-height;
+    }
+  }
+  .col-in-app-layout {
+    position: relative;
+  }
+  .col-main-menu {
+    z-index: 1001;
+    position: absolute;
+    background: $color-main-menu-bg;
+    color: $color-main-menu-fg-default;
+    width: $main-menu-width;
+    overflow: hidden;
+    transition: width $collapse-transition-time linear;
+    .main-menu-item {
+      .item-header {
+        transition: padding-left linear $collapse-transition-time, padding-right linear $collapse-transition-time;
+      }
+      .one-label {
+        opacity: 1;
+        transition: opacity linear $collapse-transition-time;
+      }
+    }
+
+    &.collapsed {
+      width: $main-menu-collapsed-width;
+      .onedata-logo {
+        margin-left: $padding-base-horizontal - 4px;
+      }
+      .main-menu-item {
+        .item-header {
+          padding-left: $padding-small-horizontal;
+          padding-right: $padding-small-horizontal;
+        }
+        .one-label {
+          opacity: 0;
+        }
+      }
+    }
+
+    .onedata-logo {
+      position: relative;
+      top: 6px;
+      height: initial;
+      background-image: none;
+      margin-left: $one-list-item-padding * 1.25;
+      transition: margin-left linear $collapse-transition-time;
+    }
+
+    .main-menu-content {
+      position: absolute;
+      @include fill-container();
+      bottom: $one-list-item-line-height;
+      background-color: inherit;
+    }
+    .row-onedata-logo {
+      position: relative;
+      padding-top: $onedata-logo-margin-top;
+      padding-bottom: $onedata-logo-margin-bottom;
+      background-color: inherit;
+      z-index: 10;
+    }
+    .row-main-menu {
+      position: relative;
+      background-color: inherit;
+      z-index: 10;
+    }
+    
+    .item-icon {
+      position: relative;
+      margin-right: 0.6rem;
+      font-size: 3.2rem;
+    }
+  }
+  .col-sidenav-cover {
+    position: absolute;
+    z-index: -1000;
+    @media (min-width: $screen-sm-min) {
+      position: absolute;
+      left: $main-menu-width;
+      width: $sidebar-menu-width-md - $main-menu-expand-delta;
+    }
+    @media (min-width: $screen-lg-min) {
+      width: $sidebar-menu-width-lg - $main-menu-expand-delta;
+    }
+  }
+  #sidenav-sidebar {
+    transition: left linear $collapse-transition-time, width linear $collapse-transition-time;
+  }
+  .col-sidebar, #sidenav-sidebar {
+    background: $color-sidebar-background;
+    @media (max-width: $screen-xs-max) {
+      position: absolute;
+      top: 0;
+      padding-top: $mobile-top-height;
+      bottom: 0;
+    }
+    @media (min-width: $screen-sm-min) {
+      position: absolute;
+      left: $main-menu-collapsed-width;
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      left: 0px;
+      padding-top: $mobile-top-height;
+    }
+    @media (min-width: $screen-md-min) {
+      position: absolute;
+      left: $main-menu-collapsed-width;
+      &.with-place-for-menu {
+        left: $main-menu-width;
+      }
+    }
+  }
+  .col-sidebar, #sidenav-sidebar.in {
+    @media (min-width: $screen-sm-min) {
+      width: $sidebar-menu-width-sm;
+    }
+    @media (min-width: $screen-md-min) {
+      width: $sidebar-menu-width-md;
+    }
+    @media (min-width: $screen-lg-min) {
+      width: $sidebar-menu-width-lg;
+    }
+  }
+  .col-sidebar {
+    z-index: $zindex-navbar;
+    padding-bottom: $one-list-item-line-height;
+    border-right: 1px solid $color-one-list-item-separator;
+    transition: left linear $collapse-transition-time;
+  }
+  .row-heading .col-title {
+    // TODO: similar to one-list-item
+    line-height: 64px;
+    text-transform: uppercase;
+    padding-left: 30px;
+    padding-right: 30px;
+    letter-spacing: $letter-spacing-base;
+    font-size: $content-header-font-size;
+  }
+  .col-content {
+    // TODO similar 30px
+    padding: $content-col-padding;
+
+    @media (max-width: $screen-sm-max) {
+      padding: $padding-large-horizontal;
+    }
+    
+    @media (max-width: $screen-xs-max) {
+      padding: 0px;
+    }
+  }
+}
+
+// TODO gradient as on design - needs additional covering element
+// @mixin main-menu-item-gradient($opacity) {
+//   &::before {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     bottom: 0;
+//     right: 0;
+//     opacity: $opacity;
+//     // NOTICE changing menu background will mess up this color
+//     background: linear-gradient(90deg, #7E8EDA 0%, rgba(255,255,255,0) 100%); 
+//   }
+// }
+
+/// Desktop main menu styles
+.main-menu {
+  // an additional space to preserve place for the user-account-button
+  padding-bottom: $one-list-item-line-height;
+}
+.col-main-menu {
+  .main-menu.sidenav-opened {
+    .one-list-item.main-menu-item.enabled {
+      &.active > .item-header {
+        background-color: #666161;
+      }
+    }
+  }
+  .one-list-item.main-menu-item {
+    >.item-header {
+      color: $color-main-menu-fg-default;
+      border: 0;
+    }
+    &.enabled {
+      &.active,
+      &.selected {
+        >.item-header {
+          color: $color-main-menu-fg-active;
+          background-color: $color-one-main;
+          @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
+        }
+        &:hover {
+          background-color: darken($color-one-main, 10%);
+        }
+        &::before {
+          display: none;
+        }
+      }
+      &.loading {
+        >.item-header {
+          @extend .animated;
+          @extend .infinite;
+          @extend .slow;
+          @extend .pulse-bg-one-main;
+        }
+      }
+      &:hover {
+        >.item-header {
+          @include main-menu-item-gradient(0.15, 0);
+        }
+      }
+    }
+    &.disabled {  
+      >.item-header {
+        color: $color-main-menu-fg-disabled;
+      }
+    }
+    // style overrides for list item
+    &.one-list-item {
+      &::after {
+        @include top-line(0)
+      }
+      &:last-of-type {
+        &::after {
+          @include bottom-line(0)
+        }
+      }
+    }
+  }
+}
+.col-main-menu .main-menu.sidenav-opened .one-list-item.main-menu-item.active {
+  >.item-header {
+    color: $color-main-menu-fg-default;
+  }
+  &::before {
+    @include left-line($one-list-item-active-left-border-width solid $color-main-menu-fg-disabled);
+  }
+}
+
+// special for sidebar in sidenav TODO
+#sidenav-sidebar {
+  background: $color-sidebar-background;
+}
+
+// fix for a bad placement of scrollbar
+.ps-scrollbar-y-rail {
+  position: absolute;
+}

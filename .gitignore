@@ -21,3 +21,19 @@ testem.log
 .node_modules.ember-try/
 bower.json.ember-try
 package.json.ember-try
+
+# test results
+**/test-results.xml
+
+# do not use package-lock.json as it seems unstable
+**/package-lock.json
+
+# OSX
+.DS_Store
+._*
+
+# Visual Studio Code
+.vscodeignore
+.vscode/
+jsconfig.json
+typings/

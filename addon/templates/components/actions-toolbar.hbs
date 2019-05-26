@@ -1,0 +1,19 @@
+{{#one-collapsible-toolbar
+  isMinimized=isMinimized
+  dropdownPlacement=dropdownPlacement
+  minimumFullWindowSize=minimumFullWindowSize
+  class=toolbarClasses
+  toggleBtnClass=toolbarToggleClasses
+  as |dropdown|}}
+  {{#each actionsArray as |act|}}
+    {{#dropdown.item
+      buttonStyle=act.buttonStyle
+      triggerClasses=act.class
+      itemAction=(action act.action actionsArg)
+      class=(if act.disabled "disabled")
+    }}
+      {{one-icon icon=act.icon}}
+      <span class="text">{{act.title}}</span>
+    {{/dropdown.item}}
+  {{/each}}
+{{/one-collapsible-toolbar}}

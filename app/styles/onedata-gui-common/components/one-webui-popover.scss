@@ -1,0 +1,120 @@
+$webui-popover-offset: 4px;
+
+@mixin webui-popover-dropdown() {
+  border: 0;
+  background-color: transparent;
+  &.right > .webui-arrow:after,
+  &.right-top > .webui-arrow:after,
+  &.right-bottom > .webui-arrow:after {
+    border-right-color: $color-one-semiblack;
+  }
+  &.left > .webui-arrow:after,
+  &.left-top > .webui-arrow:after,
+  &.left-bottom > .webui-arrow:after {
+    border-left-color: $color-one-semiblack;
+  }
+  &.bottom > .webui-arrow:after,
+  &.bottom-right > .webui-arrow:after,
+  &.bottom-left > .webui-arrow:after {
+    border-bottom-color: $color-one-semiblack;
+  }
+  &.top > .webui-arrow:after,
+  &.top-right > .webui-arrow:after,
+  &.top-left > .webui-arrow:after {
+    border-top-color: $color-one-semiblack;
+  }
+
+  .dropdown-menu {
+    // padding: 0 3px;
+    background-color: $color-one-semiblack;
+    overflow: hidden;
+    li {
+      border-top: 1px solid $color-one-dark-gray;
+      &:first-child {
+        border-top: 0;
+      }
+      &.separator a {
+        background-color: lighten($color-one-semiblack, 10%);
+      }
+      &.disabled a {
+        color: lighten($main-text-color, 20%);
+      }
+      a {
+        color: $color-one-white;
+        &:hover {
+          background-color: lighten($color-one-semiblack, 7%);
+        }
+      }
+    }
+  }
+}
+
+.webui-popover {
+  @include box-shadow(0 2px 3px rgba(128, 128, 128, 0.2));
+  max-width: 28em;
+  border-radius: $border-radius-small;
+  font-size: $font-size-base;
+  padding: 0;
+  z-index: $zindex-modal-background - 1;
+
+  &.webui-popover-with-dropdown {
+    @include webui-popover-dropdown();
+  }
+
+  .webui-popover-content {
+    padding: $padding-base-vertical;
+    overflow: initial;
+    h1 {
+      margin-top: 0;
+      font-size: $font-size-base;
+      font-weight: bold;
+      letter-spacing: $letter-spacing-base;
+    }
+    .btn-toolbar {
+      margin-right: 0;
+      float: none;
+      text-align: right;
+      .btn {
+        float: none;
+        margin-top: $padding-base-vertical;
+        & + .btn {
+          margin-left: $padding-base-vertical;
+        }
+      }
+    }
+  }
+
+  // bootstrap xs size range is to large for width in percent unit
+  @media (max-width: 400px) {
+    max-width: 80%;
+  }
+
+  &.bottom,
+  &.bottom-right, 
+  &.bottom-left {
+    transform: translateY($webui-popover-offset);
+  }
+
+  &.top,
+  &.top-right, 
+  &.top-left {
+    transform: translateY(-$webui-popover-offset);
+  }
+
+  &.left,
+  &.left-top, 
+  &.left-bottom {
+    transform: translateX(-$webui-popover-offset);
+  }
+
+  &.right,
+  &.right-top, 
+  &.right-bottom {
+    transform: translateX($webui-popover-offset);
+  }
+}
+
+// bringing back no-padding style
+.webui-popover.webui-no-padding .webui-popover-content {
+  padding: 0;
+}

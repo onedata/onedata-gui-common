@@ -1,0 +1,102 @@
+$collapsible-list-item-padding: $padding-large-horizontal;
+$collapsible-list-item-btn-toggle-padding: 12px;
+$collapsible-list-item-header-opened: darken($main-content-hover-background, 5%);
+$collapsible-list-item-header-opened-hover: darken($main-content-hover-background, 9%);
+
+.one-collapsible-list {
+  list-style-type: none;
+  padding-left: 0;
+
+  &.filtered-list .search-group .one-icon {
+    color: $color-one-mint;
+  }
+
+  .list-header-row {
+    padding: $padding-large-horizontal 2 * $padding-large-horizontal $padding-large-horizontal $padding-large-vertical;
+  }
+
+  .one-collapsible-list-header, .one-collapsible-list-item-header {
+    .btn-menu-toggle {
+      @include vertical-align-middle();
+      right: $padding-small-horizontal + 1px;
+      padding: $collapsible-list-item-btn-toggle-padding*0.75 $collapsible-list-item-btn-toggle-padding;
+    }
+  }
+
+  .one-collapsible-list-header {
+    $search-box-width: 200px;
+    $mobile-view-breakpoint: $screen-sm-min + 100px;
+
+    .list-title {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    &.align-to-icon .list-title {
+      margin-left: 6px;
+    }
+
+    &.collapsible {
+      .toggle-icon {
+        display: inline-block;
+        position: initial;
+        margin-left: 0.5em;
+        line-height: 0em;
+        transform: translateY(0.2em) rotate(0deg);
+        font-size: 130%;
+      }
+      &.opened .toggle-icon {
+        transform: translateY(0.2em) rotate(180deg);
+      }
+    }
+
+    &.collapsed {
+      .collapsible-toolbar-toggle {
+        pointer-events: none;
+      }
+    }
+
+    @media (min-width: $mobile-view-breakpoint) {
+      .list-header-content {
+        right: 0;
+      }
+      .search-group {
+        position: absolute;
+        top: 50%;
+        right: $padding-large-horizontal;
+        width: $search-box-width;
+        transform: translateY(-50%);
+      }
+      &.with-place-for-dots {
+        .search-group {
+          margin-right: 40px;
+        }
+      }
+    }
+
+    @media (max-width: $mobile-view-breakpoint - 1) {
+      .search-group {
+        margin-bottom: 0;
+        margin-top: $padding-base-vertical;
+        margin-right: -$padding-large-horizontal;
+      }
+      .collapsible-toolbar-toggle {
+        top: 10px;
+        transform: none;
+      }
+    }
+  }
+
+  @media(min-width: $screen-sm-min) {
+    .one-collapsible-list-item .one-collapsible-list-item-header {
+      .collapsible-toolbar-toggle {
+        display: none;
+      }
+      &:hover, .one-collapsible-toolbar.dropdown-opened {
+        .collapsible-toolbar-toggle {
+          display: block;
+        }
+      }
+    }
+  }
+}

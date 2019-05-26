@@ -1,0 +1,65 @@
+.user-account-button {
+  .user-account-button-main {
+    // TODO a style from list item, list header
+    width: 100%;
+    font-size: $font-size-small;
+    text-transform: none;
+    .item-header {
+      padding-right: 35px;
+    }
+  }
+  .manage-account-action {
+    &.one-list-item .header-content-container, a {
+      display: block;
+    }
+    a {
+      color: $main-text-color;
+    }
+  }
+  .user-account-button-main {
+    &::after {
+      @include top-line(none)
+    }
+  }
+  .user-toggle-icon {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1em;
+    margin: 0;
+  }
+  &.user-account-button-mobile {
+    .one-collapsible-list {
+      margin: 0;
+      .one-collapsible-list-item-header {
+        padding: 0 $one-list-item-padding;
+        text-transform: none;
+        background-color: transparent !important;
+      }
+      .one-collapsible-list-item-content {
+        border-bottom: 0;
+      }
+    }
+    .user-account-button {
+      // selector to the user-menu main item
+      & > .one-collapsible-list-item-header {
+        padding-right: 50px;
+        color: $color-sidebar-background;
+      }
+      &.active,
+      & > .one-collapsible-list-item-header:hover,
+      & > .one-collapsible-list-item-header.active  {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+// TODO maybe it should be moved to main menu styles
+.webui-popover-user-account {
+  width: $main-menu-width;
+  ul {
+    text-align: center;
+  }
+}

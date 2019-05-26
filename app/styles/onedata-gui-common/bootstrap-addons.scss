@@ -1,0 +1,549 @@
+$input-bg-light: $color-one-white;
+$icon-btn-active-color: $color-one-red;
+
+$color-token-border: #d9d9d9;
+$color-token-bg: #ededed;
+
+$token-border: 1px solid $color-token-border;
+$token-border-radius: 3px;
+
+
+@mixin btn-toolbar-float-right() {
+  .btn-toolbar {
+    text-align: right;
+    float: right;
+    margin-left: 0;
+    .btn {
+      float: none;
+      margin-left: 1.8em;
+      &:first-child {
+        margin-left: 0;
+      }
+      &.icon-btn {
+        margin-left: 1em;
+      }
+    }
+  }
+}
+
+@mixin icon-toggle-float-right() {
+  position: absolute;
+  right: $padding-base-horizontal;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'oneicons' !important;
+  font-size: 1.7em;
+  font-weight: bold;
+}
+
+@mixin tag-bg-color($color) {
+  background-color: lighten(desaturate($color, 30%), 35%)
+}
+
+.modal-content {
+  .modal-header {
+    .one-icon {
+      font-size: 1.7em;
+      margin-right: $padding-base-horizontal;
+    }
+  }
+  .btn-toolbar {
+    margin-top: $padding-large-horizontal;
+    text-align: center;
+    button, .btn {
+      margin-top: $padding-small-vertical;
+      float: none;
+    }
+    @media (max-width: $screen-xs-max) {
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.has-error {
+  .form-message {
+    color: $state-danger-text;
+  }
+}
+
+.form-horizontal {
+  .form-message {
+    padding-top: $padding-small-vertical;
+    text-align: right;
+    font-size: $font-size-small;
+  }
+  &:not(.without-labels) {
+    @media (max-width: $screen-xs-max) {
+      .form-control-feedback {
+        // 5px from hard-coded value of bootstrap label bottom margin
+        margin-top: $line-height-computed + 5px;
+      }
+    }
+  }
+  .input-group {
+    table-layout: fixed;
+    width: 100%;
+    input + .input-group-addon {
+      width: 50%;
+    }
+  }
+  .has-feedback {
+    .input-group {
+      .form-control {
+        padding-right: $padding-large-horizontal;
+      }
+      .form-control + .input-group-addon {
+        padding-right: $input-height-base - 2px;
+      }
+    }
+  }
+  .input-group {
+    table-layout: fixed;
+    width: 100%;
+    input + .input-group-addon {
+      width: 50%;
+    }
+  }
+  .has-feedback {
+    .input-group {
+      .form-control {
+        padding-right: $padding-large-horizontal;
+      }
+      .form-control + .input-group-addon {
+        padding-right: $input-height-base - 2px;
+      }
+    }
+  }
+  .has-success .form-message {
+    color: $state-success-text;
+  }
+  .has-error.disabled,
+  .has-success.disabled {
+    .form-message,
+    .form-control-feedback {
+      display: none;
+    }
+  }
+}
+
+.form-group.group-with-tip {
+  @media (min-width: $screen-sm-min) {
+    .toggle-form-row {
+      .control-label .one-label-tip {
+        height: $line-height-computed;
+        line-height: $line-height-computed;
+      }
+    }
+    .control-label {
+      position: initial;
+      .one-label-tip {
+        position: absolute;
+        top: 0px;
+        height: $input-height-base;
+        line-height: $input-height-base;
+        right: -$padding-small-horizontal;
+        transform: translateX(100%);
+      }
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    .control-label {
+      .one-label-tip {
+        font-size: 90%;
+      }
+    }
+  }
+}
+
+.form-control-static {
+  min-height: 1em;
+  word-break: break-all;
+  .field-suffix {
+    color: $color-one-light-gray;
+  }
+}
+
+.form-group-light {
+  .input-group {
+    .form-control {
+      background-color: $input-bg-light;
+      border-color: $main-border-color;
+      @include box-shadow(none);
+    }
+    // TODO disabled?
+    .input-group-addon {
+      background-color: $input-bg-light;
+      .one-icon {
+        color: $main-border-color;
+      } // should be same as input box-shadow!
+      @include box-shadow(none);
+    }
+  }
+}
+
+.input-group {
+  .input-group-btn .btn {
+    height: $input-height-base;
+    font-size: $font-size-base;
+    border-left: none;
+    
+    &.btn-primary {
+      @include input-btn-variant($btn-primary-border); 
+    }
+    &.btn-info {
+      @include input-btn-variant($btn-info-border); 
+    }
+    &.btn-default {
+      @include input-btn-variant($btn-default-border); 
+    }
+    &.btn-danger {
+      @include input-btn-variant($btn-danger-border); 
+    }
+    &.btn-warning {
+      @include input-btn-variant($btn-warning-border); 
+    }
+  }
+  &.input-group-sm .input-group-btn .btn {
+    height: $input-height-small;
+    font-size: $font-size-small;
+  }
+}
+
+.input-group.with-icon-addon {
+  position: relative;
+  width: 100%;
+  .input-group-addon {
+    position: relative;
+    // focus on input changes its z-index from 1 to 3
+    z-index: 4;
+    height: $input-height-base;
+    width: $input-height-base;
+    border: 0;
+    background-color: transparent;
+    .one-icon {
+      font-size: 32px;
+      @include absolute-align-middle-center;
+    }
+  }
+  input {
+    $border-radius: $input-border-radius;
+    float: none;
+    position: absolute;
+    z-index: 1;
+    &:last-child {
+      left: 0;
+      padding-left: $input-height-base;
+      // duplicated inside last/first-child to avoid using !important
+      border-radius: $border-radius;
+    }
+    &:first-child {
+      right: 0;
+      padding-right: $input-height-base;
+      border-radius: $border-radius;
+    }
+  }
+}
+
+.form-group-sm .input-group.with-icon-addon,
+.input-group.input-group-sm.with-icon-addon {
+  .input-group-addon {
+    height: $input-height-small;
+    min-width: $input-height-small;
+    .one-icon {
+      font-size: 22px;
+      font-weight: bold;
+    }
+  }
+  input {
+    $border-radius: $input-border-radius-small;
+    &:last-child {
+      padding-left: $input-height-small;
+      // duplicated inside last/first-child to avoid using !important
+      border-radius: $border-radius;
+    }
+    &:first-child {
+      padding-right: $input-height-small;
+      border-radius: $border-radius;
+    }
+  }
+}
+
+.form-static .form-group {
+  margin-bottom: 0;
+}
+
+.inline-label {
+  display: inline-block;
+  margin-right: $padding-base-horizontal;
+}
+
+.icon-btn {
+  border: 0;
+  background-color: transparent;
+  height: 1em;
+  position: relative;
+  padding: 0;
+  color: $btn-default-bg;
+  &:hover,
+  &:active,
+  &:hover:active,
+  &:focus {
+    color: $btn-default-bg;
+    background-color: transparent;
+    border: 0;
+  }
+  .one-icon {
+    position: relative;
+    top: 0.1em;
+  }
+  &.btn-primary {
+    color: $btn-primary-bg;
+    background-color: transparent;
+    border: 0;
+    &:hover,
+    &:active,
+    &:hover:active,
+    &:focus {
+      color: $btn-primary-bg;
+    }
+  }
+  &.active,
+  &:active {
+    color: $icon-btn-active-color;
+  }
+}
+
+// TODO use bootstrap variables
+.row-spaced {
+  [class*="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
+    
+    &:first-of-type {
+      padding-left: 0;
+    }
+    &:last-of-type {
+      padding-right: 0;
+    }
+  }
+}
+
+.text-xs-center {
+  @media (max-width: $screen-xs-max) {
+    text-align: center;
+  }
+}
+
+.btn-group-addon {
+  display: inline-block;
+  margin: $padding-base-vertical $padding-base-horizontal;
+  &.btn-group-addon-sm {
+    margin: $padding-small-vertical $padding-small-horizontal;
+  }
+}
+
+/// bs-tab styles
+
+// base style for onedata - use with one of below classes
+.bs-tab-onedata {
+  .nav-tabs {
+    li.disabled {
+      cursor: not-allowed !important;
+      > a {
+        pointer-events: none;
+        color: $main-text-color-disabled;
+      }
+    }
+  }
+  .tab-content {
+    padding: $padding-large-vertical $padding-large-horizontal;
+    background-color: $color-one-white;
+    .tab-pane {
+      position: relative;
+      @media (max-width: $screen-xs-max) {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .content-row {
+        @media (min-width: $screen-sm-min) {
+          margin-left: 0px;
+          margin-right: 0px;
+        }
+        h1 {
+          padding: 0;
+        }
+      }
+    }
+    .tab-pane.no-padding {
+      @media (min-width: $screen-sm-min) {
+        margin-left: -$padding-large-horizontal;
+        margin-left: -$padding-large-horizontal;
+      }
+      .content-row {
+        @media (min-width: $screen-sm-min) {
+          margin-left: $padding-large-horizontal;
+          margin-right: $padding-large-horizontal;
+        }
+      }
+    }
+  }
+}
+
+
+.bs-tab-oldschool {
+  .nav-tabs {
+    li {
+      > a {
+        padding: $padding-large-vertical $padding-large-horizontal;
+        border-radius: $border-radius-small $border-radius-small 0 0;
+        font-weight: bold;
+        color: $main-text-color-inactive;
+      }
+    }
+    li, li.active {
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          border-top: 4px solid transparent;
+        }
+      }
+    }
+    li.active {
+      > a {
+        color: $main-text-color;
+        &,
+        &:hover,
+        &:focus {
+          border-top-color: $color-one-blue-gray;
+        }
+      }
+    }
+  }
+  
+  .tab-content {
+    border: 1px solid $main-border-color;
+    border-top: 0;
+  }
+}
+
+.bs-tab-modern {
+  .nav-tabs {
+    border-bottom: 0;
+    li {
+      > a {
+        &,
+        &:hover,
+        &:focus {
+          background: transparent;
+          border-top: none;
+          border-left: 0;
+          border-right: 0;
+          border-bottom: 4px solid transparent;
+          font-weight: bold;
+          color: $main-text-color-inactive;
+        }
+        &:hover {
+          border-bottom-color: lighten($color-one-blue-gray, 25);
+        }
+      }
+    }
+    li.active {
+      > a {
+        border-bottom-color: $color-one-blue-gray;
+        color: $main-text-color;
+      }
+    }
+    li.disabled {
+      > a {
+        color: $main-text-color-disabled;
+      }
+    }
+  }
+}
+
+
+.only-tab-bar {
+  .tab-content {
+    border: none;
+  }
+  .tab-pane {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.table:not(.bt) {
+  td:first-child {
+    position: relative;
+    padding-left: 16px;
+  }
+}
+
+.form-horizontal-condensed {
+  .form-group {
+    margin-bottom: 0px;
+  }
+}
+
+label.align-left {
+  display: inline-block;
+  padding-right: $padding-base-vertical;
+  text-align: left;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 4px;
+  margin: 0 2px;
+  border-radius: $token-border-radius;
+  border: $token-border;
+  background-color: $color-token-bg;
+  box-sizing: border-box;
+  cursor: normal;
+  &.bg-success {
+    @include tag-bg-color($brand-success);
+  }
+  &.bg-warning {
+    @include tag-bg-color($brand-warning);
+  }
+  &.bg-danger {
+    @include tag-bg-color($brand-danger);
+  }
+}
+
+.input-group-basic-dropdown {  
+  display: table-cell;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+  .ember-basic-dropdown {
+    .ember-power-select-trigger {
+      height: $input-height-base;
+      border-left: none;
+      border-radius: 0;
+    }
+    .ember-basic-dropdown-content--left {
+      left: -1px;
+    }
+  }
+}
+
+.input-group-sm {
+  .input-group-basic-dropdown {
+    .ember-basic-dropdown {
+      .ember-power-select-trigger {
+        height: $input-height-small;
+        line-height: $input-height-small - 12px;
+        padding-left: $input-height-small - 16px;
+        padding-right: $input-height-small - 8px;
+        border-radius: 0;
+      }
+      .ember-basic-dropdown-content {
+        @extend .small;
+      }
+    }
+  }
+}

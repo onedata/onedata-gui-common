@@ -1,0 +1,44 @@
+.one-list-item {
+  position: relative;
+  line-height: $one-list-item-line-height;
+
+  &::after {
+    @include top-line(1px solid $color-one-list-item-separator)
+  }
+
+  &:last-of-type {
+    &::after {
+      @include bottom-line(1px solid $color-one-list-item-separator)
+    }
+  }
+
+  &.active {
+    &::before {
+      @include left-line(
+        $one-list-item-active-left-border-width solid $color-one-main
+      );
+      display: block;
+    }
+    > .item-header {
+      color: $color-one-main;
+    }
+  }
+
+  .one-icon {
+      display: inline-block;
+      position: relative;
+      margin-right: 0.3em;
+      top: 0.4em;
+    }
+}
+
+.item-header {
+  position: relative;
+  display: block;
+  padding-left: $one-list-item-padding;
+  padding-right: $one-list-item-padding;
+}
+
+.one-list-item.clickable .item-header:hover {
+  background: $color-one-semiwhite;
+}

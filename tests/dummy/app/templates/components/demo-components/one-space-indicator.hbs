@@ -1,0 +1,93 @@
+<h1>Standard</h1>
+<div style="max-width: 500px">
+  Small:
+  {{one-space-indicator currentTotalSize=smallCurrentTotalSize occupiedSize=smallOccupiedSize}}
+
+  Medium:
+  {{one-space-indicator currentTotalSize=mediumCurrentTotalSize occupiedSize=mediumOccupiedSize}}
+
+  Large:
+  {{one-space-indicator currentTotalSize=largeCurrentTotalSize occupiedSize=largeOccupiedSize}}
+
+  Too large:
+  {{one-space-indicator currentTotalSize=tooLargeCurrentTotalSize occupiedSize=tooLargeOccupiedSize}}
+</div>
+<h1>State after change</h1>
+<div style="max-width: 500px">
+  Expanding only a little:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=50
+    newTotalSize=102
+  }}
+  
+  Expanding more:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=50
+    newTotalSize=150
+  }}
+
+  Expanding when the space is almost full:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=99
+    newTotalSize=120
+  }}
+  
+  Expanding when data already exceeds space:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=150
+    newTotalSize=160
+  }}
+  
+  Shrinking only a little:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=50
+    newTotalSize=98
+  }}
+  
+  Shrinking more:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=50
+    newTotalSize=80
+  }}
+  
+  Shrinking causes space warning:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=50
+    newTotalSize=52
+  }}
+  
+  Shrinking below data usage:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=50
+    newTotalSize=30
+  }}
+</div>
+<h1>Other/errors</h1>
+<div style="max-width: 500px">
+  newTotalSize below 0:
+  {{one-space-indicator
+    currentTotalSize=20
+    occupiedSize=10
+    newTotalSize=-10
+  }}
+  
+  undefined occupiedSize:
+  {{one-space-indicator
+    currentTotalSize=100
+    occupiedSize=undefined
+  }}
+  
+  currentTotalSize below 0:
+  {{one-space-indicator
+    currentTotalSize=-5
+    occupiedSize=10
+  }}
+</div>

@@ -1,0 +1,20 @@
+<div class="container">
+  <h2>Always spinning</h2>
+  <div class="row">
+    {{#one-spin-button
+      class="btn btn-primary"
+      inFlight=true
+    }}
+      Hello world
+    {{/one-spin-button}}
+  </div>
+  <h2>Disabled</h2>
+  <div class="row">
+    {{#one-spin-button
+      class="btn btn-primary"
+      disabled=true
+    }}
+      Disabled button
+    {{/one-spin-button}}
+  </div>
+</div>

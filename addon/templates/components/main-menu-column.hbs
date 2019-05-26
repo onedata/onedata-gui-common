@@ -1,0 +1,21 @@
+{{#perfect-scrollbar-element
+  tagName="div"
+  class="main-menu-content"
+  onScroll=(action "scrollOccurred")
+  suppressScrollX=true}}
+  <div class="row row-onedata-logo full-width">
+    <div class="onedata-logo">{{one-animated-logo opened=isExpanded}}</div>
+  </div>
+  <div class="row row-main-menu full-width">
+    {{main-menu
+      items=mainMenuItems
+      itemClicked=(action "mainMenuItemClicked")
+    }}
+  </div>
+{{/perfect-scrollbar-element}}
+<div class="row row-account-button">
+  <div class="groove-border"></div>
+  {{user-account-button
+    isActive=(eq navigationState.activeResourceType "users")
+    onMenuOpened=(action "userAccountPopoverOpened")}}
+</div>

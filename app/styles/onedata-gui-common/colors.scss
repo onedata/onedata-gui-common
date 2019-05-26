@@ -1,0 +1,29 @@
+$color-one-white: #fff;
+$color-one-semiwhite: #EFEFEF;
+$color-one-semiblack: #363636;
+$color-one-dark-gray: #555555;
+$color-one-red: #EE3F3F;
+$color-one-mint: #4BD187;
+$color-one-light-gray: #BEBEBE;
+$color-one-blue-gray: #4A6089;
+$color-one-gray-sand: #E2E1E0;
+$color-one-dark-blue: #555d72;
+$color-one-azure: color-one-azure();
+$color-one-yellow: color-one-yellow();
+
+$color-one-main: $color-one-red;
+$color-one-default: $color-one-blue-gray;
+$color-one-info: $color-one-blue-gray;
+$color-one-success: $color-one-mint;
+$color-one-warning: $color-one-yellow;
+$color-one-danger: $color-one-red;
+// default bootstrap color
+$color-one-success-dark: #3c763d;
+
+$main-text-color: $color-one-dark-gray;
+$main-text-color-inactive: lighten($main-text-color, 15%);
+$main-text-color-disabled: lighten($main-text-color, 35%);
+$main-border-color: darken($color-one-semiwhite, 10%);
+
+// TODO: a color for future use
+$main-tabbed-content-background: #FCFCFC;

@@ -1,0 +1,87 @@
+.one-collapsible-toolbar {
+  &.minimized {
+    .collapsible-toolbar-toggle {
+      cursor: pointer;
+      .icon-dot {
+        background-color: $main-text-color;
+        height: 4px;
+        width: 4px;
+        margin-bottom: 4px;
+        border-radius: 100%;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  .collapsible-toolbar-buttons {
+    white-space: nowrap;
+  }
+}
+
+.btn-menu-toggle {
+  border: 1px solid transparent;
+  
+  &:hover {
+    background-color: $color-sidebar-item-bg;
+    border: 1px solid $color-one-list-item-separator;
+    border-radius: $border-radius-small;
+  }
+}
+
+.one-collapsible-toolbar-popover {
+  width: $mobile-menu-popover-width;
+}
+
+.with-menu {
+  position: relative;
+  .collapsible-toolbar-toggle {
+    position: absolute;
+    transform: translateY(-50%);
+    right: 0;
+    top: 50%;
+    width: 30px;
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  @media (max-width: $screen-sm-max) {
+    .collapsible-toolbar-toggle {
+      display: none;
+    }
+  }
+  @media (min-width: $screen-md-min) {
+    padding-right: 30px;
+  }
+
+  .icon-dot {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.with-back {
+  .resource-name {
+    padding-left: 68px;
+  }
+  .content-back-link {
+    font-size: 28px;
+    position: absolute;
+    top: 50%;
+    color: inherit;
+    transform: translateY(-50%) translateY(2px);
+    .content-back-arrow-icon {
+      padding-left: 8px;
+      font-size: 20px;
+      position: relative;
+      top: -4px;
+      transition: padding-left 0.1s linear;
+    }
+    &:hover {
+      .content-back-arrow-icon {
+        padding-left: 4px;
+        transition: padding-left 0.1s linear;
+      }
+    }
+  }
+}

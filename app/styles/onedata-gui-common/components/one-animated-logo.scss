@@ -1,0 +1,61 @@
+.one-animated-logo {
+  $size: 25px;
+  $frame-time: $collapse-transition-time / 2;
+  white-space: nowrap;
+  font-size: 0;
+  .logo-container {
+    position: relative;
+    display: inline-block;
+    height: $size;
+    background-image: url($root-url + 'assets/images/logo.svg');
+    background-size: auto 100%;
+  }
+  .left {
+    width: $size * 0.9;
+    transition: $frame-time width linear $frame-time;
+    background-repeat: no-repeat;
+    .shadow {
+      left: $size * 0.9;
+      width: $size * 1.9;
+      transition: $frame-time opacity linear $frame-time;
+    }
+  }
+  .right {
+    width: $size * 0.53;
+    transition: $frame-time width linear;
+    background-image: url($root-url + 'assets/images/logo.svg');
+    background-position: -$size * 2.8 0;
+    background-repeat: no-repeat;
+    .shadow {
+      transition: $frame-time opacity linear;
+      left: $size * 0.55;
+      width: $size * 2.35;
+    }
+  }
+  .shadow {
+    position: absolute;
+    background: linear-gradient(to right, transparent -100%, $color-main-menu-bg);
+    top: 0;
+    bottom: 0;
+    opacity: 1;
+  }
+  &.opened {
+    .left {
+      width: $size * 2.8;
+      transition: $frame-time width linear;
+      .shadow {
+        transition: $frame-time opacity linear ;
+      }
+    }
+    .right {
+      width: $size * 2.85;
+      transition: $frame-time width linear $frame-time;
+      .shadow {
+        transition: $frame-time opacity linear $frame-time;
+      }
+    }
+    .shadow {
+      opacity: 0;
+    }
+  }
+}

@@ -1,0 +1,54 @@
+.application-error {
+  $-base-app-error-size-lg: 212px;
+  $-base-app-error-size-md: 128px;
+
+  height: 100%;
+  text-align: center;
+
+  .application-error-icon {
+    font-size: $-base-app-error-size-lg;
+  }
+  
+  .application-error-message {
+    font-size: $-base-app-error-size-lg / 6;
+  }
+
+  .application-error-show-more {
+    font-size: $-base-app-error-size-lg / 8;
+  }
+
+  .error-row {
+    width: 80%;
+  }
+
+  .error-details {
+    max-height: 0;
+    margin-top: 0;
+    transition: $collapse-transition, margin-top .2s linear;
+    opacity: 0;
+    color: $main-text-color;
+    &.active {
+      opacity: 1; 
+      overflow: auto;
+      max-height: 10em;
+      margin-top: 10px;
+    }
+    .error-json {
+      max-height: 6em;
+      overflow: auto;
+      word-wrap: break-word;
+    }
+  }
+
+  &.md {
+    .application-error-icon {
+        font-size: $-base-app-error-size-md;
+    }
+    .application-error-message {
+        font-size: $-base-app-error-size-md / 6;
+    }
+    .application-error-show-more {
+        font-size: $-base-app-error-size-md / 8 ;
+    }
+  }
+}

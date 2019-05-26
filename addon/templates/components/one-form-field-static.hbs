@@ -1,0 +1,23 @@
+<div class="row">
+  <label class={{concat "control-label " layoutConfig.formLabelColumns}}>
+    {{field.label}}:
+    {{#if field.tip}}
+      {{one-label-tip title=field.tip}}
+    {{/if}}
+  </label>
+  <span class={{concat (concat (concat "form-control-static one-form-field-static field-" (dot-to-dash field.name)) " ") layoutConfig.formInputColumns}}>
+    {{#if (eq (data-type value) "boolean")}}
+      {{one-way-toggle
+        checked=value
+        isReadOnly=true
+      }}
+    {{else}}
+      {{#if fakePassword}}
+        {{fake-password}}
+      {{else}}
+        {{one-form-field-formatter value field.format}}
+        {{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
+      {{/if}}
+    {{/if}}
+  </span>
+</div>

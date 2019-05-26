@@ -1,0 +1,63 @@
+$status-toolbar-height: 20px;
+
+.status-toolbar {
+  line-height: $status-toolbar-height;
+  font-size: $status-toolbar-height;
+
+  display: inline-block;
+  background-color: $color-one-white;
+  border: 1px solid $color-one-list-item-separator;
+  // fully rounded corners
+  border-radius: 999px;
+  padding: 2px $padding-small-horizontal;
+  .status-toolbar-icon {
+    float: left;
+    position: relative;
+    & + .status-toolbar-icon:not(.hidden) {
+      margin-left: 8px;
+    }
+    // using camelCase because of status mapping from API
+    &.inProgress {
+      @extend .animated;
+      @extend .infinite;
+      @extend .semi-hinge;
+      @extend .pulse-mint;
+    }
+    &.done, &.waiting {
+      color: $color-one-mint;
+    }
+
+    &.not-clickable {
+      cursor: initial !important;
+    }
+    
+    .one-icon {
+      position: relative;
+      .inner-text {
+        position: absolute;
+        top: 0.9em;
+        left: 1.3em;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 40%;
+        font-weight: bold;
+        font-family: 'Open Sans';
+        color: $color-one-white;
+      }
+    }
+    .outer-text {
+      display: inline-block;
+      position: relative;
+      top: -0.6em;
+      line-height: 0;
+      white-space: nowrap;
+      font-size: 50%;
+    }
+    .sub-status-icon {
+      position: absolute;
+      right: -15%;
+      bottom: 0;
+      font-size: 70%;
+    }
+  }
+}

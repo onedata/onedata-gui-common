@@ -1,0 +1,147 @@
+$toggle-size-base: 1.4em;
+$toggle-width: 2 * $toggle-size-base;
+$one-way-toggle-control-color-active: $brand-primary;
+$one-way-toggle-control-color-maybe: $color-one-yellow;
+$toggle-disabled-desaturation: 20%;
+$toggle-color-transition: background-color 0.2s ease, opacity 0.2s ease;
+
+.one-way-toggle {
+  position: relative;
+  display: inline-block;
+  height: $toggle-size-base;
+  font-size: inherit;
+  vertical-align: middle;
+
+  &.form-control {
+    background-color: inherit;
+    border: 0;
+    box-shadow: none;
+    white-space: nowrap;
+    // padding and width properties to override bootstrap form-control styles
+    padding: 0;
+    width: auto;
+  }
+
+  &.disabled {
+    // override HammerJS inline styles
+    cursor: initial !important;
+  }
+
+  input[type="checkbox"] {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+
+    &:focus + .one-way-toggle-control::before {
+      @include box-shadow($control-box-shadow-focus);
+      border: 1px solid $input-border-focus;
+    }
+  }
+
+  &.checked {
+    .one-way-toggle-control {
+      background-color: $one-way-toggle-control-color-active;
+      &:before {
+        margin-left: $toggle-width / 2;
+      }
+    }
+    &.disabled .one-way-toggle-control {
+      background-color: desaturate($one-way-toggle-control-color-active, $toggle-disabled-desaturation);
+      transition: $toggle-color-transition;
+    }
+  }
+
+  &.maybe {
+    .one-way-toggle-control {
+      background-color: $one-way-toggle-control-color-maybe;
+      &:before {
+        margin-left: $toggle-width / 4;
+      }
+    }
+    &.disabled .one-way-toggle-control {
+      background-color: desaturate($one-way-toggle-control-color-maybe, $toggle-disabled-desaturation);
+      transition: $toggle-color-transition;
+    }
+  }
+
+  .one-way-toggle-control,
+  .one-way-toggle-control:before {
+    border: 1px solid $input-border;
+    border-radius: $toggle-size-base / 2;
+    box-sizing: border-box;
+    content: "";
+    height: $toggle-size-base;
+    @include box-shadow(none);
+  }
+
+  .one-way-toggle-control {
+    display: inline-block;
+    background-color: $color-one-light-gray;
+    transition: $toggle-color-transition;
+    width: $toggle-width;
+    vertical-align: top;
+  }
+
+  .one-way-toggle-control:before {
+    display: block;
+    background-color: $input-bg;
+    position: relative;
+    transition: margin-left 0.2s ease, $control-focus-transition;
+    width: $toggle-size-base;
+    left: -1px;
+    top: -1px;
+  }
+
+  &.disabled .one-way-toggle-control {
+    opacity: $disabled-opacity;
+  }
+
+  .one-way-toggle-readonly-icon {
+    display: inline-block;
+    font-size: 120%;
+    vertical-align: top;
+  }
+  
+  &.in-progress {
+    width: 1.55 * $toggle-width;
+    .spin-spinner-block {
+      position: absolute;
+      right: 0.55 * $toggle-width;
+      transform: translateX(12px);
+      top: 45%;
+    }
+    &.spinner-left {
+      .spin-spinner-block {
+        right: initial;
+      }
+      .one-way-toggle-control {
+        position: relative;
+        right: -0.55 * $toggle-width;
+      }
+    }
+  }
+  
+
+  div.clickable::before {
+    cursor: pointer;
+  }
+}
+
+.toggle-form-row {
+  .control-label {
+    padding-top: 0;
+  }
+  
+  & + .form-control-feedback {
+    display: none;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .form-control {
+      padding-left: $padding-large-horizontal;
+    }
+    & + .form-control-feedback {
+      margin-top: 0;
+    }
+  }
+}

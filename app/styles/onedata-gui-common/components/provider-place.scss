@@ -1,0 +1,428 @@
+$provider-place-circle-size: 64px;
+$color-provider-online: $color-one-mint;
+$color-provider-offline: $color-one-red;
+$popover-provider-details-width: 220px;
+$popover-provider-list-width: 190px;
+$provider-place-drop-height: 306px;
+
+.provider-place {
+  position: relative;
+
+  &.mixed .circle {
+    border-color: $color-one-yellow;
+    color: $color-one-yellow;
+  }
+
+  &.online .circle {
+    border-color: $color-provider-online;
+    color: $color-provider-online;
+  }
+  
+  &.offline .circle {
+    border-color: $color-provider-offline;
+    color: $color-provider-offline;
+  }
+
+  .circle {
+    // initial size
+    width: $provider-place-circle-size;
+    height: $provider-place-circle-size;
+    font-size: ($provider-place-circle-size * 0.75);
+    border-radius: 50%;
+    border-width: 2px;
+    border-style: solid;
+    background-color: white;
+    cursor: pointer;
+
+    .one-icon {
+      &::before {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) translateX(-50%);
+        left: 50%;
+      }
+    }
+  }
+}
+
+.provider-place-drop {
+  $-btn-container-height: 62px;
+
+  height: $provider-place-drop-height;
+  
+  // TODO: experimental style
+  .space-redirect-link:not(:hover) {
+    color: $main-text-color;
+  }
+  
+  &.in-content {
+    &.online {
+      .drop-title-bar {
+        background-color: $color-one-mint;
+      }
+    }
+    &.offline {
+      .drop-title-bar {
+        background-color: $color-one-red;
+      }
+    }
+    .provider-place-drop-space {
+      position: relative;
+      padding: $padding-large-horizontal;
+      padding-right: 100px;
+      padding-left: 65px;
+      border-bottom: 1px solid $main-border-color;
+    }
+    .space-icon {
+      position: absolute;
+      left: $padding-large-horizontal;
+    }
+    .spaces-items {
+      padding: 0;
+    }
+    .space-label {
+      display: inline-block;
+      max-width: 100%;
+    }
+    .space-size {
+      position: absolute;
+      right: $padding-large-vertical;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 90%;
+    }
+    hr {
+      display: none;
+    }
+    .drop-title-bar {
+      position: relative;
+      padding: $padding-large-horizontal $padding-large-vertical;
+      color: $color-one-white;
+      .provider-label {
+        font-weight: bold;
+      }
+      .provider-label-secondary {
+        position: absolute;
+        top: 50%;
+        right: $padding-large-horizontal;
+        transform: translateY(-50%);
+        font-size: 90%;
+      }
+    }
+    .drop-provider-host-container {
+      position: relative;
+      padding: $padding-large-horizontal $padding-large-vertical;
+      border-top: 1px solid $main-border-color;
+      border-bottom: 1px solid $main-border-color;
+      .provider-host-text {
+        height: $line-height-computed;
+        width: 100%;
+        padding: 0;
+        padding-right: 70px;
+      }
+      .provider-host-copy-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 60px;
+        border-left: 1px solid $main-border-color;
+        line-height: inherit;
+        text-align: center;
+        color: inherit;
+        font-size: 40px;
+  
+        &:hover {
+          background-color: darken($color-one-semiwhite, 20%);
+        }
+        .oneicon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-50%);
+        }
+      }
+    }    
+  }
+  &.outside-content {
+    $drop-padding: $padding-xs-horizontal * 1.5;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: $popover-provider-details-width;
+    min-height: 50px;
+    overflow: hidden;
+    padding: $padding-large-vertical;
+
+    &.outside-content {
+      .drop-body {
+        .btn {
+          @extend .btn-sm;
+        }
+      }
+    }
+
+    &.online {
+      .state-indicator {
+        color: $color-one-mint;
+      }
+    }
+    &.offline {
+      .state-indicator {
+        color: $color-one-red;
+      }
+    }
+    &.offline {
+      .drop-body .spaces-items {
+        margin-bottom: 0;
+      }
+
+      .drop-body .spaces-list {
+        bottom: $padding-large-vertical;
+      }
+    }
+    .drop-title-bar {
+      position: relative;
+      padding-left: 2em;
+      padding-bottom: $padding-base-vertical;
+
+      .one-icon {
+        position: absolute;
+        left: 0;
+        top: -0.05em;
+        font-size: 170%;
+      }
+
+      .provider-label {
+        font-weight: bold;
+      }
+      .provider-label-secondary {
+        position: absolute;
+        top: 0;
+        right: $drop-padding;
+        opacity: 0.5;
+      }
+    }
+
+    .drop-provider-host-container {
+      $host-copy-btn-width: 28px;
+      display: table;
+      height: 28px;
+      line-height: 28px;
+      background-color: $main-border-color;
+      margin-left: -$padding-large-vertical;
+      margin-right: -$padding-large-vertical;
+      margin-bottom: $padding-base-vertical;
+
+      .provider-host-text {
+        display: table-cell;
+        padding: 0 $padding-large-vertical;
+        margin: 0;
+        width: $popover-provider-details-width - $host-copy-btn-width - $padding-large-vertical;
+      }
+      .provider-host-copy-btn-container {
+        display: table-cell;
+        width: $host-copy-btn-width + $padding-large-vertical;
+        padding-right: $padding-large-vertical;
+      }
+      .provider-host-copy-btn {
+        position: relative;
+        right: -0.2em;
+        line-height: inherit;
+        font-size: 28px;
+        color: $color-one-azure;
+
+        &:hover {
+          background-color: darken($color-one-semiwhite, 20%);
+        }
+        .oneicon {
+          position: absolute;
+          width: $host-copy-btn-width;
+          height: $host-copy-btn-width;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
+
+    .drop-body {
+      hr {
+        margin: 10px 0;
+        color: $main-border-color;
+      }
+      .spaces-list {
+        position: absolute;
+        top: 70px + $padding-large-vertical;
+        bottom: 2 * $padding-large-vertical+$-btn-container-height;
+        left: $padding-large-vertical;
+        right: $padding-large-vertical;
+      }
+      .spaces-items {
+        list-style-type: none;
+        padding: 0;
+        .one-collapsible-list-item-header {
+          padding: 0;
+          border-bottom: 0;
+        }
+        .provider-place-drop-space {
+          position: relative;
+          padding: 1.2 * $padding-small-vertical 4.5em 1.2 * $padding-small-vertical 2.5em;
+          .space-icon {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            .oneicon {
+              font-size: 170%;
+            }
+          }
+          .space-size {
+            position: absolute;
+            top: 6px;
+            right: 0;
+            overflow: hidden;
+            text-align: right;
+            text-overflow: clip;
+            vertical-align: inherit;
+            white-space: nowrap;
+            color: $color-one-light-gray;
+            font-size: 80%;
+          }
+        }
+      }
+      .btn-container {
+        position: absolute;
+        bottom: $padding-base-horizontal;
+        left: $padding-large-vertical;
+        right: $padding-large-vertical;
+        text-align: right;
+
+        .row-btn {
+          &:not(:last-of-type) {
+            padding-bottom: 8px;
+          }
+          .btn {
+            width: 160px;
+          }
+        }
+      }
+    }
+  }
+  
+  .drop-provider-host-container {
+    .provider-host-text {
+      border: none;
+      color: inherit;
+      background-color: inherit;
+    }
+    .provider-host-copy-btn {
+      border-left: 1px solid $main-border-color;
+      text-align: center;
+      color: inherit;
+
+      &:hover {
+        background-color: darken($color-one-semiwhite, 20%);
+      }
+    }
+  }
+  
+  .spaces-list {
+    color: $color-one-dark-gray;
+  }
+
+  .resource-load-error {
+    white-space: initial;
+  }
+}
+
+.webui-popover-provider-place {
+  max-width: initial;
+  &.left, &.left-top, &.left-bottom {
+    > .webui-arrow:after {
+      border-left-color: $color-one-semiwhite;
+    }
+  }
+  &.right, &.right-top, &.right-bottom {
+    > .webui-arrow:after {
+      border-right-color: $color-one-semiwhite;
+    }
+  }
+}
+
+.popover-provider-place {
+  position: relative;
+  height: $provider-place-drop-height;
+  white-space: nowrap;
+  background-color: $color-one-semiwhite;
+  font-size: $font-size-small;
+  border-radius: $border-radius-small;
+  overflow: hidden;
+
+  &.single {
+    width: $popover-provider-details-width;
+  }
+
+  &.multi {
+    width: $popover-provider-details-width + $popover-provider-list-width;
+  }
+
+  .providers-place-list-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: $popover-provider-list-width;
+    padding: $padding-large-vertical;
+    border-right: 1px solid $main-border-color;
+    box-sizing: border-box;
+  }
+
+  .providers-place-list-title {
+    font-weight: bold;
+    padding-bottom: $padding-base-vertical;
+    text-transform: uppercase;
+  }
+
+  .search-group {
+    padding-bottom: $padding-base-vertical;
+  }
+
+  .providers-place-list {
+    position: absolute;
+    top: 70px + $padding-large-vertical;
+    bottom: $padding-large-vertical;
+    left: $padding-large-vertical;
+    right: $padding-large-vertical;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    .oneicon {
+      position: absolute;
+      top: $padding-small-vertical - 2px;
+      left: 0;
+      font-size: 170%;
+    }
+  }
+
+  .providers-place-list-item {
+    position: relative;
+    padding: 1.2 * $padding-small-vertical 0 1.2 * $padding-small-vertical 2em;
+    &:hover {
+      background-color: $color-one-gray-sand;
+      cursor: pointer;
+    }
+    &.active {
+      font-weight: bold;
+    }
+  }
+
+  .online-icon {
+    color: $color-provider-online;
+  }
+
+  .offline-icon {
+    color: $color-provider-offline;
+  }
+}

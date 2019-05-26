@@ -1,0 +1,104 @@
+.two-level-sidebar {
+  font-size: 13px;
+  font-family: 'Open Sans Semibold';
+
+  .active > .item-header > a, .active > a {
+    > .sidebar-item-icon, .truncated-string, .status-toolbar {
+      color: $color-one-red;
+    }
+  }
+  a:not(.btn) {
+    color: $main-text-color;
+  }
+
+  input {
+    font-family: 'Open Sans';
+  }
+
+  .one-list-wrapper {
+    border-bottom: 1px solid $color-one-list-item-separator;
+  }
+
+  .one-list-item {
+    &.active {
+      background-color: $color-sidebar-item-bg;
+    }
+    .item-header {
+      &:hover {
+        background-color: $color-sidebar-item-active-bg;
+      }
+      .sidebar-item-icon {
+        position: absolute;
+        top: 0.55em;
+        font-size: $menu-icon-font-size;
+      }
+      .sidebar-item-icon + * {
+        padding-left: 3.5em;
+      }
+      .status-toolbar {
+        position: absolute;
+        right: $one-list-item-padding * 0.75;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0px 7px 0 5px;
+        font-size: 13pt;
+        .one-icon, .outer-text {
+          top: -0.1em;
+          vertical-align: middle;
+        }
+        .one-icon {
+          font-size: 1em;
+          margin: 0;
+          margin-right: -0.2em;
+        }
+        .outer-text {
+          line-height: 0;
+        }
+      }
+    }
+    &.search-bar-item .item-header:hover {
+      background-color: initial;
+    }
+  }
+
+  .one-collapsible-toolbar {
+    @include vertical-align-middle();
+    right: $one-list-item-padding - $padding-small-horizontal;
+  }
+  .collapsible-toolbar-toggle {
+    padding: $padding-base-vertical $padding-small-horizontal;
+  }
+
+  .one-inline-editor {
+    $-height: $one-list-item-line-height - 2 * $padding-base-vertical;
+    height: $-height;
+    margin-top: $padding-base-vertical;
+    margin-bottom: $padding-base-vertical;
+    margin-right: 2 * $padding-small-horizontal;
+    line-height: $-height;
+    .one-icon {
+      margin-right: 0;
+    }
+    .one-label {
+      padding: 0;
+      border: 0;
+    }
+    input {
+      height: 100%;
+    }
+    &:hover {
+      .one-label {
+        border: 0;
+      }
+    }
+  }
+  
+  .warning-icon {
+    @include vertical-align-middle;
+    right: $padding-large-horizontal;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    color: $color-one-warning;
+  }
+}

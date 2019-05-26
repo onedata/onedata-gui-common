@@ -1,0 +1,98 @@
+{{!-- Bootstrap layout for signed-in user --}}
+
+{{#side-menu width="85%" class="disable-user-select"}}
+  <div class="side-menu-background"></div>
+  <div class="side-menu-header">
+    <div class="row row-onedata-logo full-width">
+      <div class="onedata-logo"></div>
+    </div>
+  </div>
+  {{user-account-button 
+    isActive=(eq navigationState.activeResourceType "users") 
+    manageAccount=(action "manageAccount")
+    mobileMode=true}}
+  {{main-menu
+    items=appModel.mainMenuItems
+    itemClicked=(action "mobileMenuItemChanged")
+  }}
+{{/side-menu}}
+{{content-backdrop}}
+{{main-menu-column mainMenuItems=appModel.mainMenuItems}}
+{{#perfect-scrollbar-element
+  tagName="div"
+  id="col-sidebar"
+  class=(concat colSidebarClass (if navigationState.mainMenuColumnExpanded " with-place-for-menu"))
+  onScroll=(action "scrollOccurred")}}
+  {{yield 'sidebar'}}
+  {{brand-info}}
+{{/perfect-scrollbar-element}}
+<div class="col-sidenav-cover"></div>
+
+<div class="container-fluid app-grid full-height">
+  <div class="row row-mobile-menu visible-xs-block visible-sm-block disable-user-select">
+    {{#side-menu-toggle}}
+      <button type="button" class="navbar-toggle{{unless showMobileSidebar " hidden-xs"}}">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    {{/side-menu-toggle}}
+    {{#link-to "onedata.sidebar.index"
+      tagName="buton"
+      class=(concat-classes "navbar-toggle toggle-back hidden-sm" (if showMobileSidebar "hidden-xs"))}}
+      {{one-icon icon="arrow-right"}}
+      <div class="sidebar-title">{{navigationState.globalBarSidebarTitle}}</div>
+    {{/link-to}}
+    <div class="tab-name">
+      <div class="visible-sm-block one-label">{{navigationState.globalBarSidebarTitle}}</div>
+      <div class="visible-xs-block one-label">{{navigationState.globalBarActiveTitle}}</div>
+    </div>
+    <div class="global-menu-toggle-container {{if navigationState.showGlobalMenuTrigger "" " hidden"}}">
+      <button type="button" class="navbar-toggle global-menu-toggle"
+        {{action "toggleGlobalMenu" (not globalMenuOpened)}}>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    {{#one-webui-popover
+      class="global-menu"
+      popoverStyle="with-dropdown"
+      padding=false
+      triggerSelector=".global-menu-toggle"
+      open=globalMenuOpened
+      onToggle=(action "toggleGlobalMenu")}}
+      {{#click-outside action=(action "toggleGlobalMenu" false) except-selector=".global-menu-toggle-container"}}
+        {{actions-popover-content actionsArray=navigationState.globalMenuActions actionClicked=(action "toggleGlobalMenu" false)}}
+      {{/click-outside}}
+    {{/one-webui-popover}}
+  </div>
+  <div class="row visible-xs-block resource-name-row">
+    {{name-conflict item=navigationState.activeResource tagName="span"}}
+  </div>
+  <div class="row row-app full-height">
+    {{#one-sidenav opened=sidenavResouceType
+      id="sidenav-sidebar"
+      class=(if navigationState.mainMenuColumnExpanded "with-place-for-menu")
+      model=sidenavModel.content}}
+      {{#promise-proxy-container proxy=sidenavModel}}
+        {{component sidenavContentComponent
+          model=sidenavModel.content
+          changeResourceId=(action "changeResourceId")
+        }}
+      {{/promise-proxy-container}}
+    {{/one-sidenav}}
+        
+    {{content-backdrop class="sidenav-backdrop"
+      progress=(if sidenavResouceType 100 0)
+      click=(action (mut navigationState.globalSidenavResourceType) null bubbles=true)
+    }}
+    
+    {{#perfect-scrollbar-element
+      class="col-in-app-layout col-content col-xs-12 full-height"
+      onScroll=(action "scrollOccurred")
+    }}
+      {{yield "content"}}
+    {{/perfect-scrollbar-element}}
+  </div>
+</div>

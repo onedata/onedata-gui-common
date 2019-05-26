@@ -1,3 +1,7 @@
-<h2 id="title">Welcome to Ember</h2>
+<div class="app-layout" style="overflow: auto; padding-bottom: 40px;">
+  {{outlet}}
+</div>
 
-{{outlet}}
+{{ember-notify messageStyle="bootstrap" closeAfter=5000}}
+
+{{alert-global}}

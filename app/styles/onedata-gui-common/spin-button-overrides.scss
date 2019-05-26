@@ -1,0 +1,18 @@
+// TODO animate only width
+
+.spin-button,
+.spin-button .spin-button-spinner,
+.spin-button .spin-button-label {
+  @include transition(none);
+}
+
+.spin-button.btn-sm {
+  &[data-style=expand-left] {
+    &.in-flight {
+      padding-left: 36px;
+    }
+    .spin-button-spinner {
+      left: 16px;
+    }
+  }
+}

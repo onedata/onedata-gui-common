@@ -1,0 +1,15 @@
+{{#if hasCheckbox}}
+  {{one-checkbox 
+    class="item-checkbox"
+    isReadOnly=(not _isCheckboxActive)
+    checked=_isSelected
+    update=toggleSelection}}
+{{/if}}
+{{#if (and isCollapsible (not disableToggleIcon))}}
+  {{one-icon class="toggle-icon" icon="arrow-down"}}
+{{/if}}
+<span class="header-content-container">
+  {{yield (hash
+    toggleAction=(action "toggle")
+  )}}
+</span>

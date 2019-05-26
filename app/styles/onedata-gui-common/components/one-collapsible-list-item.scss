@@ -1,0 +1,17 @@
+.one-collapsible-list-item {
+  background-color: inherit;
+  &.active {
+    background-color: $main-content-hover-background;
+    .one-collapsible-list-item-header.opened {
+      background-color: $collapsible-list-item-header-opened;
+      &:hover {
+        background-color: $collapsible-list-item-header-opened-hover;
+      }
+    }
+  }
+  .form {
+    .row {
+      padding: 0;
+    }
+  }
+}

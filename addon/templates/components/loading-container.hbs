@@ -1,0 +1,9 @@
+{{#if isLoaded}}
+  {{yield}}
+{{else}}
+  {{#if isLoading}}
+    {{spin-spinner-block sizeClass=sizeClass class=(concat-classes _spinnerBlockClass spinnerBlockClass)}}
+  {{else if isError}}
+    {{resource-load-error message=customErrorMessage reason=errorReason}}
+  {{/if}}
+{{/if}}

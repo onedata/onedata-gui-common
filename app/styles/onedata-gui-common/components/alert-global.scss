@@ -1,0 +1,13 @@
+.alert-global {
+  .modal-content {
+    overflow: hidden;
+  }
+  .modal-header {
+    color: $color-one-danger;
+  }
+  .error-json {
+    max-height: 6em;
+    overflow: auto;
+    word-wrap: break-word;
+  }
+}

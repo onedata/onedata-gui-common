@@ -1,0 +1,126 @@
+.one-inline-editor {
+  position: relative;
+  &:hover {
+    .one-label {
+      border: 1px solid $main-border-color;
+    }
+  }
+  &.static, &.editor.saving {
+    padding-right: 30px;
+  }
+  &.editor {
+    padding-right: 55px;
+  }
+  &.editor, &:hover {
+    .action-icons {
+      visibility: visible;
+    }
+  }
+  .action-icons {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 170%;
+    .one-icon {
+      position: relative;
+      top: 2px;
+    }
+  }
+  &:hover {
+    .edit-icon {
+      opacity: 1;
+    }
+  }
+  .edit-icon {
+    opacity: 0.5;
+  }
+  .form-control, .one-label {
+    display: block;
+  }
+  .form-control {
+    font-size: inherit;
+  }
+  .one-label {
+    border: 1px solid transparent;
+    border-radius: $input-border-radius;
+    padding: $padding-base-vertical $padding-base-horizontal;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .save-icon:hover, .edit-icon:hover {
+    color: $color-one-mint;
+  }
+  .cancel-icon:hover {
+    color: $color-one-red;
+  }
+  .empty-value {
+    color: $main-text-color-disabled;
+  }
+  @media (max-width: $screen-xs-max) {
+    &.static, &.editor.saving {
+      padding-right: 40px;
+    }
+    &.editor {
+      padding-right: 75px;
+    }
+    .action-icons {
+      font-size: 250%;
+      visibility: visible;
+    }
+  }
+  &.manual {
+    .edit-icon {
+      display: none;
+    }
+    &.static {
+      padding-right: 0;
+    }
+  }
+}
+
+// TODO: style improvements in mobile mode
+.content-row.header-row {
+  .one-inline-editor {
+    vertical-align: middle;
+    margin-top: -7px;
+    max-width: calc(100% - 35px);
+
+    @media screen and (max-width: $screen-sm-max) {
+      max-width: 100%
+    }
+    
+    @media screen and (min-width: $screen-sm-min) {
+      display: inline-block;
+      .one-label {
+        margin-right: 0;
+        padding: 0 $padding-base-horizontal/2;
+        margin-left: -$padding-base-horizontal/2;
+      }
+      .form-control {
+        display: inline-block;
+        padding: $padding-base-vertical/2 $padding-base-horizontal/2;
+        margin-left: -$padding-base-horizontal/2;
+        margin-top: -$padding-base-vertical;
+        margin-bottom: -$padding-small-vertical;
+      }
+      
+      // &.editor {
+      //   display: block;
+      // }
+    }
+    @media screen and (max-width: $screen-xs-max) {
+      .one-label, .form-control {
+        height: 57px;
+      }
+      .form-control {
+        line-height: inherit;
+      }
+    }
+    .form-control {
+      letter-spacing: inherit;
+    }
+  }
+}
+

@@ -1,0 +1,26 @@
+{{#if label}}
+  <div class="clipboard-line-label">
+    <strong>{{label}}</strong>
+  </div>
+{{/if}}
+
+<div class="input-group {{if size (concat "input-group-" size)}}">
+  <input
+    type="text"
+    class="clipboard-input form-control"
+    value={{value}}
+    readonly
+  >
+  <div class="input-group-btn">
+    {{#one-copy-button
+      class=(concat-classes "btn" (concat "btn-" (or btnType "default")) (unless showText "without-text"))
+      parentElementId=elementId
+      localTarget=".clipboard-input"
+    }}
+      {{one-icon icon="clipboard-copy"}}
+      {{#if showText}}
+        {{tt this "copyBtn"}}
+      {{/if}}
+    {{/one-copy-button}}
+  </div>
+</div>

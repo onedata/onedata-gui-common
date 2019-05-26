@@ -1,0 +1,14 @@
+<div class="brand-info-container">
+  {{#if guiIcon}}
+    <img class="brand-icon" src={{guiIcon}} title={{guiType}} alt={{guiType}}>
+  {{/if}}
+  {{#if guiName}}
+    {{#truncated-string class="brand-text brand-name"}}
+      {{guiName}}
+    {{/truncated-string}}
+  {{/if}}
+  <div class="brand-text brand-type-version">
+    <span class="brand-type">{{guiType}}</span>
+    <span class="brand-version">{{guiVersion}}</span>
+  </div>
+</div>
