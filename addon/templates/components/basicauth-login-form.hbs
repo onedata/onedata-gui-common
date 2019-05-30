@@ -11,12 +11,13 @@
             <div class="input-group-addon">
               {{one-icon icon="user"}}
             </div>
-            {{one-way-input username
+            <input
               class="form-control login-username"
-              update=(action (mut username))
-              placeholder=(tt this "username")
-              disabled=isDisabled
-            }}
+              value={{username}}
+              oninput={{action (mut username) value="target.value"}}
+              placeholder={{tt this "username"}}
+              disabled={{isDisabled}}
+            >
           </div>
         {{/form.group}}
       {{/unless}}
@@ -25,12 +26,14 @@
           <div class="input-group-addon">
             {{one-icon icon="lock"}}
           </div>
-          {{one-way-password password
+          <input
+            type="password"
             class="form-control login-lock"
-            update=(action (mut password))
-            placeholder=(tt this (if passphraseMode "passphrase" "password"))
-            disabled=isDisabled
-          }}
+            value={{password}}
+            oninput={{action (mut password) value="target.value"}}
+            placeholder={{tt this (if passphraseMode "passphrase" "password")}}
+            disabled={{isDisabled}}
+          >
         </div>
       {{/form.group}}
       <div class="login-error-message{{if areCredentialsInvalid " active" ""}}">

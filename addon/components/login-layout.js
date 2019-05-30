@@ -24,5 +24,8 @@ export default Component.extend(I18n, {
    */
   i18nPrefix: 'components.loginLayout',
 
-  version: reads('guiUtils.guiVersion'),
+  /**
+   * @type {ComputedProperty<object>}
+   */
+  softwareVersionDetails: reads('guiUtils.softwareVersionDetails'),
 });

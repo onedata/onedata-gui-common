@@ -43,4 +43,12 @@ $screen-fixed-service-version-height-min: 640px !default;
       position: static;
     }
   }
+  .login-service-version-hint {
+    // without this hack, tooltip causes version string to "jump" on Firefox
+    margin-right: 1px;
+    margin-left: 6px;
+    .login-service-version-more-icon {
+      font-size: 18px;
+    }
+  }
 }

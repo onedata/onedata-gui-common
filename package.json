@@ -78,7 +78,7 @@
     "ember-responsive": "2.0.5",
     "ember-root-url": "0.2.0",
     "ember-side-menu": "0.0.15",
-    "ember-simple-auth": "1.4.2",
+    "ember-simple-auth": "1.8.2",
     "ember-sinon": "1.0.1",
     "ember-source": "2.18.2",
     "ember-spin-button": "git+https://github.com/kliput/ember-spin-button.git#0b6427903ee7cc5e7ce7115367c66dd94e9e2a2f",
