@@ -411,7 +411,13 @@ a {
   &.before-status {
     padding-right: 100px;
     &.with-place-for-dots {
-      padding-right: 145px;
+      padding-right: 115px;
+      @media (max-width: $screen-sm-max) and (min-width: $screen-sm-min) {
+        padding-right: 20px;
+        & + .status-toolbar {
+          display: none;
+        }
+      }
     }
   }
 }

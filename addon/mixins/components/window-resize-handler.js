@@ -10,8 +10,17 @@
 import Mixin from '@ember/object/mixin';
 import { computed } from '@ember/object';
 import { debounce, scheduleOnce } from '@ember/runloop';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Mixin.create({
+  /**
+   * Called on each window resize
+   * @virtual
+   * @param {Event} event resize event object
+   * @returns {undefined}
+   */
+  onWindowResize: notImplementedIgnore,
+
   /**
    * @type {number}
    * Debounce time for window resize handler
@@ -76,12 +85,4 @@ export default Mixin.create({
       this._super(...arguments);
     }
   },
-
-  /**
-   * Called on each window resize
-   * @virtual
-   * @param {Event} event resize event object
-   * @returns {undefined}
-   */
-  onWindowResize(/* event */) {}
 });

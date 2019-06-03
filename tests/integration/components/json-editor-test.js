@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { fillIn } from 'ember-native-dom-helpers';
+import sinon from 'sinon';
 
 describe('Integration | Component | json editor', function() {
   setupComponentTest('json-editor', {
@@ -20,34 +21,32 @@ describe('Integration | Component | json editor', function() {
   it('notifies about correct data', function () {
     const value = {a: 'a'};
     this.set('value', JSON.stringify(value));
-    let actionFired = false;
-    this.on('onChange', (res) => {
-      actionFired = true;
+    const spy = sinon.spy((res) => {
       expect(JSON.parse(res.value)).to.deep.equal(value);
       expect(res.parsedValue).to.deep.equal(value);
       expect(res.isValid).to.be.true;
     });
+    this.on('onChange', spy);
     this.render(hbs`{{json-editor onChange=(action "onChange")}}`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value)).then(() => {
-      expect(actionFired).to.be.true;
+      expect(spy).to.be.calledOnce;
     })
   });
 
   it('notifies about incorrect data', function () {
     const value = {a: 'a'};
     this.set('value', JSON.stringify(value));
-    let actionFired = false;
-    this.on('onChange', (res) => {
-      actionFired = true;
+    const spy = sinon.spy((res) => {
       expect(res.value).to.contain('x');
       expect(res.parsedValue).to.be.undefined;
       expect(res.isValid).to.be.false;
     });
+    this.on('onChange', spy);
     this.render(hbs`{{json-editor onChange=(action "onChange")}}`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
-      expect(actionFired).to.be.true;
+      expect(spy).to.be.calledOnce;
     })
   });
 

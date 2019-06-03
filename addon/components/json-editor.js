@@ -13,7 +13,6 @@ import layout from '../templates/components/json-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
-import { isEmpty } from '@ember/utils';
 
 export default Component.extend(I18n, {
   layout,
@@ -31,6 +30,11 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   value: '',
+
+  /**
+   * @type {boolean}
+   */
+  isValid: true,
 
   /**
    * @type {string}
@@ -80,26 +84,6 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {Ember.ComputedProperty<boolean>}
-   */
-  isValid: computed('value', 'acceptEmptyString', function isValid() {
-    const {
-      value,
-      acceptEmptyString,
-    } = this.getProperties('value', 'acceptEmptyString');
-    if (acceptEmptyString && isEmpty(value)) {
-      return true;
-    } else {
-      try {
-        JSON.parse(value);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-  }),
-
-  /**
    * @type {Ember.ComputedProperty<string>}
    */
   bootstrapClasses: computed(
@@ -135,28 +119,33 @@ export default Component.extend(I18n, {
     }
   ),
 
+  recalculateValue(value) {
+    const {
+      onChange,
+      acceptEmptyString,
+    } = this.getProperties('onChange', 'acceptEmptyString');
+    let isValid = true;
+    let parsedValue;
+    if (acceptEmptyString && value === '') {
+      parsedValue = null;
+    } else {
+      try {
+        parsedValue = JSON.parse(value);
+      } catch (e) {
+        isValid = false;
+      }
+    }
+    this.set('isValid', isValid);
+    onChange({
+      value,
+      parsedValue,
+      isValid,
+    });
+  },
+
   actions: {
     onChange(value) {
-      const {
-        onChange,
-        acceptEmptyString,
-      } = this.getProperties('onChange', 'acceptEmptyString');
-      let isValid = true;
-      let parsedValue;
-      if (acceptEmptyString && value === '') {
-        parsedValue = null;
-      } else {
-        try {
-          parsedValue = JSON.parse(value);
-        } catch (e) {
-          isValid = false;
-        }
-      }
-      onChange({
-        value,
-        parsedValue,
-        isValid,
-      });
+      this.recalculateValue(value);
     }
   }
 });

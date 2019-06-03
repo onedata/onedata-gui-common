@@ -73,10 +73,13 @@ export default Component.extend({
       moment.relativeTimeThreshold('ss', -1);
     }
 
-    const timeFromNow = this.get('dateMoment').fromNow()
-
-    if (showIndividualSeconds) {
-      moment.relativeTimeThreshold('ss', oldSsThreshold);
+    let timeFromNow;
+    try {
+      timeFromNow = this.get('dateMoment').fromNow()
+    } finally {
+      if (showIndividualSeconds) {
+        moment.relativeTimeThreshold('ss', oldSsThreshold);
+      }
     }
 
     safeExec(this, 'set', 'timeFromNow', timeFromNow);
