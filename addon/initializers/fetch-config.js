@@ -15,12 +15,12 @@
 import { Promise } from 'rsvp';
 
 export function initialize(application) {
-  application.getOnedataConfig = function(rootUrl = '') {
+  application.getOnedataConfig = function (rootUrl = '') {
     return new Promise((resolve, reject) => {
       $.ajax({
         dataSourceType: 'json',
         url: rootUrl + 'app-config.json',
-        success: function(data) {
+        success: function (data) {
           try {
             let config = {};
             config.debug = (data.debug === true);
