@@ -5,8 +5,8 @@
  * Set `aspect` property for use as a link.
  *
  * @module components/one-tile
- * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -19,6 +19,7 @@ import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(I18n, {
   layout,
@@ -115,6 +116,11 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   sizeClass: '',
+
+  /**
+   * @type {Function}
+   */
+  tileMainClick: notImplementedIgnore,
 
   /**
    * Window object (for testing purposes only)

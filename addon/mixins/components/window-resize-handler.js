@@ -69,7 +69,9 @@ export default Mixin.create({
 
     _window.addEventListener('resize', windowResizeHandler);
     if (callWindowResizeHandlerOnInsert) {
-      scheduleOnce('afterRender', this, 'onWindowResize');
+      scheduleOnce('afterRender', this, 'onWindowResize', {
+        target: _window,
+      });
     }
   },
 
