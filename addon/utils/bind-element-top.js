@@ -3,16 +3,18 @@
  *
  * @module utils/bind-element-top
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 /**
- * Makes `belowElement` fixed to be fully stretched below `aboveElement`
+ * Makes `innerElement` fixed to be fully stretched below `topElement`
+ * and fully streched to the right from `leftElement`.
+ * Can be used without top or left element.
  * 
  * @export
  * @param {JQuery} $topElement
- * @param { JQuery } $innerElement
+ * @param {JQuery} $leftElement
  * @param {JQuery} $innerElement
  * @returns {Function}
  */
