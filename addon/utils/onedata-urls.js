@@ -17,5 +17,5 @@ export const onezoneDefaultRootPath =
   `/${onezoneAbbrev}/${onezoneDefaultClusterId}`;
 
 export function getOnezoneUrl(origin, emberPath = '') {
-  return `${origin}${onezoneDefaultRootPath}/i#${emberPath}`
+  return `${origin}${onezoneDefaultRootPath}/i#/${emberPath}`
 }
