@@ -146,3 +146,15 @@
     color: $color-one-warning;
   }
 }
+
+.col-sidebar {
+  .two-level-sidebar {
+    .one-list-item {
+      .status-toolbar {
+        &.with-place-for-dots {
+          right: 45px;
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import Component from '@ember/component';
-import { run, debounce } from '@ember/runloop';
+import { observer } from '@ember/object';
+import { run, debounce, scheduleOnce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/basic-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
@@ -9,8 +10,8 @@ import 'npm:basictable';
  * Creates a table element which uses JQuery Basic Table to handle with small devices.
  *
  * @module components/basic-table.js
- * @author Michal Borzecki, Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Component.extend({
@@ -21,6 +22,19 @@ export default Component.extend({
   breakpoint: 1200,
 
   _isMobile: undefined,
+
+  /**
+   * Trigger property to run basictable setup
+   * @type {undefined}
+   */
+  setupTrigger: undefined,
+
+  setupTriggerObserver: observer(
+    'setupTrigger',
+    function setupTriggerObserver() {
+      scheduleOnce('afterRender', this, '_reinitializeBasictable');
+    }
+  ),
 
   didInsertElement() {
     this._super(...arguments);
@@ -52,7 +66,9 @@ export default Component.extend({
   },
 
   _reinitializeBasictable() {
-    this.$().basictable('setup');
+    if (this.get('element')) {
+      this.$().basictable('setup');
+    }
   },
 
   _updateState() {

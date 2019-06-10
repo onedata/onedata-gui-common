@@ -14,7 +14,7 @@
 function configure(config) {
   if (!config.debug) {
     console._debug = console.debug;
-    console.debug = function() {};
+    console.debug = function () {};
   } else {
     console.debug('Debug messages in console enabled');
   }
@@ -35,7 +35,9 @@ export function initialize(application) {
       throw error;
     }
   } else {
-    console.error('No Ember.application.getOnedataConfig available - is fetch-config initializer invoked?');
+    console.error(
+      'No Ember.application.getOnedataConfig available - is fetch-config initializer invoked?'
+    );
     configure({});
   }
 }
