@@ -16,6 +16,11 @@ export const onezoneDefaultClusterId = 'onezone';
 export const onezoneDefaultRootPath =
   `/${onezoneAbbrev}/${onezoneDefaultClusterId}`;
 
+/**
+ * @param {string} origin 
+ * @param {string} emberPath must be path **without** leading slash, it will be
+ *  automatically trimmed
+ */
 export function getOnezoneUrl(origin, emberPath = '') {
-  return `${origin}${onezoneDefaultRootPath}/i#/${emberPath}`
+  return `${origin}${onezoneDefaultRootPath}/i#/${emberPath.replace(/^\//, '')}`
 }
