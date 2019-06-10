@@ -34,7 +34,8 @@
       }
       .sidebar-item-icon {
         position: absolute;
-        top: 0.55em;
+        top: 50%;
+        transform: translateY(-50%);
         font-size: $menu-icon-font-size;
         + *,
         + .sidebar-item-title-upper + .sidebar-item-title-lower {
@@ -143,5 +144,17 @@
     width: 22px;
     height: 22px;
     color: $color-one-warning;
+  }
+}
+
+.col-sidebar {
+  .two-level-sidebar {
+    .one-list-item {
+      .status-toolbar {
+        &.with-place-for-dots {
+          right: 45px;
+        }
+      }
+    }
   }
 }

@@ -73,7 +73,12 @@ export default OnePieChart.extend({
           spaces,
           spacesColors,
           supportInfoFieldName,
-        } = this.getProperties('providerId', 'spaces', 'spacesColors', 'supportInfoFieldName');
+        } = this.getProperties(
+          'providerId',
+          'spaces',
+          'spacesColors',
+          'supportInfoFieldName'
+        );
         if (get(spaces, 'isFulfilled')) {
           return A(spaces.map(space => {
             const spaceId = get(space, 'id');

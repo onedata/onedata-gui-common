@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48px"
+   height="48px"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg10"
+   sodipodi:docname="x-circle-empty.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     id="namedview12"
+     showgrid="false"
+     inkscape:zoom="4.9166667"
+     inkscape:cx="24"
+     inkscape:cy="24"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10" />
+  <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+  <title
+     id="title2">Shape Copy</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <g
+     id="Nie-zaimplementowane"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     style="fill:#000000">
+    <g
+       id="error-modal"
+       transform="translate(-1272.000000, -466.000000)"
+       fill="#EFEFEF"
+       style="fill:#000000">
+      <g
+         id="Sync"
+         transform="translate(1078.000000, 244.000000)"
+         style="fill:#000000">
+        <path
+           d="M224.216,236.4 L218,242.616 L211.784,236.4 L208.4,239.784 L214.616,246 L208.4,252.216 L211.784,255.6 L218,249.384 L224.216,255.6 L227.6,252.216 L221.384,246 L227.6,239.784 L224.216,236.4 L224.216,236.4 Z M218,222 C204.728,222 194,232.728 194,246 C194,259.272 204.728,270 218,270 C231.272,270 242,259.272 242,246 C242,232.728 231.272,222 218,222 L218,222 Z M218,265.2 C207.416,265.2 198.8,256.584 198.8,246 C198.8,235.416 207.416,226.8 218,226.8 C228.584,226.8 237.2,235.416 237.2,246 C237.2,256.584 228.584,265.2 218,265.2 L218,265.2 Z"
+           id="Shape-Copy"
+           style="fill:#000000" />
+      </g>
+    </g>
+  </g>
+</svg>

@@ -37,6 +37,12 @@ export default Component.extend({
 
   timeFromNow: undefined,
 
+  /**
+   * @type {boolean}
+   * If true, component will render `2 seconds ago` instead of `a few seconds ago`
+   */
+  showIndividualSeconds: false,
+
   init() {
     this._super(...arguments);
     const timeUpdater = this.set('timeUpdater', new Looper({
@@ -59,7 +65,23 @@ export default Component.extend({
   },
 
   updateTime() {
-    const timeFromNow = this.get('dateMoment').fromNow()
+    const showIndividualSeconds = this.get('showIndividualSeconds');
+
+    let oldSsThreshold;
+    if (showIndividualSeconds) {
+      oldSsThreshold = moment.relativeTimeThreshold('ss');
+      moment.relativeTimeThreshold('ss', -1);
+    }
+
+    let timeFromNow;
+    try {
+      timeFromNow = this.get('dateMoment').fromNow()
+    } finally {
+      if (showIndividualSeconds) {
+        moment.relativeTimeThreshold('ss', oldSsThreshold);
+      }
+    }
+
     safeExec(this, 'set', 'timeFromNow', timeFromNow);
   },
 });

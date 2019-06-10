@@ -32,26 +32,23 @@ const VERIFY_PASSWORD_FIELD = {
   type: 'password',
 };
 
-const CHANGE_PASSWORD_FIELDS = [
-  {
-    name: 'newPassword',
-    type: 'password',
-    length: {
-      min: 8,
-    },
+const CHANGE_PASSWORD_FIELDS = [{
+  name: 'newPassword',
+  type: 'password',
+  length: {
+    min: 8,
   },
-  {
-    name: 'newPasswordRetype',
-    type: 'password',
-  },
-];
+}, {
+  name: 'newPasswordRetype',
+  type: 'password',
+}];
 
 function createValidations() {
   const validations = {};
 
   validations['allFieldsValues.verify.' + get(VERIFY_PASSWORD_FIELD, 'name')] =
     createFieldValidator(VERIFY_PASSWORD_FIELD);
-  
+
   CHANGE_PASSWORD_FIELDS.forEach(field => {
     let thisValidations = validations['allFieldsValues.change.' + field.name] =
       createFieldValidator(field);
@@ -172,20 +169,20 @@ export default OneForm.extend(Validations, I18n, {
     'changingPassword',
     'verifyCurrentPassword',
     function currentFieldsPrefix() {
-    const {
-      changingPassword,
-      verifyCurrentPassword,
-    } = this.getProperties('changingPassword', 'verifyCurrentPassword');
-    if (changingPassword) {
-      if (verifyCurrentPassword) {
-        return ['verify', 'change'];
+      const {
+        changingPassword,
+        verifyCurrentPassword,
+      } = this.getProperties('changingPassword', 'verifyCurrentPassword');
+      if (changingPassword) {
+        if (verifyCurrentPassword) {
+          return ['verify', 'change'];
+        } else {
+          return ['change'];
+        }
       } else {
-        return ['change'];
+        return ['static'];
       }
-    } else {
-      return ['static'];
-    }
-  }),
+    }),
 
   /**
    * @override

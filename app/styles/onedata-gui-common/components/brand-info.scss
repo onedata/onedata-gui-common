@@ -86,5 +86,11 @@
   
   &.full-width {
     width: 100%;
+    .brand-info-version-hint {
+      left: 260px;
+    }
+    .truncate-brand-text {
+      max-width: 200px;
+    }
   }
 }
