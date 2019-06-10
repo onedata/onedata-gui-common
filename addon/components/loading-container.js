@@ -38,6 +38,13 @@ export default Component.extend({
   loadingClass: '',
 
   /**
+   * @virtual optional
+   * Special flag to always render content despite of loading state.
+   * It can be used when want to manually set hidden class on content element.
+   */
+  alwaysRender: false,
+
+  /**
    * If true, spinner will be absolutely centered, otherwise it will fill
    * the parent block to centerize itself
    * @type {boolean}
