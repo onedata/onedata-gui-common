@@ -4,6 +4,7 @@ export default [
   'input-group',
   'name-conflict',
   'nav-tabs',
+  'one-tab-bar',
   'one-atlas',
   'one-clipboard-line',
   'one-dynamic-tree',

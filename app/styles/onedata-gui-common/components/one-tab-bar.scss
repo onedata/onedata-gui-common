@@ -1,0 +1,106 @@
+$-one-tab-bar-arrow-width: 22px;
+$-one-tab-bar-height: 44px;
+$-one-tab-bar-fog-width: 10px;
+$-one-tab-bar-arrow-separator-padding: 18px;
+$-one-tab-bar-arrow-space: $-one-tab-bar-arrow-width + $-one-tab-bar-arrow-separator-padding;
+
+@mixin one-tab-bar-fog-style($gradient-direction) {
+  position: absolute;
+  content: '';
+  z-index: 1;
+  top: 0;
+  height: $-one-tab-bar-height;
+  width: $-one-tab-bar-fog-width;
+  background: linear-gradient($gradient-direction, rgba(255, 255, 255, 0), white 100%);
+}
+
+@mixin one-tab-bar-arrow-separator() {
+  border-width: 1px;
+  border-color: $main-border-color;
+}
+
+.one-tab-bar {
+  .tab-bar-ul-container {
+    position: relative;
+    overflow-y: hidden;
+    // height of tab element - hide bottom scroll bar
+    height: $-one-tab-bar-height;
+    .container-inner-scroll-content {
+      overflow-x: scroll;
+    }
+    .tab-bar-ul-arrow {
+      display: none;
+    }
+    &.tabs-overflowing {
+      padding-left: $-one-tab-bar-arrow-space;
+      padding-right: $-one-tab-bar-arrow-space;
+      .tab-bar-ul-arrow {
+        @include vertical-align-middle;
+        @include one-tab-bar-arrow-separator;
+        // need to pull up arrows because of bottom "active" line of tabs
+        transform: translateY(-50%) translateY(-2px);
+        display: block;
+        width: $-one-tab-bar-arrow-space;
+        line-height: $-one-tab-bar-height;
+        .one-icon.arrow-icon {
+          display: block;
+          font-size: $-one-tab-bar-arrow-width;
+          font-weight: bold;
+        }
+        .arrow-separator {
+          @include vertical-align-middle;
+          content: '';
+          width: 1px;
+          height: $-one-tab-bar-arrow-width;
+          background-color: $main-border-color;
+        }
+        &.tab-bar-ul-arrow-left {
+          left: 0;
+          text-align: left;
+          
+          .arrow-separator {
+            right: 0;
+          }
+          // border-right-style: solid;
+        }
+        &.tab-bar-ul-arrow-right {
+          right: 0;
+          text-align: right;
+          
+          .arrow-separator {
+            left: 0;
+          }
+          // border-left-style: solid;
+        }
+        &.disabled {
+          color: $main-text-color-disabled;
+          pointer-events: none;
+        }
+      }
+      &::before {
+        @include one-tab-bar-fog-style(to left);
+        left: $-one-tab-bar-arrow-space;
+      }
+      &::after {
+        @include one-tab-bar-fog-style(to right);
+        right: $-one-tab-bar-arrow-space;
+      }
+      .tab-bar-ul {
+        padding-left: $-one-tab-bar-fog-width;
+        padding-right: $-one-tab-bar-fog-width;
+      }
+    }
+  }
+  .tab-bar-ul {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .tab-bar-li {
+    .nav-link {
+      display: inline-block;
+      max-width: 150px;
+      padding: $nav-link-padding;
+    }
+  }
+}

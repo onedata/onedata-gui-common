@@ -1,0 +1,13 @@
+{{one-tab-bar/tab-bar-ul-arrow
+  direction="left"
+  moveTabs=(action "moveTabs")
+  disabled=scrollLeftReached
+}}
+<div class="container-inner-scroll-content">
+  {{yield (hash tabBarUlStyle=tabBarUlStyle)}}
+</div>
+{{one-tab-bar/tab-bar-ul-arrow
+  direction="right"
+  moveTabs=(action "moveTabs")
+  disabled=scrollRightReached
+}}
