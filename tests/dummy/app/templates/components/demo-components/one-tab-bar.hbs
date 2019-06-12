@@ -1,5 +1,13 @@
 <div class="container">
+  <div class="row row-content" style="padding-bottom: 100px;">
+    <h3>tab-bar with few items</h3>
+    {{one-tab-bar items=fewItems}}
+  </div>
   <div class="row row-content">
+    <h3>tab-bar with scrollers</h3>
+    {{one-tab-bar items=items}}
+  </div>
+  {{!-- <div class="row row-content">
     <h3>tab-bar-ul without scroll</h3>
     <div class="one-tab-bar">
       {{#one-tab-bar/tab-bar-ul-container as |ulContainer|}}
@@ -60,26 +68,8 @@
         {{/one-tab-bar/tab-bar-ul}}
       {{/one-tab-bar/tab-bar-ul-container}}
     </div>
-  </div>
+  </div> --}}
   {{!-- <div class="row row-content">
-    <h3>tab-bar-ul-container</h3>
-    {{#tab-bar-ul-container}}
-      {{#each (repeat 10) as |i|}}
-        {{tab-bar-li text=(concat "Tab " i) icon="provider" class="tab-provider-online"}}
-      {{/each}}
-    {{/tab-bar-ul-container}}
-  </div>
-  <div class="row row-content">
-    <h3>tab-bar-selector</h3>
-    {{tab-bar-selector items=items}}
-  </div>
-  <div class="row row-content">
-    <h3>tab-bar (customized tab-bar-li for each item, and selector)</h3>
-    {{#tab-bar items=items as |item|}}
-      {{tab-bar-li text=item.text icon=item.icon class=item.class}}
-    {{/tab-bar}}
-  </div>
-  <div class="row row-content">
     <h3>Modern</h3>
     {{#bs-tab customTabs=true class="bs-tab-onedata bs-tab-modern" as |tab|}}
       {{#bs-nav type="tabs" as |nav|}}

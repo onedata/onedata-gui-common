@@ -3,6 +3,9 @@ $-one-tab-bar-height: 44px;
 $-one-tab-bar-fog-width: 10px;
 $-one-tab-bar-arrow-separator-padding: 18px;
 $-one-tab-bar-arrow-space: $-one-tab-bar-arrow-width + $-one-tab-bar-arrow-separator-padding;
+$-one-tab-bar-selector-width: 180px;
+$-one-tab-bar-selector-padding: 20px;
+$-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
 
 @mixin one-tab-bar-fog-style($gradient-direction) {
   position: absolute;
@@ -20,6 +23,9 @@ $-one-tab-bar-arrow-space: $-one-tab-bar-arrow-width + $-one-tab-bar-arrow-separ
 }
 
 .one-tab-bar {
+  position: relative;
+  padding-right: $-one-tab-bar-selector-width + $-one-tab-bar-selector-padding;
+  
   .tab-bar-ul-container {
     position: relative;
     overflow-y: hidden;
@@ -38,7 +44,7 @@ $-one-tab-bar-arrow-space: $-one-tab-bar-arrow-width + $-one-tab-bar-arrow-separ
         @include vertical-align-middle;
         @include one-tab-bar-arrow-separator;
         // need to pull up arrows because of bottom "active" line of tabs
-        transform: translateY(-50%) translateY(-2px);
+        transform: $-one-tab-bar-transform;
         display: block;
         width: $-one-tab-bar-arrow-space;
         line-height: $-one-tab-bar-height;
@@ -101,6 +107,18 @@ $-one-tab-bar-arrow-space: $-one-tab-bar-arrow-width + $-one-tab-bar-arrow-separ
       display: inline-block;
       max-width: 150px;
       padding: $nav-link-padding;
+      
+      transition: all 0.2s linear;
+      
+      &.active {
+        max-width: 250px
+      }
     }
+  }
+  .tab-bar-selector {
+    @include vertical-align-middle;
+    right: 0;
+    transform: $-one-tab-bar-transform;
+    width: $-one-tab-bar-selector-width;
   }
 }

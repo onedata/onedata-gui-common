@@ -1,1 +1,34 @@
-{{yield}}
+{{#one-tab-bar/tab-bar-ul-container as |ulContainer|}}
+  {{#one-tab-bar/tab-bar-ul style=ulContainer.tabBarUlStyle as |tabBar|}}
+    {{#each sortedItems as |item|}}
+      {{one-tab-bar/tab-bar-li
+        isActive=(eq selectedItem.id item.id)
+        tabClicked=(action "selectItem" "tabClick" item)
+        text=item.name
+        icon=item.icon
+        class=(concat item.class " item-" item.id)
+      }}
+    {{/each}}
+  {{/one-tab-bar/tab-bar-ul}}
+{{/one-tab-bar/tab-bar-ul-container}}
+<div class="tab-bar-selector">
+  {{#power-select
+    triggerClass="small"
+    dropdownClass="small"
+    disabled=disabled
+    options=sortedItems
+    selected=selectedItem
+    onchange=(action "selectItem" "selector")
+    searchField="name"
+    searchEnabled=true
+    renderInPlace=true
+    as |item|
+  }}
+    {{#truncated-string class=(concat "oneprovider-select-item truncate " item.class)}}
+      <div class="inline-icon-container">
+        {{one-icon icon=item.icon}}
+      </div>
+      <span class="oneprovider-name">{{item.name}}</span>
+    {{/truncated-string}}
+  {{/power-select}}
+</div>

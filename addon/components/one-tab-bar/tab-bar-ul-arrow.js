@@ -1,3 +1,12 @@
+/**
+ * Allows to scroll the tab bar by clicking on the arrow button.
+ * 
+ * @module components/one-tab-bar/tab-bar-ul-arrow
+ * @author Jakub Liput
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-ul-arrow';
 import { computed } from '@ember/object';
@@ -28,7 +37,7 @@ export default Component.extend({
    */
   disabled: false,
 
-  moveDelta: 8,
+  moveDelta: 16,
 
   moveInterval: 50,
 
