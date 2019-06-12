@@ -23,6 +23,7 @@ export default Component.extend({
 
   eventsBus: service(),
   navigationState: service(),
+  sidebarResources: service(),
 
   /**
    * @type {Object}
@@ -31,8 +32,6 @@ export default Component.extend({
    * @property {string} resourceType
    */
   model: null,
-
-  sorting: Object.freeze(['name']),
 
   sortedCollection: sort('model.collection.list', 'sorting'),
 
@@ -71,6 +70,13 @@ export default Component.extend({
    * @type {boolean}
    */
   showCreateOnEmpty: true,
+
+  /**
+   * @type {ComputedProperty<Array<string>>}
+   */
+  sorting: computed('sidebarType', function sorting() {
+    return this.get('sidebarResources').getItemsSortingFor(this.get('sidebarType'));
+  }),
 
   init() {
     this._super(...arguments);

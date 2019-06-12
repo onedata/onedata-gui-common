@@ -30,7 +30,8 @@ describe('Unit | Mixin | error check view', function () {
         });
     });
 
-  it('resolves tryErrorCheck proxy with true if error check is enabled and returns true',
+  it(
+    'resolves tryErrorCheck proxy with true if error check is enabled and returns true',
     function () {
       const checkErrorType = 'one';
       const resourceId = 'two';
@@ -52,9 +53,11 @@ describe('Unit | Mixin | error check view', function () {
           expect(redirectToIndex).to.be.notCalled;
           expect(checkError).to.be.called;
         });
-    });
+    }
+  );
 
-  it('resolves tryErrorCheck proxy with false and invokes redirectToIndex if error check is enabled and returns false',
+  it(
+    'resolves tryErrorCheck proxy with false and invokes redirectToIndex if error check is enabled and returns false',
     function () {
       const checkErrorType = 'one';
       const resourceId = 'two';
@@ -76,5 +79,6 @@ describe('Unit | Mixin | error check view', function () {
           expect(checkError).to.be.called;
           expect(redirectToIndex).to.be.calledOnce;
         });
-    });
+    }
+  );
 });

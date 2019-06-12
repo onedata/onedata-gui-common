@@ -24,11 +24,6 @@ export default TwoLevelSidebar.extend(I18n, {
   /**
    * @override
    */
-  sorting: Object.freeze(['type:desc', 'name']),
-
-  /**
-   * @override
-   */
   firstLevelItemComponent: 'sidebar-clusters/cluster-item',
 
   /**

@@ -1,4 +1,4 @@
 export default {
-  build: 'build',
+  build: 'Build',
   logout: 'Logout',
 };

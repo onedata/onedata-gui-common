@@ -31,6 +31,7 @@ import { Promise } from 'rsvp';
 import layout from 'onedata-gui-common/templates/components/one-form-simple';
 import OneForm from 'onedata-gui-common/components/one-form';
 import { invoke, invokeAction } from 'ember-invoke-action';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default OneForm.extend({
   layout,
@@ -170,7 +171,7 @@ export default OneForm.extend({
         new Promise((resolve, reject) => reject());
       this.set('_disabled', true);
       submitting.finally(() => {
-        this.set('_disabled', false);
+        safeExec(this, 'set', '_disabled', false);
       });
       return submitting;
     },

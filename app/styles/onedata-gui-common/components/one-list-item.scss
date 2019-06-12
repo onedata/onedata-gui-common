@@ -24,12 +24,12 @@
     }
   }
 
-  .one-icon {
-      display: inline-block;
-      position: relative;
-      margin-right: 0.3em;
-      top: 0.4em;
-    }
+  .one-icon:not(.one-icon-internal) {
+    display: inline-block;
+    position: relative;
+    margin-right: 0.3em;
+    top: 0.4em;
+  }
 }
 
 .item-header {

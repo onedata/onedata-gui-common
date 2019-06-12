@@ -67,7 +67,30 @@
     }
   }
   
+  .brand-info-version-hint {
+    position: absolute;
+    display: block;
+    right: $one-list-item-padding;
+    top: 0;
+    bottom: 0;
+    line-height: $brand-info-height;
+    .brand-info-version-more-icon {
+      line-height: $brand-info-height;
+      font-size: 22px;
+      opacity: 0.4;
+      &:hover {
+        opacity: 0.6
+      }
+    }
+  }
+  
   &.full-width {
     width: 100%;
+    .brand-info-version-hint {
+      left: 260px;
+    }
+    .truncate-brand-text {
+      max-width: 200px;
+    }
   }
 }

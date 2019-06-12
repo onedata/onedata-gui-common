@@ -56,6 +56,10 @@ strong {
   text-overflow: ellipsis;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .semibold {
   font-family: 'Open Sans Semibold';
 }
@@ -66,6 +70,10 @@ strong {
 
 .break-word {
   word-wrap: break-word;
+}
+
+.no-pointer-events {
+  pointer-events: none;
 }
 
 .content-backdrop.sidenav-backdrop {
@@ -358,8 +366,9 @@ a {
   }
 }
 
-.col-image {
-  padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+.col-vertical-middle-absolute-right {
+  @include vertical-align-middle();
+  right: 0;
 }
 
 .code-textarea {
@@ -396,8 +405,19 @@ a {
   }
 }
 
-.truncated-string.before-status {
-  padding-right: 100px;
+.truncated-string {
+  &.before-status {
+    padding-right: 100px;
+    &.with-place-for-dots {
+      padding-right: 115px;
+      @media (max-width: $screen-sm-max) and (min-width: $screen-sm-min) {
+        padding-right: 20px;
+        & + .status-toolbar {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 .table.table-middle-align {
@@ -540,4 +560,27 @@ textarea[style^="touch-action: manipulation"] {
 .btn-inline-after-text {
   margin-left: $padding-small-horizontal;
   top: -2px;
+}
+
+.row-understand-notice {
+  position: relative;
+  padding: $padding-base-vertical 0;
+  .one-checkbox-understand {
+    position: absolute;
+    left: 2px;
+    @include vertical-align-middle();
+  }
+  .text-understand {
+    vertical-align: middle;
+    padding-left: 28px;
+    color: $color-one-red;
+  }
+}
+
+.fit-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

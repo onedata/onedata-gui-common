@@ -8,19 +8,36 @@
     {{/if}}
   </label>
   <div class="form-control-column {{layoutConfig.formInputColumns}}">
-    <div class={{if field.rightText "input-group"}}>
-      {{#if (eq field.type "radio-group")}}
-        {{one-way-radio-group
-          class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
-          inputId=inputId
-          value=value
-          fieldName=field.name
-          options=field.options
-          update=(action "inputChanged" field.name)
-          isReadOnly=disabled
-          onFocusOut=(action "onFocusOut")
-        }}
-      {{else}}
+    {{#if (eq field.type "radio-group")}}
+      {{one-way-radio-group
+        class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+        inputId=inputId
+        value=value
+        fieldName=field.name
+        options=field.options
+        update=(action "inputChanged" field.name)
+        isReadOnly=disabled
+        onFocusOut=(action "onFocusOut")}}
+    {{else if (eq field.type "dropdown")}}
+      {{#power-select
+        options=(map-by "value" field.options)
+        selected=value
+        onchange=(action "inputChanged" field.name)
+        onblur=(action "onFocusOut")
+        searchEnabled=false
+        renderInPlace=true
+        triggerClass=(concat-classes "one-form-field" (concat "field-" (dot-to-dash field.name)))
+        as |optionValue|
+      }}
+        {{get (find-by "value" optionValue field.options) "label"}}
+      {{/power-select}}
+    {{else if (eq field.type "clipboard-line")}}
+      {{one-clipboard-line
+        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        value=value
+        showText=false}}
+    {{else}}
+      <div class={{if field.rightText "input-group"}}>
         {{component (input-component-name field.type)
           id=inputId
           value=value
@@ -34,8 +51,8 @@
         {{#if field.rightText}}
           {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
         {{/if}}
-      {{/if}}
-    </div>
+      </div>
+    {{/if}}
     <div class="form-message {{unless field.message "hidden"}}">{{field.message}}</div>
   </div>
 </div>

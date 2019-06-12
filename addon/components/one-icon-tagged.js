@@ -16,8 +16,31 @@ export default Component.extend({
   layout,
   tagName: 'span',
   classNames: ['one-icon-tagged'],
+
+  /**
+   * @virtual
+   * Name of big icon.
+   * @type {string}
+   */
   icon: undefined,
+
+  /**
+   * Name of small (additional) icon.
+   * @type {string}
+   */
   tagIcon: 'x',
+
+  /**
+   * How the icon should be wrapped graphically.
+   * One of: circle, icon, none.
+   * @type {string}
+   */
   shadowType: 'circle',
+
+  /**
+   * When `shadowType` is `icon` this will be the icon that is cutted from
+   * main icon (some kind of negative mask).
+   * @type {string}
+   */
   shadowIcon: reads('tagIcon'),
 });
