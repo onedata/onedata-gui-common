@@ -1,21 +1,50 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
-import { reads } from '@ember/object/computed';
+import { sort } from '@ember/object/computed';
 import { get } from '@ember/object';
 
 export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
 
+  /**
+   * Array of items representing each tab. Properties of each:
+   * - id - will be used to create classes and indentify tabs
+   * - name - displayed text in the tab
+   * - class - CSS classes added to tab-bar-li component
+   * - 
+   * @type {Array}
+   */
   items: undefined,
 
-  // FIXME: items sorting
+  selectedItem: undefined,
 
-  sortedItems: reads('items'),
+  itemsSorting: Object.freeze(['name']),
+
+  sortedItems: sort('items', 'itemsSorting'),
 
   init() {
     this._super(...arguments);
-    this.set('selectedItem', this.get('sortedItems')[0]);
+    if (!this.get('selectedItem')) {
+      this.set('selectedItem', this.get('sortedItems')[0]);
+    }
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.jumpToItem(this.get('selectedItem.id'));
+  },
+
+  /**
+   * Default implementation of method invoked when the item is selected from
+   * tab bar. In most cases, it should be imlpemented in parent component
+   * to set new item, and pass the new item down.
+   * If the item wasn't changed (eg. parent component blocked the change)
+   * it should return false to stop tab bar change behaviour.
+   * @param {object|EmberObject} item
+   */
+  selectedItemChanged(item) {
+    this.set('selectedItem', item);
   },
 
   jumpToItem(itemId) {
@@ -27,15 +56,17 @@ export default Component.extend({
   },
 
   actions: {
+    // TODO: handle change of element when injected property changes (use internal prop.)
     /**
-     * 
-     * @param {string} selectType one of: tabClick, selector
+     * @param {string} selectType one of: tabClick, selector, init
      * @param {object} item on of `items`
      */
     selectItem(selectType, item) {
-      this.set('selectedItem', item);
-      if (selectType === 'selector') {
-        this.jumpToItem(get(item, 'id'));
+      const changed = this.get('selectedItemChanged')(item);
+      if (changed !== false) {
+        if (selectType === 'selector') {
+          this.jumpToItem(get(item, 'id'));
+        }
       }
     },
   }

@@ -4,7 +4,7 @@
       {{one-tab-bar/tab-bar-li
         isActive=(eq selectedItem.id item.id)
         tabClicked=(action "selectItem" "tabClick" item)
-        text=item.name
+        name=item.name
         icon=item.icon
         class=(concat item.class " item-" item.id)
       }}

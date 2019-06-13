@@ -1,6 +1,12 @@
-{{#truncated-string tagName="a" class=(concat "nav-link truncate " (if isActive "active")) click=(action "anchorClicked")}}
-  <div class="inline-icon-container">
-    {{one-icon icon=icon}}
-  </div>
-  <span class="tab-text"></span>{{text}}
+{{#truncated-string
+  tagName="a"
+  class=(concat "nav-link truncate " (if isActive "active"))
+  click=(action "anchorClicked")
+}}
+  {{#if icon}}
+    <div class="inline-icon-container">
+      {{one-icon icon=icon}}
+    </div>
+  {{/if}}
+  <span class="tab-name">{{name}}</span>
 {{/truncated-string}}
