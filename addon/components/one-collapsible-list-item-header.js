@@ -57,7 +57,7 @@ export default Component.extend({
    * toggle event handler
    * @type {string}
    */
-  _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *',
+  _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *, .one-inline-editor *',
 
   _clickHandlerObserver: observer('_isItemFixed', 'isCollapsible', function () {
     let {
@@ -88,7 +88,8 @@ export default Component.extend({
   _clickHandler(event) {
     let selector = this.get('_clickDisabledElementsSelector');
     if ((event.target.matches && event.target.matches(selector)) ||
-      (event.target.msMatchesSelector && event.target.msMatchesSelector(selector))) {
+      (event.target.msMatchesSelector && event.target.msMatchesSelector(selector)) ||
+      !event.target.parentElement) {
       event.stopPropagation();
     } else {
       invoke(this, 'toggle');

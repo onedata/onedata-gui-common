@@ -222,13 +222,15 @@ $provider-place-drop-height: 306px;
         width: $popover-provider-details-width - $host-copy-btn-width - $padding-large-vertical;
       }
       .provider-host-copy-btn-container {
+        position: relative;
         display: table-cell;
         width: $host-copy-btn-width + $padding-large-vertical;
         padding-right: $padding-large-vertical;
       }
       .provider-host-copy-btn {
-        position: relative;
-        right: -0.2em;
+        position: absolute;
+        top: 0;
+        left: 0.2em;
         line-height: inherit;
         font-size: 28px;
         color: $color-one-azure;

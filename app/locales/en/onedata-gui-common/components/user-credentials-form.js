@@ -1,7 +1,7 @@
 export default {
   passphrase: {
     secretPassword: 'Passphrase',
-    currentPassword: 'Current pasphrase',
+    currentPassword: 'Current passphrase',
     newPassword: 'New passphrase',
     newPasswordRetype: 'Retype new passphrase',
     retypedNotMatch: 'Retyped passphrase does not match',

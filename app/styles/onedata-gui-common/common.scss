@@ -407,8 +407,19 @@ a {
   }
 }
 
-.truncated-string.before-status {
-  padding-right: 100px;
+.truncated-string {
+  &.before-status {
+    padding-right: 100px;
+    &.with-place-for-dots {
+      padding-right: 115px;
+      @media (max-width: $screen-sm-max) and (min-width: $screen-sm-min) {
+        padding-right: 20px;
+        & + .status-toolbar {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 .table.table-middle-align {
@@ -551,6 +562,21 @@ textarea[style^="touch-action: manipulation"] {
 .btn-inline-after-text {
   margin-left: $padding-small-horizontal;
   top: -2px;
+}
+
+.row-understand-notice {
+  position: relative;
+  padding: $padding-base-vertical 0;
+  .one-checkbox-understand {
+    position: absolute;
+    left: 2px;
+    @include vertical-align-middle();
+  }
+  .text-understand {
+    vertical-align: middle;
+    padding-left: 28px;
+    color: $color-one-red;
+  }
 }
 
 .fit-container {
