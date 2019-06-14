@@ -1,3 +1,13 @@
+/**
+ * Create scrollable and searchable tab bar using items array with tabs
+ * specification.
+ * 
+ * @module components/one-tab-bar
+ * @author Jakub Liput
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
@@ -11,8 +21,8 @@ export default Component.extend({
    * Array of items representing each tab. Properties of each:
    * - id - will be used to create classes and indentify tabs
    * - name - displayed text in the tab
-   * - class - CSS classes added to tab-bar-li component
-   * - 
+   * - icon - name of one-icon used in item (optional)
+   * - class - CSS classes added to tab-bar-li component (optional)
    * @type {Array}
    */
   items: undefined,

@@ -67,7 +67,6 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
           .arrow-separator {
             right: 0;
           }
-          // border-right-style: solid;
         }
         &.tab-bar-ul-arrow-right {
           right: 0;
@@ -76,7 +75,6 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
           .arrow-separator {
             left: 0;
           }
-          // border-left-style: solid;
         }
         &.disabled {
           color: $main-text-color-disabled;

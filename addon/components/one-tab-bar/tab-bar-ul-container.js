@@ -1,3 +1,17 @@
+/**
+ * Container that allows to scroll horizontally-expandable tabs tab-bar-ul
+ * component that holds all tabs. When used with `tab-bar-li` renders something
+ * like this:
+ * ```
+ * < | tab1 | tab2 | tab3 | >
+ * ```
+ * 
+ * @module components/one-tab-bar/tab-bar-ul-container
+ * @author Jakub Liput
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-ul-container';
 import ContentOverFlowdetector from 'onedata-gui-common/mixins/content-overflow-detector';
@@ -14,36 +28,49 @@ export default Component.extend(ContentOverFlowdetector, {
     'scrollRightReached:scroll-right-reached',
   ],
 
-  // FIXME: remove?
-  arrowDeltaIncrement: 4,
+  /**
+   * Is set to true, when cannot scroll more to the left.
+   * See `innerScrollContentScrolled` method.
+   * @type {boolean}
+   */
+  scrollLeftReached: false,
 
-  scrollLeftReached: true,
-
+  /**
+   * Is set to true, when cannot scroll more to the right.
+   * See `innerScrollContentScrolled` method.
+   * @type {boolean}
+   */
   scrollRightReached: false,
 
   /**
-   * @override
+   * @override implements ContentOverFlowdetector
    */
   overflowElement: computed('element', function overflowElement() {
     return this.$('.tab-bar-ul');
   }),
 
-  $scrollContent: computed('element', function $scrollContent() {
+  /**
+   * A "long" bar element that contains all tabs which expands horizontally
+   * with tabs (is not scrollable and not cuts the overflow).
+   * This element will be scrolled inside the container.
+   * @type {jQuery}
+   */
+  $innerScrollContent: computed('element', function $innerScrollContent() {
     return this.$('.container-inner-scroll-content');
   }),
 
   didInsertElement() {
     this._super(...arguments);
-    const $scrollContent = this.get('$scrollContent')
+    const $innerScrollContent = this.get('$innerScrollContent')
     const self = this;
     this.addOverflowDetectionListener();
     const _overflowDetectorListener = this.get('_overflowDetectionListener')
     this.get('_overflowDetectionListener')();
     this.get('_window').addEventListener('resize', _overflowDetectorListener);
-    $scrollContent.scroll(function onScrollContent() {
-      return self.scrollContentScrolled($(this));
+    $innerScrollContent.scroll(function onScrollContent() {
+      return self.innerScrollContentScrolled($(this));
     });
-    this.scrollContentScrolled($scrollContent)
+    this.innerScrollContentScrolled($innerScrollContent)
   },
 
   willDestroyElement() {
@@ -53,7 +80,13 @@ export default Component.extend(ContentOverFlowdetector, {
     this.removeOverflowDetectionListener();
   },
 
+  /**
+   * @override Ember customEvent handler
+   * @param {WheelEvent} wheelEvent
+   * Intercept vertical scrolling and scroll content vertically.
+   */
   wheel(wheelEvent) {
+    this._super(...arguments);
     const originalEvent = wheelEvent.originalEvent;
     const { deltaX, deltaY } = originalEvent;
     if (deltaX === 0 && deltaY !== 0) {
@@ -62,7 +95,12 @@ export default Component.extend(ContentOverFlowdetector, {
     }
   },
 
-  scrollContentScrolled(jqElement) {
+  /**
+   * Method to handle scroll event.
+   * Check if scroll reached left or right boundaries.
+   * @param {jQuery} jqElement 
+   */
+  innerScrollContentScrolled(jqElement) {
     const scrollLeftReached = (jqElement.scrollLeft() === 0);
     const scrollRightReached =
       jqElement.scrollLeft() + jqElement.innerWidth() >= jqElement[0].scrollWidth;
@@ -72,12 +110,22 @@ export default Component.extend(ContentOverFlowdetector, {
     });
   },
 
+  /**
+   * Programatically invoke scrolling of tabs container.
+   * @param {number} delta value in pixels to scroll horizontally
+   */
   scrollContainer(delta) {
-    const $scrollContent = this.get('$scrollContent');
-    $scrollContent.scrollLeft($scrollContent.scrollLeft() + delta);
+    const $innerScrollContent = this.get('$innerScrollContent');
+    $innerScrollContent.scrollLeft($innerScrollContent.scrollLeft() + delta);
   },
 
   actions: {
+    /**
+     * Scroll tabs horizontally.
+     * @param {string} direction one of: left, right
+     * @param {number} moveDelta scroll amount in pixels, used in
+     *  `scrollContainer` method
+     */
     moveTabs(direction, moveDelta) {
       const right = (direction === 'right');
       this.scrollContainer((right ? 1 : -1) * moveDelta);
