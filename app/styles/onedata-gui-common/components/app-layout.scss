@@ -330,21 +330,37 @@ $brand-info-height: $one-list-item-line-height;
     }
     @media (min-width: $screen-sm-min) {
       position: absolute;
-      left: $main-menu-collapsed-width;
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-      left: 0px;
       padding-top: $mobile-top-height;
     }
     @media (min-width: $screen-md-min) {
       position: absolute;
+    }
+  }
+  .col-sidebar, #sidebar-sidenav, .brand-info {
+    @media (min-width: $screen-sm-min) {
+      left: $main-menu-collapsed-width;
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      left: 0px;
+    }
+    @media (min-width: $screen-md-min) {
       left: $main-menu-collapsed-width;
       &.with-place-for-menu {
         left: $main-menu-width;
       }
     }
   }
-  .col-sidebar, #sidenav-sidebar.in {
+  .brand-info {
+    z-index: $zindex-navbar;
+    transition: left linear $collapse-transition-time;
+    width: 100%;
+    &.full-width {
+      left: 0;
+    }
+  }
+  .col-sidebar, #sidenav-sidebar.in, .brand-info {
     @media (min-width: $screen-sm-min) {
       width: $sidebar-menu-width-sm;
     }

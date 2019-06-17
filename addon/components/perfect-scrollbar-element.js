@@ -8,10 +8,11 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/perfect-scrollbar-element';
 import { debounce } from '@ember/runloop';
 import { PerfectScrollbarMixin } from 'ember-perfect-scrollbar';
+import { scheduleOnce } from '@ember/runloop';
 
 export default Component.extend(PerfectScrollbarMixin, {
   layout,
@@ -60,6 +61,8 @@ export default Component.extend(PerfectScrollbarMixin, {
 
   didInsertElement() {
     this._super(...arguments);
+
+    this.get('class');
 
     const {
       onScroll,

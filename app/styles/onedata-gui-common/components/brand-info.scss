@@ -6,7 +6,6 @@
   position: fixed;
   bottom: 0;
   height: $brand-info-height;
-  width: inherit;
   border-right: 1px solid $main-border-color;
   background-color: $color-sidebar-item-bg;
   z-index: 10;
@@ -82,6 +81,10 @@
         opacity: 0.6
       }
     }
+  }
+  
+  .truncate-brand-text {
+    max-width: calc(100% - 20px);
   }
   
   &.full-width {
