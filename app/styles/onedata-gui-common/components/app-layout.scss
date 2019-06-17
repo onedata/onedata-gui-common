@@ -338,7 +338,7 @@ $brand-info-height: $one-list-item-line-height;
       position: absolute;
     }
   }
-  .col-sidebar, #sidebar-sidenav, .brand-info {
+  .col-sidebar, #sidenav-sidebar, .brand-info {
     @media (min-width: $screen-sm-min) {
       left: $main-menu-collapsed-width;
     }
