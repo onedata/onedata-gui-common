@@ -149,4 +149,26 @@ describe('Unit | Utility | add conflict labels', function () {
     expect(get(c, 'conflictLabel')).to.be.equal('xxxxb2');
   });
 
+  it('removes conflictLabels if names changed to different', function () {
+    const a = {
+      id: 'one',
+      name: 'One',
+    };
+    const b = {
+      id: 'two',
+      name: 'One',
+    };
+    const c = {
+      id: 'three',
+      name: 'Three',
+    };
+
+    addConflictLabels([a, b, c]);
+    b.name = 'Two';
+    addConflictLabels([a, b, c]);
+
+    expect(get(a, 'conflictLabel')).to.be.empty;
+    expect(get(b, 'conflictLabel')).to.be.empty;
+  });
+
 });

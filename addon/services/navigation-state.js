@@ -264,9 +264,12 @@ export default Service.extend(I18n, {
    * Global bar title for sidebar.
    * @type {Ember.ComputedProperty<string>}
    */
-  globalBarSidebarTitle: computed('activeResourceType', function () {
-    return _.upperFirst(this.get('activeResourceType'));
-  }),
+  globalBarSidebarTitle: computed(
+    'activeResourceType',
+    function globalBarSidebarTitle() {
+      return this.get('i18n').t(`tabs.${this.get('activeResourceType')}.menuItem`);
+    }
+  ),
 
   /**
    * Global bar title for content aspect.

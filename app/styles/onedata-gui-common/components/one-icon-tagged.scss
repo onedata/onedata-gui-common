@@ -1,0 +1,53 @@
+.one-icon-tagged {
+  position: relative;
+  line-height: 1;
+  .one-icon-tag {
+    position: absolute;
+  }
+  .one-icon-tagged-main {
+    position: relative;
+  }
+  .one-icon-tag-icon {
+    font-size: 50%;
+    bottom: 0px;
+    left: 0px;
+  }
+  .one-icon-tag-shadow {
+    font-size: 75%;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-16%) translateY(18%);
+    color: $color-one-white;
+  }
+  .one-icon-tag-circle {
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    border-width: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $color-one-white;
+  }
+  
+  &.danger {
+    .one-icon-tag-icon {
+      color: $brand-danger;
+    }
+  }
+  
+  &.deactivated {
+    .one-icon-tagged-main {
+      color: $main-text-color-disabled;
+    }
+  }
+  
+  &.gray-sand {
+    .one-icon-tag-shadow {
+      color: $color-one-gray-sand;
+    }
+    .one-icon-tag-circle {
+      background-color: $color-one-gray-sand;
+    }
+  }
+}

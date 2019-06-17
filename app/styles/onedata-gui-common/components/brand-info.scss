@@ -1,22 +1,39 @@
 .brand-info {
   $icon-size: 20px;
   $icon-left-offset: 6px;
+  $brand-info-height: $one-list-item-line-height !default;
 
   position: fixed;
   bottom: 0;
-  height: $one-list-item-line-height;
+  height: $brand-info-height;
   width: inherit;
   border-right: 1px solid $main-border-color;
   background-color: $color-sidebar-item-bg;
   z-index: 10;
+    
+  @include before-top-shadow();
 
+  &::after {
+    @include top-line(1px solid $color-one-list-item-separator);
+  }
+  
   .brand-info-container {
     @include vertical-align-middle();
     left: $one-list-item-padding;
     right: $one-list-item-padding;
     padding-left: $icon-size + $padding-xs-horizontal + $icon-left-offset;
+    user-select: text;
   }
 
+  @media (max-width: $screen-sm-max) {
+    .brand-name {
+      font-size: 90%;
+    }
+    .brand-type-version {
+      font-size: 80%;
+    }
+  }
+  
   .brand-icon {
     position: absolute;
     left: $icon-left-offset;
@@ -32,5 +49,48 @@
     font-size: 90%;
     margin-top: 2px;
     margin-bottom: -2px;
+    white-space: nowrap;
+  }
+
+  .brand-logout {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    .brand-logout-icon {
+      font-size: 32px;
+    }
+    .brand-logout-text {
+      position: relative;
+      top: -10px;
+      padding-right: 2px;
+      padding-left: 10px;
+    }
+  }
+  
+  .brand-info-version-hint {
+    position: absolute;
+    display: block;
+    right: $one-list-item-padding;
+    top: 0;
+    bottom: 0;
+    line-height: $brand-info-height;
+    .brand-info-version-more-icon {
+      line-height: $brand-info-height;
+      font-size: 22px;
+      opacity: 0.4;
+      &:hover {
+        opacity: 0.6
+      }
+    }
+  }
+  
+  &.full-width {
+    width: 100%;
+    .brand-info-version-hint {
+      left: 260px;
+    }
+    .truncate-brand-text {
+      max-width: 200px;
+    }
   }
 }

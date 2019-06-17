@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?jdrvxs');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?jdrvxs#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?jdrvxs') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?jdrvxs') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?jdrvxs##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qfdhlf');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qfdhlf#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?qfdhlf') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?qfdhlf') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?qfdhlf##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -77,6 +77,11 @@
     content: $oneicon-ban-left; 
   }
 }
+.oneicon-ceph {
+  &:before {
+    content: $oneicon-ceph; 
+  }
+}
 .oneicon-certificate {
   &:before {
     content: $oneicon-certificate; 
@@ -90,6 +95,11 @@
 .oneicon-checkbox-empty {
   &:before {
     content: $oneicon-checkbox-empty; 
+  }
+}
+.oneicon-checkbox-filled-warning {
+  &:before {
+    content: $oneicon-checkbox-filled-warning; 
   }
 }
 .oneicon-checkbox-filled-x {
@@ -135,6 +145,11 @@
 .oneicon-close {
   &:before {
     content: $oneicon-close; 
+  }
+}
+.oneicon-cluster {
+  &:before {
+    content: $oneicon-cluster; 
   }
 }
 .oneicon-collection-create {
@@ -227,6 +242,11 @@
     content: $oneicon-inbox; 
   }
 }
+.oneicon-index {
+  &:before {
+    content: $oneicon-index; 
+  }
+}
 .oneicon-join-plug {
   &:before {
     content: $oneicon-join-plug; 
@@ -252,6 +272,11 @@
     content: $oneicon-leave-space; 
   }
 }
+.oneicon-light-bulb {
+  &:before {
+    content: $oneicon-light-bulb; 
+  }
+}
 .oneicon-link-external {
   &:before {
     content: $oneicon-link-external; 
@@ -265,6 +290,11 @@
 .oneicon-lock {
   &:before {
     content: $oneicon-lock; 
+  }
+}
+.oneicon-logout {
+  &:before {
+    content: $oneicon-logout; 
   }
 }
 .oneicon-membership {
@@ -350,6 +380,16 @@
 .oneicon-node {
   &:before {
     content: $oneicon-node; 
+  }
+}
+.oneicon-onepanel {
+  &:before {
+    content: $oneicon-onepanel; 
+  }
+}
+.oneicon-onezone {
+  &:before {
+    content: $oneicon-onezone; 
   }
 }
 .oneicon-organization {
@@ -655,6 +695,11 @@
 .oneicon-view-list {
   &:before {
     content: $oneicon-view-list; 
+  }
+}
+.oneicon-x {
+  &:before {
+    content: $oneicon-x; 
   }
 }
 

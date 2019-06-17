@@ -1,18 +1,28 @@
 $-tile-spacing: 40px;
 $-tile-padding: 20px;
 $-tile-content-padding: 4px;
+$-tile-hover-background-color: lighten($color-one-semiwhite, 3%);
+$-tile-separator-color: #dcdcdc;
 
 @mixin one-tile-sizes($tile-size) {
   $-tile-size: $tile-size;
   $-tile-content-height: $-tile-size - ($-tile-padding * 2) - $font-size-base - ($-tile-content-padding * 2);
   $-tile-content-width: $-tile-size - ($-tile-padding * 2);
+  $-tile-footer-height: $-tile-size / 8.75;
   
-  padding: $-tile-padding;
   margin-top: $-tile-spacing;
   margin-right: $-tile-spacing / 2;
   margin-left: $-tile-spacing / 2;
   width: $-tile-size;
   height: $-tile-size;
+  
+  .tile-main {
+    padding: $-tile-padding;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
   
   &.x2 {
     width: $-tile-size * 2 + $-tile-spacing;
@@ -36,11 +46,24 @@ $-tile-content-padding: 4px;
     height: $-tile-content-height;
   }
   
+  .tile-footer {
+    height: $-tile-footer-height;
+    line-height: $-tile-footer-height;
+  }
+  
   .large-text {
     font-size: $font-size-base * 3;
     max-width: $-tile-content-width;
     max-height: $-tile-content-width;
     line-height: $-tile-content-height;
+  }
+  
+  &.with-footer {
+    &.one-tile-link {
+      .tile-main {
+        bottom: $-tile-footer-height;
+      }
+    }
   }
 }
 
@@ -63,13 +86,25 @@ $-tile-content-padding: 4px;
 
   background-color: #fff;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.31);
-
-  &.one-tile-link:hover {
-    background-color: lighten($color-one-semiwhite, 3%);
-    cursor: pointer;
+  
+  .tile-main {
+    position: absolute;
+    display: block;
+  }
+  
+  &.one-tile-link {
+    .tile-main {
+      &:hover {
+        background-color: $-tile-hover-background-color;
+      }
+    }
     
-    .more-link {
-      @extend a:hover;
+    &:hover {
+      cursor: pointer;
+      
+      .more-link {
+        @extend a, :hover;
+      }
     }
   }
 
@@ -94,7 +129,7 @@ $-tile-content-padding: 4px;
     line-height: inherit;
   }
 
-  .tile-content {    
+  .tile-content {
     .tile-content-inner {
       position: relative;
       height: 100%;
@@ -120,5 +155,25 @@ $-tile-content-padding: 4px;
   .large-text {
     font-weight: bold;
     text-align: center;
+  }
+  
+  .tile-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid $-tile-separator-color;
+    .footer-text-icon-container {
+      margin-right: 6px;
+    }
+    &:hover {
+      background-color: $-tile-hover-background-color;
+    }
+    .tile-footer-link {
+      display: block;
+      // override hover effects
+      color: inherit !important;
+      text-decoration: none !important;
+    }
   }
 }

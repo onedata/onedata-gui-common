@@ -22,7 +22,7 @@ export default Mixin.create({
    * - `authenticationErrorReason` is the error code with optional parameter part.
    *   Possible error codes can be found in `locales/en/mixins/authentication-error-messages`
    *   or in `authentication-error-message` mixin, which can get additional
-   *   parameter to displeyed reason (see its implementation).
+   *   parameter to displayed reason (see its implementation).
    * - `authenticationErrorState` is the token that identifies the occured error
    *   in backend. It can be send to server administrator to check what happened
    *   in server logs.
@@ -37,8 +37,8 @@ export default Mixin.create({
       authenticationErrorReason,
       authenticationErrorState,
     };
-    cookies.clear(authenticationErrorReasonKey);
-    cookies.clear(authenticationErrorStateKey);
+    cookies.clear(authenticationErrorReasonKey, { path: '/' });
+    cookies.clear(authenticationErrorStateKey, { path: '/' });
     return errors;
   },
 });

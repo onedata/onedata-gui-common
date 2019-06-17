@@ -1,5 +1,7 @@
 /**
  * A container component for login form.
+ * 
+ * In common, it's only a form for username/password.
  *
  * @module components/login-box/login-form-container
  * @author Michal Borzecki, Jakub Liput
@@ -9,6 +11,7 @@
 
 import Component from '@ember/component';
 import layout from '../../templates/components/login-box/login-form-container';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
   layout,
@@ -18,19 +21,19 @@ export default Component.extend({
    * @virtual
    * @type {function}
    */
-  authenticationSuccess: () => {},
+  authenticationSuccess: notImplementedIgnore,
 
   /**
    * Action called on login failure.
    * @virtual
    * @type {function}
    */
-  authenticationFailure: () => {},
+  authenticationFailure: notImplementedIgnore,
 
   /**
    * Action called when login has started and is in progress.
    * @virtual
    * @type {function}
    */
-  authenticationStarted: () => {},
+  authenticationStarted: notImplementedIgnore,
 });

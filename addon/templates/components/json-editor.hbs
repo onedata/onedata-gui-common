@@ -1,0 +1,12 @@
+<textarea
+  id={{inputId}}
+  value={{value}}
+  oninput={{action "onChange" value="target.value"}}
+  placeholder={{placeholder}}
+  disabled={{disabled}}
+  readonly={{if readonly "readonly"}}
+  spellcheck="false"
+  class="form-control json-editor-textarea {{inputClassName}}"></textarea>
+{{#if (and isErrorMsgVisible (eq isValid false))}}
+  <div class="form-message text-right">{{tt this "errorMsg"}}</div>
+{{/if}}

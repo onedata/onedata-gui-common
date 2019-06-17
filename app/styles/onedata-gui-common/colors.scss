@@ -1,3 +1,14 @@
+$var-color-disabled-amount: 35%;
+$var-color-inactive-amount: 15%;
+
+@function disabled-color($color) {
+  @return lighten($color, $var-color-disabled-amount);
+}
+
+@function inactive-color($color) {
+  @return lighten($color, $var-color-inactive-amount);
+}
+
 $color-one-white: #fff;
 $color-one-semiwhite: #EFEFEF;
 $color-one-semiblack: #363636;
@@ -8,6 +19,7 @@ $color-one-light-gray: #BEBEBE;
 $color-one-blue-gray: #4A6089;
 $color-one-gray-sand: #E2E1E0;
 $color-one-dark-blue: #555d72;
+$color-one-light-blue: #E5E9F1;
 $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
 
@@ -21,8 +33,8 @@ $color-one-danger: $color-one-red;
 $color-one-success-dark: #3c763d;
 
 $main-text-color: $color-one-dark-gray;
-$main-text-color-inactive: lighten($main-text-color, 15%);
-$main-text-color-disabled: lighten($main-text-color, 35%);
+$main-text-color-inactive: inactive-color($main-text-color);
+$main-text-color-disabled: disabled-color($main-text-color);
 $main-border-color: darken($color-one-semiwhite, 10%);
 
 // TODO: a color for future use

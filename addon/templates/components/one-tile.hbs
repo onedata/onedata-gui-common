@@ -1,15 +1,42 @@
-<h1 class="tile-title">
-  <span class="one-label">
-    {{title}}
-  </span>
-  {{#if linkToParams}}
-    {{#link-to params=linkToParams class="more-link"}}
-      {{moreText}} &raquo;
-    {{/link-to}}
-  {{/if}}
-</h1>
-<div class="tile-content">
-  <div class="tile-content-inner">
-    {{yield (hash sizeClass=sizeClass)}}
+<div class="tile-main" onclick={{action "tileMainClick"}}>
+  <h1 class="tile-title">
+    <span class="one-label">
+      {{title}}
+    </span>
+    {{#if linkToParams}}
+      {{#link-to params=linkToParams class="more-link"}}
+        {{moreText}} &raquo;
+      {{/link-to}}
+    {{else if customLink}}
+      <a href={{customLink}} class="more-link">
+        {{moreText}} &raquo;
+      </a>
+    {{/if}}
+  </h1>
+  <div class="tile-content">
+    <div class="tile-content-inner">
+      {{yield (hash sizeClass=sizeClass)}}
+    </div>
   </div>
 </div>
+{{#if footerText}}
+  <div class="tile-footer">
+    {{#if footerLinkToParams}}
+      {{#link-to params=footerLinkToParams class="tile-footer-text tile-footer-link black"}}
+        {{#if footerTextIcon}}
+          <div class="inline-icon-container footer-text-icon-container">
+            {{one-icon icon=footerTextIcon class="tile-footer-icon"}}
+          </div>
+        {{/if}}
+        {{footerText}}
+      {{/link-to}}
+    {{else}}
+      {{#if footerTextIcon}}
+        <div class="inline-icon-container footer-text-icon-container">
+          {{one-icon icon=footerTextIcon class="tile-footer-icon"}}
+        </div>
+      {{/if}}
+      <span class="tile-footer-text">{{footerText}}</span>
+    {{/if}}
+  </div>
+{{/if}}

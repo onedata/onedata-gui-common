@@ -1,6 +1,6 @@
 <div class="brand-info-container">
   {{#if guiIcon}}
-    <img class="brand-icon" src={{guiIcon}} title={{guiType}} alt={{guiType}}>
+    <img class="brand-icon" src={{root-url guiIcon}} title={{guiType}} alt={{guiType}}>
   {{/if}}
   {{#if guiName}}
     {{#truncated-string class="brand-text brand-name"}}
@@ -8,7 +8,23 @@
     {{/truncated-string}}
   {{/if}}
   <div class="brand-text brand-type-version">
-    <span class="brand-type">{{guiType}}</span>
-    <span class="brand-version">{{guiVersion}}</span>
+    {{#truncated-string class="truncate-brand-text"}}
+      <span class="brand-type">{{guiType}}</span>
+      <span class="brand-version">{{softwareVersionDetails.serviceVersion}}</span>
+    {{/truncated-string}}
+    {{#if showLogout}}
+      <div class="brand-logout clickable" {{action "logout"}}>
+        {{one-icon class="brand-logout-icon" icon="logout"}}
+        <span class="brand-logout-text">{{tt this "logout"}}</span>
+      </div>
+    {{/if}}
   </div>
+</div>
+<div class="brand-info-version-hint">
+  {{#one-icon icon="sign-info-rounded" class="brand-info-version-more-icon"}}
+    {{#one-tooltip}}
+      <strong>{{tt this "build"}}:</strong>
+      <span class="version-build">{{softwareVersionDetails.serviceBuildVersion}}</span>
+    {{/one-tooltip}}
+  {{/one-icon}}
 </div>

@@ -28,7 +28,10 @@
 {{/perfect-scrollbar-element}}
 <div class="col-sidenav-cover"></div>
 
-<div class="container-fluid app-grid full-height">
+<div class={{appGridClass}}>
+  {{#if withBottomBar}}
+    {{brand-info class="full-width" showLogout=true}}
+  {{/if}}
   <div class="row row-mobile-menu visible-xs-block visible-sm-block disable-user-select">
     {{#side-menu-toggle}}
       <button type="button" class="navbar-toggle{{unless showMobileSidebar " hidden-xs"}}">
@@ -70,7 +73,7 @@
   <div class="row visible-xs-block resource-name-row">
     {{name-conflict item=navigationState.activeResource tagName="span"}}
   </div>
-  <div class="row row-app full-height">
+  <div class={{rowAppClass}}>
     {{#one-sidenav opened=sidenavResouceType
       id="sidenav-sidebar"
       class=(if navigationState.mainMenuColumnExpanded "with-place-for-menu")
@@ -89,7 +92,7 @@
     }}
     
     {{#perfect-scrollbar-element
-      class="col-in-app-layout col-content col-xs-12 full-height"
+      class="col-in-app-layout col-content col-xs-12"
       onScroll=(action "scrollOccurred")
     }}
       {{yield "content"}}

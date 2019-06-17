@@ -51,20 +51,22 @@ export default Mixin.create(I18n, {
    */
   authenticationErrorReason: undefined,
 
-  authenticationErrorText: computed('authenticationErrorReason', function authenticationErrorText() {
-    const authenticationErrorReason = this.get('authenticationErrorReason');
-    if (authenticationErrorReason) {
-      const [errorCode, errorAttribute] = stripError(authenticationErrorReason);
-      return this.t(`codes.${errorCode}`, {
-        attribute: errorAttribute,
-      });
-    }
-  }),
+  authenticationErrorText: computed('authenticationErrorReason',
+    function authenticationErrorText() {
+      const authenticationErrorReason = this.get('authenticationErrorReason');
+      if (authenticationErrorReason) {
+        const [errorCode, errorAttribute] = stripError(authenticationErrorReason);
+        return this.t(`codes.${errorCode}`, {
+          attribute: errorAttribute,
+        });
+      }
+    }),
 
-  showErrorContactInfo: computed('authenticationErrorReason', function showErrorContactInfo() {
-    return ![
-      'account_already_linked_to_another_user',
-      'account_already_linked_to_current_user'
-    ].includes(this.get('authenticationErrorReason'));
-  }),
+  showErrorContactInfo: computed('authenticationErrorReason',
+    function showErrorContactInfo() {
+      return ![
+        'account_already_linked_to_another_user',
+        'account_already_linked_to_current_user'
+      ].includes(this.get('authenticationErrorReason'));
+    }),
 });

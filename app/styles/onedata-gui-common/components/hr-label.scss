@@ -1,0 +1,31 @@
+$-hr-label-margin-horizontal: 0.5em;
+.hr-label {
+  text-align: center;
+  overflow: hidden;
+  &::before, &::after {
+    content: '';
+    position: relative;
+    width: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    height: 1px;
+    vertical-align: middle;
+  }
+  &.light {
+    &::before, &::after {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+  &::before {
+    right: $-hr-label-margin-horizontal;
+    margin-left: -50%;
+  }
+  &::after {
+    left: $-hr-label-margin-horizontal;
+    margin-right: -50%;
+  }
+  &.with-margin {
+    margin-left: $-hr-label-margin-horizontal;
+    margin-right: $-hr-label-margin-horizontal;
+  }
+}

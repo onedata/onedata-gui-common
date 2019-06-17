@@ -1,0 +1,92 @@
+.content-users {
+  .linked-accounts-list {
+    position: relative;
+    min-height: 100px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  .linked-account {
+    position: relative;
+    min-height: $large-social-box-size + 2 * $content-row-vertical-padding;
+    padding-left: $large-social-box-size + $padding-base-horizontal;    
+  }
+  .login-icon-box:not(.add) {
+    cursor: default !important;
+  }
+  .login-icon-box.add:hover {
+    background-color: transparentize($color: #026381, $amount: 0.9)
+  }
+  .social-box {
+    position: absolute;
+    top: $content-row-vertical-padding;
+    left: 0;
+  }
+  .account-description {
+    position: relative;
+    padding: $padding-xs-vertical 0;
+  }
+  .account-type {
+    font-size: 110%;
+    font-weight: bold;
+  }
+  .account-email {
+    margin-top: $padding-base-vertical;
+  }
+  .login-icon-box.add {
+    $border-width: 2px;
+    $add-box-size: $large-social-box-size - 2 * $border-width;
+    background-color: $color-one-white;
+    border: 2px solid $color-one-blue-gray;
+    color: $color-one-blue-gray;
+    .one-icon {
+      line-height: $add-box-size;
+    }
+  }
+  .social-box-linked-account .login-icon-box {
+    display: block;
+    border-style: dotted;
+    .plus-icon {
+      display: block;
+      font-size: 42px;
+      margin-top: -3px;
+    }
+  }
+  @media (min-width: $screen-sm-min) {
+    .indented-row {
+      margin-left: 20px;
+    }
+    .user-image {
+      margin-left: -$padding-xs-horizontal;
+      font-size: 150px;
+      vertical-align: middle;
+    }
+    .name-editor, .login-editor {
+      display: inline-block;
+      vertical-align: middle;
+      max-width: 270px;
+    }
+    .linked-accounts-list, .credentials-row {
+      margin-left: 40px;
+    }
+    .credentials-row {
+      position: relative;
+      height: 50px;
+      .row-label {
+        @include vertical-align-middle;
+      }
+      .row-value {
+        padding-left: 130px;
+        @include vertical-align-middle;
+      }
+    }
+  }
+  @media (max-width: $screen-xs-max) {
+    .indented-row {
+      padding: 0 $mobile-horizontal-content-padding;
+    }
+    .user-image {
+      display: none;
+    }
+  }
+}

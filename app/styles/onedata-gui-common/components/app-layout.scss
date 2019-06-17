@@ -10,11 +10,12 @@ $color-main-menu-item-gradient-base: $color-main-menu-fg-base;
 
 $onedata-logo-width: 150px;
 $mobile-resource-name-height: 20px;
+$brand-info-height: $one-list-item-line-height;
 
 .onedata-logo {
   width: $onedata-logo-width;
   height: $onedata-logo-height;
-  background-image: url($root-url + 'assets/images/logo.svg');
+  background-image: url($root-url + 'images/logo.svg');
   background-position: center center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -27,6 +28,22 @@ $mobile-resource-name-height: 20px;
 .app-layout {
   position: absolute;
   @include fill-container();
+  
+  &.with-bottom-bar {
+    .app-grid {
+      padding-left: 0;
+    }
+    .row-app {
+      padding-left: 0;
+    }
+    .col-content {
+      height: calc(100% - #{$brand-info-height});
+    }
+    .col-main-menu {
+      display: none !important;
+    }
+  }
+  
   .app-grid {
     position: relative;
     padding-left: 0;
@@ -156,7 +173,7 @@ $mobile-resource-name-height: 20px;
       right: 0;
       height: $sidemenu-header-height + $one-list-item-line-height;
       z-index: -1;
-      background-image: url($root-url + 'assets/images/main-background.jpg');
+      background-image: url($root-url + 'images/main-background.jpg');
       background-repeat: no-repeat;
       background-size: cover;
       background-position-x: center;
@@ -193,6 +210,17 @@ $mobile-resource-name-height: 20px;
     position: absolute;
     bottom: 0;
     width: $main-menu-width;
+    
+    .groove-border {
+      position: relative;
+      top: 1px;
+    }
+    
+    @include before-top-shadow($shadow-alpha: 0.2);
+    
+    &::before {
+      top: -4px;
+    }
   }
   
   .row-app {
@@ -329,7 +357,9 @@ $mobile-resource-name-height: 20px;
   }
   .col-sidebar {
     z-index: $zindex-navbar;
-    padding-bottom: $one-list-item-line-height;
+    top: 0;
+    bottom: $one-list-item-line-height;
+    height: auto;
     border-right: 1px solid $color-one-list-item-separator;
     transition: left linear $collapse-transition-time;
   }
@@ -343,7 +373,7 @@ $mobile-resource-name-height: 20px;
     font-size: $content-header-font-size;
   }
   .col-content {
-    // TODO similar 30px
+    height: 100%;
     padding: $content-col-padding;
 
     @media (max-width: $screen-sm-max) {
@@ -355,20 +385,6 @@ $mobile-resource-name-height: 20px;
     }
   }
 }
-
-// TODO gradient as on design - needs additional covering element
-// @mixin main-menu-item-gradient($opacity) {
-//   &::before {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     bottom: 0;
-//     right: 0;
-//     opacity: $opacity;
-//     // NOTICE changing menu background will mess up this color
-//     background: linear-gradient(90deg, #7E8EDA 0%, rgba(255,255,255,0) 100%); 
-//   }
-// }
 
 /// Desktop main menu styles
 .main-menu {

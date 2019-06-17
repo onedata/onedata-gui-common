@@ -6,21 +6,40 @@
     {{/if}}
   </label>
   <div class={{layoutConfig.formInputColumns}}>
-    <div class={{if field.rightText "input-group"}}>
-      {{component (input-component-name field.type)
-        id=inputId
-        value=value
-        class=(concat "form-control one-form-field field-" (dot-to-dash field.name))
-        update=(action "inputChanged" field.name)
-        step=field.step
-        disabled=disabled
-        placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
-        focusOut=(action "onFocusOut")
+    {{#if (eq field.type "dropdown")}}
+      {{#power-select
+        options=(map-by "value" field.options)
+        selected=value
+        onchange=(action "inputChanged" field.name)
+        onblur=(action "onFocusOut")
+        searchEnabled=false
+        renderInPlace=true
+        as |optionValue|
       }}
-      {{#if field.rightText}}
-        {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
-      {{/if}}
-    </div>
+        {{get (find-by "value" optionValue field.options) "label"}}
+      {{/power-select}}
+    {{else if (eq field.type "clipboard-line")}}
+      {{one-clipboard-line
+        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        value=value
+        showText=false}}
+    {{else}}
+      <div class={{if field.rightText "input-group"}}>
+        {{component (input-component-name field.type)
+          id=inputId
+          value=value
+          class=(concat "form-control one-form-field field-" (dot-to-dash field.name))
+          update=(action "inputChanged" field.name)
+          step=field.step
+          disabled=disabled
+          placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
+          focusOut=(action "onFocusOut")
+        }}
+        {{#if field.rightText}}
+          {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
+        {{/if}}
+      </div>
+    {{/if}}
     <div class="form-message">{{field.message}}</div>
   </div>
 </div>

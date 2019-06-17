@@ -5,8 +5,8 @@
  * Set `aspect` property for use as a link.
  *
  * @module components/one-tile
- * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,15 +15,20 @@ import layout from '../templates/components/one-tile';
 
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(I18n, {
   layout,
   classNames: ['one-tile'],
-  classNameBindings: ['isLink:one-tile-link', 'sizeClass'],
+  classNameBindings: [
+    'isLink:one-tile-link',
+    'footerText:with-footer',
+    'sizeClass'
+  ],
 
   i18n: service(),
   router: service(),
@@ -32,6 +37,13 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.oneTile',
+
+  /**
+   * @virtual optional
+   * If provided, it will be the `href` of "more" link in tile
+   * @type {string}
+   */
+  customLink: undefined,
 
   /**
    * If set, the tile will be a link to some aspect of currently loaded resource
@@ -51,6 +63,26 @@ export default Component.extend(I18n, {
    * @type {Object|undefined}
    */
   routeQueryParams: undefined,
+
+  /**
+   * If provided, the tile will have separate footer section with text or link.
+   * Use `footerLinkToParams` to set the link.
+   * @type {string}
+   */
+  footerText: undefined,
+
+  /**
+   * If `footerText` is provided, this is an icon to display on the left
+   * of the text.
+   * @type {string}
+   */
+  footerTextIcon: undefined,
+
+  /**
+   * Array of parameters for footer `link-to` helper.
+   * @type {Array<string|object>}
+   */
+  footerLinkToParams: Object.freeze([]),
 
   /**
    * If true, whole tile is a pseudo-link to aspect.
@@ -86,6 +118,11 @@ export default Component.extend(I18n, {
   sizeClass: '',
 
   /**
+   * @type {Function}
+   */
+  tileMainClick: notImplementedIgnore,
+
+  /**
    * Window object (for testing purposes only)
    * @type {Window}
    */
@@ -94,39 +131,47 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isLink: computed('isLink', 'aspect', 'route', function _isLink() {
+  _isLink: computed('isLink', 'aspect', 'route', 'customLink', function _isLink() {
     const {
       isLink,
       aspect,
       route,
-    } = this.getProperties('isLink', 'aspect', 'route');
-    return isLink && (aspect || route);
+      customLink,
+    } = this.getProperties('isLink', 'aspect', 'route', 'customLink');
+    return isLink && (aspect || route || customLink);
   }),
 
   /**
    * Prepared link-to helper arguments
    * @type {Ember.ComputedProperty<Array<any>>}
    */
-  linkToParams: computed('route', 'routeQueryParams', function linkToParams() {
-    const {
-      route,
-      routeQueryParams,
-      aspect,
-    } = this.getProperties('route', 'routeQueryParams', 'aspect');
-    // emulate `query-params` helper result
-    const queryParamsObject = routeQueryParams ? {
-      isQueryParams: true,
-      values: routeQueryParams,
-    } : undefined;
+  linkToParams: computed(
+    'route',
+    'routeQueryParams',
+    'aspect',
+    function linkToParams() {
+      const {
+        route,
+        routeQueryParams,
+        aspect,
+      } = this.getProperties('route', 'routeQueryParams', 'aspect');
+      // emulate `query-params` helper result
+      const queryParamsObject = routeQueryParams ? {
+        isQueryParams: true,
+        values: routeQueryParams,
+      } : undefined;
 
-    if (!route && !aspect) {
-      return null;
+      if (!route && !aspect) {
+        return null;
+      }
+
+      const routeElements = route ? route : ['onedata.sidebar.content.aspect',
+        aspect
+      ];
+      return queryParamsObject ?
+        routeElements.concat(queryParamsObject) : routeElements;
     }
-
-    const routeElements = route ? route : ['onedata.sidebar.content.aspect', aspect];
-    return queryParamsObject ?
-      routeElements.concat(queryParamsObject) : routeElements;
-  }),
+  ),
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -151,27 +196,7 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-    if (this.get('_isLink')) {
-      this.click = function click(event) {
-        // do not redirect if "more" link has been clicked
-        if ($(event.target).closest('.more-link').length) {
-          return;
-        }
-
-        const {
-          router,
-          aspect,
-          route,
-          routeQueryParams,
-        } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
-        const transitionToArgs = route ?
-          route : ['onedata.sidebar.content.aspect', aspect];
-        if (routeQueryParams) {
-          transitionToArgs.push({ queryParams: routeQueryParams })
-        }
-        router.transitionTo(...transitionToArgs);
-      }
-    }
+    this.initBindMainLink();
     this.scaleUp();
   },
 
@@ -199,6 +224,32 @@ export default Component.extend(I18n, {
     }
   },
 
+  initBindMainLink() {
+    if (this.get('_isLink') && !this.get('customLink')) {
+      this.tileMainClick = function tileMainClick(clickEvent) {
+        // do not redirect if "more" or footer link has been clicked
+        if ($(clickEvent.target).closest('.more-link').length) {
+          return;
+        }
+
+        // TODO: if customLink, then use window.location = customLink
+
+        const {
+          router,
+          aspect,
+          route,
+          routeQueryParams,
+        } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
+        const transitionToArgs = route ?
+          route : ['onedata.sidebar.content.aspect', aspect];
+        if (routeQueryParams) {
+          transitionToArgs.push({ queryParams: routeQueryParams })
+        }
+        router.transitionTo(...transitionToArgs);
+      }
+    }
+  },
+
   /**
    * Sets tile scale according to breakpoints and window size
    * @returns {undefined}
@@ -219,8 +270,14 @@ export default Component.extend(I18n, {
       }
       if (this.get('sizeClass') !== sizeClass) {
         this.set('sizeClass', sizeClass);
-        _window.dispatchEvent(new Event('resize'));
+        next(() => _window.dispatchEvent(new Event('resize')));
       }
     }
+  },
+
+  actions: {
+    tileMainClick(clickEvent) {
+      return this.tileMainClick(clickEvent);
+    },
   },
 });

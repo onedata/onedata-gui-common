@@ -10,17 +10,19 @@
 import { alias } from '@ember/object/computed';
 
 import EmberObject from '@ember/object';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
+
+export const sessionExpiredKey = 'sessionExpired';
 
 export default Component.extend({
   layout,
   classNames: ['login-box'],
 
-  globalNotify: inject(),
-  session: inject(),
+  globalNotify: service(),
+  session: service(),
 
   /**
    * Current status of showing authentication error message, as the message
@@ -31,7 +33,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * See: `mixin:authentication-error-hander#authenticationErrorReason`
+   * See: `mixin:authentication-error-handler#authenticationErrorReason`
    * @type {string}
    */
   authenticationErrorReason: undefined,
@@ -57,6 +59,8 @@ export default Component.extend({
 
   isBusy: false,
 
+  _sessionStorage: sessionStorage,
+
   /**
    * True, if previous session has expired
    */
@@ -67,6 +71,15 @@ export default Component.extend({
     this.set('headerModel', EmberObject.create({}));
     if (this.get('authenticationErrorReason')) {
       this.set('showAuthenticationError', true);
+    }
+    this.consumeSessionExpiredFlag();
+  },
+
+  consumeSessionExpiredFlag() {
+    const _sessionStorage = this.get('_sessionStorage');
+    if (_sessionStorage.getItem(sessionExpiredKey)) {
+      this.set('sessionHasExpired', true);
+      _sessionStorage.removeItem(sessionExpiredKey);
     }
   },
 

@@ -13,19 +13,17 @@ import { get } from '@ember/object';
 import { observer } from '@ember/object';
 import _ from 'lodash';
 import config from 'ember-get-config';
+import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const {
   onedataTabs
 } = config;
 
-function getDefaultResource(list) {
-  return list.objectAt(0);
-}
-
 export default Route.extend({
   globalNotify: service(),
   media: service(),
   guiUtils: service(),
+  sidebarResources: service(),
 
   model() {
     return this.modelFor('onedata.sidebar');
@@ -52,11 +50,18 @@ export default Route.extend({
     }
   }),
 
+  getDefaultResource(list, resourceType) {
+    return sortByProperties(
+      list,
+      this.get('sidebarResources').getItemsSortingFor(resourceType)
+    )[0];
+  },
+
   redirectToDefault({ resourceType, collection }) {
     const guiUtils = this.get('guiUtils');
     const list = get(collection, 'list');
     let resourceIdToRedirect = get(list, 'length') > 0 ?
-      guiUtils.getRoutableIdFor(getDefaultResource(list)) : 'empty';
+      guiUtils.getRoutableIdFor(this.getDefaultResource(list, resourceType)) : 'empty';
     if (resourceIdToRedirect != null) {
       this.transitionTo(`onedata.sidebar.content`, resourceType, resourceIdToRedirect);
     } else {

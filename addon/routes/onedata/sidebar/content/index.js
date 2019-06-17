@@ -17,6 +17,7 @@ import { get } from '@ember/object';
 const SPECIAL_IDS = [
   'empty',
   'new',
+  'add',
   'join',
   'not-selected',
 ];

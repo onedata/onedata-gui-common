@@ -1,4 +1,4 @@
 export default {
-  noResources: 'There are no {{resourceType}} available.',
+  noResources: 'You have no {{resourceType}}.',
   getStarted: 'Get started',
 };

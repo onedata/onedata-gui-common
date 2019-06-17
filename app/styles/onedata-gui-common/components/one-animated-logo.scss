@@ -7,7 +7,7 @@
     position: relative;
     display: inline-block;
     height: $size;
-    background-image: url($root-url + 'assets/images/logo.svg');
+    background-image: url($root-url + 'images/logo.svg');
     background-size: auto 100%;
   }
   .left {
@@ -23,7 +23,7 @@
   .right {
     width: $size * 0.53;
     transition: $frame-time width linear;
-    background-image: url($root-url + 'assets/images/logo.svg');
+    background-image: url($root-url + 'images/logo.svg');
     background-position: -$size * 2.8 0;
     background-repeat: no-repeat;
     .shadow {

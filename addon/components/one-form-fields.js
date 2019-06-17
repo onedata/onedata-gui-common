@@ -22,6 +22,7 @@ const {
  * @property {string} type
  * @property {string} [format=undefined] special string formatting for static fields
  * @property {boolean} [disabled=undefined]
+ * @property {boolean} [hidden=undefined]
  * @property {boolean} [optional=undefined]
  * @property {*} [defaultValue=undefined]
  * @property {string} [label=undefined]
@@ -30,8 +31,12 @@ const {
  * @property {string} [example=undefined]
  * @property {string} [tip=undefined]
  * @property {number} [step=undefined] step in number inputs
+ * @property {Array<Object>} [options=undefined] array of options for inputs like
+ *   radio-group. Each option has fields: value, label
  * @property {string} [rightText=undefined] text that will be shown on
- *   the right side of the input
+ *     the right side of the input
+ * @property {string} [lockHint=undefined] text that will be shown in tooltip
+ *     after hovering locked icon (works only on disabled elements)
  * @property {number|object} [lt=undefined] 'lower than' bounding for number
  *   validator. May be a number or an object in format 
  *   `{
