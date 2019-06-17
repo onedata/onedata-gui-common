@@ -5,7 +5,7 @@
       border: 1px solid $main-border-color;
     }
   }
-  &.static, &.editor.saving {
+  &.static, &.editor.saving, &.editor.without-cancel {
     padding-right: 30px;
   }
   &.editor {
@@ -59,7 +59,7 @@
     color: $main-text-color-disabled;
   }
   @media (max-width: $screen-xs-max) {
-    &.static, &.editor.saving {
+    &.static, &.editor.saving, &.editor.without-cancel {
       padding-right: 40px;
     }
     &.editor {

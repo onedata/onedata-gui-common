@@ -27,7 +27,8 @@ export default Component.extend(I18n, {
   classNameBindings: [
     '_inEditionMode:editor:static',
     '_whileSaving:saving',
-    'controlledManually:manual'
+    'controlledManually:manual',
+    'hideCancelButton:without-cancel'
   ],
 
   i18n: service(),
@@ -78,6 +79,11 @@ export default Component.extend(I18n, {
   inputClasses: '',
 
   /**
+   * @type {boolean}
+   */
+  hideCancelButton: false,
+
+  /**
    * Values used by input while edition.
    * @type {string}.
    */
@@ -112,12 +118,19 @@ export default Component.extend(I18n, {
   onEdit: notImplementedIgnore,
 
   /**
-   * Action called the _inputValue is changed.
+   * Action called when the _inputValue is changed.
    * @type {Function}
    * @param {string} value
    * @returns {undefined}
    */
   onInputValueChanged: notImplementedIgnore,
+
+  /**
+   * Action called when input losts focus
+   * @type {Function}
+   * @returns {undefined}
+   */
+  onLostFocus: notImplementedIgnore,
 
   /**
    * Automatically set to true if the component is rendered in one-collapsible-toolbar
@@ -156,9 +169,12 @@ export default Component.extend(I18n, {
     }
   }),
 
-  inputValueChangedObserver: observer('_inputValue', function inputValueChangedObserver() {
-    this.get('onInputValueChanged')(this.get('_inputValue'));
-  }),
+  inputValueChangedObserver: observer(
+    '_inputValue',
+    function inputValueChangedObserver() {
+      this.get('onInputValueChanged')(this.getEditedValue());
+    }
+  ),
 
   init() {
     this._super(...arguments);
@@ -234,6 +250,15 @@ export default Component.extend(I18n, {
     safeExec(this, 'set', '_inEditionMode', false);
   },
 
+  getEditedValue() {
+    const {
+      _inputValue,
+      trimString,
+    } = this.getProperties('_inputValue', 'trimString');
+    const stringValue = _inputValue || '';
+    return trimString ? stringValue.trim() : stringValue;
+  },
+
   actions: {
     startEdition() {
       const {
@@ -253,24 +278,33 @@ export default Component.extend(I18n, {
       }
     },
     cancelEdition() {
-      this.get('onEdit')(false);
-      if (!this.get('controlledManually')) {
-        this.stopEdition();
+      const {
+        hideCancelButton,
+        onEdit,
+        controlledManually,
+      } = this.getProperties(
+        'hideCancelButton',
+        'onEdit',
+        'controlledManually'
+      );
+      // If cancel button is hidden, then canceling edition using any other
+      // method should be blocked
+      if (!hideCancelButton) {
+        onEdit(false);
+        if (!controlledManually) {
+          this.stopEdition();
+        }
       }
     },
     saveEdition() {
       const {
-        _inputValue,
         onSave,
-        trimString,
         controlledManually,
       } = this.getProperties(
-        '_inputValue',
         'onSave',
-        'trimString',
         'controlledManually'
       );
-      const preparedInputValue = trimString ? _inputValue.trim() : _inputValue;
+      const preparedInputValue = this.getEditedValue();
       this.set('_whileSaving', true);
       onSave(preparedInputValue)
         .then(() => {
