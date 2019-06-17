@@ -14,7 +14,6 @@
 import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { htmlSafe } from '@ember/string';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import { invokeAction, invoke } from 'ember-invoke-action';
