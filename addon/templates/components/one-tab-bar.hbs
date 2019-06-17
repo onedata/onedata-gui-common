@@ -6,7 +6,7 @@
         tabClicked=(action "selectItem" "tabClick" item)
         name=item.name
         icon=item.icon
-        class=(concat item.class " item-" item.id)
+        class=(concat item.elementClass " item-" item.id)
       }}
     {{/each}}
   {{/one-tab-bar/tab-bar-ul}}
@@ -24,7 +24,7 @@
     renderInPlace=true
     as |item|
   }}
-    {{#truncated-string class=(concat "oneprovider-select-item truncate " item.class)}}
+    {{#truncated-string class=(concat "oneprovider-select-item truncate " item.elementClass)}}
       <div class="inline-icon-container">
         {{one-icon icon=item.icon}}
       </div>
