@@ -432,8 +432,8 @@ $token-border-radius: 3px;
 .bs-tab-modern {
   .nav-tabs {
     border-bottom: 0;
-    li {
-      > a {
+    li, .tab-bar-li {
+      > a, .nav-link {
         &,
         &:hover,
         &:focus {
@@ -450,13 +450,13 @@ $token-border-radius: 3px;
         }
       }
     }
-    li.active {
+    li.active, .tab-bar-li.active {
       > a {
         border-bottom-color: $color-one-blue-gray;
         color: $main-text-color;
       }
     }
-    li.disabled {
+    li.disabled, .tab-bar-li.disabled {
       > a {
         color: $main-text-color-disabled;
       }
