@@ -37,12 +37,23 @@ export default Component.extend({
    */
   disabled: false,
 
+  /**
+   * Delta value for artificial scroll event on tab-bar-ul-container
+   * when clicking (or holding) the arrow.
+   * @type {number}
+   */
   moveDelta: 16,
 
+  /**
+   * Interval (ms) for sending artificial scroll event when holding the arrow.
+   * @type {number}
+   */
   moveInterval: 50,
 
-  isMouseDown: false,
-
+  /**
+   * ID of `setInterval` result for sending artificial scroll events.
+   * @type {number}
+   */
   mouseDownInterval: undefined,
 
   directionClass: computed('direction', function directionClass() {

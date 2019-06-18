@@ -11,10 +11,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
-import { get } from '@ember/object';
-import { getOwner } from '@ember/application';
-import { assert } from '@ember/debug';
-
+import { get, computed } from '@ember/object';
 export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
@@ -37,11 +34,6 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    const app = getOwner(this).application;
-    assert(
-      'component:one-tab-bar: no "wheel" support in application customEvents, please add it as described in https://guides.emberjs.com/release/components/handling-events',
-      app.customEvents && app.customEvents.wheel
-    );
     if (!this.get('selectedItem')) {
       this.set('selectedItem', this.get('sortedItems')[0]);
     }
@@ -60,9 +52,11 @@ export default Component.extend({
    * it should return false to stop tab bar change behaviour.
    * @param {object|EmberObject} item
    */
-  selectedItemChanged(item) {
-    this.set('selectedItem', item);
-  },
+  selectedItemChanged: computed(function selectedItemChanged() {
+    return (item) => {
+      this.set('selectedItem', item);
+    };
+  }),
 
   jumpToItem(itemId) {
     const $item = this.$(`.item-${itemId}`);

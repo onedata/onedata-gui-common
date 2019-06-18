@@ -7,9 +7,6 @@ const App = Application.extend({
   modulePrefix: config.modulePrefix,
   podModulePrefix: config.podModulePrefix,
   Resolver,
-  customEvents: Object.freeze({
-    wheel: 'wheel',
-  }),
 });
 
 loadInitializers(App, config.modulePrefix);

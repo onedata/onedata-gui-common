@@ -50,8 +50,9 @@ export default Component.extend(ContentOverFlowdetector, {
   }),
 
   /**
-   * A "long" bar element that contains all tabs which expands horizontally
-   * with tabs (is not scrollable and not cuts the overflow).
+   * A "long" bar element that contains all tabs.
+   * It expands horizontally to contain all tab-bar-li
+   * (is not scrollable and not cuts the overflow).
    * This element will be scrolled inside the container.
    * @type {jQuery}
    */
@@ -64,36 +65,38 @@ export default Component.extend(ContentOverFlowdetector, {
     const $innerScrollContent = this.get('$innerScrollContent')
     const self = this;
     this.addOverflowDetectionListener();
-    const _overflowDetectorListener = this.get('_overflowDetectionListener')
     this.get('_overflowDetectionListener')();
-    this.get('_window').addEventListener('resize', _overflowDetectorListener);
     $innerScrollContent.scroll(function onScrollContent() {
       return self.innerScrollContentScrolled($(this));
     });
     this.innerScrollContentScrolled($innerScrollContent)
+    this.element.addEventListener(
+      'wheel',
+      this.get('wheelEventHandler'), {
+        passive: false
+      }
+    );
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    const _overflowDetectorListener = this.get('_overflowDetectionListener')
-    this.get('_window').removeEventListener('resize', _overflowDetectorListener);
     this.removeOverflowDetectionListener();
+    this.element.removeEventListener(this.get('wheelEventHandler'));
   },
 
   /**
-   * @override Ember customEvent handler
    * @param {WheelEvent} wheelEvent
-   * Intercept vertical scrolling and scroll content vertically.
+   * Intercept vertical scrolling and scroll content horizontally.
    */
-  wheel(wheelEvent) {
-    this._super(...arguments);
-    const originalEvent = wheelEvent.originalEvent;
-    const { deltaX, deltaY } = originalEvent;
-    if (deltaX === 0 && deltaY !== 0) {
-      originalEvent.preventDefault();
-      this.scrollContainer(deltaY);
-    }
-  },
+  wheelEventHandler: computed(function wheelEventHandler() {
+    return (wheelEvent) => {
+      const { deltaX, deltaY } = wheelEvent;
+      if (deltaX === 0 && deltaY !== 0) {
+        wheelEvent.preventDefault();
+        this.scrollContainer(deltaY);
+      }
+    };
+  }),
 
   /**
    * Method to handle scroll event.
