@@ -366,6 +366,12 @@ a {
       color: darken($color-one-mint, 20%);
     }
   }
+  &.azure {
+    color: $color-one-azure;
+    &:hover {
+      color: darken($color-one-azure, 20%);
+    }
+  }
 }
 
 .col-vertical-middle-absolute-right {

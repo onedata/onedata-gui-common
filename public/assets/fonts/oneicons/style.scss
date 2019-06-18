@@ -2,11 +2,10 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qfdhlf');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qfdhlf#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?qfdhlf') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?qfdhlf') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?qfdhlf##{$icomoon-font-family}') format('svg');
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?ffrugp') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?ffrugp') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?ffrugp##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -75,6 +74,61 @@
 .oneicon-ban-left {
   &:before {
     content: $oneicon-ban-left; 
+  }
+}
+.oneicon-browser-copy {
+  &:before {
+    content: $oneicon-browser-copy; 
+  }
+}
+.oneicon-browser-cut {
+  &:before {
+    content: $oneicon-browser-cut; 
+  }
+}
+.oneicon-browser-delete {
+  &:before {
+    content: $oneicon-browser-delete; 
+  }
+}
+.oneicon-browser-distribution {
+  &:before {
+    content: $oneicon-browser-distribution; 
+  }
+}
+.oneicon-browser-info {
+  &:before {
+    content: $oneicon-browser-info; 
+  }
+}
+.oneicon-browser-metadata {
+  &:before {
+    content: $oneicon-browser-metadata; 
+  }
+}
+.oneicon-browser-new-directory {
+  &:before {
+    content: $oneicon-browser-new-directory; 
+  }
+}
+.oneicon-browser-permissions {
+  &:before {
+    content: $oneicon-browser-permissions; 
+  }
+}
+.oneicon-browser-rename {
+  &:before {
+    content: $oneicon-browser-rename; 
+  }
+}
+.oneicon-browser-share {
+  &:before {
+    content: $oneicon-browser-share; 
+  }
+}
+.oneicon-browser-upload {
+  &:before {
+    content: $oneicon-browser-upload; 
   }
 }
 .oneicon-ceph {
@@ -197,6 +251,12 @@
     content: $oneicon-globe-cursor; 
   }
 }
+.oneicon-globe {
+  &:before {
+    content: $oneicon-globe;     
+    color: #555d72;
+  }
+}
 .oneicon-group-add {
   &:before {
     content: $oneicon-group-add; 
@@ -240,11 +300,6 @@
 .oneicon-inbox {
   &:before {
     content: $oneicon-inbox; 
-  }
-}
-.oneicon-index {
-  &:before {
-    content: $oneicon-index; 
   }
 }
 .oneicon-join-plug {
