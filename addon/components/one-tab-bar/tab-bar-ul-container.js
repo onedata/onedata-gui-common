@@ -81,7 +81,7 @@ export default Component.extend(ContentOverFlowdetector, {
   willDestroyElement() {
     this._super(...arguments);
     this.removeOverflowDetectionListener();
-    this.element.removeEventListener(this.get('wheelEventHandler'));
+    this.element.removeEventListener('wheel', this.get('wheelEventHandler'));
   },
 
   /**
