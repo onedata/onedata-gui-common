@@ -1,43 +1,40 @@
 {{!-- TODO make some helper for generating input ids --}}
 
 {{#each fields as |field|}}
-  {{#unless field.hidden}}
+  {{#unless (or field.hidden (and (eq field.type "static") (or (eq (get formValues field.name) undefined) (eq (get formValues field.name) ""))))}}
     {{#bsForm.group 
-      validation=(if field.isInvalid "error" (if field.isValid "success")) 
-      class=(concat-classes "col-xs-12" (concat field.type "-input") (if disabled "disabled") (if field.tip "group-with-tip") field.cssClass (if field.rightText "has-right-text"))}}
-      {{#if (or (eq field.type "checkbox") (eq field.type "radio-group"))}}
+      validation=(if (not-eq field.type "radio-group") (if field.isInvalid "error" (if field.isValid "success"))) 
+      class=(concat-classes
+        "col-xs-12"
+        (concat field.type "-input")
+        (if disabled "disabled")
+        (if field.tip "group-with-tip")
+        field.cssClass
+        (if (eq field.type "static") "form-group-static" "form-group-editable")
+        (if field.rightText "has-right-text")
+        (if field.message "has-message")
+        (if (eq field.type "radio-group") "no-feedback")
+      )}}
+      {{#if (eq field.type "checkbox")}}
         <div class="row toggle-form-row">
           {{#if (not field.nolabel)}}
-            <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label text-right " layoutConfig.formToggleLabelColumns}}>
+            <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label label-column " layoutConfig.formToggleLabelColumns}}>
               {{field.label}}:
               {{#if field.tip}}
                 {{one-label-tip title=field.tip}}
               {{/if}}
             </label>
           {{/if}}
-          <div class={{if field.nolabel layoutConfig.formSubmitColumns layoutConfig.formToggleInputColumns}}>
-            {{#if (eq field.type "checkbox")}}
-              {{one-way-toggle
-                class=(concat "form-control toggle-field-" (dot-to-dash field.name))
-                inputId=(concat parentView.elementId (concat "-" field.name))
-                checked=(get formValues field.name)
-                update=(action "inputChanged" field.name)
-                isReadOnly=(or disabled field.disabled)
-                onFocusOut=(action "onFocusOut" field)
-                lockHint=field.lockHint
-              }}
-            {{else if (eq field.type "radio-group")}}
-              {{one-way-radio-group
-                class=(concat "field-" (dot-to-dash field.name))
-                inputId=(concat parentView.elementId (concat "-" field.name))
-                value=(get formValues field.name)
-                fieldName=field.name
-                options=field.options
-                update=(action "inputChanged" field.name)
-                isReadOnly=(or disabled field.disabled)
-                onFocusOut=(action "onFocusOut" field)
-              }}
-            {{/if}}
+          <div class="form-control-column {{if field.nolabel layoutConfig.formSubmitColumns layoutConfig.formToggleInputColumns}}">
+            {{one-way-toggle
+              class=(concat "form-control toggle-field-" (dot-to-dash field.name))
+              inputId=(concat parentView.elementId (concat "-" field.name))
+              checked=(get formValues field.name)
+              update=(action "inputChanged" field.name)
+              isReadOnly=(or disabled field.disabled)
+              onFocusOut=(action "onFocusOut" field)
+              lockHint=field.lockHint
+            }}
           </div>
         </div>
       {{else if (eq field.type "static")}}
