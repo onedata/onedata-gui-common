@@ -5,8 +5,11 @@
       border: 1px solid $main-border-color;
     }
   }
-  &.static, &.editor.saving, &.editor.without-cancel {
+  &.static, &.editor.saving {
     padding-right: 30px;
+  }
+  &.editor.without-edit-icons {
+    padding-right: 0;
   }
   &.editor {
     padding-right: 55px;
@@ -70,7 +73,7 @@
       visibility: visible;
     }
   }
-  &.manual {
+  &.manual:not(.show-edit-icon) {
     .edit-icon {
       display: none;
     }

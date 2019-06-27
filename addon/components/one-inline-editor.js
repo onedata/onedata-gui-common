@@ -28,7 +28,7 @@ export default Component.extend(I18n, {
     '_inEditionMode:editor:static',
     '_whileSaving:saving',
     'controlledManually:manual',
-    'hideCancelButton:without-cancel'
+    'hideEditIcons:without-edit-icons'
   ],
 
   i18n: service(),
@@ -81,7 +81,13 @@ export default Component.extend(I18n, {
   /**
    * @type {boolean}
    */
-  hideCancelButton: false,
+  hideEditIcons: false,
+
+  /**
+   * If true. editor will not focus input on first render
+   * @type {boolean}
+   */
+  ignoreInitialFocus: false,
 
   /**
    * Values used by input while edition.
@@ -139,6 +145,17 @@ export default Component.extend(I18n, {
   isInToolbar: false,
 
   /**
+   * Turns to true after first render
+   * @type {boolean}
+   */
+  isAfterInitialRender: false,
+
+  /**
+   * @type {string}
+   */
+  inputPlaceholder: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   staticPlaceholder: computed(function staticPlaceholder() {
@@ -181,6 +198,10 @@ export default Component.extend(I18n, {
     if (this.get('isEditing')) {
       this.isEditingObserver();
     }
+    next(() => {
+      // after component initialization fallback to default
+      safeExec(this, 'set', 'isAfterInitialRender', true);
+    });
   },
 
   didInsertElement() {
@@ -224,6 +245,10 @@ export default Component.extend(I18n, {
   },
 
   startEdition() {
+    const {
+      ignoreInitialFocus,
+      isAfterInitialRender,
+    } = this.getProperties('ignoreInitialFocus', 'isAfterInitialRender');
     return new Promise((resolve, reject) => {
       next(() => {
         try {
@@ -233,7 +258,9 @@ export default Component.extend(I18n, {
           });
           next(() => {
             try {
-              safeExec(this, () => this.$('input').focus().select());
+              if (!(ignoreInitialFocus && !isAfterInitialRender)) {
+                safeExec(this, () => this.$('input').focus().select());
+              }
             } catch (error) {
               reject(error);
             }
@@ -279,17 +306,17 @@ export default Component.extend(I18n, {
     },
     cancelEdition() {
       const {
-        hideCancelButton,
+        hideEditIcons,
         onEdit,
         controlledManually,
       } = this.getProperties(
-        'hideCancelButton',
+        'hideEditIcons',
         'onEdit',
         'controlledManually'
       );
       // If cancel button is hidden, then canceling edition using any other
       // method should be blocked
-      if (!hideCancelButton) {
+      if (!hideEditIcons) {
         onEdit(false);
         if (!controlledManually) {
           this.stopEdition();

@@ -5,15 +5,14 @@
     update=(action (mut _inputValue))
     onenter=(action "saveEdition")
     onescape=(action "cancelEdition")
+    placeholder=inputPlaceholder
     onblur=(action onLostFocus)}}
   <span class="action-icons">
     {{#if _whileSaving}}
       {{spin-spinner-block sizeClass="xs"}}
-    {{else}}
+    {{else if (not hideEditIcons)}}
       {{one-icon icon="checked" class="save-icon" click=(action "saveEdition")}}
-      {{#unless hideCancelButton}}
-        {{one-icon icon="ban-left" class="cancel-icon" click=(action "cancelEdition")}}
-      {{/unless}}
+      {{one-icon icon="ban-left" class="cancel-icon" click=(action "cancelEdition")}}
     {{/if}}
   </span>
 {{else}}
