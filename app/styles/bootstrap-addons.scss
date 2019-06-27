@@ -129,7 +129,7 @@ $token-border-radius: 3px;
   .form-group {
     @media (max-width: $screen-xs-max) {
       .form-control-feedback {
-        top: initial;
+        top: 0;
         bottom: 0;
       }
       &.has-message .form-control-feedback  {
