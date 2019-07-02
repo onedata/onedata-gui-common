@@ -20,6 +20,7 @@ $color-one-blue-gray: #4A6089;
 $color-one-gray-sand: #E2E1E0;
 $color-one-dark-blue: #555d72;
 $color-one-light-blue: #E5E9F1;
+$color-one-very-light-blue: lighten(#E5E9F1, 3%);
 $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
 
@@ -40,3 +41,4 @@ $main-tabbed-content-background: #FCFCFC;
 
 $color-directory: #555D72;
 $color-file: #596E99;
+$color-file-selected: $color-one-very-light-blue;

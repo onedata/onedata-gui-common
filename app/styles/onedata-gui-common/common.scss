@@ -592,3 +592,29 @@ textarea[style^="touch-action: manipulation"] {
   bottom: 0;
   left: 0;
 }
+
+// FIXME: maybe move to special file for menu toggle
+
+// FIXME: copied from one-collapsile-toolbar styles
+.menu-toggle {
+  cursor: pointer;
+  &.on-hover:not(:hover) {
+    display: none;
+  }
+  .icon-dot {
+    background-color: $main-text-color;
+    height: 4px;
+    width: 4px;
+    margin-bottom: 4px;
+    border-radius: 100%;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.menu-toggle-hover-parent:hover {
+  .menu-toggle.on-hover {
+    display: block;
+  }
+}
