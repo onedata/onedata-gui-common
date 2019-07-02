@@ -27,6 +27,7 @@ $brand-info-height: $one-list-item-line-height;
 // needs: $main-menu-width
 .app-layout {
   position: absolute;
+  pointer-events: none;
   @include fill-container();
   
   &.with-bottom-bar {
@@ -42,6 +43,14 @@ $brand-info-height: $one-list-item-line-height;
     .col-main-menu {
       display: none !important;
     }
+  }
+
+  > *:not(.app-grid),
+  .app-grid > *:not(.row-app),
+  .row-app > *:not(.col-content),
+  .col-content > *:not(.main-content),
+  .main-content > *:not(.no-pointer-events)  {
+    pointer-events: auto;
   }
   
   .app-grid {

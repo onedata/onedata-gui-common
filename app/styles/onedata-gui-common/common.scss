@@ -592,3 +592,8 @@ textarea[style^="touch-action: manipulation"] {
   bottom: 0;
   left: 0;
 }
+
+.embedded-iframe {
+  border: 0;
+  position: fixed;
+}
