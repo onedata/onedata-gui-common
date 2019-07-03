@@ -2,15 +2,17 @@
  * Application main menu component.
  *
  * @module components/main-menu-column
- * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
+import EmberObject, { observer, set, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/main-menu';
+import { getOwner } from '@ember/application';
 
 export default Component.extend({
   layout,
@@ -48,6 +50,33 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<string>}
    */
   currentItemId: reads('navigationState.activeResourceType'),
+
+  itemsObserver: observer('items', function itemsObserver() {
+    const items = this.get('items');
+
+    const itemsVisibility = EmberObject.create();
+    items.forEach(({ id, visibilityCondition }) => {
+      const conditionEnv = EmberObject.create();
+      if (visibilityCondition !== undefined) {
+        const serviceName = visibilityCondition.split('.')[0];
+        setProperties(conditionEnv, {
+          [serviceName]: getOwner(this).lookup(`service:${serviceName}`),
+          isVisible: reads(visibilityCondition),
+        });
+      } else {
+        set(conditionEnv, 'isVisible', true);
+      }
+
+      set(itemsVisibility, id, conditionEnv);
+    });
+    this.set('itemsVisibility', itemsVisibility);
+  }),
+
+  init() {
+    this._super(...arguments);
+
+    this.itemsObserver();
+  },
 
   actions: {
     itemClicked({ id }) {

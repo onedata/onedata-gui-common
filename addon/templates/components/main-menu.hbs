@@ -1,11 +1,13 @@
 {{#each items as |item|}}
-  {{main-menu-item
-    item=item
-    itemClicked=(action "itemClicked" bubbles=false)
-    isDisabled=item.disabled
-    isFailed=(and isFailedItem (eq currentItemId item.id))
-    isLoading=(and isLoadingItem (eq currentItemId item.id))
-    isActive=(eq currentItemId item.id)
-    isSelected=(eq navigationState.globalSidenavResourceType item.id)
-  }}
+  {{#if (get (get itemsVisibility item.id) "isVisible")}}
+    {{main-menu-item
+      item=item
+      itemClicked=(action "itemClicked" bubbles=false)
+      isDisabled=item.disabled
+      isFailed=(and isFailedItem (eq currentItemId item.id))
+      isLoading=(and isLoadingItem (eq currentItemId item.id))
+      isActive=(eq currentItemId item.id)
+      isSelected=(eq navigationState.globalSidenavResourceType item.id)
+    }}
+  {{/if}}
 {{/each}}

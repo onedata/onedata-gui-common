@@ -8,13 +8,15 @@
   </div>
   <div class="row row-main-menu full-width">
     {{main-menu
-      items=mainMenuItems
-      itemClicked=(action "mainMenuItemClicked")
-    }}
+      items=(reject-by "sticky" mainMenuItems)
+      itemClicked=(action "mainMenuItemClicked")}}
   </div>
 {{/perfect-scrollbar-element}}
 <div class="row row-account-button">
   <div class="groove-border"></div>
+  {{main-menu
+    items=(filter-by "sticky" mainMenuItems)
+    itemClicked=(action "mainMenuItemClicked")}}
   {{user-account-button
     isActive=(eq navigationState.activeResourceType "users")
     onMenuOpened=(action "userAccountPopoverOpened")}}
