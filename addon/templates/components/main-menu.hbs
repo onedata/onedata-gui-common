@@ -1,6 +1,6 @@
 {{#each items as |item|}}
   {{#if (get (get itemsVisibility item.id) "isVisible")}}
-    {{main-menu-item
+    {{component (if item.component item.component "main-menu-item")
       item=item
       itemClicked=(action "itemClicked" bubbles=false)
       isDisabled=item.disabled
