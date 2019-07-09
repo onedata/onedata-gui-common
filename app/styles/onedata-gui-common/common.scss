@@ -364,6 +364,12 @@ a {
       color: darken($color-one-mint, 20%);
     }
   }
+  &.azure {
+    color: $color-one-azure;
+    &:hover {
+      color: darken($color-one-azure, 20%);
+    }
+  }
 }
 
 .col-vertical-middle-absolute-right {
@@ -524,6 +530,7 @@ textarea + .btn-container {
     height: 0;
     padding: 0;
     margin: 0;
+    border: 0;
   }
   
   .data-row {
@@ -583,4 +590,10 @@ textarea[style^="touch-action: manipulation"] {
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+.menu-toggle-hover-parent:hover {
+  .menu-toggle.on-hover {
+    display: block;
+  }
 }

@@ -1,0 +1,37 @@
+// FIXME: copied from collapsible toolbar styles, unify
+.one-menu-toggle {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0 10px;
+  .menu-toggle-frame {
+    padding: 6px;
+    border: 1px solid;
+    border-color: transparent;
+    border-radius: $border-radius-small;
+  }
+  &:hover {
+    .menu-toggle-frame {
+      background-color: $color-sidebar-item-bg;
+      border-color: $color-one-list-item-separator;
+    }
+  }
+  &.on-hover:not(:hover) {
+    display: none;
+  }
+  &[disabled], &.disabled {
+    .icon-dot {
+      background-color: $main-text-color-disabled;
+    }
+  }
+  .icon-dot {
+    background-color: $main-text-color;
+    height: 4px;
+    width: 4px;
+    margin-bottom: 4px;
+    border-radius: 100%;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
