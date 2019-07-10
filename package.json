@@ -66,7 +66,7 @@
     "ember-i18n": "5.1.0",
     "ember-invoke-action": "git+https://github.com/kliput/ember-invoke-action.git#ec5bf575516ef52a2084c33c1719ff25ebf9fc5f",
     "ember-load-initializers": "1.0.0",
-    "ember-lodash": "4.18.0",
+    "ember-lodash": "4.19.4",
     "ember-models-table": "1.13.0",
     "ember-moment": "7.5.0",
     "ember-notify": "5.2.1",
