@@ -146,6 +146,12 @@ $token-border-radius: 3px;
 
 .form-group.group-with-tip {
   @media (min-width: $screen-sm-min) {
+    .toggle-form-row {
+      .control-label .one-label-tip {
+        height: $line-height-computed;
+        line-height: $line-height-computed;
+      }
+    }
     .control-label {
       position: initial;
       .one-label-tip {
