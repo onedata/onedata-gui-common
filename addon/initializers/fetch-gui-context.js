@@ -12,6 +12,7 @@
 
 import { resolve } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import $ from 'jquery';
 
 export function initialize(application) {
   application.guiContextProxy = PromiseObject.create({
