@@ -167,10 +167,8 @@ input {
     .row {
       margin: 0 $padding-large-horizontal;
       padding-left: 0;
+      border-bottom: $table-item-border;
       word-wrap: break-word;
-      @media screen and (max-width: $screen-md) {
-        border-bottom: $table-item-border;
-      }
     }
   }
 }
@@ -532,6 +530,7 @@ textarea + .btn-container {
     height: 0;
     padding: 0;
     margin: 0;
+    border: 0;
   }
   
   .data-row {
@@ -591,6 +590,12 @@ textarea[style^="touch-action: manipulation"] {
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+.menu-toggle-hover-parent:hover {
+  .menu-toggle.on-hover {
+    display: block;
+  }
 }
 
 .embedded-iframe {

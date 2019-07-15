@@ -1,12 +1,24 @@
 <div class="row">
-  <label for={{inputId}} class={{concat "control-label " layoutConfig.formLabelColumns}}>
-    {{concat field.label (if field.optional (concat " " (t "components.oneFormFields.optional") ""))}}:
+  <label for={{inputId}} class={{concat "control-label label-column " layoutConfig.formLabelColumns}}>
+    {{#unless field.nolabel}}
+      {{concat field.label (if field.optional (concat " " (t "components.oneFormFields.optional") ""))}}:
+    {{/unless}}
     {{#if field.tip}}
       {{one-label-tip title=field.tip}}
     {{/if}}
   </label>
-  <div class={{layoutConfig.formInputColumns}}>
-    {{#if (eq field.type "dropdown")}}
+  <div class="form-control-column {{layoutConfig.formInputColumns}}">
+    {{#if (eq field.type "radio-group")}}
+      {{one-way-radio-group
+        class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+        inputId=inputId
+        value=value
+        fieldName=field.name
+        options=field.options
+        update=(action "inputChanged" field.name)
+        isReadOnly=disabled
+        onFocusOut=(action "onFocusOut")}}
+    {{else if (eq field.type "dropdown")}}
       {{#power-select
         options=(map-by "value" field.options)
         selected=value
@@ -14,6 +26,7 @@
         onblur=(action "onFocusOut")
         searchEnabled=false
         renderInPlace=true
+        triggerClass=(concat-classes "one-form-field" (concat "field-" (dot-to-dash field.name)))
         as |optionValue|
       }}
         {{get (find-by "value" optionValue field.options) "label"}}
@@ -28,7 +41,7 @@
         {{component (input-component-name field.type)
           id=inputId
           value=value
-          class=(concat "form-control one-form-field field-" (dot-to-dash field.name))
+          class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
           update=(action "inputChanged" field.name)
           step=field.step
           disabled=disabled
@@ -40,6 +53,6 @@
         {{/if}}
       </div>
     {{/if}}
-    <div class="form-message">{{field.message}}</div>
+    <div class="form-message {{unless field.message "hidden"}}">{{field.message}}</div>
   </div>
 </div>

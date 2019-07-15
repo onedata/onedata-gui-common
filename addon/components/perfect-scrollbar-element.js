@@ -61,6 +61,8 @@ export default Component.extend(PerfectScrollbarMixin, {
   didInsertElement() {
     this._super(...arguments);
 
+    this.get('class');
+
     const {
       onScroll,
       windowResizeHandler,
