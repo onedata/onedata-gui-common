@@ -1,7 +1,24 @@
 /**
+ * Container object for iframe, that will be embedded into Onedata GUI
+ * application. Allows injecting data and share actions.
+ *
+ * @module utils/embedded-iframe
+ * @author Michał Borzęcki
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+/**
+ * Each owner represents and entity, that uses embedded-iframe internally,
+ * so it cannot be closed. There must be at least one owner
+ * to consider embedded-iframe active. Otherwise it will be disposed by
+ * the EmbeddedIframesManager service.
  * @typedef {Object} EmbeddedIframeOwner
  * @property {any} ownerReference
- * @property {HTMLElement} hostElement
+ * @property {HTMLElement} hostElement DOM element, which acts as a place for
+ *   embedded iframe. Iframe will be placed behind this element and resized
+ *   properly. It means that hostElement must passthrough all events to
+ *   the iframe.
  */
 
 import EmberObject, { computed, get, observer } from '@ember/object';
@@ -24,18 +41,21 @@ export default EmberObject.extend({
   /**
    * @virtual
    * @type {string}
+   * Iframe element id
    */
   iframeId: undefined,
 
   /**
    * @virtual
    * @type {Ember.A<EmbeddedIframeOwner>}
+   * Array of owners of this iframe.
    */
   owners: undefined,
 
   /**
    * @virtual
    * @type {string}
+   * Iframe src.
    */
   src: undefined,
 
@@ -70,14 +90,26 @@ export default EmberObject.extend({
   iframeError: undefined,
 
   /**
-   * @type {Ember.ComputedProperty<EmbeddedIframeOwner>}
-   */
-  activeOwner: reads('owners.firstObject'),
-
-  /**
    * @type {Document}
    */
   _document: document,
+
+  /**
+   * @type {Ember.ComputedProperty<Object>}
+   * Mapping actionName -> callback, that will be injected to iframe.
+   */
+  callParentCallbacks: computed(() => ({})),
+
+  /**
+   * @type {Ember.ComputedProperty<Object>}
+   * Shared properties object, that will be injected to iframe.
+   */
+  sharedProperties: computed(() => ({})),
+
+  /**
+   * @type {Ember.ComputedProperty<EmbeddedIframeOwner>}
+   */
+  activeOwner: reads('owners.firstObject'),
 
   /**
    * @type {HTMLIFrameElement}
@@ -104,20 +136,6 @@ export default EmberObject.extend({
   /**
    * @type {Ember.ComputedProperty<Object>}
    */
-  callParentCallbacks: computed(function callParentCallbacks() {
-    return {};
-  }),
-
-  /**
-   * @type {Ember.ComputedProperty<Object>}
-   */
-  sharedProperties: computed(function sharedProperties() {
-    return {};
-  }),
-
-  /**
-   * @type {Ember.ComputedProperty<Object>}
-   */
   parentInfo: computed(
     'guiUtils.softwareVersionDetails',
     function parentInfo() {
@@ -135,6 +153,8 @@ export default EmberObject.extend({
   }),
 
   activeOwnerObserver: observer('activeOwner', function activeOwnerObserver() {
+    // If owner changed, then hostElement also changed so the position of
+    // the iframe must be calculated again.
     this.recalculatePosition();
   }),
 
@@ -237,6 +257,9 @@ export default EmberObject.extend({
     this.get('iframeElement')[sharedObjectName].propertyChanged(name);
   },
 
+  /**
+   * @returns {undefined}
+   */
   iframeOnLoad() {
     try {
       const iframeElement = this.get('iframeElement');
@@ -273,6 +296,13 @@ export default EmberObject.extend({
     }
   },
 
+  /**
+   * Calls action from callParentCallbacks according to iframe rpc data and
+   * then returns the result back to the iframe.
+   * @param {string} method 
+   * @param  {Array<any>} args
+   * @returns {any}
+   */
   callParent(method, ...args) {
     const callParentCallbacks = this.get('callParentCallbacks');
     const callback = callParentCallbacks[method];
@@ -286,6 +316,11 @@ export default EmberObject.extend({
     return callParentCallbacks[method] 
   },
 
+  /**
+   * Places iframe according to the position of active owner host element
+   * (if specified).
+   * @returns {undefined}
+   */
   recalculatePosition() {
     const {
       iframeElement,

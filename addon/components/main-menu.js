@@ -30,6 +30,13 @@ export default Component.extend({
   items: null,
 
   /**
+   * @type {Object}
+   * Containes mapping itemId -> EmberObject, where each EmberObject has
+   * boolean field `isVisible`
+   */
+  itemsVisibility: undefined,
+
+  /**
    * @type {function}
    * @param {string} id
    * @return {undefined}
@@ -54,8 +61,12 @@ export default Component.extend({
   itemsObserver: observer('items', function itemsObserver() {
     const items = this.get('items');
 
+    // Determine items visibility according to `visibilityCondition` property
+    // of each item.
     const itemsVisibility = EmberObject.create();
     items.forEach(({ id, visibilityCondition }) => {
+      // EmberObject dedicated to store needed service injection and property
+      // getter specified in `visibilityCondition`
       const conditionEnv = EmberObject.create();
       if (visibilityCondition !== undefined) {
         const serviceName = visibilityCondition.split('.')[0];
