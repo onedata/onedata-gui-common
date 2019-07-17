@@ -1,0 +1,36 @@
+$color-oneprovider-online: $color-one-mint;
+$color-oneprovider-offline: $color-one-red;
+$color-oneprovider-mixed: $color-one-yellow;
+
+.oneprovider-map-circle {
+  position: relative;
+  border-radius: 50%;
+  border-style: solid;
+  background-color: white;
+  cursor: pointer;
+
+  &.online {
+    border-color: $color-provider-online;
+    color: $color-provider-online;
+  }
+
+  &.offline {
+    border-color: $color-oneprovider-offline;
+    color: $color-oneprovider-offline;
+  }
+
+  &.mixed {
+    border-color: $color-oneprovider-mixed;
+    color: $color-oneprovider-mixed;
+  }
+
+  &.selected {
+    box-shadow: 0px 0px 10px 2px;
+  }
+
+  .one-icon {
+    &::before {
+      @include absolute-align-middle-center();
+    }
+  }
+}

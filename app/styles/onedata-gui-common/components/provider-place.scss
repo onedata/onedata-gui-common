@@ -1,49 +1,8 @@
-$provider-place-circle-size: 64px;
 $color-provider-online: $color-one-mint;
 $color-provider-offline: $color-one-red;
 $popover-provider-details-width: 220px;
 $popover-provider-list-width: 190px;
 $provider-place-drop-height: 306px;
-
-.provider-place {
-  position: relative;
-
-  &.mixed .circle {
-    border-color: $color-one-yellow;
-    color: $color-one-yellow;
-  }
-
-  &.online .circle {
-    border-color: $color-provider-online;
-    color: $color-provider-online;
-  }
-  
-  &.offline .circle {
-    border-color: $color-provider-offline;
-    color: $color-provider-offline;
-  }
-
-  .circle {
-    // initial size
-    width: $provider-place-circle-size;
-    height: $provider-place-circle-size;
-    font-size: ($provider-place-circle-size * 0.75);
-    border-radius: 50%;
-    border-width: 2px;
-    border-style: solid;
-    background-color: white;
-    cursor: pointer;
-
-    .one-icon {
-      &::before {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%) translateX(-50%);
-        left: 50%;
-      }
-    }
-  }
-}
 
 .provider-place-drop {
   $-btn-container-height: 62px;
@@ -369,63 +328,11 @@ $provider-place-drop-height: 306px;
     width: $popover-provider-details-width + $popover-provider-list-width;
   }
 
-  .providers-place-list-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+
+  .oneproviders-selector-popover-content {
+    right: initial;
     width: $popover-provider-list-width;
-    padding: $padding-large-vertical;
     border-right: 1px solid $main-border-color;
     box-sizing: border-box;
-  }
-
-  .providers-place-list-title {
-    font-weight: bold;
-    padding-bottom: $padding-base-vertical;
-    text-transform: uppercase;
-  }
-
-  .search-group {
-    padding-bottom: $padding-base-vertical;
-  }
-
-  .providers-place-list {
-    position: absolute;
-    top: 70px + $padding-large-vertical;
-    bottom: $padding-large-vertical;
-    left: $padding-large-vertical;
-    right: $padding-large-vertical;
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    overflow-y: auto;
-    overflow-x: hidden;
-    .oneicon {
-      position: absolute;
-      top: $padding-small-vertical - 2px;
-      left: 0;
-      font-size: 170%;
-    }
-  }
-
-  .providers-place-list-item {
-    position: relative;
-    padding: 1.2 * $padding-small-vertical 0 1.2 * $padding-small-vertical 2em;
-    &:hover {
-      background-color: $color-one-gray-sand;
-      cursor: pointer;
-    }
-    &.active {
-      font-weight: bold;
-    }
-  }
-
-  .online-icon {
-    color: $color-provider-online;
-  }
-
-  .offline-icon {
-    color: $color-provider-offline;
   }
 }
