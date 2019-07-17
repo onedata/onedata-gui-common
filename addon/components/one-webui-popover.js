@@ -24,7 +24,7 @@ import { computed, observer } from '@ember/object';
 import { run, scheduleOnce, next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-webui-popover';
-import { invoke, invokeAction } from 'ember-invoke-action';
+import { invokeAction } from 'ember-invoke-action';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
@@ -98,7 +98,7 @@ export default Component.extend({
   _scrollObserver: observer(
     'scrollState.lastScrollEvent',
     function _scrollObserver() {
-      invoke(this, 'refresh');
+      this.send('refresh');
     }
   ),
 
@@ -307,7 +307,7 @@ export default Component.extend({
       this._popover({ dismissible: false });
       let submitPromise = invokeAction(this, 'submit');
       submitPromise.finally(() => {
-        invoke(this, 'hide');
+        this.send('hide');
       });
       return submitPromise;
     },
