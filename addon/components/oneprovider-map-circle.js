@@ -23,6 +23,7 @@ export default Component.extend(I18n, {
   attributeBindings: ['style'],
 
   i18n: service(),
+  media: service(),
 
   /**
    * @override

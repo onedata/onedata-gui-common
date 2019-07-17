@@ -1,5 +1,5 @@
 {{one-icon icon=(if representsManyOneproviders "providers" "provider")}}
-{{#if hint}}
+{{#if (and hint (not media.isMobile))}}
   {{one-tooltip placement="bottom" title=hint}}
 {{/if}}
 {{yield}}

@@ -299,16 +299,7 @@ $provider-place-drop-height: 306px;
 
 .webui-popover-provider-place {
   max-width: initial;
-  &.left, &.left-top, &.left-bottom {
-    > .webui-arrow:after {
-      border-left-color: $color-one-semiwhite;
-    }
-  }
-  &.right, &.right-top, &.right-bottom {
-    > .webui-arrow:after {
-      border-right-color: $color-one-semiwhite;
-    }
-  }
+  @include webui-popover-arrow-color($color-one-semiwhite);
 }
 
 .popover-provider-place {
