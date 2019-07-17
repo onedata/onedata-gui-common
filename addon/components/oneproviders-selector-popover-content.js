@@ -33,6 +33,7 @@ export default Component.extend(I18n, {
   oneproviders: undefined,
 
   /**
+   * @virtual
    * @type {Models.Provider}
    */
   selectedOneprovider: undefined,
