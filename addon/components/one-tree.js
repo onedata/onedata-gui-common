@@ -58,7 +58,7 @@ import { invokeAction } from 'ember-invoke-action';
 
 export default Component.extend({
   layout,
-  classNames: ['one-tree', 'collapse-animation', 'collapse-small'],
+  classNames: ['one-tree', 'collapse-animation', 'collapse-medium'],
   classNameBindings: [
     '_isRoot:one-tree-root',
     '_isExpanded::collapse-hidden',
