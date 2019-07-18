@@ -460,7 +460,9 @@ $token-border-radius: 3px;
           border-top: none;
           border-left: 0;
           border-right: 0;
-          border-bottom: 4px solid transparent;
+          border-bottom-width: 4px;
+          border-bottom-style: solid;
+          border-bottom-color: transparent;
           font-weight: bold;
           color: $main-text-color-inactive;
         }
@@ -470,13 +472,13 @@ $token-border-radius: 3px;
       }
     }
     li.active, .tab-bar-li.active {
-      > a {
+      > a, .nav-link {
         border-bottom-color: $color-one-blue-gray;
         color: $main-text-color;
       }
     }
     li.disabled, .tab-bar-li.disabled {
-      > a {
+      > a, .nav-link {
         color: $main-text-color-disabled;
       }
     }

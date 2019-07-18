@@ -1,15 +1,21 @@
 <p>{{tt this "intro"}}</p>
 <h2>{{tt this "details"}}</h2>
 <p>
-  {{tt this "text1" serverType=(tt this serverType)}}
-  <a style="white-space: nowrap;" href={{url}}>{{url}}</a>.
+  {{tt this "text1Prefix"}}
+  {{tt this (concat "text1Suffix." serverType)}}
+</p>
+<p>
+  {{clipboard-line
+    value=connectionUrl
+    size="sm"
+  }}
 </p>
 <p>
   {{tt this "text2"}}
 </p>
 <ul class="info info-condensed info-gray">
   <li>{{tt this "liOffline"}}</li>
-  <li>{{tt this "liCert"}} <a href={{url}}>{{url}}</a>)</li>
+  <li>{{tt this "liCert"}} <a href={{tlsUrl}}>{{tlsUrl}}</a>)</li>
   <li>{{tt this "liDomain"}}</li>
   <li>{{tt this "liNetwork"}}</li>
 </ul>
