@@ -35,7 +35,7 @@ export default Component.extend(I18n, {
    * Typically an API origin of Onepanel or Oneprovider
    * @type {ComputedProperty<string>}
    */
-  connectionUrl: computed('options.url', 'serverType', function url() {
+  connectionUrl: computed('options.url', 'serverType', function connectionUrl() {
     const serverType = this.get('serverType');
     let displayUrl = this.get('options.url');
     if (serverType === 'onepanel') {
