@@ -16,6 +16,10 @@ export const onezoneDefaultClusterId = 'onezone';
 export const onezoneDefaultRootPath =
   `/${onezoneAbbrev}/${onezoneDefaultClusterId}`;
 
+export const onepanelTestImagePath = getTestImagePath('onepanel');
+export const onezoneTestImagePath = getTestImagePath('onezone');
+export const oneproviderTestImagePath = getTestImagePath('oneprovider');
+
 /**
  * @param {string} origin 
  * @param {string} emberPath must be path **without** leading slash, it will be
@@ -23,4 +27,8 @@ export const onezoneDefaultRootPath =
  */
 export function getOnezoneUrl(origin, emberPath = '') {
   return `${origin}${onezoneDefaultRootPath}/i#/${emberPath.replace(/^\//, '')}`
+}
+
+export function getTestImagePath(type) {
+  return `/api/v3/${type}/test_image`;
 }
