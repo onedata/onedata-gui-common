@@ -88,12 +88,12 @@ export default Component.extend(I18n, {
     let styles = ''
     
     if (color) {
-      styles += `color: ${color};border-color: ${color};`;
+      styles += `color: ${color}; border-color: ${color}; `;
     }
 
     const width = mapSize * 0.01 * scale;
     styles +=
-      `border-width: ${width / 15}px;font-size: ${width * 0.75}px;width: ${width}px;height: ${width}px`;
+      `border-width: ${width / 15}px; font-size: ${width * 0.75}px; width: ${width}px; height: ${width}px;`;
     
     return htmlSafe(styles);
   }),

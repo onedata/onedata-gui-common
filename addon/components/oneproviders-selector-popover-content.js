@@ -1,5 +1,5 @@
 /**
- * Shows list o Oneproviders, that should be placed inside popover. Allows
+ * Shows list of Oneproviders, that should be placed inside popover. Allows
  * selecting and filtering.
  *
  * @module components/oneproviders-selector-popover-content

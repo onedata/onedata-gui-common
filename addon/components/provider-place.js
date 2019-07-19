@@ -99,16 +99,16 @@ export default Component.extend(I18n, {
    * Provider status
    * @type {computed.string}
    */
-  status: computed('providersArray.@each.status', function () {
+  status: computed('providersArray.@each.status', function status() {
     const providersArray = this.get('providersArray');
-    const status = [];
+    const statuses = [];
     providersArray.forEach(provider => {
       const s = get(provider, 'status');
-      if (status.indexOf(s) === -1) {
-        status.push(s);
+      if (statuses.indexOf(s) === -1) {
+        statuses.push(s);
       }
     });
-    return status.length > 1 ? 'mixed' : status[0];
+    return statuses.length > 1 ? 'mixed' : statuses[0];
   }),
 
   /**
