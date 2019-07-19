@@ -58,30 +58,33 @@ export default Component.extend({
    */
   currentItemId: reads('navigationState.activeResourceType'),
 
-  itemsObserver: observer('items', function itemsObserver() {
-    const items = this.get('items');
+  itemsObserver: observer(
+    'items.@each.{id,visibilityCondition}',
+    function itemsObserver() {
+      const items = this.get('items');
 
-    // Determine items visibility according to `visibilityCondition` property
-    // of each item.
-    const itemsVisibility = EmberObject.create();
-    items.forEach(({ id, visibilityCondition }) => {
-      // EmberObject dedicated to store needed service injection and property
-      // getter specified in `visibilityCondition`
-      const conditionEnv = EmberObject.create();
-      if (visibilityCondition !== undefined) {
-        const serviceName = visibilityCondition.split('.')[0];
-        setProperties(conditionEnv, {
-          [serviceName]: getOwner(this).lookup(`service:${serviceName}`),
-          isVisible: reads(visibilityCondition),
-        });
-      } else {
-        set(conditionEnv, 'isVisible', true);
-      }
+      // Determine items visibility according to `visibilityCondition` property
+      // of each item.
+      const itemsVisibility = EmberObject.create();
+      items.forEach(({ id, visibilityCondition }) => {
+        // EmberObject dedicated to store needed service injection and property
+        // getter specified in `visibilityCondition`
+        const conditionEnv = EmberObject.create();
+        if (visibilityCondition !== undefined) {
+          const serviceName = visibilityCondition.split('.')[0];
+          setProperties(conditionEnv, {
+            [serviceName]: getOwner(this).lookup(`service:${serviceName}`),
+            isVisible: reads(visibilityCondition),
+          });
+        } else {
+          set(conditionEnv, 'isVisible', true);
+        }
 
-      set(itemsVisibility, id, conditionEnv);
-    });
-    this.set('itemsVisibility', itemsVisibility);
-  }),
+        set(itemsVisibility, id, conditionEnv);
+      });
+      this.set('itemsVisibility', itemsVisibility);
+    }
+  ),
 
   init() {
     this._super(...arguments);

@@ -9,7 +9,7 @@
  */
 
 /**
- * Each owner represents and entity, that uses embedded-iframe internally,
+ * Each owner represents an entity, that uses embedded-iframe internally,
  * so it cannot be closed. There must be at least one owner
  * to consider embedded-iframe active. Otherwise it will be disposed by
  * the EmbeddedIframesManager service.
@@ -66,6 +66,9 @@ export default EmberObject.extend({
   iframeClass: '',
 
   /**
+   * A string that describes type/purpose of this iframe. It is optional and
+   * has only informational sense. Usually it will describe application inside
+   * iframe and/or location.
    * @virtual
    * @type {string}
    */
@@ -152,11 +155,14 @@ export default EmberObject.extend({
     return (...args) => this.iframeOnLoad(...args);
   }),
 
-  activeOwnerObserver: observer('activeOwner', function activeOwnerObserver() {
-    // If owner changed, then hostElement also changed so the position of
-    // the iframe must be calculated again.
-    this.recalculatePosition();
-  }),
+  activeOwnerObserver: observer(
+    'activeOwner.hostElement',
+    function activeOwnerObserver() {
+      // If owner changed, then hostElement also changed so the position of
+      // the iframe must be calculated again.
+      this.recalculatePosition();
+    }
+  ),
 
   srcObserver: observer('src', function srcObserver() {
     const {
@@ -173,12 +179,12 @@ export default EmberObject.extend({
     });
   }),
 
-  iframeClassObserver: observer(
+  iframeClassModifier: observer(
     'iframeClass',
     'iframeIsLoading',
     'iframeError',
     'activeOwner.hostElement',
-    function iframeClassObserver() {
+    function iframeClassModifier() {
       const {
         iframeElement,
         iframeClass,
@@ -222,7 +228,7 @@ export default EmberObject.extend({
     this.setSharedProperty('parentInfo', parentInfo);
 
     this.srcObserver();
-    this.iframeClassObserver();
+    this.iframeClassModifier();
     this.activeOwnerObserver();
   },
 
@@ -307,13 +313,12 @@ export default EmberObject.extend({
     const callParentCallbacks = this.get('callParentCallbacks');
     const callback = callParentCallbacks[method];
     if (typeof callback === 'function') {
-      callback(...args);
+      return callback(...args);
     } else {
       throw new Error(
         `embedded-iframe: no such action: ${method}`
       );
     }
-    return callParentCallbacks[method] 
   },
 
   /**

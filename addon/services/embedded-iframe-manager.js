@@ -40,7 +40,11 @@ export default Service.extend(WindowResizeHandler, {
       const embeddedIframes = this.get('embeddedIframes');
       const orphanedIframes = embeddedIframes.rejectBy('activeOwner');
       embeddedIframes.removeObjects(orphanedIframes);
-      orphanedIframes.invoke('destroy');
+      try {
+        orphanedIframes.invoke('destroy');
+      } catch (e) {
+        console.error(e);
+      }
     }
   ),
 
@@ -59,7 +63,7 @@ export default Service.extend(WindowResizeHandler, {
         [...embeddedIframesContainer.querySelectorAll('.embedded-iframe')];
       const newIframeNodes = embeddedIframes.mapBy('iframeElement');
 
-      // remove orphaned iframes from DOM and add just added iframes
+      // remove deleted iframes from DOM and add just added iframes
       _.difference(existingIframeNodes, newIframeNodes)
         .forEach(iframe => iframe.remove());
       _.difference(newIframeNodes, existingIframeNodes)
