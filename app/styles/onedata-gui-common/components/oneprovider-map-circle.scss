@@ -12,20 +12,35 @@ $color-oneprovider-mixed: $color-one-yellow;
   &.online {
     border-color: $color-provider-online;
     color: $color-provider-online;
+    &.selected {
+      background-color: $color-provider-online;
+    }
   }
 
   &.offline {
     border-color: $color-oneprovider-offline;
     color: $color-oneprovider-offline;
+    &.selected {
+      background-color: $color-oneprovider-offline;
+    }
   }
 
   &.mixed {
     border-color: $color-oneprovider-mixed;
     color: $color-oneprovider-mixed;
+    &.selected {
+      background-color: $color-oneprovider-mixed;
+    }
   }
 
   &.selected {
-    box-shadow: 0px 0px 10px 2px;
+    box-shadow: 0px 0px 15px 4px;
+    .one-icon {
+      // Override color in .one-icon, to preserve original color in
+      // .oneprovider-map-circle, because the latter is a fallback color for
+      // not defined box-shadow color.
+      color: $color-one-white;
+    }
   }
 
   .one-icon {

@@ -79,16 +79,20 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  style: computed('color', 'scale', 'mapSize', function style() {
+  style: computed('color', 'scale', 'mapSize', 'isSelected', function style() {
     const {
       color,
       scale,
       mapSize,
-    } = this.getProperties('color', 'scale', 'mapSize');
+      isSelected,
+    } = this.getProperties('color', 'scale', 'mapSize', 'isSelected');
     let styles = ''
     
     if (color) {
       styles += `color: ${color}; border-color: ${color}; `;
+      if (isSelected) {
+        styles += `background-color: ${color}; `;
+      }
     }
 
     const width = mapSize * 0.01 * scale;
