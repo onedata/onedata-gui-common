@@ -63,7 +63,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         padding-top: 0;
         h1 {
           font-size: $content-header-font-size;
-          font-family: 'Open Sans Semibold';
+          @include font-semibold();
           line-height: $onedata-logo-height;
           font-weight: normal;
           .btn-toolbar button {
@@ -99,7 +99,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
 
     h1 {
       font-size: $font-size-base;
-      font-weight: bold;
+      @include font-bold();
       text-transform: uppercase;
       line-height: 2.5;
       letter-spacing: $letter-spacing-base;
@@ -150,7 +150,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       margin-bottom: $content-row-vertical-padding * 2;
       text-align: center;
       font-size: $font-size-base;
-      font-family: 'Open Sans Semibold';
+      @include font-semibold();
       font-weight: normal;
       text-transform: uppercase;
     }
@@ -192,7 +192,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       
       strong {
         font-weight: normal;
-        font-family: 'Open Sans Semibold'
+        @include font-semibold();
       }
     }
   }

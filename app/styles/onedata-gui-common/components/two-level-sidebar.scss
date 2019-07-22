@@ -1,6 +1,6 @@
 .two-level-sidebar {
   font-size: 13px;
-  font-family: 'Open Sans Semibold';
+  @include font-semibold();
   padding-bottom: 20px;
 
   .active > .item-header > a, .active > a {
@@ -13,7 +13,7 @@
   }
 
   input {
-    font-family: 'Open Sans';
+    @include font-regular();
   }
 
   .one-list-wrapper {
@@ -54,7 +54,7 @@
         }
         .sidebar-item-title-lower {
           color: $main-text-color;
-          font-family: 'Open Sans';
+          @include font-regular();
           opacity: 0.5;
           top: -7px;
         }

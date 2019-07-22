@@ -47,7 +47,7 @@
   h1 {
     margin-bottom: 1em;
     margin-top: 0;
-    font-weight: bold;
+    @include font-bold();
     font-size: 27pt;
     text-transform: uppercase;
   }

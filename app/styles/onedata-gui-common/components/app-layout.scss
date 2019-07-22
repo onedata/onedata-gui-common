@@ -140,7 +140,7 @@ $brand-info-height: $one-list-item-line-height;
       padding: 0 $padding-small-horizontal;
       line-height: $mobile-top-height;
       font-size: 0.9em;
-      font-weight: bold;
+      @include font-bold();
       text-align: center;
       &::first-letter {
         text-transform: uppercase;

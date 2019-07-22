@@ -8,14 +8,14 @@
   </div>
   <div class="row row-main-menu full-width">
     {{main-menu
-      items=(reject-by "sticky" mainMenuItems)
+      items=(reject-by "stickyBottom" mainMenuItems)
       itemClicked=(action "mainMenuItemClicked")}}
   </div>
 {{/perfect-scrollbar-element}}
 <div class="row row-account-button">
   <div class="groove-border"></div>
   {{main-menu
-    items=(filter-by "sticky" mainMenuItems)
+    items=(filter-by "stickyBottom" mainMenuItems)
     itemClicked=(action "mainMenuItemClicked")}}
   {{user-account-button
     isActive=(eq navigationState.activeResourceType "users")

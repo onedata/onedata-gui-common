@@ -1,7 +1,7 @@
 .main-menu-item {
   text-transform: uppercase;
   // TODO: tmp
-  font-family: 'Open Sans Semibold';
+  @include font-semibold();
   font-size: 13px;
   letter-spacing: $letter-spacing-base;
   white-space: nowrap;

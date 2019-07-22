@@ -417,7 +417,7 @@ $token-border-radius: 3px;
       > a {
         padding: $padding-large-vertical $padding-large-horizontal;
         border-radius: $border-radius-small $border-radius-small 0 0;
-        font-weight: bold;
+        @include font-bold();
         color: $main-text-color-inactive;
       }
     }
@@ -461,7 +461,7 @@ $token-border-radius: 3px;
           border-left: 0;
           border-right: 0;
           border-bottom: 4px solid transparent;
-          font-weight: bold;
+          @include font-bold();
           color: $main-text-color-inactive;
         }
         &:hover {
