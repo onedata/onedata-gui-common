@@ -116,7 +116,7 @@ $-tile-separator-color: #dcdcdc;
     padding: 0px;
     margin: 0px;
     text-transform: uppercase;
-    font-weight: bold;
+    @include font-bold();
     text-align: left;
   }
 
@@ -146,14 +146,14 @@ $-tile-separator-color: #dcdcdc;
         .one-label {
           display: block;
           padding-top: 20px;
-          font-weight: bold;
+          @include font-bold();
         }
       }
     }
   }
 
   .large-text {
-    font-weight: bold;
+    @include font-bold();
     text-align: center;
   }
   

@@ -28,7 +28,7 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
     $mobile-view-breakpoint: $screen-sm-min + 100px;
 
     .list-title {
-      font-weight: bold;
+      @include font-bold();
       text-transform: uppercase;
     }
 

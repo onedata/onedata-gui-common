@@ -58,7 +58,7 @@ $provider-place-drop-height: 306px;
       padding: $padding-large-horizontal $padding-large-vertical;
       color: $color-one-white;
       .provider-label {
-        font-weight: bold;
+        @include font-bold();
       }
       .provider-label-secondary {
         position: absolute;
@@ -154,7 +154,7 @@ $provider-place-drop-height: 306px;
       }
 
       .provider-label {
-        font-weight: bold;
+        @include font-bold();
       }
       .provider-label-secondary {
         position: absolute;
