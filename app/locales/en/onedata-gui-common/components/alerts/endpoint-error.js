@@ -4,7 +4,11 @@ export default {
   onepanel: 'Onepanel',
   intro: 'This might be a temporary problem, please try again in a few minutes.',
   details: 'Details',
-  text1: 'Cannot establish a connection to the {{serverType}} server at',
+  text1Prefix: 'Cannot establish a connection to the',
+  text1Suffix: {
+    oneprovider: 'Oneprovider server at:',
+    onepanel: 'Onepanel API endpoint at:',
+  },
   text2: 'Please consider checking your network settings. The reason for this error can be one of the following:',
   liOffline: 'The {{serverType}} server is offline',
   liCert: 'The TLS certificate of the server is not trusted by your browser (verify by visiting',

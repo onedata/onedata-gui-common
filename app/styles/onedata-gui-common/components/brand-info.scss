@@ -52,8 +52,7 @@
   }
 
   .brand-logout {
-    position: absolute;
-    top: -8px;
+    @include vertical-align-middle;
     right: 0;
     .brand-logout-icon {
       font-size: 32px;
@@ -91,6 +90,7 @@
     width: 100%;
     .brand-info-version-hint {
       left: 260px;
+      right: auto;
     }
     .truncate-brand-text {
       max-width: 200px;
