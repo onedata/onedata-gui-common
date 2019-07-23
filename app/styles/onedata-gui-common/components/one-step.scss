@@ -87,7 +87,7 @@ $max-steps: 10;
     text-transform: capitalize;
     margin-top: $step-circle-size * 0.5;
     color: $color-one-step-inactive;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     font-size: $font-size-small;
     white-space: nowrap;
   }

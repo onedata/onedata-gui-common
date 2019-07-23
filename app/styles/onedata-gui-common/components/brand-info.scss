@@ -41,7 +41,7 @@
   }
 
   .brand-name {
-    font-weight: bold;
+    @include font-bold();
   }
 
   .brand-type-version {

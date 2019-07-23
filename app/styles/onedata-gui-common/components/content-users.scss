@@ -28,7 +28,7 @@
   }
   .account-type {
     font-size: 110%;
-    font-weight: bold;
+    @include font-bold();
   }
   .account-email {
     margin-top: $padding-base-vertical;
