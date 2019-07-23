@@ -419,7 +419,7 @@ $brand-info-height: $one-list-item-line-height;
 .col-main-menu {
   .main-menu.sidenav-opened {
     .one-list-item.main-menu-item.enabled {
-      &.active > .item-header {
+      &.active:not(.selected) {
         background-color: #666161;
       }
     }
@@ -432,11 +432,9 @@ $brand-info-height: $one-list-item-line-height;
     &.enabled {
       &.active,
       &.selected {
-        >.item-header {
-          color: $color-main-menu-fg-active;
-          background-color: $color-one-main;
-          @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
-        }
+        background-color: $color-one-main;
+        color: $color-main-menu-fg-active;
+        @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
         &:hover {
           background-color: darken($color-one-main, 10%);
         }
@@ -445,12 +443,10 @@ $brand-info-height: $one-list-item-line-height;
         }
       }
       &.loading {
-        >.item-header {
-          @extend .animated;
-          @extend .infinite;
-          @extend .slow;
-          @extend .pulse-bg-one-main;
-        }
+        @extend .animated;
+        @extend .infinite;
+        @extend .slow;
+        @extend .pulse-bg-one-main;
       }
       &:hover {
         >.item-header {
