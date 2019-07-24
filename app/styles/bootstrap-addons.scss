@@ -417,7 +417,7 @@ $token-border-radius: 3px;
       > a {
         padding: $padding-large-vertical $padding-large-horizontal;
         border-radius: $border-radius-small $border-radius-small 0 0;
-        font-weight: bold;
+        @include font-bold();
         color: $main-text-color-inactive;
       }
     }
@@ -460,8 +460,10 @@ $token-border-radius: 3px;
           border-top: none;
           border-left: 0;
           border-right: 0;
-          border-bottom: 4px solid transparent;
-          font-weight: bold;
+          border-bottom-width: 4px;
+          border-bottom-style: solid;
+          border-bottom-color: transparent;
+          @include font-bold();
           color: $main-text-color-inactive;
         }
         &:hover {
@@ -470,13 +472,13 @@ $token-border-radius: 3px;
       }
     }
     li.active, .tab-bar-li.active {
-      > a {
+      > a, .nav-link {
         border-bottom-color: $color-one-blue-gray;
         color: $main-text-color;
       }
     }
     li.disabled, .tab-bar-li.disabled {
-      > a {
+      > a, .nav-link {
         color: $main-text-color-disabled;
       }
     }

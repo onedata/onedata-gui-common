@@ -1,7 +1,6 @@
 /* eslint-env node */
 'use strict';
 
-var fs = require('fs');
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 const colors = require('./addon/colors').default;
 const defineSassColors = require('./addon/utils/define-sass-colors');
@@ -48,21 +47,6 @@ module.exports = function (defaults) {
 
   defineSassColors(app, colors);
   defineSassBreakpoints(app, breakpointValues);
-
-  // Generate app-config.json for environment that is used.
-  // Currently app-config.json is always overwritten on build.
-  var onedataAppConfig = {
-    debug: !app.isProduction,
-  };
-  fs.writeFile(
-    'public/app-config.json',
-    JSON.stringify(onedataAppConfig),
-    function (err) {
-      if (err) {
-        return console.error('Error on writing app-config.json: ' + err);
-      }
-    }
-  );
 
   /*
     This build file specifies the options for the dummy test app of this

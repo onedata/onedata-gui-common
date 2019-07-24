@@ -69,7 +69,6 @@ describe('Integration | Component | provider place', function () {
       entityId: '1',
       name: 'provider1',
       status: 'online',
-      isStatusValid: true,
       spaceList: EmberObject.create({
         isLoaded: true,
         list: Promise.resolve(spaces),
@@ -89,12 +88,6 @@ describe('Integration | Component | provider place', function () {
     const $providerPlace = this.$('.provider-place');
     expect($providerPlace).to.exist;
     expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
-  });
-
-  it('shows provider status as "offline" if isStatusValid==false', function () {
-    this.set('provider.isStatusValid', false);
-    this.render(hbs `{{provider-place provider=provider}}`);
-    expect(this.$('.provider-place')).to.have.class('offline');
   });
 
   it('resizes with parent one-atlas component', function () {
@@ -158,9 +151,9 @@ describe('Integration | Component | provider place', function () {
 
     click('.circle').then(() => {
       const dropContainer = $('.provider-place-drop-container');
-      expect(dropContainer.find('.providers-place-list-item'))
+      expect(dropContainer.find('.oneproviders-list-item'))
         .to.have.length(2);
-      expect(dropContainer.find('.providers-place-list-item.active')).to.exist;
+      expect(dropContainer.find('.oneproviders-list-item.active')).to.exist;
       done();
     });
   });

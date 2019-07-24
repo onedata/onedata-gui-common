@@ -25,6 +25,8 @@ import endpointError from './onedata-gui-common/components/alerts/endpoint-error
 import brandInfo from './onedata-gui-common/components/brand-info';
 import userCredentialsForm from './onedata-gui-common/components/user-credentials-form';
 import loginLayout from './onedata-gui-common/components/login-layout';
+import oneproviderMapCircle from './onedata-gui-common/components/oneprovider-map-circle';
+import oneprovidersSelectorPopoverContent from './onedata-gui-common/components/oneproviders-selector-popover-content';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -65,6 +67,8 @@ const translations = {
     jsonEditor,
     userCredentialsForm,
     loginLayout,
+    oneproviderMapCircle,
+    oneprovidersSelectorPopoverContent,
     alerts: {
       endpointError,
     },

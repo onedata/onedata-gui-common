@@ -1,12 +1,12 @@
 $table-item-border: 1px solid $main-border-color;
 
 h5 {
-  font-weight: bold;
+  @include font-bold();
 }
 
 strong {
   font-weight: normal;
-  font-family: "Open Sans Semibold";
+  @include font-semibold();
 }
 
 .horizontal-align-middle {
@@ -61,7 +61,7 @@ strong {
 }
 
 .semibold {
-  font-family: 'Open Sans Semibold';
+  @include font-semibold();
 }
 
 .relative {

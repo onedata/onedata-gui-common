@@ -227,6 +227,6 @@
   }
 
   .modified-node-label {
-    font-weight: bold;
+    @include font-bold();
   }
 }

@@ -103,7 +103,7 @@ $chart-tooltip-arrow-size: 20px;
     .chart-tooltip-title {
       text-align: center;
       padding: $chart-tooltip-padding $chart-tooltip-padding 0 $chart-tooltip-padding;
-      font-family: 'Open Sans Semibold';
+      @include font-semibold();
     }
     .ct-legend {
       padding: $chart-tooltip-padding ($chart-tooltip-padding + 2px);

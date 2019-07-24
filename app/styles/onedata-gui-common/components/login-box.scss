@@ -1,7 +1,7 @@
 .login-box {
   h1, .row-login-header h4 {
     text-align: center;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     font-size: 28px;
     letter-spacing: $letter-spacing-base;
   }
@@ -20,7 +20,7 @@
       padding-top: 20px;
       padding-left: 10px;
       vertical-align: top;
-      font-weight: bold;
+      @include font-bold();
       text-align: left;
       .login-main-title {
         padding-left: 35px;
@@ -145,7 +145,7 @@
     background-color: rgba($color-one-blue-gray, 0.3);
     border: 1px solid lighten($color-one-blue-gray, 15%);
     text-align: left;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     word-wrap: break-word;
     @media (min-width: $screen-sm-min) {
       width: $screen-sm-min - 2 * $padding-base-horizontal;
@@ -193,7 +193,7 @@
   &.more {
     background-color: white;
     color: $color-one-dark-gray;
-    font-weight: bold;    
+    @include font-bold();
     &:hover {
       color: $color-one-dark-gray;
     }
@@ -262,7 +262,7 @@
     margin-top: 20px;
     margin-bottom: 100px;
     color: $color-one-white;
-    font-weight: bold;
+    @include font-bold();
 
     @media(max-height: 600px) {
       margin-bottom: 50px;
@@ -276,7 +276,7 @@
   h2 {
     margin: 0px 20px 20px 20px;
     font-size: 12pt;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     text-align: center;
     .subtitle-tip {
       position: relative;

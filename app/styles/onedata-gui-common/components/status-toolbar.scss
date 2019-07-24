@@ -40,8 +40,7 @@ $status-toolbar-height: 20px;
         transform: translateX(-50%);
         white-space: nowrap;
         font-size: 40%;
-        font-weight: bold;
-        font-family: 'Open Sans';
+        @include font-bold();
         color: $color-one-white;
       }
     }

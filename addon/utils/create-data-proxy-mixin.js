@@ -39,7 +39,7 @@
 import Mixin from '@ember/object/mixin';
 import { classify, camelize } from '@ember/string';
 import { reads } from '@ember/object/computed';
-import { computed, set } from '@ember/object';
+import { get, computed, set } from '@ember/object';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
@@ -71,18 +71,22 @@ export default function createDataProxyMixin(name, options) {
      */
     [updateDataProxyName]({ replace = false, fetchArgs = [] } = {}) {
       const promise = this[fetchDataName](...fetchArgs);
-      if (replace && this.get(`${internalDataProxyName}.content`)) {
-        const proxy = this.get(internalDataProxyName);
-        set(proxy, 'promise', promise);
-        return proxy;
+      const internalDataProxy = this.get(internalDataProxyName);
+      if (internalDataProxy && get(internalDataProxy, 'isPending')) {
+        return internalDataProxy;
       } else {
-        return safeExec(
-          this,
-          'set',
-          internalDataProxyName,
-          (_options.type === 'array' ? PromiseArray : PromiseObject)
-          .create({ promise })
-        );
+        if (replace && this.get(`${internalDataProxyName}.content`)) {
+          set(internalDataProxy, 'promise', promise);
+          return internalDataProxy;
+        } else {
+          return safeExec(
+            this,
+            'set',
+            internalDataProxyName,
+            (_options.type === 'array' ? PromiseArray : PromiseObject)
+            .create({ promise })
+          );
+        }
       }
     },
 

@@ -16,7 +16,7 @@
   }
   .property-name {
     width: 85px;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
   }
   .resource-name {
     $-v-correction: 9px;

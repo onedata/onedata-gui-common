@@ -88,6 +88,10 @@ $disabled-opacity: 0.6;
 
 @import 'ember-power-select-config';
 
+// Utils
+
+@import 'onedata-gui-common/utils/embedded-iframe.scss';
+
 // Components
 
 @import 'onedata-gui-common/components/one-webui-popover';
@@ -155,4 +159,6 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-tab-bar';
 @import 'onedata-gui-common/components/json-editor';
 @import 'onedata-gui-common/components/one-menu-toggle.scss';
+@import 'onedata-gui-common/components/oneprovider-map-circle';
+@import 'onedata-gui-common/components/oneproviders-selector-popover-content';
 @import 'onedata-gui-common/components/privileges-tree-editor';
