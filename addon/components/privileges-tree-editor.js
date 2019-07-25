@@ -10,10 +10,13 @@
 import Component from '@ember/component';
 import { A } from '@ember/array';
 import { computed, observer } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import layout from 'onedata-gui-common/templates/components/privileges-tree-editor';
 
 export default Component.extend({
+  layout,
   classNames: ['privileges-tree-editor'],
 
   i18n: service(),
@@ -45,6 +48,12 @@ export default Component.extend({
    * @type {Object}
    */
   overridePrivileges: undefined,
+
+  /**
+   * State of privileges used to calculate modificaton state of tree
+   * @type {Ember.ComputedProperty<Object>}
+   */
+  comparePrivileges: reads('overridePrivileges'),
 
   /**
    * If false, edition will be not available.

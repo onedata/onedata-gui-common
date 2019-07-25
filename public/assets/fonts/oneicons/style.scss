@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qiub2r');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qiub2r#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?qiub2r') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?qiub2r') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?qiub2r##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?3wwp91');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?3wwp91#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?3wwp91') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?3wwp91') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?3wwp91##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -66,11 +66,6 @@
     content: $oneicon-arrow-up; 
   }
 }
-.oneicon-attribute {
-  &:before {
-    content: $oneicon-attribute; 
-  }
-}
 .oneicon-ban-left-thin {
   &:before {
     content: $oneicon-ban-left-thin;     
@@ -80,6 +75,81 @@
 .oneicon-ban-left {
   &:before {
     content: $oneicon-ban-left; 
+  }
+}
+.oneicon-browser-attribute {
+  &:before {
+    content: $oneicon-browser-attribute; 
+  }
+}
+.oneicon-browser-copy {
+  &:before {
+    content: $oneicon-browser-copy; 
+  }
+}
+.oneicon-browser-cut {
+  &:before {
+    content: $oneicon-browser-cut; 
+  }
+}
+.oneicon-browser-delete {
+  &:before {
+    content: $oneicon-browser-delete; 
+  }
+}
+.oneicon-browser-directory {
+  &:before {
+    content: $oneicon-browser-directory; 
+  }
+}
+.oneicon-browser-distribution {
+  &:before {
+    content: $oneicon-browser-distribution; 
+  }
+}
+.oneicon-browser-file {
+  &:before {
+    content: $oneicon-browser-file; 
+  }
+}
+.oneicon-browser-info {
+  &:before {
+    content: $oneicon-browser-info; 
+  }
+}
+.oneicon-browser-metadata {
+  &:before {
+    content: $oneicon-browser-metadata; 
+  }
+}
+.oneicon-browser-new-directory {
+  &:before {
+    content: $oneicon-browser-new-directory; 
+  }
+}
+.oneicon-browser-permission {
+  &:before {
+    content: $oneicon-browser-permission; 
+  }
+}
+.oneicon-browser-permissions {
+  &:before {
+    content: $oneicon-browser-permissions; 
+  }
+}
+.oneicon-browser-rename {
+  &:before {
+    content: $oneicon-browser-rename; 
+  }
+}
+.oneicon-browser-share {
+  &:before {
+    content: $oneicon-browser-share; 
+  }
+}
+.oneicon-browser-upload {
+  &:before {
+    content: $oneicon-browser-upload; 
   }
 }
 .oneicon-ceph {
@@ -200,6 +270,12 @@
 .oneicon-globe-cursor {
   &:before {
     content: $oneicon-globe-cursor; 
+  }
+}
+.oneicon-globe {
+  &:before {
+    content: $oneicon-globe;     
+    color: #555d72;
   }
 }
 .oneicon-group-add {
@@ -415,11 +491,6 @@
 .oneicon-password-change {
   &:before {
     content: $oneicon-password-change; 
-  }
-}
-.oneicon-permission {
-  &:before {
-    content: $oneicon-permission; 
   }
 }
 .oneicon-permissions {
