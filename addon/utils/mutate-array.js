@@ -20,7 +20,6 @@ export default function mergeNewItems(orig, update, compare, deep = true) {
 
     const toRemove = [];
     for (let i = 0; i < orig.length; i++) {
-      /* jshint loopfunc: true */
       const uitem = orig[i];
       const eindex = _.findIndex(update, oitem => compare(oitem, uitem));
       if (eindex === -1) {
