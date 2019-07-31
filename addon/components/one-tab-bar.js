@@ -12,9 +12,13 @@ import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+
 export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
+
+  media: service(),
 
   /**
    * Array of items representing each tab. Properties of each:
@@ -27,6 +31,8 @@ export default Component.extend({
   items: undefined,
 
   selectedItem: undefined,
+
+  tabsOverflow: undefined,
 
   itemsSorting: Object.freeze(['name']),
 
