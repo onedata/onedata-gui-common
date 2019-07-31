@@ -398,7 +398,7 @@ $token-border-radius: 3px;
     .tab-pane.no-padding {
       @media (min-width: $screen-sm-min) {
         margin-left: -$padding-large-horizontal;
-        margin-left: -$padding-large-horizontal;
+        margin-right: -$padding-large-horizontal;
       }
       .content-row {
         @media (min-width: $screen-sm-min) {
