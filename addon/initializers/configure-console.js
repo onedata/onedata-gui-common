@@ -1,6 +1,6 @@
 /**
- * Uses Onedata config read in ``fetch-config`` initializer to silent ``console.debug`` messages.
- * Requires ``fetch-config`` initializer!
+ * Uses Onedata config read in `fetch-gui-context` initializer to silent `console.debug` messages.
+ * Requires `fetch-gui-context` initializer!
  * Note, that this blocks application initialization until config is resolved/rejected.
  * In case of errors, configure with blank config, which should lead to disable debug logs.
  * This is done because if attacked could make configuration unavailabe, the logs should not be visible.
@@ -12,30 +12,24 @@
  */
 
 function configure(config) {
-  if (!config.debug) {
+  if (!config.browserDebugLogs) {
     console._debug = console.debug;
-    console.debug = function() {};
+    console.debug = function () {};
   } else {
     console.debug('Debug messages in console enabled');
   }
 }
 
 export function initialize(application) {
-  if (application.getOnedataConfig) {
-    try {
-      application.deferReadiness();
-      let configPromise = application.getOnedataConfig();
-      configPromise.then(config => configure(config));
-      // when cannot fetch config file - use empty config
-      configPromise.catch(() => configure({}));
-      configPromise.finally(() => application.advanceReadiness());
-    } catch (error) {
-      // in case of unknown exception (this should not happen)
-      application.advanceReadiness();
-      throw error;
-    }
+  if (application.guiContextProxy) {
+    application.guiContextProxy
+      .then(guiContext => {
+        configure(guiContext);
+      });
   } else {
-    console.error('No Ember.application.getOnedataConfig available - is fetch-config initializer invoked?');
+    console.error(
+      'No Ember.application.guiContextProxy available - was fetch-gui-context initializer invoked?'
+    );
     configure({});
   }
 }
@@ -43,5 +37,5 @@ export function initialize(application) {
 export default {
   name: 'configure-console',
   initialize: initialize,
-  after: 'fetch-config'
+  after: 'fetch-gui-context'
 };

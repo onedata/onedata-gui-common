@@ -1,5 +1,5 @@
 /**
- * Array that fetches additional chunks of data if requesting indexes
+ * Array that fetches additional chunks of data if requesting indices
  * that are not currently loaded
  *
  * @module utils/replacing-chunks-array

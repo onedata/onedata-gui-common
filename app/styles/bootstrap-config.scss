@@ -21,10 +21,10 @@
 //   letter-spacing: 0.1em;
 // }
 // h2 {
-//   font-weight: bold;
+//   @include font-bold();
 // }
 // h3 {
-//   font-family: "Open Sans Semibold";
+//   @include font-semibold();
 // }
 // h4 {
 //   text-transform: uppercase;
@@ -53,7 +53,7 @@
   }
   .control-label {
     padding-right: $padding-large-horizontal;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
   }
   .form-control {
     padding-left: $padding-large-horizontal;
@@ -116,7 +116,7 @@ label {
   position: relative;
   padding: $padding-base-vertical $padding-base-horizontal * 2;
   font-size: 105%;
-  font-family: 'Open Sans Semibold';
+  @include font-semibold();
   &.btn-sm {
     font-size: 85%;
     padding: $padding-small-vertical $padding-base-horizontal;
@@ -152,7 +152,7 @@ label {
 .dropdown-menu {
   padding: 0;
   margin: 0;
-  font-family: "Open Sans Semibold";
+  @include font-semibold();
   font-size: 90%;
   li {
     border-top: 1px solid $main-border-color;
@@ -302,14 +302,14 @@ label {
 
         h1 {
           font-size: $font-size-base * 1.4;
-          font-family: 'Open Sans Semibold';
+          @include font-semibold();
           letter-spacing: $letter-spacing-base;
           margin-bottom: 1em;
           text-transform: uppercase;
         }
         h2 {
           font-size: $font-size-base * 1.2;
-          font-family: 'Open Sans Semibold';
+          @include font-semibold();
           text-transform: uppercase;
         }
       }

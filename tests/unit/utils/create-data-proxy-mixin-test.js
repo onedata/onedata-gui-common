@@ -103,4 +103,43 @@ describe('Unit | Utility | create data proxy mixin', function () {
       });
     });
   });
+
+  it('can be used with ArrayProxy', function () {
+    const arrData = [1, 2, 3];
+    const fetch = sinon.stub().resolves(arrData);
+
+    const mixin = createDataProxyMixin('world', { type: 'array' });
+    const obj = EmberObject.extend(mixin, {
+      fetchWorld: fetch,
+    }).create();
+    obj.updateWorldProxy();
+
+    return wait().then(() => {
+      expect(typeof get(obj, 'worldProxy.filter')).to.equal('function');
+      expect(get(obj, 'worldProxy').objectAt(0)).to.equal(arrData[0]);
+    });
+  });
+
+  it('initializes proxy if getting dataProxy for the first time', function () {
+    const data = 'hello';
+    const fetch = sinon.stub().resolves(data);
+
+    const mixin = createDataProxyMixin('world', fetch);
+    const obj = EmberObject.extend(mixin, {}).create();
+
+    const firstGetResult = obj.get('worldProxy');
+    expect(get(firstGetResult, 'isFulfilled')).to.be.false;
+    expect(get(firstGetResult, 'content')).to.equal(null);
+    return wait()
+      .then(() => {
+        expect(fetch).to.be.calledOnce;
+        expect(get(firstGetResult, 'isFulfilled')).to.be.true;
+        expect(get(firstGetResult, 'content')).to.equal(data);
+
+        obj.get('worldProxy');
+      })
+      .then(() => {
+        expect(fetch).to.be.calledOnce;
+      });
+  });
 });

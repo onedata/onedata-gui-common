@@ -61,8 +61,11 @@
               opacity: 1;
               // value for animation purposes
               max-height: 9999em;
-              padding: 16px;
+              padding: $table-cell-padding;
               overflow: visible;
+            }
+            &.compact {
+              padding: 16px;
             }
           }
         }

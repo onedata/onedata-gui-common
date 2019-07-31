@@ -12,6 +12,7 @@ import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
 import _ from 'lodash';
+import { getOwner } from '@ember/application';
 
 const notFoundAspect = 'not-found';
 
@@ -35,12 +36,11 @@ export default Route.extend({
     const resourceType = this.modelFor('onedata.sidebar').resourceType;
     if (!contentModel.resource) {
       if (contentModel.error && !isNotFoundError(contentModel.error)) {
-        // TODO: this is now very custom code, consider making generic forbidden
-        // and resource-specific forbidden
-        if (contentModel.error.id === 'forbidden' && resourceType === 'clusters') {
+        if (contentModel.error.id === 'forbidden') {
           throw {
             isOnedataCustomError: true,
-            type: 'no-cluster-permissions'
+            type: resourceType === 'clusters' ?
+              'no-cluster-permissions' : 'no-permissions'
           };
         } else {
           throw contentModel.error;
@@ -75,12 +75,12 @@ export default Route.extend({
     const templateName = model.aspectId === notFoundAspect ?
       '-resource-not-found' :
       `tabs.${resourceType}.${aspectId}`;
-    try {
+    if (getOwner(this).lookup(`template:${templateName}`)) {
       this.render(templateName, {
         into: 'onedata.sidebar.content',
         outlet: 'main-content'
       });
-    } catch (error) {
+    } else {
       const tabSettings = _.find(
         onedataTabs,
         t => get(t, 'id') === resourceType
@@ -91,7 +91,7 @@ export default Route.extend({
   },
 });
 
-// FIXME: to test in real env
+// TODO: fix the generic not found error page
 function isNotFoundError(error) {
   return get(error, 'id') === 'notFound' ||
     get(error, 'errors.firstObject.status') === '404';

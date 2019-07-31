@@ -6,6 +6,10 @@
     display: table-cell;
     vertical-align: middle;
   }
+
+  .input-group {
+    table-layout: initial;
+  }
   
   .clipboard-line-label {
     @include clipboard-line-element();

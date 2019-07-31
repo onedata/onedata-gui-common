@@ -43,6 +43,11 @@ export default Component.extend({
    */
   tokens: Object.freeze([]),
 
+  /**
+   * @type {Array<string>}
+   */
+  separators: Object.freeze([',', ';', ' ']),
+
   tokensChanged: notImplementedWarn,
   inputValueChanged: notImplementedWarn,
 
@@ -101,14 +106,20 @@ export default Component.extend({
   },
 
   initInputTokenizer() {
+    const {
+      placeholder,
+      separators,
+      tokensChanged,
+    } = this.getProperties('placeholder', 'separators', 'tokensChanged');
+
     const $tokenInput = this.getTokenInput();
 
     $tokenInput.tokenizer({
-      placeholder: this.get('placeholder'),
-      separators: [',', ';', ' '],
+      placeholder,
+      separators,
       label: '',
       callback: ($input) => {
-        this.get('tokensChanged')($input.tokenizer('get'));
+        tokensChanged($input.tokenizer('get'));
         this.inputObserver();
       },
     });

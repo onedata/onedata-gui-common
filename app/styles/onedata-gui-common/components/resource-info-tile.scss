@@ -1,4 +1,5 @@
 .resource-info-tile {
+  overflow: auto;
   .table {
     table-layout: fixed;
     tr {
@@ -9,13 +10,13 @@
         padding-top: 2 * $table-condensed-cell-padding;
         padding-bottom: 2 * $table-condensed-cell-padding;
         border-top: 0;
-        word-break: break-word;
+        word-break: break-all;
       }
     }
   }
   .property-name {
     width: 85px;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
   }
   .resource-name {
     $-v-correction: 9px;

@@ -1,7 +1,7 @@
-.login-box {  
+.login-box {
   h1, .row-login-header h4 {
     text-align: center;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     font-size: 28px;
     letter-spacing: $letter-spacing-base;
   }
@@ -20,7 +20,7 @@
       padding-top: 20px;
       padding-left: 10px;
       vertical-align: top;
-      font-weight: bold;
+      @include font-bold();
       text-align: left;
       .login-main-title {
         padding-left: 35px;
@@ -71,18 +71,6 @@
   // TODO: remove class after icons resize
   .additional-bottom-margin {
     margin-bottom: 25px;
-  }
-
-  .login-box-error-message {
-    margin-top: 15px;
-    margin-bottom: -10px;
-    max-height: 0;
-    opacity: 0;
-    transition: $collapse-transition;
-    &.active {
-      max-height: 3em;
-      opacity: 1;
-    }
   }
   
   .login-warning-icon {
@@ -149,6 +137,41 @@
       }
     }
   }
+  
+  .login-notification {
+    position: relative;
+    padding: $padding-base-horizontal;
+    margin: 80px auto $padding-base-vertical 0;
+    background-color: rgba($color-one-blue-gray, 0.3);
+    border: 1px solid lighten($color-one-blue-gray, 15%);
+    text-align: left;
+    @include font-semibold();
+    word-wrap: break-word;
+    @media (min-width: $screen-sm-min) {
+      width: $screen-sm-min - 2 * $padding-base-horizontal;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    + .login-notification {
+      margin-top: 20px;
+    }
+    .session-expired-icon-container {
+      margin-right: 4px;
+      .one-icon {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .login-notification-warning {
+    background-color: rgba($color-one-warning, 0.5);
+    border: 1px solid darken($color-one-warning, 3%);
+    a {
+      &:hover, &:active {
+        color: darken($color-one-mint, 10%);
+      }
+    }
+  }
 }
 
 .login-icon-box {
@@ -170,7 +193,7 @@
   &.more {
     background-color: white;
     color: $color-one-dark-gray;
-    font-weight: bold;    
+    @include font-bold();
     &:hover {
       color: $color-one-dark-gray;
     }
@@ -239,7 +262,7 @@
     margin-top: 20px;
     margin-bottom: 100px;
     color: $color-one-white;
-    font-weight: bold;
+    @include font-bold();
 
     @media(max-height: 600px) {
       margin-bottom: 50px;
@@ -253,7 +276,7 @@
   h2 {
     margin: 0px 20px 20px 20px;
     font-size: 12pt;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     text-align: center;
     .subtitle-tip {
       position: relative;

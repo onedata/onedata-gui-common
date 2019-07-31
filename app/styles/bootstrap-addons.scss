@@ -129,7 +129,7 @@ $token-border-radius: 3px;
   .form-group {
     @media (max-width: $screen-xs-max) {
       .form-control-feedback {
-        top: initial;
+        top: 0;
         bottom: 0;
       }
       &.has-message .form-control-feedback  {
@@ -146,6 +146,12 @@ $token-border-radius: 3px;
 
 .form-group.group-with-tip {
   @media (min-width: $screen-sm-min) {
+    .toggle-form-row {
+      .control-label .one-label-tip {
+        height: $line-height-computed;
+        line-height: $line-height-computed;
+      }
+    }
     .control-label {
       position: initial;
       .one-label-tip {
@@ -411,7 +417,7 @@ $token-border-radius: 3px;
       > a {
         padding: $padding-large-vertical $padding-large-horizontal;
         border-radius: $border-radius-small $border-radius-small 0 0;
-        font-weight: bold;
+        @include font-bold();
         color: $main-text-color-inactive;
       }
     }
@@ -445,8 +451,8 @@ $token-border-radius: 3px;
 .bs-tab-modern {
   .nav-tabs {
     border-bottom: 0;
-    li {
-      > a {
+    li, .tab-bar-li {
+      > a, .nav-link {
         &,
         &:hover,
         &:focus {
@@ -454,8 +460,10 @@ $token-border-radius: 3px;
           border-top: none;
           border-left: 0;
           border-right: 0;
-          border-bottom: 4px solid transparent;
-          font-weight: bold;
+          border-bottom-width: 4px;
+          border-bottom-style: solid;
+          border-bottom-color: transparent;
+          @include font-bold();
           color: $main-text-color-inactive;
         }
         &:hover {
@@ -463,14 +471,14 @@ $token-border-radius: 3px;
         }
       }
     }
-    li.active {
-      > a {
+    li.active, .tab-bar-li.active {
+      > a, .nav-link {
         border-bottom-color: $color-one-blue-gray;
         color: $main-text-color;
       }
     }
-    li.disabled {
-      > a {
+    li.disabled, .tab-bar-li.disabled {
+      > a, .nav-link {
         color: $main-text-color-disabled;
       }
     }

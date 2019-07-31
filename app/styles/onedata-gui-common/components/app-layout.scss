@@ -27,6 +27,7 @@ $brand-info-height: $one-list-item-line-height;
 // needs: $main-menu-width
 .app-layout {
   position: absolute;
+  pointer-events: none;
   @include fill-container();
   
   &.with-bottom-bar {
@@ -37,11 +38,19 @@ $brand-info-height: $one-list-item-line-height;
       padding-left: 0;
     }
     .col-content {
-      padding-bottom: $content-col-padding + $brand-info-height;
+      height: calc(100% - #{$brand-info-height});
     }
     .col-main-menu {
       display: none !important;
     }
+  }
+
+  > *:not(.app-grid),
+  .app-grid > *:not(.row-app),
+  .row-app > *:not(.col-content),
+  .col-content > *:not(.main-content),
+  .main-content > *:not(.no-pointer-events)  {
+    pointer-events: auto;
   }
   
   .app-grid {
@@ -131,7 +140,7 @@ $brand-info-height: $one-list-item-line-height;
       padding: 0 $padding-small-horizontal;
       line-height: $mobile-top-height;
       font-size: 0.9em;
-      font-weight: bold;
+      @include font-bold();
       text-align: center;
       &::first-letter {
         text-transform: uppercase;
@@ -207,8 +216,7 @@ $brand-info-height: $one-list-item-line-height;
   }
   
   .row-account-button {
-    position: absolute;
-    bottom: 0;
+    flex-shrink: 0;
     width: $main-menu-width;
     
     .groove-border {
@@ -240,6 +248,8 @@ $brand-info-height: $one-list-item-line-height;
   .col-main-menu {
     z-index: 1001;
     position: absolute;
+    display: flex;
+    flex-direction: column;
     background: $color-main-menu-bg;
     color: $color-main-menu-fg-default;
     width: $main-menu-width;
@@ -281,9 +291,8 @@ $brand-info-height: $one-list-item-line-height;
     }
 
     .main-menu-content {
-      position: absolute;
-      @include fill-container();
-      bottom: $one-list-item-line-height;
+      position: relative;
+      flex-grow: 1;
       background-color: inherit;
     }
     .row-onedata-logo {
@@ -330,21 +339,37 @@ $brand-info-height: $one-list-item-line-height;
     }
     @media (min-width: $screen-sm-min) {
       position: absolute;
-      left: $main-menu-collapsed-width;
     }
     @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-      left: 0px;
       padding-top: $mobile-top-height;
     }
     @media (min-width: $screen-md-min) {
       position: absolute;
+    }
+  }
+  .col-sidebar, #sidenav-sidebar, .brand-info {
+    @media (min-width: $screen-sm-min) {
+      left: $main-menu-collapsed-width;
+    }
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      left: 0px;
+    }
+    @media (min-width: $screen-md-min) {
       left: $main-menu-collapsed-width;
       &.with-place-for-menu {
         left: $main-menu-width;
       }
     }
   }
-  .col-sidebar, #sidenav-sidebar.in {
+  .brand-info {
+    z-index: $zindex-navbar;
+    transition: left linear $collapse-transition-time;
+    width: 100%;
+    &.full-width {
+      left: 0;
+    }
+  }
+  .col-sidebar, #sidenav-sidebar.in, .brand-info {
     @media (min-width: $screen-sm-min) {
       width: $sidebar-menu-width-sm;
     }
@@ -357,7 +382,9 @@ $brand-info-height: $one-list-item-line-height;
   }
   .col-sidebar {
     z-index: $zindex-navbar;
-    padding-bottom: $one-list-item-line-height;
+    top: 0;
+    bottom: $one-list-item-line-height;
+    height: auto;
     border-right: 1px solid $color-one-list-item-separator;
     transition: left linear $collapse-transition-time;
   }
@@ -371,7 +398,7 @@ $brand-info-height: $one-list-item-line-height;
     font-size: $content-header-font-size;
   }
   .col-content {
-    // TODO similar 30px
+    height: 100%;
     padding: $content-col-padding;
 
     @media (max-width: $screen-sm-max) {
@@ -392,7 +419,7 @@ $brand-info-height: $one-list-item-line-height;
 .col-main-menu {
   .main-menu.sidenav-opened {
     .one-list-item.main-menu-item.enabled {
-      &.active > .item-header {
+      &.active:not(.selected) {
         background-color: #666161;
       }
     }
@@ -405,11 +432,9 @@ $brand-info-height: $one-list-item-line-height;
     &.enabled {
       &.active,
       &.selected {
-        >.item-header {
-          color: $color-main-menu-fg-active;
-          background-color: $color-one-main;
-          @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
-        }
+        background-color: $color-one-main;
+        color: $color-main-menu-fg-active;
+        @include box-shadow(inset 0px 0px 10px rgba(0, 0, 0, 0.5));
         &:hover {
           background-color: darken($color-one-main, 10%);
         }
@@ -418,12 +443,10 @@ $brand-info-height: $one-list-item-line-height;
         }
       }
       &.loading {
-        >.item-header {
-          @extend .animated;
-          @extend .infinite;
-          @extend .slow;
-          @extend .pulse-bg-one-main;
-        }
+        @extend .animated;
+        @extend .infinite;
+        @extend .slow;
+        @extend .pulse-bg-one-main;
       }
       &:hover {
         >.item-header {

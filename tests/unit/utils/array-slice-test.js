@@ -38,7 +38,7 @@ describe('Unit | Utility | array slice', function () {
     ).to.deep.equal(_.range(40, 80));
   });
 
-  it('changes array contents when requested indexes change', function () {
+  it('changes array contents when requested indices change', function () {
     const sourceArray = A(_.range(0, 100));
     const startIndex = 50;
     const endIndex = 70;
@@ -115,7 +115,8 @@ describe('Unit | Utility | array slice', function () {
     });
   });
 
-  it('does not notify about changes in sourceArray if index is out of range', function () {
+  it('does not notify about changes in sourceArray if index is out of range',
+  function () {
     const sourceArray = A(_.range(0, 100));
     const startIndex = 0;
     const endIndex = 5;

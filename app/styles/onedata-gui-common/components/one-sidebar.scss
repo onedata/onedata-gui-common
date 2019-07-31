@@ -7,7 +7,7 @@
       padding: $onedata-logo-margin-top $one-list-item-padding;
       // -1px is a place for border
       line-height: $onedata-logo-height - 1px;
-      font-family: 'Open Sans Semibold';
+      @include font-semibold();
       white-space: nowrap;
     }
     @media (max-width: $screen-sm-max) {

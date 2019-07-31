@@ -21,11 +21,10 @@
 {{#perfect-scrollbar-element
   tagName="div"
   id="col-sidebar"
-  class=(concat colSidebarClass (if navigationState.mainMenuColumnExpanded " with-place-for-menu"))
   onScroll=(action "scrollOccurred")}}
-  {{yield 'sidebar'}}
-  {{brand-info}}
+  {{yield "sidebar"}}
 {{/perfect-scrollbar-element}}
+{{brand-info class=brandInfoClasses}}
 <div class="col-sidenav-cover"></div>
 
 <div class={{appGridClass}}>
@@ -92,7 +91,7 @@
     }}
     
     {{#perfect-scrollbar-element
-      class="col-in-app-layout col-content col-xs-12 full-height"
+      class="col-in-app-layout col-content col-xs-12"
       onScroll=(action "scrollOccurred")
     }}
       {{yield "content"}}

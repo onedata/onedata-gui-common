@@ -8,17 +8,12 @@ describe('Integration | Component | application error', function () {
     integration: true
   });
 
-  it('renders show details button when error property is provided', function () {
+  it('renders error details when error property is provided', function () {
     this.set('model', {
-      some: 'error',
+      some: 'some_error'
     });
     this.render(hbs `{{application-error error=model}}`);
-    expect(this.$('.show-error-details')).to.exist;
+    expect(this.$('.error-details')).to.exist;
+    expect(this.$('.error-details').text()).to.match(/some_error/);
   });
-
-  it('does not render show details button when error property is not provided',
-    function () {
-      this.render(hbs `{{application-error}}`);
-      expect(this.$('.show-error-details')).to.not.exist;
-    });
 });

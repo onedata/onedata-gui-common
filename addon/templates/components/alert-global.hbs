@@ -1,12 +1,12 @@
 {{#bs-modal
-  class="alert-global"
+  class=(concat-classes "alert-global" alert.type)
   open=open
   onHide=(action "onHide")
   as |modal|
 }}
   {{#modal.header}}
     <h1>
-      {{one-icon icon="sign-error-rounded"}}
+      {{one-icon icon=icon}}
       <span class="one-label">
         {{#if options.header}}
           {{options.header}}
@@ -26,7 +26,7 @@
   {{#modal.footer class="btn-toolbar"}}
     {{#bs-button
       onClick=(action modal.close)
-      class="btn-danger"
+      class=closeBtnClass
     }}
       {{tt this "close"}}
     {{/bs-button}}

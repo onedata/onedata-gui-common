@@ -14,7 +14,6 @@ export default Component.extend({
     name: 'provider1',
     status: 'online',
     host: '127.0.0.1',
-    isStatusValid: true,
     latitude: 50,
     longitude: 19,
     spaces: [{

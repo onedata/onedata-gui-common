@@ -4,7 +4,7 @@
       {{#one-icon icon="provider" class="state-indicator"}}
         {{one-tooltip title=(tt this (if (eq provider.status "online") "online" "offline"))}}
       {{/one-icon}}
-      {{#truncated-string}}{{provider.name}}{{/truncated-string}}
+      {{#truncated-string}}{{name-conflict item=provider tagName="span"}}{{/truncated-string}}
     </span>
     <span class="hidden-sm hidden-md hidden-lg">{{tt this "status"}}</span>
   {{/truncated-string}}
@@ -45,9 +45,9 @@
       {{/loading-container}}
     {{/perfect-scrollbar-element}}
   </div>
-  {{#unless (eq provider.status "offline")}}
-    <hr>
-    <div class="btn-container">
+  <hr>
+  <div class="btn-container">
+    {{#if provider.online}}
       <div class="row row-btn">
         {{#one-spin-button
           class="btn btn-sm btn-toggle-default btn-default"
@@ -71,7 +71,12 @@
           {{/link-to}}
         {{/if}}
       </div>
-    </div>
-    
-  {{/unless}}
+    {{else}}
+      <div class="row row-btn">
+        <div class="btn btn-danger no-pointer-events offline-badge">
+          {{tt this "offline"}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
 </div>

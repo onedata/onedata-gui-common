@@ -20,10 +20,6 @@ function isValidTab(tabName) {
     tabName === 'users';
 }
 
-function getDefaultTab() {
-  return (onedataTabs[0] || {}).id;
-}
-
 export default Route.extend({
   sidebarResources: service(),
   navigationState: service(),
@@ -35,7 +31,7 @@ export default Route.extend({
         `Failed to render ${resourceType} resource type. ` +
         `Redirecting to default resource type...`
       );
-      this.transitionTo('onedata.sidebar', getDefaultTab());
+      this.transitionTo('onedata.sidebar', this.getDefaultTab());
       return;
     } else {
       this.get('navigationState').setProperties({
@@ -72,6 +68,15 @@ export default Route.extend({
       outlet: 'sidebar-content',
       model
     });
+  },
+
+  /**
+   * Returns default application tab, that can be used as a fallback when
+   * user does not provide any
+   * @returns {string}
+   */
+  getDefaultTab() {
+    return (onedataTabs[0] || {}).id;
   },
 
   actions: {

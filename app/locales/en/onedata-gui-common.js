@@ -20,8 +20,13 @@ import authenticationErrorModal from './onedata-gui-common/components/authentica
 import sidebarClusters from './onedata-gui-common/components/sidebar-clusters';
 import providersMapTile from './onedata-gui-common/components/providers-map-tile';
 import userAccountButton from './onedata-gui-common/components/user-account-button';
+import jsonEditor from './onedata-gui-common/components/json-editor';
 import endpointError from './onedata-gui-common/components/alerts/endpoint-error';
 import brandInfo from './onedata-gui-common/components/brand-info';
+import userCredentialsForm from './onedata-gui-common/components/user-credentials-form';
+import loginLayout from './onedata-gui-common/components/login-layout';
+import oneproviderMapCircle from './onedata-gui-common/components/oneprovider-map-circle';
+import oneprovidersSelectorPopoverContent from './onedata-gui-common/components/oneproviders-selector-popover-content';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -30,6 +35,9 @@ import login from './onedata-gui-common/routes/login';
 
 import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
+
+import noPermissions from './onedata-gui-common/errors/no-permissions';
+import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
 
 const translations = {
   components: {
@@ -56,6 +64,11 @@ const translations = {
     providersMapTile,
     userAccountButton,
     brandInfo,
+    jsonEditor,
+    userCredentialsForm,
+    loginLayout,
+    oneproviderMapCircle,
+    oneprovidersSelectorPopoverContent,
     alerts: {
       endpointError,
     },
@@ -72,6 +85,10 @@ const translations = {
   services: {
     guiUtils,
     clusterActions,
+  },
+  errors: {
+    noPermissions,
+    noClusterPermissions,
   },
 };
 

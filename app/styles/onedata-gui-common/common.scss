@@ -1,12 +1,12 @@
 $table-item-border: 1px solid $main-border-color;
 
 h5 {
-  font-weight: bold;
+  @include font-bold();
 }
 
 strong {
   font-weight: normal;
-  font-family: "Open Sans Semibold";
+  @include font-semibold();
 }
 
 .horizontal-align-middle {
@@ -56,8 +56,12 @@ strong {
   text-overflow: ellipsis;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .semibold {
-  font-family: 'Open Sans Semibold';
+  @include font-semibold();
 }
 
 .relative {
@@ -66,6 +70,10 @@ strong {
 
 .break-word {
   word-wrap: break-word;
+}
+
+.no-pointer-events {
+  pointer-events: none;
 }
 
 .content-backdrop.sidenav-backdrop {
@@ -356,10 +364,17 @@ a {
       color: darken($color-one-mint, 20%);
     }
   }
+  &.azure {
+    color: $color-one-azure;
+    &:hover {
+      color: darken($color-one-azure, 20%);
+    }
+  }
 }
 
-.col-image {
-  padding: $padding-large-vertical*2 $padding-large-horizontal*2;
+.col-vertical-middle-absolute-right {
+  @include vertical-align-middle();
+  right: 0;
 }
 
 .code-textarea {
@@ -396,8 +411,19 @@ a {
   }
 }
 
-.truncated-string.before-status {
-  padding-right: 100px;
+.truncated-string {
+  &.before-status {
+    padding-right: 100px;
+    &.with-place-for-dots {
+      padding-right: 115px;
+      @media (max-width: $screen-sm-max) and (min-width: $screen-sm-min) {
+        padding-right: 20px;
+        & + .status-toolbar {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 .table.table-middle-align {
@@ -511,6 +537,7 @@ textarea + .btn-container {
     height: 0;
     padding: 0;
     margin: 0;
+    border: 0;
   }
   
   .data-row {
@@ -528,7 +555,7 @@ textarea[style^="touch-action: manipulation"] {
 .inline-icon-container {
   display: inline-block;
   position: relative;
-  width: 1.6em;
+  width: 2em;
   height: 1em;
   .oneicon {
     position: absolute;
@@ -547,4 +574,33 @@ textarea[style^="touch-action: manipulation"] {
 .btn-inline-after-text {
   margin-left: $padding-small-horizontal;
   top: -2px;
+}
+
+.row-understand-notice {
+  position: relative;
+  padding: $padding-base-vertical 0;
+  .one-checkbox-understand {
+    position: absolute;
+    left: 2px;
+    @include vertical-align-middle();
+  }
+  .text-understand {
+    vertical-align: middle;
+    padding-left: 28px;
+    color: $color-one-red;
+  }
+}
+
+.fit-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.menu-toggle-hover-parent:hover {
+  .menu-toggle.on-hover {
+    display: block;
+  }
 }

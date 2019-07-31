@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { reads, equal } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/sidebar-clusters/cluster-item';
@@ -28,11 +28,22 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.sidebarClusters.clusterItem',
 
   /**
+   * @virtual
+   * @type {Cluster}
+   */
+  item: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<models/Cluster>}
    */
   cluster: reads('item'),
 
   type: reads('cluster.type'),
+
+  /**
+   * TODO: should be implemented in backend or by checking "img availability"
+   */
+  offline: equal('cluster.isOnline', false),
 
   firstLevelItemIcon: computed('type', function firstLevelItemIcon() {
     switch (this.get('type')) {
@@ -44,6 +55,15 @@ export default Component.extend(I18n, {
         return 'menu-clusters';
     }
   }),
+
+  init() {
+    this._super(...arguments);
+    const cluster = this.get('cluster');
+    // if this is new cluster (not a real cluster), skip updateIsOnlineProxy
+    if (cluster.updateIsOnlineProxy) {
+      cluster.updateIsOnlineProxy();
+    }
+  },
 
   // TODO: unfinished code for deregister in menu of cluster item
   // - should be presented only for Oneprovider clusters

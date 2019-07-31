@@ -51,11 +51,11 @@ export default Service.extend(I18n, {
   guiName: '',
 
   /**
-   * Version of gui.
+   * Version of software. Currently only backend.
    * @virtual
-   * @type {string}
+   * @type {object} string properties: serviceVersion, serviceBuildVersion
    */
-  guiVersion: '',
+  softwareVersionDetails: Object.freeze({}),
 
   /**
    * Location of gui icon.
