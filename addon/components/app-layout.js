@@ -69,10 +69,13 @@ export default Component.extend({
   brandInfoClasses: computed(
     'navigationState.mainMenuColumnExpanded',
     'showMobileSidebar',
+    'withBottomBar',
     function brandInfoClasses() {
       const base = [];
-      const showMobileSidebar = this.get('showMobileSidebar');
-      const withBottomBar = this.get('withBottomBar');
+      const {
+        showMobileSidebar,
+        withBottomBar,
+      } = this.getProperties('showMobileSidebar', 'withBottomBar');
       if (withBottomBar) {
         base.push('hidden');
       } else {
