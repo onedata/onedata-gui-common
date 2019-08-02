@@ -1,28 +1,33 @@
 $webui-popover-offset: 4px;
 
+@mixin webui-popover-arrow-color($color) {
+  &.left, &.left-top, &.left-bottom {
+    > .webui-arrow:after {
+      border-left-color: $color;
+    }
+  }
+  &.right, &.right-top, &.right-bottom {
+    > .webui-arrow:after {
+      border-right-color: $color;
+    }
+  }
+  &.top, &.top-left, &.top-right {
+    > .webui-arrow:after {
+      border-top-color: $color;
+    }
+  }
+  &.bottom, &.bottom-left, &.bottom-right {
+    > .webui-arrow:after {
+      border-bottom-color: $color;
+    }
+  }
+}
+
 @mixin webui-popover-dropdown() {
   border: 0;
   background-color: transparent;
-  &.right > .webui-arrow:after,
-  &.right-top > .webui-arrow:after,
-  &.right-bottom > .webui-arrow:after {
-    border-right-color: $color-one-semiblack;
-  }
-  &.left > .webui-arrow:after,
-  &.left-top > .webui-arrow:after,
-  &.left-bottom > .webui-arrow:after {
-    border-left-color: $color-one-semiblack;
-  }
-  &.bottom > .webui-arrow:after,
-  &.bottom-right > .webui-arrow:after,
-  &.bottom-left > .webui-arrow:after {
-    border-bottom-color: $color-one-semiblack;
-  }
-  &.top > .webui-arrow:after,
-  &.top-right > .webui-arrow:after,
-  &.top-left > .webui-arrow:after {
-    border-top-color: $color-one-semiblack;
-  }
+
+  @include webui-popover-arrow-color($color-one-semiblack);
 
   .dropdown-menu {
     // padding: 0 3px;

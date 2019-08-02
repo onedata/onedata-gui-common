@@ -1,9 +1,8 @@
-<div style={{circleStyles}} class="circle">
-  {{one-icon icon=(if (eq mode "multi") "providers" "provider")}}
-  {{#if hint}}
-    {{bs-tooltip placement="bottom" title=hint}}
-  {{/if}}
-</div>
+{{oneprovider-map-circle
+  oneproviders=providersArray
+  scale=circleSizeScale
+  color=circleColor
+  mapSize=atlasWidth}}
 {{#if renderDrop}}
   {{#one-switchable-popover-modal
     activeTriggerSelector=(concat (concat "#" elementId) " .circle")
@@ -17,28 +16,10 @@
     popoverWindowEvent="providerPlaceRefresh"
     as |ospm|}}
     {{#if (eq mode "multi")}}
-      <div class="providers-place-list-container">
-        <div class="providers-place-list-title">{{tt this "providers"}}</div>
-        <div class="form-group-sm form-group-light search-group">
-          <div class="input-group with-icon-addon">
-            {{search-bar search=(action "newQuery") class="form-control"}}
-            <div class="input-group-addon">
-              {{one-icon icon="search"}}
-            </div>
-          </div>
-        </div>
-        {{#perfect-scrollbar-element tagName="ul" class="providers-place-list"}}
-          {{#each filteredProvidersArray as |provider|}}
-            <li
-              class="providers-place-list-item {{if (eq provider selectedProvider) "active"}}"
-              data-provider={{provider.id}}
-              {{action "selectProvider" provider}}>
-              {{one-icon icon="provider" class=(if provider.isStatusValid (concat provider.status "-icon") "offline-icon")}}
-              {{#truncated-string}}{{name-conflict item=provider tagName="span"}}{{/truncated-string}}
-            </li>
-          {{/each}}
-        {{/perfect-scrollbar-element}}
-      </div>
+      {{oneproviders-selector-popover-content
+        oneproviders=providersArray
+        selectedOneprovider=selectedProvider
+        onOneproviderSelected=(action "selectProvider")}}
       {{provider-place/drop provider=selectedProvider class="outside-content"}}
     {{else}}
       {{provider-place/drop provider=providersArray.[0] class="outside-content"}}

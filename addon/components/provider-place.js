@@ -3,14 +3,13 @@
  * 
  * @module components/provider-place
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import { computed, get, observer } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { htmlSafe } from '@ember/string';
 import { A, isArray } from '@ember/array';
 import { next } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -45,12 +44,6 @@ export default Component.extend(I18n, {
   atlasWidth: 0,
 
   /**
-   * @virtual optional
-   * @type {string}
-   */
-  hint: undefined,
-
-  /**
    * Scale factor for circle size
    * @type {number} 
    */
@@ -74,12 +67,6 @@ export default Component.extend(I18n, {
   renderDrop: true,
 
   /**
-   * Query string to filter providers.
-   * @type {string}
-   */
-  query: '',
-
-  /**
    * @type {Onezone.ProviderDetails}
    */
   selectedProvider: undefined,
@@ -101,21 +88,6 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * Filtered array of providers
-   * @type {Ember.ComputedProperty<Onezone.ProviderDetails>}
-   */
-  filteredProvidersArray: computed('providersArray.[]', 'query', function filteredProvidersArray() {
-    const {
-      providersArray,
-      query,
-    } = this.getProperties('providersArray', 'query');
-    return get(providersArray, 'length') > 1 ? providersArray
-      .filter(provider => get(provider, 'name')
-        .indexOf(query) !== -1) :
-      providersArray;
-  }),
-
-  /**
    * Component mode: single or multi
    * @type {Ember.ComputedProperty<string>}
    */
@@ -127,25 +99,16 @@ export default Component.extend(I18n, {
    * Provider status
    * @type {computed.string}
    */
-  status: computed('providersArray.@each.{status,isStatusValid}', function () {
+  status: computed('providersArray.@each.status', function status() {
     const providersArray = this.get('providersArray');
-    const status = [];
+    const statuses = [];
     providersArray.forEach(provider => {
-      const s = get(provider, 'isStatusValid') ? get(provider, 'status') :
-        'offline';
-      if (status.indexOf(s) === -1) {
-        status.push(s);
+      const s = get(provider, 'status');
+      if (statuses.indexOf(s) === -1) {
+        statuses.push(s);
       }
     });
-    return status.length > 1 ? 'mixed' : status[0];
-  }),
-
-  /**
-   * @type {Ember.ComputedProperty<string>}
-   */
-  circleStyles: computed('circleColor', function () {
-    const circleColor = this.get('circleColor');
-    return htmlSafe(`color: ${circleColor}; border-color: ${circleColor};`);
+    return statuses.length > 1 ? 'mixed' : statuses[0];
   }),
 
   /**
@@ -153,16 +116,12 @@ export default Component.extend(I18n, {
    */
   popoverPlacement: 'left',
 
-  atlasWidthObserver: observer('atlasWidth', function () {
-    this._recalculateSize();
-  }),
-
   selectedProviderObserver: observer('selectedProvider', function () {
     const providerId = this.get('selectedProvider.id');
     next(() => {
       safeExec(this, () => {
         const providerElement = $(
-          `[data-provider="${providerId}"].providers-place-list-item`
+          `[data-provider="${providerId}"].oneproviders-list-item`
         );
         if (providerElement.length > 0) {
           providerElement[0].scrollIntoView();
@@ -183,33 +142,7 @@ export default Component.extend(I18n, {
     this.selectedProviderObserver();
   },
 
-  didRender() {
-    this._super(...arguments);
-    this._recalculateSize();
-  },
-
-  /**
-   * Adjusts circle size to atlas width
-   */
-  _recalculateSize() {
-    let {
-      atlasWidth,
-      circleSizeScale,
-    } = this.getProperties('atlasWidth', 'circleSizeScale');
-    let width = atlasWidth * 0.02 * circleSizeScale;
-
-    this.$().find('.circle').css({
-      borderWidth: (width / 15) + 'px',
-      fontSize: width * 0.75 + 'px',
-      width: width + 'px',
-      height: width + 'px',
-    });
-  },
-
   actions: {
-    newQuery(query) {
-      this.set('query', query);
-    },
     selectProvider(provider) {
       this.get('providerSelectedAction')(provider);
     },
