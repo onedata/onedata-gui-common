@@ -22,6 +22,7 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
+  classNameBindings: ['pointerEvents.pointerNoneToMainContent'],
 
   sidebarResources: service(),
   sideMenu: service(),
@@ -29,6 +30,7 @@ export default Component.extend({
   router: service(),
   navigationState: service(),
   guiUtils: service(),
+  pointerEvents: service(),
 
   globalMenuOpened: false,
 
