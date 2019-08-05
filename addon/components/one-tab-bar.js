@@ -17,6 +17,7 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
+  classNameBindings: ['tabsOverflow:tabs-overflowing'],
 
   media: service(),
 

@@ -1,8 +1,12 @@
 {{#if media.isMobile}}
-  {{#one-tab-bar/tab-bar-ul-container as |ulContainer|}}
+  <div class="tab-bar-ul-container-space"></div>
+{{else}}
+  {{#one-tab-bar/tab-bar-ul-container
+    hasOverflowChanged=(action (mut tabsOverflow))
+    as |ulContainer|
+  }}
     {{#one-tab-bar/tab-bar-ul
       style=ulContainer.tabBarUlStyle
-      hasOverflowChanged=(action (mut tabsOverflow))
       as |tabBar|
     }}
       {{#each sortedItems as |item|}}
@@ -17,7 +21,7 @@
     {{/one-tab-bar/tab-bar-ul}}
   {{/one-tab-bar/tab-bar-ul-container}}
 {{/if}}
-{{#if (or tabsOverflow (eq media.isMobile))}}
+{{#if (or tabsOverflow media.isMobile)}}
   <div class="tab-bar-selector">
     {{#power-select
       triggerClass="small"
