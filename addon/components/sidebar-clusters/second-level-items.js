@@ -13,6 +13,7 @@ import layout from 'onedata-gui-common/templates/components/two-level-sidebar/se
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { A } from '@ember/array';
 
 export default SecondLevelItems.extend(I18n, {
   layout,
@@ -37,7 +38,7 @@ export default SecondLevelItems.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  clusterType: reads('item.type'),
+  clusterType: reads('cluster.type'),
 
   overviewItem: computed(function overviewItem() {
     return {
@@ -79,6 +80,17 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
+  /**
+   * @type {Ember.ComputedProperty<Object>}
+   */
+  cephItem: computed(function cephItem() {
+    return {
+      id: 'ceph',
+      label: this.t('ceph'),
+      icon: 'ceph',
+    };
+  }),
+
   storagesItem: computed(function storagesItem() {
     return {
       id: 'storages',
@@ -110,6 +122,7 @@ export default SecondLevelItems.extend(I18n, {
     'nodesItem',
     'overviewItem',
     'providerItem',
+    'cephItem',
     'storagesItem',
     'spacesItem',
     'membersItem',
@@ -121,6 +134,7 @@ export default SecondLevelItems.extend(I18n, {
         nodesItem,
         overviewItem,
         providerItem,
+        cephItem,
         storagesItem,
         spacesItem,
         membersItem,
@@ -132,6 +146,7 @@ export default SecondLevelItems.extend(I18n, {
         'nodesItem',
         'overviewItem',
         'providerItem',
+        'cephItem',
         'storagesItem',
         'spacesItem',
         'membersItem'
@@ -149,10 +164,11 @@ export default SecondLevelItems.extend(I18n, {
         const items = clusterType === 'onezone' ? commonItems : [
           ...commonItems,
           providerItem,
+          cephItem,
           storagesItem,
           spacesItem,
         ];
-        return items;
+        return A(items);
       }
     }
   ),
