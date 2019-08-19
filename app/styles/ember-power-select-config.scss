@@ -54,6 +54,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   &[aria-disabled=true] {
     background-color: $input-bg;
     opacity: 0.6;
+    cursor: not-allowed;
   }
 
   &.ember-power-select-trigger--active:not([aria-expanded]) {
