@@ -202,9 +202,6 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     max-height: 99999em;
     opacity: 1;
     transition: $collapse-transition;
-    &.row-small, &.row-medium {
-      overflow-y: hidden;
-    }
     &.row-small {
       max-height: 100em;
     }
