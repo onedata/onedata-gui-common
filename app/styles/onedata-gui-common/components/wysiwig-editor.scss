@@ -1,0 +1,24 @@
+.wysiwig-editor {
+  border: 1px solid $main-border-color;
+  margin-bottom: $padding-base-vertical;
+
+  @media (max-width: $screen-xs-max) {
+    margin-left: $mobile-horizontal-content-padding;
+    margin-right: $mobile-horizontal-content-padding;
+  }
+
+  .pell-actionbar {
+    border-bottom: 1px solid $main-border-color;
+  }
+
+  .pell-button {
+    position: relative;
+    width: 35px;
+    height: 35px;
+
+    .oneicon {
+      @include absolute-align-middle-center();
+      font-size: 160%;
+    }
+  }
+}

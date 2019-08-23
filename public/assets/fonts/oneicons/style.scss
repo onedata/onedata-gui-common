@@ -2,10 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?nd1irh') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?nd1irh') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?nd1irh##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?8gg7oy');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?8gg7oy#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?8gg7oy') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?8gg7oy') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?8gg7oy##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -74,71 +75,6 @@
 .oneicon-ban-left {
   &:before {
     content: $oneicon-ban-left; 
-  }
-}
-.oneicon-browser-copy {
-  &:before {
-    content: $oneicon-browser-copy; 
-  }
-}
-.oneicon-browser-cut {
-  &:before {
-    content: $oneicon-browser-cut; 
-  }
-}
-.oneicon-browser-delete {
-  &:before {
-    content: $oneicon-browser-delete; 
-  }
-}
-.oneicon-browser-directory {
-  &:before {
-    content: $oneicon-browser-directory; 
-  }
-}
-.oneicon-browser-distribution {
-  &:before {
-    content: $oneicon-browser-distribution; 
-  }
-}
-.oneicon-browser-file {
-  &:before {
-    content: $oneicon-browser-file; 
-  }
-}
-.oneicon-browser-info {
-  &:before {
-    content: $oneicon-browser-info; 
-  }
-}
-.oneicon-browser-metadata {
-  &:before {
-    content: $oneicon-browser-metadata; 
-  }
-}
-.oneicon-browser-new-directory {
-  &:before {
-    content: $oneicon-browser-new-directory; 
-  }
-}
-.oneicon-browser-permissions {
-  &:before {
-    content: $oneicon-browser-permissions; 
-  }
-}
-.oneicon-browser-rename {
-  &:before {
-    content: $oneicon-browser-rename; 
-  }
-}
-.oneicon-browser-share {
-  &:before {
-    content: $oneicon-browser-share; 
-  }
-}
-.oneicon-browser-upload {
-  &:before {
-    content: $oneicon-browser-upload; 
   }
 }
 .oneicon-ceph {
@@ -259,12 +195,6 @@
 .oneicon-globe-cursor {
   &:before {
     content: $oneicon-globe-cursor; 
-  }
-}
-.oneicon-globe {
-  &:before {
-    content: $oneicon-globe;     
-    color: #555d72;
   }
 }
 .oneicon-group-add {
@@ -720,6 +650,51 @@
 .oneicon-team {
   &:before {
     content: $oneicon-team; 
+  }
+}
+.oneicon-text-bold {
+  &:before {
+    content: $oneicon-text-bold; 
+  }
+}
+.oneicon-text-heading1 {
+  &:before {
+    content: $oneicon-text-heading1; 
+  }
+}
+.oneicon-text-italic {
+  &:before {
+    content: $oneicon-text-italic; 
+  }
+}
+.oneicon-text-link {
+  &:before {
+    content: $oneicon-text-link; 
+  }
+}
+.oneicon-text-olist {
+  &:before {
+    content: $oneicon-text-olist; 
+  }
+}
+.oneicon-text-paragraph {
+  &:before {
+    content: $oneicon-text-paragraph; 
+  }
+}
+.oneicon-text-strikethrough {
+  &:before {
+    content: $oneicon-text-strikethrough; 
+  }
+}
+.oneicon-text-ulist {
+  &:before {
+    content: $oneicon-text-ulist; 
+  }
+}
+.oneicon-text-underline {
+  &:before {
+    content: $oneicon-text-underline; 
   }
 }
 .oneicon-tokens {

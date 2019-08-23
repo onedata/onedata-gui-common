@@ -386,16 +386,18 @@ a {
   resize: none; 
 }
 
+textarea.no-resize  {
+  resize: none;
+}
+
 .token-textarea {
   width: 100%;
   height: 120px;
   margin-top: $padding-base-vertical;
   margin-bottom: $padding-base-vertical;
   font-family: monospace;
-  &.no-resize {
-    resize: none;
-  }
 }
+
 @media (max-width: $screen-xs-max) {
   .token-textarea {
     padding: $padding-large-vertical $padding-large-horizontal;
