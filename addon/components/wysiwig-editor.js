@@ -8,10 +8,36 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import PellEditor from 'ember-pell/components/pell-editor';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { htmlSafe } from '@ember/template';
+import layout from 'onedata-gui-common/templates/components/wysiwig-editor';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
-export default PellEditor.extend({
+export default Component.extend({
+  layout,
   classNames: ['wysiwig-editor'],
+
+  /**
+   * One of 'show', 'edit'
+   * @virtual
+   * @type {string}
+   */
+  mode: 'show',
+
+  /**
+   * @virtual
+   * @type {string}
+   */
+  content: '',
+
+  /**
+   * @virtual
+   * @type {Function}
+   * @param {string} content
+   * @returns {any}
+   */
+  onChange: notImplementedIgnore,
 
   /**
    * @override
@@ -48,5 +74,12 @@ export default PellEditor.extend({
       },
     ],
     defaultParagraphSeparator: 'p',
+  }),
+
+  /**
+   * @type {HTMLSafe}
+   */
+  htmlSafeContent: computed('content', function htmlSafeContent() {
+    return htmlSafe(this.get('content'));
   }),
 });

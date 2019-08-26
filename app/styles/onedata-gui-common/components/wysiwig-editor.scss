@@ -1,12 +1,13 @@
 .wysiwig-editor {
-  border: 1px solid $main-border-color;
-  margin-bottom: $padding-base-vertical;
+  .pell-editor {
+    border: 1px solid $main-border-color;
+    margin-bottom: $padding-base-vertical;
 
-  @media (max-width: $screen-xs-max) {
-    margin-left: $mobile-horizontal-content-padding;
-    margin-right: $mobile-horizontal-content-padding;
+    @media (max-width: $screen-xs-max) {
+      margin-left: $mobile-horizontal-content-padding;
+      margin-right: $mobile-horizontal-content-padding;
+    }
   }
-
   .pell-actionbar {
     border-bottom: 1px solid $main-border-color;
   }
@@ -19,6 +20,27 @@
     .oneicon {
       @include absolute-align-middle-center();
       font-size: 160%;
+    }
+  }
+
+  .wyswig-content {
+    h1, h2, h3 {
+      margin-bottom: 1em;
+      @include font-semibold();
+      letter-spacing: $letter-spacing-base;
+      text-transform: uppercase;
+    }
+  
+    h1 {
+      font-size: $font-size-base * 1.25;
+    }
+  
+    h2 {
+      font-size: $font-size-base * 1.15;
+    }
+
+    h3 {
+      font-size: $font-size-base * 1.05;
     }
   }
 }

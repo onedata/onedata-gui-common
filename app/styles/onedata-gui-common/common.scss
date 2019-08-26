@@ -526,6 +526,13 @@ textarea + .btn-container {
   padding-bottom: $padding-large-vertical;
 }
 
+@for $i from 1 through 10 {
+  $pxNumber: $i * 100;
+  .min-height-#{$pxNumber} {
+    min-height: $pxNumber * 1px;
+  }
+}
+
 .one-infinite-list {
   thead th {
     text-align: center;

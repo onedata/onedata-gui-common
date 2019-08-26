@@ -294,19 +294,6 @@ label {
         .modal-footer {
           text-align: right;
         }
-
-        h1 {
-          font-size: $font-size-base * 1.4;
-          @include font-semibold();
-          letter-spacing: $letter-spacing-base;
-          margin-bottom: 1em;
-          text-transform: uppercase;
-        }
-        h2 {
-          font-size: $font-size-base * 1.2;
-          @include font-semibold();
-          text-transform: uppercase;
-        }
       }
     }
   }
@@ -315,6 +302,20 @@ label {
     .modal-dialog {
       transition: initial;
     }
+  }
+
+  h1 {
+    font-size: $font-size-base * 1.4;
+    @include font-semibold();
+    letter-spacing: $letter-spacing-base;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+  }
+  
+  h2 {
+    font-size: $font-size-base * 1.2;
+    @include font-semibold();
+    text-transform: uppercase;
   }
 }
 
