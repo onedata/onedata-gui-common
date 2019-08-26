@@ -23,12 +23,18 @@
     }
   }
 
-  .wyswig-content {
+  .wyswig-content, .pell-editor {
     h1, h2, h3 {
+      margin-top: 0;
       margin-bottom: 1em;
       @include font-semibold();
+      line-height: $headings-line-height;
       letter-spacing: $letter-spacing-base;
       text-transform: uppercase;
+    }
+
+    h1, h2, h3, p {
+      padding: 0;
     }
   
     h1 {
