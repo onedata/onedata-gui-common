@@ -239,19 +239,35 @@ label {
 @import "bootstrap/carousel";
 
 .modal {
+  $modal-min-height: 400px;
+  
   &.in {
     .modal-dialog {
       @include absolute-align-middle-center();
 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: calc(100% - #{2 * $padding-large-vertical});
+      min-height: $modal-min-height;
       margin: 0;
       transition: initial;
       border-radius: $border-radius-large;
+
+      @media (max-height: $modal-min-height) {
+        top: initial;
+        transform: translateX(-50%);
+        margin: $padding-large-vertical 0;
+      }
 
       @media (max-width: $screen-xs-max) {
         width: 90%;
       }
 
       .modal-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
         box-shadow: none;
         padding: 0em 2em 1em 2em;
 
@@ -266,6 +282,7 @@ label {
 
         .modal-body {
           padding: 0 $modal-inner-padding;
+          overflow: auto;
           &:first-child {
             padding-top: $modal-inner-padding;
           }
