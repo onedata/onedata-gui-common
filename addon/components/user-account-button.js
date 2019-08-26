@@ -24,6 +24,7 @@ export default Component.extend(ClickOutside, I18n, {
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
   session: service(),
+  privacyPolicyManager: service(),
   globalNotify: service(),
   guiUtils: service(),
   i18n: service(),
