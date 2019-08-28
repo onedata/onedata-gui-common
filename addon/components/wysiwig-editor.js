@@ -13,6 +13,7 @@ import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import layout from 'onedata-gui-common/templates/components/wysiwig-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import pell from 'ember-pell/pell';
 
 export default Component.extend({
   layout,
@@ -59,6 +60,14 @@ export default Component.extend({
       }, {
         name: 'heading1',
         icon: '<span class="oneicon oneicon-text-heading1"></span>',
+      }, {
+        name: 'heading2',
+        icon: '<span class="oneicon oneicon-text-heading2"></span>',
+      }, {
+        name: 'heading3',
+        icon: '<span class="oneicon oneicon-text-heading3"></span>',
+        // pell provides headings up to h2
+        result: () => pell.exec('formatBlock', '<h3>'),
       }, {
         name: 'paragraph',
         icon: '<span class="oneicon oneicon-text-paragraph"></span>',

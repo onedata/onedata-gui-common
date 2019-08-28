@@ -1,12 +1,13 @@
 @font-face {
   font-family: 'oneicons';
-  src:  url('fonts/oneicons.eot?8gg7oy');
-  src:  url('fonts/oneicons.eot?8gg7oy#iefix') format('embedded-opentype'),
-    url('fonts/oneicons.ttf?8gg7oy') format('truetype'),
-    url('fonts/oneicons.woff?8gg7oy') format('woff'),
-    url('fonts/oneicons.svg?8gg7oy#oneicons') format('svg');
+  src:  url('fonts/oneicons.eot?7jhzx7');
+  src:  url('fonts/oneicons.eot?7jhzx7#iefix') format('embedded-opentype'),
+    url('fonts/oneicons.ttf?7jhzx7') format('truetype'),
+    url('fonts/oneicons.woff?7jhzx7') format('woff'),
+    url('fonts/oneicons.svg?7jhzx7#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="oneicon-"], [class*=" oneicon-"] {
@@ -406,54 +407,60 @@
 .oneicon-text-heading1:before {
   content: "\e97e";
 }
-.oneicon-text-italic:before {
+.oneicon-text-heading2:before {
   content: "\e97f";
 }
-.oneicon-text-link:before {
+.oneicon-text-heading3:before {
   content: "\e980";
 }
-.oneicon-text-olist:before {
+.oneicon-text-italic:before {
   content: "\e981";
 }
-.oneicon-text-paragraph:before {
+.oneicon-text-link:before {
   content: "\e982";
 }
-.oneicon-text-strikethrough:before {
+.oneicon-text-olist:before {
   content: "\e983";
 }
-.oneicon-text-ulist:before {
+.oneicon-text-paragraph:before {
   content: "\e984";
 }
-.oneicon-text-underline:before {
+.oneicon-text-strikethrough:before {
   content: "\e985";
 }
-.oneicon-tokens:before {
+.oneicon-text-ulist:before {
   content: "\e986";
 }
-.oneicon-unit:before {
+.oneicon-text-underline:before {
   content: "\e987";
 }
-.oneicon-update:before {
+.oneicon-tokens:before {
   content: "\e988";
 }
-.oneicon-upload:before {
+.oneicon-unit:before {
   content: "\e989";
 }
-.oneicon-user-add:before {
+.oneicon-update:before {
   content: "\e98a";
 }
-.oneicon-user-profile:before {
+.oneicon-upload:before {
   content: "\e98b";
 }
-.oneicon-user:before {
+.oneicon-user-add:before {
   content: "\e98c";
 }
-.oneicon-view-grid:before {
+.oneicon-user-profile:before {
   content: "\e98d";
 }
-.oneicon-view-list:before {
+.oneicon-user:before {
   content: "\e98e";
 }
-.oneicon-x:before {
+.oneicon-view-grid:before {
   content: "\e98f";
+}
+.oneicon-view-list:before {
+  content: "\e990";
+}
+.oneicon-x:before {
+  content: "\e991";
 }
