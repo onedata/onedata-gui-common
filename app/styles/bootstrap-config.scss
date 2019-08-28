@@ -281,8 +281,9 @@ label {
         }
 
         .modal-body {
+          display: flex;
+          flex-direction: column;
           padding: 0 $modal-inner-padding;
-          overflow: auto;
           &:first-child {
             padding-top: $modal-inner-padding;
           }
