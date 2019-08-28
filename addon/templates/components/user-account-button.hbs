@@ -14,7 +14,7 @@
         {{#one-collapsible-list as |list|}}
           {{#if privacyPolicyManager.showPrivacyPolicyAction}}
             {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action privacyPolicyManager.showPrivacyPolicyAction) class=(concat menuItemClasses " privacy-policy-action")}}
+              {{#listItem.header click=(action "privacyPolicy") class=(concat menuItemClasses " privacy-policy-action")}}
                 {{tt this "privacyPolicy"}}
               {{/listItem.header}}
             {{/list.item}}
@@ -73,7 +73,7 @@
     <ul class="dropdown-menu">
       {{#if privacyPolicyManager.showPrivacyPolicyAction}}
         <li>
-          <a class="clickable" {{action privacyPolicyManager.showPrivacyPolicyAction}}>
+          <a class="clickable" {{action "privacyPolicy"}}>
             {{tt this "privacyPolicy"}}
           </a>
         </li>
