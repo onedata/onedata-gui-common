@@ -195,7 +195,7 @@ export default ArraySlice.extend({
     }
   },
 
-  reload({ head = false, minSize = 0 } = {}) {
+  reload({ head = false, minSize = 0, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -229,7 +229,7 @@ export default ArraySlice.extend({
     return this.get('fetch')(
         head ? null : this.get('firstObject.index'),
         size,
-        0
+        offset
       ).then(updatedRecordsArray => {
         safeExec(this, 'setProperties', {
           _startReached: true,

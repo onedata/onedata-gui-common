@@ -36,4 +36,13 @@ describe('Integration | Helper | date format', function () {
 
     expect(this.$().text().trim()).to.equal('never');
   });
+
+  it('can render date string from timestamp', function () {
+    this.set('inputDate', moment('2022-05-18T08:50:00+00:00').unix());
+    this.render(
+      hbs `{{date-format inputDate format="dateWithMinutes"}}`
+    );
+
+    expect(this.$().text().trim()).to.equal('18 May 2022 10:50');
+  });
 });

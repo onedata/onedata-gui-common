@@ -554,7 +554,7 @@ textarea[style^="touch-action: manipulation"] {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translateY(-50%) translateY(2px);
+    transform: translateY(-50%) translateY(1px);
     font-size: 180%;
   }
   &.sm {
