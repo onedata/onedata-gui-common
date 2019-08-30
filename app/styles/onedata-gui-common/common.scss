@@ -562,6 +562,10 @@ textarea[style^="touch-action: manipulation"] {
       font-size: 130%;
     }
   }
+  &.bind-right-text {
+    width: 1.6em;
+    bottom: -2px;
+  }
 }
   
 .btn-inline-after-text {
