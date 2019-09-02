@@ -554,13 +554,17 @@ textarea[style^="touch-action: manipulation"] {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translateY(-50%) translateY(2px);
+    transform: translateY(-50%) translateY(1px);
     font-size: 180%;
   }
   &.sm {
     .oneicon {
       font-size: 130%;
     }
+  }
+  &.bind-right-text {
+    width: 1.6em;
+    bottom: -2px;
   }
 }
   

@@ -15,9 +15,10 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-ul-container';
 import ContentOverFlowdetector from 'onedata-gui-common/mixins/content-overflow-detector';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(ContentOverFlowdetector, {
   layout,
@@ -27,6 +28,12 @@ export default Component.extend(ContentOverFlowdetector, {
     'scrollLeftReached:scroll-left-reached',
     'scrollRightReached:scroll-right-reached',
   ],
+
+  /**
+   * @virtual optional
+   * @type {Function}
+   */
+  hasOverflowChanged: notImplementedIgnore,
 
   /**
    * Is set to true, when cannot scroll more to the left.
@@ -58,6 +65,10 @@ export default Component.extend(ContentOverFlowdetector, {
    */
   $innerScrollContent: computed('element', function $innerScrollContent() {
     return this.$('.container-inner-scroll-content');
+  }),
+
+  hasOverflowObserver: observer('hasOverflow', function hasOverflowObserver() {
+    this.get('hasOverflowChanged')(this.get('hasOverflow'));
   }),
 
   didInsertElement() {

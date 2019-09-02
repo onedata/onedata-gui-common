@@ -150,8 +150,10 @@ export default ArraySlice.extend({
         sortFun,
       } = this.getProperties('sourceArray', 'chunkSize', 'sortFun');
 
+      const firstItem = sourceArray[0];
+
       return this.get('fetch')(
-        get(sourceArray[0], 'index'),
+        firstItem ? get(firstItem, 'index') : null,
         chunkSize,
         -chunkSize
       ).then(array => {
@@ -176,11 +178,13 @@ export default ArraySlice.extend({
         sortFun,
       } = this.getProperties('sourceArray', 'chunkSize', 'sortFun');
 
+      const lastItem = sourceArray[get(sourceArray, 'length') - 1];
+
       return this.get('fetch')(
         // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
         // and items are converted from plain objects to EmberObjects
         // the workaround is to use []
-        get(sourceArray[get(sourceArray, 'length') - 1], 'index'),
+        lastItem ? get(lastItem, 'index') : null,
         chunkSize,
         0
       ).then(array => {
@@ -195,7 +199,7 @@ export default ArraySlice.extend({
     }
   },
 
-  reload({ head = false, minSize = 0 } = {}) {
+  reload({ head = false, minSize = 0, offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -229,7 +233,7 @@ export default ArraySlice.extend({
     return this.get('fetch')(
         head ? null : this.get('firstObject.index'),
         size,
-        0
+        offset
       ).then(updatedRecordsArray => {
         safeExec(this, 'setProperties', {
           _startReached: true,
