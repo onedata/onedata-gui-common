@@ -1,0 +1,75 @@
+$one-arrow-dot-size: 6px;
+$one-arrow-height: 2 * $one-arrow-dot-size;
+$one-arrow-line-height: 2px;
+$one-arrow-arrowhead-height: (4 / 3) * $one-arrow-dot-size;
+$one-arrow-animation-time: 0.1s;
+
+.one-arrow {
+  position: relative;
+  height: $one-arrow-height;
+
+  &.direction-left {
+    .dot {
+      right: 0;
+      transform: translateX(50%) translateY(-50%);
+    }
+
+    .arrowhead {
+      left: $one-arrow-line-height;
+      border-width: $one-arrow-line-height 0 0 $one-arrow-line-height;
+    }
+  }
+
+  &.direction-right {
+    .dot {
+      left: 0;
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+    .arrowhead {
+      right: -$one-arrow-line-height;
+      border-width: 0 $one-arrow-line-height $one-arrow-line-height 0;
+    }
+  }
+
+  .dot {
+    position: absolute;
+    top: 50%;
+    width: $one-arrow-dot-size;
+    height: $one-arrow-dot-size;
+    border-radius: 100%;
+  }
+
+  .line {
+    @include vertical-align-middle();
+    height: $one-arrow-line-height;
+    width: 100%;
+  }
+
+  .line, .dot {
+    transition: background-color $one-arrow-animation-time linear;
+    background-color: $color-one-azure;
+  }
+  
+  .arrowhead {
+    position: absolute;
+    bottom: 50%;
+    width: $one-arrow-arrowhead-height;
+    height: $one-arrow-arrowhead-height;
+    border-color: $color-one-azure;
+    border-style: solid;
+    transform-origin: right bottom;
+    transform: rotate(-45deg);
+    transition: border-color $one-arrow-animation-time linear;
+  }
+
+  .arrow-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%) translateY(-1em);
+    font-size: 0.8em;
+    @include font-bold();
+    color: $color-one-azure;
+  }
+}
