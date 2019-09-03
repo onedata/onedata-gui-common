@@ -6,6 +6,7 @@ export default [
   'json-editor',
   'name-conflict',
   'nav-tabs',
+  'one-arrow',
   'one-tab-bar',
   'one-atlas',
   'one-clipboard-line',

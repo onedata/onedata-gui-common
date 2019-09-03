@@ -6,7 +6,6 @@ $one-arrow-animation-time: 0.1s;
 
 .one-arrow {
   position: relative;
-  height: $one-arrow-height;
 
   &.direction-left {
     .dot {
@@ -32,18 +31,81 @@ $one-arrow-animation-time: 0.1s;
     }
   }
 
+  &.direction-up {
+    .dot {
+      bottom: 0;
+      transform: translateX(-50%) translateY(50%);
+    }
+
+    .arrowhead {
+      top: $one-arrow-line-height;
+      border-width: $one-arrow-line-height $one-arrow-line-height 0 0;
+    }
+  }
+
+  &.direction-down {
+    .dot {
+      top: 0;
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+    .arrowhead {
+      bottom: -$one-arrow-line-height;
+      border-width: 0 0 $one-arrow-line-height $one-arrow-line-height;
+    }
+  }
+
+  &.direction-left, &.direction-right {
+    height: $one-arrow-height;
+
+    .dot {
+      top: 50%;
+    }
+
+    .line {
+      @include vertical-align-middle();
+      height: $one-arrow-line-height;
+      width: 100%;
+    }
+
+    .arrowhead {
+      bottom: 50%;
+      transform-origin: right bottom;
+    }
+
+    .arrow-text {
+      transform: translateX(-50%) translateY(-50%) translateY(-1em);
+    }
+  }
+
+  &.direction-up, &.direction-down {
+    height: 100%;
+
+    .dot {
+      left: 50%;
+    }
+
+    .line {
+      height: 100%;
+      width: $one-arrow-line-height;
+      margin: 0 auto;
+    }
+
+    .arrowhead {
+      left: 50%;
+      transform-origin: left bottom;
+    }
+
+    .arrow-text {
+      transform: translateY(-50%) translateX(1em);
+    }
+  }
+
   .dot {
     position: absolute;
-    top: 50%;
     width: $one-arrow-dot-size;
     height: $one-arrow-dot-size;
     border-radius: 100%;
-  }
-
-  .line {
-    @include vertical-align-middle();
-    height: $one-arrow-line-height;
-    width: 100%;
   }
 
   .line, .dot {
@@ -53,12 +115,10 @@ $one-arrow-animation-time: 0.1s;
   
   .arrowhead {
     position: absolute;
-    bottom: 50%;
     width: $one-arrow-arrowhead-height;
     height: $one-arrow-arrowhead-height;
     border-color: $color-one-azure;
     border-style: solid;
-    transform-origin: right bottom;
     transform: rotate(-45deg);
     transition: border-color $one-arrow-animation-time linear;
   }
@@ -67,9 +127,9 @@ $one-arrow-animation-time: 0.1s;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%) translateY(-1em);
     font-size: 0.8em;
     @include font-bold();
     color: $color-one-azure;
+    white-space: nowrap;
   }
 }
