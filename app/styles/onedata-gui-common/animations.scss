@@ -29,3 +29,7 @@ $transition-base-time: get-transition-time('base');
 @function transition-ease($property, $time: 'base', $delay: 0) {
   @return add-delay-to-transition($property get-transition-time($time) ease, $delay);
 }
+
+@function transition-ease-in($property, $time: 'base', $delay: 0) {
+  @return add-delay-to-transition($property get-transition-time($time) ease-in, $delay);
+}
