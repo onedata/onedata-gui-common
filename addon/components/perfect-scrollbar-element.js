@@ -92,5 +92,11 @@ export default Component.extend(PerfectScrollbarMixin, {
     } finally {
       this._super(...arguments);
     }
-  }
+  },
+
+  actions: {
+    scrollTop() {
+      return this.$().scrollTop(...arguments);
+    },
+  },
 });
