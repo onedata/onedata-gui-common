@@ -6,7 +6,7 @@
   bottom: 0;
   background-color: $color-one-white;
   overflow: hidden;
-  transition: width linear $collapse-transition-time;
+  transition: transition-linear(width);
 
   // initial size
   left: 0;

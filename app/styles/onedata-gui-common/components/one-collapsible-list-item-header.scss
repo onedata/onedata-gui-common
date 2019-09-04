@@ -9,7 +9,7 @@
     right: 20px;
     top: 50%;
     transform: translateY(-50%) rotate(0deg);
-    transition: transform .2s ease;
+    transition: transition-ease(transform);
   }
   @include btn-toolbar-float-right();
   &.toolbar-when-opened {

@@ -45,7 +45,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
 .ember-power-select-trigger {
   padding-left: $padding-large-horizontal;
   padding-right: 3em;
-  transition: all 0.2s ease;
+  transition: transition-ease(all);
   min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
   white-space: nowrap;
   outline: none !important;
