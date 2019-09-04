@@ -106,7 +106,7 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
       max-width: 150px;
       padding: $nav-link-padding;
       
-      transition: max-width 0.2s linear;
+      transition: transition-linear(max-width);
       
       &.active {
         max-width: 250px

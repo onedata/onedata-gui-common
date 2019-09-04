@@ -1,0 +1,31 @@
+$transition-times: (
+  short: .1s,
+  base: .2s
+);
+
+@function get-transition-time($time: 'base') {
+  @if type-of($time) == 'string' {
+    @return map-get($transition-times, $time);
+  } @else {
+    @return $time;
+  }
+}
+
+$transition-short-time: get-transition-time('short');
+$transition-base-time: get-transition-time('base');
+
+@function add-delay-to-transition($transition, $delay: 0) {
+  @if $delay != 0 {
+    @return $transition get-transition-time($delay);
+  } @else {
+    @return $transition;
+  }
+}
+
+@function transition-linear($property, $time: 'base', $delay: 0) {
+  @return add-delay-to-transition($property get-transition-time($time) linear, $delay);
+}
+
+@function transition-ease($property, $time: 'base', $delay: 0) {
+  @return add-delay-to-transition($property get-transition-time($time) ease, $delay);
+}
