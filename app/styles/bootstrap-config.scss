@@ -244,6 +244,7 @@ label {
       @include absolute-align-middle-center();
 
       margin: 0;
+      max-height: 100%;
       transition: initial;
       border-radius: $border-radius-large;
 
