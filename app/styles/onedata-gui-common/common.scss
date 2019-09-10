@@ -632,6 +632,9 @@ textarea[style^="touch-action: manipulation"] {
       &.with-input {
         padding-top: $table-info-cell-padding + $padding-base-vertical;
       }
+      &.with-input-sm {
+        padding-top: $table-info-cell-padding + $padding-small-vertical;
+      }
     }
   }
 }
