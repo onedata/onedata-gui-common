@@ -10,10 +10,12 @@
 
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import _ from 'lodash';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import { get, computed, observer } from '@ember/object';
+import { get, set, computed, observer } from '@ember/object';
 import { A } from '@ember/array';
+import _ from 'lodash';
+
+export const emptyItem = {};
 
 export default ArraySlice.extend({
   /**
@@ -25,6 +27,8 @@ export default ArraySlice.extend({
   startIndex: 0,
   endIndex: 0,
   indexMargin: 0,
+
+  emptyIndex: -1,
 
   /**
    * @type {function}
@@ -77,13 +81,11 @@ export default ArraySlice.extend({
     return this.get('chunkSize') / 2;
   }),
 
-  // TODO: implement better start change handling
   /**
    * @type {boolean}
    */
   _startReached: true,
 
-  // TODO: implement better end change handling
   /**
    * @type {boolean}
    */
@@ -123,15 +125,18 @@ export default ArraySlice.extend({
           _startReached,
           _endReached,
           sourceArray,
+          emptyIndex,
         } = this.getProperties(
           '_start',
           '_end',
           'loadMoreThreshold',
           '_startReached',
           '_endReached',
-          'sourceArray'
+          'sourceArray',
+          'emptyIndex',
         );
-        if (!_startReached && _start < loadMoreThreshold) {
+        const sourceArrayLength = get(sourceArray, 'length');
+        if (!sourceArrayLength || !_startReached && _start < emptyIndex) {
           this.fetchPrev();
         }
         if (!_endReached && _end + loadMoreThreshold >= get(sourceArray, 'length')) {
@@ -145,24 +150,45 @@ export default ArraySlice.extend({
       this.set('_fetchPrevLock', true);
 
       const {
+        _startReached,
         sourceArray,
         chunkSize,
-        sortFun,
-      } = this.getProperties('sourceArray', 'chunkSize', 'sortFun');
+        emptyIndex,
+      } = this.getProperties('_startReached', 'sourceArray', 'chunkSize', 'emptyIndex');
 
-      const firstItem = sourceArray[0];
+      const firstItem = sourceArray[emptyIndex + 1];
+      const firstIndex = firstItem ? get(firstItem, 'index') : null;
+
+      const currentChunkSize = _startReached ?
+        Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       return this.get('fetch')(
-        firstItem ? get(firstItem, 'index') : null,
-        chunkSize,
-        -chunkSize
-      ).then(array => {
-        if (get(array, 'length') < chunkSize) {
+        firstIndex,
+        currentChunkSize,
+        -currentChunkSize
+      ).then(arrayUpdate => {
+        // TODO: use of pullAllBy is working, but it is probably unsafe
+        // it can remove items from update, while they should stay there
+        // because some entries "fallen down" from further part of array
+        // it should be tested
+        _.pullAllBy(arrayUpdate, sourceArray, 'id');
+        const fetchedArraySize = get(arrayUpdate, 'length')
+        let insertIndex = emptyIndex + 1 - fetchedArraySize;
+        console.log(
+          'FIXME: fetchPrev', firstIndex, currentChunkSize,
+          fetchedArraySize, insertIndex
+        );
+        if (fetchedArraySize < currentChunkSize) {
           safeExec(this, 'set', '_startReached', true);
         }
-        _.pullAll(array, sourceArray.toArray());
-        sourceArray.unshift(...array);
-        sourceArray.sort(sortFun);
+        if (insertIndex < 0) {
+          sourceArray.unshift(...new Array(fetchedArraySize - emptyIndex));
+          insertIndex = 0;
+        }
+        for (let i = 0; i < fetchedArraySize; ++i) {
+          sourceArray[i + insertIndex] = arrayUpdate[i];
+        }
+        this.set('emptyIndex', insertIndex - 1);
         sourceArray.arrayContentDidChange();
       }).finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
     }
@@ -175,25 +201,24 @@ export default ArraySlice.extend({
       const {
         sourceArray,
         chunkSize,
-        sortFun,
-      } = this.getProperties('sourceArray', 'chunkSize', 'sortFun');
+      } = this.getProperties('sourceArray', 'chunkSize');
 
       const lastItem = sourceArray[get(sourceArray, 'length') - 1];
+
+      const fetchSize = chunkSize;
 
       return this.get('fetch')(
         // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
         // and items are converted from plain objects to EmberObjects
         // the workaround is to use []
         lastItem ? get(lastItem, 'index') : null,
-        chunkSize,
-        0
+        fetchSize,
+        lastItem ? 1 : 0
       ).then(array => {
         if (get(array, 'length') < chunkSize) {
           safeExec(this, 'set', '_endReached', true);
         }
-        _.pullAll(array, sourceArray.toArray());
         sourceArray.push(...array);
-        sourceArray.sort(sortFun);
         sourceArray.arrayContentDidChange();
       }).finally(() => safeExec(this, 'set', '_fetchNextLock', false));
     }
@@ -206,17 +231,19 @@ export default ArraySlice.extend({
       startIndex,
       endIndex,
       sourceArray,
-      sortFun,
+      indexMargin,
     } = this.getProperties(
       '_start',
       '_end',
       'startIndex',
       'endIndex',
       'sourceArray',
-      'sortFun'
+      'indexMargin',
     );
 
-    let reloadStart = Math.min(_start, startIndex);
+    // currently, if data is not loaded between start and startIndex
+    const lastSourceIndex = get(sourceArray, 'length') - 1;
+    let reloadStart = Math.min(lastSourceIndex, _start, startIndex);
     let reloadEnd = Math.max(_end, endIndex);
     if (reloadEnd === -1) {
       reloadEnd = 0;
@@ -224,25 +251,39 @@ export default ArraySlice.extend({
     if (reloadStart === -1) {
       reloadStart = 0;
     }
-    let size = reloadEnd - reloadStart;
+    let size = reloadEnd + indexMargin - reloadStart;
     if (size < minSize) {
       size = minSize;
     }
-
     this.set('_isReloading', true);
+    const firstObject = this.objectAt(0);
+    let firstObjectIndex = firstObject && get(firstObject, 'index');
+    if (firstObjectIndex === undefined || head || _start === 0) {
+      firstObjectIndex = null;
+    }
     return this.get('fetch')(
-        head ? null : this.get('firstObject.index'),
+        firstObjectIndex,
         size,
         offset
       ).then(updatedRecordsArray => {
+        const fetchedCount = get(updatedRecordsArray, 'length');
+        const updatedEnd = _start + fetchedCount;
         safeExec(this, 'setProperties', {
-          _startReached: true,
+          _startReached: false,
           _endReached: false,
           error: undefined,
         });
-        sourceArray.clear();
-        updatedRecordsArray.sort(sortFun);
-        sourceArray.pushObjects(updatedRecordsArray);
+        const emptyIndex = this.set('emptyIndex', _start - 1);
+        if (updatedEnd < get(sourceArray, 'length')) {
+          set(sourceArray, 'length', updatedEnd);
+        }
+        for (let i = 0; i <= emptyIndex; ++i) {
+          sourceArray[i] = emptyItem;
+        }
+        for (let i = 0; i < Math.min(updatedEnd, fetchedCount); ++i) {
+          sourceArray[i + _start] = updatedRecordsArray[i];
+        }
+        sourceArray.arrayContentDidChange(_start, );
         return this;
       })
       .catch(error => {
@@ -258,7 +299,7 @@ export default ArraySlice.extend({
     this._super(...arguments);
     this.set(
       'initialLoad',
-      PromiseObject.create({ promise: this.reload() })
+      PromiseObject.create({ promise: this.reload({ head: true }) })
     );
   },
 });
