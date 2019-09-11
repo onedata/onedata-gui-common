@@ -4,7 +4,7 @@
  *
  * @module utils/replacing-chunks-array
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -157,13 +157,13 @@ export default ArraySlice.extend({
       } = this.getProperties('_startReached', 'sourceArray', 'chunkSize', 'emptyIndex');
 
       const firstItem = sourceArray[emptyIndex + 1];
-      const firstIndex = firstItem ? get(firstItem, 'index') : null;
+      const fetchStartIndex = firstItem ? get(firstItem, 'index') : null;
 
       const currentChunkSize = _startReached ?
         Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       return this.get('fetch')(
-        firstIndex,
+        fetchStartIndex,
         currentChunkSize,
         -currentChunkSize
       ).then(arrayUpdate => {
@@ -174,22 +174,42 @@ export default ArraySlice.extend({
         _.pullAllBy(arrayUpdate, sourceArray, 'id');
         const fetchedArraySize = get(arrayUpdate, 'length')
         let insertIndex = emptyIndex + 1 - fetchedArraySize;
-        console.log(
-          'FIXME: fetchPrev', firstIndex, currentChunkSize,
-          fetchedArraySize, insertIndex
-        );
-        if (fetchedArraySize < currentChunkSize) {
-          safeExec(this, 'set', '_startReached', true);
+        // fetched data without duplicated is less than requested,
+        // so there is nothing left on the array start
+        if (fetchedArraySize >= currentChunkSize) {
+          if (fetchedArraySize < currentChunkSize && insertIndex > 0) {
+            for (let i = 0; i < insertIndex; ++i) {
+              sourceArray.shift();
+            }
+          }
+          if (insertIndex >= 0) {
+            // add new entries on the front and set new insertIndex for further use
+            for (let i = 0; i < fetchedArraySize; ++i) {
+              sourceArray[i + insertIndex] = arrayUpdate[i];
+            }
+            safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
+            sourceArray.arrayContentDidChange();
+          } else {
+            // there is more data on the array start, so we must move all the data
+            sourceArray.unshift(
+              _.times(
+                fetchedArraySize - emptyIndex - 1,
+                _.constant(emptyItem)
+              )
+            );
+            insertIndex = 0;
+          }
+        } else {
+          // there is equal or more items available on the start of array,
+          // so let's just reload the front and invalidate everything else!
+          for (let i = 0; i < insertIndex; ++i) {
+            sourceArray.shift();
+          }
+          this.setProperties({
+            startIndex: 0,
+          })
+          return this.reload();
         }
-        if (insertIndex < 0) {
-          sourceArray.unshift(...new Array(fetchedArraySize - emptyIndex));
-          insertIndex = 0;
-        }
-        for (let i = 0; i < fetchedArraySize; ++i) {
-          sourceArray[i + insertIndex] = arrayUpdate[i];
-        }
-        this.set('emptyIndex', insertIndex - 1);
-        sourceArray.arrayContentDidChange();
       }).finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
     }
   },
@@ -206,12 +226,13 @@ export default ArraySlice.extend({
       const lastItem = sourceArray[get(sourceArray, 'length') - 1];
 
       const fetchSize = chunkSize;
+      const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
 
       return this.get('fetch')(
         // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
         // and items are converted from plain objects to EmberObjects
         // the workaround is to use []
-        lastItem ? get(lastItem, 'index') : null,
+        fetchStartIndex,
         fetchSize,
         lastItem ? 1 : 0
       ).then(array => {
@@ -257,12 +278,13 @@ export default ArraySlice.extend({
     }
     this.set('_isReloading', true);
     const firstObject = this.objectAt(0);
-    let firstObjectIndex = firstObject && get(firstObject, 'index');
-    if (firstObjectIndex === undefined || head || _start === 0) {
-      firstObjectIndex = null;
+    let fetchStartIndex = firstObject && get(firstObject, 'index');
+    if (fetchStartIndex === undefined || head || _start === 0) {
+      fetchStartIndex = null;
     }
+
     return this.get('fetch')(
-        firstObjectIndex,
+        fetchStartIndex,
         size,
         offset
       ).then(updatedRecordsArray => {

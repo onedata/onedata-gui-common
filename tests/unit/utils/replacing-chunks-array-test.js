@@ -18,20 +18,30 @@ function recordRange(start, end) {
   return _.range(start, end).map(i => new Record(i));
 }
 
-function createFetch(array) {
-  return function fetch(fromId = 0, size = Number.MAX_SAFE_INTEGER, offset = 0) {
+class MockArray {
+  constructor() {
+    this.array = recordRange(0, 1000);
+  }
+  fetch(
+    fromId,
+    size = Number.MAX_SAFE_INTEGER,
+    offset = 0
+  ) {
+    if (fromId == null) {
+      fromId = Number.MIN_SAFE_INTEGER;
+    }
     let startIndex = 0;
-    for (let i = 0; i < array.length; ++i) {
+    for (let i = 0; i < this.array.length; ++i) {
       startIndex = i;
-      if (array[i].index >= fromId) {
+      if (this.array[i].index >= fromId) {
         break;
       }
     }
     const startOffset = Math.max(
       0,
-      Math.min(startIndex + offset, array.length - size)
+      Math.min(startIndex + offset, this.array.length - size)
     );
-    return Promise.resolve(array.slice(startOffset, startOffset + size));
+    return Promise.resolve(this.array.slice(startOffset, startOffset + size));
   }
 }
 
@@ -39,10 +49,9 @@ function removeFromArray(array, pos) {
   return [...array.slice(0, pos), ...array.slice(pos + 1, array.length)];
 }
 
-// FIXME: uncomment for some tests
-// function addToArray(array, pos, ...items) {
-//   return [...array.slice(0, pos), ...items, ...array.slice(pos, array.length)];
-// }
+function addToArray(array, pos, ...items) {
+  return [...array.slice(0, pos), ...items, ...array.slice(pos, array.length)];
+}
 
 const geMatcher = (compareValue) => {
   return sinon.match(
@@ -53,8 +62,8 @@ const geMatcher = (compareValue) => {
 
 describe('Unit | Utility | replacing chunks array', function () {
   beforeEach(function () {
-    this.testArray = recordRange(0, 1000);
-    this.fetch = createFetch(this.testArray);
+    this.mockArray = new MockArray();
+    this.fetch = MockArray.prototype.fetch.bind(this.mockArray);
   });
 
   it('exposes fragment of internal array and fetches new chunks', function () {
@@ -354,7 +363,10 @@ describe('Unit | Utility | replacing chunks array', function () {
           endIndex: 70,
         });
         return wait().then(() => {
-          this.testArray = removeFromArray(this.testArray, 70);
+          this.mockArray.array = removeFromArray(
+            this.mockArray.array,
+            70
+          );
           array.reload();
           expect(array.toArray()).to.deep.equal(
             removeFromArray(recordRange(10, 80), 70)
@@ -375,54 +387,82 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
   });
 
-  // FIXME: fix replacing chunks array implementation, check test fetch func.
-  // it('loads new data below 0 index', function () {
-  //   const fetchSpy = sinon.spy(this.fetch);
-  //   const array = ReplacingChunksArray.create({
-  //     fetch: fetchSpy,
-  //     startIndex: 0,
-  //     endIndex: 50,
-  //     indexMargin: 10,
-  //   });
-  //   const frontRecord1 = new Record(-2);
-  //   const frontRecord2 = new Record(-1);
-  //   return wait().then(() => {
-  //     array.setProperties({
-  //       startIndex: 10,
-  //       endIndex: 60,
-  //     });
-  //     return wait().then(() => {
-  //       array.setProperties({
-  //         startIndex: 20,
-  //         endIndex: 70,
-  //       });
-  //       return wait().then(() => {
-  //         this.testArray = addToArray(
-  //           this.testArray,
-  //           0,
-  //           frontRecord1,
-  //           frontRecord2
-  //         );
-  //         array.reload();
-  //         return wait().then(() => {
-  //           array.setProperties({
-  //             startIndex: 0,
-  //             endIndex: 50,
-  //           });
-  //           return wait().then(() => {
-  //             const actualArray = array.toArray();
-  //             const expectedArray = [
-  //               frontRecord1,
-  //               frontRecord2,
-  //               ...recordRange(0, 58)
-  //             ];
-  //             expect(actualArray).to.deep.equal(expectedArray);
-  //           });
-  //         });
-  //       });
-  //     });
+  // FIXME: experimental debug code
+  // it('allowsa', function () {
+  //   this.mockArray.array = addToArray(
+  //     this.mockArray.array,
+  //     0,
+  //     new Record(-2),
+  //     new Record(-1),
+  //   );
+  //   // console.log(this.testArray.mapBy('index').join(' '))
+  //   return this.fetch(null, 10, 0).then(results => {
+  //     console.log('x', results.map(JSON.stringify).join(' '))
+  //     console.log('y', recordRange(-2, 8).map(JSON.stringify).join(' '))
+  //     expect(results).to.deep.equal(
+  //       recordRange(-2, 8)
+  //     );
   //   });
   // });
+
+  // FIXME: fix replacing chunks array implementation, check test fetch func.
+  it('loads new data below 0 index', function () {
+    const fetchSpy = sinon.spy(this.fetch);
+    const array = ReplacingChunksArray.create({
+      fetch: fetchSpy,
+      startIndex: 0,
+      endIndex: 50,
+      indexMargin: 10,
+    });
+    const frontRecord1 = new Record(-2);
+    const frontRecord2 = new Record(-1);
+    return wait().then(() => {
+      array.setProperties({
+        startIndex: 10,
+        endIndex: 60,
+      });
+      return wait().then(() => {
+        array.setProperties({
+          startIndex: 20,
+          endIndex: 70,
+        });
+        return wait().then(() => {
+          this.mockArray.array = addToArray(
+            this.mockArray.array,
+            0,
+            frontRecord1,
+            frontRecord2
+          );
+          array.reload();
+          return wait().then(() => {
+            array.setProperties({
+              startIndex: 0,
+              endIndex: 50,
+            });
+            return wait().then(() => {
+              const actualArray = array.toArray();
+              const expectedArray = [
+                frontRecord1,
+                frontRecord2,
+                ...recordRange(0, 58)
+              ];
+              // FIXME: debug code
+              // console.log(
+              //   'a',
+              //   actualArray.mapBy('index').join(',')
+              // )
+              // console.log(
+              //   'e',
+              //   expectedArray.mapBy('index').join(',')
+              // )
+              expect(actualArray)
+                .to.deep.equal(expectedArray);
+            });
+          });
+        });
+      });
+    });
+  });
 
   // TODO: test truncate first element(s) of array
 
