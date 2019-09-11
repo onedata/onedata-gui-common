@@ -14,6 +14,7 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { get, set, computed, observer } from '@ember/object';
 import { A } from '@ember/array';
 import _ from 'lodash';
+import { resolve } from 'rsvp';
 
 export const emptyItem = {};
 
@@ -211,6 +212,8 @@ export default ArraySlice.extend({
           return this.reload();
         }
       }).finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
+    } else {
+      return resolve();
     }
   },
 
@@ -242,6 +245,8 @@ export default ArraySlice.extend({
         sourceArray.push(...array);
         sourceArray.arrayContentDidChange();
       }).finally(() => safeExec(this, 'set', '_fetchNextLock', false));
+    } else {
+      return resolve();
     }
   },
 
