@@ -34,7 +34,7 @@
     "chartist-plugin-legend": "0.6.1",
     "color": "2.0.1",
     "contrast": "1.0.1",
-    "ember-awesome-macros": "4.0.0",
+    "ember-awesome-macros": "5.0.1",
     "ember-bootstrap": "1.2.0",
     "ember-browser-info": "0.1.3",
     "ember-browserify": "1.2.1",
