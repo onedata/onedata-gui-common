@@ -2,7 +2,10 @@
   <div class="button-text">
     {{yield}}
   </div>
-  <div class="one-pill-button-actions-trigger">
+  <div
+    class="one-pill-button-actions-trigger"
+    onclick={{action (disable-bubbling (action "toggleActions"))}}
+  >
     <div class="inline-icon-container">
       {{one-icon icon="arrow-down"}}
     </div>
@@ -11,6 +14,7 @@
     class="one-pill-button-actions-popover"
     popoverStyle="with-dropdown {{popoverClass}}"
     padding=false
+    popoverTrigger="manual"
     triggerSelector=(concat "#" elementId " .one-pill-button-actions-trigger")
     open=actionsOpen
   }}
