@@ -23,8 +23,6 @@ export default Component.extend(ClickOutside, I18n, {
   classNames: ['user-account-button'],
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
-  session: service(),
-  globalNotify: service(),
   guiUtils: service(),
   i18n: service(),
 
