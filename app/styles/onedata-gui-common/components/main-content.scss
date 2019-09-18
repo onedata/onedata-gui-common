@@ -274,6 +274,9 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     right: $content-col-padding;
     bottom: $content-col-padding;
     left: $content-col-padding;
+    .content-info .world-map {
+      margin: -$content-col-padding;
+    }
   }
   // last row child in absolute-flex-content that should be stretched to fit
   .absolute-flex-content-child-stretch {
