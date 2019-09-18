@@ -315,6 +315,7 @@ export default ArraySlice.extend({
       })
       .catch(error => {
         safeExec(this, 'set', 'error', error);
+        throw error;
       })
       .finally(() => safeExec(this, 'set', '_isReloading', false));
   },
@@ -327,6 +328,8 @@ export default ArraySlice.extend({
     this.set(
       'initialLoad',
       PromiseObject.create({ promise: this.reload({ head: true }) })
-    );
+    ).catch(error => {
+      console.debug('replacing-chunks-array#init: initial load failed: ' + error);
+    });
   },
 });
