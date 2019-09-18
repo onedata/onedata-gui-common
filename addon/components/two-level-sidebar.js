@@ -122,11 +122,4 @@ export default Component.extend({
     } = this.getProperties('secondLevelItems', 'secondaryItemId');
     return _.find(secondLevelItems, { id: secondaryItemId });
   }),
-
-  actions: {
-    changePrimaryItemId(itemId) {
-      let resourceType = this.get('resourceType');
-      return invokeAction(this, 'changeResourceId', resourceType, itemId);
-    },
-  },
 });

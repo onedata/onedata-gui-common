@@ -161,9 +161,6 @@ export default Component.extend({
         invoke(this, 'mobileMenuItemChanged', 'users');
       }
     },
-    changeResourceId() {
-      return invokeAction(this, 'changeResourceId', ...arguments);
-    },
     scrollOccurred(event) {
       this.get('scrollState').scrollOccurred(event);
     },
