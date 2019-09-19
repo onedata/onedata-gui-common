@@ -16,7 +16,7 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
-import { invokeAction, invoke } from 'ember-invoke-action';
+import { invoke } from 'ember-invoke-action';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend({
