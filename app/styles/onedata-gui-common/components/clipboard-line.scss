@@ -1,14 +1,14 @@
 .clipboard-line {
+  $-copy-btn-width-base: 52px;
+  $-copy-btn-width-small: 40px;
+  
   display: table;
+  position: relative;
   width: 100%;
   
   @mixin clipboard-line-element {
     display: table-cell;
     vertical-align: middle;
-  }
-
-  .input-group {
-    table-layout: initial;
   }
   
   .clipboard-line-label {
@@ -17,36 +17,82 @@
     // as small as possible
     width: 1px;
   }
-  .clipboard-line-input {
+  .clipboard-input {
     @include clipboard-line-element();
-    input[type=text] {
-      height: $input-height-base;
-    }
+    text-overflow: ellipsis;
   }
-  .clipboard-line-btn {
-    @include clipboard-line-element();
-    width: 100px;
-    padding-left: 20px;
+  input.clipboard-input {
+    padding-right: $-copy-btn-width-base;
+    height: $input-height-base;
+  }
+  .clipboard-btn {
+    position: absolute;
+    background: none;
+    border: none;
+    right: 0;
+    width: $-copy-btn-width-base;
+    outline: none;
+    .copy-btn-icon {
+      position: relative;
+      font-size: 2em;
+      line-height: $input-height-base;
+    }
     .copy-btn {
       height: $input-height-base;
     }
-  }
-
-  .without-text {
-    padding-left: $padding-base-horizontal;
-    padding-right: $padding-base-horizontal;
-    .one-icon {
-      margin-right: -0.6em;
+    .copy-btn-background {
+      display: none;
+    }
+    &.clipboard-btn-input {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    &.clipboard-btn-textarea {
+      bottom: 0;
+      .copy-btn-icon {
+        z-index: 1001;
+      }
+      .copy-btn-background {
+        z-index: 1001;
+        position: absolute;
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: radial-gradient(circle at center, #fdfdfd, transparent 100%);
+      }
     }
   }
   
+  textarea.clipboard-input {
+    resize: none;
+    height: auto;
+  }
   &.sm {
-    .clipboard-line-input input[type=text] {
-      height: $input-height-small;
+    .clipboard-input {
+      font-size: $font-size-base;
       line-height: $line-height-small;
     }
-    .clipboard-line-btn .copy-btn {
+    input.clipboard-input {
       height: $input-height-small;
+      padding-right: $-copy-btn-width-small;
+    }
+    .clipboard-btn {
+      width: $-copy-btn-width-small;
+      .copy-btn {
+        height: $input-height-small;
+      }
+      .copy-btn-icon {
+        font-size: 1.5em;
+        line-height: $input-height-small;
+      }
+    }
+  }
+  
+  &.monospace-font {
+    .clipboard-input {
+      font-family: monospace;
     }
   }
 }
