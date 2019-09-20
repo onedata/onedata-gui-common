@@ -1,8 +1,10 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-pill-button';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   classNames: 'one-pill-button',
+  classNameBindings: ['mobileMode:mobile-mode'],
   layout,
 
   /**
@@ -10,6 +12,15 @@ export default Component.extend({
    * @type {Array<object>}
    */
   menuItems: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  mobileMode: false,
+
+  arrowIcon: computed('mobileMode', function arrowIcon() {
+    return this.get('mobileMode') ? 'arrow-up' : 'arrow-down';
+  }),
 
   actions: {
     toggleActions(open) {

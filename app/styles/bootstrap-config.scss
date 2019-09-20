@@ -144,6 +144,11 @@ label {
     }
   }
 }
+@media (max-width: $screen-xs-max) {
+  .dropdown-menu {
+    font-size: 80%;  
+  }
+}
 @import "bootstrap/button-groups";
 .btn-group {
   .btn {
