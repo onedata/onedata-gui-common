@@ -15,10 +15,11 @@ import { get, set, computed, observer } from '@ember/object';
 import { A } from '@ember/array';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
+import Evented from '@ember/object/evented';
 
 export const emptyItem = {};
 
-export default ArraySlice.extend({
+export default ArraySlice.extend(Evented, {
   /**
    * @virtual 
    * @type {function} `(fromIndex, size, offset) => Array<any>`
@@ -163,55 +164,66 @@ export default ArraySlice.extend({
       const currentChunkSize = _startReached ?
         Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
+      this.trigger('fetchPrevStarted');
       return this.get('fetch')(
-        fetchStartIndex,
-        currentChunkSize,
-        -currentChunkSize
-      ).then(arrayUpdate => {
-        // TODO: use of pullAllBy is working, but it is probably unsafe
-        // it can remove items from update, while they should stay there
-        // because some entries "fallen down" from further part of array
-        // it should be tested
-        _.pullAllBy(arrayUpdate, sourceArray, 'id');
-        const fetchedArraySize = get(arrayUpdate, 'length')
-        let insertIndex = emptyIndex + 1 - fetchedArraySize;
-        // fetched data without duplicated is less than requested,
-        // so there is nothing left on the array start
-        if (fetchedArraySize >= currentChunkSize) {
-          if (fetchedArraySize < currentChunkSize && insertIndex > 0) {
+          fetchStartIndex,
+          currentChunkSize,
+          -currentChunkSize
+        )
+        .then(arrayUpdate => {
+          // TODO: use of pullAllBy is working, but it is probably unsafe
+          // it can remove items from update, while they should stay there
+          // because some entries "fallen down" from further part of array
+          // it should be tested
+          _.pullAllBy(arrayUpdate, sourceArray, 'id');
+          const fetchedArraySize = get(arrayUpdate, 'length')
+          let insertIndex = emptyIndex + 1 - fetchedArraySize;
+          // fetched data without duplicated is less than requested,
+          // so there is nothing left on the array start
+          if (fetchedArraySize >= currentChunkSize) {
+            if (fetchedArraySize < currentChunkSize && insertIndex > 0) {
+              for (let i = 0; i < insertIndex; ++i) {
+                sourceArray.shift();
+              }
+            }
+            if (insertIndex >= 0) {
+              // add new entries on the front and set new insertIndex for further use
+              for (let i = 0; i < fetchedArraySize; ++i) {
+                sourceArray[i + insertIndex] = arrayUpdate[i];
+              }
+              safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
+              sourceArray.arrayContentDidChange();
+            } else {
+              // there is more data on the array start, so we must move all the data
+              sourceArray.unshift(
+                _.times(
+                  fetchedArraySize - emptyIndex - 1,
+                  _.constant(emptyItem)
+                )
+              );
+              insertIndex = 0;
+            }
+          } else {
+            // there is equal or more items available on the start of array,
+            // so let's just reload the front and invalidate everything else!
             for (let i = 0; i < insertIndex; ++i) {
               sourceArray.shift();
             }
+            this.setProperties({
+              startIndex: 0,
+            })
+            return this.reload();
           }
-          if (insertIndex >= 0) {
-            // add new entries on the front and set new insertIndex for further use
-            for (let i = 0; i < fetchedArraySize; ++i) {
-              sourceArray[i + insertIndex] = arrayUpdate[i];
-            }
-            safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
-            sourceArray.arrayContentDidChange();
-          } else {
-            // there is more data on the array start, so we must move all the data
-            sourceArray.unshift(
-              _.times(
-                fetchedArraySize - emptyIndex - 1,
-                _.constant(emptyItem)
-              )
-            );
-            insertIndex = 0;
-          }
-        } else {
-          // there is equal or more items available on the start of array,
-          // so let's just reload the front and invalidate everything else!
-          for (let i = 0; i < insertIndex; ++i) {
-            sourceArray.shift();
-          }
-          this.setProperties({
-            startIndex: 0,
-          })
-          return this.reload();
-        }
-      }).finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
+        })
+        .catch(error => {
+          this.trigger('fetchPrevRejected')
+          throw error;
+        })
+        .then(result => {
+          this.trigger('fetchPrevResolved');
+          return result
+        })
+        .finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
     } else {
       return resolve();
     }
@@ -231,20 +243,31 @@ export default ArraySlice.extend({
       const fetchSize = chunkSize;
       const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
 
+      this.trigger('fetchNextStarted');
       return this.get('fetch')(
-        // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
-        // and items are converted from plain objects to EmberObjects
-        // the workaround is to use []
-        fetchStartIndex,
-        fetchSize,
-        lastItem ? 1 : 0
-      ).then(array => {
-        if (get(array, 'length') < chunkSize) {
-          safeExec(this, 'set', '_endReached', true);
-        }
-        sourceArray.push(...array);
-        sourceArray.arrayContentDidChange();
-      }).finally(() => safeExec(this, 'set', '_fetchNextLock', false));
+          // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
+          // and items are converted from plain objects to EmberObjects
+          // the workaround is to use []
+          fetchStartIndex,
+          fetchSize,
+          lastItem ? 1 : 0
+        )
+        .then(array => {
+          if (get(array, 'length') < chunkSize) {
+            safeExec(this, 'set', '_endReached', true);
+          }
+          sourceArray.push(...array);
+          sourceArray.arrayContentDidChange();
+        })
+        .catch(error => {
+          this.trigger('fetchNextRejected')
+          throw error;
+        })
+        .then(result => {
+          this.trigger('fetchNextResolved');
+          return result
+        })
+        .finally(() => safeExec(this, 'set', '_fetchNextLock', false));
     } else {
       return resolve();
     }

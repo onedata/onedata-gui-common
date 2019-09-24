@@ -387,25 +387,6 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
   });
 
-  // FIXME: experimental debug code
-  // it('allowsa', function () {
-  //   this.mockArray.array = addToArray(
-  //     this.mockArray.array,
-  //     0,
-  //     new Record(-2),
-  //     new Record(-1),
-  //   );
-  //   // console.log(this.testArray.mapBy('index').join(' '))
-  //   return this.fetch(null, 10, 0).then(results => {
-  //     console.log('x', results.map(JSON.stringify).join(' '))
-  //     console.log('y', recordRange(-2, 8).map(JSON.stringify).join(' '))
-  //     expect(results).to.deep.equal(
-  //       recordRange(-2, 8)
-  //     );
-  //   });
-  // });
-
-  // FIXME: fix replacing chunks array implementation, check test fetch func.
   it('loads new data below 0 index', function () {
     const fetchSpy = sinon.spy(this.fetch);
     const array = ReplacingChunksArray.create({
@@ -446,15 +427,6 @@ describe('Unit | Utility | replacing chunks array', function () {
                 frontRecord2,
                 ...recordRange(0, 58)
               ];
-              // FIXME: debug code
-              // console.log(
-              //   'a',
-              //   actualArray.mapBy('index').join(',')
-              // )
-              // console.log(
-              //   'e',
-              //   expectedArray.mapBy('index').join(',')
-              // )
               expect(actualArray)
                 .to.deep.equal(expectedArray);
             });
@@ -464,6 +436,45 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
   });
 
-  // TODO: test truncate first element(s) of array
+  it('notifies about fetchPrev start and resolve', function () {
+    const fetchPrevStartedHandler = sinon.spy();
+    const fetchPrevResolvedHandler = sinon.spy();
+    const fetchSpy = sinon.spy(this.fetch);
+
+    const array = ReplacingChunksArray.create({
+      fetch: fetchSpy,
+      startIndex: 0,
+      endIndex: 50,
+      indexMargin: 10,
+    });
+    array.on('fetchPrevStarted', fetchPrevStartedHandler);
+    array.on('fetchPrevResolved', fetchPrevResolvedHandler);
+
+    return wait().then(() => {
+      array.setProperties({
+        startIndex: 10,
+        endIndex: 60,
+      });
+      return wait().then(() => {
+        array.setProperties({
+          startIndex: 20,
+          endIndex: 70,
+        });
+        return wait().then(() => {
+          array.reload();
+          return wait().then(() => {
+            array.setProperties({
+              startIndex: 0,
+              endIndex: 50,
+            });
+            expect(fetchPrevStartedHandler).to.be.calledOnce;
+            return wait().then(() => {
+              expect(fetchPrevResolvedHandler).to.be.calledOnce;
+            });
+          });
+        });
+      });
+    });
+  });
 
 });
