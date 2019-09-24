@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/perfect-scrollbar-element';
 import { debounce } from '@ember/runloop';
-import { PerfectScrollbarMixin } from 'ember-perfect-scrollbar';
+import PerfectScrollbarMixin from 'onedata-gui-common/mixins/perfect-scrollbar';
 
 export default Component.extend(PerfectScrollbarMixin, {
   layout,
