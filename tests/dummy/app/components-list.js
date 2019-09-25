@@ -17,6 +17,7 @@ export default [
   'one-space-indicator',
   'one-spin-button',
   'one-tree',
+  'one-way-capacity',
   'one-way-toggle',
   'promise-proxy-container',
   'provider-place',

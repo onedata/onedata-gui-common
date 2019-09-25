@@ -36,6 +36,14 @@
         class=(concat "one-form-field field-" (dot-to-dash field.name))
         value=value
         showText=false}}
+    {{else if (eq field.type "capacity")}}
+      {{one-way-capacity
+        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        value=value
+        inputId=inputId
+        disabled=disabled
+        onChange=(action "inputChanged" field.name)
+        onFocusOut=(action "onFocusOut")}}
     {{else}}
       <div class={{if field.rightText "input-group"}}>
         {{#if (eq field.type "radio-group")}}

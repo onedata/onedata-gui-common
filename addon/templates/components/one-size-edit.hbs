@@ -1,40 +1,13 @@
 {{#if _inEditionMode}}
-  <input
-    type="text"
-    class="form-control size-number-input {{inputClasses}}"
-    value={{or tmpDisplayedInputValue displayedInputValue}}
-    oninput={{action "updateInputValue" value="target.value"}}
-    onkeyup={{action "inputOnKeyUp"}}
-    disabled={{_whileSaving}}
-  >
+{{one-way-capacity
+  inputClasses=inputClasses
+  value=_inputValue
+  onChange=(action "updateInputValue")
+  onKeyUp=(action "inputOnKeyUp")
+  disabled=_whileSaving}}
   {{#if validationMessage}}
     <div class="form-message">{{validationMessage}}</div>
   {{/if}}
-{{else}}
-  <input
-    type="text"
-    class="form-control size-number-input {{inputClasses}}"
-    value={{displayedInputValue}}
-    readonly=true
-  >
-{{/if}}
-
-{{#if _inEditionMode}}
-  <span class="input-group-basic-dropdown size-unit-select-group">
-    {{#power-select
-      triggerClass=size
-      dropdownClass=size
-      disabled=_whileSaving
-      options=sizeUnits
-      selected=selectedSupportSizeUnit
-      onchange=(action "updateSelectedSupportSizeUnit")
-      searchEnabled=false
-      renderInPlace=true
-      as |unit|
-    }}
-      {{unit.name}}
-    {{/power-select}}
-  </span>
   <span class="input-group-btn">
     {{#one-spin-button
       class="btn btn-primary btn-confirm-choose btn-save"
@@ -54,6 +27,12 @@
     {{/bs-button}}
   </span>
 {{else}}
+  <input
+    type="text"
+    class="form-control size-number-input {{inputClasses}}"
+    value={{displayedInputValue}}
+    readonly=true
+  >
   <span class="input-group-btn">
     {{#bs-button
       type="default"

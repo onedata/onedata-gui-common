@@ -62,6 +62,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   }
 
   &.small, .form-group-sm & {
+    @extend .small;
     padding: $padding-small-vertical + 1px $padding-xs-horizontal;
     padding-right: 2em;
     min-height: $input-height-small;
@@ -158,12 +159,12 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
 .form-group {
   &.has-success {
     .ember-power-select-trigger:not([aria-expanded]) {
-      border: 1px solid $color-one-success;
+      border-color: $color-one-success;
     }
   }
   &.has-error {
     .ember-power-select-trigger:not([aria-expanded]) {
-      border: 1px solid $color-one-danger;
+      border-color: $color-one-danger;
     }
   }
 }

@@ -13,7 +13,7 @@
         (if (eq field.type "static") "form-group-static" "form-group-editable")
         (if field.rightText "has-right-text")
         (if field.message "has-message")
-        (if (eq field.type "radio-group") "no-feedback")
+        (if (or (eq field.type "radio-group") (eq field.type "capacity")) "no-feedback")
       )
     }}
       {{#if (eq field.type "checkbox")}}

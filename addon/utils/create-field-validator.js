@@ -89,7 +89,7 @@ export default function createFieldValidator(field) {
   if (['text', 'password'].includes(fieldType) && textLength) {
     validations.push(validator('length', textLength));
   }
-  if (field.type === 'number') {
+  if (['number', 'capacity'].includes(field.type)) {
     validations.push(validator('number', {
       allowString: true,
       allowBlank: field.optional,

@@ -129,6 +129,13 @@ input {
   border-color: $color-one-list-item-separator;
 }
 
+input[type=number] {  
+  &::-webkit-inner-spin-button {
+    display: none;
+  }
+  -moz-appearance:textfield;
+}
+
 .world-map {
   &.light {
     background-image: url($root-url + 'images/world-map-light.svg');
