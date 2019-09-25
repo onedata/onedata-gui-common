@@ -637,4 +637,21 @@ textarea[style^="touch-action: manipulation"] {
       }
     }
   }
+  &.table-info-collapsible {
+    @media (max-width: $screen-sm-max) {
+      tr {
+        display: block;
+      }
+      td {
+        display: block;
+        margin-top: -10px;
+        &.property-name {
+          padding-left: 10px;
+        }
+        &.property-value {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
 }
