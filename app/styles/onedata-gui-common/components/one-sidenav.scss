@@ -15,7 +15,7 @@
   &.in {
     border-right: 1px solid $color-one-list-item-separator;
   }
-  .ps-container {
+  .ps {
     position: absolute;
     @include fill-container();
   }

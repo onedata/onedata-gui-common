@@ -39,6 +39,7 @@ export default Component.extend(PerfectScrollbarMixin, {
   _window: window,
 
   /**
+   * @override
    * @type {Ember.ComputedProperty<boolean>}
    */
   perfectScrollbarOptions: computed(

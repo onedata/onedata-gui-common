@@ -18,7 +18,7 @@ import { isPresent } from '@ember/utils';
 import PerfectScrollbar from 'npm:perfect-scrollbar';
 
 export default Mixin.create({
-  perfectScrollbarOptions: {},
+  perfectScrollbarOptions: Object.freeze({}),
 
   perfectScrollbar: undefined,
 
@@ -40,7 +40,7 @@ export default Mixin.create({
     this._super(...args);
 
     const perfectScrollbar =
-      new PerfectScrollbar(this.element, get(this, 'perfectScrollbarOptions'));
+      new PerfectScrollbar(this.element, this.get('perfectScrollbarOptions'));
 
     this.set('perfectScrollbar', perfectScrollbar);
   },
@@ -48,7 +48,7 @@ export default Mixin.create({
   willDestroyElement(...args) {
     this._super(...args);
 
-    const resizeService = get(this, 'resizeService');
+    const resizeService = this.get('resizeService');
 
     if (isPresent(resizeService)) {
       resizeService.off('debouncedDidResize', this, '_resizePerfectScrollbar');
