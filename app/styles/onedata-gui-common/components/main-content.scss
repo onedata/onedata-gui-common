@@ -302,4 +302,9 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     margin-left: -$content-col-padding;
     padding-left: $content-col-padding;
   }
+  @media (max-width: $screen-xs-max) {
+    .content-header-section {
+      padding-top: 0;
+    }
+  }
 }
