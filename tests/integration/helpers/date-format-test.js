@@ -43,6 +43,6 @@ describe('Integration | Helper | date format', function () {
       hbs `{{date-format inputDate format="dateWithMinutes"}}`
     );
 
-    expect(this.$().text().trim()).to.equal('18 May 2022 10:50');
+    expect(this.$().text().trim()).to.match(/18 May 2022 \d+:50/);
   });
 });
