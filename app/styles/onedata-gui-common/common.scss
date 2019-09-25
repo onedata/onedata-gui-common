@@ -73,6 +73,10 @@ strong {
   word-wrap: break-word;
 }
 
+.break-all {
+  word-break: break-all;
+}
+
 .no-pointer-events {
   pointer-events: none;
 }
