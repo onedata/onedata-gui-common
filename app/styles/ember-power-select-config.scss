@@ -129,6 +129,10 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     min-height: $line-height-computed + 2 * $padding-base-vertical;
     overflow: hidden;
     word-wrap: break-word;
+
+    &[aria-disabled="true"] {
+      pointer-events: auto;
+    }
     
     &[aria-current="true"] {
       color: $color-one-white;
