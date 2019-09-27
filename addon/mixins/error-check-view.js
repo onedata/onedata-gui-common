@@ -13,6 +13,7 @@ import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mix
 import DisabledErrorCheckList from 'onedata-gui-common/utils/disabled-error-check-list';
 import { computed } from '@ember/object';
 import { resolve } from 'rsvp';
+import { next } from '@ember/runloop';
 
 export default Mixin.create(
   createDataProxyMixin('errorCheck'),
@@ -54,7 +55,9 @@ export default Mixin.create(
         return this.getErrorCheckProxy()
           .then(isError => {
             if (!isError) {
-              this.redirectToIndex();
+              next(() => {
+                this.redirectToIndex();
+              });
             }
             return isError;
           });
