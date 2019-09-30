@@ -12,13 +12,6 @@
       {{/listItem.header}}
       {{#listItem.content}}
         {{#one-collapsible-list as |list|}}
-          {{#if privacyPolicyManager.showPrivacyPolicyAction}}
-            {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "privacyPolicy") class=(concat menuItemClasses " privacy-policy-action")}}
-                {{tt this "privacyPolicy"}}
-              {{/listItem.header}}
-            {{/list.item}}
-          {{/if}}
           {{#if guiUtils.manageAccountText}}
             {{#list.item isCollapsible=false as |listItem|}}
               {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
@@ -31,6 +24,13 @@
                     {{guiUtils.manageAccountText}}
                   {{/link-to}}
                 {{/if}}
+              {{/listItem.header}}
+            {{/list.item}}
+          {{/if}}
+          {{#if privacyPolicyManager.showPrivacyPolicyAction}}
+            {{#list.item isCollapsible=false as |listItem|}}
+              {{#listItem.header click=(action "privacyPolicy") class=(concat menuItemClasses " privacy-policy-action")}}
+                {{tt this "privacyPolicy"}}
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
@@ -71,13 +71,6 @@
     as |popover|
   }}
     <ul class="dropdown-menu">
-      {{#if privacyPolicyManager.showPrivacyPolicyAction}}
-        <li>
-          <a class="clickable" {{action "privacyPolicy"}}>
-            {{tt this "privacyPolicy"}}
-          </a>
-        </li>
-      {{/if}}
       {{#if guiUtils.manageAccountText}}
         <li>
           {{#if guiUtils.manageAccountExternalLink}}
@@ -89,6 +82,13 @@
               {{guiUtils.manageAccountText}}
             {{/link-to}}
           {{/if}}
+        </li>
+      {{/if}}
+      {{#if privacyPolicyManager.showPrivacyPolicyAction}}
+        <li>
+          <a class="clickable" {{action "privacyPolicy"}}>
+            {{tt this "privacyPolicy"}}
+          </a>
         </li>
       {{/if}}
       <li>
