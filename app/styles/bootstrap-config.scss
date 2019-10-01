@@ -284,6 +284,7 @@ label {
           display: flex;
           flex-direction: column;
           padding: 0 $modal-inner-padding;
+          min-height: 0;
           &:first-child {
             padding-top: $modal-inner-padding;
           }

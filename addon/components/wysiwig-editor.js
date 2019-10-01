@@ -18,6 +18,7 @@ import pell from 'ember-pell/pell';
 export default Component.extend({
   layout,
   classNames: ['wysiwig-editor'],
+  classNameBindings: ['disabled'],
 
   /**
    * One of 'show', 'edit'
@@ -31,6 +32,11 @@ export default Component.extend({
    * @type {string}
    */
   content: '',
+
+  /**
+   * @type {boolean}
+   */
+  disabled: false,
 
   /**
    * @virtual

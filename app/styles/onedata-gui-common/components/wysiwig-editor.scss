@@ -1,4 +1,9 @@
 .wysiwig-editor {
+  &.disabled {
+    pointer-events: none;
+    background-color: $color-one-semiwhite;
+  }
+
   .pell-editor {
     border: 1px solid $main-border-color;
     margin-bottom: $padding-base-vertical;
