@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'oneicons';
   src:
-    url('fonts/oneicons.ttf?a8989a') format('truetype'),
-    url('fonts/oneicons.woff?a8989a') format('woff'),
-    url('fonts/oneicons.svg?a8989a#oneicons') format('svg');
+    url('fonts/oneicons.ttf?ov5uad') format('truetype'),
+    url('fonts/oneicons.woff?ov5uad') format('woff'),
+    url('fonts/oneicons.svg?ov5uad#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -467,30 +467,33 @@
 .oneicon-transfers:before {
   content: "\e992";
 }
+.oneicon-transfers:before {
+  content: "\e98d";
+}
 .oneicon-unit:before {
-  content: "\e993";
+  content: "\e98e";
 }
 .oneicon-update:before {
-  content: "\e994";
+  content: "\e98f";
 }
 .oneicon-upload:before {
-  content: "\e995";
+  content: "\e990";
 }
 .oneicon-user-add:before {
-  content: "\e996";
+  content: "\e991";
 }
 .oneicon-user-profile:before {
-  content: "\e997";
+  content: "\e992";
 }
 .oneicon-user:before {
-  content: "\e998";
+  content: "\e993";
 }
 .oneicon-view-grid:before {
-  content: "\e999";
+  content: "\e994";
 }
 .oneicon-view-list:before {
-  content: "\e99a";
+  content: "\e995";
 }
 .oneicon-x:before {
-  content: "\e99b";
+  content: "\e996";
 }
