@@ -1,26 +1,22 @@
 <div class="container">
   <h3>Large</h3>
   <div class="row row-content">
-    {{one-clipboard-line value="Hello world"}}
+    {{one-clipboard-line value=longText}}
   </div>
   <h3>Small</h3>
   <div class="row row-content">
-    {{one-clipboard-line size="sm" value="Hello world"}}
+    {{one-clipboard-line size="sm" value=longText}}
   </div>
-  <h3>Large without text</h3>
+  <h3>Large with label</h3>
   <div class="row row-content">
-    {{one-clipboard-line value="Hello world" showText=false}}
+    {{one-clipboard-line label="Large:" value=shortText}}
   </div>
-  <h3>Small without text</h3>
+  <h3>Small with label</h3>
   <div class="row row-content">
-    {{one-clipboard-line size="sm" value="Hello world" showText=false}}
+    {{one-clipboard-line label="Small:" size="sm" value=shortText}}
   </div>
-  <h3>Large with primary button and label</h3>
+  <h3>Textarea</h3>
   <div class="row row-content">
-    {{one-clipboard-line label="Large:" btnType="primary" value="Hello world"}}
-  </div>
-  <h3>Small with primary button and label</h3>
-  <div class="row row-content">
-    {{one-clipboard-line label="Small:" size="sm" btnType="primary" value="Hello world"}}
+    {{one-clipboard-line class="monospace" type="textarea" value=textareaFillText}}
   </div>
 </div>

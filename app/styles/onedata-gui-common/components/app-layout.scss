@@ -27,7 +27,6 @@ $brand-info-height: $one-list-item-line-height;
 // needs: $main-menu-width
 .app-layout {
   position: absolute;
-  pointer-events: none;
   @include fill-container();
   
   &.with-bottom-bar {
@@ -45,14 +44,18 @@ $brand-info-height: $one-list-item-line-height;
     }
   }
 
-  > *:not(.app-grid),
-  .app-grid > *:not(.row-app),
-  .row-app > *:not(.col-content),
-  .col-content > *:not(.main-content),
-  .main-content > *:not(.no-pointer-events)  {
-    pointer-events: auto;
+  &.pointer-none-to-main-content {
+    pointer-events: none;
+
+    > *:not(.app-grid),
+    .app-grid > *:not(.row-app),
+    .row-app > *:not(.col-content),
+    .col-content > *:not(.main-content),
+    .main-content > *:not(.no-pointer-events)  {
+      pointer-events: auto;
+    }
   }
-  
+
   .app-grid {
     position: relative;
     padding-left: 0;
@@ -487,6 +490,6 @@ $brand-info-height: $one-list-item-line-height;
 }
 
 // fix for a bad placement of scrollbar
-.ps-scrollbar-y-rail {
+.ps__rail-y {
   position: absolute;
 }

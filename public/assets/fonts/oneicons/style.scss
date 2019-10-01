@@ -2,11 +2,10 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?l7sdyi');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?l7sdyi#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?l7sdyi') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?l7sdyi') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?l7sdyi##{$icomoon-font-family}') format('svg');
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?a8989a') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?a8989a') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?a8989a##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -126,6 +125,11 @@
 .oneicon-browser-new-directory {
   &:before {
     content: $oneicon-browser-new-directory; 
+  }
+}
+.oneicon-browser-paste {
+  &:before {
+    content: $oneicon-browser-paste; 
   }
 }
 .oneicon-browser-permission {
@@ -752,6 +756,11 @@
 .oneicon-tokens {
   &:before {
     content: $oneicon-tokens; 
+  }
+}
+.oneicon-transfers {
+  &:before {
+    content: $oneicon-transfers; 
   }
 }
 .oneicon-unit {

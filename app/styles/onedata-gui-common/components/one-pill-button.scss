@@ -1,0 +1,49 @@
+.one-pill-button {
+  display: inline-block;
+  overflow: hidden;
+  transition: $collapse-transition-vertical;
+  .button-text {
+    line-height: 24px;
+    padding-right: 28px;
+    text-align: center;
+  }
+  .one-pill-button-inner {
+    position: relative;
+    @include vendor-prefix(user-select, none);
+    border-radius: $border-radius-large;
+    border: 2px $btn-info-bg solid;
+    padding: 0 30px 0 15px;
+    height: 28px;
+    // FIXME: refactor styles
+    .one-pill-button-actions-trigger {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      text-align: center;
+      height: 100%;
+      line-height: 24px;
+      cursor: pointer;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+      color: $btn-default-color;
+      padding-left: 3px;
+      @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+      .inline-icon-container {
+        .one-icon {
+          transform: translateY(-50%) translateY(3px) translateX(3px);
+          font-size: 20px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  &.mobile-mode {
+    padding: 20px;
+    .one-pill-button-inner {
+      box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.3);
+      background: $color-one-white;
+    }
+  }
+}

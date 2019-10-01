@@ -85,6 +85,9 @@ label {
     @include box-shadow(none);
     opacity: 0.6;
   }
+  &[readonly] {
+    background-color: $input-bg;
+  }
 }
 
 @import "bootstrap/buttons";
@@ -139,6 +142,11 @@ label {
     a {
       padding: $padding-base-vertical * 0.8;
     }
+  }
+}
+@media (max-width: $screen-xs-max) {
+  .dropdown-menu {
+    font-size: 80%;  
   }
 }
 @import "bootstrap/button-groups";

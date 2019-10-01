@@ -16,12 +16,13 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
-import { invokeAction, invoke } from 'ember-invoke-action';
+import { invoke } from 'ember-invoke-action';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
+  classNameBindings: ['pointerEvents.pointerNoneToMainContent'],
 
   sidebarResources: service(),
   sideMenu: service(),
@@ -29,6 +30,7 @@ export default Component.extend({
   router: service(),
   navigationState: service(),
   guiUtils: service(),
+  pointerEvents: service(),
 
   globalMenuOpened: false,
 
@@ -69,10 +71,13 @@ export default Component.extend({
   brandInfoClasses: computed(
     'navigationState.mainMenuColumnExpanded',
     'showMobileSidebar',
+    'withBottomBar',
     function brandInfoClasses() {
       const base = [];
-      const showMobileSidebar = this.get('showMobileSidebar');
-      const withBottomBar = this.get('withBottomBar');
+      const {
+        showMobileSidebar,
+        withBottomBar,
+      } = this.getProperties('showMobileSidebar', 'withBottomBar');
       if (withBottomBar) {
         base.push('hidden');
       } else {
@@ -160,9 +165,6 @@ export default Component.extend({
       if (!this.get('guiUtils.manageAccountExternalLink')) {
         invoke(this, 'mobileMenuItemChanged', 'users');
       }
-    },
-    changeResourceId() {
-      return invokeAction(this, 'changeResourceId', ...arguments);
     },
     scrollOccurred(event) {
       this.get('scrollState').scrollOccurred(event);

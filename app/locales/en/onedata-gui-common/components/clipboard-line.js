@@ -1,3 +1,3 @@
 export default {
-  copyBtn: 'Copy',
+  copyHint: 'Copy to clipboard',
 };

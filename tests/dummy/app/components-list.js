@@ -15,6 +15,7 @@ export default [
   'one-inline-editor',
   'one-map',
   'one-pie-chart',
+  'one-pill-button',
   'one-size-edit',
   'one-space-indicator',
   'one-spin-button',

@@ -15,7 +15,7 @@
           tabClicked=(action "selectItem" "tabClick" item)
           name=item.name
           icon=item.icon
-          class=(concat item.elementClass " item-" item.id)
+          class=(concat item.elementClass " item-" item.id " " (if tabsOverflow "apply-truncate"))
         }}
       {{/each}}
     {{/one-tab-bar/tab-bar-ul}}
