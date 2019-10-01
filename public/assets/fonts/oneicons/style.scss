@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?ov5uad') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?ov5uad') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?ov5uad##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?a5r0qt') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?a5r0qt') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?a5r0qt##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -279,8 +279,7 @@
 }
 .oneicon-globe {
   &:before {
-    content: $oneicon-globe;     
-    color: #555d72;
+    content: $oneicon-globe; 
   }
 }
 .oneicon-group-add {

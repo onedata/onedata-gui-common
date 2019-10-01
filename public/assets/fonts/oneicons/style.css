@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'oneicons';
   src:
-    url('fonts/oneicons.ttf?ov5uad') format('truetype'),
-    url('fonts/oneicons.woff?ov5uad') format('woff'),
-    url('fonts/oneicons.svg?ov5uad#oneicons') format('svg');
+    url('fonts/oneicons.ttf?a5r0qt') format('truetype'),
+    url('fonts/oneicons.woff?a5r0qt') format('woff'),
+    url('fonts/oneicons.svg?a5r0qt#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -177,7 +177,6 @@
 }
 .oneicon-globe:before {
   content: "\e932";
-  color: #555d72;
 }
 .oneicon-group-add:before {
   content: "\e933";
@@ -467,33 +466,30 @@
 .oneicon-transfers:before {
   content: "\e992";
 }
-.oneicon-transfers:before {
-  content: "\e98d";
-}
 .oneicon-unit:before {
-  content: "\e98e";
-}
-.oneicon-update:before {
-  content: "\e98f";
-}
-.oneicon-upload:before {
-  content: "\e990";
-}
-.oneicon-user-add:before {
-  content: "\e991";
-}
-.oneicon-user-profile:before {
-  content: "\e992";
-}
-.oneicon-user:before {
   content: "\e993";
 }
-.oneicon-view-grid:before {
+.oneicon-update:before {
   content: "\e994";
 }
-.oneicon-view-list:before {
+.oneicon-upload:before {
   content: "\e995";
 }
-.oneicon-x:before {
+.oneicon-user-add:before {
   content: "\e996";
+}
+.oneicon-user-profile:before {
+  content: "\e997";
+}
+.oneicon-user:before {
+  content: "\e998";
+}
+.oneicon-view-grid:before {
+  content: "\e999";
+}
+.oneicon-view-list:before {
+  content: "\e99a";
+}
+.oneicon-x:before {
+  content: "\e99b";
 }
