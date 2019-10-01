@@ -1,4 +1,4 @@
-.wysiwig-editor {
+.wysiwyg-editor {
   &.disabled {
     pointer-events: none;
     background-color: $color-one-semiwhite;
@@ -28,7 +28,7 @@
     }
   }
 
-  .wyswig-content, .pell-editor {
+  .wysiwyg-content, .pell-editor {
     h1, h2, h3 {
       margin-top: 0;
       margin-bottom: 1em;
