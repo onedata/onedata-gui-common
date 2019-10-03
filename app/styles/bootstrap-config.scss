@@ -238,9 +238,17 @@ label {
 @import "bootstrap/popovers";
 @import "bootstrap/carousel";
 
-.modal {
-  $modal-min-height: 400px;
-  
+$modal-min-height: 400px;
+// Code below fixes positioning glitch of modal with scrollable content on MacOS
+// Chromium.
+.modal-open .modal {
+  overflow-y: hidden;
+  @media (max-height: $modal-min-height) {
+    overflow-y: auto;
+  }
+}
+
+.modal {  
   &.in {
     .modal-dialog {
       @include absolute-align-middle-center();
