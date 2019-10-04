@@ -8,6 +8,7 @@ export default {
     provider: 'Provider',
     storages: 'Storages',
     spaces: 'Spaces',
+    guiSettings: 'GUI settings',
     members: 'Members',
   },
   clusterItem: {
