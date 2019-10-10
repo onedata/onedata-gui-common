@@ -1,0 +1,5 @@
+{{#each visualLogger.entries as |entry|}}
+  <div class="visual-logger-entry">
+    <strong>{{format-date entry.date}}</strong> {{entry.message}}
+  </div>
+{{/each}}
