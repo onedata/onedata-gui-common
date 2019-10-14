@@ -6,9 +6,9 @@ export default Service.extend({
   entries: computed(() => A()),
 
   log(message) {
-    this.get('entries').unshift({
+    this.get('entries').unshiftObject({
       date: new Date(),
-      time: message,
+      message,
     });
   },
 });
