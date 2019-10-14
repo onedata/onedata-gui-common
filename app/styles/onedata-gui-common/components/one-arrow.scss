@@ -108,7 +108,6 @@ $one-arrow-arrowhead-height: (4 / 3) * $one-arrow-dot-size;
   }
 
   .line, .dot {
-    transition: transition-linear(background-color, 'short');
     background-color: $color-one-azure;
   }
   
@@ -119,7 +118,6 @@ $one-arrow-arrowhead-height: (4 / 3) * $one-arrow-dot-size;
     border-color: $color-one-azure;
     border-style: solid;
     transform: rotate(-45deg);
-    transition: transition-linear(border-color, 'short');
   }
 
   .arrow-text {
