@@ -82,7 +82,7 @@
   .bar-label {
     position: absolute;
     font-size: 80%;
-    font-weight: bold;
+    @include font-bold();
     white-space: nowrap;
   }
   .current-total-space {

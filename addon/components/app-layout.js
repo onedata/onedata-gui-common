@@ -14,15 +14,15 @@
 import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
-import { htmlSafe } from '@ember/string';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
-import { invokeAction, invoke } from 'ember-invoke-action';
+import { invokeAction } from 'ember-invoke-action';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend({
   layout,
   classNames: ['app-layout'],
+  classNameBindings: ['pointerEvents.pointerNoneToMainContent'],
 
   sidebarResources: service(),
   sideMenu: service(),
@@ -30,6 +30,7 @@ export default Component.extend({
   router: service(),
   navigationState: service(),
   guiUtils: service(),
+  pointerEvents: service(),
 
   globalMenuOpened: false,
 
@@ -67,21 +68,46 @@ export default Component.extend({
     }
   }),
 
-  colSidebarClass: computed(
+  brandInfoClasses: computed(
+    'navigationState.mainMenuColumnExpanded',
     'showMobileSidebar',
     'withBottomBar',
-    function colSidebarClass() {
-      const showMobileSidebar = this.get('showMobileSidebar');
-      const base =
-        'col-sidebar full-height disable-user-select';
-      let finalClass;
-      if (this.get('withBottomBar')) {
-        finalClass = `${base} hidden`;
+    function brandInfoClasses() {
+      const base = [];
+      const {
+        showMobileSidebar,
+        withBottomBar,
+      } = this.getProperties('showMobileSidebar', 'withBottomBar');
+      if (withBottomBar) {
+        base.push('hidden');
       } else {
         let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
-        finalClass = `${base} ${xsClass}`;
+        base.push(xsClass);
       }
-      return htmlSafe(finalClass);
+      if (this.get('navigationState.mainMenuColumnExpanded')) {
+        base.push('with-place-for-menu');
+      }
+      return base.join(' ');
+    }
+  ),
+
+  colSidebarClassArray: computed(
+    'showMobileSidebar',
+    'withBottomBar',
+    'navigationState.mainMenuColumnExpanded',
+    function colSidebarClass() {
+      const showMobileSidebar = this.get('showMobileSidebar');
+      const base = ['col-sidebar', 'full-height', 'disable-user-select'];
+      if (this.get('withBottomBar')) {
+        base.push('hidden');
+      } else {
+        let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
+        base.push(xsClass);
+      }
+      if (this.get('navigationState.mainMenuColumnExpanded')) {
+        base.push('with-place-for-menu');
+      }
+      return base;
     }
   ),
 
@@ -92,14 +118,52 @@ export default Component.extend({
     }
   ),
 
+  /**
+   * Using this as a workaround to bug in perfect-scrollbar-element
+   * which destroys scrollbar when class property is changed in HBS
+   */
+  sidebarClassObserver: observer(
+    'colSidebarClassArray',
+    function moveSidebar() {
+      const colSidebarClassArray = this.get('colSidebarClassArray');
+      const $colSidebar = this.$('#col-sidebar');
+      const knownColSidebarClasses = [
+        'col-sidebar',
+        'full-height',
+        'disable-user-select',
+        'hidden',
+        'col-xs-12',
+        'hidden-xs',
+        'with-place-for-menu',
+      ];
+      knownColSidebarClasses.forEach(cls => {
+        $colSidebar.removeClass(cls);
+      });
+      colSidebarClassArray.forEach(cls => {
+        $colSidebar.addClass(cls);
+      });
+    }
+  ),
+
+  init() {
+    this._super(...arguments);
+    // activate observer
+    this.get('colSidebarClassArray');
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.sidebarClassObserver();
+  },
+
   actions: {
-    mobileMenuItemChanged(itemId) {
+    mobileMenuItemChanged(targetResourceType) {
       this.get('sideMenu').close();
-      return this.get('router').transitionTo('onedata.sidebar', itemId);
-    },
-    manageAccount() {
-      if (!this.get('guiUtils.manageAccountExternalLink')) {
-        invoke(this, 'mobileMenuItemChanged', 'users');
+      const isUsersRemoteView = targetResourceType === 'users' &&
+        this.get('guiUtils.manageAccountExternalLink')
+      if (targetResourceType && !isUsersRemoteView) {
+        return this.get('router')
+          .transitionTo('onedata.sidebar', targetResourceType);
       }
     },
     changeResourceId() {

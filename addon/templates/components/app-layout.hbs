@@ -8,8 +8,8 @@
     </div>
   </div>
   {{user-account-button 
-    isActive=(eq navigationState.activeResourceType "users") 
-    manageAccount=(action "manageAccount")
+    isActive=(eq navigationState.activeResourceType "users")
+    onItemClick=(action "mobileMenuItemChanged")
     mobileMode=true}}
   {{main-menu
     items=appModel.mainMenuItems
@@ -21,11 +21,10 @@
 {{#perfect-scrollbar-element
   tagName="div"
   id="col-sidebar"
-  class=(concat colSidebarClass (if navigationState.mainMenuColumnExpanded " with-place-for-menu"))
   onScroll=(action "scrollOccurred")}}
-  {{yield 'sidebar'}}
-  {{brand-info}}
+  {{yield "sidebar"}}
 {{/perfect-scrollbar-element}}
+{{brand-info class=brandInfoClasses}}
 <div class="col-sidenav-cover"></div>
 
 <div class={{appGridClass}}>

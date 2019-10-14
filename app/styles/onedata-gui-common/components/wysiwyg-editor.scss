@@ -1,0 +1,59 @@
+.wysiwyg-editor {
+  &.disabled {
+    pointer-events: none;
+    background-color: $color-one-semiwhite;
+  }
+
+  .pell-editor {
+    border: 1px solid $main-border-color;
+    margin-bottom: $padding-base-vertical;
+
+    @media (max-width: $screen-xs-max) {
+      margin-left: $mobile-horizontal-content-padding;
+      margin-right: $mobile-horizontal-content-padding;
+    }
+  }
+  .pell-actionbar {
+    border-bottom: 1px solid $main-border-color;
+  }
+
+  .pell-button {
+    position: relative;
+    width: 35px;
+    height: 35px;
+
+    .oneicon {
+      @include absolute-align-middle-center();
+      font-size: 160%;
+    }
+  }
+
+  .wysiwyg-content, .pell-editor {
+    word-break: break-word;
+    
+    h1, h2, h3 {
+      margin-top: 0;
+      margin-bottom: 1em;
+      @include font-semibold();
+      line-height: $headings-line-height;
+      letter-spacing: $letter-spacing-base;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p {
+      padding: 0;
+    }
+  
+    h1 {
+      font-size: $font-size-base * 1.25;
+    }
+  
+    h2 {
+      font-size: $font-size-base * 1.15;
+    }
+
+    h3 {
+      font-size: $font-size-base * 1.05;
+    }
+  }
+}

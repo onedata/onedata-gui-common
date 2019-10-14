@@ -63,7 +63,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         padding-top: 0;
         h1 {
           font-size: $content-header-font-size;
-          font-family: 'Open Sans Semibold';
+          @include font-semibold();
           line-height: $onedata-logo-height;
           font-weight: normal;
           .btn-toolbar button {
@@ -99,7 +99,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
 
     h1 {
       font-size: $font-size-base;
-      font-weight: bold;
+      @include font-bold();
       text-transform: uppercase;
       line-height: 2.5;
       letter-spacing: $letter-spacing-base;
@@ -182,7 +182,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       
       strong {
         font-weight: normal;
-        font-family: 'Open Sans Semibold'
+        @include font-semibold();
       }
     }
   }
@@ -192,7 +192,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     margin-bottom: $content-row-vertical-padding * 2;
     text-align: center;
     font-size: $font-size-base;
-    font-family: 'Open Sans Semibold';
+    @include font-semibold();
     font-weight: normal;
     text-transform: uppercase;
   }
@@ -216,6 +216,10 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       border: 0;
     }
   }
+  
+  .row-content-tab-bar {
+    padding-top: $padding-base-vertical;
+  }  
 
   @media screen and (max-width: $screen-xs-max) {
     @mixin -reset-internal-padding() {
@@ -259,5 +263,38 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         }
       }
     }
+  }  
+    
+  // additional class for non-scrollable content in layout content (eg. iframes)
+  .absolute-flex-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: $content-col-padding;
+    right: $content-col-padding;
+    bottom: $content-col-padding;
+    left: $content-col-padding;
+  }
+  // last row child in absolute-flex-content that should be stretched to fit
+  .absolute-flex-content-child-stretch {
+    display: flex;
+    flex-grow: 1;
+    align-items: stretch;
+    margin-top: auto;
+    // TODO:
+    // 4px is magic hack, because I cannot find why the scrollbar appears
+    // when stretched child is fitted to bottom
+    // should try to reproduce it in clean html
+    margin-bottom: -$content-col-padding + 4px;
+  }
+  // background for top of main content with tabs
+  .content-header-section {
+    background-color: $main-tabbed-content-background;
+    margin-top: -$content-col-padding;
+    padding-top: $content-col-padding;
+    margin-right: -$content-col-padding;
+    padding-right: $content-col-padding;
+    margin-left: -$content-col-padding;
+    padding-left: $content-col-padding;
   }
 }

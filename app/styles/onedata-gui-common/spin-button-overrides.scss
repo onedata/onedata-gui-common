@@ -1,5 +1,11 @@
 // TODO animate only width
 
+.spin-button {
+  // Sometimes spinner causes extra space after button due to its absolute
+  // position and translations.
+  overflow: hidden;
+}
+
 .spin-button,
 .spin-button .spin-button-spinner,
 .spin-button .spin-button-label {

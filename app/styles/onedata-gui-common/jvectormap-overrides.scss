@@ -33,3 +33,7 @@
   fill: lighten($color-one-dark-blue, 10%);
   stroke: lighten($color-one-dark-blue, 10%);
 }
+
+.jvectormap-tip {
+  z-index: $zindex-tooltip;
+}

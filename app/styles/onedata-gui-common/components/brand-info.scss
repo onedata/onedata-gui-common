@@ -6,7 +6,6 @@
   position: fixed;
   bottom: 0;
   height: $brand-info-height;
-  width: inherit;
   border-right: 1px solid $main-border-color;
   background-color: $color-sidebar-item-bg;
   z-index: 10;
@@ -42,7 +41,7 @@
   }
 
   .brand-name {
-    font-weight: bold;
+    @include font-bold();
   }
 
   .brand-type-version {
@@ -53,8 +52,7 @@
   }
 
   .brand-logout {
-    position: absolute;
-    top: -8px;
+    @include vertical-align-middle;
     right: 0;
     .brand-logout-icon {
       font-size: 32px;
@@ -84,10 +82,15 @@
     }
   }
   
+  .truncate-brand-text {
+    max-width: calc(100% - 20px);
+  }
+  
   &.full-width {
     width: 100%;
     .brand-info-version-hint {
       left: 260px;
+      right: auto;
     }
     .truncate-brand-text {
       max-width: 200px;

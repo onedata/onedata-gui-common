@@ -74,7 +74,9 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $collapse-transition-time: .2s;
 $height-collapse-transition: max-height $collapse-transition-time linear;
+$width-collapse-transition: max-width $collapse-transition-time linear;
 $collapse-transition: $height-collapse-transition, padding $collapse-transition-time linear, opacity $collapse-transition-time linear;
+$collapse-transition-vertical: $width-collapse-transition, padding $collapse-transition-time linear, opacity $collapse-transition-time linear, margin $collapse-transition-time linear;
 
 $disabled-opacity: 0.6;
 
@@ -85,6 +87,10 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/jvectormap-overrides';
 
 @import 'ember-power-select-config';
+
+// Utils
+
+@import 'onedata-gui-common/utils/embedded-iframe.scss';
 
 // Components
 
@@ -150,4 +156,9 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/resource-info-tile';
 @import 'onedata-gui-common/components/auto-save-form';
 @import 'onedata-gui-common/components/one-icon-tagged';
+@import 'onedata-gui-common/components/one-tab-bar';
 @import 'onedata-gui-common/components/json-editor';
+@import 'onedata-gui-common/components/one-menu-toggle.scss';
+@import 'onedata-gui-common/components/oneprovider-map-circle';
+@import 'onedata-gui-common/components/oneproviders-selector-popover-content';
+@import 'onedata-gui-common/components/wysiwyg-editor';

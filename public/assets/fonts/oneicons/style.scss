@@ -2,13 +2,14 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qfdhlf');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qfdhlf#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?qfdhlf') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?qfdhlf') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?qfdhlf##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?7jhzx7');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?7jhzx7#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?7jhzx7') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?7jhzx7') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?7jhzx7##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="oneicon-"], [class*=" oneicon-"] {
@@ -650,6 +651,61 @@
 .oneicon-team {
   &:before {
     content: $oneicon-team; 
+  }
+}
+.oneicon-text-bold {
+  &:before {
+    content: $oneicon-text-bold; 
+  }
+}
+.oneicon-text-heading1 {
+  &:before {
+    content: $oneicon-text-heading1; 
+  }
+}
+.oneicon-text-heading2 {
+  &:before {
+    content: $oneicon-text-heading2; 
+  }
+}
+.oneicon-text-heading3 {
+  &:before {
+    content: $oneicon-text-heading3; 
+  }
+}
+.oneicon-text-italic {
+  &:before {
+    content: $oneicon-text-italic; 
+  }
+}
+.oneicon-text-link {
+  &:before {
+    content: $oneicon-text-link; 
+  }
+}
+.oneicon-text-olist {
+  &:before {
+    content: $oneicon-text-olist; 
+  }
+}
+.oneicon-text-paragraph {
+  &:before {
+    content: $oneicon-text-paragraph; 
+  }
+}
+.oneicon-text-strikethrough {
+  &:before {
+    content: $oneicon-text-strikethrough; 
+  }
+}
+.oneicon-text-ulist {
+  &:before {
+    content: $oneicon-text-ulist; 
+  }
+}
+.oneicon-text-underline {
+  &:before {
+    content: $oneicon-text-underline; 
   }
 }
 .oneicon-tokens {
