@@ -95,7 +95,6 @@ label {
   border-width: 2px;
   position: relative;
   padding: $padding-base-vertical $padding-base-horizontal * 2;
-  font-size: 105%;
   @include font-semibold();
   &.btn-sm {
     font-size: 85%;
@@ -246,14 +245,10 @@ label {
 @import "bootstrap/popovers";
 @import "bootstrap/carousel";
 
-$modal-min-height: 400px;
 // Code below fixes positioning glitch of modal with scrollable content on MacOS
 // Chromium.
 .modal-open .modal {
   overflow-y: hidden;
-  @media (max-height: $modal-min-height) {
-    overflow-y: auto;
-  }
 }
 
 .modal {  
@@ -265,17 +260,10 @@ $modal-min-height: 400px;
       flex-direction: column;
       justify-content: center;
       max-height: calc(100% - #{2 * $padding-large-vertical});
-      min-height: $modal-min-height;
       margin: 0;
       max-height: 100%;
       transition: initial;
       border-radius: $border-radius-large;
-
-      @media (max-height: $modal-min-height) {
-        top: initial;
-        transform: translateX(-50%);
-        margin: $padding-large-vertical 0;
-      }
 
       @media (max-width: $screen-xs-max) {
         width: 90%;
