@@ -90,6 +90,14 @@ export default SecondLevelItems.extend(I18n, {
     };
   }),
 
+  guiSettingsItem: computed(function guiSettingsItem() {
+    return {
+      id: 'gui-settings',
+      label: this.t('guiSettings'),
+      icon: 'view-grid',
+    };
+  }),
+
   membersItem: computed(function membersItem() {
     return {
       id: 'members',
@@ -107,6 +115,7 @@ export default SecondLevelItems.extend(I18n, {
     'providerItem',
     'storagesItem',
     'spacesItem',
+    'guiSettingsItem',
     'membersItem',
     function clusterSecondLevelItems() {
       const {
@@ -118,6 +127,7 @@ export default SecondLevelItems.extend(I18n, {
         providerItem,
         storagesItem,
         spacesItem,
+        guiSettingsItem,
         membersItem,
       } = this.getProperties(
         'clusterType',
@@ -129,6 +139,7 @@ export default SecondLevelItems.extend(I18n, {
         'providerItem',
         'storagesItem',
         'spacesItem',
+        'guiSettingsItem',
         'membersItem'
       );
       if (!clusterType) {
@@ -141,7 +152,10 @@ export default SecondLevelItems.extend(I18n, {
           certificateItem,
           membersItem,
         ];
-        const items = clusterType === 'onezone' ? commonItems : [
+        const items = clusterType === 'onezone' ? [
+          ...commonItems,
+          guiSettingsItem,
+        ] : [
           ...commonItems,
           providerItem,
           storagesItem,

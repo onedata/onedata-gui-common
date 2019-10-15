@@ -78,6 +78,7 @@ strong {
 
 .break-word {
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 .break-all {
@@ -394,16 +395,18 @@ a {
   resize: none; 
 }
 
+textarea.no-resize  {
+  resize: none;
+}
+
 .token-textarea {
   width: 100%;
   height: 120px;
   margin-top: $padding-base-vertical;
   margin-bottom: $padding-base-vertical;
   font-family: monospace;
-  &.no-resize {
-    resize: none;
-  }
 }
+
 @media (max-width: $screen-xs-max) {
   .token-textarea {
     padding: $padding-large-vertical $padding-large-horizontal;
@@ -530,6 +533,13 @@ textarea + .btn-container {
 
 .subheader-text {
   padding-bottom: $padding-large-vertical;
+}
+
+@for $i from 1 through 10 {
+  $pxNumber: $i * 100;
+  .min-height-#{$pxNumber} {
+    min-height: $pxNumber * 1px;
+  }
 }
 
 .one-infinite-list {

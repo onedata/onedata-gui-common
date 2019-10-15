@@ -72,6 +72,8 @@
     "ember-moment": "7.5.0",
     "ember-notify": "5.2.1",
     "ember-one-way-controls": "2.0.1",
+    "ember-pell": "1.4.5",
+    "ember-perfect-scrollbar": "0.0.4",
     "ember-power-select": "1.9.5",
     "ember-redirect": "5.1.0",
     "ember-resolver": "4.5.0",
