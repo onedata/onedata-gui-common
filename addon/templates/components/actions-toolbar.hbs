@@ -16,7 +16,7 @@
       {{one-icon icon=act.icon}}
       <span class="text">{{act.title}}</span>
       {{#if act.tip}}
-        {{one-tooltip title=act.tip}}
+        {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
       {{/if}}
     {{/dropdown.item}}
   {{/each}}
