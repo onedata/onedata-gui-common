@@ -8,8 +8,8 @@
     </div>
   </div>
   {{user-account-button 
-    isActive=(eq navigationState.activeResourceType "users") 
-    manageAccount=(action "manageAccount")
+    isActive=(eq navigationState.activeResourceType "users")
+    onItemClick=(action "mobileMenuItemChanged")
     mobileMode=true}}
   {{main-menu
     items=appModel.mainMenuItems

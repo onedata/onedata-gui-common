@@ -2,8 +2,19 @@
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 400px;
-  height: 300px;
+  width: 300px;
+  height: 100px;
   background-color: rgba(white, 0.75);
-  color: black;
+  color: $main-text-color;
+  border: 1px solid $main-border-color;
+  font-family: monospace;
+  
+  .visual-logger-inner {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+  }
 }

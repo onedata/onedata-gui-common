@@ -43,6 +43,10 @@ export default Route.extend(ApplicationRouteMixin, {
 
   beforeModel(transition) {
     this._super(...arguments);
+    const preAppLoadingElement = document.getElementById('index-pre-app-loading');
+    if (preAppLoadingElement) {
+      preAppLoadingElement.remove();
+    }
     this.set('navigationState.queryParams', get(transition, 'queryParams'));
     this.addFavicon();
   },
