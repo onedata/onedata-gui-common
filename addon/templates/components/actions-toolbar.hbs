@@ -6,15 +6,18 @@
   toggleBtnClass=toolbarToggleClasses
   dropdownOverModals=dropdownOverModals
   as |dropdown|}}
-  {{#each actionsArray as |act|}}
+  {{#each actionsArray key="class" as |act|}}
     {{#dropdown.item
       buttonStyle=act.buttonStyle
       triggerClasses=act.class
       itemAction=(action act.action actionsArg)
-      class=(if act.disabled "disabled")
+      isDisabled=act.disabled
     }}
       {{one-icon icon=act.icon}}
       <span class="text">{{act.title}}</span>
+      {{#if act.tip}}
+        {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
+      {{/if}}
     {{/dropdown.item}}
   {{/each}}
 {{/one-collapsible-toolbar}}

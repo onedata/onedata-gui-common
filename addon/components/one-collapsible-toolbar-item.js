@@ -12,7 +12,7 @@ import Component from '@ember/component';
 
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar-item';
-import { invokeAction } from 'ember-invoke-action';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
   layout,
@@ -69,14 +69,14 @@ export default Component.extend({
    * Action invoked after trigger click.
    * @type {function}
    */
-  itemAction: null,
+  itemAction: notImplementedIgnore,
 
   /**
    * Action invoked to close dropdown.
    * To inject.
    * @type {function}
    */
-  closeDropdown: null,
+  closeDropdown: notImplementedIgnore,
 
   buttonSizeClass: computed('buttonSize', function () {
     let buttonSize = this.get('buttonSize');
@@ -89,10 +89,23 @@ export default Component.extend({
 
   actions: {
     runAction(inFullMode) {
-      if (this.get('closeOnAction')) {
-        invokeAction(this, 'closeDropdown');
+      const {
+        isDisabled,
+        closeOnAction,
+        closeDropdown,
+        itemAction,
+      } = this.getProperties(
+        'isDisabled',
+        'closeOnAction',
+        'closeDropdown',
+        'itemAction',
+      )
+      if (!isDisabled) {
+        if (closeOnAction) {
+          closeDropdown();
+        }
+        itemAction(inFullMode);
       }
-      invokeAction(this, 'itemAction', inFullMode);
     }
   },
 });
