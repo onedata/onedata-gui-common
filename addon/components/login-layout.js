@@ -18,6 +18,7 @@ export default Component.extend(I18n, {
   classNames: ['login-layout'],
 
   guiUtils: service(),
+  privacyPolicyManager: service(),
 
   /**
    * @override

@@ -2,7 +2,7 @@
  * A button that allows to invoke various actions for current user account 
  *
  * @module components/user-account-button
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -13,10 +13,10 @@ import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/user-account-button';
-import { invokeAction } from 'ember-invoke-action';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(ClickOutside, I18n, {
   layout,
@@ -24,6 +24,7 @@ export default Component.extend(ClickOutside, I18n, {
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
   session: service(),
+  privacyPolicyManager: service(),
   globalNotify: service(),
   guiUtils: service(),
   i18n: service(),
@@ -39,6 +40,14 @@ export default Component.extend(ClickOutside, I18n, {
    * @returns {undefined}
    */
   onMenuOpened: () => {},
+
+  /**
+   * @virtual
+   * @type {function}
+   * @param {string} [targetResourceType]
+   * @returns {undefined}
+   */
+  onItemClick: notImplementedIgnore,
 
   menuOpen: false,
 
@@ -89,8 +98,13 @@ export default Component.extend(ClickOutside, I18n, {
     },
     // TODO handle error if manage account cannot be displayed
     manageAccount() {
-      invokeAction(this, 'manageAccount');
       this.set('menuOpen', false);
+      this.get('onItemClick')('users');
+    },
+    privacyPolicy() {
+      this.set('menuOpen', false);
+      this.get('privacyPolicyManager.showPrivacyPolicyAction')();
+      this.get('onItemClick')();
     },
     logout() {
       return this.get('guiUtils').logout().finally(() =>

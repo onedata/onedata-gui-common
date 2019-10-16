@@ -263,20 +263,44 @@ label {
 @import "bootstrap/popovers";
 @import "bootstrap/carousel";
 
-.modal {
+$modal-min-height: 400px;
+// Code below fixes positioning glitch of modal with scrollable content on MacOS
+// Chromium.
+.modal-open .modal {
+  overflow-y: hidden;
+  @media (max-height: $modal-min-height) {
+    overflow-y: auto;
+  }
+}
+
+.modal {  
   &.in {
     .modal-dialog {
       @include absolute-align-middle-center();
 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: calc(100% - #{2 * $padding-large-vertical});
+      min-height: $modal-min-height;
       margin: 0;
       transition: initial;
       border-radius: $border-radius-large;
+
+      @media (max-height: $modal-min-height) {
+        top: initial;
+        transform: translateX(-50%);
+        margin: $padding-large-vertical 0;
+      }
 
       @media (max-width: $screen-xs-max) {
         width: 90%;
       }
 
       .modal-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
         box-shadow: none;
         padding: 0em 2em 1em 2em;
 
@@ -290,7 +314,11 @@ label {
         }
 
         .modal-body {
+          display: flex;
+          flex-direction: column;
           padding: 0 $modal-inner-padding;
+          min-height: 0;
+          max-width: 100%;
           &:first-child {
             padding-top: $modal-inner-padding;
           }
@@ -302,19 +330,6 @@ label {
         .modal-footer {
           text-align: right;
         }
-
-        h1 {
-          font-size: $font-size-base * 1.4;
-          @include font-semibold();
-          letter-spacing: $letter-spacing-base;
-          margin-bottom: 1em;
-          text-transform: uppercase;
-        }
-        h2 {
-          font-size: $font-size-base * 1.2;
-          @include font-semibold();
-          text-transform: uppercase;
-        }
       }
     }
   }
@@ -323,6 +338,20 @@ label {
     .modal-dialog {
       transition: initial;
     }
+  }
+
+  h1 {
+    font-size: $font-size-base * 1.4;
+    @include font-semibold();
+    letter-spacing: $letter-spacing-base;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+  }
+  
+  h2 {
+    font-size: $font-size-base * 1.2;
+    @include font-semibold();
+    text-transform: uppercase;
   }
 }
 

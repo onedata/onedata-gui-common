@@ -9,6 +9,7 @@ export default {
     ceph: 'Ceph',
     storages: 'Storages',
     spaces: 'Spaces',
+    guiSettings: 'GUI settings',
     members: 'Members',
   },
   clusterItem: {
