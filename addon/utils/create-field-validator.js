@@ -59,7 +59,7 @@ function getNumberMessage(field, type, i18n) {
   }].filterBy('type', type).forEach(({ name }) => {
     const operatorValue = field[name];
     if (typeof operatorValue === 'object' && operatorValue !== null &&
-      operatorValue.message) {
+      operatorValue.message && !message) {
         message = get(i18n.t(operatorValue.message), 'string');
     }
   });

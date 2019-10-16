@@ -1,10 +1,10 @@
 {{#if _inEditionMode}}
-{{one-way-capacity
-  inputClasses=inputClasses
-  value=_inputValue
-  onChange=(action "updateInputValue")
-  onKeyUp=(action "inputOnKeyUp")
-  disabled=_whileSaving}}
+  {{one-way-capacity
+    inputClasses=inputClasses
+    value=_inputValue
+    onChange=(action "updateInputValue")
+    onKeyUp=(action "inputOnKeyUp")
+    disabled=_whileSaving}}
   {{#if validationMessage}}
     <div class="form-message">{{validationMessage}}</div>
   {{/if}}

@@ -50,8 +50,7 @@ describe('Integration | Component | one size edit', function () {
     this.render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
 
     wait().then(() => {
-      next(() => {
-        fillIn('.size-number-input', '2');
+      fillIn('.size-number-input', '2').then(() => {
         const select = new SizeUnitSelectHelper();
         // option 1: MiB, option 2: GiB
         select.selectOption(2, () => {
@@ -63,11 +62,11 @@ describe('Integration | Component | one size edit', function () {
           ).to.match(/GiB/);
           click('.btn-save').then(() => {
             expect(onSave).to.be.calledOnce;
-            expect(onSave).to.be.calledWith(2 * Math.pow(1024, 3));
+            expect(onSave).to.be.calledWith(String(2 * Math.pow(1024, 3)));
             done();
           });
         });
-      }, 0);
+      });
     });
   });
 });

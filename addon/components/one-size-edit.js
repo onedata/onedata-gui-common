@@ -18,7 +18,10 @@ import { reject } from 'rsvp';
 const validations = buildValidations({
   _inputValue: [
     validator('presence', true),
-    validator('number', { gt: 0 })
+    validator('number', {
+      gt: 0,
+      allowString: true,
+    }),
   ],
 });
 

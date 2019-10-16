@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/one-way-capacity';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import bytesToString, { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
@@ -20,7 +20,7 @@ export default Component.extend({
   /**
    * Value in bytes
    * @virtual
-   * @type {number}
+   * @type {string}
    */
   value: undefined,
 
@@ -46,7 +46,7 @@ export default Component.extend({
   /**
    * @virtual
    * @type {Function}
-   * @param {number} value value in bytes
+   * @param {string} value value in bytes
    */
   onChange: notImplementedIgnore,
 
@@ -64,23 +64,9 @@ export default Component.extend({
   onKeyUp: notImplementedIgnore,
 
   /**
-   * Value scaled to `selectedSizeUnit`
-   * @type {Ember.ComputedProperty<number>}
+   * @type {string}
    */
-  scaledValue: computed('value', 'sizeUnit', function scaledValue() {
-    const {
-      value,
-      sizeUnit,
-    } = this.getProperties('value', 'sizeUnit');
-
-    if (value === undefined) {
-      return undefined;
-    } else if (!value || !sizeUnit) {
-      return 0;
-    } else {
-      return Math.round(value / sizeUnit.multiplicator * 10) / 10;
-    }
-  }),
+  scaledValue: '0',
 
   /**
    * Array of objects describing size units that will be displayed
@@ -93,6 +79,31 @@ export default Component.extend({
     );
   }),
 
+  scaledValueModifier: observer('value', 'sizeUnit', function scaledValueModifier() {
+    const {
+      value,
+      sizeUnit,
+      scaledValue,
+    } = this.getProperties('value', 'sizeUnit', 'scaledValue');
+
+    let newScaledSize;
+
+    if (value === undefined) {
+      newScaledSize = undefined;
+    } else if (!value || !sizeUnit) {
+      newScaledSize = '0';
+    } else {
+      const prevValue = String(this.getValueInBytes(scaledValue));
+      if (prevValue !== value) {
+        const scaledValueCandidate = Math.round(value / sizeUnit.multiplicator * 10) / 10;
+        newScaledSize = isNaN(scaledValueCandidate) ? value : scaledValueCandidate;
+      } else {
+        return;
+      }
+    }
+    this.set('scaledValue', newScaledSize);
+  }),
+
   init() {
     this._super(...arguments);
 
@@ -102,35 +113,38 @@ export default Component.extend({
     } = this.getProperties('value', 'sizeUnits');
 
     let sizeUnit;
-    if (value) {
-      const { unit } = bytesToString(this.get('value'), { separated: true });
+    if (value && !isNaN(Number(value))) {
+      const { unit } = bytesToString(value, { separated: true });
       sizeUnit = iecUnits.find(u => u.name === unit);
     } else {
       sizeUnit = sizeUnits[0];
     }
     
     this.set('sizeUnit', sizeUnit);
+    this.scaledValueModifier();
+  },
+
+  /**
+   * @param {string} scaledValue 
+   * @param {Object} sizeUnit 
+   */
+  getValueInBytes(scaledValue, sizeUnit = undefined) {
+    const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||
+      this.get('sizeUnit.multiplicator') || 1;
+    
+    return Math.floor(scaledValue * multiplicator);
   },
 
   actions: {
     scaledValueChanged(scaledValue) {
-      const {
-        onChange,
-        sizeUnit,
-      } = this.getProperties('onChange', 'sizeUnit');
+      this.set('scaledValue', scaledValue);
       
-      let newValue;
-      if (!sizeUnit) {
-        newValue = Math.floor(scaledValue);
-      } else {
-        newValue = Math.floor(scaledValue * sizeUnit.multiplicator);
-      }
-
+      let newValue = this.getValueInBytes(scaledValue);
       if (isNaN(newValue)) {
-        newValue = undefined;
+        newValue = scaledValue;
       }
 
-      onChange(newValue);
+      this.get('onChange')(String(newValue));
     },
     sizeUnitChanged(sizeUnit) {
       const {
@@ -140,8 +154,10 @@ export default Component.extend({
 
       this.set('sizeUnit', sizeUnit);
 
-      const newValue = Math.floor(scaledValue * sizeUnit.multiplicator);
-      onChange(newValue);
+      const newValue = this.getValueInBytes(scaledValue, sizeUnit.multiplicator);
+      if (!isNaN(newValue)) {
+        onChange(String(newValue));
+      }
     },
   }
 });

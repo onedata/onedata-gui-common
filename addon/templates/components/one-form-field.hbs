@@ -10,7 +10,7 @@
   <div class="form-control-column {{layoutConfig.formInputColumns}}">
     {{#if (eq field.type "radio-group")}}
       {{one-way-radio-group
-        class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+        class=inputClasses
         inputId=inputId
         value=value
         fieldName=field.name
@@ -26,19 +26,19 @@
         onblur=(action "onFocusOut")
         searchEnabled=false
         renderInPlace=true
-        triggerClass=(concat-classes "one-form-field" (concat "field-" (dot-to-dash field.name)))
+        triggerClass=inputClasses
         as |optionValue|
       }}
         {{get (find-by "value" optionValue field.options) "label"}}
       {{/power-select}}
     {{else if (eq field.type "clipboard-line")}}
       {{one-clipboard-line
-        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        class=inputClasses
         value=value
         showText=false}}
     {{else if (eq field.type "capacity")}}
       {{one-way-capacity
-        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        class=inputClasses
         value=value
         inputId=inputId
         disabled=disabled
@@ -48,7 +48,7 @@
       <div class={{if field.rightText "input-group"}}>
         {{#if (eq field.type "radio-group")}}
           {{one-way-radio-group
-            class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+            class=inputClasses
             inputId=inputId
             value=value
             fieldName=field.name
@@ -61,7 +61,7 @@
           {{component (input-component-name field.type)
             id=inputId
             value=value
-            class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+            class=inputClasses
             update=(action "inputChanged" field.name)
             step=field.step
             disabled=disabled

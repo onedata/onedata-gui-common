@@ -41,7 +41,7 @@ describe('Integration | Component | one way capacity', function() {
 
     return wait()
       .then(() => fillIn('.size-number-input', '2'))
-      .then(() => expect(changeSpy).to.be.calledWith(2 * 1024 * 1024));
+      .then(() => expect(changeSpy).to.be.calledWith(String(2 * 1024 * 1024)));
   });
 
   it('notifies about capacity unit change', function () {
@@ -54,7 +54,7 @@ describe('Integration | Component | one way capacity', function() {
 
     return wait()
       .then(() => new UnitSelectHelper().selectOption(2))
-      .then(() => expect(changeSpy).to.be.calledWith(1024 * 1024 * 1024));
+      .then(() => expect(changeSpy).to.be.calledWith(String(1024 * 1024 * 1024)));
   });
 
   it('notifies about focus lost', function () {

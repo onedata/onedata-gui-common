@@ -129,11 +129,13 @@ input {
   border-color: $color-one-list-item-separator;
 }
 
+// Removes additional buttons to increase/decrease values which are inside
+// number inputs.
 input[type=number] {  
   &::-webkit-inner-spin-button {
     display: none;
   }
-  -moz-appearance:textfield;
+  -moz-appearance: textfield;
 }
 
 .world-map {

@@ -61,8 +61,11 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     border: 1px solid $input-border-focus;
   }
 
-  &.small, .form-group-sm & {
+  .form-group-sm & {
     @extend .small;
+  }
+
+  &.small, .form-group-sm & {
     padding: $padding-small-vertical + 1px $padding-xs-horizontal;
     padding-right: 2em;
     min-height: $input-height-small;

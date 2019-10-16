@@ -13,7 +13,6 @@ import layout from 'onedata-gui-common/templates/components/two-level-sidebar/se
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { A } from '@ember/array';
 
 export default SecondLevelItems.extend(I18n, {
   layout,
@@ -168,7 +167,7 @@ export default SecondLevelItems.extend(I18n, {
           storagesItem,
           spacesItem,
         ];
-        return A(items);
+        return items;
       }
     }
   ),
