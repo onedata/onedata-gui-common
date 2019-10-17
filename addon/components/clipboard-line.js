@@ -46,11 +46,18 @@ export default Component.extend(I18n, {
   size: undefined,
 
   /**
+   * @virtual optional
+   * One of: input, textarea
+   * @type {string}
+   */
+  type: 'input',
+
+  /**
    * @type {number}
    */
   textareaRows: 5,
 
   clipboardBtnClass: computed('type', function clipboardBtnClass() {
-    return `clipboard-btn-${this.get('type') || 'input'}`;
+    return `clipboard-btn-${this.get('type')}`;
   }),
 });

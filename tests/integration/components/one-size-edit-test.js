@@ -33,8 +33,10 @@ describe('Integration | Component | one size edit', function () {
         next(() => {
           expect(this.$('.size-number-input').val(), 'size number')
             .to.equal('3');
-          expect(this.$(
-                '.size-unit-select-group .ember-power-select-selected-item').text(),
+          expect(
+              this.$(
+                '.size-unit-select-group .ember-power-select-selected-item'
+              ).text(),
               'size unit select')
             .to.match(/GiB/);
           done();
@@ -43,11 +45,13 @@ describe('Integration | Component | one size edit', function () {
     }
   );
 
-  it('submits the bytes value to provided onSave action', function (done) {
+  it('submits the bytes value to provided onSave action', function () {
     this.set('value', 1 * Math.pow(1024, 2));
     const onSave = sinon.stub().resolves();
     this.set('onSave', onSave);
-    this.render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
+    this.render(
+      hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`
+    );
 
     wait().then(() => {
       next(() => {
@@ -61,10 +65,9 @@ describe('Integration | Component | one size edit', function () {
             ).text(),
             'size unit select'
           ).to.match(/GiB/);
-          click('.btn-save').then(() => {
+          return click('.btn-save').then(() => {
             expect(onSave).to.be.calledOnce;
             expect(onSave).to.be.calledWith(2 * Math.pow(1024, 3));
-            done();
           });
         });
       }, 0);

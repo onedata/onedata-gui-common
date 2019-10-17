@@ -1,6 +1,15 @@
+/**
+ * A button-like element splited into two parts: text and menu toggle
+ * 
+ * @module components/one-pill-button
+ * @author Jakub Liput
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../templates/components/one-pill-button';
-import { computed } from '@ember/object';
+import { conditional, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   classNames: 'one-pill-button',
@@ -9,7 +18,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Array<object>}
+   * @type {Array<Action>}
    */
   menuItems: undefined,
 
@@ -18,9 +27,7 @@ export default Component.extend({
    */
   mobileMode: false,
 
-  arrowIcon: computed('mobileMode', function arrowIcon() {
-    return this.get('mobileMode') ? 'arrow-up' : 'arrow-down';
-  }),
+  arrowIcon: conditional('mobileMode', raw('arrow-up'), raw('arrow-down')),
 
   actions: {
     toggleActions(open) {

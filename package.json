@@ -1,6 +1,6 @@
 {
   "name": "onedata-gui-common",
-  "version": "1.0.0",
+  "version": "0.0.0-current",
   "description": "Common parts for building Onedata GUI front-ends",
   "keywords": [
     "ember-addon"
@@ -11,7 +11,7 @@
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "https://git.plgrid.pl/projects/VFS/repos/ember-cli-onedata-common",
+  "repository": "https://git.onedata.org/projects/VFS/repos/onedata-gui-common",
   "scripts": {
     "build": "ember build",
     "start": "ember server",
@@ -73,7 +73,6 @@
     "ember-notify": "5.2.1",
     "ember-one-way-controls": "2.0.1",
     "ember-pell": "1.4.5",
-    "ember-perfect-scrollbar": "0.0.4",
     "ember-power-select": "1.9.5",
     "ember-redirect": "5.1.0",
     "ember-resolver": "4.5.0",
