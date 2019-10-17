@@ -220,6 +220,9 @@ input[type=number] {
   &.collapse-medium {
     max-height: 2500px;
   }
+  &.collapse-large {
+    max-height: 10000px;
+  }
   &.collapse-hidden {
     max-height: 0 !important;
     padding: 0 !important;

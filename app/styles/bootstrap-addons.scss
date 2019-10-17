@@ -151,6 +151,12 @@ $token-border-radius: 3px;
         transform: translateX(100%);
       }
     }
+    &.form-group-sm {
+      .control-label .one-label-tip {
+        height: $input-height-small;
+        line-height: $input-height-small;
+      }
+    }
   }
   @media (max-width: $screen-xs-max) {
     .control-label {
@@ -470,15 +476,6 @@ $token-border-radius: 3px;
         color: $main-text-color-disabled;
       }
     }
-  }
-}
-
-.nav-tabs {
-  .warning-icon {
-    width: 20px;
-    height: 20px;
-    vertical-align: top;
-    margin-left: $padding-xs-horizontal;
   }
 }
 

@@ -18,3 +18,9 @@
     }
   }
 }
+
+.collapse-large {
+  .one-collapsible-list-item-content.opened {
+    max-height: 10000px;
+  }
+}
