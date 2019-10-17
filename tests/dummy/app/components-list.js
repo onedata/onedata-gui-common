@@ -24,6 +24,7 @@ export default [
   'provider-spaces-support-chart',
   'providers-list',
   'providers-map-tile',
+  'remove-icon',
   'resource-load-error',
   'space-providers-support-chart',
   'status-toolbar',
