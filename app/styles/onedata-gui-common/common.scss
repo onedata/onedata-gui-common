@@ -675,4 +675,9 @@ textarea[style^="touch-action: manipulation"] {
       }
     }
   }
+  .property-value {
+    .resource-load-error.alert {
+      margin: 0;
+    }
+  }
 }
