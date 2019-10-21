@@ -1,25 +1,22 @@
+/**
+ * Common application route procedures in every Onedata web GUI
+ * 
+ * @module routes/application
+ * @author Jakub Liput
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Route from '@ember/routing/route';
-import $ from 'jquery';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import _ from 'lodash';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-// generated with https://realfavicongenerator.net
-const FAVICON_HTML =
-  `
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="manifest" href="manifest.json">
-<link rel="mask-icon" href="safari-pinned-tab.svg" color="#ee3f3f">
-<meta name="theme-color" content="#363636">
-  `;
-
 export default Route.extend(ApplicationRouteMixin, {
-  guiUtils: inject(),
-  navigationState: inject(),
+  guiUtils: service(),
+  navigationState: service(),
 
   /**
    * Function for ember-cli-document-title
@@ -43,16 +40,7 @@ export default Route.extend(ApplicationRouteMixin, {
 
   beforeModel(transition) {
     this._super(...arguments);
-    const preAppLoadingElement = document.getElementById('index-pre-app-loading');
-    if (preAppLoadingElement) {
-      preAppLoadingElement.remove();
-    }
     this.set('navigationState.queryParams', get(transition, 'queryParams'));
-    this.addFavicon();
-  },
-
-  addFavicon() {
-    $('head').append(FAVICON_HTML);
   },
 
   getNavTokens() {
@@ -91,6 +79,6 @@ export default Route.extend(ApplicationRouteMixin, {
     transitionTo() {
       let transition = this.transitionTo(...arguments);
       return transition.promise;
-    }
+    },
   },
 });
