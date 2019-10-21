@@ -4,12 +4,22 @@
       color: $color-one-danger;
     }
   }
+
   .modal-content {
     overflow: hidden;
   }
+
+  .collapse-arrow {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -0.1em;
+  }
+  
   .error-json {
-    max-height: 6em;
+    margin-top: $padding-base-vertical;
     overflow: auto;
-    word-wrap: break-word;
+    word-break: break-all;
+    white-space: pre-wrap;
+    background-color: $code-bg;
   }
 }

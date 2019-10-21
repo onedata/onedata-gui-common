@@ -5,13 +5,13 @@
  *
  * @module components/alert-global
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
-import { readOnly } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/alert-global';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -30,6 +30,13 @@ const headerTranslations = {
   default: 'notice',
 };
 
+const expandDetailsLinkClasses = {
+  error: 'text-danger',
+  warning: 'text-warning',
+  info: '',
+  default: '',
+};
+
 const closeBtnClasses = {
   error: 'btn-danger',
   warning: 'btn-warning',
@@ -40,6 +47,7 @@ const closeBtnClasses = {
 export default Component.extend(I18n, {
   layout,
   alert: service(),
+  i18n: service(),
 
   /**
    * @override
@@ -47,19 +55,34 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.alertGlobal',
 
   /**
+   * @type {boolean}
+   */
+  areDetailsExpanded: false,
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  open: readOnly('alert.opened'),
+  open: reads('alert.opened'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  text: readOnly('alert.text'),
+  text: reads('alert.text'),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  detailsText: reads('alert.detailsText'),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  alwaysShowDetails: reads('alert.alwaysShowDetails'),
 
   /**
    * @type {Ember.ComputedProperty<Object>}
    */
-  options: readOnly('alert.options'),
+  options: reads('alert.options'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -74,9 +97,17 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
+  expandDetailsLinkClass: computed('alert.type', function expandDetailsLinkClass() {
+    const alertType = this.get('alert.type');
+    return expandDetailsLinkClasses[alertType] || expandDetailsLinkClasses['default'];
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
   closeBtnClass: computed('alert.type', function closeBtnClass() {
     const alertType = this.get('alert.type');
-    return closeBtnClasses[alertType] || closeBtnClasses['default'];
+    return (closeBtnClasses[alertType] || closeBtnClasses['default']) + ' close-alert-modal';
   }),
 
   /**
@@ -88,6 +119,9 @@ export default Component.extend(I18n, {
   }),
 
   actions: {
+    toggleDetails() {
+      this.toggleProperty('areDetailsExpanded');
+    },
     onHide() {
       this.set('alert.opened', false);
     },
