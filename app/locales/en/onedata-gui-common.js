@@ -38,7 +38,7 @@ import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 import noPermissions from './onedata-gui-common/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
-import cannotInitWebsocket from './errors/cannot-init-websocket';
+import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
 
 const translations = {
   components: {
