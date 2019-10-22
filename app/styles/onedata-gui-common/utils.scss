@@ -83,6 +83,7 @@ $top-shadow-height: 6px;
 
 @mixin clickable() {
   cursor: pointer;
+  @include vendor-prefix(user-select, none);
 }
 
 @mixin hide-shadow() {

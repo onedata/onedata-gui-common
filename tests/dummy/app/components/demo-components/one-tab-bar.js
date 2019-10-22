@@ -34,6 +34,7 @@ export default Component.extend({
         id: '3',
         name: 'Lisbon',
         icon: 'group',
+        disabled: true,
       }
     ];
   }),

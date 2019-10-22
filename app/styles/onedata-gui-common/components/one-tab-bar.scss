@@ -115,6 +115,9 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
         }
       }
     }
+    &.disabled {
+      cursor: not-allowed;
+    }
   }
   .tab-bar-selector {
     @include vertical-align-middle;

@@ -15,6 +15,7 @@
           tabClicked=(action "selectItem" "tabClick" item)
           name=item.name
           icon=item.icon
+          disabled=item.disabled
           class=(concat item.elementClass " item-" item.id " " (if tabsOverflow "apply-truncate"))
         }}
       {{/each}}
