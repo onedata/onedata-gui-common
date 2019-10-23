@@ -8,11 +8,13 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
-import { reads, equal } from '@ember/object/computed';
+import { computed, observer } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/sidebar-clusters/cluster-item';
+import { next } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend(I18n, {
   layout,
@@ -41,9 +43,10 @@ export default Component.extend(I18n, {
   type: reads('cluster.type'),
 
   /**
-   * TODO: should be implemented in backend or by checking "img availability"
+   * Set by `offlineObserver` because of nasty double render bug
+   * @type {boolean}
    */
-  offline: equal('cluster.isOnline', false),
+  offline: undefined,
 
   firstLevelItemIcon: computed('type', function firstLevelItemIcon() {
     switch (this.get('type')) {
@@ -56,9 +59,16 @@ export default Component.extend(I18n, {
     }
   }),
 
+  offlineObserver: observer('cluster.isOnline', function offlineObserver() {
+    next(() => {
+      safeExec(this, 'set', 'offline', !this.get('cluster.isOnline'));
+    });
+  }),
+
   init() {
     this._super(...arguments);
     const cluster = this.get('cluster');
+    this.offlineObserver();
     // if this is new cluster (not a real cluster), skip updateIsOnlineProxy
     if (cluster.updateIsOnlineProxy) {
       cluster.updateIsOnlineProxy();
