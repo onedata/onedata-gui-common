@@ -11,9 +11,10 @@ import DateTimePicker from 'ember-datetimepicker/components/date-time-picker';
 
 export default DateTimePicker.extend({
   classNames: ['one-datetime-picker'],
+  attributeBindings: ['disabled', 'placeholder'],
 
   /**
-   * @type {Function}
+   * @type {Function} 
    * @param {Date} selectedDate
    */
   onChange: undefined,
@@ -38,7 +39,7 @@ export default DateTimePicker.extend({
    * @override
    */
   action() {
-    return this.get('onChange')();
+    return this.get('onChange')(...arguments);
   },
 
   addCustomClassToDatetimePicker() {

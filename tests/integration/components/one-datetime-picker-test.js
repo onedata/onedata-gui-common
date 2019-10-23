@@ -72,6 +72,7 @@ describe('Integration | Component | one datetime picker', function () {
       })
       .then(() => {
         expect(changeSpy).to.be.calledOnce;
+        expect(changeSpy).to.be.calledWith(sinon.match.instanceOf(Date));
       });
   });
 
@@ -82,6 +83,21 @@ describe('Integration | Component | one datetime picker', function () {
     this.render(hbs`{{one-datetime-picker elementId=inputId}}`);
 
     expect(this.$('input#' + inputId)).to.exist;
+  });
+  
+  it('can be disabled', function () {
+    this.render(hbs`{{one-datetime-picker disabled=true}}`);
+
+    expect(this.$('input[disabled]')).to.exist;
+  });
+
+  it('can have a placeholder', function () {
+    const placeholderText = 'sth';
+    this.set('placeholderText', placeholderText);
+
+    this.render(hbs`{{one-datetime-picker placeholder=placeholderText}}`);
+
+    expect(this.$('input').attr('placeholder')).to.equal(placeholderText);
   });
 });
 
