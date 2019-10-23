@@ -5,7 +5,7 @@ export default class EmberPowerSelectHelper {
     this.triggerSelector =
       powerSelectTriggerParentSelector + ' .ember-basic-dropdown-trigger';
     this.dropdownSelector = powerSelectDropdownSelector ||
-      powerSelectTriggerParentSelector + '.ember-power-select-options';
+      powerSelectTriggerParentSelector + ' .ember-power-select-options';
   }
 
   /**
@@ -14,7 +14,7 @@ export default class EmberPowerSelectHelper {
    */
   selectOption(index, callback) {
     return click(find(this.triggerSelector))
-      .then(() => click(find(this.dropdownSelector+ ` li:nth-child(${index})`)))
+      .then(() => click(find(this.dropdownSelector + ` li:nth-child(${index})`)))
       .then(() => {
         if (callback) {
           callback.call(this);
