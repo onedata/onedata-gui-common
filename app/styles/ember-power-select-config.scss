@@ -20,25 +20,29 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   margin-left: 0;
 }
 
-.ember-basic-dropdown {
+.ember-power-select-selected-item, .ember-basic-dropdown-content {
   .option-container {
     position: relative;
-  
+    
     .one-icon {
       @include vertical-align-middle();
       font-size: 28px;
     }
-    .one-icon + .text {
-      padding-left: 34px;
-    }
   }
-  .ember-power-select-selected-item .option-container {
-    .one-icon {
-      left: -10px;
-    }
-    .one-icon + .text {
-      padding-left: 24px;
-    }
+}
+
+.ember-basic-dropdown-content .option-container {
+  .one-icon + .text {
+    padding-left: 34px;
+  }
+}
+
+.ember-power-select-selected-item .option-container {
+  .one-icon {
+    left: -10px;
+  }
+  .one-icon + .text {
+    padding-left: 24px;
   }
 }
 

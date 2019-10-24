@@ -31,9 +31,22 @@ export default Component.extend({
    */
   items: undefined,
 
+  /**
+   * Set item that will be active. Look at `selectDefaultOnInit` to see how
+   * first item can be set automatically.
+   * @type {any}
+   */
   selectedItem: undefined,
 
   tabsOverflow: undefined,
+
+  /**
+   * If set to true, sets first tab as active if `selectedItem` is undefined
+   * on component init. If you want to use this flag and set no item at all,
+   * set `selectedItem` to `null`.
+   * @type {boolean}
+   */
+  selectDefaultOnInit: true,
 
   itemsSorting: Object.freeze(['name']),
 
@@ -41,7 +54,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    if (!this.get('selectedItem')) {
+    if (this.get('selectDefaultOnInit') && this.get('selectedItem') === undefined) {
       this.set('selectedItem', this.get('sortedItems')[0]);
     }
   },

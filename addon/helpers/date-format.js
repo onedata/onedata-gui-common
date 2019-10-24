@@ -13,6 +13,7 @@ import moment from 'moment';
 export const certFormatter = 'YYYY-MM-DD [at] H:mm ([UTC]Z)';
 export const reportFormatter = 'D MMM YYYY H:mm:ss';
 export const dateWithMinutesFormatter = 'D MMM YYYY H:mm';
+export const detailedTimeFormatter = 'H:mm:ss.SSS';
 
 const blanks = {
   cert: 'never',
@@ -23,6 +24,7 @@ const formatters = {
   cert: certFormatter,
   report: reportFormatter,
   dateWithMinutes: dateWithMinutesFormatter,
+  detailedTime: detailedTimeFormatter,
 };
 
 export function dateFormat([inputDate], { format, timezone, blank } = {}) {

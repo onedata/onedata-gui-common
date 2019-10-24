@@ -12,7 +12,7 @@
   </div>
   {{#one-webui-popover
     class="one-pill-button-actions-popover"
-    popoverStyle="with-dropdown {{popoverClass}}"
+    popoverStyle=(concat-classes "with-dropdown" popoverClass)
     padding=false
     popoverTrigger="manual"
     triggerSelector=(concat "#" elementId " .one-pill-button-actions-trigger")

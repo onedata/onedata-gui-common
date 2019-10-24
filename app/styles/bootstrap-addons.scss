@@ -54,9 +54,11 @@ $token-border-radius: 3px;
       margin-top: $padding-small-vertical;
       float: none;
     }
-    @media (max-width: $screen-xs-max) {
-      .btn {
-        width: 100%;
+    &.btn-toolbar-stack {
+      @media (max-width: $screen-xs-max) {
+        .btn {
+          width: 100%;
+        }
       }
     }
   }
@@ -482,6 +484,15 @@ $token-border-radius: 3px;
         color: $main-text-color-disabled;
       }
     }
+  }
+}
+
+.nav-tabs {
+  .warning-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: top;
+    margin-left: $padding-xs-horizontal;
   }
 }
 

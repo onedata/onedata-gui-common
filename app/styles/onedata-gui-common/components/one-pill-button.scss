@@ -1,35 +1,36 @@
 .one-pill-button {
+  $one-pill-button-line-height: 24px;
+  $one-pill-button-border-width: 2px;
+  $one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-border-width;
+  
   display: inline-block;
   overflow: hidden;
   transition: $collapse-transition-vertical;
   .button-text {
-    line-height: 24px;
-    padding-right: 28px;
+    line-height: $one-pill-button-line-height;
+    padding-right: $one-pill-button-height;
     text-align: center;
   }
   .one-pill-button-inner {
     position: relative;
     @include vendor-prefix(user-select, none);
     border-radius: $border-radius-large;
-    border: 2px $btn-info-bg solid;
+    border: $one-pill-button-border-width $btn-info-bg solid;
     padding: 0 30px 0 15px;
-    height: 28px;
-    // FIXME: refactor styles
+    height: $one-pill-button-height;
     .one-pill-button-actions-trigger {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      text-align: center;
-      height: 100%;
-      line-height: 24px;
-      cursor: pointer;
-      border-top-right-radius: 2px;
-      border-bottom-right-radius: 2px;
-      color: $btn-default-color;
-      padding-left: 3px;
+      @include vertical-align-middle;
       @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+      right: 0;
+      width: 40px;
+      height: 100%;
+      padding-left: 3px;
+      text-align: center;
+      line-height: $one-pill-button-line-height;
+      border-top-right-radius: $one-pill-button-border-width;
+      border-bottom-right-radius: $one-pill-button-border-width;
+      cursor: pointer;
+      color: $btn-default-color;
       .inline-icon-container {
         .one-icon {
           transform: translateY(-50%) translateY(3px) translateX(3px);

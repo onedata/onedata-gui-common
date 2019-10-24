@@ -53,7 +53,7 @@ function addToArray(array, pos, ...items) {
   return [...array.slice(0, pos), ...items, ...array.slice(pos, array.length)];
 }
 
-const geMatcher = (compareValue) => {
+const gteMatcher = (compareValue) => {
   return sinon.match(
     value => value >= compareValue,
     `greater or equal ${compareValue}`
@@ -92,13 +92,14 @@ describe('Unit | Utility | replacing chunks array', function () {
         startIndex: 5,
         endIndex: 15,
       });
-      return wait().then(() => {
-        expect(fetchSpy, 'fetch after index change').to.be.calledTwice;
-        expect(get(array, 'length'), 'length after index change')
-          .to.equal(20);
-        expect(array.toArray(), 'content after index change')
-          .to.deep.equal(recordRange(0, 20));
-      });
+      return wait()
+        .then(() => {
+          expect(fetchSpy, 'fetch after index change').to.be.calledTwice;
+          expect(get(array, 'length'), 'length after index change')
+            .to.equal(20);
+          expect(array.toArray(), 'content after index change')
+            .to.deep.equal(recordRange(0, 20));
+        });
     });
   });
 
@@ -109,19 +110,21 @@ describe('Unit | Utility | replacing chunks array', function () {
       startIndex: 0,
       endIndex: 10,
     });
-    return wait().then(() => {
-      expect(fetchSpy, 'initial fetch').to.be.calledOnce;
-      expect(fetchSpy, 'initial fetch starts with null')
-        .to.be.calledWith(null, 10, 0);
-      array.reload();
-      return wait().then(() => {
+    return wait()
+      .then(() => {
+        expect(fetchSpy, 'initial fetch').to.be.calledOnce;
+        expect(fetchSpy, 'initial fetch starts with null')
+          .to.be.calledWith(null, 10, 0);
+        array.reload();
+        return wait();
+      })
+      .then(() => {
         expect(fetchSpy, 'fetch after reload').to.be.calledTwice;
         expect(fetchSpy, 'fetch current records starts from null')
           .to.be.calledWith(null, 10, 0);
         expect(array.toArray(), 'content after reload')
           .to.deep.equal(recordRange(0, 10));
       });
-    });
   });
 
   it('performs fetch as large as needed to load array content', function () {
@@ -131,23 +134,25 @@ describe('Unit | Utility | replacing chunks array', function () {
       startIndex: 0,
       endIndex: 20,
     });
-    return wait().then(() => {
-      expect(array.toArray(), 'content before reload')
-        .to.deep.equal(recordRange(0, 20));
-      expect(fetchSpy, 'initial fetch').to.be.calledOnce;
-      array.setProperties({
-        startIndex: 15,
-        endIndex: 45,
-      });
-      return wait().then(() => {
+    return wait()
+      .then(() => {
+        expect(array.toArray(), 'content before reload')
+          .to.deep.equal(recordRange(0, 20));
+        expect(fetchSpy, 'initial fetch').to.be.calledOnce;
+        array.setProperties({
+          startIndex: 15,
+          endIndex: 45,
+        });
+        return wait();
+      })
+      .then(() => {
         expect(fetchSpy, 'fetch records needed to fill start to end')
-          .to.be.calledWith(19, geMatcher(25), 1);
+          .to.be.calledWith(19, gteMatcher(25), 1);
         expect(get(array, '_start')).to.equal(15);
         expect(get(array, '_end')).to.equal(45);
         expect(array.toArray(), 'content after reload')
           .to.deep.equal(recordRange(15, 45));
       });
-    });
   });
 
   it('reloads array in the middle',
@@ -158,22 +163,20 @@ describe('Unit | Utility | replacing chunks array', function () {
         startIndex: 0,
         endIndex: 100,
       });
-      return wait().then(() => {
-        expect(fetchSpy).to.be.calledOnce;
-        array.setProperties({
-          startIndex: 30,
-          endIndex: 40,
-        });
-        array.reload();
-        return wait().then(() => {
+      return wait()
+        .then(() => {
+          expect(fetchSpy).to.be.calledOnce;
+          array.setProperties({
+            startIndex: 30,
+            endIndex: 40,
+          });
+          array.reload();
+          return wait();
+        })
+        .then(() => {
           expect(fetchSpy).to.be.calledTwice;
-          expect(fetchSpy).to.be.calledWith(
-            30,
-            10,
-            0
-          )
+          expect(fetchSpy).to.be.calledWith(30, 10, 0)
         });
-      });
     }
   );
 
@@ -196,14 +199,17 @@ describe('Unit | Utility | replacing chunks array', function () {
         startIndex: 0,
         endIndex: 30,
       });
-      return get(array, 'initialLoad').then(() => {
-        expect(array.get('firstObject.index')).to.equal(0);
+      return get(array, 'initialLoad')
+        .then(() => {
+          expect(array.get('firstObject.index')).to.equal(0);
 
-        array.setProperties({
-          startIndex: 7,
-          endIndex: 17,
-        });
-        return wait().then(() => {
+          array.setProperties({
+            startIndex: 7,
+            endIndex: 17,
+          });
+          return wait();
+        })
+        .then(() => {
           expect(array.toArray(), 'content after index change')
             .to.deep.equal(recordRange(7, 17));
           expect(array.objectAt(0).index, 'after: objectAt 0')
@@ -211,7 +217,6 @@ describe('Unit | Utility | replacing chunks array', function () {
           expect(array.get('firstObject.index'), 'after: firstObject')
             .to.equal(7);
         });
-      });
     }
   );
 
@@ -231,10 +236,11 @@ describe('Unit | Utility | replacing chunks array', function () {
           startIndex: 7,
           endIndex: 17,
         });
-        return wait().then(() => {
-          expect(array.get('lastObject.index'), 'last object after')
-            .to.equal(array.toArray().get('lastObject.index'));
-        });
+        return wait()
+          .then(() => {
+            expect(array.get('lastObject.index'), 'last object after')
+              .to.equal(array.toArray().get('lastObject.index'));
+          });
       });
     }
   );
@@ -250,18 +256,21 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 10,
         chunkSize,
       });
-      return wait().then(() => {
-        expect(fetchSpy).to.have.callCount(1);
-        expect(fetchSpy).to.have.been.calledWith(
-          null,
-          60,
-          0
-        );
-        array.setProperties({
-          startIndex: 20,
-          endIndex: 60,
-        });
-        return wait().then(() => {
+      return wait()
+        .then(() => {
+          expect(fetchSpy).to.have.callCount(1);
+          expect(fetchSpy).to.have.been.calledWith(
+            null,
+            60,
+            0
+          );
+          array.setProperties({
+            startIndex: 20,
+            endIndex: 60,
+          });
+          return wait();
+        })
+        .then(() => {
           expect(fetchSpy).to.have.callCount(2);
           expect(fetchSpy).to.have.been.calledWith(
             59, // index of last element
@@ -271,22 +280,23 @@ describe('Unit | Utility | replacing chunks array', function () {
           expect(array.toArray(), 'array content after index change to forth')
             .to.deep.equal(recordRange(10, 70));
           array.reload();
-          return wait().then(() => {
-            expect(fetchSpy).to.have.callCount(3);
-            array.setProperties({
-              startIndex: 0,
-              endIndex: 50,
-            });
-            return wait().then(() => {
-              expect(
-                  array.toArray(),
-                  `array index change back: ${array.toArray().mapBy('index').join(', ')}`
-                )
-                .to.deep.equal(recordRange(0, 60));
-            });
+          return wait();
+        })
+        .then(() => {
+          expect(fetchSpy).to.have.callCount(3);
+          array.setProperties({
+            startIndex: 0,
+            endIndex: 50,
           });
+          return wait();
+        })
+        .then(() => {
+          expect(
+              array.toArray(),
+              `array index change back: ${array.toArray().mapBy('index').join(', ')}`
+            )
+            .to.deep.equal(recordRange(0, 60));
         });
-      });
     }
   );
 
@@ -300,47 +310,44 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 10,
         chunkSize: 10,
       });
-      return wait().then(() => {
-        array.setProperties({
-          startIndex: 10,
-          endIndex: 60,
-        });
-        return wait().then(() => {
+      return wait()
+        .then(() => {
+          array.setProperties({
+            startIndex: 10,
+            endIndex: 60,
+          });
+          return wait();
+        })
+        .then(() => {
           array.setProperties({
             startIndex: 20,
             endIndex: 70,
           });
-          return wait().then(() => {
-            array.reload();
-            return wait().then(() => {
-              expect(get(array, 'emptyIndex'), 'emptyIndex forth')
-                .to.equal(9);
-              expect(
-                get(array, 'sourceArray').toArray().slice(0, 10),
-                'invalidated items at beginning'
-              ).to.deep.equal(_.times(10, _.constant(emptyItem)));
-              expect(
-                array.toArray(),
-                'proper content'
-              ).to.deep.equal(
-                recordRange(10, 80)
-              );
-              array.setProperties({
-                startIndex: 0,
-                endIndex: 50,
-              });
-              return wait().then(() => {
-                expect(
-                  get(array, 'emptyIndex'), 'emptyIndex back'
-                ).to.equal(-1);
-                expect(array.toArray()).to.deep.equal(
-                  recordRange(0, 60)
-                );
-              });
-            });
+          return wait();
+        })
+        .then(() => {
+          array.reload();
+          return wait();
+        })
+        .then(() => {
+          expect(get(array, 'emptyIndex'), 'emptyIndex forth').to.equal(9);
+          expect(
+            get(array, 'sourceArray').toArray().slice(0, 10),
+            'invalidated items at beginning'
+          ).to.deep.equal(_.times(10, _.constant(emptyItem)));
+          expect(array.toArray(), 'proper content').to.deep.equal(
+            recordRange(10, 80)
+          );
+          array.setProperties({
+            startIndex: 0,
+            endIndex: 50,
           });
+          return wait();
+        })
+        .then(() => {
+          expect(get(array, 'emptyIndex'), 'emptyIndex back').to.equal(-1);
+          expect(array.toArray()).to.deep.equal(recordRange(0, 60));
         });
-      });
     }
   );
 
@@ -352,39 +359,39 @@ describe('Unit | Utility | replacing chunks array', function () {
       endIndex: 50,
       indexMargin: 10,
     });
-    return wait().then(() => {
-      array.setProperties({
-        startIndex: 10,
-        endIndex: 60,
-      });
-      return wait().then(() => {
+    return wait()
+      .then(() => {
+        array.setProperties({
+          startIndex: 10,
+          endIndex: 60,
+        });
+        return wait();
+      })
+      .then(() => {
         array.setProperties({
           startIndex: 20,
           endIndex: 70,
         });
-        return wait().then(() => {
-          this.mockArray.array = removeFromArray(
-            this.mockArray.array,
-            70
-          );
-          array.reload();
-          expect(array.toArray()).to.deep.equal(
-            removeFromArray(recordRange(10, 80), 70)
-          );
-          return wait().then(() => {
-            array.setProperties({
-              startIndex: 0,
-              endIndex: 50,
-            });
-            return wait().then(() => {
-              expect(array.toArray()).to.deep.equal(
-                recordRange(0, 60)
-              );
-            });
-          });
+        return wait();
+      })
+      .then(() => {
+        this.mockArray.array = removeFromArray(this.mockArray.array, 70);
+        array.reload();
+        expect(array.toArray()).to.deep.equal(
+          removeFromArray(recordRange(10, 80), 70)
+        );
+        return wait();
+      })
+      .then(() => {
+        array.setProperties({
+          startIndex: 0,
+          endIndex: 50,
         });
+        return wait();
+      })
+      .then(() => {
+        expect(array.toArray()).to.deep.equal(recordRange(0, 60));
       });
-    });
   });
 
   it('loads new data below 0 index', function () {
@@ -397,43 +404,48 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
     const frontRecord1 = new Record(-2);
     const frontRecord2 = new Record(-1);
-    return wait().then(() => {
-      array.setProperties({
-        startIndex: 10,
-        endIndex: 60,
-      });
-      return wait().then(() => {
+    return wait()
+      .then(() => {
+        array.setProperties({
+          startIndex: 10,
+          endIndex: 60,
+        });
+        return wait();
+      })
+      .then(() => {
         array.setProperties({
           startIndex: 20,
           endIndex: 70,
         });
-        return wait().then(() => {
-          this.mockArray.array = addToArray(
-            this.mockArray.array,
-            0,
-            frontRecord1,
-            frontRecord2
-          );
-          array.reload();
-          return wait().then(() => {
-            array.setProperties({
-              startIndex: 0,
-              endIndex: 50,
-            });
-            return wait().then(() => {
-              const actualArray = array.toArray();
-              const expectedArray = [
-                frontRecord1,
-                frontRecord2,
-                ...recordRange(0, 58)
-              ];
-              expect(actualArray)
-                .to.deep.equal(expectedArray);
-            });
-          });
+        return wait();
+      })
+      .then(() => {
+        this.mockArray.array = addToArray(
+          this.mockArray.array,
+          0,
+          frontRecord1,
+          frontRecord2
+        );
+        array.reload();
+        return wait();
+      })
+      .then(() => {
+        array.setProperties({
+          startIndex: 0,
+          endIndex: 50,
         });
+        return wait();
+      })
+      .then(() => {
+        const actualArray = array.toArray();
+        const expectedArray = [
+          frontRecord1,
+          frontRecord2,
+          ...recordRange(0, 58)
+        ];
+        expect(actualArray)
+          .to.deep.equal(expectedArray);
       });
-    });
   });
 
   it('notifies about fetchPrev start and resolve', function () {
@@ -450,31 +462,36 @@ describe('Unit | Utility | replacing chunks array', function () {
     array.on('fetchPrevStarted', fetchPrevStartedHandler);
     array.on('fetchPrevResolved', fetchPrevResolvedHandler);
 
-    return wait().then(() => {
-      array.setProperties({
-        startIndex: 10,
-        endIndex: 60,
-      });
-      return wait().then(() => {
+    return wait()
+      .then(() => {
+        array.setProperties({
+          startIndex: 10,
+          endIndex: 60,
+        });
+        return wait();
+      })
+      .then(() => {
         array.setProperties({
           startIndex: 20,
           endIndex: 70,
         });
-        return wait().then(() => {
-          array.reload();
-          return wait().then(() => {
-            array.setProperties({
-              startIndex: 0,
-              endIndex: 50,
-            });
-            expect(fetchPrevStartedHandler).to.be.calledOnce;
-            return wait().then(() => {
-              expect(fetchPrevResolvedHandler).to.be.calledOnce;
-            });
-          });
+        return wait();
+      })
+      .then(() => {
+        array.reload();
+        return wait();
+      })
+      .then(() => {
+        array.setProperties({
+          startIndex: 0,
+          endIndex: 50,
         });
+        expect(fetchPrevStartedHandler).to.be.calledOnce;
+        return wait();
+      })
+      .then(() => {
+        expect(fetchPrevResolvedHandler).to.be.calledOnce;
       });
-    });
   });
 
 });

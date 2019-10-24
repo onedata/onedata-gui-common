@@ -1,7 +1,7 @@
 {{#if mobileMode}}
   {{#one-collapsible-list as |list|}}
     {{#list.item class="user-account-button" closeEventName='side-menu:close' as |listItem|}}
-      {{#listItem.header class=(concat menuItemClasses (if isActive " active" ""))}}
+      {{#listItem.header class=(concat-classes menuItemClasses (if isActive "active" ""))}}
         {{one-icon
           class="user-profile-icon item-icon"
           icon="user-profile"
@@ -14,7 +14,7 @@
         {{#one-collapsible-list as |list|}}
           {{#if guiUtils.manageAccountText}}
             {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "manageAccount") class=(concat menuItemClasses " manage-account-action")}}
+              {{#listItem.header click=(action "manageAccount") class=(concat-classes menuItemClasses "manage-account-action")}}
                 {{#if guiUtils.manageAccountExternalLink}}
                   <a href={{guiUtils.manageAccountExternalLink}}>
                     {{guiUtils.manageAccountText}}
@@ -27,8 +27,15 @@
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
+          {{#if privacyPolicyManager.showPrivacyPolicyAction}}
+            {{#list.item isCollapsible=false as |listItem|}}
+              {{#listItem.header click=(action "privacyPolicy") class=(concat-classes menuItemClasses "privacy-policy-action")}}
+                {{tt this "privacyPolicy"}}
+              {{/listItem.header}}
+            {{/list.item}}
+          {{/if}}
           {{#list.item isCollapsible=false as |listItem|}}
-            {{#listItem.header click=(action "logout") class=(concat menuItemClasses " logout-action")}}
+            {{#listItem.header click=(action "logout") class=(concat-classes menuItemClasses "logout-action")}}
               {{tt this "logout"}}
             {{/listItem.header}}
           {{/list.item}}
@@ -37,7 +44,7 @@
     {{/list.item}}
   {{/one-collapsible-list}}
 {{else}}
-  <div class={{concat menuItemClasses (if isActive " active" "")}} {{action 'toggleMenu' bubbles=false}}>
+  <div class={{concat-classes menuItemClasses (if isActive "active" "")}} {{action "toggleMenu" bubbles=false}}>
     <div class="item-header truncate">
       {{one-icon
         class="user-profile-icon item-icon"
@@ -75,6 +82,13 @@
               {{guiUtils.manageAccountText}}
             {{/link-to}}
           {{/if}}
+        </li>
+      {{/if}}
+      {{#if privacyPolicyManager.showPrivacyPolicyAction}}
+        <li>
+          <a class="clickable" {{action "privacyPolicy"}}>
+            {{tt this "privacyPolicy"}}
+          </a>
         </li>
       {{/if}}
       <li>

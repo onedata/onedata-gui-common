@@ -2,6 +2,8 @@
  * Fork of https://github.com/briarsweetbriar/ember-perfect-scrollbar/
  * that works with new perfect-scrollbar versions.
  * 
+ * Last upstream update from revision: `01580ba9bcbf6c8dd48a22d5a809e2e0f0da310c`
+ * 
  * Needs importing `node_modules/perfect-scrollbar/css/perfect-scrollbar.css`
  * to vendor CSS.
  * 
@@ -13,7 +15,6 @@
  */
 
 import Mixin from '@ember/object/mixin';
-import { get } from '@ember/object';
 import { isPresent } from '@ember/utils';
 import PerfectScrollbar from 'npm:perfect-scrollbar';
 
@@ -25,7 +26,7 @@ export default Mixin.create({
   init(...args) {
     this._super(...args);
 
-    const resizeService = get(this, 'resizeService');
+    const resizeService = this.get('resizeService');
 
     if (isPresent(resizeService)) {
       resizeService.on('debouncedDidResize', this, '_resizePerfectScrollbar');
@@ -39,8 +40,13 @@ export default Mixin.create({
   didInsertElement(...args) {
     this._super(...args);
 
+    const {
+      element,
+      perfectScrollbarOptions
+    } = this.getProperties('element', 'perfectScrollbarOptions');
+
     const perfectScrollbar =
-      new PerfectScrollbar(this.element, this.get('perfectScrollbarOptions'));
+      new PerfectScrollbar(element, perfectScrollbarOptions);
 
     this.set('perfectScrollbar', perfectScrollbar);
   },
@@ -48,12 +54,15 @@ export default Mixin.create({
   willDestroyElement(...args) {
     this._super(...args);
 
-    const resizeService = this.get('resizeService');
+    const {
+      resizeService,
+      perfectScrollbar,
+    } = this.getProperties('resizeService', 'perfectScrollbar');
 
     if (isPresent(resizeService)) {
       resizeService.off('debouncedDidResize', this, '_resizePerfectScrollbar');
     }
 
-    this.get('perfectScrollbar').destroy();
+    perfectScrollbar.destroy();
   },
 });

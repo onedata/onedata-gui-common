@@ -27,7 +27,6 @@
 
 import Mixin from '@ember/object/mixin';
 import { later, cancel } from '@ember/runloop';
-import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Mixin.create({
@@ -36,31 +35,45 @@ export default Mixin.create({
    * @type {Function}
    */
   fastDoubleClick: notImplementedIgnore,
-  
+
   /**
    * Maximum time in ms between two clicks to fire pseudo-double-click event
    * @type {number}
    */
   doubleClickInterval: 400,
-  
+
   /**
    * @type {number}
    */
   singleClickTimer: 0,
-  
+
+  /**
+   * How many times the element was clicked in the `doubleClickInterval`.
+   * It is resetted when time is reached.
+   */
+  singleClickCount: 0,
+
+  willDestroyElement() {
+    try {
+      cancel(this.get('singleClickTimer'));
+    } catch (error) {
+      this._super(...arguments);
+      throw error;
+    }
+  },
+
   click(clickEvent) {
     const doubleClickInterval = this.get('doubleClickInterval');
-    safeExec(this, 'incrementProperty', 'singleClickCount');
-    let singleClickCount = this.get('singleClickCount')
+    this.incrementProperty('singleClickCount');
+    const singleClickCount = this.get('singleClickCount')
     if (singleClickCount === 1) {
       const singleClickTimer = later(() => {
-        safeExec(this, 'set', 'singleClickCount', 0);
         this.set('singleClickCount', 0);
       }, doubleClickInterval);
-      safeExec(this, 'set', 'singleClickTimer', singleClickTimer);
+      this.set('singleClickTimer', singleClickTimer);
     } else if (singleClickCount >= 2) {
       cancel(this.get('singleClickTimer'));
-      safeExec(this, 'set', 'singleClickCount', 0);
+      this.set('singleClickCount', 0);
       this.get('fastDoubleClick')(clickEvent);
     }
   },

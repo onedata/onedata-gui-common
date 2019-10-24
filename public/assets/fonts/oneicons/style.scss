@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?a5r0qt') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?a5r0qt') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?a5r0qt##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?6qbpj9') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?6qbpj9') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?6qbpj9##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -412,11 +412,6 @@
     content: $oneicon-menu-groups; 
   }
 }
-.oneicon-menu-links {
-  &:before {
-    content: $oneicon-menu-links; 
-  }
-}
 .oneicon-menu-providers {
   &:before {
     content: $oneicon-menu-providers; 
@@ -750,6 +745,61 @@
 .oneicon-team {
   &:before {
     content: $oneicon-team; 
+  }
+}
+.oneicon-text-bold {
+  &:before {
+    content: $oneicon-text-bold; 
+  }
+}
+.oneicon-text-heading1 {
+  &:before {
+    content: $oneicon-text-heading1; 
+  }
+}
+.oneicon-text-heading2 {
+  &:before {
+    content: $oneicon-text-heading2; 
+  }
+}
+.oneicon-text-heading3 {
+  &:before {
+    content: $oneicon-text-heading3; 
+  }
+}
+.oneicon-text-italic {
+  &:before {
+    content: $oneicon-text-italic; 
+  }
+}
+.oneicon-text-link {
+  &:before {
+    content: $oneicon-text-link; 
+  }
+}
+.oneicon-text-olist {
+  &:before {
+    content: $oneicon-text-olist; 
+  }
+}
+.oneicon-text-paragraph {
+  &:before {
+    content: $oneicon-text-paragraph; 
+  }
+}
+.oneicon-text-strikethrough {
+  &:before {
+    content: $oneicon-text-strikethrough; 
+  }
+}
+.oneicon-text-ulist {
+  &:before {
+    content: $oneicon-text-ulist; 
+  }
+}
+.oneicon-text-underline {
+  &:before {
+    content: $oneicon-text-underline; 
   }
 }
 .oneicon-tokens {

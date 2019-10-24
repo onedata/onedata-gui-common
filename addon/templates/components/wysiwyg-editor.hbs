@@ -1,0 +1,7 @@
+{{#if (eq mode "edit")}}
+  {{pell-editor pellOptions=pellOptions onChange=onChange value=content class="pell-editor"}}
+{{else}}
+  <div class="wysiwyg-content">
+    {{htmlSafeContent}}
+  </div>
+{{/if}}

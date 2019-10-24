@@ -118,22 +118,23 @@ export default ArraySlice.extend(Evented, {
     '_endReached',
     'loadMoreThreshold',
     'sourceArray.[]',
-    function observeStartEndChanged() {
+    'emptyIndex',
+    function startEndChanged() {
       if (!this.get('isReloading')) {
         const {
           _start,
           _end,
-          loadMoreThreshold,
           _startReached,
           _endReached,
+          loadMoreThreshold,
           sourceArray,
           emptyIndex,
         } = this.getProperties(
           '_start',
           '_end',
-          'loadMoreThreshold',
           '_startReached',
           '_endReached',
+          'loadMoreThreshold',
           'sourceArray',
           'emptyIndex',
         );
@@ -330,7 +331,8 @@ export default ArraySlice.extend(Evented, {
         for (let i = 0; i <= emptyIndex; ++i) {
           sourceArray[i] = emptyItem;
         }
-        for (let i = 0; i < Math.min(updatedEnd, fetchedCount); ++i) {
+        const updateBoundary = Math.min(updatedEnd, fetchedCount);
+        for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = updatedRecordsArray[i];
         }
         sourceArray.arrayContentDidChange(_start, );

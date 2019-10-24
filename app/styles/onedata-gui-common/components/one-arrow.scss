@@ -2,7 +2,6 @@ $one-arrow-dot-size: 6px;
 $one-arrow-height: 2 * $one-arrow-dot-size;
 $one-arrow-line-height: 2px;
 $one-arrow-arrowhead-height: (4 / 3) * $one-arrow-dot-size;
-$one-arrow-animation-time: 0.1s;
 
 .one-arrow {
   position: relative;
@@ -109,7 +108,6 @@ $one-arrow-animation-time: 0.1s;
   }
 
   .line, .dot {
-    transition: background-color $one-arrow-animation-time linear;
     background-color: $color-one-azure;
   }
   
@@ -120,7 +118,6 @@ $one-arrow-animation-time: 0.1s;
     border-color: $color-one-azure;
     border-style: solid;
     transform: rotate(-45deg);
-    transition: border-color $one-arrow-animation-time linear;
   }
 
   .arrow-text {

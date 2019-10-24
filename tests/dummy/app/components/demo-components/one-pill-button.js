@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 
 export default Component.extend({
-  menuItems1: computed(() => ([{
+  menuItems: computed(() => ([{
       action: () => alert('action1'),
       icon: 'space',
       title: 'Action 1',
