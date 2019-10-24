@@ -29,6 +29,7 @@ import Component from '@ember/component';
 import EmberObject, { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form';
 import config from 'ember-get-config';
+import _ from 'lodash';
 
 const {
   layoutConfig
@@ -85,6 +86,11 @@ export default Component.extend({
   allFieldsValues: null,
 
   /**
+   * @type {Array<string>}
+   */
+  collapsedPrefixes: Object.freeze([]),
+
+  /**
    * Array of active (visible) form fields (used within current prefixes).
    * @type {Array.Ember.Object}
    */
@@ -133,19 +139,29 @@ export default Component.extend({
    * Array of error objects from ember-cp-validations.
    * @type {Array.Object}
    */
-  errors: computed('currentFieldsPrefix', 'validations.errors.[]', function () {
-    let {
-      currentFieldsPrefix,
-      validations
-    } = this.getProperties('currentFieldsPrefix', 'validations');
-    let errors = [];
-    currentFieldsPrefix.forEach(prefix => {
-      let attrPrefix = `allFieldsValues.${prefix}.`;
-      errors = errors.concat(validations.get('errors')
-        .filter(error => error.get('attribute').startsWith(attrPrefix)));
-    });
-    return errors;
-  }),
+  errors: computed(
+    'currentFieldsPrefix',
+    'collapsedPrefixes.[]',
+    'validations.errors.[]',
+    function () {
+      let {
+        currentFieldsPrefix,
+        collapsedPrefixes,
+        validations
+      } = this.getProperties(
+        'currentFieldsPrefix',
+        'collapsedPrefixes',
+        'validations'
+      );
+      let errors = [];
+      _.difference(currentFieldsPrefix, collapsedPrefixes).forEach(prefix => {
+        let attrPrefix = `allFieldsValues.${prefix}.`;
+        errors = errors.concat(validations.get('errors')
+          .filter(error => error.get('attribute').startsWith(attrPrefix)));
+      });
+      return errors;
+    }
+  ),
 
   /**
    * Validity status of values from the selected prefix.
