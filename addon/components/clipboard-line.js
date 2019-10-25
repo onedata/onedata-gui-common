@@ -11,6 +11,7 @@ import Component from '@ember/component';
 import layout from '../templates/components/clipboard-line';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { computed } from '@ember/object';
 
 export default Component.extend(I18n, {
   layout,
@@ -46,15 +47,23 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
-   * Eg. default, primary, danger...
+   * One of: input, textarea
    * @type {string}
    */
-  btnType: undefined,
+  type: 'input',
 
   /**
-   * If false, "Copy" text will be hidden
-   * @virtual
-   * @type {boolean}
+   * @virtual optional
+   * @type {string}
    */
-  showText: true,
+  inputClass: undefined,
+
+  /**
+   * @type {number}
+   */
+  textareaRows: 5,
+
+  clipboardBtnClass: computed('type', function clipboardBtnClass() {
+    return `clipboard-btn-${this.get('type')}`;
+  }),
 });

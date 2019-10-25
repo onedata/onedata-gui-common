@@ -4,23 +4,26 @@
   </div>
 {{/if}}
 
-<div class="input-group {{if size (concat "input-group-" size)}}">
+{{#if (eq type "textarea")}}
+  <textarea
+    rows="{{textareaRows}}"
+    class="clipboard-input form-control {{inputClass}}"
+    readonly
+  >{{value}}</textarea>
+{{else}}
   <input
     type="text"
-    class="clipboard-input form-control"
+    class="clipboard-input form-control {{inputClass}} {{if size (concat "input-" size)}}"
     value={{value}}
     readonly
   >
-  <div class="input-group-btn">
-    {{#one-copy-button
-      class=(concat-classes "btn" (concat "btn-" (or btnType "default")) (unless showText "without-text"))
-      parentElementId=elementId
-      localTarget=".clipboard-input"
-    }}
-      {{one-icon icon="clipboard-copy"}}
-      {{#if showText}}
-        {{tt this "copyBtn"}}
-      {{/if}}
-    {{/one-copy-button}}
-  </div>
-</div>
+{{/if}}
+{{#one-copy-button
+  class=(concat-classes "clipboard-btn" clipboardBtnClass)
+  parentElementId=elementId
+  localTarget=".clipboard-input"
+}}
+  <div class="copy-btn-background"></div>
+  {{one-icon class="copy-btn-icon" icon="browser-copy"}}
+  {{one-tooltip title=(tt this "copyHint")}}
+{{/one-copy-button}}
