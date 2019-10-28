@@ -66,10 +66,7 @@ describe('Integration | Component | one datetime picker', function () {
 
     return click('input')
       .then(() => waitForPickerInit(this))
-      .then(() => {
-        const dayCell = getPicker().find('[data-date="6"]')[0];
-        return click(dayCell);
-      })
+      .then(() => click(getPicker().find('.xdsoft_today')[0]))
       .then(() => {
         expect(changeSpy).to.be.calledOnce;
         expect(changeSpy).to.be.calledWith(sinon.match.instanceOf(Date));
