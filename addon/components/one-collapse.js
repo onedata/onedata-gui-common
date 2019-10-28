@@ -1,5 +1,5 @@
 /**
- * Custom extension of ember-bootstrap bs-modal
+ * Custom extension of ember-bootstrap bs-collapse
  *
  * @module components/one-collapse
  * @author Michał Borzęcki

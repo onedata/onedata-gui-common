@@ -3,6 +3,7 @@ import Service, { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { capitalize } from '@ember/string';
 
 function aliasToShow(type) {
   return function (message, options) {
@@ -41,7 +42,7 @@ export default Service.extend(I18n, {
   // TODO i18n  
   backendError(operation, error) {
     const reason = error && this.get('errorExtractor').getMessage(error);
-    let capitalizedOperation = _.upperFirst(operation);
+    let capitalizedOperation = capitalize(operation);
 
     let finalMessage =
       `<p class="operation-message"><strong>${capitalizedOperation} failed!</strong></p>`;
@@ -64,21 +65,6 @@ export default Service.extend(I18n, {
       finalMessage += `<p>${this.t('failedDueToUnknownError')}</p>`;
       options.alwaysShowDetails = Boolean(options.detailsText);
     }
-
-    // if (reason) {
-    //   if (reason.message) {
-    //     finalMessage += `<p>${reason.message}</p>`;
-    //   }
-    //   options.detailsText = reason.errorJsonString ?
-    //     htmlSafe(`<div class="error-json">${reason.errorJsonString}</div>`) : undefined;
-    //   options.alwaysShowDetails = Boolean(options.detailsText && !reason.message);
-    // } else {
-    //   finalMessage += `<p>Unfortunately, error details are unavailable</p>`;
-    //   if (error) {
-    //     options.detailsText = htmlSafe(`<div class="error-json">${JSON.stringify(error, null, 2)}</div>`);
-    //     options.alwaysShowDetails = true;
-    //   }
-    // }
 
     this.error(htmlSafe(finalMessage), options);
   },

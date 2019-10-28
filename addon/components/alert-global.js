@@ -67,6 +67,11 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<string>}
    */
+  type: reads('alert.type'),
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
   text: reads('alert.text'),
 
   /**
@@ -99,7 +104,8 @@ export default Component.extend(I18n, {
    */
   expandDetailsLinkClass: computed('alert.type', function expandDetailsLinkClass() {
     const alertType = this.get('alert.type');
-    return expandDetailsLinkClasses[alertType] || expandDetailsLinkClasses['default'];
+    return expandDetailsLinkClasses[alertType] ||
+      expandDetailsLinkClasses['default'];
   }),
 
   /**
@@ -107,7 +113,8 @@ export default Component.extend(I18n, {
    */
   closeBtnClass: computed('alert.type', function closeBtnClass() {
     const alertType = this.get('alert.type');
-    return (closeBtnClasses[alertType] || closeBtnClasses['default']) + ' close-alert-modal';
+    return (closeBtnClasses[alertType] || closeBtnClasses['default']) +
+      ' close-alert-modal';
   }),
 
   /**

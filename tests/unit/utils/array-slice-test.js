@@ -116,37 +116,37 @@ describe('Unit | Utility | array slice', function () {
   });
 
   it('does not notify about changes in sourceArray if index is out of range',
-  function () {
-    const sourceArray = A(_.range(0, 100));
-    const startIndex = 0;
-    const endIndex = 5;
-    const indexMargin = 1;
-    const as = ArraySlice.create({
-      sourceArray,
-      startIndex,
-      endIndex,
-      indexMargin,
-    });
+    function () {
+      const sourceArray = A(_.range(0, 100));
+      const startIndex = 0;
+      const endIndex = 5;
+      const indexMargin = 1;
+      const as = ArraySlice.create({
+        sourceArray,
+        startIndex,
+        endIndex,
+        indexMargin,
+      });
 
-    const spy = sinon.spy();
+      const spy = sinon.spy();
 
-    const obj = EmberObject.extend({
-      as,
-      sum: computed('as.[]', function () {
-        spy();
-        return _.sum(this.get('as').toArray());
-      }),
-    }).create();
+      const obj = EmberObject.extend({
+        as,
+        sum: computed('as.[]', function () {
+          spy();
+          return _.sum(this.get('as').toArray());
+        }),
+      }).create();
 
-    expect(obj.get('sum')).to.equal(15);
-
-    as.pushObject(10000);
-
-    return wait().then(() => {
       expect(obj.get('sum')).to.equal(15);
-      expect(spy).to.be.calledOnce;
+
+      as.pushObject(10000);
+
+      return wait().then(() => {
+        expect(obj.get('sum')).to.equal(15);
+        expect(spy).to.be.calledOnce;
+      });
     });
-  });
 
   it('notifies about changes in sourceArray if index is in range', function () {
     const sourceArray = A(_.concat([99, 99, 99], _.range(0, 6)));
