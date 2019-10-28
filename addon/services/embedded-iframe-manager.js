@@ -59,8 +59,9 @@ export default Service.extend(WindowResizeHandler, {
         'embeddedIframes'
       );
 
-      const existingIframeNodes =
-        [...embeddedIframesContainer.querySelectorAll('.embedded-iframe')];
+      const existingIframeNodes = [
+        ...embeddedIframesContainer.querySelectorAll('.embedded-iframe')
+      ];
       const newIframeNodes = embeddedIframes.mapBy('iframeElement');
 
       // remove deleted iframes from DOM and add just added iframes

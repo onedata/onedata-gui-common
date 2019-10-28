@@ -274,6 +274,9 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     right: $content-col-padding;
     bottom: $content-col-padding;
     left: $content-col-padding;
+    .content-info .world-map {
+      margin: -$content-col-padding;
+    }
   }
   // last row child in absolute-flex-content that should be stretched to fit
   .absolute-flex-content-child-stretch {
@@ -286,6 +289,8 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     // when stretched child is fitted to bottom
     // should try to reproduce it in clean html
     margin-bottom: -$content-col-padding + 4px;
+    margin-left: -$content-col-padding;
+    margin-right: -$content-col-padding;
   }
   // background for top of main content with tabs
   .content-header-section {
@@ -296,5 +301,10 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
     padding-right: $content-col-padding;
     margin-left: -$content-col-padding;
     padding-left: $content-col-padding;
+  }
+  @media (max-width: $screen-xs-max) {
+    .content-header-section {
+      padding-top: 0;
+    }
   }
 }

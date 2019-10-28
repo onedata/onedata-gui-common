@@ -146,10 +146,4 @@ export default Component.extend({
     }
     return updateResult;
   },
-
-  actions: {
-    toggle() {
-      this._toggle();
-    }
-  }
 });

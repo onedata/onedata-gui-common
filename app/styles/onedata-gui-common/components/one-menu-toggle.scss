@@ -1,4 +1,4 @@
-// FIXME: copied from collapsible toolbar styles, unify
+// TODO: copied from collapsible toolbar styles, unify
 .one-menu-toggle {
   display: inline-block;
   cursor: pointer;
@@ -23,6 +23,7 @@
     .icon-dot {
       background-color: $main-text-color-disabled;
     }
+    cursor: inherit;
   }
   .icon-dot {
     background-color: $main-text-color;

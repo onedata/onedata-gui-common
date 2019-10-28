@@ -3,7 +3,7 @@ $toggle-width: 2 * $toggle-size-base;
 $one-way-toggle-control-color-active: $brand-primary;
 $one-way-toggle-control-color-maybe: $color-one-yellow;
 $toggle-disabled-desaturation: 20%;
-$toggle-color-transition: background-color 0.2s ease, opacity 0.2s ease;
+$toggle-color-transition: transition-ease(background-color), transition-ease(opacity);
 
 .one-way-toggle {
   position: relative;
@@ -86,7 +86,7 @@ $toggle-color-transition: background-color 0.2s ease, opacity 0.2s ease;
     display: block;
     background-color: $input-bg;
     position: relative;
-    transition: margin-left 0.2s ease, $control-focus-transition;
+    transition: transition-ease(margin-left), $control-focus-transition;
     width: $toggle-size-base;
     left: -1px;
     top: -1px;

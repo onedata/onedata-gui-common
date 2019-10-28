@@ -10,7 +10,6 @@
 
   {{#one-list-wrapper items=sortedCollection class="no-top-border" as |item|}}
     {{#one-list-primary-item item=item
-      changePrimaryItemId=(action "changePrimaryItemId")
       isActive=(and (eq activeResourceType resourceType) (eq primaryItemId item.id))
       as |primarySection|}}
       {{#if (eq primarySection "header")}}

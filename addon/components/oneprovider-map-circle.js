@@ -87,7 +87,7 @@ export default Component.extend(I18n, {
       isSelected,
     } = this.getProperties('color', 'scale', 'mapSize', 'isSelected');
     let styles = ''
-    
+
     if (color) {
       styles += `color: ${color}; border-color: ${color}; `;
       if (isSelected) {
@@ -98,7 +98,7 @@ export default Component.extend(I18n, {
     const width = mapSize * 0.01 * scale;
     styles +=
       `border-width: ${width / 15}px; font-size: ${width * 0.75}px; width: ${width}px; height: ${width}px;`;
-    
+
     return htmlSafe(styles);
   }),
 

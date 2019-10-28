@@ -16,7 +16,7 @@
     {{/one-webui-popover}}
   </div>
 {{else if (eq _renderMode "modal")}}
-  {{#bs-modal
+  {{#one-modal
     open=_contentVisible
     onHide=(action "onModalHide")
     class=_modalClass
@@ -28,5 +28,5 @@
         submit=(action "submit")
       )}}
     {{/modal.body}}
-  {{/bs-modal}}
+  {{/one-modal}}
 {{/if}}

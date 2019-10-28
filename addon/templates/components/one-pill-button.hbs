@@ -1,0 +1,30 @@
+<div class="one-pill-button-inner">
+  <div class="button-text">
+    {{yield}}
+  </div>
+  <div
+    class="one-pill-button-actions-trigger"
+    onclick={{action (disable-bubbling (action "toggleActions"))}}
+  >
+    <div class="inline-icon-container">
+      {{one-icon icon=arrowIcon}}
+    </div>
+  </div>
+  {{#one-webui-popover
+    class="one-pill-button-actions-popover"
+    popoverStyle=(concat-classes "with-dropdown" popoverClass)
+    padding=false
+    popoverTrigger="manual"
+    triggerSelector=(concat "#" elementId " .one-pill-button-actions-trigger")
+    open=actionsOpen
+  }}
+    {{#click-outside action=(action "toggleActions" false)}}
+      {{actions-popover-content
+        actionsArray=menuItems
+        actionClicked=(action "toggleActions" false)
+        class="button-actions"
+      }}
+    {{/click-outside}}
+  {{/one-webui-popover}}
+  
+</div>

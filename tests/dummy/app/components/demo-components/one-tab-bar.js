@@ -34,6 +34,40 @@ export default Component.extend({
         id: '3',
         name: 'Lisbon',
         icon: 'group',
+        disabled: true,
+      }
+    ];
+  }),
+
+  fewItemsLong: computed(function fewItems() {
+    return [{
+        id: '1',
+        name: 'Lorem ipsum dolor sit amet consectetur adipiscing',
+        icon: 'provider',
+      },
+      {
+        id: '2',
+        name: 'Aenean ut ornare ex integer at massa',
+        icon: 'provider',
+      },
+    ];
+  }),
+
+  fewItemsLongLong: computed(function fewItems() {
+    return [{
+        id: '1',
+        name: 'Lorem ipsum dolor sit amet consectetur adipiscing elit',
+        icon: 'provider',
+      },
+      {
+        id: '2',
+        name: 'Aenean ut ornare ex integer at massa magna',
+        icon: 'provider',
+      },
+      {
+        id: '3',
+        name: 'Integer tempus tortor enim nec mollis odio euismod in',
+        icon: 'provider',
       }
     ];
   }),

@@ -22,14 +22,4 @@ export default Controller.extend({
     });
     return parsedOptions;
   }),
-
-  actions: {
-    changeAspect(aspectId) {
-      // TODO: a loader for clicked sidebar item can be done here by usin transition as a promise
-      return this.transitionToRoute(
-        'onedata.sidebar.content.aspect',
-        aspectId
-      );
-    }
-  }
 });
