@@ -20,11 +20,6 @@
       border-top: 0;
     }
   }
-  .disabled {
-    a {
-      pointer-events: none;
-    }
-  }
 
   .expanded {
     background-color: lighten($color-one-semiblack, 7%);

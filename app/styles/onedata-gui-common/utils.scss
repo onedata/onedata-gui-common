@@ -83,16 +83,47 @@ $top-shadow-height: 6px;
 
 @mixin clickable() {
   cursor: pointer;
+  @include vendor-prefix(user-select, none);
 }
 
-@mixin before-top-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+@mixin hide-shadow() {
+  &::before {
+    height: 0;
+  }
+}
+
+@mixin shadow-base($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05, $direction) {
   &::before {
     position: absolute;
-    top: -$top-shadow-height;
+    @if #{$direction} == #{to bottom} {
+      top: -$top-shadow-height;
+    }
+    @if #{$direction} == #{to top} {
+      bottom: -$top-shadow-height;
+    }
     height: $top-shadow-height;
-    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, $shadow-alpha));
+    background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
+    transition: height 0.2s linear;
     content: ' ';
     width: 100%;
     z-index: 1002;
+    left: 0;
+    right: 0;
   }
+}
+
+@mixin before-top-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+  @include shadow-base(
+    $top-shadow-height: $top-shadow-height,
+    $shadow-alpha: $shadow-alpha,
+    $direction: to bottom,
+  );
+}
+
+@mixin before-bottom-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+  @include shadow-base(
+    $top-shadow-height: $top-shadow-height,
+    $shadow-alpha: $shadow-alpha,
+    $direction: to top,
+  );
 }

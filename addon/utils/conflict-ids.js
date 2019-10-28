@@ -20,7 +20,6 @@ export default function conflictIds(ids) {
 
   let bufs = ids.map(name => ({ name: name, buf: [], differs: false }));
   for (let i = 0; i < maxLen; i += 1) {
-    /* jshint loopfunc:true */
     let currentLetters = bufs.map(({ name }) => name[i]);
     bufs.forEach(b => {
       if (!b.differs && currentLetters.filter(lt => lt === b.name[i]).length <= 1) {
