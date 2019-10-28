@@ -8,6 +8,8 @@
  */
 
 import DateTimePicker from 'ember-datetimepicker/components/date-time-picker';
+import { computed } from '@ember/object';
+import moment from 'moment';
 
 export default DateTimePicker.extend({
   classNames: ['one-datetime-picker'],
@@ -24,12 +26,20 @@ export default DateTimePicker.extend({
    */
   customDatetimePickerClassName: 'datetime-picker',
 
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  minDate: computed(function () {
+    return moment().format('Y/m/d');
+  }),
+
   init() {
     this._super(...arguments);
 
     this.addCustomClassToDatetimePicker();
     this.set('options', Object.assign({
       lazyInit: true,
+      minDate: this.get('minDate'),
     }, this.get('options')));
   },
 
