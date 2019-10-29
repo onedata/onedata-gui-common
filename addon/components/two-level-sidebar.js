@@ -64,11 +64,10 @@ export default Component.extend({
   sidebarType: undefined,
 
   /**
-   * If true and sidebar collection is empty, button that creates new item
-   * will be visible.
+   * If true and sidebar collection is empty, button "Get started" will be visible.
    * @type {boolean}
    */
-  showCreateOnEmpty: true,
+  showGetStartedWhenEmpty: true,
 
   /**
    * @type {ComputedProperty<Array<string>>}

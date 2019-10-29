@@ -6,14 +6,16 @@
         <p>{{tt this "noResources" resourceType=resourceType}}</p>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        {{#link-to "onedata.sidebar.content" resourceType "empty"
-          class="btn btn-default hide-sm-active"
-        }}
-          {{tt this "getStarted"}}
-        {{/link-to}}
-      </div>  
-    </div>
+    {{#if showGetStarted}}
+      <div class="row">
+        <div class="col-xs-12">
+          {{#link-to "onedata.sidebar.content" resourceType "empty"
+            class="btn btn-default hide-sm-active"
+          }}
+            {{tt this "getStarted"}}
+          {{/link-to}}
+        </div>  
+      </div>
+    {{/if}}
   </li>
 </ul>
