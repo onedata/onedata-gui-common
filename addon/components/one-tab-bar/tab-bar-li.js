@@ -15,8 +15,8 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 export default Component.extend({
   layout,
   tagName: 'span',
-  classNames: ['tab-bar-li'],
-  classNameBindings: ['isActive:active'],
+  classNames: ['tab-bar-li', 'clickable'],
+  classNameBindings: ['isActive:active', 'disabled'],
 
   /**
    * Notify parent about click (select) on the tab.
@@ -46,9 +46,17 @@ export default Component.extend({
    */
   icon: undefined,
 
+  /**
+   * If true, apply special style and not send anchorClicked action
+   * @type {boolean}
+   */
+  disabled: false,
+
   actions: {
     anchorClicked(clickEvent) {
-      return this.get('tabClicked')(clickEvent);
+      if (!this.get('disabled')) {
+        return this.get('tabClicked')(clickEvent);
+      }
     },
   },
 });

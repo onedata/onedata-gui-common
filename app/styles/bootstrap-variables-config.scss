@@ -220,7 +220,7 @@ $btn-border-radius-small:        $border-radius-small;
 
 //** `<input>` background color
 $input-bg:                       #fff !default;
-$input-bg:                       darken($color-one-white, 2%);
+$input-bg:                       #fdfdfd;
 //** `<input disabled>` background color
 $input-bg-disabled:              $gray-lighter !default;
 $input-bg-disabled:              darken($color-one-white, 3%);

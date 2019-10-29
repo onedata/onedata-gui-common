@@ -22,7 +22,7 @@ export default Service.extend({
   extractorFunction: getErrorDetails,
 
   /** 
-   * @returns {string}
+   * @returns {object} `{ message: SafeString,  errorJsonString: SafeString }`
    */
   getMessage(error) {
     const {

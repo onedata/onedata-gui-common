@@ -257,14 +257,14 @@ $brand-info-height: $one-list-item-line-height;
     color: $color-main-menu-fg-default;
     width: $main-menu-width;
     overflow: hidden;
-    transition: width $collapse-transition-time linear;
+    transition: transition-linear(width);
     .main-menu-item {
       .item-header {
-        transition: padding-left linear $collapse-transition-time, padding-right linear $collapse-transition-time;
+        transition: transition-linear(padding-left), transition-linear(padding-right);
       }
       .one-label {
         opacity: 1;
-        transition: opacity linear $collapse-transition-time;
+        transition: transition-linear(opacity);
       }
     }
 
@@ -290,7 +290,7 @@ $brand-info-height: $one-list-item-line-height;
       height: initial;
       background-image: none;
       margin-left: $one-list-item-padding * 1.25;
-      transition: margin-left linear $collapse-transition-time;
+      transition: transition-linear(margin-left);
     }
 
     .main-menu-content {
@@ -330,7 +330,7 @@ $brand-info-height: $one-list-item-line-height;
     }
   }
   #sidenav-sidebar {
-    transition: left linear $collapse-transition-time, width linear $collapse-transition-time;
+    transition: transition-linear(left), transition-linear(width);
   }
   .col-sidebar, #sidenav-sidebar {
     background: $color-sidebar-background;
@@ -366,7 +366,7 @@ $brand-info-height: $one-list-item-line-height;
   }
   .brand-info {
     z-index: $zindex-navbar;
-    transition: left linear $collapse-transition-time;
+    transition: transition-linear(left);
     width: 100%;
     &.full-width {
       left: 0;
@@ -389,7 +389,7 @@ $brand-info-height: $one-list-item-line-height;
     bottom: $one-list-item-line-height;
     height: auto;
     border-right: 1px solid $color-one-list-item-separator;
-    transition: left linear $collapse-transition-time;
+    transition: transition-linear(left);
   }
   .row-heading .col-title {
     // TODO: similar to one-list-item
@@ -490,6 +490,6 @@ $brand-info-height: $one-list-item-line-height;
 }
 
 // fix for a bad placement of scrollbar
-.ps-scrollbar-y-rail {
+.ps__rail-y {
   position: absolute;
 }

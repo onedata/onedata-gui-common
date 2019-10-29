@@ -66,6 +66,10 @@ $webui-popover-offset: 4px;
     @include webui-popover-dropdown();
   }
 
+  &.over-modals {
+    z-index: $zindex-modal + 1;
+  }
+
   .webui-popover-content {
     padding: $padding-base-vertical;
     overflow: initial;
