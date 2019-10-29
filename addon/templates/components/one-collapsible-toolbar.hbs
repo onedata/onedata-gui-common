@@ -5,29 +5,33 @@
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
   </div>
-  {{#one-webui-popover
-    class=(concat "one-collapsible-toolbar-popover popover-" elementId)
-    placement=dropdownPlacement
-    popoverStyle=(concat "with-dropdown" (if dropdownOverModals " over-modals" ""))
-    padding=false
-    triggerSelector=(concat "#" (concat elementId " .collapsible-toolbar-toggle"))
-    open=dropdownOpened
-    as |popover|
-  }}
-    <ul class="dropdown-menu actions-popover-content">
-      {{yield (hash 
-        item=(component 'one-collapsible-toolbar-item' 
-          tagName="li"
-          isMinimized=true
-          closeDropdown=(action "closeDropdown")
-        )
-      )}}
-    </ul>
-  {{/one-webui-popover}}
+  {{#render-later triggerRender=dropdownOpened}}
+    {{#one-webui-popover
+      class=(concat "one-collapsible-toolbar-popover popover-" elementId)
+      placement=dropdownPlacement
+      popoverStyle=(concat "with-dropdown" (if dropdownOverModals " over-modals" ""))
+      padding=false
+      triggerSelector=(concat "#" (concat elementId " .collapsible-toolbar-toggle"))
+      open=dropdownOpened
+      as |popover|
+    }}
+      <ul class="dropdown-menu actions-popover-content">
+        {{yield (hash 
+          item=(component 'one-collapsible-toolbar-item' 
+            tagName="li"
+            isMinimized=true
+            closeDropdown=(action "closeDropdown")
+          )
+        )}}
+      </ul>
+    {{/one-webui-popover}}
+  {{/render-later}}
 {{/if}}
 
-<span class="collapsible-toolbar-buttons {{if isInternallyMinimized "hidden"}}">
-  {{yield (hash 
-    item=(component 'one-collapsible-toolbar-item' isMinimized=false
-    ))}}
-</span>
+{{#render-later triggerRender=(not isMinimized)}}
+  <span class="collapsible-toolbar-buttons {{if isInternallyMinimized "hidden"}}">
+    {{yield (hash 
+      item=(component 'one-collapsible-toolbar-item' isMinimized=false
+      ))}}
+  </span>
+{{/render-later}}

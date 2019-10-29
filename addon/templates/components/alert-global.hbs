@@ -1,4 +1,4 @@
-{{#bs-modal
+{{#one-modal
   class=(concat-classes "alert-global" alert.type)
   open=open
   onHide=(action "onHide")
@@ -6,10 +6,12 @@
 }}
   {{#modal.header}}
     <h1>
-      {{one-icon icon=icon}}
+      {{one-icon icon=icon class="header-icon"}}
       <span class="one-label">
         {{#if options.header}}
           {{options.header}}
+        {{else if header}}
+          {{header}}
         {{else}}
           {{tt this "error"}}
         {{/if}}
@@ -21,6 +23,19 @@
       {{component options.componentName options=options}}
     {{else}}
       {{text}}
+      {{#if detailsText}}
+        {{#if (not alwaysShowDetails)}}
+          <a class="toggle-details-link clickable {{expandDetailsLinkClass}}" {{action "toggleDetails"}}>
+            {{tt this (if areDetailsExpanded "hideDetails" "showDetails")}}
+            {{one-icon class="collapse-arrow" icon=(if areDetailsExpanded "arrow-up" "arrow-down")}}
+          </a>
+        {{/if}}
+        {{#one-collapse
+          class="details-collapse"
+          collapsed=(if alwaysShowDetails false (not areDetailsExpanded))}}
+          {{detailsText}}
+        {{/one-collapse}}
+      {{/if}}
     {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
@@ -31,4 +46,4 @@
       {{tt this "close"}}
     {{/bs-button}}
   {{/modal.footer}}
-{{/bs-modal}}
+{{/one-modal}}
