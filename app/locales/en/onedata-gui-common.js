@@ -33,6 +33,7 @@ import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form'
 
 import login from './onedata-gui-common/routes/login';
 
+import globalNotify from './onedata-gui-common/services/global-notify';
 import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
@@ -84,6 +85,7 @@ const translations = {
     login,
   },
   services: {
+    globalNotify,
     guiUtils,
     clusterActions,
   },

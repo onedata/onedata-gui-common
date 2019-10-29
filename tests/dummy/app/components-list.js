@@ -1,6 +1,7 @@
 export default [
   'bezier-curve',
   'fast-double-click',
+  'global-alert',
   'hr-label',
   'input-group',
   'json-editor',

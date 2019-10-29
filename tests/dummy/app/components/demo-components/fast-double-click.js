@@ -10,7 +10,7 @@ export default Component.extend({
     this._super(...arguments);
     this.incrementProperty('fastSingleClickCount');
   },
-  
+
   actions: {
     origSingleClicked() {
       this.incrementProperty('origSingleClickCount');
