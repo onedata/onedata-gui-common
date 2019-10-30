@@ -3,4 +3,6 @@ export default {
   warning: 'Warning',
   notice: 'Notice',
   close: 'Close',
+  showDetails: 'Show details',
+  hideDetails: 'Hide details',
 };

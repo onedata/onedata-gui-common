@@ -33,11 +33,13 @@ import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form'
 
 import login from './onedata-gui-common/routes/login';
 
+import globalNotify from './onedata-gui-common/services/global-notify';
 import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 import noPermissions from './onedata-gui-common/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
+import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
 
 const translations = {
   components: {
@@ -83,12 +85,14 @@ const translations = {
     login,
   },
   services: {
+    globalNotify,
     guiUtils,
     clusterActions,
   },
   errors: {
     noPermissions,
     noClusterPermissions,
+    cannotInitWebsocket,
   },
 };
 

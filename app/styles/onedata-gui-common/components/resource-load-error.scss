@@ -31,6 +31,9 @@ $inline-alert-left-border-width: 60px;
   &.alert-danger:before {
     @include oneicon-content($oneicon-checkbox-x);
   }
+  .main-message {
+    color: $main-text-color;
+  }
   .error-close {
     position: absolute;
     right: $alert-padding;
@@ -49,7 +52,7 @@ $inline-alert-left-border-width: 60px;
   .error-details {
     max-height: 0;
     margin-top: 0;
-    transition: $collapse-transition, margin-top .2s linear;
+    transition: $collapse-transition, transition-linear(margin-top);
     opacity: 0;
     color: $main-text-color;
     &.active {

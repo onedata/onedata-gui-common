@@ -32,6 +32,11 @@ export default Component.extend({
   dropdownPlacement: 'bottom-left',
 
   /**
+   * @type {boolean}
+   */
+  dropdownOverModals: false,
+
+  /**
    * @type {string}
    */
   toolbarClasses: 'btn-toolbar',

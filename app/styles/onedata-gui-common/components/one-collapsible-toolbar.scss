@@ -75,12 +75,12 @@
       font-size: 20px;
       position: relative;
       top: -4px;
-      transition: padding-left 0.1s linear;
+      transition: transition-linear(padding-left, 'short');
     }
     &:hover {
       .content-back-arrow-icon {
         padding-left: 4px;
-        transition: padding-left 0.1s linear;
+        transition: transition-linear(padding-left, 'short');
       }
     }
   }

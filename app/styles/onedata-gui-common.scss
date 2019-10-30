@@ -13,6 +13,7 @@ body {
 @import 'onedata-gui-common/utils';
 @import 'onedata-gui-common/fonts';
 @import 'onedata-gui-common/oneicons';
+@import 'onedata-gui-common/animations';
 
 $letter-spacing-base: 0.07em;
 $control-box-shadow: inset 1px 1px 2px $color-one-semiwhite;
@@ -72,11 +73,11 @@ $onedata-logo-margin-bottom: $onedata-logo-margin-top + $one-list-item-padding;
 $main-content-hover-background: lighten($color-one-semiwhite, 3%);
 $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
-$collapse-transition-time: .2s;
-$height-collapse-transition: max-height $collapse-transition-time linear;
-$width-collapse-transition: max-width $collapse-transition-time linear;
-$collapse-transition: $height-collapse-transition, padding $collapse-transition-time linear, opacity $collapse-transition-time linear;
-$collapse-transition-vertical: $width-collapse-transition, padding $collapse-transition-time linear, opacity $collapse-transition-time linear, margin $collapse-transition-time linear;
+$collapse-transition-time: $transition-base-time;
+$height-collapse-transition: transition-linear(max-height);
+$width-collapse-transition: transition-linear(max-width);
+$collapse-transition: $height-collapse-transition, transition-linear(padding), transition-linear(opacity);
+$collapse-transition-vertical: $width-collapse-transition, transition-linear(padding), transition-linear(opacity), transition-linear(margin);
 
 $disabled-opacity: 0.6;
 
@@ -161,4 +162,9 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/one-menu-toggle.scss';
 @import 'onedata-gui-common/components/oneprovider-map-circle';
 @import 'onedata-gui-common/components/oneproviders-selector-popover-content';
+@import 'onedata-gui-common/components/privileges-tree-editor';
+@import 'onedata-gui-common/components/one-arrow';
+@import 'onedata-gui-common/components/one-pill-button.scss';
+@import 'onedata-gui-common/components/one-embedded-component.scss';
+@import 'onedata-gui-common/components/visual-logger.scss';
 @import 'onedata-gui-common/components/wysiwyg-editor';
