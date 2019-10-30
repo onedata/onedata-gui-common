@@ -30,9 +30,14 @@ export default SecondLevelItems.extend(I18n, {
   item: undefined,
 
   /**
+   * @type {Ember.ComputedProperty<Object>}
+   */
+  cluster: reads('item'),
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
-  clusterType: reads('item.type'),
+  clusterType: reads('cluster.type'),
 
   overviewItem: computed(function overviewItem() {
     return {
@@ -71,6 +76,17 @@ export default SecondLevelItems.extend(I18n, {
       id: 'provider',
       label: this.t('provider'),
       icon: 'provider',
+    };
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<Object>}
+   */
+  cephItem: computed(function cephItem() {
+    return {
+      id: 'ceph',
+      label: this.t('ceph'),
+      icon: 'ceph',
     };
   }),
 
@@ -113,6 +129,7 @@ export default SecondLevelItems.extend(I18n, {
     'nodesItem',
     'overviewItem',
     'providerItem',
+    'cephItem',
     'storagesItem',
     'spacesItem',
     'guiSettingsItem',
@@ -125,6 +142,7 @@ export default SecondLevelItems.extend(I18n, {
         nodesItem,
         overviewItem,
         providerItem,
+        cephItem,
         storagesItem,
         spacesItem,
         guiSettingsItem,
@@ -137,6 +155,7 @@ export default SecondLevelItems.extend(I18n, {
         'nodesItem',
         'overviewItem',
         'providerItem',
+        'cephItem',
         'storagesItem',
         'spacesItem',
         'guiSettingsItem',
@@ -158,6 +177,7 @@ export default SecondLevelItems.extend(I18n, {
         ] : [
           ...commonItems,
           providerItem,
+          cephItem,
           storagesItem,
           spacesItem,
         ];

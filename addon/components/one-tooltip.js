@@ -18,6 +18,7 @@ import { inject } from '@ember/service';
 import { observer } from '@ember/object';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import config from 'ember-get-config';
 
 export default BsTooltip.extend({
   scrollState: inject(),
@@ -49,6 +50,13 @@ export default BsTooltip.extend({
   init() {
     this._super(...arguments);
     this.get('scrollState');
+
+    if (config.environment === 'test') {
+      this.setProperties({
+        fade: false,
+        delay: 0,
+      });
+    }
   },
 
   /**

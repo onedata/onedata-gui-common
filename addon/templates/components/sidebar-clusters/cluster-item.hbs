@@ -7,6 +7,8 @@
 {{#truncated-string class="after-icon name sidebar-item-title-upper"}}
   {{#if item.name}}
     {{name-conflict item=item tagName="span" class="one-label"}}
+  {{else if item.isNotDeployed}}
+    {{t "components.sidebarClusters.clusterItem.newCluster"}}
   {{else}}
     {{t "components.sidebarClusters.clusterItem.nameNotAvailable"}}
   {{/if}}  

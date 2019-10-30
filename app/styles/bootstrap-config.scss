@@ -61,6 +61,33 @@
   .radio-inline {
     padding-top: 0;
   }
+  .form-group-sm {
+    .form-control {
+      padding-left: $padding-small-horizontal;
+    }
+    .form-control-feedback {
+      width: $input-height-small;
+      height: $input-height-small;
+      line-height: $input-height-small;
+    }
+    .form-control-static {
+      height: initial;
+    }
+    margin-bottom: $padding-small-vertical;
+  }
+  @media (min-width: $screen-sm-min) {
+    .form-group-sm {
+      .control-label {
+        padding-top: $padding-small-vertical + 3px;
+        padding-right: $padding-small-horizontal;
+      }
+      .toggle-form-row {
+        .control-label {
+          padding-top: 2px;
+        }
+      }
+    }
+  }
 }
 .has-success input[disabled],
 .has-error input[disabled] {
@@ -212,7 +239,6 @@ label {
 .alert {
   position: relative;
   margin: $alert-padding 0;
-  border-radius: 0;
 }
 @import "bootstrap/progress-bars";
 @import "bootstrap/media";

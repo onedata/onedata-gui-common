@@ -1,5 +1,5 @@
 import { validator } from 'ember-cp-validations';
-import { computed, getProperties } from '@ember/object';
+import { computed, get, getProperties } from '@ember/object';
 
 const comparableValues = {
   lt: (property, number) => Math.min(property, number),
@@ -37,6 +37,38 @@ function getValidatorCompareValue(validatorValue, operator) {
 }
 
 /**
+ * Generates message for number validator
+ * @param {Object} field 
+ * @param {string} type `type` argument of validator `message` function
+ * @param {Ember.Service} i18n 
+ */
+function getNumberMessage(field, type, i18n) {
+  let message;
+  [{
+    name: 'lt',
+    type: 'lessThanTo',
+  }, {
+    name: 'lte',
+    type: 'lessThanOrEqualTo',
+  }, {
+    name: 'gt',
+    type: 'greaterThanTo',
+  }, {
+    name: 'gte',
+    type: 'greaterThanOrEqualTo',
+  }].filterBy('type', type).forEach(({ name }) => {
+    const operatorValue = field[name];
+    if (typeof operatorValue === 'object' && operatorValue !== null &&
+      operatorValue.message && !message) {
+        message = get(i18n.t(operatorValue.message), 'string');
+    }
+  });
+  // If message is `undefined`, ember-cp-validation will fallback to the default
+  // message string for `type`
+  return message;
+}
+
+/**
  * Creates an ``ember-cp-validations`` validators for given field specification
  * 
  * @param {FieldType} field
@@ -57,7 +89,7 @@ export default function createFieldValidator(field) {
   if (['text', 'password'].includes(fieldType) && textLength) {
     validations.push(validator('length', textLength));
   }
-  if (field.type === 'number') {
+  if (['number', 'capacity'].includes(field.type)) {
     validations.push(validator('number', {
       allowString: true,
       allowBlank: field.optional,
@@ -65,7 +97,11 @@ export default function createFieldValidator(field) {
       lte: getValidatorCompareValue(field.lte, 'lte'),
       gt: getValidatorCompareValue(field.gt, 'gt'),
       lt: getValidatorCompareValue(field.lt, 'lt'),
-      integer: field.integer
+      integer: field.integer,
+      message(type) {
+        const i18n = this.get('model.i18n');
+        return getNumberMessage(field, type, i18n);
+      },
     }));
   }
   if (field.regex) {

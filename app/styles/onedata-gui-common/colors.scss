@@ -22,12 +22,13 @@ $color-one-dark-blue: #555d72;
 $color-one-light-blue: #E5E9F1;
 $color-one-azure: color-one-azure();
 $color-one-yellow: color-one-yellow();
+$color-one-orange: #ffac30;
 
 $color-one-main: $color-one-red;
 $color-one-default: $color-one-blue-gray;
 $color-one-info: $color-one-blue-gray;
 $color-one-success: $color-one-mint;
-$color-one-warning: $color-one-yellow;
+$color-one-warning: $color-one-orange;
 $color-one-danger: $color-one-red;
 // default bootstrap color
 $color-one-success-dark: #3c763d;

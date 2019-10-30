@@ -78,3 +78,7 @@ $radio-dot-size: $radio-size-base * 0.5;
     opacity: $disabled-opacity;
   }
 }
+
+.form-horizontal .form-group-sm .one-way-radio-group {
+  padding-left: 0;
+}

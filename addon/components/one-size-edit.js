@@ -2,16 +2,15 @@
  * Data size editor with number input, unit selector and confirm/cancel support.
  * 
  * @module components/one-size-edit
- * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import layout from '../templates/components/one-size-edit';
 import { computed } from '@ember/object';
-import bytesToString, { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
+import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import OneInlineEditor from 'onedata-gui-common/components/one-inline-editor';
-import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { reject } from 'rsvp';
@@ -19,7 +18,10 @@ import { reject } from 'rsvp';
 const validations = buildValidations({
   _inputValue: [
     validator('presence', true),
-    validator('number', { gt: 0 })
+    validator('number', {
+      gt: 0,
+      allowString: true,
+    }),
   ],
 });
 
@@ -93,62 +95,17 @@ export default OneInlineEditor.extend(I18n, validations, {
    */
   sizeClass: computed('size', function sizeClass() {
     if (this.get('size') === 'small') {
-      return 'input-group-sm';
+      return 'form-group-sm input-group-sm';
     }
   }),
 
   /**
    * Human readable size value.
-   * If only displaying value - it will full size string with unit (eg. '10 MiB')
-   * If editing - it will be numerical value of size according to currently
-   * selected size unit (eg. 3).
-   * @type {ComputedProperty<number|string>}
+   * @type {ComputedProperty<string>}
    */
-  displayedInputValue: computed(
-    '_inEditionMode',
-    'selectedSupportSizeUnit',
-    '_inputValue',
-    'value',
-    function displayedInputValue() {
-      if (this.get('_inEditionMode')) {
-        const unit = this.get('selectedSupportSizeUnit');
-        if (unit) {
-          return Math.round(this.get('_inputValue') / unit.multiplicator * 10) / 10;
-        }
-      } else {
-        return bytesToString(this.get('value'));
-      }
-    }
-  ),
-
-  /**
-   * Array of objects describing size units that will be displayed
-   * in unit selector. Like `iecUnits` from `bytes-to-string`.
-   * @type {ComputedProperty<Array<object>>}
-   */
-  sizeUnits: computed(function sizeUnits() {
-    return ['MiB', 'GiB', 'TiB', 'PiB'].map(name =>
-      iecUnits.find(u => u.name === name)
-    );
+  displayedInputValue: computed('value', function displayedInputValue() {
+    return bytesToString(this.get('value'));
   }),
-
-  /**
-   * Edited size in bytes
-   * @type {ComputedProperty<number|undefined>}
-   */
-  editedSupportSize: computed(
-    'editedSupportSizeInput',
-    'selectedSupportSizeUnit',
-    function editedSupportSize() {
-      const {
-        editedSupportSizeInput,
-        selectedSupportSizeUnit,
-      } = this.getProperties('editedSupportSizeInput', 'selectedSupportSizeUnit');
-      if (editedSupportSizeInput != null && selectedSupportSizeUnit) {
-        return Number(editedSupportSizeInput) * selectedSupportSizeUnit.multiplicator;
-      }
-    }
-  ),
 
   didInsertElement() {
     this._super(...arguments);
@@ -157,23 +114,8 @@ export default OneInlineEditor.extend(I18n, validations, {
     }
   },
 
-  updateInputValue(displayedInputValue) {
-    const selectedSupportSizeUnit = this.get('selectedSupportSizeUnit')
-    if (selectedSupportSizeUnit) {
-      const newValue = displayedInputValue * selectedSupportSizeUnit.multiplicator;
-      this.set(
-        'tmpDisplayedInputValue',
-        isNaN(Number(newValue)) ? displayedInputValue : undefined
-      );
-      this.set('_inputValue', newValue);
-    }
-  },
-
-  updateSelectedSupportSizeUnit(selectedSupportSizeUnit) {
-    this.setProperties({
-      selectedSupportSizeUnit,
-      _inputValue: this.get('displayedInputValue') * selectedSupportSizeUnit.multiplicator,
-    });
+  updateInputValue(bytes) {
+    this.set('_inputValue', bytes);
   },
 
   actions: {
@@ -181,18 +123,7 @@ export default OneInlineEditor.extend(I18n, validations, {
      * @override
      */
     startEdition() {
-      return this.startEdition()
-        .then(() => {
-          const { number, unit } = bytesToString(this.get('_inputValue'), { separated: true });
-          const selectedSupportSizeUnit = iecUnits.find(u => u.name === unit);
-          safeExec(
-            this,
-            'set',
-            'selectedSupportSizeUnit',
-            selectedSupportSizeUnit
-          );
-          this.updateInputValue(number);
-        });
+      return this.startEdition();
     },
     /**
      * @override
@@ -218,9 +149,6 @@ export default OneInlineEditor.extend(I18n, validations, {
     },
     updateInputValue(displayedInputValue) {
       this.updateInputValue(displayedInputValue);
-    },
-    updateSelectedSupportSizeUnit(selectedSupportSizeUnit) {
-      this.updateSelectedSupportSizeUnit(selectedSupportSizeUnit);
     },
   },
 });
