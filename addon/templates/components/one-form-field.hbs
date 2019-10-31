@@ -12,7 +12,7 @@
       {{one-datetime-picker
         datetime=value
         id=inputId
-        class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+        class=inputClasses
         onChange=(action "inputChanged" field.name)
         disabled=disabled
         placeholder=field.placeholder
