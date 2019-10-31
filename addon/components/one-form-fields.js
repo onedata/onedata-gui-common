@@ -46,11 +46,13 @@ const {
  *   `{
  *      [property]: string,
  *      [number]: number
+ *      [message]: string,
  *    }`
  *   where `property` is a name of some model property, which value should be used 
  *   as an upper bound. If `number` is also provided, then value 
  *   max(property-value, number) will be used. If property is not provided,
- *   then value falls back to number property.
+ *   then value falls back to number property. `message` is an i18n key, that
+ *   will be translated and used as an error message.
  * @property {number|object} [lte=undefined] 'lower than or equal' bounding for
  *   number validator. For more information see description of `lt`.
  * @property {number|object} [gt=undefined] 'greater than' bounding for

@@ -2,15 +2,17 @@
  * A form field tailored for Onedata application, used mainly in ``one-form-fields``
  *
  * @module components/one-form-field
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
+import { computed, getProperties } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form-field';
 import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
+import dotToDash from 'onedata-gui-common/utils/dot-to-dash';
 
 const {
   layoutConfig
@@ -22,6 +24,27 @@ export default Component.extend({
   tagName: '',
 
   field: null,
+
+  /**
+   * @type {Ember.ComputedProperty<string>}
+   */
+  inputClasses: computed('field.{name,nolable,type}', function incputClasses() {
+    const {
+      name,
+      nolabel,
+      type,
+    } = getProperties(this.get('field'), 'name', 'nolabel', 'type');
+
+    let classes = `one-form-field field-${dotToDash(name)}`;
+    if (!['dropdown', 'clipboard-line', 'capacity'].includes(type)) {
+      classes += ' form-control';
+    }
+    if (nolabel) {
+      classes += ' no-label';
+    }
+
+    return classes;
+  }),
 
   actions: {
     inputChanged() {

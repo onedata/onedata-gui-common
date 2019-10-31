@@ -26,7 +26,7 @@
 import { empty } from '@ember/object/computed';
 
 import Component from '@ember/component';
-import EmberObject, { observer, computed } from '@ember/object';
+import EmberObject, { observer, computed, set } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form';
 import config from 'ember-get-config';
 import _ from 'lodash';
@@ -185,12 +185,11 @@ export default Component.extend({
   },
 
   /**
-   * Is the field present in current form?
-   * @param {string} fieldName 
+   * @param {string} fieldName
+   * @returns {FieldType|undefined}
    */
-  isKnownField(fieldName) {
-    return this.get('currentFields')
-      .map(field => field.get('name')).indexOf(fieldName) !== -1;
+  getField(fieldName) {
+    return this.get('allFields').findBy('name', fieldName);
   },
 
   /**
@@ -200,17 +199,16 @@ export default Component.extend({
    */
   changeFormValue(fieldName, value) {
     let {
-      formValues,
+      allFieldsValues,
       unknownFieldErrorMsg
     } = this.getProperties(
-      'formValues',
+      'allFieldsValues',
       'unknownFieldErrorMsg'
     );
-    if (this.isKnownField(fieldName)) {
-      formValues.set(fieldName, value);
-      this.get('currentFields')
-        .filter(f => f.get('name') === fieldName)
-        .forEach(f => f.set('changed', true));
+    const field = this.getField(fieldName);
+    if (field) {
+      allFieldsValues.set(fieldName, value);
+      set(field, 'changed', true);
       this.recalculateErrors();
     } else {
       console.warn(unknownFieldErrorMsg);
