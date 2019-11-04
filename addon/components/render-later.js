@@ -56,6 +56,7 @@ export default Component.extend({
         triggerRender,
         render,
       } = this.getProperties('triggerRender', 'render');
+
       if (!!triggerRender !== render) {
         this.set('render', !!triggerRender);
       }
@@ -65,5 +66,11 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     this.triggerRenderObserver();
+  },
+
+  actions: {
+    resetRenderTrigger() {
+      this.set('resetRender', null);
+    },
   },
 });

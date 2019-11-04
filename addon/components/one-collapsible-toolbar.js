@@ -23,7 +23,7 @@
 
 import Component from '@ember/component';
 
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
@@ -119,6 +119,14 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     }
   ),
 
+  overflowDetectorMounter: observer('isMinimized', function overflowDetectorMounter() {
+    if (this.get('isMinimized')) {
+      this.detachOverflowDetection();
+    } else {
+      this.attachOverflowDetection();
+    }
+  }),
+
   didInsertElement() {
     this._super(...arguments);
     next(this, () => {
@@ -132,19 +140,28 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       overflowParentElement: this.$().parent(),
       overflowSiblingsElements: this.$().siblings()
     });
-    this.addOverflowDetectionListener();
-    this.get('_overflowDetectionListener')();
+    this.overflowDetectorMounter();
     this.get('eventsBus').on(
       'one-inline-editor:resize',
       () => this.get('_overflowDetectionListener')()
     );
   },
 
-  didDestroyElement() {
+  willDestroyElement() {
     this._super(...arguments);
     this.removeClickOutsideListener();
-    this.removeOverflowDetectionListener();
+    this.detachOverflowDetection();
     this.get('eventsBus').off('one-inline-editor:resize');
+  },
+
+  attachOverflowDetection() {
+    this.removeOverflowDetectionListener();
+    this.addOverflowDetectionListener();
+    this.get('_overflowDetectionListener')();
+  },
+
+  detachOverflowDetection() {
+    this.removeOverflowDetectionListener();
   },
 
   clickOutside(event) {

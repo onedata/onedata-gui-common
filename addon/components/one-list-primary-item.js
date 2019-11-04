@@ -10,8 +10,6 @@
  */
 
 import Component from '@ember/component';
-
-import { readOnly } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/one-list-primary-item';
 
 export default Component.extend({
@@ -20,9 +18,6 @@ export default Component.extend({
   classNames: ['one-list-item', 'clickable'],
   classNameBindings: ['isActive:active'],
 
-  primaryItemId: null,
-
-  itemId: readOnly('item.id'),
   isActive: false,
 
   /**
@@ -30,11 +25,5 @@ export default Component.extend({
    * @param {string} itemId
    * @returns {undefined}
    */
-  changePrimaryItemId: () => {},
-
-  actions: {
-    changePrimaryItemId(itemId) {
-      this.get('changePrimaryItemId')(itemId);
-    }
-  }
+  changePrimaryItem: () => {},
 });

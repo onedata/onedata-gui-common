@@ -10,9 +10,7 @@
       </div>
     </div>
   </li>
-  {{#each items as |item|}}
-    {{#if (match-query item.name query)}}
-      {{yield item}}
-    {{/if}}
+  {{#each filteredItems key="id" as |item|}}
+    {{yield item}}
   {{/each}}
 </ul>

@@ -71,6 +71,8 @@ export default Mixin.create({
    */
   minimumFullWindowSize: 0,
 
+  isOverflowDetectionAttached: false,
+
   _overflowDetectionListener: null,
 
   /**
@@ -80,32 +82,40 @@ export default Mixin.create({
   _window: window,
 
   addOverflowDetectionListener() {
-    let {
-      overflowElement,
-      overflowParentElement,
-      overflowSiblingsElements,
-      overflowDetectionDelay,
-      _window
-    } = this.getProperties('overflowElement', 'overflowParentElement',
-      'overflowSiblingsElements', 'overflowDetectionDelay', '_window');
-    if (!overflowParentElement) {
-      this.set('overflowParentElement', overflowElement.parent());
+    if (!this.get('isOverflowDetectionAttached')) {
+      let {
+        overflowElement,
+        overflowParentElement,
+        overflowSiblingsElements,
+        overflowDetectionDelay,
+        _window
+      } = this.getProperties('overflowElement', 'overflowParentElement',
+        'overflowSiblingsElements', 'overflowDetectionDelay', '_window');
+      if (!overflowParentElement) {
+        this.set('overflowParentElement', overflowElement.parent());
+      }
+      if (!overflowSiblingsElements) {
+        this.set('overflowSiblingsElements', overflowElement.siblings());
+      }
+      let detectOverflowFunction = () => safeExec(this, 'detectOverflow');
+      let overflowDetectionListener = () => {
+        run.debounce(overflowElement, detectOverflowFunction, overflowDetectionDelay);
+      };
+      this.setProperties({
+        _overflowDetectionListener: overflowDetectionListener,
+        isOverflowDetectionAttached: true,
+      });
+      _window.addEventListener('resize', overflowDetectionListener);
+      this.detectOverflow();
     }
-    if (!overflowSiblingsElements) {
-      this.set('overflowSiblingsElements', overflowElement.siblings());
-    }
-    let detectOverflowFunction = () => safeExec(this, 'detectOverflow');
-    let overflowDetectionListener = () => {
-      run.debounce(overflowElement, detectOverflowFunction, overflowDetectionDelay);
-    };
-    this.set('_overflowDetectionListener', overflowDetectionListener);
-    _window.addEventListener('resize', overflowDetectionListener);
-    this.detectOverflow();
   },
 
   removeOverflowDetectionListener() {
-    this.get('_window').removeEventListener('resize', this.get(
-      '_overflowDetectionListener'));
+    if (this.get('isOverflowDetectionAttached')) {
+      this.get('_window').removeEventListener('resize', this.get(
+        '_overflowDetectionListener'));
+      this.set('isOverflowDetectionAttached', false);
+    }
   },
 
   detectOverflow() {

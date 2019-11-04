@@ -41,7 +41,9 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this._applyStyles();
+    if (this.get('color')) {
+      this._applyStyles();
+    }
   },
 
   _applyStyles() {
