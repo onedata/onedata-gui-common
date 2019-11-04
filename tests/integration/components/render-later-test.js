@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
+import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | render later', function () {
   setupComponentTest('render-later', {
@@ -53,7 +54,7 @@ describe('Integration | Component | render later', function () {
     });
   });
 
-  it('resets render state', function () {
+  it('resets render state through property', function () {
     this.setProperties({
       trigger: 'whatever',
       resetTrigger: 'whatever2',
@@ -63,7 +64,7 @@ describe('Integration | Component | render later', function () {
         <div class="test"></div>
       {{/render-later}}
     `);
-    this.set('trigger', 'whatever3');
+
     return wait().then(() => {
       this.setProperties({
         trigger: false,
@@ -72,6 +73,20 @@ describe('Integration | Component | render later', function () {
       return wait().then(() => {
         expect(this.$('.test')).to.not.exist;
       });
+    });
+  });
+
+  it('resets render state through yielded action', function () {
+    this.set('trigger', true);
+    this.render(hbs `
+      {{#render-later triggerRender=trigger as |renderLater|}}
+        <div class="test" {{action renderLater.resetRenderTrigger}}></div>
+      {{/render-later}}
+    `);
+
+    this.set('trigger', false);
+    return click('.test').then(() => {
+      expect(this.$('.test')).to.not.exist;
     });
   });
 });
