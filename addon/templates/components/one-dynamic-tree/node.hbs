@@ -8,6 +8,9 @@
       (if item.hasSubtree "clickable")
       (if _isFieldDisabled "disabled")
       (if modificationState.isModified "modified-node-label")}}>
+      {{#if definition.icon}}
+        {{one-icon icon=definition.icon}}
+      {{/if}}
       {{definition.text}}
     </label>
     {{#if _renderField}}

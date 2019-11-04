@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row row-content">
+    <h3>Original double click tester</h3>
+    <p>
+      <button class="btn btn-primary"
+        {{action "origSingleClicked" on="click"}}
+        {{action "origDoubleClicked" on="doubleClick"}}
+      >
+        Click me twice
+      </button>
+    </p>
+    <p>Double-click count: <span class="click-count">{{origDoubleClickCount}}</span></p>
+    <p>Single-click count: <span class="click-count">{{origSingleClickCount}}</span></p>
+  </div>
+  <div class="row row-content">
+    <h3>Fast double click tester</h3>
+    <p>
+      {{#demo-components/fast-double-click/fast-button
+        class="btn btn-primary"
+        fastDoubleClick=(action "fastDoubleClicked")
+      }}
+        Click me twice
+      {{/demo-components/fast-double-click/fast-button}}
+    </p>
+    <p>Double-click count: <span class="click-count">{{fastDoubleClickCount}}</span></p>
+    <p>Single click count: <span class="click-count">{{fastSingleClickCount}}</span></p>
+  </div>
+</div>

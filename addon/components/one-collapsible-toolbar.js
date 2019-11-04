@@ -88,6 +88,11 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   dropdownPlacement: 'bottom-left',
 
   /**
+   * @type {boolean}
+   */
+  dropdownOverModals: false,
+
+  /**
    * Combined value of isMinimized and hasOverflow
    * @type {Ember.ComputedProperty<boolean>}
    */

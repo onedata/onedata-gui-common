@@ -2,6 +2,8 @@ import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { capitalize } from '@ember/string';
 
 function aliasToShow(type) {
   return function (message, options) {
@@ -22,10 +24,13 @@ function aliasToShow(type) {
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export default Service.extend({
+export default Service.extend(I18n, {
   notify: service(),
   alert: service(),
   errorExtractor: service(),
+  i18n: service(),
+
+  i18nPrefix: 'services.globalNotify',
 
   info: aliasToShow('info'),
   success: aliasToShow('success'),
@@ -35,28 +40,33 @@ export default Service.extend({
   errorAlert: aliasToShow('error-alert'),
 
   // TODO i18n  
-  backendError(message, error) {
+  backendError(operation, error) {
     const reason = error && this.get('errorExtractor').getMessage(error);
+    let capitalizedOperation = capitalize(String(operation));
 
     let finalMessage =
-      `<p><strong>We are sorry, but ${message} failed!</strong></p>`;
+      `<p class="operation-message"><strong>${capitalizedOperation} failed!</strong></p>`;
+    const options = {};
 
     if (reason) {
-      finalMessage += '<p><strong>The reason of failure:</strong></p>';
-      if (reason.message) {
-        finalMessage += `<p>${reason.message}</p>`;
-        if (reason.errorJsonString) {
-          finalMessage += '<br>';
-        }
-      }
-      if (reason.errorJsonString) {
-        finalMessage += `<div class="error-json">${reason.errorJsonString}</div>`;
-      }
+      options.detailsText = reason.errorJsonString ?
+        htmlSafe(`<div class="error-json">${reason.errorJsonString}</div>`) :
+        undefined;
     } else {
-      finalMessage += `<p>Unfortunately, error details are unavailable</p>`;
+      options.detailsText = error ?
+        htmlSafe(`<div class="error-json">${JSON.stringify(error, null, 2)}</div>`) :
+        undefined;
     }
 
-    this.error(htmlSafe(finalMessage));
+    if (reason && reason.message) {
+      finalMessage += `<p>${reason.message}</p>`;
+      options.alwaysShowDetails = false;
+    } else {
+      finalMessage += `<p>${this.t('failedDueToUnknownError')}</p>`;
+      options.alwaysShowDetails = Boolean(options.detailsText);
+    }
+
+    this.error(htmlSafe(finalMessage), options);
   },
 
   /**

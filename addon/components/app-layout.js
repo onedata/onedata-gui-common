@@ -16,7 +16,6 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
-import { invokeAction } from 'ember-invoke-action';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 
 export default Component.extend({
@@ -165,9 +164,6 @@ export default Component.extend({
         return this.get('router')
           .transitionTo('onedata.sidebar', targetResourceType);
       }
-    },
-    changeResourceId() {
-      return invokeAction(this, 'changeResourceId', ...arguments);
     },
     scrollOccurred(event) {
       this.get('scrollState').scrollOccurred(event);

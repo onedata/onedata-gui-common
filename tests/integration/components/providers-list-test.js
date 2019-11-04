@@ -156,7 +156,7 @@ describe('Integration | Component | providers list', function () {
               providerActions=actions}}
           `);
     click('.one-collapsible-list-item:nth-child(2) .provider-menu-toggle').then(() => {
-      click('.action-trigger').then(() => {
+      click($('.webui-popover.in .action-trigger')[0]).then(() => {
         expect(actionSpy).to.be.calledOnce;
         expect(actionSpy).to.be.calledWith(this.get('providersData')[0].provider);
         done();

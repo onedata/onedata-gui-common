@@ -3,7 +3,7 @@
   opacity: 0;
   min-height: 0;
   max-height: 0;
-  transition: $collapse-transition, min-height $collapse-transition-time linear;
+  transition: $collapse-transition, transition-linear(min-height);
   border-bottom: 0;
   background-color: $main-content-hover-background;
   &.opened {
@@ -16,5 +16,11 @@
       padding-left: $padding-large-horizontal;
       padding-right: $padding-large-horizontal;
     }
+  }
+}
+
+.collapse-large {
+  .one-collapsible-list-item-content.opened {
+    max-height: 10000px;
   }
 }
