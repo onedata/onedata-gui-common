@@ -88,6 +88,13 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   dropdownPlacement: 'bottom-left',
 
   /**
+   * If true, then all toolbar elements will be rendered immediately
+   * (by default are rendered on-demand).
+   * @type {boolean}
+   */
+  renderImmediately: false,
+
+  /**
    * Combined value of isMinimized and hasOverflow
    * @type {Ember.ComputedProperty<boolean>}
    */

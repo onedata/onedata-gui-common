@@ -5,7 +5,7 @@
     <div class="icon-dot"></div>
     <div class="icon-dot"></div>
   </div>
-  {{#render-later triggerRender=dropdownOpened}}
+  {{#render-later triggerRender=(or dropdownOpened renderImmediately)}}
     {{#one-webui-popover
       class=(concat "one-collapsible-toolbar-popover popover-" elementId)
       placement=dropdownPlacement
@@ -28,7 +28,7 @@
   {{/render-later}}
 {{/if}}
 
-{{#render-later triggerRender=(not isMinimized)}}
+{{#render-later triggerRender=(or (not isMinimized) renderImmediately)}}
   <span class="collapsible-toolbar-buttons {{if isInternallyMinimized "hidden"}}">
     {{yield (hash 
       item=(component 'one-collapsible-toolbar-item' isMinimized=false

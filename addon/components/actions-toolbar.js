@@ -45,4 +45,11 @@ export default Component.extend({
    * @type {number}
    */
   minimumFullWindowSize: breakpointValues.screenSm,
+
+  /**
+   * If true, then all actions toolbar elements will be rendered immediately
+   * (by default are rendered on-demand).
+   * @type {boolean}
+   */
+  renderImmediately: false,
 });
