@@ -27,3 +27,9 @@
   $color-one-red,
   darken($color-one-red, 30%)
 );
+
+@include animation-fg-color-change(
+  pulse-red-transparent,
+  $color-one-red,
+  transparent
+);

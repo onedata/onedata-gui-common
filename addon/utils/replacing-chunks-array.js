@@ -33,21 +33,6 @@ export default ArraySlice.extend(Evented, {
   emptyIndex: -1,
 
   /**
-   * @type {function}
-   */
-  sortFun(a, b) {
-    const ai = get(a, 'index');
-    const bi = get(b, 'index');
-    if (ai < bi) {
-      return -1;
-    } else if (ai > bi) {
-      return 1;
-    } else {
-      return 0;
-    }
-  },
-
-  /**
    * Initialized in init
    * @type {PromiseObject<ReplacingChunksArray>}
    */

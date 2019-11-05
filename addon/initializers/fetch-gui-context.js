@@ -13,10 +13,28 @@
 import { resolve } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import $ from 'jquery';
+import config from 'ember-get-config';
+import { isDevelopment } from 'onedata-gui-websocket-client/utils/development-environment';
+
+export const mockGuiContext = {
+  guiMode: 'unified',
+  serviceType: 'worker',
+  clusterType: 'oneprovider',
+  clusterId: 'mock_cluster_id',
+  browserDebugLogs: true,
+  apiOrigin: location.origin,
+};
 
 export function initialize(application) {
   application.guiContextProxy = PromiseObject.create({
-    promise: resolve($.ajax('./gui-context')),
+    promise: resolve($.ajax('./gui-context'))
+      .catch(error => {
+        if (isDevelopment(config)) {
+          return mockGuiContext;
+        } else {
+          throw error;
+        }
+      }),
   });
   application.deferReadiness();
   return application.guiContextProxy
