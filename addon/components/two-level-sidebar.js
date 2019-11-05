@@ -70,6 +70,11 @@ export default Component.extend({
   showGetStartedWhenEmpty: true,
 
   /**
+   * @type {boolean}
+   */
+  inSidenav: false,
+
+  /**
    * @type {ComputedProperty<Array<string>>}
    */
   sorting: computed('sidebarType', function sorting() {

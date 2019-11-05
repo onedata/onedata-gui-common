@@ -83,6 +83,12 @@ export default Component.extend(I18n, {
   onShown: notImplementedIgnore,
 
   /**
+   * Called when modal has been hidden
+   * @type {Function}
+   */
+  onHidden: notImplementedIgnore,
+
+  /**
    * If true, content text will be centered.
    * @type {boolean}
    */

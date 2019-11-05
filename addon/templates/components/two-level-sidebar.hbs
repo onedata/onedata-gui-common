@@ -20,7 +20,7 @@
           (query-params-hash queryParams)
         }}
           {{#if firstLevelItemComponent}}
-            {{component firstLevelItemComponent item=item sidebar=this}}
+            {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
           {{else}}
             {{#if firstLevelItemIcon}}
               {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}} 
