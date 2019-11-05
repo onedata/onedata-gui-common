@@ -4,7 +4,7 @@
       {{concat field.label (if field.optional (concat " " (t "components.oneFormFields.optional") ""))}}:
     {{/unless}}
     {{#if field.tip}}
-      {{one-label-tip title=field.tip}}
+      {{one-label-tip title=field.tip class="form-field-right-addon"}}
     {{/if}}
   </label>
   <div class="form-control-column {{layoutConfig.formInputColumns}}">

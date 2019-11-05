@@ -22,7 +22,7 @@
                 <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label label-column " layoutConfig.formToggleLabelColumns}}>
                   {{field.label}}:
                   {{#if field.tip}}
-                    {{one-label-tip title=field.tip}}
+                    {{one-label-tip class="form-field-right-addon" title=field.tip}}
                   {{/if}}
                 </label>
               {{/if}}

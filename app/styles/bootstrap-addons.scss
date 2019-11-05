@@ -144,14 +144,14 @@ $token-border-radius: 3px;
     }
     .control-label {
       position: initial;
-      .one-label-tip {
-        position: absolute;
-        top: 0px;
-        height: $input-height-base;
-        line-height: $input-height-base;
-        right: -$padding-small-horizontal;
-        transform: translateX(100%);
-      }
+    }
+    .form-field-right-addon {
+      position: absolute;
+      top: 0px;
+      height: $input-height-base;
+      line-height: $input-height-base;
+      right: -$padding-small-horizontal;
+      transform: translateX(100%);
     }
     &.form-group-sm {
       .control-label .one-label-tip {
@@ -161,10 +161,8 @@ $token-border-radius: 3px;
     }
   }
   @media (max-width: $screen-xs-max) {
-    .control-label {
-      .one-label-tip {
-        font-size: 90%;
-      }
+    .form-field-right-addon {
+      font-size: 90%;
     }
   }
 }

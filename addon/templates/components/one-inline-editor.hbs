@@ -4,11 +4,13 @@
     class=(concat-classes "form-control" inputClasses)
     update=(action (mut _inputValue))
     onenter=(action "saveEdition")
-    onescape=(action "cancelEdition")}}
+    onescape=(action "cancelEdition")
+    placeholder=inputPlaceholder
+    onblur=(action onLostFocus)}}
   <span class="action-icons">
     {{#if _whileSaving}}
       {{spin-spinner-block sizeClass="xs"}}
-    {{else}}
+    {{else if (not hideEditIcons)}}
       {{one-icon icon="checked" class="save-icon" click=(action "saveEdition")}}
       {{one-icon icon="ban-left" class="cancel-icon" click=(action "cancelEdition")}}
     {{/if}}
