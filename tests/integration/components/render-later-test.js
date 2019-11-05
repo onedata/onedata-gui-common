@@ -54,7 +54,7 @@ describe('Integration | Component | render later', function () {
     });
   });
 
-  it('resets render state through property', function () {
+  it('resets render state through property "resetRender"', function () {
     this.setProperties({
       trigger: 'whatever',
       resetTrigger: 'whatever2',
@@ -76,7 +76,7 @@ describe('Integration | Component | render later', function () {
     });
   });
 
-  it('resets render state through yielded action', function () {
+  it('resets render state through yielded action "resetRenderTrigger"', function () {
     this.set('trigger', true);
     this.render(hbs `
       {{#render-later triggerRender=trigger as |renderLater|}}

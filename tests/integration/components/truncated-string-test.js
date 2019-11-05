@@ -11,7 +11,7 @@ describe('Integration | Component | truncated string', function () {
   });
 
   it('does not show tooltip, when text is fully visible', function () {
-    this.render(hbs`
+    this.render(hbs `
       <div style="min-width: 500px">
         {{#truncated-string}}short text{{/truncated-string}}
       </div>
@@ -22,10 +22,11 @@ describe('Integration | Component | truncated string', function () {
   });
 
   it('shows tooltip with full text, when text is not fully visible', function () {
-    const longText = 'Very very very very very very very very very very very very long text';
+    const longText =
+      'Very very very very very very very very very very very very long text';
     this.set('longText', longText);
 
-    this.render(hbs`
+    this.render(hbs `
       <div style="min-width: 50px; max-width: 50px;">
         {{#truncated-string}}{{longText}}{{/truncated-string}}
       </div>

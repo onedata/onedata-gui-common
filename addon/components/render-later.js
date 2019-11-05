@@ -56,7 +56,6 @@ export default Component.extend({
         triggerRender,
         render,
       } = this.getProperties('triggerRender', 'render');
-
       if (!!triggerRender !== render) {
         this.set('render', !!triggerRender);
       }
