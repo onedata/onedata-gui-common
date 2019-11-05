@@ -90,12 +90,12 @@ export default Component.extend({
     'fields.@each.prefix',
     function fieldsGroupedByPrefix() {
       const fields = this.get('fields');
-      
+
       const groups = [];
       let lastGroup = null;
       fields.forEach(field => {
         const fieldPrefix = get(field, 'prefix') || 'undefined';
-        
+
         if (!lastGroup || lastGroup.prefix !== fieldPrefix) {
           lastGroup = {
             prefix: fieldPrefix,

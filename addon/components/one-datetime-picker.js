@@ -16,6 +16,18 @@ export default DateTimePicker.extend({
   attributeBindings: ['disabled', 'placeholder'],
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  disabled: undefined,
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  placeholder: undefined,
+
+  /**
    * @type {Function} 
    * @param {Date} selectedDate
    */
@@ -27,14 +39,25 @@ export default DateTimePicker.extend({
   customDatetimePickerClassName: 'datetime-picker',
 
   /**
+   * Set in `init()`. Do not override!
+   * @type {Date}
+   */
+  initializationTime: null,
+
+  /**
+   * Min date allowed in format Y/m/d
+   * @virtual optional
    * @type {Ember.ComputedProperty<string>}
    */
-  minDate: computed(function () {
-    return moment().format('Y/m/d');
+  minDate: computed('initializationTime', function minDate() {
+    const initializationTime = this.get('initializationTime');
+    return initializationTime ? moment(initializationTime).format('Y/m/d') : null;
   }),
 
   init() {
     this._super(...arguments);
+
+    this.set('initializationTime', new Date());
 
     this.addCustomClassToDatetimePicker();
     this.set('options', Object.assign({

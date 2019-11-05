@@ -60,7 +60,7 @@ function getNumberMessage(field, type, i18n) {
     const operatorValue = field[name];
     if (typeof operatorValue === 'object' && operatorValue !== null &&
       operatorValue.message && !message) {
-        message = get(i18n.t(operatorValue.message), 'string');
+      message = get(i18n.t(operatorValue.message), 'string');
     }
   });
   // If message is `undefined`, ember-cp-validation will fallback to the default
