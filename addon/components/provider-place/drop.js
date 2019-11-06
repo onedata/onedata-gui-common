@@ -16,11 +16,12 @@ import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import { conditional, raw } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
   classNames: 'provider-place-drop',
-  classNameBindings: ['provider.status'],
+  classNameBindings: ['oneproviderStatusClass'],
   globalNotify: service(),
   i18n: service(),
   guiUtils: service(),
@@ -35,6 +36,12 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.providerPlace.drop',
+
+  oneproviderStatusClass: conditional(
+    'provider.online',
+    raw('online'),
+    raw('offline')
+  ),
 
   /**
    * @type {Ember.ComputedProperty<boolean|undefined>}
