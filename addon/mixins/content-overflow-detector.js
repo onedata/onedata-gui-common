@@ -10,8 +10,8 @@
  * ```
  * 
  * @module mixins/content-overflow-detector
- * @author Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @author Michał Borzęcki
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -86,22 +86,28 @@ export default Mixin.create({
 
   addOverflowDetectionListener() {
     if (!this.get('isOverflowDetectionAttached')) {
-      let {
+      const {
         overflowElement,
         overflowParentElement,
         overflowSiblingsElements,
         overflowDetectionDelay,
         _window
-      } = this.getProperties('overflowElement', 'overflowParentElement',
-        'overflowSiblingsElements', 'overflowDetectionDelay', '_window');
+      } = this.getProperties(
+        'overflowElement',
+        'overflowParentElement',
+        'overflowSiblingsElements',
+        'overflowDetectionDelay',
+        '_window'
+      );
+
       if (!overflowParentElement) {
         this.set('overflowParentElement', overflowElement.parent());
       }
       if (!overflowSiblingsElements) {
         this.set('overflowSiblingsElements', overflowElement.siblings());
       }
-      let detectOverflowFunction = () => safeExec(this, 'detectOverflow');
-      let overflowDetectionListener = () => {
+      const detectOverflowFunction = () => safeExec(this, 'detectOverflow');
+      const overflowDetectionListener = () => {
         run.debounce(overflowElement, detectOverflowFunction, overflowDetectionDelay);
       };
       this.setProperties({
@@ -129,7 +135,7 @@ export default Mixin.create({
       return;
     }
 
-    let {
+    const {
       overflowElement,
       overflowParentElement,
       overflowSiblingsElements,
@@ -152,8 +158,8 @@ export default Mixin.create({
 
     let elementWidth = overflowElement.outerWidth(true);
     if (overflowElement.is(':hidden')) {
-      let previousCss = overflowElement.attr('style');
-      let newCss = previousCss +
+      const previousCss = overflowElement.attr('style');
+      const newCss = previousCss +
         ';position: absolute !important; visibility: hidden !important; display: block !important;';
       // shows element using standard display:block (but it is hidden from user)
       // after that we can measure its width as if it was visible and
@@ -162,8 +168,8 @@ export default Mixin.create({
       elementWidth = overflowElement.outerWidth(true);
       overflowElement.attr('style', previousCss ? previousCss : '');
     }
-    let parentWidth = overflowParentElement.width();
-    let siblingsWidth = overflowSiblingsElements
+    const parentWidth = overflowParentElement.width();
+    const siblingsWidth = overflowSiblingsElements
       .get()
       .map(sibling => $(sibling).outerWidth(true))
       .reduce((prev, curr) => prev + curr, 0);

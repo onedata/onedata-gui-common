@@ -8,15 +8,16 @@
  */
 
 import Component from '@ember/component';
-import { observer, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-icon';
-import { notEmpty } from '@ember/object/computed';
+import { htmlSafe } from '@ember/template';
 
 export default Component.extend({
   layout,
   tagName: 'span',
   classNames: ['one-icon', 'oneicon'],
   classNameBindings: ['iconClass'],
+  attributeBindings: ['style'],
 
   /**
    * Icon name (from oneicons font, without `oneicon-` prefix)
@@ -40,22 +41,12 @@ export default Component.extend({
   }),
 
   /**
-   * @type {Ember.ComputedProperty<boolean>}
+   * @type {Ember.ComputedProperty<string>}
    */
-  hasCustomStyles: notEmpty('color'),
-
-  stylesObserver: observer('color', function stylesObserver() {
-    this.applyStyles();
-  }),
-
-  didInsertElement() {
-    this._super(...arguments);
-    if (this.get('hasCustomStyles')) {
-      this.applyStyles();
+  style: computed('color', function style() {
+    const color = this.get('color');
+    if (color) {
+      return htmlSafe(`color: ${color};`);
     }
-  },
-
-  applyStyles() {
-    this.$().css({ color: this.get('color') });
-  },
+  }),
 });
