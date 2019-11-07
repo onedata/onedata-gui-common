@@ -487,6 +487,18 @@ $token-border-radius: 3px;
   }
 }
 
+.bs-tab .nav.nav-tabs-with-loading > li {
+  > a.nav-link {
+    padding-left: 38px;
+    padding-right: 38px;
+  }
+  .tab-spinner {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+  }
+}
+
 .nav-tabs {
   .warning-icon {
     width: 20px;
