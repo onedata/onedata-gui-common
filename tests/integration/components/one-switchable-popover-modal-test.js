@@ -4,6 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
+import { click } from 'ember-native-dom-helpers';
 
 const CONTENT_TEXT = 'contentText';
 const WINDOW_WIDTH_LG = 1000;
@@ -219,11 +220,10 @@ describe('Integration | Component | one switchable popover modal', function () {
 
     this.$('.trigger').click();
     wait().then(() => {
-      expect($('body')).to.have.class('modal-open');
+      expect($('.modal-element.in')).to.exist;
       // click on backdrop
-      $('.modal-backdrop').click();
-      wait().then(() => {
-        expect($('.modal-element:not(.in)')).to.exist;
+      click($('.modal')[0]).then(() => {
+        expect($('.modal-element.in')).to.not.exist;
         done();
       });
     });
@@ -244,7 +244,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     wait().then(() => {
       $('.content-button').click();
       wait().then(() => {
-        expect($('body')).to.have.class('modal-open');
+        expect($('.modal-element.in')).to.exist;
         done();
       });
     });
@@ -268,7 +268,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       expect($('.in .popover-element')).to.exist;
       $('.trigger-modal').click();
       wait().then(() => {
-        expect($('body')).to.have.class('modal-open');
+        expect($('.modal-element.in')).to.exist;
         expect($('.popover-element')).to.not.exist;
         done();
       });
@@ -392,7 +392,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       `);
 
       wait().then(() => {
-        expect($('body')).to.have.class('modal-open');
+        expect($('.modal-element.in')).to.exist;
         this.set('activeTriggerSelector', '.trigger-popover');
         wait().then(() => {
           expect($('body')).to.not.have.class('modal-open');
@@ -419,10 +419,10 @@ describe('Integration | Component | one switchable popover modal', function () {
 
     this.$('.trigger-modal').click();
     wait().then(() => {
-      expect($('body')).to.have.class('modal-open');
+      expect($('.modal-element.in')).to.exist;
       this.set('triggersConfiguration', '.trigger-popover:popover');
       wait().then(() => {
-        expect($('body')).to.not.have.class('modal-open');
+        expect($('.modal-element.in')).to.not.exist;
         this.$('.trigger-popover').click();
         wait().then(() => {
           expect($('.in .popover-element')).to.exist;

@@ -1,0 +1,8 @@
+{{#if componentName}}
+  {{#if testMode}}
+    <div class="rendered-component">{{componentName}}</div>
+  {{else}}
+    {{component componentName}}
+  {{/if}}
+{{/if}}
+{{yield}}

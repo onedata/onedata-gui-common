@@ -11,13 +11,15 @@ import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
 
 export default BsModal.extend({
+  tagName: '',
+
   init() {
     this._super(...arguments);
 
     if (config.environment === 'test') {
       this.setProperties({
-        fade: false,
-        backdropTransitionDuration: 0,
+        transitionDuration: 1,
+        backdropTransitionDuration: 1,
       });
     }
   }
