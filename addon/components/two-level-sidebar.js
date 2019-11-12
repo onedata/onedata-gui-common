@@ -12,9 +12,8 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
-import { invokeAction } from 'ember-invoke-action';
 import _ from 'lodash';
 import { array, raw } from 'ember-awesome-macros';
 
@@ -115,11 +114,4 @@ export default Component.extend({
     } = this.getProperties('secondLevelItems', 'secondaryItemId');
     return _.find(secondLevelItems, { id: secondaryItemId });
   }),
-
-  actions: {
-    changePrimaryItem(item) {
-      const resourceType = this.get('resourceType');
-      return invokeAction(this, 'changeResourceId', resourceType, get(item, 'id'));
-    },
-  },
 });

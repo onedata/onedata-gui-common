@@ -50,44 +50,42 @@ export default Component.extend({
    * @override
    */
   pellOptions: Object.freeze({
-    actions: [
-      {
-        name: 'bold',
-        icon: '<span class="oneicon oneicon-text-bold"></span>',
-      }, {
-        name: 'italic',
-        icon: '<span class="oneicon oneicon-text-italic"></span>',
-      }, {
-        name: 'underline',
-        icon: '<span class="oneicon oneicon-text-underline"></span>',
-      }, {
-        name: 'strikethrough',
-        icon: '<span class="oneicon oneicon-text-strikethrough"></span>',
-      }, {
-        name: 'heading1',
-        icon: '<span class="oneicon oneicon-text-heading1"></span>',
-      }, {
-        name: 'heading2',
-        icon: '<span class="oneicon oneicon-text-heading2"></span>',
-      }, {
-        name: 'heading3',
-        icon: '<span class="oneicon oneicon-text-heading3"></span>',
-        // pell provides headings up to h2
-        result: () => pell.exec('formatBlock', '<h3>'),
-      }, {
-        name: 'paragraph',
-        icon: '<span class="oneicon oneicon-text-paragraph"></span>',
-      }, {
-        name: 'olist',
-        icon: '<span class="oneicon oneicon-text-olist"></span>',
-      }, {
-        name: 'ulist',
-        icon: '<span class="oneicon oneicon-text-ulist"></span>',
-      }, {
-        name: 'link',
-        icon: '<span class="oneicon oneicon-text-link"></span>',
-      },
-    ],
+    actions: [{
+      name: 'bold',
+      icon: '<span class="oneicon oneicon-text-bold"></span>',
+    }, {
+      name: 'italic',
+      icon: '<span class="oneicon oneicon-text-italic"></span>',
+    }, {
+      name: 'underline',
+      icon: '<span class="oneicon oneicon-text-underline"></span>',
+    }, {
+      name: 'strikethrough',
+      icon: '<span class="oneicon oneicon-text-strikethrough"></span>',
+    }, {
+      name: 'heading1',
+      icon: '<span class="oneicon oneicon-text-heading1"></span>',
+    }, {
+      name: 'heading2',
+      icon: '<span class="oneicon oneicon-text-heading2"></span>',
+    }, {
+      name: 'heading3',
+      icon: '<span class="oneicon oneicon-text-heading3"></span>',
+      // pell provides headings up to h2
+      result: () => pell.exec('formatBlock', '<h3>'),
+    }, {
+      name: 'paragraph',
+      icon: '<span class="oneicon oneicon-text-paragraph"></span>',
+    }, {
+      name: 'olist',
+      icon: '<span class="oneicon oneicon-text-olist"></span>',
+    }, {
+      name: 'ulist',
+      icon: '<span class="oneicon oneicon-text-ulist"></span>',
+    }, {
+      name: 'link',
+      icon: '<span class="oneicon oneicon-text-link"></span>',
+    }],
     defaultParagraphSeparator: 'p',
   }),
 

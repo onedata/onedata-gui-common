@@ -61,6 +61,33 @@
   .radio-inline {
     padding-top: 0;
   }
+  .form-group-sm {
+    .form-control {
+      padding-left: $padding-small-horizontal;
+    }
+    .form-control-feedback {
+      width: $input-height-small;
+      height: $input-height-small;
+      line-height: $input-height-small;
+    }
+    .form-control-static {
+      height: initial;
+    }
+    margin-bottom: $padding-small-vertical;
+  }
+  @media (min-width: $screen-sm-min) {
+    .form-group-sm {
+      .control-label {
+        padding-top: $padding-small-vertical + 3px;
+        padding-right: $padding-small-horizontal;
+      }
+      .toggle-form-row {
+        .control-label {
+          padding-top: 2px;
+        }
+      }
+    }
+  }
 }
 .has-success input[disabled],
 .has-error input[disabled] {
@@ -85,6 +112,9 @@ label {
     @include box-shadow(none);
     opacity: 0.6;
   }
+  &[readonly] {
+    background-color: $input-bg;
+  }
 }
 
 @import "bootstrap/buttons";
@@ -92,7 +122,6 @@ label {
   border-width: 2px;
   position: relative;
   padding: $padding-base-vertical $padding-base-horizontal * 2;
-  font-size: 105%;
   @include font-semibold();
   &.btn-sm {
     font-size: 85%;
@@ -139,6 +168,11 @@ label {
     a {
       padding: $padding-base-vertical * 0.8;
     }
+  }
+}
+@media (max-width: $screen-xs-max) {
+  .dropdown-menu {
+    font-size: 80%;  
   }
 }
 @import "bootstrap/button-groups";
@@ -205,7 +239,6 @@ label {
 .alert {
   position: relative;
   margin: $alert-padding 0;
-  border-radius: 0;
 }
 @import "bootstrap/progress-bars";
 @import "bootstrap/media";
@@ -238,14 +271,10 @@ label {
 @import "bootstrap/popovers";
 @import "bootstrap/carousel";
 
-$modal-min-height: 400px;
 // Code below fixes positioning glitch of modal with scrollable content on MacOS
 // Chromium.
 .modal-open .modal {
   overflow-y: hidden;
-  @media (max-height: $modal-min-height) {
-    overflow-y: auto;
-  }
 }
 
 .modal {  
@@ -257,16 +286,10 @@ $modal-min-height: 400px;
       flex-direction: column;
       justify-content: center;
       max-height: calc(100% - #{2 * $padding-large-vertical});
-      min-height: $modal-min-height;
       margin: 0;
+      max-height: 100%;
       transition: initial;
       border-radius: $border-radius-large;
-
-      @media (max-height: $modal-min-height) {
-        top: initial;
-        transform: translateX(-50%);
-        margin: $padding-large-vertical 0;
-      }
 
       @media (max-width: $screen-xs-max) {
         width: 90%;

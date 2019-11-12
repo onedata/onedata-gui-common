@@ -103,14 +103,20 @@ $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
   .tab-bar-li {
     .nav-link {
       display: inline-block;
-      max-width: 150px;
       padding: $nav-link-padding;
       
-      transition: max-width 0.2s linear;
-      
-      &.active {
-        max-width: 250px
+      transition: transition-linear(max-width);
+    }
+    &.apply-truncate {
+      .nav-link {
+        max-width: 200px;
+        &.active {
+          max-width: 300px
+        }
       }
+    }
+    &.disabled {
+      cursor: not-allowed;
     }
   }
   .tab-bar-selector {

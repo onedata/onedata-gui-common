@@ -27,7 +27,8 @@ export default Component.extend(I18n, {
   classNameBindings: [
     '_inEditionMode:editor:static',
     '_whileSaving:saving',
-    'controlledManually:manual'
+    'controlledManually:manual',
+    'hideEditIcons:without-edit-icons'
   ],
 
   i18n: service(),
@@ -78,6 +79,17 @@ export default Component.extend(I18n, {
   inputClasses: '',
 
   /**
+   * @type {boolean}
+   */
+  hideEditIcons: false,
+
+  /**
+   * If true. editor will not focus input on first render
+   * @type {boolean}
+   */
+  ignoreInitialFocus: false,
+
+  /**
    * Values used by input while edition.
    * @type {string}.
    */
@@ -112,7 +124,7 @@ export default Component.extend(I18n, {
   onEdit: notImplementedIgnore,
 
   /**
-   * Action called the _inputValue is changed.
+   * Action called when the _inputValue is changed.
    * @type {Function}
    * @param {string} value
    * @returns {undefined}
@@ -120,10 +132,28 @@ export default Component.extend(I18n, {
   onInputValueChanged: notImplementedIgnore,
 
   /**
+   * Action called when input losts focus
+   * @type {Function}
+   * @returns {undefined}
+   */
+  onLostFocus: notImplementedIgnore,
+
+  /**
    * Automatically set to true if the component is rendered in one-collapsible-toolbar
    * @type {boolean}
    */
   isInToolbar: false,
+
+  /**
+   * Turns to true after first render
+   * @type {boolean}
+   */
+  isAfterInitialRender: false,
+
+  /**
+   * @type {string}
+   */
+  inputPlaceholder: undefined,
 
   /**
    * @type {Ember.ComputedProperty<string>}
@@ -156,15 +186,22 @@ export default Component.extend(I18n, {
     }
   }),
 
-  inputValueChangedObserver: observer('_inputValue', function inputValueChangedObserver() {
-    this.get('onInputValueChanged')(this.get('_inputValue'));
-  }),
+  inputValueChangedObserver: observer(
+    '_inputValue',
+    function inputValueChangedObserver() {
+      this.get('onInputValueChanged')(this.getEditedValue());
+    }
+  ),
 
   init() {
     this._super(...arguments);
     if (this.get('isEditing')) {
       this.isEditingObserver();
     }
+    next(() => {
+      // after component initialization fallback to default
+      safeExec(this, 'set', 'isAfterInitialRender', true);
+    });
   },
 
   didInsertElement() {
@@ -208,6 +245,10 @@ export default Component.extend(I18n, {
   },
 
   startEdition() {
+    const {
+      ignoreInitialFocus,
+      isAfterInitialRender,
+    } = this.getProperties('ignoreInitialFocus', 'isAfterInitialRender');
     return new Promise((resolve, reject) => {
       next(() => {
         try {
@@ -217,7 +258,9 @@ export default Component.extend(I18n, {
           });
           next(() => {
             try {
-              safeExec(this, () => this.$('input').focus().select());
+              if (!(ignoreInitialFocus && !isAfterInitialRender)) {
+                safeExec(this, () => this.$('input').focus().select());
+              }
             } catch (error) {
               reject(error);
             }
@@ -232,6 +275,15 @@ export default Component.extend(I18n, {
 
   stopEdition() {
     safeExec(this, 'set', '_inEditionMode', false);
+  },
+
+  getEditedValue() {
+    const {
+      _inputValue,
+      trimString,
+    } = this.getProperties('_inputValue', 'trimString');
+    const stringValue = _inputValue || '';
+    return trimString ? stringValue.trim() : stringValue;
   },
 
   actions: {
@@ -253,24 +305,33 @@ export default Component.extend(I18n, {
       }
     },
     cancelEdition() {
-      this.get('onEdit')(false);
-      if (!this.get('controlledManually')) {
-        this.stopEdition();
+      const {
+        hideEditIcons,
+        onEdit,
+        controlledManually,
+      } = this.getProperties(
+        'hideEditIcons',
+        'onEdit',
+        'controlledManually'
+      );
+      // If cancel button is hidden, then canceling edition using any other
+      // method should be blocked
+      if (!hideEditIcons) {
+        onEdit(false);
+        if (!controlledManually) {
+          this.stopEdition();
+        }
       }
     },
     saveEdition() {
       const {
-        _inputValue,
         onSave,
-        trimString,
         controlledManually,
       } = this.getProperties(
-        '_inputValue',
         'onSave',
-        'trimString',
         'controlledManually'
       );
-      const preparedInputValue = trimString ? _inputValue.trim() : _inputValue;
+      const preparedInputValue = this.getEditedValue();
       this.set('_whileSaving', true);
       onSave(preparedInputValue)
         .then(() => {

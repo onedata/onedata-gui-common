@@ -8,6 +8,9 @@
   &.static, &.editor.saving {
     padding-right: 30px;
   }
+  &.editor.without-edit-icons {
+    padding-right: 0;
+  }
   &.editor {
     padding-right: 55px;
   }
@@ -59,7 +62,7 @@
     color: $main-text-color-disabled;
   }
   @media (max-width: $screen-xs-max) {
-    &.static, &.editor.saving {
+    &.static, &.editor.saving, &.editor.without-cancel {
       padding-right: 40px;
     }
     &.editor {
@@ -70,7 +73,7 @@
       visibility: visible;
     }
   }
-  &.manual {
+  &.manual:not(.show-edit-icon) {
     .edit-icon {
       display: none;
     }

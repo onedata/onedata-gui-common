@@ -1,4 +1,5 @@
 $table-item-border: 1px solid $main-border-color;
+$table-info-cell-padding: $table-condensed-cell-padding * 2;
 
 h5 {
   @include font-bold();
@@ -7,6 +8,13 @@ h5 {
 strong {
   font-weight: normal;
   @include font-semibold();
+}
+
+.custom-font {
+  strong {
+    font-weight: bold;
+    font-family: inherit;
+  }
 }
 
 .horizontal-align-middle {
@@ -130,6 +138,15 @@ input {
   border-color: $color-one-list-item-separator;
 }
 
+// Removes additional buttons to increase/decrease values which are inside
+// number inputs.
+input[type=number] {  
+  &::-webkit-inner-spin-button {
+    display: none;
+  }
+  -moz-appearance: textfield;
+}
+
 .world-map {
   &.light {
     background-image: url($root-url + 'images/world-map-light.svg');
@@ -210,6 +227,9 @@ input {
   }
   &.collapse-medium {
     max-height: 2500px;
+  }
+  &.collapse-large {
+    max-height: 10000px;
   }
   &.collapse-hidden {
     max-height: 0 !important;
@@ -568,13 +588,17 @@ textarea[style^="touch-action: manipulation"] {
     position: absolute;
     top: 50%;
     left: 0;
-    transform: translateY(-50%) translateY(2px);
+    transform: translateY(-50%) translateY(1px);
     font-size: 180%;
   }
   &.sm {
     .oneicon {
       font-size: 130%;
     }
+  }
+  &.bind-right-text {
+    width: 1.6em;
+    bottom: -2px;
   }
 }
   
@@ -609,5 +633,63 @@ textarea[style^="touch-action: manipulation"] {
 .menu-toggle-hover-parent:hover {
   .menu-toggle.on-hover {
     display: block;
+  }
+}
+
+.input-group-clipboard-textarea {
+  display: block;
+  textarea {
+    display: block;
+    resize: none;
+    font-family: monospace;
+  }
+  .btn-container {
+    display: inline-block;
+    width: 100%;
+  }
+}
+
+.table.table-info {
+  table-layout: fixed;
+  tr {
+    border: none;
+  }
+  td {
+    border: none;
+    padding: $table-info-cell-padding;
+    &.property-name {
+      width: 160px;
+      @include font-semibold();
+      // when the input is on the left, pull down the label to start from
+      // input padding
+      &.with-input {
+        padding-top: $table-info-cell-padding + $padding-base-vertical;
+      }
+      &.with-input-sm {
+        padding-top: $table-info-cell-padding + $padding-small-vertical;
+      }
+    }
+  }
+  &.table-info-collapsible {
+    @media (max-width: $screen-sm-max) {
+      tr {
+        display: block;
+      }
+      td {
+        display: block;
+        margin-top: -10px;
+        &.property-name {
+          padding-left: 10px;
+        }
+        &.property-value {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+  .property-value {
+    .resource-load-error.alert {
+      margin: 0;
+    }
   }
 }

@@ -1,0 +1,25 @@
+<input
+  id={{inputId}}
+  class="form-control size-number-input {{inputClasses}}"
+  value={{scaledValue}}
+  oninput={{action "scaledValueChanged" value="target.value"}}
+  onblur={{action onFocusOut}}
+  onkeyup={{action onKeyUp}}
+  disabled={{disabled}}
+>
+<span class="input-group-basic-dropdown size-unit-select-group">
+  {{#power-select
+    triggerClass=size
+    dropdownClass=size
+    disabled=disabled
+    options=sizeUnits
+    selected=sizeUnit
+    onchange=(action "sizeUnitChanged")
+    searchEnabled=false
+    renderInPlace=true
+    as |unit|
+  }}
+    {{unit.name}}
+  {{/power-select}}
+  </span>
+{{yield}}

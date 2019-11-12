@@ -1,0 +1,22 @@
+.remove-icon {
+  display: inline-block;
+  margin-top: -0.1em;
+  font-size: 1.7em;
+  line-height: 0;
+  vertical-align: middle;
+  // To change basic color please use selector like `.remove-icon:not(:hover)`
+  // to not override hover color.
+  color: $color-one-light-gray;
+
+  &.enabled {
+    &:hover {
+      color: $color-one-danger;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.3;
+    // `!important` to override inline styles of clickable components
+    cursor: not-allowed !important;
+  }
+}

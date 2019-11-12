@@ -1,6 +1,5 @@
 .one-animated-logo {
   $size: 25px;
-  $frame-time: $collapse-transition-time / 2;
   white-space: nowrap;
   font-size: 0;
   .logo-container {
@@ -12,22 +11,22 @@
   }
   .left {
     width: $size * 0.9;
-    transition: $frame-time width linear $frame-time;
+    transition: transition-linear(width, 'short', 'short');
     background-repeat: no-repeat;
     .shadow {
       left: $size * 0.9;
       width: $size * 1.9;
-      transition: $frame-time opacity linear $frame-time;
+      transition: transition-linear(opacity, 'short', 'short');
     }
   }
   .right {
     width: $size * 0.53;
-    transition: $frame-time width linear;
+    transition: transition-linear(width, 'short');
     background-image: url($root-url + 'images/logo.svg');
     background-position: -$size * 2.8 0;
     background-repeat: no-repeat;
     .shadow {
-      transition: $frame-time opacity linear;
+      transition: transition-linear(opacity, 'short');
       left: $size * 0.55;
       width: $size * 2.35;
     }
@@ -42,16 +41,16 @@
   &.opened {
     .left {
       width: $size * 2.8;
-      transition: $frame-time width linear;
+      transition: transition-linear(width, 'short');
       .shadow {
-        transition: $frame-time opacity linear ;
+        transition: transition-linear(opacity, 'short');
       }
     }
     .right {
       width: $size * 2.85;
-      transition: $frame-time width linear $frame-time;
+      transition: transition-linear(width, 'short', 'short');
       .shadow {
-        transition: $frame-time opacity linear $frame-time;
+        transition: transition-linear(opacity, 'short', 'short');
       }
     }
     .shadow {

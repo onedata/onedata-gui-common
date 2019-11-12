@@ -6,6 +6,7 @@ export default {
     certificate: 'Web certificate',
     emergencyPassphrase: 'Emergency passphrase',
     provider: 'Provider',
+    ceph: 'Ceph',
     storages: 'Storages',
     spaces: 'Spaces',
     guiSettings: 'GUI settings',
@@ -14,6 +15,7 @@ export default {
   clusterItem: {
     domainNameNotAvailable: '(domain name not available)',
     nameNotAvailable: '(name not available)',
+    newCluster: 'New cluster',
     deregister: 'Deregister',
   },
 };
