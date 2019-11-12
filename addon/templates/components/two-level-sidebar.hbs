@@ -9,19 +9,18 @@
   {{yield}}
 
   {{#one-list-wrapper items=sortedCollection class="no-top-border" as |item|}}
-    {{#one-list-primary-item item=item
-      changePrimaryItemId=(action "changePrimaryItemId")
-      isActive=(and (eq activeResourceType resourceType) (eq primaryItemId item.id))
-      as |primarySection|}}
-      {{#if (eq primarySection "header")}}
+    <li class="one-list-item clickable {{if (eq primaryItem item) "active"}}">
+      <div class="item-header truncate">
         {{#link-to
           "onedata.sidebar.content.index"
           sidebarType
           (model-routable-id item)
-          (query-params-hash queryParams)
+          active=false
+          willBeActive=false
+          loading=false
         }}
           {{#if firstLevelItemComponent}}
-            {{component firstLevelItemComponent item=item sidebar=this}}
+            {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
           {{else}}
             {{#if firstLevelItemIcon}}
               {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}} 
@@ -31,8 +30,8 @@
             {{/truncated-string}}
           {{/if}}
         {{/link-to}}
-      {{else if (eq primarySection "secondary")}}
-        {{!-- TODO isActive secondary --}}
+      </div>
+      {{#if (eq primaryItem item)}}
         <ul class="one-list one-list-level-2">
           {{component secondLevelItemsComponent
             item=item
@@ -43,7 +42,7 @@
           }}
         </ul>
       {{/if}}
-    {{/one-list-primary-item}}
+    </li>
   {{/one-list-wrapper}}
 
 {{/if}}

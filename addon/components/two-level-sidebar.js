@@ -16,6 +16,7 @@ import { get, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
 import { invokeAction } from 'ember-invoke-action';
 import _ from 'lodash';
+import { array, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -72,6 +73,11 @@ export default Component.extend({
   showCreateOnEmpty: true,
 
   /**
+   * @type {boolean}
+   */
+  inSidenav: false,
+
+  /**
    * @type {ComputedProperty<Array<string>>}
    */
   sorting: computed('sidebarType', function sorting() {
@@ -98,20 +104,7 @@ export default Component.extend({
 
   activeResourceType: reads('navigationState.activeResourceType'),
 
-  primaryItem: computed(
-    'primaryItemId',
-    'model.collection.list.[]',
-    function getPrimaryItem() {
-      const {
-        model,
-        primaryItemId,
-      } = this.getProperties('model', 'primaryItemId');
-      return _.find(
-        get(model, 'collection').toArray(),
-        item => get(item, 'id') === primaryItemId
-      );
-    }
-  ),
+  primaryItem: array.findBy('model.collection.list', raw('id'), 'primaryItemId'),
 
   secondaryItemId: reads('navigationState.activeAspect'),
 
@@ -124,9 +117,9 @@ export default Component.extend({
   }),
 
   actions: {
-    changePrimaryItemId(itemId) {
-      let resourceType = this.get('resourceType');
-      return invokeAction(this, 'changeResourceId', resourceType, itemId);
+    changePrimaryItem(item) {
+      const resourceType = this.get('resourceType');
+      return invokeAction(this, 'changeResourceId', resourceType, get(item, 'id'));
     },
   },
 });
