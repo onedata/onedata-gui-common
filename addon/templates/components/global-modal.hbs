@@ -1,9 +1,10 @@
 {{#one-modal
-  open=modalManager.isModalOpened
+  open=open
   onShown=(action "shown")
   onHide=(action "hide")
   onHidden=(action "hidden")
-  as |modal|}}
+  as |modal|
+}}
 
   {{yield (hash
     header=modal.header

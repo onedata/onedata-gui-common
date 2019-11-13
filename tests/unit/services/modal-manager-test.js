@@ -5,10 +5,7 @@ import { get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
 
 describe('Unit | Service | modal manager', function () {
-  setupTest('service:modal-manager', {
-    // Specify the other units that are required for this test.
-    // needs: ['service:foo']
-  });
+  setupTest('service:modal-manager', {});
 
   it('hide() returns promise even if show() has not been called', function () {
     const service = this.subject();
@@ -17,124 +14,135 @@ describe('Unit | Service | modal manager', function () {
   });
 
   it('hides already shown modal when another show() has been called', function () {
-    const component1Options = { a: 1 };
-    const component2Options = { b: 2 };
+    const modal1Options = { a: 1 };
+    const modal2Options = { b: 2 };
+    let modal1Hidden = false;
+    let modal2Shown = false;
 
     const service = this.subject();
-
-    let component1Hidden = false;
-    let component2Shown = false;
     const {
       shownPromise,
       hiddenPromise,
-    } = service.show('component1', component1Options);
+    } = service.show('modal1', modal1Options);
 
-    hiddenPromise.then(() => {
-      component1Hidden = true;
-    });
+    hiddenPromise.then(() => modal1Hidden = true);
 
     return wait()
       .then(() => {
         expect(get(service, 'isModalOpened')).to.be.true;
+
+        // Simulate modal 'shown' event
         service.onModalShown();
         return shownPromise;
       })
       .then(() => {
         // Open modal while another is already opened
-        service.show('component2', component2Options).shownPromise
-          .then(() => component2Shown = true);
+        service.show('modal2', modal2Options).shownPromise
+          .then(() => modal2Shown = true);
       })
       .then(() => {
-        expect(get(service, 'modalComponentName')).to.equal('component1');
-        expect(get(service, 'modalOptions')).to.deep.equal(component1Options);
+        // Second modal has not replaced the first one yet
+        expect(get(service, 'modalComponentName')).to.equal('modal1');
+        expect(get(service, 'modalOptions')).to.deep.equal(modal1Options);
+
         // The first modal should close
         expect(get(service, 'isModalOpened')).to.be.false;
 
+        // Simulate modal 'hidden' event
         service.onModalHidden();
         return wait();
       })
       .then(() => {
-        expect(component1Hidden).to.be.true;
-        expect(get(service, 'modalComponentName')).to.equal('component2');
-        expect(get(service, 'modalOptions')).to.deep.equal(component2Options);
-        // The second modal should open
-        expect(get(service, 'isModalOpened')).to.be.true;
-        expect(component2Shown).to.be.false;
+        expect(modal1Hidden).to.be.true;
 
+        // The second modal should open
+        expect(get(service, 'modalComponentName')).to.equal('modal2');
+        expect(get(service, 'modalOptions')).to.deep.equal(modal2Options);
+        expect(get(service, 'isModalOpened')).to.be.true;
+        expect(modal2Shown).to.be.false;
+
+        // Simulate modal 'shown' event
         service.onModalShown();
         return wait();
       })
       .then(() => {
-        expect(component2Shown).to.be.true;
+        expect(modal2Shown).to.be.true;
       });
   });
 
-  it('cancels current showing modal when another show() has been called', function () {
-    const component1Options = { a: 1 };
-    const component2Options = { b: 2 };
+  it('hides currently showing modal when another show() has been called', function () {
+    const modal1Options = { a: 1 };
+    const modal2Options = { b: 2 };
+    let modal1Hidden = false;
+    let modal2Shown = false;
 
     const service = this.subject();
-
-    let component1Hidden = false;
-    let component2Shown = false;
-    service.show('component1', component1Options).hiddenPromise.then(() => {
-      component1Hidden = true;
-    });
+    service.show('modal1', modal1Options).hiddenPromise
+      .then(() => modal1Hidden = true);
 
     return wait()
       .then(() => {
         expect(get(service, 'isModalOpened')).to.be.true;
+
         // Open modal while another is opening (but not opened yet)
-        service.show('component2', component2Options).shownPromise
-          .then(() => component2Shown = true);
+        service.show('modal2', modal2Options).shownPromise
+          .then(() => modal2Shown = true);
       })
       .then(() => {
-        // The first modal should be already removed, because it was not shown
-        expect(get(service, 'modalComponentName')).to.equal(null);
-        expect(get(service, 'modalOptions')).to.deep.equal({});
+        // Second modal has not replaced the first one yet
+        expect(get(service, 'modalComponentName')).to.equal('modal1');
+        expect(get(service, 'modalOptions')).to.deep.equal(modal1Options);
+
+        // The first modal should close
         expect(get(service, 'isModalOpened')).to.be.false;
 
+        // Simulate modal lifecycle when hiding before shown (see discovery test in one-modal tests)
+        service.onModalShown();
+        service.onModalHidden();
         return wait();
       })
       .then(() => {
-        expect(component1Hidden).to.be.true;
-        // The second modal should open
-        expect(get(service, 'modalComponentName')).to.equal('component2');
-        expect(get(service, 'modalOptions')).to.deep.equal(component2Options);
-        expect(get(service, 'isModalOpened')).to.be.true;
-        expect(component2Shown).to.be.false;
+        expect(modal1Hidden).to.be.true;
 
+        // The second modal should open
+        expect(get(service, 'modalComponentName')).to.equal('modal2');
+        expect(get(service, 'modalOptions')).to.deep.equal(modal2Options);
+        expect(get(service, 'isModalOpened')).to.be.true;
+        expect(modal2Shown).to.be.false;
+
+        // Simulate modal 'shown' event
         service.onModalShown();
         return wait();
       })
       .then(() => {
-        expect(component2Shown).to.be.true;
+        expect(modal2Shown).to.be.true;
       });
   });
 
   it('throws error on twice show() call in the same runloop frame', function () {
-    const component1Options = { a: 1 };
-    let component1Hidden = false;
+    const modal1Options = { a: 1 };
+    let modal1Hidden = false;
     let twiceShowError;
 
     const service = this.subject();
 
-    service.show('component1', component1Options).hiddenPromise
-      .then(() => component1Hidden = true);
+    service.show('modal1', modal1Options).hiddenPromise
+      .then(() => modal1Hidden = true);
     try {
-      service.show('component2');
+      service.show('modal2');
     } catch (error) {
       twiceShowError = error;
     }
 
     expect(twiceShowError).to.exist;
     expect(twiceShowError.message).to.equal(
-      'modal-manager: You tried to render modal twice in the same runloop frame. First modal component: component1, second modal component: component2.'
+      'modal-manager: You tried to render modal twice in the same runloop frame. First modal component: modal1, second modal component: modal2.'
     );
     return wait()
       .then(() => {
-        expect(get(service, 'modalComponentName')).to.equal('component1');
-        expect(get(service, 'modalOptions')).to.deep.equal(component1Options);
+        // First modal should open
+        expect(get(service, 'modalComponentName')).to.equal('modal1');
+        expect(get(service, 'modalOptions')).to.deep.equal(modal1Options);
         expect(get(service, 'isModalOpened')).to.be.true;
 
         service.onModalShown();
@@ -142,20 +150,24 @@ describe('Unit | Service | modal manager', function () {
       })
       .then(() => {
         // Does not try to hide first modal or change it to the second one
-        expect(get(service, 'modalComponentName')).to.equal('component1');
+        expect(get(service, 'modalComponentName')).to.equal('modal1');
         expect(get(service, 'isModalOpened')).to.be.true;
-        expect(component1Hidden).to.be.false;
+        expect(modal1Hidden).to.be.false;
 
+        // Simulate first modal close
         service.onModalHide();
         return wait();
       })
       .then(() => {
         expect(get(service, 'isModalOpened')).to.be.false;
+
         service.onModalHidden();
         return wait();
       })
       .then(() => {
-        expect(component1Hidden).to.be.true;
+        expect(modal1Hidden).to.be.true;
+        // Does not try to open the second modal
+        expect(get(service, 'isModalOpened')).to.be.false;
       });
   });
 });

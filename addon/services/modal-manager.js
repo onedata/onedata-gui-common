@@ -1,3 +1,30 @@
+/**
+ * Contains API for showing and hiding modals. Allows to show only one modal at
+ * a time. Uses modal components defined inside components/modals. Each modal
+ * component should contain a global-modal component (not one/bs-modal directly!).
+ * Modal component can pass custom onHide, onSubmit and other properties to the
+ * global-modal component (these are different than specified by modalManager.show()!).
+ * 
+ * onHide and onSubmit callbacks are chained. If onHide is set both via global-modal
+ * component parameter and show(..., { onHide }), then:
+ *   - if global-modal component `onHide()` returns false then abort hiding,
+ *   - else if `modalOptions.onHide()` returns false then abort hiding,
+ *   - else hide modal.
+ * So if global-modal onHide returns false, then modalOptions.onHide will not be called.
+ * For onSubmit we have:
+ *  `global-modal.onSubmit().then(result => modalOptions.onSubmit(result))`
+ * So if global-modal onSubmit rejects, then modalOptions.onSubmit will not be called.
+ * 
+ * All global-modal components are showing/hiding according to the state of
+ * the modal-manager service. So it is important to render only one instance of
+ * the global-modal for the whole application.
+ * 
+ * @module services/modal-manager
+ * @author Michał Borzęcki
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Service from '@ember/service';
 import { resolve } from 'rsvp';
 import { writable, raw } from 'ember-awesome-macros';
@@ -10,20 +37,59 @@ export default Service.extend({
    */
   isModalOpened: false,
 
-  isModalShown: false,
-
+  /**
+   * Resolve callback called to notify about modal `shown` event
+   * @type {Function}
+   */
   modalShowResolveCallback: resolve,
 
+  /**
+   * Promise, which resolves when active modal gets hidden
+   * @type {Promise}
+   */
   modalHidePromise: writable(raw(resolve())),
 
+  /**
+   * Resolve callback for `modalHidePromise`. Called to notify about modal
+   * `hidden` event
+   * @type {Function}
+   */
   modalHideResolveCallback: resolve,
 
+  /**
+   * Name of a modal component, which should be rendered after current modal close.
+   * @type {string|null}
+   */
   queuedShowModalComponentName: null,
 
+  /**
+   * Name of a current visible modal component.
+   * @type {string}
+   */
   modalComponentName: null,
 
+  /**
+   * Options passed via `show()` to customize modal.
+   * @type {Object}
+   */
   modalOptions: Object.freeze({}),
 
+  /**
+   * Shows specified modal. If another modal is already opened, it will be replaced.
+   * @param {string} modalComponentName Name of a modal component (which contains global-modal).
+   * Component should be placed inside `components/modals`.
+   * @param {Object} modalOptions Modal options. Possible options:
+   *   - [hideAfterSubmit=true]: boolean - if true, modal will hide after submit
+   *   - [onSubmit]: function - called on modal submit. Can receive submit acton data via first
+   *     argument. If returns promise, then it will be used to render spinner.
+   *   - [onHide]: function - called on modal 'hide' event. If returns false, then
+   *     modal close is aborted.
+   *   - [*]: any - all other options, that can be accessed by modal component via
+   *     `modalManager.modalOptions`.
+   * @returns {Object} Object with fields:
+   *   - shownPromise: Promise - resolves when modal is fully visible (after all transitions),
+   *   - hiddenPromise: Promise - resolves when modal is fully closed (after all transitions).
+   */
   show(modalComponentName, modalOptions = {}) {
     const {
       queuedShowModalComponentName,
@@ -83,26 +149,23 @@ export default Service.extend({
     };
   },
 
+  /**
+   * Hides currently opened modal. If there is no active modal, returns promise,
+   * that resolves immediately.
+   * @returns {Promise} resolves when modal is fully hidden (after transitions).
+   *   It is the same promise as `show().hiddenPromise`.
+   */
   hide() {
     const {
       isModalOpened,
-      isModalShown,
       modalHidePromise,
     } = this.getProperties(
       'isModalOpened',
-      'isModalShown',
       'modalHidePromise'
     );
 
     if (isModalOpened) {
       this.set('isModalOpened', false);
-
-      if (!isModalShown) {
-        // Modal has not been shown yet, so we need to simulate whole modal lifecycle
-        // to resolve lifecycle promises returned by show() (shownPromise, hiddenPromise).
-        this.onModalShown();
-        this.onModalHidden();
-      }
     }
 
     return modalHidePromise;
@@ -117,13 +180,17 @@ export default Service.extend({
     });
   },
 
+  /**
+   * Called when onSubmit callback passed to global-modal rejected. In this case
+   * modalOptions.onSubmit should not be called.
+   * @returns {Promise} immediately resolving promise.
+   */
   onModalFailedSubmit() {
     this.hideAfterSubmit();
     return resolve();
   },
 
   onModalShown() {
-    this.set('isModalShown', true);
     this.get('modalShowResolveCallback')();
   },
 
@@ -139,7 +206,6 @@ export default Service.extend({
   },
 
   onModalHidden() {
-    this.set('isModalShown', false);
     this.get('modalHideResolveCallback')();
   },
 

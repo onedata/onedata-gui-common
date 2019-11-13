@@ -104,8 +104,8 @@ describe('Integration | Component | global modal', function () {
       hiddenPromise.then(hiddenSpy);
       return shownPromise
         .then(() => {
-          expect(hiddenSpy).to.not.be.called;
           expect(isGlobalModalOpened()).to.be.true;
+          expect(hiddenSpy).to.not.be.called;
           return click(getGlobalModal().find('.close-button')[0])
         })
         .then(() => {
@@ -296,7 +296,7 @@ describe('Integration | Component | global modal', function () {
         .then(() => {
           expect(submitSpy).to.be.calledOnce;
           expect(submitSpy).to.be.calledWith('value');
-        })
+        });
     }
   );
 

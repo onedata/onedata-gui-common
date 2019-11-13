@@ -1,6 +1,17 @@
+/**
+ * Renders special instance of one-modal, which uses state of modalManager service
+ * to control itself.
+ * 
+ * @module components/global-modal
+ * @author Michał Borzęcki
+ * @copyright (C) 2019 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../templates/components/global-modal';
 import { inject as service } from '@ember/service';
+import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
 
@@ -10,11 +21,28 @@ export default Component.extend({
 
   modalManager: service(),
 
+  /**
+   * Callback called on modal hide. If returns false, then modal hide is cancelled.
+   * @virtual optional
+   * @type {Function}
+   */
   onHide: notImplementedIgnore,
 
+  /**
+   * Function called after modal submit. If it returns a promise, then a spinner
+   * will be rendered inside the "Submit" button until settled. If returned promise
+   * rejects, then `onSubmit` callback set via ModalManager will not be called.
+   * More info in ModalManager service documentation.
+   * @virtual optional
+   * @type {Function}
+   * @param {any} data data passed via `modal.submit` action parameter
+   */
   onSubmit: data => data,
 
-  hideAfterSubmit: true,
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  open: reads('modalManager.isModalOpened'),
 
   actions: {
     submit(data) {

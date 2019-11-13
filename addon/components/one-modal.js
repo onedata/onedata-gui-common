@@ -17,6 +17,8 @@ export default BsModal.extend({
     this._super(...arguments);
 
     if (config.environment === 'test') {
+      // 1ms (not 0) for animation to prevent from firing shown and hidden events
+      // in the same runloop frame as its' trigger events.
       this.setProperties({
         transitionDuration: 1,
         backdropTransitionDuration: 1,
