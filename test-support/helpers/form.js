@@ -1,3 +1,5 @@
+import { click } from 'ember-native-dom-helpers';
+
 export default class FormHelper {
   constructor($template, componentSelector = '') {
     this.$template = $template;
@@ -21,6 +23,6 @@ export default class FormHelper {
   }
 
   submit() {
-    this.$form.find('button[type=submit]').click();
+    return click(this.$form.find('button[type=submit]')[0]);
   }
 }
