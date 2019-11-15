@@ -27,6 +27,7 @@ import userCredentialsForm from './onedata-gui-common/components/user-credential
 import loginLayout from './onedata-gui-common/components/login-layout';
 import oneproviderMapCircle from './onedata-gui-common/components/oneprovider-map-circle';
 import oneprovidersSelectorPopoverContent from './onedata-gui-common/components/oneproviders-selector-popover-content';
+import twoLevelSidebar from './onedata-gui-common/components/two-level-sidebar';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -71,6 +72,7 @@ const translations = {
     loginLayout,
     oneproviderMapCircle,
     oneprovidersSelectorPopoverContent,
+    twoLevelSidebar,
     alerts: {
       endpointError,
     },

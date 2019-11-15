@@ -3,6 +3,26 @@
   @include font-semibold();
   padding-bottom: 20px;
 
+  .sidebar-filters-container {
+    padding: $padding-large-vertical $padding-large-horizontal;
+    border-bottom: 1px solid $color-one-list-item-separator;
+  }
+
+  .toggle-more-filters {
+    margin-top: $padding-small-vertical;
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+
+    .arrow-icon {
+      vertical-align: middle;
+    }
+  }
+
+  .search-bar-form-group {
+    margin: 0;
+  }
+
   .active > .item-header > a, .active > a {
     .sidebar-item-icon, .truncated-string, .status-toolbar {
       color: $color-one-red;
@@ -18,6 +38,12 @@
 
   .one-list-wrapper {
     border-bottom: 1px solid $color-one-list-item-separator;
+
+    &.no-top-border {
+      > .one-list > .one-list-item:first-child::after {
+        display: none;
+      }
+    }
   }
 
   .one-list-item {
@@ -80,9 +106,6 @@
           line-height: 0;
         }
       }
-    }
-    &.search-bar-item .item-header:hover {
-      background-color: initial;
     }
     
     &.active .one-icon-tagged {

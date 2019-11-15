@@ -37,12 +37,27 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   }
 }
 
+.ember-basic-dropdown-content.small .option-container {
+  .one-icon {
+    left: -2px;
+  }
+  .one-icon + .text {
+    padding-left: 22px;
+  }
+}
+
 .ember-power-select-selected-item .option-container {
   .one-icon {
     left: -10px;
   }
   .one-icon + .text {
     padding-left: 24px;
+  }
+}
+
+.ember-power-select-trigger.small .ember-power-select-selected-item .option-container {
+  .one-icon {
+    left: -4px;
   }
 }
 

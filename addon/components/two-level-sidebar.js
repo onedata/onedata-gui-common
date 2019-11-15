@@ -12,18 +12,24 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
 import _ from 'lodash';
 import { array, raw } from 'ember-awesome-macros';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['two-level-sidebar'],
 
   eventsBus: service(),
   navigationState: service(),
   sidebarResources: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.twoLevelSidebar',
 
   /**
    * @type {Object}
@@ -53,8 +59,6 @@ export default Component.extend({
 
   secondLevelItemsComponent: 'two-level-sidebar/second-level-items',
 
-  queryParams: undefined,
-
   /**
    * To inject.
    * Type of sidebar route (eg. clusters)
@@ -76,11 +80,54 @@ export default Component.extend({
   inSidenav: false,
 
   /**
+   * @type {string}
+   */
+  filter: '',
+
+  /**
+   * @type {string}
+   * @virtual optional
+   */
+  advancedFiltersComponent: undefined,
+
+  /**
+   * Filters received from advancedFiltersComponent.
+   * @type {any}
+   */
+  advancedFilters: Object.freeze({}),
+
+  /**
+   * @type {boolean}
+   */
+  areAdvancedFiltersVisible: false,
+
+  /**
    * @type {ComputedProperty<Array<string>>}
    */
   sorting: computed('sidebarType', function sorting() {
     return this.get('sidebarResources').getItemsSortingFor(this.get('sidebarType'));
   }),
+
+  /**
+   * @type {Ember.ComputedProperty<Array<any>>}
+   */
+  filteredCollection: computed(
+    'sortedCollection.@each.name',
+    'filter',
+    function filteredCollection() {
+      const {
+        sortedCollection,
+        filter,
+      } = this.getProperties('sortedCollection', 'filter');
+
+      if (filter) {
+        const queryRegExp = new RegExp(filter, 'i');
+        return sortedCollection.filter(item => queryRegExp.test(get(item, 'name')));
+      } else {
+        return sortedCollection;
+      }
+    }
+  ),
 
   init() {
     this._super(...arguments);
@@ -113,4 +160,16 @@ export default Component.extend({
     } = this.getProperties('secondLevelItems', 'secondaryItemId');
     return _.find(secondLevelItems, { id: secondaryItemId });
   }),
+
+  actions: {
+    filterChanged(filter) {
+      this.set('filter', filter);
+    },
+    toggleAdvancedFilters() {
+      this.toggleProperty('areAdvancedFiltersVisible');
+    },
+    advancedFilterChanged(advancedFilters) {
+      this.set('advancedFilters', advancedFilters);
+    },
+  }
 });
