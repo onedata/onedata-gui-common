@@ -31,8 +31,8 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   }
 }
 
-.ember-basic-dropdown-content .option-container {
-  .one-icon + .text {
+.ember-basic-dropdown-content {
+  .option-container .one-icon + .text {
     padding-left: 34px;
   }
 }
@@ -71,6 +71,14 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     padding-right: 2em;
     min-height: 21px;
 
+    .one-icon {
+      left: 0;
+    }
+    
+    .one-icon + .text {
+      padding-left: 34px;
+    }
+    
     .ember-power-select-status-icon {
       right: 1.7em;
       top: 0.45em;

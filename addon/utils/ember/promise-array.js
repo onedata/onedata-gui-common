@@ -17,4 +17,10 @@ import ArrayProxy from '@ember/array/proxy';
 
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 
-export default ArrayProxy.extend(PromiseProxyMixin);
+const PromiseArray = ArrayProxy.extend(PromiseProxyMixin);
+
+export default PromiseArray;
+
+export function promiseArray(promise) {
+  return ArrayProxy.create({ promise });
+}

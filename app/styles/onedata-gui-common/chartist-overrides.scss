@@ -30,6 +30,18 @@ $chart-border-color: $main-border-color;
       }
     }
   }
+  .ct-point {
+    stroke-width: 0px;
+    &.ct-point-active {
+      stroke-width: 8px;
+    }
+  }
+  .ct-line {
+    stroke-width: 1px;
+  }
+  .ct-area {
+    fill-opacity: 0.5;
+  }
   .ct-bar-sum {
     transform: translateY(-5px);
     font-size: $chart-font-size-base;
@@ -49,13 +61,24 @@ $chart-border-color: $main-border-color;
     .ct-axis-y-label {
       text-anchor: middle;
       transform: rotate(-90deg);
+      &.right {
+        transform: rotate(90deg);
+      }
     }
     .ct-axis-x-label {
       text-anchor: middle;
     }
   }
+  .ct-values-line {
+    stroke-width: 0px;
+    stroke: black;
+    &.ct-values-line-active {
+      stroke-width: 0.5px;
+    }
+  }
   .ct-legend {
     list-style-type: none;
+    margin-bottom: 0;
     padding-left: 0;
     li {
       position: relative;
@@ -93,7 +116,7 @@ $chart-border-color: $main-border-color;
   .chart-tooltip {
     display: none;
     position: absolute;
-    border: 1px solid $main-border-color;
+    border: 1px solid $chart-border-color;
     border-radius: $border-radius-small;
     background-color: $color-one-white;
     z-index: 2;
@@ -122,7 +145,7 @@ $chart-border-color: $main-border-color;
     }
     .chart-tooltip-arrow {
       border: ($chart-tooltip-arrow-size / 2) solid transparent;
-      border-top-color: $main-border-color;
+      border-top-color: $chart-border-color;
       width: $chart-tooltip-arrow-size;
       position: absolute;
       bottom: 0;
