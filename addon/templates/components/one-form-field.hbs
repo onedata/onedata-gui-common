@@ -4,13 +4,13 @@
       {{concat field.label (if field.optional (concat " " (t "components.oneFormFields.optional") ""))}}:
     {{/unless}}
     {{#if field.tip}}
-      {{one-label-tip title=field.tip}}
+      {{one-label-tip title=field.tip class="form-field-right-addon"}}
     {{/if}}
   </label>
   <div class="form-control-column {{layoutConfig.formInputColumns}}">
     {{#if (eq field.type "radio-group")}}
       {{one-way-radio-group
-        class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
+        class=inputClasses
         inputId=inputId
         value=value
         fieldName=field.name
@@ -26,30 +26,51 @@
         onblur=(action "onFocusOut")
         searchEnabled=false
         renderInPlace=true
-        triggerClass=(concat-classes "one-form-field" (concat "field-" (dot-to-dash field.name)))
+        triggerClass=inputClasses
         as |optionValue|
       }}
         {{get (find-by "value" optionValue field.options) "label"}}
       {{/power-select}}
     {{else if (eq field.type "clipboard-line")}}
       {{one-clipboard-line
-        class=(concat "one-form-field field-" (dot-to-dash field.name))
+        class=inputClasses
         value=value
         showText=false}}
+    {{else if (eq field.type "capacity")}}
+      {{one-way-capacity
+        class=inputClasses
+        value=value
+        inputId=inputId
+        disabled=disabled
+        onChange=(action "inputChanged" field.name)
+        onFocusOut=(action "onFocusOut")}}
     {{else}}
       <div class={{if field.rightText "input-group"}}>
-        {{component (input-component-name field.type)
-          id=inputId
-          value=value
-          class=(concat-classes "form-control one-form-field" (concat "field-" (dot-to-dash field.name)) (if field.nolabel "no-label"))
-          update=(action "inputChanged" field.name)
-          step=field.step
-          disabled=disabled
-          placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
-          focusOut=(action "onFocusOut")
-        }}
-        {{#if field.rightText}}
-          {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
+        {{#if (eq field.type "radio-group")}}
+          {{one-way-radio-group
+            class=inputClasses
+            inputId=inputId
+            value=value
+            fieldName=field.name
+            options=field.options
+            update=(action "inputChanged" field.name)
+            isReadOnly=disabled
+            onFocusOut=(action "onFocusOut")
+          }}
+        {{else}}
+          {{component (input-component-name field.type)
+            id=inputId
+            value=value
+            class=inputClasses
+            update=(action "inputChanged" field.name)
+            step=field.step
+            disabled=disabled
+            placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
+            focusOut=(action "onFocusOut")
+          }}
+          {{#if field.rightText}}
+            {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
+          {{/if}}
         {{/if}}
       </div>
     {{/if}}

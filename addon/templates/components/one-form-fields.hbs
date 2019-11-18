@@ -13,15 +13,16 @@
         (if (eq field.type "static") "form-group-static" "form-group-editable")
         (if field.rightText "has-right-text")
         (if field.message "has-message")
-        (if (eq field.type "radio-group") "no-feedback")
-      )}}
+        (if (or (eq field.type "radio-group") (eq field.type "capacity")) "no-feedback")
+      )
+    }}
       {{#if (eq field.type "checkbox")}}
         <div class="row toggle-form-row">
           {{#if (not field.nolabel)}}
             <label for={{concat parentView.elementId (concat "-" field.name)}} class={{concat "control-label label-column " layoutConfig.formToggleLabelColumns}}>
               {{field.label}}:
               {{#if field.tip}}
-                {{one-label-tip title=field.tip}}
+                {{one-label-tip class="form-field-right-addon" title=field.tip}}
               {{/if}}
             </label>
           {{/if}}

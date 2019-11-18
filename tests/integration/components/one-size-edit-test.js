@@ -68,7 +68,7 @@ describe('Integration | Component | one size edit', function () {
       })
       .then(() => {
         expect(onSave).to.be.calledOnce;
-        expect(onSave).to.be.calledWith(2 * Math.pow(1024, 3));
+        expect(onSave).to.be.calledWith(String(2 * Math.pow(1024, 3)));
       });
   });
 });

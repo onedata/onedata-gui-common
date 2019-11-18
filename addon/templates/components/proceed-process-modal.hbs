@@ -1,8 +1,9 @@
-{{#bs-modal
+{{#one-modal
   class=modalClass
   open=opened
   onShown=onShown
   onHide=close
+  onHidden=onHidden
   backdropClose=(not processing)
   as |modal|
 }}
@@ -22,7 +23,7 @@
     {{/if}}
   {{/modal.body}}
   {{#modal.footer class="btn-toolbar"}}
-    {{#bs-button disabled=processing onClick=close}}
+    {{#bs-button disabled=processing onClick=close class="cancel"}}
       {{cancelButtonText}}
     {{/bs-button}}
     {{#one-spin-button
@@ -33,4 +34,4 @@
       {{proceedButtonText}}
     {{/one-spin-button}}
   {{/modal.footer}}
-{{/bs-modal}}
+{{/one-modal}}

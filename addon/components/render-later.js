@@ -66,4 +66,10 @@ export default Component.extend({
     this._super(...arguments);
     this.triggerRenderObserver();
   },
+
+  actions: {
+    resetRenderTrigger() {
+      this.set('resetRender', null);
+    },
+  },
 });

@@ -144,16 +144,6 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
       margin-top: $content-row-vertical-padding;
       text-align: center;
     }
-
-    .form-section-title {
-      margin-top: $content-row-vertical-padding;
-      margin-bottom: $content-row-vertical-padding * 2;
-      text-align: center;
-      font-size: $font-size-base;
-      @include font-semibold();
-      font-weight: normal;
-      text-transform: uppercase;
-    }
     
     .form-description {
       text-align: center;
@@ -195,6 +185,16 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
         @include font-semibold();
       }
     }
+  }
+
+  .form-section-title {
+    margin-top: $content-row-vertical-padding;
+    margin-bottom: $content-row-vertical-padding * 2;
+    text-align: center;
+    font-size: $font-size-base;
+    @include font-semibold();
+    font-weight: normal;
+    text-transform: uppercase;
   }
 
   .row {

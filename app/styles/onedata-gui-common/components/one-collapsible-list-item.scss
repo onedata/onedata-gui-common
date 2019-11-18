@@ -10,8 +10,9 @@
     }
   }
   .form {
-    .row {
+    .row:not(.nested-row) {
       padding: 0;
+      margin: 0;
     }
   }
 }

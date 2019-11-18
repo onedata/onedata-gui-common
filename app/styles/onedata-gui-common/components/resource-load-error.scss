@@ -31,6 +31,9 @@ $inline-alert-left-border-width: 60px;
   &.alert-danger:before {
     @include oneicon-content($oneicon-checkbox-x);
   }
+  .main-message {
+    color: $main-text-color;
+  }
   .error-close {
     position: absolute;
     right: $alert-padding;

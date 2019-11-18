@@ -100,21 +100,9 @@ $token-border-radius: 3px;
         padding-right: $input-height-base - 2px;
       }
     }
-  }
-  .input-group {
-    table-layout: fixed;
-    width: 100%;
-    input + .input-group-addon {
-      width: 50%;
-    }
-  }
-  .has-feedback {
-    .input-group {
+    &.form-group-sm {
       .form-control {
-        padding-right: $padding-large-horizontal;
-      }
-      .form-control + .input-group-addon {
-        padding-right: $input-height-base - 2px;
+        padding-right: 30px;
       }
     }
   }
@@ -156,21 +144,25 @@ $token-border-radius: 3px;
     }
     .control-label {
       position: initial;
-      .one-label-tip {
-        position: absolute;
-        top: 0px;
-        height: $input-height-base;
-        line-height: $input-height-base;
-        right: -$padding-small-horizontal;
-        transform: translateX(100%);
+    }
+    .form-field-right-addon {
+      position: absolute;
+      top: 0px;
+      height: $input-height-base;
+      line-height: $input-height-base;
+      right: -$padding-small-horizontal;
+      transform: translateX(100%);
+    }
+    &.form-group-sm {
+      .control-label .one-label-tip {
+        height: $input-height-small;
+        line-height: $input-height-small;
       }
     }
   }
   @media (max-width: $screen-xs-max) {
-    .control-label {
-      .one-label-tip {
-        font-size: 90%;
-      }
+    .form-field-right-addon {
+      font-size: 90%;
     }
   }
 }
@@ -400,7 +392,7 @@ $token-border-radius: 3px;
     .tab-pane.no-padding {
       @media (min-width: $screen-sm-min) {
         margin-left: -$padding-large-horizontal;
-        margin-left: -$padding-large-horizontal;
+        margin-right: -$padding-large-horizontal;
       }
       .content-row {
         @media (min-width: $screen-sm-min) {
@@ -578,15 +570,23 @@ label.align-left {
     .ember-power-select-trigger {
       height: $input-height-base;
       border-left: none;
-      border-radius: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
     .ember-basic-dropdown-content--left {
       left: -1px;
     }
   }
+  &:not(:last-child) {
+    .ember-basic-dropdown {
+      .ember-power-select-trigger {
+        border-radius: 0;
+      }
+    }
+  }
 }
 
-.input-group-sm {
+.input-group-sm, .form-group-sm {
   .input-group-basic-dropdown {
     .ember-basic-dropdown {
       .ember-power-select-trigger {
@@ -594,11 +594,38 @@ label.align-left {
         line-height: $input-height-small - 12px;
         padding-left: $input-height-small - 16px;
         padding-right: $input-height-small - 8px;
-        border-radius: 0;
+        // border-radius: 0;
       }
       .ember-basic-dropdown-content {
         @extend .small;
       }
     }
+  }
+}
+
+.text-normal {
+  font-weight: normal;
+}
+
+.alert {
+  &.with-icon {
+    padding-left: 50px;
+  }
+
+  .alert-icon {
+    position: absolute;
+    top: 25px;
+    left: 10px;
+    font-size: 34px;
+    line-height: 0;
+  }
+  &.alert-info .alert-icon {
+    color: $color-one-info;
+  }
+  &.alert-warning .alert-icon {
+    color: adjust-hue($color-one-warning, -6%);
+  }
+  &.alert-danger .alert-icon {
+    color: $color-one-danger;
   }
 }

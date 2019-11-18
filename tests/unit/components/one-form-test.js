@@ -98,18 +98,6 @@ describe('Unit | Component | one form', function () {
     ).to.be.empty;
   });
 
-  it('detects that given field is not in current fields group', function () {
-    let subject = this.subject();
-    expect(
-      subject.isKnownField('main.first'),
-      'form recognizes field, which exists in current fields group'
-    ).to.be.true;
-    expect(
-      subject.isKnownField('another.second'),
-      'form does not recognize field, which does not exists in current fields group'
-    ).to.be.false;
-  });
-
   it('allows to change field value', function () {
     let subject = this.subject();
     expect(subject.get('formValues.main.first'), 'initial field value == null')
