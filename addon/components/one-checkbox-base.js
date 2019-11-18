@@ -19,6 +19,7 @@ export default Component.extend({
     '_disabled:disabled:clickable',
     '_isInProgress:in-progress',
     '_spinnerSideClass',
+    '_checkedClass',
   ],
   attributeBindings: ['dataOption:data-option'],
 
@@ -39,6 +40,19 @@ export default Component.extend({
    * @type {boolean}
    */
   isReadOnly: false,
+
+  /**
+   * If true, toggle can have three states of selection
+   * @type {boolean}
+   */
+  threeState: false,
+
+  /**
+   * If true, third state of selection is accessible for user.
+   * Makes sense only if `threeState === true`.
+   * @type {boolean}
+   */
+  allowThreeStateToggle: false,
 
   /**
    * Optional - data-option attribute for rendered component
@@ -63,6 +77,16 @@ export default Component.extend({
    * @type {string}
    */
   spinnerSide: 'right',
+
+  /**
+   * @type {Array<any>}
+   */
+  threeStatesValues: Object.freeze([false, 2, true]),
+
+  /**
+   * @type {Array<string>}
+   */
+  threeStatesClasses: Object.freeze(['', 'maybe', 'checked']),
 
   /**
    * Spinner side css class.
@@ -94,6 +118,50 @@ export default Component.extend({
   _updateInProgress: false,
 
   /**
+   * Internal lock of toggle
+   * @type {boolean}
+   */
+  _lockToggle: or('isReadOnly', '_isInProgress'),
+
+  /**
+   * Checked class name
+   * @type {computed.string}
+   */
+  _checkedClass: computed('_checked', 'threeState', function () {
+    const {
+      _checked,
+      threeState,
+      threeStatesClasses,
+      threeStatesValues,
+    } = this.getProperties(
+      '_checked',
+      'threeState',
+      'threeStatesClasses',
+      'threeStatesValues',
+    );
+    if (threeState) {
+      return threeStatesClasses[threeStatesValues.indexOf(_checked)];
+    } else {
+      return _checked === threeStatesValues[threeStatesValues.length - 1] ?
+        threeStatesClasses[2] : threeStatesClasses[0];
+    }
+  }),
+
+  /**
+   * A displayed checkbox state
+   * @type {boolean|number} true, false or 2 ("in middle")
+   */
+  _checked: computed('_isInProgress', 'checked', '_checkedWaitState', function () {
+    const {
+      _isInProgress,
+      checked,
+      _checkedWaitState,
+    } = this.getProperties('_isInProgress', 'checked', '_checkedWaitState');
+    return (checked === 2 && checked) ||
+      (_isInProgress ? _checkedWaitState : checked);
+  }),
+
+  /**
    * Action called on input focus out
    * @type {Function}
    */
@@ -118,8 +186,30 @@ export default Component.extend({
    * Toggles checkbox value
    */
   _toggle() {
-    if (!this.get('isReadOnly')) {
-      this._update(!this.get('checked'));
+    let {
+      _lockToggle,
+      checked,
+      threeState,
+      allowThreeStateToggle,
+      threeStatesValues,
+    } = this.getProperties(
+      '_lockToggle',
+      'checked',
+      'threeState',
+      'allowThreeStateToggle',
+      'threeStatesValues'
+    );
+    if (!_lockToggle) {
+      let statesLoop = threeState && allowThreeStateToggle ?
+        threeStatesValues.concat(threeStatesValues[0]) : [
+          threeStatesValues[0],
+          threeStatesValues[threeStatesValues.length - 1],
+          threeStatesValues[0]
+        ];
+      if (statesLoop.indexOf(checked) === -1) {
+        checked = statesLoop[0];
+      }
+      this._update(statesLoop[statesLoop.indexOf(checked) + 1]);
     }
   },
 

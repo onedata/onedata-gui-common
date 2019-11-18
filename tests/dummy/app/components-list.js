@@ -1,5 +1,6 @@
 export default [
   'bezier-curve',
+  'checkbox-list',
   'fast-double-click',
   'global-alert',
   'hr-label',

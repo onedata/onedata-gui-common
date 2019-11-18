@@ -1,0 +1,23 @@
+.checkbox-list {
+  .checkbox-list-items {
+    list-style-type: none;
+    padding-left: 25px;
+    margin-top: $padding-base-vertical;
+  }
+
+  .checkbox-list-item, .checkbox-list-header {
+    display: flex;
+    word-break: break-word;
+  }
+
+  .one-checkbox {
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-right: $padding-xs-horizontal;
+    margin-top: 0.15em;
+  }
+
+  .arrow-icon {
+    vertical-align: middle;
+  }
+}

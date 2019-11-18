@@ -6,11 +6,12 @@
   width: $checkbox-size;
   height: $checkbox-size;
   border-radius: $border-radius-small;
+  border: 1px solid $main-text-color;
   background-color: $color-one-white;
   
   &.checked {
     border: 1px solid $color-one-mint;
-    &::after {  
+    &::after {
       @include oneicon-content($oneicon-checked);
       font-family: 'oneicons';
       position: absolute;
@@ -27,12 +28,22 @@
     }
   }
 
-  &.disabled {
-    opacity: $disabled-opacity;
+  &.maybe {
+    border: 1px solid $color-one-mint;
+
+    &::after {
+      @include absolute-align-middle-center();
+      content: '';
+      display: block;
+      width: $checkbox-size - 8px;
+      height: $checkbox-size - 8px;
+      background-color: $color-one-mint;
+      border-radius: $border-radius-small;
+    }
   }
 
-  &:not(.checked) {
-    border: 1px solid $main-text-color;
+  &.disabled {
+    opacity: $disabled-opacity;
   }
 
   &:not(.disabled) {

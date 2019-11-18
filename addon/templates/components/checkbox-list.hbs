@@ -1,0 +1,30 @@
+
+<div class="checkbox-list-header clickable" onclick={{action "toggleExpand"}}>
+  {{one-checkbox
+    checked=summaryCheckboxValue
+    threeState=true
+    update=(action "changeViaHeader")
+  }}
+  <div class="header-content">
+    <span class="header-text">{{headerText}}</span>
+    {{one-icon class="arrow-icon" icon=(if isExpanded "arrow-up" "arrow-down")}}
+  </div>
+</div>
+{{#one-collapse collapsed=(not isExpanded) class="checkbox-list-collapse"}}
+  <ul class="checkbox-list-items">
+    {{#each items as |item index|}}
+      <li class="checkbox-list-item">
+        {{one-checkbox
+          checked=(contains item selectedItems)
+          update=(action "change" item)
+          inputId=(concat elementId "-checkbox-" index)}}
+        <div class="item-content">
+          {{yield (hash
+            model=item
+            checkboxId=(concat elementId "-checkbox-" index)
+          )}}
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+{{/one-collapse}}

@@ -1,0 +1,11 @@
+<h1>checkbox-list</h1>
+
+{{#checkbox-list
+  headerText="Test Checkbox List"
+  items=items
+  onChange=(action (mut selectedItems))
+  selectedItems=selectedItems
+  as |listItem|
+}}
+  <label for={{listItem.checkboxId}} class="inline-label">{{listItem.model.name}}</label>
+{{/checkbox-list}}
