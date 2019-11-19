@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'oneicons';
-  src:  url('fonts/oneicons.eot?xnri36');
-  src:  url('fonts/oneicons.eot?xnri36#iefix') format('embedded-opentype'),
-    url('fonts/oneicons.ttf?xnri36') format('truetype'),
-    url('fonts/oneicons.woff?xnri36') format('woff'),
-    url('fonts/oneicons.svg?xnri36#oneicons') format('svg');
+  src:  url('fonts/oneicons.eot?avtute');
+  src:  url('fonts/oneicons.eot?avtute#iefix') format('embedded-opentype'),
+    url('fonts/oneicons.ttf?avtute') format('truetype'),
+    url('fonts/oneicons.woff?avtute') format('woff'),
+    url('fonts/oneicons.svg?avtute#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -491,36 +491,42 @@
 .oneicon-text-underline:before {
   content: "\e99a";
 }
-.oneicon-tokens:before {
+.oneicon-token-access:before {
   content: "\e99b";
 }
-.oneicon-transfers:before {
+.oneicon-token-invite:before {
   content: "\e99c";
 }
-.oneicon-unit:before {
+.oneicon-tokens:before {
   content: "\e99d";
 }
-.oneicon-update:before {
+.oneicon-transfers:before {
   content: "\e99e";
 }
-.oneicon-upload:before {
+.oneicon-unit:before {
   content: "\e99f";
 }
-.oneicon-user-add:before {
+.oneicon-update:before {
   content: "\e9a0";
 }
-.oneicon-user-profile:before {
+.oneicon-upload:before {
   content: "\e9a1";
 }
-.oneicon-user:before {
+.oneicon-user-add:before {
   content: "\e9a2";
 }
-.oneicon-view-grid:before {
+.oneicon-user-profile:before {
   content: "\e9a3";
 }
-.oneicon-view-list:before {
+.oneicon-user:before {
   content: "\e9a4";
 }
-.oneicon-x:before {
+.oneicon-view-grid:before {
   content: "\e9a5";
+}
+.oneicon-view-list:before {
+  content: "\e9a6";
+}
+.oneicon-x:before {
+  content: "\e9a7";
 }

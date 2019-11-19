@@ -13,7 +13,7 @@ class UnitSelectHelper extends EmberPowerSelectHelper {
   }
 }
 
-describe('Integration | Component | one way capacity', function() {
+describe('Integration | Component | one way capacity', function () {
   setupComponentTest('one-way-capacity', {
     integration: true
   });
@@ -22,12 +22,16 @@ describe('Integration | Component | one way capacity', function() {
     const capacity = 1024 * 1024;
     this.set('capacity', capacity);
 
-    this.render(hbs`{{one-way-capacity value=capacity}}`);
+    this.render(hbs `{{one-way-capacity value=capacity}}`);
 
     return wait()
       .then(() => {
-        expect(this.$('.size-number-input').val(), 'capacity number').to.equal('1');
-        expect(this.$('.ember-power-select-selected-item').text().trim(), 'capacity unit').to.equal('MiB');
+        expect(this.$('.size-number-input').val(), 'capacity number')
+          .to.equal('1');
+        expect(
+          this.$('.ember-power-select-selected-item').text().trim(),
+          'capacity unit'
+        ).to.equal('MiB');
       });
   });
 
@@ -37,7 +41,7 @@ describe('Integration | Component | one way capacity', function() {
     const changeSpy = sinon.spy();
 
     this.on('changed', changeSpy);
-    this.render(hbs`{{one-way-capacity value=capacity onChange=(action "changed")}}`);
+    this.render(hbs `{{one-way-capacity value=capacity onChange=(action "changed")}}`);
 
     return wait()
       .then(() => fillIn('.size-number-input', '2'))
@@ -50,7 +54,7 @@ describe('Integration | Component | one way capacity', function() {
     const changeSpy = sinon.spy();
 
     this.on('changed', changeSpy);
-    this.render(hbs`{{one-way-capacity value=capacity onChange=(action "changed")}}`);
+    this.render(hbs `{{one-way-capacity value=capacity onChange=(action "changed")}}`);
 
     return wait()
       .then(() => new UnitSelectHelper().selectOption(2))
@@ -61,7 +65,7 @@ describe('Integration | Component | one way capacity', function() {
     const focusOutSpy = sinon.spy();
 
     this.on('focusedOut', focusOutSpy);
-    this.render(hbs`{{one-way-capacity onFocusOut=(action "focusedOut")}}`);
+    this.render(hbs `{{one-way-capacity onFocusOut=(action "focusedOut")}}`);
 
     return wait()
       .then(() => focus('.size-number-input'))
@@ -73,7 +77,7 @@ describe('Integration | Component | one way capacity', function() {
     const keyUpSpy = sinon.spy();
 
     this.on('keyUp', keyUpSpy);
-    this.render(hbs`{{one-way-capacity value=capacity onKeyUp=(action "keyUp")}}`);
+    this.render(hbs `{{one-way-capacity value=capacity onKeyUp=(action "keyUp")}}`);
 
     return wait()
       .then(() => keyEvent('.size-number-input', 'keyup', 13))

@@ -7,4 +7,10 @@ export default Component.extend(I18n, {
   classNames: ['empty-collection-sidebar'],
 
   i18nPrefix: 'components.emptyCollectionSidebar',
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  showGetStarted: true,
 });

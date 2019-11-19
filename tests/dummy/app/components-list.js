@@ -10,6 +10,7 @@ export default [
   'one-arrow',
   'one-atlas',
   'one-clipboard-line',
+  'one-datetime-picker',
   'one-dynamic-tree',
   'one-icon-tagged',
   'one-inline-editor',

@@ -4,7 +4,7 @@
   padding-bottom: 20px;
 
   .active > .item-header > a, .active > a {
-    > .sidebar-item-icon, .truncated-string, .status-toolbar {
+    .sidebar-item-icon, .truncated-string, .status-toolbar {
       color: $color-one-red;
     }
   }
