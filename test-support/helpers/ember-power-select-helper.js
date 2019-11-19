@@ -19,7 +19,7 @@ export default class EmberPowerSelectHelper {
    * @param {number} n item index starting from 1
    * @returns {HTMLLIElement|null}
    */
-  getNthItem(n) {
+  getNthOption(n) {
     return find(this.dropdownSelector + ` li:nth-child(${n})`);
   }
 
@@ -29,7 +29,7 @@ export default class EmberPowerSelectHelper {
    */
   selectOption(index, callback) {
     return this.open()
-      .then(() => click(this.getNthItem(index)))
+      .then(() => click(this.getNthOption(index)))
       .then(() => {
         if (callback) {
           callback.call(this);
