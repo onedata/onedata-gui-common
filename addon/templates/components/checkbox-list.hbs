@@ -19,10 +19,14 @@
           update=(action "change" item)
           inputId=(concat elementId "-checkbox-" index)}}
         <div class="item-content">
-          {{yield (hash
-            model=item
-            checkboxId=(concat elementId "-checkbox-" index)
-          )}}
+          {{#if hasBlock}}
+            {{yield (hash
+              model=item
+              checkboxId=(concat elementId "-checkbox-" index)
+            )}}
+          {{else}}
+            <label for={{concat elementId "-checkbox-" index}}>{{item.name}}</label>
+          {{/if}}
         </div>
       </li>
     {{/each}}

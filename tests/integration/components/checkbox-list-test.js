@@ -283,4 +283,17 @@ describe('Integration | Component | checkbox list', function () {
         .then(() => expect(changeSpy).to.be.calledWith([this.get('items')[0]]));
     }
   );
+
+  it(
+    'renders <label> tag with model.name as a content for each item when component is not block',
+    function () {
+      this.render(hbs `{{checkbox-list items=items}}`);
+
+      const $itemLabels = this.$('.checkbox-list-item label');
+      expect($itemLabels).to.have.length(2);
+      expect($itemLabels.eq(0).text().trim()).to.equal('a');
+      expect($itemLabels.eq(1).text().trim()).to.equal('b');
+      expect(this.$(`#${$itemLabels.attr('for')}`).attr('type')).to.equal('checkbox');
+    }
+  );
 });
