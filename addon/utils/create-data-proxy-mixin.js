@@ -76,8 +76,24 @@ export default function createDataProxyMixin(name, options) {
         return internalDataProxy;
       } else {
         if (replace && this.get(`${internalDataProxyName}.content`)) {
-          set(internalDataProxy, 'promise', promise);
-          return internalDataProxy;
+          return promise
+            .catch(error => {
+              set(internalDataProxy, 'reason', error);
+              if (get(internalDataProxy, 'isFulfilled')) {
+                set(internalDataProxy, 'isRejected', true);
+                set(internalDataProxy, 'isFulfilled', false);
+              }
+              throw error;
+            })
+            .then(value => {
+              set(internalDataProxy, 'content', value);
+              if (get(internalDataProxy, 'isRejected')) {
+                set(internalDataProxy, 'reason', null);
+                set(internalDataProxy, 'isRejected', false);
+                set(internalDataProxy, 'isFulfilled', true);
+              }
+              return value;
+            });
         } else {
           return safeExec(
             this,
