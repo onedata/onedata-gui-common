@@ -13,8 +13,9 @@ import { reads } from '@ember/object/computed';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
+import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 
-export default EmberObject.extend(I18n, {
+export default EmberObject.extend(I18n, OwnerInjector, {
   i18n: service(),
 
   /**
@@ -46,6 +47,12 @@ export default EmberObject.extend(I18n, {
    * @type {string}
    */
   classNames: undefined,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  disabled: false,
 
   /**
    * @virtual optional
