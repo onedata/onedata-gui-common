@@ -8,15 +8,17 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
+import EmberObject, { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default EmberObject.extend(I18n, OwnerInjector, {
   i18n: service(),
+  globalNotify: service(),
 
   /**
    * @virtual
@@ -62,6 +64,18 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   context: null,
 
   /**
+   * @type {Ember.ComputedProperty<HtmlSafe>}
+   * Text used to notify action success (passed to global-notify)
+   */
+  successNotificationText: computedT('successNotificationText'),
+
+  /**
+   * @type {Ember.ComputedProperty<HtmlSafe>}
+   * Action name used notify action failure (passed to global-notify)
+   */
+  failureNotificationActionName: computedT('failureNotificationActionName'),
+
+  /**
    * @type {Ember.ComputedProperty<Function>}
    * Callback ready to use inside hbs action helper
    */
@@ -71,4 +85,53 @@ export default EmberObject.extend(I18n, OwnerInjector, {
 
   // FIXME remove
   action: reads('executeCallback'),
+
+  /**
+   * Returns text used to notify action success (passed to global-notify).
+   * @param {Utils.ActionResult} [actionResult]
+   * @returns {HtmlSafe}
+   */
+  getSuccessNotificationText(actionResult) {
+    return this.t('successNotificationText', get(actionResult || {}, 'result'));
+  },
+
+  /**
+   * Returns action name used notify action failure (passed to global-notify).
+   * @param {Utils.ActionResult} [actionResult]
+   * @returns {HtmlSafe}
+   */
+  getFailureNotificationActionName(actionResult) {
+    return this.t('failureNotificationActionName', get(actionResult || {}, 'error'));
+  },
+
+  /**
+   * @param {Utils.ActionResult} [actionResult]
+   */
+  notifySuccess(actionResult) {
+    const successText = this.getSuccessNotificationText(actionResult);
+    this.get('globalNotify').success(successText);
+  },
+
+  /**
+   * @param {Utils.ActionResult} [actionResult]
+   */
+  notifyFailure(actionResult) {
+    const failureActionName = this.getFailureNotificationActionName(actionResult);
+    this.get('globalNotify')
+      .backendError(failureActionName, get(actionResult || {}, 'error'));
+  },
+
+  /**
+   * @param {Utils.ActionResult} actionResult
+   */
+  notifyResult(actionResult) {
+    switch (get(actionResult || {}, 'status')) {
+      case 'done':
+        this.notifySuccess(actionResult);
+        break;
+      case 'failed':
+        this.notifyFailure(actionResult);
+        break;
+    }
+  },
 });
