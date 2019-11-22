@@ -6,7 +6,7 @@
  * parts of view.
  *
  * @module components/app-layout
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -43,9 +43,20 @@ export default Component.extend({
 
   sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
 
-  sidenavContentComponent: computed('sidenavResouceType', function () {
-    return `sidebar-${this.get('sidenavResouceType')}`;
-  }),
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  sidenavContentComponent: computed(
+    'sidenavResouceType',
+    function sidenavContentComponent() {
+      const {
+        sidebarResources,
+        sidenavResouceType,
+      } = this.getProperties('sidebarResources', 'sidenavResouceType');
+
+      return sidebarResources.getSidebarComponentNameFor(sidenavResouceType);
+    }
+  ),
 
   /**
    * Creates a proxy model for floating sidebar based on sidenavResouceType

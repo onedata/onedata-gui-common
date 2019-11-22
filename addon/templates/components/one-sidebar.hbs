@@ -6,7 +6,85 @@
     {{one-sidebar-toolbar buttons=buttons class="col-xs-5"}}
   </div>
   <div class="row-body row">
-    {{yield}}
+    <div class="two-level-sidebar">
+    {{#if isCollectionEmpty}}
+
+      {{empty-collection-sidebar resourceType=resourceType showGetStarted=showGetStartedWhenEmpty}}
+
+    {{else}}
+
+      {{yield}}
+
+        <div class="sidebar-filters-container">
+          <div class="form-group form-group-sm form-group-light search-bar-form-group">
+            <div class="input-group with-icon-addon">
+              {{search-bar search=(action "filterChanged") class="form-control"}}
+              <div class="input-group-addon">
+                {{one-icon icon="search"}}
+              </div>
+            </div>
+          </div>
+          {{#if advancedFiltersComponent}}
+            <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
+              {{#if areAdvancedFiltersVisible}}
+                {{tt this "hideMoreFilters"}}
+                {{one-icon class="arrow-icon" icon="arrow-up"}}
+              {{else}}
+                {{tt this "showMoreFilters"}}
+                {{one-icon class="arrow-icon" icon="arrow-down"}}
+              {{/if}}
+            </a>
+            {{#one-collapse
+              class="advanced-filters-collapse"
+              collapsed=(not areAdvancedFiltersVisible)
+            }}
+              {{component advancedFiltersComponent
+                collection=sortedCollection
+                onChange=(action "advancedFilterChanged")}}
+            {{/one-collapse}}
+          {{/if}}
+        </div>
+      <div class="one-list-wrapper no-top-border">
+        <ul class="one-list">
+          {{#each filteredCollection as |item|}}
+            <li class="one-list-item clickable resource-item {{if (eq primaryItem item) "active"}}">
+              <div class="item-header truncate">
+                {{#link-to
+                  "onedata.sidebar.content.index"
+                  sidebarType
+                  (model-routable-id item)
+                  active=false
+                  willBeActive=false
+                  loading=false
+                }}
+                  {{#if firstLevelItemComponent}}
+                    {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
+                  {{else}}
+                    {{#if firstLevelItemIcon}}
+                      {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}} 
+                    {{/if}}
+                    {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
+                      {{name-conflict item=item tagName="span" class="one-label"}}
+                    {{/truncated-string}}
+                  {{/if}}
+                {{/link-to}}
+              </div>
+              {{#if (eq primaryItem item)}}
+                <ul class="one-list one-list-level-2">
+                  {{component secondLevelItemsComponent
+                    item=item
+                    secondaryItemId=secondaryItemId
+                    sidebar=this
+                    secondLevelItems=secondLevelItems
+                    sidebarType=sidebarType
+                  }}
+                </ul>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+    </div>
   </div>
 </div>
-

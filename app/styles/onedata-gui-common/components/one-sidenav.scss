@@ -19,8 +19,4 @@
     position: absolute;
     @include fill-container();
   }
-
-  .two-level-sidebar .one-list .one-collapsible-toolbar {
-    display: none;
-  }
 }

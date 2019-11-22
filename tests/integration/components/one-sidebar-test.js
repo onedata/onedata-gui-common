@@ -7,7 +7,7 @@ import { get, computed } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Integration | Component | two level sidebar', function () {
-  setupComponentTest('two-level-sidebar', {
+  setupComponentTest('one-sidebar', {
     integration: true,
   });
 
@@ -25,14 +25,14 @@ describe('Integration | Component | two level sidebar', function () {
     });
   });
 
-  it('has class "two-level-sidebar"', function () {
-    this.render(hbs `{{two-level-sidebar}}`);
+  it('has class "one-sidebar"', function () {
+    this.render(hbs `{{one-sidebar}}`);
 
-    expect(this.$('.two-level-sidebar')).to.exist;
+    expect(this.$('.one-sidebar')).to.exist;
   });
 
   it('lists resources passed via model', function () {
-    this.render(hbs `{{two-level-sidebar model=model}}`);
+    this.render(hbs `{{one-sidebar model=model}}`);
 
     const $items = this.$('.resource-item');
     expect($items).to.have.length(2);
@@ -41,7 +41,7 @@ describe('Integration | Component | two level sidebar', function () {
   });
 
   it('allows to filter using search-bar', function () {
-    this.render(hbs `{{two-level-sidebar model=model}}`);
+    this.render(hbs `{{one-sidebar model=model}}`);
 
     return fillIn('.search-bar', '1')
       .then(() => {
@@ -54,7 +54,7 @@ describe('Integration | Component | two level sidebar', function () {
   it(
     'does not render "Show more filters" link, when advancedFiltersComponent is not set',
     function () {
-      this.render(hbs `{{two-level-sidebar model=model}}`);
+      this.render(hbs `{{one-sidebar model=model}}`);
 
       expect(this.$('.toggle-more-filters')).to.not.exist;
     }
@@ -63,7 +63,7 @@ describe('Integration | Component | two level sidebar', function () {
   it(
     'renders "Show more filters" link, when advancedFiltersComponent is set',
     function () {
-      this.render(hbs `{{two-level-sidebar
+      this.render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -77,7 +77,7 @@ describe('Integration | Component | two level sidebar', function () {
   it(
     'changes "Show more filters" link to "Hide more filters" after click',
     function () {
-      this.render(hbs `{{two-level-sidebar
+      this.render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -92,7 +92,7 @@ describe('Integration | Component | two level sidebar', function () {
   it(
     'shows component specified by advancedFiltersComponent on "Show more filters" click',
     function () {
-      this.render(hbs `{{two-level-sidebar
+      this.render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -107,7 +107,7 @@ describe('Integration | Component | two level sidebar', function () {
   it(
     'does not show component specified by advancedFiltersComponent before "Show more filters" click',
     function () {
-      this.render(hbs `{{two-level-sidebar
+      this.render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="one-icon"
       }}`);
@@ -117,7 +117,7 @@ describe('Integration | Component | two level sidebar', function () {
   );
 
   it('passes collection to advancedFiltersComponent component', function () {
-    this.render(hbs `{{two-level-sidebar
+    this.render(hbs `{{one-sidebar
       model=model
       advancedFiltersComponent="test-component"
     }}`);
@@ -136,7 +136,7 @@ describe('Integration | Component | two level sidebar', function () {
     });
     this.set('advancedFilters', advancedFilters);
     const filters = { filter: 'a' };
-    this.render(hbs `{{two-level-sidebar
+    this.render(hbs `{{one-sidebar
       model=model
       advancedFiltersComponent="test-component"
       advancedFilters=advancedFilters

@@ -42,3 +42,187 @@
     }
   }
 }
+
+.two-level-sidebar {
+  font-size: 13px;
+  @include font-semibold();
+  padding-bottom: 20px;
+
+  .sidebar-filters-container {
+    padding: $padding-large-vertical $padding-large-horizontal;
+    border-bottom: 1px solid $color-one-list-item-separator;
+  }
+
+  .toggle-more-filters {
+    margin-top: $padding-small-vertical;
+    display: block;
+    text-align: right;
+    font-size: 0.8em;
+
+    .arrow-icon {
+      vertical-align: middle;
+    }
+  }
+
+  .search-bar-form-group {
+    margin: 0;
+  }
+
+  .active > .item-header > a, .active > a {
+    .sidebar-item-icon, .truncated-string, .status-toolbar {
+      color: $color-one-red;
+    }
+  }
+  a:not(.btn) {
+    color: $main-text-color;
+  }
+
+  input {
+    @include font-regular();
+  }
+
+  .one-list-wrapper {
+    border-bottom: 1px solid $color-one-list-item-separator;
+
+    &.no-top-border {
+      > .one-list > .one-list-item:first-child::after {
+        display: none;
+      }
+    }
+  }
+
+  .one-list-item {
+    &.active {
+      background-color: $color-sidebar-item-bg;
+      
+      .item-header a .sidebar-item-title-lower {
+        opacity: 1;
+      }
+    }
+    .item-header {
+      &:hover {
+        background-color: $color-sidebar-item-active-bg;
+      }
+      .sidebar-item-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: $menu-icon-font-size;
+        + *,
+        + .sidebar-item-title-upper + .sidebar-item-title-lower {
+          padding-left: 3.5em;
+        }
+      }
+      
+      a {
+        .sidebar-item-title-upper,
+        .sidebar-item-title-lower {
+          position: relative;
+          line-height: $one-list-item-line-height / 2;
+        }
+        .sidebar-item-title-upper {
+          bottom: -7px;
+        }
+        .sidebar-item-title-lower {
+          color: $main-text-color;
+          @include font-regular();
+          opacity: 0.5;
+          top: -7px;
+        }
+      }
+      
+      .status-toolbar {
+        position: absolute;
+        right: $one-list-item-padding * 0.75;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0px 7px 0 5px;
+        font-size: 13pt;
+        .one-icon, .outer-text {
+          top: -0.1em;
+          vertical-align: middle;
+        }
+        .one-icon {
+          font-size: 1em;
+          margin: 0;
+          margin-right: -0.2em;
+        }
+        .outer-text {
+          line-height: 0;
+        }
+      }
+    }
+    
+    &.active .one-icon-tagged {
+      &.item-error {
+        .one-icon-tagged-main {
+          color: inactive-color($brand-danger);
+        }
+      }
+    }
+    
+    .one-icon-tagged {
+      &.item-error {
+        .one-icon-tag-icon {
+          color: $brand-danger;
+        }
+        .one-icon-tagged-main {
+          color: $main-text-color-disabled;
+        }
+      }
+    }
+  }
+
+  .one-collapsible-toolbar {
+    @include vertical-align-middle();
+    right: $one-list-item-padding - $padding-small-horizontal;
+  }
+  .collapsible-toolbar-toggle {
+    padding: $padding-base-vertical $padding-small-horizontal;
+  }
+
+  .one-inline-editor {
+    $-height: $one-list-item-line-height - 2 * $padding-base-vertical;
+    height: $-height;
+    margin-top: $padding-base-vertical;
+    margin-bottom: $padding-base-vertical;
+    margin-right: 2 * $padding-small-horizontal;
+    line-height: $-height;
+    .one-icon {
+      margin-right: 0;
+    }
+    .one-label {
+      padding: 0;
+      border: 0;
+    }
+    input {
+      height: 100%;
+    }
+    &:hover {
+      .one-label {
+        border: 0;
+      }
+    }
+  }
+  
+  .warning-icon {
+    @include vertical-align-middle;
+    right: $padding-large-horizontal;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+    color: $color-one-warning;
+  }
+}
+
+.col-sidebar {
+  .two-level-sidebar {
+    .one-list-item {
+      .status-toolbar {
+        &.with-place-for-dots {
+          right: 45px;
+        }
+      }
+    }
+  }
+}
