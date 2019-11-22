@@ -12,7 +12,7 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
-import { computed, get } from '@ember/object';
+import EmberObject, { computed, observer, get, setProperties } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import _ from 'lodash';
 import { array, raw } from 'ember-awesome-macros';
@@ -44,12 +44,28 @@ export default Component.extend(I18n, {
   model: null,
 
   /**
+   * @type {EmberObject}
+   */
+  context: computed(() => EmberObject.create({
+    collection: [],
+    visibleCollection: [],
+  })),
+
+  /**
    * @type {Ember.ComputedProperty<Array<object>>}
    */
-  buttons: computed('model.resourceType', function () {
-    const sidebarResources = this.get('sidebarResources');
-    const resourcesType = this.get('model.resourceType');
-    return sidebarResources.getButtonsFor(resourcesType);
+  buttons: computed('resourceType', 'context', function buttons() {
+    const {
+      sidebarResources,
+      context,
+      resourceType,
+    } = this.getProperties(
+      'sidebarResources',
+      'context',
+      'resourceType'
+    );
+
+    return sidebarResources.getButtonsFor(resourceType, context);
   }),
 
   /**
@@ -136,6 +152,27 @@ export default Component.extend(I18n, {
     return this.get('sidebarResources').getItemsSortingFor(this.get('sidebarType'));
   }),
 
+  contextUpdater: observer(
+    'sortedCollection',
+    'filteredCollection',
+    function contextUpdater() {
+      const {
+        sortedCollection,
+        filteredCollection,
+        context,
+      } = this.getProperties(
+        'sortedCollection',
+        'filteredCollection',
+        'context'
+      );
+
+      setProperties(context, {
+        collection: sortedCollection,
+        visibleCollection: filteredCollection,
+      });
+    }
+  ),
+
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
    */
@@ -167,6 +204,8 @@ export default Component.extend(I18n, {
     ) {
       throw new Error('component:one-sidebar: sidebarType is not defined');
     }
+
+    this.contextUpdater();
   },
 
   resourceType: reads('model.resourceType'),

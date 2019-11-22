@@ -5,14 +5,16 @@ import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { get, computed } from '@ember/object';
 import sinon from 'sinon';
+import { lookupService } from '../../helpers/stub-service';
 
-describe('Integration | Component | two level sidebar', function () {
+describe('Integration | Component | one sidebar', function () {
   setupComponentTest('one-sidebar', {
     integration: true,
   });
 
   beforeEach(function () {
     this.set('model', {
+      resourceType: 'testResource',
       collection: {
         list: [{
           id: 'id1',
@@ -145,5 +147,27 @@ describe('Integration | Component | two level sidebar', function () {
     const testComponent = this.$('.test-component')[0].componentInstance;
     get(testComponent, 'onChange')(filters);
     expect(filterChangeSpy).to.be.calledWith('advancedFilters', filters);
+  });
+
+  it('passes sidebar context while creating sidebar actions', function () {
+    const collection = this.get('model.collection');
+    const getButtonsForSpy = sinon.spy(
+      lookupService(this, 'sidebar-resources'),
+      'getButtonsFor'
+    );
+
+    this.render(hbs `{{one-sidebar
+      model=model
+      filter="1"
+    }}`);
+
+    expect(getButtonsForSpy).to.be.calledOnce;
+    expect(getButtonsForSpy.lastCall.args[0]).to.equal('testResource');
+    const passedContext = getButtonsForSpy.lastCall.args[1];
+    expect(passedContext).to.exist;
+    expect(get(passedContext, 'collection').toArray())
+      .to.deep.equal(collection.list.toArray());
+    expect(get(passedContext, 'visibleCollection'))
+      .to.deep.equal(collection.list.slice(0, 1));
   });
 });

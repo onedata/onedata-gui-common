@@ -73,9 +73,10 @@ export default Service.extend({
 
   /**
    * @param {string} type
+   * @param {any} [context]
    * @returns {Array<Utils.Action>}
    */
-  getButtonsFor( /* resourceType */ ) {
+  getButtonsFor( /* resourceType, context */ ) {
     return [];
   },
 
