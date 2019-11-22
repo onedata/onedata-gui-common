@@ -4,13 +4,18 @@
     checked=summaryCheckboxValue
     threeState=true
     update=(action "changeViaHeader")
+    isReadOnly=(not isSummaryCheckboxEnabled)
   }}
   <div class="header-content">
-    <span class="header-text">{{headerText}}</span>
-    {{one-icon class="arrow-icon" icon=(if isExpanded "arrow-up" "arrow-down")}}
+    <label class="inline-label">
+      <span class="header-text">{{headerText}}</span>
+      <span class="selected-counter">({{or selectedItems.length 0}}/{{or items.length 0}})</span>
+    </label>
+    
+    {{one-icon class="arrow-icon" icon=(if isEffectivelyExpanded "arrow-up" "arrow-down")}}
   </div>
 </div>
-{{#one-collapse collapsed=(not isExpanded) class="checkbox-list-collapse"}}
+{{#one-collapse collapsed=(not isEffectivelyExpanded) class="checkbox-list-collapse"}}
   <ul class="checkbox-list-items">
     {{#each items as |item index|}}
       <li class="checkbox-list-item">

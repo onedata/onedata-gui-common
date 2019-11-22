@@ -20,6 +20,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import { observer, computed } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
 import $ from 'jquery';
+import { notEmpty, and } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -52,9 +53,25 @@ export default Component.extend({
   onChange: notImplementedIgnore,
 
   /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isInitiallyExpanded: true,
+
+  /**
    * @type {boolean}
    */
   isExpanded: true,
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  canBeExpanded: notEmpty('items'),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  isEffectivelyExpanded: and('isExpanded', 'canBeExpanded'),
 
   /**
    * @type {Ember.ComputedProperty<true|false|2>}
@@ -66,7 +83,9 @@ export default Component.extend({
       const itemsCount = (this.get('items') || []).length;
       const selectedItemsCount = (this.get('selectedItems') || []).length;
 
-      if (itemsCount <= selectedItemsCount) {
+      if (itemsCount === 0) {
+        return false;
+      } else if (itemsCount <= selectedItemsCount) {
         return true;
       } else if (selectedItemsCount > 0) {
         return 2;
@@ -75,6 +94,11 @@ export default Component.extend({
       }
     }
   ),
+
+  /**
+   * @type {Ember.ComputedProperty<boolean>}
+   */
+  isSummaryCheckboxEnabled: notEmpty('items'),
 
   itemsObserver: observer('items', function itemsObserver() {
     let selectedItems = this.get('selectedItems') || [];
@@ -85,6 +109,12 @@ export default Component.extend({
       scheduleOnce('afterRender', this, 'notifyChange', nextSelectedItems);
     }
   }),
+
+  init() {
+    this._super(...arguments);
+
+    this.set('isExpanded', this.get('isInitiallyExpanded'));
+  },
 
   notifyChange(newSelectedItems) {
     this.get('onChange')(newSelectedItems);
@@ -106,9 +136,7 @@ export default Component.extend({
       }
     },
     changeViaHeader(value) {
-      const newSelectedItems =
-        this.set('selectedItems', value ? this.get('items') : []);
-      this.notifyChange(newSelectedItems);
+      this.notifyChange(value ? this.get('items') : []);
     },
   },
 });

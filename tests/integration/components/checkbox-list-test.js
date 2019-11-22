@@ -115,6 +115,18 @@ describe('Integration | Component | checkbox list', function () {
     }
   );
 
+  it('shows selection state counter via header', function () {
+    this.set('selectedItems', [this.get('items')[0]]);
+
+    this.render(hbs `
+      {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
+        {{listItem.model.name}}
+      {{/checkbox-list}}
+    `);
+
+    expect(this.$('.selected-counter').text().trim()).to.equal('(1/2)');
+  });
+
   it('shows total selection state via header', function () {
     this.set('selectedItems', this.get('items'));
 
@@ -173,13 +185,23 @@ describe('Integration | Component | checkbox list', function () {
     const headerCheckboxSelector = '.checkbox-list-header .one-checkbox';
     const firstItemCheckboxSelector =
       '.checkbox-list-item:first-child .one-checkbox';
+    const $selectedCounter = this.$('.selected-counter');
     return click(firstItemCheckboxSelector)
       .then(() => click(headerCheckboxSelector))
-      .then(() => expect(changeSpy.lastCall).to.be.calledWith(items))
+      .then(() => {
+        expect(changeSpy.lastCall).to.be.calledWith(items);
+        expect($selectedCounter.text().trim()).to.equal('(2/2)');
+      })
       .then(() => click(headerCheckboxSelector))
-      .then(() => expect(changeSpy.lastCall).to.be.calledWith([]))
+      .then(() => {
+        expect(changeSpy.lastCall).to.be.calledWith([]);
+        expect($selectedCounter.text().trim()).to.equal('(0/2)');
+      })
       .then(() => click(headerCheckboxSelector))
-      .then(() => expect(changeSpy.lastCall).to.be.calledWith(items))
+      .then(() => {
+        expect(changeSpy.lastCall).to.be.calledWith(items);
+        expect($selectedCounter.text().trim()).to.equal('(2/2)');
+      })
   });
 
   it('shows passed headerText', function () {
@@ -189,7 +211,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-header').text().trim()).to.equal('listHeader');
+    expect(this.$('.header-text').text().trim()).to.equal('listHeader');
   });
 
   it('shows expanded list by default', function () {
@@ -202,9 +224,9 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.checkbox-list-collapse')).to.have.class('in');
   });
 
-  it('shows collapsed list when isExpanded is false', function () {
+  it('shows collapsed list when isInitiallyExpanded is false', function () {
     this.render(hbs `
-      {{#checkbox-list items=items isExpanded=false as |listItem|}}
+      {{#checkbox-list items=items isInitiallyExpanded=false as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
     `);
@@ -227,7 +249,7 @@ describe('Integration | Component | checkbox list', function () {
 
   it('shows arrow-down icon when list is collapsed', function () {
     this.render(hbs `
-      {{#checkbox-list items=items isExpanded=false as |listItem|}}
+      {{#checkbox-list items=items isInitiallyExpanded=false as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
     `);
@@ -238,7 +260,7 @@ describe('Integration | Component | checkbox list', function () {
 
   it('shows arrow-up icon when list is expanded', function () {
     this.render(hbs `
-      {{#checkbox-list items=items isExpanded=true as |listItem|}}
+      {{#checkbox-list items=items isInitiallyExpanded=true as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
     `);
@@ -249,7 +271,7 @@ describe('Integration | Component | checkbox list', function () {
 
   it('does not collapse list on header checkbox click', function () {
     this.render(hbs `
-      {{#checkbox-list items=items isExpanded=true as |listItem|}}
+      {{#checkbox-list items=items isInitiallyExpanded=true as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
     `);
@@ -296,4 +318,53 @@ describe('Integration | Component | checkbox list', function () {
       expect(this.$(`#${$itemLabels.attr('for')}`).attr('type')).to.equal('checkbox');
     }
   );
+
+  it(
+    'disables and unchecks total selection state checkbox when there are no items',
+    function () {
+      this.render(hbs `{{checkbox-list}}`);
+
+      const $headerCheckbox = this.$('.checkbox-list-header .one-checkbox');
+      expect($headerCheckbox).to.not.have.class('checked');
+      expect($headerCheckbox).to.not.have.class('maybe');
+      expect($headerCheckbox).to.have.class('disabled');
+    }
+  );
+
+  it('disables list expanding when there are no items', function () {
+    this.render(hbs `{{checkbox-list isInitiallyExpanded=true}}`);
+
+    const $collapse = this.$('.checkbox-list-collapse');
+    expect($collapse).to.not.have.class('in');
+    return click('.checkbox-list-header')
+      .then(() => expect($collapse).to.not.have.class('in'));
+  });
+
+  it('does not change selection when onChange is not defined', function () {
+    this.render(hbs `{{checkbox-list items=items}}`);
+
+    const $headerCheckbox = this.$('.checkbox-list-header .one-checkbox');
+    return click($headerCheckbox[0])
+      .then(() =>
+        expect(this.$('.one-checkbox.checked, .one-checkbox.maybe')).to.not.exist
+      )
+      .then(() => click('.checkbox-list-item:first-child .one-checkbox'))
+      .then(() =>
+        expect(this.$('.one-checkbox.checked, .one-checkbox.maybe')).to.not.exist
+      );
+  });
+
+  it('does not collapse on selection change', function () {
+    this.on('change', nextSelectedItems => {
+      this.set('selectedItems', nextSelectedItems);
+    });
+
+    this.render(hbs `
+      {{checkbox-list items=items onChange=(action "change") isInitiallyExpanded=false}}
+    `);
+
+    return click('.checkbox-list-header')
+      .then(() => click('.checkbox-list-header .one-checkbox'))
+      .then(() => expect(this.$('.checkbox-list-collapse')).to.have.class('in'));
+  });
 });

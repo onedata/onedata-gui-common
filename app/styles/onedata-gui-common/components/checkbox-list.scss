@@ -2,7 +2,7 @@
   .checkbox-list-items {
     list-style-type: none;
     padding-left: 25px;
-    margin-top: $padding-base-vertical;
+    margin-top: $padding-small-vertical;
   }
 
   .checkbox-list-item, .checkbox-list-header {
@@ -19,5 +19,9 @@
 
   .arrow-icon {
     vertical-align: middle;
+  }
+
+  label {
+    margin-right: 0;
   }
 }
