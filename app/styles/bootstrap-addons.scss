@@ -256,6 +256,12 @@ $token-border-radius: 3px;
   }
 }
 
+.btn-group.btn-group-justified {
+  .btn-group:not(:first-child) .btn {
+    border-left: 0;
+  }
+}
+
 .form-group-sm .input-group.with-icon-addon,
 .input-group.input-group-sm.with-icon-addon {
   .input-group-addon {

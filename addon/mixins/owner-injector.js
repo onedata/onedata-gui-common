@@ -1,7 +1,7 @@
 /**
  * Use this mixin in objects, that does not have information about Ember owner
- * and cannot resolve service injections on their own. Need specified `ownerSource`
- * (usually a whatever component or service), that hold a reference to the Ember owner.
+ * and cannot resolve service injections on their own. Needs specified `ownerSource`
+ * (usually whatever component or service), that hold a reference to the Ember owner.
  * 
  * @module mixins/owner-injector
  * @author Michał Borzęcki

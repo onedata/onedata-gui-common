@@ -23,7 +23,7 @@ describe('Unit | Utility | action result', function () {
   );
 
   it(
-    'does not change status, result and error on interceptPromise(), but before promise resolve',
+    'does not change status, result and error after interceptPromise(promise), but before passed promise resolve',
     function () {
       const actionResult = ActionResult.create();
       const promise = new Promise(() => {});
@@ -56,11 +56,16 @@ describe('Unit | Utility | action result', function () {
       const value = 'test';
       const promise = reject(value);
 
-      return actionResult.interceptPromise(promise).catch(originError => {
-        expect(originError).to.equal(value);
-        expect(getResultValues(actionResult))
-          .to.deep.equal(['failed', null, value]);
-      });
+      return actionResult.interceptPromise(promise)
+        .then(() => {
+          // Test should not reach this code, because promise rejects
+          expect(false).to.be.true;
+        })
+        .catch(originError => {
+          expect(originError).to.equal(value);
+          expect(getResultValues(actionResult))
+            .to.deep.equal(['failed', null, value]);
+        });
     }
   );
 });

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach } from 'mocha';
+import { describe, it, beforeEach, afterEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
@@ -25,6 +25,10 @@ describe('Integration | Component | one sidebar', function () {
         }],
       },
     });
+  });
+
+  afterEach(function () {
+    localStorage.removeItem('oneSidebar.areAdvancedFiltersVisible');
   });
 
   it('has class "one-sidebar"', function () {
@@ -54,7 +58,7 @@ describe('Integration | Component | one sidebar', function () {
   });
 
   it(
-    'does not render "Show more filters" link, when advancedFiltersComponent is not set',
+    'does not render "Hide more filters" link, when advancedFiltersComponent is not set',
     function () {
       this.render(hbs `{{one-sidebar model=model}}`);
 
@@ -63,7 +67,7 @@ describe('Integration | Component | one sidebar', function () {
   );
 
   it(
-    'renders "Show more filters" link, when advancedFiltersComponent is set',
+    'renders "Hide more filters" link, when advancedFiltersComponent is set',
     function () {
       this.render(hbs `{{one-sidebar
         model=model
@@ -72,12 +76,12 @@ describe('Integration | Component | one sidebar', function () {
 
       const $moreFilters = this.$('.toggle-more-filters');
       expect($moreFilters).to.exist;
-      expect($moreFilters.text().trim()).to.equal('Show more filters');
+      expect($moreFilters.text().trim()).to.equal('Hide more filters');
     }
   );
 
   it(
-    'changes "Show more filters" link to "Hide more filters" after click',
+    'changes "Hide more filters" link to "Show more filters" after click',
     function () {
       this.render(hbs `{{one-sidebar
         model=model
@@ -86,13 +90,25 @@ describe('Integration | Component | one sidebar', function () {
 
       return click('.toggle-more-filters')
         .then(() => expect(this.$('.toggle-more-filters').text().trim())
-          .to.equal('Hide more filters')
+          .to.equal('Show more filters')
         );
     }
   );
 
   it(
-    'shows component specified by advancedFiltersComponent on "Show more filters" click',
+    'shows component specified by advancedFiltersComponent on initial render',
+    function () {
+      this.render(hbs `{{one-sidebar
+        model=model
+        advancedFiltersComponent="test-component"
+      }}`);
+
+      expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist
+    }
+  );
+
+  it(
+    'does not show component specified by advancedFiltersComponent after "Hide more filters" click',
     function () {
       this.render(hbs `{{one-sidebar
         model=model
@@ -101,20 +117,8 @@ describe('Integration | Component | one sidebar', function () {
 
       return click('.toggle-more-filters')
         .then(() =>
-          expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist
-        );
-    }
-  );
-
-  it(
-    'does not show component specified by advancedFiltersComponent before "Show more filters" click',
-    function () {
-      this.render(hbs `{{one-sidebar
-        model=model
-        advancedFiltersComponent="one-icon"
-      }}`);
-
-      expect(this.$('.advanced-filters-collapse.in .test-component')).to.not.exist;
+          expect(this.$('.advanced-filters-collapse.in .test-component')).to.not.exist
+        )
     }
   );
 
@@ -170,4 +174,77 @@ describe('Integration | Component | one sidebar', function () {
     expect(get(passedContext, 'visibleCollection'))
       .to.deep.equal(collection.list.slice(0, 1));
   });
+
+  it(
+    'does not render expanded advanced filters when localstorage has key oneSidebar.areAdvancedFiltersVisible == "false"',
+    function () {
+      const _localStorage = {
+        getItem: sinon.stub()
+          .withArgs('oneSidebar.areAdvancedFiltersVisible').returns('false'),
+      }
+      this.set('_localStorage', _localStorage);
+
+      this.render(hbs `{{one-sidebar
+        model=model
+        advancedFiltersComponent="test-component"
+        _localStorage=_localStorage
+      }}`);
+
+      expect(this.$('.advanced-filters-collapse.in .test-component')).to.not.exist;
+    }
+  );
+
+  [
+    null,
+    'true',
+  ].forEach(value => {
+    it(
+      `renders expanded advanced filters when localstorage has key oneSidebar.areAdvancedFiltersVisible == ${JSON.stringify(value)}`,
+      function () {
+        const _localStorage = {
+          getItem: sinon.stub()
+            .withArgs('oneSidebar.areAdvancedFiltersVisible').returns(value),
+        }
+        this.set('_localStorage', _localStorage);
+
+        this.render(hbs `{{one-sidebar
+          model=model
+          advancedFiltersComponent="test-component"
+          _localStorage=_localStorage
+        }}`);
+
+        expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist;
+      }
+    );
+  });
+
+  it(
+    'remembers advanced filters collapse state in localstorage oneSidebar.areAdvancedFiltersVisible key',
+    function () {
+      const _localStorage = {
+        getItem: sinon.stub().returns('true'),
+        setItem: sinon.spy(),
+      }
+      this.set('_localStorage', _localStorage);
+
+      this.render(hbs `{{one-sidebar
+        model=model
+        advancedFiltersComponent="test-component"
+        _localStorage=_localStorage
+      }}`);
+
+      return click('.toggle-more-filters')
+        .then(() => {
+          expect(_localStorage.setItem).to.be.calledOnce;
+          expect(_localStorage.setItem)
+            .to.be.calledWith('oneSidebar.areAdvancedFiltersVisible', 'false');
+          return click('.toggle-more-filters');
+        })
+        .then(() => {
+          expect(_localStorage.setItem).to.be.calledTwice;
+          expect(_localStorage.setItem.lastCall)
+            .to.be.calledWith('oneSidebar.areAdvancedFiltersVisible', 'true');
+        });
+    }
+  );
 });

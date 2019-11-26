@@ -14,7 +14,6 @@ import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw'
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
-import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default EmberObject.extend(I18n, OwnerInjector, {
   i18n: service(),
@@ -64,18 +63,6 @@ export default EmberObject.extend(I18n, OwnerInjector, {
   context: null,
 
   /**
-   * @type {Ember.ComputedProperty<HtmlSafe>}
-   * Text used to notify action success (passed to global-notify)
-   */
-  successNotificationText: computedT('successNotificationText'),
-
-  /**
-   * @type {Ember.ComputedProperty<HtmlSafe>}
-   * Action name used notify action failure (passed to global-notify)
-   */
-  failureNotificationActionName: computedT('failureNotificationActionName'),
-
-  /**
    * @type {Ember.ComputedProperty<Function>}
    * Callback ready to use inside hbs action helper
    */
@@ -83,7 +70,11 @@ export default EmberObject.extend(I18n, OwnerInjector, {
     return () => this.execute();
   }),
 
-  // FIXME remove
+  /**
+   * @type {Ember.ComputedProperty<Function>}
+   * An alias to `executeCallback` to preserve compatibility with old usages of
+   * action object. Maybe to remove in future.
+   */
   action: reads('executeCallback'),
 
   /**

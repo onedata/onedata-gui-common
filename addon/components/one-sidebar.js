@@ -2,8 +2,8 @@
  * A base component for building a sidebar view with two-level list
  *
  * @module components/one-sidebar
- * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,7 +14,6 @@ import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
 import EmberObject, { computed, observer, get, setProperties } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
-import _ from 'lodash';
 import { array, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
@@ -37,7 +36,6 @@ export default Component.extend(I18n, {
 
   /**
    * @type {Object}
-   * @namespace
    * @property {Ember.Array} collection
    * @property {string} resourceType
    */
@@ -83,8 +81,6 @@ export default Component.extend(I18n, {
       this.get('i18n').t(`tabs.${resourcesType}.menuItem`) : '';
   }),
 
-  sortedCollection: sort('model.collection.list', 'sorting'),
-
   /**
    * Name of oneicon that should be displayed for each first-level element
    * To inject.
@@ -101,6 +97,9 @@ export default Component.extend(I18n, {
    */
   firstLevelItemComponent: undefined,
 
+  /**
+   * @type {String}
+   */
   secondLevelItemsComponent: 'one-sidebar/second-level-items',
 
   /**
@@ -143,7 +142,7 @@ export default Component.extend(I18n, {
   /**
    * @type {boolean}
    */
-  areAdvancedFiltersVisible: false,
+  areAdvancedFiltersVisible: true,
 
   /**
    * @type {ComputedProperty<Array<string>>}
@@ -152,26 +151,45 @@ export default Component.extend(I18n, {
     return this.get('sidebarResources').getItemsSortingFor(this.get('sidebarType'));
   }),
 
-  contextUpdater: observer(
-    'sortedCollection',
-    'filteredCollection',
-    function contextUpdater() {
-      const {
-        sortedCollection,
-        filteredCollection,
-        context,
-      } = this.getProperties(
-        'sortedCollection',
-        'filteredCollection',
-        'context'
-      );
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  resourceType: reads('model.resourceType'),
 
-      setProperties(context, {
-        collection: sortedCollection,
-        visibleCollection: filteredCollection,
-      });
-    }
-  ),
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isCollectionEmpty: equal('sortedCollection.length', 0),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  primaryItemId: reads('navigationState.activeResourceId'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  activeResourceType: reads('navigationState.activeResourceType'),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  primaryItem: array.findBy('model.collection.list', raw('id'), 'primaryItemId'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  secondaryItemId: reads('navigationState.activeAspect'),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  secondaryItem: array.findBy('secondLevelItems', raw('id'), 'secondaryItemId'),
+
+  /**
+   * @type {Ember.ComputedProperty<Array<any>>}
+   */
+  sortedCollection: sort('model.collection.list', 'sorting'),
 
   /**
    * @type {Ember.ComputedProperty<Array<any>>}
@@ -194,39 +212,58 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @type {Storage}
+   */
+  _localStorage: localStorage,
+
+  contextUpdater: observer(
+    'sortedCollection',
+    'filteredCollection',
+    function contextUpdater() {
+      const {
+        sortedCollection,
+        filteredCollection,
+        context,
+      } = this.getProperties(
+        'sortedCollection',
+        'filteredCollection',
+        'context'
+      );
+
+      setProperties(context, {
+        collection: sortedCollection,
+        visibleCollection: filteredCollection,
+      });
+    }
+  ),
+
   init() {
     this._super(...arguments);
 
+    const {
+      sortedCollection,
+      secondLevelItems,
+      sidebarType,
+      _localStorage,
+    } = this.getProperties(
+      'sortedCollection',
+      'secondLevelItems',
+      'sidebarType',
+      '_localStorage'
+    );
+
     // if we want to show second level items, we should have a sidebarType
-    if (!isEmpty(this.get('sortedCollection')) &&
-      !isEmpty(this.get('secondLevelItems')) &&
-      !this.get('sidebarType')
-    ) {
+    if (!isEmpty(sortedCollection) && !isEmpty(secondLevelItems) && !sidebarType) {
       throw new Error('component:one-sidebar: sidebarType is not defined');
+    }
+
+    if (_localStorage.getItem('oneSidebar.areAdvancedFiltersVisible') === 'false') {
+      this.set('areAdvancedFiltersVisible', false);
     }
 
     this.contextUpdater();
   },
-
-  resourceType: reads('model.resourceType'),
-
-  isCollectionEmpty: equal('sortedCollection.length', 0),
-
-  primaryItemId: reads('navigationState.activeResourceId'),
-
-  activeResourceType: reads('navigationState.activeResourceType'),
-
-  primaryItem: array.findBy('model.collection.list', raw('id'), 'primaryItemId'),
-
-  secondaryItemId: reads('navigationState.activeAspect'),
-
-  secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
-    let {
-      secondLevelItems,
-      secondaryItemId
-    } = this.getProperties('secondLevelItems', 'secondaryItemId');
-    return _.find(secondLevelItems, { id: secondaryItemId });
-  }),
 
   actions: {
     filterChanged(filter) {
@@ -234,6 +271,16 @@ export default Component.extend(I18n, {
     },
     toggleAdvancedFilters() {
       this.toggleProperty('areAdvancedFiltersVisible');
+
+      const {
+        areAdvancedFiltersVisible,
+        _localStorage,
+      } = this.getProperties('areAdvancedFiltersVisible', '_localStorage')
+
+      _localStorage.setItem(
+        'oneSidebar.areAdvancedFiltersVisible',
+        String(areAdvancedFiltersVisible)
+      );
     },
     advancedFilterChanged(advancedFilters) {
       this.set('advancedFilters', advancedFilters);

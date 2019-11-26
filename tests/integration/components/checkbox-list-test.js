@@ -80,7 +80,7 @@ describe('Integration | Component | checkbox list', function () {
   });
 
   it(
-    'notifies about selection change without items, that no longer are in items array',
+    'notifies about selection change when items array changed and some selected items disappeared',
     function () {
       const items = this.get('items');
       this.set('selectedItems', []);
@@ -186,6 +186,7 @@ describe('Integration | Component | checkbox list', function () {
     const firstItemCheckboxSelector =
       '.checkbox-list-item:first-child .one-checkbox';
     const $selectedCounter = this.$('.selected-counter');
+    // At first select the first item to start from 'maybe' header checkbox state
     return click(firstItemCheckboxSelector)
       .then(() => click(headerCheckboxSelector))
       .then(() => {
@@ -331,7 +332,7 @@ describe('Integration | Component | checkbox list', function () {
     }
   );
 
-  it('disables list expanding when there are no items', function () {
+  it('does not allow to expand a list when there are no items', function () {
     this.render(hbs `{{checkbox-list isInitiallyExpanded=true}}`);
 
     const $collapse = this.$('.checkbox-list-collapse');
@@ -343,8 +344,7 @@ describe('Integration | Component | checkbox list', function () {
   it('does not change selection when onChange is not defined', function () {
     this.render(hbs `{{checkbox-list items=items}}`);
 
-    const $headerCheckbox = this.$('.checkbox-list-header .one-checkbox');
-    return click($headerCheckbox[0])
+    return click('.checkbox-list-header .one-checkbox')
       .then(() =>
         expect(this.$('.one-checkbox.checked, .one-checkbox.maybe')).to.not.exist
       )

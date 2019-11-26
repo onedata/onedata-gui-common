@@ -1,5 +1,5 @@
 /**
- * Render list of items with checkboxes. Each change of selection is notified
+ * Renders list of items with checkboxes. Each change of selection is notified
  * using `onChange()` callback. This component does not change selection by itself
  * - needs a new injected selectedItems array instance on each change.
  * 
@@ -7,6 +7,8 @@
  *  * model - a single item from items array
  *  * checkboxId - id of current item checkbox. Can be used for dedicated <label>
  *    elements.
+ * If component has not been used as a block component, then default item
+ * template is used (checkbox with `item.name` label)
  *
  * @module components/checkbox-list
  * @author Michał Borzęcki
@@ -101,7 +103,7 @@ export default Component.extend({
   isSummaryCheckboxEnabled: notEmpty('items'),
 
   itemsObserver: observer('items', function itemsObserver() {
-    let selectedItems = this.get('selectedItems') || [];
+    const selectedItems = this.get('selectedItems') || [];
     const items = this.get('items') || [];
 
     const nextSelectedItems = selectedItems.filter(item => items.includes(item));
@@ -127,7 +129,7 @@ export default Component.extend({
       }
     },
     change(item) {
-      let selectedItems = this.get('selectedItems') || [];
+      const selectedItems = this.get('selectedItems') || [];
 
       if (selectedItems.includes(item)) {
         this.notifyChange(selectedItems.without(item));
