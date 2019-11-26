@@ -32,8 +32,8 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  componentName: computed('modalManager.componentName', function componentName() {
-    const componentNameFromManager = this.get('modalManager.componentName');
+  componentName: computed('modalManager.modalComponentName', function componentName() {
+    const componentNameFromManager = this.get('modalManager.modalComponentName');
     return componentNameFromManager ? `modals/${componentNameFromManager}` : null;
   }),
 });

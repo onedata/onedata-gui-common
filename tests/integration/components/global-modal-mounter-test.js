@@ -19,8 +19,8 @@ describe('Integration | Component | global modal mounter', function () {
     expect(this.$().children()).to.have.length(0);
   });
 
-  it('renders component specified by modalManager.componentName', function () {
-    this.set('modalManager.componentName', 'remove-modal');
+  it('renders component specified by modalManager.modalComponentName', function () {
+    this.set('modalManager.modalComponentName', 'remove-modal');
 
     this.render(hbs `{{global-modal-mounter testMode=true}}`);
 

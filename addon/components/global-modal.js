@@ -11,15 +11,33 @@
 import Component from '@ember/component';
 import layout from '../templates/components/global-modal';
 import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
+import { isArray } from '@ember/array';
 
 export default Component.extend({
   layout,
   tagName: '',
 
   modalManager: service(),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  modalClasses: computed('classNames.[]', function () {
+    const classNames = this.get('classNames');
+    let classNamesString = '';
+
+    if (isArray(classNames)) {
+      classNamesString = classNames.join(' ');
+    } else if (classNames) {
+      classNamesString = String(classNames);
+    }
+
+    return classNamesString + ' global-modal';
+  }),
 
   /**
    * Callback called on modal hide. If returns false, then modal hide is cancelled.
