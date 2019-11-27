@@ -23,13 +23,22 @@ describe('Integration | Component | global modal', function () {
     expect(this.$().children()).to.have.length(0);
   });
 
-  it('renders modal if modalManager.isModalOpened is true', function () {
+  it('renders modal only when modalManager.isModalOpened is true', function () {
     this.set('modalManager.isModalOpened', true);
 
     this.render(hbs `{{global-modal}}`);
 
     return wait()
       .then(() => expect(isGlobalModalOpened()).to.be.true);
+  });
+
+  it('renders modal with custom class', function () {
+    this.set('modalManager.isModalOpened', true);
+
+    this.render(hbs `{{global-modal classNames="custom-modal-class"}}`);
+
+    return wait()
+      .then(() => expect(getGlobalModal()).to.have.class('custom-modal-class'));
   });
 
   it('hides modal if modalManager.isModalOpened turns from true to false', function () {
@@ -396,12 +405,12 @@ describe('Integration | Component | global modal', function () {
     'does not close modal on modal.submit when hideAfterSubmit show() option is false',
     function () {
       this.render(hbs `
-      {{#global-modal as |modal|}}
-        {{#modal.body}}
-          <button class="submit-button" {{action modal.submit}}></button>
-        {{/modal.body}}
-      {{/global-modal}}
-    `);
+        {{#global-modal as |modal|}}
+          {{#modal.body}}
+            <button class="submit-button" {{action modal.submit}}></button>
+          {{/modal.body}}
+        {{/global-modal}}
+      `);
 
       return this.get('modalManager')
         .show('someComponent', { hideAfterSubmit: false }).shownPromise
@@ -412,7 +421,7 @@ describe('Integration | Component | global modal', function () {
 });
 
 function getGlobalModal() {
-  return $('.modal');
+  return $('.modal.global-modal');
 }
 
 function isGlobalModalOpened() {

@@ -41,20 +41,20 @@ export default Service.extend({
    * Resolve callback called to notify about modal `shown` event
    * @type {Function}
    */
-  modalShowResolveCallback: resolve,
+  resolveModalShownPromise: resolve,
 
   /**
    * Promise, which resolves when active modal gets hidden
    * @type {Promise}
    */
-  modalHidePromise: writable(raw(resolve())),
+  modalHiddenPromise: writable(raw(resolve())),
 
   /**
-   * Resolve callback for `modalHidePromise`. Called to notify about modal
+   * Resolve callback for `modalHiddenPromise`. Called to notify about modal
    * `hidden` event
    * @type {Function}
    */
-  modalHideResolveCallback: resolve,
+  resolveModalHiddenPromise: resolve,
 
   /**
    * Name of a modal component, which should be rendered after current modal close.
@@ -109,19 +109,15 @@ export default Service.extend({
 
     this.set('queuedShowModalComponentName', modalComponentName);
 
-    let shownPromise = resolve();
-    if (isModalOpened) {
-      // Hide previous modal if it is still opened
-      shownPromise = this.hide();
-    }
-
+    // Hide previous modal if it is still opened
+    let shownPromise = isModalOpened ? this.hide() : resolve();
     let hideResolve;
     const hidePromise = new Promise(resolve => {
       hideResolve = resolve;
     }).then(() => {
       this.setProperties({
-        modalHideResolveCallback: resolve,
-        modalHidePromise: resolve(),
+        resolveModalHiddenPromise: resolve,
+        modalHiddenPromise: resolve(),
         modalComponentName: null,
         modalOptions: {},
       });
@@ -133,13 +129,13 @@ export default Service.extend({
           isModalOpened: true,
           modalComponentName: modalComponentName,
           modalOptions: modalOptions,
-          modalHidePromise: hidePromise,
-          modalHideResolveCallback: hideResolve,
-          modalShowResolveCallback: showResolve,
+          modalHiddenPromise: hidePromise,
+          resolveModalHiddenPromise: hideResolve,
+          resolveModalShownPromise: showResolve,
           queuedShowModalComponentName: null,
         });
       }).then(() => {
-        this.set('modalShowResolveCallback', resolve);
+        this.set('resolveModalShownPromise', resolve);
       });
     });
 
@@ -158,17 +154,17 @@ export default Service.extend({
   hide() {
     const {
       isModalOpened,
-      modalHidePromise,
+      modalHiddenPromise,
     } = this.getProperties(
       'isModalOpened',
-      'modalHidePromise'
+      'modalHiddenPromise'
     );
 
     if (isModalOpened) {
       this.set('isModalOpened', false);
     }
 
-    return modalHidePromise;
+    return modalHiddenPromise;
   },
 
   onModalSubmit(data) {
@@ -191,7 +187,7 @@ export default Service.extend({
   },
 
   onModalShown() {
-    this.get('modalShowResolveCallback')();
+    this.get('resolveModalShownPromise')();
   },
 
   onModalHide() {
@@ -206,7 +202,7 @@ export default Service.extend({
   },
 
   onModalHidden() {
-    this.get('modalHideResolveCallback')();
+    this.get('resolveModalHiddenPromise')();
   },
 
   hideAfterSubmit() {
