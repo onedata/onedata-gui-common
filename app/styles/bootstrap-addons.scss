@@ -479,6 +479,14 @@ $token-border-radius: 3px;
   }
 }
 
+.nav-tabs {
+  .warning-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: top;
+    margin-left: $padding-xs-horizontal;
+  }
+}
 
 .only-tab-bar {
   .tab-content {
