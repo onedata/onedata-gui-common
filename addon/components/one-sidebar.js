@@ -266,9 +266,6 @@ export default Component.extend(I18n, {
   },
 
   actions: {
-    filterChanged(filter) {
-      this.set('filter', filter);
-    },
     toggleAdvancedFilters() {
       this.toggleProperty('areAdvancedFiltersVisible');
 
@@ -281,9 +278,6 @@ export default Component.extend(I18n, {
         'oneSidebar.areAdvancedFiltersVisible',
         String(areAdvancedFiltersVisible)
       );
-    },
-    advancedFilterChanged(advancedFilters) {
-      this.set('advancedFilters', advancedFilters);
     },
   }
 });

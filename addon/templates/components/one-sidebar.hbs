@@ -13,7 +13,7 @@
         <div class="sidebar-filters-container">
           <div class="form-group form-group-sm form-group-light search-bar-form-group">
             <div class="input-group with-icon-addon">
-              {{search-bar search=(action "filterChanged") class="form-control"}}
+              {{search-bar search=(action (mut filter)) class="form-control"}}
               <div class="input-group-addon">
                 {{one-icon icon="search"}}
               </div>
@@ -22,10 +22,10 @@
           {{#if advancedFiltersComponent}}
             <a class="toggle-more-filters clickable" {{action "toggleAdvancedFilters"}}>
               {{#if areAdvancedFiltersVisible}}
-                {{tt this "hideMoreFilters"}}
+                {{tt this "hideAdvancedFilters"}}
                 {{one-icon class="arrow-icon" icon="arrow-up"}}
               {{else}}
-                {{tt this "showMoreFilters"}}
+                {{tt this "showAdvancedFilters"}}
                 {{one-icon class="arrow-icon" icon="arrow-down"}}
               {{/if}}
             </a>
@@ -35,7 +35,7 @@
             }}
               {{component advancedFiltersComponent
                 collection=sortedCollection
-                onChange=(action "advancedFilterChanged")}}
+                onChange=(action (mut advancedFilters))}}
             {{/one-collapse}}
           {{/if}}
         </div>

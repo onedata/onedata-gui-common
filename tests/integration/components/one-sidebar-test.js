@@ -13,6 +13,7 @@ describe('Integration | Component | one sidebar', function () {
   });
 
   beforeEach(function () {
+    clearLocalStorage();
     this.set('model', {
       resourceType: 'testResource',
       collection: {
@@ -28,7 +29,7 @@ describe('Integration | Component | one sidebar', function () {
   });
 
   afterEach(function () {
-    localStorage.removeItem('oneSidebar.areAdvancedFiltersVisible');
+    clearLocalStorage();
   });
 
   it('has class "one-sidebar"', function () {
@@ -58,7 +59,7 @@ describe('Integration | Component | one sidebar', function () {
   });
 
   it(
-    'does not render "Hide more filters" link, when advancedFiltersComponent is not set',
+    'does not render "Hide advanced filters" link, when advancedFiltersComponent is not set',
     function () {
       this.render(hbs `{{one-sidebar model=model}}`);
 
@@ -67,7 +68,7 @@ describe('Integration | Component | one sidebar', function () {
   );
 
   it(
-    'renders "Hide more filters" link, when advancedFiltersComponent is set',
+    'renders "Hide advanced filters" link, when advancedFiltersComponent is set',
     function () {
       this.render(hbs `{{one-sidebar
         model=model
@@ -76,12 +77,12 @@ describe('Integration | Component | one sidebar', function () {
 
       const $moreFilters = this.$('.toggle-more-filters');
       expect($moreFilters).to.exist;
-      expect($moreFilters.text().trim()).to.equal('Hide more filters');
+      expect($moreFilters.text().trim()).to.equal('Hide advanced filters');
     }
   );
 
   it(
-    'changes "Hide more filters" link to "Show more filters" after click',
+    'changes "Hide advanced filters" link to "Show advanced filters" after click',
     function () {
       this.render(hbs `{{one-sidebar
         model=model
@@ -90,7 +91,7 @@ describe('Integration | Component | one sidebar', function () {
 
       return click('.toggle-more-filters')
         .then(() => expect(this.$('.toggle-more-filters').text().trim())
-          .to.equal('Show more filters')
+          .to.equal('Show advanced filters')
         );
     }
   );
@@ -108,7 +109,7 @@ describe('Integration | Component | one sidebar', function () {
   );
 
   it(
-    'does not show component specified by advancedFiltersComponent after "Hide more filters" click',
+    'does not show component specified by advancedFiltersComponent after "Hide advanced filters" click',
     function () {
       this.render(hbs `{{one-sidebar
         model=model
@@ -248,3 +249,7 @@ describe('Integration | Component | one sidebar', function () {
     }
   );
 });
+
+function clearLocalStorage() {
+  localStorage.removeItem('oneSidebar.areAdvancedFiltersVisible');
+}

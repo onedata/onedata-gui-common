@@ -1,4 +1,4 @@
 export default {
-  showMoreFilters: 'Show more filters',
-  hideMoreFilters: 'Hide more filters',
+  showAdvancedFilters: 'Show advanced filters',
+  hideAdvancedFilters: 'Hide advanced filters',
 };

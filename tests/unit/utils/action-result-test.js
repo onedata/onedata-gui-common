@@ -5,11 +5,14 @@ import { getProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
 
 describe('Unit | Utility | action result', function () {
-  it('sets result status to "pending" and result,error to null on init', function () {
-    const actionResult = ActionResult.create();
+  it(
+    'sets result status to "pending" and result and error to null on init',
+    function () {
+      const actionResult = ActionResult.create();
 
-    expect(getResultValues(actionResult)).to.deep.equal(['pending', null, null]);
-  });
+      expect(getResultValues(actionResult)).to.deep.equal(['pending', null, null]);
+    }
+  );
 
   it(
     'sets status to "cancelled" after cancelIfPending(), when status is "pending"',

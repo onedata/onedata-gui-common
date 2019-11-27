@@ -13,6 +13,15 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
+const threeStatesValues = [false, 2, true];
+const threeStatesClasses = ['', 'maybe', 'checked'];
+const threeStatesLoop = threeStatesValues.concat(threeStatesValues[0]);
+const twoStatesLoop = [
+  threeStatesValues[0],
+  threeStatesValues[threeStatesValues.length - 1],
+  threeStatesValues[0],
+];
 export default Component.extend({
   classNames: ['one-checkbox-base'],
   classNameBindings: [
@@ -81,12 +90,12 @@ export default Component.extend({
   /**
    * @type {Array<any>}
    */
-  threeStatesValues: Object.freeze([false, 2, true]),
+  threeStatesValues,
 
   /**
    * @type {Array<string>}
    */
-  threeStatesClasses: Object.freeze(['', 'maybe', 'checked']),
+  threeStatesClasses,
 
   /**
    * Spinner side css class.
@@ -191,22 +200,16 @@ export default Component.extend({
       checked,
       threeState,
       allowThreeStateToggle,
-      threeStatesValues,
     } = this.getProperties(
       '_lockToggle',
       'checked',
       'threeState',
       'allowThreeStateToggle',
-      'threeStatesValues'
     );
     if (!_lockToggle) {
       let statesLoop = threeState && allowThreeStateToggle ?
-        threeStatesValues.concat(threeStatesValues[0]) : [
-          threeStatesValues[0],
-          threeStatesValues[threeStatesValues.length - 1],
-          threeStatesValues[0]
-        ];
-      if (statesLoop.indexOf(checked) === -1) {
+        threeStatesLoop : twoStatesLoop;
+      if (!statesLoop.includes(checked)) {
         checked = statesLoop[0];
       }
       this._update(statesLoop[statesLoop.indexOf(checked) + 1]);

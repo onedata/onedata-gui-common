@@ -41,34 +41,34 @@ export default Component.extend({
 
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
-  sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
+  sidenavResourceType: reads('navigationState.globalSidenavResourceType'),
 
   /**
    * @type {ComputedProperty<String>}
    */
   sidenavContentComponent: computed(
-    'sidenavResouceType',
+    'sidenavResourceType',
     function sidenavContentComponent() {
       const {
         sidebarResources,
-        sidenavResouceType,
-      } = this.getProperties('sidebarResources', 'sidenavResouceType');
+        sidenavResourceType,
+      } = this.getProperties('sidebarResources', 'sidenavResourceType');
 
-      return sidebarResources.getSidebarComponentNameFor(sidenavResouceType);
+      return sidebarResources.getSidebarComponentNameFor(sidenavResourceType);
     }
   ),
 
   /**
-   * Creates a proxy model for floating sidebar based on sidenavResouceType
+   * Creates a proxy model for floating sidebar based on sidenavResourceType
    * @type {PromiseObject|null}
    */
-  sidenavModel: computed('sidenavResouceType', function () {
+  sidenavModel: computed('sidenavResourceType', function () {
     const {
-      sidenavResouceType,
+      sidenavResourceType,
       sidebarResources
-    } = this.getProperties('sidenavResouceType', 'sidebarResources');
+    } = this.getProperties('sidenavResourceType', 'sidebarResources');
 
-    const resourceType = sidenavResouceType;
+    const resourceType = sidenavResourceType;
     if (resourceType != null) {
       return PromiseObject.create({
         promise: sidebarResources.getSidebarModelFor(resourceType),
