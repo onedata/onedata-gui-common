@@ -6,8 +6,8 @@
  * It is created as a service to allow extending with custom names mapping.
  *
  * @module services/oneicon-alias
- * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @author Michał Borzęcki
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -16,6 +16,7 @@ import Service from '@ember/service';
 const namesDictionary = {
   __global: {
     role_holders: 'role-holders',
+    harvester: 'light-bulb',
   },
 };
 

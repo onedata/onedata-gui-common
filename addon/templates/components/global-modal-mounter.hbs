@@ -2,7 +2,7 @@
   {{#if testMode}}
     <div class="rendered-component">{{componentName}}</div>
   {{else}}
-    {{component componentName}}
+    {{component componentName modalOptions=modalManager.modalOptions}}
   {{/if}}
 {{/if}}
 {{yield}}

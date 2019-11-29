@@ -3,6 +3,8 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
+import TestComponent from 'onedata-gui-common/components/test-component';
+import { get, setProperties } from '@ember/object';
 
 describe('Integration | Component | global modal mounter', function () {
   setupComponentTest('global-modal-mounter', {
@@ -20,10 +22,25 @@ describe('Integration | Component | global modal mounter', function () {
   });
 
   it('renders component specified by modalManager.modalComponentName', function () {
-    this.set('modalManager.modalComponentName', 'remove-modal');
+    this.set('modalManager.modalComponentName', 'some-modal');
+    this.register(`component:modals/some-modal`, TestComponent);
 
-    this.render(hbs `{{global-modal-mounter testMode=true}}`);
+    this.render(hbs `{{global-modal-mounter}}`);
 
-    expect(this.$('.rendered-component').text()).to.equal('modals/remove-modal');
+    expect(this.$('.test-component')).to.exist;
+  });
+
+  it('passess modalManager.modalOptions to modal component', function () {
+    const modalOptions = Object.freeze({ a: 1 });
+    setProperties(this.get('modalManager'), {
+      modalComponentName: 'some-modal',
+      modalOptions,
+    });
+    this.register(`component:modals/some-modal`, TestComponent);
+
+    this.render(hbs `{{global-modal-mounter}}`);
+
+    const testComponent = this.$('.test-component')[0].componentInstance;
+    expect(get(testComponent, 'modalOptions')).to.equal(modalOptions);
   });
 });

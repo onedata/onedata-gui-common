@@ -7,9 +7,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import SecondLevelItems from 'onedata-gui-common/components/two-level-sidebar/second-level-items';
+import SecondLevelItems from 'onedata-gui-common/components/one-sidebar/second-level-items';
 import { inject as service } from '@ember/service';
-import layout from 'onedata-gui-common/templates/components/two-level-sidebar/second-level-items';
+import layout from 'onedata-gui-common/templates/components/one-sidebar/second-level-items';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/components/i18n';

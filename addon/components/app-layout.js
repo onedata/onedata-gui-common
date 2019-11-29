@@ -6,7 +6,7 @@
  * parts of view.
  *
  * @module components/app-layout
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -41,23 +41,34 @@ export default Component.extend({
 
   showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
 
-  sidenavResouceType: reads('navigationState.globalSidenavResourceType'),
-
-  sidenavContentComponent: computed('sidenavResouceType', function () {
-    return `sidebar-${this.get('sidenavResouceType')}`;
-  }),
+  sidenavResourceType: reads('navigationState.globalSidenavResourceType'),
 
   /**
-   * Creates a proxy model for floating sidebar based on sidenavResouceType
+   * @type {ComputedProperty<String>}
+   */
+  sidenavContentComponent: computed(
+    'sidenavResourceType',
+    function sidenavContentComponent() {
+      const {
+        sidebarResources,
+        sidenavResourceType,
+      } = this.getProperties('sidebarResources', 'sidenavResourceType');
+
+      return sidebarResources.getSidebarComponentNameFor(sidenavResourceType);
+    }
+  ),
+
+  /**
+   * Creates a proxy model for floating sidebar based on sidenavResourceType
    * @type {PromiseObject|null}
    */
-  sidenavModel: computed('sidenavResouceType', function () {
+  sidenavModel: computed('sidenavResourceType', function () {
     const {
-      sidenavResouceType,
+      sidenavResourceType,
       sidebarResources
-    } = this.getProperties('sidenavResouceType', 'sidebarResources');
+    } = this.getProperties('sidenavResourceType', 'sidebarResources');
 
-    const resourceType = sidenavResouceType;
+    const resourceType = sidenavResourceType;
     if (resourceType != null) {
       return PromiseObject.create({
         promise: sidebarResources.getSidebarModelFor(resourceType),

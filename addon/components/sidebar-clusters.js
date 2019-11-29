@@ -1,5 +1,5 @@
 /**
- * A sidebar for clusters (extension of `two-level-sidebar`)
+ * A sidebar for clusters (extension of `one-sidebar`)
  *
  * @module components/sidebar-clusters
  * @author Jakub Liput, Michał Borzęcki
@@ -7,11 +7,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import TwoLevelSidebar from 'onedata-gui-common/components/two-level-sidebar';
-import layout from 'onedata-gui-common/templates/components/two-level-sidebar';
+import OneSidebar from 'onedata-gui-common/components/one-sidebar';
+import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default TwoLevelSidebar.extend(I18n, {
+export default OneSidebar.extend(I18n, {
   layout,
 
   classNames: ['sidebar-clusters'],
@@ -32,7 +32,7 @@ export default TwoLevelSidebar.extend(I18n, {
   secondLevelItemsComponent: 'sidebar-clusters/second-level-items',
 
   /**
-   * @implements TwoLevelSidebar
+   * @implements OneSidebar
    */
   sidebarType: 'clusters',
 });

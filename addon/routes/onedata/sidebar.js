@@ -7,6 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { get } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
@@ -56,17 +57,13 @@ export default Route.extend({
   },
 
   renderTemplate(controller, model) {
-    let {
-      resourceType
-    } = model;
-    this.render('onedata.sidebar', {
+    const sidebarComponentName = this.get('sidebarResources')
+      .getSidebarComponentNameFor(get(model, 'resourceType'));
+
+    this.render(`onedata.sidebar`, {
       into: 'onedata',
-      outlet: 'sidebar'
-    });
-    this.render(`tabs.${resourceType}.sidebar`, {
-      into: 'onedata.sidebar',
-      outlet: 'sidebar-content',
-      model
+      outlet: 'sidebar',
+      model: Object.assign({}, model, { sidebarComponentName }),
     });
   },
 

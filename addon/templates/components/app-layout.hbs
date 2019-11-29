@@ -73,7 +73,7 @@
     {{name-conflict item=navigationState.activeResource tagName="span"}}
   </div>
   <div class={{rowAppClass}}>
-    {{#one-sidenav opened=sidenavResouceType
+    {{#one-sidenav opened=sidenavResourceType
       id="sidenav-sidebar"
       class=(if navigationState.mainMenuColumnExpanded "with-place-for-menu")
       model=sidenavModel.content}}
@@ -86,7 +86,7 @@
     {{/one-sidenav}}
         
     {{content-backdrop class="sidenav-backdrop"
-      progress=(if sidenavResouceType 100 0)
+      progress=(if sidenavResourceType 100 0)
       click=(action (mut navigationState.globalSidenavResourceType) null bubbles=true)
     }}
     

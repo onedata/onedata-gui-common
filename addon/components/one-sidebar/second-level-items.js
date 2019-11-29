@@ -2,7 +2,7 @@
  * Abstract component for creating list of second level items in sidebar (called
  * aspects).
  * 
- * @module components/two-level-sidebar-second-level-items
+ * @module components/one-sidebar-second-level-items
  * @author Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -10,7 +10,7 @@
 
 import Component from '@ember/component';
 import { reads } from '@ember/object/computed';
-import layout from '../../templates/components/two-level-sidebar/second-level-items';
+import layout from '../../templates/components/one-sidebar/second-level-items';
 
 export default Component.extend({
   layout,
