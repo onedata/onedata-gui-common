@@ -64,6 +64,16 @@ export default ArraySlice.extend(Evented, {
    */
   chunkSize: computed.reads('maxLength'),
 
+  /**
+   * @type {ComputedProperty<Function>}
+   */
+  internalFetch: computed('fetch', function internalFetch() {
+    const fetch = this.get('fetch');
+    if (fetch) {
+      return fetch.bind(this);
+    }
+  }),
+
   loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
     return this.get('chunkSize') / 2;
   }),
@@ -151,7 +161,7 @@ export default ArraySlice.extend(Evented, {
         Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       this.trigger('fetchPrevStarted');
-      return this.get('fetch')(
+      return this.get('internalFetch')(
           fetchStartIndex,
           currentChunkSize,
           -currentChunkSize
@@ -230,7 +240,7 @@ export default ArraySlice.extend(Evented, {
       const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
 
       this.trigger('fetchNextStarted');
-      return this.get('fetch')(
+      return this.get('internalFetch')(
           // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
           // and items are converted from plain objects to EmberObjects
           // the workaround is to use []
@@ -297,7 +307,7 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    return this.get('fetch')(
+    return this.get('internalFetch')(
         fetchStartIndex,
         size,
         offset
@@ -320,7 +330,7 @@ export default ArraySlice.extend(Evented, {
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = updatedRecordsArray[i];
         }
-        sourceArray.arrayContentDidChange(_start, );
+        sourceArray.arrayContentDidChange(_start);
         return this;
       })
       .catch(error => {

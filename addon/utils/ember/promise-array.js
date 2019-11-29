@@ -22,5 +22,5 @@ const PromiseArray = ArrayProxy.extend(PromiseProxyMixin);
 export default PromiseArray;
 
 export function promiseArray(promise) {
-  return ArrayProxy.create({ promise });
+  return PromiseArray.create({ promise });
 }
