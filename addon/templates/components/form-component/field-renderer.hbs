@@ -1,7 +1,9 @@
 {{#if field.isGroup}}
-  {{#each field.fields as |nestedField|}}
-    {{form-component/field-renderer field=nestedField}}
-  {{/each}}
+  {{#one-collapse class="fields-group-collapse" collapsed=(not isExpanded)}}
+    {{#each field.fields as |nestedField|}}
+      {{form-component/field-renderer field=nestedField}}
+    {{/each}}
+  {{/one-collapse}}
 {{else}}
   {{#if field.label}}
     <label class="control-label" for={{fieldId}}>{{field.label}}:</label>

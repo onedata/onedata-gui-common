@@ -62,4 +62,9 @@ export default Component.extend({
    * @type {ComputedProperty<Object>}
    */
   error: reads('field.errors.firstObject'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isExpanded: reads('field.isExpanded'),
 });

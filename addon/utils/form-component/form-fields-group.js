@@ -10,6 +10,12 @@ export default FormElement.extend({
   isGroup: true,
 
   /**
+   * @public
+   * @type {boolean}
+   */
+  isExpanded: true,
+
+  /**
    * @override
    */
   fields: computed(() => A()),

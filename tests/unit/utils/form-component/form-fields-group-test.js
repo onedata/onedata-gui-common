@@ -317,5 +317,14 @@ describe('Unit | Utility | form component/form fields group', function () {
       expect(get(defaultValue, 'a')).to.be.undefined;
       expect(get(defaultValue, 'b')).to.equal('1');
     }
+  );
+
+  it(
+    'has truthy "isExpanded" by default',
+    function () {
+      const formGroup = FormFieldsGroup.create();
+
+      expect(get(formGroup, 'isExpanded')).to.be.true;
+    }
   )
 });
