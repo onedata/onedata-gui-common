@@ -49,7 +49,7 @@ describe('Integration | Utility | form component/form field', function () {
     function () {
       const formField = FormField.create({
         ownerSource: this,
-        validators: [
+        customValidators: [
           validator('number', { gt: 2 }),
         ],
         name: 'field',
@@ -76,7 +76,7 @@ describe('Integration | Utility | form component/form field', function () {
     function () {
       const formField = FormField.create({
         ownerSource: this,
-        validators: [
+        customValidators: [
           validator('number', { gt: 2 }),
         ],
         name: 'field',
@@ -101,7 +101,7 @@ describe('Integration | Utility | form component/form field', function () {
     function () {
       const formField = FormField.create({
         ownerSource: this,
-        validators: [
+        customValidators: [
           validator('number', { gt: 2 }),
         ],
         name: 'field',
@@ -110,7 +110,7 @@ describe('Integration | Utility | form component/form field', function () {
         },
       });
 
-      set(formField, 'validators', [
+      set(formField, 'customValidators', [
         validator('number', { gt: 4 }),
       ]);
 
@@ -123,6 +123,35 @@ describe('Integration | Utility | form component/form field', function () {
       expect(errors).to.be.have.length(1);
       expect(invalidFields).to.have.length(1);
       expect(invalidFields[0]).to.equal(formField);
+    }
+  );
+
+  it(
+    'has falsy "isOptional" field by default and notifies abut validation error for empty content',
+    function () {
+      const formField = FormField.create({
+        ownerSource: this,
+      });
+
+      const {
+        isOptional,
+        errors,
+      } = getProperties(formField, 'isOptional', 'errors');
+      expect(isOptional).to.be.false;
+      expect(errors).to.be.have.length(1);
+      expect(errors[0].message).to.equal('This field can\'t be blank');
+    }
+  );
+
+  it(
+    'does not notify about "field empty" validation error, when "isOptional" is true',
+    function () {
+      const formField = FormField.create({
+        ownerSource: this,
+        isOptional: true,
+      });
+
+      expect(get(formField, 'errors')).to.be.have.length(0);
     }
   );
 });

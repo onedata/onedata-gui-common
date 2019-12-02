@@ -8,15 +8,56 @@ import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
 import { conditional } from 'ember-awesome-macros';
+import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend(OwnerInjector, I18n, {
   i18n: service(),
 
   /**
+   * @public
+   * @virtual
+   * @type {boolean}
+   */
+  isOptional: false,
+
+  /**
+   * @public
+   * @virtual
+   * @type {boolean}
+   */
+  withValidationIcon: true,
+
+  /**
    * Array of validators (created using validator() from ember-cp-validations)
+   * @public
    * @type {Array<Object>}
    */
-  validators: computed(() => A()),
+  customValidators: computed(() => A()),
+
+  /**
+   * @type {Array<Object>}
+   */
+  validators: computed(
+    'customValidators.[]',
+    'isOptional',
+    function validators() {
+      const {
+        customValidators,
+        isOptional,
+      } = this.getProperties('customValidators', 'isOptional');
+
+      const validatorsArray = customValidators.slice();
+
+      if (!isOptional) {
+        validatorsArray.push(validator('presence', {
+          presence: true,
+          ignoreBlank: true,
+        }));
+      }
+
+      return validatorsArray;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldValidator>}
@@ -54,13 +95,17 @@ export default FormElement.extend(OwnerInjector, I18n, {
    * @type {ComputedProperty<HtmlSafe>}
    */
   label: computed('i18nPrefix', 'path', function label() {
-    return this.t(this.get('path') + '.label');
+    return fallbackTranslation(this.t(this.get('path') + '.label'), undefined);
   }),
 
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
   tip: computed('i18nPrefix', 'path', function tip() {
-    return this.t(this.get('path') + '.tip');
+    return fallbackTranslation(this.t(this.get('path') + '.tip'), undefined);
   }),
 })
+
+function fallbackTranslation(translation, fallback) {
+  return translation.startsWith('<missing-') ? fallback : translation;
+}

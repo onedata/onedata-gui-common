@@ -1,0 +1,9 @@
+<input
+  id={{fieldId}}
+  class="form-control"
+  type="text"
+  onblur={{action "focusLost"}}
+  oninput={{action "valueChanged" value="target.value"}}
+  value={{value}}
+/>
+{{yield}}

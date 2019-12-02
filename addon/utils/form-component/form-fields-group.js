@@ -7,6 +7,11 @@ export default FormElement.extend({
   /**
    * @override
    */
+  isGroup: true,
+
+  /**
+   * @override
+   */
   fields: computed(() => A()),
 
   /**

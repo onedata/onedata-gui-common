@@ -12,6 +12,12 @@ export default FormFieldsGroup.extend({
    */
   valuesSource: computed(() => EmberObject.create()),
 
+  init() {
+    this._super(...arguments);
+
+    this.reset();
+  },
+
   /**
    * @override
    */

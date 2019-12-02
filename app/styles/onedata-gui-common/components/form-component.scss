@@ -1,0 +1,36 @@
+.form-component {
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .field-component {
+    flex-grow: 1;
+    position: relative;
+  }
+
+  .control-label {
+    width: 20%;
+    min-width: 100px;
+    text-align: left;
+  }
+
+  .field-message {
+    flex-basis: 100%;
+    padding: $padding-small-vertical 0;
+    text-align: right;
+    font-size: $font-size-small;
+  }
+
+  .has-error {
+    .field-message {
+      color: $state-danger-text;
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .control-label {
+      width: 100%;
+    }
+  }
+}

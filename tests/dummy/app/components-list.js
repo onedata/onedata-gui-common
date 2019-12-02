@@ -2,6 +2,7 @@ export default [
   'bezier-curve',
   'checkbox-list',
   'fast-double-click',
+  'form-component',
   'global-alert',
   'global-modal',
   'hr-label',

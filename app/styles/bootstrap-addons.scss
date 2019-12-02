@@ -70,7 +70,7 @@ $token-border-radius: 3px;
   }
 }
 
-.form-horizontal {
+.form-horizontal:not(.form-component) {
   .form-message {
     padding: $padding-small-vertical 0;
     text-align: right;

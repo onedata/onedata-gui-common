@@ -48,6 +48,18 @@ export default EmberObject.extend({
   defaultValue: undefined,
 
   /**
+   * Component used to render this form element
+   * @type {String}
+   * @virtual
+   */
+  fieldComponentName: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  isGroup: false,
+
+  /**
    * @type {ComputedProperty<string>}
    */
   path: computed('parent.path', 'name', function path() {
