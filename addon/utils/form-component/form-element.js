@@ -8,11 +8,6 @@ export default EmberObject.extend({
   fields: Object.freeze([]),
 
   /**
-   * @type {EmberObject}
-   */
-  valuesSource: undefined,
-
-  /**
    * @type {boolean}
    */
   isEnabled: true,
@@ -63,6 +58,11 @@ export default EmberObject.extend({
       return parentPath ? `${parentPath}.${name}` : name;
     }
   }),
+
+  /**
+   * @type {EmberObject}
+   */
+  valuesSource: reads('parent.valuesSource'),
 
   /**
    * Set by valuePropertySetter
@@ -148,6 +148,7 @@ export default EmberObject.extend({
    */
   reset() {
     this.valueChanged(this.dumpDefaultValue());
+    this.markAsNotModified();
   },
 
   /**

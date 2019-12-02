@@ -17,7 +17,7 @@ export default FormElement.extend({
   /**
    * @override
    */
-  mode: computed('fields.@each.mode', function () {
+  mode: computed('fields.@each.mode', function mode() {
     const fields = this.get('fields');
 
     if (fields && fields.length) {
@@ -46,7 +46,7 @@ export default FormElement.extend({
     raw('isEnabled')
   ),
 
-  fieldsParentSetter: observer('fields.@each.parent', function () {
+  fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
 
     if (fields) {

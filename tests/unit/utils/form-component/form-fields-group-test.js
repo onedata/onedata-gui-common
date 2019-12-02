@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import FormFieldGroup from 'onedata-gui-common/utils/form-component/form-field-group';
+import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
 import { get, getProperties } from '@ember/object';
 
-describe('Unit | Utility | form component/form field group', function () {
+describe('Unit | Utility | form component/form fields group', function () {
   it('sets child fields parent when passing fields on creation', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([FormField.create()]),
     });
 
@@ -15,14 +15,14 @@ describe('Unit | Utility | form component/form field group', function () {
   });
 
   it('sets child fields parent when modifying fields collection', function () {
-    const formGroup = FormFieldGroup.create();
+    const formGroup = FormFieldsGroup.create();
     get(formGroup, 'fields').pushObject(FormField.create());
 
     expect(get(get(formGroup, 'fields').objectAt(0), 'parent')).to.equal(formGroup);
   });
 
   it('represents lack of modified fields through falsy isModified', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create(),
         FormField.create(),
@@ -33,7 +33,7 @@ describe('Unit | Utility | form component/form field group', function () {
   });
 
   it('represents existence of modified fields through truthy isModified', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create(),
         FormField.create(),
@@ -45,7 +45,7 @@ describe('Unit | Utility | form component/form field group', function () {
   });
 
   it('sets all fields isModified to false on calling markAsNotModified()', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create(),
         FormField.create(),
@@ -60,7 +60,7 @@ describe('Unit | Utility | form component/form field group', function () {
   });
 
   it('sets all fields isModified to true on calling markAsModified()', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create(),
         FormField.create(),
@@ -76,7 +76,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'represents mode of fields through mode property (every field has the same)',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             mode: 'show',
@@ -94,7 +94,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'represents mode of fields through mode property (fields have different mode)',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             mode: 'show',
@@ -110,7 +110,7 @@ describe('Unit | Utility | form component/form field group', function () {
   );
 
   it('sets all fields mode on calling changeMode()', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create({
           mode: 'show',
@@ -128,7 +128,7 @@ describe('Unit | Utility | form component/form field group', function () {
   });
 
   it('represents lack of enabled fields through falsy isEnabled', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create({
           isEnabled: false,
@@ -145,7 +145,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'represents existence of some enabled fields through truthy isEnabled',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             isEnabled: true,
@@ -161,7 +161,7 @@ describe('Unit | Utility | form component/form field group', function () {
   );
 
   it('disables all fields on disable()', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create({
           isEnabled: true,
@@ -179,7 +179,7 @@ describe('Unit | Utility | form component/form field group', function () {
   });
 
   it('enables all fields on enable()', function () {
-    const formGroup = FormFieldGroup.create({
+    const formGroup = FormFieldsGroup.create({
       fields: A([
         FormField.create({
           isEnabled: false,
@@ -199,7 +199,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'represents negative validation results of fields through falsy isValid',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             isValid: false,
@@ -217,7 +217,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'represents positive validation results of fields through truthy isValid',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             isValid: true,
@@ -235,7 +235,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'has empty "invalidFields" when fields are valid',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             isValid: true,
@@ -253,7 +253,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'has filled in "invalidFields" when fields are invalid',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             isValid: false,
@@ -277,7 +277,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'does not put disabled invalid fields into "invalidFields"',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             isValid: false,
@@ -301,7 +301,7 @@ describe('Unit | Utility | form component/form field group', function () {
   it(
     'returns aggregated fields default values as a dumpDefaultValues()',
     function () {
-      const formGroup = FormFieldGroup.create({
+      const formGroup = FormFieldsGroup.create({
         fields: A([
           FormField.create({
             name: 'a',
