@@ -244,7 +244,8 @@ export default ArraySlice.extend(Evented, {
           // the workaround is to use []
           fetchStartIndex,
           fetchSize,
-          lastItem ? 1 : 0
+          lastItem ? 1 : 0,
+          this
         )
         .then(array => {
           if (get(array, 'length') < chunkSize) {
