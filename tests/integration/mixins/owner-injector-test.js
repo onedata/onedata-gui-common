@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import EmberObject, { get } from '@ember/object';
+import EmberObject, { get, set } from '@ember/object';
 import { lookupService, registerService } from '../../helpers/stub-service';
 import OwnerInjectorMixin from 'onedata-gui-common/mixins/owner-injector';
 import Service, { inject as service } from '@ember/service';
@@ -32,6 +32,13 @@ describe('Integration | Mixin | owner injector', function () {
     const subject = OwnerInjectorObject.create({
       ownerSource: this,
     });
+
+    expect(get(subject, 'testService')).to.equal(this.get('testService'));
+  });
+
+  it('injects service, when ownerSource is specified after init', function () {
+    const subject = OwnerInjectorObject.create();
+    set(subject, 'ownerSource', this);
 
     expect(get(subject, 'testService')).to.equal(this.get('testService'));
   });

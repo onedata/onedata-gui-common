@@ -1,7 +1,18 @@
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import EmberObject, { computed, set, get } from '@ember/object';
+import EmberObject, { set, get } from '@ember/object';
 
 export default FormFieldsGroup.extend({
+  /**
+   * @override
+   */
+  i18nPrefix: undefined,
+
+  /**
+   * @virtual
+   * @override
+   */
+  ownerSource: undefined,
+
   /**
    * @override
    */
@@ -10,12 +21,14 @@ export default FormFieldsGroup.extend({
   /**
    * @override
    */
-  valuesSource: computed(() => EmberObject.create()),
+  valuesSource: undefined,
 
   init() {
     this._super(...arguments);
 
-    this.reset();
+    if (!this.get('valuesSource')) {
+      this.reset();
+    }
   },
 
   /**

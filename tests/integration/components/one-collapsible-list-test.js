@@ -128,7 +128,7 @@ describe('Integration | Component | one collapsible list', function () {
     wait().then(() => {
       click('.first-item-header input').then(() => {
         expect(this.$('.first-item-header input')).to.be.disabled;
-        expect(selectionChangedSpy).to.be.notCalled;
+        expect(selectionChangedSpy).to.be.not.called;
         done();
       });
     });
@@ -212,13 +212,14 @@ describe('Integration | Component | one collapsible list', function () {
 
     wait().then(() => {
       click('.item1 .one-checkbox').then(() => {
-        fillIn('.one-collapsible-list-header .search-bar', 'item2').then(() => {
-          let item1 = this.$('.item1');
-          expect(item1).to.have.class('selected');
-          expect(item1).not.to.have.class('collapse-hidden');
-          expect(item1.find('.header-fixed')).to.exist;
-          done();
-        });
+        fillIn('.one-collapsible-list-header .search-bar', 'item2').then(
+        () => {
+            let item1 = this.$('.item1');
+            expect(item1).to.have.class('selected');
+            expect(item1).not.to.have.class('collapse-hidden');
+            expect(item1.find('.header-fixed')).to.exist;
+            done();
+          });
       });
     });
   });

@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
-import { blur, fillIn } from 'ember-native-dom-helpers';
+import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | form component/text like field', function () {
@@ -31,7 +31,8 @@ describe('Integration | Component | form component/text like field', function ()
 
       this.render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      return blur('input')
+      return focus('input')
+        .then(() => blur('input'))
         .then(() => expect(focusLostSpy).to.be.calledOnce);
     }
   );

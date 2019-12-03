@@ -2,6 +2,7 @@ import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import EmberObject, { computed, observer, set, get } from '@ember/object';
 import { A } from '@ember/array';
 import { array, raw, isEmpty } from 'ember-awesome-macros';
+import _ from 'lodash';
 
 export default FormElement.extend({
   /**
@@ -52,10 +53,9 @@ export default FormElement.extend({
   /**
    * @override
    */
-  invalidFields: array.filterBy(
-    array.rejectBy('fields', raw('isValid')),
-    raw('isEnabled')
-  ),
+  invalidFields: computed('fields.@each.invalidFields', function invalidFields() {
+    return _.flatten(this.get('fields').mapBy('invalidFields'));
+  }),
 
   fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
@@ -114,6 +114,16 @@ export default FormElement.extend({
   dumpDefaultValue() {
     return this.get('fields').reduce((valuesAggregator, field) => {
       set(valuesAggregator, get(field, 'name'), field.dumpDefaultValue());
+      return valuesAggregator;
+    }, EmberObject.create());
+  },
+
+  /**
+   * @override
+   */
+  dumpValue() {
+    return this.get('fields').reduce((valuesAggregator, field) => {
+      set(valuesAggregator, get(field, 'name'), field.dumpValue());
       return valuesAggregator;
     }, EmberObject.create());
   },

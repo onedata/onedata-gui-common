@@ -10,6 +10,7 @@ export default Component.extend({
   classNameBindings: [
     'isGroup::form-group',
     'validationClass',
+    'fieldNameClass',
   ],
 
   /**
@@ -67,4 +68,11 @@ export default Component.extend({
    * @type {ComputedProperty<boolean>}
    */
   isExpanded: reads('field.isExpanded'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  fieldNameClass: computed('field.name', function () {
+    return `${this.get('field.name')}-field`;
+  }),
 });

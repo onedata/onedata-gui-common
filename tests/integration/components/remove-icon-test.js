@@ -42,7 +42,7 @@ describe('Integration | Component | remove icon', function () {
     this.render(hbs `{{remove-icon onClick=(action "click")}} isDisabled=true`);
 
     return click('.remove-icon')
-      .then(() => expect(clickHandler).to.not.beCalled);
+      .then(() => expect(clickHandler).to.be.called);
   });
 
   it('does not react to click when disabled', function () {

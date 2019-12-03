@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
-import { get, getProperties } from '@ember/object';
+import EmberObject, { get, getProperties } from '@ember/object';
 
 describe('Unit | Utility | form component/form fields group', function () {
   it('sets child fields parent when passing fields on creation', function () {
@@ -299,7 +299,7 @@ describe('Unit | Utility | form component/form fields group', function () {
   );
 
   it(
-    'returns aggregated fields default values as a dumpDefaultValues()',
+    'returns aggregated fields default values as a dumpDefaultValues() result',
     function () {
       const formGroup = FormFieldsGroup.create({
         fields: A([
@@ -314,8 +314,8 @@ describe('Unit | Utility | form component/form fields group', function () {
       });
 
       const defaultValue = formGroup.dumpDefaultValue();
-      expect(get(defaultValue, 'a')).to.be.undefined;
-      expect(get(defaultValue, 'b')).to.equal('1');
+      expect(defaultValue).to.not.have.property('a');
+      expect(defaultValue).to.include({ b: '1' });
     }
   );
 
@@ -326,5 +326,31 @@ describe('Unit | Utility | form component/form fields group', function () {
 
       expect(get(formGroup, 'isExpanded')).to.be.true;
     }
-  )
+  );
+
+  it(
+    'returns aggregated fields values as a dumpValues() result',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        valuesSource: EmberObject.create({
+          a: 1,
+          b: 2,
+        }),
+        fields: A([
+          FormField.create({
+            name: 'a',
+          }),
+          FormField.create({
+            name: 'b',
+          }),
+        ]),
+      });
+
+      const value = formGroup.dumpValue();
+      expect(value).to.include({
+        a: 1,
+        b: 2,
+      });
+    }
+  );
 });

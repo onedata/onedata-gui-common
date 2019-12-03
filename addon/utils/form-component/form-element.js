@@ -82,6 +82,16 @@ export default EmberObject.extend({
    */
   value: undefined,
 
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  i18nPrefix: reads('parent.i18nPrefix'),
+
+  /**
+   * @type {ComputedProperty<any>}
+   */
+  ownerSource: reads('parent.ownerSource'),
+
   valuePropertySetter: observer(
     'path',
     function valuePropertySetter() {
@@ -153,6 +163,14 @@ export default EmberObject.extend({
    */
   dumpDefaultValue() {
     return this.get('defaultValue');
+  },
+
+  /**
+   * @virtual
+   * @public
+   */
+  dumpValue() {
+    return this.get('value');
   },
 
   /**

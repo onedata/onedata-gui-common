@@ -117,7 +117,7 @@ describe('Unit | Utility | form component/form element', function () {
       name: 'field',
     });
 
-    expect(get(formElement, 'value')).to.be.empty;
+    expect(get(formElement, 'value')).to.be.undefined;
   });
 
   it('has value equal to valuesSource when name is empty', function () {
@@ -184,5 +184,16 @@ describe('Unit | Utility | form component/form element', function () {
     formElement.reset();
 
     expect(onChangeSpy).to.be.calledWith('a', formElement);
+  });
+
+  it('returns value as a dumpValue() result', function () {
+    const formElement = FormElement.create({
+      path: 'a',
+      valuesSource: {
+        a: 'b',
+      },
+    });
+
+    expect(formElement.dumpValue()).to.equal('b');
   });
 });

@@ -107,5 +107,5 @@ export default FormElement.extend(OwnerInjector, I18n, {
 })
 
 function fallbackTranslation(translation, fallback) {
-  return translation.startsWith('<missing-') ? fallback : translation;
+  return String(translation).startsWith('<missing-') ? fallback : translation;
 }
