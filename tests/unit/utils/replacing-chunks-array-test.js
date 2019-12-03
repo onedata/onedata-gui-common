@@ -5,7 +5,7 @@ import _ from 'lodash';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import { Promise, resolve } from 'rsvp';
-import { get } from '@ember/object';
+import { get, set } from '@ember/object';
 
 class Record {
   constructor(index) {
@@ -536,6 +536,30 @@ describe('Unit | Utility | replacing chunks array', function () {
           expect(fetchSpy).to.be.calledOnce;
           expect(array.toArray()).to.deep.equal(recordRange(20, 60));
           expect(get(array, 'sourceArray')).to.have.lengthOf(arraySize);
+        });
+    }
+  );
+
+  it('injects self reference into fetch method',
+    function () {
+      let compareArrayInstancesResult = undefined;
+      this.fetch = (a, b, c, arrayInstance) => {
+        compareArrayInstancesResult = this.array === arrayInstance;
+        return resolve([]);
+      };
+      this.array = ReplacingChunksArray.create({
+        fetch: () => resolve([]),
+        startIndex: 0,
+        endIndex: 50,
+        indexMargin: 10,
+      });
+      set(this.array, 'fetch', this.fetch.bind(this));
+
+      this.array.reload();
+
+      return wait()
+        .then(() => {
+          expect(compareArrayInstancesResult).to.equal(true);
         });
     }
   );

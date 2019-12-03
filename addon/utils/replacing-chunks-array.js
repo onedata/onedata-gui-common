@@ -22,7 +22,7 @@ export const emptyItem = {};
 export default ArraySlice.extend(Evented, {
   /**
    * @virtual 
-   * @type {function} `(fromIndex, size, offset) => Array<any>`
+   * @type {function} `(fromIndex, size, offset, replacingChunksArray) => Array<any>`
    */
   fetch: undefined,
 
@@ -63,16 +63,6 @@ export default ArraySlice.extend(Evented, {
    * @type {Ember.ComputedProperty<number>}
    */
   chunkSize: computed.reads('maxLength'),
-
-  /**
-   * @type {ComputedProperty<Function>}
-   */
-  internalFetch: computed('fetch', function internalFetch() {
-    const fetch = this.get('fetch');
-    if (fetch) {
-      return fetch.bind(this);
-    }
-  }),
 
   loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
     return this.get('chunkSize') / 2;
@@ -152,7 +142,14 @@ export default ArraySlice.extend(Evented, {
         sourceArray,
         chunkSize,
         emptyIndex,
-      } = this.getProperties('_startReached', 'sourceArray', 'chunkSize', 'emptyIndex');
+        fetch,
+      } = this.getProperties(
+        '_startReached',
+        'sourceArray',
+        'chunkSize',
+        'emptyIndex',
+        'fetch',
+      );
 
       const firstItem = sourceArray[emptyIndex + 1];
       const fetchStartIndex = firstItem ? get(firstItem, 'index') : null;
@@ -161,10 +158,11 @@ export default ArraySlice.extend(Evented, {
         Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       this.trigger('fetchPrevStarted');
-      return this.get('internalFetch')(
+      return fetch(
           fetchStartIndex,
           currentChunkSize,
-          -currentChunkSize
+          -currentChunkSize,
+          this,
         )
         .then(arrayUpdate => {
           // TODO: use of pullAllBy is working, but it is probably unsafe
@@ -240,7 +238,7 @@ export default ArraySlice.extend(Evented, {
       const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
 
       this.trigger('fetchNextStarted');
-      return this.get('internalFetch')(
+      return this.get('fetch')(
           // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
           // and items are converted from plain objects to EmberObjects
           // the workaround is to use []
@@ -277,6 +275,7 @@ export default ArraySlice.extend(Evented, {
       endIndex,
       sourceArray,
       indexMargin,
+      fetch,
     } = this.getProperties(
       '_start',
       '_end',
@@ -284,6 +283,7 @@ export default ArraySlice.extend(Evented, {
       'endIndex',
       'sourceArray',
       'indexMargin',
+      'fetch',
     );
 
     // currently, if data is not loaded between start and startIndex
@@ -307,10 +307,11 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    return this.get('internalFetch')(
+    return fetch(
         fetchStartIndex,
         size,
-        offset
+        offset,
+        this,
       ).then(updatedRecordsArray => {
         const fetchedCount = get(updatedRecordsArray, 'length');
         const updatedEnd = _start + fetchedCount;
