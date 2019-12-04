@@ -6,6 +6,7 @@ import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import { blur, click, focus } from 'ember-native-dom-helpers';
+import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | form component/radio field', function () {
   setupComponentTest('form-component/radio-field', {
@@ -43,10 +44,16 @@ describe('Integration | Component | form component/radio field', function () {
     function () {
       this.render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect(this.$('input')).to.have.length(3);
-      expect(this.$('.option-first .one-label').text().trim()).to.equal('First');
-      expect(this.$('.option-second .one-label').text().trim()).to.equal('Second');
-      expect(this.$('.option-third .one-label').text().trim()).to.equal('Third');
+      return wait()
+        .then(() => {
+          expect(this.$('input')).to.have.length(3);
+          expect(this.$('.option-first .one-label').text().trim())
+            .to.equal('First');
+          expect(this.$('.option-second .one-label').text().trim())
+            .to.equal('Second');
+          expect(this.$('.option-third .one-label').text().trim())
+            .to.equal('Third');
+        });
     }
   );
 
@@ -57,7 +64,8 @@ describe('Integration | Component | form component/radio field', function () {
 
       this.render(hbs `{{form-component/radio-field field=field}}`);
 
-      return focus('.option-first input')
+      return wait()
+        .then(() => focus('.option-first input'))
         .then(() => blur('.option-first input'))
         .then(() => expect(focusLostSpy).to.be.calledOnce);
     }
@@ -70,7 +78,8 @@ describe('Integration | Component | form component/radio field', function () {
 
       this.render(hbs `{{form-component/radio-field field=field}}`);
 
-      return click('.option-first')
+      return wait()
+        .then(() => click('.option-first'))
         .then(() => {
           expect(valueChangedSpy).to.be.calledOnce;
           expect(valueChangedSpy).to.be.calledWith(1);
@@ -83,7 +92,10 @@ describe('Integration | Component | form component/radio field', function () {
 
     this.render(hbs `{{form-component/radio-field field=field}}`);
 
-    expect(this.$('.option-second input').prop('checked')).to.equal(true);
+    return wait()
+      .then(() =>
+        expect(this.$('.option-second input').prop('checked')).to.equal(true)
+      );
   });
 
   it('sets input id according to "fieldId"', function () {
@@ -91,6 +103,7 @@ describe('Integration | Component | form component/radio field', function () {
       {{form-component/radio-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('input#abc')).to.exist;
+    return wait()
+      .then(() => expect(this.$('input#abc')).to.exist)
   });
 });

@@ -24,11 +24,11 @@ export default FormFieldsGroup.extend({
   valuesSource: undefined,
 
   init() {
-    this._super(...arguments);
-
     if (!this.get('valuesSource')) {
       this.reset();
     }
+
+    this._super(...arguments);
   },
 
   /**

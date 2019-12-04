@@ -72,7 +72,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  fieldNameClass: computed('field.name', function () {
+  fieldNameClass: computed('field.name', function fieldNameClass() {
     return `${this.get('field.name')}-field`;
   }),
 });

@@ -53,9 +53,17 @@ export default FormElement.extend({
   /**
    * @override
    */
-  invalidFields: computed('fields.@each.invalidFields', function invalidFields() {
-    return _.flatten(this.get('fields').mapBy('invalidFields'));
-  }),
+  invalidFields: computed(
+    'isExpanded',
+    'fields.@each.invalidFields',
+    function invalidFields() {
+      const {
+        isExpanded,
+        fields,
+      } = this.getProperties('isExpanded', 'fields');
+      return isExpanded ? _.flatten(fields.mapBy('invalidFields')) : [];
+    }
+  ),
 
   fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
@@ -126,5 +134,26 @@ export default FormElement.extend({
       set(valuesAggregator, get(field, 'name'), field.dumpValue());
       return valuesAggregator;
     }, EmberObject.create());
+  },
+
+  getFieldByPath(relativePath) {
+    if (!relativePath) {
+      return null;
+    } else {
+      const dotPosition = relativePath.indexOf('.');
+      const fields = this.get('fields');
+      if (dotPosition !== -1) {
+        const thisLevelFieldName = relativePath.slice(0, dotPosition);
+        const nestedLevelsFieldPath = relativePath.slice(dotPosition + 1);
+        const field = fields.findBy('name', thisLevelFieldName);
+        if (field) {
+          return field.getFieldByPath(nestedLevelsFieldPath);
+        } else {
+          return null;
+        }
+      } else {
+        return fields.findBy('name', relativePath) || null;
+      }
+    }
   },
 })

@@ -181,6 +181,10 @@ export default EmberObject.extend({
     this.markAsNotModified();
   },
 
+  getFieldByPath() {
+    return null;
+  },
+
   /**
    * @public
    */

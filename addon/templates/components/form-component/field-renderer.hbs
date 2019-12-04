@@ -1,5 +1,5 @@
 {{#if field.isGroup}}
-  {{#one-collapse class="fields-group-collapse" collapsed=(not isExpanded)}}
+  {{#one-collapse class=(concat-classes "fields-group-collapse" (concat field.name "-collapse")) collapsed=(not isExpanded)}}
     {{#each field.fields as |nestedField|}}
       {{form-component/field-renderer field=nestedField}}
     {{/each}}

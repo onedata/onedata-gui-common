@@ -353,4 +353,44 @@ describe('Unit | Utility | form component/form fields group', function () {
       });
     }
   );
+
+  it(
+    'returns nested field from getFieldByPath() when searching by existing path',
+    function () {
+      const field = FormField.create({
+        name: 'f',
+      });
+      const formGroup = FormFieldsGroup.create({
+        name: 'g0',
+        fields: A([
+          FormFieldsGroup.create({
+            name: 'g1',
+            fields: [field],
+          }),
+        ]),
+      });
+
+      expect(formGroup.getFieldByPath('g1.f')).to.equal(field);
+    },
+  );
+
+  it(
+    'returns null from getFieldByPath() when searching by non-existing path',
+    function () {
+      const field = FormField.create({
+        name: 'f',
+      });
+      const formGroup = FormFieldsGroup.create({
+        name: 'g0',
+        fields: A([
+          FormFieldsGroup.create({
+            name: 'g1',
+            fields: [field],
+          }),
+        ]),
+      });
+
+      expect(formGroup.getFieldByPath('g1.g')).to.be.null;
+    },
+  );
 });

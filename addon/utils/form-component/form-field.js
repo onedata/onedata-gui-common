@@ -7,7 +7,7 @@ import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
-import { conditional } from 'ember-awesome-macros';
+import { conditional, or, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend(OwnerInjector, I18n, {
@@ -81,7 +81,7 @@ export default FormElement.extend(OwnerInjector, I18n, {
    * @override
    */
   invalidFields: conditional(
-    'isValid',
+    or('isValid', not('isEnabled')),
     [],
     computed(function () { return [this]; }),
   ),

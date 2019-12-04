@@ -1,0 +1,24 @@
+{{#if (not preparedOptions.isRejected)}}
+  {{#power-select
+    tagName="div"
+    options=preparedOptions
+    onchange=(action "valueChanged")
+    selected=(find-by "value" value preparedOptions)
+    loadingMessage=loadingMessage
+    placeholder=placeholder
+    renderInPlace=true
+    onblur=(action "focusLost")
+    triggerId=fieldId
+    as |option|
+  }}
+    <div class="option-container">
+      {{#if option.icon}}
+        {{one-icon icon=option.icon}}
+      {{/if}}
+      <span class="text">{{option.label}}</span>
+    </div>
+  {{/power-select}}
+{{else}}
+  {{resource-load-error reason=preparedOptions.reason}}
+{{/if}}
+{{yield}}
