@@ -62,6 +62,15 @@ describe('Integration | Component | form component/dropdown field', function () 
   });
 
   it(
+    'has class "dropdown-field"',
+    function () {
+      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+      expect(this.$('.dropdown-field')).to.exist;
+    }
+  );
+
+  it(
     'renders three dropdown options',
     function () {
       this.render(hbs `{{form-component/dropdown-field field=field}}`);

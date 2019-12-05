@@ -16,6 +16,15 @@ describe('Integration | Component | form component/json field', function () {
   });
 
   it(
+    'has class "json-field"',
+    function () {
+      this.render(hbs `{{form-component/json-field field=field}}`);
+
+      expect(this.$('.json-field')).to.exist;
+    }
+  );
+
+  it(
     'renders textarea',
     function () {
       this.render(hbs `{{form-component/json-field field=field}}`);

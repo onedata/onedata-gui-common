@@ -4,6 +4,7 @@ import { reads } from '@ember/object/computed';
 
 export default FieldComponentBase.extend({
   layout,
+  classNames: ['radio-field'],
 
   preparedOptions: reads('field.preparedOptions'),
 });

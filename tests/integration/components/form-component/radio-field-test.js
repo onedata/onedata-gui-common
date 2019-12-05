@@ -40,6 +40,15 @@ describe('Integration | Component | form component/radio field', function () {
   });
 
   it(
+    'has class "radio-field"',
+    function () {
+      this.render(hbs `{{form-component/radio-field field=field}}`);
+
+      expect(this.$('.radio-field')).to.exist;
+    }
+  );
+
+  it(
     'renders three radio inputs with labels',
     function () {
       this.render(hbs `{{form-component/radio-field field=field}}`);

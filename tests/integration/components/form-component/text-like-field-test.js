@@ -16,6 +16,15 @@ describe('Integration | Component | form component/text like field', function ()
   });
 
   it(
+    'has class "text-like-field"',
+    function () {
+      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+
+      expect(this.$('.text-like-field')).to.exist;
+    }
+  );
+
+  it(
     'renders text input',
     function () {
       this.render(hbs `{{form-component/text-like-field field=textField}}`);

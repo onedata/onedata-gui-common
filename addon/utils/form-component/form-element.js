@@ -55,6 +55,11 @@ export default EmberObject.extend({
   fieldComponentName: undefined,
 
   /**
+   * @type {String}
+   */
+  classes: '',
+
+  /**
    * @type {boolean}
    */
   isGroup: false,

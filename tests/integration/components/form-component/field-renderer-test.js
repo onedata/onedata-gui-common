@@ -187,4 +187,15 @@ describe('Integration | Component | form component/field renderer', function () 
       expect($renderer).to.have.class('text-like-field-renderer');
     }
   );
+
+  it(
+    'has class passed via field.classes',
+    function () {
+      this.set('textField.classes', 'abc');
+
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
+
+      expect(this.$('.field-renderer')).to.have.class('abc');
+    }
+  );
 });
