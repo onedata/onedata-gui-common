@@ -11,6 +11,7 @@ export default Component.extend({
     'isGroup::form-group',
     'validationClass',
     'fieldNameClass',
+    'fieldComponentClass',
   ],
 
   /**
@@ -74,5 +75,18 @@ export default Component.extend({
    */
   fieldNameClass: computed('field.name', function fieldNameClass() {
     return `${this.get('field.name')}-field`;
+  }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  fieldComponentClass: computed('field.name', function fieldComponentClass() {
+    // It takes only the last part of component name. So it transforms
+    // 'form-component/radio-field' to 'radio-field-renderer'.
+    const fieldComponentName = this.get('field.fieldComponentName');
+    if (fieldComponentName) {
+      const componentNameParts = fieldComponentName.split('/');
+      return `${componentNameParts[componentNameParts.length - 1]}-renderer`;
+    }
   }),
 });

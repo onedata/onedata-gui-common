@@ -2,7 +2,6 @@
   .form-group {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
   }
 
   .field-component {
@@ -26,6 +25,12 @@
   .has-error {
     .field-message {
       color: $state-danger-text;
+    }
+  }
+
+  .radio-field-renderer {
+    .control-label {
+      padding-top: 0;
     }
   }
 

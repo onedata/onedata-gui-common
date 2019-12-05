@@ -5,7 +5,7 @@ export default class EmberPowerSelectHelper {
     this.triggerSelector =
       powerSelectTriggerParentSelector + ' .ember-basic-dropdown-trigger';
     this.dropdownSelector = powerSelectDropdownSelector ||
-      powerSelectTriggerParentSelector + ' .ember-power-select-options';
+      powerSelectTriggerParentSelector + ' .ember-basic-dropdown-content';
   }
 
   /**
@@ -20,6 +20,13 @@ export default class EmberPowerSelectHelper {
    */
   open() {
     return click(this.getTrigger());
+  }
+
+  /**
+   * @returns {HTMLINPUTElement}
+   */
+  getSearchInput() {
+    return find(`${this.dropdownSelector} .ember-power-select-search-input`);
   }
 
   /**

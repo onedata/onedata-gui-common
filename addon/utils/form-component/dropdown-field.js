@@ -8,6 +8,11 @@ export default OptionsField.extend({
   fieldComponentName: 'form-component/dropdown-field',
 
   /**
+   * @type {boolean}
+   */
+  showSearch: true,
+
+  /**
    * @type {ComputedProperty<HtmlSafe>}
    */
   loadingMessage: computed('i18nPrefix', 'path', function loadingMessage() {

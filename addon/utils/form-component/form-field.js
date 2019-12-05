@@ -28,6 +28,27 @@ export default FormElement.extend(OwnerInjector, I18n, {
   withValidationIcon: true,
 
   /**
+   * @type {Array<String>}
+   */
+  internalValidatorsFields: Object.freeze([]),
+
+  /**
+   * Set by registerInternalValidatorField
+   * @type {ComputedProperty<Array<Object>>}
+   */
+  internalValidators: undefined,
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  presenceValidator: computed('isOptional', function presenceValidator() {
+    return this.get('isOptional') ? undefined : validator('presence', {
+      presence: true,
+      ignoreBlank: true,
+    });
+  }),
+
+  /**
    * Array of validators (created using validator() from ember-cp-validations)
    * @public
    * @type {Array<Object>}
@@ -39,23 +60,14 @@ export default FormElement.extend(OwnerInjector, I18n, {
    */
   validators: computed(
     'customValidators.[]',
-    'isOptional',
+    'internalValidators.[]',
     function validators() {
       const {
         customValidators,
-        isOptional,
-      } = this.getProperties('customValidators', 'isOptional');
+        internalValidators,
+      } = this.getProperties('customValidators', 'internalValidators');
 
-      const validatorsArray = customValidators.slice();
-
-      if (!isOptional) {
-        validatorsArray.push(validator('presence', {
-          presence: true,
-          ignoreBlank: true,
-        }));
-      }
-
-      return validatorsArray;
+      return customValidators.concat(internalValidators || []);
     }
   ),
 
@@ -104,6 +116,28 @@ export default FormElement.extend(OwnerInjector, I18n, {
   tip: computed('i18nPrefix', 'path', function tip() {
     return fallbackTranslation(this.t(this.get('path') + '.tip'), undefined);
   }),
+
+  init() {
+    this._super(...arguments);
+
+    this.registerInternalValidatorField('presenceValidator');
+  },
+
+  registerInternalValidatorField(fieldName) {
+    const internalValidatorsFields =
+      this.get('internalValidatorsFields').concat([fieldName]);
+
+    this.setProperties({
+      internalValidatorsFields: internalValidatorsFields,
+      internalValidators: computed(
+        ...internalValidatorsFields,
+        function internalValidators() {
+          return internalValidatorsFields
+            .map(validatorFieldName => this.get(validatorFieldName))
+            .compact();
+        }),
+    });
+  },
 })
 
 function fallbackTranslation(translation, fallback) {

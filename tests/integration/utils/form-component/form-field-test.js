@@ -127,7 +127,7 @@ describe('Integration | Utility | form component/form field', function () {
   );
 
   it(
-    'has falsy "isOptional" field by default and notifies abut validation error for empty content',
+    'has falsy "isOptional" field by default and notifies about validation error for empty content',
     function () {
       const formField = FormField.create({
         ownerSource: this,

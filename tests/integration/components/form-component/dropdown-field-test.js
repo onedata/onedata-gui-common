@@ -247,6 +247,30 @@ describe('Integration | Component | form component/dropdown field', function () 
     }
   );
 
+  it(
+    'shows search input by default',
+    function () {
+      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+      const dropdown = new DropdownHelper();
+      return wait()
+        .then(() => dropdown.open())
+        .then(() => expect(dropdown.getSearchInput()).to.exist);
+    }
+  );
+
+  it(
+    'does not show search input if field "showSearch" is falsy',
+    function () {
+      this.set('field.showSearch', false);
+      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+      const dropdown = new DropdownHelper();
+      return wait()
+        .then(() => dropdown.open())
+        .then(() => expect(dropdown.getSearchInput()).to.not.exist);
+    }
+  );
 });
 
 class DropdownHelper extends EmberPowerSelectHelper {

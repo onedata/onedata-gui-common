@@ -175,11 +175,16 @@ describe('Integration | Component | form component/field renderer', function () 
       .to.not.have.class('in');
   });
 
-  it('has class "`field.Name`-field"', function () {
-    this.set('textField.name', 'field1');
+  it(
+    'has class "`field.name`-field" and "`field.fieldComponentName`-renderer',
+    function () {
+      this.set('textField.name', 'field1');
 
-    this.render(hbs `{{form-component/field-renderer field=textField}}`);
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.field-renderer')).to.have.class('field1-field');
-  });
+      const $renderer = this.$('.field-renderer');
+      expect($renderer).to.have.class('field1-field');
+      expect($renderer).to.have.class('text-like-field-renderer');
+    }
+  );
 });
