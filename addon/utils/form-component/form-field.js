@@ -25,6 +25,13 @@ export default FormElement.extend(OwnerInjector, I18n, {
    * @virtual
    * @type {boolean}
    */
+  addColonToLabel: true,
+
+  /**
+   * @public
+   * @virtual
+   * @type {boolean}
+   */
   withValidationIcon: true,
 
   /**

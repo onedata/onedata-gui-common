@@ -154,4 +154,13 @@ describe('Integration | Utility | form component/form field', function () {
       expect(get(formField, 'errors')).to.be.have.length(0);
     }
   );
+
+  it(
+    'has truthy "addColonToLabel" by default',
+    function () {
+      const formField = FormField.create();
+
+      expect(get(formField, 'addColonToLabel')).to.be.true;
+    },
+  )
 });

@@ -5,6 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
+import { setProperties } from '@ember/object';
 
 describe('Integration | Component | form component/field renderer', function () {
   setupComponentTest('form-component/field-renderer', {
@@ -196,6 +197,20 @@ describe('Integration | Component | form component/field renderer', function () 
       this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
       expect(this.$('.field-renderer')).to.have.class('abc');
+    }
+  );
+
+  it(
+    'does not add colon to label if field.addColonToLabel is false',
+    function () {
+      setProperties(this.get('textField'), {
+        addColonToLabel: false,
+        label: 'abc',
+      });
+
+      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+
+      expect(this.$('label').text().trim()).to.equal('abc');
     }
   );
 });
