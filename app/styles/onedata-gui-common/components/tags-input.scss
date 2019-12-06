@@ -1,0 +1,39 @@
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  height: initial;
+  min-height: 54px;
+  list-style-type: none;
+  padding-bottom: $padding-base-vertical - $padding-xs-horizontal;
+  padding-right: $padding-base-horizontal - $padding-xs-horizontal;
+
+  .tag-item {
+    display: flex;
+    align-items: center;
+    margin-right: $padding-xs-horizontal;
+    margin-bottom: $padding-xs-horizontal;
+    padding: $padding-small-vertical;
+    border: 1px solid $color-one-blue-gray;
+    border-radius: $border-radius-base;
+    background-color: $color-one-light-blue;
+    font-size: 0.9em;
+  }
+
+  .tag-icon {
+    margin-right: 3px;
+    font-size: 1.5em;
+  }
+
+  .tag-label {
+    align-self: baseline;
+  }
+
+  .tag-remove {
+    margin-left: 3px;
+    font-weight: bold;
+    
+    &:hover {
+      color: $color-one-danger;
+    }
+  }
+}

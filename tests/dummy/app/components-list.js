@@ -37,4 +37,5 @@ export default [
   'space-providers-support-chart',
   'status-toolbar',
   'support-size-info',
+  'tags-input',
 ];

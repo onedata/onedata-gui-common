@@ -1,0 +1,10 @@
+{{#each tags as |tag|}}
+  <li class="tag-item">
+    {{#if tag.icon}}
+      {{one-icon icon=tag.icon class="tag-icon"}}
+    {{/if}}
+    <span class="tag-label">{{tag.label}}</span>
+    {{one-icon icon="close" class="tag-remove" click=(action "removeTag" tag)}}
+  </li>
+{{/each}}
+{{yield}}
