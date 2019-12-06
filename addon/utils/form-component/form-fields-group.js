@@ -11,12 +11,6 @@ export default FormElement.extend({
   isGroup: true,
 
   /**
-   * @public
-   * @type {boolean}
-   */
-  isExpanded: true,
-
-  /**
    * @override
    */
   fields: computed(() => A()),
@@ -54,14 +48,14 @@ export default FormElement.extend({
    * @override
    */
   invalidFields: computed(
-    'isExpanded',
+    'isVisible',
     'fields.@each.invalidFields',
     function invalidFields() {
       const {
-        isExpanded,
+        isVisible,
         fields,
-      } = this.getProperties('isExpanded', 'fields');
-      return isExpanded ? _.flatten(fields.mapBy('invalidFields')) : [];
+      } = this.getProperties('isVisible', 'fields');
+      return isVisible ? _.flatten(fields.mapBy('invalidFields')) : [];
     }
   ),
 

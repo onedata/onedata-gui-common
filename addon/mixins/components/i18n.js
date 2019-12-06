@@ -62,4 +62,19 @@ export default Mixin.create({
   tt() {
     return this.t(...arguments);
   },
+
+  /**
+   * Translates text using t() method. If it returns "missing translation" error
+   * then it will return `defaultValue`.
+   * @param {string} translationKey
+   * @param {object} placeholders
+   * @param {any} defaultValue
+   * @returns {string} string translated by 18n service 
+   */
+  tWithDefault(translationKey, placeholders = {}, defaultValue) {
+    const translation = String(this.t(translationKey, placeholders));
+    return translation.startsWith('<missing-') ||
+      translation.startsWith('Missing translation: ') ?
+      defaultValue : translation;
+  },
 });

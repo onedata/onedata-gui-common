@@ -13,6 +13,11 @@ export default EmberObject.extend({
   isEnabled: true,
 
   /**
+   * @type {boolean}
+   */
+  isVisible: true,
+
+  /**
    * @type {string}
    */
   mode: 'edit',

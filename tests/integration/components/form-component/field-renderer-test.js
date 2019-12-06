@@ -158,16 +158,16 @@ describe('Integration | Component | form component/field renderer', function () 
     }
   );
 
-  it('renders expanded fields group, when field.isExpanded is true', function () {
+  it('renders expanded fields group, when field.isVisible is true', function () {
     this.set('fields', FormFieldsGroup.create());
     this.render(hbs `{{form-component/field-renderer field=fields}}`);
 
     expect(this.$('.field-renderer .fields-group-collapse')).to.have.class('in');
   });
 
-  it('renders collapsed fields group, when field.isExpanded is false', function () {
+  it('renders collapsed fields group, when field.isVisible is false', function () {
     this.set('fields', FormFieldsGroup.create({
-      isExpanded: false,
+      isVisible: false,
     }));
     this.render(hbs `{{form-component/field-renderer field=fields}}`);
 

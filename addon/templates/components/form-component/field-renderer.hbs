@@ -1,7 +1,9 @@
 {{#if field.isGroup}}
-  {{#one-collapse class=(concat-classes "fields-group-collapse" (concat field.name "-collapse")) collapsed=(not isExpanded)}}
+  {{#one-collapse class=(concat-classes "fields-group-collapse" (concat field.name "-collapse")) collapsed=(not visible)}}
     {{#each field.fields as |nestedField|}}
-      {{form-component/field-renderer field=nestedField}}
+      {{#if (or nestedField.isVisible nestedField.isGroup)}}
+        {{form-component/field-renderer field=nestedField}}
+      {{/if}}
     {{/each}}
   {{/one-collapse}}
 {{else}}

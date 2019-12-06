@@ -16,15 +16,15 @@ export default OptionsField.extend({
    * @type {ComputedProperty<HtmlSafe>}
    */
   loadingMessage: computed('i18nPrefix', 'path', function loadingMessage() {
-    const translation = this.t(this.get('path') + '.loadingMessage');
-    return String(translation).startsWith('<missing-') ? undefined : translation;
+    // Null value, because powerselect converts `undefined` to string 'undefined'
+    return this.tWithDefault(`${this.get('path')}.loadingMessage`, {}, null);
   }),
 
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
   placeholder: computed('i18nPrefix', 'path', function placeholder() {
-    const translation = this.t(this.get('path') + '.placeholder');
-    return String(translation).startsWith('<missing-') ? undefined : translation;
+    // Null value, because powerselect converts `undefined` to string 'undefined'
+    return this.tWithDefault(`${this.get('path')}.placeholder`, {}, null);
   }),
 })

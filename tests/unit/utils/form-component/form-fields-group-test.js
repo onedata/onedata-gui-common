@@ -320,15 +320,6 @@ describe('Unit | Utility | form component/form fields group', function () {
   );
 
   it(
-    'has truthy "isExpanded" by default',
-    function () {
-      const formGroup = FormFieldsGroup.create();
-
-      expect(get(formGroup, 'isExpanded')).to.be.true;
-    }
-  );
-
-  it(
     'returns aggregated fields values as a dumpValues() result',
     function () {
       const formGroup = FormFieldsGroup.create({

@@ -168,7 +168,9 @@ describe('Integration | Component | form component/dropdown field', function () 
       } = this.getProperties('i18nStub', 'field');
       i18nStub
         .withArgs('somePrefix.field1.loadingMessage')
-        .returns('Loading...');
+        .returns('Loading...')
+        .withArgs('somePrefix.field1.placeholder')
+        .returns('');
       setProperties(field, {
         value: 2,
         options: PromiseArray.create({

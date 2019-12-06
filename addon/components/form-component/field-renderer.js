@@ -69,7 +69,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isExpanded: reads('field.isExpanded'),
+  visible: reads('field.isVisible'),
 
   /**
    * @type {ComputedProperty<String>}

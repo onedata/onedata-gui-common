@@ -93,7 +93,7 @@ export default FormElement.extend(OwnerInjector, I18n, {
    * @override
    */
   invalidFields: conditional(
-    or('isValid', not('isEnabled')),
+    or('isValid', not('isEnabled'), not('isVisible')),
     [],
     computed(function () { return [this]; }),
   ),
@@ -107,14 +107,14 @@ export default FormElement.extend(OwnerInjector, I18n, {
    * @type {ComputedProperty<HtmlSafe>}
    */
   label: computed('i18nPrefix', 'path', function label() {
-    return fallbackTranslation(this.t(this.get('path') + '.label'), undefined);
+    return this.tWithDefault(`${this.get('path')}.label`, {}, undefined);
   }),
 
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
   tip: computed('i18nPrefix', 'path', function tip() {
-    return fallbackTranslation(this.t(this.get('path') + '.tip'), undefined);
+    return this.tWithDefault(`${this.get('path')}.tip`, {}, undefined);
   }),
 
   init() {
@@ -139,7 +139,3 @@ export default FormElement.extend(OwnerInjector, I18n, {
     });
   },
 })
-
-function fallbackTranslation(translation, fallback) {
-  return String(translation).startsWith('<missing-') ? fallback : translation;
-}

@@ -196,4 +196,13 @@ describe('Unit | Utility | form component/form element', function () {
 
     expect(formElement.dumpValue()).to.equal('b');
   });
+
+  it(
+    'has truthy "isVisible" by default',
+    function () {
+      const formElement = FormElement.create();
+
+      expect(get(formElement, 'isVisible')).to.be.true;
+    }
+  );
 });
