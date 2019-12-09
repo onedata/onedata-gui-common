@@ -178,13 +178,13 @@ function nodeNotCompatibleDetailsTranslator(i18n, errorDetails) {
   return _.assign({}, errorDetails, { clusterType });
 }
 
-function createNestedErrorDetailsTranslator(nestedErrorFielName = 'error') {
+function createNestedErrorDetailsTranslator(nestedErrorFieldName = 'error') {
   return (i18n, errorDetails) => {
-    const nestedError = errorDetails[nestedErrorFielName] || {};
+    const nestedError = errorDetails[nestedErrorFieldName] || {};
     const nestedErrorTranslation =
       findTranslation(i18n, i18nPrefix + nestedError.id, nestedError.details);
     return _.assign({}, errorDetails, {
-      [nestedErrorFielName]: nestedErrorTranslation
+      [nestedErrorFieldName]: nestedErrorTranslation
     });
   }
 }
