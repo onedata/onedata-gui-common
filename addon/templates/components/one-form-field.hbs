@@ -8,7 +8,16 @@
     {{/if}}
   </label>
   <div class="form-control-column {{layoutConfig.formInputColumns}}">
-    {{#if (eq field.type "radio-group")}}
+    {{#if (eq field.type "datetime")}}
+      {{one-datetime-picker
+        datetime=value
+        id=inputId
+        class=inputClasses
+        onChange=(action "inputChanged" field.name)
+        disabled=disabled
+        placeholder=field.placeholder
+        focusOut=(action "onFocusOut")}}
+    {{else if (eq field.type "radio-group")}}
       {{one-way-radio-group
         class=inputClasses
         inputId=inputId

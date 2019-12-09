@@ -11,6 +11,7 @@ import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-form-fields';
 import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
+import { computed, get } from '@ember/object';
 
 const {
   layoutConfig
@@ -79,6 +80,36 @@ export default Component.extend({
    * @type {FieldType}
    */
   fields: null,
+
+  /**
+   * @type {Array<{ prefix: string, fields: Array<FieldType> }>}
+   * Array with fields grouped by prefix. If prefixes are not directly specified
+   * by `prefix` field, then all fields are inside one group with prefix 'undefined'.
+   */
+  fieldsGroupedByPrefix: computed(
+    'fields.@each.prefix',
+    function fieldsGroupedByPrefix() {
+      const fields = this.get('fields');
+
+      const groups = [];
+      let lastGroup = null;
+      fields.forEach(field => {
+        const fieldPrefix = get(field, 'prefix') || 'undefined';
+
+        if (!lastGroup || lastGroup.prefix !== fieldPrefix) {
+          lastGroup = {
+            prefix: fieldPrefix,
+            fields: [],
+          };
+          groups.push(lastGroup);
+        }
+
+        lastGroup.fields.push(field);
+      })
+
+      return groups;
+    }
+  ),
 
   actions: {
     inputChanged() {

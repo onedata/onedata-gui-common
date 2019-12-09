@@ -53,6 +53,12 @@ export default Component.extend(I18n, {
   type: 'input',
 
   /**
+   * @virtual optional
+   * @type {string}
+   */
+  inputClass: undefined,
+
+  /**
    * @type {number}
    */
   textareaRows: 5,

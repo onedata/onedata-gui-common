@@ -95,7 +95,8 @@ export default Component.extend({
     } else {
       const prevValue = String(this.getValueInBytes(scaledValue));
       if (prevValue !== value) {
-        const scaledValueCandidate = Math.round(value / sizeUnit.multiplicator * 10) / 10;
+        const scaledValueCandidate =
+          Math.round(value / sizeUnit.multiplicator * 10) / 10;
         newScaledSize = isNaN(scaledValueCandidate) ? value : scaledValueCandidate;
       } else {
         return;
@@ -119,7 +120,7 @@ export default Component.extend({
     } else {
       sizeUnit = sizeUnits[0];
     }
-    
+
     this.set('sizeUnit', sizeUnit);
     this.scaledValueModifier();
   },
@@ -131,14 +132,14 @@ export default Component.extend({
   getValueInBytes(scaledValue, sizeUnit = undefined) {
     const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||
       this.get('sizeUnit.multiplicator') || 1;
-    
+
     return Math.floor(scaledValue * multiplicator);
   },
 
   actions: {
     scaledValueChanged(scaledValue) {
       this.set('scaledValue', scaledValue);
-      
+
       let newValue = this.getValueInBytes(scaledValue);
       if (isNaN(newValue)) {
         newValue = scaledValue;

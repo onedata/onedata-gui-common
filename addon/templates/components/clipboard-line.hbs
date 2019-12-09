@@ -7,13 +7,13 @@
 {{#if (eq type "textarea")}}
   <textarea
     rows="{{textareaRows}}"
-    class="clipboard-input form-control"
+    class="clipboard-input form-control {{inputClass}}"
     readonly
   >{{value}}</textarea>
 {{else}}
   <input
     type="text"
-    class="clipboard-input form-control {{if size (concat "input-" size)}}"
+    class="clipboard-input form-control {{inputClass}} {{if size (concat "input-" size)}}"
     value={{value}}
     readonly
   >
