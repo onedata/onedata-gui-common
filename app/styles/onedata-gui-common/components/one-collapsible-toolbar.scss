@@ -31,6 +31,15 @@
 
 .one-collapsible-toolbar-popover {
   width: $mobile-menu-popover-width;
+  .minized-item {
+    .one-icon {
+      position: relative;
+      top: 0.3em;
+      margin-right: 0.3em;
+      font-size: 190%;
+      line-height: 0;
+    }
+  }
 }
 
 .with-menu {
