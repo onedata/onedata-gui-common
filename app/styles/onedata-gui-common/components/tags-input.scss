@@ -1,12 +1,20 @@
 .tags-input {
+  $font-scale: 0.9;
+  $tag-line-height: $line-height-computed * $font-scale;
+  $tag-vertical-padding: 4px;
+  $tag-height: $tag-line-height + 2 * $tag-vertical-padding + 2px;
+  $input-vertical-padding: ($input-height-base - $tag-height - 2px) / 2;
+
   display: flex;
   flex-wrap: wrap;
   height: initial;
-  min-height: 54px;
+  min-height: $input-height-base;
+  margin: 0;
   list-style-type: none;
-  padding-bottom: $padding-base-vertical - $padding-xs-horizontal;
+  padding-top: $input-vertical-padding;
+  padding-bottom: $input-vertical-padding - $padding-xs-horizontal;
   padding-right: $padding-base-horizontal - $padding-xs-horizontal;
-  font-size: 90%;
+  font-size: $font-scale * 1em;
 
   .input-element {
     margin-right: $padding-xs-horizontal;
@@ -16,7 +24,7 @@
   .tag-item {
     display: flex;
     align-items: center;
-    padding: $padding-small-vertical;
+    padding: $tag-vertical-padding $padding-small-vertical;
     border: 1px solid $color-one-blue-gray;
     border-radius: $border-radius-base;
     background-color: $color-one-light-blue;
@@ -57,7 +65,7 @@
 
   .tags-input-text-editor {
     .text-editor-input {
-      padding: $padding-small-vertical + 1 $padding-small-vertical;
+      padding: $tag-vertical-padding;
       border: 0;
       border-bottom: 1px solid $main-border-color;
       outline: 0;
