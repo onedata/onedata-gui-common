@@ -56,6 +56,11 @@ export default Component.extend({
   separators: or('settings.separators', [',']),
 
   /**
+   * @type {ComputedProperty<RegExp>}
+   */
+  regexp: or('settings.regexp', /^.*$/),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   inputValue: reads('newTags.firstObject.label'),
@@ -102,13 +107,24 @@ export default Component.extend({
       const {
         onTagsChanged,
         onTagsAdded,
-      } = this.getProperties('onTagsChanged', 'onTagsAdded');
+        regexp,
+      } = this.getProperties('onTagsChanged', 'onTagsAdded', 'regexp');
 
       const labels = this.extractTagsLabels(value);
       const lastLabel = get(labels, 'lastObject');
 
-      const tagsToAdd = labels.slice(0, -1).map(label => ({ label }))
-      const tagsChanged = lastLabel ? [{ label: lastLabel }] : [];
+      const tagsToAdd = labels
+        .slice(0, -1)
+        .filter(label => regexp.test(label))
+        .map(label => ({ label }));
+      let tagsChanged = [];
+      if (lastLabel) {
+        const changedTag = { label: lastLabel };
+        if (!regexp.test(lastLabel)) {
+          changedTag.isInvalid = true;
+        }
+        tagsChanged.push(changedTag);
+      }
 
       if (tagsToAdd.length) {
         onTagsAdded(tagsToAdd);
@@ -128,7 +144,7 @@ export default Component.extend({
         onTagsAdded,
       } = this.getProperties('newTags', 'onTagsAdded');
 
-      if (newTags && newTags.length) {
+      if (newTags && newTags.length && !newTags[0].isInvalid) {
         onTagsAdded([newTags[0]]);
       }
     },

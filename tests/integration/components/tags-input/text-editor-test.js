@@ -158,7 +158,6 @@ describe('Integration | Component | tags input/text editor', function () {
         '.text-editor-input',
         '    someTag ,  someTag2, , someTag3   '
       ))
-      .then(() => wait())
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('someTag3');
         expect(changeSpy.lastCall).to.be.calledWith([{
@@ -167,5 +166,56 @@ describe('Integration | Component | tags input/text editor', function () {
           label: 'someTag2',
         }]);
       })
+  });
+
+  it('does not add tag which not match settings.regexp', function () {
+    this.setProperties({
+      tags: [],
+      settings: {
+        regexp: /^\d+$/
+      },
+    });
+    const changeSpy = sinon.spy((tags) => this.set('tags', tags));
+    this.on('change', changeSpy);
+
+    this.render(hbs `{{tags-input
+      tags=tags
+      tagEditorComponentName="tags-input/text-editor"
+      tagEditorSettings=settings
+      onChange=(action "change")
+    }}`);
+    return click('.tag-creator-trigger')
+      .then(() => fillIn('.text-editor-input', '1a'))
+      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => {
+        expect(this.$('.text-editor-input').val()).to.equal('1a');
+        expect(changeSpy).to.not.been.called;
+      });
+  });
+
+  it('does not add multiple tags which not match settings.regexp', function () {
+    this.setProperties({
+      tags: [],
+      settings: {
+        regexp: /^\d+$/
+      },
+    });
+    const changeSpy = sinon.spy((tags) => this.set('tags', tags));
+    this.on('change', changeSpy);
+
+    this.render(hbs `{{tags-input
+      tags=tags
+      tagEditorComponentName="tags-input/text-editor"
+      tagEditorSettings=settings
+      onChange=(action "change")
+    }}`);
+    return click('.tag-creator-trigger')
+      .then(() => fillIn('.text-editor-input', '1a,234,cvs,sd,2'))
+      .then(() => {
+        expect(this.$('.text-editor-input').val()).to.equal('2');
+        expect(changeSpy.lastCall).to.be.calledWith([{
+          label: '234',
+        }]);
+      });
   });
 });

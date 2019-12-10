@@ -308,6 +308,44 @@ describe('Integration | Component | tags input', function () {
   );
 
   it(
+    'does not add invalid tags remembered in newTags on tag-creator-trigger click in creation mode',
+    function () {
+      const newTags = [{
+        label: 'b',
+        isInvalid: true,
+      }, {
+        label: 'c',
+      }];
+      const existingTags = [{
+        label: 'a',
+      }];
+      this.set('tags', existingTags);
+      const changeSpy = sinon.spy((tags) => this.set('tags', tags));
+      this.on('change', changeSpy);
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagEditorComponentName="test-component"
+        onChange=(action "change")
+      }}`);
+
+      let testComponent;
+      return click('.tag-creator-trigger')
+        .then(() => {
+          testComponent =
+            this.$('.tag-creator .test-component')[0].componentInstance;
+
+          get(testComponent, 'onTagsChanged')(newTags);
+          return click('.tag-creator-trigger');
+        })
+        .then(() => {
+          expect(changeSpy.lastCall)
+            .to.be.calledWith(existingTags.concat([newTags[1]]));
+          expect(get(testComponent, 'newTags')).to.have.length(1);
+        });
+    }
+  );
+
+  it(
     'focuses editor after tag-creator-trigger click in creation mode',
     function () {
       const newTags = [{

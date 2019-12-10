@@ -122,8 +122,9 @@ export default Component.extend({
         newTags,
       } = this.getProperties('onChange', 'tags', 'newTags');
 
-      this.set('newTags', newTags.filter(tag => !newTagsToAdd.includes(tag)));
-      onChange(tags.concat(newTagsToAdd).uniq());
+      const correctTagsToAdd = newTagsToAdd.rejectBy('isInvalid');
+      this.set('newTags', newTags.filter(tag => !correctTagsToAdd.includes(tag)));
+      onChange(tags.concat(correctTagsToAdd).uniq());
     },
     newTagsChanged(newTags) {
       this.set('newTags', newTags);
