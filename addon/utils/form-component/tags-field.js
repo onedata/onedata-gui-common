@@ -7,6 +7,11 @@ export default FormField.extend({
   fieldComponentName: 'form-component/tags-field',
 
   /**
+   * @override
+   */
+  withValidationIcon: false,
+
+  /**
    * @public
    * @type {String}
    */

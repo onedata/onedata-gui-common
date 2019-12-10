@@ -16,6 +16,11 @@ describe('Integration | Utility | form component/tags field', function () {
       .to.equal('form-component/tags-field');
   });
 
+  it('overrides "withValidationIcon" to false', function () {
+    const field = TagsField.create();
+    expect(get(field, 'withValidationIcon')).to.be.false;
+  });
+
   it('defines tagEditorComponentName as "tags-input/text-editor"', function () {
     const field = TagsField.create();
 

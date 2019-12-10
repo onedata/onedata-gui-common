@@ -29,6 +29,7 @@
 
   .tag-label {
     align-self: baseline;
+    max-width: 200px;
   }
 
   .tag-remove {
@@ -60,6 +61,7 @@
       border: 0;
       border-bottom: 1px solid $main-border-color;
       outline: 0;
+      width: 150px;
     }
   }
 }
