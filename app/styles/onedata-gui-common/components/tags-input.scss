@@ -6,17 +6,20 @@
   list-style-type: none;
   padding-bottom: $padding-base-vertical - $padding-xs-horizontal;
   padding-right: $padding-base-horizontal - $padding-xs-horizontal;
+  font-size: 90%;
+
+  .input-element {
+    margin-right: $padding-xs-horizontal;
+    margin-bottom: $padding-xs-horizontal;
+  }
 
   .tag-item {
     display: flex;
     align-items: center;
-    margin-right: $padding-xs-horizontal;
-    margin-bottom: $padding-xs-horizontal;
     padding: $padding-small-vertical;
     border: 1px solid $color-one-blue-gray;
     border-radius: $border-radius-base;
     background-color: $color-one-light-blue;
-    font-size: 0.9em;
   }
 
   .tag-icon {
@@ -31,9 +34,32 @@
   .tag-remove {
     margin-left: 3px;
     font-weight: bold;
-    
+
     &:hover {
       color: $color-one-danger;
+    }
+  }
+
+  .tag-creator-trigger {
+    align-self: center;
+    color: $color-one-white;
+    background-color: $color-one-blue-gray;
+    border-radius: $border-radius-base;
+    line-height: 0;
+    padding: $padding-xs-vertical;
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-one-blue-gray, 10%);
+    }
+  }
+
+  .tags-input-text-editor {
+    .text-editor-input {
+      padding: $padding-small-vertical + 1 $padding-small-vertical;
+      border: 0;
+      border-bottom: 1px solid $main-border-color;
+      outline: 0;
     }
   }
 }
