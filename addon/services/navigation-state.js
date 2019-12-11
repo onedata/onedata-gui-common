@@ -28,25 +28,28 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
  * @property {string} title
  */
 
-function parseAspectOptions(optionsString) {
+const aspectOptionsDelimiter = '..';
+const aspectOptionsValueDelimiter = '.';
+
+export function parseAspectOptions(optionsString) {
   const parsedOptions = {};
   if (optionsString) {
-    optionsString.split(',').forEach(option => {
-      const [key, value] = option.split('.');
+    optionsString.split(aspectOptionsDelimiter).forEach(option => {
+      const [key, value] = option.split(aspectOptionsValueDelimiter);
       parsedOptions[key] = value;
     });
   }
   return parsedOptions;
 }
 
-function serializeAspectOptions(options) {
+export function serializeAspectOptions(options) {
   let optionsArray = [];
   for (let key in options) {
     if (options.hasOwnProperty(key)) {
-      optionsArray.push(`${key}.${options[key]}`);
+      optionsArray.push(`${key}${aspectOptionsValueDelimiter}${options[key]}`);
     }
   }
-  return optionsArray.join(',');
+  return optionsArray.join(aspectOptionsDelimiter);
 }
 
 export default Service.extend(I18n, {
