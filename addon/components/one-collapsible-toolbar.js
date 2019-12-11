@@ -50,6 +50,12 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   toggleBtnClass: '',
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  popoverClass: '',
+  
+  /**
    * CSS classes used in full mode (for a whole toolbar)
    * @type {boolean}
    */

@@ -1,7 +1,15 @@
-{{#one-collapsible-list filtrationChanged=(action "providersFilter") as |list|}}
+{{#one-collapsible-list
+  class="always-show-menu-toggle"
+  filtrationChanged=(action "providersFilter")
+  as |list|
+}}
   {{list.header class="align-to-icon" isCollapsible=false title=title}}
   {{#each providersData as |providerData|}}
-    {{#list.item isCollapsible=false selectionValue=providerData.provider click=(action "providerClick" providerData.provider) as |listItem|}}
+    {{#list.item
+      isCollapsible=false
+      selectionValue=providerData.provider
+      click=(action "providerClick" providerData.provider) as |listItem|
+    }}
       {{#listItem.header}}
         {{providers-list/provider-item
           listItem=listItem
