@@ -9,7 +9,7 @@
     {{#one-webui-popover
       class=(concat "one-collapsible-toolbar-popover popover-" elementId)
       placement=dropdownPlacement
-      popoverStyle=(concat "with-dropdown" (if dropdownOverModals " over-modals" ""))
+      popoverStyle=(concat-classes "with-dropdown" (if dropdownOverModals "over-modals" "") popoverClass)
       padding=false
       triggerSelector=(concat "#" (concat elementId " .collapsible-toolbar-toggle"))
       open=dropdownOpened
