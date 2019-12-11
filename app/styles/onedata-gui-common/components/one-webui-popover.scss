@@ -73,6 +73,9 @@ $webui-popover-offset: 4px;
   .webui-popover-content {
     padding: $padding-base-vertical;
     overflow: initial;
+    p + h1 {
+      margin-top: $line-height-computed;
+    }
     h1 {
       margin-top: 0;
       font-size: $font-size-base;
