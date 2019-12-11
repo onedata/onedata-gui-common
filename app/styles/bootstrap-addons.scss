@@ -373,6 +373,10 @@ $token-border-radius: 3px;
   .tab-content {
     padding: $padding-large-vertical $padding-large-horizontal;
     background-color: $color-one-white;
+    &.no-vertical-padding {
+      padding-left: 0;
+      padding-right: 0;
+    }
     .tab-pane {
       position: relative;
       @media (max-width: $screen-xs-max) {
