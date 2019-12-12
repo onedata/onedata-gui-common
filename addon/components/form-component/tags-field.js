@@ -29,9 +29,24 @@ export default FieldComponentBase.extend({
    */
   tagEditorSettings: reads('field.tagEditorSettings'),
 
+  /**
+   * @type {CompuedProperty<boolean>}
+   */
+  sort: reads('field.sort'),
+
   actions: {
     valueChanged(tags) {
-      this._super(this.get('field').tagsToValue(tags));
+      const {
+        sort,
+        field,
+      } = this.getProperties('sort', 'field');
+
+      if (sort) {
+        tags = field.sortTags(tags);
+      }
+
+      const value = field.tagsToValue(tags);
+      this._super(value);
     },
   },
 });

@@ -378,10 +378,9 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      let testComponent;
       return click('.tag-creator-trigger')
         .then(() => {
-          testComponent =
+          const testComponent =
             this.$('.tag-creator .test-component')[0].componentInstance;
           set(testComponent, 'focusIn', focusSpy);
 

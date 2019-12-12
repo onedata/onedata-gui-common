@@ -21,16 +21,22 @@ describe('Integration | Utility | form component/tags field', function () {
     expect(get(field, 'withValidationIcon')).to.be.false;
   });
 
-  it('defines tagEditorComponentName as "tags-input/text-editor"', function () {
+  it('defines "tagEditorComponentName" as "tags-input/text-editor"', function () {
     const field = TagsField.create();
 
     expect(get(field, 'tagEditorComponentName'))
       .to.equal('tags-input/text-editor');
   });
 
-  it('defines tagEditorSettings as undefined', function () {
+  it('defines "tagEditorSettings" as undefined', function () {
     const field = TagsField.create();
 
     expect(get(field, 'tagEditorSettings')).to.be.undefined;
+  });
+
+  it('defines "sort" as false', function () {
+    const field = TagsField.create();
+
+    expect(get(field, 'sort')).to.be.false;
   });
 });

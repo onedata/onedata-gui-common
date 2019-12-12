@@ -55,10 +55,10 @@ describe('Integration | Component | form component/tags field', function () {
       this.render(hbs `{{form-component/tags-field field=field}}`);
 
       return click('.tag-creator-trigger')
-        .then(() => fillIn('.text-editor-input', 'test,'))
+        .then(() => fillIn('.text-editor-input', 'test,aest,'))
         .then(() => {
           expect(valueChangedSpy).to.be.calledOnce;
-          expect(valueChangedSpy).to.be.calledWith(['test']);
+          expect(valueChangedSpy).to.be.calledWith(['test', 'aest']);
         });
     }
   );
@@ -98,5 +98,19 @@ describe('Integration | Component | form component/tags field', function () {
         expect(get(testEditor[0].componentInstance, 'settings'))
           .to.equal(settings);
       })
-  })
+  });
+
+  it('turns on tags sorting according to truthy "sort" property', function () {
+    this.set('field.sort', true);
+    const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
+
+    this.render(hbs `{{form-component/tags-field field=field}}`);
+
+    return click('.tag-creator-trigger')
+      .then(() => fillIn('.text-editor-input', 'test,aest,'))
+      .then(() => {
+        expect(valueChangedSpy).to.be.calledOnce;
+        expect(valueChangedSpy).to.be.calledWith(['aest', 'test']);
+      });
+  });
 });
