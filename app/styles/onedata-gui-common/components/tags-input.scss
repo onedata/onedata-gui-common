@@ -1,20 +1,21 @@
-.tags-input {
-  $font-scale: 0.9;
-  $tag-line-height: $line-height-computed * $font-scale;
-  $tag-vertical-padding: 4px;
-  $tag-height: $tag-line-height + 2 * $tag-vertical-padding + 2px;
-  $input-vertical-padding: ($input-height-base - $tag-height - 2px) / 2;
+$tags-input-font-scale: 0.9;
+$tags-input-tag-line-height: $line-height-computed * $tags-input-font-scale;
+$tags-input-tag-vertical-padding: 4px;
+$tags-input-tag-height: $tags-input-tag-line-height + 2 * $tags-input-tag-vertical-padding + 2px;
+$tags-input-input-vertical-padding: ($input-height-base - $tags-input-tag-height - 2px) / 2;
+$tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
 
+.tags-input {
   display: flex;
   flex-wrap: wrap;
   height: initial;
   min-height: $input-height-base;
   margin: 0;
   list-style-type: none;
-  padding-top: $input-vertical-padding;
-  padding-bottom: $input-vertical-padding - $padding-xs-horizontal;
+  padding-top: $tags-input-input-vertical-padding;
+  padding-bottom: $tags-input-input-vertical-padding - $padding-xs-horizontal;
   padding-right: $padding-base-horizontal - $padding-xs-horizontal;
-  font-size: $font-scale * 1em;
+  font-size: $tags-input-font-scale * 1em;
 
   .input-element {
     margin-right: $padding-xs-horizontal;
@@ -24,8 +25,8 @@
   .tag-item {
     display: flex;
     align-items: center;
-    padding: $tag-vertical-padding $padding-small-vertical;
-    border: 1px solid $color-one-blue-gray;
+    padding: $tags-input-tag-vertical-padding $padding-small-vertical;
+    border: $tags-input-tag-border;
     border-radius: $border-radius-base;
     background-color: $color-one-light-blue;
   }
@@ -33,6 +34,7 @@
   .tag-icon {
     margin-right: 3px;
     font-size: 1.5em;
+    line-height: 0;
   }
 
   .tag-label {
@@ -41,8 +43,13 @@
   }
 
   .tag-remove {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
     margin-left: 3px;
     font-weight: bold;
+    font-size: 85%;
+    color: $color-one-blue-gray;
 
     &:hover {
       color: $color-one-danger;
@@ -53,9 +60,10 @@
     align-self: center;
     color: $color-one-white;
     background-color: $color-one-blue-gray;
-    border-radius: $border-radius-base;
+    border-radius: 2px;
     line-height: 0;
     padding: $padding-xs-vertical;
+    font-size: 90%;
     cursor: pointer;
 
     &:hover {
@@ -63,13 +71,82 @@
     }
   }
 
+  .tag-creator {
+    display: flex;
+  }
+
   .tags-input-text-editor {
     .text-editor-input {
-      padding: $tag-vertical-padding;
+      padding: $tags-input-tag-vertical-padding;
       border: 0;
       border-bottom: 1px solid $main-border-color;
       outline: 0;
       width: 150px;
     }
+  }
+
+  .tags-input-selector-editor {
+    width: 150px;
+    align-self: center;
+  }
+}
+
+.one-webui-popover.tags-selector {
+  background-color: $color-one-light-blue;
+  width: 150px;
+  height: 150px;
+  padding: $padding-small-vertical;
+  font-size: $tags-input-font-scale * 1em;
+  overflow: hidden;
+
+  .selector-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .selector-item {
+    display: flex;
+    padding: $padding-small-vertical;
+    height: 25px;
+    border-radius: $border-radius-base;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($color-one-light-blue, 5%);
+    }
+
+    & ~ .selector-item {
+      margin-top: $padding-xs-vertical;
+    }
+  }
+
+  .tag-icon {
+    margin-right: 3px;
+    font-size: 1.5em;
+  }
+
+  .tag-label {
+    align-self: baseline;
+  }
+  
+  .ps {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+.webui-popover-tags-selector {
+  border: $tags-input-tag-border;
+  border-radius: $border-radius-base;
+  overflow: hidden;
+
+  &.top-right, &.top-left, &.top {
+    transform: translateY(10px + $tags-input-tag-vertical-padding);
+  }
+
+  &.bottom-right, &.bottom-left, &.bottom {
+    transform: translateY(-10px - $tags-input-tag-vertical-padding);
   }
 }

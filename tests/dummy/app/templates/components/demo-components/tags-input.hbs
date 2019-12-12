@@ -1,1 +1,12 @@
-{{tags-input tags=tags onChange=(action (mut tags))}}
+<h1>tags-input</h1>
+
+<h2>With text-editor</h2>
+{{tags-input tags=tagsText onChange=(action (mut tagsText))}}
+
+<h2>With selector-editor</h2>
+{{tags-input
+  tags=tagsSelector
+  tagEditorComponentName="tags-input/selector-editor"
+  tagEditorSettings=selectorSettings
+  onChange=(action (mut tagsSelector))
+}}

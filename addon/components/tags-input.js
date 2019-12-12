@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
+import { computed } from '@ember/object';
 
 /**
  * @typedef {Object} Tag
@@ -23,7 +24,7 @@ export default Component.extend({
    * @virtual
    * @type {Array<Tag>}
    */
-  tags: Object.freeze([]),
+  tags: computed(() => []),
 
   /**
    * @public
@@ -64,10 +65,18 @@ export default Component.extend({
    */
   isCreatingTag: false,
 
-  focusIn() {
+  click(event) {
     this._super(...arguments);
 
-    this.startTagCreation();
+    if (event.target === this.get('element')) {
+      this.startTagCreation()
+    }
+  },
+
+  keyDown(event) {
+    if ([13, 32].includes(event.keyCode) && !this.get('isCreatingTag')) {
+      this.startTagCreation()
+    }
   },
 
   focusOut() {
@@ -81,7 +90,9 @@ export default Component.extend({
   },
 
   startTagCreation() {
-    this.set('isCreatingTag', true);
+    if (!this.get('isCreatingTag')) {
+      this.set('isCreatingTag', true);
+    }
   },
 
   endTagCreation() {
@@ -124,7 +135,7 @@ export default Component.extend({
 
       const correctTagsToAdd = newTagsToAdd.rejectBy('isInvalid');
       this.set('newTags', newTags.filter(tag => !correctTagsToAdd.includes(tag)));
-      onChange(tags.concat(correctTagsToAdd).uniq());
+      onChange((tags || []).concat(correctTagsToAdd).uniq());
     },
     newTagsChanged(newTags) {
       this.set('newTags', newTags);

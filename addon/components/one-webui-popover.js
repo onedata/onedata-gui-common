@@ -27,6 +27,7 @@ import layout from 'onedata-gui-common/templates/components/one-webui-popover';
 import { invokeAction } from 'ember-invoke-action';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
   layout,
@@ -80,6 +81,17 @@ export default Component.extend({
   arrow: true,
 
   /**
+   * @type {Function}
+   * @param {Object} publicApi Object with callbacks, which interacts with popover:
+   *   ```
+   *   {
+   *     reposition(): undefined // recalculates popover position
+   *   }
+   *   ```
+   */
+  registerApi: notImplementedIgnore,
+
+  /**
    * @type {WebuiPopover}
    */
   popoverInstance: undefined,
@@ -111,6 +123,10 @@ export default Component.extend({
     }
     // update scroll observer
     this.get('scrollState.lastScrollEvent');
+
+    this.get('registerApi')({
+      reposition: () => this.reposition(),
+    });
   },
 
   triggerOpen: observer('open', function () {
@@ -299,6 +315,15 @@ export default Component.extend({
     this.set('_debounceTimerEnabled', false);
   },
 
+  reposition() {
+    const popoverInstance = this.get('popoverInstance');
+    const oldAnimation = popoverInstance.options.animation;
+    // suppress animation for the time of reposition
+    popoverInstance.options.animation = null;
+    this._popover('displayContent');
+    popoverInstance.options.animation = oldAnimation;
+  },
+
   actions: {
     hide() {
       this._popover('hide');
@@ -323,14 +348,6 @@ export default Component.extend({
       if (_isPopoverVisible || _debounceTimerEnabled) {
         run.debounce(this, this._debounceResizeRefresh, 500);
       }
-    },
-    reposition() {
-      const popoverInstance = this.get('popoverInstance');
-      const oldAnimation = popoverInstance.options.animation;
-      // suppress animation for the time of reposition
-      popoverInstance.options.animation = null;
-      this._popover('displayContent');
-      popoverInstance.options.animation = oldAnimation;
     },
   },
 });

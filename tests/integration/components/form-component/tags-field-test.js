@@ -42,7 +42,7 @@ describe('Integration | Component | form component/tags field', function () {
       this.render(hbs `{{form-component/tags-field field=field}}`);
 
       return focus('.tags-input')
-        .then(() => blur('.tags-input .text-editor-input'))
+        .then(() => blur('.tags-input'))
         .then(() => expect(focusLostSpy).to.be.calledOnce);
     }
   );

@@ -1,0 +1,27 @@
+{{#one-webui-popover
+  class="tags-selector"
+  open=true
+  triggerSelector=(concat "#" elementId)
+  arrow=false
+  registerApi=(action (mut popoverApi))
+  padding=false
+  placement="vertical"
+  popoverStyle="tags-selector"
+  as |popover|
+}}
+  {{#perfect-scrollbar-element}}
+    {{#click-outside action=onEndTagCreation except-selector=parentTagsInputSelector}}
+      <ul class="selector-list">
+        {{#each tagsToSelect as |tag|}}
+          <li class="selector-item" onClick={{action "tagSelected" tag}}>
+            {{#if tag.icon}}
+              {{one-icon icon=tag.icon class="tag-icon"}}
+            {{/if}}
+            {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/click-outside}}
+  {{/perfect-scrollbar-element}}
+{{/one-webui-popover}}
+{{yield}}

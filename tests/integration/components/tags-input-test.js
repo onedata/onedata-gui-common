@@ -85,7 +85,7 @@ describe('Integration | Component | tags input', function () {
         .then(() => {
           expect(focusLostSpy).to.be.not.called;
 
-          return blur('.tags-input .text-editor-input');
+          return blur('.tags-input');
         })
         .then(() => expect(focusLostSpy).to.be.calledOnce);
     }
@@ -106,11 +106,11 @@ describe('Integration | Component | tags input', function () {
   );
 
   it(
-    'goes into creating new tag mode on focus',
+    'goes into creating new tag mode on click',
     function () {
       this.render(hbs `{{tags-input tags=tags}}`);
 
-      return focus('.tags-input')
+      return click('.tags-input')
         .then(() => {
           expect(this.$('.tags-input')).to.have.class('creating-tag');
           expect(this.$('.tag-creator')).to.exist;
@@ -214,6 +214,24 @@ describe('Integration | Component | tags input', function () {
           return wait();
         })
         .then(() => expect(get(testComponent, 'newTags')).to.deep.equal(newTags));
+    }
+  );
+
+  it(
+    'injects currently selected tags into creation editor',
+    function () {
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      let testComponent;
+      return click('.tag-creator-trigger')
+        .then(() => {
+          testComponent =
+            this.$('.tag-creator .test-component')[0].componentInstance;
+          expect(get(testComponent, 'selectedTags')).to.equal(this.get('tags'));
+        });
     }
   );
 

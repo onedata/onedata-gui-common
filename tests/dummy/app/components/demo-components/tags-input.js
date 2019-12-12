@@ -23,4 +23,21 @@ export default Component.extend({
       icon: 'user',
     }];
   }),
+
+  selectorSettings: computed(function selectorSettings() {
+    return {
+      allowedTags: [{
+        label: 'tag1',
+        icon: 'space',
+      }, {
+        label: 'tag2',
+        icon: 'provider',
+      }, {
+        label: 'tag3',
+      }, {
+        label: 'tag4',
+        icon: 'user',
+      }]
+    };
+  }),
 })
