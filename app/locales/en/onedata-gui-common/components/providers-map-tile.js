@@ -1,4 +1,4 @@
 export default {
-  title: 'Providers',
+  title: 'Oneproviders',
   moreText: 'More',
 };
