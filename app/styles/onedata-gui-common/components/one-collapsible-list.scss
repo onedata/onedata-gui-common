@@ -99,4 +99,14 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
       }
     }
   }
+  
+  &.always-show-menu-toggle {
+    @media(min-width: $screen-sm-min) {
+      .one-collapsible-list-item .one-collapsible-list-item-header {
+        .collapsible-toolbar-toggle {
+          display: block;
+        }
+      }
+    }
+  }
 }
