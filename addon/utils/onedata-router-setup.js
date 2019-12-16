@@ -14,6 +14,9 @@ export default function onedataRouterSetup(routerClass, router, setup = {}) {
       });
     });
   });
+  router.route('public', function () {
+    setup.public && setup.public.bind(this)();
+  });
   router.route('login');
   router.route('not-found', { path: "*" });
 }
