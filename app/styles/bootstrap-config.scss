@@ -167,6 +167,11 @@ label {
     }
     a {
       padding: $padding-base-vertical * 0.8;
+      .one-icon + .truncated-string.one-label {
+        display: inline-block;
+        vertical-align: middle;
+        max-width: calc(100% - 30px);
+      }
     }
   }
 }
