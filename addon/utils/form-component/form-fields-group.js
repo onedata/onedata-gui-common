@@ -115,7 +115,7 @@ export default FormElement.extend({
    */
   dumpDefaultValue() {
     return this.get('fields').reduce((valuesAggregator, field) => {
-      set(valuesAggregator, get(field, 'name'), field.dumpDefaultValue());
+      set(valuesAggregator, get(field, 'valueName'), field.dumpDefaultValue());
       return valuesAggregator;
     }, EmberObject.create());
   },
@@ -125,7 +125,7 @@ export default FormElement.extend({
    */
   dumpValue() {
     return this.get('fields').reduce((valuesAggregator, field) => {
-      set(valuesAggregator, get(field, 'name'), field.dumpValue());
+      set(valuesAggregator, get(field, 'valueName'), field.dumpValue());
       return valuesAggregator;
     }, EmberObject.create());
   },

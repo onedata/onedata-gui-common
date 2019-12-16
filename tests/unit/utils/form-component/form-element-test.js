@@ -95,10 +95,29 @@ describe('Unit | Utility | form component/form element', function () {
     expect(get(formElement, 'path')).to.equal('name1');
   });
 
-  it('has value calculated from valuesSource and path', function () {
+  it('calculates valuePath using defined parent.valuePath and valueName', function () {
     const formElement = FormElement.create({
       parent: {
-        path: 'parent',
+        valuePath: 'parent1',
+      },
+      valueName: 'name1',
+    });
+
+    expect(get(formElement, 'valuePath')).to.equal('parent1.name1');
+  });
+
+  it('calculates path using only name when parent.path is not defined', function () {
+    const formElement = FormElement.create({
+      valueName: 'name1',
+    });
+
+    expect(get(formElement, 'valuePath')).to.equal('name1');
+  });
+
+  it('has value calculated from valuesSource and valuePath', function () {
+    const formElement = FormElement.create({
+      parent: {
+        valuePath: 'parent',
       },
       name: 'field',
       valuesSource: {
@@ -188,7 +207,7 @@ describe('Unit | Utility | form component/form element', function () {
 
   it('returns value as a dumpValue() result', function () {
     const formElement = FormElement.create({
-      path: 'a',
+      valuePath: 'a',
       valuesSource: {
         a: 'b',
       },

@@ -70,15 +70,29 @@ export default EmberObject.extend({
   isGroup: false,
 
   /**
-   * @type {ComputedProperty<string>}
+   * @type {ComputedProperty<String>}
    */
   path: computed('parent.path', 'name', function path() {
-    const parentPath = this.get('parent.path');
-    const name = this.get('name');
+    return this.buildPath(
+      this.get('parent.path'),
+      this.get('name')
+    );
+  }),
 
-    if (name) {
-      return parentPath ? `${parentPath}.${name}` : name;
-    }
+  /**
+   * @public
+   * @type {ComputedProperty<String>}
+   */
+  valueName: reads('name'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  valuePath: computed('parent.valuePath', 'valueName', function valuePath() {
+    return this.buildPath(
+      this.get('parent.valuePath'),
+      this.get('valueName')
+    );
   }),
 
   /**
@@ -103,10 +117,13 @@ export default EmberObject.extend({
   ownerSource: reads('parent.ownerSource'),
 
   valuePropertySetter: observer(
-    'path',
+    'valuePath',
     function valuePropertySetter() {
-      const path = this.get('path');
-      this.set('value', path ? reads(`valuesSource.${path}`) : reads('valuesSource'));
+      const valuePath = this.get('valuePath');
+      this.set(
+        'value',
+        valuePath ? reads(`valuesSource.${valuePath}`) : reads('valuesSource')
+      );
     }
   ),
 
@@ -215,5 +232,11 @@ export default EmberObject.extend({
     if (parent) {
       parent.onFocusLost(field);
     }
-  }
+  },
+
+  buildPath(parentPath, name) {
+    if (name) {
+      return parentPath ? `${parentPath}.${name}` : name;
+    }
+  },
 });

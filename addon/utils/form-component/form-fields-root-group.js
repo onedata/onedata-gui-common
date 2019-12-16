@@ -38,11 +38,11 @@ export default FormFieldsGroup.extend({
     if (field === this) {
       this.set('valuesSource', value);
     } else {
-      const path = `valuesSource.${get(field, 'path')}`;
+      const valuePath = `valuesSource.${get(field, 'valuePath')}`;
 
       // Construct EmberObjects across `path` if not exist
       let targetValuesObject = this;
-      path.split('.').slice(0, -1).forEach(pathElement => {
+      valuePath.split('.').slice(0, -1).forEach(pathElement => {
         let nextTargetValuesObject = get(targetValuesObject, pathElement);
         if (!nextTargetValuesObject) {
           nextTargetValuesObject = EmberObject.create();
@@ -51,7 +51,7 @@ export default FormFieldsGroup.extend({
         targetValuesObject = nextTargetValuesObject;
       })
 
-      this.set(path, value);
+      this.set(valuePath, value);
     }
 
     field.markAsModified();
