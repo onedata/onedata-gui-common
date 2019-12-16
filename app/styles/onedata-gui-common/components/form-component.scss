@@ -2,6 +2,7 @@
   .form-group {
     display: flex;
     flex-wrap: wrap;
+    flex-grow: 1;
   }
 
   .field-component {
@@ -31,6 +32,33 @@
   .radio-field-renderer, .toggle-field-renderer {
     .control-label {
       padding-top: 0;
+    }
+  }
+
+  .form-fields-group-renderer {
+    margin-bottom: 0;
+  }
+
+  .add-field-button {
+    margin-top: $padding-base-vertical - $padding-small-vertical;
+  }
+
+  .collection-item {
+    display: flex;
+    align-items: flex-start;
+
+    .remove-field-button-container {
+      display: flex;
+      align-items: center;
+      height: $input-height-base;
+    }
+  
+    .remove-field-button {
+      margin-left: $padding-base-horizontal;
+    }
+
+    + .add-field-button {
+      margin-top: 0;
     }
   }
 

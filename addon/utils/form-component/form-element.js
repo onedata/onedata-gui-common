@@ -1,11 +1,16 @@
 import EmberObject, { computed, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default EmberObject.extend({
+export default EmberObject.extend(OwnerInjector, I18n, {
+  i18n: service(),
+
   /**
    * @type {Array<Utils.FormComponent.FormElement>}
    */
-  fields: Object.freeze([]),
+  fields: computed(() => []),
 
   /**
    * @type {boolean}
@@ -60,6 +65,13 @@ export default EmberObject.extend({
   fieldComponentName: undefined,
 
   /**
+   * @public
+   * @virtual
+   * @type {boolean}
+   */
+  withValidationIcon: true,
+
+  /**
    * @type {String}
    */
   classes: '',
@@ -68,6 +80,13 @@ export default EmberObject.extend({
    * @type {boolean}
    */
   isGroup: false,
+
+  /**
+   * @public
+   * @virtual
+   * @type {boolean}
+   */
+  addColonToLabel: true,
 
   /**
    * @type {ComputedProperty<String>}
@@ -116,6 +135,20 @@ export default EmberObject.extend({
    */
   ownerSource: reads('parent.ownerSource'),
 
+  /**
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  label: computed('i18nPrefix', 'path', function label() {
+    return this.tWithDefault(`${this.get('path')}.label`, {}, undefined);
+  }),
+
+  /**
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  tip: computed('i18nPrefix', 'path', function tip() {
+    return this.tWithDefault(`${this.get('path')}.tip`, {}, undefined);
+  }),
+
   valuePropertySetter: observer(
     'valuePath',
     function valuePropertySetter() {
@@ -127,9 +160,20 @@ export default EmberObject.extend({
     }
   ),
 
+  fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
+    const fields = this.get('fields');
+
+    if (fields) {
+      fields
+        .rejectBy('parent', this)
+        .setEach('parent', this);
+    }
+  }),
+
   init() {
     this._super(...arguments);
 
+    this.fieldsParentSetter();
     this.valuePropertySetter();
   },
 

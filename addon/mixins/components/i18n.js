@@ -48,12 +48,12 @@ export default Mixin.create({
    * @param {object} placeholders
    * @returns {string} string translated by 18n service 
    */
-  t(translationKey, placeholders = {}) {
+  t(translationKey, placeholders = {}, useI18nPrefix = true) {
     const {
       i18n,
       tPrefix,
     } = this.getProperties('i18n', 'tPrefix');
-    return i18n.t(tPrefix + translationKey, placeholders);
+    return i18n.t((useI18nPrefix ? tPrefix : '') + translationKey, placeholders);
   },
 
   /**
@@ -71,8 +71,8 @@ export default Mixin.create({
    * @param {any} defaultValue
    * @returns {string} string translated by 18n service 
    */
-  tWithDefault(translationKey, placeholders = {}, defaultValue) {
-    const translation = String(this.t(translationKey, placeholders));
+  tWithDefault(translationKey, placeholders = {}, defaultValue, useI18nPrefix = true) {
+    const translation = String(this.t(translationKey, placeholders, useI18nPrefix));
     return translation.startsWith('<missing-') ||
       translation.startsWith('Missing translation: ') ?
       defaultValue : translation;

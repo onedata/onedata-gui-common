@@ -3,8 +3,14 @@ import { describe, it } from 'mocha';
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import { get } from '@ember/object';
 import sinon from 'sinon';
+import { lookupService } from '../../../helpers/stub-service';
+import { setupComponentTest } from 'ember-mocha';
 
-describe('Unit | Utility | form component/form element', function () {
+describe('Integration | Utility | form component/form element', function () {
+  setupComponentTest('test-component', {
+    integration: true,
+  });
+
   it('has an empty fields array', function () {
     const formElement = FormElement.create();
 
@@ -223,5 +229,46 @@ describe('Unit | Utility | form component/form element', function () {
 
       expect(get(formElement, 'isVisible')).to.be.true;
     }
+  );
+
+  it('calculates label translation using path', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('some.parent.name.label')
+      .returns('labelText');
+    const formField = FormElement.create({
+      ownerSource: this,
+      i18nPrefix: 'some',
+      parent: {
+        path: 'parent'
+      },
+      name: 'name',
+    });
+
+    expect(get(formField, 'label')).to.equal('labelText');
+  });
+
+  it('calculates tip translation using path', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('some.parent.name.tip')
+      .returns('tipText');
+    const formField = FormElement.create({
+      ownerSource: this,
+      i18nPrefix: 'some',
+      parent: {
+        path: 'parent'
+      },
+      name: 'name',
+    });
+
+    expect(get(formField, 'tip')).to.equal('tipText');
+  });
+
+  it(
+    'has truthy "addColonToLabel" by default',
+    function () {
+      const formField = FormElement.create();
+
+      expect(get(formField, 'addColonToLabel')).to.be.true;
+    },
   );
 });

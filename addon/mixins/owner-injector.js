@@ -25,8 +25,8 @@ export default Mixin.create({
     const ownerSource = this.get('ownerSource');
 
     if (ownerSource && !getOwner(this)) {
-      const onwerInjection = getOwner(ownerSource).ownerInjection();
-      this.setProperties(onwerInjection);
+      const ownerInjection = getOwner(ownerSource).ownerInjection();
+      this.setProperties(ownerInjection);
     }
   }),
 

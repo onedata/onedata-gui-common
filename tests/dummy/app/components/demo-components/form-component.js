@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { computed, setProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
+import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 
@@ -19,6 +20,7 @@ export default Component.extend({
         },
       })
       .create({
+        ownerSource: this,
         fields: [
           TextField.create({
             ownerSource: this,
@@ -44,6 +46,18 @@ export default Component.extend({
               value: 1,
               label: 'Adult',
             }]
+          }),
+          FormFieldsCollectionGroup.extend({
+            fieldFactoryMethod(createdFieldsCounter) {
+              return TextField.create({
+                name: 'textField',
+                valueName: `textField${createdFieldsCounter}`,
+              });
+            },
+          }).create({
+            addButtonText: 'Add',
+            name: 'textCollection',
+            label: 'Text collection',
           }),
         ]
       });

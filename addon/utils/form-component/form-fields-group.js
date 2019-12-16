@@ -1,5 +1,5 @@
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import EmberObject, { computed, observer, set, get } from '@ember/object';
+import EmberObject, { computed, set, get } from '@ember/object';
 import { A } from '@ember/array';
 import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
@@ -9,6 +9,22 @@ export default FormElement.extend({
    * @override
    */
   isGroup: true,
+
+  /**
+   * @override
+   */
+  fieldComponentName: 'form-component/form-fields-group',
+
+  /**
+   * @override
+   */
+  withValidationIcon: false,
+
+  /**
+   * @public
+   * @type {boolean}
+   */
+  isExpanded: true,
 
   /**
    * @override
@@ -49,31 +65,18 @@ export default FormElement.extend({
    */
   invalidFields: computed(
     'isVisible',
+    'isExpanded',
     'fields.@each.invalidFields',
     function invalidFields() {
       const {
         isVisible,
+        isExpanded,
         fields,
-      } = this.getProperties('isVisible', 'fields');
-      return isVisible ? _.flatten(fields.mapBy('invalidFields')) : [];
+      } = this.getProperties('isVisible', 'isExpanded', 'fields');
+      return (isVisible && isExpanded) ?
+        _.flatten(fields.mapBy('invalidFields')) : [];
     }
   ),
-
-  fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
-    const fields = this.get('fields');
-
-    if (fields) {
-      fields
-        .rejectBy('parent', this)
-        .setEach('parent', this);
-    }
-  }),
-
-  init() {
-    this._super(...arguments);
-
-    this.fieldsParentSetter();
-  },
 
   /**
    * @override

@@ -1,21 +1,12 @@
-{{#if field.isGroup}}
-  {{#one-collapse class=(concat-classes "fields-group-collapse" (concat field.name "-collapse")) collapsed=(not visible)}}
-    {{#each field.fields as |nestedField|}}
-      {{#if (or nestedField.isVisible nestedField.isGroup)}}
-        {{form-component/field-renderer field=nestedField}}
-      {{/if}}
-    {{/each}}
-  {{/one-collapse}}
-{{else}}
-  {{#if field.label}}
-    <label class="control-label" for={{fieldId}}>{{field.label}}{{#if field.addColonToLabel}}:{{/if}}</label>
-  {{/if}}
-  {{#component field.fieldComponentName field=field fieldId=fieldId}}
-    {{#if (and showValidationState field.withValidationIcon)}}
-      <div class="form-control-feedback glyphicon glyphicon-{{if isValid "ok" "remove"}}"></div>
-    {{/if}}
-  {{/component}}
-  {{#if (and showValidationState error)}}
-    <div class="field-message">{{error.message}}</div>
-  {{/if}}
+{{#if field.label}}
+  <label class="control-label" for={{fieldId}}>{{field.label}}{{#if field.addColonToLabel}}:{{/if}}</label>
 {{/if}}
+{{#component field.fieldComponentName field=field fieldId=fieldId}}
+  {{#if (and showValidationState field.withValidationIcon)}}
+    <div class="form-control-feedback glyphicon glyphicon-{{if isValid "ok" "remove"}}"></div>
+  {{/if}}
+{{/component}}
+{{#if (and showValidationState error)}}
+  <div class="field-message">{{error.message}}</div>
+{{/if}}
+{{yield}}

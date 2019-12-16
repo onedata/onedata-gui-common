@@ -2,46 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { get, set, getProperties } from '@ember/object';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
-import sinon from 'sinon';
-import { lookupService } from '../../../helpers/stub-service';
 import { setupComponentTest } from 'ember-mocha';
 import { validator } from 'ember-cp-validations';
 
 describe('Integration | Utility | form component/form field', function () {
   setupComponentTest('test-component', {
     integration: true,
-  });
-
-  it('calculates label translation using path', function () {
-    sinon.stub(lookupService(this, 'i18n'), 't')
-      .withArgs('some.parent.name.label')
-      .returns('labelText');
-    const formField = FormField.create({
-      ownerSource: this,
-      i18nPrefix: 'some',
-      parent: {
-        path: 'parent'
-      },
-      name: 'name',
-    });
-
-    expect(get(formField, 'label')).to.equal('labelText');
-  });
-
-  it('calculates tip translation using path', function () {
-    sinon.stub(lookupService(this, 'i18n'), 't')
-      .withArgs('some.parent.name.tip')
-      .returns('tipText');
-    const formField = FormField.create({
-      ownerSource: this,
-      i18nPrefix: 'some',
-      parent: {
-        path: 'parent'
-      },
-      name: 'name',
-    });
-
-    expect(get(formField, 'tip')).to.equal('tipText');
   });
 
   it(
@@ -154,13 +120,4 @@ describe('Integration | Utility | form component/form field', function () {
       expect(get(formField, 'errors')).to.be.have.length(0);
     }
   );
-
-  it(
-    'has truthy "addColonToLabel" by default',
-    function () {
-      const formField = FormField.create();
-
-      expect(get(formField, 'addColonToLabel')).to.be.true;
-    },
-  )
 });

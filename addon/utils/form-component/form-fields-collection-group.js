@@ -1,9 +1,35 @@
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import { observer, set, get } from '@ember/object';
+import { observer, set, get, computed } from '@ember/object';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 
 export default FormFieldsGroup.extend({
+  createdFieldsCounter: 0,
+
+  /**
+   * @override
+   */
+  fieldComponentName: 'form-component/form-fields-collection-group',
+
+  /**
+   * @public
+   * @virtual
+   */
   fieldFactoryMethod: notImplementedThrow,
+
+  /**
+   * @public
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  addButtonText: computed('path', 'i18nPrefix', function addButtonText() {
+    return this.tWithDefault(
+      `${this.get('path')}.addButtonText`, {},
+      this.tWithDefault(
+        'components.formComponent.formFieldsCollectionGroup.addButtonText', {},
+        undefined,
+        false
+      ),
+    );
+  }),
 
   fieldsValueNamesObserver: observer(
     'fields.@each.valueName',
@@ -18,7 +44,11 @@ export default FormFieldsGroup.extend({
   addNewField() {
     const fields = this.get('fields');
 
-    const newField = this.fieldFactoryMethod(get(fields, 'length'));
+    const newField = this.fieldFactoryMethod(
+      this.get('createdFieldsCounter'),
+      get(fields, 'length')
+    );
+    this.incrementProperty('createdFieldsCounter');
     this.set('fields', fields.concat([newField]));
   },
 
@@ -29,7 +59,6 @@ export default FormFieldsGroup.extend({
   removeField(field) {
     const fields = this.get('fields');
 
-    delete this.get('value')[get(field, 'valueName')];
     this.set('fields', fields.without(field).slice(0));
   },
 

@@ -6,9 +6,8 @@ import { and, not } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
-  classNames: ['field-renderer'],
+  classNames: ['field-renderer', 'form-group'],
   classNameBindings: [
-    'isGroup::form-group',
     'validationClass',
     'fieldNameClass',
     'fieldComponentClass',
@@ -17,7 +16,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.FormComponent.FormField}
+   * @type {Utils.FormComponent.FormElement}
    */
   field: undefined,
 
@@ -67,15 +66,11 @@ export default Component.extend({
   error: reads('field.errors.firstObject'),
 
   /**
-   * @type {ComputedProperty<boolean>}
-   */
-  visible: reads('field.isVisible'),
-
-  /**
    * @type {ComputedProperty<String>}
    */
   fieldNameClass: computed('field.name', function fieldNameClass() {
-    return `${this.get('field.name')}-field`;
+    const name = this.get('field.name');
+    return name && `${name}-field`;
   }),
 
   /**

@@ -1,8 +1,5 @@
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-field-validator';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
@@ -10,29 +7,13 @@ import { buildValidations } from 'ember-cp-validations';
 import { conditional, or, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 
-export default FormElement.extend(OwnerInjector, I18n, {
-  i18n: service(),
-
+export default FormElement.extend({
   /**
    * @public
    * @virtual
    * @type {boolean}
    */
   isOptional: false,
-
-  /**
-   * @public
-   * @virtual
-   * @type {boolean}
-   */
-  addColonToLabel: true,
-
-  /**
-   * @public
-   * @virtual
-   * @type {boolean}
-   */
-  withValidationIcon: true,
 
   /**
    * @type {Array<String>}
@@ -85,10 +66,7 @@ export default FormElement.extend(OwnerInjector, I18n, {
     const validators = this.get('validators') || [];
     return FormFieldValidator
       .extend(buildValidations({ value: validators }))
-      .create({
-        ownerSource: this,
-        field: this,
-      });
+      .create({ field: this });
   }),
 
   /**
@@ -109,20 +87,6 @@ export default FormElement.extend(OwnerInjector, I18n, {
    * @type {ComputedProperty<Array<any>>}
    */
   errors: reads('fieldValidator.errors'),
-
-  /**
-   * @type {ComputedProperty<HtmlSafe>}
-   */
-  label: computed('i18nPrefix', 'path', function label() {
-    return this.tWithDefault(`${this.get('path')}.label`, {}, undefined);
-  }),
-
-  /**
-   * @type {ComputedProperty<HtmlSafe>}
-   */
-  tip: computed('i18nPrefix', 'path', function tip() {
-    return this.tWithDefault(`${this.get('path')}.tip`, {}, undefined);
-  }),
 
   init() {
     this._super(...arguments);

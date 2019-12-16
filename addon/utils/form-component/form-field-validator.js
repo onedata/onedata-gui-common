@@ -10,6 +10,11 @@ export default EmberObject.extend(OwnerInjector, {
   field: undefined,
 
   /**
+   * @override
+   */
+  ownerSource: reads('field'),
+
+  /**
    * @type {ComputedProperty<any>}
    */
   value: reads('field.value'),

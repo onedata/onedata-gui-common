@@ -3,7 +3,6 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
-import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
 
@@ -22,14 +21,6 @@ describe('Integration | Component | form component/field renderer', function () 
 
     expect(this.$('.form-group.field-renderer')).to.exist;
   });
-
-  it('does not have class "form-group" when passed field is a fields group',
-    function () {
-      this.set('fields', FormFieldsGroup.create());
-      this.render(hbs `{{form-component/field-renderer field=fields}}`);
-
-      expect(this.$('.field-renderer')).to.not.have.class('form-group');
-    });
 
   it('renders passed field', function () {
     this.render(hbs `{{form-component/field-renderer field=textField}}`);
@@ -51,19 +42,6 @@ describe('Integration | Component | form component/field renderer', function () 
     this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
     expect(this.$('label')).to.not.exist;
-  });
-
-  it('renders list of fields when passed field is a group of fields', function () {
-    this.set('fields', FormFieldsGroup.create({
-      fields: [
-        this.get('textField'),
-        TextField.create({ ownerSource: this }),
-      ],
-    }));
-
-    this.render(hbs `{{form-component/field-renderer field=fields}}`);
-
-    expect(this.$('.text-like-field')).to.have.length(2);
   });
 
   it('has class "has-error" when field is not valid and is modified', function () {
@@ -158,23 +136,6 @@ describe('Integration | Component | form component/field renderer', function () 
       expect(this.$('.form-control-feedback')).to.not.exist;
     }
   );
-
-  it('renders expanded fields group, when field.isVisible is true', function () {
-    this.set('fields', FormFieldsGroup.create());
-    this.render(hbs `{{form-component/field-renderer field=fields}}`);
-
-    expect(this.$('.field-renderer .fields-group-collapse')).to.have.class('in');
-  });
-
-  it('renders collapsed fields group, when field.isVisible is false', function () {
-    this.set('fields', FormFieldsGroup.create({
-      isVisible: false,
-    }));
-    this.render(hbs `{{form-component/field-renderer field=fields}}`);
-
-    expect(this.$('.field-renderer .fields-group-collapse'))
-      .to.not.have.class('in');
-  });
 
   it(
     'has class "`field.name`-field" and "`field.fieldComponentName`-renderer',

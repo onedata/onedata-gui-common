@@ -54,7 +54,9 @@ export default FormFieldsGroup.extend({
       this.set(valuePath, value);
     }
 
-    field.markAsModified();
+    if (!get(field, 'isGroup')) {
+      field.markAsModified();
+    }
   },
 
   /**
