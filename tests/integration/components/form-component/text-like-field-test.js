@@ -34,6 +34,17 @@ describe('Integration | Component | form component/text like field', function ()
   );
 
   it(
+    'can be disabled',
+    function () {
+      this.get('textField').disable();
+
+      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+
+      expect(this.$('input[type="text"]')).to.have.attr('disabled');
+    }
+  );
+
+  it(
     'notifies field object about lost focus',
     function () {
       const focusLostSpy = sinon.spy(this.get('textField'), 'focusLost');

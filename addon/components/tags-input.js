@@ -2,7 +2,8 @@ import Component from '@ember/component';
 import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
+import { writable, conditional } from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} Tag
@@ -15,9 +16,19 @@ export default Component.extend({
   tagName: 'ul',
   classNames: ['tags-input', 'form-control'],
   classNameBindings: ['isCreatingTag:creating-tag'],
-  attributeBindings: ['tabindex'],
+  attributeBindings: ['tabindex', 'disabled'],
 
-  tabindex: 0,
+  /**
+   * @public
+   * @type {ComputedProperty<number>}
+   */
+  tabindex: writable(conditional('disabled', -1, 0)),
+
+  /**
+   * @public
+   * @type {boolean}
+   */
+  disabled: false,
 
   /**
    * @public
@@ -65,6 +76,12 @@ export default Component.extend({
    */
   isCreatingTag: false,
 
+  disabledObserver: observer('disabled', function disabledObserver() {
+    if (this.get('disabled')) {
+      this.endTagCreation();
+    }
+  }),
+
   click(event) {
     this._super(...arguments);
 
@@ -90,7 +107,12 @@ export default Component.extend({
   },
 
   startTagCreation() {
-    if (!this.get('isCreatingTag')) {
+    const {
+      isCreatingTag,
+      disabled,
+    } = this.getProperties('isCreatingTag', 'disabled');
+
+    if (!disabled && !isCreatingTag) {
       this.set('isCreatingTag', true);
     }
   },

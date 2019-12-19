@@ -34,6 +34,17 @@ describe('Integration | Component | form component/json field', function () {
   );
 
   it(
+    'can be disabled',
+    function () {
+      this.get('field').disable();
+
+      this.render(hbs `{{form-component/json-field field=field}}`);
+
+      expect(this.$('textarea')).to.have.attr('disabled');
+    }
+  );
+
+  it(
     'notifies field object about lost focus',
     function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');

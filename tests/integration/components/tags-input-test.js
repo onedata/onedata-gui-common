@@ -81,6 +81,7 @@ describe('Integration | Component | tags input', function () {
       this.render(hbs `
         {{tags-input tags=tags onFocusLost=(action "focusLost")}}
       `);
+
       return focus('.tags-input')
         .then(() => {
           expect(focusLostSpy).to.be.not.called;
@@ -388,6 +389,50 @@ describe('Integration | Component | tags input', function () {
           return click('.tag-creator-trigger');
         })
         .then(() => expect(focusSpy).to.be.calledOnce);
+    }
+  );
+
+  it(
+    'does not allow to add and remove tags when disabled',
+    function () {
+      this.render(hbs `{{tags-input
+        disabled=true
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      const $tagsInput = this.$('.tags-input');
+      expect($tagsInput).to.have.attr('disabled');
+      expect(this.$('.tag-creator-trigger')).to.not.exist;
+      expect(this.$('.tag-remove')).to.not.exist;
+      return click('.tags-input')
+        .then(() => {
+          expect($tagsInput).to.not.have.class('creating-tag');
+          expect(this.$('.tag-creator')).to.not.exist;
+        });
+    }
+  );
+
+  it(
+    'stops tag creation when becomes disabled',
+    function () {
+      this.set('disabled', false);
+
+      this.render(hbs `{{tags-input
+        disabled=disabled
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      return click('.tags-input')
+        .then(() => {
+          this.set('disabled', true);
+          return wait();
+        })
+        .then(() => {
+          expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+          expect(this.$('.tag-creator')).to.not.exist;
+        });
     }
   );
 });

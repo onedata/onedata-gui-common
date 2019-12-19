@@ -1,6 +1,7 @@
 {{#if (not field.preparedOptions.isRejected)}}
   {{#power-select
     tagName="div"
+    disabled=(not isEnabled)
     options=field.preparedOptions
     onchange=(action "valueChanged")
     selected=(find-by "value" value field.preparedOptions)

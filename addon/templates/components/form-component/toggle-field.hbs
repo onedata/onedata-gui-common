@@ -1,6 +1,7 @@
 {{one-way-toggle
   class="form-control"
   inputId=fieldId
+  isReadOnly=(not isEnabled)
   checked=value
   update=(action "valueChanged")
   onFocusOut=(action "focusLost")

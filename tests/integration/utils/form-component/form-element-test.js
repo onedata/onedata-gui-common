@@ -26,7 +26,6 @@ describe('Integration | Utility | form component/form element', function () {
   it('can be disabled using disable()', function () {
     const formElement = FormElement.create();
 
-    expect(get(formElement, 'isEnabled')).to.be.true;
     formElement.disable();
     expect(get(formElement, 'isEnabled')).to.be.false;
   });

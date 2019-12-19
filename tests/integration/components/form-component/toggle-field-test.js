@@ -34,6 +34,17 @@ describe('Integration | Component | form component/toggle field', function () {
   );
 
   it(
+    'can be disabled',
+    function () {
+      this.get('field').disable();
+
+      this.render(hbs `{{form-component/toggle-field field=field}}`);
+
+      expect(this.$('.one-way-toggle')).to.have.class('disabled');
+    }
+  );
+
+  it(
     'notifies field object about lost focus',
     function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');

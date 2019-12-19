@@ -100,6 +100,21 @@ describe('Integration | Component | form component/dropdown field', function () 
   );
 
   it(
+    'can be disabled',
+    function () {
+      this.get('field').disable();
+
+      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+      return wait()
+        .then(() => {
+          const dropdownTrigger = new DropdownHelper().getTrigger();
+          expect($(dropdownTrigger)).to.have.attr('aria-disabled', 'true')
+        });
+    }
+  );
+
+  it(
     'notifies field object about lost focus',
     function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');

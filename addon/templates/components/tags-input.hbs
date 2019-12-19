@@ -4,7 +4,9 @@
       {{one-icon icon=tag.icon class="tag-icon"}}
     {{/if}}
     {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
-    {{one-icon icon="close" class="tag-remove" click=(action "removeTag" tag)}}
+    {{#unless disabled}}
+      {{one-icon icon="close" class="tag-remove" click=(action "removeTag" tag)}}
+    {{/unless}}
   </li>
 {{/each}}
   {{#if isCreatingTag}}
@@ -20,7 +22,9 @@
       }}
     </li>
   {{/if}}
-  <li class="tag-creator-trigger input-element" {{action "startTagCreation"}}>
-    {{one-icon icon="plus"}}
-  </li>
+  {{#unless disabled}}
+    <li class="tag-creator-trigger input-element" {{action "startTagCreation"}}>
+      {{one-icon icon="plus"}}
+    </li>
+  {{/unless}}
 {{yield}}

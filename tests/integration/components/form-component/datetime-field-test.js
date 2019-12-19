@@ -41,6 +41,17 @@ describe('Integration | Component | form component/datetime field', function () 
   );
 
   it(
+    'can be disabled',
+    function () {
+      this.get('field').disable();
+
+      this.render(hbs `{{form-component/datetime-field field=field}}`);
+
+      expect(this.$('input')).to.have.attr('disabled');
+    }
+  );
+
+  it(
     'notifies field object about lost focus',
     function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');

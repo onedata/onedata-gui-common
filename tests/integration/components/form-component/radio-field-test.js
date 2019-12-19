@@ -67,6 +67,17 @@ describe('Integration | Component | form component/radio field', function () {
   );
 
   it(
+    'can be disabled',
+    function () {
+      this.get('field').disable();
+
+      this.render(hbs `{{form-component/radio-field field=field}}`);
+
+      expect(this.$('.one-way-radio-group')).to.have.class('disabled');
+    }
+  );
+
+  it(
     'notifies field object about lost focus',
     function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');

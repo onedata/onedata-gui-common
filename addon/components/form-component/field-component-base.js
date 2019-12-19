@@ -19,6 +19,11 @@ export default Component.extend({
   }),
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isEnabled: reads('field.isEnabled'),
+
+  /**
    * @type {ComputedProperty<any>}
    */
   value: reads('field.value'),
