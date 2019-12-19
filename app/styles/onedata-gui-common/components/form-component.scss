@@ -35,6 +35,12 @@
     }
   }
 
+  .toggle-field-renderer {
+    .one-way-toggle {
+      display: block;
+    }
+  }
+
   .form-fields-group-renderer {
     margin-bottom: 0;
   }
@@ -67,4 +73,8 @@
       width: 100%;
     }
   }
+}
+
+.dropdown-field-dropdown {
+  max-height: 300px;
 }

@@ -5,6 +5,8 @@ import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
+import { triggerEvent } from 'ember-native-dom-helpers';
+import $ from 'jquery';
 
 describe('Integration | Component | form component/field renderer', function () {
   setupComponentTest('form-component/field-renderer', {
@@ -172,6 +174,31 @@ describe('Integration | Component | form component/field renderer', function () 
       this.render(hbs `{{form-component/field-renderer field=textField}}`)
 
       expect(this.$('label').text().trim()).to.equal('abc');
+    }
+  );
+
+  it(
+    'renders tooltip if field.tip is not empty',
+    function () {
+      this.set('textField.tip', 'someTip');
+
+      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+
+      const $formFieldTip = this.$('.form-field-tip');
+      expect($formFieldTip).to.exist;
+      return triggerEvent($formFieldTip.find('.one-icon')[0], 'mouseenter')
+        .then(() => expect($('.tooltip.in').text().trim()).to.equal('someTip'));
+    }
+  );
+
+  it(
+    'does not render tooltip if field.tip is empty',
+    function () {
+      this.set('textField.tip', undefined);
+
+      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+
+      expect(this.$('.form-field-tip')).to.not.exist;
     }
   );
 });

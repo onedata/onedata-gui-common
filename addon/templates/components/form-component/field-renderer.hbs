@@ -1,5 +1,10 @@
-{{#if field.label}}
-  <label class="control-label" for={{fieldId}}>{{field.label}}{{#if field.addColonToLabel}}:{{/if}}</label>
+{{#if (or field.label field.tip)}}
+  <label class="control-label" for={{fieldId}}>
+    {{field.label}}{{#if field.addColonToLabel}}:{{/if}}
+    {{#if field.tip}}
+      {{one-label-tip class="form-field-tip" title=field.tip}}
+    {{/if}}
+  </label>
 {{/if}}
 {{#component field.fieldComponentName field=field fieldId=fieldId}}
   {{#if (and showValidationState field.withValidationIcon)}}
