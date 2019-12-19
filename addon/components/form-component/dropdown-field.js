@@ -10,5 +10,11 @@ export default FieldComponentBase.extend({
     valueChanged(option) {
       this._super(get(option, 'value'));
     },
+    triggerFocusLost() {
+      // Focus lost due to opening dropdown should be omitted
+      if (this.$('.ember-basic-dropdown-trigger').attr('aria-expanded') !== 'true') {
+        this.send('focusLost');
+      }
+    },
   },
 });

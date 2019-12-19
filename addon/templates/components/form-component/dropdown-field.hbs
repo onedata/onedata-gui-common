@@ -7,9 +7,12 @@
     loadingMessage=field.loadingMessage
     placeholder=field.placeholder
     renderInPlace=true
-    onblur=(action "focusLost")
+    onblur=(action "triggerFocusLost")
+    onclose=(action "focusLost")
     triggerId=fieldId
     searchEnabled=field.showSearch
+    triggerClass="dropdown-field-trigger"
+    dropdownClass="dropdown-field-dropdown"
     as |option|
   }}
     <div class="option-container">
