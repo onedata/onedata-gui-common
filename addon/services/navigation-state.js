@@ -28,7 +28,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
  * @property {string} title
  */
 
-const aspectOptionsDelimiter = '..';
+const aspectOptionsDelimiter = /\.\.+/;
 const aspectOptionsValueDelimiter = '.';
 
 export function parseAspectOptions(optionsString) {
