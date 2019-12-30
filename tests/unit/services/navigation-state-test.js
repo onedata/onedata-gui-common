@@ -189,4 +189,9 @@ describe('Unit | Service | navigation state', function () {
     expect(actions[1].separator).to.be.true;
     expect(actions[2].title).to.equal(aspectActions[0].title);
   });
+  
+  it('parses aspect options with multiple dots', function () {
+    const service = this.subject();
+    service.set('aspectOptionsString', 'hello.world......other.value');
+  });
 });

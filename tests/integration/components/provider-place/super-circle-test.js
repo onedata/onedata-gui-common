@@ -8,19 +8,21 @@ describe('Integration | Component | provider place/super circle', function () {
     integration: true
   });
 
-  it('renders with source animation class', function () {
+  it('renders with source and without desitnation animation class', function () {
     this.render(hbs `{{provider-place/super-circle isSource=true}}`);
 
     const $superCircle = this.$('.super-circle');
 
     expect($superCircle).to.have.class('source');
+    expect($superCircle).to.not.have.class('destination');
   });
 
-  it('renders with destination animation class', function () {
+  it('renders with destination and without source animation class', function () {
     this.render(hbs `{{provider-place/super-circle isDestination=true}}`);
 
     const $superCircle = this.$('.super-circle');
 
+    expect($superCircle).to.not.have.class('source');
     expect($superCircle).to.have.class('destination');
   });
 
@@ -33,5 +35,16 @@ describe('Integration | Component | provider place/super circle', function () {
 
     expect($superCircle).to.have.class('source');
     expect($superCircle).to.have.class('destination');
+  });
+  
+  it('renders without source and destination animation classes', function () {
+    this.render(hbs `
+      {{provider-place/super-circle isDestination=false isSource=false}}
+    `);
+
+    const $superCircle = this.$('.super-circle');
+
+    expect($superCircle).to.not.have.class('source');
+    expect($superCircle).to.not.have.class('destination');
   });
 });

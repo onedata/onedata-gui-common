@@ -5,7 +5,7 @@ import _ from 'lodash';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import { Promise, resolve } from 'rsvp';
-import { get, set } from '@ember/object';
+import { get } from '@ember/object';
 
 class Record {
   constructor(index) {
@@ -511,9 +511,9 @@ describe('Unit | Utility | replacing chunks array', function () {
   it('fills sourceArray with more data than expected if fetched more and uses it later',
     function () {
       const arraySize = 1000;
-      this.mockFullArray = new MockFullArray(arraySize);
-      this.fetchFullArray = MockFullArray.prototype.fetch.bind(this.mockFullArray);
-      const fetchSpy = sinon.spy(this.fetchFullArray);
+      const mockFullArray = new MockFullArray(arraySize);
+      const fetchFullArray = MockFullArray.prototype.fetch.bind(mockFullArray);
+      const fetchSpy = sinon.spy(fetchFullArray);
       const array = ReplacingChunksArray.create({
         fetch: fetchSpy,
         startIndex: 0,
@@ -543,19 +543,19 @@ describe('Unit | Utility | replacing chunks array', function () {
   it('injects self reference into fetch method',
     function () {
       let compareArrayInstancesResult = undefined;
+      let array;
       this.fetch = (a, b, c, arrayInstance) => {
-        compareArrayInstancesResult = this.array === arrayInstance;
+        compareArrayInstancesResult = array === arrayInstance;
         return resolve([]);
       };
-      this.array = ReplacingChunksArray.create({
-        fetch: () => resolve([]),
+      array = ReplacingChunksArray.create({
+        fetch: this.fetch.bind(this),
         startIndex: 0,
         endIndex: 50,
         indexMargin: 10,
       });
-      set(this.array, 'fetch', this.fetch.bind(this));
 
-      this.array.reload();
+      array.reload();
 
       return wait()
         .then(() => {
