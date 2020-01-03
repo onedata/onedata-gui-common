@@ -421,6 +421,12 @@ export default Service.extend(I18n, {
     return this.set('aspectOptions', Object.freeze(this.mergedAspectOptions(options)));
   },
 
+  changeRouteAspectOptions(options, replaceHistory = false) {
+    const newOptions = serializeAspectOptions(this.mergedAspectOptions(options));
+    const routerMethod = replaceHistory ? 'replaceWith' : 'transitionTo';
+    return this.get('router')[routerMethod]({ queryParams: { options: newOptions } });
+  },
+
   /**
    * Resolves to true if activeResourceCollections contains model with passed id
    * @param {string} id 
