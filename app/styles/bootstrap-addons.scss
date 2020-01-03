@@ -61,6 +61,11 @@ $token-border-radius: 3px;
         }
       }
     }
+    &.text-right {
+      text-align: right;
+      float: right;
+      margin-left: 0;
+    }
   }
 }
 
