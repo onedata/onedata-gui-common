@@ -167,6 +167,11 @@ label {
     }
     a {
       padding: $padding-base-vertical * 0.8;
+      .one-icon + .truncated-string.one-label {
+        display: inline-block;
+        vertical-align: middle;
+        max-width: calc(100% - 30px);
+      }
     }
   }
 }
@@ -291,6 +296,12 @@ label {
       transition: initial;
       border-radius: $border-radius-large;
 
+      &.modal-lg {
+        @media (max-width: $screen-sm-max) {
+          width: 90%;
+        }
+      }
+      
       @media (max-width: $screen-xs-max) {
         width: 90%;
       }

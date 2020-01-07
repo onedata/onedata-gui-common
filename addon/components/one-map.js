@@ -50,6 +50,8 @@ export default Component.extend({
    */
   initialState: Object.freeze({}),
 
+  zoomOnScroll: true,
+
   /**
    * @type {JQuery}
    */
@@ -109,7 +111,10 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const _initialState = this.get('_initialState');
+    const {
+      _initialState,
+      zoomOnScroll,
+    } = this.getProperties('_initialState', 'zoomOnScroll');
     const $mapContainer = this.$('.one-map-container');
     this.set('$mapContainer', $mapContainer);
     this.set('_mapInstance',
@@ -117,6 +122,7 @@ export default Component.extend({
         map: 'world_mill',
         backgroundColor: 'transparent',
         focusOn: _initialState,
+        zoomOnScroll,
         onViewportChange: (event, scale) =>
           safeExec(this, '_handleViewportChange', event, scale),
       }).vectorMap('get', 'mapObject')

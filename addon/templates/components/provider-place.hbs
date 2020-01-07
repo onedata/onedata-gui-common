@@ -1,8 +1,11 @@
-{{oneprovider-map-circle
+{{#oneprovider-map-circle
   oneproviders=providersArray
   scale=circleSizeScale
   color=circleColor
-  mapSize=atlasWidth}}
+  mapSize=atlasWidth
+}}
+  {{yield}}
+{{/oneprovider-map-circle}}
 {{#if renderDrop}}
   {{#one-switchable-popover-modal
     activeTriggerSelector=(concat (concat "#" elementId) " .circle")

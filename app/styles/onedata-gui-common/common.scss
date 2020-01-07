@@ -29,6 +29,16 @@ strong {
   @include absolute-align-middle-center();
 }
 
+.middle-sticky {
+  position: fixed;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.1s linear;
+  &.middle-sticky-hide {
+    opacity: 0;
+  }
+}
+
 .full-height {
   height: 100%;
   overflow-y: auto;
@@ -87,6 +97,10 @@ strong {
 
 .no-pointer-events {
   pointer-events: none;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .content-backdrop.sidenav-backdrop {
@@ -694,3 +708,30 @@ textarea[style^="touch-action: manipulation"] {
     }
   }
 }
+
+.toggle-expand {
+  .toggle-icon {
+    display: block;
+    font-size: 1.7em;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  &.left {
+    padding-right: 40px;
+    .toggle-icon {
+      left: 20px;
+      right: initial;
+    }
+  }
+  
+  &.opened {
+    .toggle-icon {
+      transform: translateY(-50%) rotate(180deg);
+    }
+  }
+}
+

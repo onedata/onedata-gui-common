@@ -3,6 +3,68 @@ $color-provider-offline: $color-one-red;
 $popover-provider-details-width: 220px;
 $popover-provider-list-width: 190px;
 $provider-place-drop-height: 306px;
+$provider-place-circle-size: 64px;
+$color-provider-online: $color-one-mint;
+$color-provider-offline: $color-one-red;
+$super-circle-animation-duration: 2s;
+
+@include animation-fg-color-change(
+  pulse-red-mint,
+  $color-one-red,
+  $color-one-mint
+);
+
+@mixin create-circles($color) {
+  .circle {
+    border-color: $color;
+    color: $color;
+  }
+  .super-circle {
+    background-color: transparentize($color-provider-online, 0.5);
+  }
+}
+    
+@mixin min-super-circle {
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+}
+
+@mixin max-super-circle {
+  width: 400%;
+  height: 400%;
+  opacity: 0;
+}
+
+@keyframes gather-circle {
+  0% {
+    @include max-super-circle();
+  }
+  100% {
+    @include min-super-circle();
+  }
+}
+
+@keyframes broadcast-circle {
+  0% {
+    @include min-super-circle();
+  }
+  100% {
+    @include max-super-circle();
+  }
+}
+
+@keyframes full-duplex-circle {
+  0% {
+    @include min-super-circle();
+  }
+  50% {
+    @include max-super-circle();
+  }
+  100% {
+    @include min-super-circle();
+  }
+}
 
 .provider-place-drop {
   $-btn-container-height: 62px;
@@ -325,5 +387,36 @@ $provider-place-drop-height: 306px;
     width: $popover-provider-list-width;
     border-right: 1px solid $main-border-color;
     box-sizing: border-box;
+  }
+}
+
+.super-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: -1;
+  
+  border-radius: 50%;
+  
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  
+  &.destination {
+    animation-name: gather-circle;
+    animation-timing-function: ease-out;
+    animation-duration: $super-circle-animation-duration;
+  }
+  
+  &.source {
+    animation-name: broadcast-circle;
+    animation-timing-function: ease-in;
+    animation-duration: $super-circle-animation-duration;
+  }
+  
+  &.destination.source {
+    animation-name: full-duplex-circle;
+    animation-timing-function: ease;
+    animation-duration: $super-circle-animation-duration * 2;
   }
 }
