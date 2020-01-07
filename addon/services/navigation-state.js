@@ -28,13 +28,14 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
  * @property {string} title
  */
 
+const aspectOptionsDelimiterRe = /\.\.+/;
 const aspectOptionsDelimiter = '..';
 const aspectOptionsValueDelimiter = '.';
 
 export function parseAspectOptions(optionsString) {
   const parsedOptions = {};
   if (optionsString) {
-    optionsString.split(aspectOptionsDelimiter).forEach(option => {
+    optionsString.split(aspectOptionsDelimiterRe).forEach(option => {
       const [key, value] = option.split(aspectOptionsValueDelimiter);
       parsedOptions[key] = value;
     });
@@ -171,11 +172,8 @@ export default Service.extend(I18n, {
       return serializeAspectOptions(this.get('aspectOptions'));
     },
     set(key, value) {
-      const aspectOptions = this.get('aspectOptions');
-      const newAspectOptions = Object.freeze(
-        Object.assign({}, aspectOptions, parseAspectOptions(value))
-      );
-      return serializeAspectOptions(this.set('aspectOptions', newAspectOptions));
+      const aspectOptions = this.set('aspectOptions', parseAspectOptions(value));
+      return serializeAspectOptions(aspectOptions);
     }
   }),
 
@@ -406,17 +404,27 @@ export default Service.extend(I18n, {
     }
   ),
 
-  setAspectOptions(options) {
+  mergedAspectOptions(options) {
     const newAspectOptions = Object.assign({}, this.get('aspectOptions'), options);
     for (let key in options) {
       if (options.hasOwnProperty(key)) {
         const value = options[key];
-        if (value == null) {
+        if (value === null) {
           delete newAspectOptions[key];
         }
       }
     }
-    return this.set('aspectOptions', Object.freeze(newAspectOptions));
+    return newAspectOptions;
+  },
+
+  setAspectOptions(options) {
+    return this.set('aspectOptions', Object.freeze(this.mergedAspectOptions(options)));
+  },
+
+  changeRouteAspectOptions(options, replaceHistory = false) {
+    const newOptions = serializeAspectOptions(this.mergedAspectOptions(options));
+    const routerMethod = replaceHistory ? 'replaceWith' : 'transitionTo';
+    return this.get('router')[routerMethod]({ queryParams: { options: newOptions } });
   },
 
   /**

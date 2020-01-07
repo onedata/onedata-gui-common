@@ -20,13 +20,25 @@ export const onepanelTestImagePath = getTestImagePath('onepanel');
 export const onezoneTestImagePath = getTestImagePath('onezone');
 export const oneproviderTestImagePath = getTestImagePath('oneprovider');
 
+function normalizeEmberPath(emberPath) {
+  return emberPath.replace(/^\//, '');
+}
+
 /**
  * @param {string} origin 
  * @param {string} emberPath must be path **without** leading slash, it will be
  *  automatically trimmed
  */
 export function getOnezoneUrl(origin, emberPath = '') {
-  return `${origin}${onezoneDefaultRootPath}/i#/${emberPath.replace(/^\//, '')}`
+  return `${origin}${onezoneDefaultRootPath}/i#/${normalizeEmberPath(emberPath)}`
+}
+
+export function getOneproviderPath(clusterId, emberPath = '') {
+  let path = `/${oneproviderAbbrev}/${clusterId}/i`
+  if (emberPath) {
+    path += `#/${normalizeEmberPath(emberPath)}`;
+  }
+  return path;
 }
 
 export function getTestImagePath(type) {

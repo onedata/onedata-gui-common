@@ -14,7 +14,23 @@ import { resolve } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import $ from 'jquery';
 import config from 'ember-get-config';
-import { isDevelopment } from 'onedata-gui-websocket-client/utils/development-environment';
+
+/**
+ * Checks if we are in environment that needs to create development model.
+ * Ported from onedata-gui-websocket-client
+ * 
+ * @export
+ * @param {object} config Ember application config, get it with: `ember-get-config`
+ * @returns {boolean}
+ */
+export function isDevelopment(config) {
+  let {
+    APP: {
+      MOCK_BACKEND,
+    },
+  } = config;
+  return MOCK_BACKEND === true;
+}
 
 export const mockGuiContext = {
   guiMode: 'unified',
