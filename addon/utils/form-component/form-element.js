@@ -72,9 +72,16 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   withValidationIcon: true,
 
   /**
+   * @public
    * @type {String}
    */
   classes: '',
+
+  /**
+   * @public
+   * @type {boolean}
+   */
+  areValidationClassesEnabled: true,
 
   /**
    * @type {boolean}

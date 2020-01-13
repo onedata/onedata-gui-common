@@ -21,6 +21,11 @@ export default FormElement.extend({
   withValidationIcon: false,
 
   /**
+   * @override
+   */
+  areValidationClassesEnabled: false,
+
+  /**
    * @public
    * @type {boolean}
    */

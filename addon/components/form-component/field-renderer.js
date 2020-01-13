@@ -2,7 +2,6 @@ import Component from '@ember/component';
 import layout from '../../templates/components/form-component/field-renderer';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { and, not } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -30,31 +29,37 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isGroup: reads('field.isGroup'),
-
-  /**
-   * @type {ComputedProperty<boolean>}
-   */
   isValid: reads('field.isValid'),
 
   /**
    * @type {ComputedProperty<boolean>}
    */
-  showValidationState: and('field.isModified', not('isGroup')),
+  isModified: reads('field.isModified'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  areValidationClassesEnabled: reads('field.areValidationClassesEnabled'),
 
   /**
    * @type {ComputedProperty<String>}
    */
   validationClass: computed(
     'isValid',
-    'showValidationState',
+    'isModified',
+    'areValidationClassesEnabled',
     function validationClass() {
       const {
         isValid,
-        showValidationState,
-      } = this.getProperties('isValid', 'showValidationState');
+        isModified,
+        areValidationClassesEnabled,
+      } = this.getProperties(
+        'isValid',
+        'isModified',
+        'areValidationClassesEnabled'
+      );
 
-      if (showValidationState) {
+      if (isModified && areValidationClassesEnabled) {
         return isValid ? 'has-success' : 'has-error';
       }
     }
