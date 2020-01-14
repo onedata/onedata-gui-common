@@ -1,0 +1,28 @@
+$public-onedata-header-height: 86px;
+$logo-height: 25px;
+
+.public-route {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .one-embedded-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .public-onedata-header + .one-embedded-container {
+    top: $public-onedata-header-height;
+  }
+  .public-onedata-header {
+    height: $public-onedata-header-height;
+    background-image: url($root-url + 'images/logo.svg');
+    background-color: $color-one-semiblack;
+    background-size: auto $logo-height;
+    background-repeat: no-repeat;
+    background-position: $content-col-padding center;
+  }
+}
