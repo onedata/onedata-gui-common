@@ -37,17 +37,6 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.providerPlace.drop',
 
   /**
-   * @type {Ember.ComputedProperty<boolean|undefined>}
-   */
-  isDefaultProvider: computed(
-    'guiUtils.defaultProviderId',
-    'provider.entityId',
-    function getIsDefaultProvider() {
-      return this.get('guiUtils.defaultProviderId') === this.get('provider.entityId');
-    },
-  ),
-
-  /**
    * Spaces list sort order
    * @type {Array<string>}
    */
@@ -95,12 +84,6 @@ export default Component.extend(I18n, {
 
     copyError() {
       this.get('globalNotify').info(this.t('hostnameCopyError'));
-    },
-
-    toggleDefaultProvider() {
-      const isDefaultProvider = this.get('isDefaultProvider');
-      return this.get('guiUtils')
-        .setDefaultProviderId(isDefaultProvider ? null : this.get('provider.entityId'));
     },
   }
 });
