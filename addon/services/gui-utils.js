@@ -13,7 +13,6 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import modelRoutableId from 'onedata-gui-common/utils/model-routable-id';
-import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 export default Service.extend(I18n, {
   i18n: service(),
@@ -32,15 +31,6 @@ export default Service.extend(I18n, {
    */
   guiType: computed(function () {
     return this.t('onedata');
-  }),
-
-  /**
-   * @virtual
-   * Entity ID of default provider or null if no default or not available
-   * @type {Ember.ComputedProperty<string>}
-   */
-  defaultProviderId: computed(function () {
-    return null;
   }),
 
   /**
@@ -63,13 +53,6 @@ export default Service.extend(I18n, {
    * @type {string}
    */
   guiIcon: '',
-
-  /**
-   * @type {function}
-   * @param {string} providerEntityId
-   * @returns {Promise<undefined|any>}
-   */
-  setDefaultProviderId: notImplementedReject,
 
   /**
    * External link to manage account. If not needed (manage account is a
