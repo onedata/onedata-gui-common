@@ -36,15 +36,19 @@
   {{#one-collapsible-toolbar
     isMinimized=true
     toggleBtnClass="btn-menu-toggle provider-menu-toggle"
+    popoverClass="oneprovider-actions"
     as |dropdown|
   }}
     {{#each providerActions as |providerAction|}}
-    {{#dropdown.item
-      itemAction=(action providerAction.action provider)
-      triggerClasses=providerAction.class
-    }}
-      {{providerAction.text}}
-    {{/dropdown.item}}
+      {{#dropdown.item
+        itemAction=(action providerAction.action provider)
+        triggerClasses=providerAction.class
+      }}
+        {{#if providerAction.icon}}
+          {{one-icon icon=providerAction.icon}}
+        {{/if}}
+        <span class="one-label">{{providerAction.text}}</span>
+      {{/dropdown.item}}
     {{/each}}
   {{/one-collapsible-toolbar}}
 {{/if}}
