@@ -85,11 +85,22 @@ export default Service.extend(I18n, {
   logout() {
     let session = this.get('session');
     let loggingOut = session.invalidate();
-    loggingOut.then(() => window.location.reload());
+    loggingOut.then(() =>
+      window.location.href = this.getAfterLogoutRedirectUrl()
+    );
     loggingOut.catch(error => {
       this.get('globalNotify').backendError(this.t('loggingOut'), error);
     });
     loggingOut.finally(() => this.set('menuOpen', false));
     return loggingOut;
   },
+
+  /**
+   * @returns {String
+   */
+  getAfterLogoutRedirectUrl() {
+    // Redirect to main page with cleared out routing data
+    // (these after '#' and '?' characters)
+    return window.location.href.match(/(^[^#?]*)/)[0];
+  }
 });
