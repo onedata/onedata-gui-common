@@ -394,6 +394,12 @@ ul.info {
 
 a {
   color: $color-one-mint;
+  &.fake-text {
+    color: $main-text-color;
+    text-decoration: none;
+    cursor: default;
+    pointer-events: none;
+  }
   &:hover {
     color: darken($color-one-mint, 20%);
   }
@@ -733,5 +739,11 @@ textarea[style^="touch-action: manipulation"] {
       transform: translateY(-50%) rotate(180deg);
     }
   }
+}
+
+// FIXME: temporary style
+
+p.text-separated {
+  margin-top: $padding-large-vertical;
 }
 

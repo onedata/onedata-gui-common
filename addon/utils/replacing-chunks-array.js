@@ -351,7 +351,11 @@ export default ArraySlice.extend(Evented, {
       'initialLoad',
       PromiseObject.create({ promise: this.reload({ head: true }) })
     ).catch(error => {
-      console.debug('replacing-chunks-array#init: initial load failed: ' + error);
+      console.debug(
+        'replacing-chunks-array#init: initial load failed: ' +
+        JSON.stringify(error)
+      );
+      safeExec(this, 'set', 'error', error);
     });
   },
 });
