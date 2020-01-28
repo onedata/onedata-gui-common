@@ -15,6 +15,7 @@ import layout from '../templates/components/proceed-process-modal';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend(I18n, {
   tagName: '',
@@ -58,6 +59,13 @@ export default Component.extend(I18n, {
    * @type {string}
    */
   modalClass: 'proceed-modal',
+
+  /**
+   * If true, the `processing` property will be updated when `proceed` promise starts and
+   * settles. Set false to get the old behaviour, where `processing` property was injected.
+   * @type {boolean}
+   */
+  autoDetectProcessing: true,
 
   /**
    * @type {string}
@@ -125,4 +133,19 @@ export default Component.extend(I18n, {
   proceedButtonText: computed(function proceedButtonText() {
     return this.t('proceed');
   }),
+
+  actions: {
+    proceed() {
+      const autoDetectProcessing = this.get('autoDetectProcessing');
+      if (autoDetectProcessing) {
+        this.set('processing', true);
+      }
+      return this.get('proceed')()
+        .finally(() => {
+          if (autoDetectProcessing) {
+            safeExec(this, 'set', 'processing', false)
+          }
+        });
+    },
+  }
 });
