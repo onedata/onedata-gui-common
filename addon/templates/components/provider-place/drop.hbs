@@ -49,16 +49,14 @@
   <div class="btn-container">
     {{#if provider.online}}
       <div class="row row-btn">
-        {{#if (eq provider.status "online")}}
-          {{#link-to "provider-redirect" (model-routable-id provider.id) 
-            class="btn btn-sm btn-go-to-files btn-primary"
-          }}
-            {{one-icon icon="provider"}}
-            <span class="text">
-              {{tt this "goToFiles"}}
-            </span>
-          {{/link-to}}
-        {{/if}}
+        {{#link-to "provider-redirect" (model-routable-id provider.id) 
+          class="btn btn-sm btn-go-to-files btn-primary"
+        }}
+          {{one-icon icon="provider"}}
+          <span class="text">
+            {{tt this "goToFiles"}}
+          </span>
+        {{/link-to}}
       </div>
     {{else}}
       <div class="row row-btn">
