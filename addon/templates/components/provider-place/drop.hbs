@@ -49,18 +49,7 @@
   <div class="btn-container">
     {{#if provider.online}}
       <div class="row row-btn">
-        {{#one-spin-button
-          class="btn btn-sm btn-toggle-default btn-default"
-          action=(action "toggleDefaultProvider")
-        }}
-          {{one-icon icon=(if isDefaultProvider "home" "home-outline")}}
-          <span class="text">
-            {{tt this (if isDefaultProvider "unsetDefault" "setDefault")}}
-          </span>
-        {{/one-spin-button}}
-      </div>
-      <div class="row row-btn">
-        {{#if provider.online}}
+        {{#if (eq provider.status "online")}}
           {{#link-to "provider-redirect" (model-routable-id provider.id) 
             class="btn btn-sm btn-go-to-files btn-primary"
           }}

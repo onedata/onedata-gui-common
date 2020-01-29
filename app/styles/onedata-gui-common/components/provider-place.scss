@@ -67,7 +67,7 @@ $super-circle-animation-duration: 2s;
 }
 
 .provider-place-drop {
-  $-btn-container-height: 62px;
+  $-btn-container-height: 30px;
 
   height: $provider-place-drop-height;
   
@@ -277,7 +277,7 @@ $super-circle-animation-duration: 2s;
       .spaces-list {
         position: absolute;
         top: 70px + $padding-large-vertical;
-        bottom: 2 * $padding-large-vertical+$-btn-container-height;
+        bottom: 2 * $padding-large-vertical + $-btn-container-height;
         left: $padding-large-vertical;
         right: $padding-large-vertical - 10px;
       }
