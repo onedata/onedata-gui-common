@@ -28,6 +28,7 @@ import loginLayout from './onedata-gui-common/components/login-layout';
 import oneproviderMapCircle from './onedata-gui-common/components/oneprovider-map-circle';
 import oneprovidersSelectorPopoverContent from './onedata-gui-common/components/oneproviders-selector-popover-content';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
+import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -74,6 +75,7 @@ const translations = {
     oneproviderMapCircle,
     oneprovidersSelectorPopoverContent,
     contentSharesEmpty,
+    qosParamsEditor,
     alerts: {
       endpointError,
     },
