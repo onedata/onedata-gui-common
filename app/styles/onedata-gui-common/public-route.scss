@@ -2,17 +2,11 @@ $public-onedata-header-height: 86px;
 $logo-height: 25px;
 
 .public-route {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: absolute;
+  @include fill-container;
   .one-embedded-container {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    @include fill-container;
   }
   .public-onedata-header + .one-embedded-container {
     top: $public-onedata-header-height;

@@ -1,0 +1,9 @@
+{{#proceed-process-modal
+  opened=open
+  headerText="Some header"
+  proceed=(action "proceed")
+  close=(action (mut open) false)
+  as |proceedModal|
+}}
+  Hello world, processing: {{proceedModal.processing}}
+{{/proceed-process-modal}}

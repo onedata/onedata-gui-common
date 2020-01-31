@@ -61,6 +61,11 @@ export default Component.extend(I18n, {
   modalClass: 'proceed-modal',
 
   /**
+   * Optionally set `size` property of bs-modal
+   */
+  size: undefined,
+
+  /**
    * If true, the `processing` property will be updated when `proceed` promise starts and
    * settles. Set false to get the old behaviour, where `processing` property was injected.
    * @type {boolean}
@@ -140,12 +145,26 @@ export default Component.extend(I18n, {
       if (autoDetectProcessing) {
         this.set('processing', true);
       }
-      return this.get('proceed')()
-        .finally(() => {
+      try {
+        const proceedResult = this.get('proceed')();
+        if (proceedResult && proceedResult.finally) {
+          proceedResult.finally(() => {
+            if (autoDetectProcessing) {
+              safeExec(this, 'set', 'processing', false)
+            }
+          });
+        } else {
           if (autoDetectProcessing) {
-            safeExec(this, 'set', 'processing', false)
+            this.set('processing', false);
           }
-        });
+        }
+        return proceedResult;
+      } catch (error) {
+        if (autoDetectProcessing) {
+          this.set('processing', false);
+        }
+        throw error;
+      }
     },
   }
 });
