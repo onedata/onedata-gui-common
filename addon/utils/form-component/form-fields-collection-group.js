@@ -76,7 +76,20 @@ export default FormFieldsGroup.extend({
    */
   dumpValue() {
     const value = this._super(...arguments);
-    set(value, '__fieldsValueNames', this.get('fields').mapBy('valueName'));
+    const fields = this.get('fields');
+
+    // Set default value to fields, which are not defined in values dump
+    // (fields which were just added)
+    fields.forEach(field => {
+      const fieldValueName = get(field, 'valueName');
+      if (!Object.keys(value).includes(fieldValueName)) {
+        set(value, fieldValueName, field.dumpDefaultValue());
+      }
+    });
+
+    // Add enumeration of existing fields
+    set(value, '__fieldsValueNames', fields.mapBy('valueName'));
+
     return value;
   },
 });

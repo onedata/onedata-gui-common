@@ -45,6 +45,7 @@ describe(
             return FormField.create({
               name: 'f',
               valueName: `f${createdFieldsCounter}`,
+              defaultValue: createdFieldsCounter,
             });
           },
         }).create({
@@ -58,8 +59,13 @@ describe(
         expect(get(collectionGroup, 'fields')).to.have.length(2);
         expect(get(collectionGroup, 'fields.firstObject.valueName')).to.equal('f0');
         expect(get(collectionGroup, 'fields.lastObject.valueName')).to.equal('f1');
+        // debugger;
         expect(changeSpy.lastCall).to.be.calledWith(
-          sinon.match.has('__fieldsValueNames', ['f0', 'f1'])
+          sinon.match({
+            f0: 0,
+            f1: 1,
+            __fieldsValueNames: ['f0', 'f1'],
+          })
         );
       }
     );
@@ -118,5 +124,34 @@ describe(
         expect(get(collectionGroup, 'addButtonText')).to.equal('specificText');
       }
     );
+
+    // it('notifies about change after creating new field', function () {
+    //   const changeSpy = sinon.spy();
+    //   const collectionGroup = FormFieldsCollectionGroup.extend({
+    //     fieldFactoryMethod() {
+    //       return FormField.create({
+    //         name: 'textField',
+    //         valueName: `textField${this.get('fields.length')}`,
+    //         defaultValue: '1',
+    //       });
+    //     },
+    //   }).create({
+    //     ownerSource: this,
+    //     parent: {
+    //       onValueChange: changeSpy,
+    //     },
+    //   });
+    //   this.set('collectionGroup', collectionGroup);
+
+    //   this.render(hbs `
+    //     {{form-component/form-fields-collection-group field=collectionGroup}}
+    //   `);
+
+    //   return click('.add-field-button')
+    //     .then(() => {
+    //       console.log(changeSpy);
+    //       debugger;
+    //     })
+    // });
   }
 );
