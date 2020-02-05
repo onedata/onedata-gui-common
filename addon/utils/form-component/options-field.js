@@ -31,7 +31,7 @@ export default FormField.extend({
     'path',
     function preparedOptions() {
       let options = this.get('options');
-      if (!options.then) {
+      if (!options || !options.then) {
         options = resolve(options);
       }
 

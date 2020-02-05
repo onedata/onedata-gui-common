@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
@@ -9,11 +9,6 @@ import { blur, focus } from 'ember-native-dom-helpers';
 import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
-import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
-import { setProperties } from '@ember/object';
-import { reject } from 'rsvp';
-import TestAdapter from '@ember/test/adapter';
-import Ember from 'ember';
 
 describe('Integration | Component | form component/dropdown field', function () {
   setupComponentTest('form-component/dropdown-field', {
@@ -21,11 +16,6 @@ describe('Integration | Component | form component/dropdown field', function () 
   });
 
   beforeEach(function () {
-    this.originalLoggerError = Ember.Logger.error;
-    this.originalTestAdapterException = TestAdapter.exception;
-    Ember.Logger.error = function () {};
-    Ember.Test.adapter.exception = function () {};
-
     const i18nStub = sinon.stub(lookupService(this, 'i18n'), 't')
       .withArgs('somePrefix.field1.options.first.label')
       .returns('First')
@@ -54,11 +44,6 @@ describe('Integration | Component | form component/dropdown field', function () 
       i18nStub,
       field,
     });
-  });
-
-  afterEach(function () {
-    Ember.Logger.error = this.originalLoggerError;
-    Ember.Test.adapter.exception = this.originalTestAdapterException;
   });
 
   it(
@@ -173,88 +158,6 @@ describe('Integration | Component | form component/dropdown field', function () 
         expect($dropdownTrigger.attr('id')).to.equal('abc');
       });
   });
-
-  it(
-    'shows "Loading..." in dropdown and nothing selected when options are loading',
-    function () {
-      const {
-        i18nStub,
-        field,
-      } = this.getProperties('i18nStub', 'field');
-      i18nStub
-        .withArgs('somePrefix.field1.loadingMessage')
-        .returns('Loading...')
-        .withArgs('somePrefix.field1.placeholder')
-        .returns('');
-      setProperties(field, {
-        value: 2,
-        options: PromiseArray.create({
-          promise: new Promise(() => {}),
-        }),
-      });
-
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
-
-      const dropdown = new DropdownHelper();
-      return wait()
-        .then(() => dropdown.open())
-        .then(() => {
-          const $trigger = $(dropdown.getTrigger());
-          const $loadingOption = $(dropdown.getNthOption(1));
-
-          expect($trigger.text().trim()).to.be.empty;
-          expect($loadingOption.text().trim()).to.equal('Loading...');
-        });
-    }
-  );
-
-  it(
-    'preselectes value specified in field after loading',
-    function () {
-      let resolvePromise;
-      const options = this.get('field.options');
-      setProperties(this.get('field'), {
-        value: 2,
-        options: PromiseArray.create({
-          promise: new Promise(resolve => resolvePromise = resolve),
-        }),
-      });
-
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
-
-      const dropdown = new DropdownHelper();
-      return wait()
-        .then(() => {
-          resolvePromise(options);
-          return wait();
-        })
-        .then(() =>
-          expect($(dropdown.getTrigger()).text().trim()).to.equal('Second')
-        );
-    }
-  );
-
-  it(
-    'shows error when options loading failed',
-    function () {
-      setProperties(this.get('field'), {
-        value: 2,
-        options: PromiseArray.create({
-          promise: reject({ id: 'forbidden' }),
-        }),
-      });
-
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
-
-      const dropdown = new DropdownHelper();
-      return wait()
-        .then(() => {
-          expect(dropdown.getTrigger()).to.not.exist;
-          expect(this.$('.resource-load-error')).to.exist;
-          expect(this.$('.error-json').text()).to.contain('"forbidden"');
-        });
-    }
-  );
 
   it(
     'shows placeholder specified in field',

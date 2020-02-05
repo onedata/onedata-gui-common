@@ -1,29 +1,24 @@
-{{#if (not field.preparedOptions.isRejected)}}
-  {{#power-select
-    tagName="div"
-    disabled=(not isEnabled)
-    options=field.preparedOptions
-    onchange=(action "valueChanged")
-    selected=(find-by "value" value field.preparedOptions)
-    loadingMessage=field.loadingMessage
-    placeholder=field.placeholder
-    renderInPlace=true
-    onblur=(action "triggerFocusLost")
-    onclose=(action "focusLost")
-    triggerId=fieldId
-    searchEnabled=field.showSearch
-    triggerClass="dropdown-field-trigger"
-    dropdownClass="dropdown-field-dropdown"
-    as |option|
-  }}
-    <div class="option-container">
-      {{#if option.icon}}
-        {{one-icon icon=option.icon}}
-      {{/if}}
-      <span class="text">{{option.label}}</span>
-    </div>
-  {{/power-select}}
-{{else}}
-  {{resource-load-error reason=field.preparedOptions.reason}}
-{{/if}}
+{{#power-select
+  tagName="div"
+  disabled=(not isEnabled)
+  options=field.preparedOptions
+  onchange=(action "valueChanged")
+  selected=(find-by "value" value field.preparedOptions)
+  placeholder=field.placeholder
+  renderInPlace=true
+  onblur=(action "triggerFocusLost")
+  onclose=(action "focusLost")
+  triggerId=fieldId
+  searchEnabled=field.showSearch
+  triggerClass="dropdown-field-trigger"
+  dropdownClass="dropdown-field-dropdown"
+  as |option|
+}}
+  <div class="option-container">
+    {{#if option.icon}}
+      {{one-icon icon=option.icon}}
+    {{/if}}
+    <span class="text">{{option.label}}</span>
+  </div>
+{{/power-select}}
 {{yield}}

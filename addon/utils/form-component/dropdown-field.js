@@ -15,14 +15,6 @@ export default OptionsField.extend({
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
-  loadingMessage: computed('i18nPrefix', 'path', function loadingMessage() {
-    // Null value, because powerselect converts `undefined` to string 'undefined'
-    return this.tWithDefault(`${this.get('path')}.loadingMessage`, {}, null);
-  }),
-
-  /**
-   * @type {ComputedProperty<HtmlSafe>}
-   */
   placeholder: computed('i18nPrefix', 'path', function placeholder() {
     // Null value, because powerselect converts `undefined` to string 'undefined'
     return this.tWithDefault(`${this.get('path')}.placeholder`, {}, null);
