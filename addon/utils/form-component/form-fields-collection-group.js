@@ -67,7 +67,11 @@ export default FormFieldsGroup.extend({
    */
   dumpDefaultValue() {
     const defaultValue = this._super(...arguments);
-    set(defaultValue, '__fieldsValueNames', this.get('fields').mapBy('valueName'));
+    set(
+      defaultValue,
+      '__fieldsValueNames',
+      this.get('fields').rejectBy('isValueless').mapBy('valueName')
+    );
     return defaultValue;
   },
 
@@ -76,7 +80,7 @@ export default FormFieldsGroup.extend({
    */
   dumpValue() {
     const value = this._super(...arguments);
-    const fields = this.get('fields');
+    const fields = this.get('fields').rejectBy('isValueless');
 
     // Set default value to fields, which are not defined in values dump
     // (fields which were just added)

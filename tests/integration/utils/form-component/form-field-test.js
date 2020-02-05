@@ -4,6 +4,7 @@ import { get, set, getProperties } from '@ember/object';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { setupComponentTest } from 'ember-mocha';
 import { validator } from 'ember-cp-validations';
+import sinon from 'sinon';
 
 describe('Integration | Utility | form component/form field', function () {
   setupComponentTest('test-component', {
@@ -49,6 +50,32 @@ describe('Integration | Utility | form component/form field', function () {
         valuesSource: {
           field: 3,
         },
+      });
+
+      const {
+        isValid,
+        errors,
+        invalidFields,
+      } = getProperties(formField, 'isValid', 'errors', 'invalidFields');
+      expect(isValid).to.be.true;
+      expect(errors).to.be.have.length(0);
+      expect(invalidFields).to.be.empty;
+    }
+  );
+
+  it(
+    'has truthy "isValid", empty "errors" and empty "invalidFields", when specified validators does not match to the field value but isValuess is true',
+    function () {
+      const formField = FormField.create({
+        ownerSource: this,
+        customValidators: [
+          validator('number', { gt: 2 }),
+        ],
+        name: 'field',
+        valuesSource: {
+          field: 1,
+        },
+        isValueless: true,
       });
 
       const {
@@ -118,6 +145,57 @@ describe('Integration | Utility | form component/form field', function () {
       });
 
       expect(get(formField, 'errors')).to.be.have.length(0);
+    }
+  );
+
+  it(
+    'does not allow to change isModified flag to true using markAsModified() when isValueless is true',
+    function () {
+      const formField = FormField.create({
+        isValueless: true,
+      });
+
+      formField.markAsModified();
+
+      expect(get(formField, 'isModified')).to.equal(false);
+    }
+  );
+
+  it('does not notify about value change when isValueless is true', function () {
+    const formField = FormField.create({
+      parent: FormField.create({
+        name: 'parent',
+      }),
+      name: 'child',
+      isValueless: true,
+    });
+    const onChangeSpy = sinon.spy(get(formField, 'parent'), 'onValueChange');
+
+    formField.valueChanged('new');
+    expect(onChangeSpy).to.not.be.called;
+  });
+
+  it('returns undefined as a dumpValue() result when isValueless is true', function () {
+    const formField = FormField.create({
+      valuePath: 'a',
+      valuesSource: {
+        a: 'b',
+      },
+      isValueless: true,
+    });
+
+    expect(formField.dumpValue()).to.be.undefined;
+  });
+
+  it(
+    'returns undefined as a dumpDefaultValue() result when isValueless is true',
+    function () {
+      const formField = FormField.create({
+        defaultValue: 'a',
+        isValueless: true,
+      });
+
+      expect(formField.dumpDefaultValue()).to.be.undefined;
     }
   );
 });

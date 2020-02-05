@@ -320,6 +320,29 @@ describe('Unit | Utility | form component/form fields group', function () {
   );
 
   it(
+    'returns aggregated fields default values as a dumpDefaultValues() result ignoring valueless fields',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        fields: A([
+          FormField.create({
+            name: 'a',
+            defaultValue: '0',
+          }),
+          FormField.create({
+            name: 'b',
+            defaultValue: '1',
+            isValueless: true,
+          }),
+        ]),
+      });
+
+      const defaultValue = formGroup.dumpDefaultValue();
+      expect(defaultValue).to.not.have.property('b');
+      expect(defaultValue).to.include({ a: '0' });
+    }
+  );
+
+  it(
     'returns aggregated fields values as a dumpValues() result',
     function () {
       const formGroup = FormFieldsGroup.create({
@@ -342,6 +365,31 @@ describe('Unit | Utility | form component/form fields group', function () {
         a: 1,
         b: 2,
       });
+    }
+  );
+
+  it(
+    'returns aggregated fields values as a dumpValues() result ignoring valueless fields',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        valuesSource: EmberObject.create({
+          a: 1,
+          b: 2,
+        }),
+        fields: A([
+          FormField.create({
+            name: 'a',
+          }),
+          FormField.create({
+            name: 'b',
+            isValueless: true,
+          }),
+        ]),
+      });
+
+      const value = formGroup.dumpValue();
+      expect(value).to.not.have.property('b');
+      expect(value).to.include({ a: 1 });
     }
   );
 

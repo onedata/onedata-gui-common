@@ -37,6 +37,28 @@ describe(
     );
 
     it(
+      'represents fields value names in collection through __fieldsValueNames in group value without valueless fields',
+      function () {
+        const collectionGroup = FormFieldsCollectionGroup.create({
+          fields: A([
+            FormField.create({
+              name: 'f',
+              valueName: 'f0',
+            }),
+            FormField.create({
+              name: 'f',
+              valueName: 'f1',
+              isValueless: true,
+            }),
+          ]),
+        });
+        const defaultValue = collectionGroup.dumpDefaultValue();
+
+        expect(get(defaultValue, '__fieldsValueNames')).to.deep.equal(['f0']);
+      }
+    );
+
+    it(
       'adds field through addNewField() (with usage of fieldFactoryMethod())',
       function () {
         const changeSpy = sinon.spy();
@@ -59,7 +81,6 @@ describe(
         expect(get(collectionGroup, 'fields')).to.have.length(2);
         expect(get(collectionGroup, 'fields.firstObject.valueName')).to.equal('f0');
         expect(get(collectionGroup, 'fields.lastObject.valueName')).to.equal('f1');
-        // debugger;
         expect(changeSpy.lastCall).to.be.calledWith(
           sinon.match({
             f0: 0,

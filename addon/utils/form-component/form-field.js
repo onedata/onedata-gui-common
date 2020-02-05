@@ -1,10 +1,9 @@
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-field-validator';
 import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
-import { conditional, or, not } from 'ember-awesome-macros';
+import { writable, conditional, or, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend({
@@ -14,6 +13,15 @@ export default FormElement.extend({
    * @type {boolean}
    */
   isOptional: false,
+
+  /**
+   * @public
+   * @type {boolean}
+   * If true then value of this form field is ignored. Changes will not propagate,
+   * (default)value dumps will always return undefined and field cannot be set as
+   * modified
+   */
+  isValueless: false,
 
   /**
    * @type {Array<String>}
@@ -72,7 +80,7 @@ export default FormElement.extend({
   /**
    * @override
    */
-  isValid: reads('fieldValidator.isValid'),
+  isValid: writable(or('isValueless', 'fieldValidator.isValid')),
 
   /**
    * @override
@@ -86,7 +94,7 @@ export default FormElement.extend({
   /**
    * @type {ComputedProperty<Array<any>>}
    */
-  errors: reads('fieldValidator.errors'),
+  errors: conditional('isValueless', [], 'fieldValidator.errors'),
 
   init() {
     this._super(...arguments);
@@ -108,5 +116,37 @@ export default FormElement.extend({
             .compact();
         }),
     });
+  },
+
+  /**
+   * @override
+   */
+  markAsModified() {
+    if (!this.get('isValueless')) {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
+  valueChanged() {
+    if (!this.get('isValueless')) {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
+  dumpDefaultValue() {
+    return this.get('isValueless') ? undefined : this._super(...arguments);
+  },
+
+  /**
+   * @override
+   */
+  dumpValue() {
+    return this.get('isValueless') ? undefined : this._super(...arguments);
   },
 })
