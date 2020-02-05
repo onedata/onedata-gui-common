@@ -8,7 +8,7 @@ export default class OneDatetimePickerHelper {
     this.$trigger = $trigger;
     // 100 is a value used internally in picker plugin in setTimeout.
     // Cannot be changed (yet)
-    this.pickerInitDelay = 100;
+    this.pickerInitDelay = 150;
   }
 
   openPicker(viaFocus = false) {
