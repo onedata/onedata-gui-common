@@ -36,7 +36,7 @@ describe('Integration | Component | form component/text like field', function ()
   it(
     'can be disabled',
     function () {
-      this.get('textField').disable();
+      this.set('textField.isEnabled', false);
 
       this.render(hbs `{{form-component/text-like-field field=textField}}`);
 

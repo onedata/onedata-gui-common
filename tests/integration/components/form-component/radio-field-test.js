@@ -69,7 +69,7 @@ describe('Integration | Component | form component/radio field', function () {
   it(
     'can be disabled',
     function () {
-      this.get('field').disable();
+      this.set('field.isEnabled', false);
 
       this.render(hbs `{{form-component/radio-field field=field}}`);
 

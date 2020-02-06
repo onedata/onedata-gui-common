@@ -58,11 +58,6 @@ export default FormElement.extend({
   /**
    * @override
    */
-  isEnabled: array.isAny('fields', raw('isEnabled')),
-
-  /**
-   * @override
-   */
   isValid: isEmpty('invalidFields'),
 
   /**
@@ -88,20 +83,6 @@ export default FormElement.extend({
    */
   changeMode(mode) {
     this.get('fields').invoke('changeMode', mode);
-  },
-
-  /**
-   * @override
-   */
-  enable() {
-    this.get('fields').invoke('enable');
-  },
-
-  /**
-   * @override
-   */
-  disable() {
-    this.get('fields').invoke('disable');
   },
 
   /**

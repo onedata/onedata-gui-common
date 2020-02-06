@@ -23,23 +23,79 @@ describe('Integration | Utility | form component/form element', function () {
     expect(get(formElement, 'isEnabled')).to.be.true;
   });
 
-  it('can be disabled using disable()', function () {
-    const formElement = FormElement.create();
+  it(
+    'is effectively enabled when is enabled and parent is not available',
+    function () {
+      const formElement = FormElement.create();
 
-    formElement.disable();
-    expect(get(formElement, 'isEnabled')).to.be.false;
-  });
+      expect(get(formElement, 'isEffectivelyEnabled')).to.be.true;
+    }
+  );
 
-  it('can be enabled using enabled()', function () {
-    const formElement = FormElement.create({
-      isEnabled: false,
-    });
+  it(
+    'is not effectively enabled when is not enabled and parent is not available',
+    function () {
+      const formElement = FormElement.create({
+        isEnabled: false,
+      });
 
-    formElement.disable();
-    formElement.enable();
+      expect(get(formElement, 'isEffectivelyEnabled')).to.be.false;
+    }
+  );
 
-    expect(get(formElement, 'isEnabled')).to.be.true;
-  });
+  it(
+    'is effectively enabled when is enabled and parent is effectively enabled',
+    function () {
+      const formElement = FormElement.create({
+        parent: FormElement.create({
+          isEnabled: true, // so also isEffectivelyEnabled
+        }),
+      });
+
+      expect(get(formElement, 'isEffectivelyEnabled')).to.be.true;
+    }
+  );
+
+  it(
+    'is not effectively enabled when is enabled and parent is not effectively enabled',
+    function () {
+      const formElement = FormElement.create({
+        parent: FormElement.create({
+          isEnabled: false, // so also isEffectivelyEnabled
+        }),
+      });
+
+      expect(get(formElement, 'isEffectivelyEnabled')).to.be.false;
+    }
+  );
+
+  it(
+    'is not effectively enabled when is not enabled and parent is effectively enabled',
+    function () {
+      const formElement = FormElement.create({
+        isEnabled: false,
+        parent: FormElement.create({
+          isEnabled: true, // so also isEffectivelyEnabled
+        }),
+      });
+
+      expect(get(formElement, 'isEffectivelyEnabled')).to.be.false;
+    }
+  );
+
+  it(
+    'is not effectively enabled when is not enabled and parent is not effectively enabled',
+    function () {
+      const formElement = FormElement.create({
+        isEnabled: false,
+        parent: FormElement.create({
+          isEnabled: false, // so also isEffectivelyEnabled
+        }),
+      });
+
+      expect(get(formElement, 'isEffectivelyEnabled')).to.be.false;
+    }
+  );
 
   it('is in mode "edit" by default', function () {
     const formElement = FormElement.create();

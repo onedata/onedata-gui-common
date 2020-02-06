@@ -43,7 +43,7 @@ describe('Integration | Component | form component/datetime field', function () 
   it(
     'can be disabled',
     function () {
-      this.get('field').disable();
+      this.set('field.isEnabled', false);
 
       this.render(hbs `{{form-component/datetime-field field=field}}`);
 

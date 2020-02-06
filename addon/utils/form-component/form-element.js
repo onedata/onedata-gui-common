@@ -3,6 +3,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { conditional, and } from 'ember-awesome-macros';
 
 export default EmberObject.extend(OwnerInjector, I18n, {
   i18n: service(),
@@ -94,6 +95,15 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @type {boolean}
    */
   addColonToLabel: true,
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isEffectivelyEnabled: conditional(
+    'parent',
+    and('parent.isEffectivelyEnabled', 'isEnabled'),
+    'isEnabled',
+  ),
 
   /**
    * @type {ComputedProperty<String>}
@@ -191,20 +201,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    */
   changeMode(mode) {
     this.set('mode', mode);
-  },
-
-  /**
-   * @public
-   */
-  enable() {
-    this.set('isEnabled', true);
-  },
-
-  /**
-   * @public
-   */
-  disable() {
-    this.set('isEnabled', false);
   },
 
   /**

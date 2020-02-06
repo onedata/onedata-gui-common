@@ -87,7 +87,7 @@ describe('Integration | Component | form component/dropdown field', function () 
   it(
     'can be disabled',
     function () {
-      this.get('field').disable();
+      this.set('field.isEnabled', false);
 
       this.render(hbs `{{form-component/dropdown-field field=field}}`);
 

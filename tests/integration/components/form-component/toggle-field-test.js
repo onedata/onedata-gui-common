@@ -36,7 +36,7 @@ describe('Integration | Component | form component/toggle field', function () {
   it(
     'can be disabled',
     function () {
-      this.get('field').disable();
+      this.set('field.isEnabled', false);
 
       this.render(hbs `{{form-component/toggle-field field=field}}`);
 

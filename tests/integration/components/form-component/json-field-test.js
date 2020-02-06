@@ -36,7 +36,7 @@ describe('Integration | Component | form component/json field', function () {
   it(
     'can be disabled',
     function () {
-      this.get('field').disable();
+      this.set('field.isEnabled', false);
 
       this.render(hbs `{{form-component/json-field field=field}}`);
 

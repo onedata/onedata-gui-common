@@ -86,7 +86,7 @@ export default FormElement.extend({
    * @override
    */
   invalidFields: conditional(
-    or('isValid', not('isEnabled'), not('isVisible')),
+    or('isValid', not('isEffectivelyEnabled'), not('isVisible')),
     [],
     computed(function () { return [this]; }),
   ),

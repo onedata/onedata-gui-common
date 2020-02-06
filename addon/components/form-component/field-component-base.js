@@ -21,7 +21,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isEnabled: reads('field.isEnabled'),
+  isEffectivelyEnabled: reads('field.isEffectivelyEnabled'),
 
   /**
    * @type {ComputedProperty<any>}
