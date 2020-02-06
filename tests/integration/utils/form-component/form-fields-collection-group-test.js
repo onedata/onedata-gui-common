@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
-import { get, set } from '@ember/object';
+import EmberObject, { get, set } from '@ember/object';
 import sinon from 'sinon';
 import { setupComponentTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
@@ -61,7 +61,10 @@ describe(
     it(
       'adds field through addNewField() (with usage of fieldFactoryMethod())',
       function () {
-        const changeSpy = sinon.spy();
+        const valuesSource = EmberObject.create({
+          parent: EmberObject.create(),
+        });
+        const changeSpy = sinon.spy(value => set(valuesSource, 'parent', value));
         const collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(createdFieldsCounter) {
             return FormField.create({
@@ -71,9 +74,11 @@ describe(
             });
           },
         }).create({
+          name: 'parent',
           parent: {
             onValueChange: changeSpy,
           },
+          valuesSource,
         });
 
         collectionGroup.addNewField();
@@ -145,34 +150,5 @@ describe(
         expect(get(collectionGroup, 'addButtonText')).to.equal('specificText');
       }
     );
-
-    // it('notifies about change after creating new field', function () {
-    //   const changeSpy = sinon.spy();
-    //   const collectionGroup = FormFieldsCollectionGroup.extend({
-    //     fieldFactoryMethod() {
-    //       return FormField.create({
-    //         name: 'textField',
-    //         valueName: `textField${this.get('fields.length')}`,
-    //         defaultValue: '1',
-    //       });
-    //     },
-    //   }).create({
-    //     ownerSource: this,
-    //     parent: {
-    //       onValueChange: changeSpy,
-    //     },
-    //   });
-    //   this.set('collectionGroup', collectionGroup);
-
-    //   this.render(hbs `
-    //     {{form-component/form-fields-collection-group field=collectionGroup}}
-    //   `);
-
-    //   return click('.add-field-button')
-    //     .then(() => {
-    //       console.log(changeSpy);
-    //       debugger;
-    //     })
-    // });
   }
 );

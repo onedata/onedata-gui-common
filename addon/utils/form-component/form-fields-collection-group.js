@@ -39,17 +39,28 @@ export default FormFieldsGroup.extend({
   ),
 
   /**
+   * @type {Utils.FormComponent.FormElement}
+   */
+  fieldsToSetDefaultValue: computed(() => []),
+
+  /**
    * @public
    */
   addNewField() {
-    const fields = this.get('fields');
+    const {
+      fields,
+      fieldsToSetDefaultValue,
+    } = this.getProperties('fields', 'fieldsToSetDefaultValue');
 
     const newField = this.fieldFactoryMethod(
       this.get('createdFieldsCounter'),
       get(fields, 'length')
     );
     this.incrementProperty('createdFieldsCounter');
-    this.set('fields', fields.concat([newField]));
+    this.setProperties({
+      fields: fields.concat([newField]),
+      fieldsToSetDefaultValue: fieldsToSetDefaultValue.concat([newField]),
+    });
   },
 
   /**
@@ -80,16 +91,18 @@ export default FormFieldsGroup.extend({
    */
   dumpValue() {
     const value = this._super(...arguments);
+    const fieldsToSetDefaultValue = this.get('fieldsToSetDefaultValue');
     const fields = this.get('fields').rejectBy('isValueless');
 
-    // Set default value to fields, which are not defined in values dump
-    // (fields which were just added)
+    // Set default value to fields, which are in fieldsToSetDefaultValue array
+    // (fields which were just added to the collection)
     fields.forEach(field => {
       const fieldValueName = get(field, 'valueName');
-      if (!Object.keys(value).includes(fieldValueName)) {
+      if (fieldsToSetDefaultValue.includes(field)) {
         set(value, fieldValueName, field.dumpDefaultValue());
       }
     });
+    this.set('fieldsToSetDefaultValue', []);
 
     // Add enumeration of existing fields
     set(value, '__fieldsValueNames', fields.mapBy('valueName'));

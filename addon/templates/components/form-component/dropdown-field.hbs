@@ -18,7 +18,9 @@
     {{#if option.icon}}
       {{one-icon icon=option.icon}}
     {{/if}}
-    <span class="text">{{option.label}}</span>
+    {{#truncated-string class="text"}}
+      {{option.label}}
+    {{/truncated-string}}
   </div>
 {{/power-select}}
 {{yield}}

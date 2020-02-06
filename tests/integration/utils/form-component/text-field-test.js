@@ -19,4 +19,60 @@ describe('Integration | Utility | form component/text field', function () {
     expect(get(textField, 'fieldComponentName'))
       .to.equal('form-component/text-like-field');
   });
+
+  it(
+    'has empty "regex" field by default',
+    function () {
+      const textField = TextField.create();
+
+      expect(get(textField, 'regex')).to.be.undefined;
+    }
+  );
+
+  it(
+    'has format validation error when regex is defined and value does not match',
+    function () {
+      const textField = TextField.create({
+        ownerSource: this,
+        regex: /^abc$/,
+        name: 'a',
+        valuesSource: {
+          a: 'abd',
+        },
+      });
+
+      const errors = get(textField, 'errors');
+      expect(errors).to.be.have.length(1);
+      expect(errors[0].message).to.equal('This field is invalid');
+    }
+  );
+
+  it(
+    'does not have format validation error when regex is defined and value matches',
+    function () {
+      const textField = TextField.create({
+        ownerSource: this,
+        regex: /^abc$/,
+        name: 'a',
+        valuesSource: {
+          a: 'abc',
+        },
+      });
+
+      expect(get(textField, 'errors')).to.be.have.length(0);
+    }
+  );
+
+  it(
+    'does not have validation error when regex is defined, isOptional is true and value is empty',
+    function () {
+      const textField = TextField.create({
+        ownerSource: this,
+        isOptional: true,
+        regex: /^abc$/,
+      });
+
+      expect(get(textField, 'errors')).to.be.have.length(0);
+    }
+  );
 });
