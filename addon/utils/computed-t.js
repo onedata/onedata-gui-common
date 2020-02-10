@@ -11,8 +11,8 @@
 
 import { computed } from '@ember/object';
 
-export default function computedT(translationName) {
+export default function computedT(translationName, interpolations) {
   return computed(function computedTFunction() {
-    return this.t(translationName);
+    return this.t(translationName, interpolations);
   });
 }
