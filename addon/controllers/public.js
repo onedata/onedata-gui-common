@@ -17,6 +17,6 @@ export default Controller.extend({
   publicRouteElementClass: conditional(
     'pointerEvents.pointerNoneToMainContent',
     raw('no-pointer-events'),
-    '',
+    raw(''),
   ),
 })
