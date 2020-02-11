@@ -85,7 +85,7 @@ export default {
   badValueCaveats: 'Provided caveats are invalid.',
   badGuiPackage: 'Provider GUI package could not be understood by the server.',
   guiPackageTooLarge: 'Provider GUI package is too large.',
-  guiPackageUnverified: 'Provider GUI package could not be verified.',
+  guiPackageUnverified: 'GUI plugin package verification failed, because SHA checksum of uploaded package is not whitelisted. To allow uploading this package please contact Onezone administrator and ask to add harvester GUI checksum {{shaSum}} to /etc/oz_worker/compatibility.json configuration file.',
   invalidQosExpression: 'Invalid QoS expression.',
 
   // State errors
