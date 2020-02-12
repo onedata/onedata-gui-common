@@ -28,6 +28,11 @@ export default Component.extend({
    */
   value: reads('field.value'),
 
+  /**
+   * @type {ComputedProperty<any>}
+   */
+  defaultValue: reads('field.defaultValue'),
+
   actions: {
     valueChanged(value) {
       this.get('field').valueChanged(value);
