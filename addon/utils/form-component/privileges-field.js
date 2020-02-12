@@ -15,6 +15,11 @@ export default FormField.extend({
   /**
    * @override
    */
+  isOptional: true,
+
+  /**
+   * @override
+   */
   defaultValue: computed(() => []),
 
   /**

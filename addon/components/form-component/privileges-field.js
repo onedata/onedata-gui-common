@@ -4,6 +4,7 @@ import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import _ from 'lodash';
 import privilegesArrayToObject from 'onedata-gui-common/utils/privileges-array-to-object';
+import { raw, or } from 'ember-awesome-macros';
 
 export default FieldComponentBase.extend({
   layout,
@@ -12,7 +13,7 @@ export default FieldComponentBase.extend({
   /**
    * @type {ComputedProperty<Array<Object>>}
    */
-  privilegesGroups: reads('field.privilegesGroups'),
+  privilegesGroups: or('field.privilegesGroups', raw([])),
 
   /**
    * @type {ComputedProperty<String>}
