@@ -4,6 +4,7 @@
   onShown=onShown
   onHide=close
   onHidden=onHidden
+  size=size
   backdropClose=(not processing)
   as |modal|
 }}
@@ -17,7 +18,7 @@
   {{/modal.header}}
   {{#modal.body class=(if textCenter "text-center")}}
     {{#if (has-block)}}
-      {{yield}}
+      {{yield (hash proceed=(action "proceed") processing=processing)}}
     {{else}}
       {{messageText}}
     {{/if}}
@@ -27,7 +28,7 @@
       {{cancelButtonText}}
     {{/bs-button}}
     {{#one-spin-button
-      action=proceed
+      action=(action "proceed")
       class=proceedButtonClass
       disabled=proceedDisabled
     }}

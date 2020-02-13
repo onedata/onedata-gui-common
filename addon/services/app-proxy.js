@@ -4,12 +4,12 @@
  *
  * @module services/app-proxy
  * @author Michał Borzęcki
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service from '@ember/service';
-import EmberObject, { computed, set } from '@ember/object';
+import EmberObject, { computed, set, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   sharedObjectName,
@@ -36,13 +36,17 @@ export default Service.extend({
     return EmberObject.create(sharedData);
   }),
 
-  init() {
-    this._super(...arguments);
-
+  appProxyObserver: observer('appProxy', function appProxyObserver() {
     const appProxy = this.get('appProxy');
     if (appProxy) {
       set(appProxy, 'propertyChanged', this.propertyChanged.bind(this));
     }
+  }),
+
+  init() {
+    this._super(...arguments);
+
+    this.appProxyObserver();
   },
 
   /**

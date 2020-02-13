@@ -15,7 +15,7 @@ import { reads } from '@ember/object/computed';
 
 export default Service.extend({
   guiMode: reads('data.guiMode'),
-  serviceType: reads('data.seviceType'),
+  serviceType: reads('data.serviceType'),
   clusterType: reads('data.clusterType'),
   clusterId: reads('data.clusterId'),
   browserDebugLogs: reads('data.browserDebugLogs'),

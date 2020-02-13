@@ -538,6 +538,7 @@ label.align-left {
   text-align: left;
 }
 
+// TODO: this style is too general, because tag class is used in code viewer (XML)
 .tag {
   display: inline-block;
   padding: 2px 4px;
