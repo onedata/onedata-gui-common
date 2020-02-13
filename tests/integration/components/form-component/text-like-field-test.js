@@ -12,7 +12,9 @@ describe('Integration | Component | form component/text like field', function ()
   });
 
   beforeEach(function () {
-    this.set('textField', TextField.create());
+    this.set('textField', TextField.create({
+      ownerSource: this,
+    }));
   });
 
   it(
@@ -86,5 +88,13 @@ describe('Integration | Component | form component/text like field', function ()
     `);
 
     expect(this.$('input#abc')).to.exist;
+  });
+
+  it('sets placeholder according to "placeholder"', function () {
+    this.set('textField.placeholder', 'test');
+
+    this.render(hbs `{{form-component/text-like-field field=textField}}`);
+
+    expect(this.$('input').attr('placeholder')).to.equal('test');
   });
 });

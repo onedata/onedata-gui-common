@@ -3,6 +3,8 @@ import { describe, it } from 'mocha';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import { get } from '@ember/object';
 import { setupComponentTest } from 'ember-mocha';
+import sinon from 'sinon';
+import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form component/text field', function () {
   setupComponentTest('test-component', {
@@ -75,4 +77,32 @@ describe('Integration | Utility | form component/text field', function () {
       expect(get(textField, 'errors')).to.be.have.length(0);
     }
   );
+
+  it('translates placeholder', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('somePrefix.field1.placeholder')
+      .returns('field tip');
+
+    const field = TextField.create({
+      ownerSource: this,
+      i18nPrefix: 'somePrefix',
+      name: 'field1',
+    });
+
+    expect(get(field, 'placeholder')).to.equal('field tip');
+  });
+
+  it('has undefined placeholder if translation for it cannot be found', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('somePrefix.field1.placeholder')
+      .returns('<missing-...');
+
+    const field = TextField.create({
+      ownerSource: this,
+      i18nPrefix: 'somePrefix',
+      name: 'field1',
+    });
+
+    expect(get(field, 'placeholder')).to.be.undefined;
+  });
 });

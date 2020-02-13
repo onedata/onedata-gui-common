@@ -7,11 +7,11 @@
   </label>
 {{/if}}
 {{#component field.fieldComponentName field=field fieldId=fieldId}}
-  {{#if (and isModified field.withValidationIcon)}}
+  {{#if canShowValidationIcon}}
     <div class="form-control-feedback glyphicon glyphicon-{{if isValid "ok" "remove"}}"></div>
   {{/if}}
 {{/component}}
-{{#if (and isModified error)}}
+{{#if canShowValidationMessage}}
   <div class="field-message">{{error.message}}</div>
 {{/if}}
 {{yield}}

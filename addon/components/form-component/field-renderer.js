@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import layout from '../../templates/components/form-component/field-renderer';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { and } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -39,6 +40,16 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
+  isEffectivelyEnabled: reads('field.isEffectivelyEnabled'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  withValidationIcon: reads('field.withValidationIcon'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
   areValidationClassesEnabled: reads('field.areValidationClassesEnabled'),
 
   /**
@@ -63,6 +74,24 @@ export default Component.extend({
         return isValid ? 'has-success' : 'has-error';
       }
     }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  canShowValidationIcon: and(
+    'isModified',
+    'isEffectivelyEnabled',
+    'withValidationIcon'
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  canShowValidationMessage: and(
+    'isModified',
+    'isEffectivelyEnabled',
+    'error'
   ),
 
   /**

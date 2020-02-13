@@ -21,6 +21,14 @@ export default FormField.extend({
   regex: undefined,
 
   /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  placeholder: computed('i18nPrefix', 'path', function placeholder() {
+    return this.tWithDefault(`${this.get('path')}.placeholder`, {}, undefined);
+  }),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   regexValidator: computed('regex', function regexValidator() {
