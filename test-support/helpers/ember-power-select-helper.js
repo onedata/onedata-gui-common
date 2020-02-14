@@ -1,4 +1,5 @@
-import { click, find } from 'ember-native-dom-helpers';
+import { click } from 'ember-native-dom-helpers';
+import $ from 'jquery';
 
 export default class EmberPowerSelectHelper {
   constructor(powerSelectTriggerParentSelector, powerSelectDropdownSelector) {
@@ -12,7 +13,7 @@ export default class EmberPowerSelectHelper {
    * @returns {HTMLDIVElement}
    */
   getTrigger() {
-    return find(this.triggerSelector);
+    return $(this.triggerSelector)[0];
   }
 
   /**
@@ -26,7 +27,7 @@ export default class EmberPowerSelectHelper {
    * @returns {HTMLINPUTElement}
    */
   getSearchInput() {
-    return find(`${this.dropdownSelector} .ember-power-select-search-input`);
+    return $(`${this.dropdownSelector} .ember-power-select-search-input`)[0];
   }
 
   /**
@@ -34,7 +35,7 @@ export default class EmberPowerSelectHelper {
    * @returns {HTMLLIElement|null}
    */
   getNthOption(n) {
-    return find(this.dropdownSelector + ` li:nth-child(${n})`);
+    return $(this.dropdownSelector + ` li:nth-child(${n})`)[0];
   }
 
   /**

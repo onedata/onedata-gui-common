@@ -194,7 +194,7 @@ export default Component.extend({
       placement: this.getPlacement(),
       style: popoverStyle,
       padding,
-      container: document.body,
+      container: document.querySelector('.ember-application'),
       multi,
       arrow,
       onShow: () => this.onShow(),

@@ -1,0 +1,89 @@
+{{#one-webui-popover
+  class="tags-selector"
+  open=true
+  triggerSelector=(concat "#" elementId)
+  arrow=false
+  registerApi=(action (mut popoverApi))
+  padding=false
+  placement="vertical"
+  popoverStyle="tags-selector"
+  as |popover|
+}}
+  {{#click-outside action=onEndTagCreation except-selector=parentTagsInputSelector}}
+    {{#one-dropdown
+      options=modelOptions
+      onchange=(action (mut selectedModelOption))
+      selected=selectedModelOption
+      searchEnabled=false
+      renderInPlace=true
+      verticalPosition="bottom"
+      as |modelType|}}
+      <div class="option-container">
+        {{#if modelType.icon}}
+          {{one-icon icon=modelType.icon}}
+        {{/if}}
+        {{#truncated-string class="text"}}
+          {{modelType.label}}
+        {{/truncated-string}}
+      </div>
+    {{/one-dropdown}}
+    {{#bs-button-group
+      value=selectedView
+      class="view-selector btn-group-justified"
+      type="radio"
+      onChange=(action (mut selectedView))
+      as |bg|
+    }}
+      <div class="btn-group" role="group">
+        {{#bg.button type="default" class="btn-sm btn-list" value="list"}}
+          {{tt this "view.list"}}
+        {{/bg.button}}
+      </div>
+      <div class="btn-group" role="group">
+        {{#bg.button type="default" class="btn-sm btn-by-id" value="byId"}}
+          {{tt this "view.byId"}}
+        {{/bg.button}}
+      </div>
+    {{/bs-button-group}}
+    {{#if (eq selectedView "list")}}
+      {{#perfect-scrollbar-element}}
+        {{#promise-proxy-container proxy=recordsProxy}}
+          {{#if showAllRecordsSelectedDescription}}
+            <p class="all-records-added-description">
+              {{tt this (concat "allRecordsAdded." selectedModelName)}}
+            </p>
+          {{else}}
+            <ul class="selector-list">
+              {{#each tagsToRender as |tag|}}
+                <li class="selector-item {{if tag.value.record.representsAll "all-item" "record-item"}}" {{action "tagSelected" tag}}>
+                  {{#if tag.icon}}
+                    {{one-icon icon=tag.icon class="tag-icon"}}
+                  {{/if}}
+                  {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        {{/promise-proxy-container}}
+      {{/perfect-scrollbar-element}}
+    {{else}}
+      <label class="id-description">{{tt this (concat "idLabel." selectedModelName)}}:</label>
+      <input
+        type="text"
+        class="record-id"
+        value={{idToAdd}}
+        oninput={{action (mut idToAdd) value="target.value"}}
+      >
+      {{#bs-button
+        size="sm"
+        type="primary"
+        class="add-id"
+        disabled=(not trimmedIdToAdd)
+        onClick=(action "addId")
+      }}
+        {{tt this "addId"}}
+      {{/bs-button}}
+    {{/if}}
+  {{/click-outside}}
+{{/one-webui-popover}}
+{{yield}}
