@@ -7,6 +7,22 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
+import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
+import {
+  Tag as RecordTag,
+  removeExcessiveTags,
+} from 'onedata-gui-common/components/tags-input/model-selector-editor';
+import { resolve } from 'rsvp';
+import _ from 'lodash';
+
+const modelSelectorSource = {
+  group: _.times(10, i => ({
+    name: `Group ${i}`,
+  })),
+  oneprovider: _.times(10, i => ({
+    name: `Oneprovider ${i}`,
+  })),
+}
 
 export default Component.extend({
   rootFieldsGroup: computed(function rootFieldsGroup() {
@@ -68,6 +84,31 @@ export default Component.extend({
               promise: new Promise(() => {}),
             }),
             loadingText: 'Loading...',
+          }),
+          TagsField.extend({
+            valueToTags(value) {
+              return (value || [])
+                .map(val => RecordTag.create({ value: val }));
+            },
+            tagsToValue(tags) {
+              return removeExcessiveTags(tags).mapBy('value').uniq()
+                .compact();
+            },
+          }).create({
+            name: 'records',
+            label: 'Records',
+            tagEditorSettings: {
+              models: [{
+                name: 'group',
+                getRecords: () => resolve(modelSelectorSource['group']),
+              }, {
+                name: 'oneprovider',
+                getRecords: () =>
+                  resolve(modelSelectorSource['oneprovider']),
+              }],
+            },
+            tagEditorComponentName: 'tags-input/model-selector-editor',
+            defaultValue: [],
           }),
         ]
       });

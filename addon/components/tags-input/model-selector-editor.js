@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/tags-input/model-selector-editor';
-import EmberObject, { computed, observer, get } from '@ember/object';
+import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { or } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -9,14 +9,60 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { conditional, promise, array, raw, and, not, tag } from 'ember-awesome-macros';
 
-const Tag = EmberObject.extend({
+export function removeExcessiveTags(tags) {
+  [
+    'user',
+    'group',
+    'oneprovider',
+    'service',
+    'serviceOnepanel',
+  ].forEach(model => {
+    if (tags.findBy('value.record.representsAll', model)) {
+      tags = tags.filter(tag =>
+        get(tag, 'value.model') !== model ||
+        get(tag, 'value.record.representsAll') ||
+        get(tag, 'value.record.type') === 'onezone'
+      );
+    }
+  });
+  return tags;
+}
+
+export const Tag = EmberObject.extend({
+  /**
+   * @type {Object}
+   * {
+   *   model: String - name of the model type
+   *   record: Object - record (of `model` type)
+   *   id: String
+   * }
+   * Only one of `id` and `record` must be present in tag value at the same time.
+   */
+  value: undefined,
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   label: conditional(
     'value.record',
     'value.record.name',
-    tag `ID: ${'value.byId.id'}`,
+    tag `ID: ${'value.id'}`,
   ),
-  value: undefined,
-  icon: undefined,
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  icon: computed('value.{model,record}', function icon() {
+    const {
+      model,
+      record,
+    } = getProperties(this.get('value') || {}, 'model', 'record');
+    if (model === 'service') {
+      return record && get(record, 'type') === 'onezone' ? 'onezone' : 'provider';
+    } else {
+      return modelIcons[model];
+    }
+  }),
 });
 
 const modelIcons = {
@@ -148,8 +194,10 @@ export default Component.extend(I18n, {
         };
         return [allRecord].concat(get(recordsProxy, 'content').sortBy('name'))
           .map(record => Tag.create({
-            value: { record },
-            icon: this.getIconForRecord(record, selectedModelName),
+            value: {
+              model: selectedModelName,
+              record,
+            },
           }));
       } else {
         return [];
@@ -231,14 +279,6 @@ export default Component.extend(I18n, {
     this.get('popoverApi').reposition();
   },
 
-  getIconForRecord(record, modelTypeName) {
-    if (modelTypeName === 'service') {
-      return record && get(record, 'type') === 'onezone' ? 'onezone' : 'provider';
-    } else {
-      return modelIcons[modelTypeName];
-    }
-  },
-
   actions: {
     tagSelected(tag) {
       this.get('onTagsAdded')([tag]);
@@ -253,14 +293,10 @@ export default Component.extend(I18n, {
         'onTagsAdded',
         'selectedModelName'
       );
-      const icon = this.getIconForRecord(null, selectedModelName);
       const tag = Tag.create({
-        icon,
         value: {
-          byId: {
-            id: trimmedIdToAdd,
-            model: selectedModelName,
-          },
+          model: selectedModelName,
+          id: trimmedIdToAdd,
         },
       });
       this.set('idToAdd', '');

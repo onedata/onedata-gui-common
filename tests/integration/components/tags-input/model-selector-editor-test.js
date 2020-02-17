@@ -395,24 +395,6 @@ describe('Integration | Component | tags input/model selector editor', function 
       });
   });
 
-  it('hides list and shows ID wizard after by-id selector click', function () {
-    this.render(hbs `{{tags-input
-      tagEditorComponentName="tags-input/model-selector-editor"
-      tagEditorSettings=settings
-    }}`);
-
-    return click('.tag-creator-trigger')
-      .then(() => click(getSelector().find('.btn-by-id')[0]))
-      .then(() => {
-        expect(getSelector().find('.btn-by-id')).to.have.class('active');
-        expect(getSelector().find('.selector-list')).to.not.exist;
-        expect(getSelector().find('.id-description')).to.exist;
-        expect(getSelector().find('input[type="text"].record-id')).to.exist;
-        expect(getSelector().find('.btn.add-id').text().trim())
-          .to.equal('Add ID');
-      });
-  });
-
   [{
     name: 'user',
     label: 'User ID:'
@@ -482,7 +464,7 @@ describe('Integration | Component | tags input/model selector editor', function 
           .then(() => fillIn(getSelector().find('.record-id')[0], '123'))
           .then(() => click(getSelector().find('.add-id')[0]))
           .then(() => {
-            expect(changeSpy.lastCall.args[0].mapBy('value.byId')[0])
+            expect(changeSpy.lastCall.args[0].mapBy('value')[0])
               .to.deep.equal({
                 model: modelName,
                 id: '123',
