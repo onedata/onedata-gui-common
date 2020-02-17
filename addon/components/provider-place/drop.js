@@ -11,20 +11,23 @@
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import { conditional, raw } from 'ember-awesome-macros';
+import { conditional, raw, promise } from 'ember-awesome-macros';
+import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
 
 export default Component.extend(I18n, {
   layout,
   classNames: 'provider-place-drop',
   classNameBindings: ['oneproviderStatusClass'],
+
   globalNotify: service(),
   i18n: service(),
   guiUtils: service(),
+  router: service(),
 
   /**
    * @virtual
@@ -36,6 +39,15 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.providerPlace.drop',
+
+  providerVersionProxy: promise.object(
+    computed('provider.cluster.workerVersion', function providerVersionProxy() {
+      return this.get('provider.cluster')
+        .then(cluster => get(cluster, 'workerVersion.release'));
+    }),
+  ),
+
+  providerVersion: reads('providerVersionProxy.content'),
 
   oneproviderStatusClass: conditional(
     'provider.online',
@@ -83,6 +95,38 @@ export default Component.extend(I18n, {
    * @type {Ember.ComputedProperty<Array<models/Space>>}
    */
   _spacesSorted: sort('_spaceList', '_spacesSorting'),
+
+  /**
+   * @type {ComputedProperty<Models.Space>}
+   */
+  firstSpace: reads('_spacesSorted.firstObject'),
+
+  visitProviderUrl: computed(
+    'provider',
+    'firstSpace.entityId',
+    'providerVersionProxy.content',
+    function visitProviderUrl() {
+      const {
+        provider,
+        firstSpace,
+        router,
+        providerVersion,
+      } = this.getProperties(
+        'provider',
+        'firstSpace',
+        'router',
+        'providerVersion'
+      );
+      if (providerVersion) {
+        return getVisitOneproviderUrl({
+          router,
+          provider,
+          providerVersion,
+          space: firstSpace,
+        });
+      }
+    }
+  ),
 
   actions: {
     copySuccess() {
