@@ -6,6 +6,7 @@ import $ from 'jquery';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
+import OneTooltipHelper from '../../../helpers/one-tooltip';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
 
@@ -126,12 +127,43 @@ describe('Integration | Component | tags input/model selector editor', function 
       });
   });
 
+  it('has empty filter input by default', function () {
+    this.render(hbs `{{tags-input
+      tagEditorComponentName="tags-input/model-selector-editor"
+      tagEditorSettings=settings
+    }}`);
+
+    return click('.tag-creator-trigger')
+      .then(() => {
+        const $filterInput = getSelector().find('.records-filter');
+        expect($filterInput.val()).to.be.empty;
+        expect($filterInput.attr('placeholder')).to.equal('Filter...');
+      });
+  });
+
+  it('allows to filter records', function () {
+    this.render(hbs `{{tags-input
+      tagEditorComponentName="tags-input/model-selector-editor"
+      tagEditorSettings=settings
+    }}`);
+
+    return click('.tag-creator-trigger')
+      .then(() => fillIn(getSelector().find('.records-filter')[0], '0'))
+      .then(() => {
+        const $options = getSelector().find('.selector-item');
+        expect($options).to.have.length(1);
+        expect($options.text().trim()).to.equal('user0');
+      });
+  });
+
   [{
     name: 'user',
     label: 'Any user',
+    tip: 'Any user that has an account in Onedata',
   }, {
     name: 'group',
     label: 'Any group',
+    tip: 'Any user that has at least one group',
   }, {
     name: 'oneprovider',
     label: 'Any Oneprovider',
@@ -141,7 +173,7 @@ describe('Integration | Component | tags input/model selector editor', function 
   }, {
     name: 'serviceOnepanel',
     label: 'Any Oneprovider Onepanel',
-  }].forEach(({ name, label }, index) => {
+  }].forEach(({ name, label, tip }, index) => {
     it(`adds "${label}" item to list of records for ${name}`, function () {
       this.render(hbs `{{tags-input
         tagEditorComponentName="tags-input/model-selector-editor"
@@ -155,6 +187,14 @@ describe('Integration | Component | tags input/model selector editor', function 
           expect($allOption).to.exist;
           expect($allOption).to.have.class('all-item');
           expect($allOption.text().trim()).to.equal(label);
+          const tooltipHelper = new OneTooltipHelper($allOption[0]);
+          if (tip) {
+            return tooltipHelper.getText()
+              .then(text => expect(text).to.equal(tip));
+          } else {
+            return tooltipHelper.hasTooltip()
+              .then(hasTooltip => expect(hasTooltip).to.be.false);
+          }
         });
     });
   });
