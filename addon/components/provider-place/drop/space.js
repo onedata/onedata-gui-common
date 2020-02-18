@@ -14,6 +14,7 @@ import ProviderSpace from 'onedata-gui-common/mixins/components/provider-space';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { or } from 'ember-awesome-macros';
 
 export default Component.extend(ProviderSpace, {
   layout,
@@ -21,6 +22,7 @@ export default Component.extend(ProviderSpace, {
   classNames: ['provider-place-drop-space'],
 
   router: service(),
+  guiUtils: service(),
 
   /**
    * @virtual
@@ -34,17 +36,27 @@ export default Component.extend(ProviderSpace, {
    */
   space: undefined,
 
+  /**
+   * @virtual
+   * @type {String}
+   */
+  providerVersion: undefined,
+
+  providerId: or('provider.entityId', 'provider.id'),
+
   visitProviderUrl: computed(
     'provider',
     'space',
     'providerVersion',
     function visitProviderUrl() {
       const {
+        guiUtils,
         provider,
         space,
         router,
         providerVersion,
       } = this.getProperties(
+        'guiUtils',
         'provider',
         'space',
         'router',
@@ -52,10 +64,11 @@ export default Component.extend(ProviderSpace, {
       );
       if (providerVersion) {
         return getVisitOneproviderUrl({
+          guiUtils,
           router,
           provider,
           providerVersion,
-          space: space,
+          space,
         });
       }
     }

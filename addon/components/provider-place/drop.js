@@ -40,12 +40,17 @@ export default Component.extend(I18n, {
    */
   i18nPrefix: 'components.providerPlace.drop',
 
-  providerVersionProxy: promise.object(
-    computed('provider.cluster.workerVersion', function providerVersionProxy() {
-      return this.get('provider.cluster')
-        .then(cluster => get(cluster, 'workerVersion.release'));
-    }),
-  ),
+  providerVersionProxy: promise.object(computed(
+    'provider.cluster.workerVersion.release',
+    function providerVersionProxy() {
+      const clusterPromise = this.get('provider.cluster');
+      if (clusterPromise) {
+        return clusterPromise.then(cluster =>
+          get(cluster, 'workerVersion.release')
+        );
+      }
+    }
+  )),
 
   providerVersion: reads('providerVersionProxy.content'),
 
@@ -107,11 +112,13 @@ export default Component.extend(I18n, {
     'providerVersionProxy.content',
     function visitProviderUrl() {
       const {
+        guiUtils,
         provider,
         firstSpace,
         router,
         providerVersion,
       } = this.getProperties(
+        'guiUtils',
         'provider',
         'firstSpace',
         'router',
@@ -119,6 +126,7 @@ export default Component.extend(I18n, {
       );
       if (providerVersion) {
         return getVisitOneproviderUrl({
+          guiUtils,
           router,
           provider,
           providerVersion,

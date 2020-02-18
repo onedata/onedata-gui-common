@@ -7,8 +7,6 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import modelRoutableId from 'onezone-gui/utils/model-routable-id';
-import { get } from '@ember/object';
 import config from 'ember-get-config';
 import { serializeAspectOptions } from 'onedata-gui-common/services/navigation-state';
 
@@ -18,16 +16,19 @@ const {
 
 export default function getVisitOneproviderUrl({
   router,
+  guiUtils,
   provider,
   providerVersion,
   space,
 }) {
+  const spaceRoutableId = guiUtils.getRoutableIdFor(space);
+  const providerRoutableId = guiUtils.getRoutableIdFor(provider);
   if (providerVersion.startsWith(legacyOneproviderVersion)) {
     return router.urlFor(
       'provider-redirect',
-      modelRoutableId(provider), {
+      providerRoutableId, {
         queryParams: {
-          space_id: get(space, 'entityId'),
+          space_id: spaceRoutableId,
         },
       }
     );
@@ -35,11 +36,11 @@ export default function getVisitOneproviderUrl({
     return router.urlFor(
       'onedata.sidebar.content.aspect',
       'spaces',
-      modelRoutableId(space),
+      spaceRoutableId,
       'data', {
         queryParams: {
           options: serializeAspectOptions({
-            oneproviderId: get(provider, 'entityId'),
+            oneproviderId: providerRoutableId,
           }),
         },
       }
