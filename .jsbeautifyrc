@@ -1,8 +1,12 @@
-{   
+{
     "html": {
-      "allowed_file_extensions": ["htm", "html", "hbs"],
-      "indent_handlebars": true,
-      "indent_size": 2
+        "allowed_file_extensions": [
+            "htm",
+            "html",
+            "hbs"
+        ],
+        "indent_handlebars": true,
+        "indent_size": 2
     },
     "js": {
         "indent_size": 2,
@@ -21,7 +25,7 @@
         "break_chained_methods": false,
         "keep_array_indentation": false,
         "unescape_strings": false,
-        "wrap_line_length": 92,
+        "wrap_line_length": 120,
         "e4x": false,
         "comma_first": false,
         "operator_position": "before-newline"
