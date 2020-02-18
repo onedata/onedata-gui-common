@@ -4,4 +4,5 @@ export default {
   value: 'Value',
   keyDuplicate: 'Key duplicate',
   keyCantBeBlank: 'Key can\'t be blank',
+  keyValidationError: 'Invalid key',
 };

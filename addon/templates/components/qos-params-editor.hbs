@@ -22,7 +22,7 @@
       (unless editRecord.disableCreateAnimation "fadeIn")
       (if editRecord.isRemoved "fadeOut")
       (if (eq editRecord activeParamEditRecords.lastObject) "last-record")
-      (if (or editRecord.isDuplicate (and (eq editRecord.key "") (not-eq editRecord.value ""))) "has-error")}}>
+      (if (or editRecord.isDuplicate (and (eq editRecord.key "") (not-eq editRecord.value "")) editRecord.keyValidationMessage) "has-error")}}>
       <div class="row">
         <div class="label-column {{layoutConfig.formLabelColumns}} control-label">
           {{one-inline-editor
@@ -45,6 +45,12 @@
                 {{tt this "keyDuplicate"}}
               {{else if editRecord.hasValueWithoutKey}}
                 {{tt this "keyCantBeBlank"}}
+              {{else if editRecord.keyValidationMessage}}
+                {{#if (eq editRecord.keyValidationMessage true)}}
+                  {{tt this "keyValidationError"}}
+                {{else}}
+                  {{editRecord.keyValidationMessage}}
+                {{/if}}
               {{/if}}
             </div>
           {{/if}}

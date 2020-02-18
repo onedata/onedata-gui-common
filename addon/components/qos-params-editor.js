@@ -11,83 +11,16 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import EmberObject, { get, set, getProperties, computed, observer } from '@ember/object';
+import { get, set, getProperties, computed, observer } from '@ember/object';
 import { A } from '@ember/array';
-import { array, raw, not, or, and } from 'ember-awesome-macros';
+import { array, raw, not } from 'ember-awesome-macros';
 import { later } from '@ember/runloop';
 import _ from 'lodash';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { resolve } from 'rsvp';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from '../templates/components/qos-params-editor';
-
-const QosParamRecord = EmberObject.extend({
-  /**
-   * @type {string}
-   */
-  key: '',
-
-  /**
-   * @type {string}
-   */
-  value: '',
-
-  /**
-   * @type {boolean}
-   */
-  isEditingKey: false,
-
-  /**
-   * If true, then record is treated as unavailable  (e.g. is in the middle 
-   * of animation of deleting)
-   * @type {boolean}
-   */
-  isRemoved: false,
-
-  /**
-   * If true, animation of creating a record will not be applied to this
-   * record. Helpful at the time of first component render, when everything
-   * should be done without delays.
-   * @type {boolean}
-   */
-  disableCreateAnimation: false,
-
-  /**
-   * True value means, that this record has the same key as some another record
-   * @type {boolean}
-   */
-  isDuplicate: false,
-
-  /**
-   * @type {boolean}
-   */
-  showHeader: true,
-
-  /**
-   * @type {Ember.ComputedProperty<boolean>}
-   */
-  isEmpty: and(not('key'), not('value')),
-
-  /**
-   * @type {Ember.ComputedProperty<boolean>}
-   */
-  hasValueWithoutKey: computed(
-    'key',
-    'value',
-    function hasValuesWithoutKeys() {
-      const {
-        key,
-        value,
-      } = this.getProperties('key', 'value');
-      return key === '' && value !== '';
-    }
-  ),
-
-  /**
-   * @type {Ember.ComputedProperty<boolean>}
-   */
-  hasKeyError: or('isDuplicate', 'hasValueWithoutKey'),
-});
+import QosParamRecord, { defaultValidate as defaultQosParamRecordValidate } from 'onedata-gui-common/utils/qos-param-record';
 
 const nodeClearDelay = 500;
 
@@ -109,6 +42,13 @@ export default Component.extend(I18n, {
    * @type {Object}
    */
   layoutConfig: undefined,
+
+  /**
+   * @virtual optional
+   * Validator for key and value of QosParamRecord. See `QosParamRecord` for details.
+   * @type {Function}
+   */
+  validateKey: defaultQosParamRecordValidate,
 
   /**
    * One of `show`, `create`, `edit`
@@ -145,7 +85,7 @@ export default Component.extend(I18n, {
     const qosParams = this.get('qosParams') || {};
     return Object.keys(qosParams).map(key => ({
       key,
-      value: get(qosParams, key),
+      value: qosParams[key],
     }));
   }),
 
@@ -174,13 +114,16 @@ export default Component.extend(I18n, {
     const {
       mode,
       paramRecords,
-    } = this.getProperties('mode', 'paramRecords');
+      validateKey,
+    } = this.getProperties('mode', 'paramRecords', 'validateKey');
     if (mode !== 'show') {
       // Depending on `mode`, clone existing params or use clear array as a state
       // of editor.
       let editRecords;
       if (mode === 'edit') {
-        editRecords = A(paramRecords.map(obj => QosParamRecord.create(obj)));
+        editRecords = A(paramRecords.map(obj => QosParamRecord.create(
+          obj, { validateKey }
+        )));
       } else {
         editRecords = A();
       }
@@ -213,6 +156,7 @@ export default Component.extend(I18n, {
     const newRecord = QosParamRecord.create({
       isEditingKey: true,
       disableCreateAnimation: disableAnimation,
+      validateKey: this.get('validateKey'),
     });
     recordsArray.pushObject(newRecord);
 
@@ -321,7 +265,7 @@ export default Component.extend(I18n, {
             key,
             value,
           } = getProperties(record, 'key', 'value');
-          set(obj, key, value);
+          obj[key] = value
           return obj;
         }, {});
     } else {
