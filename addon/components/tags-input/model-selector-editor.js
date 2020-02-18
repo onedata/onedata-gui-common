@@ -7,7 +7,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
-import { conditional, promise, array, raw, and, not, tag } from 'ember-awesome-macros';
+import { conditional, promise, array, raw, tag, isEmpty } from 'ember-awesome-macros';
 
 export function removeExcessiveTags(tags) {
   [
@@ -60,16 +60,23 @@ export const Tag = EmberObject.extend({
     if (model === 'service') {
       return record && get(record, 'type') === 'onezone' ? 'onezone' : 'provider';
     } else {
-      return modelIcons[model];
+      return recordIcons[model];
     }
   }),
 });
 
 const modelIcons = {
   user: 'user',
-  group: 'group',
+  group: 'groups',
   oneprovider: 'provider',
   service: 'cluster',
+  serviceOnepanel: 'onepanel',
+}
+
+const recordIcons = {
+  user: 'user',
+  group: 'group',
+  oneprovider: 'provider',
   serviceOnepanel: 'onepanel',
 };
 
@@ -129,6 +136,11 @@ export default Component.extend(I18n, {
    * @type {String} one of: list, byId
    */
   selectedView: 'list',
+
+  /**
+   * @type {String}
+   */
+  recordsFilter: '',
 
   /**
    * @type {String}
@@ -198,6 +210,8 @@ export default Component.extend(I18n, {
               model: selectedModelName,
               record,
             },
+            tip: get(record, 'representsAll') &&
+              this.tWithDefault(`allRecordTip.${selectedModelName}`),
           }));
       } else {
         return [];
@@ -223,10 +237,7 @@ export default Component.extend(I18n, {
     'selectedModelName'
   ),
 
-  showAllRecordsSelectedDescription: and(
-    'hasAllRecordsTagSelected',
-    not('allRecordsTagSelectsOnlySubset')
-  ),
+  showAllRecordsSelectedDescription: isEmpty('tagsToRender'),
 
   tagsToRender: computed(
     'allAvailableTags.[]',
@@ -245,7 +256,7 @@ export default Component.extend(I18n, {
         'hasAllRecordsTagSelected',
         'allRecordsTagSelectsOnlySubset'
       );
-      const selectedRecords = selectedTags.mapBy('value.record').compact();
+      const selectedValues = selectedTags.mapBy('value').compact();
       let recordsToReturn = allAvailableTags;
       if (hasAllRecordsTagSelected) {
         if (allRecordsTagSelectsOnlySubset) {
@@ -257,7 +268,26 @@ export default Component.extend(I18n, {
         }
       }
       return recordsToReturn
-        .reject(tag => selectedRecords.includes(get(tag, 'value.record')));
+        .reject(tag => selectedValues.filter(selectedValue =>
+          get(selectedValue, 'record') === get(tag, 'value.record') &&
+          get(selectedValue, 'model') === get(tag, 'value.model')
+        ).length > 0);
+    }
+  ),
+
+  filteredTagsToRender: computed(
+    'tagsToRender.each.label',
+    'recordsFilter',
+    function filteredTagsToRender() {
+      const {
+        tagsToRender,
+        recordsFilter,
+      } = this.getProperties('tagsToRender', 'recordsFilter');
+
+      const filter = recordsFilter.trim().toLocaleLowerCase();
+      return tagsToRender.filter(tag =>
+        String(get(tag, 'label')).trim().toLocaleLowerCase().indexOf(filter) > -1
+      )
     }
   ),
 

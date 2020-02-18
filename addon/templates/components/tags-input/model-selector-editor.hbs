@@ -53,26 +53,36 @@
     {{/bs-button-group}}
     <div class="content-separator"></div>
     {{#if (eq selectedView "list")}}
-      {{#perfect-scrollbar-element}}
-        {{#promise-proxy-container proxy=recordsProxy}}
-          {{#if showAllRecordsSelectedDescription}}
-            <p class="all-records-added-description">
-              {{tt this (concat "allRecordsAdded." selectedModelName)}}
-            </p>
-          {{else}}
+      {{#promise-proxy-container proxy=recordsProxy sizeClass="sm"}}
+        {{#if showAllRecordsSelectedDescription}}
+          <p class="all-records-added-description">
+            {{tt this (concat "allRecordsAdded." selectedModelName)}}
+          </p>
+        {{else}}
+          <input
+            type="text"
+            class="filter-records form-control input-sm"
+            value={{recordsFilter}}
+            oninput={{action (mut recordsFilter) value="target.value"}}
+            placeholder={{tt this "recordsFilterPlaceholder"}}
+          >
+          {{#perfect-scrollbar-element}}
             <ul class="selector-list">
-              {{#each tagsToRender key="label" as |tag|}}
+              {{#each filteredTagsToRender key="label" as |tag|}}
                 <li class="selector-item {{if tag.value.record.representsAll "all-item" "record-item"}}" {{action "tagSelected" tag}}>
                   {{#if tag.icon}}
                     {{one-icon icon=tag.icon class="tag-icon"}}
                   {{/if}}
                   {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                  {{#if tag.tip}}
+                    {{one-tooltip title=tag.tip}}
+                  {{/if}}
                 </li>
               {{/each}}
             </ul>
-          {{/if}}
-        {{/promise-proxy-container}}
-      {{/perfect-scrollbar-element}}
+          {{/perfect-scrollbar-element}}
+        {{/if}}
+      {{/promise-proxy-container}}
     {{else}}
       {{#if hasAllRecordsTagSelected}}
         <p class="all-records-added-description">

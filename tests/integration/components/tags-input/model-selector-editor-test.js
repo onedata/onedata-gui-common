@@ -128,19 +128,19 @@ describe('Integration | Component | tags input/model selector editor', function 
 
   [{
     name: 'user',
-    label: 'All users',
+    label: 'Any user',
   }, {
     name: 'group',
-    label: 'All groups',
+    label: 'Any group',
   }, {
     name: 'oneprovider',
-    label: 'All Oneproviders',
+    label: 'Any Oneprovider',
   }, {
     name: 'service',
-    label: 'All Oneproviders',
+    label: 'Any Oneprovider',
   }, {
     name: 'serviceOnepanel',
-    label: 'All Oneprovider Onepanels',
+    label: 'Any Oneprovider Onepanel',
   }].forEach(({ name, label }, index) => {
     it(`adds "${label}" item to list of records for ${name}`, function () {
       this.render(hbs `{{tags-input
@@ -166,6 +166,7 @@ describe('Integration | Component | tags input/model selector editor', function 
         this.set('selectedTags', defaultSettings.models.map(({ name }) => ({
           value: {
             record: availableModels[name][0],
+            model: typeName,
           }
         })));
 
@@ -220,6 +221,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     typeIndex: 0,
   }, {
     name: 'group',
+    typeIcon: 'groups',
     icon: 'group',
     typeIndex: 1,
   }, {

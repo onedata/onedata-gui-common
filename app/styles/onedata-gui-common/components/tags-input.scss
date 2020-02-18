@@ -87,8 +87,15 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
 
   .tags-input-selector-editor,
   .tags-input-model-selector-editor {
-    width: 150px;
     align-self: center;
+  }
+
+  .tags-input-selector-editor {
+    width: 150px;
+  }
+
+  .tags-input-model-selector-editor {
+    width: 250px;
   }
 }
 
@@ -139,6 +146,7 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
 }
 
 .one-webui-popover.model-selector {
+  width: 250px;
   height: 250px;
   
   .selector-container {
@@ -149,7 +157,9 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
 
   .ember-basic-dropdown,
   .btn-group,
-  .content-separator {
+  .content-separator,
+  .filter-records,
+  .id-form-group {
     margin-bottom: $padding-small-vertical;
   }
 
@@ -157,8 +167,22 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
     border-top: 1px solid $main-border-color;
   }
 
-  .id-form-group {
-    margin-bottom: $padding-small-vertical;
+  .all-item {
+    font-style: italic;
+
+    .tag-label {
+      // Italic text (due to its horizontal extra size) is hidden by overflow mechanism.
+      // Adding extra padding to let italic render properly
+      padding-right: 2px;
+    }
+  }
+
+  .add-id {
+    align-self: flex-end;
+  }
+
+  .all-records-added-description {
+    text-align: center;
   }
 }
 

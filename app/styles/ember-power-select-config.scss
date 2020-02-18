@@ -26,7 +26,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
     
     .one-icon {
       @include vertical-align-middle();
-      font-size: 28px;
+      font-size: 2.2em;
     }
   }
 }
@@ -43,7 +43,7 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
       left: -2px;
     }
     .one-icon + .text {
-      padding-left: 22px;
+      padding-left: 26px;
     }
   }
 }
@@ -61,7 +61,10 @@ $ember-power-select-selected-background: $ember-power-select-background-color;
   &.small {
     .ember-power-select-selected-item .option-container {
       .one-icon {
-        left: -4px;
+        left: -6px;
+      }
+      .one-icon + .text {
+        padding-left: 22px;
       }
     }
   }
