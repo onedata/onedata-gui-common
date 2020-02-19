@@ -12,8 +12,8 @@
 import _ from 'lodash';
 import emberObjectMerge from 'onedata-gui-common/utils/ember-object-merge';
 
-export default function mergeNewItems(orig, update, compare, deep = true) {
-  const isEmberArray = !!orig.pushObject;
+export default function mutateArray(orig, update, compare, deep = true) {
+  const isEmberArray = Boolean(orig.pushObject);
   let arrayModified = false;
   try {
     const pushFun = isEmberArray ? 'pushObject' : 'push';

@@ -28,6 +28,31 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
  * @property {string} title
  */
 
+const aspectOptionsDelimiterRe = /\.\.+/;
+const aspectOptionsDelimiter = '..';
+const aspectOptionsValueDelimiter = '.';
+
+export function parseAspectOptions(optionsString) {
+  const parsedOptions = {};
+  if (optionsString) {
+    optionsString.split(aspectOptionsDelimiterRe).forEach(option => {
+      const [key, value] = option.split(aspectOptionsValueDelimiter);
+      parsedOptions[key] = value;
+    });
+  }
+  return parsedOptions;
+}
+
+export function serializeAspectOptions(options) {
+  let optionsArray = [];
+  for (let key in options) {
+    if (options.hasOwnProperty(key)) {
+      optionsArray.push(`${key}${aspectOptionsValueDelimiter}${options[key]}`);
+    }
+  }
+  return optionsArray.join(aspectOptionsDelimiter);
+}
+
 export default Service.extend(I18n, {
   sidebarResources: service(),
   router: service(),
@@ -136,6 +161,21 @@ export default Service.extend(I18n, {
    * @type {boolean}
    */
   isMainMenuColumnActive: false,
+
+  aspectOptions: Object.freeze({}),
+
+  /**
+   * @type {String}
+   */
+  aspectOptionsString: computed('aspectOptions', {
+    get() {
+      return serializeAspectOptions(this.get('aspectOptions'));
+    },
+    set(key, value) {
+      const aspectOptions = this.set('aspectOptions', parseAspectOptions(value));
+      return serializeAspectOptions(aspectOptions);
+    }
+  }),
 
   /**
    * Height of the global bar
@@ -248,8 +288,8 @@ export default Service.extend(I18n, {
           } else {
             return aspectActions;
           }
-        default:
-          return [];
+          default:
+            return [];
       }
     }
   ),
@@ -363,6 +403,29 @@ export default Service.extend(I18n, {
       }
     }
   ),
+
+  mergedAspectOptions(options) {
+    const newAspectOptions = Object.assign({}, this.get('aspectOptions'), options);
+    for (let key in options) {
+      if (options.hasOwnProperty(key)) {
+        const value = options[key];
+        if (value === null) {
+          delete newAspectOptions[key];
+        }
+      }
+    }
+    return newAspectOptions;
+  },
+
+  setAspectOptions(options) {
+    return this.set('aspectOptions', Object.freeze(this.mergedAspectOptions(options)));
+  },
+
+  changeRouteAspectOptions(options, replaceHistory = false) {
+    const newOptions = serializeAspectOptions(this.mergedAspectOptions(options));
+    const routerMethod = replaceHistory ? 'replaceWith' : 'transitionTo';
+    return this.get('router')[routerMethod]({ queryParams: { options: newOptions } });
+  },
 
   /**
    * Resolves to true if activeResourceCollections contains model with passed id

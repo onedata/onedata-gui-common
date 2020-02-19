@@ -142,4 +142,26 @@ describe('Unit | Utility | create data proxy mixin', function () {
         expect(fetch).to.be.calledOnce;
       });
   });
+
+  it('allows to update proxy content without changing pending state', function () {
+    const fetch = sinon.stub()
+      .onCall(0).resolves('foo')
+      .onCall(1).resolves('bar');
+
+    const mixin = createDataProxyMixin('world', fetch);
+    const obj = EmberObject.extend(mixin, {}).create();
+
+    return obj.get('worldProxy')
+      .then(() => {
+        expect(fetch).to.be.calledOnce;
+        const update = obj.updateWorldProxy({ replace: true });
+        expect(fetch).to.be.calledTwice;
+        expect(obj.get('worldProxy.isPending')).to.equal(false);
+        expect(obj.get('worldProxy.isSettled')).to.equal(true);
+        return update;
+      })
+      .then(() => {
+        expect(obj.get('world')).to.equal('bar');
+      });
+  });
 });

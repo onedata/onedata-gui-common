@@ -28,6 +28,7 @@ import loginLayout from './onedata-gui-common/components/login-layout';
 import oneproviderMapCircle from './onedata-gui-common/components/oneprovider-map-circle';
 import oneprovidersSelectorPopoverContent from './onedata-gui-common/components/oneproviders-selector-popover-content';
 import oneSidebar from './onedata-gui-common/components/one-sidebar';
+import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -38,6 +39,7 @@ import globalNotify from './onedata-gui-common/services/global-notify';
 import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
+import backendErrors from './onedata-gui-common/errors/backend-errors';
 import noPermissions from './onedata-gui-common/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
 import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
@@ -73,6 +75,7 @@ const translations = {
     oneproviderMapCircle,
     oneprovidersSelectorPopoverContent,
     oneSidebar,
+    contentSharesEmpty,
     alerts: {
       endpointError,
     },
@@ -92,6 +95,7 @@ const translations = {
     clusterActions,
   },
   errors: {
+    backendErrors,
     noPermissions,
     noClusterPermissions,
     cannotInitWebsocket,

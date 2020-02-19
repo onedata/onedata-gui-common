@@ -87,12 +87,13 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/common';
 @import 'onedata-gui-common/spin-spinner-extensions';
 @import 'onedata-gui-common/jvectormap-overrides';
+@import 'onedata-gui-common/public-route';
 
 @import 'ember-power-select-config';
 
 // Utils
 
-@import 'onedata-gui-common/utils/embedded-iframe.scss';
+@import 'onedata-gui-common/utils/embedded-iframe';
 
 // Components
 

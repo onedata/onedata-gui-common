@@ -1,0 +1,35 @@
+{{#content-info
+  class="scroll-breakpoint-300"
+  header=(tt this "title")
+  text=(tt this (concat "text." (if forSpace "space" "global")))
+}}
+  <p class="lead text-center">
+    {{tt this "p1.goTo"}}
+    {{#if forSpace}}
+      <a href={{dataTabUrl}} target="_top">
+        <div class="inline-icon-container">
+          {{one-icon icon="browser-directory"}}
+        </div>
+        {{tt this "p1.data"}}
+        {{tt this "p1.inSpace"}}
+      </a>
+    {{else}}
+      <strong>
+        <div class="inline-icon-container">
+          {{one-icon icon="browser-directory"}}
+        </div>
+        {{tt this "p1.data"}}
+      </strong>
+    {{/if}}
+    
+    {{tt this "p1.andUse"}}
+    <strong>
+      <div class="inline-icon-container">
+        {{one-icon icon="browser-share"}}
+      </div>
+      {{tt this "p1.share"}}
+    </strong>
+    {{tt this "p1.option"}}
+    {{tt this "p1.thisWill"}}
+  </p>
+{{/content-info}}

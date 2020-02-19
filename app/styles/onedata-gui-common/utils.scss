@@ -127,3 +127,11 @@ $top-shadow-height: 6px;
     $direction: to top,
   );
 }
+
+@mixin hide-on-breakpoint($class-name, $max-width) {
+  .#{$class-name} {
+    @media (max-width: $max-width) {
+      display: none;
+    }
+  }
+}
