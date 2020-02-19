@@ -61,6 +61,11 @@ $token-border-radius: 3px;
         }
       }
     }
+    &.text-right {
+      text-align: right;
+      float: right;
+      margin-left: 0;
+    }
   }
 }
 
@@ -379,6 +384,10 @@ $token-border-radius: 3px;
   .tab-content {
     padding: $padding-large-vertical $padding-large-horizontal;
     background-color: $color-one-white;
+    &.no-vertical-padding {
+      padding-left: 0;
+      padding-right: 0;
+    }
     .tab-pane {
       position: relative;
       @media (max-width: $screen-xs-max) {
@@ -485,6 +494,26 @@ $token-border-radius: 3px;
   }
 }
 
+.bs-tab .nav.nav-tabs-with-loading > li {
+  > a.nav-link {
+    padding-left: 38px;
+    padding-right: 38px;
+  }
+  .tab-spinner {
+    position: absolute;
+    left: 10px;
+    top: 8px;
+  }
+}
+
+.nav-tabs {
+  .warning-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: top;
+    margin-left: $padding-xs-horizontal;
+  }
+}
 
 .only-tab-bar {
   .tab-content {
@@ -515,6 +544,7 @@ label.align-left {
   text-align: left;
 }
 
+// TODO: this style is too general, because tag class is used in code viewer (XML)
 .tag {
   display: inline-block;
   padding: 2px 4px;

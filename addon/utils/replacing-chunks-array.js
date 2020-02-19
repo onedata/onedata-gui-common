@@ -22,7 +22,7 @@ export const emptyItem = {};
 export default ArraySlice.extend(Evented, {
   /**
    * @virtual 
-   * @type {function} `(fromIndex, size, offset) => Array<any>`
+   * @type {function} `(fromIndex, size, offset, replacingChunksArray) => Array<any>`
    */
   fetch: undefined,
 
@@ -31,21 +31,6 @@ export default ArraySlice.extend(Evented, {
   indexMargin: 0,
 
   emptyIndex: -1,
-
-  /**
-   * @type {function}
-   */
-  sortFun(a, b) {
-    const ai = get(a, 'index');
-    const bi = get(b, 'index');
-    if (ai < bi) {
-      return -1;
-    } else if (ai > bi) {
-      return 1;
-    } else {
-      return 0;
-    }
-  },
 
   /**
    * Initialized in init
@@ -157,7 +142,14 @@ export default ArraySlice.extend(Evented, {
         sourceArray,
         chunkSize,
         emptyIndex,
-      } = this.getProperties('_startReached', 'sourceArray', 'chunkSize', 'emptyIndex');
+        fetch,
+      } = this.getProperties(
+        '_startReached',
+        'sourceArray',
+        'chunkSize',
+        'emptyIndex',
+        'fetch',
+      );
 
       const firstItem = sourceArray[emptyIndex + 1];
       const fetchStartIndex = firstItem ? get(firstItem, 'index') : null;
@@ -166,10 +158,11 @@ export default ArraySlice.extend(Evented, {
         Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       this.trigger('fetchPrevStarted');
-      return this.get('fetch')(
+      return fetch(
           fetchStartIndex,
           currentChunkSize,
-          -currentChunkSize
+          -currentChunkSize,
+          this,
         )
         .then(arrayUpdate => {
           // TODO: use of pullAllBy is working, but it is probably unsafe
@@ -251,7 +244,8 @@ export default ArraySlice.extend(Evented, {
           // the workaround is to use []
           fetchStartIndex,
           fetchSize,
-          lastItem ? 1 : 0
+          lastItem ? 1 : 0,
+          this
         )
         .then(array => {
           if (get(array, 'length') < chunkSize) {
@@ -282,6 +276,7 @@ export default ArraySlice.extend(Evented, {
       endIndex,
       sourceArray,
       indexMargin,
+      fetch,
     } = this.getProperties(
       '_start',
       '_end',
@@ -289,6 +284,7 @@ export default ArraySlice.extend(Evented, {
       'endIndex',
       'sourceArray',
       'indexMargin',
+      'fetch',
     );
 
     // currently, if data is not loaded between start and startIndex
@@ -312,10 +308,11 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    return this.get('fetch')(
+    return fetch(
         fetchStartIndex,
         size,
-        offset
+        offset,
+        this,
       ).then(updatedRecordsArray => {
         const fetchedCount = get(updatedRecordsArray, 'length');
         const updatedEnd = _start + fetchedCount;
@@ -335,7 +332,7 @@ export default ArraySlice.extend(Evented, {
         for (let i = 0; i < updateBoundary; ++i) {
           sourceArray[i + _start] = updatedRecordsArray[i];
         }
-        sourceArray.arrayContentDidChange(_start, );
+        sourceArray.arrayContentDidChange(_start);
         return this;
       })
       .catch(error => {
@@ -354,7 +351,11 @@ export default ArraySlice.extend(Evented, {
       'initialLoad',
       PromiseObject.create({ promise: this.reload({ head: true }) })
     ).catch(error => {
-      console.debug('replacing-chunks-array#init: initial load failed: ' + error);
+      console.debug(
+        'replacing-chunks-array#init: initial load failed: ' +
+        JSON.stringify(error)
+      );
+      safeExec(this, 'set', 'error', error);
     });
   },
 });

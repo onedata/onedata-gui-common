@@ -15,6 +15,7 @@ import { htmlSafe } from '@ember/template';
 import { gt, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
+import oneproviderPlaceSizes from 'onedata-gui-common/utils/oneprovider-place-sizes';
 
 export default Component.extend(I18n, {
   layout,
@@ -95,9 +96,13 @@ export default Component.extend(I18n, {
       }
     }
 
-    const width = mapSize * 0.01 * scale;
+    const {
+      width,
+      borderWidth,
+      fontSize,
+    } = oneproviderPlaceSizes(mapSize, scale);
     styles +=
-      `border-width: ${width / 15}px; font-size: ${width * 0.75}px; width: ${width}px; height: ${width}px;`;
+      `border-width: ${borderWidth}px; font-size: ${fontSize}px; width: ${width}px; height: ${width}px;`;
 
     return htmlSafe(styles);
   }),

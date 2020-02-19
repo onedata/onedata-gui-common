@@ -45,6 +45,20 @@ class MockArray {
   }
 }
 
+class MockFullArray {
+  constructor(size = 1000) {
+    this.size = size;
+    this.array = recordRange(0, size);
+  }
+  /**
+   * For test purposes, this array ignores completely input params and always returns
+   * all the array.
+   */
+  fetch() {
+    return Promise.resolve([...this.array]);
+  }
+}
+
 function removeFromArray(array, pos) {
   return [...array.slice(0, pos), ...array.slice(pos + 1, array.length)];
 }
@@ -494,4 +508,59 @@ describe('Unit | Utility | replacing chunks array', function () {
       });
   });
 
+  it('fills sourceArray with more data than expected if fetched more and uses it later',
+    function () {
+      const arraySize = 1000;
+      const mockFullArray = new MockFullArray(arraySize);
+      const fetchFullArray = MockFullArray.prototype.fetch.bind(mockFullArray);
+      const fetchSpy = sinon.spy(fetchFullArray);
+      const array = ReplacingChunksArray.create({
+        fetch: fetchSpy,
+        startIndex: 0,
+        endIndex: 20,
+        indexMargin: 0,
+      });
+      return wait()
+        .then(() => {
+          expect(fetchSpy).to.be.calledOnce;
+          expect(array.toArray(), 'first load contents')
+            .to.deep.equal(recordRange(0, 20));
+          expect(get(array, 'sourceArray')).to.have.lengthOf(arraySize);
+          array.setProperties({
+            startIndex: 20,
+            endIndex: 60,
+          })
+          return wait();
+        })
+        .then(() => {
+          expect(fetchSpy).to.be.calledOnce;
+          expect(array.toArray()).to.deep.equal(recordRange(20, 60));
+          expect(get(array, 'sourceArray')).to.have.lengthOf(arraySize);
+        });
+    }
+  );
+
+  it('injects self reference into fetch method',
+    function () {
+      let compareArrayInstancesResult = undefined;
+      let array;
+      this.fetch = (a, b, c, arrayInstance) => {
+        compareArrayInstancesResult = array === arrayInstance;
+        return resolve([]);
+      };
+      array = ReplacingChunksArray.create({
+        fetch: this.fetch.bind(this),
+        startIndex: 0,
+        endIndex: 50,
+        indexMargin: 10,
+      });
+
+      array.reload();
+
+      return wait()
+        .then(() => {
+          expect(compareArrayInstancesResult).to.equal(true);
+        });
+    }
+  );
 });

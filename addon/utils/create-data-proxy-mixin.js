@@ -39,7 +39,7 @@
 import Mixin from '@ember/object/mixin';
 import { classify, camelize } from '@ember/string';
 import { reads } from '@ember/object/computed';
-import { get, computed, set } from '@ember/object';
+import { get, computed, set, setProperties } from '@ember/object';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
@@ -76,8 +76,28 @@ export default function createDataProxyMixin(name, options) {
         return internalDataProxy;
       } else {
         if (replace && this.get(`${internalDataProxyName}.content`)) {
-          set(internalDataProxy, 'promise', promise);
-          return internalDataProxy;
+          return promise
+            .catch(error => {
+              set(internalDataProxy, 'reason', error);
+              if (get(internalDataProxy, 'isFulfilled')) {
+                setProperties(internalDataProxy, {
+                  isRejected: true,
+                  isFulfilled: true,
+                });
+              }
+              throw error;
+            })
+            .then(value => {
+              set(internalDataProxy, 'content', value);
+              if (get(internalDataProxy, 'isRejected')) {
+                setProperties(internalDataProxy, {
+                  reason: null,
+                  isRejected: false,
+                  isFulfilled: true,
+                });
+              }
+              return value;
+            });
         } else {
           return safeExec(
             this,

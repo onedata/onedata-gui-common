@@ -2,7 +2,7 @@
   <label class={{concat "control-label " layoutConfig.formLabelColumns}}>
     {{field.label}}:
     {{#if field.tip}}
-      {{one-label-tip title=field.tip}}
+      {{one-label-tip title=field.tip class="form-field-right-addon"}}
     {{/if}}
   </label>
   <span class={{concat (concat (concat "form-control-static one-form-field-static field-" (dot-to-dash field.name)) " ") layoutConfig.formInputColumns}}>

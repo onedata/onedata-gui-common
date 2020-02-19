@@ -12,6 +12,7 @@ import Component from '@ember/component';
 
 import { computed } from '@ember/object';
 import layout from '../templates/components/bezier-curve';
+import { htmlSafe } from '@ember/string';
 
 const {
   sqrt,
@@ -22,7 +23,7 @@ export default Component.extend({
   layout,
   tagName: 'path',
   classNames: ['bezier-curve'],
-  attributeBindings: ['d'],
+  attributeBindings: ['d', 'style'],
 
   /**
    * Start point x coordinate
@@ -47,6 +48,8 @@ export default Component.extend({
    * @type {number}
    */
   y2: 0,
+
+  style: htmlSafe(''),
 
   /**
    * Curve factor. Large values (positive or negative) will flatten curve.

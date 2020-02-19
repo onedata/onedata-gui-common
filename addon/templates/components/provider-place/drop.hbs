@@ -2,14 +2,14 @@
   {{#truncated-string class="provider-label"}}
     <span class="hidden-xs">
       {{#one-icon icon="provider" class="state-indicator"}}
-        {{one-tooltip title=(tt this (if (eq provider.status "online") "online" "offline"))}}
+        {{one-tooltip title=(tt this (if provider.online "online" "offline"))}}
       {{/one-icon}}
       {{#truncated-string}}{{name-conflict item=provider tagName="span"}}{{/truncated-string}}
     </span>
     <span class="hidden-sm hidden-md hidden-lg">{{tt this "status"}}</span>
   {{/truncated-string}}
   <div class="provider-label-secondary hidden-sm hidden-md hidden-lg">
-    {{#if (eq provider.status "online")}}
+    {{#if provider.online}}
       {{tt this "online"}}
     {{else}}
       {{tt this "offline"}}
@@ -49,27 +49,14 @@
   <div class="btn-container">
     {{#if provider.online}}
       <div class="row row-btn">
-        {{#one-spin-button
-          class="btn btn-sm btn-toggle-default btn-default"
-          action=(action "toggleDefaultProvider")
+        {{#link-to "provider-redirect" (model-routable-id provider.id) 
+          class="btn btn-sm btn-go-to-files btn-primary"
         }}
-          {{one-icon icon=(if isDefaultProvider "home" "home-outline")}}
+          {{one-icon icon="provider"}}
           <span class="text">
-            {{tt this (if isDefaultProvider "unsetDefault" "setDefault")}}
+            {{tt this "goToFiles"}}
           </span>
-        {{/one-spin-button}}
-      </div>
-      <div class="row row-btn">
-        {{#if (eq provider.status "online")}}
-          {{#link-to "provider-redirect" (model-routable-id provider.id) 
-            class="btn btn-sm btn-go-to-files btn-primary"
-          }}
-            {{one-icon icon="provider"}}
-            <span class="text">
-              {{tt this "goToFiles"}}
-            </span>
-          {{/link-to}}
-        {{/if}}
+        {{/link-to}}
       </div>
     {{else}}
       <div class="row row-btn">

@@ -13,7 +13,7 @@
       class="oneproviders-list-item {{if (eq oneprovider selectedOneprovider) "active"}}"
       data-provider={{oneprovider.id}}
       {{action onOneproviderSelected oneprovider}}>
-      {{one-icon icon="provider" class=(concat oneprovider.status "-icon")}}
+      {{one-icon icon="provider" class=(if oneprovider.online "online-icon" "offline-icon")}}
       {{#truncated-string}}{{name-conflict item=oneprovider tagName="span"}}{{/truncated-string}}
     </li>
   {{/each}}

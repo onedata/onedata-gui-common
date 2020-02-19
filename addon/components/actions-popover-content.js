@@ -64,8 +64,10 @@ export default Component.extend({
 
   actions: {
     triggerAction(item) {
-      get(item, 'action')(this.get('actionsArg'));
-      this.get('actionClicked')();
+      if (!get(item, 'disabled')) {
+        get(item, 'action')(this.get('actionsArg'));
+        this.get('actionClicked')();
+      }
     },
     toggleNestedActions(item, isOpened) {
       scheduleOnce('afterRender', this, 'toggleNestedActions', item, isOpened);

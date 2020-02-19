@@ -27,6 +27,7 @@ export default [
   'one-tree',
   'one-way-capacity',
   'one-way-toggle',
+  'proceed-process-modal',
   'promise-proxy-container',
   'provider-place',
   'provider-spaces-support-chart',

@@ -8,18 +8,15 @@
  */
 
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
+  navigationState: service(),
+
   queryParams: ['options'],
 
-  aspectOptions: computed('options', function aspectOptions() {
-    const options = this.get('options') || '';
-    const parsedOptions = {};
-    options.split(',').forEach(option => {
-      const [key, value] = option.split('.');
-      parsedOptions[key] = value;
-    });
-    return parsedOptions;
-  }),
+  options: alias('navigationState.aspectOptionsString'),
+
+  aspectOptions: alias('navigationState.aspectOptions'),
 });

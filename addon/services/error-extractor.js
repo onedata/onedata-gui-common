@@ -3,13 +3,13 @@
  * errors.
  * 
  * @module services/error-extractor
- * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @author Michał Borzęcki
+ * @copyright (C) 2018-2019 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service, { inject as service } from '@ember/service';
-import getErrorDetails from 'onedata-gui-common/utils/get-error-description';
+import getErrorDescription from 'onedata-gui-common/utils/get-error-description';
 
 export default Service.extend({
   i18n: service(),
@@ -19,7 +19,7 @@ export default Service.extend({
    * @type {function}
    * @returns {string}
    */
-  extractorFunction: getErrorDetails,
+  extractorFunction: getErrorDescription,
 
   /** 
    * @returns {object} `{ message: SafeString,  errorJsonString: SafeString }`
@@ -33,10 +33,16 @@ export default Service.extend({
   },
 
   /**
-   * @param {any} error
+   * @param {*} error
    * @returns {string} 
    */
-  getType( /* error */ ) {
-    return 'error';
+  getType(error) {
+    const errorId = (error || {}).id;
+    switch (errorId) {
+      case 'forbidden':
+        return 'forbidden';
+      default:
+        return 'error';
+    }
   },
 });

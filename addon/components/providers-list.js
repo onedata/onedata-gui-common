@@ -103,7 +103,9 @@ export default Component.extend({
       this.get('providersFilterAction')(providers);
     },
     providerClick(provider) {
-      this.get('providerClickAction')(provider);
+      if (!document.querySelector('.oneprovider-actions.in')) {
+        this.get('providerClickAction')(provider);
+      }
     },
   },
 });
