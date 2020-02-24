@@ -19,7 +19,6 @@ import { debounce, next } from '@ember/runloop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import $ from 'jquery';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(I18n, {
   layout,
@@ -32,6 +31,11 @@ export default Component.extend(I18n, {
 
   i18n: service(),
   router: service(),
+
+  /**
+   * @override
+   */
+  touchActionProperties: '',
 
   /**
    * @override
@@ -118,11 +122,6 @@ export default Component.extend(I18n, {
   sizeClass: '',
 
   /**
-   * @type {Function}
-   */
-  tileMainClick: notImplementedIgnore,
-
-  /**
    * Window object (for testing purposes only)
    * @type {Window}
    */
@@ -196,7 +195,6 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-    this.initBindMainLink();
     this.scaleUp();
   },
 
@@ -224,29 +222,31 @@ export default Component.extend(I18n, {
     }
   },
 
-  initBindMainLink() {
-    if (this.get('_isLink') && !this.get('customLink')) {
-      this.tileMainClick = function tileMainClick(clickEvent) {
-        // do not redirect if "more" or footer link has been clicked
-        if ($(clickEvent.target).closest('.more-link').length) {
-          return;
-        }
-
-        // TODO: if customLink, then use window.location = customLink
-
-        const {
-          router,
-          aspect,
-          route,
-          routeQueryParams,
-        } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
-        const transitionToArgs = route ?
-          route : ['onedata.sidebar.content.aspect', aspect];
-        if (routeQueryParams) {
-          transitionToArgs.push({ queryParams: routeQueryParams })
-        }
-        router.transitionTo(...transitionToArgs);
+  tileMainClick(clickEvent) {
+    // do not redirect if "more" has been clicked (it's an anchor itself)
+    // do not open if clicked with right button
+    if ($(clickEvent.target).closest('.more-link').length || clickEvent.button === 2) {
+      return;
+    }
+    const customLink = this.get('customLink');
+    if (customLink) {
+      const newWindowClick = clickEvent.button === 1 ||
+        clickEvent.ctrlKey || clickEvent.shiftKey || clickEvent.metaKey;
+      const target = newWindowClick ? '_blank' : '_self';
+      this.get('_window').open(customLink, target);
+    } else {
+      const {
+        router,
+        aspect,
+        route,
+        routeQueryParams,
+      } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
+      const transitionToArgs = route ?
+        route : ['onedata.sidebar.content.aspect', aspect];
+      if (routeQueryParams) {
+        transitionToArgs.push({ queryParams: routeQueryParams })
       }
+      router.transitionTo(...transitionToArgs);
     }
   },
 
