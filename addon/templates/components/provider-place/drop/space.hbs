@@ -2,8 +2,14 @@
   {{one-icon icon=_iconName class="item-icon"}}
 </div>
 {{#truncated-string class="space-label"}}
-  <a href={{visitProviderUrl}} class="space-redirect-link">
-    {{name-conflict item=space}}
-  </a>
+  {{#if provider.online}}
+    <a href={{visitProviderUrl}} class="space-redirect-link">
+      {{name-conflict item=space}}
+    </a>
+  {{else}}
+    <span class="space-redirect-link">
+      {{name-conflict item=space}}
+    </span>
+  {{/if}}
 {{/truncated-string}}
 <div class="space-size">{{bytes-to-string _supportSize}}</div> 

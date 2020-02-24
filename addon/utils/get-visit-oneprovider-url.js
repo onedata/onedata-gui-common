@@ -7,12 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import config from 'ember-get-config';
 import { serializeAspectOptions } from 'onedata-gui-common/services/navigation-state';
-
-const {
-  legacyOneproviderVersion,
-} = config;
+import isLegacyOneprovider from 'onedata-gui-common/utils/is-legacy-oneprovider';
 
 export default function getVisitOneproviderUrl({
   router,
@@ -23,7 +19,7 @@ export default function getVisitOneproviderUrl({
 }) {
   const spaceRoutableId = guiUtils.getRoutableIdFor(space);
   const providerRoutableId = guiUtils.getRoutableIdFor(provider);
-  if (providerVersion.startsWith(legacyOneproviderVersion)) {
+  if (isLegacyOneprovider(providerVersion)) {
     return router.urlFor(
       'provider-redirect',
       providerRoutableId, {
