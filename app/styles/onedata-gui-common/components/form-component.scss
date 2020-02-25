@@ -93,6 +93,12 @@
       width: 100%;
     }
   }
+
+  .has-validation-icon {
+    &.text-like-field-renderer input {
+      padding-right: 3em;
+    }
+  }
 }
 
 .dropdown-field-dropdown {

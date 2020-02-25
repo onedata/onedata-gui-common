@@ -18,6 +18,7 @@ export default Component.extend({
   classNames: ['field-renderer', 'form-group'],
   classNameBindings: [
     'validationClass',
+    'canShowValidationIcon:has-validation-icon',
     'fieldNameClass',
     'fieldRendererClass',
     'field.classes',
