@@ -47,6 +47,13 @@ $token-border-radius: 3px;
       margin-right: $padding-base-horizontal;
     }
   }
+  .modal-footer {
+    // put a button in this container - it enabled tooltip events for disabled buttons
+    .btn-tooltip-container {
+      @extend .btn;
+      padding: 0;
+    }
+  }
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
