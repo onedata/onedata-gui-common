@@ -36,6 +36,17 @@ describe('Integration | Component | form component/text like field', function ()
   );
 
   it(
+    'allows to render input with type different than "text"',
+    function () {
+      this.set('textField.inputType', 'number');
+
+      this.render(hbs `{{form-component/text-like-field field=textField}}`);
+
+      expect(this.$('input[type="number"]')).to.exist;
+    }
+  );
+
+  it(
     'can be disabled',
     function () {
       this.set('textField.isEnabled', false);

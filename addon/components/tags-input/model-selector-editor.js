@@ -1,3 +1,14 @@
+/**
+ * A tags (tokenizer) input editor, which allows to add tags using selector with
+ * model records. Available models are: user, group, oneprovider, service (op and oz),
+ * serviceOnepanel (opp and ozp).
+ * 
+ * @module components/tags-input/model-selector-editor
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../templates/components/tags-input/model-selector-editor';
 import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
@@ -9,6 +20,13 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { conditional, promise, array, raw, tag, isEmpty } from 'ember-awesome-macros';
 
+/**
+ * Removes tags, which are redundant due to existence of "all records" tags.
+ * E.g. if "all groups" tag is present in passed array, then all specific-group
+ * tags will be removed.
+ * @param {Array<Tag>} tags 
+ * @returns {Array<Tag>}
+ */
 export function removeExcessiveTags(tags) {
   [
     'user',
@@ -28,6 +46,7 @@ export function removeExcessiveTags(tags) {
   return tags;
 }
 
+// ModelSelectorEditor needs specific tag object to handle record related data.
 export const Tag = EmberObject.extend({
   /**
    * @type {Object}
@@ -92,21 +111,29 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.tagsInput.modelSelectorEditor',
 
   /**
-   * @public
    * @virtual
    * @type {Object}
+   * 
+   * Supported settings: {
+   *   models: Array<Object> - array of models specifications, which should be used
+   *     to construct list of record. Order of models in dropdown model selector
+   *     will be the same as in this array.
+   * }
+   * Each model specification is a object: {
+   *   name: String, - one of: user, group, oneprovider, service, serviceOnepanel
+   *   getRecords: Function - returns a Promise which should resolve to
+   *     an array of model records
+   * }
    */
   settings: undefined,
 
   /**
-   * @public
    * @virtual
    * @type {Array<Tag>}
    */
   selectedTags: computed(() => []),
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @param {Array<Tag>} tagsToAdd
@@ -115,7 +142,6 @@ export default Component.extend(I18n, {
   onTagsAdded: notImplementedIgnore,
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @returns {any}
@@ -183,17 +209,23 @@ export default Component.extend(I18n, {
     });
   }),
 
-  recordsProxy: promise.object(computed(
+  /**
+   * @type {ComputedProperty<PromiseArray<Object>>}
+   */
+  recordsProxy: promise.array(computed(
     'selectedModelOption.modelSpec.getRecords',
     'modelsSpec.[]',
-    function modelRecordsProxy() {
+    function recordsProxy() {
       const getRecords = this.get('selectedModelOption.modelSpec.getRecords');
       return getRecords ? getRecords() : resolve([]);
     }
   )),
 
+  /**
+   * @type {ComputedProperty<Array<Tag>>}
+   */
   allAvailableTags: computed(
-    'recordsProxy.content.@each.name',
+    'recordsProxy.@each.name',
     function allAvailableTags() {
       const {
         recordsProxy,
@@ -219,6 +251,9 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
   hasAllRecordsTagSelected: computed(
     'selectedTags.@each.value',
     'selectedModelName',
@@ -232,13 +267,17 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
   allRecordsTagSelectsOnlySubset: array.includes(
     raw(['service', 'serviceOnepanel']),
     'selectedModelName'
   ),
 
-  showAllRecordsSelectedDescription: isEmpty('tagsToRender'),
-
+  /**
+   * @type {ComputedProperty<Array<Tag>>}
+   */
   tagsToRender: computed(
     'allAvailableTags.[]',
     'selectedTags.[]',
@@ -275,6 +314,14 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isAllRecordsSelectedDescriptionVisible: isEmpty('tagsToRender'),
+
+  /**
+   * @type {ComputedProperty<Array<Tag>>}
+   */
   filteredTagsToRender: computed(
     'tagsToRender.each.label',
     'recordsFilter',
@@ -286,8 +333,8 @@ export default Component.extend(I18n, {
 
       const filter = recordsFilter.trim().toLocaleLowerCase();
       return tagsToRender.filter(tag =>
-        String(get(tag, 'label')).trim().toLocaleLowerCase().indexOf(filter) > -1
-      )
+        String(get(tag, 'label')).trim().toLocaleLowerCase().includes(filter)
+      );
     }
   ),
 

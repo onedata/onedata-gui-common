@@ -6,14 +6,19 @@ import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { get } from '@ember/object';
 
 describe('Unit | Utility | form component/form fields root group', function () {
-  it(
-    'has empty path',
-    function () {
-      const formFieldsRootGroup = FormFieldsRootGroup.create();
+  [
+    'path',
+    'valuePath',
+  ].forEach(fieldName => {
+    it(
+      `has empty ${fieldName}`,
+      function () {
+        const formFieldsRootGroup = FormFieldsRootGroup.create();
 
-      expect(get(formFieldsRootGroup, 'path')).to.be.empty;
-    }
-  );
+        expect(get(formFieldsRootGroup, fieldName)).to.be.empty;
+      }
+    );
+  });
 
   it(
     'sets default values for fields on reset()',

@@ -1,10 +1,19 @@
+/**
+ * A JSON form field.
+ * 
+ * @module utils/form-component/json-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { computed } from '@ember/object';
 import { validator } from 'ember-cp-validations';
 
 export default FormField.extend({
   /**
-   * @virtual
+   * @override
    */
   fieldComponentName: 'form-component/json-field',
 
@@ -16,13 +25,11 @@ export default FormField.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  jsonValidator: computed(function jsonValidator() {
-    return validator('json');
-  }),
+  jsonValidator: computed(() => validator('json')),
 
   init() {
     this._super(...arguments);
 
-    this.registerInternalValidatorField('jsonValidator');
+    this.registerInternalValidator('jsonValidator');
   },
 })

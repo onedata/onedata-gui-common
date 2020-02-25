@@ -1,9 +1,18 @@
+/**
+ * A static text form field.
+ * 
+ * @module utils/form-component/static-text-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { computed } from '@ember/object';
 
 export default FormField.extend({
   /**
-   * @virtual
+   * @override
    */
   fieldComponentName: 'form-component/static-text-field',
 
@@ -13,9 +22,9 @@ export default FormField.extend({
   isValid: true,
 
   /**
-   * @public
+   * Will be shown to user if `value` is not defined.
+   * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
-   * Will be shown to user if value is not set.
    */
   text: computed('i18nPrefix', 'path', function text() {
     return this.tWithDefault(`${this.get('path')}.text`, {}, undefined);

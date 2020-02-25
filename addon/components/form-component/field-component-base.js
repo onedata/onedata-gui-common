@@ -1,6 +1,15 @@
+/**
+ * A base component for all form elements.
+ *
+ * @module components/form-component/field-component-base
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
-import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { tag, writable } from 'ember-awesome-macros';
 
 export default Component.extend({
   classNames: ['field-component'],
@@ -14,9 +23,12 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  fieldId: computed('elementId', function fieldId() {
-    return `${this.get('elementId')}-field`;
-  }),
+  fieldId: writable(tag `${'elementId'}-field`),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  name: reads('field.name'),
 
   /**
    * @type {ComputedProperty<boolean>}

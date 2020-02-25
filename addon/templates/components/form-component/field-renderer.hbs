@@ -1,12 +1,12 @@
-{{#if (or field.label field.tip)}}
+{{#if (or label tip)}}
   <label class="control-label" for={{fieldId}}>
-    {{field.label}}{{#if field.addColonToLabel}}:{{/if}}
-    {{#if field.tip}}
-      {{one-label-tip class="form-field-tip" title=field.tip}}
+    {{label}}{{#if addColonToLabel}}:{{/if}}
+    {{#if tip}}
+      {{one-label-tip class="form-field-tip" title=tip}}
     {{/if}}
   </label>
 {{/if}}
-{{#component field.fieldComponentName field=field fieldId=fieldId}}
+{{#component fieldComponentName field=field fieldId=fieldId}}
   {{#if canShowValidationIcon}}
     <div class="form-control-feedback glyphicon glyphicon-{{if isValid "ok" "remove"}}"></div>
   {{/if}}

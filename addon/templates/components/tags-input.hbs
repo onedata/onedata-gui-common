@@ -9,22 +9,20 @@
     {{/unless}}
   </li>
 {{/each}}
-  {{#if isCreatingTag}}
-    <li class="tag-creator">
-      {{component tagEditorComponentName
-        class="input-element"
-        settings=tagEditorSettings
-        newTags=newTags
-        selectedTags=tags
-        onEndTagCreation=(action "endTagCreation")
-        onTagsAdded=(action "newTagsAdded")
-        onTagsChanged=(action "newTagsChanged")
-      }}
-    </li>
-  {{/if}}
-  {{#unless disabled}}
-    <li class="tag-creator-trigger input-element" {{action "startTagCreation"}}>
-      {{one-icon icon="plus"}}
-    </li>
-  {{/unless}}
+{{#if isCreatingTag}}
+  <li class="tag-creator">
+    {{component tagEditorComponentName
+      class="input-element"
+      settings=tagEditorSettings
+      selectedTags=tags
+      onEndTagCreation=(action "endTagCreation")
+      onTagsAdded=(action "newTagsAdded")
+    }}
+  </li>
+{{/if}}
+{{#unless disabled}}
+  <li class="tag-creator-trigger input-element" {{action "startTagCreation"}}>
+    {{one-icon icon="plus"}}
+  </li>
+{{/unless}}
 {{yield}}

@@ -36,7 +36,6 @@ describe('Integration | Component | form component/form fields group', function 
     }));
     this.render(hbs `{{form-component/form-fields-group field=fields}}`);
 
-    expect(this.$('.fields-group-collapse'))
-      .to.not.have.class('in');
+    expect(this.$('.fields-group-collapse')).to.not.have.class('in');
   });
 });

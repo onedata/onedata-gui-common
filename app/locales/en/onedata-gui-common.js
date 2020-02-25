@@ -46,6 +46,8 @@ import noPermissions from './onedata-gui-common/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
 import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
 
+import json from './onedata-gui-common/validators/json';
+
 const translations = {
   components: {
     basicauthLoginForm,
@@ -103,6 +105,9 @@ const translations = {
     noPermissions,
     noClusterPermissions,
     cannotInitWebsocket,
+  },
+  validators: {
+    json,
   },
 };
 

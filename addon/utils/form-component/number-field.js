@@ -1,16 +1,19 @@
+/**
+ * A number form field.
+ * 
+ * @module utils/form-component/number-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import { computed } from '@ember/object';
 import { validator } from 'ember-cp-validations';
 
 export default TextField.extend({
   /**
-   * @virtual
-   */
-  fieldComponentName: 'form-component/text-like-field',
-
-  /**
-   * @public
-   * @type {String}
+   * @override
    */
   inputType: 'number',
 
@@ -70,7 +73,7 @@ export default TextField.extend({
 
       return validator('number', {
         allowString: true,
-        // empty values are handled by `isOptional` field
+        // empty values are handled by presenceValidator
         allowBlank: true,
         gt,
         gte,
@@ -84,6 +87,6 @@ export default TextField.extend({
   init() {
     this._super(...arguments);
 
-    this.registerInternalValidatorField('numberValidator');
+    this.registerInternalValidator('numberValidator');
   },
 })

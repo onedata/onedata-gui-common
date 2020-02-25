@@ -47,7 +47,7 @@ describe('Integration | Component | tags input', function () {
 
   it('removes tags via remove icon on each tag', function () {
     const oldTags = this.get('tags').slice(0);
-    const changeSpy = sinon.spy((tags) => this.set('tags', tags));
+    const changeSpy = sinon.spy(tags => this.set('tags', tags));
     this.on('change', changeSpy);
 
     this.render(hbs `{{tags-input tags=tags onChange=(action "change")}}`);
@@ -192,33 +192,6 @@ describe('Integration | Component | tags input', function () {
   );
 
   it(
-    'injects current newTags (creation editor state) into creation editor',
-    function () {
-      const newTags = [{
-        label: 'c',
-      }, {
-        label: 'd',
-      }];
-      this.render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-      }}`);
-
-      let testComponent;
-      return click('.tag-creator-trigger')
-        .then(() => {
-          testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-          expect(get(testComponent, 'newTags')).to.have.length(0);
-
-          get(testComponent, 'onTagsChanged')(newTags);
-          return wait();
-        })
-        .then(() => expect(get(testComponent, 'newTags')).to.deep.equal(newTags));
-    }
-  );
-
-  it(
     'injects currently selected tags into creation editor',
     function () {
       this.render(hbs `{{tags-input
@@ -233,37 +206,6 @@ describe('Integration | Component | tags input', function () {
             this.$('.tag-creator .test-component')[0].componentInstance;
           expect(get(testComponent, 'selectedTags')).to.equal(this.get('tags'));
         });
-    }
-  );
-
-  it(
-    'adding new tags removes them from newTags array passed into the tag creation editor',
-    function () {
-      const newTags = [{
-        label: 'c',
-      }, {
-        label: 'd',
-      }];
-      this.on('change', (tags) => this.set('tags', tags));
-      this.render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-        onChange=(action "change")
-      }}`);
-
-      let testComponent;
-      return click('.tag-creator-trigger')
-        .then(() => {
-          testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-
-          get(testComponent, 'onTagsChanged')(newTags);
-          get(testComponent, 'onTagsAdded')(newTags.slice(1));
-          return wait();
-        })
-        .then(() =>
-          expect(get(testComponent, 'newTags')).to.deep.equal(newTags.slice(0, 1))
-        );
     }
   );
 
@@ -291,87 +233,8 @@ describe('Integration | Component | tags input', function () {
   );
 
   it(
-    'adds tags remembered in newTags on tag-creator-trigger click in creation mode',
-    function () {
-      const newTags = [{
-        label: 'b',
-      }, {
-        label: 'c',
-      }];
-      const existingTags = [{
-        label: 'a',
-      }];
-      this.set('tags', existingTags);
-      const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-      this.on('change', changeSpy);
-      this.render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-        onChange=(action "change")
-      }}`);
-
-      let testComponent;
-      return click('.tag-creator-trigger')
-        .then(() => {
-          testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-
-          get(testComponent, 'onTagsChanged')(newTags);
-          return click('.tag-creator-trigger');
-        })
-        .then(() => {
-          expect(changeSpy.lastCall).to.be.calledWith(existingTags.concat(newTags));
-          expect(get(testComponent, 'newTags')).to.have.length(0);
-        });
-    }
-  );
-
-  it(
-    'does not add invalid tags remembered in newTags on tag-creator-trigger click in creation mode',
-    function () {
-      const newTags = [{
-        label: 'b',
-        isInvalid: true,
-      }, {
-        label: 'c',
-      }];
-      const existingTags = [{
-        label: 'a',
-      }];
-      this.set('tags', existingTags);
-      const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-      this.on('change', changeSpy);
-      this.render(hbs `{{tags-input
-        tags=tags
-        tagEditorComponentName="test-component"
-        onChange=(action "change")
-      }}`);
-
-      let testComponent;
-      return click('.tag-creator-trigger')
-        .then(() => {
-          testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-
-          get(testComponent, 'onTagsChanged')(newTags);
-          return click('.tag-creator-trigger');
-        })
-        .then(() => {
-          expect(changeSpy.lastCall)
-            .to.be.calledWith(existingTags.concat([newTags[1]]));
-          expect(get(testComponent, 'newTags')).to.have.length(1);
-        });
-    }
-  );
-
-  it(
     'focuses editor after tag-creator-trigger click in creation mode',
     function () {
-      const newTags = [{
-        label: 'b',
-      }, {
-        label: 'c',
-      }];
       const focusSpy = sinon.spy();
 
       this.render(hbs `{{tags-input
@@ -385,7 +248,6 @@ describe('Integration | Component | tags input', function () {
             this.$('.tag-creator .test-component')[0].componentInstance;
           set(testComponent, 'focusIn', focusSpy);
 
-          get(testComponent, 'onTagsChanged')(newTags);
           return click('.tag-creator-trigger');
         })
         .then(() => expect(focusSpy).to.be.calledOnce);

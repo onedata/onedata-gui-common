@@ -1,6 +1,24 @@
-import BaseValidator from 'ember-cp-validations/validators/base';
+/**
+ * Defines JSON validator, which indicates error when JSON cannot be parsed.
+ *
+ * @module validators/json
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
 
-const Json = BaseValidator.extend({
+import BaseValidator from 'ember-cp-validations/validators/base';
+import { inject as service } from '@ember/service';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+
+const Json = BaseValidator.extend(I18n, {
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'validators.json',
+
   validate(value) {
     // Checking empty value should be handled by `presence` validator
     if (value === '' || value === undefined || value === null) {
@@ -11,7 +29,7 @@ const Json = BaseValidator.extend({
       JSON.parse(value);
       return true;
     } catch (e) {
-      return 'JSON is not valid';
+      return this.t('parseError').string;
     }
   },
 });

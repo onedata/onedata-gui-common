@@ -4,7 +4,6 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn, keyEvent, blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | tags input/text editor', function () {
   setupComponentTest('tags-input/text-editor', {
@@ -57,7 +56,6 @@ describe('Integration | Component | tags input/text editor', function () {
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag,'))
-      .then(() => wait())
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.be.empty;
         expect(changeSpy.lastCall).to.be.calledWith([{
@@ -79,7 +77,6 @@ describe('Integration | Component | tags input/text editor', function () {
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag,someTag2,someTag3'))
-      .then(() => wait())
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('someTag3');
         expect(changeSpy.lastCall).to.be.calledWith([{
@@ -107,7 +104,6 @@ describe('Integration | Component | tags input/text editor', function () {
         '.text-editor-input',
         'someTag;someTag2/someTag3,someTag4'
       ))
-      .then(() => wait())
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('someTag3,someTag4');
         expect(changeSpy.lastCall).to.be.calledWith([{
@@ -159,7 +155,7 @@ describe('Integration | Component | tags input/text editor', function () {
         '    someTag ,  someTag2, , someTag3   '
       ))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('someTag3');
+        expect(this.$('.text-editor-input').val()).to.equal(' someTag3   ');
         expect(changeSpy.lastCall).to.be.calledWith([{
           label: 'someTag',
         }, {
@@ -188,7 +184,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', '1a'))
       .then(() => keyEvent('.text-editor-input', 'keydown', 13))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('1a');
+        expect(this.$('.text-editor-input').val()).to.equal('1a,');
         expect(changeSpy).to.not.been.called;
       });
   });
@@ -210,9 +206,9 @@ describe('Integration | Component | tags input/text editor', function () {
       onChange=(action "change")
     }}`);
     return click('.tag-creator-trigger')
-      .then(() => fillIn('.text-editor-input', '1a,234,cvs,sd,2'))
+      .then(() => fillIn('.text-editor-input', '234,1a,cvs,sd,2'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('2');
+        expect(this.$('.text-editor-input').val()).to.equal('1a,cvs,sd,2');
         expect(changeSpy.lastCall).to.be.calledWith([{
           label: '234',
         }]);

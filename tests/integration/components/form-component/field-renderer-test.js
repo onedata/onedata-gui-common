@@ -5,8 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
-import { triggerEvent } from 'ember-native-dom-helpers';
-import $ from 'jquery';
+import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | form component/field renderer', function () {
   setupComponentTest('form-component/field-renderer', {
@@ -186,8 +185,8 @@ describe('Integration | Component | form component/field renderer', function () 
 
       const $formFieldTip = this.$('.form-field-tip');
       expect($formFieldTip).to.exist;
-      return triggerEvent($formFieldTip.find('.one-icon')[0], 'mouseenter')
-        .then(() => expect($('.tooltip.in').text().trim()).to.equal('someTip'));
+      return new OneTooltipHelper($formFieldTip.find('.one-icon')[0]).getText()
+        .then(text => expect(text).to.equal('someTip'));
     }
   );
 

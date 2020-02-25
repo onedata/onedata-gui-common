@@ -80,7 +80,7 @@ describe('Integration | Component | form component/loading field', function () {
   );
 
   it(
-    'show reasource load error when loadingProxy is rejected',
+    'shows reasource load error when loadingProxy is rejected',
     function () {
       this.set('field.loadingProxy', PromiseObject.create({
         promise: reject('err'),

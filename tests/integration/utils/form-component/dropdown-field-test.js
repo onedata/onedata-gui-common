@@ -23,6 +23,11 @@ describe('Integration | Utility | form component/dropdown field', function () {
     expect(get(field, 'withValidationIcon')).to.be.false;
   });
 
+  it('has "showSearch" set to true by default', function () {
+    const field = DropdownField.create();
+    expect(get(field, 'showSearch')).to.be.true;
+  });
+
   it('translates options', function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
       .withArgs('somePrefix.field1.options.one.label')

@@ -1,8 +1,17 @@
+/**
+ * A component responsible for rendering form elements.
+ *
+ * @module components/form-component/field-renderer
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../templates/components/form-component/field-renderer';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { and } from 'ember-awesome-macros';
+import { and, tag, writable } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -10,7 +19,7 @@ export default Component.extend({
   classNameBindings: [
     'validationClass',
     'fieldNameClass',
-    'fieldComponentClass',
+    'fieldRendererClass',
     'field.classes',
   ],
 
@@ -23,9 +32,27 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  fieldId: computed('elementId', function fieldId() {
-    return `${this.get('elementId')}-field`;
-  }),
+  fieldId: writable(tag `${'elementId'}-field`),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  fieldComponentName: reads('field.fieldComponentName'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  label: reads('field.label'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  tip: reads('field.tip'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  addColonToLabel: reads('field.addColonToLabel'),
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -110,7 +137,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  fieldComponentClass: computed('field.name', function fieldComponentClass() {
+  fieldRendererClass: computed('field.name', function fieldRendererClass() {
     // It takes only the last part of component name. So it transforms
     // 'form-component/radio-field' to 'radio-field-renderer'.
     const fieldComponentName = this.get('field.fieldComponentName');

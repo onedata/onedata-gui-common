@@ -1,8 +1,17 @@
+/**
+ * A tags form field.
+ * 
+ * @module utils/form-component/tags-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 
 export default FormField.extend({
   /**
-   * @virtual
+   * @override
    */
   fieldComponentName: 'form-component/tags-field',
 
@@ -12,19 +21,19 @@ export default FormField.extend({
   withValidationIcon: false,
 
   /**
-   * @public
+   * @virtual optional
    * @type {String}
    */
   tagEditorComponentName: 'tags-input/text-editor',
 
   /**
-   * @public
+   * @virtual optional
    * @type {any}
    */
   tagEditorSettings: undefined,
 
   /**
-   * @public
+   * @virtual optional
    * @type {boolean}
    */
   sort: false,

@@ -11,7 +11,7 @@ describe('Integration | Utility | form component/form field validator', function
   });
 
   it(
-    'has empty errors array in truthy isValid when no validators are used',
+    'has empty errors array and truthy isValid when no validators are used',
     function () {
       const fieldValidator = FormFieldValidator
         .extend(buildValidations())

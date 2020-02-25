@@ -1,9 +1,18 @@
+/**
+ * A privileges form field.
+ * 
+ * @module utils/form-component/privileges-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { computed } from '@ember/object';
 
 export default FormField.extend({
   /**
-   * @virtual
+   * @override
    */
   fieldComponentName: 'form-component/privileges-field',
 

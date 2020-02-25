@@ -61,7 +61,7 @@ describe('Integration | Component | form component/privileges field', function (
     'renders privileges tree',
     function () {
       this.render(hbs `{{form-component/privileges-field field=field}}`);
-      // debugger;
+
       Object.values(translations).forEach(translation =>
         expect(this.$(`.node-text:contains(${translation})`)).to.exist
       );

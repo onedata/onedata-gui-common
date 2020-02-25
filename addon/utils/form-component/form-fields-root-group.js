@@ -1,8 +1,19 @@
+/**
+ * A container for all form elements - root group. To work properly it should have
+ * specified 'ownerSource' and 'i18nPrefix'.
+ * 
+ * @module utils/form-component/form-fields-root-group
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import EmberObject, { set, get } from '@ember/object';
 
 export default FormFieldsGroup.extend({
   /**
+   * @virtual
    * @override
    */
   i18nPrefix: undefined,
@@ -17,6 +28,11 @@ export default FormFieldsGroup.extend({
    * @override
    */
   path: '',
+
+  /**
+   * @override
+   */
+  valuePath: '',
 
   /**
    * @override

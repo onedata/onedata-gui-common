@@ -117,9 +117,8 @@ describe('Integration | Component | tags input/model selector editor', function 
 
     return click('.tag-creator-trigger')
       .then(() => {
-        expect(getSelector().find('.all-item')
-          .prevAll().filter('.record-item')
-        ).to.have.length(0)
+        expect(getSelector().find('.all-item').prevAll().filter('.record-item'))
+          .to.have.length(0)
         const $options = getSelector().find('.record-item');
         availableModels['user'].forEach(({ name }, index) => {
           expect($options.eq(index).text().trim()).to.equal(name);
@@ -222,7 +221,7 @@ describe('Integration | Component | tags input/model selector editor', function 
             const $options = getSelector().find('.selector-item.record-item');
             expect($options).to.have.length(2);
             expect($options.find(
-              `tag-label:contains(${availableModels[typeName][0].name})`
+              `.tag-label:contains(${availableModels[typeName][0].name})`
             )).to.not.exist;
           });
       }
@@ -247,7 +246,7 @@ describe('Integration | Component | tags input/model selector editor', function 
           const $options = getSelector().find('.selector-item.record-item');
           expect($options).to.have.length(2);
           expect($options.find(
-            `tag-label:contains(${availableModels[typeName][0].name})`
+            `.tag-label:contains(${availableModels[typeName][0].name})`
           )).to.not.exist;
           expect(changeSpy.lastCall.args[0].mapBy('value.record'))
             .to.deep.equal([availableModels[typeName][0]]);
@@ -285,7 +284,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     typeIndex: 4,
   }].forEach(({ name, icon, typeIcon, recordIndex, typeIndex }) => {
     recordIndex = recordIndex || 0;
-    it(`uses icon ${icon} for ${recordIndex + 1}. ${name} record`, function () {
+    it(`uses icon ${icon} for ${recordIndex + 1}. ${name} test record`, function () {
       this.set('tags', []);
       const changeSpy = sinon.spy(tags => this.set('tags', tags));
       this.on('change', changeSpy);
@@ -308,7 +307,7 @@ describe('Integration | Component | tags input/model selector editor', function 
             .to.have.class(`oneicon-${typeIcon || icon}`)
 
           const $record =
-            getSelector().find('.selector-item.record-item').eq(recordIndex);
+            getSelector().find('.record-item').eq(recordIndex);
           expect($record.find('.tag-icon')).to.have.class(`oneicon-${icon}`);
           return click($record[0]);
         })
@@ -350,15 +349,12 @@ describe('Integration | Component | tags input/model selector editor', function 
             return click(getSelector().find('.selector-item.all-item')[0]);
           })
           .then(() => {
-            expect(changeSpy.lastCall.args[0]
-              .mapBy('value.record.representsAll')[0]
-            ).to.equal(name);
+            expect(changeSpy.lastCall.args[0].mapBy('value.record.representsAll')[0])
+              .to.equal(name);
             expect(getSelector().find('.selector-item.record-item'))
               .to.not.exist;
-            expect(
-              getSelector().find('.all-records-added-description')
-              .text().trim()
-            ).to.equal(addedDescription);
+            expect(getSelector().find('.all-records-added-description').text().trim())
+              .to.equal(addedDescription);
           });
       });
   });
@@ -389,9 +385,8 @@ describe('Integration | Component | tags input/model selector editor', function 
             return click(getSelector().find('.selector-item.all-item')[0]);
           })
           .then(() => {
-            expect(changeSpy.lastCall.args[0]
-              .mapBy('value.record.representsAll')[0]
-            ).to.equal(name);
+            expect(changeSpy.lastCall.args[0].mapBy('value.record.representsAll')[0])
+              .to.equal(name);
             const $records = getSelector().find('.selector-item.record-item');
             expect($records).to.have.length(1);
             expect($records.text()).to.contain('onezone');
@@ -451,7 +446,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     label: 'Oneprovider ID:'
   }, {
     name: 'serviceOnepanel',
-    label: 'Oneprovider cluster ID:'
+    label: 'Oneprovider ID:'
   }].forEach(({ name, label }, index) => {
     it(`shows correct label for ${name} id field`, function () {
       this.render(hbs `{{tags-input
@@ -505,13 +500,12 @@ describe('Integration | Component | tags input/model selector editor', function 
           .then(() => click(getSelector().find('.btn-by-id')[0]))
           .then(() => fillIn(getSelector().find('.record-id')[0], '123'))
           .then(() => click(getSelector().find('.add-id')[0]))
-          .then(() => {
-            expect(changeSpy.lastCall.args[0].mapBy('value')[0])
-              .to.deep.equal({
-                model: modelName,
-                id: '123',
-              });
-          })
+          .then(() =>
+            expect(changeSpy.lastCall.args[0].mapBy('value')[0]).to.deep.equal({
+              model: modelName,
+              id: '123',
+            })
+          );
       }
     );
   });

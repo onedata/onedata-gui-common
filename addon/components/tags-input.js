@@ -1,3 +1,14 @@
+/**
+ * A tags (tokenizer) input, which allows adding and removing tags. New tags
+ * are added through dedicated tags editors which can be specified using
+ * tagEditorComponentName property.
+ * 
+ * @module components/tags-input
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -44,6 +55,7 @@ export default Component.extend({
   tagEditorComponentName: 'tags-input/text-editor',
 
   /**
+   * Value passed to the tag editor component through `settings` property.
    * @public
    * @type {any}
    */
@@ -65,11 +77,6 @@ export default Component.extend({
    * @returns {any}
    */
   onFocusLost: notImplementedIgnore,
-
-  /**
-   * @type {Array<any>}
-   */
-  newTags: Object.freeze([]),
 
   /**
    * @type {boolan}
@@ -118,10 +125,7 @@ export default Component.extend({
   },
 
   endTagCreation() {
-    this.setProperties({
-      isCreatingTag: false,
-      newTags: [],
-    });
+    this.set('isCreatingTag', false);
   },
 
   actions: {
@@ -135,9 +139,8 @@ export default Component.extend({
     },
     startTagCreation() {
       if (this.get('isCreatingTag')) {
-        this.send('newTagsAdded', this.get('newTags'));
-
-        // Focus editor
+        // Focus editor - send focus to the root element of the editor and
+        // let the editor to handle that focus on its own
         const event = document.createEvent("Event");
         event.initEvent('focus', true, true);
         this.$('.tag-creator > *')[0].dispatchEvent(event);
@@ -152,15 +155,9 @@ export default Component.extend({
       const {
         onChange,
         tags,
-        newTags,
-      } = this.getProperties('onChange', 'tags', 'newTags');
+      } = this.getProperties('onChange', 'tags');
 
-      const correctTagsToAdd = newTagsToAdd.rejectBy('isInvalid');
-      this.set('newTags', newTags.filter(tag => !correctTagsToAdd.includes(tag)));
-      onChange((tags || []).concat(correctTagsToAdd).uniq());
-    },
-    newTagsChanged(newTags) {
-      this.set('newTags', newTags);
+      onChange((tags || []).concat(newTagsToAdd).uniq());
     },
   }
 });

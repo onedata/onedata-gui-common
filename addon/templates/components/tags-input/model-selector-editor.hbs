@@ -51,10 +51,10 @@
         {{/bg.button}}
       </div>
     {{/bs-button-group}}
-    <div class="content-separator"></div>
+    <hr class="content-separator">
     {{#if (eq selectedView "list")}}
       {{#promise-proxy-container proxy=recordsProxy sizeClass="sm"}}
-        {{#if showAllRecordsSelectedDescription}}
+        {{#if isAllRecordsSelectedDescriptionVisible}}
           <p class="all-records-added-description">
             {{tt this (concat "allRecordsAdded." selectedModelName)}}
           </p>

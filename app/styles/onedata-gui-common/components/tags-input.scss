@@ -164,6 +164,8 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
   }
 
   .content-separator {
+    width: 100%;
+    margin-top: 0;
     border-top: 1px solid $main-border-color;
   }
 

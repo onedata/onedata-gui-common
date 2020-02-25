@@ -1,15 +1,15 @@
 {{#power-select
   tagName="div"
   disabled=(not isEffectivelyEnabled)
-  options=field.preparedOptions
+  options=preparedOptions
   onchange=(action "valueChanged")
-  selected=(find-by "value" value field.preparedOptions)
-  placeholder=field.placeholder
+  selected=(find-by "value" value preparedOptions)
+  placeholder=placeholder
   renderInPlace=true
   onblur=(action "triggerFocusLost")
   onclose=(action "focusLost")
   triggerId=fieldId
-  searchEnabled=field.showSearch
+  searchEnabled=showSearch
   triggerClass="dropdown-field-trigger"
   dropdownClass="dropdown-field-dropdown"
   as |option|

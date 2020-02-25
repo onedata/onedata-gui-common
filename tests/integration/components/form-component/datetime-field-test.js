@@ -34,9 +34,7 @@ describe('Integration | Component | form component/datetime field', function () 
       expect(this.$('input')).to.exist;
       const picker = new OneDatetimePickerHelper(this.$('input'));
       return picker.openPicker()
-        .then(() =>
-          expect(picker.getPickerElement()).to.exist
-        );
+        .then(() => expect(picker.getPickerElement()).to.exist);
     }
   );
 
@@ -81,7 +79,7 @@ describe('Integration | Component | form component/datetime field', function () 
     }
   );
 
-  it('sets input value to string specified in field object', function () {
+  it('sets input value to date specified in field object', function () {
     const date = new Date();
     this.set('field.value', date);
 
@@ -92,9 +90,7 @@ describe('Integration | Component | form component/datetime field', function () 
   });
 
   it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
-      {{form-component/datetime-field field=field fieldId="abc"}}
-    `);
+    this.render(hbs `{{form-component/datetime-field field=field fieldId="abc"}}`);
 
     expect(this.$('input#abc')).to.exist;
   });

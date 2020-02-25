@@ -1,6 +1,15 @@
+/**
+ * A container for multiple fields. Allows to manage state of many fields at
+ * once.
+ * 
+ * @module utils/form-component/form-fields-group
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import EmberObject, { computed, set, get } from '@ember/object';
-import { A } from '@ember/array';
 import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
 
@@ -26,15 +35,13 @@ export default FormElement.extend({
   areValidationClassesEnabled: false,
 
   /**
+   * Changing value of isExpand will show/hide group with animation.
+   * NOTE: isVisible and isExpanded are fully separated and works independently.
+   * Group is visible only when `isVisible` and `isExpanded` are both true.
    * @public
    * @type {boolean}
    */
   isExpanded: true,
-
-  /**
-   * @override
-   */
-  fields: computed(() => A()),
 
   /**
    * @override
@@ -73,6 +80,7 @@ export default FormElement.extend({
         isExpanded,
         fields,
       } = this.getProperties('isVisible', 'isExpanded', 'fields');
+
       return (isVisible && isExpanded) ?
         _.flatten(fields.mapBy('invalidFields')) : [];
     }
@@ -119,6 +127,9 @@ export default FormElement.extend({
     }, EmberObject.create());
   },
 
+  /**
+   * @override 
+   */
   getFieldByPath(relativePath) {
     if (!relativePath) {
       return null;

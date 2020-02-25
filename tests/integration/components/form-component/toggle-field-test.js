@@ -72,7 +72,7 @@ describe('Integration | Component | form component/toggle field', function () {
     }
   );
 
-  it('sets input value to string specified in field object', function () {
+  it('sets input value to value specified in field object', function () {
     this.set('field.value', true);
 
     this.render(hbs `{{form-component/toggle-field field=field}}`);

@@ -73,11 +73,9 @@ describe('Integration | Component | form component/dropdown field', function () 
             label: 'Third',
           }].forEach(({ label, icon }, index) => {
             const $option = $(dropdown.getNthOption(index + 1));
-
             expect($option.find('.text').text().trim()).to.equal(label);
             if (icon) {
-              expect($option.find('.one-icon'))
-                .to.have.class(`oneicon-${icon}`);
+              expect($option.find('.one-icon')).to.have.class(`oneicon-${icon}`);
             }
           })
         });
@@ -189,7 +187,7 @@ describe('Integration | Component | form component/dropdown field', function () 
   );
 
   it(
-    'does not show search input if field "showSearch" is falsy',
+    'does not show search input if field "showSearch" is false',
     function () {
       this.set('field.showSearch', false);
       this.render(hbs `{{form-component/dropdown-field field=field}}`);

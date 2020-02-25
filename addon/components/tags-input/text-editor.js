@@ -1,8 +1,16 @@
+/**
+ * A tags (tokenizer) input editor, which allows to add tags using simple text input.
+ * Tags are added after separator character detection or on Enter keydown.
+ * 
+ * @module components/tags-input/text-editor
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../templates/components/tags-input/text-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { get } from '@ember/object';
-import { reads } from '@ember/object/computed';
 import { or } from 'ember-awesome-macros';
 import $ from 'jquery';
 
@@ -14,24 +22,13 @@ export default Component.extend({
    * @public
    * @virtual
    * @type {Object}
+   * 
+   * Supported settings: {
+   *   separators: Array<String> - tag separators, default [',']
+   *   regexp: RegExp - if passed, then each new tag must match regexp to be accepted
+   * }
    */
   settings: undefined,
-
-  /**
-   * @public
-   * @virtual
-   * @type {Array<Tag>}
-   */
-  newTags: Object.freeze([]),
-
-  /**
-   * @public
-   * @virtual
-   * @type {Function}
-   * @param {Array<Tag>} newTags
-   * @returns {any}
-   */
-  onTagsChanged: notImplementedIgnore,
 
   /**
    * @public
@@ -63,7 +60,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  inputValue: reads('newTags.firstObject.label'),
+  inputValue: '',
 
   focusIn(event) {
     if (!$(event.target).hasClass('text-editor-input')) {
@@ -79,73 +76,63 @@ export default Component.extend({
   },
 
   extractTagsLabels(value) {
-    const separators = this.get('separators');
-    const trimmedValue = value.trim();
+    const {
+      separators,
+      regexp,
+    } = this.getProperties(
+      'separators',
+      'regexp',
+    );
 
-    let labels = [trimmedValue];
-    for (let separator of separators) {
-      const newLabels = [];
-      for (let label of labels) {
-        newLabels.push(...label
-          .split(separator)
-          .map(s => s.trim())
-          .without('')
-        );
+    const labels = [];
+    let valueToProcess = value;
+    let nextInputValue;
+
+    while (nextInputValue === undefined) {
+      const nextSeparatorIdx = Math.min(...separators
+        .map(sep => valueToProcess.indexOf(sep))
+        .without(-1)
+      );
+      if (nextSeparatorIdx !== Number.POSITIVE_INFINITY) {
+        const label = valueToProcess.slice(0, nextSeparatorIdx).trim();
+        if (!label || regexp.test(label)) {
+          if (label) {
+            labels.push(label);
+          }
+          valueToProcess = valueToProcess.slice(nextSeparatorIdx + 1);
+        } else {
+          nextInputValue = valueToProcess;
+        }
+      } else {
+        nextInputValue = valueToProcess;
       }
-      labels = newLabels;
     }
 
-    if (separators.any(separator => trimmedValue.endsWith(separator))) {
-      labels.push('');
-    }
-
-    return labels;
+    return {
+      labels,
+      nextInputValue,
+    };
   },
 
   actions: {
     inputChanged(value) {
       const {
-        onTagsChanged,
-        onTagsAdded,
-        regexp,
-      } = this.getProperties('onTagsChanged', 'onTagsAdded', 'regexp');
+        labels,
+        nextInputValue,
+      } = this.extractTagsLabels(value);
 
-      const labels = this.extractTagsLabels(value);
-      const lastLabel = get(labels, 'lastObject');
-
-      const tagsToAdd = labels
-        .slice(0, -1)
-        .filter(label => regexp.test(label))
-        .map(label => ({ label }));
-      let tagsChanged = [];
-      if (lastLabel) {
-        const changedTag = { label: lastLabel };
-        if (!regexp.test(lastLabel)) {
-          changedTag.isInvalid = true;
-        }
-        tagsChanged.push(changedTag);
-      }
+      const tagsToAdd = labels.map(label => ({ label }));
 
       if (tagsToAdd.length) {
-        onTagsAdded(tagsToAdd);
+        this.get('onTagsAdded')(tagsToAdd);
       }
-      onTagsChanged(tagsChanged);
+      this.set('inputValue', nextInputValue);
 
-      if (!lastLabel) {
+      if (!nextInputValue) {
         // When input was empty and after filling it in with string "sthsth,"
         // it again becomes empty, then ember does not clean the input value
         // because `newTags.firstObject.label` (input value) was empty all the time.
         this.$('.text-editor-input').val('');
-      }
-    },
-    addTags() {
-      const {
-        newTags,
-        onTagsAdded,
-      } = this.getProperties('newTags', 'onTagsAdded');
-
-      if (newTags && newTags.length && !newTags[0].isInvalid) {
-        onTagsAdded([newTags[0]]);
       }
     },
     focusLost() {

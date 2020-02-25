@@ -48,7 +48,7 @@ describe('Integration | Utility | form component/form element', function () {
     function () {
       const formElement = FormElement.create({
         parent: FormElement.create({
-          isEnabled: true, // so also isEffectivelyEnabled
+          isEnabled: true, // so also isEffectivelyEnabled: true
         }),
       });
 
@@ -61,7 +61,7 @@ describe('Integration | Utility | form component/form element', function () {
     function () {
       const formElement = FormElement.create({
         parent: FormElement.create({
-          isEnabled: false, // so also isEffectivelyEnabled
+          isEnabled: false, // so also isEffectivelyEnabled: false
         }),
       });
 
@@ -75,7 +75,7 @@ describe('Integration | Utility | form component/form element', function () {
       const formElement = FormElement.create({
         isEnabled: false,
         parent: FormElement.create({
-          isEnabled: true, // so also isEffectivelyEnabled
+          isEnabled: true, // so also isEffectivelyEnabled: true
         }),
       });
 

@@ -35,7 +35,7 @@ export default {
       group: "Group ID",
       oneprovider: "Oneprovider ID",
       service: "Oneprovider ID",
-      serviceOnepanel: "Oneprovider cluster ID",
+      serviceOnepanel: "Oneprovider ID",
     },
     addId: 'Add ID',
   },

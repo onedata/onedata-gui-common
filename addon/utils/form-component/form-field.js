@@ -1,6 +1,17 @@
+/**
+ * A form field base class. Introduces validators mechanism. Provides one internal
+ * validator - presenceValidator - which can be controlled by flag isOptional.
+ * 
+ * @module utils/form-component/form-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-field-validator';
 import { computed } from '@ember/object';
+import { union } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
 import { writable, conditional, or, not } from 'ember-awesome-macros';
@@ -8,69 +19,53 @@ import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend({
   /**
-   * @public
+   * If false and value will be empty, then presence validator will notify an error
    * @virtual
    * @type {boolean}
    */
   isOptional: false,
 
   /**
-   * @public
-   * @type {boolean}
    * If true then value of this form field is ignored. Changes will not propagate,
    * (default)value dumps will always return undefined and field cannot be set as
-   * modified
+   * modified. Valueless fields may be used as a graphical elements of the form
+   * (like spinners, separators etc.).
+   * @virtual optional
+   * @type {boolean}
    */
   isValueless: false,
 
   /**
-   * @type {Array<String>}
-   */
-  internalValidatorsFields: Object.freeze([]),
-
-  /**
-   * Set by registerInternalValidatorField
-   * @type {ComputedProperty<Array<Object>>}
-   */
-  internalValidators: undefined,
-
-  /**
-   * @type {ComputedProperty<Object>}
-   */
-  presenceValidator: computed('isOptional', function presenceValidator() {
-    return this.get('isOptional') ? undefined : validator('presence', {
-      presence: true,
-      ignoreBlank: true,
-    });
-  }),
-
-  /**
-   * Array of validators (created using validator() from ember-cp-validations)
-   * @public
+   * Array of validators (created using validator() from ember-cp-validations).
+   * Any custom validators added while creating new fields should be placed here.
+   * @virtual optional
    * @type {Array<Object>}
    */
   customValidators: computed(() => A()),
 
   /**
-   * @type {Array<Object>}
+   * Array of property names, which contain internal field validators (validators
+   * which are predefined for field). Should not be modified directly but via
+   * `registerInternalValidator` method.
+   * @type {Array<String>}
    */
-  validators: computed(
-    'customValidators.[]',
-    'internalValidators.[]',
-    function validators() {
-      const {
-        customValidators,
-        internalValidators,
-      } = this.getProperties('customValidators', 'internalValidators');
+  internalValidatorsProps: computed(() => A()),
 
-      return customValidators.concat(internalValidators || []);
-    }
-  ),
+  /**
+   * Set by `internalValidatorsSetter`
+   * @type {ComputedProperty<Array<Object>>}
+   */
+  internalValidators: computed(() => A()),
+
+  /**
+   * @type {ComputedProperty<Array<Object>>}
+   */
+  validators: union('customValidators', 'internalValidators'),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldValidator>}
    */
-  fieldValidator: computed('validators.[]', function fieldValidator() {
+  fieldValidationChecker: computed('validators.[]', function fieldValidationChecker() {
     const validators = this.get('validators') || [];
     return FormFieldValidator
       .extend(buildValidations({ value: validators }))
@@ -78,9 +73,10 @@ export default FormElement.extend({
   }),
 
   /**
+   * Is writable for testing purposes
    * @override
    */
-  isValid: writable(or('isValueless', 'fieldValidator.isValid')),
+  isValid: writable(or('isValueless', 'fieldValidationChecker.isValid')),
 
   /**
    * @override
@@ -94,28 +90,40 @@ export default FormElement.extend({
   /**
    * @type {ComputedProperty<Array<any>>}
    */
-  errors: conditional('isValueless', [], 'fieldValidator.errors'),
+  errors: conditional('isValueless', [], 'fieldValidationChecker.errors'),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  presenceValidator: computed('isOptional', function presenceValidator() {
+    return this.get('isOptional') ? undefined : validator('presence', {
+      presence: true,
+      ignoreBlank: true,
+    });
+  }),
 
   init() {
     this._super(...arguments);
 
-    this.registerInternalValidatorField('presenceValidator');
+    this.registerInternalValidator('presenceValidator');
   },
 
-  registerInternalValidatorField(fieldName) {
-    const internalValidatorsFields =
-      this.get('internalValidatorsFields').concat([fieldName]);
+  /**
+   * Registers new internal validator as a string, which is a field property name where
+   * the validator is defined. Ignores duplicates.
+   * @param {String} propertyName 
+   */
+  registerInternalValidator(propertyName) {
+    this.get('internalValidatorsProps').addObject(propertyName);
+    const internalValidatorsProps = this.get('internalValidatorsProps');
 
-    this.setProperties({
-      internalValidatorsFields: internalValidatorsFields,
-      internalValidators: computed(
-        ...internalValidatorsFields,
-        function internalValidators() {
-          return internalValidatorsFields
-            .map(validatorFieldName => this.get(validatorFieldName))
-            .compact();
-        }),
-    });
+    this.set('internalValidators', computed(
+      ...internalValidatorsProps,
+      function internalValidators() {
+        return internalValidatorsProps
+          .map(validatorFieldName => this.get(validatorFieldName))
+          .compact();
+      }));
   },
 
   /**

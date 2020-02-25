@@ -1,3 +1,12 @@
+/**
+ * A component responsible for rendering tags field.
+ *
+ * @module components/form-component/tags-field
+ * @author Michał Borzęcki
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from '../../templates/components/form-component/tags-field';
 import { computed } from '@ember/object';
@@ -10,7 +19,7 @@ export default FieldComponentBase.extend({
   /**
    * @type {ComputedProperty<Array<Tag>>}
    */
-  tags: computed('value.[]', 'field', function tags() {
+  tags: computed('value.[]', function tags() {
     const {
       value,
       field,
@@ -20,17 +29,17 @@ export default FieldComponentBase.extend({
   }),
 
   /**
-   * @type {CompuedProperty<String>}
+   * @type {ComputedProperty<String>}
    */
   tagEditorComponentName: reads('field.tagEditorComponentName'),
 
   /**
-   * @type {CompuedProperty<any>}
+   * @type {ComputedProperty<any>}
    */
   tagEditorSettings: reads('field.tagEditorSettings'),
 
   /**
-   * @type {CompuedProperty<boolean>}
+   * @type {ComputedProperty<boolean>}
    */
   sort: reads('field.sort'),
 
@@ -45,8 +54,7 @@ export default FieldComponentBase.extend({
         tags = field.sortTags(tags);
       }
 
-      const value = field.tagsToValue(tags);
-      this._super(value);
+      return this._super(field.tagsToValue(tags));
     },
   },
 });
