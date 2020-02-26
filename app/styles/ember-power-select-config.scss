@@ -28,6 +28,12 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
     .one-icon {
       @include vertical-align-middle();
       font-size: 2.2em;
+
+      // Experimental space icon scale change. If everything will look good, the
+      // the space icon could be scaled down.
+      &.oneicon-space {
+        font-size: 1.8em;
+      }
     }
   }
 }
@@ -60,7 +66,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
   &.small {
     .ember-power-select-selected-item .option-container {
       .one-icon {
-        left: -6px;
+        left: -4px;
       }
       .one-icon + .text {
         padding-left: 22px;
