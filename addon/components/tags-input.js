@@ -14,7 +14,7 @@ import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
 import { computed, observer } from '@ember/object';
-import { writable, conditional } from 'ember-awesome-macros';
+import { writable, conditional, not, or } from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} Tag
@@ -25,8 +25,12 @@ import { writable, conditional } from 'ember-awesome-macros';
 export default Component.extend({
   layout,
   tagName: 'ul',
-  classNames: ['tags-input', 'form-control'],
-  classNameBindings: ['isCreatingTag:creating-tag'],
+  classNames: ['tags-input'],
+  classNameBindings: [
+    'isCreatingTag:creating-tag',
+    'readonly',
+    'readonly::form-control',
+  ],
   attributeBindings: ['tabindex', 'disabled'],
 
   /**
@@ -40,6 +44,12 @@ export default Component.extend({
    * @type {boolean}
    */
   disabled: false,
+
+  /**
+   * @public
+   * @type {boolean}
+   */
+  readonly: false,
 
   /**
    * @public
@@ -83,11 +93,19 @@ export default Component.extend({
    */
   isCreatingTag: false,
 
-  disabledObserver: observer('disabled', function disabledObserver() {
-    if (this.get('disabled')) {
-      this.endTagCreation();
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  allowModification: not(or('readonly', 'disabled')),
+
+  allowModificationObserver: observer(
+    'allowModification',
+    function allowModificationObserver() {
+      if (!this.get('allowModification')) {
+        this.endTagCreation();
+      }
     }
-  }),
+  ),
 
   click(event) {
     this._super(...arguments);
@@ -116,10 +134,10 @@ export default Component.extend({
   startTagCreation() {
     const {
       isCreatingTag,
-      disabled,
-    } = this.getProperties('isCreatingTag', 'disabled');
+      allowModification,
+    } = this.getProperties('isCreatingTag', 'allowModification');
 
-    if (!disabled && !isCreatingTag) {
+    if (allowModification && !isCreatingTag) {
       this.set('isCreatingTag', true);
     }
   },

@@ -7,6 +7,7 @@ import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import { setProperties } from '@ember/object';
+import { set } from '@ember/object';
 
 const privilegesGroups = [{
   groupName: 'g0',
@@ -119,5 +120,18 @@ describe('Integration | Component | form component/privileges field', function (
     expect($modifiedLabels).to.have.length(2);
     expect($modifiedLabels.eq(0).text().trim()).to.equal('group0');
     expect($modifiedLabels.eq(1).text().trim()).to.equal('privilege0b');
+  });
+
+  it('renders readonly active privileges when field is in "view" mode', function () {
+    const field = this.get('field');
+    set(field, 'value', ['g1a']);
+    field.changeMode('view');
+
+    this.render(hbs `{{form-component/privileges-field field=field}}`);
+
+    expect(
+      this.$('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
+    ).to.have.class('checked');
+    expect(this.$('.one-way-toggle:not(.disabled)')).to.not.exist;
   });
 });

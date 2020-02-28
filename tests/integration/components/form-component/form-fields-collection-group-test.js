@@ -7,6 +7,7 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
+import wait from 'ember-test-helpers/wait';
 
 describe(
   'Integration | Component | form component/form fields collection group',
@@ -83,6 +84,32 @@ describe(
           const $newTextFields = this.$('.text-like-field-renderer');
           expect($newTextFields).to.have.length(1);
           expect($newTextFields[0]).to.equal($textFields[1]);
+        });
+    });
+
+    it('blocks creating and removing fields in "view" mode', function () {
+      const collectionGroup = FormFieldsCollectionGroup.extend({
+        fieldFactoryMethod() {
+          return TextField.create({
+            name: 'textField',
+            valueName: `textField${this.get('fields.length')}`,
+          });
+        },
+      }).create({ ownerSource: this });
+      this.set('collectionGroup', collectionGroup);
+
+      this.render(hbs `
+        {{form-component/form-fields-collection-group field=collectionGroup}}
+      `);
+
+      return click('.add-field-button')
+        .then(() => {
+          collectionGroup.changeMode('view');
+          return wait();
+        })
+        .then(() => {
+          expect(this.$('.remove-field-button')).to.not.exist;
+          expect(this.$('.add-field-button')).to.not.exist;
         });
     });
   }

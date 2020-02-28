@@ -7,6 +7,7 @@ import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import { blur, click, focus } from 'ember-native-dom-helpers';
 import wait from 'ember-test-helpers/wait';
+import { set } from '@ember/object';
 
 describe('Integration | Component | form component/radio field', function () {
   setupComponentTest('form-component/radio-field', {
@@ -125,5 +126,16 @@ describe('Integration | Component | form component/radio field', function () {
 
     return wait()
       .then(() => expect(this.$('input#abc')).to.exist)
+  });
+
+  it('renders selected option label when field is in "view" mode', function () {
+    const field = this.get('field');
+    set(field, 'value', 2);
+    field.changeMode('view');
+
+    this.render(hbs `{{form-component/radio-field field=field}}`);
+
+    expect(this.$().text().trim()).to.equal('Second');
+    expect(this.$('input')).to.not.exist;
   });
 });

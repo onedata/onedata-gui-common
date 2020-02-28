@@ -5,6 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import { set } from '@ember/object';
 
 describe('Integration | Component | form component/text like field', function () {
   setupComponentTest('form-component/text-like-field', {
@@ -107,5 +108,16 @@ describe('Integration | Component | form component/text like field', function ()
     this.render(hbs `{{form-component/text-like-field field=textField}}`);
 
     expect(this.$('input').attr('placeholder')).to.equal('test');
+  });
+
+  it('renders raw text when field is in "view" mode', function () {
+    const textField = this.get('textField');
+    set(textField, 'value', 'test value');
+    textField.changeMode('view');
+
+    this.render(hbs `{{form-component/text-like-field field=textField}}`);
+
+    expect(this.$().text().trim()).to.equal('test value');
+    expect(this.$('input')).to.not.exist;
   });
 });

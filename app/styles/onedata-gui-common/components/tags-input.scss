@@ -17,6 +17,11 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
   padding-right: $padding-base-horizontal - $padding-xs-horizontal;
   font-size: $tags-input-font-scale * 1em;
 
+  &.readonly {
+    padding: 0;
+    min-height: initial;
+  }
+
   .input-element {
     margin-right: $padding-xs-horizontal;
     margin-bottom: $padding-xs-horizontal;

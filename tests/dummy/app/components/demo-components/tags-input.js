@@ -24,20 +24,9 @@ export default Component.extend({
     }];
   }),
 
-  selectorSettings: computed(function selectorSettings() {
+  selectorSettings: computed('tags', function selectorSettings() {
     return {
-      allowedTags: [{
-        label: 'tag1',
-        icon: 'space',
-      }, {
-        label: 'tag2',
-        icon: 'provider',
-      }, {
-        label: 'tag3',
-      }, {
-        label: 'tag4',
-        icon: 'user',
-      }]
+      allowedTags: this.get('tags'),
     };
   }),
 })

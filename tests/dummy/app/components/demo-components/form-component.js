@@ -6,6 +6,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
+import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import {
@@ -64,6 +65,11 @@ export default Component.extend({
               value: 1,
               label: 'Adult',
             }]
+          }),
+          DatetimeField.create({
+            ownerSource: this,
+            name: 'datetime',
+            label: 'Datetime',
           }),
           FormFieldsCollectionGroup.extend({
             fieldFactoryMethod(createdFieldsCounter) {

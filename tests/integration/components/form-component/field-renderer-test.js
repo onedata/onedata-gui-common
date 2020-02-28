@@ -200,4 +200,18 @@ describe('Integration | Component | form component/field renderer', function () 
       expect(this.$('.form-field-tip')).to.not.exist;
     }
   );
+
+  [
+    'view',
+    'edition',
+    'mixed',
+  ].forEach(mode => {
+    it(`has class field-${mode}-mode when field is in "${mode}" mode`, function () {
+      this.get('textField').changeMode(mode);
+
+      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+
+      expect(this.$('.field-renderer')).to.have.class(`field-${mode}-mode`);
+    });
+  });
 });

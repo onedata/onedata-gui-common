@@ -11,6 +11,7 @@ import FieldComponentBase from 'onedata-gui-common/components/form-component/fie
 import layout from '../../templates/components/form-component/dropdown-field';
 import { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { array, raw } from 'ember-awesome-macros';
 
 export default FieldComponentBase.extend({
   layout,
@@ -30,6 +31,11 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<String>}
    */
   placeholder: reads('field.placeholder'),
+
+  /**
+   * @type {ComputedProperty<FieldOption>}
+   */
+  selectedOption: array.findBy('preparedOptions', raw('value'), 'value'),
 
   actions: {
     valueChanged(option) {

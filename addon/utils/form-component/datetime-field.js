@@ -14,4 +14,10 @@ export default FormField.extend({
    * @virtual
    */
   fieldComponentName: 'form-component/datetime-field',
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  viewModeFormat: 'YYYY/MM/DD H:mm',
 })

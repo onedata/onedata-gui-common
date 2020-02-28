@@ -2,11 +2,14 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import TextField from 'onedata-gui-common/utils/form-component/text-field';
+import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
 import { blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../../helpers/one-datetime-picker';
 import moment from 'moment';
+import { set } from '@ember/object';
+
+const datetimeFormat = 'YYYY/MM/DD H:mm';
 
 describe('Integration | Component | form component/datetime field', function () {
   setupComponentTest('form-component/datetime-field', {
@@ -14,7 +17,7 @@ describe('Integration | Component | form component/datetime field', function () 
   });
 
   beforeEach(function () {
-    this.set('field', TextField.create());
+    this.set('field', DatetimeField.create());
   });
 
   it(
@@ -85,7 +88,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
     this.render(hbs `{{form-component/datetime-field field=field}}`);
 
-    const expectedValue = moment(date).format('YYYY/MM/DD H:mm');
+    const expectedValue = moment(date).format(datetimeFormat);
     expect(this.$('input').val()).to.equal(expectedValue);
   });
 
@@ -93,5 +96,17 @@ describe('Integration | Component | form component/datetime field', function () 
     this.render(hbs `{{form-component/datetime-field field=field fieldId="abc"}}`);
 
     expect(this.$('input#abc')).to.exist;
+  });
+
+  it('renders raw datetime value when field is in "view" mode', function () {
+    const field = this.get('field');
+    const date = new Date();
+    set(field, 'value', date);
+    field.changeMode('view');
+
+    this.render(hbs `{{form-component/datetime-field field=field}}`);
+
+    expect(this.$().text().trim()).to.equal(moment(date).format(datetimeFormat));
+    expect(this.$('input')).to.not.exist;
   });
 });

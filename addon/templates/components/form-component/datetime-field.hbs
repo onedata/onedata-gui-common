@@ -1,8 +1,12 @@
-{{one-datetime-picker
-  disabled=(not isEffectivelyEnabled)
-  datetime=value
-  elementId=fieldId
-  class="form-control"
-  onChange=(action "valueChanged")
-  focusOut=(action "focusLost")}}
+{{#if isInViewMode}}
+  {{moment-format value viewModeFormat}}
+{{else}}
+  {{one-datetime-picker
+    disabled=(not isEffectivelyEnabled)
+    datetime=value
+    elementId=fieldId
+    class="form-control"
+    onChange=(action "valueChanged")
+    focusOut=(action "focusLost")}}
+{{/if}}
 {{yield}}

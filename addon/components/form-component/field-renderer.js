@@ -20,6 +20,7 @@ export default Component.extend({
     'validationClass',
     'canShowValidationIcon:has-validation-icon',
     'fieldNameClass',
+    'fieldModeClass',
     'fieldRendererClass',
     'field.classes',
   ],
@@ -54,6 +55,11 @@ export default Component.extend({
    * @type {ComputedProperty<boolean>}
    */
   addColonToLabel: reads('field.addColonToLabel'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  mode: reads('field.mode'),
 
   /**
    * @type {ComputedProperty<boolean>}
@@ -134,6 +140,11 @@ export default Component.extend({
     const name = this.get('field.name');
     return name && `${name}-field`;
   }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  fieldModeClass: tag `field-${'mode'}-mode`,
 
   /**
    * @type {ComputedProperty<String>}

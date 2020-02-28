@@ -5,6 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import { set } from '@ember/object';
 
 describe('Integration | Component | form component/json field', function () {
   setupComponentTest('form-component/json-field', {
@@ -86,5 +87,16 @@ describe('Integration | Component | form component/json field', function () {
     `);
 
     expect(this.$('textarea#abc')).to.exist;
+  });
+
+  it('renders readonly value when field is in "view" mode', function () {
+    const field = this.get('field');
+    set(field, 'value', '"test"');
+    field.changeMode('view');
+
+    this.render(hbs `{{form-component/json-field field=field}}`);
+
+    expect(this.$('textarea').val()).to.equal('"test"');
+    expect(this.$('textarea')).to.have.attr('readonly');
   });
 });
