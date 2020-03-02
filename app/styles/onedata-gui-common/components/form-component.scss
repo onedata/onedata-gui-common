@@ -93,6 +93,15 @@
     }
   }
 
+  .field-view-mode.dropdown-field-renderer {
+    .oneicon {
+      font-size: 2.2em;
+      vertical-align: middle;
+      line-height: 0;
+      margin-right: $padding-xs-horizontal;
+    }
+  }
+
   @media (min-width: $screen-sm-min) {
     .privileges-field {
       .one-tree.has-items > .one-tree-list {
