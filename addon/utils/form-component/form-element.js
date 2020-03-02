@@ -234,7 +234,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { conditional, and } from 'ember-awesome-macros';
+import { conditional, and, equal, raw } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 
 export default EmberObject.extend(OwnerInjector, I18n, {
@@ -417,6 +417,21 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   tip: computed('i18nPrefix', 'path', function tip() {
     return this.tWithDefault(`${this.get('path')}.tip`, {}, undefined);
   }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInEditMode: equal('mode', raw('edit')),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInViewMode: equal('mode', raw('view')),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInMixedMode: equal('mode', raw('mixed')),
 
   valuePropertySetter: observer(
     'valuePath',

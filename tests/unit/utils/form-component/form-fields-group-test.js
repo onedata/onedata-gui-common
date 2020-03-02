@@ -128,6 +128,120 @@ describe('Unit | Utility | form component/form fields group', function () {
   });
 
   it(
+    'fallbacks mode to "edit" when all fields were in mode "edit" and then removed',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        fields: A([
+          FormField.create({
+            mode: 'edit',
+          }),
+          FormField.create({
+            mode: 'edit',
+          }),
+        ]),
+      });
+
+      get(formGroup, 'fields').clear();
+      expect(get(formGroup, 'mode')).to.equal('edit');
+    }
+  );
+
+  it(
+    'fallbacks mode to "edit" when all fields were in mixed "view" and "edit" modes and then removed',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        fields: A([
+          FormField.create({
+            mode: 'edit',
+          }),
+          FormField.create({
+            mode: 'view',
+          }),
+        ]),
+      });
+
+      get(formGroup, 'fields').clear();
+      expect(get(formGroup, 'mode')).to.equal('edit');
+    }
+  );
+
+  it(
+    'fallbacks mode to "view" when all fields were in "view" mode and then removed',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        fields: A([
+          FormField.create({
+            mode: 'edit',
+          }),
+          FormField.create({
+            mode: 'view',
+          }),
+        ]),
+      });
+
+      get(formGroup, 'fields').clear();
+      expect(get(formGroup, 'mode')).to.equal('edit');
+    }
+  );
+
+  it(
+    'fallbacks mode to "edit" when all fields were in "mixed" mode and then removed',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        fields: A([
+          FormFieldsGroup.create({
+            fields: [
+              FormField.create({
+                mode: 'edit',
+              }),
+              FormField.create({
+                mode: 'view',
+              }),
+            ],
+          }),
+          FormFieldsGroup.create({
+            fields: [
+              FormField.create({
+                mode: 'edit',
+              }),
+              FormField.create({
+                mode: 'view',
+              }),
+            ],
+          }),
+        ]),
+      });
+
+      get(formGroup, 'fields').clear();
+      expect(get(formGroup, 'mode')).to.equal('edit');
+    }
+  );
+
+  it(
+    'has mode "edit" by default',
+    function () {
+      const formGroup = FormFieldsGroup.create();
+
+      expect(get(formGroup, 'mode')).to.equal('edit');
+    }
+  );
+
+  [
+    'edit',
+    'view',
+  ].forEach(mode => {
+    it(
+      `can change mode to "${mode}" even when there are no fields`,
+      function () {
+        const formGroup = FormFieldsGroup.create();
+        formGroup.changeMode(mode);
+
+        expect(get(formGroup, 'mode')).to.equal(mode);
+      }
+    );
+  });
+
+  it(
     'represents negative validation results of fields through falsy isValid',
     function () {
       const formGroup = FormFieldsGroup.create({

@@ -3,7 +3,7 @@ export default {
     modelTypes: {
       user: 'User',
       group: 'Group',
-      oneprovider: 'Oneprovider',
+      provider: 'Oneprovider',
       service: 'Service',
       serviceOnepanel: 'Service Onepanel',
     },
@@ -15,7 +15,7 @@ export default {
     allRecord: {
       user: 'Any user',
       group: 'Any group',
-      oneprovider: 'Any Oneprovider',
+      provider: 'Any Oneprovider',
       service: 'Any Oneprovider',
       serviceOnepanel: 'Any Oneprovider Onepanel',
     },
@@ -26,14 +26,14 @@ export default {
     allRecordsAdded: {
       user: 'All users are already added.',
       group: 'All groups are already added.',
-      oneprovider: 'All Oneproviders are already added.',
+      provider: 'All Oneproviders are already added.',
       service: 'All services are already added.',
       serviceOnepanel: 'All Onepanels are already added.',
     },
     idLabel: {
       user: "User ID",
       group: "Group ID",
-      oneprovider: "Oneprovider ID",
+      provider: "Oneprovider ID",
       service: "Oneprovider ID",
       serviceOnepanel: "Oneprovider ID",
     },
