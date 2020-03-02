@@ -3,7 +3,7 @@
     {{#if nestedField.isVisible}}
       <div class="collection-item">
         {{form-component/field-renderer field=nestedField}}
-        {{#if isInEditionMode}}
+        {{#if isInEditMode}}
           <div class="remove-field-button-container">
             {{remove-icon class="remove-field-button" onClick=(action "removeField" nestedField)}}
           </div>
@@ -11,7 +11,7 @@
       </div>
     {{/if}}
   {{/each}}
-  {{#if isInEditionMode}}
+  {{#if isInEditMode}}
     {{#bs-button class="add-field-button" size="sm" onClick=(action "addField")}}
       {{one-icon icon="add-filled"}}{{addButtonText}}
     {{/bs-button}}

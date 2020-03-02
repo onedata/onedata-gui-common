@@ -58,7 +58,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isInEditionMode: not('isInViewMode'),
+  isInEditMode: not('isInViewMode'),
 
   actions: {
     valueChanged(value) {

@@ -94,7 +94,10 @@ export default Component.extend({
           TagsField.extend({
             valueToTags(value) {
               return (value || [])
-                .map(val => RecordTag.create({ value: val }));
+                .map(val => RecordTag.create({
+                  ownerSource: this,
+                  value: val,
+                }));
             },
             tagsToValue(tags) {
               return removeExcessiveTags(tags).mapBy('value').uniq()

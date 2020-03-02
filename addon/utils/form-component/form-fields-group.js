@@ -9,7 +9,7 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import EmberObject, { computed, set, get } from '@ember/object';
+import EmberObject, { computed, observer, set, get } from '@ember/object';
 import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
 
@@ -44,6 +44,12 @@ export default FormElement.extend({
   isExpanded: true,
 
   /**
+   * Set by `fieldsModeObserver`
+   * @type {String}
+   */
+  modeWhenNoFields: 'edit',
+
+  /**
    * @override
    */
   isModified: array.isAny('fields', raw('isModified')),
@@ -51,7 +57,33 @@ export default FormElement.extend({
   /**
    * @override
    */
-  mode: computed('fields.@each.mode', function mode() {
+  mode: computed(
+    'fieldsMode',
+    'fields.length',
+    'modeWhenNoFields',
+    function mode() {
+      const {
+        fields,
+        fieldsMode,
+        modeWhenNoFields,
+      } = this.getProperties(
+        'fields',
+        'fieldsMode',
+        'modeWhenNoFields'
+      );
+
+      if (get(fields, 'length')) {
+        return fieldsMode;
+      } else {
+        return modeWhenNoFields;
+      }
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  fieldsMode: computed('fields.@each.mode', function fieldsMode() {
     const fields = this.get('fields');
 
     if (fields && fields.length) {
@@ -86,11 +118,38 @@ export default FormElement.extend({
     }
   ),
 
+  fieldsModeObserver: observer('fieldsMode', function fieldsModeObserver() {
+    const fieldsMode = this.get('fieldsMode');
+    let modeWhenNoFields;
+    switch (fieldsMode) {
+      case 'view':
+        modeWhenNoFields = 'view';
+        break
+      case 'edit':
+      case 'mixed':
+      case 'undefined':
+      default:
+        modeWhenNoFields = 'edit';
+        break;
+    }
+    this.set('modeWhenNoFields', modeWhenNoFields);
+  }),
+
+  init() {
+    this._super(...arguments);
+    this.fieldsModeObserver();
+  },
+
   /**
    * @override
    */
   changeMode(mode) {
-    this.get('fields').invoke('changeMode', mode);
+    const fields = this.get('fields');
+    if (get(fields, 'length')) {
+      fields.invoke('changeMode', mode);
+    } else {
+      this.set('modeWhenNoFields', mode);
+    }
   },
 
   /**

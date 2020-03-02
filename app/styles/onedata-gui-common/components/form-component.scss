@@ -30,6 +30,13 @@
     }
   }
 
+  .static-text-field-renderer,
+  .radio-field-renderer,
+  .toggle-field-renderer {
+    padding-top: $padding-base-vertical;
+  }
+
+  .static-text-field-renderer,
   .radio-field-renderer,
   .toggle-field-renderer,
   .loading-field-renderer {
@@ -76,6 +83,13 @@
       display: inline-block;
       vertical-align: middle;
       margin-right: $padding-xs-horizontal;
+    }
+  }
+
+  .field-view-mode {
+    &.text-like-field-renderer .text-like-field,
+    &.dropdown-field-renderer .dropdown-field {
+      padding-top: $padding-base-vertical;
     }
   }
 
