@@ -119,7 +119,7 @@ export default Component.extend(I18n, {
    *     to construct list of record. Order of models in dropdown model selector
    *     will be the same as in this array.
    * }
-   * Each model specification is a object: {
+   * Each model specification is an object: {
    *   name: String, - one of: user, group, oneprovider, service, serviceOnepanel
    *   getRecords: Function - returns a Promise which should resolve to
    *     an array of model records
@@ -243,7 +243,7 @@ export default Component.extend(I18n, {
               record,
             },
             tip: get(record, 'representsAll') &&
-              this.tWithDefault(`allRecordTip.${selectedModelName}`),
+              this.t(`allRecordTip.${selectedModelName}`, {}, { defaultValue: '' }),
           }));
       } else {
         return [];

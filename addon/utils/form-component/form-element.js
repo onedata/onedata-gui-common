@@ -7,18 +7,20 @@
  *                            +-------------+
  *                            | FormElement |
  *                            +-----+-------+
+ *                                  ^
  *                                  |
- *      +---------------------------+-------------+
- *      |                                         |
- * +----+------+                            +-----+-----------+
- * | FormField |                            | FormFieldsGroup |
- * +-+---------+                            +-------+---------+
- *   | +---------------+                            |
- *   +-+ DatetimeField |                 +----------+--------------+
- *   | +---------------+                 |                         |
- *   |                           +-------+-------------+  +--------+------------------+
- *   | +-----------+             | FormFieldsRootGroup |  | FormFieldsCollectionGroup |
- *   +-+ JsonField |             +---------------------+  +---------------------------+
+ *      +---------------------------+--------------------------+
+ *      |                                                      |
+ * +----+------+                                      +--------+--------+
+ * | FormField |                                      | FormFieldsGroup |
+ * +-----------+                                      +-----------------+
+ *   ^                                                         ^
+ *   | +---------------+                                       |
+ *   +-+ DatetimeField |                       +---------------+-------------+
+ *   | +---------------+                       |                             |
+ *   |                             +---------------------+     +-------------+-------------+
+ *   | +-----------+               | FormFieldsRootGroup |     | FormFieldsCollectionGroup |
+ *   +-+ JsonField |               +---------------------+     +---------------------------+
  *   | +-----------+
  *   |
  *   | +---------------+
@@ -102,14 +104,14 @@
  * ```
  * const component = this;
  * const form = FormFieldsRootGroup.extend({
+ *   component,
  *   ownerSource: reads('component'), // Form needs to have an owner
+ *   i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
  *   onValueChange() {
  *     this._super(...arguments);
  *     component.notifyAboutChange();
  *   },
  * }).create({
- *   component,
- *   i18nPrefix: tag`${'component.i18nPrefix'}.fields`,
  *   fields: [
  *     ToggleField.create({ name: 'showMore', defaultValue: false }),
  *     FormFieldsGroup.extend({
@@ -313,7 +315,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   /**
    * Can be modified only via `changeMode()`
-   * TODO implement mode mechanism handling. Maybe fieldComponentName based on mode?
+   * TODO: implement mode mechanism handling. Maybe fieldComponentName based on mode?
    * @type {string}
    */
   mode: 'edit',
@@ -346,6 +348,12 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   isGroup: false,
 
   /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  valueName: reads('name'),
+
+  /**
    * This value is checked in component hbs to determine if field should be disabled.
    * "Effectively enabled" means "this field is enabled and all parents of ths field
    * are enabled".
@@ -366,12 +374,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
       this.get('name')
     );
   }),
-
-  /**
-   * @public
-   * @type {ComputedProperty<String>}
-   */
-  valueName: reads('name'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -395,6 +397,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   value: undefined,
 
   /**
+   * @override
    * @type {ComputedProperty<String>}
    */
   i18nPrefix: reads('parent.i18nPrefix'),
@@ -408,14 +411,14 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @type {ComputedProperty<HtmlSafe>}
    */
   label: computed('i18nPrefix', 'path', function label() {
-    return this.tWithDefault(`${this.get('path')}.label`, {}, undefined);
+    return this.t(`${this.get('path')}.label`, {}, { defaultValue: '' });
   }),
 
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
   tip: computed('i18nPrefix', 'path', function tip() {
-    return this.tWithDefault(`${this.get('path')}.tip`, {}, undefined);
+    return this.t(`${this.get('path')}.tip`, {}, { defaultValue: '' });
   }),
 
   valuePropertySetter: observer(
@@ -424,7 +427,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
       const valuePath = this.get('valuePath');
       this.set(
         'value',
-        valuePath ? reads(`valuesSource.${valuePath}`) : reads('valuesSource')
+        reads(valuePath ? `valuesSource.${valuePath}` : 'valuesSource')
       );
     }
   ),

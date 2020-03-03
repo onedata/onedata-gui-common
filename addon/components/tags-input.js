@@ -30,39 +30,37 @@ export default Component.extend({
   attributeBindings: ['tabindex', 'disabled'],
 
   /**
-   * @public
+   * @virtual optional
    * @type {ComputedProperty<number>}
    */
   tabindex: writable(conditional('disabled', -1, 0)),
 
   /**
-   * @public
+   * @virtual optional
    * @type {boolean}
    */
   disabled: false,
 
   /**
-   * @public
    * @virtual
    * @type {Array<Tag>}
    */
   tags: computed(() => []),
 
   /**
-   * @public
+   * @virtual optional
    * @type {Array<String>}
    */
   tagEditorComponentName: 'tags-input/text-editor',
 
   /**
    * Value passed to the tag editor component through `settings` property.
-   * @public
+   * @virtual optional
    * @type {any}
    */
   tagEditorSettings: undefined,
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @param {Array<Tag>} tags new array of tags
@@ -71,8 +69,7 @@ export default Component.extend({
   onChange: notImplementedIgnore,
 
   /**
-   * @public
-   * @virtual
+   * @virtual optional
    * @type {Function}
    * @returns {any}
    */
@@ -98,7 +95,7 @@ export default Component.extend({
   },
 
   keyDown(event) {
-    if ([13, 32].includes(event.keyCode) && !this.get('isCreatingTag')) {
+    if (['Enter', ' '].includes(event.key) && !this.get('isCreatingTag')) {
       this.startTagCreation()
     }
   },

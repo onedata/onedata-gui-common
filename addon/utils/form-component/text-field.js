@@ -34,7 +34,7 @@ export default FormField.extend({
    * @type {ComputedProperty<HtmlSafe>}
    */
   placeholder: computed('i18nPrefix', 'path', function placeholder() {
-    return this.tWithDefault(`${this.get('path')}.placeholder`, {}, undefined);
+    return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
   }),
 
   /**

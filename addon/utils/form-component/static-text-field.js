@@ -27,6 +27,6 @@ export default FormField.extend({
    * @type {ComputedProperty<HtmlSafe>}
    */
   text: computed('i18nPrefix', 'path', function text() {
-    return this.tWithDefault(`${this.get('path')}.text`, {}, undefined);
+    return this.t(`${this.get('path')}.text`, {}, { defaultValue: '' });
   }),
 })

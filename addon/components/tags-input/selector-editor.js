@@ -20,7 +20,6 @@ export default Component.extend({
   classNames: ['tags-input-selector-editor'],
 
   /**
-   * @public
    * @virtual
    * @type {Object}
    * 
@@ -31,14 +30,12 @@ export default Component.extend({
   settings: undefined,
 
   /**
-   * @public
    * @virtual
    * @type {Array<Tag>}
    */
   selectedTags: computed(() => []),
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @param {Array<Tag>} tagsToAdd
@@ -47,7 +44,6 @@ export default Component.extend({
   onTagsAdded: notImplementedIgnore,
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @returns {any}

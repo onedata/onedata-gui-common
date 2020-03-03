@@ -26,7 +26,9 @@ describe('Integration | Utility | form component/form element', function () {
   it(
     'is effectively enabled when is enabled and parent is not available',
     function () {
-      const formElement = FormElement.create();
+      const formElement = FormElement.create({
+        isEnabled: true,
+      });
 
       expect(get(formElement, 'isEffectivelyEnabled')).to.be.true;
     }
@@ -47,6 +49,7 @@ describe('Integration | Utility | form component/form element', function () {
     'is effectively enabled when is enabled and parent is effectively enabled',
     function () {
       const formElement = FormElement.create({
+        isEnabled: true,
         parent: FormElement.create({
           isEnabled: true, // so also isEffectivelyEnabled: true
         }),
@@ -60,6 +63,7 @@ describe('Integration | Utility | form component/form element', function () {
     'is not effectively enabled when is enabled and parent is not effectively enabled',
     function () {
       const formElement = FormElement.create({
+        isEnabled: true,
         parent: FormElement.create({
           isEnabled: false, // so also isEffectivelyEnabled: false
         }),

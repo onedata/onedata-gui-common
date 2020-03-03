@@ -42,7 +42,7 @@ describe('Integration | Utility | form component/loading field', function () {
   );
 
   it(
-    'has undefined loadingText property if "loadingText" default translation not exists',
+    'has empty loadingText property if "loadingText" default translation not exists',
     function () {
       this.register('util:i18n/missing-message', MissingMessage);
 
@@ -55,7 +55,7 @@ describe('Integration | Utility | form component/loading field', function () {
         name: 'name',
       });
 
-      expect(get(field, 'loadingText')).to.be.undefined;
+      expect(get(field, 'loadingText')).to.be.empty;
     }
   );
 

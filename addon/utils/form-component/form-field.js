@@ -38,6 +38,8 @@ export default FormElement.extend({
   /**
    * Array of validators (created using validator() from ember-cp-validations).
    * Any custom validators added while creating new fields should be placed here.
+   * NOTE: This property is not concatenated with the super class version on each
+   * FormElement class extend.
    * @virtual optional
    * @type {Array<Object>}
    */

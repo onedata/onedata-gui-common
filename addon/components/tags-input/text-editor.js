@@ -19,8 +19,7 @@ export default Component.extend({
   classNames: ['tags-input-text-editor'],
 
   /**
-   * @public
-   * @virtual
+   * @virtual optional
    * @type {Object}
    * 
    * Supported settings: {
@@ -31,7 +30,6 @@ export default Component.extend({
   settings: undefined,
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @param {Array<Tag>} tagsToAdd
@@ -40,7 +38,6 @@ export default Component.extend({
   onTagsAdded: notImplementedIgnore,
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @returns {any}

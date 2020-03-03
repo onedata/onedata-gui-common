@@ -36,9 +36,9 @@ export default FormElement.extend({
 
   /**
    * Changing value of isExpand will show/hide group with animation.
-   * NOTE: isVisible and isExpanded are fully separated and works independently.
+   * NOTE: isVisible and isExpanded are fully separated and work independently.
    * Group is visible only when `isVisible` and `isExpanded` are both true.
-   * @public
+   * @virtual optional
    * @type {boolean}
    */
   isExpanded: true,

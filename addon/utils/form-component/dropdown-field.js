@@ -28,6 +28,6 @@ export default OptionsField.extend({
    */
   placeholder: computed('i18nPrefix', 'path', function placeholder() {
     // Null value, because powerselect converts `undefined` to string 'undefined'
-    return this.tWithDefault(`${this.get('path')}.placeholder`, {}, null);
+    return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
   }),
 })

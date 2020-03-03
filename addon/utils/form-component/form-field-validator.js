@@ -33,6 +33,7 @@ export default EmberObject.extend(OwnerInjector, {
   value: reads('field.value'),
 
   /**
+   * Can be used to write validators based on values from different fields.
    * @type {ComputedProperty<any>}
    */
   valuesSource: reads('field.valuesSource'),
