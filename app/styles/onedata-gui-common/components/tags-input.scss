@@ -18,8 +18,9 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
   font-size: $tags-input-font-scale * 1em;
 
   &.readonly {
-    padding: 0;
+    padding-left: 0;
     min-height: initial;
+    outline: none;
   }
 
   .input-element {
