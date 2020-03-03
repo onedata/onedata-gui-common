@@ -42,7 +42,8 @@ export default FormField.extend({
 
     return (options || []).map(option => {
       const name = get(option, 'name') || String(get(option, 'value'));
-      const label = get(option, 'label') || this.t(`${path}.options.${name}.label`);
+      const label = get(option, 'label') ||
+        this.t(`${path}.options.${name}.label`, {}, { defaultValue: '' });
       return Object.assign({}, option, { name, label });
     });
   }),

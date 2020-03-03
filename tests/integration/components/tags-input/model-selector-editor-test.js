@@ -158,7 +158,7 @@ describe('Integration | Component | tags input/model selector editor', function 
   [{
     name: 'user',
     label: 'Any user',
-    tip: 'Any user that has an account in Onedata',
+    tip: 'Any user that has an account in Onezone',
   }, {
     name: 'group',
     label: 'Any group',

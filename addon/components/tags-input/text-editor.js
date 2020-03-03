@@ -17,6 +17,7 @@ import $ from 'jquery';
 export default Component.extend({
   layout,
   classNames: ['tags-input-text-editor'],
+  classNameBindings: ['lastTagNotMatchRegexp:has-error'],
 
   /**
    * @virtual optional
@@ -25,6 +26,8 @@ export default Component.extend({
    * Supported settings: {
    *   separators: Array<String> - tag separators, default [',']
    *   regexp: RegExp - if passed, then each new tag must match regexp to be accepted
+   *   transform: Function - if passed, will transform each new tag label before sending it
+   *     to the tags-input. Gets label as an argument, and should return a transformed label.
    * }
    */
   settings: undefined,
@@ -55,9 +58,19 @@ export default Component.extend({
   regexp: or('settings.regexp', /^.*$/),
 
   /**
+   * @type {ComputedProperty<Function>}
+   */
+  transform: or('settings.transform', label => label),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   inputValue: '',
+
+  /**
+   * @type {boolean}
+   */
+  lastTagNotMatchRegexp: false,
 
   focusIn(event) {
     if (!$(event.target).hasClass('text-editor-input')) {
@@ -72,7 +85,7 @@ export default Component.extend({
     this.$('.text-editor-input').focus();
   },
 
-  extractTagsLabels(value) {
+  extractTagsLabels(value, acceptLastWithoutSeparator) {
     const {
       separators,
       regexp,
@@ -86,10 +99,17 @@ export default Component.extend({
     let nextInputValue;
 
     while (nextInputValue === undefined) {
-      const nextSeparatorIdx = Math.min(...separators
+      let nextSeparatorIdx = Math.min(...separators
         .map(sep => valueToProcess.indexOf(sep))
         .without(-1)
       );
+      if (
+        nextSeparatorIdx === Number.POSITIVE_INFINITY &&
+        valueToProcess.length &&
+        acceptLastWithoutSeparator
+      ) {
+        nextSeparatorIdx = valueToProcess.length;
+      }
       if (nextSeparatorIdx !== Number.POSITIVE_INFINITY) {
         const label = valueToProcess.slice(0, nextSeparatorIdx).trim();
         if (!label || regexp.test(label)) {
@@ -99,6 +119,9 @@ export default Component.extend({
           valueToProcess = valueToProcess.slice(nextSeparatorIdx + 1);
         } else {
           nextInputValue = valueToProcess;
+          if (label) {
+            this.set('lastTagNotMatchRegexp', true);
+          }
         }
       } else {
         nextInputValue = valueToProcess;
@@ -111,26 +134,41 @@ export default Component.extend({
     };
   },
 
+  processNewTags(value, acceptLastWithoutSeparator) {
+    // Reset validation
+    this.set('lastTagNotMatchRegexp', false);
+
+    const {
+      onTagsAdded,
+      transform,
+    } = this.getProperties('onTagsAdded', 'transform');
+
+    const {
+      labels,
+      nextInputValue,
+    } = this.extractTagsLabels(value, acceptLastWithoutSeparator);
+
+    const tagsToAdd = labels.map(label => ({ label: transform(label) }));
+
+    if (tagsToAdd.length) {
+      onTagsAdded(tagsToAdd);
+    }
+    this.set('inputValue', nextInputValue);
+
+    if (!nextInputValue) {
+      // When input was empty and after filling it in with string "sthsth,"
+      // it again becomes empty, then ember does not clean the input value
+      // because `newTags.firstObject.label` (input value) was empty all the time.
+      this.$('.text-editor-input').val('');
+    }
+  },
+
   actions: {
     inputChanged(value) {
-      const {
-        labels,
-        nextInputValue,
-      } = this.extractTagsLabels(value);
-
-      const tagsToAdd = labels.map(label => ({ label }));
-
-      if (tagsToAdd.length) {
-        this.get('onTagsAdded')(tagsToAdd);
-      }
-      this.set('inputValue', nextInputValue);
-
-      if (!nextInputValue) {
-        // When input was empty and after filling it in with string "sthsth,"
-        // it again becomes empty, then ember does not clean the input value
-        // because `newTags.firstObject.label` (input value) was empty all the time.
-        this.$('.text-editor-input').val('');
-      }
+      this.processNewTags(value, false);
+    },
+    acceptTags() {
+      this.processNewTags(this.get('inputValue'), true);
     },
     focusLost() {
       const {

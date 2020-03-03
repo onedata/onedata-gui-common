@@ -20,7 +20,7 @@ export default {
       serviceOnepanel: 'Any Oneprovider Onepanel',
     },
     allRecordTip: {
-      user: 'Any user that has an account in Onedata',
+      user: 'Any user that has an account in Onezone',
       group: 'Any user that has at least one group',
     },
     allRecordsAdded: {

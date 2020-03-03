@@ -3,7 +3,7 @@ $tags-input-tag-line-height: $line-height-computed * $tags-input-font-scale;
 $tags-input-tag-vertical-padding: 4px;
 $tags-input-tag-height: $tags-input-tag-line-height + 2 * $tags-input-tag-vertical-padding + 2px;
 $tags-input-input-vertical-padding: ($input-height-base - $tags-input-tag-height - 2px) / 2;
-$tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
+$tags-input-tag-border: 1px solid $color-token-border;
 
 .tags-input {
   display: flex;
@@ -83,6 +83,10 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
       outline: 0;
       width: 150px;
     }
+
+    &.has-error .text-editor-input {
+      border-bottom: 1px solid $color-one-danger;
+    }
   }
 
   .tags-input-selector-editor,
@@ -96,6 +100,30 @@ $tags-input-tag-border: 1px solid darken($color-one-light-blue, 20%);
 
   .tags-input-model-selector-editor {
     width: 250px;
+  }
+}
+
+.tags-danger .tags-input,
+.tags-input.tags-danger {
+  .tag-item {
+    border-color: #d9d9d9;
+    @include tag-bg-color($brand-danger);
+  }
+}
+
+.tags-warning .tags-input,
+.tags-input.tags-warning {
+  .tag-item {
+    border-color: #d9d9d9;
+    @include tag-bg-color($brand-warning);
+  }
+}
+
+.tags-success .tags-input,
+.tags-input.tags-success {
+  .tag-item {
+    border-color: #d9d9d9;
+    @include tag-bg-color($brand-success);
   }
 }
 

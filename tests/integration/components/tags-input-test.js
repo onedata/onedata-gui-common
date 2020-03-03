@@ -58,7 +58,8 @@ describe('Integration | Component | tags input', function () {
         expect($tagItem).to.have.length(1);
         expect($tagItem.text().trim()).to.equal(oldTags[1].label);
         expect(changeSpy).to.be.calledOnce;
-        expect(changeSpy).to.be.calledWith(oldTags.slice(1));
+        expect(changeSpy.lastCall.args[0].toArray())
+          .to.deep.equal(oldTags.slice(1).toArray());
       });
   });
 
