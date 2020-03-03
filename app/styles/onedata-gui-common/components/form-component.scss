@@ -87,6 +87,7 @@
   }
 
   .field-view-mode {
+    &.datetime-field-renderer .datetime-field,
     &.text-like-field-renderer .text-like-field,
     &.dropdown-field-renderer .dropdown-field {
       padding-top: $padding-base-vertical;
