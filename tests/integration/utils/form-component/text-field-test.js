@@ -92,7 +92,7 @@ describe('Integration | Utility | form component/text field', function () {
     expect(get(field, 'placeholder')).to.equal('field tip');
   });
 
-  it('has undefined placeholder if translation for it cannot be found', function () {
+  it('has empty placeholder if translation for it cannot be found', function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
       .withArgs('somePrefix.field1.placeholder')
       .returns('<missing-...');
@@ -103,6 +103,6 @@ describe('Integration | Utility | form component/text field', function () {
       name: 'field1',
     });
 
-    expect(get(field, 'placeholder')).to.be.undefined;
+    expect(get(field, 'placeholder')).to.be.empty;
   });
 });

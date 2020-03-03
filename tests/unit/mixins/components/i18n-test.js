@@ -11,7 +11,6 @@ const i18nStub = EmberObject.extend({
 });
 
 describe('Unit | Mixin | components/i18n', function () {
-
   it('adds t method to component that uses i18n service and prefix', function () {
     const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
       i18n: i18nStub.create(),
@@ -48,24 +47,25 @@ describe('Unit | Mixin | components/i18n', function () {
   });
 
   it(
-    'returns translation from tWithDefault() if translation was found',
+    'does not use i18n prefix to resolve translation path when option usePrefix is false',
     function () {
       const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
         i18n: i18nStub.create(),
+        i18nPrefix: 'component.test.',
       });
       const subject = ComponentsI18nObject.create();
       sinon.stub(get(subject, 'i18n'), 't')
         .withArgs('someKey')
-        .returns('abc');
+        .returns('translation');
 
-      const text = subject.tWithDefault('someKey', {}, 'defaultText');
+      const text = subject.t('someKey', {}, { usePrefix: false });
 
-      expect(text).to.equal('abc');
+      expect(text).to.equal('translation');
     }
   );
 
   it(
-    'returns default value from tWithDefault() if translation was not found',
+    'returns default value from t() if translation was not found and defaultValue option is defined',
     function () {
       const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
         i18n: i18nStub.create(),
@@ -75,9 +75,26 @@ describe('Unit | Mixin | components/i18n', function () {
         .withArgs('someKey')
         .returns('<missing-en: someKey>');
 
-      const text = subject.tWithDefault('someKey', {}, 'defaultText');
+      const text = subject.t('someKey', {}, { defaultValue: 'defaultText' });
 
       expect(text).to.equal('defaultText');
+    }
+  );
+
+  it(
+    'returns missing translation from t() if translation was not found and defaultValue option is undefined',
+    function () {
+      const ComponentsI18nObject = EmberObject.extend(ComponentsI18nMixin, {
+        i18n: i18nStub.create(),
+      });
+      const subject = ComponentsI18nObject.create();
+      sinon.stub(get(subject, 'i18n'), 't')
+        .withArgs('someKey')
+        .returns('<missing-en: someKey>');
+
+      const text = subject.t('someKey', {}, { defaultValue: undefined });
+
+      expect(text).to.equal('<missing-en: someKey>');
     }
   );
 });

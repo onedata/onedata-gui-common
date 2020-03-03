@@ -12,6 +12,7 @@ import { getProperties } from '@ember/object';
 import Ember from 'ember';
 import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
+import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 const i18nPrefix = 'errors.backendErrors.';
 
@@ -83,7 +84,7 @@ function findTranslationForError(i18n, error) {
 function findTranslation(i18n, key, placeholders) {
   const translation = i18n.t(key, placeholders);
   const translationAsString = translation ? translation.toString() : '';
-  return (!translationAsString || translationAsString.startsWith('<missing-')) ?
+  return (!translationAsString || isMissingMessage(translation)) ?
     undefined : translation;
 }
 

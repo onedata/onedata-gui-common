@@ -35,14 +35,14 @@ export default FormFieldsGroup.extend({
    * @type {ComputedProperty<HtmlSafe>}
    */
   addButtonText: computed('path', 'i18nPrefix', function addButtonText() {
-    return this.tWithDefault(
-      `${this.get('path')}.addButtonText`, {},
-      this.tWithDefault(
-        'components.formComponent.formFieldsCollectionGroup.addButtonText', {},
-        undefined,
-        false
+    return this.t(`${this.get('path')}.addButtonText`, {}, {
+      defaultValue: this.t(
+        'components.formComponent.formFieldsCollectionGroup.addButtonText', {}, {
+          defaultValue: '',
+          usePrefix: false,
+        },
       ),
-    );
+    });
   }),
 
   /**
