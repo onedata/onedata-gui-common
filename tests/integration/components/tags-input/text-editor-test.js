@@ -58,7 +58,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', 'someTag,'))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.be.empty;
-        expect(changeSpy.lastCall).to.be.calledWith([{
+        expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }]);
       })
@@ -79,7 +79,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', 'someTag,someTag2,someTag3'))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('someTag3');
-        expect(changeSpy.lastCall).to.be.calledWith([{
+        expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
           label: 'someTag2',
@@ -106,7 +106,7 @@ describe('Integration | Component | tags input/text editor', function () {
       ))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('someTag3,someTag4');
-        expect(changeSpy.lastCall).to.be.calledWith([{
+        expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
           label: 'someTag2',
@@ -156,7 +156,7 @@ describe('Integration | Component | tags input/text editor', function () {
       ))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal(' someTag3   ');
-        expect(changeSpy.lastCall).to.be.calledWith([{
+        expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
           label: 'someTag2',
@@ -184,7 +184,8 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', '1a'))
       .then(() => keyEvent('.text-editor-input', 'keydown', 13))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('1a,');
+        expect(this.$('.text-editor-input').val()).to.equal('1a');
+        expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy).to.not.been.called;
       });
   });
@@ -209,9 +210,56 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', '234,1a,cvs,sd,2'))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('1a,cvs,sd,2');
-        expect(changeSpy.lastCall).to.be.calledWith([{
+        expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
+        expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: '234',
         }]);
       });
   });
+
+  it('removes error indication after modifying input value', function () {
+    this.setProperties({
+      tags: [],
+      settings: {
+        regexp: /^\d+$/
+      },
+    });
+
+    this.render(hbs `{{tags-input
+      tags=tags
+      tagEditorComponentName="tags-input/text-editor"
+      tagEditorSettings=settings
+    }}`);
+    return click('.tag-creator-trigger')
+      .then(() => fillIn('.text-editor-input', '1a'))
+      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => fillIn('.text-editor-input', '1ab'))
+      .then(() =>
+        expect(this.$('.tags-input-text-editor')).to.not.have.class('has-error')
+      );
+  });
+
+  it(
+    'transforms each new tag label using settings.transform, if it was provided',
+    function () {
+      this.setProperties({
+        tags: [],
+        settings: {
+          transform: label => label.toUpperCase(),
+        },
+      });
+      const changeSpy = sinon.spy((tags) => this.set('tags', tags));
+      this.on('change', changeSpy);
+
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagEditorComponentName="tags-input/text-editor"
+        tagEditorSettings=settings
+        onChange=(action "change")
+      }}`);
+      return click('.tag-creator-trigger')
+        .then(() => fillIn('.text-editor-input', 'pl,'))
+        .then(() => expect(changeSpy.lastCall.args[0]).to.deep.equal([{ label: 'PL' }]));
+    }
+  );
 });

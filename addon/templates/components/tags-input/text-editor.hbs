@@ -3,7 +3,7 @@
   class="text-editor-input"
   value={{inputValue}}
   oninput={{action "inputChanged" value="target.value"}}
-  onkeydown={{invoke-on-enter (action "inputChanged" (concat inputValue separators.firstObject))}}
+  onkeydown={{invoke-on-enter (action "acceptTags")}}
   onblur={{action "focusLost"}}
 />
 {{yield}}

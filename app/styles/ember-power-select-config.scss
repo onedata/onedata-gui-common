@@ -26,10 +26,10 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
     position: relative;
     
     .one-icon {
-      @include vertical-align-middle();
+      @include absolute-align-middle-center();
       font-size: 2.2em;
 
-      // Experimental space icon scale change. If everything will look good, the
+      // Experimental space icon scale change. If everything will look good,
       // the space icon could be scaled down.
       &.oneicon-space {
         font-size: 1.8em;
@@ -39,14 +39,16 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 }
 
 .ember-basic-dropdown-content {
-  .option-container .one-icon + .text {
-    padding-left: 34px;
+  .option-container {
+    .one-icon {
+      left: 11px;
+    }
+    .one-icon + .text {
+      padding-left: 34px;
+    }
   }
 
   &.small {
-    .one-icon {
-      left: -2px;
-    }
     .one-icon + .text {
       padding-left: 26px;
     }
@@ -56,20 +58,20 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 .ember-power-select-trigger {
   .ember-power-select-selected-item .option-container {
     .one-icon {
-      left: -10px;
+      left: 5px;
     }
     .one-icon + .text {
-      padding-left: 24px;
+      padding-left: 28px;
     }
   } 
 
   &.small {
     .ember-power-select-selected-item .option-container {
       .one-icon {
-        left: -4px;
+        left: 11px;
       }
       .one-icon + .text {
-        padding-left: 22px;
+        padding-left: 26px;
       }
     }
   }
