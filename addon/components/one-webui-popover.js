@@ -125,7 +125,7 @@ export default Component.extend({
     const oneWebuiPopover = this;
     return function customTargetHideFun() {
       if (!get(oneWebuiPopover, 'popoverInstance._opened')) {
-        $.prototype.hide.bind(this);
+        $.prototype.hide.bind(this)();
       }
     };
   }),
