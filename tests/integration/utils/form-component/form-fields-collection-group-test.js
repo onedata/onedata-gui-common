@@ -62,19 +62,19 @@ describe(
       'adds field through addNewField() (with usage of fieldFactoryMethod())',
       function () {
         const valuesSource = EmberObject.create({
-          parent: EmberObject.create(),
+          collection: EmberObject.create(),
         });
-        const changeSpy = sinon.spy(value => set(valuesSource, 'parent', value));
+        const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
         const collectionGroup = FormFieldsCollectionGroup.extend({
-          fieldFactoryMethod(createdFieldsCounter) {
+          fieldFactoryMethod(newFieldValueName) {
             return FormField.create({
               name: 'f',
-              valueName: `f${createdFieldsCounter}`,
-              defaultValue: createdFieldsCounter,
+              valueName: newFieldValueName,
+              defaultValue: newFieldValueName,
             });
           },
         }).create({
-          name: 'parent',
+          name: 'collection',
           parent: {
             onValueChange: changeSpy,
           },
@@ -84,13 +84,15 @@ describe(
         collectionGroup.addNewField();
         collectionGroup.addNewField();
         expect(get(collectionGroup, 'fields')).to.have.length(2);
-        expect(get(collectionGroup, 'fields.firstObject.valueName')).to.equal('f0');
-        expect(get(collectionGroup, 'fields.lastObject.valueName')).to.equal('f1');
+        expect(get(collectionGroup, 'fields.firstObject.valueName'))
+          .to.equal('collectionEntry0');
+        expect(get(collectionGroup, 'fields.lastObject.valueName'))
+          .to.equal('collectionEntry1');
         expect(changeSpy.lastCall).to.be.calledWith(
           sinon.match({
-            f0: 0,
-            f1: 1,
-            __fieldsValueNames: ['f0', 'f1'],
+            collectionEntry0: 'collectionEntry0',
+            collectionEntry1: 'collectionEntry1',
+            __fieldsValueNames: ['collectionEntry0', 'collectionEntry1'],
           })
         );
       }
@@ -101,9 +103,6 @@ describe(
       function () {
         const changeSpy = sinon.spy();
         const collectionGroup = FormFieldsCollectionGroup.create({
-          parent: {
-            onValueChange: changeSpy,
-          },
           fields: A([
             FormField.create({
               name: 'f',
@@ -111,6 +110,9 @@ describe(
               defaultValue: 1,
             }),
           ]),
+          parent: {
+            onValueChange: changeSpy,
+          },
         });
 
         set(collectionGroup, 'value', collectionGroup.dumpDefaultValue());
@@ -120,6 +122,88 @@ describe(
         expect(changeSpy.lastCall.args[0]).to.not.have.nested.property('value.f0');
         expect(get(collectionGroup, 'fields')).to.have.length(0);
         expect(get(changeSpy.lastCall.args[0], '__fieldsValueNames')).to.have.length(0);
+      }
+    );
+
+    it(
+      'automatically adds fields when value is mentioning them',
+      function () {
+        const valuesSource = EmberObject.create({
+          collection: EmberObject.create({
+            collectionEntry0: 'val0',
+            collectionEntry1: 'val1',
+            __fieldsValueNames: ['collectionEntry0', 'collectionEntry1'],
+          }),
+        });
+        const changeSpy = sinon.spy();
+        const collectionGroup = FormFieldsCollectionGroup.extend({
+          fieldFactoryMethod(newFieldValueName) {
+            return FormField.create({
+              name: 'f',
+              valueName: newFieldValueName,
+              defaultValue: 'default',
+            });
+          },
+        }).create({
+          name: 'collection',
+          parent: {
+            onValueChange: changeSpy,
+          },
+          valuesSource,
+        });
+
+        expect(get(collectionGroup, 'fields')).to.have.length(2);
+        const firstField = get(collectionGroup, 'fields.firstObject');
+        const secondField = get(collectionGroup, 'fields.lastObject');
+        expect(get(firstField, 'valueName')).to.equal('collectionEntry0');
+        expect(get(secondField, 'valueName')).to.equal('collectionEntry1');
+        expect(get(firstField, 'value')).to.equal('val0');
+        expect(get(secondField, 'value')).to.equal('val1');
+        expect(changeSpy).to.not.be.called;
+      }
+    );
+
+    it(
+      'automatically removes fields when value is not mentioning them',
+      function () {
+        const valuesSource = EmberObject.create({
+          collection: EmberObject.create({
+            collectionEntry0: 'val0',
+            __fieldsValueNames: ['collectionEntry0'],
+          }),
+        });
+        const changeSpy = sinon.spy();
+        const collectionGroup = FormFieldsCollectionGroup.extend({
+          fieldFactoryMethod(newFieldValueName) {
+            return FormField.create({
+              name: 'f',
+              valueName: newFieldValueName,
+              defaultValue: 'default',
+            });
+          },
+        }).create({
+          fields: A([
+            FormField.create({
+              name: 'f',
+              valueName: 'collectionEntry0',
+            }),
+            FormField.create({
+              name: 'f',
+              valueName: 'collectionEntry1',
+            }),
+          ]),
+          name: 'collection',
+          parent: {
+            onValueChange: changeSpy,
+          },
+          valuesSource,
+        });
+
+        expect(get(collectionGroup, 'fields')).to.have.length(1);
+        const field = get(collectionGroup, 'fields.firstObject');
+        expect(get(field, 'valueName')).to.equal('collectionEntry0');
+        expect(get(field, 'value')).to.equal('val0');
+        expect(changeSpy).to.not.be.called;
       }
     );
 

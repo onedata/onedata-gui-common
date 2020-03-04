@@ -208,13 +208,13 @@
  * adding and removing fields created using factory method. It goes like this:
  * At the very beginning collection group has no fields. When you call
  * `addNewField()` collection group calls method
- * `fieldFactoryMethod(uniqueCounter)`. You have to implement (override)
+ * `fieldFactoryMethod(uniqueValueName)`. You have to implement (override)
  * this method so it returns a form element instance, that will be later added
  * to the fields array by `addNewField` method. After that collection group will
  * notify about change with new field and its default value.
  * Field created in `fieldFactoryMethod` can have (and usually will) the same name.
  * In that case it MUST have unique `valueName` - you can make it unique using
- * passed `uniqueCounter` value. What is valueName? It is used to build path
+ * passed `uniqueValueName` value. What is valueName? It is used to build path
  * to the field value in values tree. So it looks like: `parentPath + '.' + valueName`.
  * In 99% of cases valueName IS name (under the hood `valueName: reads('name')`).
  * But you can override valueName like in collection group factory method and
@@ -446,7 +446,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
-
     if (fields) {
       fields
         .rejectBy('parent', this)
