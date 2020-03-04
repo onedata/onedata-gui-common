@@ -262,4 +262,23 @@ describe('Integration | Component | tags input/text editor', function () {
         .then(() => expect(changeSpy.lastCall.args[0]).to.deep.equal([{ label: 'PL' }]));
     }
   );
+
+  it(
+    'uses placeholder taken form settings.placeholder',
+    function () {
+      this.set('settings', {
+        placeholder: 'sometext',
+      });
+
+      this.render(hbs `{{tags-input
+        tagEditorComponentName="tags-input/text-editor"
+        tagEditorSettings=settings
+      }}`);
+
+      return click('.tag-creator-trigger')
+        .then(() =>
+          expect(this.$('.text-editor-input').attr('placeholder')).to.equal('sometext')
+        );
+    }
+  );
 });
