@@ -160,5 +160,5 @@ export default Component.extend({
         onChange(String(newValue));
       }
     },
-  }
+  },
 });

@@ -45,7 +45,7 @@ export default Mixin.create({
       } else {
         this.onWindowResize(event);
       }
-    }
+    };
   }),
 
   attachWindowResizeHandler() {

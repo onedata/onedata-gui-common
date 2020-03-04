@@ -98,12 +98,12 @@ export default Component.extend({
   mouseUp( /* mouseEvent */ ) {
     safeExec(this, () => {
       this.stopMouseDownInterval();
-    })
+    });
   },
 
   mouseLeave() {
     safeExec(this, () => {
       this.stopMouseDownInterval();
-    })
+    });
   },
 });

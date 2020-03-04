@@ -66,7 +66,7 @@ export default Mixin.create(I18n, {
     function showErrorContactInfo() {
       return ![
         'account_already_linked_to_another_user',
-        'account_already_linked_to_current_user'
+        'account_already_linked_to_current_user',
       ].includes(this.get('authenticationErrorReason'));
     }),
 });

@@ -152,7 +152,7 @@ export default Mixin.create({
     );
     let isValid = true;
     sourceFieldNames.forEach(fieldName => {
-      const isModified = get(modified, fieldName)
+      const isModified = get(modified, fieldName);
       if (isModified && formFieldsErrors[fieldName]) {
         isValid = false;
       }

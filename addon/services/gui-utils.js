@@ -102,5 +102,5 @@ export default Service.extend(I18n, {
     // Redirect to main page with cleared out routing data
     // (these after '#' and '?' characters)
     return window.location.href.match(/(^[^#?]*)/)[0];
-  }
+  },
 });

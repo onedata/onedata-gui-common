@@ -9,7 +9,7 @@ import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | support size info', function () {
   setupComponentTest('support-size-info', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -47,7 +47,7 @@ describe('Integration | Component | support size info', function () {
         .to.exist
       );
       done();
-    })
+    });
   });
 
   it('renders support size table', function (done) {
@@ -65,6 +65,6 @@ describe('Integration | Component | support size info', function () {
       expect(dataRow.children().eq(0)).to.contain('Provider1');
       expect(dataRow.children().eq(1)).to.contain('1 MiB');
       done();
-    })
+    });
   });
 });

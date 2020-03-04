@@ -65,7 +65,7 @@ export default Mixin.create({
   click(clickEvent) {
     const doubleClickInterval = this.get('doubleClickInterval');
     this.incrementProperty('singleClickCount');
-    const singleClickCount = this.get('singleClickCount')
+    const singleClickCount = this.get('singleClickCount');
     if (singleClickCount === 1) {
       const singleClickTimer = later(() => {
         this.set('singleClickCount', 0);

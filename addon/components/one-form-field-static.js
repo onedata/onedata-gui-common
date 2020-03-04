@@ -13,7 +13,7 @@ import layout from 'onedata-gui-common/templates/components/one-form-field-stati
 import config from 'ember-get-config';
 
 const {
-  layoutConfig
+  layoutConfig,
 } = config;
 
 export default Component.extend({

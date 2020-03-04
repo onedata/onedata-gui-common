@@ -15,7 +15,7 @@ import config from 'ember-get-config';
 import dotToDash from 'onedata-gui-common/utils/dot-to-dash';
 
 const {
-  layoutConfig
+  layoutConfig,
 } = config;
 
 export default Component.extend({
@@ -54,6 +54,6 @@ export default Component.extend({
       // prevents double render issue by scheduling focusout event handler on
       // events' loop end
       setTimeout(() => invokeAction(this, 'onFocusOut', ...arguments), 0);
-    }
-  }
+    },
+  },
 });

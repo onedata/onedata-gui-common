@@ -30,11 +30,11 @@ function normalizeEmberPath(emberPath) {
  *  automatically trimmed
  */
 export function getOnezoneUrl(origin, emberPath = '') {
-  return `${origin}${onezoneDefaultRootPath}/i#/${normalizeEmberPath(emberPath)}`
+  return `${origin}${onezoneDefaultRootPath}/i#/${normalizeEmberPath(emberPath)}`;
 }
 
 export function getOneproviderPath(clusterId, emberPath = '') {
-  let path = `/${oneproviderAbbrev}/${clusterId}/i`
+  let path = `/${oneproviderAbbrev}/${clusterId}/i`;
   if (emberPath) {
     path += `#/${normalizeEmberPath(emberPath)}`;
   }

@@ -6,7 +6,7 @@ import moment from 'moment';
 
 describe('Integration | Helper | date format', function () {
   setupComponentTest('date-format', {
-    integration: true
+    integration: true,
   });
 
   it('parses and renders date for certs view', function () {

@@ -60,7 +60,7 @@ export default Service.extend(WindowResizeHandler, {
       );
 
       const existingIframeNodes = [
-        ...embeddedIframesContainer.querySelectorAll('.embedded-iframe')
+        ...embeddedIframesContainer.querySelectorAll('.embedded-iframe'),
       ];
       const newIframeNodes = embeddedIframes.mapBy('iframeElement');
 

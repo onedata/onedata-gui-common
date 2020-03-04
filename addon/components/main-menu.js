@@ -95,6 +95,6 @@ export default Component.extend({
   actions: {
     itemClicked({ id }) {
       this.get('itemClicked')(id);
-    }
-  }
+    },
+  },
 });

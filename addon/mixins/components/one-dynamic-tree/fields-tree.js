@@ -78,12 +78,12 @@ export default Mixin.create({
         });
         return Object.keys(fields).length > 0 ? fields : undefined;
       }
-    }
+    };
     let tmpRoot = {
       name: '',
-      subtree: definition
+      subtree: definition,
     };
-    let fields = prepareNodeFields(tmpRoot, '')
+    let fields = prepareNodeFields(tmpRoot, '');
     return fields;
   },
 

@@ -175,7 +175,7 @@ export default Component.extend({
       let {
         _directItemsKeys,
         _filteredOutItemsKeys,
-      } = this.getProperties('_directItemsKeys', '_filteredOutItemsKeys')
+      } = this.getProperties('_directItemsKeys', '_filteredOutItemsKeys');
       if (!_directItemsKeys || !_filteredOutItemsKeys) {
         return true;
       } else {
@@ -251,7 +251,7 @@ export default Component.extend({
   actions: {
     /**
      * Expands/collapses specified subtrees.
-     * @param {Array.*} subtreeKeys subtree keys
+     * @param {Array<any>} subtreeKeys subtree keys
      * @param {boolean} subtreeIsExpanded visibility state. If not provided, 
      * action will toggle subtree visibility
      */
@@ -262,8 +262,8 @@ export default Component.extend({
       } = this.getProperties('_isRoot', '_activeSubtreeKeys');
 
       if (_isRoot) {
-        let newActiveSubtreeKeys = _activeSubtreeKeys.filter(k => subtreeKeys.indexOf(k) ===
-          -1);
+        let newActiveSubtreeKeys =
+          _activeSubtreeKeys.filter(k => subtreeKeys.indexOf(k) === -1);
         if (subtreeIsExpanded === undefined) {
           subtreeIsExpanded = newActiveSubtreeKeys.length + subtreeKeys.length >
             _activeSubtreeKeys.length;
@@ -332,6 +332,6 @@ export default Component.extend({
       } else {
         setLastExpandedKey(itemKey);
       }
-    }
-  }
+    },
+  },
 });

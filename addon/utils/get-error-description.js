@@ -184,7 +184,7 @@ function createNestedErrorDetailsTranslator(nestedErrorFieldName = 'error') {
     const nestedErrorTranslation =
       findTranslation(i18n, i18nPrefix + nestedError.id, nestedError.details);
     return _.assign({}, errorDetails, {
-      [nestedErrorFieldName]: nestedErrorTranslation
+      [nestedErrorFieldName]: nestedErrorTranslation,
     });
-  }
+  };
 }

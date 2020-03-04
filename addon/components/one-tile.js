@@ -26,7 +26,7 @@ export default Component.extend(I18n, {
   classNameBindings: [
     'isLink:one-tile-link',
     'footerText:with-footer',
-    'sizeClass'
+    'sizeClass',
   ],
 
   i18n: service(),
@@ -165,7 +165,7 @@ export default Component.extend(I18n, {
       }
 
       const routeElements = route ? route : ['onedata.sidebar.content.aspect',
-        aspect
+        aspect,
       ];
       return queryParamsObject ?
         routeElements.concat(queryParamsObject) : routeElements;
@@ -244,7 +244,7 @@ export default Component.extend(I18n, {
       const transitionToArgs = route ?
         route : ['onedata.sidebar.content.aspect', aspect];
       if (routeQueryParams) {
-        transitionToArgs.push({ queryParams: routeQueryParams })
+        transitionToArgs.push({ queryParams: routeQueryParams });
       }
       router.transitionTo(...transitionToArgs);
     }
@@ -259,7 +259,7 @@ export default Component.extend(I18n, {
       const {
         x2Breakpoint,
         x4Breakpoint,
-        _window
+        _window,
       } = this.getProperties('x2Breakpoint', 'x4Breakpoint', '_window');
       const windowWidth = _window.innerWidth;
       let sizeClass = '';

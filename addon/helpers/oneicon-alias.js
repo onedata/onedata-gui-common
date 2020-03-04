@@ -17,5 +17,5 @@ export default Helper.extend({
 
   compute(params) {
     return this.get('oneiconAlias').getName(params[0], params[1]);
-  }
+  },
 });

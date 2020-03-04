@@ -15,4 +15,4 @@ export default Component.extend({
       this.set('capacity', newCapacity);
     },
   },
-})
+});

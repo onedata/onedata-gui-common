@@ -28,7 +28,7 @@ export default Component.extend(I18n, {
     '_inEditionMode:editor:static',
     '_whileSaving:saving',
     'controlledManually:manual',
-    'hideEditIcons:without-edit-icons'
+    'hideEditIcons:without-edit-icons',
   ],
 
   i18n: service(),

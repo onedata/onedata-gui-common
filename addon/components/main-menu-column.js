@@ -112,6 +112,6 @@ export default Component.extend({
     },
     userAccountPopoverOpened(opened) {
       this.set('navigationState.isMainMenuColumnActive', opened);
-    }
+    },
   },
 });

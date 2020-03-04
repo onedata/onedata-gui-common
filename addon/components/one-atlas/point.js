@@ -69,5 +69,5 @@ export default Component.extend({
       top: positionY,
       left: positionX,
     });
-  }
+  },
 });

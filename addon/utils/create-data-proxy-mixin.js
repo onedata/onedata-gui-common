@@ -119,7 +119,7 @@ export default function createDataProxyMixin(name, options) {
       set(key, value) {
         // you should not do that, but we do not deny this
         return this.set(internalDataProxyName, value);
-      }
+      },
     }),
 
     [internalDataProxyName]: null,

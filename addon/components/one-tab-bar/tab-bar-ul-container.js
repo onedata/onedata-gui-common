@@ -73,18 +73,18 @@ export default Component.extend(ContentOverFlowdetector, {
 
   didInsertElement() {
     this._super(...arguments);
-    const $innerScrollContent = this.get('$innerScrollContent')
+    const $innerScrollContent = this.get('$innerScrollContent');
     const self = this;
     this.addOverflowDetectionListener();
     this.get('_overflowDetectionListener')();
     $innerScrollContent.scroll(function onScrollContent() {
       return self.innerScrollContentScrolled($(this));
     });
-    this.innerScrollContentScrolled($innerScrollContent)
+    this.innerScrollContentScrolled($innerScrollContent);
     this.element.addEventListener(
       'wheel',
       this.get('wheelEventHandler'), {
-        passive: false
+        passive: false,
       }
     );
   },
@@ -143,6 +143,6 @@ export default Component.extend(ContentOverFlowdetector, {
     moveTabs(direction, moveDelta) {
       const right = (direction === 'right');
       this.scrollContainer((right ? 1 : -1) * moveDelta);
-    }
+    },
   },
 });

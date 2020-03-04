@@ -29,5 +29,5 @@ export default Component.extend({
         }, 3000);
       });
     },
-  }
+  },
 });

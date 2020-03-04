@@ -54,7 +54,7 @@ export default Component.extend({
   sidenavModel: computed('sidenavResouceType', function () {
     const {
       sidenavResouceType,
-      sidebarResources
+      sidebarResources,
     } = this.getProperties('sidenavResouceType', 'sidebarResources');
 
     const resourceType = sidenavResouceType;
@@ -159,7 +159,7 @@ export default Component.extend({
     mobileMenuItemChanged(targetResourceType) {
       this.get('sideMenu').close();
       const isUsersRemoteView = targetResourceType === 'users' &&
-        this.get('guiUtils.manageAccountExternalLink')
+        this.get('guiUtils.manageAccountExternalLink');
       if (targetResourceType && !isUsersRemoteView) {
         return this.get('router')
           .transitionTo('onedata.sidebar', targetResourceType);
@@ -172,6 +172,6 @@ export default Component.extend({
       if (opened !== this.get('globalMenuOpened')) {
         this.set('globalMenuOpened', opened);
       }
-    }
-  }
+    },
+  },
 });

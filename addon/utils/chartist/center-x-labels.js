@@ -17,7 +17,7 @@ export default function () {
         .each((index, element) => {
           const label = $(element);
           const width = parseFloat(label.attr('width'));
-          label.css({ 'transform': `translateX(-${width / 2}px)` });
+          label.css({ transform: `translateX(-${width / 2}px)` });
         });
     });
   };

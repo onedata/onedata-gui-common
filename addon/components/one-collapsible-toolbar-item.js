@@ -99,13 +99,13 @@ export default Component.extend({
         'closeOnAction',
         'closeDropdown',
         'itemAction',
-      )
+      );
       if (!isDisabled) {
         if (closeOnAction) {
           closeDropdown();
         }
         itemAction(inFullMode);
       }
-    }
+    },
   },
 });

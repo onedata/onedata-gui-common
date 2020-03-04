@@ -139,10 +139,10 @@ export default OneInlineEditor.extend(I18n, validations, {
       switch (keyEvent.keyCode) {
         case 13:
           // enter
-          return this.send('saveEdition')
+          return this.send('saveEdition');
         case 27:
           // escape
-          return this.send('cancelEdition')
+          return this.send('cancelEdition');
         default:
           break;
       }

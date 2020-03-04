@@ -10,7 +10,7 @@
 
 import { unicodeLetter } from 'onedata-gui-common/utils/unicode-regexp';
 
-export const allowedChar = `(${unicodeLetter}|\\d|[()_])`
+export const allowedChar = `(${unicodeLetter}|\\d|[()_])`;
 export const additionalMiddleChar = ' .-';
 export const allowedMiddleChar = `(${allowedChar}|[${additionalMiddleChar}])`;
 

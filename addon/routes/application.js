@@ -49,7 +49,7 @@ export default Route.extend(ApplicationRouteMixin, {
       activeContentLevel,
       activeResourceType,
       activeResource,
-      globalBarAspectTitle
+      globalBarAspectTitle,
     } = navigationState.getProperties(
       'activeContentLevel',
       'activeResourceType',
@@ -65,7 +65,7 @@ export default Route.extend(ApplicationRouteMixin, {
       case 'aspect':
         return [
           activeResource ? get(activeResource, 'name') : null,
-          globalBarAspectTitle
+          globalBarAspectTitle,
         ];
       default:
         return [];

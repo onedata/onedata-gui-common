@@ -23,7 +23,7 @@ const SPECIAL_IDS = [
 ];
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 function isSpecialResourceId(id) {
@@ -59,7 +59,7 @@ export default Route.extend({
     let { resourceId } = model;
     this.render(`tabs.${resourceType}.${resourceId}`, {
       into: 'onedata.sidebar.content',
-      outlet: 'main-content'
+      outlet: 'main-content',
     });
-  }
+  },
 });

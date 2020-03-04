@@ -109,7 +109,7 @@ export default Component.extend({
   secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
     let {
       secondLevelItems,
-      secondaryItemId
+      secondaryItemId,
     } = this.getProperties('secondLevelItems', 'secondaryItemId');
     return _.find(secondLevelItems, { id: secondaryItemId });
   }),

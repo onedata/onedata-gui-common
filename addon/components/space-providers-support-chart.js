@@ -10,7 +10,7 @@
 import EmberObject, {
   getProperties,
   get,
-  computed
+  computed,
 } from '@ember/object';
 
 import { A, isArray } from '@ember/array';
@@ -76,7 +76,7 @@ export default OnePieChart.extend({
               label: get(provider, 'name'),
               value: get(supportSizes, providerId),
               color: get(providersColors, providerId),
-            })
+            });
           })
         );
       } else {
@@ -102,7 +102,7 @@ export default OnePieChart.extend({
           totalSize,
           supportSizes,
         } = getProperties(space, 'totalSize', 'supportSizes');
-        const providers = this.get('providers')
+        const providers = this.get('providers');
 
         if (typeof totalSize !== 'number' || totalSize < 0 ||
           !supportSizes || !isArray(providers)) {

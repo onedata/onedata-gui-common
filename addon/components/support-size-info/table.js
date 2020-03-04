@@ -96,7 +96,7 @@ export default Component.extend({
         supportSize: entry.get('supportSize'),
         supportSizeStr: bytesToString(entry.get('supportSize'), { iecFormat: true }),
       }));
-    })
+    });
     return processedData;
   }),
 

@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | hr label', function () {
   setupComponentTest('hr-label', {
-    integration: true
+    integration: true,
   });
 
   it('renders provided text', function () {

@@ -132,5 +132,5 @@ export default Component.extend(I18n, {
     onHide() {
       this.set('alert.opened', false);
     },
-  }
+  },
 });

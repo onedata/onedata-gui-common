@@ -6,7 +6,7 @@ import moment from 'moment';
 
 describe('Integration | Component | time from now', function () {
   setupComponentTest('time-from-now', {
-    integration: true
+    integration: true,
   });
 
   it('renders string with time from now', function () {

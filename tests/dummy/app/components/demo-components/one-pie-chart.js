@@ -30,6 +30,6 @@ export default Component.extend({
       label: 'Series 3',
       value: 30,
       color: '#EE3F3F',
-    })
+    }),
   ]),
 });

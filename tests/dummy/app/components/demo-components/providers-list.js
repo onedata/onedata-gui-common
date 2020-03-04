@@ -16,17 +16,17 @@ export default Component.extend({
   spaces: A([{
     name: 'space1',
     supportSizes: {
-      '1': 2097152,
-      '2': 1048576,
-      '3': 1048576,
+      1: 2097152,
+      2: 1048576,
+      3: 1048576,
     },
   }, {
     name: 'space2',
     supportSizes: {
-      '1': 1048576,
-      '2': 2097152,
-      '3': 1048576,
-    }
+      1: 1048576,
+      2: 2097152,
+      3: 1048576,
+    },
   }]),
 
   // fake providers

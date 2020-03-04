@@ -64,7 +64,7 @@ export default function clusterizeProvidersByCoordinates(
     square.longitude =
       _.sumBy(square.providers, provider => get(provider, 'longitude')) /
       square.providers.length;
-    square.id = square.providers.mapBy('id').sort().join('|')
+    square.id = square.providers.mapBy('id').sort().join('|');
   });
   return usedSquares;
 }

@@ -17,7 +17,7 @@ import { getOwner } from '@ember/application';
 const notFoundAspect = 'not-found';
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 export default Route.extend({
@@ -25,8 +25,8 @@ export default Route.extend({
 
   queryParams: {
     options: {
-      refreshModel: true
-    }
+      refreshModel: true,
+    },
   },
 
   beforeModel(transition) {
@@ -40,7 +40,7 @@ export default Route.extend({
           throw {
             isOnedataCustomError: true,
             type: resourceType === 'clusters' ?
-              'no-cluster-permissions' : 'no-permissions'
+              'no-cluster-permissions' : 'no-permissions',
           };
         } else {
           throw contentModel.error;
@@ -78,7 +78,7 @@ export default Route.extend({
     if (getOwner(this).lookup(`template:${templateName}`)) {
       this.render(templateName, {
         into: 'onedata.sidebar.content',
-        outlet: 'main-content'
+        outlet: 'main-content',
       });
     } else {
       const tabSettings = _.find(

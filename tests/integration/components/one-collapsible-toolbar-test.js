@@ -7,7 +7,7 @@ import $ from 'jquery';
 
 describe('Integration | Component | one collapsible toolbar', function () {
   setupComponentTest('one-collapsible-toolbar', {
-    integration: true
+    integration: true,
   });
 
   // TODO: does not run under xvfb. To check.
@@ -96,8 +96,8 @@ describe('Integration | Component | one collapsible toolbar', function () {
         let popover = $('body .webui-popover.in');
         expect(popover.length, 'shows popover after click').to.equal(1);
         let item = popover.find('a');
-        expect(item, 'dropdown item has trigger class').
-        to.have.class('trigger-class');
+        expect(item, 'dropdown item has trigger class')
+        .to.have.class('trigger-class');
         item.click();
         wait().then(() => {
           expect(actionOccurred, 'click action occurred').to.be.true;

@@ -185,5 +185,5 @@ export default Component.extend(DisabledPaths, {
   init() {
     this._super(...arguments);
     this._pathSelectionObserver();
-  }
+  },
 });

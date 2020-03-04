@@ -7,10 +7,10 @@ import wait from 'ember-test-helpers/wait';
 
 describe('Unit | Utility | ember/promise object', function () {
   it('still has first resolved content after promise replace', function (done) {
-    const content1 = { c1: null, };
-    const content2 = { c2: null, };
+    const content1 = { c1: null };
+    const content2 = { c2: null };
     const obj = EmberPromiseObject.create({
-      promise: Promise.resolve(content1)
+      promise: Promise.resolve(content1),
     });
     wait().then(() => {
       expect(get(obj, 'content'), 'after resolve of first promise')

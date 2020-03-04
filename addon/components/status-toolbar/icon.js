@@ -95,5 +95,5 @@ export default Component.extend({
 
   click() {
     invokeAction(this, 'clickAction');
-  }
+  },
 });

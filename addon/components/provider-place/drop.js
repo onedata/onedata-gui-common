@@ -132,5 +132,5 @@ export default Component.extend(I18n, {
     copyError() {
       this.get('globalNotify').info(this.t('hostnameCopyError'));
     },
-  }
+  },
 });

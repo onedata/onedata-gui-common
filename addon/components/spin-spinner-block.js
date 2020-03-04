@@ -19,7 +19,7 @@ const PREDEF_SIZES = {
   xs: 0.2,
   sm: 0.4,
   md: 0.8,
-  lg: 1.2
+  lg: 1.2,
 };
 
 export default Component.extend({
@@ -32,5 +32,5 @@ export default Component.extend({
 
   spinnerScale: computed('sizeClass', function () {
     return PREDEF_SIZES[this.get('sizeClass')];
-  })
+  }),
 });

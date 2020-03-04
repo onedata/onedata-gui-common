@@ -92,7 +92,7 @@ export default Service.extend(I18n, {
       case 'warning-alert':
         console.error('global-notify: Error reported: ' + notifyMessage.html);
         if (_.endsWith(type, '-alert')) {
-          type = type.substring(0, get(type, 'length') - '-alert'.length)
+          type = type.substring(0, get(type, 'length') - '-alert'.length);
         }
         return this.get('alert').show(type, notifyMessage, options);
       case 'warning':

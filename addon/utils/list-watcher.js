@@ -13,7 +13,7 @@ import ViewTester from 'onedata-gui-common/utils/view-tester';
 
 export default class ListWatcher {
   /**
-   * @param {jQuery} container 
+   * @param {jQuery} $container 
    * @param {string} itemsSelector 
    * @param {function} callback `(visibleElements: Element[], headerVisible: boolean) => undefined`
    */

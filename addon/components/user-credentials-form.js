@@ -264,5 +264,5 @@ export default OneForm.extend(Validations, I18n, {
       field.set('changed', true);
       this.recalculateErrors();
     },
-  }
+  },
 });

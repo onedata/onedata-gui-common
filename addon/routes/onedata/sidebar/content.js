@@ -64,7 +64,7 @@ export default Route.extend({
     // TODO: validate and use resourceType
     let {
       collection,
-      resourceType
+      resourceType,
     } = this.modelFor('onedata.sidebar');
 
     const navigationState = this.get('navigationState');
@@ -138,7 +138,7 @@ export default Route.extend({
     // render generic content template
     this.render('onedata.sidebar.content', {
       into: 'onedata',
-      outlet: 'content'
+      outlet: 'content',
     });
   },
 

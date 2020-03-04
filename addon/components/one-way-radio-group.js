@@ -57,6 +57,6 @@ export default Component.extend({
   actions: {
     updateHandler(value) {
       invokeAction(this, 'update', value, this);
-    }
-  }
+    },
+  },
 });

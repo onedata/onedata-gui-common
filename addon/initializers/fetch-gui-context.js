@@ -69,5 +69,5 @@ export function initialize(application) {
 
 export default {
   name: 'fetch-gui-context',
-  initialize: initialize
+  initialize: initialize,
 };

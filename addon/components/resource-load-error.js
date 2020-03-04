@@ -100,6 +100,6 @@ export default Component.extend(I18n, {
     },
     close() {
       this.get('onClose')();
-    }
-  }
+    },
+  },
 });

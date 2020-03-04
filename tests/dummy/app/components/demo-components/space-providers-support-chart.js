@@ -13,9 +13,9 @@ export default Component.extend({
 
   // colors for spaces
   colors: Object.freeze({
-    '1': '#4BD187',
-    '2': '#3ea5f9',
-    '3': '#EE3F3F',
+    1: '#4BD187',
+    2: '#3ea5f9',
+    3: '#EE3F3F',
   }),
 
   init() {
@@ -34,9 +34,9 @@ export default Component.extend({
         {
           id: '3',
           name: 'provider3',
-        }
-      ]
-    }
+        },
+      ],
+    };
     // generate support size
     let v1 = Math.random() * 100000000;
     let v2 = Math.random() * 100000000;

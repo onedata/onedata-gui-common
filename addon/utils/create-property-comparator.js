@@ -21,5 +21,5 @@ export default function createPropertyComparator(propertyName) {
     } else {
       return 0;
     }
-  }
+  };
 }

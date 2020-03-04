@@ -24,4 +24,4 @@ export default createClassComputed([false, true], (arr, key) => {
       return arr.isEvery(key, compareVal);
     }
   });
-})
+});

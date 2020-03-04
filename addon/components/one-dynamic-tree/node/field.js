@@ -82,6 +82,6 @@ export default Component.extend({
      */
     focusedOut() {
       this.get('focusedOut')();
-    }
-  }
+    },
+  },
 });

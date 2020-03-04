@@ -25,7 +25,7 @@ export default function safeMethodExecution(obj, method, ...params) {
     const methodString = (methodType === 'function' && method.name || method.toString());
     console.warn(
       `util:safe-method-execution: Cannot execute "${methodString}" on ` +
-      `Ember.Object because it is destroyed`
+      'Ember.Object because it is destroyed'
     );
   }
 }

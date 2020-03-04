@@ -17,5 +17,5 @@ import 'npm:contrast';
 export default {
   name: 'force-browserify-import',
 
-  initialize: function ( /* application */ ) {}
+  initialize: function ( /* application */ ) {},
 };

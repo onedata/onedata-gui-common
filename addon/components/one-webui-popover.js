@@ -319,7 +319,7 @@ export default Component.extend({
         const popoverTop = containerHeight - popoverBottom - popoverHeight;
         $popover.css({
           top: `${popoverTop}px`,
-          bottom: `initial`,
+          bottom: 'initial',
         });
       }
     }
@@ -328,7 +328,7 @@ export default Component.extend({
   _debounceResizeRefresh() {
     let {
       $triggerElement,
-      open
+      open,
     } = this.getProperties('$triggerElement', 'open');
     if (this.isDestroyed || this.isDestroying) {
       return;
@@ -363,7 +363,7 @@ export default Component.extend({
     refresh() {
       let {
         _isPopoverVisible,
-        _debounceTimerEnabled
+        _debounceTimerEnabled,
       } = this.getProperties('_isPopoverVisible', '_debounceTimerEnabled');
       if (_isPopoverVisible) {
         this._popover('hide');

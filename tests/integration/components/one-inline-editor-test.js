@@ -28,7 +28,7 @@ describe('Integration | Component | one inline editor', function () {
       expect(input).to.exist;
       expect(input.val()).to.equal(value);
       done();
-    })
+    });
   });
 
   it('allows to cancel edition', function (done) {
@@ -42,7 +42,7 @@ describe('Integration | Component | one inline editor', function () {
           done();
         });
       });
-    })
+    });
   });
 
   it('saves edited value', function (done) {
@@ -77,7 +77,7 @@ describe('Integration | Component | one inline editor', function () {
     const value = 'asdf';
     this.set('value', value);
     const onInputChanged = sinon.spy();
-    this.on('onInputValueChanged', onInputChanged)
+    this.on('onInputValueChanged', onInputChanged);
     this.render(hbs `{{one-inline-editor value=value onInputValueChanged=(action "onInputValueChanged")}}`);
     return click('.one-label').then(() => {
       return fillIn('input', 'anotherValue').then(() => {
@@ -85,6 +85,6 @@ describe('Integration | Component | one inline editor', function () {
         expect(onInputChanged).to.be.calledWith('asdf');
         expect(onInputChanged).to.be.calledWith('anotherValue');
       });
-    })
+    });
   });
 });

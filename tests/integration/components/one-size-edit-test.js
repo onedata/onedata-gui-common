@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper'
+import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
 import { click, fillIn } from 'ember-native-dom-helpers';
 
 class SizeUnitSelectHelper extends EmberPowerSelectHelper {
@@ -15,7 +15,7 @@ class SizeUnitSelectHelper extends EmberPowerSelectHelper {
 
 describe('Integration | Component | one size edit', function () {
   setupComponentTest('one-size-edit', {
-    integration: true
+    integration: true,
   });
 
   it('displays size number and unit in display mode', function () {

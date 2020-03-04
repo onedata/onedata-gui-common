@@ -20,5 +20,5 @@ export default BsModal.extend({
         backdropTransitionDuration: 0,
       });
     }
-  }
+  },
 });

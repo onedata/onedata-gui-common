@@ -19,4 +19,4 @@ export default Controller.extend({
     raw('no-pointer-events'),
     raw(''),
   ),
-})
+});

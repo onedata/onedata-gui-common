@@ -188,5 +188,5 @@ export default OneForm.extend({
     allValidChanged(isValid) {
       return invokeAction(this, 'allValidChanged', isValid);
     },
-  }
+  },
 });

@@ -18,7 +18,7 @@ export default Component.extend({
   layout,
   classNames: ['one-sidebar'],
   classNameBindings: [
-    'isLoadingItem:loading-item'
+    'isLoadingItem:loading-item',
   ],
 
   navigationState: service(),

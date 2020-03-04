@@ -9,7 +9,7 @@
 
 import {
   allowedChar,
-  allowedMiddleChar
+  allowedMiddleChar,
 } from 'onedata-gui-common/utils/backend-name-regexp';
 
 export const minLength = 2;

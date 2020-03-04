@@ -42,7 +42,7 @@ export default Mixin.create({
 
     const {
       element,
-      perfectScrollbarOptions
+      perfectScrollbarOptions,
     } = this.getProperties('element', 'perfectScrollbarOptions');
 
     const perfectScrollbar =

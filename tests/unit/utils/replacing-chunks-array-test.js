@@ -72,7 +72,7 @@ const gteMatcher = (compareValue) => {
     value => value >= compareValue,
     `greater or equal ${compareValue}`
   );
-}
+};
 
 describe('Unit | Utility | replacing chunks array', function () {
   beforeEach(function () {
@@ -189,7 +189,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         })
         .then(() => {
           expect(fetchSpy).to.be.calledTwice;
-          expect(fetchSpy).to.be.calledWith(30, 10, 0)
+          expect(fetchSpy).to.be.calledWith(30, 10, 0);
         });
     }
   );
@@ -455,7 +455,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         const expectedArray = [
           frontRecord1,
           frontRecord2,
-          ...recordRange(0, 58)
+          ...recordRange(0, 58),
         ];
         expect(actualArray)
           .to.deep.equal(expectedArray);
@@ -529,7 +529,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           array.setProperties({
             startIndex: 20,
             endIndex: 60,
-          })
+          });
           return wait();
         })
         .then(() => {

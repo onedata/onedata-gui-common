@@ -72,5 +72,5 @@ export default Component.extend({
     toggleNestedActions(item, isOpened) {
       scheduleOnce('afterRender', this, 'toggleNestedActions', item, isOpened);
     },
-  }
+  },
 });

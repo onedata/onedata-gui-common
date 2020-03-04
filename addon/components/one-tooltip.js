@@ -149,5 +149,5 @@ export default BsTooltip.extend({
       offset *= -1;
     }
     return offset;
-  }
+  },
 });

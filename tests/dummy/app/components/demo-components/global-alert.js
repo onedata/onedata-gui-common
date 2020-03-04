@@ -19,6 +19,6 @@ export default Component.extend({
       detailsText: htmlSafe(
         `<code>${JSON.stringify({ message: 'some details' }, null, 2)}</code>`
       ),
-    })
+    });
   },
 });

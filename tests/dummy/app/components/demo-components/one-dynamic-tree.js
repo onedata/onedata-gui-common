@@ -26,7 +26,7 @@ export default Component.extend({
     valuesChanged(values, isValid) {
       // logs are for component demo purposes
       console.log('Tree values:');
-      console.log(values)
+      console.log(values);
       next(() => this.set('_isValid', isValid));
     },
     toggleDisabledState() {
@@ -39,6 +39,6 @@ export default Component.extend({
     },
     search(query) {
       this.set('_searchQuery', query);
-    }
-  }
+    },
+  },
 });

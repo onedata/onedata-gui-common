@@ -14,6 +14,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { Promise } from 'rsvp';
+
 export default function tryUntilResolve(fun, limit, interval = 1) {
   const promise = fun();
   return promise
@@ -25,7 +27,7 @@ export default function tryUntilResolve(fun, limit, interval = 1) {
           setTimeout(() => resolve(
               tryUntilResolve(fun, limit - 1, interval)),
             interval
-          )
+          );
         });
       }
     });

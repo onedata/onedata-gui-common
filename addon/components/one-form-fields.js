@@ -14,7 +14,7 @@ import config from 'ember-get-config';
 import { computed, get } from '@ember/object';
 
 const {
-  layoutConfig
+  layoutConfig,
 } = config;
 
 /**
@@ -105,7 +105,7 @@ export default Component.extend({
         }
 
         lastGroup.fields.push(field);
-      })
+      });
 
       return groups;
     }
@@ -117,6 +117,6 @@ export default Component.extend({
     },
     onFocusOut() {
       invokeAction(this, 'onFocusOut', ...arguments);
-    }
+    },
   },
 });

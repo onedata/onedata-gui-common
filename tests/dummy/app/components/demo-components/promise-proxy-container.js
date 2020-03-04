@@ -23,19 +23,19 @@ export default Component.extend({
     this.set('resolvingProxy', PromiseObject.create({
       promise: new Promise(resolve => {
         run.later(resolve, 2000);
-      })
+      }),
     }));
 
     this.set('rejectingProxy', PromiseObject.create({
       promise: new Promise((resolve, reject) => {
         run.later(() => reject({ message: 'some reason' }), 2000);
-      })
-    }))
+      }),
+    }));
   },
 
   actions: {
     resetProxy() {
       this._resetProxy();
     },
-  }
+  },
 });

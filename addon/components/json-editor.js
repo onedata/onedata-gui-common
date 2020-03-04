@@ -146,6 +146,6 @@ export default Component.extend(I18n, {
   actions: {
     onChange(value) {
       this.recalculateValue(value);
-    }
-  }
+    },
+  },
 });

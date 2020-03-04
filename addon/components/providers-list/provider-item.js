@@ -74,5 +74,5 @@ export default Component.extend({
         this.get('selectedSpace.supportSizes'),
         this.get('provider.entityId')
       ));
-    })
+    }),
 });

@@ -16,7 +16,7 @@ const ClsBase = EmberObject.extend({
   init() {
     this._super(...arguments);
     this.get('value');
-  }
+  },
 });
 
 describe('Unit | Utility | computed last proxy content', function () {

@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one icon', function () {
   setupComponentTest('one-icon', {
-    integration: true
+    integration: true,
   });
 
   it('does not set color if color property is undefined', function () {

@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { later } from '@ember/runloop';
+import { Promise } from 'rsvp';
 
 export default Component.extend({
   open: true,

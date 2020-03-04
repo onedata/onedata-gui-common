@@ -15,5 +15,5 @@ export default Component.extend({
   tagName: 'div',
   classNames: ['one-collapsible-list-item-content'],
   classNameBindings: ['isOpened:opened'],
-  isOpened: false
+  isOpened: false,
 });

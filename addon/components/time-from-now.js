@@ -75,7 +75,7 @@ export default Component.extend({
 
     let timeFromNow;
     try {
-      timeFromNow = this.get('dateMoment').fromNow()
+      timeFromNow = this.get('dateMoment').fromNow();
     } finally {
       if (showIndividualSeconds) {
         moment.relativeTimeThreshold('ss', oldSsThreshold);

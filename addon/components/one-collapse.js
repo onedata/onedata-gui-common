@@ -17,5 +17,5 @@ export default BsCollapse.extend({
     if (config.environment === 'test') {
       this.set('transitionDuration', 0);
     }
-  }
+  },
 });

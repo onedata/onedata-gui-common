@@ -91,7 +91,7 @@ export default Component.extend(I18n, {
     );
     this.get('authenticationSuccess')({
       username,
-      password
+      password,
     });
     safeMethodExecution(this, 'set', 'isDisabled', false);
   },
@@ -102,7 +102,7 @@ export default Component.extend(I18n, {
     );
     this.get('authenticationFailure')({
       username,
-      password
+      password,
     });
     safeMethodExecution(this, 'setProperties', {
       isDisabled: false,
@@ -128,7 +128,7 @@ export default Component.extend(I18n, {
 
       const loginCalling = session.authenticate('authenticator:application', {
         username,
-        password
+        password,
       });
 
       loginCalling.then(() => this.onLoginSuccess(username, password));
@@ -141,6 +141,6 @@ export default Component.extend(I18n, {
       if (backButtonAction) {
         backButtonAction();
       }
-    }
-  }
+    },
+  },
 });

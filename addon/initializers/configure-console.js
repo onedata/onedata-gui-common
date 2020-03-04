@@ -37,5 +37,5 @@ export function initialize(application) {
 export default {
   name: 'configure-console',
   initialize: initialize,
-  after: 'fetch-gui-context'
+  after: 'fetch-gui-context',
 };

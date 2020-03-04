@@ -31,7 +31,7 @@ export default Component.extend({
     'isCollapsible:collapsible',
     'toolbarWhenOpened:toolbar-when-opened',
     'disableToggleIcon:disable-toggle-icon',
-    '_isItemFixed:header-fixed'
+    '_isItemFixed:header-fixed',
   ],
 
   /**
@@ -105,6 +105,6 @@ export default Component.extend({
       if (!this.get('_isItemFixed') && this.get('isCollapsible')) {
         invokeAction(this, 'toggle', opened);
       }
-    }
-  }
+    },
+  },
 });

@@ -7,7 +7,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one checkbox', function () {
   setupComponentTest('one-checkbox', {
-    integration: true
+    integration: true,
   });
 
   it('renders one-way-checkbox internally', function () {

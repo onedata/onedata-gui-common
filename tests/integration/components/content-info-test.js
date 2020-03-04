@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { click } from 'ember-native-dom-helpers'
+import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | content info', function () {
   setupComponentTest('content-info', {
-    integration: true
+    integration: true,
   });
 
   it('renders yielded content with buttonAction available for invoking', function () {

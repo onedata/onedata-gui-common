@@ -12,6 +12,6 @@ import { Promise } from 'rsvp';
 
 export default function rejectNotImplemented() {
   return Promise.reject({
-    message: 'not implemented'
+    message: 'not implemented',
   });
 }

@@ -112,7 +112,7 @@ export default Mixin.create({
         }
       }, null);
     }
-    node.set('value', value)
+    node.set('value', value);
     return value;
   },
 
@@ -147,6 +147,6 @@ export default Mixin.create({
       let _fieldsTree = this.get('_fieldsTree');
       this._changeCheckboxesState(_fieldsTree.get(path), value);
       this.valuesHaveChanged(true);
-    }
+    },
   },
 });

@@ -35,5 +35,5 @@ export default Component.extend({
    */
   directionClass: computed('direction', function directionClass() {
     return `direction-${this.get('direction')}`;
-  })
+  }),
 });

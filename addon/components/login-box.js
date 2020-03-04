@@ -100,5 +100,5 @@ export default Component.extend({
     backFromError() {
       this.set('showAuthenticationError', false);
     },
-  }
+  },
 });

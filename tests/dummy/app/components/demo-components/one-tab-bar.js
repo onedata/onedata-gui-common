@@ -35,7 +35,7 @@ export default Component.extend({
         name: 'Lisbon',
         icon: 'group',
         disabled: true,
-      }
+      },
     ];
   }),
 
@@ -68,7 +68,7 @@ export default Component.extend({
         id: '3',
         name: 'Integer tempus tortor enim nec mollis odio euismod in',
         icon: 'provider',
-      }
+      },
     ];
   }),
 });

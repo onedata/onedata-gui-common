@@ -8,7 +8,7 @@ import $ from 'jquery';
 
 describe('Integration | Component | remove icon', function () {
   setupComponentTest('remove-icon', {
-    integration: true
+    integration: true,
   });
 
   it('has class "remove-icon"', function () {

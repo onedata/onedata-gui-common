@@ -1,5 +1,5 @@
 import EmberObject, { computed } from '@ember/object';
-import { not, or, and } from 'ember-awesome-macros'
+import { not, or, and } from 'ember-awesome-macros';
 
 export const defaultValidate = () => null;
 

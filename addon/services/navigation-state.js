@@ -174,7 +174,7 @@ export default Service.extend(I18n, {
     set(key, value) {
       const aspectOptions = this.set('aspectOptions', parseAspectOptions(value));
       return serializeAspectOptions(aspectOptions);
-    }
+    },
   }),
 
   /**

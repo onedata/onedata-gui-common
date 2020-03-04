@@ -53,7 +53,9 @@ export default Component.extend({
   }),
 
   /**
+   * @override
    * @param {MouseEvent} clickEvent 
+   * @returns {boolean|undefined}
    */
   click(clickEvent) {
     if (!this.get('isDisabled')) {
@@ -68,6 +70,7 @@ export default Component.extend({
   },
 
   /**
+   * @override
    * @param {MouseEvent} mouseEvent
    */
   mouseDown(mouseEvent) {

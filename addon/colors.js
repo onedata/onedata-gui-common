@@ -20,8 +20,8 @@ var colors = {
   yellow: '#F7AA04',
 };
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+Object.defineProperty(exports, '__esModule', {
+  value: true,
 });
 
 // colors assigned to `default` to allow ES import

@@ -28,7 +28,7 @@ export default [{
             { value: '3', label: 'Option 3' },
           ],
           defaultValue: '1',
-        }
+        },
       },
       {
         name: 'node13',
@@ -46,7 +46,7 @@ export default [{
           name: 'node21',
           type: 'checkbox',
           defaultValue: true,
-          optional: true
+          optional: true,
         },
       },
       {
@@ -62,7 +62,7 @@ export default [{
               type: 'text',
             },
           }],
-        }]
+        }],
       },
       {
         name: 'node23',
@@ -80,7 +80,7 @@ export default [{
         field: {
           type: 'checkbox',
           defaultValue: false,
-          optional: true
+          optional: true,
         },
       },
       {
@@ -89,9 +89,9 @@ export default [{
         field: {
           type: 'checkbox',
           defaultValue: false,
-          optional: true
+          optional: true,
         },
       },
     ],
   },
-]
+];

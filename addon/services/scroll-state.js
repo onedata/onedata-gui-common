@@ -21,5 +21,5 @@ export default Service.extend({
    */
   scrollOccurred(scrollEvent) {
     this.set('lastScrollEvent', scrollEvent);
-  }
+  },
 });

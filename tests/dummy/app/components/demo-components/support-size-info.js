@@ -35,7 +35,7 @@ export default Component.extend({
         label: 'Provider #3',
         value: 39321600,
         color: '#EE3F3F',
-      })
+      }),
     ]));
   },
 });

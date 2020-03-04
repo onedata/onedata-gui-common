@@ -17,7 +17,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import _object from 'lodash/object';
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 export default Route.extend(AuthenticatedRouteMixin, {

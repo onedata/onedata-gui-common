@@ -13,7 +13,7 @@ export default Component.extend({
   tagName: 'svg',
   classNames: 'draw-area',
   attributeBindings: ['xmlns'],
-  xmlns: htmlSafe("http://www.w3.org/2000/svg"),
+  xmlns: htmlSafe('http://www.w3.org/2000/svg'),
 
   x2: 200,
   y2: 200,
@@ -22,6 +22,6 @@ export default Component.extend({
     this.setProperties({
       x2: clickEvent.offsetX,
       y2: clickEvent.offsetY,
-    })
+    });
   },
-})
+});

@@ -16,5 +16,5 @@ export default Helper.extend({
 
   compute(params) {
     return this.get('guiUtils').getRoutableIdFor(params[0]);
-  }
+  },
 });

@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | status toolbar/icon', function () {
   setupComponentTest('status-toolbar/icon', {
-    integration: true
+    integration: true,
   });
 
   it('is hidden if enabled is set to false', function () {

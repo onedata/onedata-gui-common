@@ -5,7 +5,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component'
+import Component from '@ember/component';
 import { Promise } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
@@ -20,6 +20,6 @@ export default Component.extend({
           resolve();
         }, 1000);
       });
-    }
+    },
   },
-})
+});

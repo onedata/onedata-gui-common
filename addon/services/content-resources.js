@@ -15,6 +15,6 @@ export default Service.extend({
    * @returns {Promise}
    */
   getModelFor( /* type, id */ ) {
-    throw new Error('service:content-resources: not implemented')
+    throw new Error('service:content-resources: not implemented');
   },
 });

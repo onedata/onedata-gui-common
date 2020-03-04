@@ -8,5 +8,5 @@ export default Component.extend({
 
   resource: null,
 
-  title: alias('resource.resourceId')
+  title: alias('resource.resourceId'),
 });

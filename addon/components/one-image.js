@@ -55,17 +55,17 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    $(window).off("resize", this.get('_onResizeHandler'));
+    $(window).off('resize', this.get('_onResizeHandler'));
   },
 
   _recalculateImageFontSize() {
     if (this.get('imageText')) {
       // 10% of image width
-      const image = this.$(".image");
+      const image = this.$('.image');
       if (image) {
         const fontSize = image.width() * 0.10;
         this.$().css('font-size', fontSize);
       }
     }
-  }
+  },
 });

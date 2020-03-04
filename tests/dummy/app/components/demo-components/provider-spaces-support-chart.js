@@ -28,6 +28,6 @@ export default Component.extend({
           p1: 2000000,
         },
       }]),
-    })
+    });
   }),
 });

@@ -13,7 +13,7 @@ export const siUnits =
   bytesPrefixes.map(
     (prefix, index) => ({
       name: prefix + 'B',
-      multiplicator: Math.pow(1000, index)
+      multiplicator: Math.pow(1000, index),
     })
   );
 
@@ -21,7 +21,7 @@ export const iecUnits =
   bytesPrefixes.map(
     (prefix, index) => ({
       name: prefix === '' ? 'B' : prefix + 'iB',
-      multiplicator: Math.pow(1024, index)
+      multiplicator: Math.pow(1024, index),
     })
   );
 

@@ -24,6 +24,6 @@ export default Component.extend({
         latitude: 30,
         longitude: 40,
       }]),
-    })
+    });
   }),
-})
+});

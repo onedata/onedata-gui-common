@@ -12,7 +12,7 @@ describe('Unit | Utility | computed t', function () {
         if (key === 'testi18n') {
           return 'success';
         }
-      }
+      },
     }).create();
     expect(get(testObject, 'test')).to.equal('success');
   });
@@ -28,7 +28,7 @@ describe('Unit | Utility | computed t', function () {
         if (key === 'testi18n') {
           return `success ${interpolations.one} ${interpolations.two}`;
         }
-      }
+      },
     }).create();
     expect(get(testObject, 'test')).to.equal('success first second');
   });

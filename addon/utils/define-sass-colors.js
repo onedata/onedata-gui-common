@@ -28,4 +28,4 @@ module.exports = function (app, colors) {
       };
       return functions;
     }, sassOptions.functions);
-}
+};

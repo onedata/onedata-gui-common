@@ -13,11 +13,11 @@ export default Route.extend({
   renderTemplate() {
     this.render('-internal-loading', {
       into: 'onedata',
-      outlet: 'sidebar'
+      outlet: 'sidebar',
     });
     this.render('-internal-loading', {
       into: 'onedata',
-      outlet: 'content'
+      outlet: 'content',
     });
   },
 });

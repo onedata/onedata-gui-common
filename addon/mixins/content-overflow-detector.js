@@ -91,7 +91,7 @@ export default Mixin.create({
         overflowParentElement,
         overflowSiblingsElements,
         overflowDetectionDelay,
-        _window
+        _window,
       } = this.getProperties(
         'overflowElement',
         'overflowParentElement',
@@ -123,7 +123,7 @@ export default Mixin.create({
     if (this.get('isOverflowDetectionAttached')) {
       const {
         _window,
-        _overflowDetectionListener
+        _overflowDetectionListener,
       } = this.getProperties('_window', '_overflowDetectionListener');
       _window.removeEventListener('resize', _overflowDetectionListener);
       this.set('isOverflowDetectionAttached', false);
@@ -141,7 +141,7 @@ export default Mixin.create({
       overflowSiblingsElements,
       additionalOverflowMargin,
       minimumFullWindowSize,
-      _window
+      _window,
     } = this.getProperties(
       'overflowElement',
       'overflowParentElement',
@@ -175,5 +175,5 @@ export default Mixin.create({
       .reduce((prev, curr) => prev + curr, 0);
     this.set('hasOverflow',
       parentWidth - siblingsWidth < elementWidth + additionalOverflowMargin);
-  }
+  },
 });

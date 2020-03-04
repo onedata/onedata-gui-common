@@ -19,14 +19,14 @@ export default Component.extend({
     spaces: [{
       name: 'space1',
       supportSizes: {
-        '1': 1048576,
+        1: 1048576,
       },
     }, {
       name: 'space2',
       supportSizes: {
-        '1': 1048576,
-        '2': 2097152,
-      }
+        1: 1048576,
+        2: 2097152,
+      },
     }],
   }),
 });

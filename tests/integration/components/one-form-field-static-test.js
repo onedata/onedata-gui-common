@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form field static', function () {
   setupComponentTest('one-form-field-static', {
-    integration: true
+    integration: true,
   });
 
   it('renders with value', function () {

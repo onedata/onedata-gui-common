@@ -29,8 +29,8 @@ module.exports = function (app, breakpoints) {
   sassOptions.functions =
     Object.keys(breakpoints).reduce(function (functions, breakpointName) {
       functions['def-' + breakpointName] = function () {
-        return new sass.types.Number(breakpoints[breakpointName])
+        return new sass.types.Number(breakpoints[breakpointName]);
       };
       return functions;
     }, sassOptions.functions);
-}
+};

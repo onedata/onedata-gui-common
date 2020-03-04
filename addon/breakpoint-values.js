@@ -14,10 +14,10 @@ var breakpoints = {
   screenSm: 768,
   screenMd: 1320,
   screenLg: 1680,
-}
+};
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+Object.defineProperty(exports, '__esModule', {
+  value: true,
 });
 
 // breakpoints assigned to `default` to allow ES import

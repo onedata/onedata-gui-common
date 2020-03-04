@@ -198,7 +198,7 @@ export default EmberObject.extend({
       );
       const hostElement = this.get('activeOwner.hostElement');
 
-      const classNames = ['embedded-iframe']
+      const classNames = ['embedded-iframe'];
       if (iframeClass) {
         classNames.push(iframeClass);
       }

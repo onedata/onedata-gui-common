@@ -369,7 +369,7 @@ export default Component.extend(ClickOutside, {
     let {
       _activeTriggerConfiguration,
       _popoverIdClass,
-      _modalIdClass
+      _modalIdClass,
     } = this.getProperties(
       '_activeTriggerConfiguration',
       '_popoverIdClass',
@@ -392,7 +392,7 @@ export default Component.extend(ClickOutside, {
   bindTriggerListeners() {
     let {
       _triggersConfiguration,
-      _clickHandler
+      _clickHandler,
     } = this.getProperties('_triggersConfiguration', '_clickHandler');
 
     _triggersConfiguration.forEach(conf => {
@@ -403,7 +403,7 @@ export default Component.extend(ClickOutside, {
   unbindTriggerListeners() {
     let {
       _triggersConfigurationOld,
-      _clickHandler
+      _clickHandler,
     } = this.getProperties('_triggersConfigurationOld', '_clickHandler');
 
     _triggersConfigurationOld.forEach(conf => {
@@ -423,7 +423,7 @@ export default Component.extend(ClickOutside, {
       _triggersConfiguration,
       _activeTriggerConfiguration,
       _handleOpenClose,
-      _contentVisible
+      _contentVisible,
     } = this.getProperties(
       '_triggersConfiguration',
       '_activeTriggerConfiguration',
@@ -477,7 +477,7 @@ export default Component.extend(ClickOutside, {
     let {
       switchBreakpoint,
       _activeTriggerConfiguration,
-      _window
+      _window,
     } = this.getProperties(
       'switchBreakpoint',
       '_activeTriggerConfiguration',
@@ -506,7 +506,7 @@ export default Component.extend(ClickOutside, {
     let {
       open,
       activeTriggerSelector,
-      _triggersConfiguration
+      _triggersConfiguration,
     } = this.getProperties(
       'open',
       'activeTriggerSelector',
@@ -528,7 +528,7 @@ export default Component.extend(ClickOutside, {
       if (invokeAction(this, 'onHide') !== false && this.get('_handleOpenClose')) {
         safeExec(this, () => {
           this.set('_contentVisible', false);
-        })
+        });
       }
     },
     onModalHide() {
@@ -541,6 +541,6 @@ export default Component.extend(ClickOutside, {
         invoke(this, 'close');
       });
       return submitPromise;
-    }
-  }
+    },
+  },
 });

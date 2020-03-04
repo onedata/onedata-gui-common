@@ -265,7 +265,7 @@ export default Component.extend(I18n, {
             key,
             value,
           } = getProperties(record, 'key', 'value');
-          obj[key] = value
+          obj[key] = value;
           return obj;
         }, {});
     } else {

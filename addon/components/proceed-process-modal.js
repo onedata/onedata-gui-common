@@ -150,7 +150,7 @@ export default Component.extend(I18n, {
         if (proceedResult && proceedResult.finally) {
           proceedResult.finally(() => {
             if (autoDetectProcessing) {
-              safeExec(this, 'set', 'processing', false)
+              safeExec(this, 'set', 'processing', false);
             }
           });
         } else {
@@ -166,5 +166,5 @@ export default Component.extend(I18n, {
         throw error;
       }
     },
-  }
+  },
 });
