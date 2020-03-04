@@ -67,11 +67,16 @@ describe('Unit | Utility | computed last proxy content', function () {
   it('returns first resolved value if proxy is recomputed and rejected', function () {
     const val1 = {};
     const val2 = {};
+    const secondValueError = {};
     const Cls = EmberObject.extend({
       dependency: val1,
       proxy: promise.object(computed('dependency', function proxy() {
         const dependency = this.get('dependency');
-        return (dependency === val1 ? resolve : reject)(dependency);
+        if (dependency === val1) {
+          return resolve(dependency);
+        } else {
+          return reject(secondValueError);
+        }
       })),
       value: computedLastProxyContent('proxy'),
     });
@@ -81,9 +86,13 @@ describe('Unit | Utility | computed last proxy content', function () {
     return get(obj, 'proxy').then(() => {
       get(obj, 'value');
       set(obj, 'dependency', val2);
-      return get(obj, 'proxy').catch(() => {
+      return get(obj, 'proxy');
+    }).catch((error) => {
+      if (error === secondValueError) {
         expect(get(obj, 'value')).to.equal(val1);
-      });
+      } else {
+        throw error;
+      }
     });
   });
 
@@ -102,9 +111,9 @@ describe('Unit | Utility | computed last proxy content', function () {
 
     return get(obj, 'proxy').then(() => {
       set(obj, 'dependency', val2);
-      return get(obj, 'proxy').then(() => {
-        expect(get(obj, 'value')).to.equal(val2);
-      });
+      return get(obj, 'proxy');
+    }).then(() => {
+      expect(get(obj, 'value')).to.equal(val2);
     });
   });
 });

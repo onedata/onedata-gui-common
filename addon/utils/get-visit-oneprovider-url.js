@@ -8,7 +8,7 @@
  */
 
 import { serializeAspectOptions } from 'onedata-gui-common/services/navigation-state';
-import isLegacyOneprovider from 'onedata-gui-common/utils/is-legacy-oneprovider';
+import isStandaloneGuiOneprovider from 'onedata-gui-common/utils/is-standalone-gui-oneprovider';
 
 export default function getVisitOneproviderUrl({
   router,
@@ -19,7 +19,7 @@ export default function getVisitOneproviderUrl({
 }) {
   const spaceRoutableId = guiUtils.getRoutableIdFor(space);
   const providerRoutableId = guiUtils.getRoutableIdFor(provider);
-  if (isLegacyOneprovider(providerVersion)) {
+  if (isStandaloneGuiOneprovider(providerVersion)) {
     return router.urlFor(
       'provider-redirect',
       providerRoutableId, {
