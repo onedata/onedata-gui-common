@@ -12,6 +12,7 @@
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { observer, set, get, computed } from '@ember/object';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
+import _ from 'lodash';
 
 export default FormFieldsGroup.extend({
   /**
@@ -44,20 +45,53 @@ export default FormFieldsGroup.extend({
     );
   }),
 
-  fieldsValueNamesObserver: observer(
-    'fields.@each.valueName',
-    function fieldsValueNamesObserver() {
-      // Adding new field will call dumpValue, which will set value of the new field
-      // to defaultValue.
-      this.valueChanged(this.dumpValue());
-    }
-  ),
-
   /**
    * Fields on this list will have value set to defaultValue on next dumpValue call.
    * @type {Utils.FormComponent.FormElement}
    */
   fieldsToSetDefaultValue: computed(() => []),
+
+  fieldsValueNamesObserver: observer(
+    'fields.@each.valueName',
+    function fieldsValueNamesObserver() {
+      if (!_.isEqual(
+          _.sortBy(this.getFieldsValueNames()),
+          _.sortBy(this.get('value.__fieldsValueNames') || [])
+        )) {
+        // Adding new field will call dumpValue, which will set value of the new field
+        // to defaultValue.
+        this.valueChanged(this.dumpValue());
+      }
+    }
+  ),
+
+  incomingFieldsValueNamesObserver: observer(
+    'value.__fieldsValueNames.[]',
+    function () {
+      const fields = this.get('fields');
+      const incomingFieldsValueNames = this.get('value.__fieldsValueNames') || [];
+      const newFields = incomingFieldsValueNames
+        .map(valueName => {
+          const existingField = fields.findBy('valueName', valueName);
+          if (existingField) {
+            return existingField;
+          } else {
+            return this.fieldFactoryMethod(valueName);
+          }
+        });
+      this.set('fields', newFields);
+      this.fieldsParentSetter();
+    }
+  ),
+
+  init() {
+    this._super(...arguments);
+    if (this.get('value.__fieldsValueNames')) {
+      this.incomingFieldsValueNamesObserver();
+    } else {
+      this.fieldsValueNamesObserver();
+    }
+  },
 
   /**
    * @public
@@ -68,8 +102,7 @@ export default FormFieldsGroup.extend({
       fieldsToSetDefaultValue,
     } = this.getProperties('fields', 'fieldsToSetDefaultValue');
 
-    const newField = this.fieldFactoryMethod(this.get('createdFieldsCounter'));
-    this.incrementProperty('createdFieldsCounter');
+    const newField = this.fieldFactoryMethod(this.generateUniqueFieldValueName());
     this.setProperties({
       fields: fields.concat([newField]),
       fieldsToSetDefaultValue: fieldsToSetDefaultValue.concat([newField]),
@@ -95,7 +128,7 @@ export default FormFieldsGroup.extend({
     set(
       defaultValue,
       '__fieldsValueNames',
-      this.get('fields').rejectBy('isValueless').mapBy('valueName')
+      this.getFieldsValueNames(),
     );
     return defaultValue;
   },
@@ -118,8 +151,40 @@ export default FormFieldsGroup.extend({
     this.set('fieldsToSetDefaultValue', []);
 
     // Add enumeration of existing fields
-    set(value, '__fieldsValueNames', fields.rejectBy('isValueless').mapBy('valueName'));
+    set(value, '__fieldsValueNames', this.getFieldsValueNames());
 
     return value;
+  },
+
+  /**
+   * @returns {Array<String>}
+   */
+  getFieldsValueNames() {
+    return this.get('fields').rejectBy('isValueless').mapBy('valueName');
+  },
+
+  /**
+   * @returns {String}
+   */
+  generateUniqueFieldValueName() {
+    const {
+      createdFieldsCounter,
+      name,
+    } = this.getProperties(
+      'createdFieldsCounter',
+      'name'
+    );
+    const fieldsValueNames = this.getFieldsValueNames();
+
+    let newCreatedFieldsCounter = createdFieldsCounter;
+    let uniqueFieldValueName;
+    do {
+      uniqueFieldValueName = `${name}Entry${newCreatedFieldsCounter}`;
+      newCreatedFieldsCounter++;
+    } while (fieldsValueNames.includes(uniqueFieldValueName))
+
+    this.set('createdFieldsCounter', newCreatedFieldsCounter);
+
+    return uniqueFieldValueName;
   },
 });
