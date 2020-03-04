@@ -12,6 +12,7 @@ import Component from '@ember/component';
 import layout from '../../templates/components/tags-input/text-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { or } from 'ember-awesome-macros';
+import { reads } from '@ember/object/computed';
 import $ from 'jquery';
 
 export default Component.extend({
@@ -61,6 +62,11 @@ export default Component.extend({
    * @type {ComputedProperty<Function>}
    */
   transform: or('settings.transform', label => label),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  placeholder: reads('settings.placeholder'),
 
   /**
    * @type {ComputedProperty<String>}
