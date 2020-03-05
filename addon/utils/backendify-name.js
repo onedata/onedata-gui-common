@@ -14,22 +14,17 @@ import {
 
 export const minLength = 2;
 export const maxLength = 50;
-const allowedCharRe = new RegExp(allowedChar);
 const allowedMiddleCharRe = new RegExp(allowedMiddleChar);
 
-export default function backendifyName(name, padChar) {
-  let newName = name.trim();
-  if (!allowedCharRe.test(newName[0])) {
-    newName = newName.slice(1, newName.length);
-  }
-  if (!allowedCharRe.test(newName[newName.length - 1])) {
-    newName = newName.slice(0, newName.length - 1);
-  }
+export default function backendifyName(name) {
+  let newName = name;
+  const m = newName.match(
+    new RegExp(
+      `.*?(${allowedChar}+.*${allowedChar}+|${allowedChar}{1,${minLength}}).*?`
+    )
+  );
+  newName = m && m[1] || '';
   newName = [...newName].map(c => allowedMiddleCharRe.test(c) ? c : '').join('');
-  newName = newName.trim();
   newName = newName.slice(0, maxLength);
-  if (padChar) {
-    newName = newName.padEnd(minLength, padChar);
-  }
   return newName;
 }

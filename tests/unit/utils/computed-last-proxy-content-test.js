@@ -4,6 +4,7 @@ import computedLastProxyContent from 'onedata-gui-common/utils/computed-last-pro
 import EmberObject, { set, get, computed, observer } from '@ember/object';
 import { promise, raw } from 'ember-awesome-macros';
 import { Promise, resolve, reject } from 'rsvp';
+import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 
 const ClsBase = EmberObject.extend({
   /**
@@ -116,4 +117,54 @@ describe('Unit | Utility | computed last proxy content', function () {
       expect(get(obj, 'value')).to.equal(val2);
     });
   });
+
+  it('stores value of proxy created with createDataProxyMixin', function () {
+    const val = 'val';
+    const Cls = EmberObject.extend(createDataProxyMixin('data'), {
+      value: computedLastProxyContent('dataProxy'),
+      valueObserver: observer('value', function () {}),
+      init() {
+        this._super(...arguments);
+        this.get('value');
+      },
+      fetchData() {
+        return resolve(val);
+      },
+    });
+
+    const obj = Cls.create();
+
+    return get(obj, 'dataProxy').then(() => {
+      expect(get(obj, 'value')).to.equal(val);
+    });
+  });
+
+  it('returns second resolved value if recomputed and fulfilled for createDataProxyMixin',
+    function () {
+      const val1 = 'val1';
+      const val2 = 'val2';
+      this.secondValue = false;
+      const testCase = this;
+      const Cls = EmberObject.extend(createDataProxyMixin('data'), {
+        value: computedLastProxyContent('dataProxy'),
+        valueObserver: observer('value', function () {}),
+        init() {
+          this._super(...arguments);
+          this.get('value');
+        },
+        fetchData() {
+          return resolve(testCase.secondValue ? val2 : val1);
+        },
+      });
+
+      const obj = Cls.create();
+
+      return get(obj, 'dataProxy').then(() => {
+        expect(get(obj, 'value')).to.equal(val1);
+        testCase.secondValue = true;
+        return obj.updateDataProxy({ replace: false });
+      }).then(() => {
+        expect(get(obj, 'value')).to.equal(val2);
+      });
+    });
 });

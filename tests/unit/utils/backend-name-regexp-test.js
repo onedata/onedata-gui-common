@@ -26,4 +26,11 @@ describe('Unit | Utility | backend name regexp', function () {
     expect('hello-').to.not.match(backendNameRegexp);
     expect('hello.').to.not.match(backendNameRegexp);
   });
+
+  it('does not match names with whitespaces on start or end', function () {
+    expect('   hello').to.not.match(backendNameRegexp);
+    expect('hello   ').to.not.match(backendNameRegexp);
+    expect('   hello   ').to.not.match(backendNameRegexp);
+    expect('\thello\n').to.not.match(backendNameRegexp);
+  });
 });
