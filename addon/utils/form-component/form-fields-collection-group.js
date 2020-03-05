@@ -13,6 +13,7 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import { observer, set, get, computed } from '@ember/object';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import _ from 'lodash';
+import { scheduleOnce } from '@ember/runloop';
 
 export default FormFieldsGroup.extend({
   /**
@@ -86,11 +87,9 @@ export default FormFieldsGroup.extend({
 
   init() {
     this._super(...arguments);
-    if (this.get('value.__fieldsValueNames')) {
-      this.incomingFieldsValueNamesObserver();
-    } else {
-      this.fieldsValueNamesObserver();
-    }
+    this.fieldsValueNamesObserver();
+
+    scheduleOnce('afterRender', this, 'incomingFieldsValueNamesObserver');
   },
 
   /**

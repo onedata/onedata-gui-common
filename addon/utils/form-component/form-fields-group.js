@@ -119,20 +119,28 @@ export default FormElement.extend({
   ),
 
   fieldsModeObserver: observer('fieldsMode', function fieldsModeObserver() {
-    const fieldsMode = this.get('fieldsMode');
-    let modeWhenNoFields;
+    const {
+      fieldsMode,
+      modeWhenNoFields: oldModeWhenNoFields,
+    } = this.getProperties('fieldsMode', 'modeWhenNoFields');
+    let newModeWhenNoFields = oldModeWhenNoFields;
     switch (fieldsMode) {
       case 'view':
-        modeWhenNoFields = 'view';
+        newModeWhenNoFields = 'view';
         break
+      case undefined: {
+        if (oldModeWhenNoFields && oldModeWhenNoFields !== 'mixed') {
+          break;
+        }
+      }
+      /* falls through */
       case 'edit':
       case 'mixed':
-      case 'undefined':
       default:
-        modeWhenNoFields = 'edit';
+        newModeWhenNoFields = 'edit';
         break;
     }
-    this.set('modeWhenNoFields', modeWhenNoFields);
+    this.set('modeWhenNoFields', newModeWhenNoFields);
   }),
 
   init() {

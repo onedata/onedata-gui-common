@@ -91,19 +91,27 @@
   }
 
   .field-view-mode {
+    &:not(.form-fields-group-renderer) {
+      margin-bottom: $padding-base-vertical * 0.75;
+    }
+
+    &.tags-field-renderer {
+      margin-bottom: 0;
+    }
+
     &.datetime-field-renderer .datetime-field,
     &.text-like-field-renderer .text-like-field,
     &.dropdown-field-renderer .dropdown-field {
       padding-top: $padding-base-vertical;
     }
-  }
 
-  .field-view-mode.dropdown-field-renderer {
-    .oneicon {
-      font-size: 2.2em;
-      vertical-align: middle;
-      line-height: 0;
-      margin-right: $padding-xs-horizontal;
+    &.dropdown-field-renderer {
+      .oneicon {
+        font-size: 2.2em;
+        vertical-align: middle;
+        line-height: 0;
+        margin-right: $padding-xs-horizontal;
+      }
     }
   }
 
