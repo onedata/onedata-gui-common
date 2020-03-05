@@ -463,6 +463,11 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     this.valuePropertySetter();
   },
 
+  willDestroy() {
+    this._super(...arguments);
+    this.get('fields').invoke('destroy');
+  },
+
   /**
    * @public
    * @param {string} mode one of: 'edit', 'show'
