@@ -13,8 +13,10 @@ import Component from '@ember/component';
 import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
-import { computed, observer } from '@ember/object';
+import { computed, observer, getProperties } from '@ember/object';
 import { writable, conditional, not, or } from 'ember-awesome-macros';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import config from 'ember-get-config';
 
 /**
  * @typedef {Object} Tag
@@ -34,45 +36,43 @@ export default Component.extend({
   attributeBindings: ['tabindex', 'disabled'],
 
   /**
-   * @public
+   * @virtual optional
    * @type {ComputedProperty<number>}
    */
   tabindex: writable(conditional('disabled', -1, 0)),
 
   /**
-   * @public
+   * @virtual optional
    * @type {boolean}
    */
   disabled: false,
 
   /**
-   * @public
+   * @virtual optional
    * @type {boolean}
    */
   readonly: false,
 
   /**
-   * @public
    * @virtual
    * @type {Array<Tag>}
    */
   tags: computed(() => []),
 
   /**
-   * @public
+   * @virtual optional
    * @type {Array<String>}
    */
   tagEditorComponentName: 'tags-input/text-editor',
 
   /**
    * Value passed to the tag editor component through `settings` property.
-   * @public
+   * @virtual optional
    * @type {any}
    */
   tagEditorSettings: undefined,
 
   /**
-   * @public
    * @virtual
    * @type {Function}
    * @param {Array<Tag>} tags new array of tags
@@ -81,8 +81,7 @@ export default Component.extend({
   onChange: notImplementedIgnore,
 
   /**
-   * @public
-   * @virtual
+   * @virtual optional
    * @type {Function}
    * @returns {any}
    */
@@ -98,6 +97,34 @@ export default Component.extend({
    */
   allowModification: not(or('readonly', 'disabled')),
 
+  /**
+   * @type {ComputedProperty<Array<Tag>>}
+   */
+  newTagsToHighlight: computed(() => []),
+
+  /**
+   * Tags from `tags` which are the same as tags in `newTagsToHighlight`
+   * @type {ComputedProperty<Array<Tag>>}
+   */
+  currentTagsToHighlight: computed(
+    'newTagsToHighlight.@each.{icon,label}',
+    'tags.@each.{icon,label}',
+    function currentTagsToHighlight() {
+      const {
+        newTagsToHighlight,
+        tags,
+      } = this.getProperties('newTagsToHighlight', 'tags');
+
+      return tags.filter(tag => {
+        const {
+          label,
+          icon,
+        } = getProperties(tag, 'label', 'icon');
+        return newTagsToHighlight.filterBy('label', label).isAny('icon', icon);
+      });
+    }
+  ),
+
   allowModificationObserver: observer(
     'allowModification',
     function allowModificationObserver() {
@@ -106,6 +133,12 @@ export default Component.extend({
       }
     }
   ),
+
+  disabledObserver: observer('disabled', function disabledObserver() {
+    if (this.get('disabled')) {
+      this.endTagCreation();
+    }
+  }),
 
   click(event) {
     this._super(...arguments);
@@ -116,7 +149,7 @@ export default Component.extend({
   },
 
   keyDown(event) {
-    if ([13, 32].includes(event.keyCode) && !this.get('isCreatingTag')) {
+    if (['Enter', ' '].includes(event.key) && !this.get('isCreatingTag')) {
       this.startTagCreation()
     }
   },
@@ -144,6 +177,16 @@ export default Component.extend({
 
   endTagCreation() {
     this.set('isCreatingTag', false);
+  },
+
+  removeTagFromHighlighted(tag) {
+    safeExec(this, () => {
+      const newTagsToHighlight = this.get('newTagsToHighlight');
+      const index = newTagsToHighlight.indexOf(tag);
+      if (index > -1) {
+        newTagsToHighlight.removeAt(index);
+      }
+    });
   },
 
   actions: {
@@ -174,6 +217,15 @@ export default Component.extend({
         onChange,
         tags,
       } = this.getProperties('onChange', 'tags');
+      this.get('newTagsToHighlight').pushObjects(newTagsToAdd);
+      newTagsToAdd.forEach(newTag =>
+        later(
+          this,
+          'removeTagFromHighlighted',
+          newTag,
+          config.environment === 'test' ? 1 : 1000
+        )
+      );
 
       onChange((tags || []).concat(newTagsToAdd).uniq());
     },

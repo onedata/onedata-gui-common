@@ -1,5 +1,5 @@
 {{#each tags as |tag|}}
-  <li class="tag-item input-element">
+  <li class="tag-item input-element {{if (contains tag currentTagsToHighlight) "animated fadeIn"}}">
     {{#if tag.icon}}
       {{one-icon icon=tag.icon class="tag-icon"}}
     {{/if}}

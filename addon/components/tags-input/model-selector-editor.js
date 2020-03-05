@@ -90,7 +90,8 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 
   tip: computed('value.record.representsAll', function tip() {
     const representsAll = this.get('value.record.representsAll');
-    return representsAll && this.tWithDefault(`allRecordTip.${representsAll}`);
+    return representsAll &&
+      this.t(`allRecordTip.${representsAll}`, {}, { defaultValue: '' });
   }),
 
   /**
@@ -144,7 +145,7 @@ export default Component.extend(I18n, {
    *     to construct list of record. Order of models in dropdown model selector
    *     will be the same as in this array.
    * }
-   * Each model specification is a object: {
+   * Each model specification is an object: {
    *   name: String, - one of: user, group, provider, service, serviceOnepanel
    *   getRecords: Function - returns a Promise which should resolve to
    *     an array of model records

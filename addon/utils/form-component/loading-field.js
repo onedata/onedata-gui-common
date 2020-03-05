@@ -31,7 +31,7 @@ export default FormField.extend({
    * @type {ComputedProperty<HtmlSafe>}
    */
   loadingText: computed('i18nPrefix', 'path', function loadingText() {
-    return this.tWithDefault(`${this.get('path')}.loadingText`, {}, undefined);
+    return this.t(`${this.get('path')}.loadingText`, {}, { defaultValue: '' });
   }),
 
   /**

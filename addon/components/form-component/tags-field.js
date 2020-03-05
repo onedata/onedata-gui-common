@@ -23,9 +23,11 @@ export default FieldComponentBase.extend({
     const {
       value,
       field,
-    } = this.getProperties('value', 'field');
+      sort,
+    } = this.getProperties('value', 'field', 'sort');
 
-    return field.valueToTags(value);
+    const convertedTags = field.valueToTags(value);
+    return sort ? field.sortTags(convertedTags) : convertedTags;
   }),
 
   /**

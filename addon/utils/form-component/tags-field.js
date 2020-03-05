@@ -39,7 +39,7 @@ export default FormField.extend({
   sort: false,
 
   /**
-   * @public
+   * @virtual optional
    * @param {any} value
    * @returns {Array<Tag>}
    */
@@ -48,7 +48,7 @@ export default FormField.extend({
   },
 
   /**
-   * @public
+   * @virtual optional
    * @param {Array<Tag>} tags
    * @returns {any}
    */
@@ -57,7 +57,7 @@ export default FormField.extend({
   },
 
   /**
-   * @public
+   * @virtual optional
    * @param {Array<Tag>} tags
    * @returns {Array<Tag>}
    */

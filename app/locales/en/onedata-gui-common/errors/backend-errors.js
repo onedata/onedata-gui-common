@@ -84,7 +84,7 @@ export default {
   badValueName: 'Value provided in request must be a valid name.',
   badValueDomain: 'Value provided in request must be a valid domain name.',
   badValueSubdomain: 'Value provided in request must be a valid subdomain name.',
-  badValueCaveats: 'Provided caveats are invalid.',
+  badValueCaveat: 'Provided caveats are invalid.',
   badGuiPackage: 'Provider GUI package could not be understood by the server.',
   guiPackageTooLarge: 'Provider GUI package is too large.',
   guiPackageUnverified: 'GUI plugin package verification failed, because SHA checksum of uploaded package is not whitelisted. To allow uploading this package please contact Onezone administrator and ask to add harvester GUI checksum {{shaSum}} to /etc/oz_worker/compatibility.json configuration file.',

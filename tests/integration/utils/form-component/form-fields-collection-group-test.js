@@ -215,7 +215,7 @@ describe(
           name: 'abc',
         });
 
-        expect(get(collectionGroup, 'addButtonText')).to.equal('Add');
+        expect(String(get(collectionGroup, 'addButtonText'))).to.equal('Add');
       }
     );
 
