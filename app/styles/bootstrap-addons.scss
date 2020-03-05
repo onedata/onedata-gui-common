@@ -48,7 +48,7 @@ $token-border-radius: 3px;
     }
   }
   .modal-footer {
-    // put a button in this container - it enabled tooltip events for disabled buttons
+    // put a button in this container - it enables tooltip events for disabled buttons
     .btn-tooltip-container {
       @extend .btn;
       padding: 0;

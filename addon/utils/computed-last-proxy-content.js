@@ -17,7 +17,7 @@ export default function computedLastProxyContent(proxyPropertyName) {
   const cacheName = `_${proxyPropertyName}Cache`;
   const contentPath = `${proxyPropertyName}.content`;
   const isFulfilledPath = `${proxyPropertyName}.isFulfilled`;
-  return computed(isFulfilledPath, function () {
+  return computed(isFulfilledPath, function lastProxyContent() {
     if (this.get(isFulfilledPath)) {
       return this.set(cacheName, this.get(contentPath));
     } else {

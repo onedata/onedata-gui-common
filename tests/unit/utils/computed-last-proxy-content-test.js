@@ -118,53 +118,24 @@ describe('Unit | Utility | computed last proxy content', function () {
     });
   });
 
-  it('stores value of proxy created with createDataProxyMixin', function () {
-    const val = 'val';
-    const Cls = EmberObject.extend(createDataProxyMixin('data'), {
-      value: computedLastProxyContent('dataProxy'),
-      valueObserver: observer('value', function () {}),
-      init() {
-        this._super(...arguments);
-        this.get('value');
-      },
-      fetchData() {
-        return resolve(val);
-      },
+  it('returns second resolved value if proxy is recomputed and fulfilled', function () {
+    const val1 = {};
+    const val2 = {};
+    const Cls = EmberObject.extend({
+      dependency: val1,
+      proxy: promise.object(computed('dependency', function proxy() {
+        return resolve(this.get('dependency'));
+      })),
+      value: computedLastProxyContent('proxy'),
     });
 
     const obj = Cls.create();
 
-    return get(obj, 'dataProxy').then(() => {
-      expect(get(obj, 'value')).to.equal(val);
+    return get(obj, 'proxy').then(() => {
+      set(obj, 'dependency', val2);
+      return get(obj, 'proxy');
+    }).then(() => {
+      expect(get(obj, 'value')).to.equal(val2);
     });
   });
-
-  it('returns second resolved value if recomputed and fulfilled for createDataProxyMixin',
-    function () {
-      const val1 = 'val1';
-      const val2 = 'val2';
-      this.secondValue = false;
-      const testCase = this;
-      const Cls = EmberObject.extend(createDataProxyMixin('data'), {
-        value: computedLastProxyContent('dataProxy'),
-        valueObserver: observer('value', function () {}),
-        init() {
-          this._super(...arguments);
-          this.get('value');
-        },
-        fetchData() {
-          return resolve(testCase.secondValue ? val2 : val1);
-        },
-      });
-
-      const obj = Cls.create();
-
-      return get(obj, 'dataProxy').then(() => {
-        expect(get(obj, 'value')).to.equal(val1);
-        testCase.secondValue = true;
-        return obj.updateDataProxy({ replace: false });
-      }).then(() => {
-        expect(get(obj, 'value')).to.equal(val2);
-      });
-    });
 });
