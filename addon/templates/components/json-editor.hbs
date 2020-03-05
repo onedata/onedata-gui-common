@@ -6,7 +6,8 @@
   disabled={{disabled}}
   readonly={{if readonly "readonly"}}
   spellcheck="false"
-  class="form-control json-editor-textarea {{inputClassName}}"></textarea>
+  onblur={{action onFocusLost}}
+  class="form-control json-editor-textarea no-resize {{inputClassName}}"></textarea>
 {{#if (and isErrorMsgVisible (eq isValid false))}}
   <div class="form-message text-right">{{tt this "errorMsg"}}</div>
 {{/if}}

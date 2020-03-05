@@ -1,4 +1,4 @@
-import { click } from 'ember-native-dom-helpers';
+import { click, focus } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
@@ -11,9 +11,9 @@ export default class OneDatetimePickerHelper {
     this.pickerInitDelay = 150;
   }
 
-  openPicker() {
+  openPicker(viaFocus = false) {
     const clock = this.createFakeClock();
-    return click(this.$trigger[0])
+    return (viaFocus ? focus(this.$trigger[0]) : click(this.$trigger[0]))
       .then(() => this.waitForPickerInit(clock))
       .then(() => clock.restore());
   }

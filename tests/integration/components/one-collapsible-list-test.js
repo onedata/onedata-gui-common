@@ -128,7 +128,7 @@ describe('Integration | Component | one collapsible list', function () {
     wait().then(() => {
       click('.first-item-header input').then(() => {
         expect(this.$('.first-item-header input')).to.be.disabled;
-        expect(selectionChangedSpy).to.be.notCalled;
+        expect(selectionChangedSpy).to.be.not.called;
         done();
       });
     });

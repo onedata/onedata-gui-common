@@ -1,0 +1,9 @@
+{{one-way-toggle
+  class="form-control"
+  inputId=fieldId
+  isReadOnly=(not isEffectivelyEnabled)
+  checked=value
+  update=(action "valueChanged")
+  onFocusOut=(action "focusLost")
+}}
+{{yield}}

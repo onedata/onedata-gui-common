@@ -63,6 +63,7 @@ module.exports = function (defaults) {
   const NODE_ASSETS = [
     'chartist-plugin-legend/chartist-plugin-legend.js',
     'input-tokenizer/tokenizer.min.js',
+    'perfect-scrollbar/css/perfect-scrollbar.css',
   ];
 
   BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));

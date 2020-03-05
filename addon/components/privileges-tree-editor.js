@@ -77,22 +77,31 @@ export default Component.extend({
   initialPrivileges: undefined,
 
   /**
+   * @virtua optional
+   * @type {boolean}
+   */
+  allowThreeStateToggles: true,
+
+  /**
    * Tree definition
    * @type {Ember.ComputedProperty<Array<Object>>}
    */
   initialTreeState: computed(
+    'allowThreeStateToggles',
     'initialPrivileges',
     'privilegesGroups',
     'privilegeGroupsTranslationsPath',
     'privilegesTranslationsPath',
     function initialTreeState() {
       const {
+        allowThreeStateToggles,
         initialPrivileges,
         privilegesGroups,
         privilegeGroupsTranslationsPath,
         privilegesTranslationsPath,
         i18n,
       } = this.getProperties(
+        'allowThreeStateToggles',
         'initialPrivileges',
         'privilegesGroups',
         'privilegeGroupsTranslationsPath',
@@ -105,7 +114,7 @@ export default Component.extend({
       return privilegesGroups.map(privilegesGroup => {
         const groupName = privilegesGroup.groupName;
         const privilegesNodes = privilegesGroup.privileges.map(privilege => {
-          const threeStatePermission =
+          const threeStatePermission = allowThreeStateToggles &&
             initialPrivileges[groupName][privilege.name] === 2;
           return {
             name: privilege.name,

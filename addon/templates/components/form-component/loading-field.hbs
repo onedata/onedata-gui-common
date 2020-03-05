@@ -1,0 +1,9 @@
+{{#if isPending}}
+  {{spin-spinner-block sizeClass="xs"}}
+  {{#if loadingText}}
+    <span class="loading-text">{{loadingText}}</span>
+  {{/if}}
+{{else if isRejected}}
+  {{resource-load-error reason=loadingError}}
+{{/if}}
+{{yield}}

@@ -2,6 +2,7 @@ export default [
   'bezier-curve',
   'checkbox-list',
   'fast-double-click',
+  'form-component',
   'global-alert',
   'global-modal',
   'hr-label',
@@ -37,4 +38,5 @@ export default [
   'space-providers-support-chart',
   'status-toolbar',
   'support-size-info',
+  'tags-input',
 ];

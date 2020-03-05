@@ -12,16 +12,19 @@ import { getProperties } from '@ember/object';
 import Ember from 'ember';
 import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
+import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 const i18nPrefix = 'errors.backendErrors.';
 
 const detailsTranslateFunctions = {
   posix: posixDetailsTranslator,
-  badAudienceToken: createNestedErrorDetailsTranslator('tokenError'),
+  badServiceToken: createNestedErrorDetailsTranslator('tokenError'),
+  badConsumerToken: createNestedErrorDetailsTranslator('tokenError'),
   badValueToken: createNestedErrorDetailsTranslator('tokenError'),
-  notAnAccessToken: notAnAccessOrInviteTokenDetailsTranslator,
-  notAnInviteToken: notAnAccessOrInviteTokenDetailsTranslator,
-  tokenAudienceForbidden: tokenAudienceForbiddenDetailsError,
+  notAnAccessToken: notAnXTokenDetailsTranslator,
+  notAnIdentityToken: notAnXTokenDetailsTranslator,
+  notAnInviteToken: notAnXTokenDetailsTranslator,
+  tokenServiceForbidden: tokenServiceForbiddenDetailsError,
   inviteTokenConsumerInvalid: inviteTokenConsumerInvalidDetailsError,
   storageTestFailed: storageTestFailedDetailsTranslator,
   fileAccess: posixDetailsTranslator,
@@ -81,7 +84,7 @@ function findTranslationForError(i18n, error) {
 function findTranslation(i18n, key, placeholders) {
   const translation = i18n.t(key, placeholders);
   const translationAsString = translation ? translation.toString() : '';
-  return (!translationAsString || translationAsString.startsWith('<missing-')) ?
+  return (!translationAsString || isMissingMessage(translation)) ?
     undefined : translation;
 }
 
@@ -111,7 +114,7 @@ function posixDetailsTranslator(i18n, errorDetails) {
   return _.assign({}, errorDetails, { errno: errnoTranslation });
 }
 
-function notAnAccessOrInviteTokenDetailsTranslator(i18n, errorDetails) {
+function notAnXTokenDetailsTranslator(i18n, errorDetails) {
   const receivedTranslation =
     findTokenTypeTranslation(i18n, errorDetails.received);
   return _.assign({}, errorDetails, { received: receivedTranslation });
@@ -122,18 +125,21 @@ function findTokenTypeTranslation(i18n, tokenType) {
   if (tokenType.accessToken) {
     translation =
       findTranslation(i18n, i18nPrefix + 'translationParts.accessToken');
+  } else if (tokenType.identityToken) {
+    translation =
+      findTranslation(i18n, i18nPrefix + 'translationParts.identityToken');
   } else if (tokenType.inviteToken) {
     translation =
-      tokenType.inviteToken.subtype + ' ' +
+      tokenType.inviteToken.inviteType + ' ' +
       findTranslation(i18n, i18nPrefix + 'translationParts.inviteToken');
   }
   return translation;
 }
 
-function tokenAudienceForbiddenDetailsError(i18n, errorDetails) {
-  const audience = errorDetails.audience || {};
-  const audienceTranslation = resourceTypeAndIdToString(audience);
-  return _.assign({}, errorDetails, { audience: audienceTranslation });
+function tokenServiceForbiddenDetailsError(i18n, errorDetails) {
+  const service = errorDetails.service || {};
+  const serviceTranslation = resourceTypeAndIdToString(service);
+  return _.assign({}, errorDetails, { service: serviceTranslation });
 }
 
 function inviteTokenConsumerInvalidDetailsError(i18n, errorDetails) {

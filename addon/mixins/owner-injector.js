@@ -10,6 +10,7 @@
  */
 
 import Mixin from '@ember/object/mixin';
+import { observer } from '@ember/object';
 import { getOwner } from '@ember/application';
 
 export default Mixin.create({
@@ -20,13 +21,17 @@ export default Mixin.create({
    */
   ownerSource: undefined,
 
-  init() {
-    this._super(...arguments);
-
+  ownerSourceObserver: observer('ownerSource', function ownerSourceObserver() {
     const ownerSource = this.get('ownerSource');
-    if (ownerSource) {
-      const onwerInjection = getOwner(ownerSource).ownerInjection();
-      this.setProperties(onwerInjection)
+
+    if (ownerSource && !getOwner(this)) {
+      const ownerInjection = getOwner(ownerSource).ownerInjection();
+      this.setProperties(ownerInjection);
     }
+  }),
+
+  init() {
+    this.ownerSourceObserver();
+    this._super(...arguments);
   }
 });

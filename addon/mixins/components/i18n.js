@@ -5,13 +5,14 @@
  * A prefix can be used with or without trailing dot.
  *
  * @module mixins/components/i18n
- * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Mixin from "@ember/object/mixin";
 import { computed } from "@ember/object";
+import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 export default Mixin.create({
   /**
@@ -46,14 +47,25 @@ export default Mixin.create({
    * Translate text using i18n service, using optional i18nPrefix
    * @param {string} translationKey
    * @param {object} placeholders
+   * @param {boolean} options.usePrefix
+   * @param {any} options.defaultValue
    * @returns {string} string translated by 18n service 
    */
-  t(translationKey, placeholders = {}) {
+  t(
+    translationKey,
+    placeholders = {}, { usePrefix, defaultValue } = { usePrefix: true, defaultValue: undefined }
+  ) {
     const {
       i18n,
       tPrefix,
     } = this.getProperties('i18n', 'tPrefix');
-    return i18n.t(tPrefix + translationKey, placeholders);
+    const translation =
+      i18n.t((usePrefix !== false ? tPrefix : '') + translationKey, placeholders);
+    if (defaultValue !== undefined && isMissingMessage(translation)) {
+      return defaultValue;
+    } else {
+      return translation;
+    }
   },
 
   /**

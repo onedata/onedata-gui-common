@@ -2,10 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?du2da2') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?du2da2') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?du2da2##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?a45ie9');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?a45ie9#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?a45ie9') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?a45ie9') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?a45ie9##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -515,6 +516,11 @@
 .oneicon-permissions {
   &:before {
     content: $oneicon-permissions; 
+  }
+}
+.oneicon-plus {
+  &:before {
+    content: $oneicon-plus; 
   }
 }
 .oneicon-provider-add {

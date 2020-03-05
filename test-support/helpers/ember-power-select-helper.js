@@ -1,18 +1,18 @@
-import { click, find } from 'ember-native-dom-helpers';
+import { click } from 'ember-native-dom-helpers';
 
 export default class EmberPowerSelectHelper {
   constructor(powerSelectTriggerParentSelector, powerSelectDropdownSelector) {
     this.triggerSelector =
       powerSelectTriggerParentSelector + ' .ember-basic-dropdown-trigger';
     this.dropdownSelector = powerSelectDropdownSelector ||
-      powerSelectTriggerParentSelector + ' .ember-power-select-options';
+      powerSelectTriggerParentSelector + ' .ember-basic-dropdown-content';
   }
 
   /**
    * @returns {HTMLDIVElement}
    */
   getTrigger() {
-    return find(this.triggerSelector);
+    return document.querySelector(this.triggerSelector);
   }
 
   /**
@@ -23,11 +23,20 @@ export default class EmberPowerSelectHelper {
   }
 
   /**
+   * @returns {HTMLINPUTElement}
+   */
+  getSearchInput() {
+    return document.querySelector(
+      `${this.dropdownSelector} .ember-power-select-search-input`
+    );
+  }
+
+  /**
    * @param {number} n item index starting from 1
    * @returns {HTMLLIElement|null}
    */
   getNthOption(n) {
-    return find(this.dropdownSelector + ` li:nth-child(${n})`);
+    return document.querySelector(`${this.dropdownSelector} li:nth-child(${n})`);
   }
 
   /**

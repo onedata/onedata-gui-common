@@ -1,0 +1,120 @@
+{{#one-webui-popover
+  class="tags-selector model-selector"
+  open=true
+  triggerSelector=(concat "#" elementId)
+  arrow=false
+  registerApi=(action (mut popoverApi))
+  padding=false
+  placement="vertical"
+  popoverStyle="tags-selector"
+  as |popover|
+}}
+  {{#click-outside
+    class="selector-container"
+    action=onEndTagCreation
+    except-selector=parentTagsInputSelector
+  }}
+    {{#one-dropdown
+      triggerClass="small"
+      dropdownClass="small"
+      options=modelOptions
+      onchange=(action (mut selectedModelOption))
+      selected=selectedModelOption
+      searchEnabled=false
+      renderInPlace=true
+      verticalPosition="bottom"
+      as |modelType|}}
+      <div class="option-container">
+        {{#if modelType.icon}}
+          {{one-icon icon=modelType.icon}}
+        {{/if}}
+        {{#truncated-string class="text"}}
+          {{modelType.label}}
+        {{/truncated-string}}
+      </div>
+    {{/one-dropdown}}
+    {{#bs-button-group
+      value=selectedView
+      class="view-selector btn-group-justified"
+      type="radio"
+      onChange=(action (mut selectedView))
+      as |bg|
+    }}
+      <div class="btn-group" role="group">
+        {{#bg.button type="default" class="btn-sm btn-list" value="list"}}
+          {{tt this "view.list"}}
+        {{/bg.button}}
+      </div>
+      <div class="btn-group" role="group">
+        {{#bg.button type="default" class="btn-sm btn-by-id" value="byId"}}
+          {{tt this "view.byId"}}
+        {{/bg.button}}
+      </div>
+    {{/bs-button-group}}
+    <hr class="content-separator">
+    {{#if (eq selectedView "list")}}
+      {{#promise-proxy-container proxy=recordsProxy sizeClass="sm"}}
+        {{#if isAllRecordsSelectedDescriptionVisible}}
+          <p class="all-records-added-description">
+            {{tt this (concat "allRecordsAdded." selectedModelName)}}
+          </p>
+        {{else}}
+          <input
+            type="text"
+            class="records-filter form-control input-sm"
+            value={{recordsFilter}}
+            oninput={{action (mut recordsFilter) value="target.value"}}
+            placeholder={{tt this "recordsFilterPlaceholder"}}
+          >
+          {{#perfect-scrollbar-element}}
+            <ul class="selector-list">
+              {{#each filteredTagsToRender key="label" as |tag|}}
+                <li class="selector-item {{if tag.value.record.representsAll "all-item" "record-item"}}" {{action "tagSelected" tag}}>
+                  {{#if tag.icon}}
+                    {{one-icon icon=tag.icon class="tag-icon"}}
+                  {{/if}}
+                  {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                  {{#if tag.tip}}
+                    {{one-tooltip title=tag.tip}}
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+          {{/perfect-scrollbar-element}}
+        {{/if}}
+      {{/promise-proxy-container}}
+    {{else}}
+      {{#if hasAllRecordsTagSelected}}
+        <p class="all-records-added-description">
+          {{tt this (concat "allRecordsAdded." selectedModelName)}}
+        </p>
+      {{else}}
+        <div class="form-group form-group-sm id-form-group">
+          <label
+            for={{concat elemetId "-id-input"}}
+            class="id-description control-label"
+          >
+            {{tt this (concat "idLabel." selectedModelName)}}:
+          </label>
+          <input
+            id={{concat elemetId "-id-input"}}
+            type="text"
+            class="record-id form-control"
+            value={{idToAdd}}
+            oninput={{action (mut idToAdd) value="target.value"}}
+          >
+        </div>
+        {{#bs-button
+          size="sm"
+          type="primary"
+          class="add-id pull-right"
+          disabled=(not trimmedIdToAdd)
+          onClick=(action "addId")
+        }}
+          {{tt this "addId"}}
+        {{/bs-button}}
+      {{/if}}
+    {{/if}}
+  {{/click-outside}}
+{{/one-webui-popover}}
+{{yield}}

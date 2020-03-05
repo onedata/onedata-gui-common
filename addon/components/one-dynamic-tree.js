@@ -189,6 +189,10 @@ export default Component.extend(
       this.valuesHaveChanged(false, false);
     }),
 
+    definitionObserver: observer('definition', function () {
+      this.reset();
+    }),
+
     _valuesPrepareObserver: observer('definition', 'overrideValues', function () {
       const {
         definition,

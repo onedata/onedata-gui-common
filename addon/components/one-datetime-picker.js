@@ -51,7 +51,7 @@ export default DateTimePicker.extend({
    */
   minDate: computed('initializationTime', function minDate() {
     const initializationTime = this.get('initializationTime');
-    return initializationTime ? moment(initializationTime).format('Y/m/d') : null;
+    return initializationTime ? moment(initializationTime).format('Y/M/D') : null;
   }),
 
   init() {

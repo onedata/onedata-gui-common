@@ -28,6 +28,8 @@ import loginLayout from './onedata-gui-common/components/login-layout';
 import oneproviderMapCircle from './onedata-gui-common/components/oneprovider-map-circle';
 import oneprovidersSelectorPopoverContent from './onedata-gui-common/components/oneproviders-selector-popover-content';
 import oneSidebar from './onedata-gui-common/components/one-sidebar';
+import formComponent from './onedata-gui-common/components/form-component';
+import tagsInput from './onedata-gui-common/components/tags-input';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
@@ -43,6 +45,8 @@ import backendErrors from './onedata-gui-common/errors/backend-errors';
 import noPermissions from './onedata-gui-common/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
 import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
+
+import json from './onedata-gui-common/validators/json';
 
 const translations = {
   components: {
@@ -75,6 +79,8 @@ const translations = {
     oneproviderMapCircle,
     oneprovidersSelectorPopoverContent,
     oneSidebar,
+    formComponent,
+    tagsInput,
     contentSharesEmpty,
     alerts: {
       endpointError,
@@ -99,6 +105,9 @@ const translations = {
     noPermissions,
     noClusterPermissions,
     cannotInitWebsocket,
+  },
+  validators: {
+    json,
   },
 };
 
