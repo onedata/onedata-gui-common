@@ -15,7 +15,7 @@ import $ from 'jquery';
  * 
  * @module components/one-image
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Component.extend({
