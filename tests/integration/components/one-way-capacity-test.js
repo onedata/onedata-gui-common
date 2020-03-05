@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { fillIn, focus, blur, keyEvent } from 'ember-native-dom-helpers';
-import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper'
+import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
 
 class UnitSelectHelper extends EmberPowerSelectHelper {
   constructor() {
@@ -15,7 +15,7 @@ class UnitSelectHelper extends EmberPowerSelectHelper {
 
 describe('Integration | Component | one way capacity', function () {
   setupComponentTest('one-way-capacity', {
-    integration: true
+    integration: true,
   });
 
   it('shows passed capacity', function () {

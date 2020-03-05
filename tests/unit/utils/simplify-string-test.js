@@ -5,7 +5,7 @@ import simplifyString from 'onedata-gui-common/utils/simplify-string';
 describe('Unit | Utility | simplify string', function () {
   it('changes spaces to dashes', function () {
     let result = simplifyString('abc def   ghi');
-    expect(result).to.be.equal('abc-def-ghi')
+    expect(result).to.be.equal('abc-def-ghi');
   });
 
   it('removes illegal characters', function () {

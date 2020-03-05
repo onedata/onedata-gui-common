@@ -7,7 +7,7 @@ import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | actions popover content', function () {
   setupComponentTest('actions-popover-content', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

@@ -6,7 +6,7 @@ import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | one collapsible list item header', function () {
   setupComponentTest('one-collapsible-list-item-header', {
-    integration: true
+    integration: true,
   });
 
   it('propagates click events to btn-toolbar children', function () {

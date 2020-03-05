@@ -19,7 +19,7 @@
  *
  * @module components/one-form
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -32,7 +32,7 @@ import config from 'ember-get-config';
 import _ from 'lodash';
 
 const {
-  layoutConfig
+  layoutConfig,
 } = config;
 
 export default Component.extend({
@@ -97,7 +97,7 @@ export default Component.extend({
   currentFields: computed('currentFieldsPrefix.[]', 'allFields', function () {
     let {
       allFields,
-      currentFieldsPrefix
+      currentFieldsPrefix,
     } = this.getProperties('allFields', 'currentFieldsPrefix');
     let fields = [];
     currentFieldsPrefix.forEach(prefix => {
@@ -127,7 +127,7 @@ export default Component.extend({
   formValues: computed('allFieldsValues', 'currentFieldsPrefix.[]', function () {
     let {
       allFieldsValues,
-      currentFieldsPrefix
+      currentFieldsPrefix,
     } = this.getProperties('allFieldsValues', 'currentFieldsPrefix');
     let values = EmberObject.create({});
     currentFieldsPrefix
@@ -147,7 +147,7 @@ export default Component.extend({
       let {
         currentFieldsPrefix,
         collapsedPrefixes,
-        validations
+        validations,
       } = this.getProperties(
         'currentFieldsPrefix',
         'collapsedPrefixes',
@@ -177,7 +177,7 @@ export default Component.extend({
    */
   prepareFields() {
     let {
-      allFields
+      allFields,
     } = this.getProperties('allFields');
     allFields.forEach(field => {
       this._resetField(field);
@@ -200,7 +200,7 @@ export default Component.extend({
   changeFormValue(fieldName, value) {
     let {
       allFieldsValues,
-      unknownFieldErrorMsg
+      unknownFieldErrorMsg,
     } = this.getProperties(
       'allFieldsValues',
       'unknownFieldErrorMsg'
@@ -224,7 +224,7 @@ export default Component.extend({
     let {
       currentFields,
       allFields,
-      allFieldsValues
+      allFieldsValues,
     } = this.getProperties('currentFields', 'allFields', 'allFieldsValues');
     let fields = currentFields;
     if (prefixes) {
@@ -248,7 +248,7 @@ export default Component.extend({
     let {
       currentFields,
       allFieldsValues,
-      errors
+      errors,
     } = this.getProperties('currentFields', 'allFieldsValues', 'errors');
 
     let prefix = 'allFieldsValues.';
@@ -263,13 +263,13 @@ export default Component.extend({
         field.setProperties({
           isValid: !error,
           isInvalid: !!error,
-          message: error ? error.get('message') : ''
+          message: error ? error.get('message') : '',
         });
       } else {
         field.setProperties({
           isValid: false,
           isInvalid: false,
-          message: ''
+          message: '',
         });
       }
     });
@@ -295,5 +295,5 @@ export default Component.extend({
    */
   cutOffPrefix(fieldName) {
     return fieldName.substring(fieldName.indexOf('.') + 1);
-  }
+  },
 });

@@ -7,7 +7,7 @@ import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | render later', function () {
   setupComponentTest('render-later', {
-    integration: true
+    integration: true,
   });
 
   it('does not render content for falsy trigger value', function () {

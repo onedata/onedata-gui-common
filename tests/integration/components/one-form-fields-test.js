@@ -6,12 +6,12 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form fields', function () {
   setupComponentTest('one-form-fields', {
-    integration: true
+    integration: true,
   });
 
   it('puts an "optional" label in optional inputs', function () {
     let fields = [
-      { name: 'one', type: 'text', label: 'One field', optional: true }
+      { name: 'one', type: 'text', label: 'One field', optional: true },
     ];
 
     this.set('fields', fields);
@@ -31,7 +31,7 @@ describe('Integration | Component | one form fields', function () {
 
   it('renders label tip if field should have one', function () {
     let fields = [
-      { name: 'one', type: 'text', label: 'One field', tip: 'Field tip' }
+      { name: 'one', type: 'text', label: 'One field', tip: 'Field tip' },
     ];
 
     this.set('fields', fields);
@@ -53,7 +53,7 @@ describe('Integration | Component | one form fields', function () {
     const VALUE = 'some value';
 
     let fields = [
-      { name: 'one', type: 'text' }
+      { name: 'one', type: 'text' },
     ];
 
     this.set('fields', fields);
@@ -75,12 +75,12 @@ describe('Integration | Component | one form fields', function () {
     const VALUE = 'some value';
 
     let fields = [
-      { name: 'one', type: 'static', optional: true }
+      { name: 'one', type: 'static', optional: true },
     ];
 
     this.set('fields', fields);
     this.set('formValues', EmberObject.create({
-      one: VALUE
+      one: VALUE,
     }));
 
     this.render(hbs `

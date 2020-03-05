@@ -31,18 +31,18 @@ function triggerCopyClick(context, success = true) {
 const GuiUtils = Service.extend({
   getRoutableIdFor(id) {
     return id;
-  }
+  },
 });
 
 const Router = Service.extend({
   urlFor() {
     return '#/url';
-  }
+  },
 });
 
 describe('Integration | Component | provider place', function () {
   setupComponentTest('provider-place', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -60,31 +60,31 @@ describe('Integration | Component | provider place', function () {
           drop: {
             hostnameCopySuccess: COPY_SUCCESS_MSG,
             hostnameCopyError: COPY_ERROR_MSG,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     const spaces = [{
       id: 'space1',
       name: 'space1',
       supportSizes: {
-        '1': 1048576,
+        1: 1048576,
       },
     }, {
       id: 'space2',
       name: 'space2',
       supportSizes: {
-        '1': 1048576,
-        '2': 2097152,
-      }
+        1: 1048576,
+        2: 2097152,
+      },
     }];
     spaces.isFulfilled = true;
 
     const cluster = {
       workerVersion: {
         release: '20.02.0-alpha',
-      }
+      },
     };
 
     const provider = EmberObject.create({
@@ -103,7 +103,7 @@ describe('Integration | Component | provider place', function () {
     this.set('provider', provider);
     this.set('providers', [
       provider,
-      Object.assign({}, provider, { id: '2', name: 'provider2' })
+      Object.assign({}, provider, { id: '2', name: 'provider2' }),
     ]);
   });
 

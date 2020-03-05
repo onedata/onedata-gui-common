@@ -4,7 +4,7 @@
 module.exports = function ( /* environment, appConfig */ ) {
   return {
     i18n: {
-      defaultLocale: 'en'
-    }
+      defaultLocale: 'en',
+    },
   };
 };

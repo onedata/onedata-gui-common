@@ -10,7 +10,7 @@
  * 
  * @module mixins/components/one-dynamic-tree/fields-tree
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -78,12 +78,12 @@ export default Mixin.create({
         });
         return Object.keys(fields).length > 0 ? fields : undefined;
       }
-    }
+    };
     let tmpRoot = {
       name: '',
-      subtree: definition
+      subtree: definition,
     };
-    let fields = prepareNodeFields(tmpRoot, '')
+    let fields = prepareNodeFields(tmpRoot, '');
     return fields;
   },
 

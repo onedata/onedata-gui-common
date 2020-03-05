@@ -7,7 +7,7 @@ import $ from 'jquery';
 
 describe('Integration | Component | truncated string', function () {
   setupComponentTest('truncated-string', {
-    integration: true
+    integration: true,
   });
 
   it('does not show tooltip, when text is fully visible', function () {

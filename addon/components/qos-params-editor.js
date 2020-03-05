@@ -4,7 +4,7 @@
  *
  * @module components/qos-params-editor
  * @author Michał Borzęcki
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -265,7 +265,7 @@ export default Component.extend(I18n, {
             key,
             value,
           } = getProperties(record, 'key', 'value');
-          obj[key] = value
+          obj[key] = value;
           return obj;
         }, {});
     } else {

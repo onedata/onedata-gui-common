@@ -10,7 +10,7 @@
  * @module mixins/perfect-scrollbar
  * @author Jakub Liput
  * @copyright (C) 2018 briarsweetbriar
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -42,7 +42,7 @@ export default Mixin.create({
 
     const {
       element,
-      perfectScrollbarOptions
+      perfectScrollbarOptions,
     } = this.getProperties('element', 'perfectScrollbarOptions');
 
     const perfectScrollbar =

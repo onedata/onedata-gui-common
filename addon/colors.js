@@ -4,7 +4,7 @@
  *
  * @module colors
  * @author Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -20,8 +20,8 @@ var colors = {
   yellow: '#F7AA04',
 };
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
+Object.defineProperty(exports, '__esModule', {
+  value: true,
 });
 
 // colors assigned to `default` to allow ES import

@@ -5,7 +5,7 @@
  *
  * @module components/one-inline-editor
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -28,7 +28,7 @@ export default Component.extend(I18n, {
     '_inEditionMode:editor:static',
     '_whileSaving:saving',
     'controlledManually:manual',
-    'hideEditIcons:without-edit-icons'
+    'hideEditIcons:without-edit-icons',
   ],
 
   i18n: service(),

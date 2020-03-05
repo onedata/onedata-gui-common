@@ -4,19 +4,19 @@
  * 
  * @module components/provider-place-drop
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import { conditional, raw, promise } from 'ember-awesome-macros';
+import { conditional, raw } from 'ember-awesome-macros';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
 
 export default Component.extend(I18n, {
@@ -40,19 +40,7 @@ export default Component.extend(I18n, {
    */
   i18nPrefix: 'components.providerPlace.drop',
 
-  providerVersionProxy: promise.object(computed(
-    'provider.cluster.workerVersion.release',
-    function providerVersionProxy() {
-      const clusterPromise = this.get('provider.cluster');
-      if (clusterPromise) {
-        return clusterPromise.then(cluster =>
-          get(cluster, 'workerVersion.release')
-        );
-      }
-    }
-  )),
-
-  providerVersion: reads('providerVersionProxy.content'),
+  providerVersion: reads('provider.versionProxy.content'),
 
   oneproviderStatusClass: conditional(
     'provider.online',
@@ -144,5 +132,5 @@ export default Component.extend(I18n, {
     copyError() {
       this.get('globalNotify').info(this.t('hostnameCopyError'));
     },
-  }
+  },
 });

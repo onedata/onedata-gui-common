@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | loading container', function () {
   setupComponentTest('loading-container', {
-    integration: true
+    integration: true,
   });
 
   it('renders yielded content if isLoading is false', function () {

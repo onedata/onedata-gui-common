@@ -3,7 +3,7 @@
  *
  * @module components/basicauth-login-form
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -91,7 +91,7 @@ export default Component.extend(I18n, {
     );
     this.get('authenticationSuccess')({
       username,
-      password
+      password,
     });
     safeMethodExecution(this, 'set', 'isDisabled', false);
   },
@@ -102,7 +102,7 @@ export default Component.extend(I18n, {
     );
     this.get('authenticationFailure')({
       username,
-      password
+      password,
     });
     safeMethodExecution(this, 'setProperties', {
       isDisabled: false,
@@ -128,7 +128,7 @@ export default Component.extend(I18n, {
 
       const loginCalling = session.authenticate('authenticator:application', {
         username,
-        password
+        password,
       });
 
       loginCalling.then(() => this.onLoginSuccess(username, password));
@@ -141,6 +141,6 @@ export default Component.extend(I18n, {
       if (backButtonAction) {
         backButtonAction();
       }
-    }
-  }
+    },
+  },
 });

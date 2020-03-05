@@ -10,8 +10,8 @@ describe('Unit | Mixin | components/provider space', function () {
     subject.setProperties({
       space: {
         supportSizes: {
-          '1': 123,
-          '2': 456,
+          1: 123,
+          2: 456,
         },
       },
       providerId: '1',

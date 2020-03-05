@@ -21,5 +21,5 @@ export default Component.extend({
 
   input() {
     this.get('search')(this.element.value);
-  }
+  },
 });

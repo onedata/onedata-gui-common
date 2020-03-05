@@ -1,7 +1,7 @@
 /**
  * @module components/demo-components/providers-map-tile
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -24,6 +24,6 @@ export default Component.extend({
         latitude: 30,
         longitude: 40,
       }]),
-    })
+    });
   }),
-})
+});

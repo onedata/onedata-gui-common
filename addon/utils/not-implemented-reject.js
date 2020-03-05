@@ -4,7 +4,7 @@
  *
  * @module utils/not-implemented-reject
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,6 +12,6 @@ import { Promise } from 'rsvp';
 
 export default function rejectNotImplemented() {
   return Promise.reject({
-    message: 'not implemented'
+    message: 'not implemented',
   });
 }

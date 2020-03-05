@@ -5,7 +5,7 @@
  *
  * @module components/one-pie-chart
  * @author Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -29,7 +29,7 @@ import layout from '../templates/components/one-pie-chart';
 import _ from 'lodash';
 import centeredText from 'onedata-gui-common/utils/chartist/centered-text';
 import pieLabels from 'onedata-gui-common/utils/chartist/pie-labels';
-import tooltip from 'onedata-gui-common/utils/chartist/tooltip'
+import tooltip from 'onedata-gui-common/utils/chartist/tooltip';
 import customCss from 'onedata-gui-common/utils/chartist/custom-css';
 import legendColors from 'onedata-gui-common/utils/chartist/legend-colors';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -44,7 +44,7 @@ export default Component.extend({
   classNameBindings: [
     '_valuesSum::zero-chart',
     'hideLegend:hide-legend',
-    'forceMobile:force-mobile'
+    'forceMobile:force-mobile',
   ],
 
   /**
@@ -205,7 +205,7 @@ export default Component.extend({
       },
       set(key, value) {
         return value;
-      }
+      },
     }
   ),
 
@@ -268,8 +268,8 @@ export default Component.extend({
    * @param {number} value A value.
    * @return {string} A value string.
    */
-  formatValue(sum) {
-    return String(sum);
+  formatValue(value) {
+    return String(value);
   },
 
   /**
@@ -330,7 +330,7 @@ export default Component.extend({
           clickable: false,
         }),
         legendColors(legendColorsOptions),
-      ]
+      ],
     };
     if (mobileMode) {
       optionsBase.disabledPlugins = ['pieLabels'];
@@ -441,16 +441,16 @@ export default Component.extend({
             'transition': `stroke-opacity ${hoverTransitionTime}s`,
             'stroke-opacity': !activeSeriesId || isActive ?
               '1' : String(inactiveOpacity),
-          }
+          },
         },
         'pie-label': {
           'opacity': this._getLabelOpacity(series),
           'pointer-events': isLabelVisible ? 'initial' : 'none',
           'transitionProperties': {
-            'transition': `opacity ${hoverTransitionTime}s`,
-            'opacity': isLabelVisible ? '1' : '0',
-          }
-        }
+            transition: `opacity ${hoverTransitionTime}s`,
+            opacity: isLabelVisible ? '1' : '0',
+          },
+        },
       };
     });
   },
@@ -492,5 +492,5 @@ export default Component.extend({
    */
   _windowResized() {
     safeExec(this, 'set', '_mobileMode', window.innerWidth < 768);
-  }
+  },
 });

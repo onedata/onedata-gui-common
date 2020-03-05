@@ -6,7 +6,7 @@ import { fillIn } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | one list wrapper', function () {
   setupComponentTest('one-list-wrapper', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -28,7 +28,7 @@ describe('Integration | Component | one list wrapper', function () {
     expect($listItems).to.have.length(2);
     expect($listItems).to.contain('item1');
     expect($listItems).to.contain('item2');
-  })
+  });
 
   it('filter items', function () {
     this.render(hbs `
@@ -42,6 +42,6 @@ describe('Integration | Component | one list wrapper', function () {
         const $listItems = this.$('.list-item');
         expect($listItems).to.have.length(1);
         expect($listItems).to.contain('item1');
-      })
+      });
   });
 });

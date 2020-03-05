@@ -31,7 +31,7 @@ describe('Unit | Service | app storage', function () {
       init() {
         this._super(...arguments);
         this.appStorageObserver();
-      }
+      },
     }).create({
       appStorage: service,
     });

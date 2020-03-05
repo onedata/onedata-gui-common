@@ -7,7 +7,7 @@ import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | one atlas', function () {
   setupComponentTest('one-atlas', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -19,7 +19,7 @@ describe('Integration | Component | one atlas', function () {
       },
       removeEventListener() {
         this.resizeListener = null;
-      }
+      },
     });
   });
 

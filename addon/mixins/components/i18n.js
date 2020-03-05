@@ -6,12 +6,12 @@
  *
  * @module mixins/components/i18n
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Mixin from "@ember/object/mixin";
-import { computed } from "@ember/object";
+import Mixin from '@ember/object/mixin';
+import { computed } from '@ember/object';
 
 export default Mixin.create({
   /**

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   describe,
-  it
+  it,
 } from 'mocha';
 import conflictIds from 'onedata-gui-common/utils/conflict-ids';
 
@@ -11,7 +11,7 @@ describe('conflictIds', function () {
       let result = conflictIds([
         'onetwothree',
         'fourfivesix',
-        'seveneightten'
+        'seveneightten',
       ]);
 
       expect(result.length).to.equal(3);
@@ -26,7 +26,7 @@ describe('conflictIds', function () {
     let result = conflictIds([
       'somestring111',
       'somestring211',
-      'somestring311'
+      'somestring311',
     ]);
 
     expect(result.length).to.equal(3);
@@ -41,7 +41,7 @@ describe('conflictIds', function () {
     let result = conflictIds([
       'so',
       'somes211',
-      'somestring311'
+      'somestring311',
     ]);
 
     expect(result.length).to.equal(3);

@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | name conflict', function () {
   setupComponentTest('name-conflict', {
-    integration: true
+    integration: true,
   });
 
   it('renders name with conflict label if available', function () {

@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form field', function () {
   setupComponentTest('one-form-field', {
-    integration: true
+    integration: true,
   });
 
   it('can render text input with provided value', function () {

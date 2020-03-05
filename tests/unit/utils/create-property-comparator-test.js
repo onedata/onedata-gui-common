@@ -18,7 +18,7 @@ describe('Unit | Utility | create property comparator', function () {
         id: 3,
         hello: '2',
         world: '1',
-      }
+      },
     ];
     const helloComparator = createPropertyComparator('hello');
     const worldComparator = createPropertyComparator('world');

@@ -3,7 +3,7 @@
  *
  * @module utils/safe-method-execution
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  * 
  * @param {Ember.Object} obj 
@@ -25,7 +25,7 @@ export default function safeMethodExecution(obj, method, ...params) {
     const methodString = (methodType === 'function' && method.name || method.toString());
     console.warn(
       `util:safe-method-execution: Cannot execute "${methodString}" on ` +
-      `Ember.Object because it is destroyed`
+      'Ember.Object because it is destroyed'
     );
   }
 }

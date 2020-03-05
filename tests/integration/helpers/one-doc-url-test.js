@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Helper | one doc url', function () {
   setupComponentTest('one-doc-url', {
-    integration: true
+    integration: true,
   });
 
   it('generates valid URL', function () {

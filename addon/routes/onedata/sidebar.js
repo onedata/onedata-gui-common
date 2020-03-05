@@ -3,7 +3,7 @@
  *
  * @module routes/onedata/sidebar
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 function isValidTab(tabName) {
@@ -29,7 +29,7 @@ export default Route.extend({
     if (!isValidTab(resourceType)) {
       console.warn(
         `Failed to render ${resourceType} resource type. ` +
-        `Redirecting to default resource type...`
+        'Redirecting to default resource type...'
       );
       this.transitionTo('onedata.sidebar', this.getDefaultTab());
       return;
@@ -57,16 +57,16 @@ export default Route.extend({
 
   renderTemplate(controller, model) {
     let {
-      resourceType
+      resourceType,
     } = model;
     this.render('onedata.sidebar', {
       into: 'onedata',
-      outlet: 'sidebar'
+      outlet: 'sidebar',
     });
     this.render(`tabs.${resourceType}.sidebar`, {
       into: 'onedata.sidebar',
       outlet: 'sidebar-content',
-      model
+      model,
     });
   },
 
@@ -87,5 +87,5 @@ export default Route.extend({
       });
       return true;
     },
-  }
+  },
 });

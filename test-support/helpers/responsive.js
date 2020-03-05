@@ -41,7 +41,7 @@ MediaService.reopen({
     this._super(...arguments);
 
     this._forceSetBreakpoint(this.get('_defaultBreakpoint'));
-  }
+  },
 });
 
 export default registerAsyncHelper('setBreakpoint', function (app, breakpoint) {

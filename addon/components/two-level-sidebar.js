@@ -3,7 +3,7 @@
  *
  * @module components/two-level-sidebar
  * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -109,7 +109,7 @@ export default Component.extend({
   secondaryItem: computed('secondLevelItems', 'secondaryItemId', function () {
     let {
       secondLevelItems,
-      secondaryItemId
+      secondaryItemId,
     } = this.getProperties('secondLevelItems', 'secondaryItemId');
     return _.find(secondLevelItems, { id: secondaryItemId });
   }),

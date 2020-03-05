@@ -7,7 +7,7 @@
  * 
  * @module initializers/configure-console
  * @author Jakub Liput
- * @copyright (C) 2016-2019 ACK CYFRONET AGH
+ * @copyright (C) 2016-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -37,5 +37,5 @@ export function initialize(application) {
 export default {
   name: 'configure-console',
   initialize: initialize,
-  after: 'fetch-gui-context'
+  after: 'fetch-gui-context',
 };

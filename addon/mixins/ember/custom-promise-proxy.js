@@ -10,7 +10,7 @@
  *
  * @module mixins/ember/custom-promise-proxy
  * @author Jakub Liput, EmberJS
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -93,7 +93,7 @@ export default Mixin.create({
     },
     set(key, promise) {
       return this._tap(promise);
-    }
+    },
   }),
 
   /**
@@ -115,7 +115,7 @@ export default Mixin.create({
     @since 1.3.0
     @public
   */
-  'catch': promiseAlias('catch'),
+  catch: promiseAlias('catch'),
 
   /**
     An alias to the proxied promise's `finally`.
@@ -126,21 +126,21 @@ export default Mixin.create({
     @since 1.3.0
     @public
   */
-  'finally': promiseAlias('finally'),
+  finally: promiseAlias('finally'),
 
   _tap(promise) {
     const resolvedContentProperty = this.get('resolvedContentProperty');
 
     setProperties(this, {
       isFulfilled: false,
-      isRejected: false
+      isRejected: false,
     });
 
     return promise.then(value => {
       if (!this.isDestroyed && !this.isDestroying) {
         setProperties(this, {
           [resolvedContentProperty]: value,
-          isFulfilled: true
+          isFulfilled: true,
         });
       }
       return value;
@@ -148,7 +148,7 @@ export default Mixin.create({
       if (!this.isDestroyed && !this.isDestroying) {
         setProperties(this, {
           reason,
-          isRejected: true
+          isRejected: true,
         });
       }
       throw reason;

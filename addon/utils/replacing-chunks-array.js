@@ -4,7 +4,7 @@
  *
  * @module utils/replacing-chunks-array
  * @author Jakub Liput
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -170,7 +170,7 @@ export default ArraySlice.extend(Evented, {
           // because some entries "fallen down" from further part of array
           // it should be tested
           _.pullAllBy(arrayUpdate, sourceArray, 'id');
-          const fetchedArraySize = get(arrayUpdate, 'length')
+          const fetchedArraySize = get(arrayUpdate, 'length');
           let insertIndex = emptyIndex + 1 - fetchedArraySize;
           // fetched data without duplicated is less than requested,
           // so there is nothing left on the array start
@@ -205,17 +205,17 @@ export default ArraySlice.extend(Evented, {
             }
             this.setProperties({
               startIndex: 0,
-            })
+            });
             return this.reload();
           }
         })
         .catch(error => {
-          this.trigger('fetchPrevRejected')
+          this.trigger('fetchPrevRejected');
           throw error;
         })
         .then(result => {
           this.trigger('fetchPrevResolved');
-          return result
+          return result;
         })
         .finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
     } else {
@@ -255,12 +255,12 @@ export default ArraySlice.extend(Evented, {
           sourceArray.arrayContentDidChange();
         })
         .catch(error => {
-          this.trigger('fetchNextRejected')
+          this.trigger('fetchNextRejected');
           throw error;
         })
         .then(result => {
           this.trigger('fetchNextResolved');
-          return result
+          return result;
         })
         .finally(() => safeExec(this, 'set', '_fetchNextLock', false));
     } else {

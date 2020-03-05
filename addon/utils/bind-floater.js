@@ -70,7 +70,7 @@ export default function bindFloater(element, parent, options) {
 
     element.css({
       left: `${left + options.offsetX - $(window).scrollLeft()}px`,
-      top: `${top + options.offsetY + $(window).scrollTop()}px`
+      top: `${top + options.offsetY + $(window).scrollTop()}px`,
     });
   };
 

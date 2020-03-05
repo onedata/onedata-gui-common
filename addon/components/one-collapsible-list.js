@@ -28,7 +28,7 @@
  *
  * @module components/one-collapsible-list.js
  * @author Michał Borzęcki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -142,7 +142,7 @@ export default Component.extend({
   _filtrationChanged() {
     let {
       filtrationChanged,
-      _availableItemValues
+      _availableItemValues,
     } = this.getProperties('filtrationChanged', '_availableItemValues');
     filtrationChanged(_availableItemValues.toArray());
   },
@@ -192,7 +192,7 @@ export default Component.extend({
       let {
         _areAllItemsSelected,
         _availableItemValues,
-        _selectedItemValues
+        _selectedItemValues,
       } = this.getProperties(
         '_areAllItemsSelected',
         '_availableItemValues',
@@ -215,6 +215,6 @@ export default Component.extend({
     },
     search(query) {
       this.set('searchQuery', query);
-    }
-  }
+    },
+  },
 });

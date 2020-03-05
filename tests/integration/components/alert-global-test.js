@@ -12,7 +12,7 @@ import { setProperties } from '@ember/object';
 
 describe('Integration | Component | alert global', function () {
   setupComponentTest('alert-global', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -247,7 +247,7 @@ describe('Integration | Component | alert global', function () {
 
     return wait()
       .then(() => {
-        expect(getModal().find('.toggle-details-link')).to.not.exist
+        expect(getModal().find('.toggle-details-link')).to.not.exist;
         expect(getModal().find('.details-collapse')).to.have.class('in');
       });
   });

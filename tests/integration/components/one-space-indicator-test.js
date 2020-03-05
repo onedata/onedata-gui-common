@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one space indicator', function () {
   setupComponentTest('one-space-indicator', {
-    integration: true
+    integration: true,
   });
 
   it('renders space usage', function () {

@@ -7,7 +7,7 @@ describe('Unit | Service | scroll state', function () {
   it('changes lastScrollEvent', function () {
     let service = this.subject();
     const event = new Event('click');
-    service.scrollOccurred(event)
+    service.scrollOccurred(event);
     expect(service.lastScrollEvent).to.be.equal(event);
   });
 });
