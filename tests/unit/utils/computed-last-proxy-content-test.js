@@ -4,7 +4,6 @@ import computedLastProxyContent from 'onedata-gui-common/utils/computed-last-pro
 import EmberObject, { set, get, computed, observer } from '@ember/object';
 import { promise, raw } from 'ember-awesome-macros';
 import { Promise, resolve, reject } from 'rsvp';
-import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 
 const ClsBase = EmberObject.extend({
   /**
