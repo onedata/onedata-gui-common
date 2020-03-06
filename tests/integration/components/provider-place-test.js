@@ -11,6 +11,8 @@ import EmberObject from '@ember/object';
 import { resolve } from 'rsvp';
 import { registerService } from '../../helpers/stub-service';
 import Service from '@ember/service';
+import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
+import { promiseArray } from 'onedata-gui-common/utils/ember/promise-array';
 
 const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
@@ -92,11 +94,10 @@ describe('Integration | Component | provider place', function () {
       entityId: '1',
       name: 'provider1',
       status: 'online',
-      spaceList: EmberObject.create({
-        isLoaded: true,
-        list: resolve(spaces),
-      }),
-      cluster: resolve(cluster),
+      spaceList: promiseObject(resolve({
+        list: promiseArray(resolve(spaces)),
+      })),
+      cluster: promiseObject(resolve(cluster)),
     });
 
     this.set('spaces', spaces);
