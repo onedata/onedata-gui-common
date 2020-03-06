@@ -11,13 +11,13 @@
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { conditional, raw } from 'ember-awesome-macros';
 import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
+import { promise } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -58,12 +58,13 @@ export default Component.extend(I18n, {
    * PromiseObject proxy to the list of spaces.
    * @type {Ember.ComputedProperty<PromiseObject<Array<Space>>>}
    */
-  _spaceListProxy: computed('provider', function () {
-    const provider = this.get('provider');
-    return PromiseObject.create({
-      promise: provider.get('spaceList.list'),
-    });
-  }),
+  _spaceListProxy: promise.object(computed('provider.spaceList',
+    function _spaceListProxy() {
+      return this.get('provider.spaceList').then(spaceList =>
+        get(spaceList, 'list')
+      );
+    }
+  )),
 
   /**
    * Error occurred while loading list of spaces.
@@ -97,7 +98,7 @@ export default Component.extend(I18n, {
   visitProviderUrl: computed(
     'provider',
     'firstSpace.entityId',
-    'providerVersionProxy.content',
+    'providerVersion',
     function visitProviderUrl() {
       const {
         guiUtils,
