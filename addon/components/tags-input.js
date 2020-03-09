@@ -32,8 +32,14 @@ export default Component.extend({
     'isCreatingTag:creating-tag',
     'readonly',
     'readonly::form-control',
+    'readonly::clickable',
   ],
   attributeBindings: ['tabindex', 'disabled'],
+
+  /**
+   * @override
+   */
+  touchActionProperties: '',
 
   /**
    * @virtual optional

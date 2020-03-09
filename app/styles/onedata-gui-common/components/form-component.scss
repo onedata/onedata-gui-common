@@ -1,3 +1,5 @@
+$form-component-view-margin: $padding-base-vertical;
+
 .form-component {
   .form-group {
     display: flex;
@@ -92,17 +94,27 @@
 
   .field-view-mode {
     &:not(.form-fields-group-renderer) {
-      margin-bottom: $padding-base-vertical * 0.75;
+      margin-bottom: $form-component-view-margin;
+    }
+
+    .control-label {
+      padding-top: 0;
+    }
+
+    &.clipboard-field-renderer {
+      .control-label {
+        padding-top: $padding-base-vertical;
+      }
     }
 
     &.tags-field-renderer {
-      margin-bottom: 0;
+      margin-bottom: $form-component-view-margin - $padding-xs-horizontal;
     }
 
-    &.datetime-field-renderer .datetime-field,
-    &.text-like-field-renderer .text-like-field,
-    &.dropdown-field-renderer .dropdown-field {
-      padding-top: $padding-base-vertical;
+    .static-text-field-renderer,
+    .radio-field-renderer,
+    .toggle-field-renderer {
+      padding-top: initial;
     }
 
     &.dropdown-field-renderer {
