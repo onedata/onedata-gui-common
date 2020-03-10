@@ -19,6 +19,22 @@ import Evented from '@ember/object/evented';
 
 export const emptyItem = {};
 
+export function countEndDuplicates(array) {
+  const lastIndex = get(array, 'lastObject.index');
+  if (lastIndex) {
+    let count = 0;
+    for (let i = get(array, 'length') - 2; i >= 0; --i) {
+      if (get(array.objectAt(i), 'index') === lastIndex) {
+        count += 1;
+      } else {
+        return count;
+      }
+    }
+  } else {
+    return 0;
+  }
+}
+
 export default ArraySlice.extend(Evented, {
   /**
    * @virtual 
@@ -236,6 +252,7 @@ export default ArraySlice.extend(Evented, {
 
       const fetchSize = chunkSize;
       const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
+      const duplicateCount = countEndDuplicates(sourceArray);
 
       this.trigger('fetchNextStarted');
       return this.get('fetch')(
@@ -244,7 +261,7 @@ export default ArraySlice.extend(Evented, {
           // the workaround is to use []
           fetchStartIndex,
           fetchSize,
-          lastItem ? 1 : 0,
+          (lastItem ? 1 : 0) + duplicateCount,
           this
         )
         .then(array => {
