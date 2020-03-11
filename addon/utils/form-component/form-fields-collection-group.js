@@ -12,8 +12,6 @@
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { observer, set, get, computed } from '@ember/object';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
-import _ from 'lodash';
-import { scheduleOnce } from '@ember/runloop';
 
 export default FormFieldsGroup.extend({
   /**
@@ -47,29 +45,18 @@ export default FormFieldsGroup.extend({
   }),
 
   /**
-   * Fields on this list will have value set to defaultValue on next dumpValue call.
-   * @type {Utils.FormComponent.FormElement}
+   * @type {ComputedProperty<Array<Utils.FormComponent.FormElement>>}
    */
-  fieldsToSetDefaultValue: computed(() => []),
-
-  fieldsValueNamesObserver: observer(
-    'fields.@each.valueName',
-    function fieldsValueNamesObserver() {
-      if (!_.isEqual(
-          _.sortBy(this.getFieldsValueNames()),
-          _.sortBy(this.get('value.__fieldsValueNames') || [])
-        )) {
-        // Adding new field will call dumpValue, which will set value of the new field
-        // to defaultValue.
-        this.valueChanged(this.dumpValue());
-      }
-    }
-  ),
+  fieldsToAdd: computed(() => []),
 
   incomingFieldsValueNamesObserver: observer(
     'value.__fieldsValueNames.[]',
     function () {
-      const fields = this.get('fields');
+      const {
+        fields,
+        fieldsToAdd,
+      } = this.getProperties('fields', 'fieldsToAdd');
+      let newFieldsToAdd = fieldsToAdd;
       const incomingFieldsValueNames = this.get('value.__fieldsValueNames') || [];
       const newFields = incomingFieldsValueNames
         .map(valueName => {
@@ -77,35 +64,46 @@ export default FormFieldsGroup.extend({
           if (existingField) {
             return existingField;
           } else {
-            return this.fieldFactoryMethod(valueName);
+            const fieldToAdd = fieldsToAdd.findBy('valueName', valueName);
+            if (fieldToAdd) {
+              newFieldsToAdd = newFieldsToAdd.without(fieldToAdd);
+              return fieldToAdd;
+            } else {
+              const field = this.fieldFactoryMethod(valueName);
+              return field;
+            }
           }
         });
-      this.set('fields', newFields);
+      const areFieldsTheSame =
+        newFields.every((field, index) => fields[index] === field) &&
+        get(newFields, 'length') === get(fields, 'length');
+      if (!areFieldsTheSame) {
+        this.set('fields', newFields);
+      }
+      this.set('fieldsToAdd', newFieldsToAdd);
       this.fieldsParentSetter();
     }
   ),
 
   init() {
     this._super(...arguments);
-    this.fieldsValueNamesObserver();
-
-    scheduleOnce('afterRender', this, 'incomingFieldsValueNamesObserver');
+    this.incomingFieldsValueNamesObserver();
   },
 
   /**
    * @public
    */
   addNewField() {
-    const {
-      fields,
-      fieldsToSetDefaultValue,
-    } = this.getProperties('fields', 'fieldsToSetDefaultValue');
+    const newValue = this.dumpValue();
+    const newFieldValueName = this.generateUniqueFieldValueName();
+    const newField = this.fieldFactoryMethod(newFieldValueName);
+    set(newField, 'parent', this);
 
-    const newField = this.fieldFactoryMethod(this.generateUniqueFieldValueName());
-    this.setProperties({
-      fields: fields.concat([newField]),
-      fieldsToSetDefaultValue: fieldsToSetDefaultValue.concat([newField]),
-    });
+    set(newValue, newFieldValueName, newField.dumpDefaultValue())
+    get(newValue, '__fieldsValueNames').push(newFieldValueName);
+    this.get('fieldsToAdd').push(newField);
+
+    this.valueChanged(newValue);
   },
 
   /**
@@ -113,9 +111,15 @@ export default FormFieldsGroup.extend({
    * @param {Utils.FormComponent.FormElement} field 
    */
   removeField(field) {
-    const fields = this.get('fields');
-
-    this.set('fields', fields.without(field));
+    const fieldValueName = get(field, 'valueName');
+    const newValue = this.dumpValue();
+    delete newValue[fieldValueName];
+    set(
+      newValue,
+      '__fieldsValueNames',
+      get(newValue, '__fieldsValueNames').without(fieldValueName)
+    );
+    this.valueChanged(newValue);
   },
 
   /**
@@ -123,7 +127,6 @@ export default FormFieldsGroup.extend({
    */
   dumpDefaultValue() {
     const defaultValue = this._super(...arguments);
-    // Pass __fieldsValueNames with group value to inform about state of fields list.
     set(
       defaultValue,
       '__fieldsValueNames',
@@ -137,21 +140,7 @@ export default FormFieldsGroup.extend({
    */
   dumpValue() {
     const value = this._super(...arguments);
-    const fieldsToSetDefaultValue = this.get('fieldsToSetDefaultValue');
-    const fields = this.get('fields').rejectBy('isValueless');
-
-    // Set default value to fields, which are in fieldsToSetDefaultValue array
-    // (fields which were just added to the collection)
-    fields.forEach(field => {
-      if (fieldsToSetDefaultValue.includes(field)) {
-        set(value, get(field, 'valueName'), field.dumpDefaultValue());
-      }
-    });
-    this.set('fieldsToSetDefaultValue', []);
-
-    // Add enumeration of existing fields
     set(value, '__fieldsValueNames', this.getFieldsValueNames());
-
     return value;
   },
 
@@ -159,7 +148,7 @@ export default FormFieldsGroup.extend({
    * @returns {Array<String>}
    */
   getFieldsValueNames() {
-    return this.get('fields').rejectBy('isValueless').mapBy('valueName');
+    return this.get('fields').mapBy('valueName');
   },
 
   /**

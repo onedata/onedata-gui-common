@@ -38,12 +38,6 @@ $form-component-view-margin: $padding-base-vertical;
 
   .static-text-field-renderer,
   .radio-field-renderer,
-  .toggle-field-renderer {
-    padding-top: $padding-base-vertical;
-  }
-
-  .static-text-field-renderer,
-  .radio-field-renderer,
   .toggle-field-renderer,
   .loading-field-renderer {
     .control-label {

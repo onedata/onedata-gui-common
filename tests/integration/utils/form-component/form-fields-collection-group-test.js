@@ -16,49 +16,6 @@ describe(
     });
 
     it(
-      'represents fields value names in collection through __fieldsValueNames in group value',
-      function () {
-        const collectionGroup = FormFieldsCollectionGroup.create({
-          fields: A([
-            FormField.create({
-              name: 'f',
-              valueName: 'f0',
-            }),
-            FormField.create({
-              name: 'f',
-              valueName: 'f1',
-            }),
-          ]),
-        });
-        const defaultValue = collectionGroup.dumpDefaultValue();
-
-        expect(get(defaultValue, '__fieldsValueNames')).to.deep.equal(['f0', 'f1']);
-      }
-    );
-
-    it(
-      'represents fields value names in collection through __fieldsValueNames in group value without valueless fields',
-      function () {
-        const collectionGroup = FormFieldsCollectionGroup.create({
-          fields: A([
-            FormField.create({
-              name: 'f',
-              valueName: 'f0',
-            }),
-            FormField.create({
-              name: 'f',
-              valueName: 'f1',
-              isValueless: true,
-            }),
-          ]),
-        });
-        const defaultValue = collectionGroup.dumpDefaultValue();
-
-        expect(get(defaultValue, '__fieldsValueNames')).to.deep.equal(['f0']);
-      }
-    );
-
-    it(
       'adds field through addNewField() (with usage of fieldFactoryMethod())',
       function () {
         const valuesSource = EmberObject.create({
@@ -101,25 +58,33 @@ describe(
     it(
       'removes specified field through removeField()',
       function () {
-        const changeSpy = sinon.spy();
-        const collectionGroup = FormFieldsCollectionGroup.create({
-          fields: A([
-            FormField.create({
+        const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
+        const valuesSource = EmberObject.create({
+          collection: EmberObject.create({
+            collectionEntry0: 'val0',
+            __fieldsValueNames: ['collectionEntry0'],
+          }),
+        });
+        const collectionGroup = FormFieldsCollectionGroup.extend({
+          fieldFactoryMethod(newFieldValueName) {
+            return FormField.create({
               name: 'f',
-              valueName: 'f0',
+              valueName: newFieldValueName,
               defaultValue: 1,
-            }),
-          ]),
+            });
+          },
+        }).create({
+          name: 'collection',
           parent: {
             onValueChange: changeSpy,
           },
+          valuesSource,
         });
 
-        set(collectionGroup, 'value', collectionGroup.dumpDefaultValue());
-        expect(get(collectionGroup, 'value.f0')).to.equal(1);
+        expect(get(collectionGroup, 'fields.length')).to.equal(1);
 
         collectionGroup.removeField(get(collectionGroup, 'fields.firstObject'));
-        expect(changeSpy.lastCall.args[0]).to.not.have.nested.property('value.f0');
+        expect(changeSpy.lastCall.args[0]).to.not.have.nested.property('collectionEntry0');
         expect(get(collectionGroup, 'fields')).to.have.length(0);
         expect(get(changeSpy.lastCall.args[0], '__fieldsValueNames')).to.have.length(0);
       }
@@ -135,7 +100,7 @@ describe(
             __fieldsValueNames: ['collectionEntry0', 'collectionEntry1'],
           }),
         });
-        const changeSpy = sinon.spy();
+        const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
         const collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(newFieldValueName) {
             return FormField.create({
@@ -172,7 +137,7 @@ describe(
             __fieldsValueNames: ['collectionEntry0'],
           }),
         });
-        const changeSpy = sinon.spy();
+        const changeSpy = sinon.spy((value => set(valuesSource, 'collection', value)));
         const collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(newFieldValueName) {
             return FormField.create({

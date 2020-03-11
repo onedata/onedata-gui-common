@@ -236,7 +236,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { conditional, and, equal, raw } from 'ember-awesome-macros';
+import { conditional, and, equal, raw, getBy, notEmpty, writable } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 
 export default EmberObject.extend(OwnerInjector, I18n, {
@@ -386,15 +386,18 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   /**
-   * @type {EmberObject}
+   * @type {ComputedProperty<EmberObject>}
    */
   valuesSource: reads('parent.valuesSource'),
 
   /**
-   * Set by valuePropertySetter
    * @type {ComputedProperty<any>}
    */
-  value: undefined,
+  value: writable(conditional(
+    notEmpty('valuePath'),
+    getBy('valuesSource', 'valuePath'),
+    'valuesSource'
+  )),
 
   /**
    * @override
@@ -436,23 +439,15 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    */
   isInMixedMode: equal('mode', raw('mixed')),
 
-  valuePropertySetter: observer(
-    'valuePath',
-    function valuePropertySetter() {
-      const valuePath = this.get('valuePath');
-      this.set(
-        'value',
-        reads(valuePath ? `valuesSource.${valuePath}` : 'valuesSource')
-      );
-    }
-  ),
-
   fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
     if (fields) {
-      fields
-        .rejectBy('parent', this)
-        .setEach('parent', this);
+      const fieldsToInjectParent = fields.rejectBy('parent', this);
+      fieldsToInjectParent.setEach('parent', this);
+      // In more complicated forms with multiple levels of groups
+      // owner is not injected properly, because observers are not
+      // firing. We need to kick this mechanism manually
+      fieldsToInjectParent.invoke('updateOwner');
     }
   }),
 
@@ -464,7 +459,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     this._super(...arguments);
 
     this.fieldsParentSetter();
-    this.valuePropertySetter();
   },
 
   willDestroy() {
@@ -564,6 +558,11 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     if (parent) {
       parent.onFocusLost(field);
     }
+  },
+
+  updateOwner() {
+    this.ownerSourceObserver();
+    this.get('fields').invoke('updateOwner');
   },
 
   buildPath(parentPath, name) {
