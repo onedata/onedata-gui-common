@@ -37,7 +37,6 @@ describe(
     });
 
     it('allows to add new field', function () {
-      const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
       const valuesSource = EmberObject.create({
         collection: EmberObject.create(),
       });
@@ -52,7 +51,9 @@ describe(
         name: 'collection',
         ownerSource: this,
         parent: {
-          onValueChange: changeSpy,
+          onValueChange(value) {
+            set(valuesSource, 'collection', value);
+          },
         },
         valuesSource,
       });
@@ -73,7 +74,6 @@ describe(
     });
 
     it('allows to remove field', function () {
-      const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
       const valuesSource = EmberObject.create({
         collection: EmberObject.create(),
       });
@@ -88,7 +88,9 @@ describe(
         name: 'collection',
         ownerSource: this,
         parent: {
-          onValueChange: changeSpy,
+          onValueChange(value) {
+            set(valuesSource, 'collection', value);
+          },
         },
         valuesSource,
       });
@@ -111,6 +113,9 @@ describe(
     });
 
     it('blocks creating and removing fields in "view" mode', function () {
+      const valuesSource = EmberObject.create({
+        collection: EmberObject.create(),
+      });
       const collectionGroup = FormFieldsCollectionGroup.extend({
         fieldFactoryMethod() {
           return TextField.create({
@@ -118,7 +123,16 @@ describe(
             valueName: `textField${this.get('fields.length')}`,
           });
         },
-      }).create({ ownerSource: this });
+      }).create({
+        name: 'collection',
+        ownerSource: this,
+        parent: {
+          onValueChange(value) {
+            set(valuesSource, 'collection', value);
+          },
+        },
+        valuesSource,
+      });
       this.set('collectionGroup', collectionGroup);
 
       this.render(hbs `

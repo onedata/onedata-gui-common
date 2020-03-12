@@ -10,7 +10,7 @@
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import EmberObject, { computed, observer, set, get } from '@ember/object';
-import { array, raw, isEmpty } from 'ember-awesome-macros';
+import { array, raw, isEmpty, conditional, notEmpty, gt } from 'ember-awesome-macros';
 import _ from 'lodash';
 
 export default FormElement.extend({
@@ -57,42 +57,26 @@ export default FormElement.extend({
   /**
    * @override
    */
-  mode: computed(
+  mode: conditional(
+    notEmpty('fields'),
     'fieldsMode',
-    'fields.length',
-    'modeWhenNoFields',
-    function mode() {
-      const {
-        fields,
-        fieldsMode,
-        modeWhenNoFields,
-      } = this.getProperties(
-        'fields',
-        'fieldsMode',
-        'modeWhenNoFields'
-      );
-
-      if (get(fields, 'length')) {
-        return fieldsMode;
-      } else {
-        return modeWhenNoFields;
-      }
-    }
+    'modeWhenNoFields'
   ),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  fieldsMode: computed('fields.@each.mode', function fieldsMode() {
-    const fields = this.get('fields');
-
-    if (fields && fields.length) {
-      return fields.mapBy('mode').uniq().length > 1 ?
-        'mixed' : get(fields.objectAt(0), 'mode');
-    } else {
-      return undefined;
-    }
-  }),
+  fieldsMode: conditional(
+    notEmpty('fields'),
+    conditional(
+      gt(array.length(
+        array.uniq(array.mapBy('fields', raw('mode')))
+      ), 1),
+      raw('mixed'),
+      'fields.firstObject.mode'
+    ),
+    raw(undefined)
+  ),
 
   /**
    * @override

@@ -14,7 +14,7 @@ import { computed } from '@ember/object';
 import { union } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
-import { writable, conditional, or, not, equal, raw } from 'ember-awesome-macros';
+import { writable, conditional, or, not } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 
 export default FormElement.extend({
@@ -80,7 +80,7 @@ export default FormElement.extend({
    */
   isValid: writable(or(
     'isValueless',
-    equal('mode', raw('view')),
+    'isInViewMode',
     'fieldValidationChecker.isValid'
   )),
 

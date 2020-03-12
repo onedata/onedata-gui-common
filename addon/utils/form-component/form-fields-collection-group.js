@@ -51,7 +51,7 @@ export default FormFieldsGroup.extend({
 
   incomingFieldsValueNamesObserver: observer(
     'value.__fieldsValueNames.[]',
-    function () {
+    function incomingFieldsValueNamesObserver() {
       const {
         fields,
         fieldsToAdd,
@@ -79,9 +79,9 @@ export default FormFieldsGroup.extend({
         get(newFields, 'length') === get(fields, 'length');
       if (!areFieldsTheSame) {
         this.set('fields', newFields);
+        this.fieldsParentSetter();
       }
       this.set('fieldsToAdd', newFieldsToAdd);
-      this.fieldsParentSetter();
     }
   ),
 

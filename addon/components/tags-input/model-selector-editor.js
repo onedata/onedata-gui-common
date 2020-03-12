@@ -88,6 +88,9 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
     }
   }),
 
+  /**
+   * @type {ComputedProperty<String>}
+   */
   tip: computed('value.record.representsAll', function tip() {
     const representsAll = this.get('value.record.representsAll');
     return representsAll &&
@@ -361,16 +364,6 @@ export default Component.extend(I18n, {
       );
     }
   ),
-
-  /**
-   * @type {ComputedProperty<Object>}
-   */
-  allRecordsTagTranslations: computed(function () {
-    return supportedModels.reduce((tObject, modelName) => {
-      tObject[modelName] = this.t(`allRecord.${modelName}`);
-      return tObject;
-    }, {});
-  }),
 
   selectedTagsObserver: observer(
     'selectedTags.@each.label',

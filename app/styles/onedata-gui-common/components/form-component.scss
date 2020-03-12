@@ -95,12 +95,6 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: 0;
     }
 
-    &.clipboard-field-renderer {
-      .control-label {
-        padding-top: $padding-base-vertical;
-      }
-    }
-
     &.tags-field-renderer {
       margin-bottom: $form-component-view-margin - $padding-xs-horizontal;
     }
@@ -126,6 +120,12 @@ $form-component-view-margin: $padding-base-vertical;
       .one-tree.has-items > .one-tree-list {
         padding-top: 0;
         margin-top: $padding-base-vertical;
+      }
+    }
+
+    .field-view-mode.clipboard-field-renderer {
+      .control-label {
+        padding-top: $padding-base-vertical;
       }
     }
   }

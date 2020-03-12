@@ -204,6 +204,13 @@ describe('Integration | Utility | form component/form field', function () {
     function () {
       const formField = FormField.create({
         ownerSource: this,
+        customValidators: [
+          validator('number', { gt: 2 }),
+        ],
+        name: 'field',
+        valuesSource: {
+          field: 1,
+        },
       });
       formField.changeMode('view');
 
