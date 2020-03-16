@@ -18,6 +18,16 @@ describe('Integration | Component | name conflict', function () {
     expect(this.$()).to.contain('name#label');
   });
 
+  it('renders name with conflict label with custom separator', function () {
+    this.set('item', {
+      name: 'name',
+      conflictLabel: 'label',
+    });
+
+    this.render(hbs `{{name-conflict item=item separator="^"}}`);
+    expect(this.$()).to.contain('name^label');
+  });
+
   it('renders name without conflict label if not available', function () {
     this.set('item', { name: 'name' });
 
