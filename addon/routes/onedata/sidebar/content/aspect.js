@@ -23,12 +23,6 @@ const {
 export default Route.extend({
   navigationState: service(),
 
-  queryParams: {
-    options: {
-      refreshModel: true
-    }
-  },
-
   beforeModel(transition) {
     this.get('navigationState').updateQueryParams(transition);
     const contentModel = this.modelFor('onedata.sidebar.content');

@@ -1,7 +1,7 @@
 /**
  * Defines actions that use routes for closure actions in route templates
  *
- * @module controllers/onedata/sidebar/content/aspect
+ * @module controllers/onedata
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
