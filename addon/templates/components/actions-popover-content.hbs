@@ -11,8 +11,8 @@
     {{else}}
       <a class={{concat-classes
           "clickable"
-          (or act.class act.classNames)
-          (concat elementId "-" (or act.class act.classNames))
+          (or act.class act.className)
+          (concat elementId "-" (or act.class act.className))
         }}
         onClick={{if act.nestedActions
           (action "toggleNestedActions" act (not-eq nestedActionsOpened act))
