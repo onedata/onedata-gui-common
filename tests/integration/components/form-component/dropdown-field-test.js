@@ -9,6 +9,7 @@ import { blur, focus } from 'ember-native-dom-helpers';
 import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
+import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {
   setupComponentTest('form-component/dropdown-field', {
@@ -198,6 +199,18 @@ describe('Integration | Component | form component/dropdown field', function () 
         .then(() => expect(dropdown.getSearchInput()).to.not.exist);
     }
   );
+
+  it('renders raw icon and label of selected option when field is in "view" mode', function () {
+    const field = this.get('field');
+    set(field, 'value', 1);
+    field.changeMode('view');
+
+    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+    expect(this.$('.text').text().trim()).to.equal('First');
+    expect(this.$('.one-icon')).to.have.class('oneicon-space');
+    expect(this.$('.ember-basic-dropdown')).to.not.exist;
+  });
 });
 
 class DropdownHelper extends EmberPowerSelectHelper {

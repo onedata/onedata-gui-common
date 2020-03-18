@@ -16,7 +16,7 @@ const defaultSettings = {
   }, {
     name: 'group',
   }, {
-    name: 'oneprovider',
+    name: 'provider',
   }, {
     name: 'service',
   }, {
@@ -164,7 +164,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     label: 'Any group',
     tip: 'Any user that has at least one group',
   }, {
-    name: 'oneprovider',
+    name: 'provider',
     label: 'Any Oneprovider',
   }, {
     name: 'service',
@@ -264,7 +264,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     icon: 'group',
     typeIndex: 1,
   }, {
-    name: 'oneprovider',
+    name: 'provider',
     icon: 'provider',
     typeIndex: 2,
   }, {
@@ -324,7 +324,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     name: 'group',
     addedDescription: 'All groups are already added.',
   }, {
-    name: 'oneprovider',
+    name: 'provider',
     addedDescription: 'All Oneproviders are already added.',
   }].forEach(({ name, addedDescription }, index) => {
     it(`hides all records when "all records" item has been clicked for ${name}`,
@@ -439,7 +439,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     name: 'group',
     label: 'Group ID:'
   }, {
-    name: 'oneprovider',
+    name: 'provider',
     label: 'Oneprovider ID:'
   }, {
     name: 'service',

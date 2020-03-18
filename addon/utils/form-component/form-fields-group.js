@@ -9,8 +9,8 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import EmberObject, { computed, set, get } from '@ember/object';
-import { array, raw, isEmpty } from 'ember-awesome-macros';
+import EmberObject, { computed, observer, set, get } from '@ember/object';
+import { array, raw, isEmpty, conditional, notEmpty, gt } from 'ember-awesome-macros';
 import _ from 'lodash';
 
 export default FormElement.extend({
@@ -44,6 +44,12 @@ export default FormElement.extend({
   isExpanded: true,
 
   /**
+   * Set by `fieldsModeObserver`
+   * @type {String}
+   */
+  modeWhenNoFields: 'edit',
+
+  /**
    * @override
    */
   isModified: array.isAny('fields', raw('isModified')),
@@ -51,16 +57,26 @@ export default FormElement.extend({
   /**
    * @override
    */
-  mode: computed('fields.@each.mode', function mode() {
-    const fields = this.get('fields');
+  mode: conditional(
+    notEmpty('fields'),
+    'fieldsMode',
+    'modeWhenNoFields'
+  ),
 
-    if (fields && fields.length) {
-      return fields.mapBy('mode').uniq().length > 1 ?
-        'mixed' : get(fields.objectAt(0), 'mode');
-    } else {
-      return undefined;
-    }
-  }),
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  fieldsMode: conditional(
+    notEmpty('fields'),
+    conditional(
+      gt(array.length(
+        array.uniq(array.mapBy('fields', raw('mode')))
+      ), 1),
+      raw('mixed'),
+      'fields.firstObject.mode'
+    ),
+    raw(undefined)
+  ),
 
   /**
    * @override
@@ -86,11 +102,46 @@ export default FormElement.extend({
     }
   ),
 
+  fieldsModeObserver: observer('fieldsMode', function fieldsModeObserver() {
+    const {
+      fieldsMode,
+      modeWhenNoFields: oldModeWhenNoFields,
+    } = this.getProperties('fieldsMode', 'modeWhenNoFields');
+    let newModeWhenNoFields = oldModeWhenNoFields;
+    switch (fieldsMode) {
+      case 'view':
+        newModeWhenNoFields = 'view';
+        break
+      case undefined: {
+        if (oldModeWhenNoFields && oldModeWhenNoFields !== 'mixed') {
+          break;
+        }
+      }
+      /* falls through */
+      case 'edit':
+      case 'mixed':
+      default:
+        newModeWhenNoFields = 'edit';
+        break;
+    }
+    this.set('modeWhenNoFields', newModeWhenNoFields);
+  }),
+
+  init() {
+    this._super(...arguments);
+    this.fieldsModeObserver();
+  },
+
   /**
    * @override
    */
   changeMode(mode) {
-    this.get('fields').invoke('changeMode', mode);
+    const fields = this.get('fields');
+    if (get(fields, 'length')) {
+      fields.invoke('changeMode', mode);
+    } else {
+      this.set('modeWhenNoFields', mode);
+    }
   },
 
   /**

@@ -18,7 +18,16 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
-import { conditional, promise, array, raw, tag, isEmpty } from 'ember-awesome-macros';
+import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
+import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+
+const supportedModels = [
+  'user',
+  'group',
+  'provider',
+  'service',
+  'serviceOnepanel',
+];
 
 /**
  * Removes tags, which are redundant due to existence of "all records" tags.
@@ -28,13 +37,7 @@ import { conditional, promise, array, raw, tag, isEmpty } from 'ember-awesome-ma
  * @returns {Array<Tag>}
  */
 export function removeExcessiveTags(tags) {
-  [
-    'user',
-    'group',
-    'oneprovider',
-    'service',
-    'serviceOnepanel',
-  ].forEach(model => {
+  supportedModels.forEach(model => {
     if (tags.findBy('value.record.representsAll', model)) {
       tags = tags.filter(tag =>
         get(tag, 'value.model') !== model ||
@@ -47,7 +50,14 @@ export function removeExcessiveTags(tags) {
 }
 
 // ModelSelectorEditor needs specific tag object to handle record related data.
-export const Tag = EmberObject.extend({
+export const Tag = EmberObject.extend(I18n, OwnerInjector, {
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.tagsInput.modelSelectorEditor',
+
   /**
    * @type {Object}
    * {
@@ -62,11 +72,30 @@ export const Tag = EmberObject.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  label: conditional(
-    'value.record',
-    'value.record.name',
-    tag `ID: ${'value.id'}`,
-  ),
+  label: computed('value.record.{name,representsAll}', function label() {
+    const {
+      record,
+      id,
+    } = getProperties(this.get('value') || {}, 'record', 'id');
+    if (record) {
+      const {
+        name,
+        representsAll,
+      } = getProperties(record, 'name', 'representsAll');
+      return representsAll ? this.t(`allRecord.${representsAll}`) : name;
+    } else {
+      return `ID: ${id}`;
+    }
+  }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  tip: computed('value.record.representsAll', function tip() {
+    const representsAll = this.get('value.record.representsAll');
+    return representsAll &&
+      this.t(`allRecordTip.${representsAll}`, {}, { defaultValue: '' });
+  }),
 
   /**
    * @type {ComputedProperty<String>}
@@ -87,7 +116,7 @@ export const Tag = EmberObject.extend({
 const modelIcons = {
   user: 'user',
   group: 'groups',
-  oneprovider: 'provider',
+  provider: 'provider',
   service: 'cluster',
   serviceOnepanel: 'onepanel',
 }
@@ -95,7 +124,7 @@ const modelIcons = {
 const recordIcons = {
   user: 'user',
   group: 'group',
-  oneprovider: 'provider',
+  provider: 'provider',
   serviceOnepanel: 'onepanel',
 };
 
@@ -120,7 +149,7 @@ export default Component.extend(I18n, {
    *     will be the same as in this array.
    * }
    * Each model specification is an object: {
-   *   name: String, - one of: user, group, oneprovider, service, serviceOnepanel
+   *   name: String, - one of: user, group, provider, service, serviceOnepanel
    *   getRecords: Function - returns a Promise which should resolve to
    *     an array of model records
    * }
@@ -233,17 +262,15 @@ export default Component.extend(I18n, {
       } = this.getProperties('recordsProxy', 'selectedModelName');
       if (get(recordsProxy, 'isFulfilled') && selectedModelName) {
         const allRecord = {
-          name: this.t(`allRecord.${selectedModelName}`),
           representsAll: selectedModelName,
         };
         return [allRecord].concat(get(recordsProxy, 'content').sortBy('name'))
           .map(record => Tag.create({
+            ownerSource: this,
             value: {
               model: selectedModelName,
               record,
             },
-            tip: get(record, 'representsAll') &&
-              this.t(`allRecordTip.${selectedModelName}`, {}, { defaultValue: '' }),
           }));
       } else {
         return [];
@@ -371,6 +398,7 @@ export default Component.extend(I18n, {
         'selectedModelName'
       );
       const tag = Tag.create({
+        ownerSource: this,
         value: {
           model: selectedModelName,
           id: trimmedIdToAdd,

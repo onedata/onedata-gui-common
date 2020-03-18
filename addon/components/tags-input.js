@@ -14,7 +14,7 @@ import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
 import { computed, observer, getProperties } from '@ember/object';
-import { writable, conditional } from 'ember-awesome-macros';
+import { writable, conditional, not, or } from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
 
@@ -27,9 +27,19 @@ import config from 'ember-get-config';
 export default Component.extend({
   layout,
   tagName: 'ul',
-  classNames: ['tags-input', 'form-control'],
-  classNameBindings: ['isCreatingTag:creating-tag'],
+  classNames: ['tags-input'],
+  classNameBindings: [
+    'isCreatingTag:creating-tag',
+    'readonly',
+    'readonly::form-control',
+    'readonly::clickable',
+  ],
   attributeBindings: ['tabindex', 'disabled'],
+
+  /**
+   * @override
+   */
+  touchActionProperties: '',
 
   /**
    * @virtual optional
@@ -42,6 +52,12 @@ export default Component.extend({
    * @type {boolean}
    */
   disabled: false,
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  readonly: false,
 
   /**
    * @virtual
@@ -83,6 +99,11 @@ export default Component.extend({
   isCreatingTag: false,
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  allowModification: not(or('readonly', 'disabled')),
+
+  /**
    * @type {ComputedProperty<Array<Tag>>}
    */
   newTagsToHighlight: computed(() => []),
@@ -107,6 +128,15 @@ export default Component.extend({
         } = getProperties(tag, 'label', 'icon');
         return newTagsToHighlight.filterBy('label', label).isAny('icon', icon);
       });
+    }
+  ),
+
+  allowModificationObserver: observer(
+    'allowModification',
+    function allowModificationObserver() {
+      if (!this.get('allowModification')) {
+        this.endTagCreation();
+      }
     }
   ),
 
@@ -143,10 +173,10 @@ export default Component.extend({
   startTagCreation() {
     const {
       isCreatingTag,
-      disabled,
-    } = this.getProperties('isCreatingTag', 'disabled');
+      allowModification,
+    } = this.getProperties('isCreatingTag', 'allowModification');
 
-    if (!disabled && !isCreatingTag) {
+    if (allowModification && !isCreatingTag) {
       this.set('isCreatingTag', true);
     }
   },

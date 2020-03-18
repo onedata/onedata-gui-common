@@ -4,7 +4,7 @@
   privilegesTranslationsPath=privilegesTranslationsPath
   overridePrivileges=treeValue
   comparePrivileges=compareTreeValue
-  editionEnabled=isEffectivelyEnabled
+  editionEnabled=(and isEffectivelyEnabled isInEditMode)
   allowThreeStateToggles=false
   onChange=(action "valueChanged")
 }}

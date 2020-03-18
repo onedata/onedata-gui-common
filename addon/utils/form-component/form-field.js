@@ -78,7 +78,11 @@ export default FormElement.extend({
    * Is writable for testing purposes
    * @override
    */
-  isValid: writable(or('isValueless', 'fieldValidationChecker.isValid')),
+  isValid: writable(or(
+    'isValueless',
+    'isInViewMode',
+    'fieldValidationChecker.isValid'
+  )),
 
   /**
    * @override

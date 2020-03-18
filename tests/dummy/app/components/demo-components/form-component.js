@@ -6,6 +6,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
+import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import {
@@ -65,6 +66,11 @@ export default Component.extend({
               label: 'Adult',
             }]
           }),
+          DatetimeField.create({
+            ownerSource: this,
+            name: 'datetime',
+            label: 'Datetime',
+          }),
           FormFieldsCollectionGroup.extend({
             fieldFactoryMethod(createdFieldsCounter) {
               return TextField.create({
@@ -88,7 +94,10 @@ export default Component.extend({
           TagsField.extend({
             valueToTags(value) {
               return (value || [])
-                .map(val => RecordTag.create({ value: val }));
+                .map(val => RecordTag.create({
+                  ownerSource: this,
+                  value: val,
+                }));
             },
             tagsToValue(tags) {
               return removeExcessiveTags(tags).mapBy('value').uniq()

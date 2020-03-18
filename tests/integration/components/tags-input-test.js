@@ -298,4 +298,48 @@ describe('Integration | Component | tags input', function () {
         });
     }
   );
+
+  it(
+    'does not allow to add and remove tags in readonly mode',
+    function () {
+      this.render(hbs `{{tags-input
+        readonly=true
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      const $tagsInput = this.$('.tags-input');
+      expect($tagsInput).to.have.class('readonly');
+      expect(this.$('.tag-creator-trigger')).to.not.exist;
+      expect(this.$('.tag-remove')).to.not.exist;
+      return click('.tags-input')
+        .then(() => {
+          expect($tagsInput).to.not.have.class('creating-tag');
+          expect(this.$('.tag-creator')).to.not.exist;
+        });
+    }
+  );
+
+  it(
+    'stops tag creation when becomes readonly',
+    function () {
+      this.set('readonly', false);
+
+      this.render(hbs `{{tags-input
+        readonly=readonly
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      return click('.tags-input')
+        .then(() => {
+          this.set('readonly', true);
+          return wait();
+        })
+        .then(() => {
+          expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+          expect(this.$('.tag-creator')).to.not.exist;
+        });
+    }
+  );
 });

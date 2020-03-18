@@ -210,13 +210,13 @@
  * adding and removing fields created using factory method. It goes like this:
  * At the very beginning collection group has no fields. When you call
  * `addNewField()` collection group calls method
- * `fieldFactoryMethod(uniqueCounter)`. You have to implement (override)
+ * `fieldFactoryMethod(uniqueValueName)`. You have to implement (override)
  * this method so it returns a form element instance, that will be later added
  * to the fields array by `addNewField` method. After that collection group will
  * notify about change with new field and its default value.
  * Field created in `fieldFactoryMethod` can have (and usually will) the same name.
  * In that case it MUST have unique `valueName` - you can make it unique using
- * passed `uniqueCounter` value. What is valueName? It is used to build path
+ * passed `uniqueValueName` value. What is valueName? It is used to build path
  * to the field value in values tree. So it looks like: `parentPath + '.' + valueName`.
  * In 99% of cases valueName IS name (under the hood `valueName: reads('name')`).
  * But you can override valueName like in collection group factory method and
@@ -236,7 +236,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { conditional, and } from 'ember-awesome-macros';
+import { conditional, and, equal, raw, getBy, notEmpty, writable } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 
 export default EmberObject.extend(OwnerInjector, I18n, {
@@ -386,15 +386,18 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   /**
-   * @type {EmberObject}
+   * @type {ComputedProperty<EmberObject>}
    */
   valuesSource: reads('parent.valuesSource'),
 
   /**
-   * Set by valuePropertySetter
    * @type {ComputedProperty<any>}
    */
-  value: undefined,
+  value: writable(conditional(
+    notEmpty('valuePath'),
+    getBy('valuesSource', 'valuePath'),
+    'valuesSource'
+  )),
 
   /**
    * @override
@@ -421,32 +424,46 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     return this.t(`${this.get('path')}.tip`, {}, { defaultValue: '' });
   }),
 
-  valuePropertySetter: observer(
-    'valuePath',
-    function valuePropertySetter() {
-      const valuePath = this.get('valuePath');
-      this.set(
-        'value',
-        reads(valuePath ? `valuesSource.${valuePath}` : 'valuesSource')
-      );
-    }
-  ),
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInEditMode: equal('mode', raw('edit')),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInViewMode: equal('mode', raw('view')),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isInMixedMode: equal('mode', raw('mixed')),
 
   fieldsParentSetter: observer('fields.@each.parent', function fieldsParentSetter() {
     const fields = this.get('fields');
-
     if (fields) {
-      fields
-        .rejectBy('parent', this)
-        .setEach('parent', this);
+      const fieldsToInjectParent = fields.rejectBy('parent', this);
+      fieldsToInjectParent.setEach('parent', this);
+      // In more complicated forms with multiple levels of groups
+      // owner is not injected properly, because observers are not
+      // firing. We need to kick this mechanism manually
+      fieldsToInjectParent.invoke('updateOwner');
     }
+  }),
+
+  valuesSourceObserver: observer('valuesSource', function valuesSourceObserver() {
+    this.notifyPropertyChange('value');
   }),
 
   init() {
     this._super(...arguments);
 
     this.fieldsParentSetter();
-    this.valuePropertySetter();
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+    this.get('fields').invoke('destroy');
   },
 
   /**
@@ -541,6 +558,11 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     if (parent) {
       parent.onFocusLost(field);
     }
+  },
+
+  updateOwner() {
+    this.ownerSourceObserver();
+    this.get('fields').invoke('updateOwner');
   },
 
   buildPath(parentPath, name) {

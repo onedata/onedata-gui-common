@@ -124,4 +124,12 @@ describe('Integration | Component | form component/tags field', function () {
         expect(valueChangedSpy).to.be.calledWith(['aest', 'test']);
       });
   });
+
+  it('renders readonly tags input when field is in "view" mode', function () {
+    this.get('field').changeMode('view');
+
+    this.render(hbs `{{form-component/tags-field field=field}}`);
+
+    expect(this.$('.tags-input')).to.have.class('readonly');
+  });
 });

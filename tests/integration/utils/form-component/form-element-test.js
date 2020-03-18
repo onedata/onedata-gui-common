@@ -5,6 +5,13 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import { setupComponentTest } from 'ember-mocha';
+import _ from 'lodash';
+
+const fieldModes = [
+  'edit',
+  'view',
+  'mixed',
+];
 
 describe('Integration | Utility | form component/form element', function () {
   setupComponentTest('test-component', {
@@ -110,9 +117,23 @@ describe('Integration | Utility | form component/form element', function () {
   it('allows to change mode using changeMode()', function () {
     const formElement = FormElement.create();
 
-    formElement.changeMode('show');
+    formElement.changeMode('view');
 
-    expect(get(formElement, 'mode')).to.equal('show');
+    expect(get(formElement, 'mode')).to.equal('view');
+  });
+
+  fieldModes.forEach(mode => {
+    const propName = `isIn${_.upperFirst(mode)}Mode`;
+    it(`has true ${propName} when mode is "${mode}" and false all other mode flags`, function () {
+      const formElement = FormElement.create();
+
+      formElement.changeMode(mode);
+
+      expect(get(formElement, propName)).to.be.true;
+      fieldModes.without(mode).forEach(otherMode =>
+        expect(get(formElement, `isIn${_.upperFirst(otherMode)}Mode`)).to.be.false
+      );
+    });
   });
 
   it('has isModified set to false by default', function () {

@@ -1,3 +1,5 @@
+$form-component-view-margin: $padding-base-vertical;
+
 .form-component {
   .form-group {
     display: flex;
@@ -34,6 +36,7 @@
     }
   }
 
+  .static-text-field-renderer,
   .radio-field-renderer,
   .toggle-field-renderer,
   .loading-field-renderer {
@@ -45,6 +48,12 @@
   .toggle-field-renderer {
     .one-way-toggle {
       display: block;
+    }
+  }
+
+  .loading-field-renderer {
+    .spinner {
+      z-index: initial !important;
     }
   }
 
@@ -83,11 +92,46 @@
     }
   }
 
+  .field-view-mode {
+    &:not(.form-fields-group-renderer) {
+      margin-bottom: $form-component-view-margin;
+    }
+
+    .control-label {
+      padding-top: 0;
+    }
+
+    &.tags-field-renderer {
+      margin-bottom: $form-component-view-margin - $padding-xs-horizontal;
+    }
+
+    .static-text-field-renderer,
+    .radio-field-renderer,
+    .toggle-field-renderer {
+      padding-top: initial;
+    }
+
+    &.dropdown-field-renderer {
+      .oneicon {
+        font-size: 2.2em;
+        vertical-align: middle;
+        line-height: 0;
+        margin-right: $padding-xs-horizontal;
+      }
+    }
+  }
+
   @media (min-width: $screen-sm-min) {
     .privileges-field {
       .one-tree.has-items > .one-tree-list {
         padding-top: 0;
         margin-top: $padding-base-vertical;
+      }
+    }
+
+    .field-view-mode.clipboard-field-renderer {
+      .control-label {
+        padding-top: $padding-base-vertical;
       }
     }
   }

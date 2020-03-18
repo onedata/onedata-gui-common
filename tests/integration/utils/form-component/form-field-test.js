@@ -198,4 +198,28 @@ describe('Integration | Utility | form component/form field', function () {
       expect(formField.dumpDefaultValue()).to.be.undefined;
     }
   );
+
+  it(
+    'is valid when value is invalid, but mode is "view"',
+    function () {
+      const formField = FormField.create({
+        ownerSource: this,
+        customValidators: [
+          validator('number', { gt: 2 }),
+        ],
+        name: 'field',
+        valuesSource: {
+          field: 1,
+        },
+      });
+      formField.changeMode('view');
+
+      const {
+        isValid,
+        invalidFields,
+      } = getProperties(formField, 'isValid', 'invalidFields');
+      expect(isValid).to.be.true;
+      expect(invalidFields).to.be.empty;
+    }
+  );
 });

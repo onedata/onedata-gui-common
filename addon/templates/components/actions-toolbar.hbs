@@ -10,7 +10,7 @@
   {{#each actionsArray key="class" as |act|}}
     {{#dropdown.item
       buttonStyle=act.buttonStyle
-      triggerClasses=act.class
+      triggerClasses=(or act.class act.className)
       itemAction=(action act.action actionsArg)
       isDisabled=act.disabled
     }}

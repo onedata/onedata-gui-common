@@ -87,4 +87,12 @@ describe('Integration | Component | form component/toggle field', function () {
 
     expect(this.$('input#abc')).to.exist;
   });
+
+  it('renders blocked toggle when field is in "view" mode', function () {
+    this.get('field').changeMode('view');
+
+    this.render(hbs `{{form-component/toggle-field field=field}}`);
+
+    expect(this.$('.one-way-toggle')).to.have.class('disabled');
+  });
 });

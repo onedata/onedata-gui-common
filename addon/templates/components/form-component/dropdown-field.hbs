@@ -1,26 +1,33 @@
-{{#power-select
-  tagName="div"
-  disabled=(not isEffectivelyEnabled)
-  options=preparedOptions
-  onchange=(action "valueChanged")
-  selected=(find-by "value" value preparedOptions)
-  placeholder=placeholder
-  renderInPlace=true
-  onblur=(action "triggerFocusLost")
-  onclose=(action "focusLost")
-  triggerId=fieldId
-  searchEnabled=showSearch
-  triggerClass="dropdown-field-trigger"
-  dropdownClass="dropdown-field-dropdown"
-  as |option|
-}}
-  <div class="option-container">
-    {{#if option.icon}}
-      {{one-icon icon=option.icon}}
-    {{/if}}
-    {{#truncated-string class="text"}}
-      {{option.label}}
-    {{/truncated-string}}
-  </div>
-{{/power-select}}
+{{#if isInViewMode}}
+  {{#if selectedOption.icon}}
+    {{one-icon icon=selectedOption.icon}}
+  {{/if}}
+  <span class="text">{{selectedOption.label}}</span>
+{{else}}
+  {{#power-select
+    tagName="div"
+    disabled=(not isEffectivelyEnabled)
+    options=preparedOptions
+    onchange=(action "valueChanged")
+    selected=selectedOption
+    placeholder=placeholder
+    renderInPlace=true
+    onblur=(action "triggerFocusLost")
+    onclose=(action "focusLost")
+    triggerId=fieldId
+    searchEnabled=showSearch
+    triggerClass="dropdown-field-trigger"
+    dropdownClass="dropdown-field-dropdown"
+    as |option|
+  }}
+    <div class="option-container">
+      {{#if option.icon}}
+        {{one-icon icon=option.icon}}
+      {{/if}}
+      {{#truncated-string class="text"}}
+        {{option.label}}
+      {{/truncated-string}}
+    </div>
+  {{/power-select}}
+{{/if}}
 {{yield}}
