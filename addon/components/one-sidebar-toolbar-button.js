@@ -26,7 +26,7 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  title: readOnly('buttonModel.title'),
+  title: readOnly('buttonModel.sidebarTitle'),
 
   /**
    * @type {Ember.ComputedProperty<string>}
