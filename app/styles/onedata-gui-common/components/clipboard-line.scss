@@ -47,7 +47,7 @@
       top: 50%;
       transform: translateY(-50%);
     }
-    &.clipboard-btn-textarea {
+    &.clipboard-btn-textarea, &.clipboard-btn-html {
       bottom: 0;
       .copy-btn-icon {
         z-index: 1001;
@@ -88,11 +88,18 @@
         line-height: $input-height-small;
       }
     }
+    &.clipboard-line-html {
+      padding-bottom: $-copy-btn-width-small / 2;
+    }
   }
   
   &.monospace-font {
     .clipboard-input {
       font-family: monospace;
     }
+  }
+  
+  &.clipboard-line-html {
+    padding-bottom: $-copy-btn-width-base / 2;
   }
 }

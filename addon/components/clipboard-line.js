@@ -12,11 +12,12 @@ import layout from '../templates/components/clipboard-line';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { computed } from '@ember/object';
+import { tag } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
   classNames: ['clipboard-line'],
-  classNameBindings: ['size'],
+  classNameBindings: ['size', 'typeClass'],
 
   globalNotify: service(),
   i18n: service(),
@@ -62,6 +63,8 @@ export default Component.extend(I18n, {
    * @type {number}
    */
   textareaRows: 5,
+
+  typeClass: tag `clipboard-line-${'type'}`,
 
   clipboardBtnClass: computed('type', function clipboardBtnClass() {
     return `clipboard-btn-${this.get('type')}`;

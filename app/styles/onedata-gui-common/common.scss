@@ -708,6 +708,9 @@ textarea[style^="touch-action: manipulation"] {
       }
     }
   }
+  &.table-info-breakable {
+    word-break: break-all;
+  }
   .property-value {
     .resource-load-error.alert {
       margin: 0;

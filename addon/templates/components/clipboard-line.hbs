@@ -10,6 +10,12 @@
     class="clipboard-input form-control {{inputClass}}"
     readonly
   >{{value}}</textarea>
+{{else if (eq type "html")}}
+  <div
+    class="clipboard-input"
+  >
+    {{{value}}}
+  </div>
 {{else}}
   <input
     type="text"
