@@ -23,17 +23,17 @@ class MockArray {
     this.array = recordRange(0, 1000);
   }
   fetch(
-    fromId,
+    fromIndex,
     size = Number.MAX_SAFE_INTEGER,
     offset = 0
   ) {
-    if (fromId == null) {
-      fromId = Number.MIN_SAFE_INTEGER;
+    if (fromIndex == null) {
+      fromIndex = Number.MIN_SAFE_INTEGER;
     }
     let startIndex = 0;
     for (let i = 0; i < this.array.length; ++i) {
       startIndex = i;
-      if (this.array[i].index >= fromId) {
+      if (this.array[i].index >= fromIndex) {
         break;
       }
     }
@@ -72,7 +72,7 @@ const gteMatcher = (compareValue) => {
     value => value >= compareValue,
     `greater or equal ${compareValue}`
   );
-}
+};
 
 describe('Unit | Utility | replacing chunks array', function () {
   beforeEach(function () {
@@ -189,7 +189,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         })
         .then(() => {
           expect(fetchSpy).to.be.calledTwice;
-          expect(fetchSpy).to.be.calledWith(30, 10, 0)
+          expect(fetchSpy).to.be.calledWith(30, 10, 0);
         });
     }
   );
@@ -455,7 +455,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         const expectedArray = [
           frontRecord1,
           frontRecord2,
-          ...recordRange(0, 58)
+          ...recordRange(0, 58),
         ];
         expect(actualArray)
           .to.deep.equal(expectedArray);
@@ -529,7 +529,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           array.setProperties({
             startIndex: 20,
             endIndex: 60,
-          })
+          });
           return wait();
         })
         .then(() => {
@@ -563,4 +563,53 @@ describe('Unit | Utility | replacing chunks array', function () {
         });
     }
   );
+
+  it('uses offset if there are index duplicates', function () {
+    const duplicatedIndex = 15;
+    const indexMargin = 1;
+    const marray = this.mockArray.array;
+    const duplicates = [
+      { index: duplicatedIndex, id: duplicatedIndex + 'a' },
+      { index: duplicatedIndex, id: duplicatedIndex + 'b' },
+      { index: duplicatedIndex, id: duplicatedIndex + 'c' },
+    ];
+    this.mockArray.array = [
+      ...marray.slice(0, duplicatedIndex),
+      ...duplicates,
+      ...marray.slice(duplicatedIndex + 1, marray.length),
+    ];
+    const fetchSpy = sinon.spy(this.fetch);
+    const array = ReplacingChunksArray.create({
+      fetch: fetchSpy,
+      startIndex: 0,
+      // adding 3 because need to reach 3rd duplicate (it should be on the end)
+      endIndex: duplicatedIndex + 3 - indexMargin,
+      indexMargin: indexMargin,
+    });
+
+    return wait()
+      .then(() => {
+        expect(fetchSpy, 'initial fetch').to.be.calledOnce;
+        array.setProperties({
+          startIndex: duplicatedIndex - 5,
+          endIndex: duplicatedIndex + 15,
+        });
+        return wait();
+      })
+      .then(() => {
+        expect(fetchSpy).to.be.calledWith(duplicatedIndex);
+        const expectedArray = [
+          ...recordRange(
+            duplicatedIndex - 5 - indexMargin,
+            duplicatedIndex
+          ),
+          ...duplicates,
+          ...recordRange(
+            duplicatedIndex + 1,
+            duplicatedIndex + 1 + 15 + indexMargin - 3,
+          ),
+        ];
+        expect(array.toArray(), 'content after reload').to.deep.equal(expectedArray);
+      });
+  });
 });

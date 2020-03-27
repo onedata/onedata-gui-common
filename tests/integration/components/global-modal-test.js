@@ -7,6 +7,7 @@ import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
+import { Promise } from 'rsvp';
 
 describe('Integration | Component | global modal', function () {
   setupComponentTest('global-modal', {
@@ -115,7 +116,7 @@ describe('Integration | Component | global modal', function () {
         .then(() => {
           expect(isGlobalModalOpened()).to.be.true;
           expect(hiddenSpy).to.not.be.called;
-          return click(getGlobalModal().find('.close-button')[0])
+          return click(getGlobalModal().find('.close-button')[0]);
         })
         .then(() => {
           expect(isGlobalModalOpened()).to.be.false;

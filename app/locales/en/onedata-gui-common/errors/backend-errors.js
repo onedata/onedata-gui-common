@@ -1,3 +1,6 @@
+// should be sychronized with:
+// https://git.onedata.org/projects/VFS/repos/ctool/browse/src/errors.erl
+
 export default {
   // General errors
   badMessage: 'Internal error: client message could not be understood by the server.',
@@ -75,7 +78,7 @@ export default {
   badValueListNotAllowed: 'Value of "{{key}}" provided in request must be a list, allowed values: {{allowed}}.',
   badValueIdNotFound: 'Resource specified in "{{key}}" does not exist.',
   badValueAmbiguousId: 'The Id (key: {{key}}) is ambiguous.',
-  badValueIntentifier: 'Value of "{{key}}" provided in request must be a valid identifier.',
+  badValueIndentifier: 'Value of "{{key}}" provided in request must be a valid identifier.',
   badValueIdentifierOccupied: 'The identifier provided for "{{key}}" is occupied.',
   badValueFullName: 'Value provided in request must be a valid full name. More details below.',
   badValueUsername: 'Value provided in request must be a valid username. More details below.',

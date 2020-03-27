@@ -37,7 +37,7 @@ describe('Unit | Utility | one way modifiable', function () {
   it('forgets modification after source change', function () {
     let sampleObject = SampleObject.create();
     const newValue = 'src';
-    sampleObject.set('computedProperty', false)
+    sampleObject.set('computedProperty', false);
     sampleObject.set('sourceProperty', newValue);
     expect(sampleObject.get('computedProperty')).to.be.equal(newValue);
   });

@@ -89,4 +89,4 @@ export default TextField.extend({
 
     this.registerInternalValidator('numberValidator');
   },
-})
+});

@@ -12,7 +12,7 @@ const WINDOW_WIDTH_SM = 400;
 
 describe('Integration | Component | one switchable popover modal', function () {
   setupComponentTest('one-switchable-popover-modal', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -25,7 +25,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       },
       removeEventListener() {
         this.resizeListener = null;
-      }
+      },
     });
   });
 
@@ -375,7 +375,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     function (done) {
       this.setProperties({
         activeTriggerSelector: '.trigger-modal',
-        open: true
+        open: true,
       });
       this.render(hbs `
         <button class="trigger-popover">Trigger1</button>

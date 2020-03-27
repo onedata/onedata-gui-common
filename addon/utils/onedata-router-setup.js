@@ -18,5 +18,5 @@ export default function onedataRouterSetup(routerClass, router, setup = {}) {
     setup.public && setup.public.bind(this)();
   });
   router.route('login');
-  router.route('not-found', { path: "*" });
+  router.route('not-found', { path: '*' });
 }

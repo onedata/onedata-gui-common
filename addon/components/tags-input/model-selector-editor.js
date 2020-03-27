@@ -119,7 +119,7 @@ const modelIcons = {
   provider: 'provider',
   service: 'cluster',
   serviceOnepanel: 'onepanel',
-}
+};
 
 const recordIcons = {
   user: 'user',
@@ -375,8 +375,8 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = this.$().parents('.tags-input')
-    this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`)
+    const $parentTagsInput = this.$().parents('.tags-input');
+    this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
   },
 
   repositionPopover() {

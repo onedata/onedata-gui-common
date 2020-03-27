@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | name conflict', function () {
   setupComponentTest('name-conflict', {
-    integration: true
+    integration: true,
   });
 
   it('renders name with conflict label if available', function () {
@@ -16,6 +16,16 @@ describe('Integration | Component | name conflict', function () {
 
     this.render(hbs `{{name-conflict item=item}}`);
     expect(this.$()).to.contain('name#label');
+  });
+
+  it('renders name with conflict label with custom separator', function () {
+    this.set('item', {
+      name: 'name',
+      conflictLabel: 'label',
+    });
+
+    this.render(hbs `{{name-conflict item=item separator="^"}}`);
+    expect(this.$()).to.contain('name^label');
   });
 
   it('renders name without conflict label if not available', function () {

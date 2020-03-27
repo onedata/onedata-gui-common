@@ -3,7 +3,7 @@
  * 
  * @module routes/application
  * @author Jakub Liput
- * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -49,7 +49,7 @@ export default Route.extend(ApplicationRouteMixin, {
       activeContentLevel,
       activeResourceType,
       activeResource,
-      globalBarAspectTitle
+      globalBarAspectTitle,
     } = navigationState.getProperties(
       'activeContentLevel',
       'activeResourceType',
@@ -65,7 +65,7 @@ export default Route.extend(ApplicationRouteMixin, {
       case 'aspect':
         return [
           activeResource ? get(activeResource, 'name') : null,
-          globalBarAspectTitle
+          globalBarAspectTitle,
         ];
       default:
         return [];

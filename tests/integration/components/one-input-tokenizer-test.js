@@ -8,7 +8,7 @@ import $ from 'jquery';
 
 describe('Integration | Component | one input tokenizer', function () {
   setupComponentTest('one-input-tokenizer', {
-    integration: true
+    integration: true,
   });
 
   it('displays injected input text', function () {
@@ -42,7 +42,7 @@ describe('Integration | Component | one input tokenizer', function () {
 
       const inputEvent = new $.Event('keypress');
       inputEvent.which = inputEvent.keyCode = 13;
-      $oneInputTokenizer.val('hello')
+      $oneInputTokenizer.val('hello');
       $oneInputTokenizer.trigger(inputEvent);
 
       return wait().then(() => {

@@ -21,7 +21,7 @@ describe('Unit | Utility | safe method execution', function () {
   it('does not throw exception if invoking method on destroyed object', function (done) {
     const testObject = EmberObject.create({
       hello() {
-        return 'world'
+        return 'world';
       },
     });
 

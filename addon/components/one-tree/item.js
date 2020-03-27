@@ -6,7 +6,7 @@
  * 
  * @module components/one-tree/item
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -173,7 +173,7 @@ export default Component.extend({
   _bulletIcon: computed('_isSubtreeExpanded', '_hasSubtree', function () {
     let {
       _isSubtreeExpanded,
-      _hasSubtree
+      _hasSubtree,
     } = this.getProperties('_isSubtreeExpanded', '_hasSubtree');
 
     if (_hasSubtree) {
@@ -196,7 +196,7 @@ export default Component.extend({
       let {
         key,
         _rootKey,
-        _areParentsExpanded
+        _areParentsExpanded,
       } = this.getProperties('key', '_rootKey', '_areParentsExpanded');
 
       assert('one-tree-item: Root tree key must be provided.',
@@ -332,7 +332,7 @@ export default Component.extend({
     itemFilteredOut(visible) {
       next(() => {
         if (!this.isDestroyed && !this.isDestroying) {
-          this.set('_contentFilteredOut', !visible)
+          this.set('_contentFilteredOut', !visible);
         }
       });
     },
@@ -342,6 +342,6 @@ export default Component.extend({
           this.set('_subtreeFilteredOut', !visible);
         }
       });
-    }
-  }
+    },
+  },
 });

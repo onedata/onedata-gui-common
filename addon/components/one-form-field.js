@@ -3,7 +3,7 @@
  *
  * @module components/one-form-field
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,7 +15,7 @@ import config from 'ember-get-config';
 import dotToDash from 'onedata-gui-common/utils/dot-to-dash';
 
 const {
-  layoutConfig
+  layoutConfig,
 } = config;
 
 export default Component.extend({
@@ -54,6 +54,6 @@ export default Component.extend({
       // prevents double render issue by scheduling focusout event handler on
       // events' loop end
       setTimeout(() => invokeAction(this, 'onFocusOut', ...arguments), 0);
-    }
-  }
+    },
+  },
 });

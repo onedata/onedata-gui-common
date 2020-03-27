@@ -32,4 +32,4 @@ export default FormField.extend({
 
     this.registerInternalValidator('jsonValidator');
   },
-})
+});

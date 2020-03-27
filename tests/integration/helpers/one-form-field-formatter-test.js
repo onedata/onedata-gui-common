@@ -7,7 +7,7 @@ import { certFormatter } from 'onedata-gui-common/helpers/date-format';
 
 describe('Integration | Helper | one form field formatter', function () {
   setupComponentTest('one-form-field-formatter', {
-    integration: true
+    integration: true,
   });
 
   it('handles date format', function () {

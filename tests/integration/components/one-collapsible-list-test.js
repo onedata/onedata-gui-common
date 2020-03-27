@@ -9,7 +9,7 @@ import $ from 'jquery';
 
 describe('Integration | Component | one collapsible list', function () {
   setupComponentTest('one-collapsible-list', {
-    integration: true
+    integration: true,
   });
 
   it('renders items with headers', function () {

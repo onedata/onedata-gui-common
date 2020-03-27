@@ -54,4 +54,4 @@ export default FormField.extend({
 
     this.registerInternalValidator('regexValidator');
   },
-})
+});

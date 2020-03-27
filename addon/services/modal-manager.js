@@ -26,7 +26,7 @@
  */
 
 import Service from '@ember/service';
-import { resolve } from 'rsvp';
+import { Promise, resolve } from 'rsvp';
 import { writable, raw } from 'ember-awesome-macros';
 
 export default Service.extend({
@@ -104,7 +104,7 @@ export default Service.extend({
         `First modal component: ${queuedShowModalComponentName}, second modal component: ${modalComponentName}.`;
       throw new Error(
         `modal-manager: You tried to render modal twice in the same runloop frame. ${componentsInfo}`,
-      )
+      );
     }
 
     this.set('queuedShowModalComponentName', modalComponentName);
@@ -197,7 +197,7 @@ export default Service.extend({
       // Cancel modal hide
       return false;
     } else {
-      return this.hide()
+      return this.hide();
     }
   },
 
@@ -209,5 +209,5 @@ export default Service.extend({
     if (this.get('modalOptions.hideAfterSubmit') !== false) {
       this.hide();
     }
-  }
+  },
 });

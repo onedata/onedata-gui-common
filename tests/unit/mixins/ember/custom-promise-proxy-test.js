@@ -3,6 +3,7 @@ import { describe, it } from 'mocha';
 import { default as EmberObject, get } from '@ember/object';
 import EmberCustomPromiseProxyMixin from 'onedata-gui-common/mixins/ember/custom-promise-proxy';
 import wait from 'ember-test-helpers/wait';
+import { Promise } from 'rsvp';
 
 describe('Unit | Mixin | ember/custom promise proxy', function () {
   it('sets chosen property after promise resolve', function (done) {

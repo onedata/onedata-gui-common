@@ -1,0 +1,72 @@
+{{#if (eq mode "show")}}
+  {{#if paramRecords.length}}
+    <div class="row content-row">
+      {{#if showHeader}}
+        <strong class="property-label">{{tt this "header"}}:</strong>
+      {{/if}}
+      {{#each paramRecords as |qosParam|}}
+        <div class="row content-row nested-row">
+          <strong class="property-label qos-param-key">{{qosParam.key}}:</strong>
+          <span class="one-label qos-param-value">{{qosParam.value}}</span>
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+{{else}}
+  {{#if showHeader}}
+    <h2 class="form-section-title">{{tt this "header"}}</h2>
+  {{/if}}
+  {{#each paramEditRecords as |editRecord|}}
+    <div class={{concat-classes
+      "col-xs-12 form-group form-group-editable text-input animated fast group-with-tip"
+      (unless editRecord.disableCreateAnimation "fadeIn")
+      (if editRecord.isRemoved "fadeOut")
+      (if (eq editRecord activeParamEditRecords.lastObject) "last-record")
+      (if (or editRecord.isDuplicate (and (eq editRecord.key "") (not-eq editRecord.value "")) editRecord.keyValidationMessage) "has-error")}}>
+      <div class="row">
+        <div class="label-column {{layoutConfig.formLabelColumns}} control-label">
+          {{one-inline-editor
+            value=editRecord.key
+            isEditing=editRecord.isEditingKey
+            hideEditIcons=true
+            onInputValueChanged=(action "keyChanged" editRecord)
+            onEdit=(action "keyEdit" editRecord)
+            onSave=(action "keyChanged" editRecord)
+            onLostFocus=(action "inputLostFocus" "key" editRecord)
+            inputPlaceholder=(tt this "key")
+            ignoreInitialFocus=true
+            class="show-edit-icon"}}
+          {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
+            {{one-icon icon="close" class="form-field-right-addon remove-param" click=(action "removeRecord" editRecord)}}
+          {{/unless}}
+          {{#if editRecord.hasKeyError}}
+            <div class="form-message">
+              {{#if editRecord.isDuplicate}}
+                {{tt this "keyDuplicate"}}
+              {{else if editRecord.hasValueWithoutKey}}
+                {{tt this "keyCantBeBlank"}}
+              {{else if editRecord.keyValidationMessage}}
+                {{#if (eq editRecord.keyValidationMessage true)}}
+                  {{tt this "keyValidationError"}}
+                {{else}}
+                  {{editRecord.keyValidationMessage}}
+                {{/if}}
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="form-control-column {{layoutConfig.formInputColumns}}">
+          <input
+            type="text"
+            class="form-control qos-field"
+            value={{editRecord.value}}
+            placeholder={{tt this "value"}}
+            oninput={{action "valueChanged" editRecord}}
+            onblur={{action "inputLostFocus" "value" editRecord}}>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+{{/if}}
+
+{{yield}}

@@ -3,7 +3,7 @@
  *
  * @module routes/onedata/sidebar/content/option
  * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -17,7 +17,7 @@ import { getOwner } from '@ember/application';
 const notFoundAspect = 'not-found';
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 export default Route.extend({
@@ -34,7 +34,7 @@ export default Route.extend({
           throw {
             isOnedataCustomError: true,
             type: resourceType === 'clusters' ?
-              'no-cluster-permissions' : 'no-permissions'
+              'no-cluster-permissions' : 'no-permissions',
           };
         } else {
           throw contentModel.error;
@@ -72,7 +72,7 @@ export default Route.extend({
     if (getOwner(this).lookup(`template:${templateName}`)) {
       this.render(templateName, {
         into: 'onedata.sidebar.content',
-        outlet: 'main-content'
+        outlet: 'main-content',
       });
     } else {
       const tabSettings = _.find(

@@ -9,7 +9,7 @@ import { set } from '@ember/object';
 
 describe('Integration | Component | form component/text like field', function () {
   setupComponentTest('form-component/text-like-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

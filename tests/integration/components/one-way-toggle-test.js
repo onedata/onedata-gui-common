@@ -11,7 +11,7 @@ import $ from 'jquery';
 
 describe('Integration | Component | one way toggle', function () {
   setupComponentTest('one-way-toggle', {
-    integration: true
+    integration: true,
   });
 
   it('renders checked toggle when passed checked value true', function () {

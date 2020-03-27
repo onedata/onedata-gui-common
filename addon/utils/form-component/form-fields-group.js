@@ -111,7 +111,7 @@ export default FormElement.extend({
     switch (fieldsMode) {
       case 'view':
         newModeWhenNoFields = 'view';
-        break
+        break;
       case undefined: {
         if (oldModeWhenNoFields && oldModeWhenNoFields !== 'mixed') {
           break;
@@ -201,4 +201,4 @@ export default FormElement.extend({
       }
     }
   },
-})
+});

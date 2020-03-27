@@ -7,7 +7,7 @@ import { setProperties } from '@ember/object';
 
 describe('Integration | Component | form component/static text field', function () {
   setupComponentTest('form-component/static-text-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

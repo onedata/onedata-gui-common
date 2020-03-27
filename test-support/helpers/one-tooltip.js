@@ -34,6 +34,6 @@ export default class OneTooltipHelper {
    * @returns {Promise<String>}
    */
   getText() {
-    return this.open().then(() => this.getTooltip().innerText)
+    return this.open().then(() => this.getTooltip().innerText);
   }
 }

@@ -3,7 +3,7 @@
  *
  * @module initializers/i18n
  * @author Jakub Liput
- * @copyright (C) 2016-2017 ACK CYFRONET AGH
+ * @copyright (C) 2016-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,5 +15,5 @@ export default {
   initialize: function (application) {
     application.inject('component', 'i18n', 'service:i18n');
     application.inject('route', 'i18n', 'service:i18n');
-  }
+  },
 };

@@ -3,7 +3,7 @@
  * 
  * @module mixins/components/auto-save-form
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -152,7 +152,7 @@ export default Mixin.create({
     );
     let isValid = true;
     sourceFieldNames.forEach(fieldName => {
-      const isModified = get(modified, fieldName)
+      const isModified = get(modified, fieldName);
       if (isModified && formFieldsErrors[fieldName]) {
         isValid = false;
       }

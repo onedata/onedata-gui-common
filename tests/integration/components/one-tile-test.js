@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one tile', function () {
   setupComponentTest('one-tile', {
-    integration: true
+    integration: true,
   });
 
   it('renders tile title', function () {

@@ -13,7 +13,7 @@ import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {
   setupComponentTest('form-component/dropdown-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -78,7 +78,7 @@ describe('Integration | Component | form component/dropdown field', function () 
             if (icon) {
               expect($option.find('.one-icon')).to.have.class(`oneicon-${icon}`);
             }
-          })
+          });
         });
     }
   );
@@ -93,7 +93,7 @@ describe('Integration | Component | form component/dropdown field', function () 
       return wait()
         .then(() => {
           const dropdownTrigger = new DropdownHelper().getTrigger();
-          expect($(dropdownTrigger)).to.have.attr('aria-disabled', 'true')
+          expect($(dropdownTrigger)).to.have.attr('aria-disabled', 'true');
         });
     }
   );

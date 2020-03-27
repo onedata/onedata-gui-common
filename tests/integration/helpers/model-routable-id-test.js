@@ -6,7 +6,7 @@ import EmberObject from '@ember/object';
 
 describe('Integration | Helper | model routable id', function () {
   setupComponentTest('model-routable-id', {
-    integration: true
+    integration: true,
   });
 
   it('extracts id', function () {

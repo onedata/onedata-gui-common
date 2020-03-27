@@ -4,7 +4,7 @@
  *
  * @module services/gui-utils
  * @author Michal Borzecki
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -102,5 +102,5 @@ export default Service.extend(I18n, {
     // Redirect to main page with cleared out routing data
     // (these after '#' and '?' characters)
     return window.location.href.match(/(^[^#?]*)/)[0];
-  }
+  },
 });

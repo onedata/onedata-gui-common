@@ -3,7 +3,7 @@
  *
  * @module components/one-sidebar
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -21,7 +21,7 @@ export default Component.extend(I18n, {
   layout,
   classNames: ['one-sidebar'],
   classNameBindings: [
-    'isLoadingItem:loading-item'
+    'isLoadingItem:loading-item',
   ],
 
   eventsBus: service(),
@@ -272,12 +272,12 @@ export default Component.extend(I18n, {
       const {
         areAdvancedFiltersVisible,
         _localStorage,
-      } = this.getProperties('areAdvancedFiltersVisible', '_localStorage')
+      } = this.getProperties('areAdvancedFiltersVisible', '_localStorage');
 
       _localStorage.setItem(
         'oneSidebar.areAdvancedFiltersVisible',
         String(areAdvancedFiltersVisible)
       );
     },
-  }
+  },
 });

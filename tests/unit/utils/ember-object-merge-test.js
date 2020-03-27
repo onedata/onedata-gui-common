@@ -31,7 +31,7 @@ describe('Unit | Utility | ember object merge', function () {
         two: {
           three: {
             a: 1,
-          }
+          },
         },
       },
     });
@@ -40,8 +40,8 @@ describe('Unit | Utility | ember object merge', function () {
         two: {
           three: {
             b: 2,
-          }
-        }
+          },
+        },
       },
     });
     merge(a, b);

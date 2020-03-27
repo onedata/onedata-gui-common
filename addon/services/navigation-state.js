@@ -8,7 +8,7 @@
  *
  * @module services/navigation-state
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -174,7 +174,7 @@ export default Service.extend(I18n, {
     set(key, value) {
       const aspectOptions = this.set('aspectOptions', parseAspectOptions(value));
       return serializeAspectOptions(aspectOptions);
-    }
+    },
   }),
 
   /**

@@ -8,7 +8,7 @@ const ERROR_MSG = 'error!';
 
 describe('Unit | Component | one form', function () {
   setupComponentTest('one-form', {
-    unit: true
+    unit: true,
   });
 
   beforeEach(function () {
@@ -20,7 +20,7 @@ describe('Unit | Component | one form', function () {
       another: [EmberObject.create({
         name: 'another.second',
         type: 'text',
-      })]
+      })],
     };
     const ALL_FIELDS = _object.values(FIELDS).reduce((a, b) => a.concat(b));
     const ALL_FIELDS_VALUES = EmberObject.create({
@@ -31,9 +31,9 @@ describe('Unit | Component | one form', function () {
       errors: [
         EmberObject.create({
           attribute: 'allFieldsValues.main.first',
-          message: ERROR_MSG
-        })
-      ]
+          message: ERROR_MSG,
+        }),
+      ],
     });
 
     let subject = this.subject();

@@ -53,4 +53,4 @@ export default FormField.extend({
    * @override
    */
   isValueless: true,
-})
+});

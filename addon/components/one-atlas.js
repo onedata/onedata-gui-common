@@ -25,7 +25,7 @@
  * 
  * @module components/one-atlas
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -78,7 +78,7 @@ export default Component.extend({
 
     let {
       _resizeEventHandler,
-      _window
+      _window,
     } = this.getProperties('_resizeEventHandler', '_window');
 
     this.resizeToFit();
@@ -89,7 +89,7 @@ export default Component.extend({
     try {
       let {
         _resizeEventHandler,
-        _window
+        _window,
       } = this.getProperties('_resizeEventHandler', '_window');
       _window.removeEventListener('resize', _resizeEventHandler);
     } finally {
@@ -113,7 +113,7 @@ export default Component.extend({
 
     this.setProperties({
       width: newWidth,
-      height: newHeight
+      height: newHeight,
     });
     element.css({
       width: newWidth,

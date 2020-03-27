@@ -32,7 +32,7 @@
  * 
  * @module utils/create-data-proxy-mixin
  * @author Jakub Liput
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -119,7 +119,7 @@ export default function createDataProxyMixin(name, options) {
       set(key, value) {
         // you should not do that, but we do not deny this
         return this.set(internalDataProxyName, value);
-      }
+      },
     }),
 
     [internalDataProxyName]: null,

@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 describe('Integration | Component | tags input/text editor', function () {
   setupComponentTest('tags-input/text-editor', {
-    integration: true
+    integration: true,
   });
 
   it('has class "tags-input-text-editor"', function () {
@@ -61,7 +61,7 @@ describe('Integration | Component | tags input/text editor', function () {
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }]);
-      })
+      });
   });
 
   it('separates multiple new tags using comma', function () {
@@ -84,7 +84,7 @@ describe('Integration | Component | tags input/text editor', function () {
         }, {
           label: 'someTag2',
         }]);
-      })
+      });
   });
 
   it('separates new tags using custom separators', function () {
@@ -111,7 +111,7 @@ describe('Integration | Component | tags input/text editor', function () {
         }, {
           label: 'someTag2',
         }]);
-      })
+      });
   });
 
   it('turns off edition after loosing focus with empty input', function () {
@@ -161,14 +161,14 @@ describe('Integration | Component | tags input/text editor', function () {
         }, {
           label: 'someTag2',
         }]);
-      })
+      });
   });
 
   it('does not add tag which not match settings.regexp', function () {
     this.setProperties({
       tags: [],
       settings: {
-        regexp: /^\d+$/
+        regexp: /^\d+$/,
       },
     });
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
@@ -194,7 +194,7 @@ describe('Integration | Component | tags input/text editor', function () {
     this.setProperties({
       tags: [],
       settings: {
-        regexp: /^\d+$/
+        regexp: /^\d+$/,
       },
     });
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
@@ -221,7 +221,7 @@ describe('Integration | Component | tags input/text editor', function () {
     this.setProperties({
       tags: [],
       settings: {
-        regexp: /^\d+$/
+        regexp: /^\d+$/,
       },
     });
 

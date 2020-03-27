@@ -8,7 +8,7 @@
  *
  * @module components/one-space-indicator
  * @author Michal Borzecki, Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -209,7 +209,7 @@ export default Component.extend({
    * @type {ComputedProperty<number>}
    */
   normalizedNewTotalSize: computed('newTotalSize', function normalizedNewTotalSize() {
-    const newTotalSize = this.get('newTotalSize')
+    const newTotalSize = this.get('newTotalSize');
     return newTotalSize && Math.max(newTotalSize, 0);
   }),
 
@@ -337,7 +337,7 @@ export default Component.extend({
           `new-total-space-expand new-total-space-expand-${currentTotalSize < normalizedNewTotalSize ? 'right' : 'left'}`;
         if (expandDiff > minShowArrowFraction) {
           classes +=
-            ` new-total-space-expand-arrow`;
+            ' new-total-space-expand-arrow';
         }
         return classes;
       }

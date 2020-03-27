@@ -11,7 +11,7 @@
  *
  * @module components/one-collapsible-list-item-header.js
  * @author Michał Borzęcki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -31,7 +31,7 @@ export default Component.extend({
     'isCollapsible:collapsible',
     'toolbarWhenOpened:toolbar-when-opened',
     'disableToggleIcon:disable-toggle-icon',
-    '_isItemFixed:header-fixed'
+    '_isItemFixed:header-fixed',
   ],
 
   /**
@@ -105,6 +105,6 @@ export default Component.extend({
       if (!this.get('_isItemFixed') && this.get('isCollapsible')) {
         invokeAction(this, 'toggle', opened);
       }
-    }
-  }
+    },
+  },
 });

@@ -5,12 +5,12 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | application error', function () {
   setupComponentTest('application-error', {
-    integration: true
+    integration: true,
   });
 
   it('renders error details when error property is provided', function () {
     this.set('model', {
-      some: 'some_error'
+      some: 'some_error',
     });
     this.render(hbs `{{application-error error=model}}`);
     expect(this.$('.error-details')).to.exist;

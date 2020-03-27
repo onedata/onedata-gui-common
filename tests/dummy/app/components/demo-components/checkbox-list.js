@@ -14,5 +14,5 @@ export default Component.extend({
     name: 'item2',
   }, {
     name: 'item3',
-  }])
-})
+  }]),
+});

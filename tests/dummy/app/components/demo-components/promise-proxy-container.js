@@ -1,7 +1,7 @@
 /**
  * @module components/demo-components/promise-proxy-container
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -23,19 +23,19 @@ export default Component.extend({
     this.set('resolvingProxy', PromiseObject.create({
       promise: new Promise(resolve => {
         run.later(resolve, 2000);
-      })
+      }),
     }));
 
     this.set('rejectingProxy', PromiseObject.create({
       promise: new Promise((resolve, reject) => {
         run.later(() => reject({ message: 'some reason' }), 2000);
-      })
-    }))
+      }),
+    }));
   },
 
   actions: {
     resetProxy() {
       this._resetProxy();
     },
-  }
+  },
 });

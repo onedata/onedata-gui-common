@@ -3,7 +3,7 @@
  * 
  * @module components/one-size-edit
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -139,10 +139,10 @@ export default OneInlineEditor.extend(I18n, validations, {
       switch (keyEvent.keyCode) {
         case 13:
           // enter
-          return this.send('saveEdition')
+          return this.send('saveEdition');
         case 27:
           // escape
-          return this.send('cancelEdition')
+          return this.send('cancelEdition');
         default:
           break;
       }

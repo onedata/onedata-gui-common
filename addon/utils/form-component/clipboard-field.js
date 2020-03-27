@@ -27,4 +27,4 @@ export default StaticTextField.extend({
    * @type {number}
    */
   textareaRows: 5,
-})
+});

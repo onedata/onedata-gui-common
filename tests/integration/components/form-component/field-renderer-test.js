@@ -170,7 +170,7 @@ describe('Integration | Component | form component/field renderer', function () 
         label: 'abc',
       });
 
-      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
       expect(this.$('label').text().trim()).to.equal('abc');
     }
@@ -181,7 +181,7 @@ describe('Integration | Component | form component/field renderer', function () 
     function () {
       this.set('textField.tip', 'someTip');
 
-      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
       const $formFieldTip = this.$('.form-field-tip');
       expect($formFieldTip).to.exist;
@@ -195,7 +195,7 @@ describe('Integration | Component | form component/field renderer', function () 
     function () {
       this.set('textField.tip', undefined);
 
-      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
       expect(this.$('.form-field-tip')).to.not.exist;
     }
@@ -209,7 +209,7 @@ describe('Integration | Component | form component/field renderer', function () 
     it(`has class field-${mode}-mode when field is in "${mode}" mode`, function () {
       this.get('textField').changeMode(mode);
 
-      this.render(hbs `{{form-component/field-renderer field=textField}}`)
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
       expect(this.$('.field-renderer')).to.have.class(`field-${mode}-mode`);
     });

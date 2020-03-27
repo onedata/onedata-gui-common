@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | bezier curve', function () {
   setupComponentTest('bezier-curve', {
-    integration: true
+    integration: true,
   });
 
   it('renders', function () {

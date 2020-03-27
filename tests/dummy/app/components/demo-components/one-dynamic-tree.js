@@ -1,7 +1,7 @@
 /**
  * @module components/demo-components/one-dynamic-tree
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -26,7 +26,7 @@ export default Component.extend({
     valuesChanged(values, isValid) {
       // logs are for component demo purposes
       console.log('Tree values:');
-      console.log(values)
+      console.log(values);
       next(() => this.set('_isValid', isValid));
     },
     toggleDisabledState() {
@@ -39,6 +39,6 @@ export default Component.extend({
     },
     search(query) {
       this.set('_searchQuery', query);
-    }
-  }
+    },
+  },
 });

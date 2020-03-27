@@ -12,7 +12,7 @@ describe('Integration | Mixin | owner injector', function () {
   });
 
   beforeEach(function () {
-    registerService(this, 'test-service', Service)
+    registerService(this, 'test-service', Service);
     this.set('testService', lookupService(this, 'test-service'));
   });
 

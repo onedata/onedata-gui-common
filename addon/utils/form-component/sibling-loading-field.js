@@ -34,4 +34,4 @@ export default LoadingField.extend({
    * @override
    */
   isValid: reads('isFulfilled'),
-})
+});

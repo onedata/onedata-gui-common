@@ -10,8 +10,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Mixin from "@ember/object/mixin";
-import { computed } from "@ember/object";
+import Mixin from '@ember/object/mixin';
+import { computed } from '@ember/object';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
 
 export default Mixin.create({

@@ -104,7 +104,7 @@ describe('Integration | Component | one sidebar', function () {
         advancedFiltersComponent="test-component"
       }}`);
 
-      expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist
+      expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist;
     }
   );
 
@@ -119,7 +119,7 @@ describe('Integration | Component | one sidebar', function () {
       return click('.toggle-more-filters')
         .then(() =>
           expect(this.$('.advanced-filters-collapse.in .test-component')).to.not.exist
-        )
+        );
     }
   );
 
@@ -182,7 +182,7 @@ describe('Integration | Component | one sidebar', function () {
       const _localStorage = {
         getItem: sinon.stub()
           .withArgs('oneSidebar.areAdvancedFiltersVisible').returns('false'),
-      }
+      };
       this.set('_localStorage', _localStorage);
 
       this.render(hbs `{{one-sidebar
@@ -205,7 +205,7 @@ describe('Integration | Component | one sidebar', function () {
         const _localStorage = {
           getItem: sinon.stub()
             .withArgs('oneSidebar.areAdvancedFiltersVisible').returns(value),
-        }
+        };
         this.set('_localStorage', _localStorage);
 
         this.render(hbs `{{one-sidebar
@@ -225,7 +225,7 @@ describe('Integration | Component | one sidebar', function () {
       const _localStorage = {
         getItem: sinon.stub().returns('true'),
         setItem: sinon.spy(),
-      }
+      };
       this.set('_localStorage', _localStorage);
 
       this.render(hbs `{{one-sidebar

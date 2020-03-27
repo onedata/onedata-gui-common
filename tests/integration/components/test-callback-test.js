@@ -6,7 +6,7 @@ import sinon from 'sinon';
 
 describe('Integration | Component | test callback', function () {
   setupComponentTest('test-callback', {
-    integration: true
+    integration: true,
   });
 
   it('immediately invokes callback', function () {

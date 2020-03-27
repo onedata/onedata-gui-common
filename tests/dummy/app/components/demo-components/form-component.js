@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { computed, setProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { Promise } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
@@ -23,7 +24,7 @@ const modelSelectorSource = {
   oneprovider: _.times(10, i => ({
     name: `Oneprovider ${i}`,
   })),
-}
+};
 
 export default Component.extend({
   rootFieldsGroup: computed(function rootFieldsGroup() {
@@ -64,7 +65,7 @@ export default Component.extend({
               name: 'adult',
               value: 1,
               label: 'Adult',
-            }]
+            }],
           }),
           DatetimeField.create({
             ownerSource: this,
@@ -119,7 +120,7 @@ export default Component.extend({
             tagEditorComponentName: 'tags-input/model-selector-editor',
             defaultValue: [],
           }),
-        ]
+        ],
       });
   }),
 

@@ -4,7 +4,7 @@
  *
  * @module components/proceed-process-modal
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -150,7 +150,7 @@ export default Component.extend(I18n, {
         if (proceedResult && proceedResult.finally) {
           proceedResult.finally(() => {
             if (autoDetectProcessing) {
-              safeExec(this, 'set', 'processing', false)
+              safeExec(this, 'set', 'processing', false);
             }
           });
         } else {
@@ -166,5 +166,5 @@ export default Component.extend(I18n, {
         throw error;
       }
     },
-  }
+  },
 });

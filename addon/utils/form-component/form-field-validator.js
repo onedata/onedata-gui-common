@@ -47,4 +47,4 @@ export default EmberObject.extend(OwnerInjector, {
    * @type {ComputedProperty<boolean>}
    */
   isValid: isEmpty('errors'),
-})
+});

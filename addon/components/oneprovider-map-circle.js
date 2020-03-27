@@ -4,7 +4,7 @@
  *
  * @module components/oneprovider-map-circle
  * @author Michał Borzęcki
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -87,7 +87,7 @@ export default Component.extend(I18n, {
       mapSize,
       isSelected,
     } = this.getProperties('color', 'scale', 'mapSize', 'isSelected');
-    let styles = ''
+    let styles = '';
 
     if (color) {
       styles += `color: ${color}; border-color: ${color}; `;
@@ -115,5 +115,5 @@ export default Component.extend(I18n, {
     return oneprovidersCount === 1 ?
       get(this.get('oneproviders')[0], 'name') :
       this.t('nOneproviders', { n: oneprovidersCount });
-  })
+  }),
 });

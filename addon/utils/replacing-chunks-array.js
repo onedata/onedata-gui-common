@@ -4,7 +4,7 @@
  *
  * @module utils/replacing-chunks-array
  * @author Jakub Liput
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -18,6 +18,22 @@ import { resolve } from 'rsvp';
 import Evented from '@ember/object/evented';
 
 export const emptyItem = {};
+
+export function countEndDuplicates(array) {
+  const lastIndex = get(array, 'lastObject.index');
+  if (lastIndex) {
+    let count = 0;
+    for (let i = get(array, 'length') - 2; i >= 0; --i) {
+      if (get(array.objectAt(i), 'index') === lastIndex) {
+        count += 1;
+      } else {
+        return count;
+      }
+    }
+  } else {
+    return 0;
+  }
+}
 
 export default ArraySlice.extend(Evented, {
   /**
@@ -170,7 +186,7 @@ export default ArraySlice.extend(Evented, {
           // because some entries "fallen down" from further part of array
           // it should be tested
           _.pullAllBy(arrayUpdate, sourceArray, 'id');
-          const fetchedArraySize = get(arrayUpdate, 'length')
+          const fetchedArraySize = get(arrayUpdate, 'length');
           let insertIndex = emptyIndex + 1 - fetchedArraySize;
           // fetched data without duplicated is less than requested,
           // so there is nothing left on the array start
@@ -205,17 +221,17 @@ export default ArraySlice.extend(Evented, {
             }
             this.setProperties({
               startIndex: 0,
-            })
+            });
             return this.reload();
           }
         })
         .catch(error => {
-          this.trigger('fetchPrevRejected')
+          this.trigger('fetchPrevRejected');
           throw error;
         })
         .then(result => {
           this.trigger('fetchPrevResolved');
-          return result
+          return result;
         })
         .finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
     } else {
@@ -236,6 +252,7 @@ export default ArraySlice.extend(Evented, {
 
       const fetchSize = chunkSize;
       const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
+      const duplicateCount = countEndDuplicates(sourceArray);
 
       this.trigger('fetchNextStarted');
       return this.get('fetch')(
@@ -244,7 +261,7 @@ export default ArraySlice.extend(Evented, {
           // the workaround is to use []
           fetchStartIndex,
           fetchSize,
-          lastItem ? 1 : 0,
+          (lastItem ? 1 : 0) + duplicateCount,
           this
         )
         .then(array => {
@@ -255,12 +272,12 @@ export default ArraySlice.extend(Evented, {
           sourceArray.arrayContentDidChange();
         })
         .catch(error => {
-          this.trigger('fetchNextRejected')
+          this.trigger('fetchNextRejected');
           throw error;
         })
         .then(result => {
           this.trigger('fetchNextResolved');
-          return result
+          return result;
         })
         .finally(() => safeExec(this, 'set', '_fetchNextLock', false));
     } else {

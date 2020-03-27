@@ -9,7 +9,7 @@ import EventsBusStub from 'dummy/tests/helpers/events-bus-stub';
 
 describe('Integration | Component | one tree', function () {
   setupComponentTest('one-tree', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -66,7 +66,7 @@ describe('Integration | Component | one tree', function () {
         expect(subtree).to.not.have.class('collapse-hidden');
         done();
       });
-    })
+    });
   });
 
   it('collapses children recursively when collapseRecursively==true', function (done) {

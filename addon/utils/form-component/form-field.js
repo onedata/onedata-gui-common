@@ -163,4 +163,4 @@ export default FormElement.extend({
   dumpValue() {
     return this.get('isValueless') ? undefined : this._super(...arguments);
   },
-})
+});

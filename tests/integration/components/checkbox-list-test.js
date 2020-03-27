@@ -7,7 +7,7 @@ import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | checkbox list', function () {
   setupComponentTest('checkbox-list', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -202,7 +202,7 @@ describe('Integration | Component | checkbox list', function () {
       .then(() => {
         expect(changeSpy.lastCall).to.be.calledWith(items);
         expect($selectedCounter.text().trim()).to.equal('(2/2)');
-      })
+      });
   });
 
   it('shows passed headerText', function () {

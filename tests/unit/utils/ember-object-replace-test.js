@@ -45,7 +45,7 @@ describe('Unit | Utility | ember object replace', function () {
       foo: 1,
     });
     const source = EmberObject.create({
-      foo: 2
+      foo: 2,
     });
 
     const result = emberObjectReplace(target, source);

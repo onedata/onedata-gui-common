@@ -13,24 +13,24 @@ import { Promise } from 'rsvp';
 
 describe('Integration | Component | providers list', function () {
   setupComponentTest('providers-list', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
     const spaces = A([{
       name: 'space1',
       supportSizes: {
-        '1': 2097152,
-        '2': 1048576,
-        '3': 1048576,
+        1: 2097152,
+        2: 1048576,
+        3: 1048576,
       },
     }, {
       name: 'space2',
       supportSizes: {
-        '1': 1048576,
-        '2': 2097152,
-        '3': 1048576,
-      }
+        1: 1048576,
+        2: 2097152,
+        3: 1048576,
+      },
     }]);
     const spaceList = PromiseObject.create({
       promise: Promise.resolve({
@@ -44,7 +44,7 @@ describe('Integration | Component | providers list', function () {
             name: 'provider1',
             spaceList,
           },
-          color: 'red'
+          color: 'red',
         },
         {
           provider: {
@@ -52,7 +52,7 @@ describe('Integration | Component | providers list', function () {
             name: 'provider2',
             spaceList,
           },
-          color: 'green'
+          color: 'green',
         },
         {
           provider: {
@@ -60,7 +60,7 @@ describe('Integration | Component | providers list', function () {
             name: 'provider3',
             spaceList,
           },
-          color: 'yellow'
+          color: 'yellow',
         },
       ]),
       selectedSpace: spaces[0],

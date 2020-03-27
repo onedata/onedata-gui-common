@@ -1,7 +1,7 @@
 /**
  * @module components/demo-components/one-pie-chart
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -30,6 +30,6 @@ export default Component.extend({
       label: 'Series 3',
       value: 30,
       color: '#EE3F3F',
-    })
+    }),
   ]),
 });

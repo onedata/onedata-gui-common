@@ -18,7 +18,7 @@
  *
  * @module utils/chartist/pie-labels
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -37,7 +37,7 @@ export default function (options) {
     lineTextMargin: 3,
     lineLength: DEFAULT_LINE_LENGTH,
     linePointerLength: DEFAULT_LINE_POINTER_LENGTH,
-    hideLabelThresholdPercent: 15
+    hideLabelThresholdPercent: 15,
   };
   options = Chartist.extend({}, defaultOptions, options);
   return (chart) => {
@@ -239,7 +239,7 @@ function getChartRenderEntry(chart) {
       node,
       oldTooltipTargets: [],
       actualTooltipTargets: [],
-    }
+    };
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
       return $.contains(document.documentElement, existingChartRender.node);

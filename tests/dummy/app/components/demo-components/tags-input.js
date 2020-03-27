@@ -29,4 +29,4 @@ export default Component.extend({
       allowedTags: this.get('tags'),
     };
   }),
-})
+});

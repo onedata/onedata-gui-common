@@ -9,7 +9,7 @@ import { setProperties, get } from '@ember/object';
 
 describe('Integration | Component | form component/tags field', function () {
   setupComponentTest('form-component/tags-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -108,7 +108,7 @@ describe('Integration | Component | form component/tags field', function () {
         expect(testEditor).to.exist;
         expect(get(testEditor[0].componentInstance, 'settings'))
           .to.equal(settings);
-      })
+      });
   });
 
   it('turns on tags sorting according to truthy "sort" property', function () {

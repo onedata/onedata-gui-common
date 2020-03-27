@@ -30,7 +30,7 @@ function getMapObject(context) {
 
 describe('Integration | Component | one map', function () {
   setupComponentTest('one-map', {
-    integration: true
+    integration: true,
   });
 
   it('shows whole world map by default', function () {
@@ -76,7 +76,7 @@ describe('Integration | Component | one map', function () {
       const eventSpy = sinon.spy();
       const _window = {
         dispatchEvent: eventSpy,
-      }
+      };
       this.set('_window', _window);
       this.render(hbs `
         <div style="width: 1400px; height: 700px">

@@ -3,7 +3,7 @@
  *
  * @module routes/onedata/sidebar/content/index
  * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -23,7 +23,7 @@ const SPECIAL_IDS = [
 ];
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 function isSpecialResourceId(id) {
@@ -59,7 +59,7 @@ export default Route.extend({
     let { resourceId } = model;
     this.render(`tabs.${resourceType}.${resourceId}`, {
       into: 'onedata.sidebar.content',
-      outlet: 'main-content'
+      outlet: 'main-content',
     });
-  }
+  },
 });
