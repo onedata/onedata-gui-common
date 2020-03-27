@@ -6,10 +6,6 @@
 
   &:hover {
     color: $color-one-red;
-
-    .button-label {
-      border-color: $color-one-red;
-    }
   }
 
   &.disabled {
@@ -28,6 +24,24 @@
     }
   }
 
+  &.has-title {
+    height: 24px;
+    background-color: $main-text-color;
+    color: $color-sidebar-background;
+    border-radius: 14px;
+    padding: 0 $padding-xs-horizontal * 1.5;
+    font-size: 80%;
+
+    &:hover {
+      background-color: $color-one-red;
+    }
+
+    .one-icon {
+      font-size: 22px;
+      width: initial;
+    }
+  }
+
   + .one-sidebar-toolbar-button {
     margin-left: $padding-xs-horizontal * 1.5;
   }
@@ -39,16 +53,16 @@
   }
 
   .button-label {
-    padding-top: $padding-xs-vertical;
-    padding-bottom: $padding-xs-vertical;
-    padding-left: $padding-small-horizontal;
-    padding-right: 18px;
-    margin-right: -12px;
-    border: 2px solid $main-text-color;
-    border-right: 0;
-    border-top-left-radius: 14px;
-    border-bottom-left-radius: 14px;
-    text-transform: uppercase;
+    // padding-top: $padding-xs-vertical;
+    // padding-bottom: $padding-xs-vertical;
+    // padding-left: $padding-small-horizontal;
+    // padding-right: 18px;
+    // margin-right: -12px;
+    // border: 2px solid $main-text-color;
+    // border-right: 0;
+    // border-top-left-radius: 14px;
+    // border-bottom-left-radius: 14px;
+    // text-transform: uppercase;
     @include font-semibold();
   }
 }

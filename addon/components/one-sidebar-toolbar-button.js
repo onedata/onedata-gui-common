@@ -15,7 +15,10 @@ import layout from 'onedata-gui-common/templates/components/one-sidebar-toolbar-
 export default Component.extend({
   layout,
   classNames: ['one-sidebar-toolbar-button'],
-  classNameBindings: ['disabled:disabled:clickable'],
+  classNameBindings: [
+    'disabled:disabled:clickable',
+    'title:has-title',
+  ],
 
   /**
    * Button definition
