@@ -21,10 +21,6 @@ const {
 } = config;
 
 export default Route.extend(AuthenticatedRouteMixin, {
-  queryParams: {
-    options: {},
-  },
-
   model() {
     let mainMenuItems = A(onedataTabs).map(item => _object.assign({}, item, { disabled: false }));
 
