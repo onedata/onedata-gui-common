@@ -71,6 +71,6 @@ export default FieldComponentBase.extend({
         .filter(privilegeName => oneLevelTree[privilegeName]);
 
       return this._super(flattenedValue);
-    }
+    },
   },
 });
