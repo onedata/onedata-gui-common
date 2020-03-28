@@ -25,11 +25,11 @@ describe('Unit | Utility | form component/form fields root group', function () {
     function () {
       const field1 = FormField.create({
         name: 'field1',
-        defaultValue: 'f1'
+        defaultValue: 'f1',
       });
       const field2 = FormField.create({
         name: 'field2',
-        defaultValue: 'f2'
+        defaultValue: 'f2',
       });
       const formFieldsRootGroup = FormFieldsRootGroup.create({
         fields: [
