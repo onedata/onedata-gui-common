@@ -460,6 +460,9 @@ textarea.no-resize  {
 }
 
 .truncated-string {
+  &.rtl {
+    direction: rtl;
+  }
   &.before-status {
     padding-right: 100px;
     &.with-place-for-dots {
