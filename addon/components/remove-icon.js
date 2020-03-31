@@ -34,6 +34,12 @@ export default Component.extend({
    */
   onClick: notImplementedIgnore,
 
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  tooltipTriggerEvents: undefined,
+
   click() {
     const {
       isDisabled,
