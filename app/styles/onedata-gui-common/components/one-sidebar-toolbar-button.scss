@@ -10,17 +10,9 @@
 
   &.disabled {
     color: $main-text-color-disabled;
-
-    .button-label {
-      border-color: $main-text-color-disabled;
-    }
     
     &:hover {
       color: $main-text-color-disabled;
-
-      .button-label {
-        border-color: $main-text-color-disabled;
-      }
     }
   }
 
@@ -34,6 +26,15 @@
 
     &:hover {
       background-color: $color-one-red;
+      color: $color-sidebar-background;
+    }
+
+    &.disabled {
+      background-color: $main-text-color-disabled;
+      
+      &:hover {
+        background-color: $main-text-color-disabled;
+      }
     }
 
     .one-icon {
@@ -53,16 +54,6 @@
   }
 
   .button-label {
-    // padding-top: $padding-xs-vertical;
-    // padding-bottom: $padding-xs-vertical;
-    // padding-left: $padding-small-horizontal;
-    // padding-right: 18px;
-    // margin-right: -12px;
-    // border: 2px solid $main-text-color;
-    // border-right: 0;
-    // border-top-left-radius: 14px;
-    // border-bottom-left-radius: 14px;
-    // text-transform: uppercase;
     @include font-semibold();
   }
 }
