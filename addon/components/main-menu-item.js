@@ -3,7 +3,7 @@
  * 
  * @module components/main-menu-item
  * @author Jakub Liput
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -53,7 +53,9 @@ export default Component.extend({
   }),
 
   /**
+   * @override
    * @param {MouseEvent} clickEvent 
+   * @returns {boolean|undefined}
    */
   click(clickEvent) {
     if (!this.get('isDisabled')) {
@@ -68,6 +70,7 @@ export default Component.extend({
   },
 
   /**
+   * @override
    * @param {MouseEvent} mouseEvent
    */
   mouseDown(mouseEvent) {

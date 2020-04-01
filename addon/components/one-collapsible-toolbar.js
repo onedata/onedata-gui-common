@@ -17,7 +17,7 @@
  *
  * @module components/one-collapsible-toolbar
  * @author Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -128,7 +128,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       let {
         isInternallyMinimized,
         fullModeClasses,
-        minimizedModeClasses
+        minimizedModeClasses,
       } = this.getProperties(
         'isInternallyMinimized',
         'fullModeClasses',
@@ -156,7 +156,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     this.setProperties({
       overflowElement: this.$('.collapsible-toolbar-buttons'),
       overflowParentElement: this.$().parent(),
-      overflowSiblingsElements: this.$().siblings()
+      overflowSiblingsElements: this.$().siblings(),
     });
     this.overflowDetectorMounter();
     this.get('eventsBus').on(
@@ -200,6 +200,6 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     },
     toggleDropdown() {
       this.toggleProperty('dropdownOpened');
-    }
+    },
   },
 });

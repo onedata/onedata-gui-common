@@ -17,5 +17,5 @@ export default Component.extend({
 
   displayedIndex: computed('index', function () {
     return this.get('index') + 1;
-  })
+  }),
 });

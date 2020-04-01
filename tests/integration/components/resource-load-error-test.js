@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | resource load error', function () {
   setupComponentTest('resource-load-error', {
-    integration: true
+    integration: true,
   });
 
   it('renders show details button if reason is provided', function () {
@@ -37,9 +37,9 @@ describe('Integration | Component | resource load error', function () {
     let reason = {
       response: {
         body: {
-          description
-        }
-      }
+          description,
+        },
+      },
     };
     this.set('reason', reason);
     this.render(hbs `{{resource-load-error reason=reason}}`);

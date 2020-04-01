@@ -65,7 +65,7 @@ export default FormFieldsGroup.extend({
           set(targetValuesObject, pathElement, nextTargetValuesObject);
         }
         targetValuesObject = nextTargetValuesObject;
-      })
+      });
 
       this.set(valuePath, value);
     }
@@ -80,5 +80,5 @@ export default FormFieldsGroup.extend({
    */
   onFocusLost(field) {
     field.markAsModified();
-  }
+  },
 });

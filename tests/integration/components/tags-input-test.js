@@ -9,7 +9,7 @@ import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | tags input', function () {
   setupComponentTest('tags-input', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

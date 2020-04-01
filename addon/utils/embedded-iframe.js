@@ -4,7 +4,7 @@
  *
  * @module utils/embedded-iframe
  * @author Michał Borzęcki
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -198,7 +198,7 @@ export default EmberObject.extend({
       );
       const hostElement = this.get('activeOwner.hostElement');
 
-      const classNames = ['embedded-iframe']
+      const classNames = ['embedded-iframe'];
       if (iframeClass) {
         classNames.push(iframeClass);
       }

@@ -7,7 +7,7 @@
  *
  * @module components/app-layout
  * @author Jakub Liput, Michał Borzęcki
- * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -65,7 +65,7 @@ export default Component.extend({
   sidenavModel: computed('sidenavResourceType', function () {
     const {
       sidenavResourceType,
-      sidebarResources
+      sidebarResources,
     } = this.getProperties('sidenavResourceType', 'sidebarResources');
 
     const resourceType = sidenavResourceType;
@@ -170,7 +170,7 @@ export default Component.extend({
     mobileMenuItemChanged(targetResourceType) {
       this.get('sideMenu').close();
       const isUsersRemoteView = targetResourceType === 'users' &&
-        this.get('guiUtils.manageAccountExternalLink')
+        this.get('guiUtils.manageAccountExternalLink');
       if (targetResourceType && !isUsersRemoteView) {
         return this.get('router')
           .transitionTo('onedata.sidebar', targetResourceType);
@@ -183,6 +183,6 @@ export default Component.extend({
       if (opened !== this.get('globalMenuOpened')) {
         this.set('globalMenuOpened', opened);
       }
-    }
-  }
+    },
+  },
 });

@@ -1,0 +1,56 @@
+.qos-params-editor {
+  .form-group {
+    &.has-error {
+      .qos-field {
+        border-color: $input-border; 
+      }
+    }
+    .control-label {
+      padding-top: 0;
+      margin-bottom: 5px;
+      .form-message {
+        font-family: Open Sans;
+      }
+    }
+    .remove-param {
+      font-weight: bold;
+      color: $color-one-danger;
+    }
+    .one-inline-editor:hover {
+      .one-label {
+        padding-left: $padding-large-horizontal; 
+      }
+    }
+    @media (min-width: $screen-sm-min) {
+      .remove-param {
+        opacity: 0.5;
+        font-size: 1.2em;
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+    @media (max-width: $screen-xs-max) {
+      &.last-record {
+        .label-column {
+          padding-right: 0px;
+        }
+      }
+      .label-column {
+        padding-right: 40px;
+      }
+      .one-inline-editor {
+        .one-label {
+          padding-left: 0;
+        }
+      }
+      .remove-param {
+        position: absolute;
+        top: 0;
+        right: 0;
+        line-height: $input-height-base;
+        font-size: 230%;
+      }
+    }
+  }
+}

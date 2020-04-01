@@ -17,7 +17,7 @@ const i18nTranslations = {
         index: 'Index',
         testAspect: 'test aspect',
       },
-    }
+    },
   },
 };
 
@@ -34,7 +34,7 @@ const SidebarResourcesStub = Service.extend({
       default:
         return [];
     }
-  }
+  },
 });
 
 const aspectActions = [{
@@ -137,7 +137,7 @@ describe('Unit | Service | navigation state', function () {
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.index');
     service.set('activeResourceType', 'spaces');
-    const actions = service.get('globalMenuActions')
+    const actions = service.get('globalMenuActions');
     expect(actions).to.have.length(1);
     expect(actions[0].title).to.equal(testSidebarAction);
   });
@@ -148,7 +148,7 @@ describe('Unit | Service | navigation state', function () {
     router.set('currentRouteName', 'onedata.sidebar.content.index');
     service.set('activeResourceType', 'spaces');
     service.set('activeResource', resource);
-    const actions = service.get('globalMenuActions')
+    const actions = service.get('globalMenuActions');
     expect(actions).to.have.length(1);
     expect(actions[0].title).to.equal(testSidebarAction);
   });
@@ -164,7 +164,7 @@ describe('Unit | Service | navigation state', function () {
       aspectActions,
       aspectActionsTitle: 'space',
     });
-    const actions = service.get('globalMenuActions')
+    const actions = service.get('globalMenuActions');
     expect(actions).to.have.length(1);
     expect(actions[0].title).to.equal(aspectActions[0].title);
   });
@@ -182,7 +182,7 @@ describe('Unit | Service | navigation state', function () {
       aspectActions,
       aspectActionsTitle: 'space',
     });
-    const actions = service.get('globalMenuActions')
+    const actions = service.get('globalMenuActions');
     expect(actions).to.have.length(3);
     expect(actions[0].title).to.equal(testSidebarAction);
     expect(actions[1].title).to.equal('space');

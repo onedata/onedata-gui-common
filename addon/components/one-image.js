@@ -15,7 +15,7 @@ import $ from 'jquery';
  * 
  * @module components/one-image
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Component.extend({
@@ -55,17 +55,17 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    $(window).off("resize", this.get('_onResizeHandler'));
+    $(window).off('resize', this.get('_onResizeHandler'));
   },
 
   _recalculateImageFontSize() {
     if (this.get('imageText')) {
       // 10% of image width
-      const image = this.$(".image");
+      const image = this.$('.image');
       if (image) {
         const fontSize = image.width() * 0.10;
         this.$().css('font-size', fontSize);
       }
     }
-  }
+  },
 });

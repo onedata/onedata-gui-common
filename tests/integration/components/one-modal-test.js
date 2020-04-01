@@ -8,7 +8,7 @@ import { next } from '@ember/runloop';
 
 describe('Integration | Component | one modal', function () {
   setupComponentTest('one-modal', {
-    integration: true
+    integration: true,
   });
 
   it(

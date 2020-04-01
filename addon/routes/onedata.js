@@ -3,7 +3,7 @@
  *
  * @module routes/onedata
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -17,14 +17,10 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import _object from 'lodash/object';
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 export default Route.extend(AuthenticatedRouteMixin, {
-  queryParams: {
-    options: {},
-  },
-
   model() {
     let mainMenuItems = A(onedataTabs).map(item => _object.assign({}, item, { disabled: false }));
 

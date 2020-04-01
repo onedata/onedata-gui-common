@@ -3,7 +3,7 @@
  *
  * @module components/bs-modal
  * @author Michał Borzęcki
- * @copyright (C) 2018-2019 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -48,5 +48,5 @@ export default BsModal.extend({
         backdropTransitionDuration: 1,
       });
     }
-  }
+  },
 });

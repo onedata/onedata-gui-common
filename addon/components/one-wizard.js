@@ -11,12 +11,12 @@ export default Component.extend({
   steps: null,
   stepsNumClassName: computed('steps', function () {
     let steps = this.get('steps'),
-      className = "steps-";
+      className = 'steps-';
     className += steps !== null ? steps.length : 0;
     return className;
   }),
   activeStepClassName: computed('currentIndex', function () {
-    return "step-active-" + (this.get('currentIndex') + 1);
+    return 'step-active-' + (this.get('currentIndex') + 1);
   }),
 
   init() {
@@ -26,7 +26,7 @@ export default Component.extend({
   currentStep: computed('steps.[]', 'currentIndex', function () {
     let {
       steps,
-      currentIndex
+      currentIndex,
     } = this.getProperties('steps', 'currentIndex');
 
     return steps.objectAt(currentIndex);
@@ -35,6 +35,6 @@ export default Component.extend({
   actions: {
     next() {
       this.incrementProperty('currentIndex');
-    }
-  }
+    },
+  },
 });

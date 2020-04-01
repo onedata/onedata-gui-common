@@ -110,8 +110,8 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = this.$().parents('.tags-input')
-    this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`)
+    const $parentTagsInput = this.$().parents('.tags-input');
+    this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
   },
 
   repositionPopover() {

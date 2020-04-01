@@ -21,5 +21,5 @@ export default Service.extend({
       });
     }
     return translation;
-  }
+  },
 });

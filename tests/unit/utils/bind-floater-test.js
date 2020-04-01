@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import {
   describe,
-  it
+  it,
 } from 'mocha';
 import bindFloater from 'onedata-gui-common/utils/bind-floater';
 

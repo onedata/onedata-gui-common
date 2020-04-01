@@ -47,6 +47,13 @@ $token-border-radius: 3px;
       margin-right: $padding-base-horizontal;
     }
   }
+  .modal-footer {
+    // put a button in this container - it enables tooltip events for disabled buttons
+    .btn-tooltip-container {
+      @extend .btn;
+      padding: 0;
+    }
+  }
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
@@ -122,6 +129,11 @@ $token-border-radius: 3px;
     }
   }
   .form-group {
+    &.has-feedback {
+      textarea.form-control + .form-message + .form-control-feedback {
+        display: none;
+      }
+    }
     @media (max-width: $screen-xs-max) {
       .form-control-feedback {
         top: 0;
@@ -369,6 +381,49 @@ $token-border-radius: 3px;
 }
 
 /// bs-tab styles
+
+.bs-tab {
+  .nav-tabs {
+    li {
+      > a {
+        .tab-name {
+          &.tab-state {
+            $size: 10px;
+            $states: blank danger warning success;
+            $stateColors: (
+              empty: transparent,
+              inactive: $color-one-semiwhite,
+              danger: $color-one-danger,
+              warning: $color-one-warning,
+              success: $color-one-success,
+            );
+            @mixin stateAfter($type) {
+              &.tab-state-#{$type}::after {
+                background-color: map-get($stateColors, $type);
+              }
+            }
+            display: inline-block;
+            position: relative;
+            margin-right: $size * 0.5;
+            @each $state in $states {
+              @include stateAfter($state)
+            }            
+            &::after {
+              position: absolute;
+              background-color: map-get($stateColors, inactive);
+              top: 0;
+              right: -$size * 1.5;
+              content: ' ';
+              width: $size;
+              height: $size;
+              border-radius: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 // base style for onedata - use with one of below classes
 .bs-tab-onedata {

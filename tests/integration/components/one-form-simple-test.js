@@ -10,7 +10,7 @@ const ERROR_MSG = 'error!';
 
 describe('Integration | Component | one form simple', function () {
   setupComponentTest('one-form-simple', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -21,16 +21,16 @@ describe('Integration | Component | one form simple', function () {
       {
         name: 'second',
         type: 'text',
-      }
+      },
     ];
 
     const VALIDATIONS = EmberObject.create({
       errors: [
         EmberObject.create({
           attribute: 'allFieldsValues.main.first',
-          message: ERROR_MSG
-        })
-      ]
+          message: ERROR_MSG,
+        }),
+      ],
     });
 
     this.set('fields', FIELDS);

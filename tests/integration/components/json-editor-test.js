@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 describe('Integration | Component | json editor', function () {
   setupComponentTest('json-editor', {
-    integration: true
+    integration: true,
   });
 
   it('shows passed value', function () {
@@ -31,7 +31,7 @@ describe('Integration | Component | json editor', function () {
 
     return fillIn('.json-editor-textarea', JSON.stringify(value)).then(() => {
       expect(spy).to.be.calledOnce;
-    })
+    });
   });
 
   it('notifies about incorrect data', function () {
@@ -47,7 +47,7 @@ describe('Integration | Component | json editor', function () {
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
       expect(spy).to.be.calledOnce;
-    })
+    });
   });
 
   it('shows information about invalid data', function () {
@@ -61,6 +61,6 @@ describe('Integration | Component | json editor', function () {
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
       expect(this.$('.form-message')).to.exist;
       expect(this.$('.json-editor.has-error')).to.exist;
-    })
+    });
   });
 });

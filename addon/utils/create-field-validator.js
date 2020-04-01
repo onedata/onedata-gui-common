@@ -6,7 +6,7 @@ const comparableValues = {
   lte: (property, number) => Math.min(property, number),
   gt: (property, number) => Math.max(property, number),
   gte: (property, number) => Math.max(property, number),
-}
+};
 
 function comparableValueForOperator(property, number, operator) {
   property = parseFloat(property);
@@ -108,7 +108,7 @@ export default function createFieldValidator(field) {
     validations.push(validator('format', {
       regex: field.regex,
       message: field.regexMessage,
-      allowBlank: field.regexAllowBlank
+      allowBlank: field.regexAllowBlank,
     }));
   }
   return validations;

@@ -8,7 +8,7 @@ import $ from 'jquery';
 
 describe('Integration | Helper | invoke on enter', function () {
   setupComponentTest('invoke-on-enter', {
-    integration: true
+    integration: true,
   });
 
   it('invokes action once on enter press', function () {

@@ -24,7 +24,7 @@
  * 
  * @module utils/chartist/tooltip
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -98,8 +98,8 @@ export default function (options) {
         tooltipNode = $($.parseHTML(TOOLTIP_HTML));
         container.append(tooltipNode);
         tooltipNode.css({
-          'transform': `translateY(-100%) translateX(-50%)`,
-          'marginTop': `${options.topOffset}px`,
+          transform: 'translateY(-100%) translateX(-50%)',
+          marginTop: `${options.topOffset}px`,
         });
       } else {
         if (chartEntry.x !== null) {
@@ -204,7 +204,7 @@ export default function (options) {
           tooltipNode.addClass('active');
           chartEntry.x = x;
           chartEntry.y = y;
-        }
+        };
         sliceNode.mousemove((event) => showTooltip(event.pageX, event.pageY))
           .mouseout(() => {
             tooltipNode.removeClass('active');
@@ -232,7 +232,7 @@ function getChartRenderEntry(chart) {
       y: null,
       showCallbacksTargets: [],
       showCallbacks: [],
-    }
+    };
     // remove not existing charts renders
     chartsIndex = chartsIndex.filter((existingChartRender) => {
       return jQuery.contains(document.documentElement, existingChartRender.node);

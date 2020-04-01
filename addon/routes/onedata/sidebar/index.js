@@ -3,7 +3,7 @@
  *
  * @module routes/onedata/sidebar/index
  * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -16,7 +16,7 @@ import config from 'ember-get-config';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const {
-  onedataTabs
+  onedataTabs,
 } = config;
 
 export default Route.extend({
@@ -63,7 +63,7 @@ export default Route.extend({
     let resourceIdToRedirect = get(list, 'length') > 0 ?
       guiUtils.getRoutableIdFor(this.getDefaultResource(list, resourceType)) : 'empty';
     if (resourceIdToRedirect != null) {
-      this.transitionTo(`onedata.sidebar.content`, resourceType, resourceIdToRedirect);
+      this.transitionTo('onedata.sidebar.content', resourceType, resourceIdToRedirect);
     } else {
       throw new Error(
         'route:onedata/sidebar/index: the collection is not empty, but cannot find default resource'

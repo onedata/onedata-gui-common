@@ -3,7 +3,7 @@
  *
  * @module components/one-form-fields
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,7 +14,7 @@ import config from 'ember-get-config';
 import { computed, get } from '@ember/object';
 
 const {
-  layoutConfig
+  layoutConfig,
 } = config;
 
 /**
@@ -105,7 +105,7 @@ export default Component.extend({
         }
 
         lastGroup.fields.push(field);
-      })
+      });
 
       return groups;
     }
@@ -117,6 +117,6 @@ export default Component.extend({
     },
     onFocusOut() {
       invokeAction(this, 'onFocusOut', ...arguments);
-    }
+    },
   },
 });

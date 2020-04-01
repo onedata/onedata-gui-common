@@ -16,7 +16,7 @@
  *
  * @module routes/onedata/sidebar/content
  * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -64,7 +64,7 @@ export default Route.extend({
     // TODO: validate and use resourceType
     let {
       collection,
-      resourceType
+      resourceType,
     } = this.modelFor('onedata.sidebar');
 
     const navigationState = this.get('navigationState');
@@ -138,7 +138,7 @@ export default Route.extend({
     // render generic content template
     this.render('onedata.sidebar.content', {
       into: 'onedata',
-      outlet: 'content'
+      outlet: 'content',
     });
   },
 

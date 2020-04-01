@@ -30,4 +30,4 @@ export default OptionsField.extend({
     // Null value, because powerselect converts `undefined` to string 'undefined'
     return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
   }),
-})
+});

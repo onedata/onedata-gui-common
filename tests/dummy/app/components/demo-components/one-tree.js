@@ -1,7 +1,7 @@
 /**
  * @module components/demo-components/one-tree
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -24,7 +24,7 @@ export default Component.extend({
         }, {
           content: 'Node 1.1.4',
           subtree: [],
-        }]
+        }],
       }, {
         content: 'Node 1.2',
         subtree: [{
@@ -39,8 +39,8 @@ export default Component.extend({
         }, {
           content: 'Node 1.2.4',
           subtree: [],
-        }]
-      }]
+        }],
+      }],
     },
     {
       content: 'Node 2',
@@ -58,7 +58,7 @@ export default Component.extend({
         }, {
           content: 'Node 2.1.4',
           subtree: [],
-        }]
+        }],
       }, {
         content: 'Node 2.2',
         subtree: [{
@@ -73,9 +73,9 @@ export default Component.extend({
         }, {
           content: 'Node 2.2.4',
           subtree: [],
-        }]
-      }]
-    }
+        }],
+      }],
+    },
   ]),
 
   _searchQuery: '',
@@ -83,6 +83,6 @@ export default Component.extend({
   actions: {
     search(query) {
       this.set('_searchQuery', query);
-    }
-  }
+    },
+  },
 });

@@ -9,7 +9,7 @@ import { set } from '@ember/object';
 
 describe('Integration | Component | form component/json field', function () {
   setupComponentTest('form-component/json-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

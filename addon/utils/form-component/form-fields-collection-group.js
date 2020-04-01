@@ -99,7 +99,7 @@ export default FormFieldsGroup.extend({
     const newField = this.fieldFactoryMethod(newFieldValueName);
     set(newField, 'parent', this);
 
-    set(newValue, newFieldValueName, newField.dumpDefaultValue())
+    set(newValue, newFieldValueName, newField.dumpDefaultValue());
     get(newValue, '__fieldsValueNames').push(newFieldValueName);
     this.get('fieldsToAdd').push(newField);
 
@@ -169,7 +169,7 @@ export default FormFieldsGroup.extend({
     do {
       uniqueFieldValueName = `${name}Entry${newCreatedFieldsCounter}`;
       newCreatedFieldsCounter++;
-    } while (fieldsValueNames.includes(uniqueFieldValueName))
+    } while (fieldsValueNames.includes(uniqueFieldValueName));
 
     this.set('createdFieldsCounter', newCreatedFieldsCounter);
 

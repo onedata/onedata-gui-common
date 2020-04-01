@@ -3,7 +3,7 @@
  * 
  * @module utils/onedata-urls
  * @author Jakub Liput
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -30,11 +30,11 @@ function normalizeEmberPath(emberPath) {
  *  automatically trimmed
  */
 export function getOnezoneUrl(origin, emberPath = '') {
-  return `${origin}${onezoneDefaultRootPath}/i#/${normalizeEmberPath(emberPath)}`
+  return `${origin}${onezoneDefaultRootPath}/i#/${normalizeEmberPath(emberPath)}`;
 }
 
 export function getOneproviderPath(clusterId, emberPath = '') {
-  let path = `/${oneproviderAbbrev}/${clusterId}/i`
+  let path = `/${oneproviderAbbrev}/${clusterId}/i`;
   if (emberPath) {
     path += `#/${normalizeEmberPath(emberPath)}`;
   }

@@ -47,4 +47,4 @@ export default FormField.extend({
       return Object.assign({}, option, { name, label });
     });
   }),
-})
+});

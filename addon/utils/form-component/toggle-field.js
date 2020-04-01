@@ -19,4 +19,4 @@ export default FormField.extend({
    * @override
    */
   withValidationIcon: false,
-})
+});

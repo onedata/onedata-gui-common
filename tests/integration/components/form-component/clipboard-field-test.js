@@ -7,7 +7,7 @@ import { setProperties } from '@ember/object';
 
 describe('Integration | Component | form component/clipboard field', function () {
   setupComponentTest('form-component/clipboard-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

@@ -13,7 +13,7 @@ const datetimeFormat = 'YYYY/MM/DD H:mm';
 
 describe('Integration | Component | form component/datetime field', function () {
   setupComponentTest('form-component/datetime-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

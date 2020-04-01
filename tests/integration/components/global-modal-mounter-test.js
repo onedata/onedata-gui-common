@@ -8,7 +8,7 @@ import { get, setProperties } from '@ember/object';
 
 describe('Integration | Component | global modal mounter', function () {
   setupComponentTest('global-modal-mounter', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -23,7 +23,7 @@ describe('Integration | Component | global modal mounter', function () {
 
   it('renders component specified by modalManager.modalComponentName', function () {
     this.set('modalManager.modalComponentName', 'some-modal');
-    this.register(`component:modals/some-modal`, TestComponent);
+    this.register('component:modals/some-modal', TestComponent);
 
     this.render(hbs `{{global-modal-mounter}}`);
 
@@ -36,7 +36,7 @@ describe('Integration | Component | global modal mounter', function () {
       modalComponentName: 'some-modal',
       modalOptions,
     });
-    this.register(`component:modals/some-modal`, TestComponent);
+    this.register('component:modals/some-modal', TestComponent);
 
     this.render(hbs `{{global-modal-mounter}}`);
 

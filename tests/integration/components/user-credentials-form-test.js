@@ -13,7 +13,7 @@ class UserCredentialsFormHelper extends FormHelper {
 
 describe('Integration | Component | user credentials form', function () {
   setupComponentTest('user-credentials-form', {
-    integration: true
+    integration: true,
   });
 
   it('shows secret password field by default', function () {

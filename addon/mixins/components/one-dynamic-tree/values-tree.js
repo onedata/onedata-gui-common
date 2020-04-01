@@ -9,7 +9,7 @@
  * 
  * @module mixins/components/one-dynamic-tree/values-tree
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -33,7 +33,7 @@ export default Mixin.create({
   _buildEmptyValuesTree(definition, useDefaults = false) {
     let tmpRoot = {
       name: '',
-      subtree: definition
+      subtree: definition,
     };
     const overrideValues = this.get('overrideValues');
     return this._buildValuesNode(tmpRoot, useDefaults, overrideValues);
@@ -92,8 +92,8 @@ export default Mixin.create({
 
   /**
    * Copies (merges) values from passed node to another.
+   * @param {Ember.Object} nodeTo 
    * @param {Object|Ember.Object} treeFrom
-   * @param {Ember.Object} treeTo 
    */
   _mergeValuesNodeCopy(nodeTo, nodeFrom) {
     const objectTypes = ['instance', 'object'];
@@ -134,5 +134,5 @@ export default Mixin.create({
       });
       return objectDump;
     }
-  }
+  },
 });

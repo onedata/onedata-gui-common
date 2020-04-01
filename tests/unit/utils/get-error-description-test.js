@@ -492,7 +492,7 @@ describe('Unit | Utility | get error description', function () {
     function () {
       sinon.stub(this.i18n, 't')
         .withArgs('errors.backendErrors.storageTestFailed', {
-          operation: 'write translation'
+          operation: 'write translation',
         })
         .returns('complete error')
         .withArgs('errors.backendErrors.translationParts.storageTestOperations.write')
@@ -605,7 +605,7 @@ describe('Unit | Utility | get error description', function () {
     function () {
       sinon.stub(this.i18n, 't')
         .withArgs('errors.backendErrors.noServiceNodes', {
-          service: 'database'
+          service: 'database',
         })
         .returns('complete error')
         .withArgs('errors.backendErrors.translationParts.nodeServices.couchbase')

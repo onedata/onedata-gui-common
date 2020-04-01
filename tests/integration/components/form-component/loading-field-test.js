@@ -12,7 +12,7 @@ import Ember from 'ember';
 
 describe('Integration | Component | form component/loading field', function () {
   setupComponentTest('form-component/loading-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -23,7 +23,7 @@ describe('Integration | Component | form component/loading field', function () {
 
     this.set('field', LoadingField.create({
       ownerSource: this,
-      loadingText: 'Loading...'
+      loadingText: 'Loading...',
     }));
   });
 
@@ -54,7 +54,7 @@ describe('Integration | Component | form component/loading field', function () {
         .then(() => {
           expect(this.$('.spin-spinner')).to.exist;
           expect(this.$('.loading-text').text().trim()).to.equal('Loading...');
-          expect(this.$('.resource-load-error')).to.not.exist
+          expect(this.$('.resource-load-error')).to.not.exist;
         });
     }
   );
@@ -90,7 +90,7 @@ describe('Integration | Component | form component/loading field', function () {
 
       return wait()
         .then(() => {
-          expect(this.$('.resource-load-error')).to.exist
+          expect(this.$('.resource-load-error')).to.exist;
           expect(this.$('.resource-load-error .error-details').text().trim())
             .to.equal('"err"');
         });

@@ -28,11 +28,11 @@ const translations = {
   'prvT.g0a': 'privilege0a',
   'prvT.g0b': 'privilege0b',
   'prvT.g1a': 'privilege1a',
-}
+};
 
 describe('Integration | Component | form component/privileges field', function () {
   setupComponentTest('form-component/privileges-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

@@ -8,7 +8,7 @@ import sinon from 'sinon';
 
 describe('Integration | Component | form component/toggle field', function () {
   setupComponentTest('form-component/toggle-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

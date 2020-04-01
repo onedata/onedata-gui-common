@@ -15,7 +15,7 @@
  *
  * @module utils/clusterize-providers-by-coordinates
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  * 
  * @function
@@ -64,7 +64,7 @@ export default function clusterizeProvidersByCoordinates(
     square.longitude =
       _.sumBy(square.providers, provider => get(provider, 'longitude')) /
       square.providers.length;
-    square.id = square.providers.mapBy('id').sort().join('|')
+    square.id = square.providers.mapBy('id').sort().join('|');
   });
   return usedSquares;
 }

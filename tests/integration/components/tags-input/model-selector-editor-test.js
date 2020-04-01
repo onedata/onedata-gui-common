@@ -41,7 +41,7 @@ availableModels['serviceOnepanel'][0].name += 'onezone';
 
 describe('Integration | Component | tags input/model selector editor', function () {
   setupComponentTest('tags-input/model-selector-editor', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -118,7 +118,7 @@ describe('Integration | Component | tags input/model selector editor', function 
     return click('.tag-creator-trigger')
       .then(() => {
         expect(getSelector().find('.all-item').prevAll().filter('.record-item'))
-          .to.have.length(0)
+          .to.have.length(0);
         const $options = getSelector().find('.record-item');
         availableModels['user'].forEach(({ name }, index) => {
           expect($options.eq(index).text().trim()).to.equal(name);
@@ -206,7 +206,7 @@ describe('Integration | Component | tags input/model selector editor', function 
           value: {
             record: availableModels[name][0],
             model: typeName,
-          }
+          },
         })));
 
         this.render(hbs `{{tags-input
@@ -304,7 +304,7 @@ describe('Integration | Component | tags input/model selector editor', function 
         })
         .then(() => {
           expect($(modelTypeHelper.getTrigger()).find('.oneicon'))
-            .to.have.class(`oneicon-${typeIcon || icon}`)
+            .to.have.class(`oneicon-${typeIcon || icon}`);
 
           const $record =
             getSelector().find('.record-item').eq(recordIndex);
@@ -434,19 +434,19 @@ describe('Integration | Component | tags input/model selector editor', function 
 
   [{
     name: 'user',
-    label: 'User ID:'
+    label: 'User ID:',
   }, {
     name: 'group',
-    label: 'Group ID:'
+    label: 'Group ID:',
   }, {
     name: 'provider',
-    label: 'Oneprovider ID:'
+    label: 'Oneprovider ID:',
   }, {
     name: 'service',
-    label: 'Oneprovider ID:'
+    label: 'Oneprovider ID:',
   }, {
     name: 'serviceOnepanel',
-    label: 'Oneprovider ID:'
+    label: 'Oneprovider ID:',
   }].forEach(({ name, label }, index) => {
     it(`shows correct label for ${name} id field`, function () {
       this.render(hbs `{{tags-input

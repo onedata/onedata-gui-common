@@ -4,27 +4,30 @@
  * 
  * @module components/provider-place-drop
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 
 import { sort, reads } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/provider-place/drop';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { conditional, raw } from 'ember-awesome-macros';
+import getVisitOneproviderUrl from 'onedata-gui-common/utils/get-visit-oneprovider-url';
+import { promise } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
   classNames: 'provider-place-drop',
   classNameBindings: ['oneproviderStatusClass'],
+
   globalNotify: service(),
   i18n: service(),
   guiUtils: service(),
+  router: service(),
 
   /**
    * @virtual
@@ -36,6 +39,8 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.providerPlace.drop',
+
+  providerVersion: reads('provider.versionProxy.content'),
 
   oneproviderStatusClass: conditional(
     'provider.online',
@@ -53,12 +58,13 @@ export default Component.extend(I18n, {
    * PromiseObject proxy to the list of spaces.
    * @type {Ember.ComputedProperty<PromiseObject<Array<Space>>>}
    */
-  _spaceListProxy: computed('provider', function () {
-    const provider = this.get('provider');
-    return PromiseObject.create({
-      promise: provider.get('spaceList.list'),
-    });
-  }),
+  _spaceListProxy: promise.object(computed('provider.spaceList',
+    function _spaceListProxy() {
+      return this.get('provider.spaceList').then(spaceList =>
+        get(spaceList, 'list')
+      );
+    }
+  )),
 
   /**
    * Error occurred while loading list of spaces.
@@ -84,6 +90,41 @@ export default Component.extend(I18n, {
    */
   _spacesSorted: sort('_spaceList', '_spacesSorting'),
 
+  /**
+   * @type {ComputedProperty<Models.Space>}
+   */
+  firstSpace: reads('_spacesSorted.firstObject'),
+
+  visitProviderUrl: computed(
+    'provider',
+    'firstSpace.entityId',
+    'providerVersion',
+    function visitProviderUrl() {
+      const {
+        guiUtils,
+        provider,
+        firstSpace,
+        router,
+        providerVersion,
+      } = this.getProperties(
+        'guiUtils',
+        'provider',
+        'firstSpace',
+        'router',
+        'providerVersion'
+      );
+      if (providerVersion) {
+        return getVisitOneproviderUrl({
+          guiUtils,
+          router,
+          provider,
+          providerVersion,
+          space: firstSpace,
+        });
+      }
+    }
+  ),
+
   actions: {
     copySuccess() {
       this.get('globalNotify').info(this.t('hostnameCopySuccess'));
@@ -92,5 +133,5 @@ export default Component.extend(I18n, {
     copyError() {
       this.get('globalNotify').info(this.t('hostnameCopyError'));
     },
-  }
+  },
 });

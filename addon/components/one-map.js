@@ -13,7 +13,7 @@
  * 
  * @module components/one-map
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -166,7 +166,7 @@ export default Component.extend({
     const oldApplyTransformParams = canvas.applyTransformParams.bind(canvas);
     const newApplyTransformParams = (...args) => {
       setTimeout(() => oldApplyTransformParams(...args), 0);
-    }
+    };
     canvas.applyTransformParams = newApplyTransformParams;
   },
 
@@ -210,5 +210,5 @@ export default Component.extend({
       _window.dispatchEvent(new Event(triggerWindowEventName));
     }
     onViewportChange(calculatedEvent);
-  }
+  },
 });

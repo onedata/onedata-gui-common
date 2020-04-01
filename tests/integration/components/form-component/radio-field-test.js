@@ -11,7 +11,7 @@ import { set } from '@ember/object';
 
 describe('Integration | Component | form component/radio field', function () {
   setupComponentTest('form-component/radio-field', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -125,7 +125,7 @@ describe('Integration | Component | form component/radio field', function () {
     `);
 
     return wait()
-      .then(() => expect(this.$('input#abc')).to.exist)
+      .then(() => expect(this.$('input#abc')).to.exist);
   });
 
   it('renders selected option label when field is in "view" mode', function () {

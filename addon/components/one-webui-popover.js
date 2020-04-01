@@ -13,14 +13,14 @@
  *
  * @module components/one-webui-popover
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 
 import { assert } from '@ember/debug';
-import { computed, observer } from '@ember/object';
+import { get, computed, observer } from '@ember/object';
 import { run, scheduleOnce, next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-webui-popover';
@@ -114,6 +114,22 @@ export default Component.extend({
     }
   ),
 
+  /**
+   * Workaround for bug in webui popover that causes to the popover to disappear when
+   * opening it in 300 ms after hiding. The original jQuery plugin has hardcoded 300 ms
+   * async function to $.prototype.hide the element. When user opens the popover in this
+   * time, the timeout is not cleared and it hides the element but stays in _opened state.
+   * @type {ComputedProperty<Function>}
+   */
+  customTargetHide: computed('popoverInstance', function customTargetHide() {
+    const oneWebuiPopover = this;
+    return function customTargetHideFun() {
+      if (!get(oneWebuiPopover, 'popoverInstance._opened')) {
+        $.prototype.hide.bind(this)();
+      }
+    };
+  }),
+
   init() {
     this._super(...arguments);
     let open = this.get('open');
@@ -134,6 +150,14 @@ export default Component.extend({
     if (open === true) {
       this._popover('show');
     } else if (open === false) {
+      const {
+        popoverInstance,
+        customTargetHide,
+      } = this.getProperties('popoverInstance', 'customTargetHide');
+      const $target = popoverInstance.$target;
+      if ($target && $target.hide !== customTargetHide) {
+        $target.hide = customTargetHide;
+      }
       this._popover('hide');
     }
   }),
@@ -295,7 +319,7 @@ export default Component.extend({
         const popoverTop = containerHeight - popoverBottom - popoverHeight;
         $popover.css({
           top: `${popoverTop}px`,
-          bottom: `initial`,
+          bottom: 'initial',
         });
       }
     }
@@ -304,7 +328,7 @@ export default Component.extend({
   _debounceResizeRefresh() {
     let {
       $triggerElement,
-      open
+      open,
     } = this.getProperties('$triggerElement', 'open');
     if (this.isDestroyed || this.isDestroying) {
       return;
@@ -339,7 +363,7 @@ export default Component.extend({
     refresh() {
       let {
         _isPopoverVisible,
-        _debounceTimerEnabled
+        _debounceTimerEnabled,
       } = this.getProperties('_isPopoverVisible', '_debounceTimerEnabled');
       if (_isPopoverVisible) {
         this._popover('hide');

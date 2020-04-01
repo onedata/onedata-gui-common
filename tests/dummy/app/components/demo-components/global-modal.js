@@ -14,6 +14,6 @@ export default Component.extend({
   actions: {
     showModal() {
       this.get('modalManager').show('dummy-modal');
-    }
-  }
-})
+    },
+  },
+});

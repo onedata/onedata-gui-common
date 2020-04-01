@@ -14,4 +14,4 @@ export default OptionsField.extend({
    * @override
    */
   fieldComponentName: 'form-component/radio-field',
-})
+});

@@ -8,7 +8,7 @@ import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | promise proxy container', function () {
   setupComponentTest('promise-proxy-container', {
-    integration: true
+    integration: true,
   });
 
   it('renders error alert if promise has been rejected', function (done) {

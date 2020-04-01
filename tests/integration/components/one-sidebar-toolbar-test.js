@@ -13,7 +13,7 @@ describe('Integration | Component | one sidebar toolbar', function () {
   it('renders button', function () {
     this.set('buttons', [{
       icon: 'space',
-    }])
+    }]);
     this.render(hbs `{{one-sidebar-toolbar buttons=buttons}}
     <div class="collapsible-toolbar-global-toggle"></div>`);
     expect(this.$('.oneicon-space')).to.have.length(1);

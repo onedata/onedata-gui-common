@@ -1,21 +1,21 @@
 import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import {
-  expect
+  expect,
 } from 'chai';
 import {
   describe,
   it,
-  beforeEach
+  beforeEach,
 } from 'mocha';
 import {
-  setupComponentTest
+  setupComponentTest,
 } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import {
   click,
-  fillIn
+  fillIn,
 } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -24,7 +24,7 @@ const ERROR_MSG = 'error!';
 
 describe('Integration | Component | one dynamic tree', function () {
   setupComponentTest('one-dynamic-tree', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {
@@ -47,19 +47,19 @@ describe('Integration | Component | one dynamic tree', function () {
               type: 'radio-group',
               options: [{
                   value: '1',
-                  label: '1'
+                  label: '1',
                 },
                 {
                   value: '2',
-                  label: '2'
+                  label: '2',
                 },
                 {
                   value: '3',
-                  label: '3'
+                  label: '3',
                 },
               ],
               defaultValue: '1',
-            }
+            },
           },
           {
             name: 'node13',
@@ -76,7 +76,7 @@ describe('Integration | Component | one dynamic tree', function () {
             text: 'Node 2.1',
             field: {
               type: 'checkbox',
-              defaultValue: false
+              defaultValue: false,
             },
           },
           {
@@ -84,11 +84,11 @@ describe('Integration | Component | one dynamic tree', function () {
             text: 'Node 2.2',
             field: {
               type: 'checkbox',
-              defaultValue: true
+              defaultValue: true,
             },
-          }
+          },
         ],
-      }
+      },
     ]);
     this.set('values', {
       node1: {
@@ -98,15 +98,15 @@ describe('Integration | Component | one dynamic tree', function () {
       node2: {
         node21: false,
         node22: true,
-      }
+      },
     });
     this.set('validations', EmberObject.create({
       errors: [
         EmberObject.create({
           attribute: 'values.node1.node11',
-          message: ERROR_MSG
-        })
-      ]
+          message: ERROR_MSG,
+        }),
+      ],
     }));
   });
 

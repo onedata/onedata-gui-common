@@ -5,7 +5,7 @@
  * 
  * @module helpers/oneicon-alias
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -17,5 +17,5 @@ export default Helper.extend({
 
   compute(params) {
     return this.get('oneiconAlias').getName(params[0], params[1]);
-  }
+  },
 });

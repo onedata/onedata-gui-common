@@ -1,6 +1,3 @@
-import Component from '@ember/component';
-import layout from 'onedata-gui-common/templates/components/one-label-tip';
-
 /**
  * Inserts 'help' icon with tooltip
  * Typical usage: 
@@ -10,9 +7,13 @@ import layout from 'onedata-gui-common/templates/components/one-label-tip';
  * 
  * @module components/one-label-tip
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
+
+import Component from '@ember/component';
+import layout from 'onedata-gui-common/templates/components/one-label-tip';
+
 export default Component.extend({
   layout,
   tagName: 'span',
@@ -28,7 +29,7 @@ export default Component.extend({
    * Icon used as a tooltip trigger (from oneicons icons set)
    * @type {string}
    */
-  icon: 'sign-question',
+  icon: 'sign-question-rounded',
 
   /**
    * Placement of the tooltip 

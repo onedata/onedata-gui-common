@@ -6,7 +6,7 @@ import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | status toolbar', function () {
   setupComponentTest('status-toolbar', {
-    integration: true
+    integration: true,
   });
 
   it('hides icon if icon `enabled` property is set to false', function () {

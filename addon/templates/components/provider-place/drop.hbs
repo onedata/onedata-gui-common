@@ -39,7 +39,11 @@
       {{#loading-container isLoading=_spacesLoading sizeClass="sm" errorReason=_spaceListError}}
         <ul class="spaces-items">
           {{#each _spacesSorted as |space|}}
-            {{provider-place/drop/space space=space providerId=(model-routable-id provider.id)}}
+            {{provider-place/drop/space
+              space=space
+              provider=provider
+              providerVersion=providerVersion
+            }}
           {{/each}} 
         </ul>
       {{/loading-container}}
@@ -47,23 +51,21 @@
   </div>
   <hr>
   <div class="btn-container">
-    {{#if provider.online}}
-      <div class="row row-btn">
-        {{#link-to "provider-redirect" (model-routable-id provider.id) 
-          class="btn btn-sm btn-go-to-files btn-primary"
-        }}
-          {{one-icon icon="provider"}}
-          <span class="text">
-            {{tt this "goToFiles"}}
-          </span>
-        {{/link-to}}
-      </div>
-    {{else}}
-      <div class="row row-btn">
+    <div class="row row-btn">
+      {{#if provider.online}}
+       {{#promise-proxy-container proxy=_spaceListProxy sizeClass="xs"}}
+          <a href={{visitProviderUrl}} class="btn btn-sm btn-go-to-files btn-primary">
+            {{one-icon icon="provider"}}
+            <span class="text">
+              {{tt this "goToFiles"}}
+            </span>
+          </a>
+        {{/promise-proxy-container}}
+      {{else}}
         <div class="btn btn-danger no-pointer-events offline-badge">
           {{tt this "offline"}}
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </div>
 </div>

@@ -21,7 +21,7 @@ function aliasToShow(type) {
  *
  * @module services/global-notify
  * @author Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Service.extend(I18n, {
@@ -92,7 +92,7 @@ export default Service.extend(I18n, {
       case 'warning-alert':
         console.error('global-notify: Error reported: ' + notifyMessage.html);
         if (_.endsWith(type, '-alert')) {
-          type = type.substring(0, get(type, 'length') - '-alert'.length)
+          type = type.substring(0, get(type, 'length') - '-alert'.length);
         }
         return this.get('alert').show(type, notifyMessage, options);
       case 'warning':

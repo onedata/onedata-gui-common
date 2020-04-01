@@ -44,7 +44,7 @@ export default FormField.extend({
    * @returns {Array<Tag>}
    */
   valueToTags(value) {
-    return (value || []).map(val => ({ label: val }))
+    return (value || []).map(val => ({ label: val }));
   },
 
   /**
@@ -64,4 +64,4 @@ export default FormField.extend({
   sortTags(tags) {
     return tags.slice(0).sortBy('label');
   },
-})
+});

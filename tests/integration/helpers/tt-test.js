@@ -14,7 +14,7 @@ const I18nStub = Service.extend({
 
 describe('Integration | Helper | tt', function () {
   setupComponentTest('tt', {
-    integration: true
+    integration: true,
   });
 
   beforeEach(function () {

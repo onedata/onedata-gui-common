@@ -8,6 +8,7 @@ import ComponentsProvidersColorsMixin from 'onedata-gui-common/mixins/components
 import { getOwner } from '@ember/application';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import { Promise } from 'rsvp';
 
 describe('Integration | Mixin | components/providers colors', function () {
   setupComponentTest('components/providers-colors', {

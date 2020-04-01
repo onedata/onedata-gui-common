@@ -150,13 +150,13 @@ export default Component.extend({
     this._super(...arguments);
 
     if (event.target === this.get('element')) {
-      this.startTagCreation()
+      this.startTagCreation();
     }
   },
 
   keyDown(event) {
     if (['Enter', ' '].includes(event.key) && !this.get('isCreatingTag')) {
-      this.startTagCreation()
+      this.startTagCreation();
     }
   },
 
@@ -208,7 +208,7 @@ export default Component.extend({
       if (this.get('isCreatingTag')) {
         // Focus editor - send focus to the root element of the editor and
         // let the editor to handle that focus on its own
-        const event = document.createEvent("Event");
+        const event = document.createEvent('Event');
         event.initEvent('focus', true, true);
         this.$('.tag-creator > *')[0].dispatchEvent(event);
       } else {
@@ -235,5 +235,5 @@ export default Component.extend({
 
       onChange((tags || []).concat(newTagsToAdd).uniq());
     },
-  }
+  },
 });

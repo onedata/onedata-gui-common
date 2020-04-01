@@ -5,6 +5,6 @@ export default Route.extend({
   model() {
     return {
       components: componentsList,
-    }
-  }
+    };
+  },
 });

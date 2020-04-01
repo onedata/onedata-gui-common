@@ -68,7 +68,7 @@
  * 
  * @module components/one-dynamic-tree
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -161,7 +161,7 @@ export default Component.extend(
       function () {
         let {
           _fieldsTree,
-          validations
+          validations,
         } = this.getProperties('_fieldsTree', 'validations');
 
         // Case when validations are not specified.
@@ -305,13 +305,13 @@ export default Component.extend(
             node.setProperties({
               isValid: !error,
               isInvalid: !!error,
-              message: error ? error.get('message') : ''
+              message: error ? error.get('message') : '',
             });
           } else {
             node.setProperties({
               isValid: false,
               isInvalid: false,
-              message: ''
+              message: '',
             });
           }
         }
@@ -398,8 +398,8 @@ export default Component.extend(
        */
       inputFocusedOut(path) {
         this._markFieldAsModified(path);
-        this.valuesHaveChanged(false, false)
+        this.valuesHaveChanged(false, false);
       },
-    }
+    },
   }
 );

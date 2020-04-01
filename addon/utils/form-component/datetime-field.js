@@ -20,4 +20,4 @@ export default FormField.extend({
    * @type {String}
    */
   viewModeFormat: 'YYYY/MM/DD H:mm',
-})
+});

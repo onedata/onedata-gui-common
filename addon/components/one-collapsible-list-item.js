@@ -14,7 +14,7 @@ import { invoke, invokeAction } from 'ember-invoke-action';
  *
  * @module components/one-collapsible-list-item.js
  * @author Michał Borzęcki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default Component.extend({
@@ -24,7 +24,7 @@ export default Component.extend({
   classNameBindings: [
     'isActive:active',
     '_isItemCollapsed:collapse-hidden',
-    '_isSelected:selected'
+    '_isSelected:selected',
   ],
 
   eventsBus: service(),
@@ -93,7 +93,7 @@ export default Component.extend({
       let {
         _isListCollapsed,
         _matchesSearchQuery,
-        _isSelected
+        _isSelected,
       } = this.getProperties(
         '_isListCollapsed',
         '_matchesSearchQuery',
@@ -106,7 +106,7 @@ export default Component.extend({
   _isItemFixed: computed('_matchesSearchQuery', '_isSelected', function () {
     let {
       _matchesSearchQuery,
-      _isSelected
+      _isSelected,
     } = this.getProperties('_matchesSearchQuery', '_isSelected');
     return !_matchesSearchQuery && _isSelected;
   }),
@@ -114,9 +114,9 @@ export default Component.extend({
   isActive: computed('activeElementId', 'accordionMode', function () {
     let {
       activeElementId,
-      elementId
+      elementId,
     } = this.getProperties([
-      'activeElementId', 'elementId'
+      'activeElementId', 'elementId',
     ]);
     if (this.get('accordionMode')) {
       return activeElementId === elementId;
@@ -143,7 +143,7 @@ export default Component.extend({
       let {
         _matchesSearchQuery,
         _isSelected,
-        selectionValue
+        selectionValue,
       } = this.getProperties(
         '_matchesSearchQuery',
         '_isSelected',
@@ -182,7 +182,7 @@ export default Component.extend({
     let {
       closeEventName,
       eventsBus,
-      selectionValue
+      selectionValue,
     } = this.getProperties('closeEventName', 'eventsBus', 'selectionValue');
     if (closeEventName) {
       eventsBus.on(closeEventName, () => this.set('isActive', false));
@@ -247,6 +247,6 @@ export default Component.extend({
       if (selectionValue !== null) {
         invokeAction(this, 'toggleItemSelection', this.get('selectionValue'));
       }
-    }
-  }
+    },
+  },
 });

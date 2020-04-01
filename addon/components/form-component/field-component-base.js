@@ -67,5 +67,5 @@ export default Component.extend({
     focusLost() {
       this.get('field').focusLost();
     },
-  }
+  },
 });

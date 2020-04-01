@@ -9,5 +9,5 @@ export default Component.extend({
   smallOccupiedSize: 1073543450,
   mediumOccupiedSize: 1073543450,
   largeOccupiedSize: 1073543450,
-  tooLargeOccupiedSize: 11073543450
+  tooLargeOccupiedSize: 11073543450,
 });

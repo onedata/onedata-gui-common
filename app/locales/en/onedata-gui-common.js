@@ -31,6 +31,7 @@ import oneSidebar from './onedata-gui-common/components/one-sidebar';
 import formComponent from './onedata-gui-common/components/form-component';
 import tagsInput from './onedata-gui-common/components/tags-input';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
+import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -82,6 +83,7 @@ const translations = {
     formComponent,
     tagsInput,
     contentSharesEmpty,
+    qosParamsEditor,
     alerts: {
       endpointError,
     },

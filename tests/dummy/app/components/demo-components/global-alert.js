@@ -1,7 +1,7 @@
 /**
  * @module components/demo-components/global-alert
  * @author Michał Borzęcki
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -19,6 +19,6 @@ export default Component.extend({
       detailsText: htmlSafe(
         `<code>${JSON.stringify({ message: 'some details' }, null, 2)}</code>`
       ),
-    })
+    });
   },
 });

@@ -32,7 +32,7 @@ describe('Integration | Utility | form component/loading field', function () {
         ownerSource: this,
         i18nPrefix: 'some',
         parent: {
-          path: 'parent'
+          path: 'parent',
         },
         name: 'name',
       });
@@ -50,7 +50,7 @@ describe('Integration | Utility | form component/loading field', function () {
         ownerSource: this,
         i18nPrefix: 'some',
         parent: {
-          path: 'parent'
+          path: 'parent',
         },
         name: 'name',
       });
@@ -65,7 +65,7 @@ describe('Integration | Utility | form component/loading field', function () {
       const field = LoadingField.create({
         loadingProxy: PromiseObject.create({
           promise: new Promise(() => {}),
-        })
+        }),
       });
 
       return wait().then(() => {
@@ -82,7 +82,7 @@ describe('Integration | Utility | form component/loading field', function () {
       const field = LoadingField.create({
         loadingProxy: PromiseObject.create({
           promise: resolve(),
-        })
+        }),
       });
 
       return wait().then(() => {
@@ -99,7 +99,7 @@ describe('Integration | Utility | form component/loading field', function () {
       const field = LoadingField.create({
         loadingProxy: PromiseObject.create({
           promise: reject(),
-        })
+        }),
       });
 
       return wait().then(() => {

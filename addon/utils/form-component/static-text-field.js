@@ -29,4 +29,4 @@ export default FormField.extend({
   text: computed('i18nPrefix', 'path', function text() {
     return this.t(`${this.get('path')}.text`, {}, { defaultValue: '' });
   }),
-})
+});

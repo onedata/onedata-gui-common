@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | provider place/super circle', function () {
   setupComponentTest('provider-place/super-circle', {
-    integration: true
+    integration: true,
   });
 
   it('renders with source and without desitnation animation class', function () {

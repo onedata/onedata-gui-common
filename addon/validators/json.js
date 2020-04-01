@@ -49,7 +49,7 @@ Json.reopenClass({
    */
   getDependentsFor( /* attribute, options */ ) {
     return [];
-  }
+  },
 });
 
 export default Json;

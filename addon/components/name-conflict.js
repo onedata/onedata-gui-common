@@ -5,7 +5,7 @@
  *
  * @module components/name-conflict
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -15,4 +15,5 @@ import layout from 'onedata-gui-common/templates/components/name-conflict';
 export default Component.extend({
   layout,
   tagName: '',
+  separator: '#',
 });

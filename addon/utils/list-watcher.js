@@ -5,7 +5,7 @@
  *
  * @module utils/list-watcher
  * @author Jakub Liput
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,7 +13,7 @@ import ViewTester from 'onedata-gui-common/utils/view-tester';
 
 export default class ListWatcher {
   /**
-   * @param {jQuery} container 
+   * @param {jQuery} $container 
    * @param {string} itemsSelector 
    * @param {function} callback `(visibleElements: Element[], headerVisible: boolean) => undefined`
    */
