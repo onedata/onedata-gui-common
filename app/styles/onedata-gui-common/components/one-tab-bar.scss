@@ -8,13 +8,12 @@ $-one-tab-bar-selector-padding: 20px;
 $-one-tab-bar-transform: translateY(-50%) translateY(-2px);;
 
 @mixin one-tab-bar-fog-style($gradient-direction) {
-  position: absolute;
-  content: '';
-  z-index: 1;
-  top: 0;
-  height: $-one-tab-bar-height;
-  width: $-one-tab-bar-fog-width;
-  background: linear-gradient($gradient-direction, rgba(255, 255, 255, 0), white 100%);
+  @include bar-fog-style(
+    $gradient-direction: $gradient-direction,
+    $fog-width: $-one-tab-bar-fog-width,
+    $fog-height: $-one-tab-bar-height,
+    $color: white,
+  );
 }
 
 @mixin one-tab-bar-arrow-separator() {
