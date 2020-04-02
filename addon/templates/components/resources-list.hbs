@@ -1,0 +1,38 @@
+{{#one-collapsible-list as |list|}}
+  {{#each sortedItems as |item|}}
+    {{#list.item class="resource-item" as |listItem|}}
+      {{#listItem.header isCollapsible=false}}
+        {{#if item.icon}}
+          <span class="item-icon-container">
+            {{one-icon class="item-icon" icon=item.icon}}
+            {{one-tooltip
+              title=item.label
+              placement="top"
+              arrowPlacement="left"
+              triggerEvents="hover"
+            }}
+          </span>
+        {{/if}}
+        {{#if item.conflictingLabelSource}}
+          {{name-conflict
+            item=item.conflictingLabelSource
+            tagName="span"
+            class="one-label"
+          }}
+        {{else}}
+          <span class="one-label">{{item.label}}</span>
+        {{/if}}
+        {{#if item.actions.length}}
+          {{actions-toolbar
+            isMinimized=true
+            toolbarClasses=""
+            toolbarToggleClasses="btn-menu-toggle"
+            dropdownPlacement="auto"
+            actionsArray=item.actions
+          }}
+        {{/if}}
+      {{/listItem.header}}
+    {{/list.item}}
+  {{/each}}
+{{/one-collapsible-list}}
+{{yield}}
