@@ -13,6 +13,7 @@ import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { computed } from '@ember/object';
 import { tag } from 'ember-awesome-macros';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(I18n, {
   layout,
@@ -60,6 +61,12 @@ export default Component.extend(I18n, {
   inputClass: undefined,
 
   /**
+   * @virtual optional
+   * @type {Function}
+   */
+  notify: notImplementedIgnore,
+
+  /**
    * @type {number}
    */
   textareaRows: 5,
@@ -69,4 +76,10 @@ export default Component.extend(I18n, {
   clipboardBtnClass: computed('type', function clipboardBtnClass() {
     return `clipboard-btn-${this.get('type')}`;
   }),
+
+  actions: {
+    notify() {
+      return this.get('notify')(arguments);
+    },
+  },
 });
