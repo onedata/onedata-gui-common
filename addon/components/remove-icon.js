@@ -38,7 +38,7 @@ export default Component.extend({
    * @virtual optional
    * @type {boolean}
    */
-  tooltipTriggerEvents: undefined,
+  tooltipTriggerEvents: 'hover',
 
   click() {
     const {

@@ -26,7 +26,7 @@ describe('Unit | Mixin | error check view', function () {
         .then(() => {
           expect(get(subject, 'tryErrorCheckProxy.isFulfilled')).to.be.true;
           expect(get(subject, 'tryErrorCheckProxy.content')).to.be.undefined;
-          expect(checkError).to.be.notCalled;
+          expect(checkError).to.be.not.called;
         });
     });
 
@@ -50,7 +50,7 @@ describe('Unit | Mixin | error check view', function () {
         .then(() => {
           expect(get(subject, 'tryErrorCheckProxy.isFulfilled')).to.be.true;
           expect(get(subject, 'tryErrorCheckProxy.content')).to.be.true;
-          expect(redirectToIndex).to.be.notCalled;
+          expect(redirectToIndex).to.be.not.called;
           expect(checkError).to.be.called;
         });
     }

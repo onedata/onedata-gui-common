@@ -37,12 +37,12 @@ describe('Integration | Component | remove icon', function () {
 
   it('handles click event', function () {
     const clickHandler = sinon.spy();
-    this.on('click', clickHandler);
+    this.on('clickHandler', clickHandler);
 
-    this.render(hbs `{{remove-icon onClick=(action "click")}} isDisabled=true`);
+    this.render(hbs `{{remove-icon onClick=(action "clickHandler") isDisabled=true}}`);
 
     return click('.remove-icon')
-      .then(() => expect(clickHandler).to.not.beCalled);
+      .then(() => expect(clickHandler).to.be.not.called);
   });
 
   it('does not react to click when disabled', function () {
