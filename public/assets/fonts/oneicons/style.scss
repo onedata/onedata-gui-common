@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?nf2aor');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?nf2aor#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?nf2aor') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?nf2aor') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?nf2aor##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?l5tmtt');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?l5tmtt#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?l5tmtt') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?l5tmtt') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?l5tmtt##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -223,6 +223,11 @@
     content: $oneicon-checked; 
   }
 }
+.oneicon-clean-filled {
+  &:before {
+    content: $oneicon-clean-filled; 
+  }
+}
 .oneicon-clean {
   &:before {
     content: $oneicon-clean; 
@@ -246,6 +251,11 @@
 .oneicon-collection-create {
   &:before {
     content: $oneicon-collection-create; 
+  }
+}
+.oneicon-consume-token {
+  &:before {
+    content: $oneicon-consume-token; 
   }
 }
 .oneicon-copy {

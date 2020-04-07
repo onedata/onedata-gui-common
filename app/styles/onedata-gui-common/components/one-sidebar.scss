@@ -1,12 +1,13 @@
 .one-sidebar {
   .row-heading {
     position: relative;
+    display: flex;
+    height: 95px;
+    align-items: center;
     border-bottom: 1px solid $color-one-list-item-separator;
 
     .col-title {
-      padding: $onedata-logo-margin-top $one-list-item-padding;
-      // -1px is a place for border
-      line-height: $onedata-logo-height - 1px;
+      flex-grow: 1;
       @include font-semibold();
       white-space: nowrap;
     }

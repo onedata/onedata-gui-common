@@ -4,8 +4,8 @@ $ember-basic-dropdown-content-z-index: $zindex-modal+1;
 $ember-power-select-border-color: $input-border;
 $ember-power-select-number-of-visible-options: 10;
 $ember-power-select-background-color: $input-bg;
-$ember-power-select-highlighted-background: $color-one-info;
-$ember-power-select-highlighted-color: white;
+$ember-power-select-highlighted-background: $color-one-light-blue;
+$ember-power-select-highlighted-color: $main-text-color;
 $ember-power-select-trigger-default-border-radius: $input-border-radius;
 $ember-power-select-trigger-ltr-padding: $padding-base-vertical;
 $ember-power-select-line-height: $line-height-computed;
@@ -145,9 +145,6 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
   }
 
   &[aria-expanded="true"] {
-    color: white;
-    background-color: $color-one-info;
-
     .ember-power-select-status-icon {
       transform: none;
       &:before {
@@ -180,10 +177,6 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 
     &[aria-disabled="true"] {
       pointer-events: auto;
-    }
-    
-    &[aria-current="true"] {
-      color: $color-one-white;
     }
 
     &::last-child {
