@@ -329,7 +329,6 @@ describe('Integration | Component | tags input/model selector editor', function 
   }].forEach(({ name, addedDescription }, index) => {
     it(`hides all records when "all records" item has been clicked for ${name}`,
       function () {
-        this.timeout(10000000);
         this.set('tags', []);
         const changeSpy = sinon.spy(tags => this.set('tags', tags));
         this.on('change', changeSpy);
