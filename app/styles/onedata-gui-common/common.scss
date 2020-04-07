@@ -460,9 +460,6 @@ textarea.no-resize  {
 }
 
 .truncated-string {
-  &.rtl {
-    direction: rtl;
-  }
   &.before-status {
     padding-right: 100px;
     &.with-place-for-dots {
@@ -695,7 +692,7 @@ textarea[style^="touch-action: manipulation"] {
     }
   }
   &.table-info-collapsible {
-    @media (max-width: $screen-sm-max) {
+    @media (max-width: $screen-xs-max) {
       tr {
         display: block;
       }

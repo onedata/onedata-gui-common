@@ -47,8 +47,13 @@
       top: 50%;
       transform: translateY(-50%);
     }
-    &.clipboard-btn-textarea, &.clipboard-btn-html {
+    &.clipboard-btn-textarea {
       bottom: 0;
+    } 
+    &.clipboard-btn-html {
+      bottom: -8px;
+    }
+    &.clipboard-btn-textarea, &.clipboard-btn-html {
       .copy-btn-icon {
         z-index: 1001;
       }
@@ -60,7 +65,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: radial-gradient(circle at center, #fdfdfd, transparent 100%);
+        background: radial-gradient(circle at center, #fdfdfd, transparent 60%);
       }
     }
   }
@@ -88,9 +93,6 @@
         line-height: $input-height-small;
       }
     }
-    &.clipboard-line-html {
-      padding-bottom: $-copy-btn-width-small / 2;
-    }
   }
   
   &.monospace-font {
@@ -98,11 +100,7 @@
       font-family: monospace;
     }
   }
-  
-  &.clipboard-line-html {
-    padding-bottom: $-copy-btn-width-base / 2;
-  }
-  
+    
   // semi-hidden element - display: none; or zero-spaced elements do allow copy
   .clipboard-raw-value {
     position: fixed;

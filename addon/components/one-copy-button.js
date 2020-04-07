@@ -38,7 +38,7 @@ export default Component.extend(I18n, {
   i18n: service(),
 
   /**
-   * @virutal
+   * @virtual
    * elementId of the component that uses this one-copy-button
    * @type {string}
    */

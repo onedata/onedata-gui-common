@@ -7,7 +7,9 @@
   {{#if isLoading}}
     {{spin-spinner-block sizeClass=sizeClass class=(concat-classes _spinnerBlockClass spinnerBlockClass)}}
   {{else if isError}}
-    {{#if (and errorReason.isOnedataCustomError errorReason.type)}}
+    {{#if inlineError}}
+      <span class="loading-container-inline-error">{{or customErrorMessage errorReason}}</span>
+    {{else if (and errorReason.isOnedataCustomError errorReason.type)}}
       {{partial (concat "errors/" errorReason.type)}}
     {{else}}
       {{resource-load-error message=customErrorMessage reason=errorReason}}

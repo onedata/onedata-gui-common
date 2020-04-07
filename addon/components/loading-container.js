@@ -51,6 +51,14 @@ export default Component.extend({
   centered: true,
 
   /**
+   * @virtual optional
+   * If true, show customErrorText or inlined errorReason as plain text instead of
+   * error component
+   * @type {Boolean}
+   */
+  inlineError: false,
+
+  /**
    * If true, spinner will be absolutely centered, otherwise it will fill
    * the parent block to centerize itself
    * @type {boolean}
