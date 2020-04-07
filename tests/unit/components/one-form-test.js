@@ -95,7 +95,7 @@ describe('Unit | Component | one form', function () {
     expect(
       subject.get('currentFields')[0].get('message'),
       'field has no error after reset'
-    ).to.be.empty;
+    ).to.be.a('string').that.is.empty;
   });
 
   it('allows to change field value', function () {

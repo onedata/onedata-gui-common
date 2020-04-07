@@ -10,6 +10,14 @@
     class="clipboard-input form-control {{inputClass}}"
     readonly
   >{{value}}</textarea>
+{{else if (eq type "html")}}
+  <div class="clipboard-input">
+    {{#if hasBlock}}
+      {{yield}}
+    {{else}}
+      {{{value}}}
+    {{/if}}
+  </div>
 {{else}}
   <input
     type="text"
@@ -18,10 +26,14 @@
     readonly
   >
 {{/if}}
+{{#if rawValue}}
+  <input class="clipboard-raw-value" value={{rawValue}} readonly>
+{{/if}}
 {{#one-copy-button
   class=(concat-classes "clipboard-btn" clipboardBtnClass)
   parentElementId=elementId
-  localTarget=".clipboard-input"
+  localTarget=(if rawValue ".clipboard-raw-value" ".clipboard-input")
+  notify=(action "notify")
 }}
   <div class="copy-btn-background"></div>
   {{one-icon class="copy-btn-icon" icon="browser-copy"}}

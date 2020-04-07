@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?l5tmtt');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?l5tmtt#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?l5tmtt') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?l5tmtt') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?l5tmtt##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?1iplg2');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?1iplg2#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?1iplg2') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?1iplg2') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?1iplg2##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -208,6 +208,11 @@
     content: $oneicon-checkbox-option; 
   }
 }
+.oneicon-checkbox-pending {
+  &:before {
+    content: $oneicon-checkbox-pending; 
+  }
+}
 .oneicon-checkbox-x {
   &:before {
     content: $oneicon-checkbox-x; 
@@ -226,11 +231,6 @@
 .oneicon-clean-filled {
   &:before {
     content: $oneicon-clean-filled; 
-  }
-}
-.oneicon-clean {
-  &:before {
-    content: $oneicon-clean; 
   }
 }
 .oneicon-clipboard-copy {
@@ -566,6 +566,11 @@
 .oneicon-providers {
   &:before {
     content: $oneicon-providers; 
+  }
+}
+.oneicon-qos {
+  &:before {
+    content: $oneicon-qos; 
   }
 }
 .oneicon-remove {

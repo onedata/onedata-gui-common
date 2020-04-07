@@ -692,7 +692,7 @@ textarea[style^="touch-action: manipulation"] {
     }
   }
   &.table-info-collapsible {
-    @media (max-width: $screen-sm-max) {
+    @media (max-width: $screen-xs-max) {
       tr {
         display: block;
       }
@@ -707,6 +707,9 @@ textarea[style^="touch-action: manipulation"] {
         }
       }
     }
+  }
+  &.table-info-breakable {
+    word-break: break-all;
   }
   .property-value {
     .resource-load-error.alert {
