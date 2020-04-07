@@ -67,6 +67,13 @@ export default Component.extend(I18n, {
   notify: notImplementedIgnore,
 
   /**
+   * If provided, this string is copied to clipboard instead of displayed `value`
+   * @virtual optional
+   * @type {String}
+   */
+  rawValue: undefined,
+
+  /**
    * @type {number}
    */
   textareaRows: 5,
@@ -79,7 +86,7 @@ export default Component.extend(I18n, {
 
   actions: {
     notify() {
-      return this.get('notify')(arguments);
+      return this.get('notify')(...arguments);
     },
   },
 });
