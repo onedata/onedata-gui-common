@@ -26,6 +26,7 @@ import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/one-copy-button';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend(I18n, {
   layout,
@@ -37,7 +38,7 @@ export default Component.extend(I18n, {
   i18n: service(),
 
   /**
-   * @virutal
+   * @virtual
    * elementId of the component that uses this one-copy-button
    * @type {string}
    */
@@ -49,6 +50,12 @@ export default Component.extend(I18n, {
    * @type {string} jQuery selector
    */
   localTarget: undefined,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  notify: notImplementedIgnore,
 
   /**
    * Computes global clipboard target selector for local element selector
@@ -89,6 +96,7 @@ export default Component.extend(I18n, {
   }),
 
   _success() {
+    this.get('notify')(true);
     this.get('globalNotify').info(this.t(
       'copySuccess', {
         textType: _.startCase(this.get('textType')),
@@ -97,6 +105,7 @@ export default Component.extend(I18n, {
   },
 
   _error() {
+    this.get('notify')(false);
     this.get('globalNotify').info(this.t(
       'copyError', {
         textType: this.get('textType'),

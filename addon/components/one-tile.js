@@ -241,6 +241,10 @@ export default Component.extend(I18n, {
         route,
         routeQueryParams,
       } = this.getProperties('router', 'aspect', 'route', 'routeQueryParams');
+      // do not redirect if there is no route nor aspect
+      if (!route && !aspect) {
+        return;
+      }
       const transitionToArgs = route ?
         route : ['onedata.sidebar.content.aspect', aspect];
       if (routeQueryParams) {

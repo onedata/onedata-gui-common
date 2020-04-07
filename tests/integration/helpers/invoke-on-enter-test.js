@@ -26,7 +26,7 @@ describe('Integration | Helper | invoke on enter', function () {
     this.$('#invoke-on-enter-input').trigger(e);
 
     return wait().then(() => {
-      expect(spy).to.be.called.once;
+      expect(spy).to.be.calledOnce;
       expect(spy).to.be.calledWith(1, 2, 3);
     });
   });

@@ -135,3 +135,13 @@ $top-shadow-height: 6px;
     }
   }
 }
+
+@mixin bar-fog-style($gradient-direction, $fog-width, $fog-height, $color: white) {
+  position: absolute;
+  content: '';
+  z-index: 1;
+  top: 0;
+  height: $fog-height;
+  width: $fog-width;
+  background: linear-gradient($gradient-direction, rgba($color, 0), $color 100%);
+}

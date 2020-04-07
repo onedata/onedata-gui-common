@@ -1,0 +1,248 @@
+$tags-input-font-scale: 0.9;
+$tags-input-tag-line-height: $line-height-computed * $tags-input-font-scale;
+$tags-input-tag-vertical-padding: 4px;
+$tags-input-tag-height: $tags-input-tag-line-height + 2 * $tags-input-tag-vertical-padding + 2px;
+$tags-input-input-padding-top: ($input-height-base - $tags-input-tag-height - 2px) / 2;
+$tags-input-tag-border: 1px solid $color-token-border;
+$tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-horizontal;
+
+@mixin tag-type($type, $color) {
+  .tags-#{$type} .tags-input .tag-item,
+  .tags-input.tags-#{$type} .tag-item,
+  .tag-item.tag-item-#{$type} {
+    border-color: #d9d9d9;
+    @include tag-bg-color($color);
+  }
+}
+
+.tags-input {
+  display: flex;
+  flex-wrap: wrap;
+  height: initial;
+  min-height: $input-height-base;
+  margin: 0;
+  list-style-type: none;
+  padding-top: $tags-input-input-padding-top;
+  padding-bottom: $tags-input-input-padding-bottom;
+  padding-right: $padding-base-horizontal - $padding-xs-horizontal;
+  font-size: $tags-input-font-scale * 1em;
+
+  &.readonly {
+    padding: 0;
+    min-height: initial;
+    outline: none;
+  }
+
+  &.middle-centered {
+    align-items: center;
+  }
+  
+  .input-element {
+    margin-right: $padding-xs-horizontal;
+    margin-bottom: $padding-xs-horizontal;
+  }
+
+  .tag-item {
+    display: flex;
+    align-items: center;
+    padding: $tags-input-tag-vertical-padding $padding-small-vertical;
+    border: $tags-input-tag-border;
+    border-radius: $border-radius-base;
+    background-color: $color-one-light-blue;
+    
+    &.tag-item-plaintext {
+      // @include font-semibold();
+      border: none;
+      background-color: transparent;
+      font-size: 130%;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-left: 0;
+      margin-right: 0;
+      + .tag-item-plaintext {
+        margin-left: -$padding-xs-horizontal/2;
+      }
+    }
+    + .tag-item-plaintext {
+      margin-left: -$padding-xs-horizontal;
+    }
+  }
+
+  .tag-icon {
+    margin-right: 3px;
+    font-size: 1.5em;
+    line-height: 0;
+  }
+
+  .tag-label {
+    align-self: baseline;
+    max-width: 200px;
+  }
+
+  .tag-remove {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    margin-left: 3px;
+    font-weight: bold;
+    font-size: 85%;
+    color: $color-one-blue-gray;
+
+    &:hover {
+      color: $color-one-danger;
+    }
+  }
+
+  .tag-creator-trigger {
+    align-self: center;
+    color: $color-one-white;
+    background-color: $color-one-blue-gray;
+    border-radius: 2px;
+    line-height: 0;
+    padding: $padding-xs-vertical;
+    font-size: 90%;
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-one-blue-gray, 10%);
+    }
+  }
+
+  .tag-creator {
+    display: flex;
+  }
+
+  .tags-input-text-editor {
+    .text-editor-input {
+      padding: $tags-input-tag-vertical-padding;
+      border: 0;
+      border-bottom: 1px solid $main-border-color;
+      outline: 0;
+      width: 150px;
+    }
+
+    &.has-error .text-editor-input {
+      border-bottom: 1px solid $color-one-danger;
+    }
+  }
+
+  .tags-input-selector-editor,
+  .tags-input-model-selector-editor {
+    align-self: center;
+  }
+
+  .tags-input-selector-editor {
+    width: 150px;
+  }
+
+  .tags-input-model-selector-editor {
+    width: 250px;
+  }
+}
+
+@include tag-type(success, $brand-success);
+@include tag-type(warning, $brand-warning);
+@include tag-type(danger, $brand-danger);
+
+.one-webui-popover.tags-selector {
+  background-color: $color-one-light-blue;
+  width: 150px;
+  height: 150px;
+  padding: $padding-small-vertical;
+  font-size: $tags-input-font-scale * 1em;
+  overflow: hidden;
+
+  .selector-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .selector-item {
+    display: flex;
+    padding: $padding-small-vertical;
+    height: 25px;
+    border-radius: $border-radius-base;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($color-one-light-blue, 5%);
+    }
+
+    & ~ .selector-item {
+      margin-top: $padding-xs-vertical;
+    }
+  }
+
+  .tag-icon {
+    margin-right: 3px;
+    font-size: 1.5em;
+  }
+
+  .tag-label {
+    align-self: baseline;
+  }
+  
+  .ps {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+.one-webui-popover.model-selector {
+  width: 250px;
+  height: 250px;
+  
+  .selector-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .ember-basic-dropdown,
+  .btn-group,
+  .content-separator,
+  .records-filter,
+  .id-form-group {
+    margin-bottom: $padding-small-vertical;
+  }
+
+  .content-separator {
+    width: 100%;
+    margin-top: 0;
+    border-top: 1px solid $main-border-color;
+  }
+
+  .all-item {
+    font-style: italic;
+
+    .tag-label {
+      // Italic text (due to its horizontal extra size) is hidden by overflow mechanism.
+      // Adding extra padding to let italic render properly
+      padding-right: 2px;
+    }
+  }
+
+  .add-id {
+    align-self: flex-end;
+  }
+
+  .all-records-added-description {
+    text-align: center;
+  }
+}
+
+.webui-popover-tags-selector {
+  border: $tags-input-tag-border;
+  border-radius: $border-radius-base;
+  overflow: hidden;
+
+  &.top-right, &.top-left, &.top {
+    transform: translateY(10px + $tags-input-tag-vertical-padding);
+  }
+
+  &.bottom-right, &.bottom-left, &.bottom {
+    transform: translateY(-10px - $tags-input-tag-vertical-padding);
+  }
+}
