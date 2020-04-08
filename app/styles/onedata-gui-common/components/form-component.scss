@@ -1,0 +1,154 @@
+$form-component-view-margin: $padding-base-vertical;
+
+.form-component {
+  .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+  }
+
+  .field-component {
+    flex-grow: 1;
+    min-width: 0;
+    position: relative;
+  }
+
+  .control-label {
+    width: 20%;
+    min-width: 100px;
+    text-align: left;
+  }
+
+  .one-label-tip {
+    margin-left: $padding-xs-horizontal;
+  }
+
+  .field-message {
+    flex-basis: 100%;
+    padding: $padding-small-vertical 0;
+    text-align: right;
+    font-size: $font-size-small;
+  }
+
+  .has-error {
+    .field-message {
+      color: $state-danger-text;
+    }
+  }
+
+  .static-text-field-renderer,
+  .radio-field-renderer,
+  .toggle-field-renderer,
+  .loading-field-renderer {
+    .control-label {
+      padding-top: 0;
+    }
+  }
+
+  .toggle-field-renderer {
+    .one-way-toggle {
+      display: block;
+    }
+  }
+
+  .loading-field-renderer {
+    .spinner {
+      z-index: initial !important;
+    }
+  }
+
+  .form-fields-group-renderer {
+    margin-bottom: 0;
+  }
+
+  .add-field-button {
+    margin-top: $padding-base-vertical - $padding-small-vertical;
+  }
+
+  .collection-item {
+    display: flex;
+    align-items: flex-start;
+
+    .remove-field-button-container {
+      display: flex;
+      align-items: center;
+      height: $input-height-base;
+    }
+  
+    .remove-field-button {
+      margin-left: $padding-base-horizontal;
+    }
+
+    + .add-field-button {
+      margin-top: 0;
+    }
+  }
+
+  .loading-field {
+    .spinner-container {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: $padding-xs-horizontal;
+    }
+  }
+
+  .field-view-mode {
+    &:not(.form-fields-group-renderer) {
+      margin-bottom: $form-component-view-margin;
+    }
+
+    .control-label {
+      padding-top: 0;
+    }
+
+    &.tags-field-renderer {
+      margin-bottom: $form-component-view-margin - $padding-xs-horizontal;
+    }
+
+    .static-text-field-renderer,
+    .radio-field-renderer,
+    .toggle-field-renderer {
+      padding-top: initial;
+    }
+
+    &.dropdown-field-renderer {
+      .oneicon {
+        font-size: 2.2em;
+        vertical-align: middle;
+        line-height: 0;
+        margin-right: $padding-xs-horizontal;
+      }
+    }
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .privileges-field {
+      .one-tree.has-items > .one-tree-list {
+        padding-top: 0;
+        margin-top: $padding-base-vertical;
+      }
+    }
+
+    .field-view-mode.clipboard-field-renderer {
+      .control-label {
+        padding-top: $padding-base-vertical;
+      }
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .control-label {
+      width: 100%;
+    }
+  }
+
+  .has-validation-icon {
+    &.text-like-field-renderer input {
+      padding-right: 3em;
+    }
+  }
+}
+
+.dropdown-field-dropdown {
+  max-height: 300px;
+}

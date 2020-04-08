@@ -1,0 +1,11 @@
+{{#global-modal as |modal|}}
+  {{#modal.header}}
+    <h1>Modal header</h1>
+  {{/modal.header}}
+  {{#modal.body}}
+    Modal body
+  {{/modal.body}}
+  {{#modal.header}}
+    {{#bs-button onClick=modal.close}}Close{{/bs-button}}
+  {{/modal.header}}
+{{/global-modal}}

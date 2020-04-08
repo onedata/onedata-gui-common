@@ -1,0 +1,14 @@
+{{#if isInViewMode}}
+  {{get (find-by "value" value preparedOptions) "label"}}
+{{else}}
+  {{one-way-radio-group
+    class=inputClasses
+    inputId=fieldId
+    isReadOnly=(not isEffectivelyEnabled)
+    value=value
+    options=preparedOptions
+    update=(action "valueChanged")
+    onFocusOut=(action "focusLost")
+  }}
+{{/if}}
+{{yield}}

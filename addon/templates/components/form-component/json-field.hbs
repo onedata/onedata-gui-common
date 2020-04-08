@@ -1,0 +1,11 @@
+{{json-editor
+  disabled=(not isEffectivelyEnabled)
+  readonly=isInViewMode
+  value=value
+  isErrorMsgVisible=false
+  useBootstrapClasses=false
+  inputId=fieldId
+  onChange=(action "valueChanged")
+  onFocusLost=(action "focusLost")
+}}
+{{yield}}

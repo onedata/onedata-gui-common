@@ -151,7 +151,8 @@ describe('Unit | Utility | get error description', function () {
   );
 
   [
-    'badAudienceToken',
+    'badServiceToken',
+    'badConsumerToken',
     'badValueToken',
   ].forEach(errorId => {
     it(`handles errors in form { id, details } with id == "${errorId}"`,
@@ -216,6 +217,32 @@ describe('Unit | Utility | get error description', function () {
   );
 
   it(
+    'handles errors in form { id, details } with id == "notAnAccessToken" and received with "identityToken"',
+    function () {
+      const tStub = sinon.stub(this.i18n, 't')
+        .withArgs(
+          'errors.backendErrors.notAnAccessToken',
+          sinon.match({ received: 'identity token' })
+        ).returns('complete error');
+      stubIdentityTokenTypeTranslation(tStub);
+      const error = {
+        id: 'notAnAccessToken',
+        details: {
+          received: {
+            identityToken: {},
+          },
+        },
+      };
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe('complete error'),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
+  it(
     'handles errors in form { id, details } with id == "notAnAccessToken" and received with "inviteToken"',
     function () {
       const tStub = sinon.stub(this.i18n, 't')
@@ -229,7 +256,7 @@ describe('Unit | Utility | get error description', function () {
         details: {
           received: {
             inviteToken: {
-              subtype: 'userJoinSpace',
+              inviteType: 'userJoinSpace',
             },
           },
         },
@@ -245,25 +272,81 @@ describe('Unit | Utility | get error description', function () {
   );
 
   it(
-    'handles errors in form { id, details } with id == "notAnInviteToken", expected with "userJoinSpace" and received with "inviteToken"',
+    'handles errors in form { id, details } with id == "notAnIdentityToken" and received with "accessToken"',
+    function () {
+      const tStub = sinon.stub(this.i18n, 't')
+        .withArgs(
+          'errors.backendErrors.notAnIdentityToken',
+          sinon.match({ received: 'access token' })
+        ).returns('complete error');
+      stubAccessTokenTypeTranslation(tStub);
+      const error = {
+        id: 'notAnIdentityToken',
+        details: {
+          received: {
+            accessToken: {},
+          },
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe('complete error'),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
+  it(
+    'handles errors in form { id, details } with id == "notAnIdentityToken" and received with "inviteToken"',
+    function () {
+      const tStub = sinon.stub(this.i18n, 't')
+        .withArgs(
+          'errors.backendErrors.notAnIdentityToken',
+          sinon.match({ received: 'userJoinSpace invite token' })
+        ).returns('complete error');
+      stubInviteTokenTypeTranslation(tStub);
+      const error = {
+        id: 'notAnIdentityToken',
+        details: {
+          received: {
+            inviteToken: {
+              inviteType: 'userJoinSpace',
+            },
+          },
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe('complete error'),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
+  it(
+    'handles errors in form { id, details } with id == "notAnInviteToken", expected with "userJoinSpace" and received with "inviteToken" "groupJoinSpace"',
     function () {
       const tStub = sinon.stub(this.i18n, 't')
         .withArgs(
           'errors.backendErrors.notAnInviteToken',
           sinon.match({
-            expectedInviteTokenType: 'userJoinSpace',
+            expectedInviteType: 'userJoinSpace',
             received: 'groupJoinSpace invite token',
           })
         ).returns('complete error');
-      stubAccessTokenTypeTranslation(tStub);
+      // stubAccessTokenTypeTranslation(tStub);
       stubInviteTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnInviteToken',
         details: {
-          expectedInviteTokenType: 'userJoinSpace',
+          expectedInviteType: 'userJoinSpace',
           received: {
             inviteToken: {
-              subtype: 'groupJoinSpace',
+              inviteType: 'groupJoinSpace',
             },
           },
         },
@@ -285,7 +368,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs(
           'errors.backendErrors.notAnInviteToken',
           sinon.match({
-            expectedInviteTokenType: 'userJoinSpace',
+            expectedInviteType: 'userJoinSpace',
             received: 'access token',
           })
         ).returns('complete error');
@@ -294,7 +377,7 @@ describe('Unit | Utility | get error description', function () {
       const error = {
         id: 'notAnInviteToken',
         details: {
-          expectedInviteTokenType: 'userJoinSpace',
+          expectedInviteType: 'userJoinSpace',
           received: {
             accessToken: {},
           },
@@ -310,9 +393,41 @@ describe('Unit | Utility | get error description', function () {
     }
   );
 
+  it(
+    'handles errors in form { id, details } with id == "notAnInviteToken", expected with "userJoinSpace" and received with "identityToken"',
+    function () {
+      const tStub = sinon.stub(this.i18n, 't')
+        .withArgs(
+          'errors.backendErrors.notAnInviteToken',
+          sinon.match({
+            expectedInviteType: 'userJoinSpace',
+            received: 'identity token',
+          })
+        ).returns('complete error');
+      stubIdentityTokenTypeTranslation(tStub);
+      stubInviteTokenTypeTranslation(tStub);
+      const error = {
+        id: 'notAnInviteToken',
+        details: {
+          expectedInviteType: 'userJoinSpace',
+          received: {
+            identityToken: {},
+          },
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe('complete error'),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
   [{
-    id: 'tokenAudienceForbidden',
-    resourceFieldName: 'audience',
+    id: 'tokenServiceForbidden',
+    resourceFieldName: 'service',
   }, {
     id: 'inviteTokenConsumerInvalid',
     resourceFieldName: 'consumer',
@@ -516,6 +631,12 @@ function stubInviteTokenTypeTranslation(tStub) {
   return tStub
     .withArgs('errors.backendErrors.translationParts.inviteToken')
     .returns('invite token');
+}
+
+function stubIdentityTokenTypeTranslation(tStub) {
+  return tStub
+    .withArgs('errors.backendErrors.translationParts.identityToken')
+    .returns('identity token');
 }
 
 function stubAccessTokenTypeTranslation(tStub) {

@@ -4,8 +4,8 @@ $ember-basic-dropdown-content-z-index: $zindex-modal+1;
 $ember-power-select-border-color: $input-border;
 $ember-power-select-number-of-visible-options: 10;
 $ember-power-select-background-color: $input-bg;
-$ember-power-select-highlighted-background: $color-one-info;
-$ember-power-select-highlighted-color: white;
+$ember-power-select-highlighted-background: $color-one-light-blue;
+$ember-power-select-highlighted-color: $main-text-color;
 $ember-power-select-trigger-default-border-radius: $input-border-radius;
 $ember-power-select-trigger-ltr-padding: $padding-base-vertical;
 $ember-power-select-line-height: $line-height-computed;
@@ -26,24 +26,54 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
     position: relative;
     
     .one-icon {
-      @include vertical-align-middle();
-      font-size: 28px;
+      @include absolute-align-middle-center();
+      font-size: 2.2em;
+
+      // Experimental space icon scale change. If everything will look good,
+      // the space icon could be scaled down.
+      &.oneicon-space {
+        font-size: 1.8em;
+      }
     }
   }
 }
 
 .ember-basic-dropdown-content {
-  .option-container .one-icon + .text {
-    padding-left: 34px;
+  .option-container {
+    .one-icon {
+      left: 11px;
+    }
+    .one-icon + .text {
+      padding-left: 34px;
+    }
+  }
+
+  &.small {
+    .one-icon + .text {
+      padding-left: 26px;
+    }
   }
 }
 
-.ember-power-select-selected-item .option-container {
-  .one-icon {
-    left: -10px;
-  }
-  .one-icon + .text {
-    padding-left: 24px;
+.ember-power-select-trigger {
+  .ember-power-select-selected-item .option-container {
+    .one-icon {
+      left: 5px;
+    }
+    .one-icon + .text {
+      padding-left: 28px;
+    }
+  } 
+
+  &.small {
+    .ember-power-select-selected-item .option-container {
+      .one-icon {
+        left: 11px;
+      }
+      .one-icon + .text {
+        padding-left: 26px;
+      }
+    }
   }
 }
 
@@ -115,9 +145,6 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
   }
 
   &[aria-expanded="true"] {
-    color: white;
-    background-color: $color-one-info;
-
     .ember-power-select-status-icon {
       transform: none;
       &:before {
@@ -138,7 +165,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
   }
 
   .ember-power-select-options[role="listbox"] {
-    max-height: 600px;
+    max-height: 300px;
   }
 
   .ember-power-select-option {
@@ -150,10 +177,6 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 
     &[aria-disabled="true"] {
       pointer-events: auto;
-    }
-    
-    &[aria-current="true"] {
-      color: $color-one-white;
     }
 
     &::last-child {

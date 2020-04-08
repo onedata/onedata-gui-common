@@ -21,7 +21,7 @@ export default Service.extend(I18n, {
   /**
    * @type {Ember.Computed<Array<SidebarButtonDefinition>>}
    */
-  buttons: collect('btnAdd', 'btnJoin'),
+  buttons: collect('btnAdd'),
 
   addAction: computed(function addAction() {
     const router = this.get('router');
@@ -35,27 +35,6 @@ export default Service.extend(I18n, {
       tip: this.t('btnAdd.hint'),
       class: 'add-cluster-btn',
       action: this.get('addAction'),
-    };
-  }),
-
-  /**
-   * @type {Ember.ComputedProperty<Function>}
-   */
-  joinAction: computed(function joinAction() {
-    const router = this.get('router');
-    return () => router.transitionTo('onedata.sidebar.content', 'clusters', 'join');
-  }),
-
-  /**
-   * @type {Ember.Computed<SidebarButtonDefinition>}
-   */
-  btnJoin: computed(function getBtnCreate() {
-    return {
-      icon: 'join-plug',
-      title: this.t('btnJoin.title'),
-      tip: this.t('btnJoin.hint'),
-      class: 'join-cluster-btn',
-      action: this.get('joinAction'),
     };
   }),
 });

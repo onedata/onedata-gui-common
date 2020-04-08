@@ -1,6 +1,9 @@
 {{#if icon}}
   {{one-icon icon=icon}}
 {{/if}}
+{{#if sidebarTitle}}
+  <span class="button-label">{{sidebarTitle}}</span>
+{{/if}}
 {{#if tip}}
   {{one-tooltip title=tip placement="bottom" arrowPlacement="right"}}
 {{/if}}

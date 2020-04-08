@@ -1,0 +1,10 @@
+<input
+  type="text"
+  class="text-editor-input"
+  value={{inputValue}}
+  placeholder={{placeholder}}
+  oninput={{action "inputChanged" value="target.value"}}
+  onkeydown={{invoke-on-enter (action "acceptTags")}}
+  onblur={{action "focusLost"}}
+/>
+{{yield}}

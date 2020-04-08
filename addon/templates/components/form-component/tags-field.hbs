@@ -1,0 +1,11 @@
+{{tags-input
+  disabled=(not isEffectivelyEnabled)
+  readonly=isInViewMode
+  tags=tags
+  onChange=(action "valueChanged")
+  onFocusLost=(action "focusLost")
+  elementId=fieldId
+  tagEditorComponentName=tagEditorComponentName
+  tagEditorSettings=tagEditorSettings
+}}
+{{yield}}

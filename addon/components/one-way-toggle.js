@@ -15,9 +15,6 @@ import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
 import { inject as service } from '@ember/service';
 
-const THREE_STATES = [false, 2, true];
-const THREE_STATES_CLASSES = ['', 'maybe', 'checked'];
-
 // TODO: handle three state in progress
 
 export default OneCheckboxBase.extend(RecognizerMixin, {
@@ -27,19 +24,6 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
   recognizers: 'pan',
 
   i18n: service(),
-
-  /**
-   * If true, toggle can have three states of selection
-   * @type {boolean}
-   */
-  threeState: false,
-
-  /**
-   * If true, third state of selection is accessible for user.
-   * Makes sense only if `threeState === true`.
-   * @type {boolean}
-   */
-  allowThreeStateToggle: false,
 
   /**
    * If true, shows 'lock' icon when toogle is readonly.
@@ -65,37 +49,6 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    * @type {boolean}
    */
   _disableClick: false,
-
-  /**
-   * Checked class name
-   * @type {computed.string}
-   */
-  _checkedClass: computed('_checked', 'threeState', function () {
-    let {
-      _checked,
-      threeState,
-    } = this.getProperties('_checked', 'threeState');
-    if (threeState) {
-      return THREE_STATES_CLASSES[THREE_STATES.indexOf(_checked)];
-    } else {
-      return _checked === THREE_STATES[THREE_STATES.length - 1] ?
-        THREE_STATES_CLASSES[2] : THREE_STATES_CLASSES[0];
-    }
-  }),
-
-  /**
-   * A displayed checkbox state
-   * @type {boolean|number} true, false or 2 ("in middle")
-   */
-  _checked: computed('_isInProgress', 'checked', '_checkedWaitState', function () {
-    const {
-      _isInProgress,
-      checked,
-      _checkedWaitState,
-    } = this.getProperties('_isInProgress', 'checked', '_checkedWaitState');
-    return (checked === 2 && checked) ||
-      (_isInProgress ? _checkedWaitState : checked);
-  }),
 
   /**
    * Toggle class from input id.
@@ -135,9 +88,15 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
 
     let {
       threeState,
+      threeStatesValues,
       allowThreeStateToggle,
       checked,
-    } = this.getProperties('threeState', 'allowThreeStateToggle', 'checked');
+    } = this.getProperties(
+      'threeState',
+      'threeStatesValues',
+      'allowThreeStateToggle',
+      'checked'
+    );
 
     document.getSelection().removeAllRanges();
 
@@ -148,17 +107,17 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
     let newValue;
     if (threeState && allowThreeStateToggle) {
       if (moveRatio < 0.33) {
-        newValue = THREE_STATES[0];
+        newValue = threeStatesValues[0];
       } else if (moveRatio < 0.66) {
-        newValue = THREE_STATES[1];
+        newValue = threeStatesValues[1];
       } else {
-        newValue = THREE_STATES[2];
+        newValue = threeStatesValues[2];
       }
     } else {
       if (moveRatio < 0.5) {
-        newValue = THREE_STATES[0];
+        newValue = threeStatesValues[0];
       } else {
-        newValue = THREE_STATES[2];
+        newValue = threeStatesValues[2];
       }
     }
     if (checked !== newValue) {
@@ -168,31 +127,5 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
 
   panEnd() {
     next(() => this.set('_disableClick', false));
-  },
-
-  /**
-   * Toggles checkbox value
-   */
-  _toggle() {
-    let {
-      _lockToggle,
-      checked,
-      threeState,
-      allowThreeStateToggle,
-    } = this.getProperties(
-      '_lockToggle',
-      'checked',
-      'threeState',
-      'allowThreeStateToggle'
-    );
-    if (!_lockToggle) {
-      let statesLoop = threeState && allowThreeStateToggle ?
-        THREE_STATES.concat(THREE_STATES[0]) : [THREE_STATES[0], THREE_STATES[
-          THREE_STATES.length - 1], THREE_STATES[0]];
-      if (statesLoop.indexOf(checked) === -1) {
-        checked = statesLoop[0];
-      }
-      this._update(statesLoop[statesLoop.indexOf(checked) + 1]);
-    }
   },
 });

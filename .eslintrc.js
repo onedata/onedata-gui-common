@@ -57,5 +57,6 @@ module.exports = {
     'promise/no-callback-in-promise': 'off', // default: warn
     'promise/avoid-new': 'off', // default: warn
     'promise/no-return-in-finally': 'warn',
+    'promise/param-names': 'off', // default: error
   },
 };

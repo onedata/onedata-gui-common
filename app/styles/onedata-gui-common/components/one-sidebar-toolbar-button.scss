@@ -1,25 +1,59 @@
 .one-sidebar-toolbar-button {
-  position: relative;
-  display: inline-block;
-  width: 32px;
+  display: flex;
+  align-items: center;
   height: 32px;
-  border-radius: 50%;
-  line-height: 32px;
-  text-align: center;
-  font-size: 40px;
+  font-size: 13px;
+
   &:hover {
     color: $color-one-red;
   }
-  .one-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-  }
+
   &.disabled {
     color: $main-text-color-disabled;
+    
     &:hover {
       color: $main-text-color-disabled;
     }
+  }
+
+  &.has-title {
+    height: 24px;
+    background-color: $main-text-color;
+    color: $color-sidebar-background;
+    border-radius: 14px;
+    padding: 0 $padding-xs-horizontal * 1.5;
+    font-size: 80%;
+
+    &:hover {
+      background-color: $color-one-red;
+      color: $color-sidebar-background;
+    }
+
+    &.disabled {
+      background-color: $main-text-color-disabled;
+      
+      &:hover {
+        background-color: $main-text-color-disabled;
+      }
+    }
+
+    .one-icon {
+      font-size: 22px;
+      width: initial;
+    }
+  }
+
+  + .one-sidebar-toolbar-button {
+    margin-left: $padding-xs-horizontal * 1.5;
+  }
+
+  .one-icon {
+    font-size: 40px;
+    width: 32px;
+    margin-left: -6px;
+  }
+
+  .button-label {
+    @include font-semibold();
   }
 }

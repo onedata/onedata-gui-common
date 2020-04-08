@@ -9,10 +9,16 @@
         <span class="one-label">{{act.title}}</span>
       </a>
     {{else}}
-      <a class="clickable {{act.class}} {{concat elementId "-" act.class}}" onClick={{if act.nestedActions
-        (action "toggleNestedActions" act (not-eq nestedActionsOpened act))
-        (action "triggerAction" act)
-      }}>
+      <a class={{concat-classes
+          "clickable"
+          (or act.class act.className)
+          (concat elementId "-" (or act.class act.className))
+        }}
+        onClick={{if act.nestedActions
+          (action "toggleNestedActions" act (not-eq nestedActionsOpened act))
+          (action "triggerAction" act)
+        }}
+      >
         {{#if act.icon}}
           {{one-icon icon=act.icon}}
         {{/if}}

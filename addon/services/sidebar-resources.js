@@ -70,4 +70,21 @@ export default Service.extend({
       return ['name'];
     }
   },
+
+  /**
+   * @param {string} type
+   * @param {any} [context]
+   * @returns {Array<Utils.Action>}
+   */
+  getButtonsFor( /* resourceType, context */ ) {
+    return [];
+  },
+
+  /**
+   * @param {string} resourceType
+   * @returns {string}
+   */
+  getSidebarComponentNameFor(resourceType) {
+    return `sidebar-${resourceType}`;
+  },
 });

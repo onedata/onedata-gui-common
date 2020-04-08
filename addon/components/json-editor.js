@@ -77,6 +77,12 @@ export default Component.extend(I18n, {
   onChange: notImplementedIgnore,
 
   /**
+   * @virtual optional
+   * @type {Function}
+   */
+  onFocusLost: notImplementedIgnore,
+
+  /**
    * @type {Ember.ComputedProperty<string>}
    */
   inputId: computed('elementId', function inputId() {

@@ -1,0 +1,20 @@
+{{#one-modal
+  class=modalClasses
+  open=open
+  onShown=(action "shown")
+  onHide=(action "hide")
+  onHidden=(action "hidden")
+  as |modal|
+}}
+
+  {{yield (hash
+    header=modal.header
+    body=modal.body
+    footer=modal.footer
+    submit=(action "submit")
+    close=modal.close
+  )}}
+
+{{/one-modal}}
+
+{{yield}}
