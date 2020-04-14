@@ -11,7 +11,7 @@ import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
-import { tag } from 'ember-awesome-macros';
+import { or, tag } from 'ember-awesome-macros';
 
 export default BsModal.extend({
   tagName: '',
@@ -21,7 +21,7 @@ export default BsModal.extend({
    * due to an empty tag.
    * @override
    */
-  modalId: tag `${'componentGuid'}-modal`,
+  modalId: or('id', tag `${'componentGuid'}-modal`),
 
   /**
    * In original source code modalId depends on elementId which is null here,
