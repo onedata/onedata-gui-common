@@ -182,6 +182,16 @@ label {
 }
 @import "bootstrap/button-groups";
 .btn-group {
+  // TODO: this is a workaround for below, but maybe it should be fixed better
+  // 1) hover background on disabled buttons
+  // 2) cursor: pointer from hammertime
+  // these problems are not present in original Bootstrap 3 styles
+  &.disabled {
+    cursor: not-allowed;
+    button {
+      pointer-events: none;
+    }
+  }
   .btn {
     @include box-shadow(none);
     border-color: $color-one-default;
