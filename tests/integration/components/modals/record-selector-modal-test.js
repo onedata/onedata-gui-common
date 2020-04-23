@@ -192,6 +192,14 @@ describe('Integration | Component | modals/record selector modal', function () {
       .then(() => expect(onHideSpy).to.be.calledOnce);
   });
 
+  it('closes modal on backdrop click', function () {
+    const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
+
+    return showModal(this)
+      .then(() => click(getModal()[0]))
+      .then(() => expect(onHideSpy).to.be.calledOnce);
+  });
+
   it('disables cancel button while submitting', function () {
     const recordHelper = new RecordHelper();
     const submitStub = sinon.stub().returns(new Promise(() => {}));
@@ -203,6 +211,19 @@ describe('Integration | Component | modals/record selector modal', function () {
       .then(() => expect(
         getModalFooter().find('.record-selector-cancel')
       ).to.have.attr('disabled'));
+  });
+
+  it('does not close modal on backdrop click when submitting', function () {
+    const recordHelper = new RecordHelper();
+    const submitStub = sinon.stub().returns(new Promise(() => {}));
+    this.set('modalOptions.onSubmit', submitStub);
+    const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
+
+    return showModal(this)
+      .then(() => recordHelper.selectOption(1))
+      .then(() => click(getModalFooter().find('.record-selector-submit')[0]))
+      .then(() => click(getModal()[0]))
+      .then(() => expect(onHideSpy).to.not.be.called);
   });
 });
 

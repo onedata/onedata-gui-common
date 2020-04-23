@@ -114,6 +114,14 @@ describe('Integration | Component | modals/question modal', function () {
       .then(() => expect(onHideSpy).to.be.calledOnce);
   });
 
+  it('closes modal on backdrop click', function () {
+    const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
+
+    return showModal(this)
+      .then(() => click(getModal()[0]))
+      .then(() => expect(onHideSpy).to.be.calledOnce);
+  });
+
   it('disables cancel button while submitting', function () {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
@@ -123,6 +131,17 @@ describe('Integration | Component | modals/question modal', function () {
       .then(() => expect(
         getModalFooter().find('.question-no')
       ).to.have.attr('disabled'));
+  });
+
+  it('does not close modal on backdrop click when submitting', function () {
+    const submitStub = sinon.stub().returns(new Promise(() => {}));
+    this.set('modalOptions.onSubmit', submitStub);
+    const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
+
+    return showModal(this)
+      .then(() => click(getModalFooter().find('.question-yes')[0]))
+      .then(() => click(getModal()[0]))
+      .then(() => expect(onHideSpy).to.not.be.called);
   });
 });
 
