@@ -19,7 +19,7 @@ import { inject as service } from '@ember/service';
 import { promise } from 'ember-awesome-macros';
 import { computed, observer, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import RecordsOptionsArrayProxy from 'onedata-gui-common/utils/record-options-array-proxy';
+import RecordOptionsArrayProxy from 'onedata-gui-common/utils/record-options-array-proxy';
 import { resolve } from 'rsvp';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import layout from '../../templates/components/modals/record-selector-modal';
@@ -78,28 +78,28 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<ArrayProxy<FieldOption>>}
    */
-  recordsOptionsProxy: promise.array(computed(
+  recordOptionsProxy: promise.array(computed(
     'recordsPromise',
     function recordsOptions() {
       const recordsPromise = this.get('recordsPromise') || resolve([]);
 
       return recordsPromise
-        .then(records => RecordsOptionsArrayProxy.create({
+        .then(records => RecordOptionsArrayProxy.create({
           ownerSource: this,
           records,
         }));
     }
   )),
 
-  recordsOptionsProxyObserver: observer(
-    'recordsOptionsProxy.[]',
-    function recordsOptionsProxyObserver() {
+  recordOptionsProxyObserver: observer(
+    'recordOptionsProxy.[]',
+    function recordOptionsProxyObserver() {
       const {
         selectedRecordOption,
-        recordsOptionsProxy,
-      } = this.getProperties('selectedRecordOption', 'recordsOptionsProxy');
+        recordOptionsProxy,
+      } = this.getProperties('selectedRecordOption', 'recordOptionsProxy');
 
-      const records = recordsOptionsProxy.mapBy('value');
+      const records = recordOptionsProxy.mapBy('value');
       const selectedRecord = selectedRecordOption ?
         get(selectedRecordOption, 'value') : null;
 

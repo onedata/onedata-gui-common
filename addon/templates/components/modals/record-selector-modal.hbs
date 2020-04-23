@@ -10,9 +10,9 @@
 
   {{#modal.body}}
     <p class="description">{{descriptionText}}</p>
-    {{#promise-proxy-container proxy=recordsOptionsProxy}}
+    {{#promise-proxy-container proxy=recordOptionsProxy}}
       {{#one-dropdown
-        options=recordsOptionsProxy
+        options=recordOptionsProxy
         onchange=(action (mut selectedRecordOption))
         selected=selectedRecordOption
         placeholder=selectorPlaceholderText
