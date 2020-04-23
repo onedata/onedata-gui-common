@@ -1,0 +1,48 @@
+{{#global-modal
+  classNames="record-selector-modal"
+  as |modal|
+}}
+  
+  {{#modal.header}}
+    <h1>{{headerText}}</h1>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    <p class="description">{{descriptionText}}</p>
+    {{#promise-proxy-container proxy=recordsOptionsProxy}}
+      {{#one-dropdown
+        options=recordsOptionsProxy
+        onchange=(action (mut selectedRecordOption))
+        selected=selectedRecordOption
+        placeholder=selectorPlaceholderText
+        as |recordOption|
+      }}
+        <div class="option-container">
+          {{one-icon icon=recordOption.icon}}
+          {{#truncated-string class="text"}}
+            {{recordOption.label}}
+          {{/truncated-string}}
+        </div>
+      {{/one-dropdown}}
+    {{/promise-proxy-container}}
+  {{/modal.body}}
+
+  {{#modal.footer class="btn-toolbar"}}
+    {{#bs-button
+      type="default"
+      class="record-selector-cancel"
+      onClick=modal.close
+      disabled=isSubmitting
+    }}
+      {{tt this "cancel"}}
+    {{/bs-button}}
+    {{#one-spin-button
+      class="btn btn-primary record-selector-submit"
+      action=(action "submit" modal.submit)
+      disabled=(not selectedRecordOption)
+    }}
+      {{submitText}}
+    {{/one-spin-button}}
+  {{/modal.footer}}
+
+{{/global-modal}}

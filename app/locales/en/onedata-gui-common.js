@@ -33,6 +33,9 @@ import tagsInput from './onedata-gui-common/components/tags-input';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
 import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
 
+import recordSelectorModal from './onedata-gui-common/components/modals/record-selector-modal';
+import questionModal from './onedata-gui-common/components/modals/question-modal';
+
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
 
@@ -86,6 +89,10 @@ const translations = {
     qosParamsEditor,
     alerts: {
       endpointError,
+    },
+    modals: {
+      recordSelectorModal,
+      questionModal,
     },
   },
   mixins: {
