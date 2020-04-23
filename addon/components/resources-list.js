@@ -1,6 +1,6 @@
 /**
  * A generic component for showing resources list. For now it only shows names, without more
- * contextual content.
+ * contextual content. To improve in more complicated use cases.
  *
  * @module components/resources-list
  * @author Michał Borzęcki
@@ -13,20 +13,26 @@ import EmberObject, { computed } from '@ember/object';
 import { array } from 'ember-awesome-macros';
 import layout from '../templates/components/resources-list';
 
+/**
+ * Should be used to construct items of resources list. Array of ResourceListItem
+ * instances should be passed via items property to ResourcesList component.
+ */
 export const ResourceListItem = EmberObject.extend({
   /**
-   * Item label. Should be specified even when conflictingLabelSource is
-   * defined to allow sorting.
+   * Item label. Used to render item label when `conflictingLabelSource` is not defined.
+   * Always used for sorting (hence must be set even when
+   * `conflictingLabelSource` is defined).
    * @virtual
    * @type {String}
    */
   label: undefined,
 
   /**
-   * It takes precedence over label property. Should be an object with properties
-   * needed to show conflicting labels.
+   * If set, it takes precedence over label property in label rendering. Should be an
+   * object with properties needed to show conflicting labels (a model instance
+   * in most cases).
    * @virtual
-   * @type {String}
+   * @type {Object}
    */
   conflictingLabelSource: undefined,
 
@@ -40,7 +46,15 @@ export const ResourceListItem = EmberObject.extend({
    * @virtual
    * @type {Array<Utils.Action>}
    */
-  actions: computed(() => []),
+  actions: undefined,
+
+  init() {
+    this._super(...arguments);
+
+    if (!this.get('actions')) {
+      this.set('actions', []);
+    }
+  },
 });
 
 export default Component.extend({
