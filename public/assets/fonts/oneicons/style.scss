@@ -2,11 +2,10 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?1iplg2');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?1iplg2#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?1iplg2') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?1iplg2') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?1iplg2##{$icomoon-font-family}') format('svg');
+  src:
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?9j9odc') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?9j9odc') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?9j9odc##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -228,9 +227,9 @@
     content: $oneicon-checked; 
   }
 }
-.oneicon-clean-filled {
+.oneicon-clean {
   &:before {
-    content: $oneicon-clean-filled; 
+    content: $oneicon-clean; 
   }
 }
 .oneicon-clipboard-copy {
@@ -251,11 +250,6 @@
 .oneicon-collection-create {
   &:before {
     content: $oneicon-collection-create; 
-  }
-}
-.oneicon-consume-token {
-  &:before {
-    content: $oneicon-consume-token; 
   }
 }
 .oneicon-copy {
@@ -571,6 +565,11 @@
 .oneicon-qos {
   &:before {
     content: $oneicon-qos; 
+  }
+}
+.oneicon-refresh {
+  &:before {
+    content: $oneicon-refresh; 
   }
 }
 .oneicon-remove {
