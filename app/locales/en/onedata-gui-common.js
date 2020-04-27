@@ -33,6 +33,10 @@ import tagsInput from './onedata-gui-common/components/tags-input';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
 import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
 
+import noPermissions from './onedata-gui-common/components/errors/no-permissions';
+import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
+import cannotInitWebsocket from './onedata-gui-common/components/errors/cannot-init-websocket';
+
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
 
@@ -43,9 +47,6 @@ import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
-import noPermissions from './onedata-gui-common/errors/no-permissions';
-import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
-import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
 
 import json from './onedata-gui-common/validators/json';
 
