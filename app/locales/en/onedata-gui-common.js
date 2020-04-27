@@ -87,6 +87,11 @@ const translations = {
     alerts: {
       endpointError,
     },
+    errors: {
+      noPermissions,
+      noClusterPermissions,
+      cannotInitWebsocket,
+    },
   },
   mixins: {
     authenticationErrorMessage,
@@ -104,9 +109,6 @@ const translations = {
   },
   errors: {
     backendErrors,
-    noPermissions,
-    noClusterPermissions,
-    cannotInitWebsocket,
   },
   validators: {
     json,
