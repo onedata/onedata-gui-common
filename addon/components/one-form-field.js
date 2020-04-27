@@ -13,15 +13,21 @@ import layout from 'onedata-gui-common/templates/components/one-form-field';
 import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
 import dotToDash from 'onedata-gui-common/utils/dot-to-dash';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 const {
   layoutConfig,
 } = config;
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   layoutConfig,
   tagName: '',
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneFormField',
 
   field: null,
 

@@ -2,6 +2,7 @@ import basicauthLoginForm from './onedata-gui-common/components/basicauth-login-
 import alertGlobal from './onedata-gui-common/components/alert-global';
 import loginBox from './onedata-gui-common/components/login-box';
 import oneFormFields from './onedata-gui-common/components/one-form-fields';
+import oneFormField from './onedata-gui-common/components/one-form-field';
 import applicationError from './onedata-gui-common/components/application-error';
 import providerPlace from './onedata-gui-common/components/provider-place';
 import providersList from './onedata-gui-common/components/providers-list';
@@ -56,6 +57,7 @@ const translations = {
     alertGlobal,
     loginBox,
     oneFormFields,
+    oneFormField,
     applicationError,
     providerPlace,
     providersList,
