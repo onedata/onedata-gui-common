@@ -76,4 +76,34 @@ describe('Integration | Component | one modal', function () {
         });
     }
   );
+
+  it(
+    'have auto-generated element id when id is not provided',
+    function () {
+      const hideSpy = sinon.spy();
+      this.on('hide', hideSpy);
+
+      this.render(hbs `{{one-modal class="my-modal"}}`);
+
+      return wait()
+        .then(() => {
+          expect(this.$('.my-modal').attr('id')).to.match(/.*-modal/);
+        });
+    }
+  );
+
+  it(
+    'uses id property as modal id when provided',
+    function () {
+      const hideSpy = sinon.spy();
+      this.on('hide', hideSpy);
+
+      this.render(hbs `{{one-modal id="some-id" class="my-modal"}}`);
+
+      return wait()
+        .then(() => {
+          expect(this.$('.my-modal')).to.have.id('some-id');
+        });
+    }
+  );
 });

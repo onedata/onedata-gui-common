@@ -40,8 +40,8 @@ import Mixin from '@ember/object/mixin';
 import { classify, camelize } from '@ember/string';
 import { reads } from '@ember/object/computed';
 import { get, computed, set, setProperties } from '@ember/object';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
+import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
+import { promiseArray } from 'onedata-gui-common/utils/ember/promise-array';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
@@ -99,13 +99,15 @@ export default function createDataProxyMixin(name, options) {
               return value;
             });
         } else {
-          return safeExec(
+          const proxy =
+            (_options.type === 'array' ? promiseArray : promiseObject)(promise);
+          safeExec(
             this,
             'set',
             internalDataProxyName,
-            (_options.type === 'array' ? PromiseArray : PromiseObject)
-            .create({ promise })
+            proxy
           );
+          return proxy;
         }
       }
     },

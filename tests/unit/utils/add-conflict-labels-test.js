@@ -167,8 +167,8 @@ describe('Unit | Utility | add conflict labels', function () {
     b.name = 'Two';
     addConflictLabels([a, b, c]);
 
-    expect(get(a, 'conflictLabel')).to.be.undefined;
-    expect(get(b, 'conflictLabel')).to.be.undefined;
+    expect(get(a, 'conflictLabel'), 'object a').to.be.undefined;
+    expect(get(b, 'conflictLabel'), 'object b').to.be.undefined;
   });
 
 });

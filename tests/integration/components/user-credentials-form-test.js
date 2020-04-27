@@ -42,9 +42,8 @@ describe('Integration | Component | user credentials form', function () {
         .to.exist;
 
       done();
-    });
-
-  this.timeout(20000);
+    }
+  );
 
   it('submits current and new password', function (done) {
     const OLD_PASSWORD = 'one123456789';

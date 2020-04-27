@@ -2,8 +2,8 @@
  * Sidebar button component.
  *
  * @module services/one-sidebar-toolbar-button
- * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2019 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -17,7 +17,7 @@ export default Component.extend({
   classNames: ['one-sidebar-toolbar-button'],
   classNameBindings: [
     'disabled:disabled:clickable',
-    'title:has-title',
+    'sidebarTitle:has-title',
   ],
 
   /**
@@ -29,7 +29,7 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  title: readOnly('buttonModel.sidebarTitle'),
+  sidebarTitle: readOnly('buttonModel.sidebarTitle'),
 
   /**
    * @type {Ember.ComputedProperty<string>}

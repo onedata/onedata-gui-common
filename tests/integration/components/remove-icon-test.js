@@ -37,22 +37,22 @@ describe('Integration | Component | remove icon', function () {
 
   it('handles click event', function () {
     const clickHandler = sinon.spy();
-    this.on('click', clickHandler);
+    this.on('clickHandler', clickHandler);
 
-    this.render(hbs `{{remove-icon onClick=(action "click")}} isDisabled=true`);
+    this.render(hbs `{{remove-icon onClick=(action "clickHandler")}}`);
 
     return click('.remove-icon')
-      .then(() => expect(clickHandler).to.be.called);
+      .then(() => expect(clickHandler).to.be.calledOnce);
   });
 
   it('does not react to click when disabled', function () {
     const clickHandler = sinon.spy();
     this.on('click', clickHandler);
 
-    this.render(hbs `{{remove-icon onClick=(action "click")}}`);
+    this.render(hbs `{{remove-icon onClick=(action "click") isDisabled=true}}`);
 
     return click('.remove-icon')
-      .then(() => expect(clickHandler).to.be.calledOnce);
+      .then(() => expect(clickHandler).to.be.not.called);
   });
 
   it('shows tooltip if tooltipText property is not empty', function () {
