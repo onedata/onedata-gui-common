@@ -13,6 +13,22 @@ import EmberObject, { computed } from '@ember/object';
 import { array } from 'ember-awesome-macros';
 import layout from '../templates/components/resources-list';
 
+export default Component.extend({
+  layout,
+  classNames: ['resources-list'],
+
+  /**
+   * @virtual
+   * @type {Array<ResourceListItem>}
+   */
+  items: computed(() => []),
+
+  /**
+   * @type {ComputedProperty<Array<ResourceListItem>>}
+   */
+  sortedItems: array.sort('items', ['label']),
+});
+
 /**
  * Should be used to construct items of resources list. Array of ResourceListItem
  * instances should be passed via items property to ResourcesList component.
@@ -43,7 +59,8 @@ export const ResourceListItem = EmberObject.extend({
   icon: undefined,
 
   /**
-   * @virtual
+   * Default value is set on init.
+   * @virtual optional
    * @type {Array<Utils.Action>}
    */
   actions: undefined,
@@ -55,20 +72,4 @@ export const ResourceListItem = EmberObject.extend({
       this.set('actions', []);
     }
   },
-});
-
-export default Component.extend({
-  layout,
-  classNames: ['resources-list'],
-
-  /**
-   * @virtual
-   * @type {Array<ResourceListItem>}
-   */
-  items: computed(() => []),
-
-  /**
-   * @type {ComputedProperty<Array<ResourceListItem>>}
-   */
-  sortedItems: array.sort('items', ['label']),
 });

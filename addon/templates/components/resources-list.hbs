@@ -5,12 +5,19 @@
         {{#if item.icon}}
           <span class="item-icon-container">
             {{one-icon class="item-icon" icon=item.icon}}
-            {{one-tooltip
-              title=item.label
+            {{#one-tooltip
               placement="top"
               arrowPlacement="left"
               triggerEvents="hover"
             }}
+            {{#if item.conflictingLabelSource}}
+              {{name-conflict
+                item=item.conflictingLabelSource
+              }}
+            {{else}}
+              {{item.label}}
+            {{/if}}
+            {{/one-tooltip}}
           </span>
         {{/if}}
         {{#if item.conflictingLabelSource}}

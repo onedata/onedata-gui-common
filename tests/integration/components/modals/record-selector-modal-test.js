@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach } from 'mocha';
+import { describe, context, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import hbs from 'htmlbars-inline-precompile';
@@ -21,8 +21,6 @@ describe('Integration | Component | modals/record selector modal', function () {
   setupComponentTest('modals/record-selector-modal', {
     integration: true,
   });
-
-  suppressRejections();
 
   beforeEach(function () {
     // space is before group to test sorting records by name
@@ -106,19 +104,6 @@ describe('Integration | Component | modals/record selector modal', function () {
         expect(recordHelper.getNthOption(1).querySelector('.oneicon-group')).to.exist;
         expect(recordHelper.getNthOption(2).innerText.trim()).to.equal('space1');
         expect(recordHelper.getNthOption(2).querySelector('.oneicon-space')).to.exist;
-      });
-  });
-
-  it('renders loading error when records cannot be loaded', function () {
-    this.set('modalOptions.recordsPromise', reject('loadError'));
-    const recordHelper = new RecordHelper();
-
-    return showModal(this)
-      .then(() => {
-        expect(recordHelper.getTrigger()).to.not.exist;
-        const $loadError = getModalBody().find('.resource-load-error');
-        expect($loadError).to.exist;
-        expect($loadError.text()).to.contain('loadError');
       });
   });
 
@@ -224,6 +209,23 @@ describe('Integration | Component | modals/record selector modal', function () {
       .then(() => click(getModalFooter().find('.record-selector-submit')[0]))
       .then(() => click(getModal()[0]))
       .then(() => expect(onHideSpy).to.not.be.called);
+  });
+
+  context('handles errors', function () {
+    suppressRejections();
+
+    it('renders loading error when records cannot be loaded', function () {
+      this.set('modalOptions.recordsPromise', reject('loadError'));
+      const recordHelper = new RecordHelper();
+
+      return showModal(this)
+        .then(() => {
+          expect(recordHelper.getTrigger()).to.not.exist;
+          const $loadError = getModalBody().find('.resource-load-error');
+          expect($loadError).to.exist;
+          expect($loadError.text()).to.contain('loadError');
+        });
+    });
   });
 });
 

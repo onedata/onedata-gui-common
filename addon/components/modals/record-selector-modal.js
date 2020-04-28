@@ -36,6 +36,7 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.recordSelectorModal',
 
   /**
+   * Is described in the file header
    * @virtual
    */
   modalOptions: undefined,
@@ -76,7 +77,7 @@ export default Component.extend(I18n, {
   recordsPromise: reads('modalOptions.recordsPromise'),
 
   /**
-   * @type {ComputedProperty<ArrayProxy<FieldOption>>}
+   * @type {ComputedProperty<PromiseArray<FieldOption>>}
    */
   recordOptionsProxy: promise.array(computed(
     'recordsPromise',

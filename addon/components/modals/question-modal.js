@@ -37,6 +37,7 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.questionModal',
 
   /**
+   * Is described in the file header
    * @virtual
    */
   modalOptions: undefined,
@@ -64,7 +65,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  yesButtonText: reads('modalOptions.yesButtonText'),
+  yesButtonText: or('modalOptions.yesButtonText', computedT('ok')),
 
   /**
    * @type {ComputedProperty<String>}
