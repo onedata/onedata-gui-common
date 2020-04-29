@@ -6,7 +6,7 @@ import { lookupService } from '../../helpers/stub-service';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import { click } from 'ember-native-dom-helpers';
+import { click, keyEvent } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 
 describe('Integration | Component | global modal', function () {
@@ -419,6 +419,38 @@ describe('Integration | Component | global modal', function () {
         .then(() => expect(isGlobalModalOpened()).to.be.true);
     }
   );
+
+  it('closes modal on Escape key press by default', function () {
+    this.render(hbs `{{global-modal}}`);
+
+    return this.get('modalManager').show().shownPromise
+      .then(() => keyEvent(getGlobalModal()[0], 'keydown', 27))
+      .then(() => expect(isGlobalModalOpened()).to.be.false);
+  });
+
+  it('does not close modal on Escape key press when allowClose is false', function () {
+    this.render(hbs `{{global-modal allowClose=false}}`);
+
+    return this.get('modalManager').show().shownPromise
+      .then(() => keyEvent(getGlobalModal()[0], 'keydown', 27))
+      .then(() => expect(isGlobalModalOpened()).to.be.true);
+  });
+
+  it('closes modal on backdrop click by default', function () {
+    this.render(hbs `{{global-modal}}`);
+
+    return this.get('modalManager').show().shownPromise
+      .then(() => click(getGlobalModal()[0]))
+      .then(() => expect(isGlobalModalOpened()).to.be.false);
+  });
+
+  it('does not close modal on backdrop click when allowClose is false', function () {
+    this.render(hbs `{{global-modal allowClose=false}}`);
+
+    return this.get('modalManager').show().shownPromise
+      .then(() => click(getGlobalModal()[0]))
+      .then(() => expect(isGlobalModalOpened()).to.be.true);
+  });
 });
 
 function getGlobalModal() {

@@ -24,20 +24,11 @@ export default Component.extend({
   modalManager: service(),
 
   /**
-   * @type {ComputedProperty<String>}
+   * If true, modal can be close using backdrop click and Escape key
+   * @virtual optional
+   * @type {boolean}
    */
-  modalClasses: computed('classNames.[]', function () {
-    const classNames = this.get('classNames');
-    let classNamesString = '';
-
-    if (isArray(classNames)) {
-      classNamesString = classNames.join(' ');
-    } else if (classNames) {
-      classNamesString = String(classNames);
-    }
-
-    return classNamesString + ' global-modal';
-  }),
+  allowClose: true,
 
   /**
    * Callback called on modal hide. If returns false, then modal hide is cancelled.
@@ -61,6 +52,22 @@ export default Component.extend({
    * @type {Ember.ComputedProperty<boolean>}
    */
   open: reads('modalManager.isModalOpened'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  modalClasses: computed('classNames.[]', function () {
+    const classNames = this.get('classNames');
+    let classNamesString = '';
+
+    if (isArray(classNames)) {
+      classNamesString = classNames.join(' ');
+    } else if (classNames) {
+      classNamesString = String(classNames);
+    }
+
+    return classNamesString + ' global-modal';
+  }),
 
   actions: {
     submit(data) {
