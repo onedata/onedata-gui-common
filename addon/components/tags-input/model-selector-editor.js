@@ -289,8 +289,9 @@ export default Component.extend(I18n, {
         selectedTags,
         selectedModelName,
       } = this.getProperties('selectedTags', 'selectedModelName');
-      return selectedTags.mapBy('value.record.representsAll')
-        .includes(selectedModelName);
+      return Boolean(
+        selectedTags.findBy('value.record.representsAll', selectedModelName)
+      );
     }
   ),
 

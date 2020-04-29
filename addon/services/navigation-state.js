@@ -234,13 +234,29 @@ export default Service.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Array<Action>>}
    */
-  resourceTypeActions: computed('activeResourceType', function () {
-    const {
-      sidebarResources,
-      activeResourceType,
-    } = this.getProperties('sidebarResources', 'activeResourceType');
-    return sidebarResources.getButtonsFor(activeResourceType);
-  }),
+  resourceTypeActions: computed(
+    'activeResourceType',
+    'activeResourceCollection.list.[]',
+    function () {
+      const {
+        sidebarResources,
+        activeResourceType,
+        activeResourceCollection,
+      } = this.getProperties(
+        'sidebarResources',
+        'activeResourceType',
+        'activeResourceCollection'
+      );
+
+      const collection = get(activeResourceCollection || {}, 'list');
+      return sidebarResources.getButtonsFor(activeResourceType, {
+        collection,
+        // In global view we assume, that all items are visible - we cannot guess any
+        // filtering from this point.
+        visibleCollection: collection,
+      });
+    }
+  ),
 
   /**
    * @type {Ember.ComputedProperty<Array<Action>>}
