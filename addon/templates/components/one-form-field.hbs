@@ -71,7 +71,7 @@
           <input
             id={{inputId}}
             value={{value}}
-            type={{if (eq field.type "input") "text" field.type}}
+            type={{form-field-input-type field.type}}
             class={{inputClasses}}
             oninput={{action
               (action "inputChanged" field.name)
@@ -84,7 +84,7 @@
             onblur={{action "onFocusOut"}}
             step={{field.step}}
             disabled={{disabled}}
-            autocomplete="new-password"
+            autocomplete={{if (eq field.type "password") "new-password"}}
             placeholder={{if field.placeholder
               field.placeholder
               (if field.example

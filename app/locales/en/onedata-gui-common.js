@@ -33,6 +33,7 @@ import formComponent from './onedata-gui-common/components/form-component';
 import tagsInput from './onedata-gui-common/components/tags-input';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
 import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
+import oneDynamicTree from './onedata-gui-common/components/one-dynamic-tree';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -87,6 +88,7 @@ const translations = {
     tagsInput,
     contentSharesEmpty,
     qosParamsEditor,
+    oneDynamicTree,
     alerts: {
       endpointError,
     },
