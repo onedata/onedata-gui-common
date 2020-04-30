@@ -6,7 +6,7 @@ import { setupComponentTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 
-const ERROR_MSG = 'error!';
+const errorMsg = 'error!';
 
 describe('Integration | Component | one form simple', function () {
   setupComponentTest('one-form-simple', {
@@ -28,7 +28,7 @@ describe('Integration | Component | one form simple', function () {
       errors: [
         EmberObject.create({
           attribute: 'allFieldsValues.main.first',
-          message: ERROR_MSG,
+          message: errorMsg,
         }),
       ],
     });
@@ -50,28 +50,28 @@ describe('Integration | Component | one form simple', function () {
     expect(this.$('.field-main-second'), 'field second').to.exist;
   });
 
-  it('renders errors after field change', function (done) {
+  it('renders errors after field change', function () {
     this.render(hbs `
-    {{one-form-simple
-      validations=fakeValidations
-      fields=fields
-      submitButton=false
-    }}
-      `);
+      {{one-form-simple
+        validations=fakeValidations
+        fields=fields
+        submitButton=false
+      }}
+    `);
 
-    let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
+    const $firstField = this.$('.field-main-first');
+
+    const firstFieldMsg = $firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change')
       .to.be.empty;
-    firstField.trigger('change');
-    wait().then(() => {
+    $firstField.trigger('change');
+    return wait().then(() => {
       expect(firstFieldMsg.text(), 'field has error after change')
-        .to.equal(ERROR_MSG);
-      done();
+        .to.equal(errorMsg);
     });
   });
 
-  it('renders errors after field looses its focus', function (done) {
+  it('renders errors after field loses its focus', function (done) {
     this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
@@ -87,7 +87,7 @@ describe('Integration | Component | one form simple', function () {
     firstField.blur();
     wait().then(() => {
       expect(firstFieldMsg.text(), 'field has error after change')
-        .to.equal(ERROR_MSG);
+        .to.equal(errorMsg);
       done();
     });
   });

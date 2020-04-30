@@ -67,12 +67,17 @@
             onFocusOut=(action "onFocusOut")
           }}
         {{else}}
+          {{!-- using input and change events to be compatible with one-way-input --}}
           <input
             id={{inputId}}
             value={{value}}
             type={{if (eq field.type "input") "text" field.type}}
             class={{inputClasses}}
             oninput={{action
+              (action "inputChanged" field.name)
+              value="target.value"
+            }}
+            onchange={{action
               (action "inputChanged" field.name)
               value="target.value"
             }}
