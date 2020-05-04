@@ -74,7 +74,9 @@ export default Component.extend({
      * @param {*} value Changed value.
      */
     inputChanged(value) {
-      this.get('inputChanged')(value);
+      if (this.get('value') !== value) {
+        this.get('inputChanged')(value);
+      }
     },
 
     /**

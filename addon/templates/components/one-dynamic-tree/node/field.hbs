@@ -27,7 +27,7 @@
     id={{inputId}}
     value={{value}}
     type={{form-field-input-type field.type}}
-    class={{inputClasses}}
+    class={{inputClass}}
     oninput={{action
       (action "inputChanged")
       value="target.value"
@@ -41,10 +41,7 @@
     autocomplete={{if (eq field.type "password") "new-password"}}
     placeholder={{if field.placeholder
       field.placeholder
-      (if field.example
-        (concat (tt this "example") ": " field.example)
-        ""
-      )
+      (if field.example (concat (tt this "example") ": " field.example) "")
     }}
   >
 {{/if}}

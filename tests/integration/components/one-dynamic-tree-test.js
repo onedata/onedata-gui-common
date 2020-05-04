@@ -112,6 +112,8 @@ describe('Integration | Component | one dynamic tree', function () {
 
   it('renders fields', function () {
     this.render(hbs `{{one-dynamic-tree definition=definition}}`);
+    expect(this.$('.field-node1-node11'), 'node 1.1').to.exist;
+    expect(this.$('.field-node1-node12'), 'node 1.2').to.exist;
     expect(this.$('input[type="text"]')).to.exist;
     expect(this.$('.one-way-radio-group')).to.exist;
   });
