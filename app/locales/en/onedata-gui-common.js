@@ -39,6 +39,9 @@ import noPermissions from './onedata-gui-common/components/errors/no-permissions
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
 import cannotInitWebsocket from './onedata-gui-common/components/errors/cannot-init-websocket';
 
+import recordSelectorModal from './onedata-gui-common/components/modals/record-selector-modal';
+import questionModal from './onedata-gui-common/components/modals/question-modal';
+
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
 
@@ -96,6 +99,10 @@ const translations = {
       noPermissions,
       noClusterPermissions,
       cannotInitWebsocket,
+    },
+    modals: {
+      recordSelectorModal,
+      questionModal,
     },
   },
   mixins: {
