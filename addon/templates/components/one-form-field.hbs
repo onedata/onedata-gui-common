@@ -67,16 +67,32 @@
             onFocusOut=(action "onFocusOut")
           }}
         {{else}}
-          {{component (input-component-name field.type)
-            id=inputId
-            value=value
-            class=inputClasses
-            update=(action "inputChanged" field.name)
-            step=field.step
-            disabled=disabled
-            placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
-            focusOut=(action "onFocusOut")
-          }}
+          {{!-- using input and change events to be compatible with one-way-input --}}
+          <input
+            id={{inputId}}
+            value={{value}}
+            type={{form-field-input-type field.type}}
+            class={{inputClasses}}
+            oninput={{action
+              (action "inputChanged" field.name)
+              value="target.value"
+            }}
+            onchange={{action
+              (action "inputChanged" field.name)
+              value="target.value"
+            }}
+            onblur={{action "onFocusOut"}}
+            step={{field.step}}
+            disabled={{disabled}}
+            autocomplete={{if (eq field.type "password") "new-password"}}
+            placeholder={{if field.placeholder
+              field.placeholder
+              (if field.example
+                (concat (tt this "example") ": " field.example)
+                ""
+              )
+            }}
+          >
           {{#if field.rightText}}
             {{#truncated-string class="input-group-addon"}}{{field.rightText}}{{/truncated-string}}
           {{/if}}

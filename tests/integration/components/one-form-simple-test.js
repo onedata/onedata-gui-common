@@ -1,12 +1,12 @@
-import EmberObject from '@ember/object';
-import { Promise } from 'rsvp';
+import EmberObject, { setProperties } from '@ember/object';
+import { reject } from 'rsvp';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 
-const ERROR_MSG = 'error!';
+const errorMsg = 'error!';
 
 describe('Integration | Component | one form simple', function () {
   setupComponentTest('one-form-simple', {
@@ -28,7 +28,7 @@ describe('Integration | Component | one form simple', function () {
       errors: [
         EmberObject.create({
           attribute: 'allFieldsValues.main.first',
-          message: ERROR_MSG,
+          message: errorMsg,
         }),
       ],
     });
@@ -39,60 +39,58 @@ describe('Integration | Component | one form simple', function () {
 
   it('renders injected fields', function () {
     this.render(hbs `
-    {{one-form-simple
-      validations=fakeValidations
-      fields=fields
-      submitButton=false
-    }}
-      `);
+      {{one-form-simple
+        validations=fakeValidations
+        fields=fields
+        submitButton=false
+      }}
+    `);
 
     expect(this.$('.field-main-first'), 'field first').to.exist;
     expect(this.$('.field-main-second'), 'field second').to.exist;
   });
 
-  it('renders errors after field change', function (done) {
+  it('renders errors after field change', function () {
     this.render(hbs `
-    {{one-form-simple
-      validations=fakeValidations
-      fields=fields
-      submitButton=false
-    }}
-      `);
+      {{one-form-simple
+        validations=fakeValidations
+        fields=fields
+        submitButton=false
+      }}
+    `);
 
-    let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
+    const $firstField = this.$('.field-main-first');
+
+    const firstFieldMsg = $firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change')
       .to.be.empty;
-    firstField.trigger('change');
-    wait().then(() => {
+    $firstField.trigger('change');
+    return wait().then(() => {
       expect(firstFieldMsg.text(), 'field has error after change')
-        .to.equal(ERROR_MSG);
-      done();
+        .to.equal(errorMsg);
     });
   });
 
-  it('renders errors after field looses its focus', function (done) {
+  it('renders errors after field loses its focus', function () {
     this.render(hbs `
-    {{one-form-simple
-      validations=fakeValidations
-      fields=fields
-      submitButton=false
-    }}
-      `);
+      {{one-form-simple
+        validations=fakeValidations
+        fields=fields
+        submitButton=false
+      }}
+    `);
 
-    let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
-    expect(firstFieldMsg.text(), 'field has no error before value change')
-      .to.be.empty;
+    const firstField = this.$('.field-main-first');
+    const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
+    expect(firstFieldMsg.text(), 'field has no error before value change').to.be.empty;
     firstField.blur();
-    wait().then(() => {
+    return wait().then(() => {
       expect(firstFieldMsg.text(), 'field has error after change')
-        .to.equal(ERROR_MSG);
-      done();
+        .to.equal(errorMsg);
     });
   });
 
-  it('reacts when field error changes', function (done) {
+  it('reacts when field error changes', function () {
     this.render(hbs `
     {{one-form-simple
       validations=fakeValidations
@@ -101,23 +99,22 @@ describe('Integration | Component | one form simple', function () {
     }}
       `);
 
-    const NEW_ERROR_MSG = 'error2!';
-    let firstField = this.$('.field-main-first');
-    let firstFieldMsg = firstField.parents('.form-group').find('.form-message');
+    const newErrorMsg = 'error2!';
+    const firstField = this.$('.field-main-first');
+    const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
     firstField.blur();
-    this.get('fakeValidations.errors')[0].set('message', NEW_ERROR_MSG);
-    wait().then(() => {
+    this.get('fakeValidations.errors')[0].set('message', newErrorMsg);
+    return wait().then(() => {
       expect(firstFieldMsg.text(), 'field has its another error')
-        .to.equal(NEW_ERROR_MSG);
-      done();
+        .to.equal(newErrorMsg);
     });
   });
 
-  it('changes submit button "disable" attribute', function (done) {
+  it('changes submit button "disable" attribute', function () {
     let submitOccurred = false;
     this.on('submitAction', () => {
       submitOccurred = true;
-      return new Promise((resolve, reject) => reject());
+      return reject();
     });
 
     this.render(hbs `
@@ -134,18 +131,20 @@ describe('Integration | Component | one form simple', function () {
       'submit button is disabled if form is not valid'
     ).to.be.true;
 
-    this.get('fakeValidations').set('errors', []);
-    this.get('fakeValidations').set('isValid', true);
-    wait().then(() => {
+    setProperties(this.get('fakeValidations'), {
+      errors: [],
+      isValid: true,
+    });
+
+    return wait().then(() => {
       expect(
         submitBtn.prop('disabled'),
         'submit button is enabled if form is valid'
       ).to.equal(false);
       submitBtn.click();
-      wait({ waitForTimers: false }).then(() => {
-        expect(submitOccurred, 'submitAction was invoked').to.be.true;
-        done();
-      });
+      return wait({ waitForTimers: false });
+    }).then(() => {
+      expect(submitOccurred, 'submitAction was invoked').to.be.true;
     });
   });
 });

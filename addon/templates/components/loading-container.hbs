@@ -10,7 +10,7 @@
     {{#if inlineError}}
       <span class="loading-container-inline-error">{{or customErrorMessage errorReason}}</span>
     {{else if (and errorReason.isOnedataCustomError errorReason.type)}}
-      {{partial (concat "errors/" errorReason.type)}}
+      {{component (concat "errors/" errorReason.type)}}
     {{else}}
       {{resource-load-error message=customErrorMessage reason=errorReason}}
     {{/if}}

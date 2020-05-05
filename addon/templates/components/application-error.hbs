@@ -1,5 +1,5 @@
 {{#if error.isOnedataCustomError}}
-  {{partial (concat "errors/" error.type)}}
+  {{component (concat "errors/" error.type)}}
 {{else}}
   <div class="row absolute-align-middle-center error-row">
     {{one-icon tagName="div" icon="sign-warning" class="application-error-icon"}}

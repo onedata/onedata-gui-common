@@ -2,6 +2,7 @@ import basicauthLoginForm from './onedata-gui-common/components/basicauth-login-
 import alertGlobal from './onedata-gui-common/components/alert-global';
 import loginBox from './onedata-gui-common/components/login-box';
 import oneFormFields from './onedata-gui-common/components/one-form-fields';
+import oneFormField from './onedata-gui-common/components/one-form-field';
 import applicationError from './onedata-gui-common/components/application-error';
 import providerPlace from './onedata-gui-common/components/provider-place';
 import providersList from './onedata-gui-common/components/providers-list';
@@ -32,6 +33,11 @@ import formComponent from './onedata-gui-common/components/form-component';
 import tagsInput from './onedata-gui-common/components/tags-input';
 import contentSharesEmpty from './onedata-gui-common/components/content-shares-empty';
 import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
+import oneDynamicTree from './onedata-gui-common/components/one-dynamic-tree';
+
+import noPermissions from './onedata-gui-common/components/errors/no-permissions';
+import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
+import cannotInitWebsocket from './onedata-gui-common/components/errors/cannot-init-websocket';
 
 import recordSelectorModal from './onedata-gui-common/components/modals/record-selector-modal';
 import questionModal from './onedata-gui-common/components/modals/question-modal';
@@ -46,9 +52,6 @@ import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
-import noPermissions from './onedata-gui-common/errors/no-permissions';
-import noClusterPermissions from './onedata-gui-common/errors/no-cluster-permissions';
-import cannotInitWebsocket from './onedata-gui-common/errors/cannot-init-websocket';
 
 import json from './onedata-gui-common/validators/json';
 
@@ -58,6 +61,7 @@ const translations = {
     alertGlobal,
     loginBox,
     oneFormFields,
+    oneFormField,
     applicationError,
     providerPlace,
     providersList,
@@ -87,8 +91,14 @@ const translations = {
     tagsInput,
     contentSharesEmpty,
     qosParamsEditor,
+    oneDynamicTree,
     alerts: {
       endpointError,
+    },
+    errors: {
+      noPermissions,
+      noClusterPermissions,
+      cannotInitWebsocket,
     },
     modals: {
       recordSelectorModal,
@@ -111,9 +121,6 @@ const translations = {
   },
   errors: {
     backendErrors,
-    noPermissions,
-    noClusterPermissions,
-    cannotInitWebsocket,
   },
   validators: {
     json,

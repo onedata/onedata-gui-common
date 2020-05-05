@@ -10,18 +10,38 @@
 import Component from '@ember/component';
 import { computed, getProperties } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form-field';
-import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
 import dotToDash from 'onedata-gui-common/utils/dot-to-dash';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { next } from '@ember/runloop';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 
 const {
   layoutConfig,
 } = config;
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   layoutConfig,
   tagName: '',
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneFormField',
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  inputChanged: notImplementedThrow,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  onFocusOut: notImplementedIgnore,
 
   field: null,
 
@@ -47,13 +67,15 @@ export default Component.extend({
   }),
 
   actions: {
-    inputChanged() {
-      invokeAction(this, 'inputChanged', ...arguments);
+    inputChanged(fieldName, value) {
+      if (this.get('value') !== value) {
+        this.get('inputChanged')(fieldName, value);
+      }
     },
     onFocusOut() {
       // prevents double render issue by scheduling focusout event handler on
       // events' loop end
-      setTimeout(() => invokeAction(this, 'onFocusOut', ...arguments), 0);
+      next(() => this.get('onFocusOut')(...arguments));
     },
   },
 });

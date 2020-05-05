@@ -22,14 +22,26 @@
     onFocusOut=(action "focusedOut")
   }}
 {{else}}
-  {{component (input-component-name field.type)
-    id=inputId
-    value=value
-    class=inputClass
-    update=(action "inputChanged")
-    step=field.step
-    disabled=disabled
-    placeholder=(if field.placeholder field.placeholder (if field.example (concat 'Example: ' field.example) ""))
-    focusOut=(action "focusedOut")
-  }}
+  {{!-- using input and change events to be compatible with one-way-input --}}
+  <input
+    id={{inputId}}
+    value={{value}}
+    type={{form-field-input-type field.type}}
+    class={{inputClass}}
+    oninput={{action
+      (action "inputChanged")
+      value="target.value"
+    }}
+    onchange={{action
+      (action "inputChanged")
+      value="target.value"
+    }}
+    onblur={{action "focusedOut"}}
+    disabled={{disabled}}
+    autocomplete={{if (eq field.type "password") "new-password"}}
+    placeholder={{if field.placeholder
+      field.placeholder
+      (if field.example (concat (tt this "example") ": " field.example) "")
+    }}
+  >
 {{/if}}
