@@ -289,8 +289,9 @@ export default Component.extend(I18n, {
         selectedTags,
         selectedModelName,
       } = this.getProperties('selectedTags', 'selectedModelName');
-      return selectedTags.mapBy('value.record.representsAll')
-        .includes(selectedModelName);
+      return Boolean(
+        selectedTags.findBy('value.record.representsAll', selectedModelName)
+      );
     }
   ),
 
@@ -325,6 +326,9 @@ export default Component.extend(I18n, {
       const selectedValues = selectedTags.mapBy('value').compact();
       let recordsToReturn = allAvailableTags;
       if (hasAllRecordsTagSelected) {
+        // Remove "Any" tag
+        recordsToReturn = recordsToReturn
+          .rejectBy('value.record.representsAll');
         if (allRecordsTagSelectsOnlySubset) {
           // remove oneproviders for types service and serviceOnepanel
           recordsToReturn = recordsToReturn
