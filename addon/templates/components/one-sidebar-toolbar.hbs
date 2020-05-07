@@ -1,3 +1,6 @@
 {{#each buttons as |button|}}
-  {{one-sidebar-toolbar-button buttonModel=button class=button.class}}
+  {{one-sidebar-toolbar-button
+    buttonModel=button
+    class=(or button.class button.className)
+  }}
 {{/each}}
