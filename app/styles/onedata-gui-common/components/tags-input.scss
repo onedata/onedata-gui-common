@@ -141,6 +141,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 }
 
 @include tag-type(success, $brand-success);
+@include tag-type(info, $brand-info);
 @include tag-type(warning, $brand-warning);
 @include tag-type(danger, $brand-danger);
 

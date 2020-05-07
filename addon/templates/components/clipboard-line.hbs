@@ -12,11 +12,15 @@
   >{{value}}</textarea>
 {{else if (eq type "html")}}
   <div class="clipboard-input">
-    {{#if hasBlock}}
-      {{yield}}
-    {{else}}
-      {{{value}}}
-    {{/if}}
+    <div class="form-control form-control-block">
+      <div class="html-content-container">
+        {{#if hasBlock}}
+          {{yield}}
+        {{else}}
+          {{{value}}}
+        {{/if}}
+      </div>
+    </div>
   </div>
 {{else}}
   <input

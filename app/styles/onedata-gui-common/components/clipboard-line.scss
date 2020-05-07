@@ -47,13 +47,8 @@
       top: 50%;
       transform: translateY(-50%);
     }
-    &.clipboard-btn-textarea {
-      bottom: 0;
-    } 
-    &.clipboard-btn-html {
-      bottom: -8px;
-    }
     &.clipboard-btn-textarea, &.clipboard-btn-html {
+      bottom: 0;
       .copy-btn-icon {
         z-index: 1001;
       }

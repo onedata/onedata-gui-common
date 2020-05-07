@@ -13,7 +13,7 @@ import { get } from '@ember/object';
 export default Route.extend({
   renderTemplate(controller, model) {
     const errorType = model && get(model, 'isOnedataCustomError') && get(model, 'type');
-    const template = errorType ? `errors/${errorType}` : '-internal-error';
+    const template = errorType ? `errors/components/${errorType}` : '-internal-error';
     try {
       this.render(template, {
         into: 'onedata',
