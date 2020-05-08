@@ -35,6 +35,12 @@ export default Component.extend(I18n, {
   onClose: undefined,
 
   /**
+   * Custom error message to use instead of generic default
+   * @type {String}
+   */
+  message: undefined,
+
+  /**
    * Displayed error details generated from reason error object
    * @type {string}
    */
@@ -86,13 +92,6 @@ export default Component.extend(I18n, {
     } = this.getProperties('reason', 'type');
     return reason && type !== 'forbidden';
   }),
-
-  init() {
-    this._super(...arguments);
-    if (!this.get('message')) {
-      this.set('message', this.get('defaultMessage'));
-    }
-  },
 
   actions: {
     toggleShowDetails() {
