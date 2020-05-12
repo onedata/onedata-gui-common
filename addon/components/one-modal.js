@@ -90,11 +90,13 @@ export default BsModal.extend({
     const modalElement = this.get('modalElement');
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
-      const scrolledTop = area.scrollTop <= 0;
-      const scrolledBottom = area.scrollTop + area.clientHeight >= area.scrollHeight;
+      if (area) {
+        const scrolledTop = area.scrollTop <= 0;
+        const scrolledBottom = area.scrollTop + area.clientHeight >= area.scrollHeight;
 
-      modalElement.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
-      modalElement.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-the-bottom');
+        modalElement.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
+        modalElement.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-the-bottom');
+      }
     }
   },
 
@@ -106,10 +108,13 @@ export default BsModal.extend({
     } = this.getProperties('_window', 'modalElement', 'recomputeScrollShadowFunction');
     const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
     if (modalElement) {
-      modalElement.querySelector('.bs-modal-body-scroll')[methodName](
-        'scroll',
-        recomputeScrollShadowFunction
-      );
+      const area = modalElement.querySelector('.bs-modal-body-scroll');
+      if (area) {
+        area[methodName](
+          'scroll',
+          recomputeScrollShadowFunction
+        );
+      }
     }
     _window[methodName]('resize', recomputeScrollShadowFunction);
   },
