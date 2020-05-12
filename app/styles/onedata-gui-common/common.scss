@@ -264,6 +264,10 @@ input[type=number] {
   .item-icon {
     margin-right: 0;
   }
+  &.item-icon-container-right {
+    margin-right: 0;
+    margin-left: 0.6em;
+  }
 }
 
 /// A class to display short information text with icon
