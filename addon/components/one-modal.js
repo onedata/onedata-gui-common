@@ -65,9 +65,7 @@ export default BsModal.extend({
    */
   didRender() {
     this._super(...arguments);
-    scheduleOnce('afterRender', () => {
-      this.recomputeScrollShadow();
-    });
+    this.recomputeScrollShadow();
   },
 
   /**
