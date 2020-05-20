@@ -1,0 +1,55 @@
+$modal-footer-vertical-padding: 25px;
+$modal-scroll-margin: 14px;
+
+.modal {
+  @mixin reposition-inner-shadow {
+    position: relative;
+    &::before {
+      width: calc(100% + 4em + 6px);
+      left: calc(-2em - 3px);
+      @media (max-width: $screen-xs-max) {
+        width: calc(100% + 6px);
+        left: calc(-3px);
+      }
+    }
+  }
+  .modal-header {
+    @include before-bottom-shadow;
+    @include reposition-inner-shadow;
+  }
+  .modal-footer {
+    @include before-top-shadow;
+    @include reposition-inner-shadow;
+  }
+  &.scroll-on-top {
+    .modal-header {
+      @include hide-shadow;
+    }
+  }
+  &.scroll-on-the-bottom {
+    .modal-footer {
+      @include hide-shadow;
+    }
+  }
+}
+
+.modal.in .modal-dialog {
+  .modal-body {
+    .bs-modal-body-scroll {
+      margin-right: -$modal-scroll-margin;
+      padding-right: $modal-scroll-margin;
+    }    
+  }
+  .modal-footer {
+    padding-top: $modal-footer-vertical-padding;
+    padding-bottom: $modal-footer-vertical-padding;
+    margin-bottom: -$modal-content-bottom-padding;
+    @media (max-width: $screen-xs-max) {
+      margin-bottom: -$modal-content-bottom-padding / 2;
+    }
+    &.btn-toolbar {
+      margin-top: 0;
+    }
+  }
+}
+

@@ -12,7 +12,6 @@ import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
-import { scheduleOnce } from '@ember/runloop';
 
 export default BsModal.extend({
   tagName: '',
