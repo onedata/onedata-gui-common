@@ -17,6 +17,16 @@
   }
 }
 
+// NOTE: it will work only on static lists without filtering
+// (when items are hidden by CSS)
+.one-collapsible-list.hide-final-border {
+  .one-collapsible-list-item:last-of-type {
+    .list-header-row {
+      border-bottom: none;
+    }
+  }
+}
+
 a.one-collapsible-list-item {
   color: inherit !important;
 }

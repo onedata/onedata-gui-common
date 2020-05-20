@@ -1,8 +1,8 @@
 {{!-- TODO i18n --}}
 {{#if onClose}}
-  <button class="btn icon-btn error-close" {{action 'close'}}>{{one-icon icon="close"}}</button>
+  <button class="btn icon-btn error-close" {{action "close"}}>{{one-icon icon="close"}}</button>
 {{/if}}
-<strong class="main-message">{{message}}</strong>
+<strong class="main-message">{{or message defaultMessage}}</strong>
 {{#if showReasonPanel}}
   <a role="button" class="promise-error-show-details text-danger" {{action "toggleShowDetails"}}>
     {{if showDetails "Hide" "Show"}}&nbsp;details...

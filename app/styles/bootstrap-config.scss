@@ -320,7 +320,10 @@ label {
         flex-direction: column;
         min-height: 0;
         box-shadow: none;
-        padding: 0em 2em 1em 2em;
+        padding-top: 0;
+        padding-right: $modal-content-horizontal-padding;
+        padding-bottom: $modal-content-bottom-padding;
+        padding-left: $modal-content-horizontal-padding;
 
         .modal-header {
           .one-icon {

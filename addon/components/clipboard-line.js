@@ -3,7 +3,7 @@
  *
  * @module components/clipboard-line
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,6 +14,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { computed } from '@ember/object';
 import { tag } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import animateCss from 'onedata-gui-common/utils/animate-css';
 
 export default Component.extend(I18n, {
   layout,
@@ -86,6 +87,9 @@ export default Component.extend(I18n, {
 
   actions: {
     notify() {
+      if (this.get('type') === 'html') {
+        animateCss(this.$('.html-content-container')[0], 'pulse-mint');
+      }
       return this.get('notify')(...arguments);
     },
   },

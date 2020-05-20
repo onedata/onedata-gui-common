@@ -1,26 +1,54 @@
 $webui-popover-offset: 4px;
 
-@mixin webui-popover-arrow-color($color) {
-  &.left, &.left-top, &.left-bottom {
-    > .webui-arrow:after {
-      border-left-color: $color;
+@mixin webui-popover-arrow-color-part($part1, $part2, $part3, $color, $border-color) {
+  &.#{$part1}, &.#{$part2}, &.#{$part3} {
+    > .webui-arrow {
+      @if $border-color {
+        border-#{$part1}-color: $border-color;
+      }
+      &::after {
+        border-#{$part1}-color: $color;
+      }
     }
   }
-  &.right, &.right-top, &.right-bottom {
-    > .webui-arrow:after {
-      border-right-color: $color;
-    }
-  }
-  &.top, &.top-left, &.top-right {
-    > .webui-arrow:after {
-      border-top-color: $color;
-    }
-  }
-  &.bottom, &.bottom-left, &.bottom-right {
-    > .webui-arrow:after {
-      border-bottom-color: $color;
-    }
-  }
+} 
+
+@mixin webui-popover-arrow-color($color, $border-color: false) {
+  @include webui-popover-arrow-color-part(
+    left,
+    left-top,
+    left-bottom,
+    $color,
+    $border-color
+  );
+  @include webui-popover-arrow-color-part(
+    right,
+    right-top,
+    right-bottom,
+    $color,
+    $border-color
+  );
+  @include webui-popover-arrow-color-part(
+    left,
+    left-top,
+    left-bottom,
+    $color,
+    $border-color
+  );
+  @include webui-popover-arrow-color-part(
+    top,
+    top-left,
+    top-right,
+    $color,
+    $border-color
+  );
+  @include webui-popover-arrow-color-part(
+    bottom,
+    bottom-left,
+    bottom-right,
+    $color,
+    $border-color
+  );
 }
 
 @mixin webui-popover-dropdown() {
@@ -55,7 +83,8 @@ $webui-popover-offset: 4px;
 }
 
 .webui-popover {
-  @include box-shadow(0 2px 3px rgba(128, 128, 128, 0.2));
+  @include box-shadow(0 2px 10px rgba(128, 128, 128, 0.75));
+  @include webui-popover-arrow-color(white, #999);
   max-width: 28em;
   border-radius: $border-radius-small;
   font-size: $font-size-base;

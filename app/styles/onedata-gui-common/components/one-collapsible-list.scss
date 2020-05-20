@@ -12,7 +12,14 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
   }
 
   .list-header-row {
-    padding: $padding-large-horizontal 2 * $padding-large-horizontal $padding-large-horizontal $padding-large-vertical;
+    padding-top: $padding-large-horizontal;
+    padding-right: 2 * $padding-large-horizontal;
+    padding-bottom: $padding-large-horizontal;
+    padding-left: $padding-large-horizontal;
+    
+    &.without-menu {
+      padding-right: $padding-large-horizontal;
+    }
   }
 
   .one-collapsible-list-header, .one-collapsible-list-item-header {
