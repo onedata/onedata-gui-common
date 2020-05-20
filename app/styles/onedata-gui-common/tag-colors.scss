@@ -1,0 +1,21 @@
+@mixin tag-colors($color, $saturate: 0%, $darken: 0%) {
+  color: change-color($color, $saturation: 55%, $lightness: 40%);
+  border-color: change-color($color, $saturation: 50% + $saturate / 2, $lightness: 75% - $darken);
+  background-color: change-color($color, $saturation: 50% + $saturate, $lightness: 90%);
+}
+
+@mixin tag-colors-success {
+  @include tag-colors($color-one-success, 0%, 10%);
+}
+
+@mixin tag-colors-default {
+  @include tag-colors($color-one-default);
+}
+
+@mixin tag-colors-warning {
+  @include tag-colors($color-one-warning, 50%, 5%);
+}
+
+@mixin tag-colors-danger {
+  @include tag-colors($color-one-danger, 30%);
+}

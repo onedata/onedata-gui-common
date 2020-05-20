@@ -76,6 +76,7 @@
     }
     input.clipboard-input {
       height: $input-height-small;
+      padding-left: $padding-small-horizontal;
       padding-right: $-copy-btn-width-small;
     }
     .clipboard-btn {
