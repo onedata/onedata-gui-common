@@ -6,4 +6,5 @@ export default {
   bodySureQuestion: 'Are you sure you want to proceed?',
   confirmCheckbox: 'I understand the risk of data loss',
   ceasingSupport: 'ceasing Oneprovider support for space',
+  ceaseSuccess: 'Ceased support of Oneprovider "{{providerName}}" for space "{{spaceName}}"',
 };

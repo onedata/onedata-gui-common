@@ -23,7 +23,10 @@
       checked=confirmChecked
       update=(action (mut confirmChecked))
     }}
-    <div class="text-understand" {{action (mut confirmChecked) (not confirmChecked)}}>
+    <div
+      class="text-understand clickable"
+      {{action (mut confirmChecked) (not confirmChecked)}}
+    >
       {{tt this "confirmCheckbox"}}
     </div>
   </div>
