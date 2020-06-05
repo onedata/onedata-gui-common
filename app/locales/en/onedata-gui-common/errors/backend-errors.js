@@ -103,6 +103,7 @@ export default {
   cannotAddRelationToSelf: 'Cannot join group to itself.',
   relationDoesNotExist: 'The {{childType}} (Id: "{{childId}}") does not belong to the {{parentType}} (Id: {{parentId}}).',
   relationAlreadyExists: 'The {{childType}} (Id: "{{childId}}") already belongs to the {{parentType}} (Id: {{parentId}}).',
+  spaceAlreadySupportedWithImportedStorage: 'Space (Id: "{{spaceId}}") is already supported with an imported storage (Id: "{{storageId}}").',
 
   // Op-worker errors
   autoCleaningDisabled: 'Auto-cleaning is disabled.',
