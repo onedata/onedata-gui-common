@@ -98,7 +98,8 @@
     "round10": "1.0.3",
     "sass": "1.17.0",
     "sinon": "4.2.0",
-    "sinon-chai": "2.14.0"
+    "sinon-chai": "2.14.0",
+    "webui-popover": "git+https://github.com/michalborzecki/webui-popover.git#83d0eca5b89b1dec86bdcbba463fe7b94f2e3ae0"
   },
   "engines": {
     "node": "^4.5 || 6.* || >= 7.*"
