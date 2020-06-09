@@ -13,11 +13,18 @@
 
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-label-tip';
+import { tag } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
   tagName: 'span',
   classNames: ['one-label-tip'],
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  tooltipClass: '',
 
   /**
    * Text used in tooltip
@@ -48,6 +55,8 @@ export default Component.extend({
    * @type {string}
    */
   triggerEvents: 'hover',
+
+  tooltipClassInternal: tag `one-label-tooltip ${'tooltipClass'}`,
 
   /**
    * In mobile mode, it's better to not propagate click event from tip.
