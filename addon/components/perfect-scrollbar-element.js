@@ -55,9 +55,7 @@ export default Component.extend(PerfectScrollbarMixin, {
    * @type {Ember.ComputedProperty<Function>}
    */
   windowResizeHandler: computed(function windowResizeHandler() {
-    // Using internal PerfectScrollbarMixin method to update scrollbar on
-    // window resize
-    return () => debounce(this, this._resizePerfectScrollbar, 100);
+    return () => debounce(this, 'updateScrollbar', 100);
   }),
 
   didInsertElement() {
