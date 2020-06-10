@@ -1,5 +1,5 @@
 /**
- * Provides viewer and editor of QOS parameters for storage (but is pretty
+ * Provides viewer and editor of QoS parameters for storage (but is pretty
  * universal an may by used in the future for another similiar problems)
  *
  * @module components/qos-params-editor

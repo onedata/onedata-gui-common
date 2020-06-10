@@ -1,5 +1,5 @@
 export default {
-  header: 'QOS parameters',
+  header: 'QoS parameters',
   key: 'Key',
   value: 'Value',
   keyDuplicate: 'Key duplicate',

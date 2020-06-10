@@ -19,3 +19,9 @@
 @mixin tag-colors-danger {
   @include tag-colors($color-one-danger, 30%);
 }
+
+@mixin tag-colors-disabled {
+  color: change-color(white, $lightness: 40%);
+  border-color: change-color(white, $lightness: 75%);
+  background-color: change-color(white, $lightness: 90%);
+}
