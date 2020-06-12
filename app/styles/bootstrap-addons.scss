@@ -45,6 +45,9 @@ $token-border-radius: 3px;
     .one-icon {
       font-size: 1.7em;
       margin-right: $padding-base-horizontal;
+      &.one-icon-tag {
+        margin-right: auto;
+      }
     }
   }
   .modal-footer {

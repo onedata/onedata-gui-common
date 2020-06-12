@@ -3,7 +3,8 @@
     (if act.separator "separator")
     (if act.disabled "disabled")
     (if (eq nestedActionsOpened act) "expanded")
-    }}>
+    }}
+  > 
     {{#if act.separator}}
       <a>
         <span class="one-label">{{act.title}}</span>
@@ -49,6 +50,9 @@
             )}}
         {{/if}}
       {{/if}}
+    {{/if}}
+    {{#if act.tip}}
+      {{one-tooltip title=act.tip placement="right"}}
     {{/if}}
   </li>
 {{/each}}

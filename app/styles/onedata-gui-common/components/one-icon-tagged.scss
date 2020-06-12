@@ -8,9 +8,18 @@
     position: relative;
   }
   .one-icon-tag-icon {
-    font-size: 50%;
+    // important is used to force use relative size to main icon
+    // thus ignore one-icon sizes defined contextually
+    font-size: 50% !important;
     bottom: 0px;
     left: 0px;
+    right: auto;
+  }
+  &.tag-right {
+    .one-icon-tag-icon {
+      left: auto;
+      right: 0;
+    }
   }
   .one-icon-tag-shadow {
     font-size: 75%;
