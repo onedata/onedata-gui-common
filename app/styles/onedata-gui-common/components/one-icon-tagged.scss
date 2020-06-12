@@ -13,6 +13,13 @@
     font-size: 50% !important;
     bottom: 0px;
     left: 0px;
+    right: auto;
+  }
+  &.tag-right {
+    .one-icon-tag-icon {
+      left: auto;
+      right: 0;
+    }
   }
   .one-icon-tag-shadow {
     font-size: 75%;
