@@ -1,0 +1,12 @@
+{{tt this "see"}}
+{{#if hasBlock}}
+  {{yield}}
+{{else}}
+  <a class="documentation-link" href={{one-doc-url docPath}} target="_blank">
+    {{#if linkName}}
+      {{linkName}}
+    {{/if}}
+    {{tt this "documentation"}}
+  </a>
+{{/if}}
+{{tt this "more"}}
