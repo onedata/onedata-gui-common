@@ -25,6 +25,14 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.oneDocSeeMore',
 
   /**
+   * @virtual optional
+   * @type {Boolean}
+   * If true, the text will be suitable as part of sentence.
+   * If false, the text will be suitable as different sentence/paragraph.
+   */
+  internal: false,
+
+  /**
    * @virtual
    * @type {String}
    * An argument for one-doc-url helper, see `one-doc-url` for details

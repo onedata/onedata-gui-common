@@ -1,5 +1,6 @@
 export default {
-  see: 'See the',
-  more: 'for more.',
+  seeLower: 'see the',
+  seeUpper: 'See the',
+  more: 'for more',
   documentation: 'documentation',
 };

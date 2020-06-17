@@ -1,4 +1,4 @@
-{{tt this "see"}}
+{{#if internal}}({{/if}}{{tt this (if internal "seeLower" "seeUpper")}}
 {{#if hasBlock}}
   {{yield}}
 {{else}}
@@ -9,4 +9,5 @@
     {{tt this "documentation"}}
   </a>
 {{/if}}
-{{tt this "more"}}
+{{!-- NOTE: do not add any whitespace after below line to avoid spaces after text --}}
+{{tt this "more"}}{{#if internal}}){{else}}.{{/if}}

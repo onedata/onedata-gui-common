@@ -37,4 +37,15 @@ describe('Integration | Component | one doc see more', function () {
     expect(this.$('#x')).exist;
   });
 
+  it('renders text with parenthesis in internal mode without spaces around', function () {
+    this.render(hbs `Some -{{one-doc-see-more
+      internal=true
+      linkName="foo bar"
+      docPath="world.html"
+    }}- text`);
+    expect(this.$().text()).to.match(
+      /Some -\(see the\s+foo bar\s+documentation\s+for more\)- text/
+    );
+  });
+
 });
