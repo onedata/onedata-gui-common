@@ -396,10 +396,11 @@ $token-border-radius: 3px;
         .tab-name {
           &.tab-state {
             $size: 10px;
-            $states: blank danger warning success;
+            $states: empty inactive disabled danger warning success;
             $stateColors: (
               empty: transparent,
               inactive: $color-one-semiwhite,
+              disabled: $color-one-light-gray,
               danger: $color-one-danger,
               warning: $color-one-warning,
               success: $color-one-success,
@@ -411,10 +412,7 @@ $token-border-radius: 3px;
             }
             display: inline-block;
             position: relative;
-            margin-right: $size * 0.5;
-            @each $state in $states {
-              @include stateAfter($state)
-            }            
+            margin-right: $size * 0.5;       
             &::after {
               position: absolute;
               background-color: map-get($stateColors, inactive);
@@ -424,6 +422,9 @@ $token-border-radius: 3px;
               width: $size;
               height: $size;
               border-radius: 100%;
+            }
+            @each $state in $states {
+              @include stateAfter($state)
             }
           }
         }
