@@ -20,7 +20,7 @@
     as |popover|
   }}
     {{#click-outside action=(action "toggleActions" false)}}
-      {{#popover-content-limit opened=popover.opened}}
+      {{#popover-content-limit opened=popover.visible}}
         {{actions-popover-content
           actionsArray=menuItems
           actionClicked=(action "toggleActions" false)

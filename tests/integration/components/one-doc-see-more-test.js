@@ -26,20 +26,27 @@ describe('Integration | Component | one doc see more', function () {
     );
   });
 
-  it('renders see more text without link with provided yielded block', function () {
+  it('renders see more text with provided yielded block inside link', function () {
     this.render(hbs `
       {{#one-doc-see-more docPath="hello/world.html"}}
         <span id="x">foo</span>
       {{/one-doc-see-more}}
     `);
     expect(this.$().text()).to.match(/See the\s+foo\s+for more\./);
-    expect(this.$('.documentation-link')).to.not.exist;
+    expect(this.$('.documentation-link')).to.exist;
     expect(this.$('#x')).exist;
+  });
+
+  it('renders link with custom href if provided', function () {
+    this.render(hbs `
+      {{one-doc-see-more linkName="hello" href="http://example.com"}}
+    `);
+    expect(this.$('.documentation-link')).to.have.attr('href', 'http://example.com');
   });
 
   it('renders text with parenthesis in internal mode without spaces around', function () {
     this.render(hbs `Some -{{one-doc-see-more
-      internal=true
+      isSentencePart=true
       linkName="foo bar"
       docPath="world.html"
     }}- text`);

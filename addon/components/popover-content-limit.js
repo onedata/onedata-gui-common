@@ -18,6 +18,13 @@ export default Component.extend({
   layout,
 
   /**
+   * @virtual
+   * @type {any}
+   * Used as a trigger to recompute size of content limiter if it's truthy
+   */
+  opened: false,
+
+  /**
    * @type {PerfectScrollbar}
    */
   perfectScrollbar: undefined,
@@ -33,6 +40,17 @@ export default Component.extend({
    * @type {HTMLElement}
    */
   targetElement: null,
+
+  restoreSizeAfterCloseFun: computed(function restoreSizeAfterCloseFun() {
+    const self = this;
+    return function restoreSizeAfterClose(event) {
+      // NOTE: will not work if the popover is without opacity transition
+      if (self.get('scheduledRestore') && event && event.propertyName === 'opacity') {
+        return self.restoreSize();
+      }
+      self.set('scheduledRestore', false);
+    };
+  }),
 
   openedObserver: observer('opened', function openedObserver() {
     const popover = this.getPopover();
@@ -55,17 +73,6 @@ export default Component.extend({
         this.set('scheduledRestore', true);
       }
     }
-  }),
-
-  restoreSizeAfterCloseFun: computed(function restoreSizeAfterCloseFun() {
-    const self = this;
-    return function restoreSizeAfterClose(event) {
-      // NOTE: will not work if the popover is without opacity transition
-      if (self.get('scheduledRestore') && event && event.propertyName === 'opacity') {
-        return self.restoreSize();
-      }
-      this.set('scheduledRestore', false);
-    };
   }),
 
   /**
@@ -113,12 +120,10 @@ export default Component.extend({
       Array.from(popover.classList)
       .some(cls => cls.startsWith('bottom') || cls.startsWith('top')) ?
       20 : 10;
+
     let popoverTop = parseInt(popover.style.top);
-    const windowHeight = window.innerHeight;
     if (popoverTop < 0) {
       const offset = popoverTop - windowMargin;
-      targetElement.style.height =
-        `${targetElement.offsetHeight + offset}px`;
       popover.style.top = `${windowMargin}px`;
       const webuiArrow = popover.querySelector('.webui-arrow');
       if (webuiArrow.style.top) {
@@ -126,9 +131,7 @@ export default Component.extend({
       }
       popoverTop = parseInt(popover.style.top);
     }
-    if (popoverTop + targetElement.offsetHeight > windowHeight) {
-      targetElement.style.height = `${windowHeight - popoverTop - windowMargin}px`;
-    }
+    targetElement.style.maxHeight = `calc(100vh - ${popoverTop + windowMargin}px)`;
 
     scheduleOnce('afterRender', () => {
       this.get('perfectScrollbar').update();

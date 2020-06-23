@@ -11,6 +11,8 @@ import Component from '@ember/component';
 import layout from '../templates/components/one-doc-see-more';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
+import { oneDocUrl } from 'onedata-gui-common/helpers/one-doc-url';
+import { computed } from '@ember/object';
 
 export default Component.extend(I18n, {
   layout,
@@ -27,15 +29,16 @@ export default Component.extend(I18n, {
   /**
    * @virtual optional
    * @type {Boolean}
-   * If true, the text will be suitable as part of sentence.
-   * If false, the text will be suitable as different sentence/paragraph.
+   * If true, generated text will be suitable as part of sentence.
+   * If false, generated tesxt will be suitable as different sentence/paragraph.
    */
-  internal: false,
+  isSentencePart: false,
 
   /**
-   * @virtual
+   * @virtual optional
    * @type {String}
-   * An argument for one-doc-url helper, see `one-doc-url` for details
+   * An argument for one-doc-url helper, see `one-doc-url` for details.
+   * No used when using block - omit then.
    */
   docPath: '',
 
@@ -45,4 +48,8 @@ export default Component.extend(I18n, {
    * Text of link displayed for user. Can be empty to display generic link name.
    */
   linkName: '',
+
+  href: computed('docPath', function url() {
+    return oneDocUrl([this.get('docPath')]);
+  }),
 });

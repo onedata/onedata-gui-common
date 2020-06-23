@@ -11,7 +11,16 @@
 import OneModalBody from 'onedata-gui-common/components/one-modal/body';
 import OneModal from 'onedata-gui-common/components/one-modal';
 
+/**
+ * Maps: fullName -> factory (Ember class) of component to be overriden
+ */
+const overrides = {
+  'component:bs-modal/body': OneModalBody,
+  'component:bs-modal': OneModal,
+};
+
 export default function overrideComponents(applicationInstance) {
-  applicationInstance.register('component:bs-modal/body', OneModalBody);
-  applicationInstance.register('component:bs-modal', OneModal);
+  overrides.entries().forEach(([fullName, factory]) => {
+    applicationInstance.register(fullName, factory);
+  });
 }

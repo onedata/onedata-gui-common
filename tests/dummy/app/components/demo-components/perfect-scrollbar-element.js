@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 
 export default Component.extend({
-  lipsum: 'lorem ipsum sit dolor amet',
+  lipsum: 'lorem ipsum dolor sit amet',
   lipsumCount: 10,
 
   incrementTimer: undefined,
