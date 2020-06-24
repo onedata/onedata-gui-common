@@ -1,14 +1,19 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import { next } from '@ember/runloop';
+import overrideComponents from 'onedata-gui-common/utils/override-components';
 
 describe('Integration | Component | one modal', function () {
   setupComponentTest('one-modal', {
     integration: true,
+  });
+
+  beforeEach(function () {
+    overrideComponents(this);
   });
 
   it(

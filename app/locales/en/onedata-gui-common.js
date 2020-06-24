@@ -35,6 +35,7 @@ import contentSharesEmpty from './onedata-gui-common/components/content-shares-e
 import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
 import oneDynamicTree from './onedata-gui-common/components/one-dynamic-tree';
 import ceaseOneproviderSupportModal from './onedata-gui-common/components/cease-oneprovider-support-modal';
+import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -94,6 +95,7 @@ const translations = {
     qosParamsEditor,
     oneDynamicTree,
     ceaseOneproviderSupportModal,
+    oneDocSeeMore,
     alerts: {
       endpointError,
     },

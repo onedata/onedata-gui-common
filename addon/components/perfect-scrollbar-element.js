@@ -3,7 +3,7 @@
  *
  * @module components/perfect-scrollbar-element
  * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -14,6 +14,7 @@ import { debounce } from '@ember/runloop';
 import PerfectScrollbarMixin from 'onedata-gui-common/mixins/perfect-scrollbar';
 
 export default Component.extend(PerfectScrollbarMixin, {
+  classNames: ['perfect-scrollbar-element'],
   layout,
 
   /**
@@ -54,9 +55,7 @@ export default Component.extend(PerfectScrollbarMixin, {
    * @type {Ember.ComputedProperty<Function>}
    */
   windowResizeHandler: computed(function windowResizeHandler() {
-    // Using internal PerfectScrollbarMixin method to update scrollbar on
-    // window resize
-    return () => debounce(this, this._resizePerfectScrollbar, 100);
+    return () => debounce(this, 'updateScrollbar', 100);
   }),
 
   didInsertElement() {
