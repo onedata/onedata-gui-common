@@ -20,7 +20,7 @@ const overrides = {
 };
 
 export default function overrideComponents(applicationInstance) {
-  overrides.entries().forEach(([fullName, factory]) => {
+  Object.entries(overrides).forEach(([fullName, factory]) => {
     applicationInstance.register(fullName, factory);
   });
 }
