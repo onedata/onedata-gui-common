@@ -1,0 +1,20 @@
+<div class="row">
+  {{#if (eq _mode "html")}}
+    {{wysiwyg-editor
+      class="markdown-wysiwyg"
+      mode="edit"
+      content=htmlContent
+      onChange=(action (mut htmlContent))
+    }}
+  {{else if (eq _mode "source")}}
+    <textarea
+      rows="10"
+      class="form-control no-resize code-textarea"
+      oninput={{action (mut mdContent) value="target.value"}}
+    >{{mdContent}}</textarea>
+  {{else if (eq _mode "preview")}}
+    <div class="row" style="margin-top: 40px;">
+      {{{htmlContent}}}
+    </div>
+  {{/if}}
+</div>
