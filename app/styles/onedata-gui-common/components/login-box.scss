@@ -324,12 +324,6 @@
       position: relative;
       opacity: 0;
       margin-top: 10px;
-      .ember-power-select-trigger[aria-expanded] {
-        color: $color-one-white;
-        & ~ .dropdown-label {
-          color: $color-one-white;
-        }
-     }
     }
     .dropdown-label {
       position: absolute;
