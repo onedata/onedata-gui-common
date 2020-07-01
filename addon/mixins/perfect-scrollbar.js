@@ -17,6 +17,7 @@
 import Mixin from '@ember/object/mixin';
 import { isPresent } from '@ember/utils';
 import PerfectScrollbar from 'npm:perfect-scrollbar';
+import { computed } from '@ember/object';
 
 export default Mixin.create({
   perfectScrollbarOptions: Object.freeze({}),
@@ -29,11 +30,18 @@ export default Mixin.create({
     const resizeService = this.get('resizeService');
 
     if (isPresent(resizeService)) {
-      resizeService.on('debouncedDidResize', this, '_resizePerfectScrollbar');
+      resizeService.on('debouncedDidResize', this, 'updateScrollbar');
     }
   },
 
-  _resizePerfectScrollbar() {
+  /**
+   * @type {ComputedProperty<Function>}
+   */
+  updateScrollbarFun: computed(function updateScrollbarFun() {
+    return this.updateScrollbar.bind(this);
+  }),
+
+  updateScrollbar() {
     this.get('perfectScrollbar').update();
   },
 
@@ -43,25 +51,42 @@ export default Mixin.create({
     const {
       element,
       perfectScrollbarOptions,
-    } = this.getProperties('element', 'perfectScrollbarOptions');
+      updateScrollbarFun,
+    } = this.getProperties('element', 'perfectScrollbarOptions', 'updateScrollbarFun');
 
     const perfectScrollbar =
       new PerfectScrollbar(element, perfectScrollbarOptions);
 
+    element.addEventListener('transitionend', updateScrollbarFun);
+
     this.set('perfectScrollbar', perfectScrollbar);
+  },
+
+  didRender() {
+    this._super(...arguments);
+    this.updateScrollbar();
   },
 
   willDestroyElement(...args) {
     this._super(...args);
 
     const {
+      element,
       resizeService,
       perfectScrollbar,
-    } = this.getProperties('resizeService', 'perfectScrollbar');
+      updateScrollbarFun,
+    } = this.getProperties(
+      'element',
+      'resizeService',
+      'perfectScrollbar',
+      'updateScrollbarFun'
+    );
 
     if (isPresent(resizeService)) {
-      resizeService.off('debouncedDidResize', this, '_resizePerfectScrollbar');
+      resizeService.off('debouncedDidResize', this, 'updateScrollbar');
     }
+
+    element.removeEventListener('transitionend', updateScrollbarFun);
 
     perfectScrollbar.destroy();
   },

@@ -1,0 +1,13 @@
+{{#if isSentencePart}}({{/if}}{{tt this (if isSentencePart "seeLower" "seeUpper")}}
+  <a class="documentation-link" href={{href}} target="_blank">
+    {{#if hasBlock}}
+      {{yield}}
+    {{else}}
+      {{#if linkName}}
+        {{linkName}}
+      {{/if}}
+      {{tt this "documentation"}}
+    {{/if}}
+  </a>
+{{!-- NOTE: do not add any whitespace after below line to avoid spaces after text --}}
+{{tt this "more"}}{{#if isSentencePart}}){{else}}.{{/if}}

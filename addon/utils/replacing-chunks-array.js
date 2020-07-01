@@ -30,6 +30,7 @@ export function countEndDuplicates(array) {
         return count;
       }
     }
+    return count;
   } else {
     return 0;
   }

@@ -73,7 +73,7 @@ export default BsModal.extend({
    */
   show() {
     this._super(...arguments);
-    scheduleOnce('afterRender', this, 'toggleScrollListener', true);
+    scheduleOnce('afterRender', this, 'toggleListeners', true);
   },
 
   /**
@@ -81,7 +81,7 @@ export default BsModal.extend({
    */
   hide() {
     this._super(...arguments);
-    this.toggleScrollListener(false);
+    this.toggleListeners(false);
   },
 
   recomputeScrollShadow() {
@@ -98,7 +98,7 @@ export default BsModal.extend({
     }
   },
 
-  toggleScrollListener(enabled) {
+  toggleListeners(enabled) {
     const {
       _window,
       modalElement,
@@ -108,10 +108,12 @@ export default BsModal.extend({
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
       if (area) {
-        area[methodName](
-          'scroll',
-          recomputeScrollShadowFunction
-        );
+        ['scroll', 'transitionend'].forEach(eventName => {
+          area[methodName](
+            eventName,
+            recomputeScrollShadowFunction
+          );
+        });
       }
     }
     _window[methodName]('resize', recomputeScrollShadowFunction);
