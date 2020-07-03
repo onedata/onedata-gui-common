@@ -19,23 +19,6 @@ import Evented from '@ember/object/evented';
 
 export const emptyItem = {};
 
-export function countEndDuplicates(array) {
-  const lastIndex = get(array, 'lastObject.index');
-  if (lastIndex) {
-    let count = 0;
-    for (let i = get(array, 'length') - 2; i >= 0; --i) {
-      if (get(array.objectAt(i), 'index') === lastIndex) {
-        count += 1;
-      } else {
-        return count;
-      }
-    }
-    return count;
-  } else {
-    return 0;
-  }
-}
-
 export default ArraySlice.extend(Evented, {
   /**
    * @virtual 
@@ -150,6 +133,27 @@ export default ArraySlice.extend(Evented, {
       }
     }),
 
+  getIndex(record) {
+    return get(record, 'index');
+  },
+
+  countEndDuplicates(array) {
+    const lastIndex = get(array, 'lastObject.index');
+    if (lastIndex) {
+      let count = 0;
+      for (let i = get(array, 'length') - 2; i >= 0; --i) {
+        if (this.getIndex(array.objectAt(i)) === lastIndex) {
+          count += 1;
+        } else {
+          return count;
+        }
+      }
+      return count;
+    } else {
+      return 0;
+    }
+  },
+
   fetchPrev() {
     if (!this.get('_fetchPrevLock')) {
       this.set('_fetchPrevLock', true);
@@ -169,7 +173,7 @@ export default ArraySlice.extend(Evented, {
       );
 
       const firstItem = sourceArray[emptyIndex + 1];
-      const fetchStartIndex = firstItem ? get(firstItem, 'index') : null;
+      const fetchStartIndex = firstItem ? this.getIndex(firstItem) : null;
 
       const currentChunkSize = _startReached ?
         Math.min(emptyIndex + 1, chunkSize) : chunkSize;
@@ -252,8 +256,8 @@ export default ArraySlice.extend(Evented, {
       const lastItem = sourceArray[get(sourceArray, 'length') - 1];
 
       const fetchSize = chunkSize;
-      const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
-      const duplicateCount = countEndDuplicates(sourceArray);
+      const fetchStartIndex = lastItem ? this.getIndex(lastItem) : null;
+      const duplicateCount = this.countEndDuplicates(sourceArray);
 
       this.trigger('fetchNextStarted');
       return this.get('fetch')(
@@ -321,7 +325,7 @@ export default ArraySlice.extend(Evented, {
     }
     this.set('_isReloading', true);
     const firstObject = this.objectAt(0);
-    let fetchStartIndex = firstObject && get(firstObject, 'index');
+    let fetchStartIndex = firstObject && this.getIndex(firstObject);
     if (fetchStartIndex === undefined || head || _start === 0) {
       fetchStartIndex = null;
     }
