@@ -7,23 +7,17 @@
     onChange=(action (mut htmlContent))
   }}
 {{else}}
+  <div class="markdown-bar">
+    <div class="markdown-bar-placeholder">
+      Markdown editor
+    </div>
+  </div>
   <textarea
     value={{mdContent}}
     oninput={{action (mut mdContent) value="target.value"}}
     class="no-resize code-textarea textarea-source-editor"
   ></textarea>
 {{/if}}
-
-{{!-- {{wysiwyg-editor
-  class="markdown-wysiwyg"
-  mode="edit"
-  content=(if (eq internalMode "visual") htmlContent displayedMdContent)
-  contentType=(if (eq internalMode "visual") "wysiwyg" "plaintext")
-  onChange=(if (eq internalMode "visual")
-    (action (mut htmlContent))
-    (action (mut displayedMdContent))
-  )
-}} --}}
 <div class="markdown-editor-toolbar btn-toolbar">
   {{#bs-button
     class="btn-sm btn-switch-editor-mode"
@@ -33,17 +27,18 @@
     {{one-icon icon=modeSwitchIcon}}
     <span class="text">{{modeSwitchText}}</span>
   {{/bs-button}}
-  {{!-- FIXME: disable button if there is no sense in them --}}
   {{#bs-button
     class="btn-sm"
     type="warning"
+    disabled=(not isContentChanged)
     onClick=(action "discard")
   }}
     {{tt this "discard"}}
   {{/bs-button}}
   {{#one-spin-button
     class="btn btn-sm btn-primary"
-    action=(action "discard")
+    disabled=isContentChanged
+    action=(action "save")
   }}
     {{tt this "save"}}
   {{/one-spin-button}}

@@ -13,6 +13,8 @@ import 'npm:round10';
 import 'npm:color';
 import 'npm:basictable';
 import 'npm:contrast';
+import 'npm:dompurify';
+// import 'npm:autosize';
 
 export default {
   name: 'force-browserify-import',

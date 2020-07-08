@@ -50,26 +50,13 @@ export default Component.extend({
   contentType: 'wysiwyg',
 
   /**
-   * @override
-   */
-  pellOptions: conditional(
-    equal('contentType', raw('plaintext')),
-    'plaintextPellOptions',
-    'wysiwygPellOptions',
-  ),
-
-  /**
    * @type {HTMLSafe}
    */
   htmlSafeContent: computed('content', function htmlSafeContent() {
     return htmlSafe(this.get('content'));
   }),
 
-  plaintextPellOptions: Object.freeze({
-    actions: [],
-  }),
-
-  wysiwygPellOptions: Object.freeze({
+  pellOptions: Object.freeze({
     actions: [{
       name: 'bold',
       icon: '<span class="oneicon oneicon-text-bold"></span>',

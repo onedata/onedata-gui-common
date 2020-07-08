@@ -1,3 +1,14 @@
+/**
+ * NOTE: current version adds extra comment tags after lists when converting visual -> md
+ * because of bug in: https://github.com/showdownjs/showdown/issues/700 As we are using
+ * ember-cli-showdown, the update is currenlty not available
+ * 
+ * @module components/markdown-editor
+ * @author Jakub Liput
+ * @copyright (C) 2020 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../templates/components/markdown-editor';
 import { computed, observer } from '@ember/object';
@@ -6,11 +17,33 @@ import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw'
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { conditional, equal, raw } from 'ember-awesome-macros';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, next } from '@ember/runloop';
 import _ from 'lodash';
-import autosize from 'autosize';
+import autosize from 'onedata-gui-common/utils/autosize';
+import DOMPurify from 'npm:dompurify';
 
 const defaultMode = 'visual';
+
+const htmlToMdTags = {
+  strike: 'del',
+  b: 'strong',
+  i: 'em',
+};
+
+const mdToHtmlTags = {
+  del: 'strike',
+  strong: 'b',
+  em: 'i',
+};
+
+function convertTags(content, tags) {
+  let converted = content;
+  for (let sourceTag in tags) {
+    const destTag = tags[sourceTag];
+    converted = converted.replace(new RegExp(`<(/)?${sourceTag}`, 'g'), `<$1${destTag}`);
+  }
+  return converted;
+}
 
 export default Component.extend(I18n, {
   layout,
@@ -44,16 +77,15 @@ export default Component.extend(I18n, {
    */
   htmlContent: '',
 
-  // FIXME: experimental
-  // internalMode: reads('mode'),
-
   internalMode: defaultMode,
 
   mode: defaultMode,
 
+  isContentChanged: false,
+
   modeSwitchIcon: conditional(
     equal('mode', raw('visual')),
-    raw('view-list'),
+    raw('markdown'),
     raw('visual-editor'),
   ),
 
@@ -82,7 +114,6 @@ export default Component.extend(I18n, {
       openLinksInNewWindow: true,
       emoji: true,
     });
-    instance.setFlavor('github');
     return instance;
   }),
 
@@ -90,26 +121,50 @@ export default Component.extend(I18n, {
     const {
       internalMode,
       mode,
-      converter,
-      htmlContent,
-      mdContent,
-    } = this.getProperties('internalMode', 'mode', 'converter', 'htmlContent', 'mdContent');
+      element,
+    } = this.getProperties('internalMode', 'mode', 'element');
     if (internalMode === 'visual' && mode === 'markdown') {
       scheduleOnce('afterRender', () => {
-        this.changeMdContent(converter.makeMarkdown(htmlContent));
-        autosize(this.get('element').querySelector('.textarea-source-editor'));
+        this.updateMarkdownContent();
+        autosize(element.querySelector('.textarea-source-editor'));
       });
     } else if (mode === 'visual') {
-      this.changeHtmlContent(converter.makeHtml(mdContent));
+      this.updateVisualContent();
     }
     this.set('internalMode', mode);
   }),
 
+  updateVisualContent() {
+    this.changeHtmlContent(this.markdownToHtml(this.get('mdContent')));
+  },
+
+  updateMarkdownContent() {
+    this.changeMdContent(this.htmlToMarkdown(this.get('htmlContent')));
+  },
+
+  markdownToHtml(markdown) {
+    return convertTags(this.get('converter').makeHtml(markdown), mdToHtmlTags);
+  },
+
+  htmlToMarkdown(html) {
+    let sanitizedHtml = DOMPurify.sanitize(html, {
+      ALLOWED_TAGS: htmlAllowedTags,
+    }).toString();
+    sanitizedHtml = convertTags(sanitizedHtml, htmlToMdTags);
+    return this.get('converter').makeMarkdown(sanitizedHtml);
+  },
+
   changeMdContent(content) {
+    if (!this.get('isContentChanged')) {
+      this.set('isContentChanged', true);
+    }
     return this.get('mdContentChanged')(content);
   },
 
   changeHtmlContent(content) {
+    if (!this.get('isContentChanged')) {
+      this.set('isContentChanged', true);
+    }
     return this.set('htmlContent', content);
   },
 
@@ -119,19 +174,70 @@ export default Component.extend(I18n, {
   },
 
   actions: {
-    contentChanged(content) {
+    isContentChanged(content) {
       this.set('content', content);
     },
     discard() {
       this.get('discard')();
+      this.set('isContentChanged', false);
+      next(() => {
+        if (this.get('mode') === 'visual') {
+          this.updateVisualContent();
+        }
+      });
     },
     save() {
-      this.get('save')();
+      this.updateMarkdownContent();
+      return this.get('save')()
+        .then(() => {
+          this.set('isContentChanged', false);
+        });
     },
     toggleEditorMode() {
       const mode = this.get('mode');
       let newMode = (mode === 'visual') ? 'markdown' : 'visual';
       this.get('changeMode')(newMode);
     },
+    changeHtmlContent(content) {
+      return this.get('changeHtmlContent')(content);
+    },
+    changeMdContent(content) {
+      return this.get('changeMdContent')(content);
+    },
   },
 });
+
+const htmlAllowedTags = [
+  '#text',
+  'b',
+  'strong',
+  'i',
+  'em',
+  'u',
+  'strike',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'p',
+  'ol',
+  'ul',
+  'li',
+  'a',
+  'table',
+  'tbody',
+  'thead',
+  'th',
+  'tr',
+  'td',
+  'img',
+  'pre',
+  'hr',
+  'video',
+  'blockquote',
+  'math',
+  'figure',
+  'audio',
+];
