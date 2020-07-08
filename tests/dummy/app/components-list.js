@@ -8,6 +8,7 @@ export default [
   'hr-label',
   'input-group',
   'json-editor',
+  'markdown-editor',
   'name-conflict',
   'nav-tabs',
   'one-arrow',

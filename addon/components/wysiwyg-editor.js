@@ -14,11 +14,12 @@ import { htmlSafe } from '@ember/template';
 import layout from 'onedata-gui-common/templates/components/wysiwyg-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import pell from 'ember-pell/pell';
+import { conditional, equal, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
   classNames: ['wysiwyg-editor'],
-  classNameBindings: ['disabled'],
+  classNameBindings: ['disabled', 'contentType'],
 
   /**
    * One of 'show', 'edit'
@@ -46,10 +47,29 @@ export default Component.extend({
    */
   onChange: notImplementedIgnore,
 
+  contentType: 'wysiwyg',
+
   /**
    * @override
    */
-  pellOptions: Object.freeze({
+  pellOptions: conditional(
+    equal('contentType', raw('plaintext')),
+    'plaintextPellOptions',
+    'wysiwygPellOptions',
+  ),
+
+  /**
+   * @type {HTMLSafe}
+   */
+  htmlSafeContent: computed('content', function htmlSafeContent() {
+    return htmlSafe(this.get('content'));
+  }),
+
+  plaintextPellOptions: Object.freeze({
+    actions: [],
+  }),
+
+  wysiwygPellOptions: Object.freeze({
     actions: [{
       name: 'bold',
       icon: '<span class="oneicon oneicon-text-bold"></span>',
@@ -87,12 +107,5 @@ export default Component.extend({
       icon: '<span class="oneicon oneicon-text-link"></span>',
     }],
     defaultParagraphSeparator: 'p',
-  }),
-
-  /**
-   * @type {HTMLSafe}
-   */
-  htmlSafeContent: computed('content', function htmlSafeContent() {
-    return htmlSafe(this.get('content'));
   }),
 });

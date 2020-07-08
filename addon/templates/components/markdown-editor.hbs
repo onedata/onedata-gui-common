@@ -1,0 +1,50 @@
+{{#if (eq internalMode "visual")}}
+  {{wysiwyg-editor
+    class="markdown-wysiwyg"
+    mode="edit"
+    content=htmlContent
+    contentType="wysiwyg"
+    onChange=(action (mut htmlContent))
+  }}
+{{else}}
+  <textarea
+    value={{mdContent}}
+    oninput={{action (mut mdContent) value="target.value"}}
+    class="no-resize code-textarea textarea-source-editor"
+  ></textarea>
+{{/if}}
+
+{{!-- {{wysiwyg-editor
+  class="markdown-wysiwyg"
+  mode="edit"
+  content=(if (eq internalMode "visual") htmlContent displayedMdContent)
+  contentType=(if (eq internalMode "visual") "wysiwyg" "plaintext")
+  onChange=(if (eq internalMode "visual")
+    (action (mut htmlContent))
+    (action (mut displayedMdContent))
+  )
+}} --}}
+<div class="markdown-editor-toolbar btn-toolbar">
+  {{#bs-button
+    class="btn-sm btn-switch-editor-mode"
+    type="default"
+    onClick=(action "toggleEditorMode")
+  }}
+    {{one-icon icon=modeSwitchIcon}}
+    <span class="text">{{modeSwitchText}}</span>
+  {{/bs-button}}
+  {{!-- FIXME: disable button if there is no sense in them --}}
+  {{#bs-button
+    class="btn-sm"
+    type="warning"
+    onClick=(action "discard")
+  }}
+    {{tt this "discard"}}
+  {{/bs-button}}
+  {{#one-spin-button
+    class="btn btn-sm btn-primary"
+    action=(action "discard")
+  }}
+    {{tt this "save"}}
+  {{/one-spin-button}}
+</div>

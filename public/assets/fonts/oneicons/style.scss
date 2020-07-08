@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?rvc1lg') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?rvc1lg') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?rvc1lg##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?7ftigc') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?7ftigc') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?7ftigc##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -14,7 +14,7 @@
 [class^="oneicon-"], [class*=" oneicon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: '#{$icomoon-font-family}' !important;
-  speak: none;
+  speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -322,6 +322,11 @@
     content: $oneicon-globe-cursor; 
   }
 }
+.oneicon-globe-filled {
+  &:before {
+    content: $oneicon-globe-filled; 
+  }
+}
 .oneicon-globe {
   &:before {
     content: $oneicon-globe; 
@@ -430,6 +435,11 @@
 .oneicon-logout {
   &:before {
     content: $oneicon-logout; 
+  }
+}
+.oneicon-markdown {
+  &:before {
+    content: $oneicon-markdown; 
   }
 }
 .oneicon-membership {
@@ -947,6 +957,11 @@
     content: $oneicon-view-list; 
   }
 }
+.oneicon-visual-editor {
+  &:before {
+    content: $oneicon-visual-editor; 
+  }
+}
 .oneicon-warning {
   &:before {
     content: $oneicon-warning; 
@@ -955,6 +970,11 @@
 .oneicon-x {
   &:before {
     content: $oneicon-x; 
+  }
+}
+.oneicon-xml-file {
+  &:before {
+    content: $oneicon-xml-file; 
   }
 }
 
