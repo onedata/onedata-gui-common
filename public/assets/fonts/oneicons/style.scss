@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?7ftigc') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?7ftigc') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?7ftigc##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?3dl1ju') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?3dl1ju') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?3dl1ju##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -955,6 +955,11 @@
 .oneicon-view-list {
   &:before {
     content: $oneicon-view-list; 
+  }
+}
+.oneicon-view {
+  &:before {
+    content: $oneicon-view; 
   }
 }
 .oneicon-visual-editor {

@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'oneicons';
   src:
-    url('fonts/oneicons.ttf?7ftigc') format('truetype'),
-    url('fonts/oneicons.woff?7ftigc') format('woff'),
-    url('fonts/oneicons.svg?7ftigc#oneicons') format('svg');
+    url('fonts/oneicons.ttf?3dl1ju') format('truetype'),
+    url('fonts/oneicons.woff?3dl1ju') format('woff'),
+    url('fonts/oneicons.svg?3dl1ju#oneicons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -583,15 +583,18 @@
 .oneicon-view-list:before {
   content: "\e9b9";
 }
-.oneicon-visual-editor:before {
+.oneicon-view:before {
   content: "\e9ba";
 }
-.oneicon-warning:before {
+.oneicon-visual-editor:before {
   content: "\e9bb";
 }
-.oneicon-x:before {
+.oneicon-warning:before {
   content: "\e9bc";
 }
-.oneicon-xml-file:before {
+.oneicon-x:before {
   content: "\e9bd";
+}
+.oneicon-xml-file:before {
+  content: "\e9be";
 }

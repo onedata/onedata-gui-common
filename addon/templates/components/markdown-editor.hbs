@@ -1,20 +1,26 @@
-{{#if (eq internalMode "visual")}}
-  {{wysiwyg-editor
-    class="markdown-wysiwyg"
-    mode="edit"
-    content=htmlContent
-    contentType="wysiwyg"
-    onChange=(action (mut htmlContent))
+<div class="markdown-bar">
+  <div class="markdown-bar-placeholder hidden-xs">
+    <div class="inline-icon-container">
+      {{one-icon icon=modeCurrentIcon}}
+    </div>
+    <span class="text">{{modeCurrentText}}</span>
+  </div>
+</div>
+{{#if (eq mode "visual")}}
+  {{markdown-to-html
+    class="markdown-view markdown-preview"
+    markdown=mdContent
+    tables=true
+    strikethrough=true
+    literalMidWordUnderscores=true
+    simplifiedAutoLink=true
+    openLinksInNewWindow=true
   }}
 {{else}}
-  <div class="markdown-bar">
-    <div class="markdown-bar-placeholder">
-      Markdown editor
-    </div>
-  </div>
   <textarea
     value={{mdContent}}
-    oninput={{action (mut mdContent) value="target.value"}}
+    oninput={{action "mdContentChanged" value="target.value"}}
+    placeholder={{placeholder}}
     class="no-resize code-textarea textarea-source-editor"
   ></textarea>
 {{/if}}
@@ -22,6 +28,7 @@
   {{#bs-button
     class="btn-sm btn-switch-editor-mode"
     type="default"
+    disabled=isToggleEditorDisabled
     onClick=(action "toggleEditorMode")
   }}
     {{one-icon icon=modeSwitchIcon}}
@@ -37,7 +44,7 @@
   {{/bs-button}}
   {{#one-spin-button
     class="btn btn-sm btn-primary"
-    disabled=isContentChanged
+    disabled=(not isContentChanged)
     action=(action "save")
   }}
     {{tt this "save"}}
