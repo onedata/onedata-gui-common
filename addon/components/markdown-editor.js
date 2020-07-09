@@ -77,18 +77,19 @@ export default Component.extend(I18n, {
     computedT('markdownEditor'),
   ),
 
-  autoApplyAutosize: observer('mode', function autoApplyAutosize() {
-    if (this.get('mode') === 'markdown') {
-      scheduleOnce('afterRender', () => {
-        const textarea = this.get('element').querySelector('.textarea-source-editor');
-        if (textarea) {
-          autosize(textarea);
-        } else {
-          console.error('component:markdown-editor: no textarea found for autosize');
-        }
-      });
+  autoApplyAutosize: observer(
+    'mode',
+    function autoApplyAutosize() {
+      if (this.get('mode') === 'markdown') {
+        scheduleOnce('afterRender', () => {
+          const textarea = this.get('element').querySelector('.textarea-source-editor');
+          if (textarea) {
+            autosize(textarea);
+          }
+        });
+      }
     }
-  }),
+  ),
 
   changeHtmlContent(content) {
     if (!this.get('isContentChanged')) {
@@ -98,6 +99,11 @@ export default Component.extend(I18n, {
   },
 
   isToggleEditorDisabled: and(equal('mode', raw('markdown')), isEmpty('mdContent')),
+
+  init() {
+    this._super(...arguments);
+    this.autoApplyAutosize();
+  },
 
   actions: {
     isContentChanged(content) {
