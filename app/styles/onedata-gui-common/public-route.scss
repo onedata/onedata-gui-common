@@ -8,15 +8,20 @@ $logo-height: 25px;
     position: absolute;
     @include fill-container;
   }
-  .public-onedata-header + .one-embedded-container {
-    top: $public-onedata-header-height;
+  .dark {
+    .public-onedata-header + .one-embedded-container {
+      top: $public-onedata-header-height;
+    }
+    .public-onedata-header {
+      height: $public-onedata-header-height;
+      background-image: url($root-url + 'images/logo.svg');
+      background-color: $color-one-semiblack;
+      background-size: auto $logo-height;
+      background-repeat: no-repeat;
+      background-position: $content-col-padding center;
+    }
   }
-  .public-onedata-header {
-    height: $public-onedata-header-height;
-    background-image: url($root-url + 'images/logo.svg');
-    background-color: $color-one-semiblack;
-    background-size: auto $logo-height;
-    background-repeat: no-repeat;
-    background-position: $content-col-padding center;
+  .light {
+    
   }
 }
