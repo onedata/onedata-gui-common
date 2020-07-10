@@ -14,7 +14,6 @@ import { htmlSafe } from '@ember/template';
 import layout from 'onedata-gui-common/templates/components/wysiwyg-editor';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import pell from 'ember-pell/pell';
-import { conditional, equal, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
