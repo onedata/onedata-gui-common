@@ -30,30 +30,11 @@
 
   .wysiwyg-content, .pell-editor {
     word-break: break-word;
+  }
     
-    h1, h2, h3 {
-      margin-top: 0;
-      margin-bottom: 1em;
-      @include font-semibold();
-      line-height: $headings-line-height;
-      letter-spacing: $letter-spacing-base;
-      text-transform: uppercase;
-    }
-
-    h1, h2, h3, p {
-      padding: 0;
-    }
-  
-    h1 {
-      font-size: $font-size-base * 1.25;
-    }
-  
-    h2 {
-      font-size: $font-size-base * 1.15;
-    }
-
-    h3 {
-      font-size: $font-size-base * 1.05;
+  &.plaintext {
+    .pell-content {
+      font-family: monospace;
     }
   }
 }
