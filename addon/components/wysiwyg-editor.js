@@ -18,7 +18,7 @@ import pell from 'ember-pell/pell';
 export default Component.extend({
   layout,
   classNames: ['wysiwyg-editor'],
-  classNameBindings: ['disabled'],
+  classNameBindings: ['disabled', 'contentType'],
 
   /**
    * One of 'show', 'edit'
@@ -46,9 +46,15 @@ export default Component.extend({
    */
   onChange: notImplementedIgnore,
 
+  contentType: 'wysiwyg',
+
   /**
-   * @override
+   * @type {HTMLSafe}
    */
+  htmlSafeContent: computed('content', function htmlSafeContent() {
+    return htmlSafe(this.get('content'));
+  }),
+
   pellOptions: Object.freeze({
     actions: [{
       name: 'bold',
@@ -87,12 +93,5 @@ export default Component.extend({
       icon: '<span class="oneicon oneicon-text-link"></span>',
     }],
     defaultParagraphSeparator: 'p',
-  }),
-
-  /**
-   * @type {HTMLSafe}
-   */
-  htmlSafeContent: computed('content', function htmlSafeContent() {
-    return htmlSafe(this.get('content'));
   }),
 });
