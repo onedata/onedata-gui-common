@@ -170,13 +170,23 @@ export default EmberObject.extend({
       src,
     } = this.getProperties('iframeElement', 'src');
 
+    const oldSrc = iframeElement.src;
     iframeElement.src = src;
-    safeExec(this, () => {
-      this.setProperties({
-        iframeIsLoading: true,
-        iframeError: undefined,
+
+    if (oldSrc) {
+      // Do not set iframeIsLoading to true, because iframe may not notify onLoad event
+      // and set it back to false (especially when part after "#" is changed)
+      safeExec(this, () => {
+        this.set('iframeError', undefined);
       });
-    });
+    } else {
+      safeExec(this, () => {
+        this.setProperties({
+          iframeIsLoading: true,
+          iframeError: undefined,
+        });
+      });
+    }
   }),
 
   iframeClassModifier: observer(
