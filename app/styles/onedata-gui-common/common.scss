@@ -752,3 +752,14 @@ p.text-separated {
   margin-top: $padding-large-vertical;
 }
 
+// FIXME: markdown
+
+.markdown-editor {
+  .markdown-wysiwyg {
+    table {
+      @extend .table;
+      @extend .table-striped;
+    }
+  }
+}
+
