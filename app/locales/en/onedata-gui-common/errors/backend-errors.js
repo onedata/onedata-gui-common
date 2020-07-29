@@ -99,6 +99,7 @@ export default {
   subdomainDelegationNotSupported: 'Subdomain delegation is not supported by this Onezone.',
   subdomainDelegationDisabled: 'This operation is not available as subdomain delegation is disabled for this Oneprovider.',
   protectedGroup: 'This group is protected and cannot be deleted',
+  cannotRemoveLastOwner: 'Cannot remove the last owner - another owner must be assigned first. Ownership can be granted to any direct or effective member.',
   cannotDeleteEntity: 'Unexpected error while deleting the {{entityType}} (Id: "{{entityId}}").',
   cannotAddRelationToSelf: 'Cannot join group to itself.',
   relationDoesNotExist: 'The {{childType}} (Id: "{{childId}}") does not belong to the {{parentType}} (Id: {{parentId}}).',
