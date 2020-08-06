@@ -5,6 +5,11 @@ $form-component-view-margin: $padding-base-vertical;
     display: flex;
     flex-wrap: wrap;
     flex-grow: 1;
+
+    &::before, &::after {
+      // remove bootstrap clearfix
+      display: none;
+    }
   }
 
   .field-component {
@@ -14,6 +19,7 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   .control-label {
+    flex-shrink: 0;
     width: 20%;
     min-width: 100px;
     text-align: left;
@@ -39,13 +45,20 @@ $form-component-view-margin: $padding-base-vertical;
   .static-text-field-renderer,
   .radio-field-renderer,
   .toggle-field-renderer,
-  .loading-field-renderer {
-    .control-label {
+  .loading-field-renderer,
+  .no-label-top-padding {
+    > .control-label {
       padding-top: 0;
     }
   }
 
+  .textarea-field textarea {
+    resize: none;
+  }
+
   .toggle-field-renderer {
+    flex-wrap: nowrap;
+
     .one-way-toggle {
       display: block;
     }
@@ -122,6 +135,16 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   @media (min-width: $screen-sm-min) {
+    .form-group.nowrap-on-desktop {
+      flex-wrap: nowrap;
+    }
+
+    .form-fields-group-renderer {
+      > .control-label {
+        margin-bottom: $form-group-margin-bottom;
+      }
+    }
+
     .privileges-field {
       .one-tree.has-items > .one-tree-list {
         padding-top: 0;
@@ -139,6 +162,17 @@ $form-component-view-margin: $padding-base-vertical;
   @media (max-width: $screen-xs-max) {
     .control-label {
       width: 100%;
+    }
+
+    .toggle-field-renderer {
+      .control-label {
+        width: initial;
+        flex-grow: 1;
+      }
+
+      .field-component {
+        flex-grow: 0;
+      }
     }
   }
 

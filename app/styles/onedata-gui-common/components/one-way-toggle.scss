@@ -41,7 +41,7 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
   &.checked {
     .one-way-toggle-control {
       background-color: $one-way-toggle-control-color-active;
-      &:before {
+      &::before {
         margin-left: $toggle-width / 2;
       }
     }
@@ -54,7 +54,7 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
   &.maybe {
     .one-way-toggle-control {
       background-color: $one-way-toggle-control-color-maybe;
-      &:before {
+      &::before {
         margin-left: $toggle-width / 4;
       }
     }
@@ -65,7 +65,7 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
   }
 
   .one-way-toggle-control,
-  .one-way-toggle-control:before {
+  .one-way-toggle-control::before {
     border: 1px solid $input-border;
     border-radius: $toggle-size-base / 2;
     box-sizing: border-box;
@@ -82,7 +82,7 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
     vertical-align: top;
   }
 
-  .one-way-toggle-control:before {
+  .one-way-toggle-control::before {
     display: block;
     background-color: $input-bg;
     position: relative;
@@ -124,6 +124,12 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
 
   div.clickable::before {
     cursor: pointer;
+  }
+}
+
+.has-error .form-control.one-way-toggle {
+  .one-way-toggle-control {
+    background-color: $color-one-danger;
   }
 }
 
