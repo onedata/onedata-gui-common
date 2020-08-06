@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import layout from '../../templates/components/form-component/field-renderer';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { and, tag, writable } from 'ember-awesome-macros';
+import { and, tag, writable, equal, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -93,18 +93,21 @@ export default Component.extend({
     'isValid',
     'isModified',
     'areValidationClassesEnabled',
+    'mode',
     function validationClass() {
       const {
         isValid,
         isModified,
         areValidationClassesEnabled,
+        mode,
       } = this.getProperties(
         'isValid',
         'isModified',
-        'areValidationClassesEnabled'
+        'areValidationClassesEnabled',
+        'mode'
       );
 
-      if (isModified && areValidationClassesEnabled) {
+      if (isModified && areValidationClassesEnabled && mode === 'edit') {
         return isValid ? 'has-success' : 'has-error';
       }
     }
@@ -116,7 +119,8 @@ export default Component.extend({
   canShowValidationIcon: and(
     'isModified',
     'isEffectivelyEnabled',
-    'withValidationIcon'
+    'withValidationIcon',
+    equal('mode', raw('edit'))
   ),
 
   /**
@@ -125,7 +129,8 @@ export default Component.extend({
   canShowValidationMessage: and(
     'isModified',
     'isEffectivelyEnabled',
-    'error'
+    'error',
+    equal('mode', raw('edit'))
   ),
 
   /**

@@ -145,6 +145,12 @@ $form-component-view-margin: $padding-base-vertical;
       }
     }
 
+    .field-view-mode {
+      .form-fields-group-renderer > .control-label {
+        margin-bottom: $form-component-view-margin;
+      }
+    }
+
     .privileges-field {
       .one-tree.has-items > .one-tree-list {
         padding-top: 0;
