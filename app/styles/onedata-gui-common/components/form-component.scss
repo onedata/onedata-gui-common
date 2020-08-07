@@ -124,7 +124,7 @@ $form-component-view-margin: $padding-base-vertical;
     }
 
     &.dropdown-field-renderer {
-      .oneicon {
+      .dropdown-field .oneicon {
         font-size: 2.2em;
         vertical-align: middle;
         line-height: 0;
