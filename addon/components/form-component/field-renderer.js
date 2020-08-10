@@ -129,7 +129,7 @@ export default Component.extend({
   canShowValidationMessage: and(
     'isModified',
     'isEffectivelyEnabled',
-    'error',
+    'error.message',
     equal('mode', raw('edit'))
   ),
 
