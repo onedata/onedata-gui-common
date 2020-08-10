@@ -19,7 +19,6 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   .control-label {
-    flex-shrink: 0;
     width: 20%;
     min-width: 100px;
   }
@@ -134,6 +133,10 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   @media (min-width: $screen-sm-min) {
+    .control-label {
+      flex-shrink: 0;
+    }
+
     .form-group.nowrap-on-desktop {
       flex-wrap: nowrap;
     }
@@ -177,6 +180,7 @@ $form-component-view-margin: $padding-base-vertical;
 
       .field-component {
         flex-grow: 0;
+        flex-shrink: 0;
       }
     }
   }
