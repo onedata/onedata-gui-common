@@ -3,7 +3,6 @@ $form-component-view-margin: $padding-base-vertical;
 .form-component {
   .form-group {
     display: flex;
-    flex-wrap: wrap;
     flex-grow: 1;
 
     &::before, &::after {
@@ -55,8 +54,6 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   .toggle-field-renderer {
-    flex-wrap: nowrap;
-
     .one-way-toggle {
       display: block;
     }
@@ -103,6 +100,10 @@ $form-component-view-margin: $padding-base-vertical;
     }
   }
 
+  .static-text-field-renderer .field-component {
+      word-wrap: break-word;
+  }
+
   .field-view-mode {
     &:not(.form-fields-group-renderer) {
       margin-bottom: $form-component-view-margin;
@@ -116,9 +117,9 @@ $form-component-view-margin: $padding-base-vertical;
       margin-bottom: $form-component-view-margin - $padding-xs-horizontal;
     }
 
-    .static-text-field-renderer,
-    .radio-field-renderer,
-    .toggle-field-renderer {
+    &.static-text-field-renderer,
+    &.radio-field-renderer,
+    &.toggle-field-renderer {
       padding-top: initial;
     }
 
@@ -130,6 +131,13 @@ $form-component-view-margin: $padding-base-vertical;
         margin-right: $padding-xs-horizontal;
       }
     }
+
+    &.text-like-field-renderer,
+    &.dropdown-field-renderer {
+      .field-component {
+        word-wrap: break-word;
+      }
+    }
   }
 
   @media (min-width: $screen-sm-min) {
@@ -137,7 +145,17 @@ $form-component-view-margin: $padding-base-vertical;
       flex-shrink: 0;
     }
 
-    .form-group.nowrap-on-desktop {
+    .wrap-on-desktop,
+    .field-edit-mode {
+      flex-wrap: wrap;
+    }
+
+    .nowrap-on-desktop {
+      flex-wrap: nowrap;
+    }
+
+    .static-text-field-renderer,
+    .clipboard-field-renderer {
       flex-wrap: nowrap;
     }
 
@@ -168,11 +186,17 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   @media (max-width: $screen-xs-max) {
+    .form-group {
+      flex-wrap: wrap;
+    }
+
     .control-label {
       width: 100%;
     }
 
     .toggle-field-renderer {
+      flex-wrap: nowrap;
+
       .control-label {
         width: initial;
         flex-grow: 1;
