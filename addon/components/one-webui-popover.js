@@ -86,6 +86,7 @@ export default Component.extend({
    *   ```
    *   {
    *     reposition(): undefined // recalculates popover position
+   *     hide(): undefined // hides popover
    *   }
    *   ```
    */
@@ -142,6 +143,7 @@ export default Component.extend({
 
     this.get('registerApi')({
       reposition: () => this.reposition(),
+      hide: () => this.send('hide'),
     });
   },
 
@@ -340,6 +342,10 @@ export default Component.extend({
   },
 
   reposition() {
+    if (!this.get('_isPopoverVisible')) {
+      return;
+    }
+
     const popoverInstance = this.get('popoverInstance');
     const oldAnimation = popoverInstance.options.animation;
     // suppress animation for the time of reposition
