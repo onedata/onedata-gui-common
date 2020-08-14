@@ -191,28 +191,32 @@ export default ArraySlice.extend(Evented, {
   ),
 
   fetchPrev() {
+    const {
+      _startReached,
+      sourceArray,
+      chunkSize,
+      emptyIndex,
+      fetch,
+    } = this.getProperties(
+      '_startReached',
+      'sourceArray',
+      'chunkSize',
+      'emptyIndex',
+      'fetch',
+    );
+
+    const firstItem = sourceArray[emptyIndex + 1];
+    const fetchStartIndex = firstItem ? get(firstItem, 'index') : null;
+
+    const currentChunkSize = _startReached ?
+      Math.min(emptyIndex + 1, chunkSize) : chunkSize;
+
+    if (!currentChunkSize) {
+      return resolve();
+    }
+
     if (!this.get('_fetchPrevLock')) {
       this.set('_fetchPrevLock', true);
-
-      const {
-        _startReached,
-        sourceArray,
-        chunkSize,
-        emptyIndex,
-        fetch,
-      } = this.getProperties(
-        '_startReached',
-        'sourceArray',
-        'chunkSize',
-        'emptyIndex',
-        'fetch',
-      );
-
-      const firstItem = sourceArray[emptyIndex + 1];
-      const fetchStartIndex = firstItem ? get(firstItem, 'index') : null;
-
-      const currentChunkSize = _startReached ?
-        Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       this.trigger('fetchPrevStarted');
       return fetch(
@@ -285,17 +289,21 @@ export default ArraySlice.extend(Evented, {
   },
 
   fetchNext() {
+    const {
+      sourceArray,
+      chunkSize,
+    } = this.getProperties('sourceArray', 'chunkSize');
+
+    const fetchSize = chunkSize;
+    if (!fetchSize) {
+      return resolve();
+    }
+
     if (!this.get('_fetchNextLock')) {
       this.set('_fetchNextLock', true);
 
-      const {
-        sourceArray,
-        chunkSize,
-      } = this.getProperties('sourceArray', 'chunkSize');
-
       const lastItem = sourceArray[get(sourceArray, 'length') - 1];
 
-      const fetchSize = chunkSize;
       const fetchStartIndex = lastItem ? get(lastItem, 'index') : null;
       const duplicateCount = countEndDuplicates(sourceArray);
 
@@ -450,6 +458,11 @@ export default ArraySlice.extend(Evented, {
     if (!this.get('sourceArray')) {
       this.set('sourceArray', A());
     }
+    const fetch = this.get('fetch');
+    this.set('fetch', function () {
+      console.log('fetch invoked with: ', ...arguments);
+      return fetch(...arguments);
+    });
     this._super(...arguments);
     const initialJumpIndex = this.get('initialJumpIndex');
     const initialLoad = promiseObject(
