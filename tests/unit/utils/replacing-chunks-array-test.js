@@ -626,13 +626,15 @@ describe('Unit | Utility | replacing chunks array', function () {
     return wait()
       .then(() => {
         fetchSpy.reset();
-        array.jump(60, 30, -3);
+        array.jump(60, 30);
         return wait();
       })
       .then(() => {
-        expect(fetchSpy).to.be.calledWith(60, 30 + indexMargin * 2, -3 - indexMargin);
+        expect(fetchSpy).to.be.calledWith(60, 30 + indexMargin * 2, -indexMargin);
+        console.log(inspect(array));
+        console.log(mapIndex(recordRange(60 - indexMargin, 60 + 30 + indexMargin)));
         expect(array.toArray(), 'content after jump').to.deep.equal(
-          recordRange(60 - 3 - indexMargin, 60 + 30 - 3 + indexMargin),
+          recordRange(60 - indexMargin, 60 + 30 + indexMargin),
         );
       });
   });

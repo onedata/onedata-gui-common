@@ -413,7 +413,7 @@ export default ArraySlice.extend(Evented, {
       .finally(() => safeExec(this, 'set', '_isReloading', false));
   },
 
-  jump(index, size = 50, offset = 0) {
+  jump(index, size = 50) {
     const {
       fetch,
       sourceArray,
@@ -422,7 +422,7 @@ export default ArraySlice.extend(Evented, {
     return fetch(
       index,
       size + indexMargin * 2,
-      offset - indexMargin,
+      -indexMargin,
       this
     ).then(array => {
       // clear array without notify
@@ -434,8 +434,8 @@ export default ArraySlice.extend(Evented, {
       if (startIndex === -1) {
         return false;
       } else {
-        const endIndex = Math.max(
-          startIndex + size + indexMargin,
+        const endIndex = Math.min(
+          startIndex + size,
           array.length
         );
         this.setProperties({
@@ -463,11 +463,6 @@ export default ArraySlice.extend(Evented, {
     if (!this.get('sourceArray')) {
       this.set('sourceArray', A());
     }
-    const fetch = this.get('fetch');
-    this.set('fetch', function () {
-      console.log('fetch invoked with: ', ...arguments);
-      return fetch(...arguments);
-    });
     this._super(...arguments);
     const initialJumpIndex = this.get('initialJumpIndex');
     const initialLoad = promiseObject(
