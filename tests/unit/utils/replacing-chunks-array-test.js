@@ -139,8 +139,7 @@ describe('Unit | Utility | replacing chunks array', function () {
     return wait()
       .then(() => {
         fetchSpy.reset();
-        array.reload();
-        return wait();
+        return array.reload();
       })
       .then(() => {
         expect(fetchSpy, 'fetch after reload').to.be.calledOnce;
@@ -193,8 +192,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 30,
             endIndex: 40,
           });
-          array.reload();
-          return wait();
+          return array.reload();
         })
         .then(() => {
           expect(fetchSpy).to.be.calledOnce;
@@ -225,7 +223,6 @@ describe('Unit | Utility | replacing chunks array', function () {
       return get(array, 'initialLoad')
         .then(() => {
           expect(array.get('firstObject.index')).to.equal(0);
-
           array.setProperties({
             startIndex: 7,
             endIndex: 17,
@@ -259,11 +256,10 @@ describe('Unit | Utility | replacing chunks array', function () {
           startIndex: 7,
           endIndex: 17,
         });
-        return wait()
-          .then(() => {
-            expect(array.get('lastObject.index'), 'last object after')
-              .to.equal(array.toArray().get('lastObject.index'));
-          });
+        return wait();
+      }).then(() => {
+        expect(array.get('lastObject.index'), 'last object after')
+          .to.equal(array.toArray().get('lastObject.index'));
       });
     }
   );
@@ -297,8 +293,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           expect(array.toArray(), 'array content after index change to forth')
             .to.deep.equal(recordRange(10, 70));
           // reload causes 0..10 items to be emptied
-          array.reload();
-          return wait();
+          return array.reload();
         })
         .then(() => {
           array.setProperties({
@@ -343,8 +338,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           return wait();
         })
         .then(() => {
-          array.reload();
-          return wait();
+          return array.reload();
         })
         .then(() => {
           expect(get(array, 'emptyIndex'), 'emptyIndex forth').to.equal(9);
@@ -443,8 +437,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           frontRecord1,
           frontRecord2
         );
-        array.reload();
-        return wait();
+        return array.reload();
       })
       .then(() => {
         array.setProperties({
@@ -494,8 +487,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         return wait();
       })
       .then(() => {
-        array.reload();
-        return wait();
+        return array.reload();
       })
       .then(() => {
         array.setProperties({
@@ -557,9 +549,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 10,
       });
 
-      array.reload();
-
-      return wait()
+      return array.reload()
         .then(() => {
           expect(compareArrayInstancesResult).to.equal(true);
         });
@@ -626,13 +616,10 @@ describe('Unit | Utility | replacing chunks array', function () {
     return wait()
       .then(() => {
         fetchSpy.reset();
-        array.jump(60, 30);
-        return wait();
+        return array.jump(60, 30);
       })
       .then(() => {
         expect(fetchSpy).to.be.calledWith(60, 30 + indexMargin * 2, -indexMargin);
-        console.log(inspect(array));
-        console.log(mapIndex(recordRange(60 - indexMargin, 60 + 30 + indexMargin)));
         expect(array.toArray(), 'content after jump').to.deep.equal(
           recordRange(60 - indexMargin, 60 + 30 + indexMargin),
         );
@@ -653,8 +640,7 @@ describe('Unit | Utility | replacing chunks array', function () {
     return wait()
       .then(() => {
         fetchSpy.reset();
-        array.jump(defaultMockArraySize - expectedSize, 50);
-        return wait();
+        return array.jump(defaultMockArraySize - expectedSize, 50);
       })
       .then(() => {
         // fetch prev will be used after jump, so indexes will be moved by chunkSize
@@ -675,8 +661,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       return wait()
         .then(() => {
           fetchSpy.reset();
-          array.jump(60, 30);
-          return wait();
+          return array.jump(60, 30);
         })
         .then(() => {
           expect(fetchSpy, 'jump fetch call').to.be.calledWith(60, 30);

@@ -424,11 +424,11 @@ export default ArraySlice.extend(Evented, {
       size + indexMargin * 2,
       -indexMargin,
       this
-    ).then(array => {
+    ).then(fileAttrs => {
       // clear array without notify
       sourceArray.splice(0, get(sourceArray, 'length'));
-      sourceArray.push(...array);
-      const startIndex = array.findIndex(item =>
+      sourceArray.push(...fileAttrs);
+      const startIndex = fileAttrs.findIndex(item =>
         get(item, 'index') === index
       );
       if (startIndex === -1) {
@@ -436,7 +436,7 @@ export default ArraySlice.extend(Evented, {
       } else {
         const endIndex = Math.min(
           startIndex + size,
-          array.length
+          fileAttrs.length
         );
         this.setProperties({
           _startReached: false,
@@ -467,7 +467,7 @@ export default ArraySlice.extend(Evented, {
     const initialJumpIndex = this.get('initialJumpIndex');
     const initialLoad = promiseObject(
       initialJumpIndex ?
-      this.jump(this.get('initialJumpIndex')) :
+      this.jump(initialJumpIndex) :
       this.reload({ head: true }).then(() => {
         this.set('_startReached', this.get('_start') === 0);
         return this.startEndChanged();
