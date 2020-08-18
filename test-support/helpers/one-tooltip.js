@@ -43,7 +43,7 @@ export default class OneTooltipHelper {
    */
   getText() {
     return this.open()
-      .then(() => this.getTooltip().innerText)
+      .then(() => this.getTooltip().textContent.trim())
       .then(text => this.close().then(() => text));
   }
 }

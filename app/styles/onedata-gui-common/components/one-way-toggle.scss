@@ -127,12 +127,6 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
   }
 }
 
-.has-error .form-control.one-way-toggle {
-  .one-way-toggle-control {
-    background-color: $color-one-danger;
-  }
-}
-
 .toggle-form-row {
   .control-label {
     padding-top: 0;

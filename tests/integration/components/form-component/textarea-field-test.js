@@ -75,13 +75,16 @@ describe('Integration | Component | form component/textarea field', function () 
     }
   );
 
-  it('sets input value to string specified in field object', function () {
-    this.set('field.value', 'test');
+  it(
+    'sets input value to string specified in field object',
+    function () {
+      this.set('field.value', 'test');
 
-    this.render(hbs `{{form-component/textarea-field field=field}}`);
+      this.render(hbs `{{form-component/textarea-field field=field}}`);
 
-    expect(this.$('textarea').val()).to.equal('test');
-  });
+      expect(this.$('textarea').val()).to.equal('test');
+    }
+  );
 
   it('sets input id according to "fieldId"', function () {
     this.render(hbs `
@@ -91,21 +94,27 @@ describe('Integration | Component | form component/textarea field', function () 
     expect(this.$('textarea#abc')).to.exist;
   });
 
-  it('sets placeholder according to "placeholder"', function () {
-    this.set('field.placeholder', 'test');
+  it(
+    'sets placeholder according to "placeholder"',
+    function () {
+      this.set('field.placeholder', 'test');
 
-    this.render(hbs `{{form-component/textarea-field field=field}}`);
+      this.render(hbs `{{form-component/textarea-field field=field}}`);
 
-    expect(this.$('textarea').attr('placeholder')).to.equal('test');
-  });
+      expect(this.$('textarea').attr('placeholder')).to.equal('test');
+    }
+  );
 
-  it('renders readonly textarea when field is in "view" mode', function () {
-    const field = this.get('field');
-    set(field, 'value', 'test value');
-    field.changeMode('view');
+  it(
+    'renders readonly textarea when field is in "view" mode',
+    function () {
+      const field = this.get('field');
+      set(field, 'value', 'test value');
+      field.changeMode('view');
 
-    this.render(hbs `{{form-component/textarea-field field=field}}`);
+      this.render(hbs `{{form-component/textarea-field field=field}}`);
 
-    expect(this.$('textarea')).to.have.attr('readonly');
-  });
+      expect(this.$('textarea')).to.have.attr('readonly');
+    }
+  );
 });
