@@ -1,5 +1,5 @@
 {{one-icon-tagged
-  class=(concat "sidebar-item-icon" (if offline " item-error"))
+  class=(concat "sidebar-item-icon" (if (or pending offline) " item-error"))
   icon=firstLevelItemIcon
   tagIcon=(if offline "x")
   shadowType="none"

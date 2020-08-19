@@ -48,6 +48,12 @@ export default Component.extend(I18n, {
    */
   offline: undefined,
 
+  /**
+   * Set by `offlineObserver` because of nasty double render bug
+   * @type {boolean}
+   */
+  pending: true,
+
   firstLevelItemIcon: computed('type', function firstLevelItemIcon() {
     switch (this.get('type')) {
       case 'oneprovider':
@@ -61,7 +67,11 @@ export default Component.extend(I18n, {
 
   offlineObserver: observer('cluster.isOnline', function offlineObserver() {
     next(() => {
-      safeExec(this, 'set', 'offline', !this.get('cluster.isOnline'));
+      const clusterIsOnline = this.get('cluster.isOnline');
+      safeExec(this, 'setProperties', {
+        offline: clusterIsOnline === false,
+        pending: clusterIsOnline == null,
+      });
     });
   }),
 
