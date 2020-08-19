@@ -315,7 +315,6 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   /**
    * Can be modified only via `changeMode()`
-   * TODO: implement mode mechanism handling. Maybe fieldComponentName based on mode?
    * @type {string}
    */
   mode: 'edit',

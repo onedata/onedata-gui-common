@@ -10,11 +10,13 @@
 
 import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { get, set, computed, observer } from '@ember/object';
+import { reads, not } from '@ember/object/computed';
+import { math, writable } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 import _ from 'lodash';
-import { resolve } from 'rsvp';
+import { resolve, all as allFulfilled } from 'rsvp';
 import Evented from '@ember/object/evented';
 
 export const emptyItem = {};
@@ -33,6 +35,21 @@ export default ArraySlice.extend(Evented, {
   emptyIndex: -1,
 
   /**
+   * @virtual optional
+   * If provided, the array will be initialized using object index, not fetch of data
+   * using offset.
+   * @type {String} anything that is an index in backend
+   */
+  initialJumpIndex: undefined,
+
+  /**
+   * @virtual optional
+   * If `chunkSize` is computed from endIndex and startIndex, `chunkSize` will not be
+   * smaller than this number
+   */
+  minChunkSize: 50,
+
+  /**
    * Initialized in init
    * @type {PromiseObject<ReplacingChunksArray>}
    */
@@ -47,22 +64,22 @@ export default ArraySlice.extend(Evented, {
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isLoaded: computed.reads('initialLoad.isSettled'),
+  isLoaded: reads('initialLoad.isSettled'),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isLoading: computed.not('isLoaded'),
+  isLoading: not('isLoaded'),
 
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  isReloading: computed.reads('_isReloading'),
+  isReloading: reads('_isReloading'),
 
   /**
    * @type {Ember.ComputedProperty<number>}
    */
-  chunkSize: computed.reads('maxLength'),
+  chunkSize: writable(math.min('maxLength', 'minChunkSize')),
 
   loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
     return this.get('chunkSize') / 2;
@@ -96,42 +113,65 @@ export default ArraySlice.extend(Evented, {
    */
   _isReloading: false,
 
-  startEndChanged: observer(
+  startEndChanged() {
+    return allFulfilled([this.startChanged(), this.endChanged()]);
+  },
+
+  startChanged: observer(
     '_start',
-    '_end',
     '_startReached',
-    '_endReached',
     'loadMoreThreshold',
     'sourceArray.[]',
     'emptyIndex',
-    function startEndChanged() {
+    function startChanged() {
       if (!this.get('isReloading')) {
         const {
           _start,
-          _end,
           _startReached,
-          _endReached,
           loadMoreThreshold,
           sourceArray,
           emptyIndex,
         } = this.getProperties(
           '_start',
-          '_end',
           '_startReached',
-          '_endReached',
           'loadMoreThreshold',
           'sourceArray',
           'emptyIndex',
         );
         const sourceArrayLength = get(sourceArray, 'length');
-        if (!sourceArrayLength || !_startReached && _start < emptyIndex) {
-          this.fetchPrev();
-        }
-        if (!_endReached && _end + loadMoreThreshold >= get(sourceArray, 'length')) {
-          this.fetchNext();
+        if (!sourceArrayLength ||
+          !_startReached && _start - loadMoreThreshold <= emptyIndex
+        ) {
+          return this.fetchPrev();
         }
       }
-    }),
+    }
+  ),
+
+  endChanged: observer(
+    '_end',
+    '_endReached',
+    'loadMoreThreshold',
+    'sourceArray.[]',
+    function startChanged() {
+      if (!this.get('isReloading')) {
+        const {
+          _end,
+          _endReached,
+          loadMoreThreshold,
+          sourceArray,
+        } = this.getProperties(
+          '_end',
+          '_endReached',
+          'loadMoreThreshold',
+          'sourceArray',
+        );
+        if (!_endReached && _end + loadMoreThreshold >= get(sourceArray, 'length')) {
+          return this.fetchNext();
+        }
+      }
+    }
+  ),
 
   getIndex(record) {
     return get(record, 'index');
@@ -155,28 +195,32 @@ export default ArraySlice.extend(Evented, {
   },
 
   fetchPrev() {
+    const {
+      _startReached,
+      sourceArray,
+      chunkSize,
+      emptyIndex,
+      fetch,
+    } = this.getProperties(
+      '_startReached',
+      'sourceArray',
+      'chunkSize',
+      'emptyIndex',
+      'fetch',
+    );
+
+    const firstItem = sourceArray[emptyIndex + 1];
+    const fetchStartIndex = firstItem ? this.getIndex(firstItem) : null;
+
+    const currentChunkSize = _startReached ?
+      Math.min(emptyIndex + 1, chunkSize) : chunkSize;
+
+    if (!currentChunkSize) {
+      return resolve();
+    }
+
     if (!this.get('_fetchPrevLock')) {
       this.set('_fetchPrevLock', true);
-
-      const {
-        _startReached,
-        sourceArray,
-        chunkSize,
-        emptyIndex,
-        fetch,
-      } = this.getProperties(
-        '_startReached',
-        'sourceArray',
-        'chunkSize',
-        'emptyIndex',
-        'fetch',
-      );
-
-      const firstItem = sourceArray[emptyIndex + 1];
-      const fetchStartIndex = firstItem ? this.getIndex(firstItem) : null;
-
-      const currentChunkSize = _startReached ?
-        Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
       this.trigger('fetchPrevStarted');
       return fetch(
@@ -193,41 +237,45 @@ export default ArraySlice.extend(Evented, {
           _.pullAllBy(arrayUpdate, sourceArray, 'id');
           const fetchedArraySize = get(arrayUpdate, 'length');
           let insertIndex = emptyIndex + 1 - fetchedArraySize;
+          // check if we have enough empty items on start to put new data
+          if (insertIndex >= 0) {
+            // add new entries on the front and set new insertIndex for further use
+            for (let i = 0; i < fetchedArraySize; ++i) {
+              sourceArray[i + insertIndex] = arrayUpdate[i];
+            }
+            safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
+            sourceArray.arrayContentDidChange();
+          } else {
+            // there is more data on the array start, so we must make additional space
+            const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
+            sourceArray.unshift(..._.times(
+              additionalFrontSpace,
+              _.constant(emptyItem)
+            ));
+            // insert index is now sourceArray beginning, add new entries
+            insertIndex = 0;
+            for (let i = insertIndex; i < fetchedArraySize; ++i) {
+              sourceArray[i] = arrayUpdate[i];
+            }
+            const indexOffset = fetchedArraySize;
+            this.setProperties({
+              startIndex: this.get('startIndex') + indexOffset,
+              endIndex: this.get('endIndex') + indexOffset,
+            });
+          }
           // fetched data without duplicated is less than requested,
           // so there is nothing left on the array start
-          if (fetchedArraySize >= currentChunkSize) {
-            if (fetchedArraySize < currentChunkSize && insertIndex > 0) {
-              for (let i = 0; i < insertIndex; ++i) {
-                sourceArray.shift();
-              }
-            }
-            if (insertIndex >= 0) {
-              // add new entries on the front and set new insertIndex for further use
-              for (let i = 0; i < fetchedArraySize; ++i) {
-                sourceArray[i + insertIndex] = arrayUpdate[i];
-              }
-              safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
-              sourceArray.arrayContentDidChange();
-            } else {
-              // there is more data on the array start, so we must move all the data
-              sourceArray.unshift(
-                _.times(
-                  fetchedArraySize - emptyIndex - 1,
-                  _.constant(emptyItem)
-                )
-              );
-              insertIndex = 0;
-            }
-          } else {
-            // there is equal or more items available on the start of array,
-            // so let's just reload the front and invalidate everything else!
+          if (fetchedArraySize < currentChunkSize) {
             for (let i = 0; i < insertIndex; ++i) {
               sourceArray.shift();
             }
             this.setProperties({
-              startIndex: 0,
+              startIndex: this.get('startIndex') - insertIndex,
+              endIndex: this.get('endIndex') - insertIndex,
+              _startReached: true,
             });
-            return this.reload();
+          } else {
+            this.set('_startReached', false);
           }
         })
         .catch(error => {
@@ -245,19 +293,24 @@ export default ArraySlice.extend(Evented, {
   },
 
   fetchNext() {
+    const {
+      sourceArray,
+      chunkSize,
+    } = this.getProperties('sourceArray', 'chunkSize');
+
+    const fetchSize = chunkSize;
+    if (!fetchSize) {
+      return resolve();
+    }
+
     if (!this.get('_fetchNextLock')) {
       this.set('_fetchNextLock', true);
 
-      const {
-        sourceArray,
-        chunkSize,
-      } = this.getProperties('sourceArray', 'chunkSize');
-
       const lastItem = sourceArray[get(sourceArray, 'length') - 1];
 
-      const fetchSize = chunkSize;
       const fetchStartIndex = lastItem ? this.getIndex(lastItem) : null;
       const duplicateCount = this.countEndDuplicates(sourceArray);
+      const fetchSize = chunkSize;
 
       this.trigger('fetchNextStarted');
       return this.get('fetch')(
@@ -280,9 +333,8 @@ export default ArraySlice.extend(Evented, {
           this.trigger('fetchNextRejected');
           throw error;
         })
-        .then(result => {
+        .then(() => {
           this.trigger('fetchNextResolved');
-          return result;
         })
         .finally(() => safeExec(this, 'set', '_fetchNextLock', false));
     } else {
@@ -343,12 +395,9 @@ export default ArraySlice.extend(Evented, {
           _endReached: false,
           error: undefined,
         });
-        const emptyIndex = this.set('emptyIndex', _start - 1);
+        this.setEmptyIndex(_start - 1);
         if (updatedEnd < get(sourceArray, 'length')) {
           set(sourceArray, 'length', updatedEnd);
-        }
-        for (let i = 0; i <= emptyIndex; ++i) {
-          sourceArray[i] = emptyItem;
         }
         const updateBoundary = Math.min(updatedEnd, fetchedCount);
         for (let i = 0; i < updateBoundary; ++i) {
@@ -364,15 +413,67 @@ export default ArraySlice.extend(Evented, {
       .finally(() => safeExec(this, 'set', '_isReloading', false));
   },
 
+  jump(index, size = 50) {
+    const {
+      fetch,
+      sourceArray,
+      indexMargin,
+    } = this.getProperties('fetch', 'sourceArray', 'indexMargin');
+    return fetch(
+      index,
+      size + indexMargin * 2,
+      -indexMargin,
+      this
+    ).then(fileAttrs => {
+      // clear array without notify
+      sourceArray.splice(0, get(sourceArray, 'length'));
+      sourceArray.push(...fileAttrs);
+      const startIndex = fileAttrs.findIndex(item =>
+        get(item, 'index') === index
+      );
+      if (startIndex === -1) {
+        return false;
+      } else {
+        const endIndex = Math.min(
+          startIndex + size,
+          fileAttrs.length
+        );
+        this.setProperties({
+          _startReached: false,
+          _endReached: false,
+          startIndex,
+          endIndex,
+          emptyIndex: -1,
+        });
+        sourceArray.arrayContentDidChange();
+        return this;
+      }
+    });
+  },
+
+  setEmptyIndex(index) {
+    const sourceArray = this.get('sourceArray');
+    for (let i = 0; i <= index; ++i) {
+      sourceArray[i] = emptyItem;
+    }
+    this.set('emptyIndex', index);
+  },
+
   init() {
     if (!this.get('sourceArray')) {
       this.set('sourceArray', A());
     }
     this._super(...arguments);
-    this.set(
-      'initialLoad',
-      PromiseObject.create({ promise: this.reload({ head: true }) })
-    ).catch(error => {
+    const initialJumpIndex = this.get('initialJumpIndex');
+    const initialLoad = promiseObject(
+      initialJumpIndex ?
+      this.jump(initialJumpIndex) :
+      this.reload({ head: true }).then(() => {
+        this.set('_startReached', this.get('_start') === 0);
+        return this.startEndChanged();
+      })
+    );
+    this.set('initialLoad', initialLoad).catch(error => {
       console.debug(
         'replacing-chunks-array#init: initial load failed: ' +
         JSON.stringify(error)
