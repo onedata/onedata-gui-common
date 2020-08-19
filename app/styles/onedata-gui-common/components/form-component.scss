@@ -3,8 +3,12 @@ $form-component-view-margin: $padding-base-vertical;
 .form-component {
   .form-group {
     display: flex;
-    flex-wrap: wrap;
     flex-grow: 1;
+
+    &::before, &::after {
+      // remove bootstrap clearfix
+      display: none;
+    }
   }
 
   .field-component {
@@ -16,7 +20,6 @@ $form-component-view-margin: $padding-base-vertical;
   .control-label {
     width: 20%;
     min-width: 100px;
-    text-align: left;
   }
 
   .one-label-tip {
@@ -39,15 +42,26 @@ $form-component-view-margin: $padding-base-vertical;
   .static-text-field-renderer,
   .radio-field-renderer,
   .toggle-field-renderer,
-  .loading-field-renderer {
-    .control-label {
+  .loading-field-renderer,
+  .no-label-top-padding {
+    > .control-label {
       padding-top: 0;
     }
   }
 
+  .textarea-field textarea {
+    resize: none;
+  }
+
   .toggle-field-renderer {
+    align-items: center;
+
     .one-way-toggle {
       display: block;
+    }
+
+    .field-component {
+      flex-shrink: 0;
     }
   }
 
@@ -92,6 +106,10 @@ $form-component-view-margin: $padding-base-vertical;
     }
   }
 
+  .static-text-field-renderer .field-component {
+      word-wrap: break-word;
+  }
+
   .field-view-mode {
     &:not(.form-fields-group-renderer) {
       margin-bottom: $form-component-view-margin;
@@ -101,27 +119,70 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: 0;
     }
 
+    &.textarea-field-renderer {
+      .control-label {
+        padding-top: $padding-base-vertical + 1;
+      }
+    }
+
     &.tags-field-renderer {
       margin-bottom: $form-component-view-margin - $padding-xs-horizontal;
     }
 
-    .static-text-field-renderer,
-    .radio-field-renderer,
-    .toggle-field-renderer {
+    &.static-text-field-renderer,
+    &.radio-field-renderer,
+    &.toggle-field-renderer {
       padding-top: initial;
     }
 
     &.dropdown-field-renderer {
-      .oneicon {
+      .dropdown-field .oneicon {
         font-size: 2.2em;
         vertical-align: middle;
         line-height: 0;
         margin-right: $padding-xs-horizontal;
       }
     }
+
+    &.text-like-field-renderer,
+    &.dropdown-field-renderer {
+      .field-component {
+        word-wrap: break-word;
+      }
+    }
   }
 
   @media (min-width: $screen-sm-min) {
+    .control-label {
+      flex-shrink: 0;
+    }
+
+    .wrap-on-desktop,
+    .field-edit-mode {
+      flex-wrap: wrap;
+    }
+
+    .nowrap-on-desktop {
+      flex-wrap: nowrap;
+    }
+
+    .static-text-field-renderer,
+    .clipboard-field-renderer {
+      flex-wrap: nowrap;
+    }
+
+    .form-fields-group-renderer {
+      > .control-label {
+        margin-bottom: $form-group-margin-bottom;
+      }
+    }
+
+    .field-view-mode {
+      .form-fields-group-renderer > .control-label {
+        margin-bottom: $form-component-view-margin;
+      }
+    }
+
     .privileges-field {
       .one-tree.has-items > .one-tree-list {
         padding-top: 0;
@@ -137,8 +198,25 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   @media (max-width: $screen-xs-max) {
+    .form-group {
+      flex-wrap: wrap;
+    }
+
     .control-label {
       width: 100%;
+    }
+
+    .toggle-field-renderer {
+      flex-wrap: nowrap;
+
+      .control-label {
+        width: initial;
+        flex-grow: 1;
+      }
+
+      .field-component {
+        flex-grow: 0;
+      }
     }
   }
 
