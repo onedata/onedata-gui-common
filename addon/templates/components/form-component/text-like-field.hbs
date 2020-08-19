@@ -6,7 +6,7 @@
     class="form-control"
     type={{inputType}}
     disabled={{not isEffectivelyEnabled}}
-    placeholder={{placeholder}}
+    placeholder={{or placeholder null}}
     onblur={{action "focusLost"}}
     oninput={{action "valueChanged" value="target.value"}}
     value={{value}}
