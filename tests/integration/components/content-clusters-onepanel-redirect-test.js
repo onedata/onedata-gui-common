@@ -30,6 +30,5 @@ describe('Integration | Component | content clusters onepanel redirect', functio
         expect(redirectToOnepanelApp).to.be.calledOnce;
         expect(this.$('.spin-spinner')).to.exist;
       });
-
     });
 });

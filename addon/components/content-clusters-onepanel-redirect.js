@@ -17,13 +17,21 @@ import { or } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/content-clusters-onepanel-redirect';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
+/**
+ * @typedef {Object} ClusterModel
+ * @property {string} type
+ * @property {string} domain
+ * @property {string} [entityId] id of cluster
+ * @property {string} [id] id of cluster used if entityId is not defined
+ */
+
 export default Component.extend({
   layout,
   classNames: ['content-clusters-onepanel-redirect'],
 
   /**
    * @virtual
-   * @type {models/Cluster} cluster item
+   * @type {ClusterModel} cluster item
    */
   cluster: undefined,
 
