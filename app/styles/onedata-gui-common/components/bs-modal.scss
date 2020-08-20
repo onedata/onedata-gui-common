@@ -26,7 +26,7 @@ $modal-scroll-margin: 14px;
       @include hide-shadow;
     }
   }
-  &.scroll-on-the-bottom {
+  &.scroll-on-bottom {
     .modal-footer {
       @include hide-shadow;
     }

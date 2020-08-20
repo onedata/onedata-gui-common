@@ -13,11 +13,10 @@ import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
+import $ from 'jquery';
 
 export default BsModal.extend({
   tagName: '',
-
-  _window: window,
 
   /**
    * In original source code modalId depends on elementId which is null here,
@@ -89,33 +88,25 @@ export default BsModal.extend({
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
       if (area) {
-        const scrolledTop = area.scrollTop <= 0;
-        const scrolledBottom = area.scrollTop + area.clientHeight >= area.scrollHeight;
+        const scrolledTop = area.classList.contains('on-top');
+        const scrolledBottom = area.classList.contains('on-bottom');
 
         modalElement.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
-        modalElement.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-the-bottom');
+        modalElement.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
       }
     }
   },
 
   toggleListeners(enabled) {
     const {
-      _window,
       modalElement,
       recomputeScrollShadowFunction,
-    } = this.getProperties('_window', 'modalElement', 'recomputeScrollShadowFunction');
-    const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
+    } = this.getProperties('modalElement', 'recomputeScrollShadowFunction');
+    const methodName = enabled ? 'on' : 'off';
     if (modalElement) {
-      const area = modalElement.querySelector('.bs-modal-body-scroll');
-      if (area) {
-        ['scroll', 'transitionend'].forEach(eventName => {
-          area[methodName](
-            eventName,
-            recomputeScrollShadowFunction
-          );
-        });
-      }
+      const $area = $(modalElement.querySelector('.bs-modal-body-scroll'));
+      $area[methodName]('top-edge-scroll-change', recomputeScrollShadowFunction);
+      $area[methodName]('bottom-edge-scroll-change', recomputeScrollShadowFunction);
     }
-    _window[methodName]('resize', recomputeScrollShadowFunction);
   },
 });
