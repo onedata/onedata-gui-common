@@ -31,25 +31,37 @@ function shortenCamelize(flag) {
   return camelize(flag.split('space_')[1]);
 }
 
+export function currentUserSpacePrivileges(
+  allFlags,
+  currentUserEffPrivileges,
+  currentUserIsOwner
+) {
+  if (!currentUserEffPrivileges) {
+    return null;
+  }
+  const defaultValue = Boolean(currentUserIsOwner);
+  const result = allFlags.reduce((tmpResult, flag) => {
+    tmpResult[shortenCamelize(flag)] = defaultValue;
+    return tmpResult;
+  }, {});
+  if (!currentUserIsOwner) {
+    currentUserEffPrivileges.forEach(flag => {
+      result[shortenCamelize(flag)] = true;
+    }, {});
+  }
+  return result;
+}
+
 export default function computedCurrentUserSpacePrivileges(allFlags) {
   return computed('currentUserEffPrivileges.[]', 'currentUserIsOwner', function () {
     const {
       currentUserEffPrivileges,
       currentUserIsOwner,
     } = this.getProperties('currentUserEffPrivileges', 'currentUserIsOwner');
-    const defaultValue = Boolean(currentUserIsOwner);
-    const result = allFlags.reduce((tmpResult, flag) => {
-      tmpResult[shortenCamelize(flag)] = defaultValue;
-      return tmpResult;
-    }, {});
-    if (!currentUserIsOwner) {
-      currentUserEffPrivileges.forEach(flag => {
-        result[shortenCamelize(flag)] = true;
-      }, {});
-    }
-    return result;
+    return currentUserSpacePrivileges(
+      allFlags,
+      currentUserEffPrivileges,
+      currentUserIsOwner
+    );
   });
-}
-export default function computedCurrentUserSpacePrivileges() {
-  return true;
 }
