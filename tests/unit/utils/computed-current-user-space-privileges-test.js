@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import EmberObject, { get } from '@ember/object';
-import computedCurrentUserSpacePrivileges from 'oneprovider-gui/utils/computed-current-user-space-privileges';
+import computedCurrentUserSpacePrivileges from 'onedata-gui-common/utils/computed-current-user-space-privileges';
 
 describe('Unit | Utility | computed current user space privileges', function () {
   beforeEach(function () {
