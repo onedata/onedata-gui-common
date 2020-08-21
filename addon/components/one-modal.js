@@ -64,7 +64,16 @@ export default BsModal.extend({
    */
   didRender() {
     this._super(...arguments);
-    this.recomputeScrollShadow();
+
+    // Modals make some magic with positioning which does not fire perfect-scrollbars
+    // overflow detection on render. We need to notify perfect-scrollbar about change
+    const modalElement = this.get('modalElement');
+    if (modalElement) {
+      const scrollableArea = modalElement.querySelector('.bs-modal-body-scroll');
+      if (scrollableArea) {
+        scrollableArea.dispatchEvent(new Event('scroll'));
+      }
+    }
   },
 
   /**
