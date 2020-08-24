@@ -23,12 +23,12 @@ $modal-scroll-margin: 14px;
   }
   &.scroll-on-top {
     .modal-header {
-      @include hide-shadow;
+      @include hide-before-shadow;
     }
   }
   &.scroll-on-bottom {
     .modal-footer {
-      @include hide-shadow;
+      @include hide-before-shadow;
     }
   }
 }

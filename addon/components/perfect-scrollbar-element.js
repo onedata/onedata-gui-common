@@ -14,6 +14,7 @@ import { debounce } from '@ember/runloop';
 import PerfectScrollbarMixin from 'onedata-gui-common/mixins/perfect-scrollbar';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import _ from 'lodash';
 
 export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   classNames: ['perfect-scrollbar-element'],
@@ -55,6 +56,24 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   onBottomEdgeScroll: notImplementedIgnore,
 
   /**
+   * Called when scroll reached the left edge or it just moved right from the edge
+   * @virtual optional
+   * @type {Function}
+   * @param {boolean} reachedEdge true if reached edge, false if left it
+   * @returns {any}
+   */
+  onLeftEdgeScroll: notImplementedIgnore,
+
+  /**
+   * Called when scroll reached the right edge or it just moved left from the edge
+   * @virtual optional
+   * @type {Function}
+   * @param {boolean} reachedEdge true if reached edge, false if left it
+   * @returns {any}
+   */
+  onRightEdgeScroll: notImplementedIgnore,
+
+  /**
    * @type {boolean}
    */
   isScrolledTop: false,
@@ -63,6 +82,16 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
    * @type {boolean}
    */
   isScrolledBottom: false,
+
+  /**
+   * @type {boolean}
+   */
+  isScrolledLeft: false,
+
+  /**
+   * @type {boolean}
+   */
+  isScrolledRight: false,
 
   /**
    * @type {boolean}
@@ -168,13 +197,9 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     const {
       isScrolledTop,
       isScrolledBottom,
-      onTopEdgeScroll,
-      onBottomEdgeScroll,
     } = this.getProperties(
       'isScrolledTop',
       'isScrolledBottom',
-      'onTopEdgeScroll',
-      'onBottomEdgeScroll',
     );
     const $element = this.$();
     const element = $element && this.$()[0];
@@ -186,25 +211,30 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     const isNowScrolledTop = element.scrollTop <= 0;
     const isNowScrolledBottom =
       element.scrollTop + element.clientHeight >= element.scrollHeight;
+    const isNowScrolledLeft = element.scrollLeft <= 0;
+    const isNowScrolledRight =
+      element.scrollLeft + element.clientWidth >= element.scrollWidth;
 
-    if (isScrolledTop !== isNowScrolledTop) {
-      this.set('isScrolledTop', isNowScrolledTop);
-      $element
-        .toggleClass('on-top', isNowScrolledTop)
-        .trigger('top-edge-scroll-change');
-      if (typeof onTopEdgeScroll === 'function') {
-        onTopEdgeScroll(isNowScrolledTop);
+    [
+      { side: 'top', isNowScrolledToEdge: isNowScrolledTop },
+      { side: 'bottom', isNowScrolledToEdge: isNowScrolledBottom },
+      { side: 'left', isNowScrolledToEdge: isNowScrolledLeft },
+      { side: 'right', isNowScrolledToEdge: isNowScrolledRight },
+    ].forEach(({ side, isNowScrolledToEdge }) => {
+      const sideWithUpperFirst = _.upperFirst(side);
+      const wasScrolledPropName = `isScrolled${sideWithUpperFirst}`;
+      const onScrollChangeCallback = this.get(`on${sideWithUpperFirst}EdgeScroll`);
+
+      if (this.get(wasScrolledPropName) !== isNowScrolledToEdge) {
+        this.set(wasScrolledPropName, isNowScrolledToEdge);
+        $element
+          .toggleClass(`on-${side}`, isNowScrolledToEdge)
+          .trigger(`${side}-edge-scroll-change`);
+        if (typeof onScrollChangeCallback === 'function') {
+          onScrollChangeCallback(isNowScrolledToEdge);
+        }
       }
-    }
-    if (isScrolledBottom !== isNowScrolledBottom) {
-      this.set('isScrolledBottom', isNowScrolledBottom);
-      $element
-        .toggleClass('on-bottom', isNowScrolledBottom)
-        .trigger('bottom-edge-scroll-change');
-      if (typeof onTopEdgeScroll === 'function') {
-        onBottomEdgeScroll(isNowScrolledBottom);
-      }
-    }
+    });
 
     if (event && event.type === 'touchmove') {
       if (
@@ -217,7 +247,10 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
       ) {
         this.set('hasActiveTouchScroll', true);
         // any other scroll (so being on the edge and scroll outside) will not set
-        // `hasActiveTouchScroll` to true
+        // `hasActiveTouchScroll` to true.
+        // Also any horizontal scroll is not checked, because we do not have any existing
+        // examples of nested horizontal scrollbars. If such exist in the future,
+        // the algorithm will have to be way more complex.
       }
 
       if (this.get('hasActiveTouchScroll')) {
