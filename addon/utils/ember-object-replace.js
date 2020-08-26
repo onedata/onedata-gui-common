@@ -6,8 +6,8 @@
  * value - this prevents changing object references in properties.
  *
  * @module utils/ember-object-replace
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -41,6 +41,10 @@ export default function emberObjectReplace(dest, source) {
     }
   });
   for (let k in copy) {
+    if (dest[k] && get(dest[k], 'constructor.name') === 'ComputedProperty') {
+      // do not copy value to computed property. Let it recalculate on its own
+      continue;
+    }
     set(dest, k, copy[k]);
   }
   return dest;
