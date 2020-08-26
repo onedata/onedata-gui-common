@@ -5,6 +5,12 @@
 );
 
 @include animation-fg-color-change(
+  pulse-orange,
+  inherit,
+  $color-one-orange
+);
+
+@include animation-fg-color-change(
   pulse-mint-gray,
   $color-one-light-gray,
   $color-one-mint
