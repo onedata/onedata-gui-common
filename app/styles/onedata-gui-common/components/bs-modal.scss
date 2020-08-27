@@ -21,14 +21,16 @@ $modal-scroll-margin: 14px;
     @include before-top-shadow;
     @include reposition-inner-shadow;
   }
-  &.scroll-on-top {
-    .modal-header {
-      @include hide-before-shadow;
+  .modal-dialog {
+    &.scroll-on-top {
+      .modal-header {
+        @include hide-before-shadow;
+      }
     }
-  }
-  &.scroll-on-bottom {
-    .modal-footer {
-      @include hide-before-shadow;
+    &.scroll-on-bottom {
+      .modal-footer {
+        @include hide-before-shadow;
+      }
     }
   }
 }

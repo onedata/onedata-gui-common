@@ -96,12 +96,16 @@ export default BsModal.extend({
     const modalElement = this.get('modalElement');
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
-      if (area) {
+      const modalDialog = modalElement.querySelector('.modal-dialog');
+      if (modalDialog && area) {
         const scrolledTop = area.classList.contains('on-top');
         const scrolledBottom = area.classList.contains('on-bottom');
 
-        modalElement.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
-        modalElement.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
+        // We do not add classes to the modalElement, because its classes are changing too
+        // frequently,so it would clear scroll classes added below. On the other hand the
+        // class list of modalDialog is pretty constant
+        modalDialog.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
+        modalDialog.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
       }
     }
   },
