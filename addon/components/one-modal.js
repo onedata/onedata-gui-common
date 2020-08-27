@@ -12,7 +12,7 @@ import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, next } from '@ember/runloop';
 import $ from 'jquery';
 
 export default BsModal.extend({
@@ -120,6 +120,9 @@ export default BsModal.extend({
       const $area = $(modalElement.querySelector('.bs-modal-body-scroll'));
       $area[methodName]('top-edge-scroll-change', recomputeScrollShadowFunction);
       $area[methodName]('bottom-edge-scroll-change', recomputeScrollShadowFunction);
+      if (enabled) {
+        next(() => this.recomputeScrollShadow());
+      }
     }
   },
 });
