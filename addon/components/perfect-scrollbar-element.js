@@ -76,22 +76,22 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   /**
    * @type {boolean}
    */
-  isScrolledTop: false,
+  isScrolledTop: true,
 
   /**
    * @type {boolean}
    */
-  isScrolledBottom: false,
+  isScrolledBottom: true,
 
   /**
    * @type {boolean}
    */
-  isScrolledLeft: false,
+  isScrolledLeft: true,
 
   /**
    * @type {boolean}
    */
-  isScrolledRight: false,
+  isScrolledRight: true,
 
   /**
    * @type {boolean}
@@ -225,10 +225,10 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
       const wasScrolledPropName = `isScrolled${sideWithUpperFirst}`;
       const onScrollChangeCallback = this.get(`on${sideWithUpperFirst}EdgeScroll`);
 
+      $element.toggleClass(`on-${side}`, isNowScrolledToEdge);
       if (this.get(wasScrolledPropName) !== isNowScrolledToEdge) {
         this.set(wasScrolledPropName, isNowScrolledToEdge);
         $element
-          .toggleClass(`on-${side}`, isNowScrolledToEdge)
           .trigger(`${side}-edge-scroll-change`);
         if (typeof onScrollChangeCallback === 'function') {
           onScrollChangeCallback(isNowScrolledToEdge);
