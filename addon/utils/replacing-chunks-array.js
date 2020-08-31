@@ -216,7 +216,7 @@ export default ArraySlice.extend(Evented, {
       Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
     if (!currentChunkSize) {
-      return resolve();
+      return resolve(false);
     }
 
     if (!this.get('_fetchPrevLock')) {
@@ -295,7 +295,7 @@ export default ArraySlice.extend(Evented, {
           });
         });
     } else {
-      return resolve();
+      return resolve(false);
     }
   },
 
@@ -307,7 +307,7 @@ export default ArraySlice.extend(Evented, {
 
     const fetchSize = chunkSize;
     if (!fetchSize) {
-      return resolve();
+      return resolve(false);
     }
 
     if (!this.get('_fetchNextLock')) {
@@ -350,7 +350,7 @@ export default ArraySlice.extend(Evented, {
           });
         });
     } else {
-      return resolve();
+      return resolve(false);
     }
   },
 
