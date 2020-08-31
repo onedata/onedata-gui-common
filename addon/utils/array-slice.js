@@ -22,13 +22,6 @@ export default ArrayProxy.extend({
 
   sourceArray: computed.alias('content'),
 
-  /**
-   * @type {Ember.ComputedProperty<number>}
-   */
-  maxLength: computed('startIndex', 'endIndex', function getMaxLength() {
-    return this.get('endIndex') - this.get('startIndex');
-  }),
-
   _start: computed('startIndex', 'indexMargin', function _start() {
     const {
       startIndex,

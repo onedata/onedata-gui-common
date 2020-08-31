@@ -13,7 +13,6 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { get, set, computed, observer } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
-import { math, writable } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 import _ from 'lodash';
 import { resolve, all as allFulfilled } from 'rsvp';
@@ -41,13 +40,6 @@ export default ArraySlice.extend(Evented, {
    * @type {String} anything that is an index in backend
    */
   initialJumpIndex: undefined,
-
-  /**
-   * @virtual optional
-   * If `chunkSize` is computed from endIndex and startIndex, `chunkSize` will not be
-   * smaller than this number
-   */
-  minChunkSize: 50,
 
   /**
    * Initialized in init
@@ -79,7 +71,7 @@ export default ArraySlice.extend(Evented, {
   /**
    * @type {Ember.ComputedProperty<number>}
    */
-  chunkSize: writable(math.min('maxLength', 'minChunkSize')),
+  chunkSize: 24,
 
   loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
     return this.get('chunkSize') / 2;
