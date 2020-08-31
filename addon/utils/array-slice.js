@@ -43,7 +43,7 @@ export default ArrayProxy.extend({
     );
 
     const sourceLength = this.get('sourceArray.length');
-    return Math.min(sourceLength, endIndex + indexMargin);
+    return Math.max(Math.min(sourceLength, endIndex + indexMargin), 0);
   }),
 
   _startChanged: observer('_start', function _startChanged() {

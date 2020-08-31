@@ -346,7 +346,7 @@ export default ArraySlice.extend(Evented, {
     }
   },
 
-  reload({ head = false, minSize = 0, offset = 0 } = {}) {
+  reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
     const {
       _start,
       _end,
