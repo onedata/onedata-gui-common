@@ -1,4 +1,7 @@
 export default {
-  insufficientPrivileges: 'Insufficient privileges (requires "{{privilege}}" privilege).',
-  insufficientPrivilegesWithModel: 'Insufficient privileges (requires "{{privilege}}" privilege in this {{modelName}}).',
+  insufficientPrivileges: 'Insufficient privileges (requires {{privilegeExpression}}).',
+  insufficientPrivilegesWithModel: 'Insufficient privileges (requires {{privilegeExpression}} in this {{modelName}}).',
+  and: 'and',
+  privilege: 'privilege',
+  privileges: 'privileges',
 };
