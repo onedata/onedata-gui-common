@@ -126,44 +126,75 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     };
   }),
 
-  didInsertElement() {
-    this._super(...arguments);
-
+  /**
+   * It does not observe any property to not recalculate callback references
+   * @type {ComputedProperty<Array<{ eventName: String, handler: Function }>>}
+   */
+  eventListeners: computed(function eventListeners() {
     const {
       onScroll,
       detectReachingStartEndHandler,
       touchEndHandler,
     } = this.getProperties(
-      'class',
       'onScroll',
       'detectReachingStartEndHandler',
-      'touchEndHandler'
+      'touchEndHandler',
     );
 
-    this.$()
-      .on('ps-scroll-y', onScroll)
-      .on('ps-scroll-x', onScroll)
-      .on('scroll transitionend touchmove', detectReachingStartEndHandler)
-      .on('touchend', touchEndHandler);
+    return [{
+      eventName: 'ps-scroll-y',
+      handler: onScroll,
+    }, {
+      eventName: 'ps-scroll-x',
+      handler: onScroll,
+    }, {
+      eventName: 'scroll',
+      handler: detectReachingStartEndHandler,
+      passive: true,
+    }, {
+      eventName: 'transitionend',
+      handler: detectReachingStartEndHandler,
+    }, {
+      eventName: 'touchmove',
+      handler: detectReachingStartEndHandler,
+      passive: true,
+    }, {
+      eventName: 'touchend',
+      handler: touchEndHandler,
+    }];
+  }),
+
+  didInsertElement() {
+    this._super(...arguments);
+
+    const {
+      eventListeners,
+      element,
+    } = this.getProperties(
+      'class',
+      'eventListeners',
+      'element'
+    );
+
+    eventListeners.forEach(({ eventName, handler, passive }) =>
+      element.addEventListener(eventName, handler, passive ? { passive: true } : false)
+    );
   },
 
   willDestroyElement() {
     try {
       const {
-        onScroll,
-        detectReachingStartEndHandler,
-        touchEndHandler,
+        eventListeners,
+        element,
       } = this.getProperties(
-        'onScroll',
-        'detectReachingStartEndHandler',
-        'touchEndHandler'
+        'class',
+        'eventListeners',
+        'element'
       );
 
-      this.$()
-        .off('ps-scroll-y', onScroll)
-        .off('ps-scroll-x', onScroll)
-        .off('scroll transitionend touchmove', detectReachingStartEndHandler)
-        .off('touchend', touchEndHandler);
+      eventListeners.forEach(({ eventName, handler }) =>
+        element.removeEventListener(eventName, handler)
+      );
     } finally {
       this._super(...arguments);
     }
@@ -197,12 +228,12 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
     const {
       isScrolledTop,
       isScrolledBottom,
+      element,
     } = this.getProperties(
       'isScrolledTop',
       'isScrolledBottom',
+      'element',
     );
-    const $element = this.$();
-    const element = $element && this.$()[0];
 
     if (!element) {
       return;
@@ -225,11 +256,10 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
       const wasScrolledPropName = `isScrolled${sideWithUpperFirst}`;
       const onScrollChangeCallback = this.get(`on${sideWithUpperFirst}EdgeScroll`);
 
-      $element.toggleClass(`on-${side}`, isNowScrolledToEdge);
+      element.classList.toggle(`on-${side}`, isNowScrolledToEdge);
       if (this.get(wasScrolledPropName) !== isNowScrolledToEdge) {
         this.set(wasScrolledPropName, isNowScrolledToEdge);
-        $element
-          .trigger(`${side}-edge-scroll-change`);
+        element.dispatchEvent(new Event(`${side}-edge-scroll-change`));
         if (typeof onScrollChangeCallback === 'function') {
           onScrollChangeCallback(isNowScrolledToEdge);
         }

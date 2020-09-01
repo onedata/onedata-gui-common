@@ -13,7 +13,6 @@ import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
-import $ from 'jquery';
 
 export default BsModal.extend({
   tagName: '',
@@ -115,13 +114,21 @@ export default BsModal.extend({
       modalElement,
       recomputeScrollShadowFunction,
     } = this.getProperties('modalElement', 'recomputeScrollShadowFunction');
-    const methodName = enabled ? 'on' : 'off';
+
     if (modalElement) {
-      const $area = $(modalElement.querySelector('.bs-modal-body-scroll'));
-      $area[methodName]('top-edge-scroll-change', recomputeScrollShadowFunction);
-      $area[methodName]('bottom-edge-scroll-change', recomputeScrollShadowFunction);
-      if (enabled) {
-        next(() => this.recomputeScrollShadow());
+      const area = modalElement.querySelector('.bs-modal-body-scroll');
+      if (area) {
+        const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
+        ['top-edge-scroll-change', 'bottom-edge-scroll-change'].forEach(eventName => {
+          area[methodName](
+            eventName,
+            recomputeScrollShadowFunction
+          );
+        });
+
+        if (enabled) {
+          next(() => this.recomputeScrollShadow());
+        }
       }
     }
   },
