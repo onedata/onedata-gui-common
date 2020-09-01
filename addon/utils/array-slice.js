@@ -22,13 +22,6 @@ export default ArrayProxy.extend({
 
   sourceArray: computed.alias('content'),
 
-  /**
-   * @type {Ember.ComputedProperty<number>}
-   */
-  maxLength: computed('startIndex', 'endIndex', function getMaxLength() {
-    return this.get('endIndex') - this.get('startIndex');
-  }),
-
   _start: computed('startIndex', 'indexMargin', function _start() {
     const {
       startIndex,
@@ -50,7 +43,7 @@ export default ArrayProxy.extend({
     );
 
     const sourceLength = this.get('sourceArray.length');
-    return Math.min(sourceLength, endIndex + indexMargin);
+    return Math.max(Math.min(sourceLength, endIndex + indexMargin), 0);
   }),
 
   _startChanged: observer('_start', function _startChanged() {
