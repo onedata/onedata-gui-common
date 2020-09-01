@@ -13,7 +13,6 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { get, set, computed, observer } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
-import { math, writable } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 import _ from 'lodash';
 import { resolve, all as allFulfilled } from 'rsvp';
@@ -41,13 +40,6 @@ export default ArraySlice.extend(Evented, {
    * @type {String} anything that is an index in backend
    */
   initialJumpIndex: undefined,
-
-  /**
-   * @virtual optional
-   * If `chunkSize` is computed from endIndex and startIndex, `chunkSize` will not be
-   * smaller than this number
-   */
-  minChunkSize: 50,
 
   /**
    * Initialized in init
@@ -79,7 +71,7 @@ export default ArraySlice.extend(Evented, {
   /**
    * @type {Ember.ComputedProperty<number>}
    */
-  chunkSize: writable(math.min('maxLength', 'minChunkSize')),
+  chunkSize: 24,
 
   loadMoreThreshold: computed('chunkSize', function getLoadMoreThreshold() {
     return this.get('chunkSize') / 2;
@@ -216,7 +208,7 @@ export default ArraySlice.extend(Evented, {
       Math.min(emptyIndex + 1, chunkSize) : chunkSize;
 
     if (!currentChunkSize) {
-      return resolve();
+      return resolve(false);
     }
 
     if (!this.get('_fetchPrevLock')) {
@@ -237,31 +229,33 @@ export default ArraySlice.extend(Evented, {
           _.pullAllBy(arrayUpdate, sourceArray, 'id');
           const fetchedArraySize = get(arrayUpdate, 'length');
           let insertIndex = emptyIndex + 1 - fetchedArraySize;
-          // check if we have enough empty items on start to put new data
-          if (insertIndex >= 0) {
-            // add new entries on the front and set new insertIndex for further use
-            for (let i = 0; i < fetchedArraySize; ++i) {
-              sourceArray[i + insertIndex] = arrayUpdate[i];
+          if (fetchedArraySize) {
+            // check if we have enough empty items on start to put new data
+            if (insertIndex >= 0) {
+              // add new entries on the front and set new insertIndex for further use
+              for (let i = 0; i < fetchedArraySize; ++i) {
+                sourceArray[i + insertIndex] = arrayUpdate[i];
+              }
+              safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
+              sourceArray.arrayContentDidChange();
+            } else {
+              // there is more data on the array start, so we must make additional space
+              const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
+              sourceArray.unshift(..._.times(
+                additionalFrontSpace,
+                _.constant(emptyItem)
+              ));
+              // insert index is now sourceArray beginning, add new entries
+              insertIndex = 0;
+              for (let i = insertIndex; i < fetchedArraySize; ++i) {
+                sourceArray[i] = arrayUpdate[i];
+              }
+              const indexOffset = fetchedArraySize;
+              this.setProperties({
+                startIndex: this.get('startIndex') + indexOffset,
+                endIndex: this.get('endIndex') + indexOffset,
+              });
             }
-            safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
-            sourceArray.arrayContentDidChange();
-          } else {
-            // there is more data on the array start, so we must make additional space
-            const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
-            sourceArray.unshift(..._.times(
-              additionalFrontSpace,
-              _.constant(emptyItem)
-            ));
-            // insert index is now sourceArray beginning, add new entries
-            insertIndex = 0;
-            for (let i = insertIndex; i < fetchedArraySize; ++i) {
-              sourceArray[i] = arrayUpdate[i];
-            }
-            const indexOffset = fetchedArraySize;
-            this.setProperties({
-              startIndex: this.get('startIndex') + indexOffset,
-              endIndex: this.get('endIndex') + indexOffset,
-            });
           }
           // fetched data without duplicated is less than requested,
           // so there is nothing left on the array start
@@ -286,9 +280,14 @@ export default ArraySlice.extend(Evented, {
           this.trigger('fetchPrevResolved');
           return result;
         })
-        .finally(() => safeExec(this, 'set', '_fetchPrevLock', false));
+        .finally(() => {
+          safeExec(this, () => {
+            this.set('_fetchPrevLock', false);
+            this.notifyPropertyChange('[]');
+          });
+        });
     } else {
-      return resolve();
+      return resolve(false);
     }
   },
 
@@ -300,7 +299,7 @@ export default ArraySlice.extend(Evented, {
 
     const fetchSize = chunkSize;
     if (!fetchSize) {
-      return resolve();
+      return resolve(false);
     }
 
     if (!this.get('_fetchNextLock')) {
@@ -336,13 +335,18 @@ export default ArraySlice.extend(Evented, {
         .then(() => {
           this.trigger('fetchNextResolved');
         })
-        .finally(() => safeExec(this, 'set', '_fetchNextLock', false));
+        .finally(() => {
+          safeExec(this, () => {
+            this.set('_fetchNextLock', false);
+            this.notifyPropertyChange('[]');
+          });
+        });
     } else {
-      return resolve();
+      return resolve(false);
     }
   },
 
-  reload({ head = false, minSize = 0, offset = 0 } = {}) {
+  reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -410,7 +414,12 @@ export default ArraySlice.extend(Evented, {
         safeExec(this, 'set', 'error', error);
         throw error;
       })
-      .finally(() => safeExec(this, 'set', '_isReloading', false));
+      .finally(() => {
+        safeExec(this, () => {
+          this.set('_isReloading', false);
+          this.notifyPropertyChange('[]');
+        });
+      });
   },
 
   jump(index, size = 50) {

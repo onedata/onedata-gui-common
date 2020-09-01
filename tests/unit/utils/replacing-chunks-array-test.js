@@ -152,15 +152,19 @@ describe('Unit | Utility | replacing chunks array', function () {
 
   it('performs fetch as large as needed to load array content', function () {
     const fetchSpy = sinon.spy(this.fetch);
+    const chunkSize = 24;
     const array = ReplacingChunksArray.create({
       fetch: fetchSpy,
       startIndex: 0,
       endIndex: 20,
+      indexMargin: 0,
+      chunkSize,
     });
     return wait()
       .then(() => {
-        expect(array.toArray(), 'content before reload')
+        expect(array.toArray(), 'content before load more')
           .to.deep.equal(recordRange(0, 20));
+        fetchSpy.reset();
         array.setProperties({
           startIndex: 15,
           endIndex: 45,
@@ -169,7 +173,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       })
       .then(() => {
         expect(fetchSpy, 'fetch records needed to fill start to end')
-          .to.be.calledWith(gteMatcher(19), gteMatcher(25), 1);
+          .to.be.calledWith(gteMatcher(19), chunkSize, 1);
         expect(get(array, '_start')).to.equal(15);
         expect(get(array, '_end')).to.equal(45);
         expect(array.toArray(), 'content after reload')
@@ -652,22 +656,28 @@ describe('Unit | Utility | replacing chunks array', function () {
   it('modifies source array after jump to contain requested range and prev next chunks',
     function () {
       const fetchSpy = sinon.spy(this.fetch);
+      const chunkSize = 10;
+      const jumpStart = 60;
+      const jumpAreaSize = 30;
       const array = ReplacingChunksArray.create({
         fetch: fetchSpy,
         startIndex: 0,
         endIndex: 10,
         indexMargin: 0,
+        chunkSize,
       });
       return wait()
         .then(() => {
           fetchSpy.reset();
-          return array.jump(60, 30);
+          return array.jump(jumpStart, jumpAreaSize);
         })
         .then(() => {
-          expect(fetchSpy, 'jump fetch call').to.be.calledWith(60, 30);
+          expect(fetchSpy, 'jump fetch call').to.be.calledWith(jumpStart, jumpAreaSize);
           const source = array.get('sourceArray').toArray();
           expect(source, `source after jump ${inspect(array)}`)
-            .to.deep.equal(recordRange(30, 120));
+            .to.deep.equal(
+              recordRange(jumpStart - chunkSize, jumpStart + jumpAreaSize + chunkSize)
+            );
         });
     }
   );
