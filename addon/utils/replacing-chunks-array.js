@@ -321,11 +321,14 @@ export default ArraySlice.extend(Evented, {
           (lastItem ? 1 : 0) + duplicateCount,
           this
         )
-        .then(array => {
-          if (get(array, 'length') < chunkSize) {
+        .then(arrayUpdate => {
+          // after asynchronous fetch, other fetch could modify array, so we need to
+          // ensure that pulled data does not already contain new records
+          _.pullAllBy(arrayUpdate, sourceArray, 'id');
+          if (get(arrayUpdate, 'length') < chunkSize) {
             safeExec(this, 'set', '_endReached', true);
           }
-          sourceArray.push(...array);
+          sourceArray.push(...arrayUpdate);
           sourceArray.arrayContentDidChange();
         })
         .catch(error => {
