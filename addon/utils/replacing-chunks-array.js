@@ -322,9 +322,9 @@ export default ArraySlice.extend(Evented, {
           this
         )
         .then(arrayUpdate => {
-          if (sourceArrayLength !== get(sourceArray, 'length')) {
+          if (lastItem !== sourceArray[get(sourceArray, 'length') - 1]) {
             console.debug(
-              'util:replacing-chunks-array#fetchNext: source array length changed before fetch resolved, ignoring values'
+              'util:replacing-chunks-array#fetchNext: source array last item changed before fetch resolved, so it was modified; ignoring values'
             );
             return false;
           }
