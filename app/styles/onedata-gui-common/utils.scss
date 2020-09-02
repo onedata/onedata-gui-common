@@ -1,5 +1,6 @@
 // SCSS utils
 $top-shadow-height: 6px;
+$top-shadow-zindex: 1002;
 
 @mixin fill-container() {
   top: 0;
@@ -86,45 +87,88 @@ $top-shadow-height: 6px;
   @include vendor-prefix(user-select, none);
 }
 
-@mixin hide-shadow() {
+@mixin hide-before-shadow() {
   &::before {
     height: 0;
   }
 }
 
-@mixin shadow-base($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05, $direction) {
-  &::before {
-    position: absolute;
-    @if #{$direction} == #{to bottom} {
-      top: -$top-shadow-height;
-    }
-    @if #{$direction} == #{to top} {
-      bottom: -$top-shadow-height;
-    }
-    height: $top-shadow-height;
-    background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
-    transition: height 0.2s linear;
-    content: ' ';
-    width: 100%;
-    z-index: 1002;
-    left: 0;
-    right: 0;
+@mixin hide-after-shadow() {
+  &::after {
+    width: 0;
   }
 }
 
-@mixin before-top-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+@mixin shadow-base($shadow-height: $top-shadow-height, $shadow-alpha: 0.05, $direction) {
+  @if #{$direction} == #{to bottom} or #{$direction} == #{to top} {
+    &::before {
+      position: absolute;
+      @if #{$direction} == #{to bottom} {
+        top: -$shadow-height;
+      }
+      @if #{$direction} == #{to top} {
+        bottom: -$shadow-height;
+      }
+      height: $shadow-height;
+      background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
+      transition: height 0.2s linear;
+      content: ' ';
+      width: 100%;
+      z-index: $top-shadow-zindex;
+      left: 0;
+      right: 0;
+    }
+  }
+  @if #{$direction} == #{to left} or #{$direction} == #{to right} {
+    &::after {
+      position: absolute;
+      @if #{$direction} == #{to left} {
+        right: -$shadow-height;
+      }
+      @if #{$direction} == #{to right} {
+        left: -$shadow-height;
+      }
+      width: $shadow-height;
+      background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
+      transition: width 0.2s linear;
+      content: ' ';
+      height: 100%;
+      z-index: $top-shadow-zindex;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
+
+@mixin before-top-shadow($shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
   @include shadow-base(
-    $top-shadow-height: $top-shadow-height,
+    $shadow-height: $shadow-height,
     $shadow-alpha: $shadow-alpha,
     $direction: to bottom,
   );
 }
 
-@mixin before-bottom-shadow($top-shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+@mixin before-bottom-shadow($shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
   @include shadow-base(
-    $top-shadow-height: $top-shadow-height,
+    $shadow-height: $shadow-height,
     $shadow-alpha: $shadow-alpha,
     $direction: to top,
+  );
+}
+
+@mixin after-left-shadow($shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+  @include shadow-base(
+    $shadow-height: $shadow-height,
+    $shadow-alpha: $shadow-alpha,
+    $direction: to right,
+  );
+}
+
+@mixin after-right-shadow($shadow-height: $top-shadow-height, $shadow-alpha: 0.05) {
+  @include shadow-base(
+    $shadow-height: $shadow-height,
+    $shadow-alpha: $shadow-alpha,
+    $direction: to left,
   );
 }
 
