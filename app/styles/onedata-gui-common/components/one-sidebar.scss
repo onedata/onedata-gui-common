@@ -228,6 +228,13 @@
     width: 22px;
     height: 22px;
     color: $color-one-warning;
+    
+    & + .forbidden-icon {
+      right: $padding-large-horizontal * 3;
+      @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+        right: $padding-large-horizontal * 2;
+      }
+    }
   }
   
   .forbidden-icon {
