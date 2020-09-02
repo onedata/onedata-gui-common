@@ -145,7 +145,7 @@ export default ArraySlice.extend(Evented, {
     '_endReached',
     'loadMoreThreshold',
     'sourceArray.[]',
-    function startChanged() {
+    function endChanged() {
       if (!this.get('isReloading')) {
         const {
           _end,
@@ -305,8 +305,8 @@ export default ArraySlice.extend(Evented, {
     if (!this.get('_fetchNextLock')) {
       this.set('_fetchNextLock', true);
 
-      const lastItem = sourceArray[get(sourceArray, 'length') - 1];
-
+      const sourceArrayLength = get(sourceArray, 'length');
+      const lastItem = sourceArray[sourceArrayLength - 1];
       const fetchStartIndex = lastItem ? this.getIndex(lastItem) : null;
       const duplicateCount = this.countEndDuplicates(sourceArray);
       const fetchSize = chunkSize;
@@ -322,6 +322,13 @@ export default ArraySlice.extend(Evented, {
           this
         )
         .then(arrayUpdate => {
+          if (sourceArrayLength !== get(sourceArray, 'length')) {
+            console.debug(
+              'util:replacing-chunks-array#fetchNext: source array length changed before fetch resolved, ignoring values'
+            );
+            return false;
+          }
+
           // after asynchronous fetch, other fetch could modify array, so we need to
           // ensure that pulled data does not already contain new records
           _.pullAllBy(arrayUpdate, sourceArray, 'id');
