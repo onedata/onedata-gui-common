@@ -40,7 +40,7 @@ function createPrivilegeExpression(i18n, privileges) {
     if (privileges.length === 1) {
       return `${singleExpr(i18n, privileges[0])} ${i18n.t(i18nPrefix + '.privilege')}`;
     } else {
-      return privileges.slice(0, privileges.length - 1)
+      return privileges.slice(0, -1)
         .map(p => singleExpr(i18n, p)).join(', ') +
         ` ${i18n.t(i18nPrefix + '.and')} ` +
         singleExpr(i18n, privileges[privileges.length - 1]) +
