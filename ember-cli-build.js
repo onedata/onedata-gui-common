@@ -9,6 +9,23 @@ const breakpointValues = require('./addon/breakpoint-values').default;
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
+    'fingerprint': {
+      extensions: [
+        'js',
+        'css',
+        'map',
+        'svg',
+        'png',
+        'jpg',
+        'gif',
+        'webmanifest',
+        'ttf',
+        'woff',
+        'svg',
+        'eot',
+      ],
+      replaceExtensions: ['html', 'css', 'js', 'webmanifest'],
+    },
     'ember-cli-babel': {
       includePolyfill: true,
     },
