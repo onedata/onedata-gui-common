@@ -1,0 +1,15 @@
+export default {
+  cluster: 'cluster',
+  group: 'group',
+  guiMessage: 'GUI message',
+  harvester: 'harvester',
+  index: 'index',
+  linkedAccount: 'linked account',
+  membership: 'membership',
+  privilege: 'privilege',
+  provider: 'provider',
+  share: 'share',
+  space: 'space',
+  user: 'user',
+  token: 'token',
+};

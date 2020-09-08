@@ -70,14 +70,29 @@
   }
 
   .active > .item-header > a, .active > a {
-    .sidebar-item-icon, .truncated-string, .status-toolbar {
+    .sidebar-item-icon, .truncated-string, .status-toolbar, .one-label {
       color: $color-one-red;
     }
   }
+  .active.disabled {
+    > .item-header > a,
+    > a {
+      .sidebar-item-icon, .truncated-string, .status-toolbar, .one-label {
+        color: inactive-color($color-one-red);
+      }
+    }
+  }
+  
   a:not(.btn) {
     color: $main-text-color;
   }
 
+  .disabled {
+    a:not(.btn) {
+      color: disabled-color($main-text-color);
+    }
+  }
+  
   input {
     @include font-regular();
   }
@@ -213,6 +228,19 @@
     width: 22px;
     height: 22px;
     color: $color-one-warning;
+    
+    & + .forbidden-icon {
+      right: $padding-large-horizontal * 3;
+      @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+        right: $padding-large-horizontal * 2;
+      }
+    }
+  }
+  
+  .forbidden-icon {
+    @include vertical-align-middle;
+    right: $padding-large-horizontal;
+    font-size: $menu-icon-font-size;
   }
 }
 
