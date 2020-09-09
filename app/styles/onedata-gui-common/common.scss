@@ -41,7 +41,6 @@ strong {
 
 .full-height {
   height: 100%;
-  overflow-y: auto;
 }
 
 .full-width {
@@ -428,7 +427,7 @@ a {
 }
 
 .code-textarea {
-  font-family: monospace;
+  font-family: $font-family-monospace;
   resize: none; 
 }
 
@@ -441,7 +440,7 @@ textarea.no-resize  {
   height: 120px;
   margin-top: $padding-base-vertical;
   margin-bottom: $padding-base-vertical;
-  font-family: monospace;
+  font-family: $font-family-monospace;
 }
 
 @media (max-width: $screen-xs-max) {
@@ -666,7 +665,7 @@ textarea[style^="touch-action: manipulation"] {
   textarea {
     display: block;
     resize: none;
-    font-family: monospace;
+    font-family: $font-family-monospace;
   }
   .btn-container {
     display: inline-block;

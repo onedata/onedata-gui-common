@@ -38,6 +38,7 @@ $modal-scroll-margin: 14px;
 .modal.in .modal-dialog {
   .modal-body {
     .bs-modal-body-scroll {
+      height: 100%;
       margin-right: -$modal-scroll-margin;
       padding-right: $modal-scroll-margin;
     }    
