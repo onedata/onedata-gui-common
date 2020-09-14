@@ -33,6 +33,11 @@ $modal-scroll-margin: 14px;
       }
     }
   }
+  &.full-vertical {
+    .modal-content {
+      height: 100vh !important;
+    }
+  }
 }
 
 .modal.in .modal-dialog {
