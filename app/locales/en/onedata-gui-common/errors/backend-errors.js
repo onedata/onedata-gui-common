@@ -110,11 +110,21 @@ export default {
   autoCleaningDisabled: 'Auto-cleaning is disabled.',
   filePopularityDisabled: 'File popularity is disabled.',
   spaceNotSupportedBy: 'Space is not supported by the Oneprovider (Id: {{providerId}}).',
+  notALocalStorageSupportingSpace: 'Storage (ID: {{storageId}}) does not belong to this Oneprovider (ID: {{providerId}}) and/or does not support the space (ID: {{spaceId}}).',
   storageInUse: 'Specified storage supports a space.',
+  requiresManualStorageImportMode: 'Operation requires space with manual storage import mode.',
+  requiresAutoStorageImportMode: 'Operation requires space with auto storage import mode.',
   storageTestFailed: 'Failed to {{operation}} test file on storage.',
+  requiresNonImportedStorage: 'Cannot apply for storage (ID: {{storageId}}) - this operation requires a non-imported storage.',
+  requiresImportedStorage: 'Cannot apply for storage (ID: {{storageId}}) - this operation requires a non-imported storage.',
+  requiresPosixCompatibleStorage: 'Cannot apply for storage (ID: {{storageId}}) - this operation requires a POSIX-compatible storage (any of: {{posixCompatibleStorages}}).',
+  autoStorageImportNotSupported: 'Cannot configure auto storage import on storage (ID: {{storageId}}) - this operation requires any of: {{supportedStorages}} storage with canonical path type and on object storages (any of: {{supportedObjectStorages}}) it requires blockSize = 0.',
+  fileRegistrationNotSupported: 'Cannot perform file registration on storage (ID: {{storageId}}) - this operation requires storage with canonical path type and on object storages (any of: {{objectStorages}}) it requires blockSize = 0.',
+  statOperationNotSupported: 'Storage (ID: {{storageId}}) does not support the `stat` operation or equivalent used for acquiring files metadata.',
   transferAlreadyEnded: 'The transfer has already ended.',
   transferNotEnded: 'The transfer has not ended yet.',
   viewNotExistsOn: 'The database view does not exist on the Oneprovider (Id: {{providerId}}).',
+  viewQueryFailed: 'Query on view failed. Error category: {{category}}. Description: {{description}}.',
 
   // Onepanel errors
   errorOnNodes: 'Error on nodes {{hostnames}}: {{error}}',
@@ -126,7 +136,6 @@ export default {
   nodeNotCompatible: 'Cannot add "{{hostname}}", it is a {{clusterType}} node.',
   noConnectionToNewNode: 'Cannot add node "{{hostname}}", connection failed.',
   noServiceNodes: 'Service {{service}} is not deployed on any node.',
-  storageImportStarted: 'Modifying storageImport that has been already started.',
 
   // Unexpected error
   unexpectedError: 'Unexpected error, reference: {{reference}}.',
