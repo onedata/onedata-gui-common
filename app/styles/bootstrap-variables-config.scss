@@ -49,11 +49,12 @@ $link-hover-decoration: none;
 //
 //## Font, line-height, and color for body text, headings, and more.
 
+// NOTE: one-font-* families are set in `fonts.scss`
 $font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-family-sans-serif:  "Open Sans", sans-serif;
+$font-family-sans-serif:  $one-font-family-regular, sans-serif;
 $font-family-serif:       Georgia, "Times New Roman", Times, serif !default;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
-$font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace !default;
+$font-family-monospace:   $one-font-family-monospace, monospace !default;
 $font-family-base:        $font-family-sans-serif !default;
 $font-family-base:        $font-family-sans-serif;
 

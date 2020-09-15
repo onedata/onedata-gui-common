@@ -392,8 +392,19 @@ $token-border-radius: 3px;
 .bs-tab {
   .nav-tabs {
     li {
+      &.nav-item-wide {
+        @media (min-width: $screen-sm-min) {
+          > a {
+            padding-left: $padding-large-horizontal;
+            padding-right: $padding-large-horizontal;
+          }
+        }
+      }
       > a {
         .tab-name {
+          &.truncate {
+            max-width: 200px;  
+          }
           &.tab-state {
             $size: 10px;
             $states: empty inactive disabled danger warning success;
@@ -427,6 +438,9 @@ $token-border-radius: 3px;
               @include stateAfter($state)
             }
           }
+        }
+        .tab-icon + .tab-name {
+          padding-left: 24px;
         }
       }
     }

@@ -33,11 +33,17 @@ $modal-scroll-margin: 14px;
       }
     }
   }
+  &.full-vertical {
+    .modal-content {
+      height: 100vh !important;
+    }
+  }
 }
 
 .modal.in .modal-dialog {
   .modal-body {
     .bs-modal-body-scroll {
+      height: 100%;
       margin-right: -$modal-scroll-margin;
       padding-right: $modal-scroll-margin;
     }    
