@@ -12,9 +12,12 @@
  */
 
 import _ from 'lodash';
-import { get, set } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import plainCopy from 'onedata-gui-common/utils/plain-copy';
 import { typeOf } from '@ember/utils';
+
+// fake, empty computed. Used only for detection of computed properties
+const fakeComputed = computed(() => {});
 
 /**
  * @export
@@ -41,7 +44,7 @@ export default function emberObjectReplace(dest, source) {
     }
   });
   for (let k in copy) {
-    if (dest[k] && get(dest[k], 'constructor.name') === 'ComputedProperty') {
+    if (dest[k] && dest[k].constructor === fakeComputed.constructor) {
       // do not copy value to computed property. Let it recalculate on its own
       continue;
     }
