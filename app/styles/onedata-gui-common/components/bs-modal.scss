@@ -5,11 +5,11 @@ $modal-scroll-margin: 14px;
   @mixin reposition-inner-shadow {
     position: relative;
     &::before {
-      width: calc(100% + 4em + 6px);
-      left: calc(-2em - 3px);
+      width: calc(100% + 4em + 2px);
+      left: calc(-2em - 1px);
       @media (max-width: $screen-xs-max) {
-        width: calc(100% + 6px);
-        left: calc(-3px);
+        width: calc(100% + 2px);
+        left: -1px;
       }
     }
   }
@@ -57,7 +57,20 @@ $modal-scroll-margin: 14px;
     }
     &.btn-toolbar {
       margin-top: 0;
+      margin-left: 0;
     }
+  }
+  .modal-content {
+    // a fix for the semi-transparent border of modal
+    background-clip: unset;
   }
 }
 
+@media (max-width: $screen-xs-max) {
+  .modal.in .modal-dialog {
+    width: calc(100% - 16px);
+    .modal-content {
+      padding: 0;
+    }
+  }
+}
