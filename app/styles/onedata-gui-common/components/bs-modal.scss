@@ -9,7 +9,7 @@ $modal-scroll-margin: 14px;
       left: calc(-2em - 1px);
       @media (max-width: $screen-xs-max) {
         width: calc(100% + 2px);
-        left: calc(-1px);
+        left: -1px;
       }
     }
   }
