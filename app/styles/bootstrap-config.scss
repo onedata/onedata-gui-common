@@ -295,6 +295,7 @@ label {
 .modal {  
   &.in {
     .modal-dialog {
+      $full-with-margins: calc(100% - #{$padding-small-horizontal});
       @include absolute-align-middle-center();
 
       display: flex;
@@ -308,6 +309,29 @@ label {
       &.modal-lg {
         @media (max-width: $screen-sm-max) {
           width: 90%;
+        }
+      }
+      
+      &.modal-full {
+        width: $full-with-margins;
+        height: $full-with-margins;
+        .modal-content {
+          height: 100%;
+        }
+        .modal-body {
+          flex-grow: 1;
+        }
+      }
+      
+      &.modal-xl {
+        @extend .modal-lg;
+        width: $full-with-margins;
+        max-width: 1200px;
+        .modal-content {
+          height: 100%;
+        }
+        .modal-body {
+          flex-grow: 1;
         }
       }
       

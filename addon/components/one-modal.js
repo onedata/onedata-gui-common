@@ -12,12 +12,10 @@ import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
-import { scheduleOnce } from '@ember/runloop';
+import { scheduleOnce, next } from '@ember/runloop';
 
 export default BsModal.extend({
   tagName: '',
-
-  _window: window,
 
   /**
    * In original source code modalId depends on elementId which is null here,
@@ -65,7 +63,16 @@ export default BsModal.extend({
    */
   didRender() {
     this._super(...arguments);
-    this.recomputeScrollShadow();
+
+    // Modals make some magic with positioning which does not fire perfect-scrollbars
+    // overflow detection on render. We need to notify perfect-scrollbar about change
+    const modalElement = this.get('modalElement');
+    if (modalElement) {
+      const scrollableArea = modalElement.querySelector('.bs-modal-body-scroll');
+      if (scrollableArea) {
+        scrollableArea.dispatchEvent(new Event('scroll'));
+      }
+    }
   },
 
   /**
@@ -88,34 +95,41 @@ export default BsModal.extend({
     const modalElement = this.get('modalElement');
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
-      if (area) {
-        const scrolledTop = area.scrollTop <= 0;
-        const scrolledBottom = area.scrollTop + area.clientHeight >= area.scrollHeight;
+      const modalDialog = modalElement.querySelector('.modal-dialog');
+      if (modalDialog && area) {
+        const scrolledTop = area.classList.contains('on-top');
+        const scrolledBottom = area.classList.contains('on-bottom');
 
-        modalElement.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
-        modalElement.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-the-bottom');
+        // We do not add classes to the modalElement, because its classes are changing too
+        // frequently,so it would clear scroll classes added below. On the other hand the
+        // class list of modalDialog is pretty constant
+        modalDialog.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
+        modalDialog.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
       }
     }
   },
 
   toggleListeners(enabled) {
     const {
-      _window,
       modalElement,
       recomputeScrollShadowFunction,
-    } = this.getProperties('_window', 'modalElement', 'recomputeScrollShadowFunction');
-    const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
+    } = this.getProperties('modalElement', 'recomputeScrollShadowFunction');
+
     if (modalElement) {
       const area = modalElement.querySelector('.bs-modal-body-scroll');
       if (area) {
-        ['scroll', 'transitionend'].forEach(eventName => {
+        const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
+        ['top-edge-scroll-change', 'bottom-edge-scroll-change'].forEach(eventName => {
           area[methodName](
             eventName,
             recomputeScrollShadowFunction
           );
         });
+
+        if (enabled) {
+          next(() => this.recomputeScrollShadow());
+        }
       }
     }
-    _window[methodName]('resize', recomputeScrollShadowFunction);
   },
 });

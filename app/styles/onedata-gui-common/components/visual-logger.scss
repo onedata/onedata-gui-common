@@ -7,7 +7,7 @@
   background-color: rgba(white, 0.75);
   color: $main-text-color;
   border: 1px solid $main-border-color;
-  font-family: monospace;
+  font-family: $font-family-monospace;
   
   .visual-logger-inner {
     position: relative;

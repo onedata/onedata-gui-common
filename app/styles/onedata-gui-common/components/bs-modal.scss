@@ -5,11 +5,11 @@ $modal-scroll-margin: 14px;
   @mixin reposition-inner-shadow {
     position: relative;
     &::before {
-      width: calc(100% + 4em + 6px);
-      left: calc(-2em - 3px);
+      width: calc(100% + 4em + 2px);
+      left: calc(-2em - 1px);
       @media (max-width: $screen-xs-max) {
-        width: calc(100% + 6px);
-        left: calc(-3px);
+        width: calc(100% + 2px);
+        left: -1px;
       }
     }
   }
@@ -21,14 +21,21 @@ $modal-scroll-margin: 14px;
     @include before-top-shadow;
     @include reposition-inner-shadow;
   }
-  &.scroll-on-top {
-    .modal-header {
-      @include hide-shadow;
+  .modal-dialog {
+    &.scroll-on-top {
+      .modal-header {
+        @include hide-before-shadow;
+      }
+    }
+    &.scroll-on-bottom {
+      .modal-footer {
+        @include hide-before-shadow;
+      }
     }
   }
-  &.scroll-on-the-bottom {
-    .modal-footer {
-      @include hide-shadow;
+  &.full-vertical {
+    .modal-content {
+      height: 100vh !important;
     }
   }
 }
@@ -36,6 +43,7 @@ $modal-scroll-margin: 14px;
 .modal.in .modal-dialog {
   .modal-body {
     .bs-modal-body-scroll {
+      height: 100%;
       margin-right: -$modal-scroll-margin;
       padding-right: $modal-scroll-margin;
     }    
@@ -49,7 +57,20 @@ $modal-scroll-margin: 14px;
     }
     &.btn-toolbar {
       margin-top: 0;
+      margin-left: 0;
     }
+  }
+  .modal-content {
+    // a fix for the semi-transparent border of modal
+    background-clip: unset;
   }
 }
 
+@media (max-width: $screen-xs-max) {
+  .modal.in .modal-dialog {
+    width: calc(100% - 16px);
+    .modal-content {
+      padding: 0;
+    }
+  }
+}

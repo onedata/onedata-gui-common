@@ -16,6 +16,13 @@ export default class OneTooltipHelper {
   }
 
   /**
+   * @returns {Promise}
+   */
+  close() {
+    return triggerEvent(this.trigger, 'mouseleave');
+  }
+
+  /**
    * @returns {HTMLElement}
    */
   getTooltip() {
@@ -27,13 +34,16 @@ export default class OneTooltipHelper {
    */
   hasTooltip() {
     return this.open()
-      .then(() => Boolean(this.getTooltip()));
+      .then(() => Boolean(this.getTooltip()))
+      .then(exists => this.close().then(() => exists));
   }
 
   /**
    * @returns {Promise<String>}
    */
   getText() {
-    return this.open().then(() => this.getTooltip().textContent.trim());
+    return this.open()
+      .then(() => this.getTooltip().textContent.trim())
+      .then(text => this.close().then(() => text));
   }
 }

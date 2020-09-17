@@ -37,7 +37,10 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Array<object>} each: `{ id, label, icon }`
+   * @type {Array<object>} each:
+   * ```
+   * { id, label, icon, [warningMessage], [forbidden], [disabled], [tip] }`
+   * ```
    */
   secondLevelItems: undefined,
 

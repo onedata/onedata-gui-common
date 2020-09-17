@@ -1,17 +1,31 @@
 {{#each internalSecondLevelItems as |sli|}}
-  <li class={{concat-classes "one-list-item clickable" (if (eq secondaryItemId sli.id) "active") (concat "item-" sli.id)}}>
+  <li class={{concat-classes
+    "one-list-item clickable"
+    (if (eq secondaryItemId sli.id) "active")
+    (concat "item-" sli.id)
+    (if (or sli.disabled sli.forbidden) "disabled")
+  }}>
     {{#link-to
       "onedata.sidebar.content.aspect"
       sidebarType
       (model-routable-id item)
       sli.id
       (query-params options="")
+      disabled=(or sli.disabled sli.forbidden)
       class="item-header truncate"
     }}
       {{#if sli.component}}
         {{component sli.component item=sli sidebar=sidebar}}
       {{else}}
         {{one-sidebar/item-content item=sli sidebar=sidebar iconClass="sidebar-item-icon"}}
+      {{/if}}
+      {{#if (and sli.tip (not media.isMobile))}}
+        {{one-tooltip
+          title=sli.tip
+          triggerEvents="hover"
+          placement="right"
+          arrowPlacement="center"
+        }}
       {{/if}}
     {{/link-to}}
   </li>

@@ -54,9 +54,14 @@ import globalNotify from './onedata-gui-common/services/global-notify';
 import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
+import insufficientPrivilegesMessage from './onedata-gui-common/utils/i18n/insufficient-privileges-message';
+
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
 import json from './onedata-gui-common/validators/json';
+
+import privileges from './onedata-gui-common/common/privileges';
+import modelNames from './onedata-gui-common/common/model-names';
 
 const translations = {
   components: {
@@ -125,11 +130,18 @@ const translations = {
     guiUtils,
     clusterActions,
   },
+  utils: {
+    insufficientPrivilegesMessage,
+  },
   errors: {
     backendErrors,
   },
   validators: {
     json,
+  },
+  common: {
+    privileges,
+    modelNames,
   },
 };
 
