@@ -91,11 +91,15 @@ $webui-popover-offset: 4px;
   padding: 0;
   z-index: $zindex-modal-background - 1;
 
+  &.webui-popover-unlimited-width {
+    max-width: none;
+  }
+  
   &.webui-popover-with-dropdown {
     @include webui-popover-dropdown();
   }
 
-  &.over-modals {
+  &.webui-popover-over-modals, &.over-modals {
     z-index: $zindex-modal + 1;
   }
 
