@@ -328,6 +328,7 @@ $zindex-navbar-fixed:      1030 !default;
 $zindex-modal-background:  1040 !default;
 $zindex-modal:             1050 !default;
 
+$zindex-popover-over-modals: $zindex-modal + 1;
 
 //== Media queries breakpoints
 //

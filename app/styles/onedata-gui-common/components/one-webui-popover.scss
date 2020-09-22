@@ -100,7 +100,7 @@ $webui-popover-offset: 4px;
   }
 
   &.webui-popover-over-modals, &.over-modals {
-    z-index: $zindex-modal + 1;
+    z-index: $zindex-popover-over-modals;
   }
 
   .webui-popover-content {
