@@ -18,8 +18,9 @@ import { gt, or } from '@ember/object/computed';
 import { later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import _ from 'lodash';
-
+import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { next } from '@ember/runloop';
 
 /**
  * @typedef {object} Action
@@ -451,6 +452,36 @@ export default Service.extend(I18n, {
   resourceCollectionContainsId(id) {
     return get(this.get('activeResourceCollection'), 'list')
       .then(list => !!list.findBy('id', id));
+  },
+
+  /**
+   * Redirects to the index of resources type when current resource does not exist.
+   * Usefull e.g. after removing record.
+   * @returns {Promise}
+   */
+  redirectToCollectionIfResourceNotExist() {
+    const {
+      router,
+      activeResourceType,
+    } = this.getProperties('router', 'activeResourceType');
+    const activeResourceId = this.get('activeResource.id');
+    if (!activeResourceId) {
+      return resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      this.resourceCollectionContainsId(activeResourceId)
+        .then(contains => {
+          if (!contains) {
+            next(() =>
+              router.transitionTo('onedata.sidebar', activeResourceType).finally(resolve)
+            );
+          } else {
+            resolve();
+          }
+        })
+        .catch(reject);
+    });
   },
 
   /**
