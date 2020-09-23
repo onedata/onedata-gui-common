@@ -118,14 +118,26 @@ label {
 }
 
 @import "bootstrap/buttons";
+
+@mixin btn-sm {
+  font-size: 85%;
+  padding: $padding-small-vertical $padding-base-horizontal;
+}
+
+.modal.in .modal-dialog {
+  .btn {
+    &.btn-sm {
+      @include btn-sm;
+    }
+  }
+}
 .btn {
   border-width: 2px;
   position: relative;
   padding: $padding-base-vertical $padding-base-horizontal * 2;
   @include font-semibold();
   &.btn-sm {
-    font-size: 85%;
-    padding: $padding-small-vertical $padding-base-horizontal;
+    @include btn-sm;
   }
   // special style for btn-primary, as it is "filled"
   &.btn-primary { 

@@ -12,7 +12,7 @@
   @include transition(none);
 }
 
-.spin-button.btn-sm {
+@mixin spin-button-sm {
   &[data-style=expand-left] {
     &.in-flight {
       padding-left: 36px;
@@ -21,6 +21,18 @@
       left: 16px;
     }
   }
+}
+
+.modal.in .modal-dialog {
+  .btn {
+    &.spin-button.btn-sm {
+      @include spin-button-sm;
+    }
+  }
+}
+
+.spin-button.btn-sm {
+  @include spin-button-sm;
 }
 
 .spin-button.with-addon {
