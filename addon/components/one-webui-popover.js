@@ -375,6 +375,9 @@ export default Component.extend({
         run.debounce(this, this._debounceResizeRefresh, 500);
       }
     },
+    reposition() {
+      this.reposition();
+    },
   },
 });
 
