@@ -1,6 +1,6 @@
 /**
  * A base implementation of an action runner, which is fed using data from routing-related
- * objects. It has no action runners defined. To be fully functional, it need to be
+ * objects. It has no action runners defined. To be fully functional, it needs to be
  * extended in main projects to introduce some runners implementations (e.g. by registering
  * them in `init` method).
  *
