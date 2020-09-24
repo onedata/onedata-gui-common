@@ -1,10 +1,9 @@
 export default {
   headerText: 'Cease Oneprovider support for space',
-  proceedBtn: 'Cease support',
-  bodyQuestion: 'You are about to cease support of Oneprovider <strong>{{providerName}}</strong> for <strong>{{spaceName}}</strong>.',
-  bodyInfo: 'This operation can cause irreversible data loss and break the integrity of files that are distributed. To prevent data loss, make sure all the data in the space is replicated to other supporting Oneproviders. If this is the only Oneprovider, all data in the space will be lost.',
-  bodySureQuestion: 'Are you sure you want to proceed?',
-  confirmCheckbox: 'I understand the risk of data loss',
-  ceasingSupport: 'ceasing Oneprovider support for space',
-  ceaseSuccess: 'Ceased support of Oneprovider "{{providerName}}" for space "{{spaceName}}"',
+  mainDescription: 'This operation is disabled in this software release, as under certain circumstances it can lead to irreversible space data corruption. Recommended way of removing unwanted supports is complete deletion of the space and recreation of a new space in its place - this guarantees data integrity but requires re-import or manual data migration. The space can be deleted in two ways:',
+  firstWayDescription: 'In the spaces menu, by a space member with sufficient privileges – ',
+  firstWayLink: 'take me there',
+  secondWayDescription: 'Using the REST API, by a Onezone admin',
+  planDescription: 'Safe support revocation is planned for the next major software release.',
+  close: 'Close',
 };

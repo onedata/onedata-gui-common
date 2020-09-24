@@ -1,33 +1,32 @@
-{{#proceed-process-modal
-  modalIcon="sign-warning-rounded"
-  modalClass="cease-oneprovider-support-modal"
-  headerText=(tt this "headerText")
-  proceedButtonText=(tt this "proceedBtn")
-  proceedDisabled=(not confirmChecked)
-  opened=opened
-  onHidden=(action "onHidden")
-  close=(action "close")
-  proceed=(action "proceed")
+{{#one-modal
+  class="cease-oneprovider-support-modal"
+  open=opened
+  onHidden=close
+  as |modal|
 }}
-  <p>
-    {{tt this "bodyQuestion"
-      spaceName=space.name
-      providerName=provider.name
-    }}
-  </p>
-  <p>{{tt this "bodyInfo"}}</p>
-  <p>{{tt this "bodySureQuestion"}}</p>
-  <div class="row content-row no-border row-understand-notice">
-    {{one-checkbox 
-      class="danger one-checkbox-danger one-checkbox-understand"
-      checked=confirmChecked
-      update=(action (mut confirmChecked))
-    }}
-    <div
-      class="text-understand clickable"
-      {{action (mut confirmChecked) (not confirmChecked)}}
-    >
-      {{tt this "confirmCheckbox"}}
-    </div>
-  </div>
-{{/proceed-process-modal}}
+  {{#modal.header}}
+    <h1>
+      {{one-icon icon="sign-warning-rounded"}}
+      <span class="one-label">{{tt this "headerText"}}</span>
+    </h1>
+  {{/modal.header}}
+  {{#modal.body}}
+    <p>{{tt this "mainDescription"}}</p>
+    <ul class="info info-condensed info-gray">
+      <li>
+        {{tt this "firstWayDescription"}}<a
+          class="clickable"
+          href={{removeSpaceUrl}}
+          {{action (or removeSpaceClick no-action)}}
+        >{{tt this "firstWayLink"}}</a>
+      </li>
+      <li>{{tt this "secondWayDescription"}}</li>
+    </ul>
+    <p>{{tt this "planDescription"}}</p>
+  {{/modal.body}}
+  {{#modal.footer class="btn-toolbar"}}
+    {{#bs-button onClick=close}}
+      {{tt this "close"}}
+    {{/bs-button}}
+  {{/modal.footer}}
+{{/one-modal}}
