@@ -28,10 +28,16 @@ export default Component.extend(I18n, {
   opened: false,
 
   /**
-   * @virtual
+   * @virtual optional
    * @type {Function}
    */
   removeSpaceClick: notImplementedIgnore,
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  removeSpaceUrl: undefined,
 
   /**
    * @virtual

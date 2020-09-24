@@ -17,7 +17,7 @@
         {{tt this "firstWayDescription"}}<a
           class="clickable"
           href={{removeSpaceUrl}}
-          {{action (or removeSpaceClick no-action)}}
+          {{action (or removeSpaceClick no-action) preventDefault=false}}
         >{{tt this "firstWayLink"}}</a>
       </li>
       <li>{{tt this "secondWayDescription"}}</li>
