@@ -93,27 +93,4 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
       }
     }
   }
-
-  @media(min-width: $screen-sm-min) {
-    .one-collapsible-list-item .one-collapsible-list-item-header {
-      .collapsible-toolbar-toggle {
-        display: none;
-      }
-      &:hover, .one-collapsible-toolbar.dropdown-opened {
-        .collapsible-toolbar-toggle {
-          display: block;
-        }
-      }
-    }
-  }
-  
-  &.always-show-menu-toggle {
-    @media(min-width: $screen-sm-min) {
-      .one-collapsible-list-item .one-collapsible-list-item-header {
-        .collapsible-toolbar-toggle {
-          display: block;
-        }
-      }
-    }
-  }
 }
