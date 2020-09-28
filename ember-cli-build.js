@@ -21,6 +21,7 @@ module.exports = function (defaults) {
         'webmanifest',
         'ttf',
         'woff',
+        'woff2',
         'svg',
         'eot',
       ],

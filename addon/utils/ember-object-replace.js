@@ -6,15 +6,18 @@
  * value - this prevents changing object references in properties.
  *
  * @module utils/ember-object-replace
- * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import _ from 'lodash';
-import { get, set } from '@ember/object';
+import { get, set, computed } from '@ember/object';
 import plainCopy from 'onedata-gui-common/utils/plain-copy';
 import { typeOf } from '@ember/utils';
+
+// fake, empty computed. Used only for detection of computed properties
+const fakeComputed = computed(() => {});
 
 /**
  * @export
@@ -41,7 +44,10 @@ export default function emberObjectReplace(dest, source) {
     }
   });
   for (let k in copy) {
-    set(dest, k, copy[k]);
+    // do not copy value to computed property. Let it recalculate on its own
+    if (!dest[k] || dest[k].constructor !== fakeComputed.constructor) {
+      set(dest, k, copy[k]);
+    }
   }
   return dest;
 }

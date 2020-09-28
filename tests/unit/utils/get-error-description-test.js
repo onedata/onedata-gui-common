@@ -625,6 +625,45 @@ describe('Unit | Utility | get error description', function () {
       });
     }
   );
+
+  [{
+    errorId: 'requiresPosixCompatibleStorage',
+    arraysInDetails: ['posixCompatibleStorages'],
+  }, {
+    errorId: 'autoStorageImportNotSupported',
+    arraysInDetails: ['supportedStorages', 'supportedObjectStorages'],
+  }, {
+    errorId: 'fileRegistrationNotSupported',
+    arraysInDetails: ['objectStorages'],
+  }].forEach(({ errorId, arraysInDetails }) => {
+    it(`handles errors in form { id, details } with id == "${errorId}"`,
+      function () {
+        const details = arraysInDetails.reduce((details, arrayName) => {
+          details[arrayName] = [`${arrayName}0`, `${arrayName}1`];
+          return details;
+        }, {});
+        const convertedDetails = arraysInDetails.reduce((details, arrayName) => {
+          details[arrayName] = `${arrayName}0, ${arrayName}1`;
+          return details;
+        }, {});
+        sinon.stub(this.i18n, 't')
+          .withArgs(
+            `errors.backendErrors.${errorId}`,
+            sinon.match(convertedDetails)
+          ).returns('complete error');
+        const error = {
+          id: errorId,
+          details,
+        };
+
+        const result = getErrorDescription(error, this.i18n);
+
+        expect(result).to.deep.equal({
+          message: escapedHtmlSafe('complete error'),
+          errorJsonString: escapedJsonHtmlSafe(error),
+        });
+      });
+  });
 });
 
 function stubInviteTokenTypeTranslation(tStub) {

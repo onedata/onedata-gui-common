@@ -562,6 +562,11 @@
     content: $oneicon-permissions; 
   }
 }
+.oneicon-play {
+  &:before {
+    content: $oneicon-play; 
+  }
+}
 .oneicon-plus {
   &:before {
     content: $oneicon-plus; 
