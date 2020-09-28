@@ -469,9 +469,6 @@ textarea.no-resize  {
       padding-right: 115px;
       @media (max-width: $screen-sm-max) and (min-width: $screen-sm-min) {
         padding-right: 20px;
-        & + .status-toolbar {
-          display: none;
-        }
       }
     }
   }

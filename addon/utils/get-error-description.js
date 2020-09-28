@@ -32,6 +32,14 @@ const detailsTranslateFunctions = {
   fileAllocation: fileAllocationDetailsTranslator,
   nodeNotCompatible: nodeNotCompatibleDetailsTranslator,
   errorOnNodes: createNestedErrorDetailsTranslator(),
+  requiresPosixCompatibleStorage: arrayDetailsToStringsTranslator([
+    'posixCompatibleStorages',
+  ]),
+  autoStorageImportNotSupported: arrayDetailsToStringsTranslator([
+    'supportedStorages',
+    'supportedObjectStorages',
+  ]),
+  fileRegistrationNotSupported: arrayDetailsToStringsTranslator(['objectStorages']),
 };
 
 /**
@@ -192,5 +200,17 @@ function createNestedErrorDetailsTranslator(nestedErrorFieldName = 'error') {
     return _.assign({}, errorDetails, {
       [nestedErrorFieldName]: nestedErrorTranslation,
     });
+  };
+}
+
+function arrayDetailsToStringsTranslator(arraysInDetails) {
+  return (i18n, errorDetails) => {
+    const convertedArrays = arraysInDetails.reduce((arrays, arrayName) => {
+      if (_.isArray(errorDetails[arrayName])) {
+        arrays[arrayName] = errorDetails[arrayName].join(', ');
+      }
+      return arrays;
+    }, {});
+    return _.assign({}, errorDetails, convertedArrays);
   };
 }

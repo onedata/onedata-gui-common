@@ -17,6 +17,21 @@
     {{#each descriptionParagraphs as |paragraph|}}
       <p class={{paragraph.className}}>{{paragraph.text}}</p>
     {{/each}}
+    {{#if isCheckboxVisible}}
+      <div class="row content-row no-border row-understand-notice">
+        {{one-checkbox 
+          class="danger one-checkbox-danger one-checkbox-understand"
+          checked=isCheckboxChecked
+          update=(action (mut isCheckboxChecked))
+        }}
+        <div
+          class="text-understand clickable"
+          {{action (mut isCheckboxChecked) (not isCheckboxChecked)}}
+        >
+          {{checkboxMessage}}
+        </div>
+      </div>
+    {{/if}}
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
@@ -31,6 +46,7 @@
     {{#one-spin-button
       class=(concat-classes "btn question-yes" yesButtonClassName)
       action=(action "submit" modal.submit)
+      disabled=isYesButtonDisabled
     }}
       {{yesButtonText}}
     {{/one-spin-button}}
