@@ -143,6 +143,106 @@ describe('Integration | Component | modals/question modal', function () {
       .then(() => click(getModal()[0]))
       .then(() => expect(onHideSpy).to.not.be.called);
   });
+
+  it(
+    'does not show "understand notice" when checkboxMessage is not specified (by default)',
+    function () {
+      return showModal(this)
+        .then(() => expect(getModalBody().find('.row-understand-notice')).to.not.exist);
+    }
+
+  );
+
+  it(
+    'shows "understand notice" when checkboxMessage is specified',
+    function () {
+      this.set('modalOptions.checkboxMessage', 'understand?');
+
+      return showModal(this)
+        .then(() => {
+          const $notice = getModalBody().find('.row-understand-notice');
+          expect($notice).to.exist;
+          const $checkbox = $notice.find('.one-checkbox');
+          expect($checkbox).to.exist;
+          expect($checkbox).to.not.have.class('checked');
+          expect($notice.find('.text-understand').text().trim()).to.equal('understand?');
+        });
+    }
+  );
+
+  it(
+    'allows to change checkbox state by clicking on checkbox message',
+    function () {
+      this.set('modalOptions.checkboxMessage', 'understand?');
+
+      return showModal(this)
+        .then(() => click(getModalBody().find('.text-understand')[0]))
+        .then(() =>
+          expect(getModalBody().find('.one-checkbox')).to.have.class('checked')
+        );
+    }
+  );
+
+  it('disables "yes" button when checkbox is unchecked', function () {
+    this.set('modalOptions.checkboxMessage', 'understand?');
+
+    return showModal(this)
+      .then(() =>
+        expect(getModalFooter().find('.question-yes')).to.have.attr('disabled')
+      );
+  });
+
+  it('enables "yes" button when checkbox is checked', function () {
+    this.set('modalOptions.checkboxMessage', 'understand?');
+
+    return showModal(this)
+      .then(() => click(getModalBody().find('.one-checkbox')[0]))
+      .then(() =>
+        expect(getModalFooter().find('.question-yes')).to.not.have.attr('disabled')
+      );
+  });
+
+  it(
+    'enables "yes" button when checkbox is unchecked and isCheckboxBlocking is false',
+    function () {
+      this.set('modalOptions.checkboxMessage', 'understand?');
+      this.set('modalOptions.isCheckboxBlocking', false);
+
+      return showModal(this)
+        .then(() =>
+          expect(getModalFooter().find('.question-yes')).to.not.have.attr('disabled')
+        );
+    }
+  );
+
+  it('informs, that checkbox is not checked on "yes" button click', function () {
+    const submitStub = sinon.stub().resolves();
+    this.set('modalOptions.onSubmit', submitStub);
+
+    this.set('modalOptions.checkboxMessage', 'understand?');
+    this.set('modalOptions.isCheckboxBlocking', false);
+
+    return showModal(this)
+      .then(() => click(getModalFooter().find('.question-yes')[0]))
+      .then(() => expect(submitStub).to.be.calledWith(sinon.match({
+        isCheckboxChecked: false,
+      })));
+  });
+
+  it('informs, that checkbox is checked on "yes" button click', function () {
+    const submitStub = sinon.stub().resolves();
+    this.set('modalOptions.onSubmit', submitStub);
+
+    this.set('modalOptions.checkboxMessage', 'understand?');
+    this.set('modalOptions.isCheckboxBlocking', false);
+
+    return showModal(this)
+      .then(() => click(getModalBody().find('.one-checkbox')[0]))
+      .then(() => click(getModalFooter().find('.question-yes')[0]))
+      .then(() => expect(submitStub).to.be.calledWith(sinon.match({
+        isCheckboxChecked: true,
+      })));
+  });
 });
 
 function showModal(testCase) {
