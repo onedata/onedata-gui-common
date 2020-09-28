@@ -14,11 +14,14 @@
     <p>{{tt this "mainDescription"}}</p>
     <ul class="info info-condensed info-gray">
       <li>
-        {{tt this "firstWayDescription"}}<a
+        {{tt this "firstWayDescription"}}
+        <a
           class="clickable"
           href={{removeSpaceUrl}}
           {{action (or removeSpaceClick no-action) preventDefault=false}}
-        >{{tt this "firstWayLink"}}</a>
+        >
+          {{tt this "firstWayLink"}}
+        </a>
       </li>
       <li>{{tt this "secondWayDescription"}}</li>
     </ul>

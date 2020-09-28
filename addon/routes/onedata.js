@@ -34,7 +34,25 @@ export default Route.extend(AuthenticatedRouteMixin, {
     const superResult = this._super(...arguments);
 
     this.get('urlActionRunner').runFromTransition(transition);
+    // Remove action-related query params to simplify visible URL
+    this.clearActionQueryParams(transition);
 
     return superResult;
+  },
+
+  /**
+   * @param {Transition} transition 
+   */
+  clearActionQueryParams(transition) {
+    const queryParamsNames = Object.keys(transition.queryParams);
+    if (queryParamsNames.find(name => name.startsWith('action_'))) {
+      const queryParamsWithoutAction = Object.keys(transition.queryParams)
+        .reduce((params, key) => {
+          params[key] = key.startsWith('action_') ?
+            undefined : transition.queryParams[key];
+          return params;
+        }, {});
+      this.transitionTo({ queryParams: queryParamsWithoutAction });
+    }
   },
 });

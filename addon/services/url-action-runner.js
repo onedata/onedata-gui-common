@@ -67,6 +67,8 @@ export default Service.extend({
     }
 
     const actionRunner = this.getActionRunner(actionName);
-    return (typeof actionRunner === 'function') ? actionRunner(queryParams) : resolve();
+    const actionResult = (typeof actionRunner === 'function') ?
+      actionRunner(queryParams) : resolve();
+    return actionResult && actionResult.then ? actionResult : resolve(actionResult);
   },
 });

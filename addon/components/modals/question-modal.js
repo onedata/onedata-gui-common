@@ -7,8 +7,8 @@
  *   `{ text: String, className: String }`. `className` is optional.
  * - checkboxMessage - (optional) if not empty, then modal will contain a checkbox with specified
  *   message. May be used to implement "Are you sure?" mechanism
- * - disableYesBtnWhenCheckboxUnchecked - (optional) if false, then deselected checkbox will
- *   not block accepting button
+ * - isCheckboxBlocking - (optional) if false, then deselected checkbox will not block
+ *   accepting button
  * - yesButtonText - accepting button text
  * - yesButtonClassName - (optional) accepting button classes
  * - noButtonText - (optional) declining button text
@@ -79,8 +79,8 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<boolean>}
    */
-  disableYesBtnWhenCheckboxUnchecked: notEqual(
-    'modalOptions.disableYesBtnWhenCheckboxUnchecked',
+  isCheckboxBlocking: notEqual(
+    'modalOptions.isCheckboxBlocking',
     raw(false)
   ),
 
@@ -109,7 +109,7 @@ export default Component.extend(I18n, {
    */
   isYesButtonDisabled: and(
     'isCheckboxVisible',
-    'disableYesBtnWhenCheckboxUnchecked',
+    'isCheckboxBlocking',
     not('isCheckboxChecked')
   ),
 
@@ -122,7 +122,7 @@ export default Component.extend(I18n, {
 
       let dataToPass;
       if (isCheckboxVisible) {
-        dataToPass = { isCheckboxChecked: isCheckboxChecked };
+        dataToPass = { isCheckboxChecked };
       }
 
       this.set('isSubmitting', true);

@@ -203,10 +203,10 @@ describe('Integration | Component | modals/question modal', function () {
   });
 
   it(
-    'enables "yes" button when checkbox is unchecked and disableYesBtnWhenCheckboxUnchecked is false',
+    'enables "yes" button when checkbox is unchecked and isCheckboxBlocking is false',
     function () {
       this.set('modalOptions.checkboxMessage', 'understand?');
-      this.set('modalOptions.disableYesBtnWhenCheckboxUnchecked', false);
+      this.set('modalOptions.isCheckboxBlocking', false);
 
       return showModal(this)
         .then(() =>
@@ -220,7 +220,7 @@ describe('Integration | Component | modals/question modal', function () {
     this.set('modalOptions.onSubmit', submitStub);
 
     this.set('modalOptions.checkboxMessage', 'understand?');
-    this.set('modalOptions.disableYesBtnWhenCheckboxUnchecked', false);
+    this.set('modalOptions.isCheckboxBlocking', false);
 
     return showModal(this)
       .then(() => click(getModalFooter().find('.question-yes')[0]))
@@ -234,7 +234,7 @@ describe('Integration | Component | modals/question modal', function () {
     this.set('modalOptions.onSubmit', submitStub);
 
     this.set('modalOptions.checkboxMessage', 'understand?');
-    this.set('modalOptions.disableYesBtnWhenCheckboxUnchecked', false);
+    this.set('modalOptions.isCheckboxBlocking', false);
 
     return showModal(this)
       .then(() => click(getModalBody().find('.one-checkbox')[0]))

@@ -447,7 +447,7 @@ export default Service.extend(I18n, {
   /**
    * Resolves to true if activeResourceCollections contains model with passed id
    * @param {string} id 
-   * @returns {boolean}
+   * @returns {Promise<Boolean>}
    */
   resourceCollectionContainsId(id) {
     return get(this.get('activeResourceCollection'), 'list')
@@ -456,7 +456,7 @@ export default Service.extend(I18n, {
 
   /**
    * Redirects to the index of resources type when current resource does not exist.
-   * Usefull e.g. after removing record.
+   * Useful e.g. after removing record.
    * @returns {Promise}
    */
   redirectToCollectionIfResourceNotExist() {
@@ -469,19 +469,16 @@ export default Service.extend(I18n, {
       return resolve();
     }
 
-    return new Promise((resolve, reject) => {
-      this.resourceCollectionContainsId(activeResourceId)
-        .then(contains => {
-          if (!contains) {
+    return this.resourceCollectionContainsId(activeResourceId)
+      .then(contains => {
+        if (!contains) {
+          return new Promise(resolve => {
             next(() =>
               router.transitionTo('onedata.sidebar', activeResourceType).finally(resolve)
             );
-          } else {
-            resolve();
-          }
-        })
-        .catch(reject);
-    });
+          });
+        }
+      });
   },
 
   /**
