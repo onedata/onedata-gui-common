@@ -2,8 +2,8 @@
  * A button-like element splited into two parts: text and menu toggle
  * 
  * @module components/one-pill-button
- * @author Jakub Liput
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2019-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -13,7 +13,7 @@ import { conditional, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   classNames: 'one-pill-button',
-  classNameBindings: ['mobileMode:mobile-mode'],
+  classNameBindings: ['mobileMode:mobile-mode', 'theme'],
   layout,
 
   /**
@@ -26,6 +26,18 @@ export default Component.extend({
    * @type {boolean}
    */
   mobileMode: false,
+
+  /**
+   * One of: 'default', 'light'
+   * @type {String}
+   */
+  theme: 'default',
+
+  /**
+   * If true, then arrow will be replaced by dots
+   * @type {Boolean}
+   */
+  useDots: false,
 
   arrowIcon: conditional('mobileMode', raw('arrow-up'), raw('arrow-down')),
 

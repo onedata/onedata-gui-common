@@ -6,45 +6,99 @@
   display: inline-block;
   overflow: hidden;
   transition: $collapse-transition-vertical;
-  .button-text {
-    line-height: $one-pill-button-line-height;
-    padding-right: $one-pill-button-height;
-    text-align: center;
-  }
+
   .one-pill-button-inner {
-    position: relative;
     @include vendor-prefix(user-select, none);
+    display: flex;
+    align-items: center;
     border-radius: $border-radius-large;
-    border: $one-pill-button-border-width $btn-info-bg solid;
-    padding: 0 30px 0 15px;
     height: $one-pill-button-height;
-    .one-pill-button-actions-trigger {
-      @include vertical-align-middle;
-      @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
-      right: 0;
-      width: 40px;
-      height: 100%;
-      padding-left: 3px;
-      text-align: center;
-      line-height: $one-pill-button-line-height;
-      border-top-right-radius: $one-pill-button-border-width;
-      border-bottom-right-radius: $one-pill-button-border-width;
-      cursor: pointer;
-      color: $btn-default-color;
-      .inline-icon-container {
-        .one-icon {
-          transform: translateY(-50%) translateY(3px) translateX(3px);
-          font-size: 20px;
-          font-weight: bold;
-        }
+  }
+
+  .button-text {
+    padding: 0 $padding-small-horizontal;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .one-pill-button-actions-trigger {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: $one-pill-button-border-width;
+    border-bottom-right-radius: $one-pill-button-border-width;
+    cursor: pointer;
+
+    // Arrow icon
+    .one-icon {
+      font-size: 20px;
+      font-weight: bold;
+      // Arrow with bold is moved to the top (due to the thicker line). We need to
+      // center it back.
+      margin-top: 1px;
+    }
+
+    // Dot for dots menu
+    .icon-dot {
+      height: 3px;
+      width: 3px;
+      margin-bottom: 2px;
+      border-radius: 100%;
+  
+      &:last-child {
+        margin-bottom: 0;
       }
     }
   }
+
   &.mobile-mode {
     padding: 20px;
+
     .one-pill-button-inner {
       box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.3);
       background: $color-one-white;
+    }
+  }
+
+  &.default {
+    .one-pill-button-inner {
+      border: $one-pill-button-border-width $btn-info-bg solid;
+    }
+
+    .one-pill-button-actions-trigger {
+      @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+
+      .icon-dot {
+        background-color: $color-one-white;
+      }
+    }
+  }
+
+  &.light {
+    .one-pill-button-inner {
+      border: 1px solid $color-one-gray-sand;
+    }
+
+    .button-text {
+      padding: 0 $padding-xs-horizontal;
+    }
+
+    .one-pill-button-actions-trigger {
+      width: 32px;
+      border-left: 1px solid $color-one-gray-sand;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: $main-content-hover-background;
+      }
+
+      .icon-dot {
+        background-color: $main-text-color;
+      }
     }
   }
 }
