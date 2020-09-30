@@ -80,6 +80,7 @@ $one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-bor
   &.light {
     .one-pill-button-inner {
       border: 1px solid $color-one-gray-sand;
+      background-color: $color-one-white;
     }
 
     .button-text {
