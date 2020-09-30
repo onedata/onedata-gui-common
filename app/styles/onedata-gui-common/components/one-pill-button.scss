@@ -1,8 +1,8 @@
-.one-pill-button {
-  $one-pill-button-line-height: 24px;
-  $one-pill-button-border-width: 2px;
-  $one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-border-width;
-  
+$one-pill-button-line-height: 24px;
+$one-pill-button-border-width: 2px;
+$one-pill-button-height: $one-pill-button-line-height + 2 * $one-pill-button-border-width;
+
+.one-pill-button {  
   display: inline-block;
   overflow: hidden;
   transition: $collapse-transition-vertical;
