@@ -75,6 +75,9 @@ $-tile-separator-color: #dcdcdc;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  // place for tile box-shadow
+  margin-bottom: $padding-small-vertical;
+
   @media (min-width: $screen-sm-min) {
     margin-right: -$-tile-spacing / 2;
     margin-left: -$-tile-spacing / 2;
