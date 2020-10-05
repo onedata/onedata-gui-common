@@ -6,9 +6,13 @@
     class="one-pill-button-actions-trigger"
     onclick={{action (disable-bubbling (action "toggleActions"))}}
   >
-    <div class="inline-icon-container">
+    {{#if useDots}}
+      <div class="icon-dot"></div>
+      <div class="icon-dot"></div>
+      <div class="icon-dot"></div>
+    {{else}}
       {{one-icon icon=arrowIcon}}
-    </div>
+    {{/if}}
   </div>
   {{#one-webui-popover
     class="one-pill-button-actions-popover"
