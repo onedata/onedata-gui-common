@@ -50,13 +50,6 @@ $token-border-radius: 3px;
       }
     }
   }
-  .modal-footer {
-    // put a button in this container - it enables tooltip events for disabled buttons
-    .btn-tooltip-container {
-      @extend .btn;
-      padding: 0 !important;
-    }
-  }
   .btn-toolbar {
     margin-top: $padding-large-horizontal;
     text-align: center;
@@ -640,6 +633,12 @@ label.align-left {
   &.bg-danger {
     @include tag-bg-color($brand-danger);
   }
+}
+
+// put a button in this container - it enables tooltip events for disabled buttons
+.btn-tooltip-container {
+  @extend .btn;
+  padding: 0 !important;
 }
 
 .btn {
