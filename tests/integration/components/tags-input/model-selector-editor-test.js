@@ -34,9 +34,9 @@ const availableModels = defaultSettings.models.reduce((avModels, { name }) => {
 defaultSettings.models.forEach(modelSpec => {
   modelSpec.getRecords = () => resolve(availableModels[modelSpec.name]);
 });
-availableModels['service'][0].type = 'onezone';
+availableModels['service'][0].serviceType = 'onezone';
 availableModels['service'][0].name += 'onezone';
-availableModels['serviceOnepanel'][0].type = 'onezone';
+availableModels['serviceOnepanel'][0].serviceType = 'onezone';
 availableModels['serviceOnepanel'][0].name += 'onezone';
 
 describe('Integration | Component | tags input/model selector editor', function () {
@@ -182,7 +182,7 @@ describe('Integration | Component | tags input/model selector editor', function 
       return click('.tag-creator-trigger')
         .then(() => new ModelTypeHelper().selectOption(index + 1))
         .then(() => {
-          const $allOption = getSelector().find('.selector-item:first-child');
+          const $allOption = getSelector().find('.selector-item:not(.record-item)');
           expect($allOption).to.exist;
           expect($allOption).to.have.class('all-item');
           expect($allOption.text().trim()).to.equal(label);
