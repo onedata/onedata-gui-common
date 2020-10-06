@@ -42,7 +42,7 @@ export function removeExcessiveTags(tags) {
       tags = tags.filter(tag =>
         get(tag, 'value.model') !== model ||
         get(tag, 'value.record.representsAll') ||
-        get(tag, 'value.record.type') === 'onezone'
+        get(tag, 'value.record.serviceType') === 'onezone'
       );
     }
   });
@@ -106,7 +106,7 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
       record,
     } = getProperties(this.get('value') || {}, 'model', 'record');
     if (model === 'service') {
-      return record && get(record, 'type') === 'onezone' ? 'onezone' : 'provider';
+      return record && get(record, 'serviceType') === 'onezone' ? 'onezone' : 'provider';
     } else {
       return recordIcons[model];
     }
@@ -264,7 +264,10 @@ export default Component.extend(I18n, {
         const allRecord = {
           representsAll: selectedModelName,
         };
-        return [allRecord].concat(get(recordsProxy, 'content').sortBy('name'))
+        const records = get(recordsProxy, 'content');
+        const onezoneRecord = records.findBy('serviceType', 'onezone');
+        return [onezoneRecord, allRecord].compact()
+          .concat(records.without(onezoneRecord).sortBy('name'))
           .map(record => Tag.create({
             ownerSource: this,
             value: {
@@ -332,7 +335,7 @@ export default Component.extend(I18n, {
         if (allRecordsTagSelectsOnlySubset) {
           // remove oneproviders for types service and serviceOnepanel
           recordsToReturn = recordsToReturn
-            .filter(tag => get(tag, 'value.record.type') === 'onezone');
+            .filter(tag => get(tag, 'value.record.serviceType') === 'onezone');
         } else {
           recordsToReturn = [];
         }
