@@ -287,9 +287,14 @@
     content: $oneicon-cut; 
   }
 }
-.oneicon-evict {
+.oneicon-data-receive {
   &:before {
-    content: $oneicon-evict; 
+    content: $oneicon-data-receive; 
+  }
+}
+.oneicon-data-send {
+  &:before {
+    content: $oneicon-data-send; 
   }
 }
 .oneicon-file {
@@ -502,11 +507,6 @@
     content: $oneicon-metadata; 
   }
 }
-.oneicon-migrate {
-  &:before {
-    content: $oneicon-migrate; 
-  }
-}
 .oneicon-move-down {
   &:before {
     content: $oneicon-move-down; 
@@ -620,11 +620,6 @@
 .oneicon-rename {
   &:before {
     content: $oneicon-rename; 
-  }
-}
-.oneicon-replicate {
-  &:before {
-    content: $oneicon-replicate; 
   }
 }
 .oneicon-rerun {

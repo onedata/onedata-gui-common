@@ -11,6 +11,12 @@
 );
 
 @include animation-fg-color-change(
+  pulse-red,
+  inherit,
+  $color-one-red
+);
+
+@include animation-fg-color-change(
   pulse-mint-gray,
   $color-one-light-gray,
   $color-one-mint
