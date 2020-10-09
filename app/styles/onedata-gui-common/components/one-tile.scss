@@ -16,14 +16,6 @@ $-tile-separator-color: #dcdcdc;
   width: $-tile-size;
   height: $-tile-size;
   
-  .tile-main {
-    padding: $-tile-padding;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  
   &.x2 {
     width: $-tile-size * 2 + $-tile-spacing;
   }
@@ -41,11 +33,6 @@ $-tile-separator-color: #dcdcdc;
     right: $-tile-padding;
   }
   
-  .tile-content {
-    padding-top: $font-size-base;
-    height: $-tile-content-height;
-  }
-  
   .tile-footer {
     height: $-tile-footer-height;
     line-height: $-tile-footer-height;
@@ -56,14 +43,6 @@ $-tile-separator-color: #dcdcdc;
     max-width: $-tile-content-width;
     max-height: $-tile-content-width;
     line-height: $-tile-content-height;
-  }
-  
-  &.with-footer {
-    &.one-tile-link {
-      .tile-main {
-        bottom: $-tile-footer-height;
-      }
-    }
   }
 }
 
@@ -86,13 +65,19 @@ $-tile-separator-color: #dcdcdc;
 
 .one-tile {  
   position: relative;
+  display: flex;
+  flex-direction: column;
 
   background-color: #fff;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.31);
   
   .tile-main {
-    position: absolute;
-    display: block;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    padding: $-tile-padding;
   }
   
   &.one-tile-link {
@@ -133,9 +118,17 @@ $-tile-separator-color: #dcdcdc;
   }
 
   .tile-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    padding-top: $font-size-base;
+
     .tile-content-inner {
       position: relative;
-      height: 100%;
+      flex-grow: 1;
+      min-height: 0;
+
       .main-figure {
         position: absolute;
         left: 0;
@@ -161,10 +154,6 @@ $-tile-separator-color: #dcdcdc;
   }
   
   .tile-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     border-top: 1px solid $-tile-separator-color;
     .footer-text-icon-container {
       margin-right: 6px;
