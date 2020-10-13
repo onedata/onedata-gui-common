@@ -54,7 +54,7 @@ describe('Integration | Component | record icon', function () {
 
         this.render(hbs `{{record-icon record=record}}`);
 
-        expect(this.$('.record-icon .one-icon')).to.have.class(`oneicon-${icon}`);
+        expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
     );
 
@@ -65,7 +65,7 @@ describe('Integration | Component | record icon', function () {
 
         this.render(hbs `{{record-icon modelName=modelName}}`);
 
-        expect(this.$('.record-icon .one-icon')).to.have.class(`oneicon-${icon}`);
+        expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
     );
 
@@ -78,7 +78,7 @@ describe('Integration | Component | record icon', function () {
 
           this.render(hbs `{{record-icon modelName=modelName}}`);
 
-          expect(this.$('.record-icon .one-icon')).to.have.class(`oneicon-${icon}`);
+          expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
         }
       );
     }
@@ -211,21 +211,9 @@ describe('Integration | Component | record icon', function () {
 
           this.render(hbs `{{record-icon useSubtypeIcon=true record=record}}`);
 
-          expect(this.$('.record-icon .one-icon')).to.have.class(`oneicon-${icon}`);
+          expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
         }
       );
     });
-  });
-
-  it('allows to set icon color', function () {
-    this.render(hbs `{{record-icon modelName="space" color="#ff0000"}}`);
-
-    expect(this.$('.one-icon')[0].outerHTML).to.contain('color: #ff0000');
-  });
-
-  it('does not set icon color by default', function () {
-    this.render(hbs `{{record-icon modelName="space"}}`);
-
-    expect(this.$('.one-icon')[0].outerHTML).to.not.contain('color:');
   });
 });

@@ -1,11 +1,9 @@
 /**
  * Shows record icon. To calculate proper icon, one of `record` or `modelName` properties
- * must be set.
+ * must be set. When both provided, `record` is used.
  * 
  * To get a more detailed icon (e.g. icon dedicated for a specific group type)
  * you must pass `record` and set `useSubtypeIcon` to true.
- * 
- * TODO: add more icons when used in projects other that onezone-gui.
  *
  * @module components/record-icon
  * @author Michał Borzęcki
@@ -13,79 +11,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Component from '@ember/component';
-import layout from '../templates/components/record-icon';
-import { computed, get } from '@ember/object';
-import { reads } from '@ember/object/computed';
-import { camelize } from '@ember/string';
+import { computed } from '@ember/object';
+import recordIcon from 'onedata-gui-common/utils/record-icon';
+import OneIcon from 'onedata-gui-common/components/one-icon';
 
-const modelToIconMapping = {
-  harvester: 'light-bulb',
-  share: 'browser-share',
-  sharedUser: 'user',
-  token: 'tokens',
-};
-[
-  'cluster',
-  'group',
-  'provider',
-  'space',
-  'user',
-].forEach(modelName => modelToIconMapping[modelName] = modelName);
-
-const subtypeIconGetters = {
-  cluster: cluster => {
-    const type = get(cluster || {}, 'type');
-    switch (type) {
-      case 'oneprovider':
-        return 'provider';
-      case 'onezone':
-        return 'onezone';
-      default:
-        return undefined;
-    }
-  },
-  group: group => {
-    const type = get(group || {}, 'type');
-    switch (type) {
-      case 'organization':
-      case 'unit':
-      case 'team':
-        return type;
-      case 'role_holders':
-        return 'role-holders';
-      default:
-        return undefined;
-    }
-  },
-  share: share => {
-    const fileType = get(share || {}, 'fileType');
-    switch (fileType) {
-      case 'file':
-        return 'browser-file';
-      case 'dir':
-      case 'directory':
-        return 'browser-directory';
-      default:
-        return undefined;
-    }
-  },
-  token: token => {
-    const typeName = get(token || {}, 'typeName');
-    switch (typeName) {
-      case 'access':
-      case 'identity':
-      case 'invite':
-        return `token-${typeName}`;
-      default:
-        return undefined;
-    }
-  },
-};
-
-export default Component.extend({
-  layout,
-  tagName: 'span',
+export default OneIcon.extend({
   classNames: ['record-icon'],
 
   /**
@@ -102,62 +32,29 @@ export default Component.extend({
 
   /**
    * @virtual optional
-   * @type {ComputedProperty<String>}
-   */
-  modelName: reads('record.constructor.modelName'),
-
-  /**
-   * @virtual optional
    * @type {String}
    */
-  color: undefined,
-
-  /**
-   * @type {Object}
-   */
-  modelToIconMapping,
-
-  /**
-   * @type {Object}
-   */
-  subtypeIconGetters,
+  modelName: undefined,
 
   /**
    * @type {ComputedProperty<String>}
    */
-  iconName: computed(
+  icon: computed(
     'useSubtypeIcon',
     'record',
     'modelName',
-    'modelToIconMapping',
-    'subtypeIconGetters',
     function iconName() {
       const {
         useSubtypeIcon,
         record,
         modelName,
-        modelToIconMapping,
-        subtypeIconGetters,
       } = this.getProperties(
         'useSubtypeIcon',
         'record',
-        'modelName',
-        'modelToIconMapping',
-        'subtypeIconGetters'
+        'modelName'
       );
 
-      if (!modelName) {
-        return;
-      }
-
-      if (useSubtypeIcon && subtypeIconGetters[modelName]) {
-        const subtypeIcon = subtypeIconGetters[modelName](record);
-        if (subtypeIcon) {
-          return subtypeIcon;
-        }
-      }
-
-      return modelToIconMapping[camelize(modelName)];
+      return recordIcon(record || modelName, useSubtypeIcon);
     }
   ),
 });

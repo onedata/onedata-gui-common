@@ -1,12 +1,12 @@
 /**
  * Arranges content in carousel slides. At each time only one slide may be visible.
- * you need to control manually which slide is active now using `activeSlideId` property.
+ * You need to control manually which slide is active now using `activeSlideId` property.
  * Also each slide must have defined `slideId` property.
  * 
  * Changing slides wont be corrupted by different slides height - both of changing slides will
  * be taken into account by content flow and scrolling during the animation (so the height of
  * the carousel will be equal to the height of the highest changing slide). When the
- * animation ends, the old slide jumps out of the content flow and does not presere any space.
+ * animation ends, the old slide jumps out of the content flow and does not preserve any space.
  * 
  * Usage example:
  * ```
