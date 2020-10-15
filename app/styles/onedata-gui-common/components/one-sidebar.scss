@@ -126,6 +126,11 @@
     }
   }
 
+  .one-icon-tagged-main {
+    // (Safari only) vertical align fix
+    vertical-align: middle;
+  }
+
   .sidebar-item-title {
     flex-grow: 1;
     min-width: 0;
