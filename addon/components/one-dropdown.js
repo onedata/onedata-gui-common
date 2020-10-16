@@ -9,12 +9,13 @@
 
 import PowerSelect from 'ember-power-select/components/power-select';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { observer } from '@ember/object';
+import { observer, getProperties } from '@ember/object';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default PowerSelect.extend({
   scrollState: service(),
+  media: service(),
 
   scrollObserver: observer('scrollState.lastScrollEvent', function scrollObserver() {
     this.handlePageScroll();
@@ -30,8 +31,23 @@ export default PowerSelect.extend({
   },
 
   handlePageScroll() {
-    if (!this.get('renderInPlace') && this.get('publicAPI.isOpen')) {
-      (this.get('publicAPI.actions.reposition') || notImplementedIgnore)();
+    const {
+      media,
+      renderInPlace,
+    } = this.getProperties('media', 'renderInPlace');
+    const {
+      isTablet,
+      isMobile,
+    } = getProperties(media, 'isTablet', 'isMobile');
+
+    if (!renderInPlace && this.get('publicAPI.isOpen')) {
+      if (isTablet || isMobile) {
+        // In mobile mode dropdown may overlay top bar of the GUI. We need to hide dropdown
+        // on scroll.
+        (this.get('publicAPI.actions.close') || notImplementedIgnore)();
+      } else {
+        (this.get('publicAPI.actions.reposition') || notImplementedIgnore)();
+      }
     }
   },
 });
