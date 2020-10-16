@@ -4,14 +4,14 @@
   {{/if}}
   <span class="text">{{selectedOption.label}}</span>
 {{else}}
-  {{#power-select
+  {{#one-dropdown
     tagName="div"
     disabled=(not isEffectivelyEnabled)
     options=preparedOptions
     onchange=(action "valueChanged")
     selected=selectedOption
     placeholder=placeholder
-    renderInPlace=true
+    renderInPlace=false
     onblur=(action "triggerFocusLost")
     onclose=(action "focusLost")
     triggerId=fieldId
@@ -28,6 +28,6 @@
         {{option.label}}
       {{/truncated-string}}
     </div>
-  {{/power-select}}
+  {{/one-dropdown}}
 {{/if}}
 {{yield}}
