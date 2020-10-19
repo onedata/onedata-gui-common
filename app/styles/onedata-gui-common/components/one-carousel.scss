@@ -24,70 +24,86 @@ $one-carousel-slides-gap: 100px;
 
     &.hidden-to-left {
       animation-name: one-carousel-hide-to-left;
+      overflow: hidden;
     }
 
     &.hidden-to-right {
       animation-name: one-carousel-hide-to-right;
+      overflow: hidden;
     }
 
-    // hidden without animation - placement (translate to left or right) is not relevant
     &.hidden {
-      position: absolute;
       transform: translateX(100%) translateX(#{$one-carousel-slides-gap});
+      overflow: hidden;
+      width: 0;
+      height: 0;
     }
   }
 }
 
 @keyframes one-carousel-hide-to-left {
   0% {
-    position: relative;
     transform: none;
+    width: 100%;
+    height: initial;
   }
   99.9999% {
-    position: relative;
     transform: translateX(-100%) translateX(#{-$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
   }
   100% {
-    position: absolute;
-    transform: translateX(-100%) translateX(#{-$one-carousel-slides-gap});
+    transform: none;
+    width: 0;
+    height: 0;
   }
 }
 
 @keyframes one-carousel-hide-to-right {
   0% {
-    position: relative;
     transform: translateX(-100%);
+    width: 100%;
+    height: initial;
   }
   99.9999% {
-    position: relative;
     transform: translateX(#{$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
   }
   100% {
-    position: absolute;
-    transform: translateX(100%) translateX(#{$one-carousel-slides-gap});
+    transform: none;
+    width: 0;
+    height: 0;
   }
 }
 
 @keyframes one-carousel-active-from-left {
   0% {
-    position: relative;
     transform: translateX(-100%) translateX(#{-$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
   }
   100% {
     transform: none;
+    width: 100%;
+    height: initial;
   }
 }
 
 @keyframes one-carousel-active-from-right {
   0% {
-    position: relative;
     transform: translateX(#{$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
   }
   99.9999% {
     transform: translateX(-100%);
+    width: 100%;
+    height: initial;
   }
   100% {
     transform: none;
+    width: 100%;
+    height: initial;
   }
 }
-

@@ -9,13 +9,13 @@ $-tile-separator-color: #dcdcdc;
   $-tile-content-height: $-tile-size - ($-tile-padding * 2) - $font-size-base - ($-tile-content-padding * 2);
   $-tile-content-width: $-tile-size - ($-tile-padding * 2);
   $-tile-footer-height: $-tile-size / 8.75;
-  
+
   margin-top: $-tile-spacing;
   margin-right: $-tile-spacing / 2;
   margin-left: $-tile-spacing / 2;
   width: $-tile-size;
   height: $-tile-size;
-  
+
   &.x2 {
     width: $-tile-size * 2 + $-tile-spacing;
   }
@@ -23,21 +23,21 @@ $-tile-separator-color: #dcdcdc;
   &.x4 {
     width: $-tile-size * 4 + 3 * $-tile-spacing;
   }
-  
+
   h1.tile-title, .more-link {
     font-size: $font-size-base;
     line-height: $font-size-base;
   }
-  
+
   .more-link {
     right: $-tile-padding;
   }
-  
+
   .tile-footer {
     height: $-tile-footer-height;
     line-height: $-tile-footer-height;
   }
-  
+
   .large-text {
     font-size: $font-size-base * 3;
     max-width: $-tile-content-width;
@@ -63,33 +63,34 @@ $-tile-separator-color: #dcdcdc;
   }
 }
 
-.one-tile {  
+.one-tile {
   position: relative;
   display: flex;
   flex-direction: column;
 
   background-color: #fff;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.31);
-  
+
   .tile-main {
     position: relative;
     display: flex;
+    flex-basis: 100%;
     flex-direction: column;
     flex-grow: 1;
     min-height: 0;
     padding: $-tile-padding;
   }
-  
+
   &.one-tile-link {
     .tile-main {
       &:hover {
         background-color: $-tile-hover-background-color;
       }
     }
-    
+
     &:hover {
       cursor: pointer;
-      
+
       .more-link {
         @extend a, :hover;
       }
@@ -99,7 +100,7 @@ $-tile-separator-color: #dcdcdc;
   &.one-tile-link .resource-load-error .promise-error-show-details {
     display: none;
   }
-  
+
   h1.tile-title, .more-link {
     padding: 0px;
     margin: 0px;
@@ -120,12 +121,14 @@ $-tile-separator-color: #dcdcdc;
   .tile-content {
     display: flex;
     flex-direction: column;
+    flex-basis: 100%;
     flex-grow: 1;
     min-height: 0;
     padding-top: $font-size-base;
 
     .tile-content-inner {
       position: relative;
+      flex-basis: 100%;
       flex-grow: 1;
       min-height: 0;
 
@@ -152,7 +155,7 @@ $-tile-separator-color: #dcdcdc;
     @include font-bold();
     text-align: center;
   }
-  
+
   .tile-footer {
     border-top: 1px solid $-tile-separator-color;
     .footer-text-icon-container {
