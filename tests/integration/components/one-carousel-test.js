@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
+import { getSlide } from '../../helpers/one-carousel';
 
 describe('Integration | Component | one carousel', function () {
   setupComponentTest('one-carousel', {
@@ -31,8 +32,8 @@ describe('Integration | Component | one carousel', function () {
     `);
 
     expect(this.$('.one-carousel-slide')).to.have.length(2);
-    expect(getSlideById(this, 'first').text()).to.contain('slide 1');
-    expect(getSlideById(this, 'second').text()).to.contain('slide 2');
+    expect(getSlide('first').textContent).to.contain('slide 1');
+    expect(getSlide('second').textContent).to.contain('slide 2');
   });
 
   it('shows active slide', function () {
@@ -43,8 +44,8 @@ describe('Integration | Component | one carousel', function () {
       {{/one-carousel}}
     `);
 
-    expect(getSlideById(this, 'second')).to.have.class('active');
-    expect(getSlideById(this, 'first')).to.have.class('hidden');
+    expect(getSlide('second').classList.contains('active')).to.be.true;
+    expect(getSlide('first').classList.contains('hidden')).to.be.true;
   });
 
   it('allows to change slide to next one', function () {
@@ -57,8 +58,8 @@ describe('Integration | Component | one carousel', function () {
     `);
     this.set('activeSlideId', 'second');
 
-    expect(getSlideById(this, 'first')).to.have.class('hidden-to-left');
-    expect(getSlideById(this, 'second')).to.have.class('active-from-right');
+    expect(getSlide('first').classList.contains('hidden-to-left')).to.be.true;
+    expect(getSlide('second').classList.contains('active-from-right')).to.be.true;
   });
 
   it('allows to change slide to previous one', function () {
@@ -71,8 +72,8 @@ describe('Integration | Component | one carousel', function () {
     `);
     this.set('activeSlideId', 'first');
 
-    expect(getSlideById(this, 'first')).to.have.class('active-from-left');
-    expect(getSlideById(this, 'second')).to.have.class('hidden-to-right');
+    expect(getSlide('first').classList.contains('active-from-left')).to.be.true;
+    expect(getSlide('second').classList.contains('hidden-to-right')).to.be.true;
   });
 
   it('does not show any slide if active slide does not exist', function () {
@@ -92,7 +93,3 @@ describe('Integration | Component | one carousel', function () {
     );
   });
 });
-
-function getSlideById(testCase, slideId) {
-  return testCase.$(`[data-one-carousel-slide-id='${slideId}'`);
-}
