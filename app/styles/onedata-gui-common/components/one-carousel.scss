@@ -52,6 +52,12 @@ $one-carousel-slides-gap: 100px;
     width: 100%;
     height: initial;
   }
+  // When slides are changing, then the hiding slide should take place in content flow
+  // as long as possible to let it be taken into account by scrollbars and possible other
+  // "content-flow things". But when slide is completely hidden, then it should not take
+  // any place. To achive that solution, `99.9999% keyframe hack` is used. That last
+  // animation frame changes size of the slide to 0x0, to force it to not take any place
+  // (so scrollbars does not calculate them as content).
   100% {
     transform: none;
     width: 0;
