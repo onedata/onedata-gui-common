@@ -23,6 +23,8 @@ export default PowerSelect.extend({
 
   init() {
     this._super(...arguments);
+
+    // Enable observers
     this.get('scrollState.lastScrollEvent');
   },
 
@@ -31,16 +33,11 @@ export default PowerSelect.extend({
   },
 
   handlePageScroll() {
-    const {
-      media,
-      renderInPlace,
-    } = this.getProperties('media', 'renderInPlace');
-    const {
-      isTablet,
-      isMobile,
-    } = getProperties(media, 'isTablet', 'isMobile');
-
-    if (!renderInPlace && this.get('publicAPI.isOpen')) {
+    if (!this.get('renderInPlace') && this.get('publicAPI.isOpen')) {
+      const {
+        isTablet,
+        isMobile,
+      } = getProperties(this.get('media'), 'isTablet', 'isMobile');
       if (isTablet || isMobile) {
         // In mobile mode dropdown may overlay top bar of the GUI. We need to hide dropdown
         // on scroll.
