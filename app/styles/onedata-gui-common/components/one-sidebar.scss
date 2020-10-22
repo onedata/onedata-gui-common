@@ -45,6 +45,8 @@
 }
 
 .two-level-sidebar {
+  $title-with-subtitle-pull-up: -7px;
+
   @mixin item-header-elements-color($color) {
     .sidebar-item-icon,
     .truncated-string,
@@ -108,9 +110,18 @@
     }
   }
 
+  .item-header-inner-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    min-width: 0;
+  }
+
   .sidebar-item-icon {
     margin-right: $padding-small-horizontal * 0.9;
     font-size: $menu-icon-font-size;
+    // Font size of this icon is much larger than used for text. We need to minimize
+    // excessive icon height.
     line-height: 0;
   }
 
@@ -143,11 +154,11 @@
   }
 
   .sidebar-item-title-upper {
-    bottom: -7px;
+    bottom: $title-with-subtitle-pull-up;
   }
 
   .sidebar-item-title-lower {
-    top: -7px;
+    top: $title-with-subtitle-pull-up;
     opacity: 0.5;
     color: $main-text-color;
     @include font-regular();
