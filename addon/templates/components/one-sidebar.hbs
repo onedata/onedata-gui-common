@@ -37,31 +37,30 @@
             {{/one-collapse}}
           {{/if}}
         </div>
-        <div class="one-list-wrapper no-top-border">
+        {{#if filteredCollection}}
           <ul class="one-list">
             {{#each filteredCollection as |item|}}
               <li class="one-list-item clickable resource-item {{if (eq primaryItem item) "active"}}">
-                <div class="item-header truncate">
-                  {{#link-to
-                    "onedata.sidebar.content.index"
-                    sidebarType
-                    (model-routable-id item)
-                    active=false
-                    willBeActive=false
-                    loading=false
-                  }}
-                    {{#if firstLevelItemComponent}}
-                      {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
-                    {{else}}
-                      {{#if firstLevelItemIcon}}
-                        {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}} 
-                      {{/if}}
-                      {{#truncated-string class=(if firstLevelItemIcon "after-icon")}}
-                        {{name-conflict item=item tagName="span" class="one-label"}}
-                      {{/truncated-string}}
+                {{#link-to
+                  "onedata.sidebar.content.index"
+                  sidebarType
+                  (model-routable-id item)
+                  class="item-header"
+                  active=false
+                  willBeActive=false
+                  loading=false
+                }}
+                  {{#if firstLevelItemComponent}}
+                    {{component firstLevelItemComponent item=item inSidenav=inSidenav sidebar=this}}
+                  {{else}}
+                    {{#if firstLevelItemIcon}}
+                      {{one-icon class="sidebar-item-icon" icon=firstLevelItemIcon}}
                     {{/if}}
-                  {{/link-to}}
-                </div>
+                    {{#truncated-string}}
+                      {{name-conflict item=item tagName="span" class="one-label"}}
+                    {{/truncated-string}}
+                  {{/if}}
+                {{/link-to}}
                 {{#if (eq primaryItem item)}}
                   <ul class="one-list one-list-level-2">
                     {{component secondLevelItemsComponent
@@ -76,7 +75,7 @@
               </li>
             {{/each}}
           </ul>
-        </div>
+        {{/if}}
       {{/if}}
     </div>
   </div>
