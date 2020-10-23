@@ -1,0 +1,31 @@
+{{#bs-button
+  id=btnId
+  class=(concat-classes "query-builder-block-adder clickable" btnClass)
+  size="sm"
+  type="default"
+  disabled=disabled
+  onClick=(action (mut popoverOpen) true)
+}}
+  {{one-icon icon="plus"}}
+{{/bs-button}}
+
+{{#one-webui-popover
+  popoverStyle="unlimited-width"
+  class="block-adder-popover"
+  popoverTrigger="manual"
+  open=popoverOpen
+  padding=true
+  triggerSelector=(concat "#" btnId)
+  renderInPlace=true
+}}
+  {{#click-outside
+    action=(action (mut popoverOpen) false)
+    except-selector=".ember-power-select-dropdown *"
+  }}
+    {{query-builder/block-selector
+      mode="create"
+      queryProperties=queryProperties
+      onBlockAdd=(action "addBlock" (action (mut popoverOpen) false))
+    }}
+  {{/click-outside}}
+{{/one-webui-popover}}

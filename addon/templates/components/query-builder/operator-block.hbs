@@ -1,0 +1,57 @@
+{{#if hasSingleOperandOperator}}
+  {{#if (and queryBlock.operator (not (eq queryBlock.operator "root")))}}
+    <div class="block-label block-prefix-label">{{tt this (concat "operators." queryBlock.operator)}}</div>
+  {{/if}}
+
+  {{#if firstOperand}}
+    {{query-builder/block-visualiser
+      queryBlock=firstOperand
+      queryProperties=queryProperties
+      onBlockReplace=(action "replaceBlock" firstOperand)
+      onBlockRemove=(action "removeBlock" firstOperand)
+      onConditionEditionStart=onConditionEditionStart
+      onConditionEditionEnd=onConditionEditionEnd
+      onConditionEditionValidityChange=onConditionEditionValidityChange
+      onBlockRemoved=onBlockRemoved
+    }}
+  {{else}}
+    {{query-builder/block-adder
+      onBlockAdd=(action "addBlock")
+      queryProperties=queryProperties
+    }}
+  {{/if}}
+{{else}}
+  {{#each queryBlock.operands as |operandBlock|}}
+    {{query-builder/block-visualiser
+      queryBlock=operandBlock
+      queryProperties=queryProperties
+      onBlockReplace=(action "replaceBlock" operandBlock)
+      onBlockRemove=(action "removeBlock" operandBlock)
+      onConditionEditionStart=onConditionEditionStart
+      onConditionEditionEnd=onConditionEditionEnd
+      onConditionEditionValidityChange=onConditionEditionValidityChange
+      onBlockRemoved=onBlockRemoved
+    }}
+    {{#if queryBlock.operator}}
+      <div class="block-label block-infix-label">
+        {{tt this (concat "operators." queryBlock.operator)}}
+      </div>
+    {{/if}}
+  {{else}}
+    {{query-builder/block-adder
+      onBlockAdd=(action "addBlock")
+      queryProperties=queryProperties
+    }}
+    {{#if queryBlock.operator}}
+      <div class="block-label block-infix-label">
+        {{tt this (concat "operators." queryBlock.operator)}}
+      </div>
+    {{/if}}
+  {{/each}}
+  {{query-builder/block-adder
+    onBlockAdd=(action "addBlock")
+    queryProperties=queryProperties
+    disabled=(eq queryBlock.operands.length 0)
+  }}
+{{/if}}
+{{yield}}

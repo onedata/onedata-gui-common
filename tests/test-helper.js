@@ -7,5 +7,6 @@ import { setResolver } from 'ember-mocha';
 setResolver(resolver);
 
 mocha.setup({
-  timeout: 5000,
+  // FIXME: restore 5000
+  timeout: 600000,
 });

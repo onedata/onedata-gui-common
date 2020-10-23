@@ -1,0 +1,95 @@
+.query-builder-block-selector {
+  background-color: white;
+  padding: $query-builder-spacer * 0.8;
+  font-size: 80%;
+
+  &.create-block-selector {
+    width: 280px;
+  }
+
+  h1 {
+    font-size: 100%;
+    font-weight: bold;
+  }
+
+  .btn, .form-control {
+    font-size: inherit;
+  }
+
+  .operators-section:not(:last-child) {
+    margin-bottom: $query-builder-spacer;
+  }
+
+  .operator-selector {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  .comparator-main-container,
+  .comparator-additional-container {
+    display: flex;
+  }
+
+  .operator {
+    margin-right: $query-builder-spacer * 0.25;
+    text-transform: uppercase;
+  }
+
+  .ember-power-select-trigger {
+    line-height: 2.2;
+  }
+
+  .ember-power-select-option {
+    word-break: break-all;
+  }
+
+  .ember-basic-dropdown {
+    flex-grow: 1;
+  }
+
+  .special-property {
+    @include font-semibold;
+    font-style: italic;
+  }
+
+  .form-group {
+    margin-bottom: $query-builder-spacer * 0.5;
+    min-width: 0;
+  }
+
+  .form-group-no-shrink {
+    flex-shrink: 0;
+  }
+
+  .form-group-full-line {
+    flex-basis: 100%;
+    justify-content: flex-start;
+  }
+
+  .form-group-fill-line {
+    margin-left: $query-builder-spacer * 0.5;
+    flex-grow: 1;
+    justify-content: flex-start;
+  }
+  
+  .date-editor {
+    .input-group {
+      flex-wrap: nowrap;
+    }
+
+    .form-control {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+  
+  .flatpickr-wrapper {
+    width: 100%;
+  }
+
+  .accept-condition {
+    display: block;
+  }
+}

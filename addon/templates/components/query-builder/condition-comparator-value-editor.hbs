@@ -1,0 +1,20 @@
+{{#if viewMode}}
+  <span
+    onclick={{action "onStartEdit"}}
+    class="comparator-value comparator-value-view {{elementClass}}"
+  >
+    {{viewModeComparatorValue}}
+  </span>
+{{else}}
+  {{!-- TODO: support for dropdown with values --}}
+  <div id={{componentGuid}} class="form-group comparator-value-editor {{comparatorEditor.type}}-editor {{if this.isValueInvalid "has-error"}} {{elementClass}}">
+    <input
+      type="text"
+      class="comparator-value form-control form-control-sm {{if isValueInvalid "is-invalid"}}"
+      value={{value}}
+      oninput={{action "valueChanged" value="target.value"}}
+      onkeydown={{action "onKeyDown"}}
+      onblur={{action "onFinishEdit"}}
+    >
+  </div>
+{{/if}}

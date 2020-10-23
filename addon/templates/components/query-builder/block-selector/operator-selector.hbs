@@ -1,0 +1,17 @@
+{{#each operatorsSpec as |operator|}}
+  <li>
+    {{!-- FIXME: outline button style --}}
+    {{#bs-button
+      class=(concat "btn-outline-default operator operator-" operator.name)
+      disabled=operator.disabled
+      type="default"
+      size="sm"
+      onClick=(action "onOperatorSelected" operator.name)
+    }}
+      {{tt this (concat "operators." operator.name)}}
+    {{/bs-button}}
+  </li>
+{{/each}}
+
+
+

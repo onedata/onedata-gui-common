@@ -1,0 +1,34 @@
+.query-builder {
+  .query-builder-condition-block {
+    font-size: 80%;
+    align-items: baseline;
+
+    .special-property {
+      font-style: italic;
+    }
+
+    // FIXME: there is no property-path -> key
+    .property-path {
+      font-size: 100%;
+      color: $text-color;
+      font-weight: bold;
+    }
+
+    .comparator {
+      margin: 0 $query-builder-spacer * 0.2;
+    }
+
+    .property-path,
+    .comparator,
+    .comparator-value {
+      min-width: 0;
+      word-wrap: break-word;
+      line-height: 1;
+    }
+
+    .comparator-value-view:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}

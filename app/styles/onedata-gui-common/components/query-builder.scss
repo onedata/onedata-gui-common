@@ -1,0 +1,82 @@
+$query-builder-spacer: $padding-small-horizontal;
+
+.query-builder {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: $query-builder-spacer;
+
+  .query-builder-input {
+    display: flex;
+    min-height: $input-height-base;
+    height: auto;
+    flex-basis: 100%;
+    min-width: 0;
+    margin-right: $query-builder-spacer * 0.5;
+  }
+
+  .query-builder-block {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    min-width: 0;
+    padding: 0 $query-builder-spacer * 0.1;
+
+    &:not(.root-block) {
+      background-color: $color-one-light-blue;
+      border: 1px solid darken($color-one-light-blue, 20%);
+      border-radius: $input-border-radius-small;
+
+      > * {
+        margin: $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
+      }
+    }
+  }
+
+  .query-builder-block-visualiser.is-directly-hovered {
+    > .query-builder-block {
+      background-color: darken($color-one-light-blue, 5%);
+      border: 1px solid darken($color-one-light-blue, 25%);
+    }
+  }
+
+  .block-label {
+    font-size: 80%;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .block-prefix-label {
+    margin-right: $query-builder-spacer * 0.2;
+  }
+
+  .block-infix-label {
+    margin: 0 $query-builder-spacer * 0.2;
+  }
+
+  .property-path, .comparator, .comparator-value {
+    line-height: 1;
+  }
+
+  .block-button {
+    display: block;
+    line-height: 1;
+    padding: 2px;
+    background-color: transparent;
+    border: 0;
+    color: darken($color-one-light-blue, 30%);
+    font-size: 0.6rem;
+  }
+
+  .remove-block {
+    &:hover {
+      color: $color-one-danger;
+    }
+  }
+}
+
+@import 'onedata-gui-common/components/query-builder/block-adder';
+@import 'onedata-gui-common/components/query-builder/block-selector';
+@import 'onedata-gui-common/components/query-builder/block-visualiser';
+@import 'onedata-gui-common/components/query-builder/condition-block';
+@import 'onedata-gui-common/components/query-builder/curl-generator';

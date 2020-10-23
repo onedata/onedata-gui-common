@@ -45,6 +45,11 @@ module.exports = {
       },
     ],
     'semi': 2,
+    'no-restricted-globals': [
+      2,
+      'name',
+      'blur',
+    ],
     // NOTE: disabled valid-jsdoc
 
     'promise/always-return': 'off', // default: error

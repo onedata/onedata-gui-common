@@ -1,0 +1,52 @@
+<div class="form-group form-group-full-line property-selector-container">
+  {{#power-select
+    options=queryProperties
+    selected=selectedConditionProperty
+    onchange=(action "conditionPropertyChanged")
+    searchEnabled=true
+    searchField="key"
+    renderInPlace=true
+    placeholder=(tt this "propertySelectorPlaceholder")
+    class="property-selector"
+    as |queryProperty|
+  }}
+    <span class="parameter-suggestion-name">
+      {{queryProperty.key}}
+    </span>
+  {{/power-select}}
+</div>
+<div class="comparator-main-container">
+  {{#if comparators.length}}
+    <div class="form-group form-group-no-shrink comparator-selector-container">
+      {{#power-select
+        options=comparators
+        selected=selectedConditionComparator
+        onchange=(action "conditionComparatorChanged")
+        renderInPlace=true
+        class="comparator-selector"
+        as |comparator|
+      }}
+        {{tt this (concat "comparators." comparator)}}
+      {{/power-select}}
+    </div>
+    {{query-builder/condition-comparator-value-editor
+      mode="create"
+      comparator=selectedConditionComparator
+      value=conditionComparatorValue
+      onValueChange=(action "conditionComparatorValueChanged")
+      class="form-group-fill-line"
+    }}
+  {{/if}}
+</div>
+<div class="form-group-full-line">
+  {{#bs-button
+    class="accept-condition"
+    disabled=(not isConditionDataValid)
+    type="primary"
+    size="sm"
+    onClick=(action "conditionSelected")
+  }}
+    {{tt this "acceptCondition"}}
+  {{/bs-button}}
+</div>
+{{yield}}

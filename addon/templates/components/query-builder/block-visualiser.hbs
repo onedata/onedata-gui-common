@@ -1,0 +1,30 @@
+{{#component (concat "query-builder/" queryBlock.renderer)
+  queryBlock=queryBlock
+  queryProperties=queryProperties
+  onConditionEditionStart=onConditionEditionStart
+  onConditionEditionEnd=onConditionEditionEnd
+  onConditionEditionValidityChange=onConditionEditionValidityChange
+  onBlockRemoved=onBlockRemoved
+}}
+  {{#bs-button
+    onClick=onBlockRemove
+    type="danger"
+    class="block-button block-settings clickable"
+  }}
+    {{one-icon icon="settings"}}
+    {{query-builder/block-settings
+      queryBlock=queryBlock
+      onBlockReplace=onBlockReplace
+      open=areSettingsVisible
+      onSettingsClose=(action "onSettingsClose")
+      class="block-button"
+    }}
+  {{/bs-button}}
+  {{#bs-button
+    onClick=onBlockRemove
+    type="danger"
+    class="block-button remove-block clickable"
+  }}
+    {{one-icon icon="x"}}
+  {{/bs-button}}
+{{/component}}

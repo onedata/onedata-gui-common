@@ -36,6 +36,7 @@ export default [
   'provider-spaces-support-chart',
   'providers-list',
   'providers-map-tile',
+  'query-builder',
   'remove-icon',
   'resource-load-error',
   'space-providers-support-chart',

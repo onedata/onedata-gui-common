@@ -1,0 +1,31 @@
+{{#if (eq mode "create")}}
+  <div class="operators-section add-operator-section">
+      <h1>{{tt this "operatorHeader"}}</h1>
+      {{query-builder/block-selector/operator-selector
+        onOperatorSelected=(action "operatorAdded")
+      }}
+  </div>
+  <div class="condition-selector">
+    <h1>{{tt this "conditionHeader"}}</h1>
+    {{query-builder/block-selector/condition-selector
+      onConditionSelected=(action "conditionAdded")
+      queryProperties=queryProperties
+    }}
+  </div>
+{{else}}
+  <div class="operators-section surround-section">
+    <h1>{{tt this "surroundHeader"}}</h1>
+    {{query-builder/block-selector/operator-selector
+      onOperatorSelected=(action "surround")
+    }}
+  </div>
+  {{#if isEditBlockAnOperator}}
+    <div class="operators-section change-to-section">
+      <h1>{{tt this "changeToOperatorHeader"}}</h1>
+      {{query-builder/block-selector/operator-selector
+        disabledOperators=disabledOperatorsForChange
+        onOperatorSelected=(action "changeToOperator")
+      }}
+    </div>
+  {{/if}}
+{{/if}}

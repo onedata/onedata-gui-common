@@ -1,0 +1,24 @@
+{{#render-later triggerRender=open}}
+  {{#one-webui-popover
+    class="block-settings-popover"
+    popoverTrigger="manual"
+    padding=true
+    triggerSelector=(or
+      triggerSelector
+      (and parentView.elementId (concat "#" parentView.elementId))
+      "body"
+    )
+    renderInPlace=true
+    open=open
+  }}
+    {{#click-outside
+      action=(action (mut open) false)
+    }}
+      {{query-builder/block-selector
+        mode="edit"
+        editBlock=queryBlock
+        onBlockReplace=(action "blockReplace" (action (mut open) false))
+      }}
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}

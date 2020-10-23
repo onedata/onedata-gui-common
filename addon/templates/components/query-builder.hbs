@@ -1,0 +1,19 @@
+<div class="form-control query-builder-input">
+  {{query-builder/operator-block
+    queryBlock=rootQueryBlock
+    queryProperties=queryProperties
+    onConditionEditionStart=(action "onConditionEditionStart")
+    onConditionEditionEnd=(action "onConditionEditionEnd")
+    onConditionEditionValidityChange=(action "onConditionEditionValidityChange")
+    onBlockRemoved=(action "onBlockRemoved")
+  }}
+</div>
+{{#bs-button
+  class="submit-query btn-input-padding"
+  type="primary"
+  onClick=(action "performQuery")
+  disabled=hasInvalidCondition
+}}
+  {{tt this "performQueryButton"}}
+{{/bs-button}}
+{{yield}}

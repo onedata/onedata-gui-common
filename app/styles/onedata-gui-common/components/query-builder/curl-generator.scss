@@ -1,0 +1,23 @@
+.query-builder-curl-generator {
+  white-space: nowrap;
+  margin-left: $query-builder-spacer * 0.5;
+}
+
+.curl-generator-body {
+  display: flex;
+  flex-direction: column;
+  height: 300px;
+  align-items: stretch;
+  
+  .one-copy-button {
+    display: flex;
+    flex-grow: 1;
+    align-self: initial;
+  }
+
+  .copy-textarea {
+    flex-grow: 1;
+    align-self: initial;
+    font-size: 1rem;
+  }
+}
