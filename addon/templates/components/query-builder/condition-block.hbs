@@ -4,6 +4,7 @@
 <span class="comparator">{{tt this (concat "comparators." queryBlock.comparator)}}</span>
 {{query-builder/condition-comparator-value-editor
   class="clickable"
+  inputClass="input-sm"
   mode=mode
   comparator=queryBlock.comparator
   value=(if (eq mode "edit") editComparatorValue queryBlock.comparatorValue)

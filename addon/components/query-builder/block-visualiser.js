@@ -71,8 +71,7 @@ export default Component.extend({
 
     this.set(
       'areSettingsVisible',
-      !clickEvent.target.matches('.clickable, .clickable *') &&
-      closestVisualiserElement === this.get('element')
+      closestVisualiserElement === this.get('element') && !this.get('areSettingsVisible')
     );
   },
 

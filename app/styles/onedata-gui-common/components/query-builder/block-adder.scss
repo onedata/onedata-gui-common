@@ -1,6 +1,14 @@
 .query-builder-block-adder {
   display: block;
   line-height: 1;
-  font-size: 60%;
-  padding: 2px 3px;
+  
+  &.btn.btn-sm {
+    font-size: 60%;
+    padding: 2px 2px;
+  }
+  
+  .adder-icon {
+    top: 0.25em;
+    left: auto;
+  }
 }

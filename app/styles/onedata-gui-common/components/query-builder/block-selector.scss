@@ -1,7 +1,6 @@
 .query-builder-block-selector {
   background-color: white;
   padding: $query-builder-spacer * 0.8;
-  font-size: 80%;
 
   &.create-block-selector {
     width: 280px;
@@ -35,10 +34,6 @@
   .operator {
     margin-right: $query-builder-spacer * 0.25;
     text-transform: uppercase;
-  }
-
-  .ember-power-select-trigger {
-    line-height: 2.2;
   }
 
   .ember-power-select-option {
@@ -91,5 +86,13 @@
 
   .accept-condition {
     display: block;
+  }
+  
+  .condition-selector {
+    .comparator-selector-container {
+      .ember-power-select-selected-item {
+        padding-right: $padding-small-horizontal;
+      }
+    }
   }
 }

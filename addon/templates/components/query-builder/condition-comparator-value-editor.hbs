@@ -7,10 +7,13 @@
   </span>
 {{else}}
   {{!-- TODO: support for dropdown with values --}}
-  <div id={{componentGuid}} class="form-group comparator-value-editor {{comparatorEditor.type}}-editor {{if this.isValueInvalid "has-error"}} {{elementClass}}">
+  <div
+    id={{componentGuid}}
+    class="form-group form-group-fill-line comparator-value-editor {{comparatorEditor.type}}-editor {{if this.isValueInvalid "has-error"}} {{elementClass}}"
+  >
     <input
       type="text"
-      class="comparator-value form-control form-control-sm {{if isValueInvalid "is-invalid"}}"
+      class="comparator-value form-control {{if isValueInvalid "is-invalid"}} {{inputClass}}"
       value={{value}}
       oninput={{action "valueChanged" value="target.value"}}
       onkeydown={{action "onKeyDown"}}

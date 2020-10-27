@@ -1,7 +1,7 @@
 .query-builder {
   .query-builder-condition-block {
     font-size: 80%;
-    align-items: baseline;
+    align-items: center;
 
     .special-property {
       font-style: italic;
@@ -29,6 +29,13 @@
     .comparator-value-view:hover {
       cursor: pointer;
       text-decoration: underline;
+    }
+    
+    // FIXME: separate files?
+    .comparator-value-editor {
+      input.input-sm {
+        padding-bottom: 0.3em;
+      }
     }
   }
 }

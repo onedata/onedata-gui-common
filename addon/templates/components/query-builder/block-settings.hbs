@@ -1,18 +1,21 @@
 {{#render-later triggerRender=open}}
   {{#one-webui-popover
     class="block-settings-popover"
+    onHide=(action "close")
     popoverTrigger="manual"
     padding=true
     triggerSelector=(or
       triggerSelector
-      (and parentView.elementId (concat "#" parentView.elementId))
+      parentSelector
       "body"
     )
     renderInPlace=true
     open=open
+    as |popover|
   }}
     {{#click-outside
-      action=(action (mut open) false)
+      action=popover.hide
+      except-selector=clickOutsideExceptSelector
     }}
       {{query-builder/block-selector
         mode="edit"

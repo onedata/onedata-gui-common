@@ -1,9 +1,8 @@
 {{#each operatorsSpec as |operator|}}
   <li>
-    {{!-- FIXME: outline button style --}}
     {{#bs-button
       class=(concat "btn-outline-default operator operator-" operator.name)
-      disabled=operator.disabled
+      disabled=(or selectionDone operator.disabled)
       type="default"
       size="sm"
       onClick=(action "onOperatorSelected" operator.name)
@@ -12,6 +11,3 @@
     {{/bs-button}}
   </li>
 {{/each}}
-
-
-

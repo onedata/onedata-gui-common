@@ -6,23 +6,14 @@
   onConditionEditionValidityChange=onConditionEditionValidityChange
   onBlockRemoved=onBlockRemoved
 }}
-  {{#bs-button
-    onClick=onBlockRemove
-    type="danger"
-    class="block-button block-settings clickable"
+  {{query-builder/block-settings
+    queryBlock=queryBlock
+    onBlockReplace=onBlockReplace
+    open=areSettingsVisible
+    onSettingsClose=(action "onSettingsClose")
   }}
-    {{one-icon icon="settings"}}
-    {{query-builder/block-settings
-      queryBlock=queryBlock
-      onBlockReplace=onBlockReplace
-      open=areSettingsVisible
-      onSettingsClose=(action "onSettingsClose")
-      class="block-button"
-    }}
-  {{/bs-button}}
   {{#bs-button
     onClick=onBlockRemove
-    type="danger"
     class="block-button remove-block clickable"
   }}
     {{one-icon icon="x"}}

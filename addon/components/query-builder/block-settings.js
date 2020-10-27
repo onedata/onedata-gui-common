@@ -9,8 +9,9 @@
 
 import Component from '@ember/component';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { observer } from '@ember/object';
+import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-settings';
+import { tag } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -40,11 +41,20 @@ export default Component.extend({
    */
   open: false,
 
-  openObserver: observer('open', function openObserver() {
-    if (!this.get('open')) {
-      this.get('onSettingsClose')();
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  parentSelector: computed('parentView.elementId', function parentSelector() {
+    const parentId = this.get('parentView.elementId');
+    if (parentId) {
+      return `#${parentId}`;
     }
   }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  clickOutsideExceptSelector: tag `${'parentSelector'}, ${'parentSelector'} *`,
 
   actions: {
     /**
@@ -54,6 +64,10 @@ export default Component.extend({
     blockReplace(closeSelectorCallback, newBlock) {
       closeSelectorCallback();
       this.get('onBlockReplace')(newBlock);
+    },
+
+    close() {
+      this.get('onSettingsClose')();
     },
   },
 });

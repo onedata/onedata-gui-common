@@ -32,6 +32,13 @@ export default Component.extend(I18n, {
   operators: undefined,
 
   /**
+   * @virtual optional
+   * @param {String} selectedOperator
+   * @type {Function}
+   */
+  onOperatorSelected: notImplementedIgnore,
+
+  /**
    * @type {Array<String>}
    */
   validOperators: Object.freeze(['and', 'or', 'not']),
@@ -42,11 +49,11 @@ export default Component.extend(I18n, {
   disabledOperators: Object.freeze([]),
 
   /**
-   * @virtual optional
-   * @param {String} selectedOperator
-   * @type {Function}
+   * Protection for mulitple clicks on selected operator - turns to true right after
+   * selection (click) event and then disables buttons.
+   * @type {Boolean}
    */
-  onOperatorSelected: notImplementedIgnore,
+  selectionDone: false,
 
   /**
    * @type {ComputedProperty<string[]>}
@@ -85,6 +92,7 @@ export default Component.extend(I18n, {
 
   actions: {
     onOperatorSelected(operatorName) {
+      this.set('selectionDone');
       this.get('onOperatorSelected')(operatorName);
     },
   },
