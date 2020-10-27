@@ -1,6 +1,7 @@
 {{#render-later triggerRender=open}}
   {{#one-webui-popover
     class="block-settings-popover"
+    popoverStyle="unlimited-width over-modals"
     onHide=(action "close")
     popoverTrigger="manual"
     padding=true
@@ -19,6 +20,7 @@
     }}
       {{query-builder/block-selector
         mode="edit"
+        operators=operators
         editBlock=queryBlock
         onBlockReplace=(action "blockReplace" (action (mut open) false))
       }}

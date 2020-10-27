@@ -12,6 +12,7 @@ import Component from '@ember/component';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
+import ExcludingOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/excluding-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -26,6 +27,7 @@ const allowedModes = ['create', 'edit'];
 const operatorClasses = {
   and: AndOperatorQueryBlock,
   or: OrOperatorQueryBlock,
+  excluding: ExcludingOperatorQueryBlock,
   not: NotOperatorQueryBlock,
 };
 

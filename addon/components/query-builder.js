@@ -27,12 +27,6 @@ export default Component.extend(I18n, {
    * @virtual
    * // FIXME: description
    */
-  filteredProperties: undefined,
-
-  /**
-   * @virtual
-   * // FIXME: description
-   */
   sortProperty: undefined,
 
   /**

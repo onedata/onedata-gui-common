@@ -5,6 +5,7 @@
 
   {{#if firstOperand}}
     {{query-builder/block-visualiser
+      operators=operators
       queryBlock=firstOperand
       queryProperties=queryProperties
       onBlockReplace=(action "replaceBlock" firstOperand)
@@ -17,12 +18,14 @@
   {{else}}
     {{query-builder/block-adder
       onBlockAdd=(action "addBlock")
+      operators=operators
       queryProperties=queryProperties
     }}
   {{/if}}
 {{else}}
   {{#each queryBlock.operands as |operandBlock|}}
     {{query-builder/block-visualiser
+      operators=operators
       queryBlock=operandBlock
       queryProperties=queryProperties
       onBlockReplace=(action "replaceBlock" operandBlock)
@@ -39,6 +42,7 @@
     {{/if}}
   {{else}}
     {{query-builder/block-adder
+      operators=operators
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
     }}
@@ -49,6 +53,7 @@
     {{/if}}
   {{/each}}
   {{query-builder/block-adder
+    operators=operators
     onBlockAdd=(action "addBlock")
     queryProperties=queryProperties
     disabled=(eq queryBlock.operands.length 0)

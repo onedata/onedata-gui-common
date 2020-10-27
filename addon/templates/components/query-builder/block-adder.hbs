@@ -1,7 +1,6 @@
 {{#bs-button
   id=btnId
   class=(concat-classes "query-builder-block-adder clickable" btnClass)
-  size="sm"
   type="default"
   disabled=disabled
   onClick=(action (mut popoverOpen) true)
@@ -10,7 +9,7 @@
 {{/bs-button}}
 
 {{#one-webui-popover
-  popoverStyle="unlimited-width"
+  popoverStyle="unlimited-width over-modals"
   class="block-adder-popover"
   popoverTrigger="manual"
   open=popoverOpen
@@ -24,6 +23,7 @@
   }}
     {{query-builder/block-selector
       mode="create"
+      operators=operators
       queryProperties=queryProperties
       onBlockAdd=(action "addBlock" (action (mut popoverOpen) false))
     }}
