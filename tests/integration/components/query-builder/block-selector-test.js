@@ -7,16 +7,18 @@ import { click, fillIn } from 'ember-native-dom-helpers';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
+import ExcludingOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/excluding-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { get } from '@ember/object';
 
-const multiOperandOperatorsList = ['and', 'or'];
+const multiOperandOperatorsList = ['and', 'or', 'excluding'];
 const singleOperandOperatorsList = ['not'];
 const operatorsList = [...multiOperandOperatorsList, ...singleOperandOperatorsList];
 const operatorBlockClasses = {
   and: AndOperatorQueryBlock,
   or: OrOperatorQueryBlock,
+  excluding: ExcludingOperatorQueryBlock,
   not: NotOperatorQueryBlock,
 };
 
@@ -36,11 +38,11 @@ describe('Integration | Component | query builder/block selector', function () {
       }]);
     });
 
-    it('renders three operators: AND, OR and NOT', async function () {
+    it(`renders operators: ${operatorsList.join(', ')}`, async function () {
       this.render(hbs `{{query-builder/block-selector mode="create"}}`);
 
       const operators = this.$('.operator-selector .operator');
-      expect(operators).to.have.length(3);
+      expect(operators).to.have.length(operatorsList.length);
       operatorsList.forEach((operatorName, index) => {
         const operator = operators[index];
         expect(operator.textContent.trim()).to.equal(operatorName);
@@ -123,13 +125,13 @@ describe('Integration | Component | query builder/block selector', function () {
     });
 
     it(
-      'renders three operators: AND, OR and NOT in "surround" section',
+      `renders operators: ${operatorsList.join(', ')} in "surround" section`,
       async function () {
         this.render(hbs `{{query-builder/block-selector
           mode="edit"
         }}`);
         const operators = this.$('.surround-section .operator-selector .operator');
-        expect(operators).to.have.length(3);
+        expect(operators).to.have.length(operatorsList.length);
         operatorsList.forEach((operatorName, index) => {
           const operator = operators[index];
           expect(operator.textContent.trim()).to.equal(operatorName);
@@ -161,7 +163,7 @@ describe('Integration | Component | query builder/block selector', function () {
     });
 
     it(
-      'renders three operators: AND, OR and NOT in "change to" section',
+      `renders operators: ${operatorsList.join(', ')} in "change to" section`,
       async function () {
         this.render(hbs `{{query-builder/block-selector
           mode="edit"
@@ -169,7 +171,7 @@ describe('Integration | Component | query builder/block selector', function () {
         }}`);
 
         const operators = this.$('.change-to-section .operator-selector .operator');
-        expect(operators).to.have.length(3);
+        expect(operators).to.have.length(operatorsList.length);
         operatorsList.forEach((operatorName, index) => {
           const operator = operators[index];
           expect(operator.textContent.trim()).to.equal(operatorName);
@@ -199,7 +201,7 @@ describe('Integration | Component | query builder/block selector', function () {
         beforeFunc(testCase) {
           const editBlock = testCase.get('editBlock');
           const conditionBlock = ConditionQueryBlock.create();
-          get(editBlock, 'operands').pushObject(conditionBlock);
+          editBlock.addOperand(conditionBlock);
         },
         descriptionSuffix: 'with single condition',
       }].forEach(({ beforeFunc, descriptionSuffix }) => {
@@ -222,7 +224,7 @@ describe('Integration | Component | query builder/block selector', function () {
             ).to.have.attr('disabled');
             expect(
               this.$('.change-to-section .operator:not([disabled])')
-            ).to.have.length(2);
+            ).to.have.length(operatorsList.length - 1);
           }
         );
       });
@@ -240,7 +242,8 @@ describe('Integration | Component | query builder/block selector', function () {
             })
           );
           const conditionBlock = ConditionQueryBlock.create();
-          get(editBlock, 'operands').pushObjects([conditionBlock, conditionBlock]);
+          editBlock.addOperand(conditionBlock);
+          editBlock.addOperand(conditionBlock);
 
           this.render(hbs `{{query-builder/block-selector
             mode="edit"
@@ -258,7 +261,7 @@ describe('Integration | Component | query builder/block selector', function () {
 
           expect(
             this.$('.change-to-section .operator:not([disabled])')
-          ).to.have.length(1);
+          ).to.have.length(operatorsList.length - 2);
         }
       );
     });
@@ -275,7 +278,7 @@ describe('Integration | Component | query builder/block selector', function () {
               })
             );
             const conditionBlock = ConditionQueryBlock.create();
-            get(editBlock, 'operands').pushObject(conditionBlock);
+            editBlock.addOperand(conditionBlock);
             const replaceSpy = this.set(
               'replaceSpy',
               sinon.spy((block) => this.set('block', block))

@@ -25,38 +25,26 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * // FIXME: description
    */
   sortProperty: undefined,
 
   /**
    * @virtual
-   * FIXME: description
    */
   sortDirection: undefined,
 
   /**
    * @virtual
-   * FIXME: description
    */
   queryChanged: undefined,
 
   /**
    * @virtual
-   * @type {Function}
-   * @param {Utils.QueryBuilder.RootOperatorQueryBlock} rootQueryBlock
-   */
-  onPerformQuery: undefined,
-
-  /**
-   * @virtual
-   * FIXME: description
    */
   onGenerateCurl: undefined,
 
   /**
    * @virtual
-   * FIXME: some transform function is needed to create them from qos-parameter-suggestions
    */
   queryProperties: undefined,
 

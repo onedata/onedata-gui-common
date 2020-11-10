@@ -3,29 +3,30 @@
   class=(concat-classes "query-builder-block-adder clickable" btnClass)
   type="default"
   disabled=disabled
-  onClick=(action (mut popoverOpen) true)
+  onClick=(action "togglePopover" true)
 }}
   {{one-icon icon="plus" class="adder-icon"}}
 {{/bs-button}}
 
-{{#one-webui-popover
-  popoverStyle="unlimited-width over-modals"
-  class="block-adder-popover"
-  popoverTrigger="manual"
-  open=popoverOpen
-  padding=true
-  triggerSelector=(concat "#" btnId)
-  renderInPlace=true
+{{#click-outside
+  action=(action "togglePopover" false)
+  except-selector=".ember-basic-dropdown, .webui-popover-block-adder"
 }}
-  {{#click-outside
-    action=(action (mut popoverOpen) false)
-    except-selector=".ember-power-select-dropdown *"
+  {{#one-webui-popover
+    popoverStyle="unlimited-width over-modals webui-popover-block-adder"
+    class="block-adder-popover"
+    popoverTrigger="manual"
+    open=popoverOpen
+    padding=true
+    triggerSelector=(concat "#" btnId)
+    renderInPlace=true
   }}
-    {{query-builder/block-selector
-      mode="create"
-      operators=operators
-      queryProperties=queryProperties
-      onBlockAdd=(action "addBlock" (action (mut popoverOpen) false))
-    }}
-  {{/click-outside}}
-{{/one-webui-popover}}
+      {{query-builder/block-selector
+        mode="create"
+        operators=operators
+        queryProperties=queryProperties
+        onBlockAdd=(action "addBlock" (action "togglePopover" false))
+      }}
+    
+  {{/one-webui-popover}}
+{{/click-outside}}

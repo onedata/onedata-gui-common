@@ -48,5 +48,8 @@ export default Component.extend({
       closeSelectorCallback();
       this.get('onBlockAdd')(selectedBlock);
     },
+    togglePopover(open) {
+      this.set('popoverOpen', open);
+    },
   },
 });

@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
 
-const allowedOperatorsList = ['and', 'or', 'not'];
+const allowedOperatorsList = ['and', 'or', 'excluding', 'not'];
 
 describe(
   'Integration | Component | query builder/block selector/operator selector',
@@ -15,12 +15,12 @@ describe(
     });
 
     it(
-      `renders three operators: ${allowedOperatorsList.map(s => s.toUpperCase()).join(', ')} by default`,
+      `renders four operators: ${allowedOperatorsList.map(s => s.toUpperCase()).join(', ')} by default`,
       async function () {
         this.render(hbs `{{query-builder/block-selector/operator-selector}}`);
 
         const operators = this.$('.operator-selector .operator');
-        expect(operators).to.have.length(3);
+        expect(operators).to.have.length(4);
         allowedOperatorsList.forEach((operatorName, index) =>
           checkOperatorButton(operators[index], operatorName)
         );

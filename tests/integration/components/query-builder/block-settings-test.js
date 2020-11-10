@@ -123,7 +123,7 @@ describe('Integration | Component | query builder/block settings', function () {
         isShown: true,
       });
       const condition = new ConditionQueryBlock();
-      get(queryBlock, 'operands').pushObject(condition);
+      queryBlock.addOperand(condition);
 
       this.render(hbs `<div id="x">{{query-builder/block-settings
         queryBlock=queryBlock

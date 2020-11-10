@@ -10,12 +10,4 @@
     onBlockRemoved=(action "onBlockRemoved")
   }}
 </div>
-{{#bs-button
-  class="submit-query btn-input-padding"
-  type="primary"
-  onClick=(action "performQuery")
-  disabled=hasInvalidCondition
-}}
-  {{tt this "performQueryButton"}}
-{{/bs-button}}
 {{yield}}

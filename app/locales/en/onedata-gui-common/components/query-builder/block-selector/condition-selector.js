@@ -16,4 +16,8 @@ export default {
     mixed: commonComparators,
   },
   acceptCondition: 'Add',
+  comparatorMode: {
+    known: 'Known',
+    custom: 'Custom',
+  },
 };

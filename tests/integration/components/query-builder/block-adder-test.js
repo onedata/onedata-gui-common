@@ -7,6 +7,7 @@ import $ from 'jquery';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import { selectChoose } from '../../../helpers/ember-power-select';
+import sleep from 'onedata-gui-common/utils/sleep';
 
 describe('Integration | Component | query builder/block adder', function () {
   setupComponentTest('query-builder/block-adder', {

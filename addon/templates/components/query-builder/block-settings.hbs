@@ -1,9 +1,8 @@
 {{#render-later triggerRender=open}}
   {{#one-webui-popover
     class="block-settings-popover"
-    popoverStyle="unlimited-width over-modals"
+    popoverStyle="unlimited-width over-modals one-webui-popover-block-settings"
     onHide=(action "close")
-    popoverTrigger="manual"
     padding=true
     triggerSelector=(or
       triggerSelector

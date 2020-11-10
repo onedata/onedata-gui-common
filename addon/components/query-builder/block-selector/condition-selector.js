@@ -45,6 +45,12 @@ export default Component.extend(I18n, {
   selectedConditionComparator: undefined,
 
   /**
+   * One of: known, custom
+   * @type {String}
+   */
+  comparatorMode: 'known',
+
+  /**
    * @type {any}
    */
   conditionComparatorValue: undefined,
@@ -66,6 +72,24 @@ export default Component.extend(I18n, {
    * @param {any} comparatorValue
    */
   onConditionSelected: notImplementedIgnore,
+
+  conditionComparator: computed(
+    'selectedConditionComparator',
+    'comparatorMode',
+    function conditionComparator() {
+      const {
+        comparatorMode,
+        selectedConditionComparator,
+      } = this.getProperties('comparatorMode', 'selectedConditionComparator');
+      switch (comparatorMode) {
+        case 'known':
+          return selectedConditionComparator + 'Suggestion';
+        case 'custom':
+        default:
+          return selectedConditionComparator;
+      }
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<String>>}

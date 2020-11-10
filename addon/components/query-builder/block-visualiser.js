@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { conditional, raw } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-visualiser';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend({
   layout,
@@ -58,16 +59,14 @@ export default Component.extend({
    * @param {MouseEvent} clickEvent 
    */
   click(clickEvent) {
+    const target = clickEvent.target;
+    if (target.matches('input') || target.closest('.block-adder-popover')) {
+      return;
+    }
+
     // Query blocks are nested. We need to find the origin (deepest) visualiser element,
     // that is on the path of the event bubbling.
-    let closestVisualiserElement = clickEvent.target;
-    while (
-      closestVisualiserElement &&
-      !closestVisualiserElement.matches('.query-builder-block-visualiser') &&
-      closestVisualiserElement !== document.body
-    ) {
-      closestVisualiserElement = closestVisualiserElement.parentElement;
-    }
+    let closestVisualiserElement = target.closest('.query-builder-block-visualiser');
 
     this.set(
       'areSettingsVisible',
@@ -87,7 +86,7 @@ export default Component.extend({
 
   actions: {
     onSettingsClose() {
-      this.set('areSettingsVisible', false);
+      safeExec(this, 'set', 'areSettingsVisible', false);
     },
   },
 });

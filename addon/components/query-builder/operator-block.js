@@ -40,6 +40,12 @@ export default Component.extend(I18n, {
 
   onConditionEditionValidityChange: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Array<String>}
+   */
+  operators: undefined,
+
   operatorBlockClass: tag `${'queryBlock.operator'}-operator-block`,
 
   /**
@@ -63,7 +69,7 @@ export default Component.extend(I18n, {
      * @param {Utils.QueryBuilder.QueryBlock} queryBlock 
      */
     addBlock(queryBlock) {
-      this.get('queryBlock.operands').pushObject(queryBlock);
+      this.get('queryBlock').addOperand(queryBlock);
     },
 
     /**

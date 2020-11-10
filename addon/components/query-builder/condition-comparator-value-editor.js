@@ -116,10 +116,6 @@ export default Component.extend({
     }
   },
 
-  test1: (event) => {
-    console.dir(event);
-  },
-
   actions: {
     valueChanged(value) {
       let newValue = value;
@@ -136,7 +132,6 @@ export default Component.extend({
       if (event.key === 'Enter') {
         this.get('onFinishEdit')();
       } else if (event.key === 'Escape') {
-        console.log(event);
         // FIXME: workaround for finishEdit after cancelEdit (blur event) only for Chrome
         this.set('preventFinishEdit', true);
         this.get('onCancelEdit')();
@@ -147,8 +142,7 @@ export default Component.extend({
       this.get('onStartEdit')();
     },
 
-    onFinishEdit(event) {
-      console.dir(event);
+    onFinishEdit() {
       if (this.get('preventFinishEdit')) {
         this.set('preventFinishEdit', false);
       } else {

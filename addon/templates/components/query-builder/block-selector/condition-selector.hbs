@@ -17,6 +17,20 @@
 </div>
 <div class="comparator-main-container">
   {{#if comparators.length}}
+    {{!-- {{#bs-button-group
+      value=comparatorMode
+      onChange=(action (mut comparatorMode))
+      type="radio"
+      size="sm"
+      class="btn-group-comparator-mode"
+      as |bg|
+    }}
+      {{#each (array "known" "custom") as |comparatorMode|}}
+        {{#bg.button value=unit}}
+          {{tt this (concat "comparatorMode." comparatorMode)}}
+        {{/bg.button}}
+      {{/each}}
+    {{/bs-button-group}} --}}
     <div class="form-group form-group-no-shrink comparator-selector-container">
       {{#power-select
         options=comparators
@@ -31,7 +45,8 @@
     </div>
     {{query-builder/condition-comparator-value-editor
       mode="create"
-      comparator=selectedConditionComparator
+      comparatorEditor=comparatorEditor
+      comparator=conditionComparator
       value=conditionComparatorValue
       onValueChange=(action "conditionComparatorValueChanged")
       class="form-group-fill-line"

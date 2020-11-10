@@ -7,15 +7,24 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
+import Evented from '@ember/object/evented';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
-const QueryBlock = EmberObject.extend({
+export default EmberObject.extend(Evented, {
   /**
    * The name of a component, which should be used to render this block. The rendered
    * component will be `query-builder/${this.renderer}`.
+   * @virtual
    * @type {String}
    */
   renderer: null,
-});
 
-export default QueryBlock;
+  /**
+   * Should be invoked when the block changes it's content, eg. when generated text
+   * will change. Should pass this when invoked.
+   * @virtual
+   * @type {(QueryBlock: Object) => undefined}
+   */
+  notifyUpdate: notImplementedIgnore,
+});

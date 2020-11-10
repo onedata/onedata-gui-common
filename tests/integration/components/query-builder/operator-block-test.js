@@ -5,19 +5,22 @@ import hbs from 'htmlbars-inline-precompile';
 import { click, blur, fillIn } from 'ember-native-dom-helpers';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
+import ExcludingOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/excluding-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
 import { get } from '@ember/object';
+import sleep from 'onedata-gui-common/utils/sleep';
 
-const multiOperandOperatorsList = ['and', 'or'];
+const multiOperandOperatorsList = ['and', 'or', 'excluding'];
 const singleOperandOperatorsList = ['not', 'root'];
 const operatorsList = [...multiOperandOperatorsList, ...singleOperandOperatorsList];
 const operatorBlockClasses = {
   and: AndOperatorQueryBlock,
   or: OrOperatorQueryBlock,
   not: NotOperatorQueryBlock,
+  excluding: ExcludingOperatorQueryBlock,
   root: RootOperatorQueryBlock,
 };
 
@@ -81,10 +84,8 @@ describe('Integration | Component | query builder/operator block', function () {
           async function () {
             const queryBlock =
               this.set('queryBlock', operatorBlockClasses[operatorName].create());
-            get(queryBlock, 'operands').pushObjects([
-              NotOperatorQueryBlock.create(),
-              NotOperatorQueryBlock.create(),
-            ]);
+            queryBlock.addOperand(NotOperatorQueryBlock.create());
+            queryBlock.addOperand(NotOperatorQueryBlock.create());
 
             this.render(hbs `
               {{query-builder/operator-block queryBlock=queryBlock}}
@@ -130,10 +131,8 @@ describe('Integration | Component | query builder/operator block', function () {
         it('shows operator name', async function () {
           const queryBlock =
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
-          get(queryBlock, 'operands').pushObjects([
-            NotOperatorQueryBlock.create(),
-            NotOperatorQueryBlock.create(),
-          ]);
+          queryBlock.addOperand(NotOperatorQueryBlock.create());
+          queryBlock.addOperand(NotOperatorQueryBlock.create());
 
           this.render(hbs `
             {{query-builder/operator-block queryBlock=queryBlock}}
@@ -167,7 +166,7 @@ describe('Integration | Component | query builder/operator block', function () {
           async function () {
             const queryBlock =
               this.set('queryBlock', operatorBlockClasses[operatorName].create());
-            get(queryBlock, 'operands').pushObject(NotOperatorQueryBlock.create());
+            queryBlock.addOperand(NotOperatorQueryBlock.create());
 
             this.render(hbs `
               {{query-builder/operator-block queryBlock=queryBlock}}
@@ -268,13 +267,9 @@ describe('Integration | Component | query builder/operator block', function () {
           {{query-builder/operator-block queryBlock=queryBlock}}
         `);
         await click('.query-builder-block-adder');
-        console.log('a');
         await click('.operator-not');
-        console.log('b');
         await click('.query-builder-block-visualiser');
-        console.log('c');
         await click('.surround-section .operator-and');
-        console.log('d');
 
         expect(this.$('.query-builder-block')).to.have.length(3);
         const surroundingBlock = this.$('.query-builder-block .query-builder-block');
@@ -331,13 +326,13 @@ describe('Integration | Component | query builder/operator block', function () {
             editionValidityChangeSpy: sinon.spy(),
           });
           const nestedOperator = operatorBlockClasses[operatorName].create();
-          get(queryBlock, 'operands').pushObject(nestedOperator);
+          queryBlock.addOperand(nestedOperator);
           const condition = ConditionQueryBlock.create({
             property: { key: 'some_key', type: 'string' },
             comparator: 'string.eq',
             comparatorValue: 'abc',
           });
-          get(nestedOperator, 'operands').pushObject(condition);
+          nestedOperator.addOperand(condition);
 
           this.render(hbs `
             {{query-builder/operator-block

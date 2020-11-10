@@ -20,7 +20,9 @@ import { tag } from 'ember-awesome-macros';
 import { set, get, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { reads } from '@ember/object/computed';
+import { A } from '@ember/array';
 
 const allowedModes = ['create', 'edit'];
 
@@ -127,11 +129,13 @@ export default Component.extend(I18n, {
    * @returns {Utils.QueryBuilder.OperatorQueryBlock}
    */
   createOperatorBlock(operatorName, initialOperands) {
-    const newBlock = operatorClasses[operatorName].create();
+    const blockProperties = {
+      notifyUpdate: this.get('editBlock.notifyUpdate'),
+    };
     if (!isEmpty(initialOperands)) {
-      set(newBlock, 'operands', initialOperands);
+      set(blockProperties, 'operands', initialOperands);
     }
-    return newBlock;
+    return operatorClasses[operatorName].create(blockProperties);
   },
 
   actions: {
@@ -152,6 +156,7 @@ export default Component.extend(I18n, {
         property,
         comparator,
         comparatorValue,
+        notifyUpdate: this.get('editBlock.notifyUpdate'),
       });
       this.get('onBlockAdd')(condition);
     },
@@ -165,7 +170,7 @@ export default Component.extend(I18n, {
         onBlockReplace,
       } = this.getProperties('editBlock', 'onBlockReplace');
       if (editBlock) {
-        onBlockReplace(this.createOperatorBlock(operatorName, [editBlock]));
+        onBlockReplace(this.createOperatorBlock(operatorName, A([editBlock])));
       }
     },
 

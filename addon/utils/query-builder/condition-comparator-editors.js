@@ -12,6 +12,7 @@
  * @type {Object}
  */
 const defaultComparators = {
+  // FIXME: add stringSuggestion, numberSuggestion, mixedSuggestion
   string: ['string.eq'],
   number: ['number.eq', 'number.lt', 'number.lte', 'number.gt', 'number.gte'],
   mixed: ['string.eq', 'number.lt', 'number.lte', 'number.gt', 'number.gte'],

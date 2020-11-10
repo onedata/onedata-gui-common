@@ -8,6 +8,7 @@
  */
 
 import QueryBlock from 'onedata-gui-common/utils/query-builder/query-block';
+import { observer } from '@ember/object';
 
 export default QueryBlock.extend({
   /**
@@ -31,4 +32,13 @@ export default QueryBlock.extend({
    * @type {any}
    */
   comparatorValue: null,
+
+  updateObserver: observer(
+    'property',
+    'comparator',
+    'comparatorValue',
+    function updateObserver() {
+      this.get('notifyUpdate')(this);
+    }
+  ),
 });

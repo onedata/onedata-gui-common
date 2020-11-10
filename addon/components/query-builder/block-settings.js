@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-settings';
 import { tag } from 'ember-awesome-macros';
 
@@ -54,7 +54,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  clickOutsideExceptSelector: tag `${'parentSelector'}, ${'parentSelector'} *`,
+  clickOutsideExceptSelector: tag `${'parentSelector'}, ${'parentSelector'} *, .one-webui-popover-block-settings`,
 
   actions: {
     /**
