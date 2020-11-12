@@ -16,11 +16,10 @@ import ExcludingOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { tag } from 'ember-awesome-macros';
+import { tag, array, raw, or, equal } from 'ember-awesome-macros';
 import { set, get, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
-import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
 
@@ -43,7 +42,7 @@ export default Component.extend(I18n, {
   layout,
 
   classNames: ['query-builder-block-selector'],
-  classNameBindings: ['modeClass'],
+  classNameBindings: ['modeClass', 'effHideConditionsCreation::with-conditions'],
 
   i18nPrefix: 'components.queryBuilder.blockSelector',
 
@@ -52,6 +51,18 @@ export default Component.extend(I18n, {
    * @type {Array<Utils.QueryProperty>}
    */
   queryProperties: Object.freeze([]),
+
+  /**
+   * @virtual optional
+   * @type {Boolean}
+   */
+  hideConditionCreation: false,
+
+  /**
+   * @virtual optional
+   * @type {Utils.QueryBuilder.OperatorQueryBlock}
+   */
+  editParentBlock: null,
 
   /**
    * @type {Array<String>}
@@ -64,6 +75,8 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   rawMode: null,
+
+  effHideConditionCreation: or(equal('mode', raw('edit')), 'hideConditionCreation'),
 
   mode: computed({
     get() {
@@ -101,25 +114,43 @@ export default Component.extend(I18n, {
 
   modeClass: tag `${'mode'}-block-selector`,
 
+  editOperators: array.concat('operators', raw(['none'])),
+
   /**
    * @type {ComputedProperty<Array<String>>}
    */
   disabledOperatorsForChange: computed(
     'editBlock.{operator,operands.[]}',
+    'editParentBlock',
     function disabledChangeSectionOperators() {
       const editBlock = this.get('editBlock');
+      const editParentBlock = this.get('editParentBlock');
       const operatorNames = Object.keys(operatorClasses);
 
       if (!editBlock) {
-        return operatorNames;
+        return [...operatorNames, 'none'];
       }
 
       const editBlockOperator = get(editBlock, 'operator');
       const editBlockOperandsCount = get(editBlock, 'operands.length');
-      return operatorNames.filter((operatorName) => {
+      const disabledOperators = operatorNames.filter((operatorName) => {
         return operatorName === editBlockOperator ||
           operatorsMaxOperandsNumber[operatorName] < editBlockOperandsCount;
       });
+
+      const parentBlockMaxOperands = editParentBlock &&
+        get(editParentBlock, 'maxOperandsNumber');
+      const parentBlockOperandsCount = editParentBlock &&
+        get(editParentBlock, 'operands.length');
+      if (
+        !editParentBlock ||
+        !(get(editBlock, 'isOperator')) ||
+        parentBlockMaxOperands < (parentBlockOperandsCount - 1) + editBlockOperandsCount
+      ) {
+        disabledOperators.push('none');
+      }
+
+      return disabledOperators;
     }
   ),
 
@@ -129,9 +160,11 @@ export default Component.extend(I18n, {
    * @returns {Utils.QueryBuilder.OperatorQueryBlock}
    */
   createOperatorBlock(operatorName, initialOperands) {
-    const blockProperties = {
-      notifyUpdate: this.get('editBlock.notifyUpdate'),
-    };
+    const editBlockNotifyUpdate = this.get('editBlock.notifyUpdate');
+    const blockProperties = {};
+    if (editBlockNotifyUpdate) {
+      set(blockProperties, 'notifyUpdate', editBlockNotifyUpdate);
+    }
     if (!isEmpty(initialOperands)) {
       set(blockProperties, 'operands', initialOperands);
     }
@@ -152,12 +185,16 @@ export default Component.extend(I18n, {
      * @param {any} comparatorValue 
      */
     conditionAdded(property, comparator, comparatorValue) {
-      const condition = ConditionQueryBlock.create({
+      const editBlockNotifyUpdate = this.get('editBlock.notifyUpdate');
+      const blockProperties = {
         property,
         comparator,
         comparatorValue,
-        notifyUpdate: this.get('editBlock.notifyUpdate'),
-      });
+      };
+      if (this.get('editBlock.notifyUpdate')) {
+        set(blockProperties, 'notifyUpdate', editBlockNotifyUpdate);
+      }
+      const condition = ConditionQueryBlock.create(blockProperties);
       this.get('onBlockAdd')(condition);
     },
 
@@ -170,7 +207,7 @@ export default Component.extend(I18n, {
         onBlockReplace,
       } = this.getProperties('editBlock', 'onBlockReplace');
       if (editBlock) {
-        onBlockReplace(this.createOperatorBlock(operatorName, A([editBlock])));
+        onBlockReplace([this.createOperatorBlock(operatorName, A([editBlock]))]);
       }
     },
 
@@ -183,9 +220,12 @@ export default Component.extend(I18n, {
         onBlockReplace,
       } = this.getProperties('editBlock', 'onBlockReplace');
       if (editBlock) {
-        onBlockReplace(
-          this.createOperatorBlock(operatorName, get(editBlock, 'operands'))
-        );
+        const operands = get(editBlock, 'operands');
+        if (operatorName === 'none') {
+          onBlockReplace(operands);
+        } else {
+          onBlockReplace([this.createOperatorBlock(operatorName, operands)]);
+        }
       }
     },
   },

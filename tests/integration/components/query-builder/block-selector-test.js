@@ -154,10 +154,13 @@ describe('Integration | Component | query builder/block selector', function () {
 
           expect(replaceSpy).to.not.be.called;
           await click(`.surround-section .operator-${operatorName}`);
-          const blockMatcher = sinon.match(obj => get(obj, 'operator') === operatorName)
-            .and(sinon.match(obj => get(obj, 'operands.length') === 1))
-            .and(sinon.match(obj => get(obj, 'operands.firstObject') === editBlock));
-          expect(replaceSpy).to.be.calledOnce.and.to.be.calledWith(blockMatcher);
+          expect(replaceSpy).to.be.calledOnce;
+          const blocks = replaceSpy.firstCall.args[0];
+          const block = blocks[0];
+          expect(get(blocks, 'length')).to.equal(1);
+          expect(get(block, 'operator')).to.equal(operatorName);
+          expect(get(block, 'operands.length')).to.equal(1);
+          expect(get(block, 'operands.firstObject')).to.equal(editBlock);
         }
       );
     });
@@ -281,7 +284,7 @@ describe('Integration | Component | query builder/block selector', function () {
             editBlock.addOperand(conditionBlock);
             const replaceSpy = this.set(
               'replaceSpy',
-              sinon.spy((block) => this.set('block', block))
+              sinon.spy(([block]) => this.set('block', block))
             );
 
             this.render(hbs `{{query-builder/block-selector

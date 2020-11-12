@@ -4,5 +4,6 @@ export default {
     or: 'or',
     excluding: 'excluding',
     not: 'not',
+    none: 'none',
   },
 };

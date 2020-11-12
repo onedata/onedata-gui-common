@@ -7,18 +7,25 @@
       font-style: italic;
     }
 
-    // FIXME: there is no property-path -> key
-    .property-path {
+    .property-key {
       font-size: 100%;
       color: $text-color;
       font-weight: bold;
     }
 
-    .comparator {
-      margin: 0 $query-builder-spacer * 0.2;
+    .property-comparison {
+      display: flex;
+      align-items: center;
+      min-width: 0;
     }
 
-    .property-path,
+    .comparator {
+      margin-right: $query-builder-spacer * 0.2;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .property-key,
     .comparator,
     .comparator-value {
       min-width: 0;
@@ -26,16 +33,21 @@
       line-height: 1;
     }
 
+    .comparator-value {
+      margin-left: $query-builder-spacer * 0.2;
+    }
+
+    .comparator-value-view {
+      @include font-monospace();
+    }
+
+    .form-group {
+      margin: 0;
+    }
+
     .comparator-value-view:hover {
       cursor: pointer;
       text-decoration: underline;
-    }
-    
-    // FIXME: separate files?
-    .comparator-value-editor {
-      input.input-sm {
-        padding-bottom: 0.3em;
-      }
     }
   }
 }

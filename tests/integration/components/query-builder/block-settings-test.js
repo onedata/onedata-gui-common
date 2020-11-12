@@ -2,14 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import { click, waitUntil } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';
 import { get } from '@ember/object';
-import sleep from 'onedata-gui-common/utils/sleep';
 
 describe('Integration | Component | query builder/block settings', function () {
   setupComponentTest('query-builder/block-settings', {
@@ -102,9 +100,12 @@ describe('Integration | Component | query builder/block settings', function () {
       );
 
       expect($('.webui-popover').css('display')).to.equal('none');
-      const blockMatcher = sinon.match.instanceOf(AndOperatorQueryBlock)
-        .and(sinon.match.has('operands', [queryBlock]));
-      expect(replaceSpy).to.be.calledOnce.and.to.be.calledWith(blockMatcher);
+      expect(replaceSpy).to.be.calledOnce;
+      const blocks = replaceSpy.firstCall.args[0];
+      expect(get(blocks, 'length')).to.equal(1);
+      const block = blocks[0];
+      expect(get(block, 'operands')).to.deep.equal([queryBlock]);
+      expect(get(block, 'operator')).to.equal('and');
       expect(closeSpy).to.be.calledOnce;
     }
   );
@@ -138,9 +139,12 @@ describe('Integration | Component | query builder/block settings', function () {
         () => $('.webui-popover').css('display') === 'none', { timeout: 1000 }
       );
 
-      const blockMatcher = sinon.match.instanceOf(AndOperatorQueryBlock)
-        .and(sinon.match.has('operands', [condition]));
-      expect(replaceSpy).to.be.calledOnce.and.to.be.calledWith(blockMatcher);
+      expect(replaceSpy).to.be.calledOnce;
+      const blocks = replaceSpy.firstCall.args[0];
+      expect(get(blocks, 'length')).to.equal(1);
+      const block = blocks[0];
+      expect(get(block, 'operands')).to.deep.equal([condition]);
+      expect(get(block, 'operator')).to.equal('and');
       expect(closeSpy).to.be.calledOnce;
     }
   );

@@ -106,7 +106,7 @@ export default Component.extend(I18n, {
     },
 
     finishEdit() {
-      if (!this.get('isEditComparatorValueValid')) {
+      if (!this.get('isEditComparatorValueValid' || this.get('mode') === 'view')) {
         return;
       }
       this.set('mode', 'view');

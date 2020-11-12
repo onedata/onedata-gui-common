@@ -4,8 +4,9 @@ import operatorSelector from './block-selector/operator-selector';
 export default {
   conditionSelector,
   operatorSelector,
-  operatorHeader: 'Operator',
-  conditionHeader: 'Condition',
+  operatorHeader: 'Insert operator',
+  conditionHeader: 'Add condition',
   surroundHeader: 'Surround with operator',
   changeToOperatorHeader: 'Change to operator',
+  orLineText: 'or',
 };

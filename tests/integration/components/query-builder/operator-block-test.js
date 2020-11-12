@@ -11,7 +11,6 @@ import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
 import { get } from '@ember/object';
-import sleep from 'onedata-gui-common/utils/sleep';
 
 const multiOperandOperatorsList = ['and', 'or', 'excluding'];
 const singleOperandOperatorsList = ['not', 'root'];
@@ -175,10 +174,10 @@ describe('Integration | Component | query builder/operator block', function () {
             // 1 operand
             expect(this.$('.query-builder-block .query-builder-block'))
               .to.have.length(1);
-            // 1 adder...
+            // 1 adder... (or 2 if operator is "root")
             expect(this.$('.query-builder-block-adder'))
-              .to.have.length(1);
-            // ... but from operand, not parent block
+              .to.have.length(operatorName === 'root' ? 2 : 1);
+            // ... where 1 is from operand
             expect(this.$(
               '.query-builder-block .query-builder-block .query-builder-block-adder'
             )).to.exist;
@@ -198,9 +197,9 @@ describe('Integration | Component | query builder/operator block', function () {
           // 1 operand
           expect(this.$('.query-builder-block .query-builder-block'))
             .to.have.length(1);
-          // 1 adder...
+          // 1 adder... (or 2 if operator is "root")
           expect(this.$('.query-builder-block-adder'))
-            .to.have.length(1);
+            .to.have.length(operatorName === 'root' ? 2 : 1);
           // ... but from operand, not parent block
           expect(this.$(
             '.query-builder-block .query-builder-block .query-builder-block-adder'

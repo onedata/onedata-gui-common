@@ -41,7 +41,12 @@ export default Component.extend(I18n, {
   /**
    * @type {Array<String>}
    */
-  validOperators: Object.freeze(['and', 'or', 'excluding', 'not']),
+  validOperators: Object.freeze(['and', 'or', 'excluding', 'not', 'none']),
+
+  /**
+   * @type {Array<String>}
+   */
+  operatorsWithTip: Object.freeze(['none']),
 
   /**
    * @type {Array<String>}
@@ -68,23 +73,31 @@ export default Component.extend(I18n, {
       } = this.getProperties('operators', 'validOperators');
       return operators ?
         operators.filter(operator => validOperators.includes(operator)) :
-        validOperators;
+        validOperators.without('none');
     }
   ),
 
   /**
-   * @type {ComputedProperty<Array<{ name: String, disabled: boolean }>>}
+   * @type {ComputedProperty<Array<{ name: String, tip: SafeString, disabled: boolean }>>}
    */
   operatorsSpec: computed(
     'availableOperators.[]',
     'disabledOperators.[]',
+    'operatorsWithTip.[]',
     function operatorsSpec() {
       const {
         availableOperators,
         disabledOperators,
-      } = this.getProperties('availableOperators', 'disabledOperators');
+        operatorsWithTip,
+      } = this.getProperties(
+        'availableOperators',
+        'disabledOperators',
+        'operatorsWithTip'
+      );
       return availableOperators.map(operatorName => ({
         name: operatorName,
+        tip: operatorsWithTip.includes(operatorName) ?
+          this.t(`operatorTips.${operatorName}`) : undefined,
         disabled: disabledOperators.includes(operatorName),
       }));
     }

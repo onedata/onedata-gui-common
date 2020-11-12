@@ -1,4 +1,4 @@
-<div class="form-group form-group-full-line property-selector-container">
+<div class="form-group form-group-whole-line property-selector-container">
   {{#power-select
     options=queryProperties
     selected=selectedConditionProperty
@@ -17,31 +17,23 @@
 </div>
 <div class="comparator-main-container">
   {{#if comparators.length}}
-    {{!-- {{#bs-button-group
-      value=comparatorMode
-      onChange=(action (mut comparatorMode))
-      type="radio"
-      size="sm"
-      class="btn-group-comparator-mode"
-      as |bg|
-    }}
-      {{#each (array "known" "custom") as |comparatorMode|}}
-        {{#bg.button value=unit}}
-          {{tt this (concat "comparatorMode." comparatorMode)}}
-        {{/bg.button}}
-      {{/each}}
-    {{/bs-button-group}} --}}
     <div class="form-group form-group-no-shrink comparator-selector-container">
-      {{#power-select
-        options=comparators
-        selected=selectedConditionComparator
-        onchange=(action "conditionComparatorChanged")
-        renderInPlace=true
-        class="comparator-selector"
-        as |comparator|
-      }}
-        {{tt this (concat "comparators." comparator)}}
-      {{/power-select}}
+      {{#if (gt comparators.length 1)}}
+        {{#power-select
+          options=comparators
+          selected=selectedConditionComparator
+          onchange=(action "conditionComparatorChanged")
+          renderInPlace=true
+          class="comparator-selector"
+          as |comparator|
+        }}
+          {{tt this (concat "comparators." comparator)}}
+        {{/power-select}}
+      {{else}}
+        <span class="comparator-selector">
+          {{tt this (concat "comparators." comparators.firstObject)}}
+        </span>
+      {{/if}}
     </div>
     {{query-builder/condition-comparator-value-editor
       mode="create"
@@ -53,7 +45,7 @@
     }}
   {{/if}}
 </div>
-<div class="form-group-full-line">
+<div class="form-group-whole-line">
   {{#bs-button
     class="accept-condition"
     disabled=(not isConditionDataValid)

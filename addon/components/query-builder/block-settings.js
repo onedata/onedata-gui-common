@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { computed, observer } from '@ember/object';
+import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-settings';
 import { tag } from 'ember-awesome-macros';
 
@@ -30,6 +30,12 @@ export default Component.extend({
    * @param {Utils.QueryBuilder.QueryBlock} newBlock
    */
   onBlockReplace: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Utils.OperatorQueryBlock}
+   */
+  parentQueryBlock: null,
 
   /**
    * @virtual
@@ -59,11 +65,11 @@ export default Component.extend({
   actions: {
     /**
      * @param {Function} closeSelectorCallback 
-     * @param {Utils.QueryBuilder.QueryBlock} newBlock 
+     * @param {Array<Utils.QueryBuilder.QueryBlock>} newBlocks
      */
-    blockReplace(closeSelectorCallback, newBlock) {
+    blockReplace(closeSelectorCallback, newBlocks) {
       closeSelectorCallback();
-      this.get('onBlockReplace')(newBlock);
+      this.get('onBlockReplace')(newBlocks);
     },
 
     close() {

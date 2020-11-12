@@ -2,23 +2,20 @@
   background-color: white;
   padding: $query-builder-spacer * 0.8;
 
-  &.create-block-selector {
+  &.with-conditions {
     width: 280px;
   }
 
   h1 {
-    font-size: 100%;
+    font-size: 110%;
     font-weight: bold;
+    margin-bottom: $query-builder-spacer * 0.8;
   }
-
+  
   .btn, .form-control {
     font-size: inherit;
   }
-
-  .operators-section:not(:last-child) {
-    margin-bottom: $query-builder-spacer;
-  }
-
+  
   .operator-selector {
     display: flex;
     padding: 0;
@@ -26,9 +23,9 @@
     list-style-type: none;
   }
 
-  .comparator-main-container,
-  .comparator-additional-container {
+  .comparator-main-container {
     display: flex;
+    align-items: center;
   }
 
   .operator {
@@ -58,15 +55,17 @@
     flex-shrink: 0;
   }
 
-  .form-group-full-line {
+  .form-group-whole-line {
     flex-basis: 100%;
-    justify-content: flex-start;
   }
 
   .form-group-fill-line {
     margin-left: $query-builder-spacer * 0.5;
     flex-grow: 1;
-    justify-content: flex-start;
+  }
+  
+  .condition-selector > .form-group:last-child {
+    margin-bottom: 0;
   }
   
   .date-editor {
@@ -84,10 +83,6 @@
     width: 100%;
   }
 
-  .accept-condition {
-    display: block;
-  }
-  
   .condition-selector {
     .comparator-selector-container {
       .ember-power-select-selected-item {

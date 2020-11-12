@@ -4,5 +4,9 @@ export default {
     or: 'or',
     excluding: 'excluding',
     not: 'not',
+    none: 'none',
+  },
+  operatorTips: {
+    none: 'Will move nested expressions to a parent operator.',
   },
 };

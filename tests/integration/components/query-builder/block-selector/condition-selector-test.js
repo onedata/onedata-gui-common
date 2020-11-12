@@ -4,20 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn } from 'ember-native-dom-helpers';
-import EmberPowerSelectHelper from '../../../../helpers/ember-power-select-helper';
-import { clickTrigger } from '../../../../helpers/ember-power-select';
-
-class PropertySelectHelper extends EmberPowerSelectHelper {
-  constructor() {
-    super('.property-selector-container');
-  }
-}
-
-class ComparatorSelectHelper extends EmberPowerSelectHelper {
-  constructor() {
-    super('.comparator-selector-container');
-  }
-}
+import { clickTrigger, selectChoose, typeInSearch } from '../../../../helpers/ember-power-select';
 
 const numberComparators = [{
   operator: 'eq',
@@ -51,9 +38,6 @@ describe(
     });
 
     beforeEach(function () {
-      // FIXME: refactor to use ember-power-select test helpers
-      this.set('propertySelectHelper', new PropertySelectHelper());
-      this.set('comparatorSelectHelper', new ComparatorSelectHelper());
       this.setProperties({
         queryProperties: [{
           key: 'stringProp',
@@ -85,10 +69,8 @@ describe(
         queryProperties=queryProperties
       }}`);
 
-      const propertySelectHelper = this.get('propertySelectHelper');
-
-      await propertySelectHelper.open();
-      await propertySelectHelper.typeInSearch('string');
+      await clickTrigger('.property-selector-container');
+      await typeInSearch('string');
 
       const options = this.$('.ember-power-select-option');
       expect(options).to.have.length(1);
@@ -111,17 +93,12 @@ describe(
       expect(this.$('.comparator-selector')).to.not.exist;
     });
 
-    it('shows comparator selector when property is selected', async function () {
+    it('shows comparator selector when multi-comparator property is selected', async function () {
       this.render(hbs `{{query-builder/block-selector/condition-selector
         queryProperties=queryProperties
       }}`);
 
-      const propertySelectHelper = this.get('propertySelectHelper');
-
-      await propertySelectHelper.open();
-      await propertySelectHelper.selectChoose('stringProp');
-
-      console.log(this.$().html());
+      await selectChoose('.property-selector-container', 'numberProp');
 
       expect(this.$('.comparator-selector-container .ember-basic-dropdown')).to.exist;
     });
@@ -165,23 +142,25 @@ describe(
           queryProperties=queryProperties
         }}`);
 
-        const propertySelectHelper = this.get('propertySelectHelper');
-        const comparatorSelectHelper = this.get('comparatorSelectHelper');
+        await selectChoose('.property-selector-container', propertyName);
 
-        await propertySelectHelper.open();
-        await propertySelectHelper.selectChoose(propertyName);
+        if (comparators.length > 1) {
+          await clickTrigger('.comparator-selector-container');
+          const options = this.$('.ember-power-select-option');
 
-        await comparatorSelectHelper.open();
-        const options = comparatorSelectHelper.getOptions();
-        expect(options).to.have.length(comparators.length);
-        comparators.forEach(({ comparator }, index) =>
-          expect(options[index].textContent.trim())
-          .to.equal(comparatorTranslations[comparator])
-        );
-        expect(
-          this.$('.comparator-selector-container .ember-power-select-selected-item')
-          .text().trim()
-        ).to.equal(comparatorTranslations[defaultComparator]);
+          expect(options).to.have.length(comparators.length);
+          comparators.forEach(({ comparator }, index) =>
+            expect(options[index].textContent.trim())
+            .to.equal(comparatorTranslations[comparator])
+          );
+          expect(
+            this.$('.comparator-selector-container .ember-power-select-selected-item')
+            .text().trim()
+          ).to.equal(comparatorTranslations[defaultComparator]);
+        } else {
+          expect(this.$('.comparator-selector').text().trim())
+            .to.equal(comparatorTranslations[comparators[0].comparator]);
+        }
       });
 
       comparators.forEach(({
@@ -196,19 +175,17 @@ describe(
           `calls "onConditionSelected" callback, when ${propertyType} property "${comparatorName}" condition has been accepted`,
           async function () {
             const selectedSpy = this.set('selectedSpy', sinon.spy());
-
             this.render(hbs `{{query-builder/block-selector/condition-selector
               queryProperties=queryProperties
               onConditionSelected=selectedSpy
             }}`);
-
-            const propertySelectHelper = this.get('propertySelectHelper');
-            const comparatorSelectHelper = this.get('comparatorSelectHelper');
-
-            await propertySelectHelper.open();
-            await propertySelectHelper.selectChoose(propertyName);
-            await comparatorSelectHelper.open();
-            await comparatorSelectHelper.selectChoose(comparatorTranslations[comparator]);
+            await selectChoose('.property-selector-container', propertyName);
+            if (comparators.length > 1) {
+              await selectChoose(
+                '.comparator-selector-container',
+                comparatorTranslations[comparator]
+              );
+            }
             await inputValueCallback();
             await click('.accept-condition');
 
@@ -230,11 +207,7 @@ describe(
             this.render(hbs `{{query-builder/block-selector/condition-selector
               queryProperties=queryProperties
             }}`);
-
-            const propertySelectHelper = this.get('propertySelectHelper');
-
-            await propertySelectHelper.open();
-            await propertySelectHelper.selectChoose(propertyName);
+            await selectChoose('.property-selector-container', propertyName);
 
             const comparatorValueNode = this.$('.comparator-value')[0];
             const comparatorValue = comparatorValueNode.value !== undefined ?
@@ -249,11 +222,7 @@ describe(
             this.render(hbs `{{query-builder/block-selector/condition-selector
               queryProperties=queryProperties
             }}`);
-
-            const propertySelectHelper = this.get('propertySelectHelper');
-
-            await propertySelectHelper.open();
-            await propertySelectHelper.selectChoose(propertyName);
+            await selectChoose('.property-selector-container', propertyName);
 
             const addBtn = this.$('.accept-condition');
             if (isAddEnabledForDefaults) {
@@ -270,19 +239,11 @@ describe(
       it(
         `blocks "Add" button when number property "${operator}" condition has a non-number condition value`,
         async function () {
-
           this.render(hbs `{{query-builder/block-selector/condition-selector
-              queryProperties=queryProperties
-            }}`);
-
-          const propertySelectHelper = this.get('propertySelectHelper');
-          await propertySelectHelper.open();
-          await propertySelectHelper.selectChoose('numberProp');
-
-          const comparatorSelectHelper = this.get('comparatorSelectHelper');
-          await comparatorSelectHelper.open();
-          await comparatorSelectHelper.selectChoose(symbol);
-
+            queryProperties=queryProperties
+          }}`);
+          await selectChoose('.property-selector-container', 'numberProp');
+          await selectChoose('.comparator-selector-container', symbol);
           await fillIn('.comparator-value', 'xyz');
 
           expect(this.$('.accept-condition')).to.have.attr('disabled');

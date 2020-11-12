@@ -21,12 +21,12 @@
     triggerSelector=(concat "#" btnId)
     renderInPlace=true
   }}
-      {{query-builder/block-selector
-        mode="create"
-        operators=operators
-        queryProperties=queryProperties
-        onBlockAdd=(action "addBlock" (action "togglePopover" false))
-      }}
-    
+    {{query-builder/block-selector
+      mode="create"
+      hideConditionCreation=hideConditionCreation
+      operators=operators
+      queryProperties=queryProperties
+      onBlockAdd=(action "addBlock" (action "togglePopover" false))
+    }}
   {{/one-webui-popover}}
 {{/click-outside}}

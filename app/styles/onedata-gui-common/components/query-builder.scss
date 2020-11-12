@@ -1,4 +1,7 @@
 $query-builder-spacer: $padding-small-horizontal;
+$color-query-builder-sand: #f2d16b;
+$input-padding-x: $padding-small-vertical;
+$input-padding-y: $padding-small-horizontal;
 
 .query-builder {
   display: flex;
@@ -12,6 +15,7 @@ $query-builder-spacer: $padding-small-horizontal;
     flex-basis: 100%;
     min-width: 0;
     margin-right: $query-builder-spacer * 0.5;
+    padding: ($input-padding-y - $query-builder-spacer * 0.3) ($input-padding-x - $query-builder-spacer * 0.2);
   }
 
   .query-builder-block {
@@ -20,16 +24,16 @@ $query-builder-spacer: $padding-small-horizontal;
     align-items: center;
     flex-wrap: wrap;
     min-width: 0;
-    padding: 0 $query-builder-spacer * 0.1;
+    padding: $query-builder-spacer * 0.3 $query-builder-spacer * 0.1 0 $query-builder-spacer * 0.1;
 
     &:not(.root-block) {
       background-color: $color-one-light-blue;
       border: 1px solid darken($color-one-light-blue, 20%);
       border-radius: $input-border-radius-small;
+    }
 
-      > * {
-        margin: $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
-      }
+    > * {
+      margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
     }
   }
 
@@ -39,7 +43,20 @@ $query-builder-spacer: $padding-small-horizontal;
       border: 1px solid darken($color-one-light-blue, 25%);
     }
   }
-
+  
+  .query-builder-block-visualiser.has-open-settings {
+    > .query-builder-block {
+      background: repeating-linear-gradient(
+        135deg,
+        $color-query-builder-sand,
+        $color-query-builder-sand 4px,
+        darken($color-query-builder-sand, 8%) 4px,
+        darken($color-query-builder-sand, 8%) 8px
+      );
+      border: 1px solid darken($color-query-builder-sand, 30%);
+    }
+  }
+  
   .block-label {
     font-size: 80%;
     text-transform: uppercase;
@@ -47,14 +64,14 @@ $query-builder-spacer: $padding-small-horizontal;
   }
 
   .block-prefix-label {
-    margin-right: $query-builder-spacer * 0.2;
+    margin-right: $query-builder-spacer * 0.3 $query-builder-spacer * 0.2 $query-builder-spacer * 0.2 0;
   }
 
   .block-infix-label {
-    margin: 0 $query-builder-spacer * 0.2;
+    margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
   }
 
-  .property-path, .comparator, .comparator-value {
+  .property-key, .comparator, .comparator-value {
     line-height: 1;
   }
 

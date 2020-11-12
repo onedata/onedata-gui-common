@@ -32,6 +32,12 @@ export default Component.extend({
    */
   disabled: false,
 
+  /**
+   * @virtual optional
+   * @type {Boolean}
+   */
+  hideConditionCreation: false,
+
   btnId: tag `btn-${'componentId'}`,
 
   componentId: computed(function componentId() {

@@ -1,17 +1,19 @@
-<code class="property-key">
+<dt class="property-key">
   {{queryBlock.property.key}}
-</code>
-<span class="comparator">{{tt this (concat "comparators." queryBlock.comparator)}}</span>
-{{query-builder/condition-comparator-value-editor
-  class="clickable"
-  inputClass="input-sm"
-  mode=mode
-  comparator=queryBlock.comparator
-  value=(if (eq mode "edit") editComparatorValue queryBlock.comparatorValue)
-  isValueInvalid=(not isEditComparatorValueValid)
-  onStartEdit=(action "startEdit")
-  onValueChange=(action "comparatorValueChange")
-  onFinishEdit=(action "finishEdit")
-  onCancelEdit=(action "cancelEdit")
-}}
+</dt>
+<dd class="property-comparison">
+  <span class="comparator">{{tt this (concat "comparators." queryBlock.comparator)}}</span>
+  {{query-builder/condition-comparator-value-editor
+    class="clickable"
+    inputClass="input-sm"
+    mode=mode
+    comparator=queryBlock.comparator
+    value=(if (eq mode "edit") editComparatorValue queryBlock.comparatorValue)
+    isValueInvalid=(not isEditComparatorValueValid)
+    onStartEdit=(action "startEdit")
+    onValueChange=(action "comparatorValueChange")
+    onFinishEdit=(action "finishEdit")
+    onCancelEdit=(action "cancelEdit")
+  }}
+</dd>
 {{yield}}

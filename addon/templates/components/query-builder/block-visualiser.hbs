@@ -9,12 +9,14 @@
   {{query-builder/block-settings
     queryBlock=queryBlock
     operators=operators
+    parentQueryBlock=parentQueryBlock
     onBlockReplace=onBlockReplace
     open=areSettingsVisible
     onSettingsClose=(action "onSettingsClose")
   }}
   {{#bs-button
     onClick=onBlockRemove
+    bubble=true
     class="block-button remove-block clickable"
   }}
     {{one-icon icon="x"}}

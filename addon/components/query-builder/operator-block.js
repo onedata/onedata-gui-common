@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import { notImplementedIgnore } from 'onedata-gui-common/utils/not-implemented-ignore';
-import { computed, get } from '@ember/object';
+import { computed, get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/query-builder/operator-block';
 import { tag } from 'ember-awesome-macros';
@@ -64,24 +64,43 @@ export default Component.extend(I18n, {
     }
   ),
 
+  replaceBlock(oldBlock, newBlocks) {
+    const operands = this.get('queryBlock.operands');
+    const oldBlockIndex = operands.indexOf(oldBlock);
+    if (oldBlockIndex >= 0) {
+      operands.replace(oldBlockIndex, 1, newBlocks);
+    }
+  },
+
   actions: {
     /**
-     * @param {Utils.QueryBuilder.QueryBlock} queryBlock 
+     * @param {Utils.QueryBuilder.QueryBlock} newQueryBlock 
      */
-    addBlock(queryBlock) {
-      this.get('queryBlock').addOperand(queryBlock);
+    addBlock(newQueryBlock) {
+      const queryBlock = this.get('queryBlock');
+      if (
+        get(queryBlock, 'operator') === 'root' &&
+        get(queryBlock, 'operands.length')
+      ) {
+        // When root block has an operand, then next operator additions should surround
+        // existing operand. Adding next conditions to the root block is not allowed.
+        if (get(newQueryBlock, 'isOperator')) {
+          const firstOperand = this.get('firstOperand');
+          set(newQueryBlock, 'notifyUpdate', get(queryBlock, 'notifyUpdate'));
+          newQueryBlock.addOperand(firstOperand);
+          this.replaceBlock(firstOperand, [newQueryBlock]);
+        }
+      } else {
+        queryBlock.addOperand(newQueryBlock);
+      }
     },
 
     /**
      * @param {Utils.QueryBuilder.QueryBlock} oldBlock
-     * @param {Utils.QueryBuilder.QueryBlock} newBlock
+     * @param {Array<Utils.QueryBuilder.QueryBlock>} newBlocks
      */
-    replaceBlock(oldBlock, newBlock) {
-      const operands = this.get('queryBlock.operands');
-      const oldBlockIndex = operands.indexOf(oldBlock);
-      if (oldBlockIndex >= 0) {
-        operands.replace(oldBlockIndex, 1, [newBlock]);
-      }
+    replaceBlock(oldBlock, newBlocks) {
+      this.replaceBlock(oldBlock, newBlocks);
     },
 
     /**
