@@ -15,10 +15,21 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+const valueTypes = {
+  eq: 'all',
+  lt: 'number',
+  lte: 'number',
+  gt: 'number',
+  gte: 'number',
+};
+
+export default Component.extend(I18n, {
   layout,
   tagName: '',
+
+  i18nPrefix: 'components.queryBuilder.conditionComparatorValueEditor',
 
   /**
    * @virtual optional
@@ -41,6 +52,13 @@ export default Component.extend({
    * @type {String}
    */
   comparator: '',
+
+  /**
+   * A QueryProperty instance for which value is edited
+   * @virtual
+   * @type {Utils.QueryProperty}
+   */
+  queryProperty: undefined,
 
   /**
    * @type {any}
@@ -73,12 +91,19 @@ export default Component.extend({
   comparatorEditor: computed(
     'comparatorEditorsSet',
     'comparator',
+    'queryProperty.allValues',
     function comparatorEditor() {
       const {
         comparatorEditorsSet,
         comparator,
       } = this.getProperties('comparatorEditorsSet', 'comparator');
-      return comparatorEditorsSet[comparator];
+      const comparatorMatch = comparator.match(/(string|number)Options\.(.*)/);
+      const proto = {};
+      if (comparatorMatch) {
+        const valueType = valueTypes[comparatorMatch[2]];
+        proto.values = this.get(`queryProperty.${valueType}Values`);
+      }
+      return Object.assign({}, comparatorEditorsSet[comparator], proto);
     }
   ),
 

@@ -7,7 +7,9 @@
         queryProperties=queryProperties
       }}
     </div>
-    {{#hr-label}}{{tt this "orLineText"}}{{/hr-label}}
+    {{#hr-label class="hr-label-query-builder"}}
+      {{tt this "orLineText"}}
+    {{/hr-label}}
   {{/if}}
   <div class="operators-section add-operator-section">
     <h1>{{tt this "operatorHeader"}}</h1>
@@ -25,7 +27,9 @@
     }}
   </div>
   {{#if isEditBlockAnOperator}}
-    {{#hr-label}}{{tt this "orLineText"}}{{/hr-label}}
+    {{#hr-label class="hr-label-query-builder"}}
+      {{tt this "orLineText"}}
+    {{/hr-label}}
     <div class="operators-section change-to-section">
       <h1>{{tt this "changeToOperatorHeader"}}</h1>
       {{query-builder/block-selector/operator-selector

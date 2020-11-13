@@ -37,9 +37,9 @@
     </div>
     {{query-builder/condition-comparator-value-editor
       mode="create"
-      comparatorEditor=comparatorEditor
-      comparator=conditionComparator
+      comparator=selectedConditionComparator
       value=conditionComparatorValue
+      queryProperty=selectedConditionProperty
       onValueChange=(action "conditionComparatorValueChanged")
       class="form-group-fill-line"
     }}

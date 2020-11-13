@@ -14,10 +14,11 @@ export default {
     },
     number: commonComparators,
     mixed: commonComparators,
+    stringOptions: {
+      eq: '=',
+    },
+    numberOptions: commonComparators,
+    mixedOptions: commonComparators,
   },
   acceptCondition: 'Add',
-  comparatorMode: {
-    known: 'Known',
-    custom: 'Custom',
-  },
 };

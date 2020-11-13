@@ -12,30 +12,61 @@
  * @type {Object}
  */
 const defaultComparators = {
-  // FIXME: add stringSuggestion, numberSuggestion, mixedSuggestion
+  specialKey: [],
+  stringOptions: ['stringOptions.eq'],
+  numberOptions: [
+    'numberOptions.eq',
+    'numberOptions.lt',
+    'numberOptions.lte',
+    'numberOptions.gt',
+    'numberOptions.gte',
+  ],
+  mixedOptions: [
+    'stringOptions.eq',
+    'numberOptions.eq',
+    'numberOptions.lt',
+    'numberOptions.lte',
+    'numberOptions.gt',
+    'numberOptions.gte',
+  ],
   string: ['string.eq'],
   number: ['number.eq', 'number.lt', 'number.lte', 'number.gt', 'number.gte'],
   mixed: ['string.eq', 'number.lt', 'number.lte', 'number.gt', 'number.gte'],
 };
 
-const stringEditor = {
+const stringEditor = Object.freeze({
   type: 'text',
   defaultValue: () => '',
   isValidValue: value => typeof value === 'string' && value.length > 0,
-};
+});
 
-const numberEditor = {
+const numberEditor = Object.freeze({
   type: 'text',
   defaultValue: () => '',
   isValidValue: value =>
     typeof value === 'string' && value.trim().length > 0 && !isNaN(Number(value)),
-};
+});
+
+// FIXME: isValidValue
+const dropdownEditor = Object.freeze({
+  type: 'dropdown',
+  defaultValue: () => undefined,
+  isValidValue(value) {
+    return this.values ? this.values.includes(value) : value;
+  },
+});
 
 /**
  * Preffered editors for each property comparator
  * @type {Object}
  */
 const defaultComparatorEditors = {
+  'stringOptions.eq': dropdownEditor,
+  'numberOptions.eq': dropdownEditor,
+  'numberOptions.lt': dropdownEditor,
+  'numberOptions.lte': dropdownEditor,
+  'numberOptions.gt': dropdownEditor,
+  'numberOptions.gte': dropdownEditor,
   'string.eq': stringEditor,
   'number.eq': numberEditor,
   'number.lt': numberEditor,

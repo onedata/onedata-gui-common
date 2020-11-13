@@ -48,6 +48,17 @@ export default Component.extend(I18n, {
    */
   onConditionEditionValidityChange: notImplementedIgnore,
 
+  queryProperty: computed(
+    'queryProperties.[]',
+    'queryBlock.property.key',
+    function queryProperty() {
+      const queryProperties = this.get('queryProperties');
+      if (queryProperties) {
+        return queryProperties.findBy('key', this.get('queryBlock.property.key'));
+      }
+    }
+  ),
+
   comparatorEditor: computed(
     'comparatorEditorsSet',
     'queryBlock.comparator',

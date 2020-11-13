@@ -6,18 +6,32 @@
     {{viewModeComparatorValue}}
   </span>
 {{else}}
-  {{!-- TODO: support for dropdown with values --}}
   <div
     id={{componentGuid}}
-    class="form-group form-group-fill-line comparator-value-editor {{comparatorEditor.type}}-editor {{if this.isValueInvalid "has-error"}} {{elementClass}}"
+    class="form-group form-group-fill-line comparator-value-editor {{comparatorEditor.type}}-editor {{if isValueInvalid "has-error"}} {{elementClass}}"
   >
-    <input
-      type="text"
-      class="comparator-value form-control {{if isValueInvalid "is-invalid"}} {{inputClass}}"
-      value={{value}}
-      oninput={{action "valueChanged" value="target.value"}}
-      onkeydown={{action "onKeyDown"}}
-      onblur={{action "onFinishEdit"}}
-    >
+    {{#if (eq comparatorEditor.type "dropdown")}}
+      {{#power-select
+        class="comparator-value"
+        options=comparatorEditor.values
+        selected=value
+        renderInPlace=true
+        placeholder=(tt this "dropdownPlaceholder")
+        onchange=(action "valueChanged")
+        onclose=(action "onFinishEdit")
+        as |comparatorValue|
+      }}
+        {{comparatorValue}}
+      {{/power-select}}
+    {{else if (eq comparatorEditor.type "text")}}
+      <input
+        type="text"
+        class="comparator-value form-control {{if isValueInvalid "is-invalid"}} {{inputClass}}"
+        value={{value}}
+        oninput={{action "valueChanged" value="target.value"}}
+        onkeydown={{action "onKeyDown"}}
+        onblur={{action "onFinishEdit"}}
+      >
+    {{/if}}
   </div>
 {{/if}}

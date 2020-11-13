@@ -76,7 +76,7 @@ export default Component.extend({
    */
   click(clickEvent) {
     const target = clickEvent.target;
-    if (target.matches('input') || target.closest('.block-adder-popover')) {
+    if (target.matches('input, .comparator-value-editor') || target.closest('.block-adder-popover')) {
       return;
     }
 

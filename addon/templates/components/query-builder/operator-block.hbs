@@ -32,7 +32,7 @@
     }}
   {{/if}}
 {{else}}
-  {{#each queryBlock.operands as |operandBlock|}}
+  {{#each queryBlock.operands as |operandBlock index|}}
     {{query-builder/block-visualiser
       parentQueryBlock=queryBlock
       operators=operators
@@ -46,7 +46,7 @@
       onBlockRemoved=onBlockRemoved
     }}
     {{#if queryBlock.operator}}
-      <div class="block-label block-infix-label">
+      <div class="block-label block-infix-label {{if (eq index (sub queryBlock.operands.length 1)) "block-infix-label-last"}}">
         {{tt this (concat "operators." queryBlock.operator)}}
       </div>
     {{/if}}
@@ -57,7 +57,7 @@
       queryProperties=queryProperties
     }}
     {{#if queryBlock.operator}}
-      <div class="block-label block-infix-label">
+      <div class="block-label block-infix-label block-infix-label-last">
         {{tt this (concat "operators." queryBlock.operator)}}
       </div>
     {{/if}}

@@ -22,6 +22,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {Array<String>}
+   */
+  operators: undefined,
+
+  /**
+   * @virtual
    * @type {Function}
    */
   onBlockAdd: notImplementedIgnore,

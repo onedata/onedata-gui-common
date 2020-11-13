@@ -10,5 +10,15 @@ export default {
       gt: '>',
       gte: '≥',
     },
+    stringOptions: {
+      eq: '=',
+    },
+    numberOptions: {
+      eq: '=',
+      lt: '<',
+      lte: '≤',
+      gt: '>',
+      gte: '≥',
+    },
   },
 };

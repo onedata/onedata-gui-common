@@ -3,19 +3,35 @@ $color-query-builder-sand: #f2d16b;
 $input-padding-x: $padding-small-vertical;
 $input-padding-y: $padding-small-horizontal;
 
+// FIXME: modified/commented styles
+
 .query-builder {
   display: flex;
   align-items: flex-start;
-  margin-bottom: $query-builder-spacer;
+  // margin-bottom: $query-builder-spacer;
 
+  &.readonly {
+    pointer-events: none;
+    .query-builder-block-adder {
+      display: none;
+    }
+    .block-infix-label.block-infix-label-last {
+      display: none;
+    }
+    .remove-block {
+      display: none;
+    }
+  }
+  
   .query-builder-input {
     display: flex;
     min-height: $input-height-base;
     height: auto;
     flex-basis: 100%;
     min-width: 0;
-    margin-right: $query-builder-spacer * 0.5;
-    padding: ($input-padding-y - $query-builder-spacer * 0.3) ($input-padding-x - $query-builder-spacer * 0.2);
+    // margin-right: $query-builder-spacer * 0.5;
+    // padding: ($input-padding-y - $query-builder-spacer * 0.3) ($input-padding-x - $query-builder-spacer * 0.2);
+    padding: $padding-small-vertical;
   }
 
   .query-builder-block {
@@ -90,6 +106,11 @@ $input-padding-y: $padding-small-horizontal;
       color: $color-one-danger;
     }
   }
+}
+
+.hr-label-query-builder {
+  padding-top: $padding-base-vertical;
+  padding-bottom: $padding-base-vertical;
 }
 
 @import 'onedata-gui-common/components/query-builder/block-adder';

@@ -7,7 +7,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { computed } from '@ember/object';
+import EmberObject from '@ember/object';
 import Evented from '@ember/object/evented';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 

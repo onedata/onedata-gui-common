@@ -45,12 +45,6 @@ export default Component.extend(I18n, {
   selectedConditionComparator: undefined,
 
   /**
-   * One of: known, custom
-   * @type {String}
-   */
-  comparatorMode: 'known',
-
-  /**
    * @type {any}
    */
   conditionComparatorValue: undefined,
@@ -73,24 +67,6 @@ export default Component.extend(I18n, {
    */
   onConditionSelected: notImplementedIgnore,
 
-  conditionComparator: computed(
-    'selectedConditionComparator',
-    'comparatorMode',
-    function conditionComparator() {
-      const {
-        comparatorMode,
-        selectedConditionComparator,
-      } = this.getProperties('comparatorMode', 'selectedConditionComparator');
-      switch (comparatorMode) {
-        case 'known':
-          return selectedConditionComparator + 'Suggestion';
-        case 'custom':
-        default:
-          return selectedConditionComparator;
-      }
-    }
-  ),
-
   /**
    * @type {ComputedProperty<Array<String>>}
    */
@@ -107,6 +83,9 @@ export default Component.extend(I18n, {
     'comparatorEditorsSet',
     'selectedConditionComparator',
     function comparatorEditor() {
+      if (!this.get('comparators.length')) {
+        return null;
+      }
       const {
         comparatorEditorsSet,
         selectedConditionComparator,
@@ -122,6 +101,9 @@ export default Component.extend(I18n, {
     'comparatorEditor',
     'conditionComparatorValue',
     function isConditionComparatorValueValid() {
+      if (comparatorEditor === null) {
+        return true;
+      }
       const {
         comparatorEditor,
         conditionComparatorValue,
@@ -135,10 +117,15 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Boolean>}
    */
   isConditionDataValid: computed(
+    'comparators.length',
     'selectedConditionProperty',
     'selectedConditionComparator',
     'isConditionComparatorValueValid',
     function isConditionDataValid() {
+      // special case when property does not need comparator at all
+      if (!this.get('comparators.length')) {
+        return true;
+      }
       const {
         selectedConditionProperty,
         selectedConditionComparator,
@@ -173,7 +160,7 @@ export default Component.extend(I18n, {
       'comparatorEditor'
     );
 
-    if (!isConditionComparatorValueValid) {
+    if (comparatorEditor != null && !isConditionComparatorValueValid) {
       this.conditionComparatorValueChanged(comparatorEditor.defaultValue());
     }
   },
