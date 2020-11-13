@@ -31,7 +31,7 @@ $input-padding-y: $padding-small-horizontal;
     min-width: 0;
     // margin-right: $query-builder-spacer * 0.5;
     // padding: ($input-padding-y - $query-builder-spacer * 0.3) ($input-padding-x - $query-builder-spacer * 0.2);
-    padding: $padding-small-vertical;
+    padding: $padding-small-vertical $padding-small-horizontal;
   }
 
   .query-builder-block {
