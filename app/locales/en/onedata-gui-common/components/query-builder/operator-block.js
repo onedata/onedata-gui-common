@@ -2,7 +2,7 @@ export default {
   operators: {
     and: 'and',
     or: 'or',
-    excluding: 'excluding',
+    except: 'except',
     not: 'not',
     none: 'none',
   },

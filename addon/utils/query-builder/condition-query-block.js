@@ -33,6 +33,8 @@ export default QueryBlock.extend({
    */
   comparatorValue: null,
 
+  levelScore: 1,
+
   updateObserver: observer(
     'property',
     'comparator',

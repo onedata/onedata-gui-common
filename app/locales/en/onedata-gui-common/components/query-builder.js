@@ -8,5 +8,4 @@ export default {
   conditionBlock,
   operatorBlock,
   conditionComparatorValueEditor,
-  performQueryButton: 'Query',
 };

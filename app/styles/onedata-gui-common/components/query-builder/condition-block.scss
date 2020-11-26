@@ -40,14 +40,22 @@
     .comparator-value-view {
       @include font-monospace();
     }
+    
+    .comparator-value-editor {
+      .ember-basic-dropdown {
+        max-width: 14em;
+      }
+    }
 
     .form-group {
       margin: 0;
     }
 
-    .comparator-value-view:hover {
-      cursor: pointer;
-      text-decoration: underline;
+    &:not(.readonly) {
+      .comparator-value-view:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
 }

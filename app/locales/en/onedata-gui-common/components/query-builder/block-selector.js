@@ -6,7 +6,7 @@ export default {
   operatorSelector,
   operatorHeader: 'Insert operator',
   conditionHeader: 'Add condition',
-  surroundHeader: 'Surround with operator',
-  changeToOperatorHeader: 'Change to operator',
+  surroundHeader: 'Expand with operator',
+  changeToOperatorHeader: 'Replace operator(s)',
   orLineText: 'or',
 };

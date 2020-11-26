@@ -7,18 +7,18 @@ import { click, fillIn } from 'ember-native-dom-helpers';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
-import ExcludingOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/excluding-operator-query-block';
+import ExceptOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/except-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { get } from '@ember/object';
 
-const multiOperandOperatorsList = ['and', 'or', 'excluding'];
+const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not'];
 const operatorsList = [...multiOperandOperatorsList, ...singleOperandOperatorsList];
 const operatorBlockClasses = {
   and: AndOperatorQueryBlock,
   or: OrOperatorQueryBlock,
-  excluding: ExcludingOperatorQueryBlock,
+  except: ExceptOperatorQueryBlock,
   not: NotOperatorQueryBlock,
 };
 

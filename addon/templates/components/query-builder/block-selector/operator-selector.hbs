@@ -1,9 +1,9 @@
 {{#each operatorsSpec as |operator|}}
   <li>
     {{#bs-button
-      class=(concat "btn-outline-default operator operator-" operator.name)
+      class=(concat "operator operator-" operator.name)
       disabled=(or selectionDone operator.disabled)
-      type="default"
+      type="outline-default"
       size="sm"
       onClick=(action "onOperatorSelected" operator.name)
     }}

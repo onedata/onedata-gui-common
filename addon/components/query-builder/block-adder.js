@@ -13,6 +13,8 @@ import layout from 'onedata-gui-common/templates/components/query-builder/block-
 import { guidFor } from '@ember/object/internals';
 import { tag } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
+import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
+import { resolve } from 'rsvp';
 
 export default Component.extend({
   tagName: '',
@@ -33,6 +35,12 @@ export default Component.extend({
   onBlockAdd: notImplementedIgnore,
 
   /**
+   * @virtual
+   * @type {Function}
+   */
+  refreshQueryProperties: notImplementedIgnore,
+
+  /**
    * @virtual optional
    * @type {Boolean}
    */
@@ -44,11 +52,21 @@ export default Component.extend({
    */
   hideConditionCreation: false,
 
+  /**
+   * @type {PromiseObject}
+   */
+  refreshQueryPropertiesProxy: undefined,
+
   btnId: tag `btn-${'componentId'}`,
 
   componentId: computed(function componentId() {
     return guidFor(this);
   }),
+
+  init() {
+    this._super(...arguments);
+    this.set('refreshQueryPropertiesProxy', promiseObject(resolve()));
+  },
 
   actions: {
     /**
@@ -61,6 +79,12 @@ export default Component.extend({
       this.get('onBlockAdd')(selectedBlock);
     },
     togglePopover(open) {
+      if (open && !this.get('hideConditionCreation')) {
+        const promise = this.get('refreshQueryProperties')();
+        if (promise && promise.then) {
+          this.set('refreshQueryPropertiesProxy', promise);
+        }
+      }
       this.set('popoverOpen', open);
     },
   },

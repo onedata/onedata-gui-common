@@ -18,6 +18,7 @@ export default Component.extend(I18n, {
   layout,
 
   classNames: ['query-builder-block', 'query-builder-condition-block'],
+  classNameBindings: ['readonly'],
 
   i18nPrefix: 'components.queryBuilder.conditionBlock',
 
@@ -85,6 +86,10 @@ export default Component.extend(I18n, {
 
   actions: {
     startEdit() {
+      if (this.get('readonly')) {
+        return;
+      }
+
       this.setProperties({
         mode: 'edit',
         editComparatorValue: this.get('queryBlock.comparatorValue'),

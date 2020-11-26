@@ -51,6 +51,55 @@ $btn-active-boxshadow-size: 0 0 7px;
   }
 }
 
+@mixin button-outline-variant($color, $border) {
+  color: $color;
+  background-color: inherit;
+  border-color: $border;
+
+  &:focus,
+  &.focus {
+    background-color: lighten($border, 40%);
+        border-color: darken($border, 7%);
+    @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
+  }
+  &:hover {
+    color: $color;
+    background-color: lighten($border, 50%);
+        border-color: darken($border, 10%);
+  }
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    color: $color;
+    background-color: lighten($border, 50%);
+        border-color: darken($border, 10%);
+    @include box-shadow($btn-active-boxshadow-size lighten($color-one-semiblack, 10%));
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: $color;
+      background-color: lighten($border, 45%);
+          border-color: darken($border, 8%);
+    }
+  }
+
+  &[disabled] {
+    @include box-shadow(none);
+    &,
+    &:focus,
+    &.focus,
+    &:hover,
+    &:active,
+    &.active,
+    .open > &.dropdown-toggle {
+      color: $color-one-light-gray;
+      background-color: inherit;
+      border-color: $color-one-light-gray;
+    }
+  }
+}
+
 @mixin input-btn-variant($border-color) {
   border: 1px solid darken($border-color, 10%);
 }

@@ -748,6 +748,17 @@ p.text-separated {
   margin-top: $padding-large-vertical;
 }
 
+.fixed-invisible {
+  position: fixed;
+  opacity: 0;
+  width: 10px;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  right: 0;
+  bottom: 0;
+}
+
 // FIXME: markdown
 
 .markdown-editor {

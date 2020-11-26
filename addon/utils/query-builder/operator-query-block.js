@@ -10,8 +10,9 @@
 
 import QueryBlock from 'onedata-gui-common/utils/query-builder/query-block';
 import { get, set, computed, observer } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
-import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { array, math, sum, raw } from 'ember-awesome-macros';
 
 export default QueryBlock.extend({
   /**
@@ -35,6 +36,17 @@ export default QueryBlock.extend({
    * @type {Number}
    */
   maxOperandsNumber: Number.MAX_SAFE_INTEGER,
+
+  levelScore: computed('operands.@each.levelScore', function levelScore() {
+    const operands = this.get('operands');
+    if (isEmpty(operands)) {
+      return 1;
+    } else {
+      return Math.max(...this.get('operands').mapBy('levelScore')) + 1;
+    }
+  }),
+
+  // levelScore: sum(math.max(array.mapBy('operands', 'levelScore')), raw(1)),
 
   /**
    * @type {Array<Utils.QueryBuilder.QueryBlock>}

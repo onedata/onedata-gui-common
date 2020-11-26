@@ -12,11 +12,14 @@ import { computed, get, set } from '@ember/object';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import layout from 'onedata-gui-common/templates/components/query-builder';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { tag } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
 
   classNames: ['query-builder'],
+  classNameBindings: ['modeClass'],
 
   /**
    * @type {String}
@@ -49,9 +52,15 @@ export default Component.extend(I18n, {
   queryProperties: undefined,
 
   /**
-   * @type {Utils.QueryBuilder.RootOperatorQueryBlock}
+   * @virtual
+   * @type {Function}
    */
-  rootQueryBlock: computed(() => RootOperatorQueryBlock.create()),
+  refreshQueryProperties: notImplementedIgnore,
+
+  /**
+   * @type {Boolean}
+   */
+  readonly: false,
 
   /**
    * Contains state of the condition blocks edition.
@@ -63,12 +72,19 @@ export default Component.extend(I18n, {
   editedConditions: undefined,
 
   /**
+   * @type {Utils.QueryBuilder.RootOperatorQueryBlock}
+   */
+  rootQueryBlock: computed(() => RootOperatorQueryBlock.create()),
+
+  /**
    * @type {ComputedProperty<Boolean>}
    */
   hasInvalidCondition: computed('editedConditions', function hasInvalidCondition() {
     return [...this.get('editedConditions').values()].mapBy('isValid')
       .some(isValid => !isValid);
   }),
+
+  modeClass: tag `query-builder-mode-${'inputMode'}`,
 
   init() {
     this._super(...arguments);

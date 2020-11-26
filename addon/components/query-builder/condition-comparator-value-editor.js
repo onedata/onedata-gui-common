@@ -9,7 +9,7 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { defaultComparatorEditors } from 'onedata-gui-common/utils/query-builder/condition-comparator-editors';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { equal, raw } from 'ember-awesome-macros';
@@ -17,7 +17,7 @@ import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-const valueTypes = {
+const comparatorTypeToPropertyType = {
   eq: 'all',
   lt: 'number',
   lte: 'number',
@@ -28,6 +28,7 @@ const valueTypes = {
 export default Component.extend(I18n, {
   layout,
   tagName: '',
+  classNames: 'condition-comparator-value-editor',
 
   i18nPrefix: 'components.queryBuilder.conditionComparatorValueEditor',
 
@@ -97,11 +98,16 @@ export default Component.extend(I18n, {
         comparatorEditorsSet,
         comparator,
       } = this.getProperties('comparatorEditorsSet', 'comparator');
-      const comparatorMatch = comparator.match(/(string|number)Options\.(.*)/);
+      if (!comparator || !comparatorEditorsSet) {
+        return null;
+      }
+      // maybe better will be:  comparatorEditor.initialize(queryProperty);
+      const comparatorOptionsMatch =
+        comparator.match(/(string|number)Options\.(.*)/);
       const proto = {};
-      if (comparatorMatch) {
-        const valueType = valueTypes[comparatorMatch[2]];
-        proto.values = this.get(`queryProperty.${valueType}Values`);
+      if (comparatorOptionsMatch) {
+        const propertyType = comparatorTypeToPropertyType[comparatorOptionsMatch[2]];
+        proto.values = this.get(`queryProperty.${propertyType}Values`) || [];
       }
       return Object.assign({}, comparatorEditorsSet[comparator], proto);
     }
@@ -112,10 +118,15 @@ export default Component.extend(I18n, {
    */
   viewModeComparatorValue: computed(
     'value',
+    'queryProperty.key',
     function viewModeComparatorValue() {
       const value = this.get('value');
       if (typeof value === 'string') {
         return `"${value}"`;
+      } else if (this.get('queryProperty.key') === 'storageId' ||
+        this.get('queryProperty.key') === 'providerId'
+      ) {
+        return `${get(value, 'entityId').substring(0, 4)}… (${get(value, 'name')})`;
       } else {
         return value;
       }

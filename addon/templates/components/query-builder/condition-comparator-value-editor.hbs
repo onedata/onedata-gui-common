@@ -10,18 +10,44 @@
     id={{componentGuid}}
     class="form-group form-group-fill-line comparator-value-editor {{comparatorEditor.type}}-editor {{if isValueInvalid "has-error"}} {{elementClass}}"
   >
-    {{#if (eq comparatorEditor.type "dropdown")}}
+    {{!-- FIXME: maybe everything should be in separate components --}}
+    {{#if (or
+      (eq comparatorEditor.type "dropdown")
+      (eq comparatorEditor.type "storage")
+    )}}
       {{#power-select
         class="comparator-value"
         options=comparatorEditor.values
         selected=value
         renderInPlace=true
+        triggerClass="small"
+        dropdownClass="small"
         placeholder=(tt this "dropdownPlaceholder")
         onchange=(action "valueChanged")
         onclose=(action "onFinishEdit")
-        as |comparatorValue|
+        as |itemValue|
       }}
-        {{comparatorValue}}
+        {{#if (eq queryProperty.key "storageId")}}
+          <div class="option-container">
+            {{#truncated-string class="storage-option-storage-line"}}
+              <strong class="storage-name">{{itemValue.name}}</strong>
+              <code class="storage-id comparator-item-id">{{itemValue.entityId}}</code>
+            {{/truncated-string}}
+            {{#truncated-string class="storage-option-provider-line small"}}
+              {{tt this "providedBy"}}
+              <span class="storage-provider">{{itemValue.provider.name}}</span>
+            {{/truncated-string}}
+          </div>
+        {{else if (eq queryProperty.key "providerId")}}
+          <div class="option-container">
+            {{#truncated-string class="provider-option-provider-line"}}
+              <strong class="provider-name">{{itemValue.name}}</strong>
+              <code class="provider-id comparator-item-id">{{itemValue.entityId}}</code>
+            {{/truncated-string}}
+          </div>
+        {{else}}
+          {{itemValue}}
+        {{/if}}
       {{/power-select}}
     {{else if (eq comparatorEditor.type "text")}}
       <input

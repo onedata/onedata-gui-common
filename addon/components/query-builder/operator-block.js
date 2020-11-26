@@ -23,9 +23,10 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.queryBuilder.operatorBlock',
 
   /**
-   * @type {Utils.QueryBuilder.OperatorQueryBlock}
+   * @virtual
+   * @type {Function}
    */
-  queryBlock: undefined,
+  refreshQueryProperties: notImplementedIgnore,
 
   /**
    * @virtual
@@ -34,10 +35,22 @@ export default Component.extend(I18n, {
    */
   onBlockRemoved: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onConditionEditionStart: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onConditionEditionEnd: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onConditionEditionValidityChange: notImplementedIgnore,
 
   /**
@@ -45,6 +58,11 @@ export default Component.extend(I18n, {
    * @type {Array<String>}
    */
   operators: undefined,
+
+  /**
+   * @type {Utils.QueryBuilder.OperatorQueryBlock}
+   */
+  queryBlock: undefined,
 
   operatorBlockClass: tag `${'queryBlock.operator'}-operator-block`,
 
@@ -55,6 +73,19 @@ export default Component.extend(I18n, {
   queryProperties: Object.freeze([]),
 
   firstOperand: reads('queryBlock.operands.firstObject'),
+
+  /**
+   * Root of the tree has the highest level value. Children on the same level will have
+   * level - 1.
+   * Typically level should be passed from outside except for root, which have the level
+   * set to known max depth of tree.
+   * @type {Number}
+   */
+  level: computed('queryBlock.{operator,levelScore}', function level() {
+    if (this.get('queryBlock.operator') === 'root') {
+      return this.get('queryBlock.levelScore');
+    }
+  }),
 
   hasSingleOperandOperator: computed(
     'queryBlock.maxOperandsNumber',

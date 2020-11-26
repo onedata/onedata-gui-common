@@ -17,6 +17,7 @@ import {
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector/condition-selector';
+import { and, or, not } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -113,32 +114,13 @@ export default Component.extend(I18n, {
     },
   ),
 
-  /**
-   * @type {ComputedProperty<Boolean>}
-   */
-  isConditionDataValid: computed(
-    'comparators.length',
-    'selectedConditionProperty',
-    'selectedConditionComparator',
-    'isConditionComparatorValueValid',
-    function isConditionDataValid() {
-      // special case when property does not need comparator at all
-      if (!this.get('comparators.length')) {
-        return true;
-      }
-      const {
-        selectedConditionProperty,
-        selectedConditionComparator,
-        isConditionComparatorValueValid,
-      } = this.getProperties(
-        'selectedConditionProperty',
-        'selectedConditionComparator',
-        'isConditionComparatorValueValid',
-      );
-      return selectedConditionProperty &&
-        selectedConditionComparator &&
-        isConditionComparatorValueValid;
-    },
+  isConditionDataValid: or(
+    and(not('comparators.length'), 'selectedConditionProperty'),
+    and(
+      'selectedConditionProperty',
+      'selectedConditionComparator',
+      'isConditionComparatorValueValid',
+    ),
   ),
 
   conditionComparatorValueChanged(value) {

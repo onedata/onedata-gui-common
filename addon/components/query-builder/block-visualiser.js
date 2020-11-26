@@ -9,7 +9,7 @@
  */
 
 import Component from '@ember/component';
-import { conditional, raw } from 'ember-awesome-macros';
+import { conditional, raw, and } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-visualiser';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
@@ -18,14 +18,40 @@ export default Component.extend({
   layout,
 
   classNames: ['query-builder-block-visualiser'],
-  classNameBindings: ['isHoveredClass', 'areSettingsVisible:has-open-settings'],
+  classNameBindings: [
+    'isHoveredClass',
+    'isRemoveHoveredClass',
+    'areSettingsVisible:has-open-settings',
+  ],
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  refreshQueryProperties: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onConditionEditionStart: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onConditionEditionEnd: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onConditionEditionValidityChange: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onBlockRemoved: notImplementedIgnore,
 
   /**
@@ -60,6 +86,12 @@ export default Component.extend({
 
   isHoveredClass: conditional('isHovered', 'hoveredClassName', raw(undefined)),
 
+  isRemoveHoveredClass: conditional(
+    and('isHovered', 'removeButtonHovered'),
+    raw('is-directly-hovered-remove'),
+    raw(undefined)
+  ),
+
   mouseLeave() {
     this.changeHoverState(false);
   },
@@ -75,8 +107,13 @@ export default Component.extend({
    * @param {MouseEvent} clickEvent 
    */
   click(clickEvent) {
+    if (this.get('readonly')) {
+      return;
+    }
+
     const target = clickEvent.target;
-    if (target.matches('input, .comparator-value-editor') || target.closest('.block-adder-popover')) {
+    if (target.matches('input') ||
+      target.closest('.block-adder-popover, .comparator-value-editor')) {
       return;
     }
 
@@ -103,6 +140,9 @@ export default Component.extend({
   actions: {
     onSettingsClose() {
       safeExec(this, 'set', 'areSettingsVisible', false);
+    },
+    removeButtonHover(state) {
+      this.set('removeButtonHovered', state);
     },
   },
 });

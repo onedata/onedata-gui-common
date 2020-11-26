@@ -1,10 +1,7 @@
-{{yield}}
-{{#render-later triggerRender=showTooltip as |renderLater|}}
-  {{one-tooltip
+{{yield}}{{#render-later triggerRender=showTooltip as |renderLater|}}{{one-tooltip
     autoPlacement=true
     placement="top" 
     title=tooltipText
     triggerEvents=""
     visible=showTooltip
-    onHidden=renderLater.resetRenderTrigger}}
-{{/render-later}}
+    onHidden=renderLater.resetRenderTrigger}}{{/render-later}}

@@ -1,13 +1,15 @@
-<div class="form-control query-builder-input">
+<div class="form-control query-builder-input query-builder-input-visual">
   {{query-builder/operator-block
     class="root-block"
     operators=operators
     queryBlock=rootQueryBlock
     queryProperties=queryProperties
+    refreshQueryProperties=refreshQueryProperties
+    readonly=readonly
     onConditionEditionStart=(action "onConditionEditionStart")
     onConditionEditionEnd=(action "onConditionEditionEnd")
     onConditionEditionValidityChange=(action "onConditionEditionValidityChange")
     onBlockRemoved=(action "onBlockRemoved")
   }}
+  {{yield}}
 </div>
-{{yield}}

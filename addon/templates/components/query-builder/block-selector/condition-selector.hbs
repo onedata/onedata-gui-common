@@ -1,4 +1,4 @@
-<div class="form-group form-group-whole-line property-selector-container">
+<div class="form-group property-selector-container">
   {{#power-select
     options=queryProperties
     selected=selectedConditionProperty
@@ -8,6 +8,8 @@
     renderInPlace=true
     placeholder=(tt this "propertySelectorPlaceholder")
     class="property-selector"
+    triggerClass="small"
+    dropdownClass="small"
     as |queryProperty|
   }}
     <span class="parameter-suggestion-name">
@@ -24,6 +26,8 @@
           selected=selectedConditionComparator
           onchange=(action "conditionComparatorChanged")
           renderInPlace=true
+          triggerClass="small"
+          dropdownClass="small"
           class="comparator-selector"
           as |comparator|
         }}
@@ -45,7 +49,7 @@
     }}
   {{/if}}
 </div>
-<div class="form-group-whole-line">
+<div class="form-group accept-condition-container">
   {{#bs-button
     class="accept-condition"
     disabled=(not isConditionDataValid)

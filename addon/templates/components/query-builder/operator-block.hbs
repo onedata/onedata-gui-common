@@ -2,30 +2,34 @@
   {{#if (and queryBlock.operator (not (eq queryBlock.operator "root")))}}
     <div class="block-label block-prefix-label">{{tt this (concat "operators." queryBlock.operator)}}</div>
   {{/if}}
-
   {{#if firstOperand}}
     {{query-builder/block-visualiser
       parentQueryBlock=queryBlock
       operators=operators
       queryBlock=firstOperand
       queryProperties=queryProperties
+      readonly=readonly
+      level=(sub level 1)
       onBlockReplace=(action "replaceBlock" firstOperand)
       onBlockRemove=(action "removeBlock" firstOperand)
+      refreshQueryProperties=refreshQueryProperties
       onConditionEditionStart=onConditionEditionStart
       onConditionEditionEnd=onConditionEditionEnd
       onConditionEditionValidityChange=onConditionEditionValidityChange
       onBlockRemoved=onBlockRemoved
     }}
-    {{#if (eq queryBlock.operator "root")}}
+    {{#if (and (not readonly) (eq queryBlock.operator "root"))}}
       {{query-builder/block-adder
+        refreshQueryProperties=refreshQueryProperties
         operators=operators
         onBlockAdd=(action "addBlock")
         hideConditionCreation=true
         class="surround-root"
       }}
     {{/if}}
-  {{else}}
+  {{else if (not readonly)}}
     {{query-builder/block-adder
+      refreshQueryProperties=refreshQueryProperties
       operators=operators
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
@@ -35,9 +39,12 @@
   {{#each queryBlock.operands as |operandBlock index|}}
     {{query-builder/block-visualiser
       parentQueryBlock=queryBlock
+      level=(sub level 1)
+      readonly=readonly
       operators=operators
       queryBlock=operandBlock
       queryProperties=queryProperties
+      refreshQueryProperties=refreshQueryProperties
       onBlockReplace=(action "replaceBlock" operandBlock)
       onBlockRemove=(action "removeBlock" operandBlock)
       onConditionEditionStart=onConditionEditionStart
@@ -45,28 +52,40 @@
       onConditionEditionValidityChange=onConditionEditionValidityChange
       onBlockRemoved=onBlockRemoved
     }}
-    {{#if queryBlock.operator}}
+    {{#if (and
+      queryBlock.operator
+      (or
+        (not readonly)
+        (not (eq index (sub queryBlock.operands.length 1)))
+      )
+    )}}
       <div class="block-label block-infix-label {{if (eq index (sub queryBlock.operands.length 1)) "block-infix-label-last"}}">
         {{tt this (concat "operators." queryBlock.operator)}}
       </div>
     {{/if}}
   {{else}}
+    {{#unless readonly}}
+      {{query-builder/block-adder
+        operators=operators
+        refreshQueryProperties=refreshQueryProperties
+        onBlockAdd=(action "addBlock")
+        queryProperties=queryProperties
+      }}
+      {{#if queryBlock.operator}}
+        <div class="block-label block-infix-label block-infix-label-last">
+          {{tt this (concat "operators." queryBlock.operator)}}
+        </div>
+      {{/if}}
+    {{/unless}}
+  {{/each}}
+  {{#unless readonly}}
     {{query-builder/block-adder
       operators=operators
+      refreshQueryProperties=refreshQueryProperties
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
+      disabled=(eq queryBlock.operands.length 0)
     }}
-    {{#if queryBlock.operator}}
-      <div class="block-label block-infix-label block-infix-label-last">
-        {{tt this (concat "operators." queryBlock.operator)}}
-      </div>
-    {{/if}}
-  {{/each}}
-  {{query-builder/block-adder
-    operators=operators
-    onBlockAdd=(action "addBlock")
-    queryProperties=queryProperties
-    disabled=(eq queryBlock.operands.length 0)
-  }}
+  {{/unless}}
 {{/if}}
 {{yield}}

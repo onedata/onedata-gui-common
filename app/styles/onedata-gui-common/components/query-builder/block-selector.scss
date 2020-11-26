@@ -1,20 +1,27 @@
-.query-builder-block-selector {
+.query-builder-block-selector {  
+  $selectors-spacing: $query-builder-spacer * 0.5;
+  
   background-color: white;
   padding: $query-builder-spacer * 0.8;
 
-  &.with-conditions {
-    width: 280px;
-  }
+  // &.with-conditions {
+  //   min-width: 38em;
+  //   max-width: 46em;
+  // }
 
+  .form-group {
+    margin-bottom: 0.2em;
+  }
+  
   h1 {
     font-size: 110%;
     font-weight: bold;
     margin-bottom: $query-builder-spacer * 0.8;
   }
   
-  .btn, .form-control {
-    font-size: inherit;
-  }
+  // .btn, .form-control {
+  //   font-size: inherit;
+  // }
   
   .operator-selector {
     display: flex;
@@ -26,6 +33,11 @@
   .comparator-main-container {
     display: flex;
     align-items: center;
+    flex-grow: 1.8;
+    .comparator-value-editor {
+      padding-left: $selectors-spacing;
+      width: 12em;
+    }
   }
 
   .operator {
@@ -37,18 +49,16 @@
     word-break: break-all;
   }
 
-  .ember-basic-dropdown {
-    flex-grow: 1;
-  }
-
   .special-property {
     @include font-semibold;
     font-style: italic;
   }
 
-  .form-group {
-    margin-bottom: $query-builder-spacer * 0.5;
-    min-width: 0;
+  .property-selector-container {
+    flex-grow: 1;
+    .ember-basic-dropdown {
+      width: 12em;
+    }
   }
 
   .form-group-no-shrink {
@@ -60,12 +70,7 @@
   }
 
   .form-group-fill-line {
-    margin-left: $query-builder-spacer * 0.5;
     flex-grow: 1;
-  }
-  
-  .condition-selector > .form-group:last-child {
-    margin-bottom: 0;
   }
   
   .date-editor {
@@ -83,10 +88,22 @@
     width: 100%;
   }
 
+  .accept-condition-container {
+    flex-grow: 0;
+    margin-left: calc(#{$selectors-spacing} + 0.2em);
+  }
+  
   .condition-selector {
+    display: flex;
+    align-items: center;
     .comparator-selector-container {
+      margin-left: $selectors-spacing;
       .ember-power-select-selected-item {
         padding-right: $padding-small-horizontal;
+      }
+      .comparator-selector {
+        padding-left: 0.2em;
+        padding-right: 0.2em;
       }
     }
   }

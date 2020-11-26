@@ -1,37 +1,64 @@
 $query-builder-spacer: $padding-small-horizontal;
 $color-query-builder-sand: #f2d16b;
-$input-padding-x: $padding-small-vertical;
-$input-padding-y: $padding-small-horizontal;
-
-// FIXME: modified/commented styles
 
 .query-builder {
   display: flex;
   align-items: flex-start;
-  // margin-bottom: $query-builder-spacer;
 
+  &.query-builder-mode-text {
+    flex-direction: column;
+    .text-edit-btn-toolbar {
+      align-self: flex-end;
+      padding-top: $padding-small-vertical;
+    }
+  }
+  
+  // FIXME: change this to ifs in hbs
   &.readonly {
-    pointer-events: none;
-    .query-builder-block-adder {
-      display: none;
-    }
-    .block-infix-label.block-infix-label-last {
-      display: none;
-    }
-    .remove-block {
-      display: none;
-    }
+    // pointer-events: none;
+    // .query-builder-block-adder {
+    //   display: none;
+    // }
+    // .block-infix-label.block-infix-label-last {
+    //   display: none;
+    // }
+    // .remove-block {
+    //   display: none;
+    // }
+  }
+  
+  .btn-toolbar.text-edit-btn-toolbar {
+    margin-top: $padding-small-vertical;
   }
   
   .query-builder-input {
     display: flex;
+    align-items: center;
     min-height: $input-height-base;
     height: auto;
     flex-basis: 100%;
     min-width: 0;
-    // margin-right: $query-builder-spacer * 0.5;
-    // padding: ($input-padding-y - $query-builder-spacer * 0.3) ($input-padding-x - $query-builder-spacer * 0.2);
     padding: $padding-small-vertical $padding-small-horizontal;
+    
+    .root-block {
+      flex-grow: 1;
+    }
+      
+    .enter-text-link {
+      flex-grow: 0;
+      padding-right: 0.2em;
+    }
+    
+    .copy-btn {
+      position: block;
+      font-size: 2em;
+      align-self: flex-end;
+      padding-top: $padding-small-vertical;
+    }
+  }
+  
+  .query-builder-input-text {
+    padding: $padding-base-vertical $padding-base-horizontal;
   }
 
   .query-builder-block {
@@ -46,17 +73,46 @@ $input-padding-y: $padding-small-horizontal;
       background-color: $color-one-light-blue;
       border: 1px solid darken($color-one-light-blue, 20%);
       border-radius: $input-border-radius-small;
+      
+      &.block-level-1 {
+        background-color: lighten($color-one-light-blue, 10%);
+      }
+      &.block-level-2 {
+        background-color: lighten($color-one-light-blue, 8%);
+      }
+      &.block-level-3 {
+        background-color: lighten($color-one-light-blue, 6%);
+      }
+      &.block-level-4 {
+        background-color: lighten($color-one-light-blue, 4%);
+      }
+      &.block-level-5 {
+        background-color: lighten($color-one-light-blue, 2%);
+      }
+      
+      
     }
 
     > * {
       margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
     }
   }
-
-  .query-builder-block-visualiser.is-directly-hovered {
-    > .query-builder-block {
-      background-color: darken($color-one-light-blue, 5%);
-      border: 1px solid darken($color-one-light-blue, 25%);
+  
+  .query-builder-block-visualiser {  
+    &.is-directly-hovered {
+      > .query-builder-block {
+        background-color: $color-query-builder-sand;
+        border: 1px solid darken($color-query-builder-sand, 30%);
+        > .block-infix-label {
+          font-weight: bold;
+        }
+      }
+      &.is-directly-hovered-remove {
+        .query-builder-block {
+          border: 1px solid darken($color-one-danger, 10%);
+          background-color: lighten($color-one-danger, 25%);
+        }
+      }
     }
   }
   
@@ -70,6 +126,9 @@ $input-padding-y: $padding-small-horizontal;
         darken($color-query-builder-sand, 8%) 8px
       );
       border: 1px solid darken($color-query-builder-sand, 30%);
+      > .block-infix-label {
+        font-weight: bold;
+      }
     }
   }
   
@@ -85,6 +144,7 @@ $input-padding-y: $padding-small-horizontal;
 
   .block-infix-label {
     margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
+    @include font-monospace;
   }
 
   .property-key, .comparator, .comparator-value {
@@ -117,4 +177,4 @@ $input-padding-y: $padding-small-horizontal;
 @import 'onedata-gui-common/components/query-builder/block-selector';
 @import 'onedata-gui-common/components/query-builder/block-visualiser';
 @import 'onedata-gui-common/components/query-builder/condition-block';
-@import 'onedata-gui-common/components/query-builder/curl-generator';
+@import 'onedata-gui-common/components/query-builder/condition-comparator-value-editor';

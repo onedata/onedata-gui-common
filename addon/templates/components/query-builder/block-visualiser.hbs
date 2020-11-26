@@ -1,25 +1,33 @@
 {{#component (concat "query-builder/" queryBlock.renderer)
+  class=(concat "block-level-" level)
   operators=operators
+  refreshQueryProperties=refreshQueryProperties
   queryBlock=queryBlock
   queryProperties=queryProperties
+  level=level
+  readonly=readonly
   onConditionEditionStart=onConditionEditionStart
   onConditionEditionEnd=onConditionEditionEnd
   onConditionEditionValidityChange=onConditionEditionValidityChange
   onBlockRemoved=onBlockRemoved
 }}
-  {{query-builder/block-settings
-    queryBlock=queryBlock
-    operators=operators
-    parentQueryBlock=parentQueryBlock
-    onBlockReplace=onBlockReplace
-    open=areSettingsVisible
-    onSettingsClose=(action "onSettingsClose")
-  }}
-  {{#bs-button
-    onClick=onBlockRemove
-    bubble=true
-    class="block-button remove-block clickable"
-  }}
-    {{one-icon icon="x"}}
-  {{/bs-button}}
+  {{#unless readonly}}
+    {{query-builder/block-settings
+      queryBlock=queryBlock
+      operators=operators
+      parentQueryBlock=parentQueryBlock
+      onBlockReplace=onBlockReplace
+      open=areSettingsVisible
+      onSettingsClose=(action "onSettingsClose")
+    }}
+    {{#bs-button
+      onClick=onBlockRemove
+      mouseEnter=(action "removeButtonHover" true)
+      mouseLeave=(action "removeButtonHover" false)
+      bubble=true
+      class="block-button remove-block clickable"
+    }}
+      {{one-icon icon="x"}}
+    {{/bs-button}}
+  {{/unless}}
 {{/component}}

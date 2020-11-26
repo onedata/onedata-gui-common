@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
 
-const allowedOperatorsList = ['and', 'or', 'excluding', 'not'];
+const allowedOperatorsList = ['and', 'or', 'except', 'not'];
 
 describe(
   'Integration | Component | query builder/block selector/operator selector',

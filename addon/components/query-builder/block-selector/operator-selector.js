@@ -41,7 +41,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Array<String>}
    */
-  validOperators: Object.freeze(['and', 'or', 'excluding', 'not', 'none']),
+  validOperators: Object.freeze(['and', 'or', 'except', 'not', 'none']),
 
   /**
    * @type {Array<String>}

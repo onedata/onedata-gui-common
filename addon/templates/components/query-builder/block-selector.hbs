@@ -1,6 +1,6 @@
 {{#if (eq mode "create")}}
   {{#if (not effHideConditionCreation)}}
-    <div class="condition-selector">
+    <div class="condition-section">
       <h1>{{tt this "conditionHeader"}}</h1>
       {{query-builder/block-selector/condition-selector
         onConditionSelected=(action "conditionAdded")

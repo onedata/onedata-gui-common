@@ -68,8 +68,8 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
           font-weight: normal;
           .btn-toolbar button {
             // resets font size to its default for normal content. 
-            // 85% is from font-size for .btn-sm (hard-coded in bootstrap config)
-            font-size: (1em / $content-header-font-size) * 85%;
+            // 90% is from font-size for .btn-sm (hard-coded in bootstrap config)
+            font-size: (1em / $content-header-font-size) * 90%;
           }
         }
       }
