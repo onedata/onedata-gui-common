@@ -162,6 +162,8 @@ export default Component.extend(I18n, {
       if (!comparators.includes(selectedConditionComparator)) {
         this.conditionComparatorChanged(comparators[0]);
       }
+      // reset value
+      this.conditionComparatorValueChanged(undefined);
     },
 
     /**
@@ -175,7 +177,7 @@ export default Component.extend(I18n, {
      * @param {any} value 
      */
     conditionComparatorValueChanged(value) {
-      this.conditionComparatorValueChanged(value);
+      return this.conditionComparatorValueChanged(value);
     },
 
     conditionSelected() {

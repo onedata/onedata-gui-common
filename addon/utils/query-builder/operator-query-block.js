@@ -3,7 +3,7 @@
  * another operators.
  * 
  * @module utils/query-builder/operator-query-block
- * @author Michał Borzęcki
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -12,7 +12,6 @@ import QueryBlock from 'onedata-gui-common/utils/query-builder/query-block';
 import { get, set, computed, observer } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { A } from '@ember/array';
-import { array, math, sum, raw } from 'ember-awesome-macros';
 
 export default QueryBlock.extend({
   /**

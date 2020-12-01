@@ -13,20 +13,6 @@ $color-query-builder-sand: #f2d16b;
     }
   }
   
-  // FIXME: change this to ifs in hbs
-  &.readonly {
-    // pointer-events: none;
-    // .query-builder-block-adder {
-    //   display: none;
-    // }
-    // .block-infix-label.block-infix-label-last {
-    //   display: none;
-    // }
-    // .remove-block {
-    //   display: none;
-    // }
-  }
-  
   .btn-toolbar.text-edit-btn-toolbar {
     margin-top: $padding-small-vertical;
   }
@@ -165,6 +151,7 @@ $color-query-builder-sand: #f2d16b;
     &:hover {
       color: $color-one-danger;
     }
+    margin-left: 1em;
   }
 }
 

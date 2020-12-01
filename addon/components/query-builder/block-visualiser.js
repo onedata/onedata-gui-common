@@ -144,5 +144,8 @@ export default Component.extend({
     removeButtonHover(state) {
       this.set('removeButtonHovered', state);
     },
+    refreshQueryProperties() {
+      return this.get('refreshQueryProperties')();
+    },
   },
 });

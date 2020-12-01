@@ -8,7 +8,7 @@
  */
 
 import Component from '@ember/component';
-import { notImplementedIgnore } from 'onedata-gui-common/utils/not-implemented-ignore';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { computed, get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/query-builder/operator-block';
@@ -140,6 +140,10 @@ export default Component.extend(I18n, {
     removeBlock(queryBlock) {
       this.get('queryBlock.operands').removeObject(queryBlock);
       this.get('onBlockRemoved')(queryBlock);
+    },
+
+    refreshQueryProperties() {
+      return this.get('refreshQueryProperties')();
     },
   },
 });

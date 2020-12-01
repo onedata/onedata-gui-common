@@ -8,8 +8,7 @@ import wait from 'ember-test-helpers/wait';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
-describe(
-  'Integration | Component | query builder/condition comparator value editor',
+describe('Integration | Component | query builder/condition comparator value editor',
   function () {
     setupComponentTest('query-builder/condition-comparator-value-editor', {
       integration: true,
@@ -26,8 +25,7 @@ describe(
         viewValue: '"2"',
       }].forEach(({ comparator, value, viewValue }) => {
         const [propertyType, comparatorName] = comparator.split('.');
-        it(
-          `shows comparator value for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`shows comparator value for "${comparatorName}" comparator for ${propertyType} property`,
           function () {
             this.setProperties({
               comparator,
@@ -50,7 +48,7 @@ describe(
 
         this.render(hbs `{{query-builder/condition-comparator-value-editor
           mode="view"
-          comparator="text.eq"
+          comparator="string.eq"
           value="hello"
           onStartEdit=onStartEditSpy
         }}`);
@@ -71,8 +69,7 @@ describe(
       }))].forEach(({ comparator, valueToInput }) => {
         const [propertyType, comparatorName] = comparator.split('.');
 
-        it(
-          `shows text input for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`shows text input for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             this.set('comparator', comparator);
 
@@ -86,8 +83,7 @@ describe(
           }
         );
 
-        it(
-          `calls "onValueChange" callback, when ${propertyType} property "${comparatorName}" condition value has changed`,
+        it(`calls "onValueChange" callback, when ${propertyType} property "${comparatorName}" condition value has changed`,
           async function () {
             const { changeSpy } = this.setProperties({
               comparator,
@@ -110,25 +106,23 @@ describe(
 
     context('in edit mode', function () {
       [
-        'text.eq',
+        'string.eq',
         ...mathOperators.map(operator => `number.${operator}`),
       ].forEach(comparator => {
         const [propertyType, comparatorName] = comparator.split('.');
         const value = comparator.startsWith('number') ? '1' : 'abc';
         const newValue = comparator.startsWith('number') ? '2' : 'def';
-        const beforeTest = testCase => {
-          testCase.setProperties(
+        const beforeTest = (testCase) => {
+          testCase.setProperties({
             comparator,
             value,
-            newValue
-          );
+            newValue,
+          });
         };
 
-        it(
-          `has focused editor on init for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`has focused editor on init for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
-
             this.render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
@@ -139,8 +133,7 @@ describe(
           }
         );
 
-        it(
-          `shows current comparator value for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`shows current comparator value for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
 
@@ -154,8 +147,7 @@ describe(
           }
         );
 
-        it(
-          `closes editor and notifies about new value for "${comparatorName}" comparator for ${propertyType} property (close using Enter)`,
+        it(`closes editor and notifies about new value for "${comparatorName}" comparator for ${propertyType} property (close using Enter)`,
           async function () {
             beforeTest(this);
             const {
@@ -183,8 +175,7 @@ describe(
           }
         );
 
-        it(
-          `closes editor and notifies about new value for "${comparatorName}" comparator for ${propertyType} property (close using blur)`,
+        it(`closes editor and notifies about new value for "${comparatorName}" comparator for ${propertyType} property (close using blur)`,
           async function () {
             beforeTest(this);
             const {
@@ -211,8 +202,7 @@ describe(
           }
         );
 
-        it(
-          `notifies about partial new value before close for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`notifies about partial new value before close for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
             const {
@@ -238,8 +228,7 @@ describe(
           }
         );
 
-        it(
-          `cancels editor on Escape key down for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`cancels editor on Escape key down for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
             const {
@@ -269,8 +258,7 @@ describe(
           }
         );
 
-        it(
-          `does not add class "is-invalid" to the input by default for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`does not add class "is-invalid" to the input by default for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
 
@@ -284,8 +272,7 @@ describe(
           }
         );
 
-        it(
-          `adds class "is-invalid" to the input if isValueInvalid is true for "${comparatorName}" comparator for ${propertyType} property`,
+        it(`adds class "is-invalid" to the input if isValueInvalid is true for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
 

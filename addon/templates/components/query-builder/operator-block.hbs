@@ -12,7 +12,7 @@
       level=(sub level 1)
       onBlockReplace=(action "replaceBlock" firstOperand)
       onBlockRemove=(action "removeBlock" firstOperand)
-      refreshQueryProperties=refreshQueryProperties
+      refreshQueryProperties=(action "refreshQueryProperties")
       onConditionEditionStart=onConditionEditionStart
       onConditionEditionEnd=onConditionEditionEnd
       onConditionEditionValidityChange=onConditionEditionValidityChange
@@ -20,7 +20,7 @@
     }}
     {{#if (and (not readonly) (eq queryBlock.operator "root"))}}
       {{query-builder/block-adder
-        refreshQueryProperties=refreshQueryProperties
+        refreshQueryProperties=(action "refreshQueryProperties")
         operators=operators
         onBlockAdd=(action "addBlock")
         hideConditionCreation=true
@@ -29,7 +29,7 @@
     {{/if}}
   {{else if (not readonly)}}
     {{query-builder/block-adder
-      refreshQueryProperties=refreshQueryProperties
+      refreshQueryProperties=(action "refreshQueryProperties")
       operators=operators
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
@@ -44,7 +44,7 @@
       operators=operators
       queryBlock=operandBlock
       queryProperties=queryProperties
-      refreshQueryProperties=refreshQueryProperties
+      refreshQueryProperties=(action "refreshQueryProperties")
       onBlockReplace=(action "replaceBlock" operandBlock)
       onBlockRemove=(action "removeBlock" operandBlock)
       onConditionEditionStart=onConditionEditionStart
@@ -67,7 +67,7 @@
     {{#unless readonly}}
       {{query-builder/block-adder
         operators=operators
-        refreshQueryProperties=refreshQueryProperties
+        refreshQueryProperties=(action "refreshQueryProperties")
         onBlockAdd=(action "addBlock")
         queryProperties=queryProperties
       }}
@@ -81,7 +81,7 @@
   {{#unless readonly}}
     {{query-builder/block-adder
       operators=operators
-      refreshQueryProperties=refreshQueryProperties
+      refreshQueryProperties=(action "refreshQueryProperties")
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
       disabled=(eq queryBlock.operands.length 0)

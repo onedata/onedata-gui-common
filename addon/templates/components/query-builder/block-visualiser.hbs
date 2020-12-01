@@ -1,7 +1,7 @@
 {{#component (concat "query-builder/" queryBlock.renderer)
   class=(concat "block-level-" level)
   operators=operators
-  refreshQueryProperties=refreshQueryProperties
+  refreshQueryProperties=(action "refreshQueryProperties")
   queryBlock=queryBlock
   queryProperties=queryProperties
   level=level
@@ -12,14 +12,6 @@
   onBlockRemoved=onBlockRemoved
 }}
   {{#unless readonly}}
-    {{query-builder/block-settings
-      queryBlock=queryBlock
-      operators=operators
-      parentQueryBlock=parentQueryBlock
-      onBlockReplace=onBlockReplace
-      open=areSettingsVisible
-      onSettingsClose=(action "onSettingsClose")
-    }}
     {{#bs-button
       onClick=onBlockRemove
       mouseEnter=(action "removeButtonHover" true)
@@ -29,5 +21,13 @@
     }}
       {{one-icon icon="x"}}
     {{/bs-button}}
+    {{query-builder/block-settings
+      queryBlock=queryBlock
+      operators=operators
+      parentQueryBlock=parentQueryBlock
+      onBlockReplace=onBlockReplace
+      open=areSettingsVisible
+      onSettingsClose=(action "onSettingsClose")
+    }}
   {{/unless}}
 {{/component}}
