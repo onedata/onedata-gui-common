@@ -125,29 +125,31 @@ $-tile-separator-color: #dcdcdc;
     flex-grow: 1;
     min-height: 0;
     padding-top: $font-size-base;
+  }
 
-    .tile-content-inner {
-      position: relative;
-      flex-basis: 100%;
-      flex-grow: 1;
-      min-height: 0;
+  .tile-content-inner {
+    position: relative;
+    flex-basis: 100%;
+    flex-grow: 1;
+    min-height: 0;
+  }
 
-      .main-figure {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%) translateY(14px);
+  .main-figure {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) translateY(14px);
+    text-align: center;
 
-        img.main-image {
-          max-width: 100%;
-        }
-        .one-label {
-          display: block;
-          padding-top: 20px;
-          @include font-bold();
-        }
-      }
+    .main-image {
+      max-width: 100%;
+    }
+
+    .one-label {
+      display: block;
+      padding-top: 20px;
+      @include font-bold();
     }
   }
 
