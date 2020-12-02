@@ -209,6 +209,7 @@ export default Component.extend({
     if (field) {
       allFieldsValues.set(fieldName, value);
       set(field, 'changed', true);
+      this.notifyPropertyChange('errors');
       this.recalculateErrors();
     } else {
       console.warn(unknownFieldErrorMsg);

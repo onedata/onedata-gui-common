@@ -59,6 +59,7 @@ export default {
   missingRequiredValue: 'Required value of "{{key}}" is missing.',
   missingAtLeastOneValue: 'Missing data, you must provide at least one of: {{keys}}.',
   badData: 'Value of "{{key}}" provided in request is invalid.',
+  badDataWithHint: 'Value of "{{key}}" provided in request is invalid: {{hint}}.',
   badValueEmpty: 'Value of "{{key}}" provided in request cannot be empty.',
   badValueBoolean: 'Value of "{{key}}" provided in request must be a boolean.',
   badValueString: 'Value of "{{key}}" provided in request must be a string.',
