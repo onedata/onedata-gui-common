@@ -1,8 +1,9 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-step';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   tagName: 'li',
   classNames: ['one-step'],
@@ -10,6 +11,11 @@ export default Component.extend({
 
   index: null,
   title: null,
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneStep',
 
   stepNumberClassName: computed('index', function () {
     return 'one-step-' + (this.get('index') + 1);
