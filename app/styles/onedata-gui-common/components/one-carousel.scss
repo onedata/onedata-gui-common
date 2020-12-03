@@ -1,0 +1,115 @@
+$one-carousel-slides-gap: 100px;
+
+.one-carousel {
+  position: relative;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+
+  .one-carousel-slide {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    flex-shrink: 0;
+    animation-fill-mode: forwards;
+    animation-duration: 0.7s;
+
+    &.active-from-left {
+      animation-name: one-carousel-active-from-left;
+    }
+
+    &.active-from-right {
+      animation-name: one-carousel-active-from-right;
+    }
+
+    &.hidden-to-left {
+      animation-name: one-carousel-hide-to-left;
+      overflow: hidden;
+    }
+
+    &.hidden-to-right {
+      animation-name: one-carousel-hide-to-right;
+      overflow: hidden;
+    }
+
+    &.hidden {
+      transform: translateX(100%) translateX(#{$one-carousel-slides-gap});
+      overflow: hidden;
+      width: 0;
+      height: 0;
+    }
+  }
+}
+
+@keyframes one-carousel-hide-to-left {
+  0% {
+    transform: none;
+    width: 100%;
+    height: initial;
+  }
+  99.9999% {
+    transform: translateX(-100%) translateX(#{-$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
+  }
+  // When slides are changing, then the hiding slide should take place in content flow
+  // as long as possible to let it be taken into account by scrollbars and possible other
+  // "content-flow things". But when slide is completely hidden, then it should not take
+  // any place. To achive that solution, `99.9999% keyframe hack` is used. That last
+  // animation frame changes size of the slide to 0x0, to force it to not take any place
+  // (so scrollbars does not calculate them as content).
+  100% {
+    transform: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+@keyframes one-carousel-hide-to-right {
+  0% {
+    transform: translateX(-100%);
+    width: 100%;
+    height: initial;
+  }
+  99.9999% {
+    transform: translateX(#{$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
+  }
+  100% {
+    transform: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+@keyframes one-carousel-active-from-left {
+  0% {
+    transform: translateX(-100%) translateX(#{-$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
+  }
+  100% {
+    transform: none;
+    width: 100%;
+    height: initial;
+  }
+}
+
+@keyframes one-carousel-active-from-right {
+  0% {
+    transform: translateX(#{$one-carousel-slides-gap});
+    width: 100%;
+    height: initial;
+  }
+  99.9999% {
+    transform: translateX(-100%);
+    width: 100%;
+    height: initial;
+  }
+  100% {
+    transform: none;
+    width: 100%;
+    height: initial;
+  }
+}

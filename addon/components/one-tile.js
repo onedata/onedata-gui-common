@@ -25,7 +25,6 @@ export default Component.extend(I18n, {
   classNames: ['one-tile'],
   classNameBindings: [
     'isLink:one-tile-link',
-    'footerText:with-footer',
     'sizeClass',
   ],
 

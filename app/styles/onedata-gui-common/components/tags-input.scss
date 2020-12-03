@@ -36,7 +36,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   &.middle-centered {
     align-items: center;
   }
-  
+
   .input-element {
     margin-right: $padding-xs-horizontal;
     margin-bottom: $padding-xs-horizontal;
@@ -49,7 +49,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     border: $tags-input-tag-border;
     border-radius: $border-radius-base;
     background-color: $color-one-light-blue;
-    
+
     &.tag-item-plaintext {
       // @include font-semibold();
       border: none;
@@ -98,7 +98,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     color: $color-one-white;
     background-color: $color-one-blue-gray;
     border-radius: 2px;
-    line-height: 0;
+    line-height: 0.8;
     padding: $padding-xs-vertical;
     font-size: 90%;
     cursor: pointer;
@@ -183,7 +183,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   .tag-label {
     align-self: baseline;
   }
-  
+
   .ps {
     height: 100%;
     position: relative;
@@ -194,7 +194,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 .one-webui-popover.model-selector {
   width: 250px;
   height: 250px;
-  
+
   .selector-container {
     display: flex;
     flex-direction: column;

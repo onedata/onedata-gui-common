@@ -85,10 +85,7 @@ export default Component.extend(I18n, {
       const recordsPromise = this.get('recordsPromise') || resolve([]);
 
       return recordsPromise
-        .then(records => RecordOptionsArrayProxy.create({
-          ownerSource: this,
-          records,
-        }));
+        .then(records => RecordOptionsArrayProxy.create({ records }));
     }
   )),
 

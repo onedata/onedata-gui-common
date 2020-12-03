@@ -215,6 +215,6 @@ describe('Integration | Component | form component/dropdown field', function () 
 
 class DropdownHelper extends EmberPowerSelectHelper {
   constructor() {
-    super('.ember-basic-dropdown');
+    super('.dropdown-field', '.ember-basic-dropdown-content');
   }
 }

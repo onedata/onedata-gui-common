@@ -55,8 +55,11 @@ $inline-alert-left-border-width: 60px;
     transition: $collapse-transition, transition-linear(margin-top);
     opacity: 0;
     color: $main-text-color;
+    // fixes scroll-up issue in some places
+    overflow: hidden;
+
     &.active {
-      opacity: 1; 
+      opacity: 1;
       max-height: 20em;
       margin-top: 10px;
       overflow: auto;
