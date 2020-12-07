@@ -14,8 +14,10 @@ $block-adder-btn-padding: 0.4em;
   }
 }
 
-.block-adder-popover {
-  width: 20em;
+@media (max-width: $screen-xs-max) {
+  .block-adder-popover, .block-settings-popover {
+    width: 19em;
+  }
 }
 
 // modals have overriden btn padding, so we must force its style to be compact

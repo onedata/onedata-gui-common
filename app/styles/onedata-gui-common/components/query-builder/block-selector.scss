@@ -1,11 +1,11 @@
 .query-builder-block-selector {  
-  $selectors-spacing: $query-builder-spacer * 0.5;
+  $selectors-spacing: 0.6em;
   
   background-color: white;
   padding: $query-builder-spacer * 0.8;
 
   .form-group {
-    margin-bottom: 0.2em;
+    margin-bottom: 0;
   }
   
   h1 {
@@ -19,6 +19,12 @@
     padding: 0;
     margin: 0;
     list-style-type: none;
+    flex-wrap: wrap;
+    // will add spacing between flex lines if necessary
+    margin-top: -0.4em;
+    li {
+      margin-top: 0.4em;
+    }
   }
 
   .comparator-main-container {
@@ -101,14 +107,30 @@
       flex-wrap: wrap;
       .property-selector-container {
         order: 1;
-      }
-      .accept-condition-container {
-        order: 2;
+        flex-basis: 100%;
+        .ember-basic-dropdown {
+          width: 100%;
+        }
       }
       .comparator-main-container {
+        order: 2;
+        flex-grow: 1;
+        padding-top: $selectors-spacing;
+        .comparator-selector-container {
+          margin-left: 0;
+          .comparator-selector {
+            padding-left: 0.2em;
+            padding-right: 0.6em;
+          }
+        }
+      }
+      .accept-condition-container {
         order: 3;
-        padding-top: 0.4em;
+        flex-grow: 1;
+        flex-basis: 100%;
+        margin-top: $selectors-spacing;
         margin-left: 0;
+        text-align: right;
       }
     }
   }

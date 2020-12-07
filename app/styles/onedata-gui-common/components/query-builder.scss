@@ -4,7 +4,7 @@ $color-query-builder-tag-darkest: darken($color-one-light-blue, 8%);
 $color-query-block-remove: lighten($color-one-danger, 25%);
 $query-builder-hover-darken: 8%;
 
-@mixin query-builder-stripped-background($base-color, $darken-difference: 8%) {
+@mixin query-builder-striped-background($base-color, $darken-difference: 8%) {
   background: repeating-linear-gradient(
     135deg,
     $base-color,
@@ -109,7 +109,7 @@ $query-builder-hover-darken: 8%;
   
   .query-builder-block-visualiser.has-open-settings {
     > .query-builder-block {
-      @include query-builder-stripped-background($color-query-builder-sand);
+      @include query-builder-striped-background($color-query-builder-sand);
       border: 1px solid darken($color-query-builder-sand, 30%);
       > .block-infix-label {
         font-weight: bold;
@@ -117,7 +117,7 @@ $query-builder-hover-darken: 8%;
     }
     &.is-directly-hovered-remove {
       > .query-builder-block {
-        @include query-builder-stripped-background($color-query-block-remove, 4%);
+        @include query-builder-striped-background($color-query-block-remove, 4%);
         border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
       }
     }
@@ -126,7 +126,7 @@ $query-builder-hover-darken: 8%;
   .is-directly-hovered-remove {
     .query-builder-block-visualiser.has-open-settings {
       > .query-builder-block {
-        @include query-builder-stripped-background($color-query-block-remove, 4%);
+        @include query-builder-striped-background($color-query-block-remove, 4%);
         border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
       }
     }
