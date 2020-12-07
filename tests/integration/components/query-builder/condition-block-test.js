@@ -34,7 +34,7 @@ describe('Integration | Component | query builder/condition block', function () 
     'has classes "query-builder-block" and "query-builder-condition-block"',
     async function () {
       this.set('queryBlock', ConditionQueryBlock.create({
-        property: { key: 'example' },
+        property: { key: 'example', displayedKey: 'example' },
         comparator: 'string.eq',
         comparatorValue: 'hello',
       }));
@@ -70,7 +70,7 @@ describe('Integration | Component | query builder/condition block', function () 
       async function () {
         this.set(
           'queryBlock', ConditionQueryBlock.create({
-            property: { key: 'some_key' },
+            property: { key: 'some_key', displayedKey: 'some_key' },
             comparator,
             comparatorValue,
           })
@@ -87,7 +87,7 @@ describe('Integration | Component | query builder/condition block', function () 
 
   it('yields', async function () {
     this.set('queryBlock', ConditionQueryBlock.create({
-      property: { key: 'some_key' },
+      property: { key: 'some_key', displayedKey: 'some_key' },
       comparator: 'string.eq',
       comparatorValue: 'hello',
     }));
@@ -132,7 +132,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionValidityChangeSpy,
     } = this.setProperties({
       queryBlock: ConditionQueryBlock.create({
-        property: { key: 'some_key' },
+        property: { key: 'some_key', displayedKey: 'some_key' },
         comparator: 'string.eq',
         comparatorValue: 'abc',
       }),
@@ -168,7 +168,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionValidityChangeSpy,
     } = this.setProperties({
       queryBlock: ConditionQueryBlock.create({
-        property: { key: 'some_key' },
+        property: { key: 'some_key', displayedKey: 'some_key' },
         comparator: 'string.eq',
         comparatorValue: 'abc',
       }),
@@ -221,7 +221,7 @@ describe('Integration | Component | query builder/condition block', function () 
           `shows invalid state ${when}`,
           async function () {
             this.set('queryBlock', ConditionQueryBlock.create({
-              property: { key: 'some_key' },
+              property: { key: 'some_key', displayedKey: 'some_key' },
               comparator,
               comparatorValue: initialValue,
             }));
@@ -249,7 +249,7 @@ describe('Integration | Component | query builder/condition block', function () 
               editionValidityChangeSpy,
             } = this.setProperties({
               queryBlock: ConditionQueryBlock.create({
-                property: { key: 'some_key' },
+                property: { key: 'some_key', displayedKey: 'some_key' },
                 comparator,
                 comparatorValue: initialValue,
               }),

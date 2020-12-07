@@ -9,13 +9,14 @@
  */
 
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, observer } from '@ember/object';
 import { defaultComparatorEditors } from 'onedata-gui-common/utils/query-builder/condition-comparator-editors';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { scheduleOnce } from '@ember/runloop';
 
 const comparatorTypeToPropertyType = {
   eq: 'all',
@@ -113,6 +114,8 @@ export default Component.extend(I18n, {
     }
   ),
 
+  // FIXME: refactor - strategy
+
   /**
    * @type {ComputedProperty<any>}
    */
@@ -126,17 +129,24 @@ export default Component.extend(I18n, {
       } else if (this.get('queryProperty.key') === 'storageId' ||
         this.get('queryProperty.key') === 'providerId'
       ) {
-        return `${get(value, 'entityId').substring(0, 4)}… (${get(value, 'name')})`;
+        // FIXME: displaying values is to refactor
+        // return `${get(value, 'entityId').substring(0, 4)}… (${get(value, 'name')})`;
+        return `${get(value, 'name')} (${get(value, 'entityId').substring(0, 4)}…)`;
       } else {
         return value;
       }
     }
   ),
 
+  modeObserver: observer('mode', function modeObserver() {
+    scheduleOnce('afterRender', () => {
+      this.checkTextEditorInserted();
+    });
+  }),
+
   didInsertElement() {
     this._super(...arguments);
     this.checkTextEditorInserted();
-    this.addObserver('mode', this, 'checkTextEditorInserted');
   },
 
   checkTextEditorInserted() {
@@ -144,16 +154,23 @@ export default Component.extend(I18n, {
       mode,
       componentGuid,
     } = this.getProperties('mode', 'componentGuid');
-    const inputElement =
-      document.querySelector(`#${componentGuid} input[type="text"].comparator-value`);
-    if (inputElement && mode === 'edit') {
-      inputElement.focus();
-      inputElement.select();
+    if (mode === 'edit') {
+      const inputElement =
+        document.querySelector(`#${componentGuid} .comparator-value`);
+      if (inputElement) {
+        inputElement.focus();
+        if (inputElement.select) {
+          inputElement.select();
+        }
+      }
     }
   },
 
   actions: {
     valueChanged(value) {
+      if (this.mode === 'view') {
+        return;
+      }
       let newValue = value;
       if (newValue instanceof Event) {
         newValue = newValue.target.value;
@@ -168,8 +185,6 @@ export default Component.extend(I18n, {
       if (event.key === 'Enter') {
         this.get('onFinishEdit')();
       } else if (event.key === 'Escape') {
-        // FIXME: workaround for finishEdit after cancelEdit (blur event) only for Chrome
-        this.set('preventFinishEdit', true);
         this.get('onCancelEdit')();
       }
     },
@@ -179,11 +194,20 @@ export default Component.extend(I18n, {
     },
 
     onFinishEdit() {
-      if (this.get('preventFinishEdit')) {
-        this.set('preventFinishEdit', false);
-      } else {
-        this.get('onFinishEdit')();
+      if (this.mode === 'view') {
+        return;
       }
+      this.get('onFinishEdit')();
+    },
+
+    onSelectorBlur({ isOpen, isActive }) {
+      // FIXME: debug
+      return;
+      // ignore blur when dropdown is opened (when opening by trigger and selecting value)
+      if (isOpen && isActive) {
+        return;
+      }
+      this.actions.onFinishEdit.call(this);
     },
   },
 });

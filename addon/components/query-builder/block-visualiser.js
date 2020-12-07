@@ -13,6 +13,7 @@ import { conditional, raw, and } from 'ember-awesome-macros';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-visualiser';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { scheduleOnce } from '@ember/runloop';
 
 export default Component.extend({
   layout,
@@ -139,7 +140,13 @@ export default Component.extend({
 
   actions: {
     onSettingsClose() {
-      safeExec(this, 'set', 'areSettingsVisible', false);
+      // NOTE: this is a workaround for a bug in Ember that causes not chaninging
+      // className when bound property is changed
+      // FIXME: changed
+      scheduleOnce('afterRender', () => {
+        safeExec(this, 'set', 'areSettingsVisible', false);
+      });
+
     },
     removeButtonHover(state) {
       this.set('removeButtonHovered', state);

@@ -160,7 +160,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 
   &.small, .form-group-sm & {
     .ember-power-select-option {
-      padding: $ember-power-select-option-small-padding;
+      padding: $ember-power-select-option-small-padding 0.8em;
       min-height: 31px;
     }
   }

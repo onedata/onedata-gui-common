@@ -49,6 +49,23 @@ export default Component.extend(I18n, {
    */
   onConditionEditionValidityChange: notImplementedIgnore,
 
+  displayedKey: computed(
+    'queryBlock.property.{key,displayKey,isSpecialKey}',
+    function displayedKey() {
+      const key = this.get('queryBlock.property.key');
+      switch (key) {
+        case 'spaceId':
+          return 'space';
+        case 'storageId':
+          return 'storage';
+        case 'anyStorage':
+          return 'any storage';
+        default:
+          return key;
+      }
+    },
+  ),
+
   queryProperty: computed(
     'queryProperties.[]',
     'queryBlock.property.key',

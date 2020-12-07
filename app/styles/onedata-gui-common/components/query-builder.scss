@@ -1,7 +1,20 @@
 $query-builder-spacer: $padding-small-horizontal;
-$color-query-builder-sand: #f2d16b;
+$color-query-builder-sand: #fef0c7;
+$color-query-builder-tag-darkest: darken($color-one-light-blue, 8%);
+$color-query-block-remove: lighten($color-one-danger, 25%);
+$query-builder-hover-darken: 8%;
 
-.query-builder {
+@mixin query-builder-stripped-background($base-color, $darken-difference: 8%) {
+  background: repeating-linear-gradient(
+    135deg,
+    $base-color,
+    $base-color 4px,
+    darken($base-color, $darken-difference) 4px,
+    darken($base-color, $darken-difference) 8px
+  );
+}
+
+.query-builder {  
   display: flex;
   align-items: flex-start;
 
@@ -56,47 +69,39 @@ $color-query-builder-sand: #f2d16b;
     padding: $query-builder-spacer * 0.3 $query-builder-spacer * 0.1 0 $query-builder-spacer * 0.1;
 
     &:not(.root-block) {
-      background-color: $color-one-light-blue;
-      border: 1px solid darken($color-one-light-blue, 20%);
+      background-color: $color-query-builder-tag-darkest;
+      border: 1px solid darken($color-query-builder-tag-darkest, 8%);
       border-radius: $input-border-radius-small;
       
-      &.block-level-1 {
-        background-color: lighten($color-one-light-blue, 10%);
+      $levelsCount: 5;
+      @for $level from 1 to $levelsCount {
+        &.block-level-#{$level} {
+          background-color: lighten($color-query-builder-tag-darkest, ($levelsCount - $level - 1) * 5%);
+        }
       }
-      &.block-level-2 {
-        background-color: lighten($color-one-light-blue, 8%);
-      }
-      &.block-level-3 {
-        background-color: lighten($color-one-light-blue, 6%);
-      }
-      &.block-level-4 {
-        background-color: lighten($color-one-light-blue, 4%);
-      }
-      &.block-level-5 {
-        background-color: lighten($color-one-light-blue, 2%);
-      }
-      
-      
     }
 
     > * {
-      margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
+      &:not(.click-outside) {
+        margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
+      }
     }
   }
   
   .query-builder-block-visualiser {  
     &.is-directly-hovered {
       > .query-builder-block {
-        background-color: $color-query-builder-sand;
-        border: 1px solid darken($color-query-builder-sand, 30%);
+        background-color: darken($color-query-builder-tag-darkest, $query-builder-hover-darken);
+        border: 1px solid darken($color-query-builder-tag-darkest, $query-builder-hover-darken);
+        
         > .block-infix-label {
           font-weight: bold;
         }
       }
       &.is-directly-hovered-remove {
-        .query-builder-block {
-          border: 1px solid darken($color-one-danger, 10%);
-          background-color: lighten($color-one-danger, 25%);
+        > .query-builder-block, .query-builder-block {
+          background-color: $color-query-block-remove;
+          border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
         }
       }
     }
@@ -104,16 +109,25 @@ $color-query-builder-sand: #f2d16b;
   
   .query-builder-block-visualiser.has-open-settings {
     > .query-builder-block {
-      background: repeating-linear-gradient(
-        135deg,
-        $color-query-builder-sand,
-        $color-query-builder-sand 4px,
-        darken($color-query-builder-sand, 8%) 4px,
-        darken($color-query-builder-sand, 8%) 8px
-      );
+      @include query-builder-stripped-background($color-query-builder-sand);
       border: 1px solid darken($color-query-builder-sand, 30%);
       > .block-infix-label {
         font-weight: bold;
+      }
+    }
+    &.is-directly-hovered-remove {
+      > .query-builder-block {
+        @include query-builder-stripped-background($color-query-block-remove, 4%);
+        border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
+      }
+    }
+  }
+  
+  .is-directly-hovered-remove {
+    .query-builder-block-visualiser.has-open-settings {
+      > .query-builder-block {
+        @include query-builder-stripped-background($color-query-block-remove, 4%);
+        border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
       }
     }
   }
@@ -144,7 +158,6 @@ $color-query-builder-sand: #f2d16b;
     background-color: transparent;
     border: 0;
     color: darken($color-one-light-blue, 30%);
-    font-size: 0.6rem;
   }
 
   .remove-block {
@@ -153,8 +166,15 @@ $color-query-builder-sand: #f2d16b;
     }
     margin-left: 1em;
   }
+  
+  &.readonly {
+    .query-builder-block-visualiser {
+      cursor: default;
+    }
+  }
 }
 
+// used in query-builder popovers, so must be defined outside query-builder class
 .hr-label-query-builder {
   padding-top: $padding-base-vertical;
   padding-bottom: $padding-base-vertical;

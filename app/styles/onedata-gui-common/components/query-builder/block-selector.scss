@@ -4,11 +4,6 @@
   background-color: white;
   padding: $query-builder-spacer * 0.8;
 
-  // &.with-conditions {
-  //   min-width: 38em;
-  //   max-width: 46em;
-  // }
-
   .form-group {
     margin-bottom: 0.2em;
   }
@@ -18,10 +13,6 @@
     font-weight: bold;
     margin-bottom: $query-builder-spacer * 0.8;
   }
-  
-  // .btn, .form-control {
-  //   font-size: inherit;
-  // }
   
   .operator-selector {
     display: flex;
@@ -36,7 +27,6 @@
     flex-grow: 1.8;
     .comparator-value-editor {
       padding-left: $selectors-spacing;
-      width: 12em;
     }
   }
 
@@ -104,6 +94,21 @@
       .comparator-selector {
         padding-left: 0.2em;
         padding-right: 0.2em;
+      }
+    }
+    
+    @media (max-width: $screen-xs-max) {
+      flex-wrap: wrap;
+      .property-selector-container {
+        order: 1;
+      }
+      .accept-condition-container {
+        order: 2;
+      }
+      .comparator-main-container {
+        order: 3;
+        padding-top: 0.4em;
+        margin-left: 0;
       }
     }
   }

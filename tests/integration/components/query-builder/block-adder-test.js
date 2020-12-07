@@ -42,6 +42,7 @@ describe('Integration | Component | query builder/block adder', function () {
   it('passess through information about new condition', async function () {
     this.set('queryProperties', [{
       key: 'some_key',
+      displayedKey: 'some name',
       type: 'string',
     }]);
     const addSpy = this.set('addSpy', sinon.spy());
@@ -51,7 +52,7 @@ describe('Integration | Component | query builder/block adder', function () {
       onBlockAdd=this.addSpy
     }}`);
     await click('.query-builder-block-adder');
-    await selectChoose('.property-selector-container', 'some_key');
+    await selectChoose('.property-selector-container', 'some name');
     await fillIn('.comparator-value', 'hello');
     await click('.accept-condition');
 
@@ -72,6 +73,7 @@ describe('Integration | Component | query builder/block adder', function () {
   it('closes block selector when condition has been choosen', async function () {
     this.set('queryProperties', [{
       key: 'some_key',
+      displayedKey: 'some name',
       type: 'string',
     }]);
 
@@ -79,7 +81,7 @@ describe('Integration | Component | query builder/block adder', function () {
         queryProperties=queryProperties
       }}`);
     await click('.query-builder-block-adder');
-    await selectChoose('.property-selector-container', 'some_key');
+    await selectChoose('.property-selector-container', 'some name');
     await fillIn('.comparator-value', 'hello');
     await click('.accept-condition');
 

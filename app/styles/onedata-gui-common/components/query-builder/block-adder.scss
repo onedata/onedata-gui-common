@@ -1,14 +1,28 @@
+$block-adder-btn-padding: 0.4em;
 .query-builder-block-adder {
   display: block;
   line-height: 1;
   
   &.btn {
     font-size: 56%;
-    padding: 0.4em 0.4em;
+    padding: $block-adder-btn-padding;
   }
   
   .adder-icon {
     top: 0.25em;
     left: auto;
+  }
+}
+
+.block-adder-popover {
+  width: 20em;
+}
+
+// modals have overriden btn padding, so we must force its style to be compact
+.modal.in .modal-dialog {
+  .query-builder-block-adder {
+    &.btn {
+      padding: $block-adder-btn-padding;
+    }
   }
 }

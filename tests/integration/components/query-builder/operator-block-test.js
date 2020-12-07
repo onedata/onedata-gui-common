@@ -327,7 +327,7 @@ describe('Integration | Component | query builder/operator block', function () {
           const nestedOperator = operatorBlockClasses[operatorName].create();
           queryBlock.addOperand(nestedOperator);
           const condition = ConditionQueryBlock.create({
-            property: { key: 'some_key', type: 'string' },
+            property: { key: 'some_key', displayedKey: 'some_key', type: 'string' },
             comparator: 'string.eq',
             comparatorValue: 'abc',
           });

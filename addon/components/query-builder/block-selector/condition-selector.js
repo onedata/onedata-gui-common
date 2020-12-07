@@ -9,7 +9,7 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import {
   defaultComparators,
   defaultComparatorEditors,
@@ -67,6 +67,30 @@ export default Component.extend(I18n, {
    * @param {any} comparatorValue
    */
   onConditionSelected: notImplementedIgnore,
+
+  queryPropertiesForSelector: computed(
+    // NOTE: not using @each because of problems with testing, but elements should be
+    // immutable anyway
+    'queryProperties.[]',
+    function queryPropertiesForSelector() {
+      const queryProperties = this.get('queryProperties');
+      if (!queryProperties) {
+        return [];
+      }
+      const customProperties = queryProperties
+        .filter(p => !['anyStorage', 'storageId', 'providerId'].includes(get(p, 'key')))
+        .sort();
+      const result = [];
+      ['anyStorage', 'providerId', 'storageId'].forEach(specialKey => {
+        const property = queryProperties.findBy('key', specialKey);
+        if (property) {
+          result.push(property);
+        }
+      });
+      result.push(...customProperties);
+      return result;
+    },
+  ),
 
   /**
    * @type {ComputedProperty<Array<String>>}

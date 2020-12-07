@@ -12,15 +12,14 @@
   onBlockRemoved=onBlockRemoved
 }}
   {{#unless readonly}}
-    {{#bs-button
-      onClick=onBlockRemove
-      mouseEnter=(action "removeButtonHover" true)
-      mouseLeave=(action "removeButtonHover" false)
-      bubble=true
+    <button
       class="block-button remove-block clickable"
-    }}
+      onclick={{onBlockRemove}}
+      onmouseenter={{action "removeButtonHover" true}}
+      onmouseleave={{action "removeButtonHover" false}}
+    >
       {{one-icon icon="x"}}
-    {{/bs-button}}
+    </button>
     {{query-builder/block-settings
       queryBlock=queryBlock
       operators=operators

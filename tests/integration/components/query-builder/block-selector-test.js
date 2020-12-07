@@ -31,9 +31,11 @@ describe('Integration | Component | query builder/block selector', function () {
     beforeEach(function () {
       this.set('queryProperties', [{
         key: 'numProp',
+        displayedKey: 'numProp',
         type: 'number',
       }, {
         key: 'stringProp',
+        displayedKey: 'stringProp',
         type: 'string',
       }]);
     });

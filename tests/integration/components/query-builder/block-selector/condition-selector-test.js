@@ -41,9 +41,11 @@ describe(
       this.setProperties({
         queryProperties: [{
           key: 'stringProp',
+          displayedKey: 'stringProp',
           type: 'string',
         }, {
           key: 'numberProp',
+          displayedKey: 'numberProp',
           type: 'number',
         }],
       });

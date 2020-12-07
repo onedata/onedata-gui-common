@@ -16,15 +16,14 @@
       (eq comparatorEditor.type "storage")
     )}}
       {{#power-select
-        class="comparator-value"
         options=comparatorEditor.values
-        dropdownClass="ember-basic-dropdown-content-comparator-value over-popover-over-modals"
+        dropdownClass="small ember-basic-dropdown-content-comparator-value over-popover-over-modals"
         selected=value
         renderInPlace=false
-        triggerClass="small"
-        dropdownClass="small"
+        triggerClass="small comparator-value"
         placeholder=(tt this "dropdownPlaceholder")
         onchange=(action "valueChanged")
+        onblur=(action "onSelectorBlur")
         onclose=(action "onFinishEdit")
         as |itemValue|
       }}

@@ -1,6 +1,6 @@
 <div class="form-group property-selector-container">
   {{#power-select
-    options=queryProperties
+    options=queryPropertiesForSelector
     selected=selectedConditionProperty
     onchange=(action "conditionPropertyChanged")
     searchEnabled=true
@@ -13,7 +13,13 @@
     as |queryProperty|
   }}
     <span class="parameter-suggestion-name">
-      {{queryProperty.key}}
+      {{!-- FIXME: emphasise by css class --}}
+      {{#if queryProperty.isSpecialKey}}
+        <em>{{queryProperty.displayedKey}}</em>
+      {{else}}
+        <span>{{queryProperty.displayedKey}}</span>
+      {{/if}}
+      
     </span>
   {{/power-select}}
 </div>

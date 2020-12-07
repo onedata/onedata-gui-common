@@ -36,6 +36,10 @@
     .comparator-value {
       margin-left: $query-builder-spacer * 0.2;
     }
+    
+    .comparator-value.ember-power-select-trigger {
+      line-height: $ember-power-select-line-height;
+    }
 
     .comparator-value-view {
       @include font-monospace();
