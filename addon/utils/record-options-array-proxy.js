@@ -1,7 +1,6 @@
 /**
  * A proxy array that transforms source array to an array of options ready to use
- * by dropdown or other enumeration mechanism. Extracts label and correct icon. Needs
- * owner injected.
+ * by dropdown or other enumeration mechanism. Extracts label and correct icon.
  *
  * @module utils/record-options-array-proxy
  * @author Michał Borzęcki
@@ -9,14 +8,11 @@
  */
 
 import ArrayProxy from '@ember/array/proxy';
-import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import { computed, get } from '@ember/object';
-import { inject as service } from '@ember/service';
 import { array } from 'ember-awesome-macros';
+import recordIcon from 'onedata-gui-common/utils/record-icon';
 
-export default ArrayProxy.extend(OwnerInjector, {
-  oneiconAlias: service(),
-
+export default ArrayProxy.extend({
   /**
    * @virtual
    * @type {Array<DS.Model>}
@@ -32,14 +28,10 @@ export default ArrayProxy.extend(OwnerInjector, {
    * @override
    */
   content: computed('sortedRecords.@each.name', function content() {
-    const {
-      sortedRecords,
-      oneiconAlias,
-    } = this.getProperties('sortedRecords', 'oneiconAlias');
-    return sortedRecords.map(record => ({
+    return this.get('sortedRecords').map(record => ({
       value: record,
       label: get(record, 'name'),
-      icon: oneiconAlias.getName(record.constructor.modelName),
+      icon: recordIcon(record),
     }));
   }),
 });

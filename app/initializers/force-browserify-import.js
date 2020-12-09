@@ -14,6 +14,7 @@ import 'npm:color';
 import 'npm:basictable';
 import 'npm:contrast';
 import 'npm:dompurify';
+import 'npm:smoothscroll-polyfill';
 
 export default {
   name: 'force-browserify-import',

@@ -102,6 +102,7 @@
     "showdown": "1.9.1",
     "sinon": "4.2.0",
     "sinon-chai": "2.14.0",
+    "smoothscroll-polyfill": "git+https://github.com/michalborzecki/smoothscroll.git#d875d528259e928aa815afd1fc46fb91c18d7282",
     "webui-popover": "git+https://github.com/michalborzecki/webui-popover.git#83d0eca5b89b1dec86bdcbba463fe7b94f2e3ae0"
   },
   "engines": {

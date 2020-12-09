@@ -40,7 +40,7 @@ export default {
   tokenTimeCaveatRequired: 'You must specify a time caveat with maximum TTL of {{maxTtl}} seconds.',
   tokenSubjectInvalid: 'The token subject is invalid (does not exist or is different than expected).',
   tokenServiceForbidden: 'The service ({{service}}) is forbidden for this subject.',
-  inviteTokenCreatorNotAuthorized: 'The creator of this token is not (or not longer) authorized to issue such invitations.',
+  inviteTokenSubjectNotAuthorized: 'The subject (creator) of this token is not (or not longer) authorized to issue such invitations.',
   inviteTokenUsageLimitReached: 'The usage limit of this invite token has been reached.',
   inviteTokenConsumerInvalid: 'The consumer ({{consumer}}) is invalid for this type of invite token.',
   inviteTokenTargetIdInvalid: 'The target id ({{id}}) is invalid for this type of invite token.',
@@ -59,9 +59,11 @@ export default {
   missingRequiredValue: 'Required value of "{{key}}" is missing.',
   missingAtLeastOneValue: 'Missing data, you must provide at least one of: {{keys}}.',
   badData: 'Value of "{{key}}" provided in request is invalid.',
+  badDataWithHint: 'Value of "{{key}}" provided in request is invalid: {{hint}}.',
   badValueEmpty: 'Value of "{{key}}" provided in request cannot be empty.',
   badValueBoolean: 'Value of "{{key}}" provided in request must be a boolean.',
   badValueString: 'Value of "{{key}}" provided in request must be a string.',
+  badValueStringTooLarge: 'Value of "{{key}}" provided in request cannot be larger than {{limit}} characters.',
   badValueListOfStrings: 'Value of "{{key}}" provided in request must be a list of strings.',
   badValueInteger: 'Value of "{{key}}" provided in request must be an integer.',
   badValueFloat: 'Value of "{{key}}" provided in request must be a float.',
@@ -78,8 +80,9 @@ export default {
   badValueListNotAllowed: 'Value of "{{key}}" provided in request must be a list, allowed values: {{allowed}}.',
   badValueIdNotFound: 'Resource specified in "{{key}}" does not exist.',
   badValueAmbiguousId: 'The Id (key: {{key}}) is ambiguous.',
-  badValueIndentifier: 'Value of "{{key}}" provided in request must be a valid identifier.',
+  badValueIdentifier: 'Value of "{{key}}" provided in request must be a valid identifier.',
   badValueIdentifierOccupied: 'The identifier provided for "{{key}}" is occupied.',
+  badValueOctal: 'Value of "{{key}}" provided in request is not a valid octal number.',
   badValueFullName: 'Value provided in request must be a valid full name. More details below.',
   badValueUsername: 'Value provided in request must be a valid username. More details below.',
   badValuePassword: 'Value provided in request must be a valid password. More details below.',
@@ -88,10 +91,12 @@ export default {
   badValueDomain: 'Value provided in request must be a valid domain name.',
   badValueSubdomain: 'Value provided in request must be a valid subdomain name.',
   badValueCaveat: 'Provided caveats are invalid.',
+  badValueQoSParameters: 'Provided QoS parameters are invalid.',
   badGuiPackage: 'Provider GUI package could not be understood by the server.',
   guiPackageTooLarge: 'Provider GUI package is too large.',
   guiPackageUnverified: 'GUI plugin package verification failed, because SHA checksum of uploaded package is not whitelisted. To allow uploading this package please contact Onezone administrator and ask to add harvester GUI checksum {{shaSum}} to /etc/oz_worker/compatibility.json configuration file.',
   invalidQosExpression: 'Invalid QoS expression.',
+  illegalSupportStageTransition: 'Illegal support stage transition: this operation cannot be performed while the storage is in stage "{{currentStorageStage}}" and provider is in stage "{{currentProviderStage}}".',
 
   // State errors
   basicAuthNotSupported: 'Username & password sign-in is not supported by this Onezone.',
@@ -107,6 +112,7 @@ export default {
   spaceAlreadySupportedWithImportedStorage: 'Space (Id: "{{spaceId}}") is already supported with an imported storage (Id: "{{storageId}}").',
 
   // Op-worker errors
+  userNotSupported: 'Authenticated user is not supported by this Oneprovider.',
   autoCleaningDisabled: 'Auto-cleaning is disabled.',
   filePopularityDisabled: 'File popularity is disabled.',
   spaceNotSupportedBy: 'Space is not supported by the Oneprovider (Id: {{providerId}}).',
@@ -136,6 +142,7 @@ export default {
   nodeNotCompatible: 'Cannot add "{{hostname}}", it is a {{clusterType}} node.',
   noConnectionToNewNode: 'Cannot add node "{{hostname}}", connection failed.',
   noServiceNodes: 'Service {{service}} is not deployed on any node.',
+  userNotInCluster: 'Authenticated user is not a member of this cluster.',
 
   // Unexpected error
   unexpectedError: 'Unexpected error, reference: {{reference}}.',

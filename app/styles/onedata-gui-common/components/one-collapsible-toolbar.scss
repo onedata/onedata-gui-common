@@ -78,7 +78,8 @@
     position: absolute;
     top: 50%;
     color: inherit;
-    transform: translateY(-50%) translateY(2px);
+    line-height: 0;
+    transform: translateY(-50%);
     .content-back-arrow-icon {
       padding-left: 8px;
       font-size: 20px;

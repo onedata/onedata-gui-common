@@ -11,10 +11,11 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import _ from 'lodash';
-
+import smoothscroll from 'npm:smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
 export default Route.extend(ApplicationRouteMixin, {
+  browser: service(),
   guiUtils: service(),
   navigationState: service(),
 
@@ -41,6 +42,7 @@ export default Route.extend(ApplicationRouteMixin, {
   beforeModel(transition) {
     this._super(...arguments);
     this.set('navigationState.queryParams', get(transition, 'queryParams'));
+    this.smoothScrollPolyfill();
   },
 
   getNavTokens() {
@@ -70,6 +72,15 @@ export default Route.extend(ApplicationRouteMixin, {
       default:
         return [];
     }
+  },
+
+  smoothScrollPolyfill() {
+    if (this.get('browser.browser.browserCode') === 'firefox') {
+      // Firefox does not handle smooth scroll for perfect scrollbar. Enforce smooth scroll
+      // polyfill.
+      window.__forceSmoothScrollPolyfill__ = true;
+    }
+    smoothscroll.polyfill();
   },
 
   actions: {
