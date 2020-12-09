@@ -16,7 +16,9 @@
     right: auto;
   }
   &.tag-right {
-    .one-icon-tag-icon {
+    .one-icon-tag-icon,
+    .one-icon-tag-shadow,
+    .one-icon-tag-circle {
       left: auto;
       right: 0;
     }
@@ -38,19 +40,19 @@
     left: 0;
     background-color: $color-one-white;
   }
-  
+
   &.danger {
     .one-icon-tag-icon {
       color: $brand-danger;
     }
   }
-  
+
   &.deactivated {
     .one-icon-tagged-main {
       color: $main-text-color-disabled;
     }
   }
-  
+
   &.gray-sand {
     .one-icon-tag-shadow {
       color: $color-one-gray-sand;
