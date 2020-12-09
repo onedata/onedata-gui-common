@@ -201,9 +201,6 @@ export default Component.extend(I18n, {
     },
 
     onSelectorBlur({ isOpen, isActive }) {
-      // FIXME: debug
-      return;
-      // ignore blur when dropdown is opened (when opening by trigger and selecting value)
       if (isOpen && isActive) {
         return;
       }
