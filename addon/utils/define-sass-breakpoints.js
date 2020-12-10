@@ -12,7 +12,7 @@
 const sass = require('sass');
 
 /**
- * @param {EmberApp} app 
+ * @param {EmberApp} app
  * @param {object} breakpoints contains keys with CSS size values (eg. '100px')
  *    - screenSm
  *    - screenMd
@@ -23,13 +23,14 @@ module.exports = function (app, breakpoints) {
     app.options.sassOptions = {};
   }
   const sassOptions = app.options.sassOptions;
+  const sassImplementation = sassOptions.implementation || sass;
   if (!sassOptions.functions) {
     sassOptions.functions = {};
   }
   sassOptions.functions =
     Object.keys(breakpoints).reduce(function (functions, breakpointName) {
       functions['def-' + breakpointName] = function () {
-        return new sass.types.Number(breakpoints[breakpointName]);
+        return new sassImplementation.types.Number(breakpoints[breakpointName]);
       };
       return functions;
     }, sassOptions.functions);

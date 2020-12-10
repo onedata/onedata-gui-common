@@ -16,13 +16,14 @@ module.exports = function (app, colors) {
     app.options.sassOptions = {};
   }
   const sassOptions = app.options.sassOptions;
+  const sassImplementation = sassOptions.implementation || sass;
   if (!sassOptions.functions) {
     sassOptions.functions = {};
   }
   sassOptions.functions =
     Object.keys(colors).reduce(function (functions, colorName) {
       functions['color-one-' + colorName] = function () {
-        return new sass.types.Color(
+        return new sassImplementation.types.Color(
           parseInt(colors[colorName].substring(1), 16) + 0xff000000
         );
       };
