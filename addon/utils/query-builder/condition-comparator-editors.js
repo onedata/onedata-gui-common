@@ -47,7 +47,6 @@ const numberEditor = Object.freeze({
     typeof value === 'string' && value.trim().length > 0 && !isNaN(Number(value)),
 });
 
-// FIXME: isValidValue
 const dropdownEditor = Object.freeze({
   type: 'dropdown',
   defaultValue: () => undefined,

@@ -142,11 +142,11 @@ export default Component.extend({
     onSettingsClose() {
       // NOTE: this is a workaround for a bug in Ember that causes not chaninging
       // className when bound property is changed
-      // FIXME: changed
+      // without this, selection of block stays if clicking from inside to outside blocks
+      // FIXME: try notifyChange on areSettingsVisile
       scheduleOnce('afterRender', () => {
         safeExec(this, 'set', 'areSettingsVisible', false);
       });
-
     },
     removeButtonHover(state) {
       this.set('removeButtonHovered', state);

@@ -114,8 +114,6 @@ export default Component.extend(I18n, {
     }
   ),
 
-  // FIXME: refactor - strategy
-
   /**
    * @type {ComputedProperty<any>}
    */

@@ -10,7 +10,7 @@
     id={{componentGuid}}
     class="form-group form-group-fill-line comparator-value-editor {{comparatorEditor.type}}-editor {{if isValueInvalid "has-error"}} {{elementClass}}"
   >
-    {{!-- FIXME: maybe everything should be in separate components --}}
+    {{!-- FIXME: refactor to stategies --}}
     {{#if (or
       (eq comparatorEditor.type "dropdown")
       (eq comparatorEditor.type "storage")

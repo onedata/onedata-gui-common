@@ -26,6 +26,13 @@ export default Component.extend({
    */
   tooltipText: undefined,
 
+  /**
+   * Placement of popover with full text.
+   * See one-webui-popover docs for available values.
+   * @type {string}
+   */
+  tooltipPlacement: 'top',
+
   mouseEnter() {
     this.updateTooltipText();
 
