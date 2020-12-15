@@ -16,9 +16,15 @@
     right: auto;
   }
   &.tag-right {
-    .one-icon-tag-icon {
+    .one-icon-tag-icon,
+    .one-icon-tag-shadow,
+    .one-icon-tag-circle {
       left: auto;
       right: 0;
+    }
+
+    .one-icon-tag-shadow {
+      transform: translateX(16%) translateY(18%);
     }
   }
   .one-icon-tag-shadow {
@@ -38,19 +44,19 @@
     left: 0;
     background-color: $color-one-white;
   }
-  
+
   &.danger {
     .one-icon-tag-icon {
       color: $brand-danger;
     }
   }
-  
+
   &.deactivated {
     .one-icon-tagged-main {
       color: $main-text-color-disabled;
     }
   }
-  
+
   &.gray-sand {
     .one-icon-tag-shadow {
       color: $color-one-gray-sand;
