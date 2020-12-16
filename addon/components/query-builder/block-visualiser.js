@@ -74,6 +74,12 @@ export default Component.extend({
   parentQueryBlock: undefined,
 
   /**
+   * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
+
+  /**
    * @type {boolean}
    */
   areSettingsVisible: false,

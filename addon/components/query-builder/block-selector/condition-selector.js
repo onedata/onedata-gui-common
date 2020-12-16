@@ -10,21 +10,24 @@
 
 import Component from '@ember/component';
 import { get, computed } from '@ember/object';
-import {
-  defaultComparators,
-  defaultComparatorEditors,
-} from 'onedata-gui-common/utils/query-builder/condition-comparator-editors';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector/condition-selector';
 import { and, or, not } from 'ember-awesome-macros';
+import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
-export default Component.extend(I18n, {
+const mixins = [
+  I18n,
+  InjectDefaultValuesBuilder,
+];
+
+export default Component.extend(...mixins, {
   layout,
 
   classNames: ['condition-selector'],
 
   /**
+   * @override
    * @type {String}
    */
   i18nPrefix: 'components.queryBuilder.blockSelector.conditionSelector',
@@ -34,6 +37,20 @@ export default Component.extend(I18n, {
    * @type {Array<QueryProperty>}
    */
   queryProperties: Object.freeze([]),
+
+  /**
+   * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
+
+  /**
+   * @type {Function}
+   * @param {Utils.QueryProperty} property
+   * @param {String} comparator
+   * @param {any} comparatorValue
+   */
+  onConditionSelected: notImplementedIgnore,
 
   /**
    * @type {Utils.QueryProperty}
@@ -50,24 +67,7 @@ export default Component.extend(I18n, {
    */
   conditionComparatorValue: undefined,
 
-  /**
-   * @type {Object}
-   */
-  comparatorsSet: defaultComparators,
-
-  /**
-   * @type {Object}
-   */
-  comparatorEditorsSet: defaultComparatorEditors,
-
-  /**
-   * @type {Function}
-   * @param {Utils.QueryProperty} property
-   * @param {String} comparator
-   * @param {any} comparatorValue
-   */
-  onConditionSelected: notImplementedIgnore,
-
+  // FIXME: refactor
   queryPropertiesForSelector: computed(
     // NOTE: not using @each because of problems with testing, but elements should be
     // immutable anyway
@@ -97,48 +97,56 @@ export default Component.extend(I18n, {
    */
   comparators: computed(
     'selectedConditionProperty.type',
-    'comparatorsSet',
+    'valuesBuilder',
     function comparators() {
       const propertyType = this.get('selectedConditionProperty.type');
-      return this.get('comparatorsSet')[propertyType] || [];
+      const valuesBuilder = this.get('valuesBuilder');
+      return valuesBuilder.getComparatorsFor(propertyType);
     }
   ),
 
-  comparatorEditor: computed(
-    'comparatorEditorsSet',
+  /**
+   * @type {ComputedProperty<(value: any) => boolean>}
+   */
+  comparatorValidator: computed(
     'selectedConditionComparator',
-    function comparatorEditor() {
-      if (!this.get('comparators.length')) {
-        return null;
-      }
+    'valuesBuilder',
+    function comparatorValidator() {
       const {
-        comparatorEditorsSet,
         selectedConditionComparator,
-      } = this.getProperties('comparatorEditorsSet', 'selectedConditionComparator');
-      return comparatorEditorsSet[selectedConditionComparator];
+        valuesBuilder,
+      } = this.getProperties('selectedConditionComparator', 'valuesBuilder');
+      return valuesBuilder.getValidatorFor(selectedConditionComparator);
     }
   ),
+
+  /**
+   * @type {ComputedProperty<any>}
+   */
+  comparatorDefaultValue: computed('selectedConditionProperty.type', 'valuesBuilder',
+    function comparatorDefaultValue() {
+      const propertyType = this.get('selectedConditionProperty.type');
+      const valuesBuilder = this.get('valuesBuilder');
+      return valuesBuilder.getDefaultValueFor(propertyType);
+    }),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
   isConditionComparatorValueValid: computed(
-    'comparatorEditor',
+    'comparatorValidator',
     'conditionComparatorValue',
     function isConditionComparatorValueValid() {
-      if (comparatorEditor === null) {
-        return true;
-      }
       const {
-        comparatorEditor,
+        comparatorValidator,
         conditionComparatorValue,
-      } = this.getProperties('comparatorEditor', 'conditionComparatorValue');
-      return comparatorEditor ?
-        comparatorEditor.isValidValue(conditionComparatorValue) : false;
+      } = this.getProperties('comparatorValidator', 'conditionComparatorValue');
+      return comparatorValidator ? comparatorValidator(conditionComparatorValue) : false;
     },
   ),
 
   isConditionDataValid: or(
+    // support for comparator-less conditions
     and(not('comparators.length'), 'selectedConditionProperty'),
     and(
       'selectedConditionProperty',
@@ -151,6 +159,21 @@ export default Component.extend(I18n, {
     this.set('conditionComparatorValue', value);
   },
 
+  conditionPropertyChanged(queryProperty) {
+    this.set('selectedConditionProperty', queryProperty);
+
+    // below properties update after change of selectedConditionProperty
+    const {
+      comparators,
+      selectedConditionComparator,
+    } = this.getProperties('comparators', 'selectedConditionComparator');
+    if (!comparators.includes(selectedConditionComparator)) {
+      this.conditionComparatorChanged(comparators[0]);
+    }
+    // reset value
+    this.conditionComparatorValueChanged(undefined);
+  },
+
   /**
    * @param {String} comparator 
    */
@@ -160,14 +183,14 @@ export default Component.extend(I18n, {
     // below properties update after change of seletedConditionComparator
     const {
       isConditionComparatorValueValid,
-      comparatorEditor,
+      comparatorDefaultValue,
     } = this.getProperties(
       'isConditionComparatorValueValid',
-      'comparatorEditor'
+      'comparatorDefaultValue'
     );
 
-    if (comparatorEditor != null && !isConditionComparatorValueValid) {
-      this.conditionComparatorValueChanged(comparatorEditor.defaultValue());
+    if (isConditionComparatorValueValid) {
+      this.conditionComparatorValueChanged(comparatorDefaultValue);
     }
   },
 
@@ -176,18 +199,7 @@ export default Component.extend(I18n, {
      * @param {Utils.QueryProperty} queryProperty 
      */
     conditionPropertyChanged(queryProperty) {
-      this.set('selectedConditionProperty', queryProperty);
-
-      // below properties update after change of selectedConditionProperty
-      const {
-        comparators,
-        selectedConditionComparator,
-      } = this.getProperties('comparators', 'selectedConditionComparator');
-      if (!comparators.includes(selectedConditionComparator)) {
-        this.conditionComparatorChanged(comparators[0]);
-      }
-      // reset value
-      this.conditionComparatorValueChanged(undefined);
+      return this.conditionPropertyChanged(queryProperty);
     },
 
     /**

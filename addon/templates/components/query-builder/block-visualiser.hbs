@@ -1,15 +1,16 @@
 {{#component (concat "query-builder/" queryBlock.renderer)
   class=(concat "block-level-" level)
   operators=operators
-  refreshQueryProperties=(action "refreshQueryProperties")
   queryBlock=queryBlock
   queryProperties=queryProperties
+  valuesBuilder=valuesBuilder
   level=level
   readonly=readonly
   onConditionEditionStart=onConditionEditionStart
   onConditionEditionEnd=onConditionEditionEnd
   onConditionEditionValidityChange=onConditionEditionValidityChange
   onBlockRemoved=onBlockRemoved
+  refreshQueryProperties=(action "refreshQueryProperties")
 }}
   {{#unless readonly}}
     <button

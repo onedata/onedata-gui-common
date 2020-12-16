@@ -54,7 +54,7 @@ describe('Integration | Component | query builder/condition block', function () 
     ...mathOperators.map(({ operator, symbol }) => ({
       comparator: `number.${operator}`,
       comparatorValue: '2',
-      comparatorViewValue: '"2"',
+      comparatorViewValue: '2',
       comparatorSymbol: symbol,
     })),
   ].forEach(({
@@ -93,8 +93,9 @@ describe('Integration | Component | query builder/condition block', function () 
     }));
 
     this.render(hbs `{{#query-builder/condition-block queryBlock=queryBlock}}
-    <span class="test-element"></span>
-    {{/query-builder/condition-block}}`);
+      <span class="test-element"></span>
+      {{/query-builder/condition-block}}
+    `);
 
     expect(this.$('.test-element')).to.exist;
   });

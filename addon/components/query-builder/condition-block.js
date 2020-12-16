@@ -9,12 +9,18 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { defaultComparatorEditors } from 'onedata-gui-common/utils/query-builder/condition-comparator-editors';
+import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-block';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
-export default Component.extend(I18n, {
+const mixins = [
+  I18n,
+  InjectDefaultValuesBuilder,
+];
+
+export default Component.extend(...mixins, {
   layout,
 
   classNames: ['query-builder-block', 'query-builder-condition-block'],
@@ -22,32 +28,66 @@ export default Component.extend(I18n, {
 
   i18nPrefix: 'components.queryBuilder.conditionBlock',
 
-  mode: 'view',
-
-  editComparatorValue: null,
-
-  comparatorEditorsSet: defaultComparatorEditors,
+  /**
+   * @virtual
+   * @type {Array<Object>}
+   */
+  queryProperties: undefined,
 
   /**
+   * @virtual
    * @type {Utils.QueryBuilder.ConditionQueryBlock}
    */
   queryBlock: Object.freeze({}),
 
   /**
+   * @virtual
+   * @type {Number}
+   */
+  level: undefined,
+
+  /**
+   * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
+
+  /**
+   * @virtual
    * @param {Utils.QueryBuilder.ConditionQueryBlock} queryBlock
    */
   onConditionEditionStart: notImplementedIgnore,
 
   /**
+   * @virtual
    * @param {Utils.QueryBuilder.ConditionQueryBlock} queryBlock
    */
   onConditionEditionEnd: notImplementedIgnore,
 
   /**
+   * @virtual
    * @param {Utils.QueryBuilder.ConditionQueryBlock} queryBlock
    * @param {boolean} isValid
    */
   onConditionEditionValidityChange: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  onBlockRemoved: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  refreshQueryProperties: notImplementedIgnore,
+
+  mode: 'view',
+
+  editComparatorValue: null,
+
+  comparator: reads('queryBlock.comparator'),
 
   displayedKey: computed(
     'queryBlock.property.{key,displayKey,isSpecialKey}',
@@ -77,27 +117,33 @@ export default Component.extend(I18n, {
     }
   ),
 
-  comparatorEditor: computed(
-    'comparatorEditorsSet',
-    'queryBlock.comparator',
-    function comparatorEditor() {
-      return this.get('comparatorEditorsSet')[this.get('queryBlock.comparator')];
-    }
-  ),
-
   /**
    * @type {ComputedProperty<Boolean>}
    */
   isEditComparatorValueValid: computed(
-    'comparatorEditor',
+    'comparatorValidator',
     'editComparatorValue',
     function isEditComparatorValueValid() {
       const {
-        comparatorEditor,
+        comparatorValidator,
         editComparatorValue,
-      } = this.getProperties('comparatorEditor', 'editComparatorValue');
-      return comparatorEditor ?
-        comparatorEditor.isValidValue(editComparatorValue) : false;
+      } = this.getProperties('comparatorValidator', 'editComparatorValue');
+      return comparatorValidator ? comparatorValidator(editComparatorValue) : false;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<(value: any) => boolean>}
+   */
+  comparatorValidator: computed(
+    'comparator',
+    'valuesBuilder',
+    function comparatorValidator() {
+      const {
+        comparator,
+        valuesBuilder,
+      } = this.getProperties('comparator', 'valuesBuilder');
+      return valuesBuilder.getValidatorFor(comparator);
     }
   ),
 

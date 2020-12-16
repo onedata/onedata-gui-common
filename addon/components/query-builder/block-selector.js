@@ -22,6 +22,7 @@ import { isEmpty } from '@ember/utils';
 import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw';
 import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
+import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
 const allowedModes = ['create', 'edit'];
 
@@ -38,7 +39,12 @@ const operatorsMaxOperandsNumber = Object.keys(operatorClasses)
     return obj;
   }, {});
 
-export default Component.extend(I18n, {
+const mixins = [
+  I18n,
+  InjectDefaultValuesBuilder,
+];
+
+export default Component.extend(...mixins, {
   layout,
 
   classNames: ['query-builder-block-selector'],
@@ -63,6 +69,12 @@ export default Component.extend(I18n, {
    * @type {Utils.QueryBuilder.OperatorQueryBlock}
    */
   editParentBlock: null,
+
+  /**
+   * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
 
   /**
    * @type {Array<String>}

@@ -8,6 +8,7 @@
       operators=operators
       queryBlock=firstOperand
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
       readonly=readonly
       level=(sub level 1)
       onBlockReplace=(action "replaceBlock" firstOperand)
@@ -22,6 +23,7 @@
       {{query-builder/block-adder
         refreshQueryProperties=(action "refreshQueryProperties")
         operators=operators
+        valuesBuilder=valuesBuilder
         onBlockAdd=(action "addBlock")
         hideConditionCreation=true
         class="surround-root"
@@ -31,6 +33,7 @@
     {{query-builder/block-adder
       refreshQueryProperties=(action "refreshQueryProperties")
       operators=operators
+      valuesBuilder=valuesBuilder
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
     }}
@@ -44,6 +47,7 @@
       operators=operators
       queryBlock=operandBlock
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
       refreshQueryProperties=(action "refreshQueryProperties")
       onBlockReplace=(action "replaceBlock" operandBlock)
       onBlockRemove=(action "removeBlock" operandBlock)
@@ -67,9 +71,10 @@
     {{#unless readonly}}
       {{query-builder/block-adder
         operators=operators
+        valuesBuilder=valuesBuilder
+        queryProperties=queryProperties
         refreshQueryProperties=(action "refreshQueryProperties")
         onBlockAdd=(action "addBlock")
-        queryProperties=queryProperties
       }}
       {{#if queryBlock.operator}}
         <div class="block-label block-infix-label block-infix-label-last">
@@ -81,10 +86,11 @@
   {{#unless readonly}}
     {{query-builder/block-adder
       operators=operators
-      refreshQueryProperties=(action "refreshQueryProperties")
-      onBlockAdd=(action "addBlock")
+      valuesBuilder=valuesBuilder
       queryProperties=queryProperties
       disabled=(eq queryBlock.operands.length 0)
+      refreshQueryProperties=(action "refreshQueryProperties")
+      onBlockAdd=(action "addBlock")
     }}
   {{/unless}}
 {{/if}}

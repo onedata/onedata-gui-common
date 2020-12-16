@@ -7,12 +7,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+// FIXME: to remove?
+
 /**
  * Contains a list of allowed comparators for each property type.
  * @type {Object}
  */
 const defaultComparators = {
-  specialKey: [],
+  symbol: [],
   stringOptions: ['stringOptions.eq'],
   numberOptions: [
     'numberOptions.eq',

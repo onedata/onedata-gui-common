@@ -53,6 +53,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
+
+  /**
+   * @virtual
    * @type {Function}
    */
   refreshQueryProperties: notImplementedIgnore,

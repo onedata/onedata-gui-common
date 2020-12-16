@@ -3,8 +3,9 @@
     <div class="condition-section">
       <h1>{{tt this "conditionHeader"}}</h1>
       {{query-builder/block-selector/condition-selector
-        onConditionSelected=(action "conditionAdded")
         queryProperties=queryProperties
+        valuesBuilder=valuesBuilder
+        onConditionSelected=(action "conditionAdded")
       }}
     </div>
     {{#hr-label class="hr-label-query-builder"}}

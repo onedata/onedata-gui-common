@@ -5,6 +5,8 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn, blur } from 'ember-native-dom-helpers';
 import wait from 'ember-test-helpers/wait';
+import { clickTrigger } from '../../../helpers/ember-power-select';
+import $ from 'jquery';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
@@ -22,7 +24,7 @@ describe('Integration | Component | query builder/condition comparator value edi
       }, {
         comparator: 'number.eq',
         value: '2',
-        viewValue: '"2"',
+        viewValue: '2',
       }].forEach(({ comparator, value, viewValue }) => {
         const [propertyType, comparatorName] = comparator.split('.');
         it(`shows comparator value for "${comparatorName}" comparator for ${propertyType} property`,
@@ -60,47 +62,15 @@ describe('Integration | Component | query builder/condition comparator value edi
     });
 
     context('in create mode', function () {
-      [{
-        comparator: 'string.eq',
-        valueToInput: 'abc',
-      }, ...mathOperators.map(operator => ({
-        comparator: `number.${operator}`,
-        valueToInput: '2',
-      }))].forEach(({ comparator, valueToInput }) => {
-        const [propertyType, comparatorName] = comparator.split('.');
+      itShowsTextInput('string.eq');
+      itShowsPowerSelectWithOptions('stringOptions.eq', ['one', 'two', 'three']);
+      itShowsPowerSelectWithOptions('mixedOptions.eq', ['1', '2', 'a', 'b', 'c']);
+      itShowsPowerSelectWithOptions('mixedOptions.lt', ['1', '2', 'a', 'b'], ['1', '2']);
+      itCallsOnValueChange('string.eq', 'abc');
 
-        it(`shows text input for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
-            this.set('comparator', comparator);
-
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="create"
-              comparator=comparator
-            }}`);
-
-            expect(this.$('input[type="text"].comparator-value'))
-              .to.exist;
-          }
-        );
-
-        it(`calls "onValueChange" callback, when ${propertyType} property "${comparatorName}" condition value has changed`,
-          async function () {
-            const { changeSpy } = this.setProperties({
-              comparator,
-              changeSpy: sinon.spy(),
-            });
-
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
-              mode="create"
-              comparator=comparator
-              onValueChange=changeSpy
-            }}`);
-
-            await fillIn('.comparator-value', valueToInput);
-
-            expect(changeSpy).to.be.calledOnce.and.to.be.calledWith(valueToInput);
-          }
-        );
+      mathOperators.forEach(operator => {
+        itShowsTextInput(`number.${operator}`);
+        itCallsOnValueChange(`number.${operator}`, 'abc');
       });
     });
 
@@ -129,7 +99,8 @@ describe('Integration | Component | query builder/condition comparator value edi
               value=value
             }}`);
 
-            expect(this.$('.comparator-value')[0]).to.equal(document.activeElement);
+            expect(this.$('.comparator-value')[0], '.comparator-value is active')
+              .to.equal(document.activeElement);
           }
         );
 
@@ -291,3 +262,81 @@ describe('Integration | Component | query builder/condition comparator value edi
     });
   }
 );
+
+function itShowsPowerSelectWithOptions(
+  comparator,
+  providedOptionValues = [],
+  expectedOptionValues = providedOptionValues
+) {
+  const [propertyType, comparatorName] = comparator.split('.');
+  it(`shows power-select with options for "${comparatorName}" comparator for ${propertyType} property`,
+    async function () {
+      const queryProperty = {
+        key: 'dummy',
+        displayedKey: 'Dummy',
+        type: `${propertyType}Options`,
+        numberValues: providedOptionValues.filter(value => !isNaN(parseFloat(value))),
+        stringValues: providedOptionValues.filter(value => isNaN(parseFloat(value))),
+        allValues: providedOptionValues,
+      };
+
+      this.setProperties({
+        queryProperty,
+        comparator,
+      });
+
+      this.render(hbs `{{query-builder/condition-comparator-value-editor
+        mode="create"
+        comparator=comparator
+        queryProperty=queryProperty
+      }}`);
+
+      expect(this.$('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
+        .to.exist;
+      await clickTrigger('.dropdown-editor');
+      const options = $('.ember-power-select-option');
+      expect(options).to.have.length(expectedOptionValues.length);
+      expect(Array.from(options).map(opt => opt.textContent.trim()).sort())
+        .to.deep.equal(expectedOptionValues.sort());
+    }
+  );
+}
+
+function itShowsTextInput(comparator) {
+  const [propertyType, comparatorName] = comparator.split('.');
+  it(`shows text input for "${comparatorName}" comparator for ${propertyType} property`,
+    async function () {
+      this.set('comparator', comparator);
+
+      this.render(hbs `{{query-builder/condition-comparator-value-editor
+        mode="create"
+        comparator=comparator
+      }}`);
+
+      expect(this.$('input[type="text"].comparator-value'), 'input.comparator-value')
+        .to.exist;
+    }
+  );
+}
+
+function itCallsOnValueChange(comparator, valueToInput) {
+  const [propertyType, comparatorName] = comparator.split('.');
+  it(`calls "onValueChange" callback, when ${propertyType} property "${comparatorName}" condition value has changed`,
+    async function () {
+      const { changeSpy } = this.setProperties({
+        comparator,
+        changeSpy: sinon.spy(),
+      });
+
+      this.render(hbs `{{query-builder/condition-comparator-value-editor
+        mode="create"
+        comparator=comparator
+        onValueChange=changeSpy
+      }}`);
+
+      await fillIn('.comparator-value', valueToInput);
+
+      expect(changeSpy).to.be.calledOnce.and.to.be.calledWith(valueToInput);
+    }
+  );
+}

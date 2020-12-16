@@ -3,61 +3,25 @@
     onclick={{action "onStartEdit"}}
     class="comparator-value comparator-value-view {{elementClass}}"
   >
-    {{viewModeComparatorValue}}
+    {{#if presenterComponentName}}
+      {{component (concat "query-builder/value-presenters/" presenterComponentName)
+        value=value
+      }}
+    {{/if}}
   </span>
-{{else}}
+{{else if editorSpec}}
   <div
     id={{componentGuid}}
-    class="form-group form-group-fill-line comparator-value-editor {{comparatorEditor.type}}-editor {{if isValueInvalid "has-error"}} {{elementClass}}"
+    class="form-group comparator-value-editor {{editorSpec.componentName}} {{if isValueInvalid "has-error"}} {{elementClass}}"
   >
-    {{!-- FIXME: refactor to stategies --}}
-    {{#if (or
-      (eq comparatorEditor.type "dropdown")
-      (eq comparatorEditor.type "storage")
-    )}}
-      {{#power-select
-        options=comparatorEditor.values
-        dropdownClass="small ember-basic-dropdown-content-comparator-value over-popover-over-modals"
-        selected=value
-        renderInPlace=false
-        triggerClass="small comparator-value"
-        placeholder=(tt this "dropdownPlaceholder")
-        onchange=(action "valueChanged")
-        onblur=(action "onSelectorBlur")
-        onclose=(action "onFinishEdit")
-        as |itemValue|
-      }}
-        {{#if (eq queryProperty.key "storageId")}}
-          <div class="option-container">
-            {{#truncated-string class="storage-option-storage-line"}}
-              <strong class="storage-name">{{itemValue.name}}</strong>
-              <code class="storage-id comparator-item-id">{{itemValue.entityId}}</code>
-            {{/truncated-string}}
-            {{#truncated-string class="storage-option-provider-line small"}}
-              {{tt this "providedBy"}}
-              <span class="storage-provider">{{itemValue.provider.name}}</span>
-            {{/truncated-string}}
-          </div>
-        {{else if (eq queryProperty.key "providerId")}}
-          <div class="option-container">
-            {{#truncated-string class="provider-option-provider-line"}}
-              <strong class="provider-name">{{itemValue.name}}</strong>
-              <code class="provider-id comparator-item-id">{{itemValue.entityId}}</code>
-            {{/truncated-string}}
-          </div>
-        {{else}}
-          {{itemValue}}
-        {{/if}}
-      {{/power-select}}
-    {{else if (eq comparatorEditor.type "text")}}
-      <input
-        type="text"
-        class="comparator-value form-control {{if isValueInvalid "is-invalid"}} {{inputClass}}"
-        value={{value}}
-        oninput={{action "valueChanged" value="target.value"}}
-        onkeydown={{action "onKeyDown"}}
-        onblur={{action "onFinishEdit"}}
-      >
-    {{/if}}
+    {{component (concat "query-builder/value-editors/" editorSpec.componentName)
+      class="comparator-value"
+      params=editorSpec.params
+      value=value
+      isValueInvalid=isValueInvalid
+      onValueChange=(action onValueChange)
+      onCancelEdit=(action onCancelEdit)
+      onFinishEdit=(action "onFinishEdit")
+    }}
   </div>
 {{/if}}

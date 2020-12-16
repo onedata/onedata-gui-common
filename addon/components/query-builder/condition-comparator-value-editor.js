@@ -10,13 +10,13 @@
 
 import Component from '@ember/component';
 import { computed, get, observer } from '@ember/object';
-import { defaultComparatorEditors } from 'onedata-gui-common/utils/query-builder/condition-comparator-editors';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { scheduleOnce } from '@ember/runloop';
+import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
 const comparatorTypeToPropertyType = {
   eq: 'all',
@@ -26,7 +26,12 @@ const comparatorTypeToPropertyType = {
   gte: 'number',
 };
 
-export default Component.extend(I18n, {
+const mixins = [
+  I18n,
+  InjectDefaultValuesBuilder,
+];
+
+export default Component.extend(...mixins, {
   layout,
   tagName: '',
   classNames: 'condition-comparator-value-editor',
@@ -35,56 +40,110 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
+   * @type {String}
    */
   elementClass: '',
 
   /**
-   * @type {Object}
-   */
-  comparatorEditorsSet: defaultComparatorEditors,
-
-  /**
    * One of: view, edit, create
+   * @virtual
    * @type {String}
    */
   mode: 'view',
 
   /**
    * @virtual
-   * @type {String}
+   * @type {string}
    */
-  comparator: '',
+  comparator: undefined,
 
   /**
-   * A QueryProperty instance for which value is edited
    * @virtual
-   * @type {Utils.QueryProperty}
-   */
-  queryProperty: undefined,
-
-  /**
    * @type {any}
    */
   value: null,
 
   /**
+   * @virtual
    * @type {boolean}
    */
   isValueInvalid: false,
 
   /**
+   * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
+
+  /**
+   * @virtual
    * @type {Function}
    * @param {any} comparatorValue
    */
   onValueChange: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onStartEdit: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onFinishEdit: notImplementedIgnore,
 
+  /**
+   * @virtual
+   * @type {Function}
+   */
   onCancelEdit: notImplementedIgnore,
 
+  /**
+   * A QueryProperty instance for which value is edited
+   * @virtual optional
+   * @type {Utils.QueryProperty}
+   */
+  queryProperty: undefined,
+
   viewMode: equal('mode', raw('view')),
+
+  /**
+   * @type {ComputedProperty<{ componentName: string, params: Object }>}
+   */
+  editorSpec: computed('valuesBuilder', 'comparator', 'mode', function editorSpec() {
+    const {
+      valuesBuilder,
+      comparator,
+      mode,
+      queryProperty,
+    } = this.getProperties('valuesBuilder', 'comparator', 'mode', 'queryProperty');
+    if (valuesBuilder) {
+      return valuesBuilder.getEditorFor(comparator, queryProperty, mode === 'edit');
+    } else {
+      console.warn(
+        'component:...condition-comparator-value-editor: requested editorSpec, but no valuesBuilder provided'
+      );
+    }
+  }),
+
+  /**
+   * @type {ComputedProperty<>}
+   */
+  presenterComponentName: computed(
+    'valuesBuilder',
+    'comparator',
+    function presenterComponentName() {
+      const {
+        valuesBuilder,
+        comparator,
+      } = this.getProperties('valuesBuilder', 'comparator');
+      if (valuesBuilder) {
+        return valuesBuilder.getPresenterFor(comparator);
+      }
+    }
+  ),
 
   componentGuid: computed(function componentGuid() {
     return guidFor(this);
@@ -136,37 +195,9 @@ export default Component.extend(I18n, {
     }
   ),
 
-  modeObserver: observer('mode', function modeObserver() {
-    scheduleOnce('afterRender', () => {
-      this.checkTextEditorInserted();
-    });
-  }),
-
-  didInsertElement() {
-    this._super(...arguments);
-    this.checkTextEditorInserted();
-  },
-
-  checkTextEditorInserted() {
-    const {
-      mode,
-      componentGuid,
-    } = this.getProperties('mode', 'componentGuid');
-    if (mode === 'edit') {
-      const inputElement =
-        document.querySelector(`#${componentGuid} .comparator-value`);
-      if (inputElement) {
-        inputElement.focus();
-        if (inputElement.select) {
-          inputElement.select();
-        }
-      }
-    }
-  },
-
   actions: {
     valueChanged(value) {
-      if (this.mode === 'view') {
+      if (this.get('mode') === 'view') {
         return;
       }
       let newValue = value;
@@ -176,33 +207,15 @@ export default Component.extend(I18n, {
       this.onValueChange(newValue);
     },
 
-    /**
-     * @param {KeyboardEvent} event
-     */
-    onKeyDown(event) {
-      if (event.key === 'Enter') {
-        this.get('onFinishEdit')();
-      } else if (event.key === 'Escape') {
-        this.get('onCancelEdit')();
-      }
-    },
-
     onStartEdit() {
       this.get('onStartEdit')();
     },
 
     onFinishEdit() {
-      if (this.mode === 'view') {
+      if (this.get('mode') === 'view') {
         return;
       }
       this.get('onFinishEdit')();
-    },
-
-    onSelectorBlur({ isOpen, isActive }) {
-      if (isOpen && isActive) {
-        return;
-      }
-      this.actions.onFinishEdit.call(this);
     },
   },
 });

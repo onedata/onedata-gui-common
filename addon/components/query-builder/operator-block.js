@@ -14,8 +14,14 @@ import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/query-builder/operator-block';
 import { tag } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
-export default Component.extend(I18n, {
+const mixins = [
+  I18n,
+  InjectDefaultValuesBuilder,
+];
+
+export default Component.extend(...mixins, {
   layout,
   classNames: ['query-builder-block', 'query-builder-operator-block'],
   classNameBindings: ['operatorBlockClass'],
@@ -58,6 +64,12 @@ export default Component.extend(I18n, {
    * @type {Array<String>}
    */
   operators: undefined,
+
+  /**
+   * @virtual
+   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   */
+  valuesBuilder: undefined,
 
   /**
    * @type {Utils.QueryBuilder.OperatorQueryBlock}
