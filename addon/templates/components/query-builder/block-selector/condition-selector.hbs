@@ -12,14 +12,10 @@
     dropdownClass="small"
     as |queryProperty|
   }}
-    <span class="parameter-suggestion-name">
-      {{!-- FIXME: emphasise using css class --}}
-      {{#if queryProperty.isSpecialKey}}
-        <em>{{queryProperty.displayedKey}}</em>
-      {{else}}
-        <span>{{queryProperty.displayedKey}}</span>
-      {{/if}}
-      
+    <span
+      class="parameter-suggestion-name {{if queryProperty.isSpecialKey "is-special-key"}}"
+    >
+      {{queryProperty.displayedKey}}
     </span>
   {{/power-select}}
 </div>

@@ -20,5 +20,19 @@ export default {
       gt: '>',
       gte: '≥',
     },
+    mixedOptions: {
+      eq: '=',
+      lt: '<',
+      lte: '≤',
+      gt: '>',
+      gte: '≥',
+    },
+    // FIXME: cannot be in common
+    provider: {
+      is: 'is',
+    },
+    storage: {
+      is: 'is',
+    },
   },
 };

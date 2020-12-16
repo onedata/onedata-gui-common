@@ -150,6 +150,10 @@ $query-builder-hover-darken: 8%;
   .property-key, .comparator, .comparator-value {
     line-height: 1;
   }
+  
+  .comparator-value {
+    max-width: 12em;
+  }
 
   .block-button {
     display: block;
@@ -178,6 +182,14 @@ $query-builder-hover-darken: 8%;
 .hr-label-query-builder {
   padding-top: $padding-base-vertical;
   padding-bottom: $padding-base-vertical;
+}
+
+
+// common special-key styles across query-builder parts
+.query-builder .property-key, .condition-selector .parameter-suggestion-name {
+  &.is-special-key {
+    font-style: italic;
+  }
 }
 
 @import 'onedata-gui-common/components/query-builder/block-adder';

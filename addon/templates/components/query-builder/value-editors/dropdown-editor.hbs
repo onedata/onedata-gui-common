@@ -11,25 +11,5 @@
   onblur=(action "onSelectorBlur")
   as |itemValue|
 }}
-  {{#if (eq queryProperty.key "storageId")}}
-    <div class="option-container">
-      {{#truncated-string class="storage-option-storage-line"}}
-        <strong class="storage-name">{{itemValue.name}}</strong>
-        <code class="storage-id comparator-item-id">{{itemValue.entityId}}</code>
-      {{/truncated-string}}
-      {{#truncated-string class="storage-option-provider-line small"}}
-        {{tt this "providedBy"}}
-        <span class="storage-provider">{{itemValue.provider.name}}</span>
-      {{/truncated-string}}
-    </div>
-  {{else if (eq queryProperty.key "providerId")}}
-    <div class="option-container">
-      {{#truncated-string class="provider-option-provider-line"}}
-        <strong class="provider-name">{{itemValue.name}}</strong>
-        <code class="provider-id comparator-item-id">{{itemValue.entityId}}</code>
-      {{/truncated-string}}
-    </div>
-  {{else}}
-    {{itemValue}}
-  {{/if}}
+  {{itemValue}}
 {{/power-select}}

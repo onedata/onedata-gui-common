@@ -124,6 +124,10 @@ export default EmberObject.extend({
       componentName = 'text-editor';
     }
 
+    return this.createEditorObject(componentName, params, initiallyFocused);
+  },
+
+  createEditorObject(componentName, params = {}, initiallyFocused = false) {
     return { componentName, params: Object.assign({ initiallyFocused }, params) };
   },
 

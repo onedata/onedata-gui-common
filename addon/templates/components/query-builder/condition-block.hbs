@@ -1,12 +1,5 @@
-<dt class="property-key">
-  {{!-- FIXME: use strategies for displaying --}}
-  {{#if (eq displayedKey queryBlock.property.key)}}
-    {{displayedKey}}
-  {{else}}
-    <em>
-      {{displayedKey}}
-    </em>
-  {{/if}}
+<dt class="property-key {{if queryProperty.isSpecialKey "is-special-key"}}">
+  {{displayedKey}}
 </dt>
 {{#if queryBlock.comparatorValue}}
   <dd class="property-comparison">
