@@ -60,6 +60,11 @@ export default Component.extend(InjectDefaultValuesBuilder, {
   valuesBuilder: undefined,
 
   /**
+   * @type {String}
+   */
+  popoverPlacement: 'vertical',
+
+  /**
    * @type {PromiseObject}
    */
   refreshQueryPropertiesProxy: undefined,

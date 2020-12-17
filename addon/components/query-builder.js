@@ -64,6 +64,13 @@ export default Component.extend(I18n, {
   refreshQueryProperties: notImplementedIgnore,
 
   /**
+   * Placement of all rendered one-webui-popover, see
+   * `component:one-webui-popover#placement`.
+   * @type {String}
+   */
+  popoverPlacement: 'vertical',
+
+  /**
    * @type {Boolean}
    */
   readonly: false,

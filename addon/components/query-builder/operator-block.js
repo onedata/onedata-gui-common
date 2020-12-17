@@ -72,6 +72,11 @@ export default Component.extend(...mixins, {
   valuesBuilder: undefined,
 
   /**
+   * @type {String}
+   */
+  popoverPlacement: 'vertical',
+
+  /**
    * @type {Utils.QueryBuilder.OperatorQueryBlock}
    */
   queryBlock: undefined,

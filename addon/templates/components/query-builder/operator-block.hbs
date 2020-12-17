@@ -24,6 +24,7 @@
         refreshQueryProperties=(action "refreshQueryProperties")
         operators=operators
         valuesBuilder=valuesBuilder
+        popoverPlacement=popoverPlacement
         onBlockAdd=(action "addBlock")
         hideConditionCreation=true
         class="surround-root"
@@ -34,6 +35,7 @@
       refreshQueryProperties=(action "refreshQueryProperties")
       operators=operators
       valuesBuilder=valuesBuilder
+      popoverPlacement=popoverPlacement
       onBlockAdd=(action "addBlock")
       queryProperties=queryProperties
     }}
@@ -48,6 +50,7 @@
       queryBlock=operandBlock
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
+      popoverPlacement=popoverPlacement
       refreshQueryProperties=(action "refreshQueryProperties")
       onBlockReplace=(action "replaceBlock" operandBlock)
       onBlockRemove=(action "removeBlock" operandBlock)
@@ -73,6 +76,7 @@
         operators=operators
         valuesBuilder=valuesBuilder
         queryProperties=queryProperties
+        popoverPlacement=popoverPlacement
         refreshQueryProperties=(action "refreshQueryProperties")
         onBlockAdd=(action "addBlock")
       }}
@@ -88,6 +92,7 @@
       operators=operators
       valuesBuilder=valuesBuilder
       queryProperties=queryProperties
+      popoverPlacement=popoverPlacement
       disabled=(eq queryBlock.operands.length 0)
       refreshQueryProperties=(action "refreshQueryProperties")
       onBlockAdd=(action "addBlock")

@@ -48,6 +48,11 @@ export default Component.extend({
   open: false,
 
   /**
+   * @type {String}
+   */
+  popoverPlacement: 'vertical',
+
+  /**
    * @type {ComputedProperty<String>}
    */
   parentSelector: computed('parentView.elementId', function parentSelector() {
