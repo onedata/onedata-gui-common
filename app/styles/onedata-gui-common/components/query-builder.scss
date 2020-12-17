@@ -147,10 +147,6 @@ $query-builder-hover-darken: 8%;
     @include font-monospace;
   }
 
-  .property-key, .comparator, .comparator-value {
-    line-height: 1;
-  }
-  
   .comparator-value {
     max-width: 12em;
   }
