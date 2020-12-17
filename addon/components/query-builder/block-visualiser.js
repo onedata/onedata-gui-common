@@ -80,6 +80,11 @@ export default Component.extend({
   valuesBuilder: undefined,
 
   /**
+   * @type {String}
+   */
+  popoverPlacement: 'vertical',
+
+  /**
    * @type {boolean}
    */
   areSettingsVisible: false,
@@ -149,7 +154,6 @@ export default Component.extend({
       // NOTE: this is a workaround for a bug in Ember that causes not chaninging
       // className when bound property is changed
       // without this, selection of block stays if clicking from inside to outside blocks
-      // FIXME: try notifyChange on areSettingsVisile
       scheduleOnce('afterRender', () => {
         safeExec(this, 'set', 'areSettingsVisible', false);
       });
