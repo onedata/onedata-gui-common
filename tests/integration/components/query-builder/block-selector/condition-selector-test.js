@@ -68,7 +68,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     const queryProperties = this.get('queryProperties');
     const options = this.$('.ember-power-select-option');
     expect(options).to.have.length(queryProperties.length);
-    queryProperties.mapBy('key').forEach((key, index) =>
+    queryProperties.mapBy('key').sort().forEach((key, index) =>
       expect(options[index].textContent.trim()).to.equal(key)
     );
   });

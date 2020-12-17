@@ -13,8 +13,7 @@ import EditorBaseComponent from 'onedata-gui-common/components/query-builder/val
 export default EditorBaseComponent.extend({
   tagName: 'input',
   attributeBindings: ['type', 'value'],
-  // FIXME: do not repeat comparator-value class
-  classNames: ['text-editor', 'comparator-value', 'form-control', 'form-control-sm'],
+  classNames: ['text-editor', 'form-control', 'form-control-sm'],
   classNameBindings: ['isValueInvalid:is-invalid'],
 
   /**

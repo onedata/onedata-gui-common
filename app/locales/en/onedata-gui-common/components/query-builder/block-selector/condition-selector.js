@@ -19,13 +19,6 @@ export default {
     },
     numberOptions: commonComparators,
     mixedOptions: commonComparators,
-    // FIXME: cannot be in common
-    storage: {
-      is: 'is',
-    },
-    provider: {
-      is: 'is',
-    },
   },
   acceptCondition: 'Add',
 };

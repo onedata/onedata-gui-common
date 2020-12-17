@@ -27,12 +27,5 @@ export default {
       gt: '>',
       gte: '≥',
     },
-    // FIXME: cannot be in common
-    provider: {
-      is: 'is',
-    },
-    storage: {
-      is: 'is',
-    },
   },
 };

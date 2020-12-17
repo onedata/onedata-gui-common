@@ -9,7 +9,7 @@
  */
 
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
