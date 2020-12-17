@@ -9,13 +9,12 @@
  */
 
 import Component from '@ember/component';
-import { computed, get, observer } from '@ember/object';
+import { computed, get } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { scheduleOnce } from '@ember/runloop';
 import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
 const comparatorTypeToPropertyType = {
