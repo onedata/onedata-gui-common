@@ -172,28 +172,6 @@ export default Component.extend(...mixins, {
     }
   ),
 
-  /**
-   * @type {ComputedProperty<any>}
-   */
-  viewModeComparatorValue: computed(
-    'value',
-    'queryProperty.key',
-    function viewModeComparatorValue() {
-      const value = this.get('value');
-      if (typeof value === 'string') {
-        return `"${value}"`;
-      } else if (this.get('queryProperty.key') === 'storageId' ||
-        this.get('queryProperty.key') === 'providerId'
-      ) {
-        // FIXME: displaying values is to refactor
-        // return `${get(value, 'entityId').substring(0, 4)}… (${get(value, 'name')})`;
-        return `${get(value, 'name')} (${get(value, 'entityId').substring(0, 4)}…)`;
-      } else {
-        return value;
-      }
-    }
-  ),
-
   actions: {
     valueChanged(value) {
       if (this.get('mode') === 'view') {

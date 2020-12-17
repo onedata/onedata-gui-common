@@ -9,12 +9,13 @@
  */
 
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector/condition-selector';
 import { and, or, not } from 'ember-awesome-macros';
 import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
+import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const mixins = [
   I18n,
@@ -67,28 +68,15 @@ export default Component.extend(...mixins, {
    */
   conditionComparatorValue: undefined,
 
-  // FIXME: refactor
   queryPropertiesForSelector: computed(
-    // NOTE: not using @each because of problems with testing, but elements should be
-    // immutable anyway
     'queryProperties.[]',
     function queryPropertiesForSelector() {
       const queryProperties = this.get('queryProperties');
-      if (!queryProperties) {
+      if (queryProperties) {
+        return sortByProperties(queryProperties, ['isSpecialKey:desc', 'displayedKey']);
+      } else {
         return [];
       }
-      const customProperties = queryProperties
-        .filter(p => !['anyStorage', 'storageId', 'providerId'].includes(get(p, 'key')))
-        .sort();
-      const result = [];
-      ['anyStorage', 'providerId', 'storageId'].forEach(specialKey => {
-        const property = queryProperties.findBy('key', specialKey);
-        if (property) {
-          result.push(property);
-        }
-      });
-      result.push(...customProperties);
-      return result;
     },
   ),
 
