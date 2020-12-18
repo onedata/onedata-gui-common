@@ -21,13 +21,13 @@
     }}
     {{#if (and (not readonly) (eq queryBlock.operator "root"))}}
       {{query-builder/block-adder
-        refreshQueryProperties=(action "refreshQueryProperties")
+        btnClass="surround-root"
         operators=operators
         valuesBuilder=valuesBuilder
         popoverPlacement=popoverPlacement
-        onBlockAdd=(action "addBlock")
         hideConditionCreation=true
-        class="surround-root"
+        refreshQueryProperties=(action "refreshQueryProperties")
+        onBlockAdd=(action "addBlock")
       }}
     {{/if}}
   {{else if (not readonly)}}

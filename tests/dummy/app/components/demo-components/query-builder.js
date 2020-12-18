@@ -6,6 +6,8 @@
  */
 
 import Component from '@ember/component';
+import { computed } from '@ember/object';
+import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 
 export default Component.extend({
   queryProperties: Object.freeze([{
@@ -17,4 +19,15 @@ export default Component.extend({
       type: 'number',
     },
   ]),
+
+  rootQueryBlock: computed(function rootQueryBlock() {
+    return RootOperatorQueryBlock.create({
+      notifyUpdate: this.notifyUpdate.bind(this),
+    });
+  }),
+
+  notifyUpdate(block) {
+    console.log('block updated');
+    console.dir(block);
+  },
 });

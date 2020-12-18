@@ -233,6 +233,39 @@ describe('Integration | Component | query builder/operator block', function () {
 
             expect(this.$('.block-prefix-label')).to.not.exist;
           });
+
+          it(
+            'allows to surround existing operand with an operator via block-adder',
+            async function () {
+              const queryBlock =
+                this.set('queryBlock', operatorBlockClasses[operatorName].create());
+
+              this.render(hbs `{{query-builder/operator-block
+                queryBlock=queryBlock
+                popoverPlacement="right"
+                valuesBuilder=valuesBuilder
+              }}`);
+              await click('.query-builder-block-adder');
+              await click('.operator-or');
+              await click('.query-builder-block-adder.surround-root');
+              // popover should lack condition selector, as it can only surround
+              expect(this.$('.condition-selector'), 'condition selector').to.not.exist;
+              await click('.operator-and');
+              expect(this.$('.query-builder-block')).to.have.length(3);
+              const surroundingBlock =
+                this.$('.query-builder-block .query-builder-block');
+              expect(surroundingBlock).to.have.class('and-operator-block');
+              const innerBlock = this.$(
+                '.query-builder-block .query-builder-block .query-builder-block'
+              );
+              expect(innerBlock).to.have.class('or-operator-block');
+              expect(get(queryBlock, 'operands.0.operator')).to.equal('and');
+              expect(get(queryBlock, 'operands.0.operands.0.operator')).to.equal('or');
+              expect(
+                this.$('.query-builder-block-adder.surround-root')
+              ).to.exist;
+            }
+          );
         } else {
           it('shows operator name', async function () {
             this.set('queryBlock', operatorBlockClasses[operatorName].create());

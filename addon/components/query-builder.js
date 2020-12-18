@@ -15,6 +15,7 @@ import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-
 import layout from 'onedata-gui-common/templates/components/query-builder';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import QueryValueComponentsBuilder from 'onedata-gui-common/utils/query-value-components-builder';
 
 export default Component.extend(I18n, {
   layout,
@@ -95,6 +96,9 @@ export default Component.extend(I18n, {
     this.set('editedConditions', new Map());
     if (!this.get('rootQueryBlock')) {
       this.set('rootQueryBlock', RootOperatorQueryBlock.create());
+    }
+    if (!this.get('valuesBuilder')) {
+      this.set('valuesBuilder', QueryValueComponentsBuilder.create());
     }
   },
 

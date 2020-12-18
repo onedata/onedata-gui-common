@@ -70,16 +70,10 @@ export default Component.extend(...mixins, {
   valuesBuilder: undefined,
 
   /**
-   * @type {String}
-   */
-  popoverPlacement: 'vertical',
-
-  /**
+   * @virtual
    * @type {Utils.QueryBuilder.OperatorQueryBlock}
    */
   queryBlock: undefined,
-
-  operatorBlockClass: tag `${'queryBlock.operator'}-operator-block`,
 
   /**
    * @virtual
@@ -87,6 +81,21 @@ export default Component.extend(...mixins, {
    */
   queryProperties: Object.freeze([]),
 
+  /**
+   * @type {String}
+   */
+  popoverPlacement: 'vertical',
+
+  /**
+   * Class name based on operator type (eg. or-operator-block)
+   * @type {ComputedProperty<String>}
+   */
+  operatorBlockClass: tag `${'queryBlock.operator'}-operator-block`,
+
+  /**
+   * First internal query block (if this block contains at least one operand)
+   * @type {ComputedProperty<Utils.QueryBlock|undefined>}
+   */
   firstOperand: reads('queryBlock.operands.firstObject'),
 
   /**
@@ -102,11 +111,14 @@ export default Component.extend(...mixins, {
     }
   }),
 
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
   hasSingleOperandOperator: computed(
     'queryBlock.maxOperandsNumber',
     function hasSingleOperandOperator() {
       const queryBlock = this.get('queryBlock');
-      return queryBlock && get(queryBlock, 'maxOperandsNumber') === 1;
+      return Boolean(queryBlock) && get(queryBlock, 'maxOperandsNumber') === 1;
     }
   ),
 
@@ -132,7 +144,6 @@ export default Component.extend(...mixins, {
         // existing operand. Adding next conditions to the root block is not allowed.
         if (get(newQueryBlock, 'isOperator')) {
           const firstOperand = this.get('firstOperand');
-          set(newQueryBlock, 'notifyUpdate', get(queryBlock, 'notifyUpdate'));
           newQueryBlock.addOperand(firstOperand);
           this.replaceBlock(firstOperand, [newQueryBlock]);
         }
