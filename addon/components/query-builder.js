@@ -39,16 +39,6 @@ export default Component.extend(I18n, {
   /**
    * @virtual
    */
-  queryChanged: undefined,
-
-  /**
-   * @virtual
-   */
-  onGenerateCurl: undefined,
-
-  /**
-   * @virtual
-   */
   queryProperties: undefined,
 
   /**

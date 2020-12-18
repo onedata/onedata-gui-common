@@ -1,5 +1,4 @@
 import { click } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 
 /**
  * @deprecated Use `ember-power-select/test-support` instead
@@ -17,13 +16,6 @@ export default class EmberPowerSelectHelper {
    */
   getTrigger() {
     return document.querySelector(this.triggerSelector);
-  }
-
-  typeInSearch(value) {
-    const input = this.getSearchInput();
-    input.value = value;
-    input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    return wait();
   }
 
   /**
@@ -48,21 +40,6 @@ export default class EmberPowerSelectHelper {
    */
   getNthOption(n) {
     return document.querySelector(`${this.dropdownSelector} li:nth-child(${n})`);
-  }
-
-  getOptions() {
-    return document.querySelectorAll(`${this.dropdownSelector} .ember-power-select-option`);
-  }
-
-  selectChoose(optionValue) {
-    const option = Array.from(this.getOptions())
-      .find(option => option.textContent.trim() === optionValue);
-    if (option) {
-      return click(option);
-    } else {
-      console.dir(document.querySelector(this.dropdownSelector));
-      throw new Error('Could not find option in select: ' + optionValue);
-    }
   }
 
   /**

@@ -31,12 +31,12 @@
   >
 {{/if}}
 {{#if rawValue}}
-  <input class="clipboard-raw-value" value={{rawValue}} readonly>
+  <input class="hidden-clipboard-source" value={{rawValue}} readonly>
 {{/if}}
 {{#one-copy-button
   class=(concat-classes "clipboard-btn" clipboardBtnClass)
   parentElementId=elementId
-  localTarget=(if rawValue ".clipboard-raw-value" ".clipboard-input")
+  localTarget=(if rawValue ".hidden-clipboard-source" ".clipboard-input")
   notify=(action "notify")
 }}
   <div class="copy-btn-background"></div>

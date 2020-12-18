@@ -101,9 +101,3 @@
     height: auto;
   }
 }
-
-// defined outside .clipboard-line, because it is a useful util
-// semi-hidden element - display: none; or zero-spaced elements do allow copy
-.clipboard-raw-value {
-  @extend .fixed-invisible;
-}
