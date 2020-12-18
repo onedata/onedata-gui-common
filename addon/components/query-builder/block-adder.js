@@ -15,9 +15,8 @@ import { tag } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { resolve } from 'rsvp';
-import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
-export default Component.extend(InjectDefaultValuesBuilder, {
+export default Component.extend({
   tagName: '',
   layout,
 

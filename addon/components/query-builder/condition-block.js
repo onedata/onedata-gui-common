@@ -13,11 +13,9 @@ import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-block';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
 const mixins = [
   I18n,
-  InjectDefaultValuesBuilder,
 ];
 
 export default Component.extend(...mixins, {

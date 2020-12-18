@@ -15,7 +15,6 @@ import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 
 const comparatorTypeToPropertyType = {
   eq: 'all',
@@ -27,7 +26,6 @@ const comparatorTypeToPropertyType = {
 
 const mixins = [
   I18n,
-  InjectDefaultValuesBuilder,
 ];
 
 export default Component.extend(...mixins, {

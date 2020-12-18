@@ -11,6 +11,7 @@ import ExceptOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/exc
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { get } from '@ember/object';
+import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not'];
@@ -27,6 +28,8 @@ describe('Integration | Component | query builder/block selector', function () {
     integration: true,
   });
 
+  setDefaultQueryValuesBuilder();
+
   context('in "create" mode', function () {
     beforeEach(function () {
       this.set('queryProperties', [{
@@ -41,7 +44,10 @@ describe('Integration | Component | query builder/block selector', function () {
     });
 
     it(`renders operators: ${operatorsList.join(', ')}`, async function () {
-      this.render(hbs `{{query-builder/block-selector mode="create"}}`);
+      this.render(hbs `{{query-builder/block-selector
+        mode="create"
+        valuesBuilder=valuesBuilder
+      }}`);
 
       const operators = this.$('.operator-selector .operator');
       expect(operators).to.have.length(operatorsList.length);
@@ -60,6 +66,7 @@ describe('Integration | Component | query builder/block selector', function () {
           this.render(hbs `{{query-builder/block-selector
             mode="create"
             onBlockAdd=addSpy
+            valuesBuilder=valuesBuilder
           }}`);
 
           expect(addSpy).to.not.be.called;
@@ -75,6 +82,7 @@ describe('Integration | Component | query builder/block selector', function () {
       this.render(hbs `{{query-builder/block-selector
         mode="create"
         queryProperties=queryProperties
+        valuesBuilder=valuesBuilder
       }}`);
 
       await clickTrigger('.property-selector-container');
@@ -96,6 +104,7 @@ describe('Integration | Component | query builder/block selector', function () {
           mode="create"
           onBlockAdd=addSpy
           queryProperties=queryProperties
+          valuesBuilder=valuesBuilder
         }}`);
 
         await selectChoose('.property-selector-container', 'numProp');
@@ -114,6 +123,7 @@ describe('Integration | Component | query builder/block selector', function () {
     it('does not render edit-specific sections', async function () {
       this.render(hbs `{{query-builder/block-selector
         mode="create"
+        valuesBuilder=valuesBuilder
       }}`);
 
       expect(this.$('.surround-section')).to.not.exist;
@@ -131,6 +141,7 @@ describe('Integration | Component | query builder/block selector', function () {
       async function () {
         this.render(hbs `{{query-builder/block-selector
           mode="edit"
+          valuesBuilder=valuesBuilder
         }}`);
         const operators = this.$('.surround-section .operator-selector .operator');
         expect(operators).to.have.length(operatorsList.length);
@@ -152,6 +163,7 @@ describe('Integration | Component | query builder/block selector', function () {
             mode="edit"
             editBlock=editBlock
             onBlockReplace=replaceSpy
+            valuesBuilder=valuesBuilder
           }}`);
 
           expect(replaceSpy).to.not.be.called;
@@ -173,6 +185,7 @@ describe('Integration | Component | query builder/block selector', function () {
         this.render(hbs `{{query-builder/block-selector
           mode="edit"
           editBlock=editBlock
+          valuesBuilder=valuesBuilder
         }}`);
 
         const operators = this.$('.change-to-section .operator-selector .operator');
@@ -192,6 +205,7 @@ describe('Integration | Component | query builder/block selector', function () {
         this.render(hbs `{{query-builder/block-selector
           mode="edit"
           editBlock=editBlock
+          valuesBuilder=valuesBuilder
         }}`);
 
         expect(this.$('.change-to-section')).to.not.exist;
@@ -220,9 +234,10 @@ describe('Integration | Component | query builder/block selector', function () {
             beforeFunc(this);
 
             this.render(hbs `{{query-builder/block-selector
-                mode="edit"
-                editBlock=editBlock
-              }}`);
+              mode="edit"
+              editBlock=editBlock
+              valuesBuilder=valuesBuilder
+            }}`);
 
             expect(
               this.$(`.change-to-section .operator-${operatorName}`)
@@ -253,6 +268,7 @@ describe('Integration | Component | query builder/block selector', function () {
           this.render(hbs `{{query-builder/block-selector
             mode="edit"
             editBlock=editBlock
+            valuesBuilder=valuesBuilder
           }}`);
 
           [
@@ -293,6 +309,7 @@ describe('Integration | Component | query builder/block selector', function () {
               mode="edit"
               editBlock=editBlock
               onBlockReplace=replaceSpy
+              valuesBuilder=valuesBuilder
             }}`);
 
             await click(`.change-to-section .operator-${destinationOperatorName}`);
@@ -311,6 +328,7 @@ describe('Integration | Component | query builder/block selector', function () {
       this.render(hbs `{{query-builder/block-selector
         mode="edit"
         editBlock=editBlock
+        valuesBuilder=valuesBuilder
       }}`);
 
       expect(this.$('.add-operator-section')).to.not.exist;

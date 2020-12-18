@@ -6,6 +6,7 @@ import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-op
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
+import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 const operatorBlockClasses = {
   and: AndOperatorQueryBlock,
@@ -18,6 +19,8 @@ describe('Integration | Component | query builder/block visualiser', function ()
     integration: true,
   });
 
+  setDefaultQueryValuesBuilder();
+
   Object.keys(operatorBlockClasses).forEach(operatorName => {
     const upperOperator = operatorName.toUpperCase();
     it(
@@ -25,7 +28,10 @@ describe('Integration | Component | query builder/block visualiser', function ()
       async function () {
         this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-        this.render(hbs `{{query-builder/block-visualiser queryBlock=queryBlock}}`);
+        this.render(hbs `{{query-builder/block-visualiser
+          queryBlock=queryBlock
+          valuesBuilder=valuesBuilder
+        }}`);
 
         expect(
           this.$(`.query-builder-operator-block.${operatorName}-operator-block`),
@@ -38,9 +44,12 @@ describe('Integration | Component | query builder/block visualiser', function ()
   it(
     'renders condition block according to the passed block spec',
     async function () {
-      this.set('block', ConditionQueryBlock.create());
+      this.set('queryBlock', ConditionQueryBlock.create());
 
-      this.render(hbs `{{query-builder/block-visualiser queryBlock=block}}`);
+      this.render(hbs `{{query-builder/block-visualiser
+        queryBlock=queryBlock
+        valuesBuilder=valuesBuilder
+      }}`);
 
       expect(this.$('.query-builder-condition-block')).to.exist;
     }

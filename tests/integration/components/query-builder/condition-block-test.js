@@ -7,6 +7,7 @@ import { click, fillIn, blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
+import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 const mathOperators = [{
   operator: 'eq',
@@ -30,6 +31,8 @@ describe('Integration | Component | query builder/condition block', function () 
     integration: true,
   });
 
+  setDefaultQueryValuesBuilder();
+
   it(
     'has classes "query-builder-block" and "query-builder-condition-block"',
     async function () {
@@ -39,7 +42,10 @@ describe('Integration | Component | query builder/condition block', function () 
         comparatorValue: 'hello',
       }));
 
-      this.render(hbs `{{query-builder/condition-block queryBlock=queryBlock}}`);
+      this.render(hbs `{{query-builder/condition-block
+        queryBlock=queryBlock
+        valuesBuilder=valuesBuilder
+      }}`);
 
       expect(this.$('.query-builder-block.query-builder-condition-block')).to.exist;
     }
@@ -76,7 +82,10 @@ describe('Integration | Component | query builder/condition block', function () 
           })
         );
 
-        this.render(hbs `{{query-builder/condition-block queryBlock=queryBlock}}`);
+        this.render(hbs `{{query-builder/condition-block
+          queryBlock=queryBlock
+          valuesBuilder=valuesBuilder
+        }}`);
 
         expect(this.$('.property-key').text().trim()).to.equal('some_key');
         expect(this.$('.comparator').text().trim()).to.equal(comparatorSymbol);
@@ -92,9 +101,12 @@ describe('Integration | Component | query builder/condition block', function () 
       comparatorValue: 'hello',
     }));
 
-    this.render(hbs `{{#query-builder/condition-block queryBlock=queryBlock}}
+    this.render(hbs `{{#query-builder/condition-block
+      queryBlock=queryBlock
+      valuesBuilder=valuesBuilder
+    }}
       <span class="test-element"></span>
-      {{/query-builder/condition-block}}
+    {{/query-builder/condition-block}}
     `);
 
     expect(this.$('.test-element')).to.exist;
@@ -116,6 +128,7 @@ describe('Integration | Component | query builder/condition block', function () 
     this.render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionStart=editionStartSpy
+      valuesBuilder=valuesBuilder
     }}`);
 
     expect(editionStartSpy).to.not.be.called;
@@ -145,6 +158,7 @@ describe('Integration | Component | query builder/condition block', function () 
       queryBlock=queryBlock
       onConditionEditionEnd=editionEndSpy
       onConditionEditionValidityChange=editionValidityChangeSpy
+      valuesBuilder=valuesBuilder
     }}`);
 
     await click('.comparator-value');
@@ -181,6 +195,7 @@ describe('Integration | Component | query builder/condition block', function () 
       queryBlock=queryBlock
       onConditionEditionEnd=editionEndSpy
       onConditionEditionValidityChange=editionValidityChangeSpy
+      valuesBuilder=valuesBuilder
     }}`);
 
     await click('.comparator-value');
@@ -227,7 +242,10 @@ describe('Integration | Component | query builder/condition block', function () 
               comparatorValue: initialValue,
             }));
 
-            this.render(hbs `{{query-builder/condition-block queryBlock=queryBlock}}`);
+            this.render(hbs `{{query-builder/condition-block
+              queryBlock=queryBlock
+              valuesBuilder=valuesBuilder
+            }}`);
 
             await click('.comparator-value');
 
@@ -262,6 +280,7 @@ describe('Integration | Component | query builder/condition block', function () 
               queryBlock=queryBlock
               onConditionEditionEnd=editionEndSpy
               onConditionEditionValidityChange=editionValidityChangeSpy
+              valuesBuilder=valuesBuilder
             }}`);
 
             await click('.comparator-value');

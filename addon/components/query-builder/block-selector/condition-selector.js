@@ -14,12 +14,10 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector/condition-selector';
 import { and, or, not } from 'ember-awesome-macros';
-import InjectDefaultValuesBuilder from 'onedata-gui-common/mixins/query-builder/inject-default-values-builder';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
 
 const mixins = [
   I18n,
-  InjectDefaultValuesBuilder,
 ];
 
 export default Component.extend(...mixins, {

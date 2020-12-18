@@ -7,6 +7,7 @@ import { click, fillIn, blur } from 'ember-native-dom-helpers';
 import wait from 'ember-test-helpers/wait';
 import { clickTrigger } from '../../../helpers/ember-power-select';
 import $ from 'jquery';
+import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
@@ -15,6 +16,8 @@ describe('Integration | Component | query builder/condition comparator value edi
     setupComponentTest('query-builder/condition-comparator-value-editor', {
       integration: true,
     });
+
+    setDefaultQueryValuesBuilder();
 
     context('in view mode', function () {
       [{
@@ -38,6 +41,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               mode="view"
               comparator=comparator
               value=value
+              valuesBuilder=valuesBuilder
             }}`);
 
             expect(this.$('.comparator-value').text().trim()).to.equal(viewValue);
@@ -53,6 +57,7 @@ describe('Integration | Component | query builder/condition comparator value edi
           comparator="string.eq"
           value="hello"
           onStartEdit=onStartEditSpy
+          valuesBuilder=valuesBuilder
         }}`);
 
         await click('.comparator-value');
@@ -97,6 +102,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               mode="edit"
               comparator=comparator
               value=value
+              valuesBuilder=valuesBuilder
             }}`);
 
             expect(this.$('.comparator-value')[0], '.comparator-value is active')
@@ -112,6 +118,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               mode="edit"
               comparator=comparator
               value="abc"
+              valuesBuilder=valuesBuilder
             }}`);
 
             expect(this.$('.comparator-value')).to.have.value('abc');
@@ -135,6 +142,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               value="abc"
               onValueChange=changeSpy
               onFinishEdit=finishEditSpy
+              valuesBuilder=valuesBuilder
             }}`);
 
             await fillIn('.comparator-value', newValue);
@@ -163,6 +171,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               value=value
               onValueChange=changeSpy
               onFinishEdit=finishEditSpy
+              valuesBuilder=valuesBuilder
             }}`);
 
             await fillIn('.comparator-value', newValue);
@@ -190,6 +199,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               value=value
               onValueChange=changeSpy
               onFinishEdit=finishEditSpy
+              valuesBuilder=valuesBuilder
             }}`);
 
             await fillIn('.comparator-value', 'de');
@@ -216,6 +226,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               value=value
               onFinishEdit=finishEditSpy
               onCancelEdit=cancelEditSpy
+              valuesBuilder=valuesBuilder
             }}`);
 
             await click('.comparator-value');
@@ -237,6 +248,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               mode="edit"
               comparator=comparator
               value="abc"
+              valuesBuilder=valuesBuilder
             }}`);
 
             expect(this.$('.comparator-value')).to.not.have.class('is-invalid');
@@ -252,6 +264,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               comparator=comparator
               isValueInvalid=true
               value="abc"
+              valuesBuilder=valuesBuilder
             }}`);
 
             expect(this.$('.comparator-value'))
@@ -289,6 +302,7 @@ function itShowsPowerSelectWithOptions(
         mode="create"
         comparator=comparator
         queryProperty=queryProperty
+        valuesBuilder=valuesBuilder
       }}`);
 
       expect(this.$('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
@@ -311,6 +325,7 @@ function itShowsTextInput(comparator) {
       this.render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
+        valuesBuilder=valuesBuilder
       }}`);
 
       expect(this.$('input[type="text"].comparator-value'), 'input.comparator-value')
@@ -332,6 +347,7 @@ function itCallsOnValueChange(comparator, valueToInput) {
         mode="create"
         comparator=comparator
         onValueChange=changeSpy
+        valuesBuilder=valuesBuilder
       }}`);
 
       await fillIn('.comparator-value', valueToInput);

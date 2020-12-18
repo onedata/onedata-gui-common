@@ -5,6 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose, typeInSearch } from '../../../../helpers/ember-power-select';
+import setDefaultQueryValuesBuilder from '../../../../helpers/set-default-query-values-builder';
 
 const numberComparators = [{
   operator: 'eq',
@@ -35,6 +36,8 @@ describe('Integration | Component | query builder/block selector/condition selec
     integration: true,
   });
 
+  setDefaultQueryValuesBuilder();
+
   beforeEach(function () {
     const numberOptionsProp = {
       key: 'numberOptionsProp',
@@ -61,6 +64,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   it('lists query properties in dropdown', async function () {
     this.render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
     }}`);
 
     await clickTrigger('.property-selector-container');
@@ -76,6 +80,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   it('filters query properties in dropdown', async function () {
     this.render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
     }}`);
 
     await clickTrigger('.property-selector-container');
@@ -89,6 +94,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   it('blocks "Add" button when no property is selected', async function () {
     this.render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
     }}`);
 
     expect(this.$('.accept-condition')).to.have.attr('disabled');
@@ -99,6 +105,7 @@ describe('Integration | Component | query builder/block selector/condition selec
       queryProperties=queryProperties
       selectedConditionProperty=numberOptionsProp
       selectedConditionComparator="numberOptions.lt"
+      valuesBuilder=valuesBuilder
     }}`);
 
     await selectChoose('.comparator-value-editor', '1');
@@ -109,6 +116,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   it('does not show comparator selector on init', async function () {
     this.render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
     }}`);
 
     expect(this.$('.comparator-selector')).to.not.exist;
@@ -117,6 +125,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   it('shows comparator selector when multi-comparator property is selected', async function () {
     this.render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
     }}`);
 
     await selectChoose('.property-selector-container', 'numberProp');
@@ -161,6 +170,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     it(`shows comparators for ${propertyType} property`, async function () {
       this.render(hbs `{{query-builder/block-selector/condition-selector
         queryProperties=queryProperties
+        valuesBuilder=valuesBuilder
       }}`);
 
       await selectChoose('.property-selector-container', propertyName);
@@ -199,6 +209,7 @@ describe('Integration | Component | query builder/block selector/condition selec
           this.render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
             onConditionSelected=selectedSpy
+            valuesBuilder=valuesBuilder
           }}`);
           await selectChoose('.property-selector-container', propertyName);
           if (comparators.length > 1) {
@@ -227,6 +238,7 @@ describe('Integration | Component | query builder/block selector/condition selec
         async function () {
           this.render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
+            valuesBuilder=valuesBuilder
           }}`);
           await selectChoose('.property-selector-container', propertyName);
 
@@ -242,6 +254,7 @@ describe('Integration | Component | query builder/block selector/condition selec
         async function () {
           this.render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
+            valuesBuilder=valuesBuilder
           }}`);
           await selectChoose('.property-selector-container', propertyName);
 
@@ -262,6 +275,7 @@ describe('Integration | Component | query builder/block selector/condition selec
       async function () {
         this.render(hbs `{{query-builder/block-selector/condition-selector
           queryProperties=queryProperties
+          valuesBuilder=valuesBuilder
         }}`);
         await selectChoose('.property-selector-container', 'numberProp');
         await selectChoose('.comparator-selector-container', symbol);

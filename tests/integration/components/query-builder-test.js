@@ -9,11 +9,14 @@ import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-oper
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
+import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 describe('Integration | Component | query builder main component', function () {
   setupComponentTest('query-builder/block-adder', {
     integration: true,
   });
+
+  setDefaultQueryValuesBuilder();
 
   beforeEach(function () {
     this.set('queryProperties', [{
@@ -28,7 +31,7 @@ describe('Integration | Component | query builder main component', function () {
   });
 
   it('has class "query-builder', async function () {
-    this.render(hbs `{{query-builder}}`);
+    this.render(hbs `{{query-builder valuesBuilder=valuesBuilder}}`);
 
     expect(this.$('.query-builder'));
   });
@@ -74,6 +77,7 @@ describe('Integration | Component | query builder main component', function () {
       this.render(hbs `<div id="builder-container">{{query-builder
         queryProperties=queryProperties
         rootQueryBlock=rootQueryBlock
+        valuesBuilder=valuesBuilder
       }}</div>`);
     });
 
