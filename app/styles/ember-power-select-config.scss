@@ -12,7 +12,7 @@ $ember-power-select-line-height: $line-height-computed;
 $ember-power-select-opened-border-radius: 0;
 $ember-power-select-dropdown-default-border-radius: $input-border-radius;
 $ember-power-select-selected-background: $ember-power-select-background-color;
-$ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding-xs-horizontal;
+$ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
 
 @import 'ember-power-select';
 @import 'ember-power-select/themes/bootstrap';
@@ -50,7 +50,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 
   &.small {
     .one-icon + .text {
-      padding-left: 26px;
+      padding-left: 2.2em;
     }
   }
 }
@@ -71,8 +71,18 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
         left: 11px;
       }
       .one-icon + .text {
-        padding-left: 26px;
+        padding-left: 2.2em;
       }
+    }
+  }
+}
+
+.small {
+  &.ember-basic-dropdown-content, &.ember-power-select-trigger {
+    // sometimes we used the icon container without option-container
+    .inline-icon-container {
+      width: 1.75em;
+      margin-left: -0.1em;
     }
   }
 }
@@ -160,7 +170,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px $padding
 
   &.small, .form-group-sm & {
     .ember-power-select-option {
-      padding: $ember-power-select-option-small-padding 0.8em;
+      padding: $ember-power-select-option-small-padding;
       min-height: 31px;
     }
   }
