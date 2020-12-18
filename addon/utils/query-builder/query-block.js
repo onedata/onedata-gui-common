@@ -21,16 +21,17 @@ export default EmberObject.extend(Evented, {
   renderer: null,
 
   /**
-   * @virtual
-   * @type {String}
-   */
-  comparator: undefined,
-
-  /**
    * Should be invoked when the block changes it's content, eg. when generated text
    * will change. Should pass this when invoked.
    * @virtual
    * @type {(QueryBlock: Object) => undefined}
    */
   notifyUpdate: notImplementedIgnore,
+
+  /**
+   * How many levels have tree starting from this query block.
+   * Eg. 
+   * @type {Number|ComputedProperty<Number>}
+   */
+  levelScore: 1,
 });

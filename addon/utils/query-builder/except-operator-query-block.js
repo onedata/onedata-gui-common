@@ -1,9 +1,7 @@
 /**
- * EXCEPT operator query block for COMPLEMENT operation of RUCIO (QoS), see:
- * https://rucio.readthedocs.io/en/latest/rse_expressions.html#operators
- * We are using "except" name because it is more user-friendly.
+ * A subctration operator for sets.
  * 
- * @module utils/query-builder/exclude-operator-query-block
+ * @module utils/query-builder/except-operator-query-block
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

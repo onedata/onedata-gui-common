@@ -12,28 +12,33 @@ import { observer } from '@ember/object';
 
 export default QueryBlock.extend({
   /**
-   * @override
-   */
-  renderer: 'condition-block',
-
-  isCondition: true,
-
-  /**
+   * @virtual
    * @type {Utils.QueryProperty}
    */
   property: null,
 
   /**
+   * @virtual
    * @type {String}
    */
   comparator: null,
 
   /**
+   * @virtual
    * @type {any}
    */
   comparatorValue: null,
 
-  levelScore: 1,
+  /**
+   * @override
+   */
+  renderer: 'condition-block',
+
+  /**
+   * A flag to test if this query block is condition block (instead of `instanceof`)
+   * @type {Boolean}
+   */
+  isCondition: true,
 
   updateObserver: observer(
     'property',

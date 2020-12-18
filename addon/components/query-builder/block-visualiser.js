@@ -94,10 +94,23 @@ export default Component.extend({
    */
   isHovered: false,
 
+  /**
+   * Name of class that will be added when mouse is exactly over this block and not over
+   * the child or parent.
+   * @type {String}
+   */
   hoveredClassName: 'is-directly-hovered',
 
+  /**
+   * Decide if directly hovered class should be applied.
+   * @type {ComputedProperty<Boolean>}
+   */
   isHoveredClass: conditional('isHovered', 'hoveredClassName', raw(undefined)),
 
+  /**
+   * Decide if directly remove-hovered class should be applied.
+   * @type {ComputedProperty<Boolean>}
+   */
   isRemoveHoveredClass: conditional(
     and('isHovered', 'removeButtonHovered'),
     raw('is-directly-hovered-remove'),

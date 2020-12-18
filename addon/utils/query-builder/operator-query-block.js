@@ -36,6 +36,12 @@ export default QueryBlock.extend({
    */
   maxOperandsNumber: Number.MAX_SAFE_INTEGER,
 
+  /**
+   * If has operands, returns max levelScore of operands incremented by 1.
+   * Returns 1 otherwise.
+   * Operands are tree-like structure, so this works recursively (composite pattern).
+   * @override
+   */
   levelScore: computed('operands.@each.levelScore', function levelScore() {
     const operands = this.get('operands');
     if (isEmpty(operands)) {
@@ -44,8 +50,6 @@ export default QueryBlock.extend({
       return Math.max(...this.get('operands').mapBy('levelScore')) + 1;
     }
   }),
-
-  // levelScore: sum(math.max(array.mapBy('operands', 'levelScore')), raw(1)),
 
   /**
    * @type {Array<Utils.QueryBuilder.QueryBlock>}

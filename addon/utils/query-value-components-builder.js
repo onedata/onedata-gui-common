@@ -21,8 +21,6 @@ export default EmberObject.extend({
         return ['string.eq'];
       case 'number':
         return ['number.eq', 'number.lt', 'number.lte', 'number.gt', 'number.gte'];
-      case 'mixed':
-        return ['string.eq', 'number.lt', 'number.lte', 'number.gt', 'number.gte'];
       case 'stringOptions':
         return ['stringOptions.eq'];
       case 'numberOptions':
@@ -60,20 +58,21 @@ export default EmberObject.extend({
    * @returns {(comparator: string) => boolean}
    */
   getValidatorFor(comparator) {
+    // special case for comparator-less types (eg. symbol)
     if (comparator === undefined) {
-      console.warn(
-        'util:query-value-components-builder#getValidatorFor: no comparator specified'
-      );
       return () => true;
     } else if (
-      comparator.match(/mixed(Options)?\.(eq|lt|lte|gt|gte)|string(Options)?\.eq/)
+      comparator.match(/^mixedOptions\.(eq|lt|lte|gt|gte)$/)
     ) {
       return value =>
         typeof value === 'string' && value.length > 0 ||
         typeof value === 'number' && !isNaN(value);
-    } else if (comparator.match(/number(Options)?\.(eq|lt|lte|gt|gte)?/)) {
+    } else if (comparator.match(/^string(Options)?\.eq$/)) {
       return value =>
-        typeof value === 'number' ||
+        typeof value === 'string' && value.trim().length > 0;
+    } else if (comparator.match(/^(number(Options)?\.(eq|lt|lte|gt|gte)?)$/)) {
+      return value =>
+        typeof value === 'number' && !isNaN(value) ||
         typeof value === 'string' && value.trim().length > 0 && !isNaN(Number(value));
     } else if (comparator === 'symbol') {
       return () => true;
@@ -87,26 +86,25 @@ export default EmberObject.extend({
 
   /**
    * @param {String} comparator
+   * @param {Object} queryProperty
    * @param {Boolean} [initiallyFocused=false]
    * @returns {{ componentName: String, params: Object }}
    */
   getEditorFor(comparator, queryProperty, initiallyFocused = false) {
     let componentName;
     let params = {};
+    // special case for comparator-less types (eg. symbol)
     if (comparator === undefined) {
-      console.warn(
-        'util:query-value-components-builder#getEditorFor: no comparator specified'
-      );
+      componentName = null;
+    } else if (comparator.match(/^(string\.eq|number\.(eq|lt|lte|gt|gte))$/)) {
       componentName = 'text-editor';
-    } else if (comparator.match(/string\.eq|number\.(eq|lt|lte|gt|gte)/)) {
-      componentName = 'text-editor';
-    } else if (comparator.match(/stringOptions\.eq|(mixed|number)Options\.(eq|lt|lte|gt|gte)/)) {
+    } else if (comparator.match(/^(stringOptions\.eq|(mixed|number)Options\.(eq|lt|lte|gt|gte))$/)) {
       componentName = 'dropdown-editor';
       const [propertyType, operator] = comparator.split('.');
       let values;
       if (
         propertyType === 'numberOptions' ||
-        propertyType === 'mixedOptions' && operator.match(/lt|lte|gt|gte/)
+        propertyType === 'mixedOptions' && operator.match(/^(lt|lte|gt|gte)$/)
       ) {
         values = get(queryProperty, 'numberValues');
       } else if (propertyType === 'stringOptions') {
@@ -115,8 +113,6 @@ export default EmberObject.extend({
         values = get(queryProperty, 'allValues');
       }
       params = { values };
-    } else if (comparator === 'symbol') {
-      return null;
     } else {
       console.warn(
         `util:query-value-components-builder#getEditorFor: unknown comparator "${comparator}"`
@@ -136,13 +132,29 @@ export default EmberObject.extend({
    * @returns {String} componentName
    */
   getPresenterFor(comparator) {
-    if (!comparator) {
-      return 'raw-presenter';
-    } else if (comparator.match(/string(Options)?\.eq/)) {
-      return 'string-presenter';
-    } else if (comparator === 'symbol') {
+    // special case for comparator-less types (eg. symbol)
+    if (comparator === undefined) {
       return null;
+    } else if (comparator.match(/^string(Options)?\.eq$/)) {
+      return 'string-presenter';
     } else if (comparator.startsWith('number')) {
+      return 'raw-presenter';
+    } else if (comparator.startsWith('mixedOptions')) {
+      const operator = comparator.split('.')[1];
+      if (operator.match(/^(lt|lte|gt|gte)$/)) {
+        return 'raw-presenter';
+      } else if (operator === 'eq') {
+        return 'string-presenter';
+      } else {
+        console.warn(
+          `util:query-value-components-builder#getPresenterFor: unknown comparator "${comparator}"`
+        );
+        return 'raw-presenter';
+      }
+    } else {
+      console.warn(
+        `util:query-value-components-builder#getPresenterFor: unknown comparator "${comparator}"`
+      );
       return 'raw-presenter';
     }
   },
