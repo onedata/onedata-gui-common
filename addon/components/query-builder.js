@@ -1,5 +1,7 @@
 /**
- * Shows query builder - blocks editor, query trigger and curl generator.
+ * Renders query builder - an input-looking container that renders block hierarchy.
+ * To integrate query builder with outside world, inject your own `rootQueryBlock`
+ * and see methods for reading edited query data.
  *
  * @module components/query-builder
  * @author Michał Borzęcki, Jakub Liput
@@ -13,45 +15,56 @@ import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-
 import layout from 'onedata-gui-common/templates/components/query-builder';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { tag } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
 
   classNames: ['query-builder'],
-  classNameBindings: ['modeClass'],
 
   /**
+   * @override
    * @type {String}
    */
   i18nPrefix: 'components.queryBuilder',
 
   /**
+   * Objects should have at least these properties:
+   * - key
+   * - displayedKey
+   * - type
+   * 
+   * Additional properties:
+   * - isSpecialKey
+   * 
    * @virtual
-   */
-  sortProperty: undefined,
-
-  /**
-   * @virtual
-   */
-  sortDirection: undefined,
-
-  /**
-   * @virtual
+   * @type {Array<Object>}
    */
   queryProperties: undefined,
 
   /**
    * @virtual
-   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
 
   /**
+   * Trigger parent of component to update `queryProperties` data.
    * @virtual
    * @type {Function}
    */
   refreshQueryProperties: notImplementedIgnore,
+
+  /**
+   * @virtual optional
+   * @type {Boolean}
+   */
+  readonly: false,
+
+  /**
+   * @virtual optional
+   * @type {Utils.QueryBuilder.RootOperatorQueryBlock}
+   */
+  rootQueryBlock: undefined,
 
   /**
    * Placement of all rendered one-webui-popover, see
@@ -59,11 +72,6 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   popoverPlacement: 'vertical',
-
-  /**
-   * @type {Boolean}
-   */
-  readonly: false,
 
   /**
    * Contains state of the condition blocks edition.
@@ -75,11 +83,6 @@ export default Component.extend(I18n, {
   editedConditions: undefined,
 
   /**
-   * @type {Utils.QueryBuilder.RootOperatorQueryBlock}
-   */
-  rootQueryBlock: computed(() => RootOperatorQueryBlock.create()),
-
-  /**
    * @type {ComputedProperty<Boolean>}
    */
   hasInvalidCondition: computed('editedConditions', function hasInvalidCondition() {
@@ -87,21 +90,15 @@ export default Component.extend(I18n, {
       .some(isValid => !isValid);
   }),
 
-  modeClass: tag `query-builder-mode-${'inputMode'}`,
-
   init() {
     this._super(...arguments);
     this.set('editedConditions', new Map());
+    if (!this.get('rootQueryBlock')) {
+      this.set('rootQueryBlock', RootOperatorQueryBlock.create());
+    }
   },
 
   actions: {
-    performQuery() {
-      const {
-        onPerformQuery,
-        rootQueryBlock,
-      } = this.getProperties('onPerformQuery', 'rootQueryBlock');
-      onPerformQuery(rootQueryBlock);
-    },
     /**
      * @param {Utils.QueryBuilder.ConditionQueryBlock} conditionBlock
      */
@@ -119,8 +116,7 @@ export default Component.extend(I18n, {
 
     /**
      * @param {Utils.QueryBuilder.ConditionQueryBlock} conditionBlock
-     *
-     * @param {boolean} isValid
+     * @param {Boolean} isValid
      */
     onConditionEditionValidityChange(conditionBlock, isValid) {
       const editedConditionEntry = this.get('editedConditions').get(conditionBlock);

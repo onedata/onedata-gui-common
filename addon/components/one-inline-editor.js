@@ -86,7 +86,7 @@ export default Component.extend(I18n, {
   /**
    * If true. editor will not focus input on first render
    * @type {boolean}
-   /*
+   */
   ignoreInitialFocus: false,
 
   /**

@@ -16,22 +16,24 @@ export default Component.extend({
   classNames: ['truncated-string', 'truncate'],
 
   /**
-   * If true, tooltip is visible
-   * @type {boolean}
-   */
-  showTooltip: false,
-
-  /**
+   * @virtual
    * @type {string}
    */
   tooltipText: undefined,
 
   /**
    * Placement of popover with full text.
-   * See one-webui-popover docs for available values.
+   * See Bootstrap 3 docs for available values.
+   * @virtual optional
    * @type {string}
    */
   tooltipPlacement: 'top',
+
+  /**
+   * If true, tooltip is visible
+   * @type {boolean}
+   */
+  showTooltip: false,
 
   mouseEnter() {
     this.updateTooltipText();
