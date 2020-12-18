@@ -153,7 +153,7 @@ input {
 
 // Removes additional buttons to increase/decrease values which are inside
 // number inputs.
-input[type=number] {  
+input[type=number] {
   &::-webkit-inner-spin-button {
     display: none;
   }
@@ -315,11 +315,11 @@ input[type=number] {
 .loadable-row {
   position: relative;
   min-height: 150px;
-  
+
   &.sm {
     min-height: 50px;
   }
-  
+
   &.lg {
     min-height: 100px;
   }
@@ -346,7 +346,7 @@ ul.info, ol.info {
     margin: 0 0 28px 52px; /* Give each list item a left margin to make room for the numbers */
     list-style: none; /* Disable the normal item numbering */
   }
-  
+
   li::before {
     position: absolute;
     top: 1px;
@@ -363,13 +363,13 @@ ul.info, ol.info {
     border-radius: 4px;
     text-align: center;
   }
-  
+
   &.info-condensed {
     li {
       margin-bottom: 12px;
     }
   }
-  
+
   &.info-gray {
     li::before {
       background: $color-one-light-gray;
@@ -380,7 +380,7 @@ ul.info, ol.info {
 // based on: http://www.456bereastreet.com/archive/201105/styling_ordered_list_numbers/
 ol.info {
   counter-reset: li; /* Initiate a counter */
-  
+
   li::before {
     content:counter(li); /* Use the counter as content */
     counter-increment: li; /* Increment the counter by 1 */
@@ -428,7 +428,7 @@ a {
 
 .code-textarea {
   font-family: $font-family-monospace;
-  resize: none; 
+  resize: none;
 }
 
 textarea.no-resize  {
@@ -543,6 +543,10 @@ textarea.no-resize  {
   margin-right: 0.3em;
 }
 
+.thousand-space {
+  margin-left: 0.15em;
+}
+
 h1 .header-addon {
   margin-left: 10px;
   text-transform: none;
@@ -580,14 +584,14 @@ textarea + .btn-container {
     text-align: center;
     padding-bottom: 10px;
   }
-  
+
   .first-row td {
     height: 0;
     padding: 0;
     margin: 0;
     border: 0;
   }
-  
+
   .data-row {
     td {
       height: 44px;
@@ -622,7 +626,7 @@ textarea[style^="touch-action: manipulation"] {
     bottom: -2px;
   }
 }
-  
+
 .btn-inline-after-text {
   margin-left: $padding-small-horizontal;
   top: -2px;
@@ -736,7 +740,7 @@ textarea[style^="touch-action: manipulation"] {
       right: initial;
     }
   }
-  
+
   &.opened {
     .toggle-icon {
       transform: translateY(-50%) rotate(180deg);
