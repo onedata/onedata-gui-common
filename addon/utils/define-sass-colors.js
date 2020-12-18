@@ -16,7 +16,12 @@ module.exports = function (app, colors) {
     app.options.sassOptions = {};
   }
   const sassOptions = app.options.sassOptions;
+
+  // Using passed sass implementation if possible. It's a hack to avoid instanceof check
+  // errors when parent project sass.types.* classes are considered different than
+  // gui-common sass.types.* classes.
   const sassImplementation = sassOptions.implementation || sass;
+
   if (!sassOptions.functions) {
     sassOptions.functions = {};
   }
