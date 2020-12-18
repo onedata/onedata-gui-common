@@ -152,9 +152,5 @@ export default Component.extend(I18n, {
 
       this.notifyPropertyChange('editedConditions');
     },
-
-    refreshQueryProperties() {
-      return this.get('refreshQueryProperties')();
-    },
   },
 });

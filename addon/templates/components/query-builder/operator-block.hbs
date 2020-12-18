@@ -13,7 +13,7 @@
       level=(sub level 1)
       onBlockReplace=(action "replaceBlock" firstOperand)
       onBlockRemove=(action "removeBlock" firstOperand)
-      refreshQueryProperties=(action "refreshQueryProperties")
+      refreshQueryProperties=(action refreshQueryProperties)
       onConditionEditionStart=onConditionEditionStart
       onConditionEditionEnd=onConditionEditionEnd
       onConditionEditionValidityChange=onConditionEditionValidityChange
@@ -26,13 +26,13 @@
         valuesBuilder=valuesBuilder
         popoverPlacement=popoverPlacement
         hideConditionCreation=true
-        refreshQueryProperties=(action "refreshQueryProperties")
+        refreshQueryProperties=(action refreshQueryProperties)
         onBlockAdd=(action "addBlock")
       }}
     {{/if}}
   {{else if (not readonly)}}
     {{query-builder/block-adder
-      refreshQueryProperties=(action "refreshQueryProperties")
+      refreshQueryProperties=(action refreshQueryProperties)
       operators=operators
       valuesBuilder=valuesBuilder
       popoverPlacement=popoverPlacement
@@ -51,7 +51,7 @@
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
       popoverPlacement=popoverPlacement
-      refreshQueryProperties=(action "refreshQueryProperties")
+      refreshQueryProperties=(action refreshQueryProperties)
       onBlockReplace=(action "replaceBlock" operandBlock)
       onBlockRemove=(action "removeBlock" operandBlock)
       onConditionEditionStart=onConditionEditionStart
@@ -77,7 +77,7 @@
         valuesBuilder=valuesBuilder
         queryProperties=queryProperties
         popoverPlacement=popoverPlacement
-        refreshQueryProperties=(action "refreshQueryProperties")
+        refreshQueryProperties=(action refreshQueryProperties)
         onBlockAdd=(action "addBlock")
       }}
       {{#if queryBlock.operator}}
@@ -94,7 +94,7 @@
       queryProperties=queryProperties
       popoverPlacement=popoverPlacement
       disabled=(eq queryBlock.operands.length 0)
-      refreshQueryProperties=(action "refreshQueryProperties")
+      refreshQueryProperties=(action refreshQueryProperties)
       onBlockAdd=(action "addBlock")
     }}
   {{/unless}}

@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { computed, get, set } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from 'onedata-gui-common/templates/components/query-builder/operator-block';
 import { tag } from 'ember-awesome-macros';
@@ -166,10 +166,6 @@ export default Component.extend(...mixins, {
     removeBlock(queryBlock) {
       this.get('queryBlock.operands').removeObject(queryBlock);
       this.get('onBlockRemoved')(queryBlock);
-    },
-
-    refreshQueryProperties() {
-      return this.get('refreshQueryProperties')();
     },
   },
 });

@@ -9,7 +9,7 @@ import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-oper
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
-import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
+import setDefaultQueryValuesBuilder from '../../helpers/set-default-query-values-builder';
 
 describe('Integration | Component | query builder main component', function () {
   setupComponentTest('query-builder/block-adder', {
@@ -34,6 +34,20 @@ describe('Integration | Component | query builder main component', function () {
     this.render(hbs `{{query-builder valuesBuilder=valuesBuilder}}`);
 
     expect(this.$('.query-builder'));
+  });
+
+  it('calls refreshQueryProperties when add condition popover is opened', async function () {
+    const refreshQueryProperties = sinon.spy();
+    this.on('refreshQueryProperties', refreshQueryProperties);
+    this.render(hbs `{{query-builder
+      valuesBuilder=valuesBuilder
+      refreshQueryProperties=(action "refreshQueryProperties")
+    }}`);
+    await click('.query-builder-block-adder');
+    expect(refreshQueryProperties).to.be.calledOnce;
+    await click('.operator-or');
+    await click('.query-builder-block-adder');
+    expect(refreshQueryProperties).to.be.calledTwice;
   });
 
   describe('calls notifyChange when', function () {
