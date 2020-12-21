@@ -3,8 +3,7 @@ import { describe, context, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { click, fillIn, blur } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
+import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import { clickTrigger } from '../../../helpers/ember-power-select';
 import $ from 'jquery';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
@@ -146,8 +145,7 @@ describe('Integration | Component | query builder/condition comparator value edi
             }}`);
 
             await fillIn('.comparator-value', newValue);
-
-            this.$('.comparator-value').trigger({ type: 'keydown', key: 'Enter' });
+            await keyEvent('.comparator-value', 'keydown', 'Enter');
 
             expect(changeSpy).to.be.calledWith(newValue);
             expect(finishEditSpy).to.be.calledOnce;
@@ -231,9 +229,7 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             await click('.comparator-value');
             await fillIn('.comparator-value', newValue);
-
-            this.$('.comparator-value').trigger({ type: 'keydown', key: 'Escape' });
-            await wait();
+            await keyEvent('.comparator-value', 'keydown', 'Escape');
 
             expect(finishEditSpy).to.not.be.called;
             expect(cancelEditSpy).to.be.calledOnce;

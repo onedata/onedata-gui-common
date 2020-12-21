@@ -14,18 +14,11 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import { equal, raw } from 'ember-awesome-macros';
 import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
-import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-const mixins = [
-  I18n,
-];
-
-export default Component.extend(...mixins, {
+export default Component.extend({
   layout,
   tagName: '',
   classNames: 'condition-comparator-value-editor',
-
-  i18nPrefix: 'components.queryBuilder.conditionComparatorValueEditor',
 
   /**
    * One of: view, edit, create

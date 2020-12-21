@@ -1,7 +1,7 @@
 /**
  * Allows to edit query text values.
  *
- * @module components/query-builder/editors/text-editor
+ * @module components/query-builder/value-editors/text-editor
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -17,17 +17,17 @@ export default EditorBaseComponent.extend({
   classNameBindings: ['isValueInvalid:is-invalid'],
 
   /**
+   * Input type attribute
+   * @type {String}
+   */
+  type: 'text',
+
+  /**
    * @type {ComputedProperty<Function>}
    */
   blurHandler: computed(function blurHandler() {
     return () => this.get('onFinishEdit')();
   }),
-
-  /**
-   * Input type attribute
-   * @type {String}
-   */
-  type: 'text',
 
   /**
    * @override
@@ -69,12 +69,18 @@ export default EditorBaseComponent.extend({
   },
 
   registerEventHandlers() {
-    const element = this.get('element');
-    element.addEventListener('blur', this.get('blurHandler'));
+    const {
+      element,
+      blurHandler,
+    } = this.getProperties('element', 'blurHandler');
+    element.addEventListener('blur', blurHandler);
   },
 
   deregisterEventHandlers() {
-    const element = this.get('element');
-    element.removeEventListener('blur', this.get('blurHandler'));
+    const {
+      element,
+      blurHandler,
+    } = this.getProperties('element', 'blurHandler');
+    element.removeEventListener('blur', blurHandler);
   },
 });

@@ -1,31 +1,21 @@
+const numberComparators = {
+  eq: '=',
+  lt: '&lt;',
+  lte: '≤',
+  gt: '&gt;',
+  gte: '≥',
+};
+
 export default {
   comparators: {
     string: {
       eq: '=',
     },
-    number: {
-      eq: '=',
-      lt: '<',
-      lte: '≤',
-      gt: '>',
-      gte: '≥',
-    },
+    number: numberComparators,
     stringOptions: {
       eq: '=',
     },
-    numberOptions: {
-      eq: '=',
-      lt: '<',
-      lte: '≤',
-      gt: '>',
-      gte: '≥',
-    },
-    mixedOptions: {
-      eq: '=',
-      lt: '<',
-      lte: '≤',
-      gt: '>',
-      gte: '≥',
-    },
+    numberOptions: numberComparators,
+    mixedOptions: numberComparators,
   },
 };

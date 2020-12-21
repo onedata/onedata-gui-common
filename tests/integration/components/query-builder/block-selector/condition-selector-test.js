@@ -100,7 +100,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     expect(this.$('.accept-condition')).to.have.attr('disabled');
   });
 
-  it('does not block "Add" button when property and number values is selected from dropdown', async function () {
+  it('does not block "Add" button when property and number values are selected from dropdown', async function () {
     this.render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       selectedConditionProperty=numberOptionsProp
@@ -144,8 +144,6 @@ describe('Integration | Component | query builder/block selector/condition selec
       notifiedInputValue: 'hello',
     }],
     defaultComparator: 'string.eq',
-    defaultComparatorVisibleValue: '',
-    isAddEnabledForDefaults: false,
   }, {
     propertyName: 'numberProp',
     propertyType: 'number',
@@ -157,15 +155,11 @@ describe('Integration | Component | query builder/block selector/condition selec
       notifiedInputValue: '2',
     })),
     defaultComparator: 'number.eq',
-    defaultComparatorVisibleValue: '',
-    isAddEnabledForDefaults: false,
   }].forEach(({
     propertyName,
     propertyType,
     comparators,
     defaultComparator,
-    defaultComparatorVisibleValue,
-    isAddEnabledForDefaults,
   }) => {
     it(`shows comparators for ${propertyType} property`, async function () {
       this.render(hbs `{{query-builder/block-selector/condition-selector
@@ -198,7 +192,6 @@ describe('Integration | Component | query builder/block selector/condition selec
       comparator,
       inputValueCallback,
       notifiedInputValue,
-      extraNotifiedInputCheck,
     }) => {
       const [propertyType, comparatorName] = comparator.split('.');
 
@@ -226,10 +219,6 @@ describe('Integration | Component | query builder/block selector/condition selec
             comparator,
             notifiedInputValue
           );
-
-          if (extraNotifiedInputCheck) {
-            extraNotifiedInputCheck(selectedSpy);
-          }
         }
       );
 
@@ -245,12 +234,12 @@ describe('Integration | Component | query builder/block selector/condition selec
           const comparatorValueNode = this.$('.comparator-value')[0];
           const comparatorValue = comparatorValueNode.value !== undefined ?
             comparatorValueNode.value : comparatorValueNode.textContent.trim();
-          expect(comparatorValue).to.equal(defaultComparatorVisibleValue);
+          expect(comparatorValue).to.equal('');
         }
       );
 
       it(
-        `${isAddEnabledForDefaults ? 'does not block' : 'blocks'} "Add" button when ${propertyType} property "${comparatorName}" condition has default comparator value`,
+        `blocks "Add" button when ${propertyType} property "${comparatorName}" condition has default comparator value`,
         async function () {
           this.render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
@@ -259,11 +248,7 @@ describe('Integration | Component | query builder/block selector/condition selec
           await selectChoose('.property-selector-container', propertyName);
 
           const addBtn = this.$('.accept-condition');
-          if (isAddEnabledForDefaults) {
-            expect(addBtn).to.not.have.attr('disabled');
-          } else {
-            expect(addBtn).to.have.attr('disabled');
-          }
+          expect(addBtn).to.have.attr('disabled');
         }
       );
     });
