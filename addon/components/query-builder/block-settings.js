@@ -65,7 +65,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  clickOutsideExceptSelector: tag `${'parentSelector'}, ${'parentSelector'} *, .one-webui-popover-block-settings`,
+  clickOutsideExceptSelector: tag `${'triggerSelector'}, ${'triggerSelector'} *, .one-webui-popover-block-settings`,
 
   actions: {
     /**
