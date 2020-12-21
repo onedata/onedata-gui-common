@@ -46,7 +46,7 @@ export default Component.extend(...mixins, {
 
   /**
    * @virtual
-   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
 

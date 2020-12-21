@@ -52,7 +52,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
 

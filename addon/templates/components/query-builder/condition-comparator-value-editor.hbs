@@ -12,7 +12,7 @@
 {{else if editorSpec}}
   <div
     id={{componentGuid}}
-    class="form-group comparator-value-editor {{editorSpec.componentName}} {{if isValueInvalid "has-error"}} {{elementClass}}"
+    class="form-group form-group-sm comparator-value-editor {{editorSpec.componentName}} {{if isValueInvalid "has-error"}} {{elementClass}}"
   >
     {{component (concat "query-builder/value-editors/" editorSpec.componentName)
       class="comparator-value"

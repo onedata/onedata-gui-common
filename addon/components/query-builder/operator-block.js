@@ -65,7 +65,7 @@ export default Component.extend(...mixins, {
 
   /**
    * @virtual
-   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
 
@@ -77,7 +77,7 @@ export default Component.extend(...mixins, {
 
   /**
    * @virtual
-   * @type {Array<Utils.QueryProperty>}
+   * @type {Array<QueryProperty>}
    */
   queryProperties: Object.freeze([]),
 

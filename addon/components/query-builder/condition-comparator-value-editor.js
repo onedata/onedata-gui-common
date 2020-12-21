@@ -68,7 +68,7 @@ export default Component.extend(...mixins, {
 
   /**
    * @virtual
-   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
 
@@ -100,7 +100,7 @@ export default Component.extend(...mixins, {
   /**
    * A QueryProperty instance for which value is edited
    * @virtual optional
-   * @type {Utils.QueryProperty}
+   * @type {QueryProperty}
    */
   queryProperty: undefined,
 

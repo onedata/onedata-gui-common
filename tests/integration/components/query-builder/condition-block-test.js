@@ -118,7 +118,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionStartSpy,
     } = this.setProperties({
       queryBlock: ConditionQueryBlock.create({
-        property: { path: 'a.b' },
+        property: { key: 'some_key' },
         comparator: 'string.eq',
         comparatorValue: 'abc',
       }),

@@ -13,7 +13,7 @@ import { observer } from '@ember/object';
 export default QueryBlock.extend({
   /**
    * @virtual
-   * @type {Utils.QueryProperty}
+   * @type {QueryProperty}
    */
   property: null,
 

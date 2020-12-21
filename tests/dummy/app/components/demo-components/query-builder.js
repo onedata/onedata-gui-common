@@ -12,11 +12,24 @@ import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-
 export default Component.extend({
   queryProperties: Object.freeze([{
       key: 'hello',
+      displayedKey: 'Hello',
       type: 'string',
     },
     {
+      displayedKey: 'World',
       key: 'world',
       type: 'number',
+    }, {
+      displayedKey: 'Zeta',
+      isSpecialKey: true,
+      key: 'zeta',
+      type: 'number',
+    },
+    {
+      displayedKey: 'Some options',
+      key: 'optionKey',
+      type: 'stringOptions',
+      stringValues: ['one', 'two', 'alpha'],
     },
   ]),
 

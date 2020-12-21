@@ -90,8 +90,8 @@ describe('Integration | Component | query builder/block selector', function () {
       const queryProperties = this.get('queryProperties');
       const options = this.$('.ember-power-select-option');
       expect(options).to.have.length(queryProperties.length);
-      queryProperties.mapBy('key').forEach((path, index) =>
-        expect(options[index].textContent.trim()).to.equal(path)
+      queryProperties.mapBy('key').forEach((key, index) =>
+        expect(options[index].textContent.trim()).to.equal(key)
       );
     });
 

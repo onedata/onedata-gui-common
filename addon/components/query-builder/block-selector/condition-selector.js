@@ -32,27 +32,28 @@ export default Component.extend(...mixins, {
   i18nPrefix: 'components.queryBuilder.blockSelector.conditionSelector',
 
   /**
-   * @virtual optional
+   * @virtual
    * @type {Array<QueryProperty>}
    */
   queryProperties: Object.freeze([]),
 
   /**
    * @virtual
-   * @type {OnedataGuiCommon.Utils.QueryComponentValueBuilder}
+   * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
 
   /**
+   * @virtual
    * @type {Function}
-   * @param {Utils.QueryProperty} property
+   * @param {QueryProperty} property
    * @param {String} comparator
    * @param {any} comparatorValue
    */
   onConditionSelected: notImplementedIgnore,
 
   /**
-   * @type {Utils.QueryProperty}
+   * @type {QueryProperty}
    */
   selectedConditionProperty: undefined,
 
@@ -66,6 +67,10 @@ export default Component.extend(...mixins, {
    */
   conditionComparatorValue: undefined,
 
+  /**
+   * Query properties sorted for display in power select
+   * @type {ComputedProperty<Array<QueryProperty>>}
+   */
   queryPropertiesForSelector: computed(
     'queryProperties.[]',
     function queryPropertiesForSelector() {
@@ -131,13 +136,18 @@ export default Component.extend(...mixins, {
     },
   ),
 
-  isConditionDataValid: or(
-    // support for comparator-less conditions
-    and(not('comparators.length'), 'selectedConditionProperty'),
-    and(
-      'selectedConditionProperty',
-      'selectedConditionComparator',
-      'isConditionComparatorValueValid',
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isConditionDataValid: and(
+    'selectedConditionProperty',
+    or(
+      // support for comparator-less conditions
+      not('comparators.length'),
+      and(
+        'selectedConditionComparator',
+        'isConditionComparatorValueValid',
+      )
     ),
   ),
 
@@ -182,7 +192,7 @@ export default Component.extend(...mixins, {
 
   actions: {
     /**
-     * @param {Utils.QueryProperty} queryProperty 
+     * @param {QueryProperty} queryProperty 
      */
     conditionPropertyChanged(queryProperty) {
       return this.conditionPropertyChanged(queryProperty);

@@ -35,7 +35,7 @@ describe('Integration | Component | query builder/block settings', function () {
       triggerSelector="#x"
     }}</div>`);
 
-    expect($('.webui-popover')).to.exist.and.not.have.css('display', 'none');
+    expect($('.webui-popover')).to.exist.and.have.class('in');
 
     const blockSelector = $('.query-builder-block-selector');
     expect(blockSelector).to.exist;
@@ -52,6 +52,7 @@ describe('Integration | Component | query builder/block settings', function () {
     }}</div>`);
 
     const blockSelector = $('.query-builder-block-selector');
+    expect($('.webui-popover')).to.exist.and.have.class('in');
     expect(blockSelector).to.exist;
     // only operator blocks have "change to" section
     expect(blockSelector.find('.change-to-section')).to.exist;
@@ -67,6 +68,7 @@ describe('Integration | Component | query builder/block settings', function () {
     }}</div>`);
 
     const blockSelector = $('.query-builder-block-selector');
+    expect($('.webui-popover')).to.exist.and.have.class('in');
     expect(blockSelector).to.exist;
     // condition blocks don't have "change to" section
     expect($('.change-to-section')).to.not.exist;
@@ -95,9 +97,8 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.surround-section .operator-and');
-      await waitUntil(() => $('.webui-popover').css('display') === 'none');
+      await waitUntil(() => !$('.webui-popover').hasClass('in'));
 
-      expect($('.webui-popover').css('display')).to.equal('none');
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];
       expect(get(blocks, 'length')).to.equal(1);
@@ -133,7 +134,7 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.change-to-section .operator-and');
-      await waitUntil(() => $('.webui-popover').css('display') === 'none');
+      await waitUntil(() => !$('.webui-popover').hasClass('in'));
 
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];

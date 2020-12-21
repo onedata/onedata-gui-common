@@ -163,3 +163,15 @@ export default Component.extend(I18n, {
     },
   },
 });
+
+/**
+ * @typedef QueryProperty
+ * @property {String} key backend name of property
+ * @property {String} displayedKey name of property displayed for user
+ * @property {String} type one of: "string", "number", "stringOptions", "numberOptions",
+ *   "mixedOptions"
+ * @property {Array<String>} [stringValues] available string values to choose from
+ * @property {Array<Number>} [numberValues] available number value to choose from
+ * @property {Array<any>} [allValues] available string/number value to chooese from,
+ *   if type is "mixedOptions"
+ */

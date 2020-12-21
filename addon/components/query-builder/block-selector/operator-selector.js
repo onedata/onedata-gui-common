@@ -46,11 +46,6 @@ export default Component.extend(I18n, {
   /**
    * @type {Array<String>}
    */
-  operatorsWithTip: Object.freeze(['none']),
-
-  /**
-   * @type {Array<String>}
-   */
   disabledOperators: Object.freeze([]),
 
   /**
@@ -88,16 +83,13 @@ export default Component.extend(I18n, {
       const {
         availableOperators,
         disabledOperators,
-        operatorsWithTip,
       } = this.getProperties(
         'availableOperators',
         'disabledOperators',
-        'operatorsWithTip'
       );
       return availableOperators.map(operatorName => ({
         name: operatorName,
-        tip: operatorsWithTip.includes(operatorName) ?
-          this.t(`operatorTips.${operatorName}`) : undefined,
+        tip: this.t(`operatorTips.${operatorName}`, {}, { defaultValue: null }),
         disabled: disabledOperators.includes(operatorName),
       }));
     }

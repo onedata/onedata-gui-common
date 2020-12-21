@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import { click, fillIn, blur } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
@@ -79,7 +78,6 @@ describe('Integration | Component | query builder main component', function () {
         notifyUpdate: notifyUpdateSpy,
       });
       rootQueryBlock.addOperand(andBlock);
-      notifyUpdateSpy.reset();
       this.setProperties({
         conditionBlocks,
         orBlock,
@@ -88,26 +86,23 @@ describe('Integration | Component | query builder main component', function () {
         notifyUpdateSpy,
       });
 
-      this.render(hbs `<div id="builder-container">{{query-builder
+      this.render(hbs `{{query-builder
         queryProperties=queryProperties
         rootQueryBlock=rootQueryBlock
         valuesBuilder=valuesBuilder
-      }}</div>`);
+      }}`);
+      notifyUpdateSpy.reset();
     });
 
-    it(
-      'value nested in operators is changed',
-      async function () {
-        const firstValue = this.$('.comparator-value:contains("1")');
-        firstValue[0].click();
-        await wait();
+    it('value nested in operators is changed', async function () {
+      const firstValue = this.$('.comparator-value:contains("1")');
+      await click(firstValue[0]);
 
-        await fillIn('input.comparator-value', 'test');
-        await blur('input.comparator-value');
+      await fillIn('input.comparator-value', 'test');
+      await blur('input.comparator-value');
 
-        expect(this.get('notifyUpdateSpy')).to.be.calledOnce;
-      }
-    );
+      expect(this.get('notifyUpdateSpy')).to.be.calledOnce;
+    });
 
     it('a new nested operator is added', async function () {
       await click('.query-builder-block-adder');
