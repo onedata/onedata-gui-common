@@ -79,8 +79,15 @@ export default Component.extend(...mixins, {
    */
   mode: 'create',
 
+  /**
+   * Condition creation should be hidden always in edit mode.
+   * @type {ComputedProperty<Boolean>}
+   */
   effHideConditionCreation: or(equal('mode', raw('edit')), 'hideConditionCreation'),
 
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
   isEditBlockAnOperator: reads('editBlock.isOperator'),
 
   /**
@@ -102,8 +109,15 @@ export default Component.extend(...mixins, {
    */
   onBlockReplace: notImplementedThrow,
 
+  /**
+   * @type {ComputedProperty<String>}
+   */
   modeClass: tag `${'mode'}-block-selector`,
 
+  /**
+   * Add pseudo-operator "none" to available operators.
+   * @type {ComputedProperty<Array<String>}
+   */
   editOperators: array.concat('operators', raw(['none'])),
 
   /**
@@ -113,8 +127,10 @@ export default Component.extend(...mixins, {
     'editBlock.{operator,operands.[]}',
     'editParentBlock',
     function disabledChangeSectionOperators() {
-      const editBlock = this.get('editBlock');
-      const editParentBlock = this.get('editParentBlock');
+      const {
+        editBlock,
+        editParentBlock,
+      } = this.getProperties('editBlock', 'editParentBlock');
       const operatorNames = Object.keys(operatorClasses);
 
       if (!editBlock) {
@@ -150,11 +166,7 @@ export default Component.extend(...mixins, {
    * @returns {Utils.QueryBuilder.OperatorQueryBlock}
    */
   createOperatorBlock(operatorName, initialOperands) {
-    const editBlockNotifyUpdate = this.get('editBlock.notifyUpdate');
     const blockProperties = {};
-    if (editBlockNotifyUpdate) {
-      set(blockProperties, 'notifyUpdate', editBlockNotifyUpdate);
-    }
     if (!isEmpty(initialOperands)) {
       set(blockProperties, 'operands', initialOperands);
     }
@@ -175,16 +187,11 @@ export default Component.extend(...mixins, {
      * @param {any} comparatorValue 
      */
     conditionAdded(property, comparator, comparatorValue) {
-      const editBlockNotifyUpdate = this.get('editBlock.notifyUpdate');
-      const blockProperties = {
+      const condition = ConditionQueryBlock.create({
         property,
         comparator,
         comparatorValue,
-      };
-      if (this.get('editBlock.notifyUpdate')) {
-        set(blockProperties, 'notifyUpdate', editBlockNotifyUpdate);
-      }
-      const condition = ConditionQueryBlock.create(blockProperties);
+      });
       this.get('onBlockAdd')(condition);
     },
 

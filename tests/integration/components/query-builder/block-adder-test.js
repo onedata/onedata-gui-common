@@ -74,7 +74,7 @@ describe('Integration | Component | query builder/block adder', function () {
     await click('.query-builder-block-adder');
     await click('.operator-and');
 
-    await waitUntil(() => $('.webui-popover.in').length === 0, { timeout: 1000 });
+    await waitUntil(() => $('.webui-popover.in').length === 0);
   });
 
   it('closes block selector when condition has been choosen', async function () {
@@ -93,7 +93,7 @@ describe('Integration | Component | query builder/block adder', function () {
     await fillIn('.comparator-value', 'hello');
     await click('.accept-condition');
 
-    await waitUntil(() => $('.webui-popover.in').length === 0, { timeout: 1000 });
+    await waitUntil(() => $('.webui-popover.in').length === 0);
   });
 
   it('can be disabled', async function () {

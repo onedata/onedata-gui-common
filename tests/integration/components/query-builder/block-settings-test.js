@@ -95,9 +95,7 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.surround-section .operator-and');
-      await waitUntil(
-        () => $('.webui-popover').css('display') === 'none', { timeout: 1000 }
-      );
+      await waitUntil(() => $('.webui-popover').css('display') === 'none');
 
       expect($('.webui-popover').css('display')).to.equal('none');
       expect(replaceSpy).to.be.calledOnce;
@@ -135,9 +133,7 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.change-to-section .operator-and');
-      await waitUntil(
-        () => $('.webui-popover').css('display') === 'none', { timeout: 1000 }
-      );
+      await waitUntil(() => $('.webui-popover').css('display') === 'none');
 
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];

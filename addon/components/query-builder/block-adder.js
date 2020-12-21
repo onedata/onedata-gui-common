@@ -2,7 +2,7 @@
  * Shows query block adder with adder trigger.
  * 
  * @module components/query-builder/block-adder
- * @author Michał Borzęcki
+ * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -19,8 +19,6 @@ import { resolve } from 'rsvp';
 export default Component.extend({
   tagName: '',
   layout,
-
-  classNames: ['query-builder-block-adder'],
 
   /**
    * @virtual
@@ -68,8 +66,15 @@ export default Component.extend({
    */
   refreshQueryPropertiesProxy: undefined,
 
+  /**
+   * @type {ComputedProperty<String>}
+   */
   btnId: tag `btn-${'componentId'}`,
 
+  /**
+   * Id of main element of this component in template
+   * @type {ComputedProperty<String>}
+   */
   componentId: computed(function componentId() {
     return guidFor(this);
   }),
