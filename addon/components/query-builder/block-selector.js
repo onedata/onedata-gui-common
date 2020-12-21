@@ -23,8 +23,6 @@ import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw'
 import { reads } from '@ember/object/computed';
 import { A } from '@ember/array';
 
-const allowedModes = ['create', 'edit'];
-
 const operatorClasses = {
   and: AndOperatorQueryBlock,
   or: OrOperatorQueryBlock,
@@ -75,31 +73,13 @@ export default Component.extend(...mixins, {
   valuesBuilder: undefined,
 
   /**
-   * @type {Array<String>}
-   */
-  allowedModes,
-
-  /**
-   * Non-validated user-set value of mode.
-   * See: `mode` computed property.
+   * One of: "create", "edit"
+   * @virtual optional
    * @type {String}
    */
-  rawMode: null,
+  mode: 'create',
 
   effHideConditionCreation: or(equal('mode', raw('edit')), 'hideConditionCreation'),
-
-  mode: computed({
-    get() {
-      const {
-        rawMode,
-        allowedModes,
-      } = this.getProperties('rawMode', 'allowedModes');
-      return rawMode && allowedModes.include(rawMode) ? rawMode : allowedModes[0];
-    },
-    set(key, value) {
-      return this.set('rawMode', value);
-    },
-  }),
 
   isEditBlockAnOperator: reads('editBlock.isOperator'),
 

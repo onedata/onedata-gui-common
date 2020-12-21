@@ -56,6 +56,15 @@ export default Component.extend(I18n, {
   refreshQueryProperties: notImplementedIgnore,
 
   /**
+   * Set of operators available to add in blocks.
+   * Eg. `['and', 'or', 'expect', 'not']`.
+   * See: `component:query-builder/block-selector#validOperators` for available values.
+   * @virtual
+   * @type {Array<String>}
+   */
+  operators: undefined,
+
+  /**
    * @virtual optional
    * @type {Boolean}
    */
