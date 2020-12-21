@@ -124,7 +124,6 @@ describe('Integration | Component | query builder/operator block', function () {
             }}`);
           await click('.query-builder-block-adder');
 
-          // FIXME: there is no not operator! search for all operator not
           await click('.operator-not');
 
           // 1 operand
