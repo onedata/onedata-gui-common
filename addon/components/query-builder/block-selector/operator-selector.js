@@ -13,12 +13,15 @@ import { computed } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from 'onedata-gui-common/templates/components/query-builder/block-selector/operator-selector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { inject as service } from '@ember/service';
 
 export default Component.extend(I18n, {
   layout,
 
   tagName: 'ul',
   classNames: ['operator-selector'],
+
+  i18n: service(),
 
   /**
    * @override
@@ -97,7 +100,7 @@ export default Component.extend(I18n, {
 
   actions: {
     onOperatorSelected(operatorName) {
-      this.set('selectionDone');
+      this.set('selectionDone', true);
       this.get('onOperatorSelected')(operatorName);
     },
   },

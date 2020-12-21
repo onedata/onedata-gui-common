@@ -42,13 +42,13 @@
       {{/if}}
     </div>
     {{query-builder/condition-comparator-value-editor
+      class="form-group-fill-line"
       mode="create"
       comparator=selectedConditionComparator
       value=conditionComparatorValue
       queryProperty=selectedConditionProperty
       valuesBuilder=valuesBuilder
       onValueChange=(action "conditionComparatorValueChanged")
-      class="form-group-fill-line"
     }}
   {{/if}}
 </div>

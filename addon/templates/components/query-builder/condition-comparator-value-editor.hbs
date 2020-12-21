@@ -1,7 +1,8 @@
 {{#if viewMode}}
   <span
+    id={{componentGuid}}
     onclick={{action "onStartEdit"}}
-    class="comparator-value comparator-value-view {{elementClass}}"
+    class="comparator-value comparator-value-view"
   >
     {{#if presenterComponentName}}
       {{component (concat "query-builder/value-presenters/" presenterComponentName)

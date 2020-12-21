@@ -3,10 +3,9 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
-import { click, fillIn, blur } from 'ember-native-dom-helpers';
+import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 const mathOperators = [{
@@ -203,8 +202,7 @@ describe('Integration | Component | query builder/condition block', function () 
     await fillIn('.comparator-value', 'def');
     expect(editionEndSpy).to.not.be.called;
 
-    this.$('.comparator-value').trigger({ type: 'keydown', key: 'Escape' });
-    await wait();
+    await keyEvent('.comparator-value', 'keydown', 'Escape');
 
     expect(editionEndSpy).to.be.calledOnce.and.to.be.calledWith(queryBlock);
 

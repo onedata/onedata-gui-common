@@ -87,6 +87,22 @@ export default Component.extend(...mixins, {
   popoverPlacement: 'vertical',
 
   /**
+   * If this is not a root, please inject the value.
+   * Root of the tree has the highest level value. Children on the same level will have
+   * level - 1.
+   * Typically level should be passed from outside except for root, which have the level
+   * set to known max depth of tree.
+   * See `component:block-visualiser#level` docs.
+   * @virtual optional
+   * @type {Number}
+   */
+  level: computed('queryBlock.{operator,levelScore}', function level() {
+    if (this.get('queryBlock.operator') === 'root') {
+      return this.get('queryBlock.levelScore');
+    }
+  }),
+
+  /**
    * Class name based on operator type (eg. or-operator-block)
    * @type {ComputedProperty<String>}
    */
@@ -97,19 +113,6 @@ export default Component.extend(...mixins, {
    * @type {ComputedProperty<Utils.QueryBlock|undefined>}
    */
   firstOperand: reads('queryBlock.operands.firstObject'),
-
-  /**
-   * Root of the tree has the highest level value. Children on the same level will have
-   * level - 1.
-   * Typically level should be passed from outside except for root, which have the level
-   * set to known max depth of tree.
-   * @type {Number}
-   */
-  level: computed('queryBlock.{operator,levelScore}', function level() {
-    if (this.get('queryBlock.operator') === 'root') {
-      return this.get('queryBlock.levelScore');
-    }
-  }),
 
   /**
    * @type {ComputedProperty<Boolean>}

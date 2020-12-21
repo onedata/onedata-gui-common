@@ -16,14 +16,6 @@ import { guidFor } from '@ember/object/internals';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-comparator-value-editor';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-const comparatorTypeToPropertyType = {
-  eq: 'all',
-  lt: 'number',
-  lte: 'number',
-  gt: 'number',
-  gte: 'number',
-};
-
 const mixins = [
   I18n,
 ];
@@ -34,12 +26,6 @@ export default Component.extend(...mixins, {
   classNames: 'condition-comparator-value-editor',
 
   i18nPrefix: 'components.queryBuilder.conditionComparatorValueEditor',
-
-  /**
-   * @virtual optional
-   * @type {String}
-   */
-  elementClass: '',
 
   /**
    * One of: view, edit, create
@@ -104,29 +90,39 @@ export default Component.extend(...mixins, {
    */
   queryProperty: undefined,
 
+  /**
+   * True, if mode is view
+   * @type {ComputedProperty<Boolean>}
+   */
   viewMode: equal('mode', raw('view')),
 
   /**
    * @type {ComputedProperty<{ componentName: string, params: Object }>}
    */
-  editorSpec: computed('valuesBuilder', 'comparator', 'mode', function editorSpec() {
-    const {
-      valuesBuilder,
-      comparator,
-      mode,
-      queryProperty,
-    } = this.getProperties('valuesBuilder', 'comparator', 'mode', 'queryProperty');
-    if (valuesBuilder) {
-      return valuesBuilder.getEditorFor(comparator, queryProperty, mode === 'edit');
-    } else {
-      console.warn(
-        'component:...condition-comparator-value-editor: requested editorSpec, but no valuesBuilder provided'
-      );
+  editorSpec: computed(
+    'valuesBuilder',
+    'comparator',
+    'mode',
+    'queryProperty',
+    function editorSpec() {
+      const {
+        valuesBuilder,
+        comparator,
+        mode,
+        queryProperty,
+      } = this.getProperties('valuesBuilder', 'comparator', 'mode', 'queryProperty');
+      if (valuesBuilder) {
+        return valuesBuilder.getEditorFor(comparator, queryProperty, mode === 'edit');
+      } else {
+        console.warn(
+          'component:...condition-comparator-value-editor: requested editorSpec, but no valuesBuilder provided'
+        );
+      }
     }
-  }),
+  ),
 
   /**
-   * @type {ComputedProperty<>}
+   * @type {ComputedProperty<String>}
    */
   presenterComponentName: computed(
     'valuesBuilder',
@@ -142,44 +138,20 @@ export default Component.extend(...mixins, {
     }
   ),
 
+  /**
+   * Id of main component - viewer or editor
+   * @type {ComputedProperty<String>}
+   */
   componentGuid: computed(function componentGuid() {
     return guidFor(this);
   }),
-
-  comparatorEditor: computed(
-    'comparatorEditorsSet',
-    'comparator',
-    'queryProperty.allValues',
-    function comparatorEditor() {
-      const {
-        comparatorEditorsSet,
-        comparator,
-      } = this.getProperties('comparatorEditorsSet', 'comparator');
-      if (!comparator || !comparatorEditorsSet) {
-        return null;
-      }
-      // maybe better will be:  comparatorEditor.initialize(queryProperty);
-      const comparatorOptionsMatch =
-        comparator.match(/(string|number)Options\.(.*)/);
-      const proto = {};
-      if (comparatorOptionsMatch) {
-        const propertyType = comparatorTypeToPropertyType[comparatorOptionsMatch[2]];
-        proto.values = this.get(`queryProperty.${propertyType}Values`) || [];
-      }
-      return Object.assign({}, comparatorEditorsSet[comparator], proto);
-    }
-  ),
 
   actions: {
     valueChanged(value) {
       if (this.get('mode') === 'view') {
         return;
       }
-      let newValue = value;
-      if (newValue instanceof Event) {
-        newValue = newValue.target.value;
-      }
-      this.onValueChange(newValue);
+      this.onValueChange(value);
     },
 
     onStartEdit() {

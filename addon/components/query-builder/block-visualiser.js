@@ -26,6 +26,16 @@ export default Component.extend({
   ],
 
   /**
+   * Nesting level of block tree hierachy, but *counted from bottom*.
+   * The deepets block in blocks tree have level 0, and the root block has max value
+   * of level. The level-from-bottom is computed using another property `levelScore`,
+   * which is counted from the root, to check what is the deepest level.
+   * @virtual
+   * @type {Number}
+   */
+  level: undefined,
+
+  /**
    * @virtual
    * @type {Function}
    */

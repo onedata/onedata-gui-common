@@ -8,11 +8,12 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from 'onedata-gui-common/templates/components/query-builder/condition-block';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { or } from 'ember-awesome-macros';
 
 const mixins = [
   I18n,
@@ -37,12 +38,6 @@ export default Component.extend(...mixins, {
    * @type {Utils.QueryBuilder.ConditionQueryBlock}
    */
   queryBlock: Object.freeze({}),
-
-  /**
-   * @virtual
-   * @type {Number}
-   */
-  level: undefined,
 
   /**
    * @virtual
@@ -81,37 +76,42 @@ export default Component.extend(...mixins, {
    */
   refreshQueryProperties: notImplementedIgnore,
 
+  /**
+   * Mode for condition-comparator-value-editor, see its mode property for more.
+   * @type {String}
+   */
   mode: 'view',
 
+  /**
+   * Current value of editor, eg. input's value
+   * @type {String}
+   */
   editComparatorValue: null,
 
+  /**
+   * @type {ComputedProperty<String>}
+   */
   comparator: reads('queryBlock.comparator'),
 
-  displayedKey: computed(
-    'queryBlock.property.{key,displayKey,isSpecialKey}',
-    function displayedKey() {
-      const key = this.get('queryBlock.property.key');
-      switch (key) {
-        case 'spaceId':
-          return 'space';
-        case 'storageId':
-          return 'storage';
-        case 'anyStorage':
-          return 'any storage';
-        default:
-          return key;
-      }
-    },
-  ),
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  displayedKey: or('queryBlock.property.displayedKey', 'queryBlock.property.key'),
 
+  /**
+   * Find model of query property basing on key.
+   * Enables updates of query properties data instead of relying on on-create version
+   * of queryBlock.property.
+   * @type {ComputedProperty<QueryProperty>}
+   */
   queryProperty: computed(
     'queryProperties.[]',
     'queryBlock.property.key',
     function queryProperty() {
       const queryProperties = this.get('queryProperties');
-      if (queryProperties) {
-        return queryProperties.findBy('key', this.get('queryBlock.property.key'));
-      }
+      const property = this.get('queryBlock.property');
+      return queryProperties && property &&
+        queryProperties.findBy('key', get(property, 'key')) || property;
     }
   ),
 
@@ -183,15 +183,24 @@ export default Component.extend(...mixins, {
     },
 
     finishEdit() {
-      if (!this.get('isEditComparatorValueValid' || this.get('mode') === 'view')) {
+      const {
+        mode,
+        isEditComparatorValueValid,
+        editComparatorValue,
+        onConditionEditionEnd,
+        queryBlock,
+      } = this.getProperties(
+        'mode',
+        'isEditComparatorValueValid',
+        'editComparatorValue',
+        'onConditionEditionEnd',
+        'queryBlock'
+      );
+      if (!isEditComparatorValueValid || mode === 'view') {
         return;
       }
       this.set('mode', 'view');
-      this.set('queryBlock.comparatorValue', this.get('editComparatorValue'));
-      const {
-        onConditionEditionEnd,
-        queryBlock,
-      } = this.getProperties('onConditionEditionEnd', 'queryBlock');
+      this.set('queryBlock.comparatorValue', editComparatorValue);
       onConditionEditionEnd(queryBlock);
     },
 

@@ -47,6 +47,12 @@ export default Component.extend({
    */
   onCancelEdit: notImplementedIgnore,
 
+  // TODO: https://jira.onedata.org/browse/VFS-7145
+  /**
+   * @override
+   */
+  touchActionProperties: 'touch-action: manipulation;',
+
   init() {
     this._super(...arguments);
     if (!this.get('params')) {

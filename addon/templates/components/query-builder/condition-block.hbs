@@ -3,14 +3,12 @@
 </dt>
 {{#if queryBlock.comparatorValue}}
   <dd class="property-comparison">
-    <span class="comparator">{{tt this (concat "comparators." queryBlock.comparator)}}</span>
+    <span class="comparator">{{tt this (concat "comparators." comparator)}}</span>
     {{query-builder/condition-comparator-value-editor
-      class="clickable"
-      inputClass="input-sm"
       queryProperty=queryProperty
       valuesBuilder=valuesBuilder
       mode=(if readonly "view" mode)
-      comparator=queryBlock.comparator
+      comparator=comparator
       value=(if (eq mode "edit") editComparatorValue queryBlock.comparatorValue)
       isValueInvalid=(not isEditComparatorValueValid)
       onStartEdit=(action "startEdit")
