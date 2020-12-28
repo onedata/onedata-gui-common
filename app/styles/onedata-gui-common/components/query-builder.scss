@@ -42,18 +42,6 @@ $query-builder-hover-darken: 8%;
     .root-block {
       flex-grow: 1;
     }
-      
-    .enter-text-link {
-      flex-grow: 0;
-      padding-right: 0.2em;
-    }
-    
-    .copy-btn {
-      position: block;
-      font-size: 2em;
-      align-self: flex-end;
-      padding-top: $padding-small-vertical;
-    }
   }
   
   .query-builder-block {
