@@ -34,9 +34,11 @@ export default EditorBaseComponent.extend({
    */
   didInsertElement() {
     this._super(...arguments);
-    const element = this.get('element');
-    element.focus();
-    element.select();
+    if (this.get('initiallyFocused')) {
+      const element = this.get('element');
+      element.focus();
+      element.select();
+    }
     this.registerEventHandlers();
   },
 

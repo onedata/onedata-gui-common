@@ -9,6 +9,7 @@
 
 import Component from '@ember/component';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { reads } from '@ember/object/computed';
 
 export default Component.extend({
   /**
@@ -52,6 +53,11 @@ export default Component.extend({
    * @override
    */
   touchActionProperties: 'touch-action: manipulation;',
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  initiallyFocused: reads('params.initiallyFocused'),
 
   init() {
     this._super(...arguments);

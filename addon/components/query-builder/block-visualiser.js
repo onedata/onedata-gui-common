@@ -23,6 +23,7 @@ export default Component.extend({
     'isHoveredClass',
     'isRemoveHoveredClass',
     'areSettingsVisible:has-open-settings',
+    'readonly',
   ],
 
   /**
@@ -34,6 +35,12 @@ export default Component.extend({
    * @type {Number}
    */
   level: undefined,
+
+  /**
+   * @virtual
+   * @type {Boolean}
+   */
+  readonly: undefined,
 
   /**
    * @virtual
@@ -88,6 +95,12 @@ export default Component.extend({
    * @type {Utils.QueryComponentValueBuilder}
    */
   valuesBuilder: undefined,
+
+  // TODO: https://jira.onedata.org/browse/VFS-7145
+  /**
+   * @override
+   */
+  touchActionProperties: 'touch-action: manipulation;',
 
   /**
    * @type {String}

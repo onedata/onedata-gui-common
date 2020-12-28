@@ -8,13 +8,25 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
+import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
+import { A } from '@ember/array';
+
+const optionsProperty = {
+  displayedKey: 'Some options',
+  key: 'optionKey',
+  type: 'stringOptions',
+  stringValues: ['one', 'two', 'alpha'],
+};
+
+const stringProperty = {
+  key: 'hello',
+  displayedKey: 'Hello',
+  type: 'string',
+};
 
 export default Component.extend({
-  queryProperties: Object.freeze([{
-      key: 'hello',
-      displayedKey: 'Hello',
-      type: 'string',
-    },
+  queryProperties: Object.freeze([
+    stringProperty,
     {
       displayedKey: 'World',
       key: 'world',
@@ -25,16 +37,30 @@ export default Component.extend({
       key: 'zeta',
       type: 'number',
     },
-    {
-      displayedKey: 'Some options',
-      key: 'optionKey',
-      type: 'stringOptions',
-      stringValues: ['one', 'two', 'alpha'],
-    },
+    optionsProperty,
   ]),
+
+  // uncomment to mock initial data
+  operands: computed(function operands() {
+    // UNCOMMENT for dropdown
+    // return A([ConditionQueryBlock.create({
+    //   property: optionsProperty,
+    //   comparator: 'stringOptions.eq',
+    //   comparatorValue: 'two',
+    // })]);
+    // UNCOMMENT for text editor
+    return A([ConditionQueryBlock.create({
+      property: stringProperty,
+      comparator: 'string.eq',
+      comparatorValue: 'test',
+    })]);
+    // UNCOMMENT for empty query
+    // return A();
+  }),
 
   rootQueryBlock: computed(function rootQueryBlock() {
     return RootOperatorQueryBlock.create({
+      operands: this.get('operands') || A(),
       notifyUpdate: this.notifyUpdate.bind(this),
     });
   }),

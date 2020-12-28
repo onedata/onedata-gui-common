@@ -12,6 +12,7 @@ import layout from '../../../templates/components/query-builder/value-editors/dr
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
+import { next } from '@ember/runloop';
 
 export default EditorBaseComponent.extend(I18n, {
   layout,
@@ -28,6 +29,17 @@ export default EditorBaseComponent.extend(I18n, {
   guid: computed(function guid() {
     return guidFor(this);
   }),
+
+  didInsertElement() {
+    this._super(...arguments);
+    if (this.get('initiallyFocused')) {
+      next(() => {
+        const trigger = document.querySelector(`.${this.get('guid')}.ember-power-select-trigger`);
+        const mouseDownEvent = new MouseEvent('mousedown');
+        trigger.dispatchEvent(mouseDownEvent);
+      });
+    }
+  },
 
   actions: {
     onSelectorBlur({ isOpen, isActive }) {
