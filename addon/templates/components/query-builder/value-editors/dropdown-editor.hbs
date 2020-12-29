@@ -10,5 +10,5 @@
   onblur=(action "onSelectorBlur")
   as |itemValue|
 }}
-  {{itemValue}}
+  {{if (eq itemValue 0) "0" itemValue}}
 {{/power-select}}

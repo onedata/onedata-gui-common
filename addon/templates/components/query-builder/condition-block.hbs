@@ -1,7 +1,7 @@
 <dt class="property-key {{if queryProperty.isSpecialKey "is-special-key"}}">
   {{displayedKey}}
 </dt>
-{{#if queryBlock.comparatorValue}}
+{{#unless (eq queryProperty.type "symbol")}}
   <dd class="property-comparison">
     <span class="comparator">{{tt this (concat "comparators." comparator)}}</span>
     {{query-builder/condition-comparator-value-editor
@@ -17,5 +17,5 @@
       onCancelEdit=(action "cancelEdit")
     }}
   </dd>
-{{/if}}
+{{/unless}}
 {{yield}}
