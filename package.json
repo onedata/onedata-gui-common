@@ -55,6 +55,7 @@
     "ember-cli-mocha": "0.14.4",
     "ember-cli-moment-shim": "3.5.0",
     "ember-cli-node-assets": "0.2.2",
+    "ember-cli-number-formatter": "1.0.3",
     "ember-cli-sass": "10.0.0",
     "ember-cli-shims": "1.2.0",
     "ember-cli-sri": "2.1.1",
