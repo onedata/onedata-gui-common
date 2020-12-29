@@ -50,7 +50,10 @@ $query-builder-hover-darken: 8%;
     align-items: center;
     flex-wrap: wrap;
     min-width: 0;
-    padding: $query-builder-spacer * 0.3 $query-builder-spacer * 0.1 0 $query-builder-spacer * 0.1;
+    padding-top: $query-builder-spacer * 0.3;
+    padding-right: $query-builder-spacer * 0.3;
+    padding-left: $query-builder-spacer * 0.3;
+    padding-bottom: 0;
 
     &:not(.root-block) {
       background-color: $color-query-builder-tag-darkest;
@@ -67,7 +70,26 @@ $query-builder-hover-darken: 8%;
 
     > * {
       &:not(.click-outside) {
-        margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
+        margin-top: 0;
+        margin-right: 0;
+        margin-left: $query-builder-spacer * 0.3;
+        margin-bottom: $query-builder-spacer * 0.3;
+        &:last-child {
+          margin-right: $query-builder-spacer * 0.3;
+        }
+      }
+      &.block-infix-label {
+        margin-left: $query-builder-spacer * 0.6;
+        margin-right: $query-builder-spacer * 0.3;
+      }
+      &.remove-block {
+        &:hover {
+          color: $color-one-danger;
+        }
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: $query-builder-spacer * 0.6;
+        margin-bottom: $query-builder-spacer * 0.1;
       }
     }
   }
@@ -138,17 +160,9 @@ $query-builder-hover-darken: 8%;
   .block-button {
     display: block;
     line-height: 1;
-    padding: 2px;
     background-color: transparent;
     border: 0;
     color: darken($color-one-light-blue, 30%);
-  }
-
-  .remove-block {
-    &:hover {
-      color: $color-one-danger;
-    }
-    margin-left: 1em;
   }
   
   &.readonly {
