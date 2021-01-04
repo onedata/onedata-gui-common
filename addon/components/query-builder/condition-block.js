@@ -29,7 +29,7 @@ export default Component.extend(...mixins, {
 
   /**
    * @virtual
-   * @type {Array<Object>}
+   * @type {Array<QueryProperty>}
    */
   queryProperties: undefined,
 

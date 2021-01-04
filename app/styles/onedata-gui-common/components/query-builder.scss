@@ -3,6 +3,7 @@ $color-query-builder-sand: #fef0c7;
 $color-query-builder-tag-darkest: darken($color-one-light-blue, 8%);
 $color-query-block-remove: lighten($color-one-danger, 25%);
 $query-builder-hover-darken: 8%;
+$query-builder-comparator-value-width: 20em;
 
 @mixin query-builder-striped-background($base-color, $darken-difference: 8%) {
   background: repeating-linear-gradient(
@@ -155,7 +156,7 @@ $query-builder-hover-darken: 8%;
   }
 
   .comparator-value {
-    max-width: 12em;
+    max-width: $query-builder-comparator-value-width;
   }
 
   .block-button {

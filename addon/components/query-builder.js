@@ -38,7 +38,7 @@ export default Component.extend(I18n, {
    * - isSpecialKey
    * 
    * @virtual
-   * @type {Array<Object>}
+   * @type {Array<QueryProperty>}
    */
   queryProperties: undefined,
 
