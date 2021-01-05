@@ -765,6 +765,12 @@ p.text-separated {
   transform: translate(100vw);
 }
 
+.tooltip code {
+  background: none;
+  color: inherit;
+  border: none;
+}
+
 // TODO: VFS-6566 maybe too specific for common scss (markdown)
 
 .markdown-editor {

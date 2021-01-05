@@ -1,7 +1,7 @@
 {{#power-select
-  triggerClass=(concat-classes "small comparator-value dropdown-editor-trigger" guid)
+  triggerClass=(concat-classes "small comparator-value truncate dropdown-editor-trigger" guid)
   dropdownClass="small ember-basic-dropdown-content-comparator-value over-popover-over-modals dropdown-editor-options"
-  options=params.values
+  options=options
   selected=value
   renderInPlace=false
   placeholder=(tt this "dropdownPlaceholder")

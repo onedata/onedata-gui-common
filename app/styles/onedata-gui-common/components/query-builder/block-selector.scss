@@ -32,6 +32,7 @@
     align-items: center;
     flex-grow: 1.8;
     .comparator-value-editor {
+      width: $query-builder-comparator-value-width-compact;
       padding-left: $selectors-spacing;
     }
   }
@@ -53,7 +54,7 @@
   .property-selector-container {
     flex-grow: 1;
     .ember-basic-dropdown {
-      width: 12em;
+      width: $query-builder-comparator-value-width-compact;
     }
   }
 

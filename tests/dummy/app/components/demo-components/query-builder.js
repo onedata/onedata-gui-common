@@ -25,6 +25,21 @@ const numberOptionsProperty = {
   numberValues: [-1, 0, 1, 2, 3, 4, 5],
 };
 
+const mixedNumberOptions = [1, 2, 3, 4, 5];
+const mixedStringOptions = [
+  'Commodo mollit ut tempor ut irure tempor dolore veniam proident do aliquip amet culpa.',
+  'Aliqua exercitation quis veniam id est.',
+];
+
+const mixedOptionsProperty = {
+  displayedKey: 'Mixed options',
+  key: 'mixedOptionKey',
+  type: 'mixedOptions',
+  numberValues: mixedNumberOptions,
+  stringValues: mixedStringOptions,
+  allValues: [...mixedNumberOptions, ...mixedStringOptions],
+};
+
 const stringProperty = {
   key: 'hello',
   displayedKey: 'Hello',
@@ -36,6 +51,7 @@ export default Component.extend({
     stringProperty,
     numberOptionsProperty,
     stringOptionsProperty,
+    mixedOptionsProperty,
     {
       displayedKey: 'World',
       key: 'world',

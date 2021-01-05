@@ -107,6 +107,16 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
     border: 1px solid $input-border-focus;
   }
 
+  &.truncate {
+    .ember-power-select-selected-item {
+      .option-container {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  
   .form-group-sm & {
     @extend .small;
   }

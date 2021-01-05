@@ -13,6 +13,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { guidFor } from '@ember/object/internals';
 import { computed } from '@ember/object';
 import { next } from '@ember/runloop';
+import { array } from 'ember-awesome-macros';
 
 export default EditorBaseComponent.extend(I18n, {
   layout,
@@ -28,6 +29,21 @@ export default EditorBaseComponent.extend(I18n, {
    */
   guid: computed(function guid() {
     return guidFor(this);
+  }),
+
+  options: array.sort('params.values', (a, b) => {
+    if (typeof a === 'string' && typeof b === 'string') {
+      return a.toLowerCase().localeCompare(b.toLowerCase());
+    } else if (typeof a === 'number' && typeof b === 'string') {
+      return -1;
+    } else if (typeof a === 'string' && typeof b === 'number') {
+      return 1;
+    } else if (typeof a === 'number' && typeof b === 'number') {
+      return a - b;
+    } else {
+      // for other types - sorting should be provided somewhere else
+      return 0;
+    }
   }),
 
   didInsertElement() {

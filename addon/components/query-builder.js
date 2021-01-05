@@ -77,6 +77,12 @@ export default Component.extend(I18n, {
   rootQueryBlock: undefined,
 
   /**
+   * @virtual
+   * @type {(isValid: boolean) => any}
+   */
+  onValidityChange: notImplementedIgnore,
+
+  /**
    * Placement of all rendered one-webui-popover, see
    * `component:one-webui-popover#placement`.
    * @type {String}
@@ -116,15 +122,25 @@ export default Component.extend(I18n, {
      * @param {Utils.QueryBuilder.ConditionQueryBlock} conditionBlock
      */
     onConditionEditionStart(conditionBlock) {
-      this.get('editedConditions').set(conditionBlock, { isValid: true });
+      const {
+        editedConditions,
+        onValidityChange,
+      } = this.getProperties('editedConditions', 'onValidityChange');
+      editedConditions.set(conditionBlock, { isValid: true });
       this.notifyPropertyChange('editedConditions');
+      onValidityChange(true);
     },
     /**
      * @param {Utils.QueryBuilder.ConditionQueryBlock} conditionBlock
      */
     onConditionEditionEnd(conditionBlock) {
-      this.get('editedConditions').delete(conditionBlock);
+      const {
+        editedConditions,
+        onValidityChange,
+      } = this.getProperties('editedConditions', 'onValidityChange');
+      editedConditions.delete(conditionBlock);
       this.notifyPropertyChange('editedConditions');
+      onValidityChange(true);
     },
 
     /**
@@ -132,10 +148,15 @@ export default Component.extend(I18n, {
      * @param {Boolean} isValid
      */
     onConditionEditionValidityChange(conditionBlock, isValid) {
-      const editedConditionEntry = this.get('editedConditions').get(conditionBlock);
+      const {
+        editedConditions,
+        onValidityChange,
+      } = this.getProperties('editedConditions', 'onValidityChange');
+      const editedConditionEntry = editedConditions.get(conditionBlock);
       if (editedConditionEntry) {
         set(editedConditionEntry, 'isValid', isValid);
         this.notifyPropertyChange('editedConditions');
+        onValidityChange(isValid);
       }
     },
 
