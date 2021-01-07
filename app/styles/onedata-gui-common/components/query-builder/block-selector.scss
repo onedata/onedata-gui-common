@@ -120,6 +120,11 @@
             padding-right: 0.6em;
           }
         }
+        .comparator-value-editor {
+          // let flex force the width
+          width: 0;
+          flex-grow: 1;
+        }
       }
       .accept-condition-container {
         order: 3;
