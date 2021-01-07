@@ -44,7 +44,15 @@ describe('Integration | Component | query builder/block visualiser', function ()
   it(
     'renders condition block according to the passed block spec',
     async function () {
-      this.set('queryBlock', ConditionQueryBlock.create());
+      this.set('queryBlock', ConditionQueryBlock.create({
+        property: {
+          key: 'hello',
+          displayedKey: 'Hello',
+          type: 'string',
+        },
+        comparator: 'string.eq',
+        comparatorValues: 'world',
+      }));
 
       this.render(hbs `{{query-builder/block-visualiser
         queryBlock=queryBlock

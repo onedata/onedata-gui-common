@@ -62,15 +62,15 @@ export default EmberObject.extend({
     if (comparator === undefined) {
       return () => true;
     } else if (
-      comparator.match(/^mixedOptions\.(eq|lt|lte|gt|gte)$/)
+      /^mixedOptions\.(eq|lt|lte|gt|gte)$/.test(comparator)
     ) {
       return value =>
         typeof value === 'string' && value.length > 0 ||
         typeof value === 'number' && !isNaN(value);
-    } else if (comparator.match(/^string(Options)?\.eq$/)) {
+    } else if (/^string(Options)?\.eq$/.test(comparator)) {
       return value =>
         typeof value === 'string' && value.trim().length > 0;
-    } else if (comparator.match(/^(number(Options)?\.(eq|lt|lte|gt|gte)?)$/)) {
+    } else if (/^(number(Options)?\.(eq|lt|lte|gt|gte)?)$/.test(comparator)) {
       return value =>
         typeof value === 'number' && !isNaN(value) ||
         typeof value === 'string' && value.trim().length > 0 && !isNaN(Number(value));
