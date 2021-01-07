@@ -9,6 +9,7 @@ import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-op
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
 import setDefaultQueryValuesBuilder from '../../helpers/set-default-query-values-builder';
+import $ from 'jquery';
 
 describe('Integration | Component | query builder main component', function () {
   setupComponentTest('query-builder/block-adder', {
@@ -124,5 +125,25 @@ describe('Integration | Component | query builder main component', function () {
 
       expect(this.get('notifyUpdateSpy')).to.be.calledOnce;
     });
+  });
+
+  // tests against regression bug
+  it('allows to change block operator two times', async function () {
+    const rootQueryBlock = RootOperatorQueryBlock.create({
+      operands: [OrOperatorQueryBlock.create()],
+    });
+
+    this.setProperties({
+      rootQueryBlock,
+    });
+
+    this.render(hbs `{{query-builder rootQueryBlock=rootQueryBlock}}`);
+
+    await click('.or-operator-block');
+    await click('.change-to-section .operator-and');
+    await click('.and-operator-block');
+
+    expect($('.change-to-section .operator-or'), '"or" operator button')
+      .to.exist.and.to.not.have.attr('disabled');
   });
 });

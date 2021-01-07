@@ -100,7 +100,6 @@ export default Component.extend(I18n, {
 
   actions: {
     onOperatorSelected(operatorName) {
-      this.set('selectionDone', true);
       this.get('onOperatorSelected')(operatorName);
     },
   },

@@ -73,6 +73,14 @@ export default Component.extend(...mixins, {
   valuesBuilder: undefined,
 
   /**
+   * If true, select buttons are disabled. It should be set if the popover is going
+   * to be hidden to prevent multiple clicks.
+   * @virtual
+   * @type {Boolean}
+   */
+  selectionDone: undefined,
+
+  /**
    * One of: "create", "edit"
    * @virtual optional
    * @type {String}
