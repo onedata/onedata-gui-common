@@ -1,0 +1,102 @@
+{{#if hasSingleOperandOperator}}
+  {{#if (and queryBlock.operator (not (eq queryBlock.operator "root")))}}
+    <div class="block-label block-prefix-label">{{tt this (concat "operators." queryBlock.operator)}}</div>
+  {{/if}}
+  {{#if firstOperand}}
+    {{query-builder/block-visualiser
+      parentQueryBlock=queryBlock
+      operators=operators
+      queryBlock=firstOperand
+      queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
+      readonly=readonly
+      level=(sub level 1)
+      onBlockReplace=(action "replaceBlock" firstOperand)
+      onBlockRemove=(action "removeBlock" firstOperand)
+      refreshQueryProperties=(action refreshQueryProperties)
+      onConditionEditionStart=onConditionEditionStart
+      onConditionEditionEnd=onConditionEditionEnd
+      onConditionEditionValidityChange=onConditionEditionValidityChange
+      onBlockRemoved=onBlockRemoved
+    }}
+    {{#if (and (not readonly) (eq queryBlock.operator "root"))}}
+      {{query-builder/block-adder
+        btnClass="surround-root"
+        operators=operators
+        valuesBuilder=valuesBuilder
+        popoverPlacement=popoverPlacement
+        hideConditionCreation=true
+        refreshQueryProperties=(action refreshQueryProperties)
+        onBlockAdd=(action "addBlock")
+      }}
+    {{/if}}
+  {{else if (not readonly)}}
+    {{query-builder/block-adder
+      refreshQueryProperties=(action refreshQueryProperties)
+      operators=operators
+      valuesBuilder=valuesBuilder
+      popoverPlacement=popoverPlacement
+      onBlockAdd=(action "addBlock")
+      queryProperties=queryProperties
+    }}
+  {{/if}}
+{{else}}
+  {{#each queryBlock.operands as |operandBlock index|}}
+    {{query-builder/block-visualiser
+      parentQueryBlock=queryBlock
+      level=(sub level 1)
+      readonly=readonly
+      operators=operators
+      queryBlock=operandBlock
+      queryProperties=queryProperties
+      valuesBuilder=valuesBuilder
+      popoverPlacement=popoverPlacement
+      refreshQueryProperties=(action refreshQueryProperties)
+      onBlockReplace=(action "replaceBlock" operandBlock)
+      onBlockRemove=(action "removeBlock" operandBlock)
+      onConditionEditionStart=onConditionEditionStart
+      onConditionEditionEnd=onConditionEditionEnd
+      onConditionEditionValidityChange=onConditionEditionValidityChange
+      onBlockRemoved=onBlockRemoved
+    }}
+    {{#if (and
+      queryBlock.operator
+      (or
+        (not readonly)
+        (not (eq index (sub queryBlock.operands.length 1)))
+      )
+    )}}
+      <div class="block-label block-infix-label {{if (eq index (sub queryBlock.operands.length 1)) "block-infix-label-last"}}">
+        {{tt this (concat "operators." queryBlock.operator)}}
+      </div>
+    {{/if}}
+  {{else}}
+    {{#unless readonly}}
+      {{query-builder/block-adder
+        operators=operators
+        valuesBuilder=valuesBuilder
+        queryProperties=queryProperties
+        popoverPlacement=popoverPlacement
+        refreshQueryProperties=(action refreshQueryProperties)
+        onBlockAdd=(action "addBlock")
+      }}
+      {{#if queryBlock.operator}}
+        <div class="block-label block-infix-label block-infix-label-last">
+          {{tt this (concat "operators." queryBlock.operator)}}
+        </div>
+      {{/if}}
+    {{/unless}}
+  {{/each}}
+  {{#unless readonly}}
+    {{query-builder/block-adder
+      operators=operators
+      valuesBuilder=valuesBuilder
+      queryProperties=queryProperties
+      popoverPlacement=popoverPlacement
+      disabled=(eq queryBlock.operands.length 0)
+      refreshQueryProperties=(action refreshQueryProperties)
+      onBlockAdd=(action "addBlock")
+    }}
+  {{/unless}}
+{{/if}}
+{{yield}}

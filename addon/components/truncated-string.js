@@ -16,15 +16,24 @@ export default Component.extend({
   classNames: ['truncated-string', 'truncate'],
 
   /**
+   * @virtual
+   * @type {string}
+   */
+  tooltipText: undefined,
+
+  /**
+   * Placement of popover with full text.
+   * See Bootstrap 3 docs for available values.
+   * @virtual optional
+   * @type {string}
+   */
+  tooltipPlacement: 'top',
+
+  /**
    * If true, tooltip is visible
    * @type {boolean}
    */
   showTooltip: false,
-
-  /**
-   * @type {string}
-   */
-  tooltipText: undefined,
 
   mouseEnter() {
     this.updateTooltipText();

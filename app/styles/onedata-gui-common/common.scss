@@ -752,7 +752,26 @@ p.text-separated {
   margin-top: $padding-large-vertical;
 }
 
-// FIXME: markdown
+// defined outside .clipboard-line, because it can be placed anywhere
+// semi-hidden element - display: none; or zero-spaced elements do allow copy
+.hidden-clipboard-source {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  transform: translate(100vw);
+}
+
+.tooltip code {
+  background: none;
+  color: inherit;
+  border: none;
+}
+
+// TODO: VFS-6566 maybe too specific for common scss (markdown)
 
 .markdown-editor {
   .markdown-wysiwyg {

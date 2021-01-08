@@ -1,0 +1,17 @@
+<dl class="form-control query-builder-input">
+  {{query-builder/operator-block
+    class="root-block"
+    operators=operators
+    queryBlock=rootQueryBlock
+    queryProperties=queryProperties
+    valuesBuilder=valuesBuilder
+    readonly=readonly
+    popoverPlacement=popoverPlacement
+    refreshQueryProperties=(action refreshQueryProperties)
+    onConditionEditionStart=(action "onConditionEditionStart")
+    onConditionEditionEnd=(action "onConditionEditionEnd")
+    onConditionEditionValidityChange=(action "onConditionEditionValidityChange")
+    onBlockRemoved=(action "onBlockRemoved")
+  }}
+  {{yield}}
+</dl>

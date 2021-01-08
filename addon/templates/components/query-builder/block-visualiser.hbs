@@ -1,0 +1,36 @@
+{{#component (concat "query-builder/" queryBlock.renderer)
+  class=(concat "block-level-" level)
+  operators=operators
+  queryBlock=queryBlock
+  queryProperties=queryProperties
+  valuesBuilder=valuesBuilder
+  level=level
+  readonly=readonly
+  popoverPlacement=popoverPlacement
+  onConditionEditionStart=onConditionEditionStart
+  onConditionEditionEnd=onConditionEditionEnd
+  onConditionEditionValidityChange=onConditionEditionValidityChange
+  onBlockRemoved=onBlockRemoved
+  refreshQueryProperties=(action refreshQueryProperties)
+}}
+  {{#unless readonly}}
+    <button
+      class="block-button remove-block clickable"
+      onclick={{onBlockRemove}}
+      onmouseenter={{action "removeButtonHover" true}}
+      onmouseleave={{action "removeButtonHover" false}}
+    >
+      {{one-icon icon="x"}}
+    </button>
+    {{query-builder/block-settings
+      queryBlock=queryBlock
+      operators=operators
+      parentQueryBlock=parentQueryBlock
+      open=areSettingsVisible
+      triggerSelector=(concat "#" elementId)
+      popoverPlacement=popoverPlacement
+      onBlockReplace=onBlockReplace
+      onSettingsClose=(action "onSettingsClose")
+    }}
+  {{/unless}}
+{{/component}}

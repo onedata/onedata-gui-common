@@ -1,5 +1,8 @@
 import { click } from 'ember-native-dom-helpers';
 
+/**
+ * @deprecated Use `ember-power-select/test-support` instead
+ */
 export default class EmberPowerSelectHelper {
   constructor(powerSelectTriggerParentSelector, powerSelectDropdownSelector) {
     this.triggerSelector =
@@ -9,7 +12,7 @@ export default class EmberPowerSelectHelper {
   }
 
   /**
-   * @returns {HTMLDIVElement}
+   * @returns {HTMLDivElement}
    */
   getTrigger() {
     return document.querySelector(this.triggerSelector);
@@ -23,7 +26,7 @@ export default class EmberPowerSelectHelper {
   }
 
   /**
-   * @returns {HTMLINPUTElement}
+   * @returns {HTMLInputElement}
    */
   getSearchInput() {
     return document.querySelector(
@@ -33,7 +36,7 @@ export default class EmberPowerSelectHelper {
 
   /**
    * @param {number} n item index starting from 1
-   * @returns {HTMLLIElement|null}
+   * @returns {HTMLLiElement|null}
    */
   getNthOption(n) {
     return document.querySelector(`${this.dropdownSelector} li:nth-child(${n})`);

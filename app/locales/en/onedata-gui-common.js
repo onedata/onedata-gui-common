@@ -37,6 +37,8 @@ import oneDynamicTree from './onedata-gui-common/components/one-dynamic-tree';
 import ceaseOneproviderSupportModal from './onedata-gui-common/components/cease-oneprovider-support-modal';
 import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
 import markdownEditor from './onedata-gui-common/components/markdown-editor';
+import queryBuilder from './onedata-gui-common/components/query-builder';
+import oneStep from './onedata-gui-common/components/one-step';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -103,6 +105,8 @@ const translations = {
     ceaseOneproviderSupportModal,
     oneDocSeeMore,
     markdownEditor,
+    queryBuilder,
+    oneStep,
     alerts: {
       endpointError,
     },

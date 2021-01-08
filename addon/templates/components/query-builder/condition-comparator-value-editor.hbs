@@ -1,0 +1,28 @@
+{{#if viewMode}}
+  <span
+    id={{componentGuid}}
+    onclick={{action "onStartEdit"}}
+    class="comparator-value comparator-value-view"
+  >
+    {{#if presenterComponentName}}
+      {{component (concat "query-builder/value-presenters/" presenterComponentName)
+        value=value
+      }}
+    {{/if}}
+  </span>
+{{else if editorSpec}}
+  <div
+    id={{componentGuid}}
+    class="form-group form-group-sm comparator-value-editor {{editorSpec.componentName}} {{if isValueInvalid "has-error"}} {{elementClass}}"
+  >
+    {{component (concat "query-builder/value-editors/" editorSpec.componentName)
+      class="comparator-value"
+      params=editorSpec.params
+      value=value
+      isValueInvalid=isValueInvalid
+      onValueChange=(action onValueChange)
+      onCancelEdit=(action onCancelEdit)
+      onFinishEdit=(action "onFinishEdit")
+    }}
+  </div>
+{{/if}}

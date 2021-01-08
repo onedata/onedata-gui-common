@@ -1,0 +1,65 @@
+.query-builder {
+  .query-builder-condition-block {
+    font-size: 80%;
+    align-items: center;
+
+    .special-property {
+      font-style: italic;
+    }
+
+    .property-key {
+      font-size: 100%;
+      color: $text-color;
+      font-weight: bold;
+    }
+
+    .property-comparison {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .comparator {
+      margin-right: $query-builder-spacer * 0.2;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .property-key,
+    .comparator,
+    .comparator-value {
+      min-width: 0;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .comparator-value {
+      margin-left: $query-builder-spacer * 0.2;
+    }
+    
+    .comparator-value.ember-power-select-trigger {
+      line-height: $ember-power-select-line-height;
+    }
+
+    .comparator-value-view {
+      @include font-monospace();
+    }
+    
+    .comparator-value-editor {
+      .ember-basic-dropdown {
+        max-width: 14em;
+      }
+    }
+
+    .form-group {
+      margin: 0;
+    }
+
+    &:not(.readonly) {
+      .comparator-value-view:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+}

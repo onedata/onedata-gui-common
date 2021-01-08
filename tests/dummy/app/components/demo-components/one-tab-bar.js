@@ -14,7 +14,7 @@ export default Component.extend({
     return _.range(1, 20).map(i => ({
       id: String(i),
       name: i + '. Oneprovider with long name',
-      icon: 'provider',
+      icon: 'space',
       class: 'provider-online',
     }));
   }),

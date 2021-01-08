@@ -96,18 +96,6 @@
       font-family: $font-family-monospace;
     }
   }
-    
-  // semi-hidden element - display: none; or zero-spaced elements do allow copy
-  .clipboard-raw-value {
-    position: fixed;
-    opacity: 0;
-    width: 10px;
-    height: 0;
-    padding: 0;
-    margin: 0;
-    right: 0;
-    bottom: 0;
-  }
   
   .form-control-block {
     height: auto;

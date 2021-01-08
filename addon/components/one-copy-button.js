@@ -58,6 +58,12 @@ export default Component.extend(I18n, {
   notify: notImplementedIgnore,
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  copyButtonTagName: 'button',
+
+  /**
    * Computes global clipboard target selector for local element selector
    * @type {Ember.ComputedProperty<function>}
    */

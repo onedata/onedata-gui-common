@@ -232,6 +232,11 @@
     content: $oneicon-checked; 
   }
 }
+.oneicon-circle-copy {
+  &:before {
+    content: $oneicon-circle-copy; 
+  }
+}
 .oneicon-circle-id {
   &:before {
     content: $oneicon-circle-id; 

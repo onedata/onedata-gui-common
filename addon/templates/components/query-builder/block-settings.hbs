@@ -1,0 +1,27 @@
+{{#render-later triggerRender=open}}
+  {{#one-webui-popover
+    class="block-settings-popover"
+    popoverStyle="unlimited-width over-modals one-webui-popover-block-settings"
+    onHide=(action "close")
+    padding=true
+    placement=popoverPlacement
+    triggerSelector=triggerSelector
+    open=open
+    as |popover|
+  }}
+    {{#click-outside
+      class="click-outside"
+      action=popover.hide
+      except-selector=clickOutsideExceptSelector
+    }}
+      {{query-builder/block-selector
+        mode="edit"
+        operators=operators
+        editBlock=queryBlock
+        editParentBlock=parentQueryBlock
+        selectionDone=(not open)
+        onBlockReplace=(action "blockReplace" (action (mut open) false))
+      }}
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}

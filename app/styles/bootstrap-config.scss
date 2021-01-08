@@ -120,7 +120,7 @@ label {
 @import "bootstrap/buttons";
 
 @mixin btn-sm {
-  font-size: 85%;
+  font-size: 90%;
   padding: $padding-small-vertical $padding-base-horizontal;
 }
 
@@ -148,6 +148,18 @@ label {
   }
   &.btn-danger {
     @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border); 
+  }
+  &.btn-outline-default { 
+    @include button-outline-variant($text-color, $btn-default-border); 
+  }
+  &.btn-outline-primary { 
+    @include button-outline-variant($text-color, $btn-primary-border); 
+  }
+  &.btn-outline-info {
+    @include button-outline-variant($text-color, $btn-info-border); 
+  }
+  &.btn-outline-danger {
+    @include button-outline-variant($text-color, $btn-danger-border); 
   }
   .one-icon {
     font-size: 1.7em;
@@ -291,8 +303,18 @@ label {
 @import "bootstrap/modals";
 @import "bootstrap/tooltip";
 
-.tooltip .tooltip-inner {
-  word-wrap: break-word;
+.tooltip {
+  &.tooltip-lg {
+    .tooltip-inner {
+      max-width: 400px;
+      @media (max-width: $screen-xs-max) {
+        max-width: calc(100vw - 60px);
+      }
+    }
+  }
+  .tooltip-inner {
+    word-wrap: break-word;
+  }
 }
 
 @import "bootstrap/popovers";
@@ -407,7 +429,6 @@ label {
   
   h2 {
     font-size: $font-size-base * 1.2;
-    @include font-semibold();
     text-transform: uppercase;
   }
 }

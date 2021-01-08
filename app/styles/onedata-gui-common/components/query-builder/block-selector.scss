@@ -1,0 +1,138 @@
+.query-builder-block-selector {  
+  $selectors-spacing: 0.6em;
+  
+  background-color: white;
+
+  .form-group {
+    margin-bottom: 0;
+  }
+  
+  h1 {
+    font-size: 110%;
+    font-weight: bold;
+    margin-bottom: $query-builder-spacer * 0.8;
+  }
+  
+  .operator-selector {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    flex-wrap: wrap;
+    // will add spacing between flex lines if necessary
+    margin-top: -0.4em;
+    li {
+      margin-top: 0.4em;
+    }
+  }
+
+  .comparator-main-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1.8;
+    .comparator-value-editor {
+      width: $query-builder-comparator-value-width-compact;
+      padding-left: $selectors-spacing;
+    }
+  }
+
+  .operator {
+    margin-right: $query-builder-spacer * 0.25;
+    text-transform: uppercase;
+  }
+
+  .ember-power-select-option {
+    word-break: break-all;
+  }
+
+  .special-property {
+    @include font-semibold;
+    font-style: italic;
+  }
+
+  .property-selector-container {
+    flex-grow: 1;
+    .ember-basic-dropdown {
+      width: $query-builder-comparator-value-width-compact;
+    }
+  }
+
+  .form-group-no-shrink {
+    flex-shrink: 0;
+  }
+
+  .form-group-whole-line {
+    flex-basis: 100%;
+  }
+
+  .form-group-fill-line {
+    flex-grow: 1;
+  }
+  
+  .date-editor {
+    .input-group {
+      flex-wrap: nowrap;
+    }
+
+    .form-control {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .accept-condition-container {
+    flex-grow: 0;
+    margin-left: calc(#{$selectors-spacing} + 0.2em);
+  }
+  
+  .condition-selector {
+    display: flex;
+    align-items: center;
+    .comparator-selector-container {
+      margin-left: $selectors-spacing;
+      .ember-power-select-selected-item {
+        padding-right: $padding-small-horizontal;
+      }
+      .comparator-selector {
+        padding-left: 0.2em;
+        padding-right: 0.2em;
+      }
+    }
+    
+    @media (max-width: $screen-xs-max) {
+      flex-wrap: wrap;
+      .property-selector-container {
+        order: 1;
+        flex-basis: 100%;
+        .ember-basic-dropdown {
+          width: 100%;
+        }
+      }
+      .comparator-main-container {
+        order: 2;
+        flex-grow: 1;
+        padding-top: $selectors-spacing;
+        .comparator-selector-container {
+          margin-left: 0;
+          .comparator-selector {
+            padding-left: 0.2em;
+            padding-right: 0.6em;
+          }
+        }
+        .comparator-value-editor {
+          // let flex force the width
+          width: 0;
+          flex-grow: 1;
+        }
+      }
+      .accept-condition-container {
+        order: 3;
+        flex-grow: 1;
+        flex-basis: 100%;
+        margin-top: $selectors-spacing;
+        margin-left: 0;
+        text-align: right;
+      }
+    }
+  }
+}

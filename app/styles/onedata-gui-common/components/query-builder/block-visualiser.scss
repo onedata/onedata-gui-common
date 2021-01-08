@@ -1,0 +1,6 @@
+.query-builder-block-visualiser {
+  min-width: 0;
+  &:not(.readonly) {
+    cursor: pointer;
+  }
+}

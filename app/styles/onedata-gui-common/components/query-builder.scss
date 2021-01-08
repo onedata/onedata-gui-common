@@ -1,0 +1,212 @@
+$query-builder-spacer: $padding-small-horizontal;
+$color-query-builder-sand: #fef0c7;
+$color-query-builder-tag-darkest: darken($color-one-light-blue, 8%);
+$color-query-block-remove: lighten($color-one-danger, 25%);
+$query-builder-hover-darken: 8%;
+$query-builder-comparator-value-width-compact: 14em;
+$query-builder-comparator-value-width: 20em;
+
+@mixin query-builder-striped-background($base-color, $darken-difference: 8%) {
+  background: repeating-linear-gradient(
+    135deg,
+    $base-color,
+    $base-color 4px,
+    darken($base-color, $darken-difference) 4px,
+    darken($base-color, $darken-difference) 8px
+  );
+}
+
+.query-builder {  
+  display: flex;
+  align-items: flex-start;
+
+  &.query-builder-mode-text {
+    flex-direction: column;
+    .text-edit-btn-toolbar {
+      align-self: flex-end;
+      padding-top: $padding-small-vertical;
+    }
+  }
+  
+  .btn-toolbar.text-edit-btn-toolbar {
+    margin-top: $padding-small-vertical;
+  }
+  
+  .query-builder-input {
+    display: flex;
+    align-items: center;
+    min-height: $input-height-base;
+    height: auto;
+    flex-basis: 100%;
+    min-width: 0;
+    padding: $padding-small-vertical $padding-small-horizontal;
+    margin-bottom: 0;
+    
+    .root-block {
+      flex-grow: 1;
+    }
+  }
+  
+  .readonly {
+    .query-builder-block {
+      padding-right: 0;
+      padding-right: $query-builder-spacer * 0.1;
+    }
+  }
+  
+  .query-builder-block {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    min-width: 0;
+    padding-top: $query-builder-spacer * 0.3;
+    padding-right: $query-builder-spacer * 0.3;
+    padding-left: 0;
+    padding-bottom: 0;
+
+    &.query-builder-condition-block {
+      padding-left: $query-builder-spacer * 0.3;
+      padding-right: $query-builder-spacer * 0.4;
+    }
+    
+    &:not(.root-block) {
+      background-color: $color-query-builder-tag-darkest;
+      border: 1px solid darken($color-query-builder-tag-darkest, 8%);
+      border-radius: $input-border-radius-small;
+      
+      $levelsCount: 5;
+      @for $level from 1 to $levelsCount {
+        &.block-level-#{$level} {
+          background-color: lighten($color-query-builder-tag-darkest, ($levelsCount - $level - 1) * 5%);
+        }
+      }
+    }
+
+    > * {
+      &:not(.click-outside) {
+        margin-top: 0;
+        margin-right: 0;
+        margin-left: $query-builder-spacer * 0.3;
+        margin-bottom: $query-builder-spacer * 0.3;
+        &:last-child {
+          margin-right: $query-builder-spacer * 0.3;
+        }
+      }
+      &.block-infix-label {
+        margin-left: $query-builder-spacer * 0.6;
+        margin-right: $query-builder-spacer * 0.3;
+      }
+      &.remove-block {
+        font-size: 1.5rem;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: $query-builder-spacer * 0.6;
+        margin-bottom: $query-builder-spacer * 0.1;
+        &:hover {
+          color: $color-one-danger;
+        }
+      }
+      &.surround-root {
+        margin-left: $query-builder-spacer * 0.6;
+      }
+    }
+  }
+  
+  .query-builder-block-visualiser {  
+    &.is-directly-hovered {
+      > .query-builder-block {
+        background-color: darken($color-query-builder-tag-darkest, $query-builder-hover-darken);
+        border: 1px solid darken($color-query-builder-tag-darkest, $query-builder-hover-darken);
+        
+        > .block-infix-label {
+          font-weight: bold;
+        }
+      }
+      &.is-directly-hovered-remove {
+        > .query-builder-block, .query-builder-block {
+          background-color: $color-query-block-remove;
+          border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
+        }
+      }
+    }
+  }
+  
+  .query-builder-block-visualiser.has-open-settings {
+    > .query-builder-block {
+      @include query-builder-striped-background($color-query-builder-sand);
+      border: 1px solid darken($color-query-builder-sand, 30%);
+      > .block-infix-label {
+        font-weight: bold;
+      }
+    }
+    &.is-directly-hovered-remove {
+      > .query-builder-block {
+        @include query-builder-striped-background($color-query-block-remove, 4%);
+        border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
+      }
+    }
+  }
+  
+  .is-directly-hovered-remove {
+    .query-builder-block-visualiser.has-open-settings {
+      > .query-builder-block {
+        @include query-builder-striped-background($color-query-block-remove, 4%);
+        border: 1px solid darken($color-query-block-remove, $query-builder-hover-darken);
+      }
+    }
+  }
+  
+  .block-label {
+    font-size: 80%;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .block-prefix-label {
+    margin-right: $query-builder-spacer * 0.3 $query-builder-spacer * 0.2 $query-builder-spacer * 0.2 0;
+  }
+
+  .block-infix-label {
+    margin: 0 $query-builder-spacer * 0.2 $query-builder-spacer * 0.3 $query-builder-spacer * 0.2;
+    @include font-monospace;
+  }
+
+  .comparator-value {
+    max-width: $query-builder-comparator-value-width;
+  }
+
+  .block-button {
+    display: block;
+    line-height: 1;
+    background-color: transparent;
+    border: 0;
+    color: darken($color-one-light-blue, 30%);
+  }
+  
+  &.readonly {
+    .query-builder-block-visualiser {
+      cursor: default;
+    }
+  }
+}
+
+// used in query-builder popovers, so must be defined outside query-builder class
+.hr-label-query-builder {
+  padding-top: $padding-base-vertical;
+  padding-bottom: $padding-base-vertical;
+}
+
+
+// common special-key styles across query-builder parts
+.query-builder .property-key, .condition-selector .parameter-suggestion-name {
+  &.is-special-key {
+    font-style: italic;
+  }
+}
+
+@import 'onedata-gui-common/components/query-builder/block-adder';
+@import 'onedata-gui-common/components/query-builder/block-selector';
+@import 'onedata-gui-common/components/query-builder/block-visualiser';
+@import 'onedata-gui-common/components/query-builder/condition-block';
+@import 'onedata-gui-common/components/query-builder/condition-comparator-value-editor';
