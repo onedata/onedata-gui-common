@@ -47,6 +47,13 @@ $query-builder-comparator-value-width: 20em;
     }
   }
   
+  .readonly {
+    .query-builder-block {
+      padding-right: 0;
+      padding-right: $query-builder-spacer * 0.1;
+    }
+  }
+  
   .query-builder-block {
     position: relative;
     display: flex;
@@ -55,9 +62,14 @@ $query-builder-comparator-value-width: 20em;
     min-width: 0;
     padding-top: $query-builder-spacer * 0.3;
     padding-right: $query-builder-spacer * 0.3;
-    padding-left: $query-builder-spacer * 0.3;
+    padding-left: 0;
     padding-bottom: 0;
 
+    &.query-builder-condition-block {
+      padding-left: $query-builder-spacer * 0.3;
+      padding-right: $query-builder-spacer * 0.4;
+    }
+    
     &:not(.root-block) {
       background-color: $color-query-builder-tag-darkest;
       border: 1px solid darken($color-query-builder-tag-darkest, 8%);
@@ -86,13 +98,14 @@ $query-builder-comparator-value-width: 20em;
         margin-right: $query-builder-spacer * 0.3;
       }
       &.remove-block {
-        &:hover {
-          color: $color-one-danger;
-        }
+        font-size: 1.5rem;
         padding-left: 0;
         padding-right: 0;
         margin-left: $query-builder-spacer * 0.6;
         margin-bottom: $query-builder-spacer * 0.1;
+        &:hover {
+          color: $color-one-danger;
+        }
       }
       &.surround-root {
         margin-left: $query-builder-spacer * 0.6;

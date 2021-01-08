@@ -303,8 +303,18 @@ label {
 @import "bootstrap/modals";
 @import "bootstrap/tooltip";
 
-.tooltip .tooltip-inner {
-  word-wrap: break-word;
+.tooltip {
+  &.tooltip-lg {
+    .tooltip-inner {
+      max-width: 400px;
+      @media (max-width: $screen-xs-max) {
+        max-width: calc(100vw - 60px);
+      }
+    }
+  }
+  .tooltip-inner {
+    word-wrap: break-word;
+  }
 }
 
 @import "bootstrap/popovers";

@@ -3,7 +3,7 @@
   class=(concat-classes "query-builder-block-adder clickable" btnClass)
   type="default"
   disabled=disabled
-  onClick=(action "togglePopover" true)
+  onClick=(action "togglePopover")
 }}
   {{one-icon icon="plus" class="adder-icon"}}
 {{/bs-button}}
@@ -12,7 +12,7 @@
   {{#click-outside
     class="click-outside"
     action=(action "togglePopover" false)
-    except-selector=".ember-basic-dropdown, .webui-popover-block-adder, .ember-basic-dropdown-content.ember-basic-dropdown-content-comparator-value"
+    except-selector=".ember-basic-dropdown, .webui-popover-block-adder, .query-builder-block-adder, .ember-basic-dropdown-content.ember-basic-dropdown-content-comparator-value"
   }}
     {{#one-webui-popover
       popoverStyle="unlimited-width over-modals webui-popover-block-adder"

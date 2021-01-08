@@ -95,13 +95,17 @@ export default Component.extend({
       this.get('onBlockAdd')(selectedBlock);
     },
     togglePopover(open) {
-      if (open && !this.get('hideConditionCreation')) {
+      let effOpen = open;
+      if (typeof effOpen !== 'boolean') {
+        effOpen = !this.get('popoverOpen');
+      }
+      if (effOpen && !this.get('hideConditionCreation')) {
         const promise = this.get('refreshQueryProperties')();
         if (promise && promise.then) {
           this.set('refreshQueryPropertiesProxy', promise);
         }
       }
-      this.set('popoverOpen', open);
+      this.set('popoverOpen', effOpen);
     },
   },
 });
