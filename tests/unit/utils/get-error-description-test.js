@@ -664,6 +664,58 @@ describe('Unit | Utility | get error description', function () {
         });
       });
   });
+
+  it(
+    'handles errors in form { id, details } with id == "badData" and no hint',
+    function () {
+      sinon.stub(this.i18n, 't')
+        .withArgs('errors.backendErrors.badData', {
+          key: 'somekey',
+          endingWithHint: '.',
+        })
+        .returns('complete error');
+      const error = {
+        id: 'badData',
+        details: {
+          key: 'somekey',
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe('complete error'),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
+  it(
+    'handles errors in form { id, details } with id == "badData" and hint',
+    function () {
+      sinon.stub(this.i18n, 't')
+        .withArgs('errors.backendErrors.badData', {
+          key: 'somekey',
+          hint: 'somehint',
+          endingWithHint: ': somehint.',
+        })
+        .returns('complete error');
+      const error = {
+        id: 'badData',
+        details: {
+          key: 'somekey',
+          hint: 'somehint',
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe('complete error'),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
 });
 
 function stubInviteTokenTypeTranslation(tStub) {

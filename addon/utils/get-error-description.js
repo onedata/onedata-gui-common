@@ -40,6 +40,7 @@ const detailsTranslateFunctions = {
     'supportedObjectStorages',
   ]),
   fileRegistrationNotSupported: arrayDetailsToStringsTranslator(['objectStorages']),
+  badData: badDataDetailsTranslator,
 };
 
 /**
@@ -75,7 +76,7 @@ export default function getErrorDescription(error, i18n) {
 function findTranslationForError(i18n, error) {
   const {
     id: errorId,
-    details: errorDetails,
+    details: errorDetails = {},
   } = getProperties(error, 'id', 'details');
 
   const detailsToTranslateFun = detailsTranslateFunctions[errorId];
@@ -213,4 +214,10 @@ function arrayDetailsToStringsTranslator(arraysInDetails) {
     }, {});
     return _.assign({}, errorDetails, convertedArrays);
   };
+}
+
+function badDataDetailsTranslator(i18n, errorDetails) {
+  return _.assign({}, errorDetails, {
+    endingWithHint: errorDetails.hint ? `: ${errorDetails.hint}.` : '.',
+  });
 }
