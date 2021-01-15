@@ -3,7 +3,7 @@
  *
  * @module utils/get-error-description
  * @author Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @copyright (C) 2019-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -32,14 +32,15 @@ const detailsTranslateFunctions = {
   fileAllocation: fileAllocationDetailsTranslator,
   nodeNotCompatible: nodeNotCompatibleDetailsTranslator,
   errorOnNodes: createNestedErrorDetailsTranslator(),
-  requiresPosixCompatibleStorage: arrayDetailsToStringsTranslator([
+  requiresPosixCompatibleStorage: createArrayDetailsToStringsTranslator([
     'posixCompatibleStorages',
   ]),
-  autoStorageImportNotSupported: arrayDetailsToStringsTranslator([
+  autoStorageImportNotSupported: createArrayDetailsToStringsTranslator([
     'supportedStorages',
     'supportedObjectStorages',
   ]),
-  fileRegistrationNotSupported: arrayDetailsToStringsTranslator(['objectStorages']),
+  fileRegistrationNotSupported: createArrayDetailsToStringsTranslator(['objectStorages']),
+  badData: badDataDetailsTranslator,
 };
 
 /**
@@ -75,7 +76,7 @@ export default function getErrorDescription(error, i18n) {
 function findTranslationForError(i18n, error) {
   const {
     id: errorId,
-    details: errorDetails,
+    details: errorDetails = {},
   } = getProperties(error, 'id', 'details');
 
   const detailsToTranslateFun = detailsTranslateFunctions[errorId];
@@ -119,13 +120,13 @@ function toFormattedJson(data) {
 function posixDetailsTranslator(i18n, errorDetails) {
   const errnoTranslation =
     findTranslation(i18n, `${i18nPrefix}translationParts.posixErrno.${errorDetails.errno}`);
-  return _.assign({}, errorDetails, { errno: errnoTranslation });
+  return Object.assign({}, errorDetails, { errno: errnoTranslation });
 }
 
 function notAnXTokenDetailsTranslator(i18n, errorDetails) {
   const receivedTranslation =
     findTokenTypeTranslation(i18n, errorDetails.received);
-  return _.assign({}, errorDetails, { received: receivedTranslation });
+  return Object.assign({}, errorDetails, { received: receivedTranslation });
 }
 
 function findTokenTypeTranslation(i18n, tokenType) {
@@ -147,13 +148,13 @@ function findTokenTypeTranslation(i18n, tokenType) {
 function tokenServiceForbiddenDetailsError(i18n, errorDetails) {
   const service = errorDetails.service || {};
   const serviceTranslation = resourceTypeAndIdToString(service);
-  return _.assign({}, errorDetails, { service: serviceTranslation });
+  return Object.assign({}, errorDetails, { service: serviceTranslation });
 }
 
 function inviteTokenConsumerInvalidDetailsError(i18n, errorDetails) {
   const consumer = errorDetails.consumer || {};
   const consumerTranslation = resourceTypeAndIdToString(consumer);
-  return _.assign({}, errorDetails, { consumer: consumerTranslation });
+  return Object.assign({}, errorDetails, { consumer: consumerTranslation });
 }
 
 function resourceTypeAndIdToString(resource) {
@@ -164,7 +165,7 @@ function storageTestFailedDetailsTranslator(i18n, errorDetails) {
   const operationTranslation =
     findTranslation(i18n,
       `${i18nPrefix}translationParts.storageTestOperations.${errorDetails.operation}`);
-  return _.assign({}, errorDetails, {
+  return Object.assign({}, errorDetails, {
     operation: operationTranslation || errorDetails.operation,
   });
 }
@@ -173,7 +174,7 @@ function noServiceNodesDetailsTranslator(i18n, errorDetails) {
   const serviceTranslation =
     findTranslation(i18n,
       `${i18nPrefix}translationParts.nodeServices.${errorDetails.service}`);
-  return _.assign({}, errorDetails, {
+  return Object.assign({}, errorDetails, {
     service: serviceTranslation || errorDetails.service,
   });
 }
@@ -181,7 +182,7 @@ function noServiceNodesDetailsTranslator(i18n, errorDetails) {
 function fileAllocationDetailsTranslator(i18n, errorDetails) {
   const actualSize = bytesToString(errorDetails.actualSize);
   const targetSize = bytesToString(errorDetails.targetSize);
-  return _.assign({}, errorDetails, {
+  return Object.assign({}, errorDetails, {
     actualSize,
     targetSize,
   });
@@ -189,7 +190,7 @@ function fileAllocationDetailsTranslator(i18n, errorDetails) {
 
 function nodeNotCompatibleDetailsTranslator(i18n, errorDetails) {
   const clusterType = _.upperFirst(errorDetails.clusterType);
-  return _.assign({}, errorDetails, { clusterType });
+  return Object.assign({}, errorDetails, { clusterType });
 }
 
 function createNestedErrorDetailsTranslator(nestedErrorFieldName = 'error') {
@@ -197,13 +198,13 @@ function createNestedErrorDetailsTranslator(nestedErrorFieldName = 'error') {
     const nestedError = errorDetails[nestedErrorFieldName] || {};
     const nestedErrorTranslation =
       findTranslation(i18n, i18nPrefix + nestedError.id, nestedError.details);
-    return _.assign({}, errorDetails, {
+    return Object.assign({}, errorDetails, {
       [nestedErrorFieldName]: nestedErrorTranslation,
     });
   };
 }
 
-function arrayDetailsToStringsTranslator(arraysInDetails) {
+function createArrayDetailsToStringsTranslator(arraysInDetails) {
   return (i18n, errorDetails) => {
     const convertedArrays = arraysInDetails.reduce((arrays, arrayName) => {
       if (_.isArray(errorDetails[arrayName])) {
@@ -211,6 +212,12 @@ function arrayDetailsToStringsTranslator(arraysInDetails) {
       }
       return arrays;
     }, {});
-    return _.assign({}, errorDetails, convertedArrays);
+    return Object.assign({}, errorDetails, convertedArrays);
   };
+}
+
+function badDataDetailsTranslator(i18n, errorDetails) {
+  return Object.assign({}, errorDetails, {
+    endingWithHint: errorDetails.hint ? `: ${errorDetails.hint}.` : '.',
+  });
 }
