@@ -1,4 +1,9 @@
 .one-embedded-component {
+  @include horizontal-flex-stretch;
+  // add some default spacing for content
+  // margins can be set to 0 if component has complex layout and wish to have own padding
+  padding-top: $content-row-vertical-padding;
+  padding-bottom: $content-col-padding;
   padding-left: $content-col-padding;
   padding-right: $content-col-padding;
 }

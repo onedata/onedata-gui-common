@@ -27,6 +27,9 @@
   }
   .clipboard-btn {
     position: absolute;
+    // z-index of input in input-group is hardcoded in bootstrap-sass 3.x, so we cannot
+    // use a variable
+    z-index: 3;
     background: none;
     border: none;
     right: 0;

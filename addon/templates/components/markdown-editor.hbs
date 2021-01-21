@@ -1,13 +1,11 @@
-<div class="share-edit-bar">
-  <div class="share-edit-bar-placeholder hidden-xs">
-    <div class="inline-icon-container">
-      {{one-icon icon=modeCurrentIcon}}
-    </div>
-    <span class="text">{{modeCurrentText}}</span>
+<div class="editor-current-mode-bar hidden-xs">
+  <div class="inline-icon-container">
+    {{one-icon icon=modeCurrentIcon}}
   </div>
+  <span class="text">{{modeCurrentText}}</span>
 </div>
 {{#if (eq mode "visual")}}
-  {{markdown-to-html
+  {{one-markdown-to-html
     class="markdown-view markdown-preview"
     markdown=mdContent
     tables=true

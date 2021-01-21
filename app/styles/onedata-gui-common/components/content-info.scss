@@ -1,6 +1,16 @@
 .content-info {
   $-content-margin: 2.5em;
   
+  @mixin centered-content-info {
+    .world-map {
+      position: absolute;
+    }
+    .content-info-content-container {
+      @include absolute-align-middle-center();
+      padding: $padding-large-horizontal;
+    }
+  }
+  
   // scroll-breakpoint-[number] toggles between two modes:
   // - centered horizontally and vertically (on large screens) 
   // - normally positiononed with scroll (on small screens)
@@ -9,17 +19,15 @@
   // so scroll-breakpoint is "magnified"
   @for $i from 1 to 20 {
     $size: $i * 100;
-    &.scroll-breakpoint-#{$size} .content-info-content-container {
+    &.scroll-breakpoint-#{$size} {
       @media (max-width: $screen-xs-max) {
         @media (min-height: $size * 1.2px) {
-          @include absolute-align-middle-center();
-          padding: $padding-large-horizontal;
+          @include centered-content-info;
         }
       }
       @media (min-width: $screen-sm-min) {
         @media (min-height: $size * 1px) {
-          @include absolute-align-middle-center();
-          padding: $padding-large-horizontal;
+          @include centered-content-info;
         }
       }
     }
@@ -33,7 +41,7 @@
     }
   }
   .world-map {
-    position: absolute;
+    position: relative;
     @include fill-container();
     padding: $padding-large-horizontal;
     overflow: auto;

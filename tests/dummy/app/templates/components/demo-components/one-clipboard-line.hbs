@@ -19,4 +19,32 @@
   <div class="row row-content">
     {{one-clipboard-line class="monospace" type="textarea" value=textareaFillText}}
   </div>
+  <hr>
+  <h3>Custom large with addon left</h3>
+  <div class="row row-content">
+    <div class="clipboard-line custom-large-clipboard">
+      <div class="input-group">
+        <div class="input-group-addon">
+          <strong>
+            Hello
+            {{one-tooltip title="Test"}}
+          </strong>
+          world
+        </div>
+        <input
+          type="text"
+          class="clipboard-input form-control"
+          value="Copy me!"
+          readonly
+        >
+      </div>
+      {{#one-copy-button
+        class="clipboard-btn clipboard-btn-input"
+        clipboardTarget=".custom-large-clipboard input.clipboard-input"
+      }}
+        <div class="copy-btn-background"></div>
+        {{one-icon class="copy-btn-icon" icon="browser-copy"}}
+      {{/one-copy-button}}
+    </div>
+  </div>
 </div>

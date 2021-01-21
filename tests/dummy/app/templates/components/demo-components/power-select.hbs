@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row row-content">
+    <h3>Power select small</h3>
+    <div class="row">
+      {{#power-select
+        triggerClass="small"
+        dropdownClass="small"
+        options=(array "one" "two" "three")
+        selected=valueSmall
+        onchange=(action (mut valueSmall))
+        as |value|
+      }}
+        {{value}}
+      {{/power-select}}
+    </div>
+  </div>
+  <div class="row row-content">
+    <h3>Power select pseudo-text</h3>
+    <div class="row">
+      <p>Hello world</p>
+      <div class="row">
+        <div class="col-xs-4 text-with-power-select text-right">
+          Text on left
+        </div>        
+        <div class="col-xs-4">
+          {{#power-select
+            triggerClass="small text-like"
+            dropdownClass="small"
+            options=(array "very long text very" "two" "three")
+            searchEnabled=false
+            selected=valueSmallText
+            onchange=(action (mut valueSmallText))
+            as |value|
+          }}
+            {{value}}
+          {{/power-select}}
+        </div>
+        <div class="col-xs-4 text-with-power-select">
+          Some text on right
+        </div>        
+      </div>
+      <p>Foo bar</p>
+    </div>
+  </div>
+</div>

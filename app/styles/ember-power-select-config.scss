@@ -2,6 +2,7 @@
 $ember-basic-dropdown-content-z-index: $zindex-modal+1;
 
 $ember-power-select-border-color: $input-border;
+$ember-power-select-border-width: 1px;
 $ember-power-select-number-of-visible-options: 10;
 $ember-power-select-background-color: $input-bg;
 $ember-power-select-highlighted-background: $color-one-light-blue;
@@ -12,7 +13,10 @@ $ember-power-select-line-height: $line-height-computed;
 $ember-power-select-opened-border-radius: 0;
 $ember-power-select-dropdown-default-border-radius: $input-border-radius;
 $ember-power-select-selected-background: $ember-power-select-background-color;
-$ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
+$ember-power-select-option-large-padding-horizontal: $padding-large-horizontal;
+$ember-power-select-option-small-padding-horizontal: 0.8em;
+$ember-power-select-option-small-padding-vertical: $padding-small-vertical + $ember-power-select-border-width;
+$ember-power-select-option-small-padding: $ember-power-select-option-small-padding-vertical $ember-power-select-option-small-padding-horizontal;
 
 @import 'ember-power-select';
 @import 'ember-power-select/themes/bootstrap';
@@ -52,6 +56,10 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
     .one-icon + .text {
       padding-left: 2.2em;
     }
+    // see .ember-power-select-trigger.small.text-like
+    &.text-like {
+      font-size: inherit;
+    }
   }
 }
 
@@ -74,6 +82,33 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
         padding-left: 2.2em;
       }
     }
+    
+    // a special style to render selector like text with selector decorations
+    // on hover and active
+    // implemented only for small, because large (normal) makes no graphical sense
+    &.text-like {
+      font-size: inherit;
+      background: none;
+      transition: none;
+      margin-left: -$ember-power-select-option-small-padding-horizontal;
+      border-color: transparent;
+      @include vendor-prefix(box-shadow, none);
+      &:hover {
+        border-color: $input-border;
+        @include box-shadow($control-box-shadow);
+      }
+      &.ember-power-select-trigger--active {
+        border-color: $input-border-focus;
+        @include box-shadow($control-box-shadow-focus);
+        &[aria-expanded] {
+          border-color: $input-border;
+          @include box-shadow($control-box-shadow);
+        }
+      }
+      .ember-power-select-status-icon {
+        top: 0.35em;
+      }
+    }
   }
 }
 
@@ -88,7 +123,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
 }
 
 .ember-power-select-trigger {
-  padding-left: $padding-large-horizontal;
+  padding-left: $ember-power-select-option-large-padding-horizontal;
   padding-right: 3em;
   transition: transition-ease(all);
   min-height: $line-height-computed + 2 * $padding-base-vertical + 2px;
@@ -104,7 +139,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
 
   &.ember-power-select-trigger--active:not([aria-expanded]) {
     @include box-shadow($control-box-shadow-focus);
-    border: 1px solid $input-border-focus;
+    border: $ember-power-select-border-width solid $input-border-focus;
   }
 
   &.truncate {
@@ -123,7 +158,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
 
   &.small, .form-group-sm & {
     padding: $ember-power-select-option-small-padding;
-    padding-left: 0.8em;
+    padding-left: $ember-power-select-option-small-padding-horizontal;
     padding-right: 2em;
     min-height: $input-height-small;
 
@@ -194,7 +229,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
   }
 
   .ember-power-select-option {
-    border-bottom: 1px solid $input-border;
+    border-bottom: $ember-power-select-border-width solid $input-border;
     padding: $padding-base-vertical;
     min-height: $line-height-computed + 2 * $padding-base-vertical;
     overflow: hidden;
@@ -217,7 +252,7 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
   border-radius: $input-border-radius;
   &:focus {
     outline: 0;
-    border: 1px solid $input-border-focus;
+    border: $ember-power-select-border-width solid $input-border-focus;
   }
 }
 
@@ -236,4 +271,12 @@ $ember-power-select-option-small-padding: $padding-small-vertical + 1px 0.8em;
       border-color: $color-one-danger;
     }
   }
+}
+
+// Use this class, when some text should be inline with .text-like power-select-trigger
+.text-with-power-select {
+  $-padding-vertical: calc(#{$ember-power-select-option-small-padding-vertical} + #{$ember-power-select-border-width});
+  line-height: $ember-power-select-line-height;
+  padding-top: $-padding-vertical;
+  padding-bottom: $-padding-vertical;
 }

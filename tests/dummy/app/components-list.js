@@ -30,6 +30,7 @@ export default [
   'one-way-capacity',
   'one-way-toggle',
   'perfect-scrollbar-element',
+  'power-select',
   'proceed-process-modal',
   'promise-proxy-container',
   'provider-place',

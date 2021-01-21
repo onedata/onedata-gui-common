@@ -1,7 +1,7 @@
 /**
  * NOTE: current version adds extra comment tags after lists when converting visual -> md
- * because of bug in: https://github.com/showdownjs/showdown/issues/700 As we are using
- * ember-cli-showdown, the update is currenlty not available
+ * because of bug in: https://github.com/showdownjs/showdown/issues/700
+ * As we are using ember-cli-showdown, the update is currently not available.
  * 
  * @module components/markdown-editor
  * @author Jakub Liput
