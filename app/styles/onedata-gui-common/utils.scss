@@ -85,7 +85,7 @@ $top-shadow-zindex: 1002;
 // fits content horizontally to 100% or more of container
 // must be put in another horizonatal-flex-stretch!
 // see: https://css-tricks.com/boxes-fill-height-dont-squish/
-@mixin horizontal-flex-stretch {
+@mixin vertical-flex-stretch {
   display: flex;
   flex-direction: column;
   flex-grow: 1;

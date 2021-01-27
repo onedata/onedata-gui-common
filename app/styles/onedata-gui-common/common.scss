@@ -47,8 +47,8 @@ strong {
   width: 100%;
 }
 
-.horizontal-flex-stretch {
-  @include horizontal-flex-stretch;
+.vertical-flex-stretch {
+  @include vertical-flex-stretch;
 }
 
 .no-padding {
