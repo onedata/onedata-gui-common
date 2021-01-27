@@ -295,12 +295,7 @@ $content-header-row-mobile-height: $content-header-row-height - 9px;
   // background for top of main content with tabs
   .content-header-section {
     background-color: $main-tabbed-content-background;
-    margin-top: -$content-col-padding;
-    padding-top: $content-col-padding;
-    margin-right: -$content-col-padding;
-    padding-right: $content-col-padding;
-    margin-left: -$content-col-padding;
-    padding-left: $content-col-padding;
+    @include undo-content-padding;
   }
   @media (max-width: $screen-xs-max) {
     .content-header-section {

@@ -198,3 +198,20 @@ $top-shadow-zindex: 1002;
   width: $fog-width;
   background: linear-gradient($gradient-direction, rgba($color, 0), $color 100%);
 }
+
+
+@mixin undo-horizontal-content-padding-xs() {
+  @media (max-width: $screen-xs-max) {
+    margin-left: -$content-col-padding;
+    margin-right: -$content-col-padding;
+  }
+}
+
+@mixin undo-content-padding() {
+  margin-top: -$content-col-padding;
+  padding-top: $content-col-padding;
+  margin-right: -$content-col-padding;
+  padding-right: $content-col-padding;
+  margin-left: -$content-col-padding;
+  padding-left: $content-col-padding;
+}
