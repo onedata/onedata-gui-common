@@ -5,6 +5,8 @@ import sinon from 'sinon';
 import { htmlSafe } from '@ember/string';
 import Ember from 'ember';
 
+const correctTranslation = 'correctTranslation';
+
 describe('Unit | Utility | get error description', function () {
   beforeEach(function () {
     this.i18n = new I18nStub();
@@ -12,10 +14,9 @@ describe('Unit | Utility | get error description', function () {
 
   it('handles errors in form { id, details }', function () {
     const errorDetails = { a: 1 };
-    const testTranslation = 'translation';
     sinon.stub(this.i18n, 't')
       .withArgs('errors.backendErrors.someError', errorDetails)
-      .returns(testTranslation);
+      .returns(correctTranslation);
     const error = {
       id: 'someError',
       details: errorDetails,
@@ -24,7 +25,7 @@ describe('Unit | Utility | get error description', function () {
     const result = getErrorDescription(error, this.i18n);
 
     expect(result).to.deep.equal({
-      message: escapedHtmlSafe(testTranslation),
+      message: escapedHtmlSafe(correctTranslation),
       errorJsonString: escapedJsonHtmlSafe(error),
     });
   });
@@ -49,7 +50,6 @@ describe('Unit | Utility | get error description', function () {
 
   it('handles errors in form { id, details } when JSON cannot be stringified',
     function () {
-      const testTranslation = 'translation';
       const error = {
         id: 'someError',
         details: {},
@@ -58,12 +58,12 @@ describe('Unit | Utility | get error description', function () {
       error.details = error;
       sinon.stub(this.i18n, 't')
         .withArgs('errors.backendErrors.someError', error.details)
-        .returns(testTranslation);
+        .returns(correctTranslation);
 
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe(testTranslation),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: undefined,
       });
     });
@@ -80,13 +80,12 @@ describe('Unit | Utility | get error description', function () {
   });
 
   it('handles errors inside htmlSafe', function () {
-    const testTranslation = 'translation';
-    const error = htmlSafe(testTranslation);
+    const error = htmlSafe(correctTranslation);
 
     const result = getErrorDescription(error, this.i18n);
 
     expect(result).to.deep.equal({
-      message: escapedHtmlSafe(testTranslation),
+      message: escapedHtmlSafe(correctTranslation),
       errorJsonString: undefined,
     });
   });
@@ -117,7 +116,7 @@ describe('Unit | Utility | get error description', function () {
   it('handles errors in form { id, details } with id == "posix"', function () {
     sinon.stub(this.i18n, 't')
       .withArgs('errors.backendErrors.posix', { errno: 'enoent error' })
-      .returns('complete enoent error')
+      .returns(correctTranslation)
       .withArgs('errors.backendErrors.translationParts.posixErrno.enoent')
       .returns('enoent error');
     const error = {
@@ -128,7 +127,7 @@ describe('Unit | Utility | get error description', function () {
     const result = getErrorDescription(error, this.i18n);
 
     expect(result).to.deep.equal({
-      message: escapedHtmlSafe('complete enoent error'),
+      message: escapedHtmlSafe(correctTranslation),
       errorJsonString: escapedJsonHtmlSafe(error),
     });
   });
@@ -168,7 +167,7 @@ describe('Unit | Utility | get error description', function () {
           .withArgs(
             `errors.backendErrors.${errorId}`,
             sinon.match({ tokenError: 'token too large' })
-          ).returns('complete error')
+          ).returns(correctTranslation)
           .withArgs(
             'errors.backendErrors.tokenTooLarge',
             nestedErrorDetails
@@ -183,7 +182,7 @@ describe('Unit | Utility | get error description', function () {
         const result = getErrorDescription(error, this.i18n);
 
         expect(result).to.deep.equal({
-          message: escapedHtmlSafe('complete error'),
+          message: escapedHtmlSafe(correctTranslation),
           errorJsonString: escapedJsonHtmlSafe(error),
         });
       });
@@ -196,7 +195,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs(
           'errors.backendErrors.notAnAccessToken',
           sinon.match({ received: 'access token' })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubAccessTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnAccessToken',
@@ -210,7 +209,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -223,7 +222,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs(
           'errors.backendErrors.notAnAccessToken',
           sinon.match({ received: 'identity token' })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubIdentityTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnAccessToken',
@@ -236,7 +235,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -249,7 +248,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs(
           'errors.backendErrors.notAnAccessToken',
           sinon.match({ received: 'userJoinSpace invite token' })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubInviteTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnAccessToken',
@@ -265,7 +264,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -278,7 +277,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs(
           'errors.backendErrors.notAnIdentityToken',
           sinon.match({ received: 'access token' })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubAccessTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnIdentityToken',
@@ -292,7 +291,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -305,7 +304,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs(
           'errors.backendErrors.notAnIdentityToken',
           sinon.match({ received: 'userJoinSpace invite token' })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubInviteTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnIdentityToken',
@@ -321,7 +320,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -337,8 +336,7 @@ describe('Unit | Utility | get error description', function () {
             expectedInviteType: 'userJoinSpace',
             received: 'groupJoinSpace invite token',
           })
-        ).returns('complete error');
-      // stubAccessTokenTypeTranslation(tStub);
+        ).returns(correctTranslation);
       stubInviteTokenTypeTranslation(tStub);
       const error = {
         id: 'notAnInviteToken',
@@ -355,7 +353,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -371,7 +369,7 @@ describe('Unit | Utility | get error description', function () {
             expectedInviteType: 'userJoinSpace',
             received: 'access token',
           })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubAccessTokenTypeTranslation(tStub);
       stubInviteTokenTypeTranslation(tStub);
       const error = {
@@ -387,7 +385,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -403,7 +401,7 @@ describe('Unit | Utility | get error description', function () {
             expectedInviteType: 'userJoinSpace',
             received: 'identity token',
           })
-        ).returns('complete error');
+        ).returns(correctTranslation);
       stubIdentityTokenTypeTranslation(tStub);
       stubInviteTokenTypeTranslation(tStub);
       const error = {
@@ -419,7 +417,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -438,7 +436,7 @@ describe('Unit | Utility | get error description', function () {
         sinon.stub(this.i18n, 't')
           .withArgs(`errors.backendErrors.${id}`, {
             [resourceFieldName]: 'user:123',
-          }).returns('complete error');
+          }).returns(correctTranslation);
         const error = {
           id,
           details: {
@@ -452,7 +450,7 @@ describe('Unit | Utility | get error description', function () {
         const result = getErrorDescription(error, this.i18n);
 
         expect(result).to.deep.equal({
-          message: escapedHtmlSafe('complete error'),
+          message: escapedHtmlSafe(correctTranslation),
           errorJsonString: escapedJsonHtmlSafe(error),
         });
       }
@@ -467,7 +465,7 @@ describe('Unit | Utility | get error description', function () {
           path: '/some/path',
           errno: 'eaccess error',
         })
-        .returns('complete error')
+        .returns(correctTranslation)
         .withArgs('errors.backendErrors.translationParts.posixErrno.eaccess')
         .returns('eaccess error');
       const error = {
@@ -481,7 +479,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -494,7 +492,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs('errors.backendErrors.storageTestFailed', {
           operation: 'write translation',
         })
-        .returns('complete error')
+        .returns(correctTranslation)
         .withArgs('errors.backendErrors.translationParts.storageTestOperations.write')
         .returns('write translation');
       const error = {
@@ -507,7 +505,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -521,7 +519,7 @@ describe('Unit | Utility | get error description', function () {
           actualSize: '1 MiB',
           targetSize: '2 MiB',
         })
-        .returns('complete error');
+        .returns(correctTranslation);
       const error = {
         id: 'fileAllocation',
         details: {
@@ -533,7 +531,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -547,7 +545,7 @@ describe('Unit | Utility | get error description', function () {
           hostname: 'host',
           clusterType: 'Onezone',
         })
-        .returns('complete error');
+        .returns(correctTranslation);
       const error = {
         id: 'nodeNotCompatible',
         details: {
@@ -559,7 +557,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -573,7 +571,7 @@ describe('Unit | Utility | get error description', function () {
           hostnames: ['host'],
           error: 'some suberror',
         })
-        .returns('complete error')
+        .returns(correctTranslation)
         .withArgs('errors.backendErrors.noConnectionToNewNode', {
           hostname: 'otherhost',
         })
@@ -594,7 +592,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -607,7 +605,7 @@ describe('Unit | Utility | get error description', function () {
         .withArgs('errors.backendErrors.noServiceNodes', {
           service: 'database',
         })
-        .returns('complete error')
+        .returns(correctTranslation)
         .withArgs('errors.backendErrors.translationParts.nodeServices.couchbase')
         .returns('database');
       const error = {
@@ -620,7 +618,7 @@ describe('Unit | Utility | get error description', function () {
       const result = getErrorDescription(error, this.i18n);
 
       expect(result).to.deep.equal({
-        message: escapedHtmlSafe('complete error'),
+        message: escapedHtmlSafe(correctTranslation),
         errorJsonString: escapedJsonHtmlSafe(error),
       });
     }
@@ -650,7 +648,7 @@ describe('Unit | Utility | get error description', function () {
           .withArgs(
             `errors.backendErrors.${errorId}`,
             sinon.match(convertedDetails)
-          ).returns('complete error');
+          ).returns(correctTranslation);
         const error = {
           id: errorId,
           details,
@@ -659,11 +657,63 @@ describe('Unit | Utility | get error description', function () {
         const result = getErrorDescription(error, this.i18n);
 
         expect(result).to.deep.equal({
-          message: escapedHtmlSafe('complete error'),
+          message: escapedHtmlSafe(correctTranslation),
           errorJsonString: escapedJsonHtmlSafe(error),
         });
       });
   });
+
+  it(
+    'handles errors in form { id, details } with id == "badData" and no hint',
+    function () {
+      sinon.stub(this.i18n, 't')
+        .withArgs('errors.backendErrors.badData', {
+          key: 'somekey',
+          endingWithHint: '.',
+        })
+        .returns(correctTranslation);
+      const error = {
+        id: 'badData',
+        details: {
+          key: 'somekey',
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe(correctTranslation),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
+
+  it(
+    'handles errors in form { id, details } with id == "badData" and hint',
+    function () {
+      sinon.stub(this.i18n, 't')
+        .withArgs('errors.backendErrors.badData', {
+          key: 'somekey',
+          hint: 'somehint',
+          endingWithHint: ': somehint.',
+        })
+        .returns(correctTranslation);
+      const error = {
+        id: 'badData',
+        details: {
+          key: 'somekey',
+          hint: 'somehint',
+        },
+      };
+
+      const result = getErrorDescription(error, this.i18n);
+
+      expect(result).to.deep.equal({
+        message: escapedHtmlSafe(correctTranslation),
+        errorJsonString: escapedJsonHtmlSafe(error),
+      });
+    }
+  );
 });
 
 function stubInviteTokenTypeTranslation(tStub) {
