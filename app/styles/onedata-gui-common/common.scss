@@ -774,15 +774,3 @@ p.text-separated {
   color: inherit;
   border: none;
 }
-
-// TODO: VFS-6566 maybe too specific for common scss (markdown)
-
-.markdown-editor {
-  .markdown-wysiwyg {
-    table {
-      @extend .table;
-      @extend .table-striped;
-    }
-  }
-}
-
