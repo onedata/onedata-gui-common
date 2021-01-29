@@ -34,12 +34,20 @@ import { observer } from '@ember/object';
 export default Component.extend({
   layout,
   classNames: ['one-carousel'],
+  classNameBindings: ['animated:one-carousel-animated:one-carousel-static'],
 
   /**
    * @virtual
    * @type {String}
    */
   activeSlideId: undefined,
+
+  /**
+   * If false, slide animations are disabled
+   * @virtual optional
+   * @type {Boolean}
+   */
+  animated: true,
 
   /**
    * slideId: String -> slideState: String
