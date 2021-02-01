@@ -52,6 +52,8 @@ export default Component.extend({
    */
   isCollapsible: true,
 
+  attributeBindings: ['link:href'],
+
   /**
    * A selector for elements, which click actions should be ignored by item 
    * toggle event handler
