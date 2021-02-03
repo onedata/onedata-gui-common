@@ -11,10 +11,6 @@
     transform: translateY(-50%) rotate(0deg);
     transition: transition-ease(transform);
   }
-  &.link {
-    color: inherit;
-    display: block;
-  }
   
   @include btn-toolbar-float-right();
   &.toolbar-when-opened {
@@ -83,4 +79,10 @@
     font-weight: normal;
     white-space: nowrap;
   }
+}
+
+a.one-collapsible-list-item-header {
+  color: inherit;
+  display: block;
+  @extend .hoverable;
 }

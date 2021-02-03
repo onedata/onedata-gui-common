@@ -34,6 +34,13 @@ export default Component.extend({
     '_isItemFixed:header-fixed',
   ],
 
+  attributeBindings: ['href'],
+
+  /**
+   * @type {string}
+   */
+  href: '',
+
   /**
    * If true, text inside will be truncated with `truncate` css class.
    * @type {boolean}
@@ -51,8 +58,6 @@ export default Component.extend({
    * @type {boolean}
    */
   isCollapsible: true,
-
-  attributeBindings: ['link:href'],
 
   /**
    * A selector for elements, which click actions should be ignored by item 
