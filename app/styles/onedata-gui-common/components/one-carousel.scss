@@ -1,6 +1,6 @@
 $one-carousel-slides-gap: 100px;
 
-@mixin one-carousel-hide-final-state {
+@mixin one-carousel-hidden-final-state {
   transform: none;
   width: 0;
   height: 0;
@@ -52,11 +52,11 @@ $one-carousel-slides-gap: 100px;
       }
 
       &.hidden-to-left {
-        @include one-carousel-hide-final-state;
+        @include one-carousel-hidden-final-state;
       }
 
       &.hidden-to-right {
-        @include one-carousel-hide-final-state;
+        @include one-carousel-hidden-final-state;
       }
     }
   }
@@ -102,7 +102,7 @@ $one-carousel-slides-gap: 100px;
   // animation frame changes size of the slide to 0x0, to force it to not take any place
   // (so scrollbars does not calculate them as content).
   100% {
-    @include one-carousel-hide-final-state;
+    @include one-carousel-hidden-final-state;
   }
 }
 
@@ -118,7 +118,7 @@ $one-carousel-slides-gap: 100px;
     height: initial;
   }
   100% {
-    @include one-carousel-hide-final-state;
+    @include one-carousel-hidden-final-state;
   }
 }
 

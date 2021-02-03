@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row row-content">
-    <h3>Power select small</h3>
+    <h3>OneDropdown small</h3>
     <div class="row">
-      {{#power-select
+      {{#one-dropdown
         triggerClass="small"
         dropdownClass="small"
         options=(array "one" "two" "three")
@@ -11,11 +11,11 @@
         as |value|
       }}
         {{value}}
-      {{/power-select}}
+      {{/one-dropdown}}
     </div>
   </div>
   <div class="row row-content">
-    <h3>Power select pseudo-text</h3>
+    <h3>OneDropdown pseudo-text</h3>
     <div class="row">
       <p>Hello world</p>
       <div class="row">
@@ -23,7 +23,7 @@
           Text on left
         </div>        
         <div class="col-xs-4">
-          {{#power-select
+          {{#one-dropdown
             triggerClass="small text-like"
             dropdownClass="small"
             options=(array "very long text very" "two" "three")
@@ -33,7 +33,7 @@
             as |value|
           }}
             {{value}}
-          {{/power-select}}
+          {{/one-dropdown}}
         </div>
         <div class="col-xs-4 text-with-power-select">
           Some text on right

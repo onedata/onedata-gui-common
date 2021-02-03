@@ -83,9 +83,8 @@ $top-shadow-zindex: 1002;
 }
 
 // fits content horizontally to 100% or more of container
-// must be put in another horizonatal-flex-stretch!
 // see: https://css-tricks.com/boxes-fill-height-dont-squish/
-@mixin vertical-flex-stretch {
+@mixin fill-flex-using-column {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -200,18 +199,7 @@ $top-shadow-zindex: 1002;
 }
 
 
-@mixin undo-horizontal-content-padding-xs() {
-  @media (max-width: $screen-xs-max) {
-    margin-left: -$content-col-padding;
-    margin-right: -$content-col-padding;
-  }
-}
-
-@mixin undo-content-padding() {
-  margin-top: -$content-col-padding;
-  padding-top: $content-col-padding;
-  margin-right: -$content-col-padding;
-  padding-right: $content-col-padding;
+@mixin remove-embedded-component-horizontal-padding {
   margin-left: -$content-col-padding;
-  padding-left: $content-col-padding;
+  margin-right: -$content-col-padding;
 }

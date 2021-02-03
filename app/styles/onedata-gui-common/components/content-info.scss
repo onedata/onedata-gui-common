@@ -4,6 +4,8 @@
   @mixin centered-content-info {
     .world-map {
       position: absolute;
+      top: 0;
+      bottom: 0;
     }
     .content-info-content-container {
       @include absolute-align-middle-center();
@@ -42,7 +44,8 @@
   }
   .world-map {
     position: relative;
-    @include fill-container();
+    right: 0;
+    left: 0;
     padding: $padding-large-horizontal;
     overflow: auto;
     background-position: center center;

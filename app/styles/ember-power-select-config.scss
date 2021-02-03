@@ -53,12 +53,15 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 
   &.small {
-    .one-icon + .text {
-      padding-left: 2.2em;
-    }
     // see .ember-power-select-trigger.small.text-like
     &.text-like {
       font-size: inherit;
+    }
+    .one-icon + .text {
+      padding-left: 2.2em;
+    }
+    .ember-power-select-option {
+      margin-left: -$ember-power-select-border-width;
     }
   }
 }
@@ -92,7 +95,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
       transition: none;
       margin-left: -$ember-power-select-option-small-padding-horizontal;
       border-color: transparent;
-      @include vendor-prefix(box-shadow, none);
+      @include box-shadow(none);
       &:hover {
         border-color: $input-border;
         @include box-shadow($control-box-shadow);
@@ -103,6 +106,11 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
         &[aria-expanded] {
           border-color: $input-border;
           @include box-shadow($control-box-shadow);
+        }
+      }
+      &.ember-power-select-trigger {
+        .ember-power-select-selected-item {
+          margin-left: -$ember-power-select-border-width; 
         }
       }
       .ember-power-select-status-icon {

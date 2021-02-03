@@ -1,5 +1,5 @@
 /**
- * Scroll fitst found container in ancestor to top. By default search for perfect-scroll.
+ * Scroll first found container in ancestor to top. By default search for perfect-scroll.
  * Optionally a scroll-container selector can be given. 
  *
  * @module utils/scroll-top-closest
@@ -8,9 +8,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-export default function scrollTopClosest(element, options = {}) {
-  const parentSelector = options.parentSelector || '.ps';
-  const smooth = options.smooth !== undefined ? options.smooth : true;
+/**
+ * @param {Element} element
+ * @param {Object} options
+ * @param {String} options.parentSelector
+ * @param {Boolean} options.smooth
+ */
+export default function scrollTopClosest(
+  element, {
+    parentSelector = '.ps',
+    smooth = true,
+  } = {}
+) {
   const scrollableParent = element.closest(parentSelector);
   if (scrollableParent) {
     scrollableParent.scroll({
