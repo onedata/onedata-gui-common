@@ -47,6 +47,10 @@ strong {
   width: 100%;
 }
 
+.fill-flex-using-column {
+  @include fill-flex-using-column;
+}
+
 .no-padding {
   padding: 0 !important;
 }
@@ -770,15 +774,3 @@ p.text-separated {
   color: inherit;
   border: none;
 }
-
-// TODO: VFS-6566 maybe too specific for common scss (markdown)
-
-.markdown-editor {
-  .markdown-wysiwyg {
-    table {
-      @extend .table;
-      @extend .table-striped;
-    }
-  }
-}
-

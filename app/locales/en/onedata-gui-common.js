@@ -36,7 +36,6 @@ import qosParamsEditor from './onedata-gui-common/components/qos-params-editor';
 import oneDynamicTree from './onedata-gui-common/components/one-dynamic-tree';
 import ceaseOneproviderSupportModal from './onedata-gui-common/components/cease-oneprovider-support-modal';
 import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
-import markdownEditor from './onedata-gui-common/components/markdown-editor';
 import queryBuilder from './onedata-gui-common/components/query-builder';
 import oneStep from './onedata-gui-common/components/one-step';
 
@@ -104,7 +103,6 @@ const translations = {
     oneDynamicTree,
     ceaseOneproviderSupportModal,
     oneDocSeeMore,
-    markdownEditor,
     queryBuilder,
     oneStep,
     alerts: {

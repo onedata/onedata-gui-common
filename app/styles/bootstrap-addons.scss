@@ -450,6 +450,17 @@ $token-border-radius: 3px;
         color: $main-text-color-disabled;
       }
     }
+    li > a {
+      .tab-icon {
+        @include vertical-align-middle();
+        left: 8px;
+        font-size: 26px;
+        // custom pull-up icons
+        &.one-icon {
+          margin-top: -1px;
+        }
+      }
+    }
   }
   .tab-content {
     padding: $padding-large-vertical $padding-large-horizontal;

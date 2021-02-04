@@ -36,7 +36,7 @@ export const mockGuiContext = {
   guiMode: 'unified',
   serviceType: 'worker',
   clusterType: 'oneprovider',
-  clusterId: 'oneprovider-1',
+  clusterId: 'oneprovider1',
   browserDebugLogs: true,
   apiOrigin: location.origin,
 };

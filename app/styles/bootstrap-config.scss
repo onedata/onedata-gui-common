@@ -249,6 +249,11 @@ label {
 }
 @import "bootstrap/input-groups";
 
+.input-group-addon.input-group-addon-icon {
+  padding-left: $padding-small-vertical;
+  padding-right: $padding-small-vertical;
+}
+
 .table {
   thead > tr > th {
     border-bottom: 0;

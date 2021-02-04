@@ -82,6 +82,14 @@ $top-shadow-zindex: 1002;
   margin-right: auto;
 }
 
+// fits content horizontally to 100% or more of container
+// see: https://css-tricks.com/boxes-fill-height-dont-squish/
+@mixin fill-flex-using-column {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 @mixin clickable() {
   cursor: pointer;
   @include vendor-prefix(user-select, none);
@@ -188,4 +196,10 @@ $top-shadow-zindex: 1002;
   height: $fog-height;
   width: $fog-width;
   background: linear-gradient($gradient-direction, rgba($color, 0), $color 100%);
+}
+
+
+@mixin remove-embedded-component-horizontal-padding {
+  margin-left: -$content-col-padding;
+  margin-right: -$content-col-padding;
 }
