@@ -33,10 +33,10 @@ export default Component.extend({
     'disableToggleIcon:disable-toggle-icon',
     '_isItemFixed:header-fixed',
   ],
-
   attributeBindings: ['href'],
 
   /**
+   * @virtual optional
    * @type {string}
    */
   href: '',
