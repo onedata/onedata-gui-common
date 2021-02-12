@@ -77,6 +77,8 @@ export default Component.extend(I18n, {
    */
   onChange: notImplementedIgnore,
 
+  notModifiedKeyQosParams: undefined,
+
   /**
    * `qosParams` converted to an array of QosParamRecord
    * @type {Ember.ComputedProperty<Array<QosParamRecord>>}
