@@ -192,6 +192,12 @@ $token-border-radius: 3px;
   }
 }
 
+// this fixes unnecessary right border for second and next addons
+// on the left of input
+.input-group-addon-left {
+  border-right: 0;
+}
+
 .form-group-light {
   .input-group {
     .form-control {

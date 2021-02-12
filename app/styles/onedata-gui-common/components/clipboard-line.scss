@@ -73,6 +73,16 @@
     height: auto;
   }
   &.sm {
+    // for layouts with both small copy inputs and textareas, this makes textareas
+    // more compact; for single textareas this might look too small
+    &.compact {
+      textarea.clipboard-input {
+        word-break: break-all;
+        font-size: $font-size-small;
+        padding-left: $padding-small-horizontal;
+        padding-right: $padding-small-horizontal;
+      }
+    }
     .clipboard-input {
       font-size: $font-size-base;
       line-height: $line-height-small;
