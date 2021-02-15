@@ -16,7 +16,7 @@
       font-weight: bold;
       color: $color-one-danger;
     }
-    .disabled-modified-parm {
+    .disabled-param-icon {
       font-weight: bold;
       color: $color-one-dark-gray;
       opacity: 0.5;
@@ -34,15 +34,18 @@
           opacity: 1;
         }
       }
-      .disabled-modified-parm {
+      .disabled-param-icon {
         font-size: 1.2em;
       }
-      .disabled-modified-parm.lock-icon {
+      .disabled-param-icon.lock-icon {
         line-height: $input-height-base;
         font-size: 145%;
       }
       .clipboard-line .copy-btn {
         padding-top: 8px;
+      }
+      .truncated-string.one-label.not-modified-key-param {
+        display: inline-block;
       }
     }
     @media (max-width: $screen-xs-max) {
@@ -66,25 +69,25 @@
         line-height: $input-height-base;
         font-size: 230%;
       }
-      .disabled-modified-parm {
+      .disabled-param-icon {
         position: absolute;
-        top: -10px;
+        top: 0;
         right: 0;
         font-size: 230%;
+        line-height: $input-height-base;
         &.lock-icon {
           right: 40px;
         }
-      }
-      .row.not-modified-row .label-column {
-        margin-top: 20px;
-        margin-bottom: 13px;
+        
       }
       .clipboard-line .copy-btn {
         padding-top: 0;
       }
+      .not-modified-key-param {
+        line-height: $input-height-base;
+      }
     }
-    .truncated-string.one-label.not-modified-key-parm {
-      display: inline-block;
+    .truncated-string.one-label.not-modified-key-param {
       width: calc(100% - 24px);
       margin-right: 2px;
     }

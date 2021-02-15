@@ -5,5 +5,5 @@ export default {
   keyDuplicate: 'Key duplicate',
   keyCantBeBlank: 'Key can\'t be blank',
   keyValidationError: 'Invalid key',
-  notModify: 'This parameter can\'t be change',
+  cannotModify: 'This parameter can\'t be changed',
 };
