@@ -41,9 +41,6 @@
         line-height: $input-height-base;
         font-size: 145%;
       }
-      .clipboard-line .copy-btn {
-        padding-top: 8px;
-      }
       .truncated-string.one-label.not-modified-key-param {
         display: inline-block;
       }
@@ -62,26 +59,15 @@
           padding-left: 0;
         }
       }
-      .remove-param {
+      .remove-param, .disabled-param-icon {
         position: absolute;
         top: 0;
         right: 0;
         line-height: $input-height-base;
         font-size: 230%;
-      }
-      .disabled-param-icon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        font-size: 230%;
-        line-height: $input-height-base;
         &.lock-icon {
           right: 40px;
         }
-        
-      }
-      .clipboard-line .copy-btn {
-        padding-top: 0;
       }
       .not-modified-key-param {
         line-height: $input-height-base;
