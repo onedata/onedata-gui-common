@@ -12,6 +12,7 @@ export default {
     internal_server_error: 'The server has encountered an unexpected error while processing your sign-in request.',
     account_already_linked_to_another_user: 'You cannot link this account because it is already linked to another user profile.',
     account_already_linked_to_current_user: 'This account is already linked to your profile.',
+    user_blocked: 'This user account has been blocked by the administrator and cannot be used unless it is unblocked again.',
     unknown: 'Unknown reason.',
   },
 };

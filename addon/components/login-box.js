@@ -9,11 +9,12 @@
 
 import { alias } from '@ember/object/computed';
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
+import { underscore } from '@ember/string';
 
 export const sessionExpiredKey = 'sessionExpired';
 
@@ -57,6 +58,16 @@ export default Component.extend({
    */
   headerModel: undefined,
 
+  /**
+   * When one of these error occurs after username and password sign-in, that means
+   * user should not try other password, because invalid form data is not the problem.
+   */
+  fatalBasicAuthErrors: Object.freeze([
+    'basicAuthNotSupported',
+    'basicAuthDisabled',
+    'userBlocked',
+  ]),
+
   isBusy: false,
 
   _sessionStorage: sessionStorage,
@@ -93,8 +104,22 @@ export default Component.extend({
       safeMethodExecution(this, 'set', 'isBusy', false);
     },
 
-    authenticationFailure() {
+    authenticationFailure({ error }) {
+      const fatalBasicAuthErrors = this.get('fatalBasicAuthErrors');
       safeMethodExecution(this, 'set', 'isBusy', false);
+      let reason;
+      const errorId = error && get(error, 'responseJSON.error.details.authError.id');
+      if (fatalBasicAuthErrors.includes(errorId)) {
+        reason = underscore(errorId);
+      } else if (errorId && errorId !== 'badBasicCredentials') {
+        reason = 'unknown';
+      }
+      if (reason) {
+        this.setProperties({
+          authenticationErrorReason: reason,
+          showAuthenticationError: true,
+        });
+      }
     },
 
     backFromError() {
