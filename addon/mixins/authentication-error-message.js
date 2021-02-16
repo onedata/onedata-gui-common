@@ -25,6 +25,9 @@ const authenticationErrors = [
   'internal_server_error',
   'account_already_linked_to_another_user',
   'account_already_linked_to_current_user',
+  'user_blocked',
+  'basic_auth_not_supported',
+  'basic_auth_disabled',
 ];
 
 function stripError(authenticationError) {
@@ -62,11 +65,18 @@ export default Mixin.create(I18n, {
       }
     }),
 
-  showErrorContactInfo: computed('authenticationErrorReason',
+  showErrorContactInfo: computed('authenticationErrorReason', 'authenticationErrorState',
     function showErrorContactInfo() {
-      return ![
+      const {
+        authenticationErrorReason,
+        authenticationErrorState,
+      } = this.getProperties('authenticationErrorReason', 'authenticationErrorState');
+      return authenticationErrorState && ![
         'account_already_linked_to_another_user',
         'account_already_linked_to_current_user',
-      ].includes(this.get('authenticationErrorReason'));
+        'user_blocked',
+        'basic_auth_not_supported',
+        'basic_auth_disabled',
+      ].includes(authenticationErrorReason);
     }),
 });

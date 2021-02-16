@@ -24,6 +24,7 @@ export default {
   posix: '{{errno}}',
 
   // Auth errors
+  userBlocked: 'This user account has been blocked by the administrator and cannot be used unless it is unblocked again.',
   badBasicCredentials: 'Invalid username or password.',
   badIdpAccessToken: 'Provided access token for {{idp}} is not valid.',
   badToken: 'Provided token could not be understood by the server.',
