@@ -13,7 +13,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { get, set, computed, observer } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
-import { A } from '@ember/array';
+import { A, isArray } from '@ember/array';
 import _ from 'lodash';
 import { resolve, all as allFulfilled } from 'rsvp';
 import Evented from '@ember/object/evented';
@@ -221,7 +221,8 @@ export default ArraySlice.extend(Evented, {
           -currentChunkSize,
           this,
         )
-        .then(arrayUpdate => {
+        .then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
+        .then(({ arrayUpdate }) => {
           // TODO: use of pullAllBy is working, but it is probably unsafe
           // it can remove items from update, while they should stay there
           // because some entries "fallen down" from further part of array
@@ -321,18 +322,15 @@ export default ArraySlice.extend(Evented, {
           (lastItem ? 1 : 0) + duplicateCount,
           this
         )
-        .then(arrayUpdate => {
-          if (lastItem !== sourceArray[get(sourceArray, 'length') - 1]) {
-            console.debug(
-              'util:replacing-chunks-array#fetchNext: source array last item changed before fetch resolved, so it was modified; ignoring values'
-            );
-            return false;
-          }
-
+        .then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
+        .then(({ arrayUpdate, endReached }) => {
           // after asynchronous fetch, other fetch could modify array, so we need to
           // ensure that pulled data does not already contain new records
           _.pullAllBy(arrayUpdate, sourceArray, 'id');
-          if (get(arrayUpdate, 'length') < chunkSize) {
+          if (endReached === undefined) {
+            endReached = get(arrayUpdate, 'length') < chunkSize;
+          }
+          if (endReached) {
             safeExec(this, 'set', '_endReached', true);
           }
           sourceArray.push(...arrayUpdate);
@@ -401,8 +399,10 @@ export default ArraySlice.extend(Evented, {
         size,
         offset,
         this,
-      ).then(updatedRecordsArray => {
-        const fetchedCount = get(updatedRecordsArray, 'length');
+      )
+      .then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
+      .then(({ arrayUpdate }) => {
+        const fetchedCount = get(arrayUpdate, 'length');
         const updatedEnd = _start + fetchedCount;
         safeExec(this, 'setProperties', {
           _startReached: false,
@@ -415,7 +415,7 @@ export default ArraySlice.extend(Evented, {
         }
         const updateBoundary = Math.min(updatedEnd, fetchedCount);
         for (let i = 0; i < updateBoundary; ++i) {
-          sourceArray[i + _start] = updatedRecordsArray[i];
+          sourceArray[i + _start] = arrayUpdate[i];
         }
         sourceArray.arrayContentDidChange(_start);
         return this;
@@ -439,35 +439,36 @@ export default ArraySlice.extend(Evented, {
       indexMargin,
     } = this.getProperties('fetch', 'sourceArray', 'indexMargin');
     return fetch(
-      index,
-      size + indexMargin * 2,
-      -indexMargin,
-      this
-    ).then(fileAttrs => {
-      // clear array without notify
-      sourceArray.splice(0, get(sourceArray, 'length'));
-      sourceArray.push(...fileAttrs);
-      const startIndex = fileAttrs.findIndex(item =>
-        get(item, 'index') === index
-      );
-      if (startIndex === -1) {
-        return false;
-      } else {
-        const endIndex = Math.min(
-          startIndex + size,
-          fileAttrs.length
+        index,
+        size + indexMargin * 2,
+        -indexMargin,
+        this
+      ).then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
+      .then(({ arrayUpdate }) => {
+        // clear array without notify
+        sourceArray.splice(0, get(sourceArray, 'length'));
+        sourceArray.push(...arrayUpdate);
+        const startIndex = arrayUpdate.findIndex(item =>
+          get(item, 'index') === index
         );
-        this.setProperties({
-          _startReached: false,
-          _endReached: false,
-          startIndex,
-          endIndex,
-          emptyIndex: -1,
-        });
-        sourceArray.arrayContentDidChange();
-        return this;
-      }
-    });
+        if (startIndex === -1) {
+          return false;
+        } else {
+          const endIndex = Math.min(
+            startIndex + size,
+            arrayUpdate.length
+          );
+          this.setProperties({
+            _startReached: false,
+            _endReached: false,
+            startIndex,
+            endIndex,
+            emptyIndex: -1,
+          });
+          sourceArray.arrayContentDidChange();
+          return this;
+        }
+      });
   },
 
   setEmptyIndex(index) {
@@ -476,6 +477,38 @@ export default ArraySlice.extend(Evented, {
       sourceArray[i] = emptyItem;
     }
     this.set('emptyIndex', index);
+  },
+
+  /**
+   * @param {Array|Object} fetchResult can be:
+   *   - array with items from requested chunk; chunk in next pocessing steps should be
+   *     considered as last if there are less new elements than requested
+   *   - object with: `array: Array`, `isLast: boolean` - array is the same as array-only
+   *     parameter, but chunk shoud be considered as last if the `isLast` flag is true
+   *   - if the result is not an array nor object, then chunk is considered as empty
+   *     and as last
+   * @returns {{ arrayUpdate: Array, endReached: Boolean }}
+   */
+  handleFetchDataFetchResult(fetchResult) {
+    let arrayUpdate;
+    let endReached;
+    if (isArray(fetchResult)) {
+      arrayUpdate = fetchResult;
+    } else if (typeof fetchResult === 'object') {
+      arrayUpdate = fetchResult.array;
+      endReached = fetchResult.isLast;
+    } else {
+      console.error(
+        'util:replacing-chunks-array#handleFetchDataFetchResult: invalid data from fetch'
+      );
+      console.dir(fetchResult);
+      arrayUpdate = [];
+      endReached = true;
+    }
+    return {
+      arrayUpdate,
+      endReached,
+    };
   },
 
   init() {
