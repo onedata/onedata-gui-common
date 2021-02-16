@@ -26,6 +26,8 @@ const authenticationErrors = [
   'account_already_linked_to_another_user',
   'account_already_linked_to_current_user',
   'user_blocked',
+  'basic_auth_not_supported',
+  'basic_auth_disabled',
 ];
 
 function stripError(authenticationError) {
@@ -73,6 +75,8 @@ export default Mixin.create(I18n, {
         'account_already_linked_to_another_user',
         'account_already_linked_to_current_user',
         'user_blocked',
+        'basic_auth_not_supported',
+        'basic_auth_disabled',
       ].includes(authenticationErrorReason);
     }),
 });
