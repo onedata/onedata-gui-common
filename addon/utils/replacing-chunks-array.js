@@ -22,6 +22,7 @@ export const emptyItem = {};
 
 export default ArraySlice.extend(Evented, {
   /**
+   * Should not be used directly internally. Instead use `fetchWrapper`.
    * @virtual 
    * @type {function} `(fromIndex, size, offset, replacingChunksArray) => Array<any>`
    */
@@ -165,6 +166,16 @@ export default ArraySlice.extend(Evented, {
     }
   ),
 
+  /**
+   * @returns {{ arrayUpdate: Array, endReached: Boolean }}
+   */
+  fetchWrapper(index, size, offset) {
+    const effOffset = (index == null && (!offset || offset < 0)) ? 0 : offset;
+    return this.get('fetch')(index, size, effOffset, this).then(result =>
+      this.handleFetchDataFetchResult(result)
+    );
+  },
+
   getIndex(record) {
     return get(record, 'index');
   },
@@ -192,13 +203,11 @@ export default ArraySlice.extend(Evented, {
       sourceArray,
       chunkSize,
       emptyIndex,
-      fetch,
     } = this.getProperties(
       '_startReached',
       'sourceArray',
       'chunkSize',
       'emptyIndex',
-      'fetch',
     );
 
     const firstItem = sourceArray[emptyIndex + 1];
@@ -215,13 +224,11 @@ export default ArraySlice.extend(Evented, {
       this.set('_fetchPrevLock', true);
 
       this.trigger('fetchPrevStarted');
-      return fetch(
+      return this.fetchWrapper(
           fetchStartIndex,
           currentChunkSize,
           -currentChunkSize,
-          this,
         )
-        .then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
         .then(({ arrayUpdate }) => {
           // TODO: use of pullAllBy is working, but it is probably unsafe
           // it can remove items from update, while they should stay there
@@ -313,16 +320,14 @@ export default ArraySlice.extend(Evented, {
       const fetchSize = chunkSize;
 
       this.trigger('fetchNextStarted');
-      return this.get('fetch')(
+      return this.fetchWrapper(
           // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
           // and items are converted from plain objects to EmberObjects
           // the workaround is to use []
           fetchStartIndex,
           fetchSize,
           (lastItem ? 1 : 0) + duplicateCount,
-          this
         )
-        .then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
         .then(({ arrayUpdate, endReached }) => {
           // after asynchronous fetch, other fetch could modify array, so we need to
           // ensure that pulled data does not already contain new records
@@ -362,7 +367,6 @@ export default ArraySlice.extend(Evented, {
       endIndex,
       sourceArray,
       indexMargin,
-      fetch,
     } = this.getProperties(
       '_start',
       '_end',
@@ -370,7 +374,6 @@ export default ArraySlice.extend(Evented, {
       'endIndex',
       'sourceArray',
       'indexMargin',
-      'fetch',
     );
 
     // currently, if data is not loaded between start and startIndex
@@ -394,13 +397,11 @@ export default ArraySlice.extend(Evented, {
       fetchStartIndex = null;
     }
 
-    return fetch(
+    return this.fetchWrapper(
         fetchStartIndex,
         size,
         offset,
-        this,
       )
-      .then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
       .then(({ arrayUpdate }) => {
         const fetchedCount = get(arrayUpdate, 'length');
         const updatedEnd = _start + fetchedCount;
@@ -434,16 +435,14 @@ export default ArraySlice.extend(Evented, {
 
   jump(index, size = 50) {
     const {
-      fetch,
       sourceArray,
       indexMargin,
-    } = this.getProperties('fetch', 'sourceArray', 'indexMargin');
-    return fetch(
+    } = this.getProperties('sourceArray', 'indexMargin');
+    return this.fetchWrapper(
         index,
         size + indexMargin * 2,
         -indexMargin,
-        this
-      ).then(fetchResult => this.handleFetchDataFetchResult(fetchResult))
+      )
       .then(({ arrayUpdate }) => {
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
