@@ -18,9 +18,11 @@
     {{or item.domain (t "components.sidebarClusters.clusterItem.domainNameNotAvailable")}}
   {{/truncated-string}}
 </div>
-{{!-- TODO: add context menu to this item --}}
-{{!-- {{actions-toolbar
-  isMinimized=true
-  dropdownPlacement="auto"
-  actionsArray=itemActions
-}} --}}
+
+{{#unless inSidenav}}
+  {{actions-toolbar
+    isMinimized=true
+    dropdownPlacement="auto"
+    actionsArray=itemActions
+  }}
+{{/unless}}
