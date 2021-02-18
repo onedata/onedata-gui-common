@@ -690,4 +690,71 @@ describe('Unit | Utility | replacing chunks array', function () {
         });
     }
   );
+
+  it('handles object-format output from fetch when going forth',
+    function () {
+      const baseFetch = MockArray.prototype.fetch.bind(this.mockArray);
+      this.mockArray.fetch = function fetchWithObject() {
+        return baseFetch(...arguments).then(array => ({
+          array,
+          isLast: this.forceIsLast,
+        }));
+      };
+      this.fetch = this.mockArray.fetch.bind(this.mockArray);
+      const fetchSpy = sinon.spy(this.fetch);
+
+      const array = ReplacingChunksArray.create({
+        fetch: fetchSpy,
+        startIndex: 0,
+        endIndex: 50,
+        indexMargin: 0,
+        chunkSize: 30,
+      });
+      return wait()
+        .then(() => {
+          expect(fetchSpy).to.have.been.calledWith(null, 50, 0);
+          fetchSpy.reset();
+          expect(get(array, 'sourceArray').toArray())
+            .to.deep.equal(recordRange(0, 50 + 30));
+
+          array.setProperties({
+            startIndex: 20,
+            endIndex: 70,
+          });
+          return wait();
+        })
+        .then(() => {
+          expect(fetchSpy).to.have.been.called;
+          fetchSpy.reset();
+          expect(get(array, 'sourceArray').toArray())
+            .to.deep.equal(recordRange(0, 50 + 30 * 2));
+
+          // next fetch should get isLast flag
+          this.mockArray.forceIsLast = true;
+
+          array.setProperties({
+            startIndex: 45,
+            endIndex: 95,
+          });
+          return wait();
+        })
+        .then(() => {
+          // last call that should return "isLast: true" flag
+          expect(fetchSpy).to.have.been.called;
+          fetchSpy.reset();
+          expect(get(array, 'sourceArray').toArray())
+            .to.deep.equal(recordRange(0, 50 + 30 * 3));
+
+          array.setProperties({
+            endIndex: 150,
+          });
+          return wait();
+        })
+        .then(() => {
+          expect(fetchSpy).to.have.not.been.called;
+          expect(get(array, 'sourceArray').toArray())
+            .to.deep.equal(recordRange(0, 50 + 30 * 3));
+        });
+    }
+  );
 });
