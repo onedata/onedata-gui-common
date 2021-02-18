@@ -49,6 +49,7 @@ module.exports = {
       2,
       'name',
       'blur',
+      'fetch',
     ],
     // NOTE: disabled valid-jsdoc
 
