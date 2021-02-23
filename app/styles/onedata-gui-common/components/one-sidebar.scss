@@ -126,6 +126,11 @@
   }
 
   .one-icon-tagged {
+    &.item-pending {
+      .one-icon-tagged-main {
+        animation-name: pulse-inherit-disabled;
+      }
+    }
     &.item-error {
       .one-icon-tag-icon {
         color: $brand-danger;

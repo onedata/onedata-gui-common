@@ -26,6 +26,7 @@ import { inject as service } from '@ember/service';
 import { Promise, resolve } from 'rsvp';
 import { get, setProperties } from '@ember/object';
 import isRecord from 'onedata-gui-common/utils/is-record';
+import { scheduleOnce } from '@ember/runloop';
 
 // TODO: refactor to create route-, or application-specific special ids
 const SPECIAL_IDS = [
@@ -140,6 +141,7 @@ export default Route.extend({
       into: 'onedata',
       outlet: 'content',
     });
+    scheduleOnce('afterRender', this, 'scrollSidebarToActiveSidebarItem');
   },
 
   /**
@@ -165,6 +167,30 @@ export default Route.extend({
 
   findOutResourceId(resourceId /* , resourceType */ ) {
     return resourceId;
+  },
+
+  scrollSidebarToActiveSidebarItem() {
+    const sidebar = document.querySelector('.col-sidebar');
+    const sidebarActiveItemNode =
+      document.querySelector('.col-sidebar .resource-item.active .item-header');
+    if (!sidebarActiveItemNode) {
+      return;
+    }
+
+    const sidebarBoundingRect = sidebar.getBoundingClientRect();
+    const activeItemBoundingRect = sidebarActiveItemNode.getBoundingClientRect();
+    const activeItemYInSidebar = activeItemBoundingRect.top - sidebarBoundingRect.top;
+
+    const minAllowedActiveItemY = 0;
+    // At least 3/4 of the active item must be visible
+    const maxAllowedActiveItemY = sidebarBoundingRect.height -
+      activeItemBoundingRect.height * 0.75;
+    if (
+      activeItemYInSidebar < minAllowedActiveItemY ||
+      activeItemYInSidebar > maxAllowedActiveItemY
+    ) {
+      sidebarActiveItemNode.scrollIntoView();
+    }
   },
 
   actions: {

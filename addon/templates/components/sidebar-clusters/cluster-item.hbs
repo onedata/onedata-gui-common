@@ -1,6 +1,11 @@
 {{one-icon-tagged
-  class=(concat "sidebar-item-icon" (if (or pending offline) " item-error"))
+  class=(concat-classes
+    "sidebar-item-icon"
+    (if offline "item-error")
+    (if pending "item-pending")
+  )
   icon=firstLevelItemIcon
+  iconClass=(if pending "pulse-inherit-disabled animated infinite hinge")
   tagIcon=(if offline "x")
   shadowType="none"
 }}
