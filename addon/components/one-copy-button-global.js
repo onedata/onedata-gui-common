@@ -11,8 +11,8 @@ import CopyButton from 'ember-cli-clipboard/components/copy-button';
 import { inject as service } from '@ember/service';
 import { reads } from '@ember/object/computed';
 import { computed } from '@ember/object';
+import { capitalize } from '@ember/string';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import _ from 'lodash';
 import { or } from 'ember-awesome-macros';
 import computedT from 'onedata-gui-common/utils/computed-t';
 
@@ -65,7 +65,7 @@ export default CopyButton.extend(I18n, {
     } = this.getProperties('globalNotify', 'textType');
     globalNotify.success(this.t(
       'copySuccess', {
-        textType: _.startCase(textType),
+        textType: capitalize(String(textType)),
       }
     ));
   },

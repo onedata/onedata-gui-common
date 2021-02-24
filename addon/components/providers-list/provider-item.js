@@ -16,6 +16,7 @@ import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 
 export default Component.extend({
   layout,
+  classNames: ['providers-list-provider-item', 'provider-item'],
 
   /**
    * @virtual

@@ -37,6 +37,8 @@ const {
  * @property {Array<Object>} [options=undefined] array of options for inputs like
  *   radio-group. Each option has fields: value, label
  * @property {string} [message=undefined] field message (typically an error message)
+ * @property {boolean} [copyable=undefined] if true and field is static,
+ *   it renders a clipboard line to copy value
  * @property {string} [rightText=undefined] text that will be shown on
  *     the right side of the input
  * @property {string} [lockHint=undefined] text that will be shown in tooltip
