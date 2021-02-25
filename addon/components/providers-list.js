@@ -1,10 +1,9 @@
 /**
  * A component that shows list of providers. It allows to:
- * * display provider icon using custom color (from provider.color property),
- * * notify about click on provider (by providerClickAction callback)
- * * notify about actual state of items filtration (by providersFilterAction
+ * - display provider icon using custom color (from provider.color property),
+ * - notify about actual state of items filtration (by providersFilterAction
  *   callback)
- * * set custom actions for providers (using providerActions - 
+ * - set custom actions for providers (using providerActions - 
  *   see property comment for more details)
  *
  * @module components/providers-list.js
@@ -65,12 +64,6 @@ export default Component.extend({
   providersFilterAction: () => {},
 
   /**
-   * Action called on provider click.
-   * @type {Function}
-   */
-  providerClickAction: () => {},
-
-  /**
    * Array of possible actions per provider. Each action must be in format: 
    * ```
    * {
@@ -101,11 +94,6 @@ export default Component.extend({
   actions: {
     providersFilter(providers) {
       this.get('providersFilterAction')(providers);
-    },
-    providerClick(provider) {
-      if (!document.querySelector('.oneprovider-actions.in')) {
-        this.get('providerClickAction')(provider);
-      }
     },
   },
 });

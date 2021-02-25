@@ -8,3 +8,10 @@
     }
   }  
 }
+
+.one-form-field-static {
+  &.form-control-static.form-control-static-clipboard-line {
+    padding-top: $padding-small-vertical + 2px;
+    padding-bottom: $padding-small-vertical + 2px;
+  }
+}

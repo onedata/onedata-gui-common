@@ -45,3 +45,9 @@
   $color-one-red,
   transparent
 );
+
+@include animation-fg-color-change(
+  pulse-inherit-disabled,
+  inherit,
+  $main-text-color-disabled
+);

@@ -86,21 +86,6 @@ describe('Integration | Component | providers list', function () {
       .to.contain(this.get('providersData')[0].color);
   });
 
-  it('triggers provider clicked action', function () {
-    let providerClickedSpy = sinon.spy();
-    this.on('providerClicked', providerClickedSpy);
-
-    this.render(hbs `
-      {{providers-list 
-        providersData=providersData
-        providerClickAction=(action "providerClicked")}}
-    `);
-    return click('.one-collapsible-list-item:nth-child(2)').then(() => {
-      expect(providerClickedSpy).to.be.calledOnce;
-      expect(providerClickedSpy).to.be.calledWith(this.get('providersData')[0].provider);
-    });
-  });
-
   it('triggers providers filter state changed action on init', function () {
     let providersFilterSpy = sinon.spy();
     this.on('providersFilter', providersFilterSpy);
