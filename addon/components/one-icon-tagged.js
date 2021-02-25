@@ -25,10 +25,21 @@ export default Component.extend({
   icon: undefined,
 
   /**
+   * @virtual optional
    * Name of small (additional) icon.
    * @type {string}
    */
   tagIcon: 'x',
+
+  /**
+   * @virtual optional
+   */
+  iconClass: '',
+
+  /**
+   * @virtual optional
+   */
+  tagIconClass: '',
 
   /**
    * How the icon should be wrapped graphically.

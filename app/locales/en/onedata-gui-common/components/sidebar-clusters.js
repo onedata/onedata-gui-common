@@ -17,5 +17,9 @@ export default {
     nameNotAvailable: '(name not available)',
     newCluster: 'New cluster',
     deregister: 'Deregister',
+    clusterId: 'cluster ID',
+    copyClusterIdAction: 'Copy cluster ID',
+    clusterDomain: 'cluster domain',
+    copyDomainAction: 'Copy cluster domain',
   },
 };

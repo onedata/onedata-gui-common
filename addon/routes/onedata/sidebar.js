@@ -11,6 +11,7 @@ import { get } from '@ember/object';
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
+import { scheduleOnce } from '@ember/runloop';
 
 const {
   onedataTabs,
@@ -65,6 +66,14 @@ export default Route.extend({
       outlet: 'sidebar',
       model: Object.assign({}, model, { sidebarComponentName }),
     });
+    scheduleOnce('afterRender', this, 'scrollSidebarToTop');
+  },
+
+  scrollSidebarToTop() {
+    const sidebar = document.querySelector('.col-sidebar');
+    if (sidebar) {
+      sidebar.scrollTop = 0;
+    }
   },
 
   /**

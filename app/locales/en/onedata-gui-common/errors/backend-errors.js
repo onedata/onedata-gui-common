@@ -14,6 +14,7 @@ export default {
   serviceUnavailable: 'Service required for this operation is offline.',
   timeout: 'Operation timed out – please try again later.',
   temporaryFailure: 'The server reported a temporary failure – please try again later.',
+  externalServiceOperationFailed: 'Your request could not be fulfilled due to problems with the external service "{{serviceName}}". This might be a temporary problem or a misconfiguration. Please try again later or contact the site administrators if the problem persists.',
   unauthorized: 'You must authenticate yourself to perform this operation.',
   forbidden: 'You are not authorized to perform this operation (insufficient privileges?).',
   notFound: 'The resource could not be found.',

@@ -121,13 +121,6 @@ export default Component.extend({
     }
   ),
 
-  contentScrollResetObserver: observer(
-    'navigationState.{activeResourceType,activeResource,activeAspect}',
-    function contentScrollResetObserver() {
-      this.$('.col-content').scrollTop(0);
-    }
-  ),
-
   /**
    * Using this as a workaround to bug in perfect-scrollbar-element
    * which destroys scrollbar when class property is changed in HBS

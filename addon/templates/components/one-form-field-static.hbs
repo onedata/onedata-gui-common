@@ -5,7 +5,12 @@
       {{one-label-tip title=field.tip class="form-field-right-addon"}}
     {{/if}}
   </label>
-  <span class={{concat (concat (concat "form-control-static one-form-field-static field-" (dot-to-dash field.name)) " ") layoutConfig.formInputColumns}}>
+  <span class={{concat-classes
+    "form-control-static one-form-field-static"
+    (if field.copyable "form-control-static-clipboard-line")
+    (concat "field-" (dot-to-dash field.name))
+    layoutConfig.formInputColumns
+  }}>
     {{#if (eq (data-type value) "boolean")}}
       {{one-way-toggle
         checked=value
@@ -14,6 +19,11 @@
     {{else}}
       {{#if fakePassword}}
         {{fake-password}}
+      {{else if field.copyable}}
+        {{one-clipboard-line
+          value=(one-form-field-formatter value field.format)
+          size="sm"
+        }}
       {{else}}
         {{one-form-field-formatter value field.format}}
         {{#if field.rightText}}<span class="field-suffix">{{field.rightText}}</span>{{/if}}
