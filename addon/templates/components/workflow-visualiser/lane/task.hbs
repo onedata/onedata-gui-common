@@ -1,0 +1,42 @@
+{{#if (and (eq mode "view") showProgress)}}
+  <div
+    class="task-progress-bar {{if hasPercentCounterInsideProgressBar "counter-inside-bar"}}"
+    style={{progressBarStyle}}
+  >
+    <span class="percent-counter">{{progressPercentAsText}}</span>
+  </div>
+{{/if}}
+{{#if (eq mode "edit")}}
+  {{one-inline-editor
+    class="task-name"
+    value=name
+    hideViewIcons=true
+    onSave=(action "changeName")
+  }}
+  {{one-icon
+    icon="settings-circle-filled"
+    class=(concat-classes
+      "task-actions-trigger"
+      (concat "actions-trigger-" elementId)
+      (if areActionsOpened "active")
+    )
+    click=(action (mut areActionsOpened) (not areActionsOpened))
+  }}
+  {{#one-webui-popover
+    class="task-actions"
+    padding=false
+    popoverStyle="with-dropdown"
+    triggerSelector=(concat ".actions-trigger-" elementId)
+    open=areActionsOpened
+    onToggle=(action (mut areActionsOpened)) as |popover|}}
+    {{#click-outside action=(action (mut areActionsOpened) false) except-selector=(concat ".actions-trigger-" elementId)}}
+      {{actions-popover-content
+        actionsArray=taskActions
+        actionClicked=(action (mut areActionsOpened) false)
+      }}
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{else}}
+  <span class="task-name">{{name}}</span>
+{{/if}}
+{{yield}}

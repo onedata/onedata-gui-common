@@ -1,0 +1,14 @@
+{{#if (not-eq arrowType "none")}}
+  <div class="arrow">
+    <div class="line"></div>
+    <div class="arrowhead"></div>
+  </div>
+{{/if}}
+{{#if allowAdding}}
+  {{one-icon
+    class="add-block-action-trigger"
+    icon="add-filled"
+    click=(action "addBlock")
+  }}
+{{/if}}
+{{yield}}
