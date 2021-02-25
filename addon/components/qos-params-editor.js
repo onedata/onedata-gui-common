@@ -78,6 +78,13 @@ export default Component.extend(I18n, {
   onChange: notImplementedIgnore,
 
   /**
+   * @virtual optional
+   * Parameters with these keys can't be removed or modified.
+   * @type {Ember.ComputedProperty <Array<String>>}
+   */
+  readonlyKeys: undefined,
+
+  /**
    * `qosParams` converted to an array of QosParamRecord
    * @type {Ember.ComputedProperty<Array<QosParamRecord>>}
    */

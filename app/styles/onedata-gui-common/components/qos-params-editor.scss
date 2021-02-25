@@ -16,6 +16,11 @@
       font-weight: bold;
       color: $color-one-danger;
     }
+    .disabled-param-icon {
+      font-weight: bold;
+      color: $color-one-dark-gray;
+      opacity: 0.5;
+    }
     .one-inline-editor:hover {
       .one-label {
         padding-left: $padding-large-horizontal; 
@@ -28,6 +33,16 @@
         &:hover {
           opacity: 1;
         }
+      }
+      .disabled-param-icon {
+        font-size: 1.2em;
+      }
+      .disabled-param-icon.lock-icon {
+        line-height: $input-height-base;
+        font-size: 145%;
+      }
+      .truncated-string.one-label.not-modified-key-param {
+        display: inline-block;
       }
     }
     @media (max-width: $screen-xs-max) {
@@ -44,13 +59,23 @@
           padding-left: 0;
         }
       }
-      .remove-param {
+      .remove-param, .disabled-param-icon {
         position: absolute;
         top: 0;
         right: 0;
         line-height: $input-height-base;
         font-size: 230%;
+        &.lock-icon {
+          right: 40px;
+        }
       }
+      .not-modified-key-param {
+        line-height: $input-height-base;
+      }
+    }
+    .truncated-string.one-label.not-modified-key-param {
+      width: calc(100% - 24px);
+      margin-right: 2px;
     }
   }
 }

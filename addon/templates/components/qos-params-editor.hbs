@@ -23,48 +23,68 @@
       (if editRecord.isRemoved "fadeOut")
       (if (eq editRecord activeParamEditRecords.lastObject) "last-record")
       (if (or editRecord.isDuplicate (and (eq editRecord.key "") (not-eq editRecord.value "")) editRecord.keyValidationMessage) "has-error")}}>
-      <div class="row">
-        <div class="label-column {{layoutConfig.formLabelColumns}} control-label">
-          {{one-inline-editor
-            value=editRecord.key
-            isEditing=editRecord.isEditingKey
-            hideEditIcons=true
-            onInputValueChanged=(action "keyChanged" editRecord)
-            onEdit=(action "keyEdit" editRecord)
-            onSave=(action "keyChanged" editRecord)
-            onLostFocus=(action "inputLostFocus" "key" editRecord)
-            inputPlaceholder=(tt this "key")
-            ignoreInitialFocus=true
-            class="show-edit-icon"}}
-          {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
-            {{one-icon icon="close" class="form-field-right-addon remove-param" click=(action "removeRecord" editRecord)}}
-          {{/unless}}
-          {{#if editRecord.hasKeyError}}
-            <div class="form-message">
-              {{#if editRecord.isDuplicate}}
-                {{tt this "keyDuplicate"}}
-              {{else if editRecord.hasValueWithoutKey}}
-                {{tt this "keyCantBeBlank"}}
-              {{else if editRecord.keyValidationMessage}}
-                {{#if (eq editRecord.keyValidationMessage true)}}
-                  {{tt this "keyValidationError"}}
-                {{else}}
-                  {{editRecord.keyValidationMessage}}
+      {{#with (if (contains editRecord.key readonlyKeys) "readonly" "modifiable") as |entryType|}}
+        <div class={{concat-classes "row" (if (eq entryType "readonly") "readonly-key")}}>
+          <div class="label-column {{layoutConfig.formLabelColumns}} control-label">
+            {{#if (eq entryType "readonly")}}
+              {{#truncated-string class="one-label not-modified-key-param"}}
+                {{editRecord.key}}
+              {{/truncated-string}}
+              {{#one-icon class="lock-icon disabled-param-icon" icon="lock"}}
+                {{one-tooltip title=(tt this "cannotModify")}}
+              {{/one-icon}}
+              {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
+                {{#one-icon icon="close" class="form-field-right-addon disabled-param-icon"}}
+                  {{one-tooltip title=(tt this "cannotModify")}}
+                {{/one-icon}}
+              {{/unless}}
+            {{else}}
+              {{one-inline-editor
+                value=editRecord.key
+                isEditing=editRecord.isEditingKey
+                hideEditIcons=true
+                onInputValueChanged=(action "keyChanged" editRecord)
+                onEdit=(action "keyEdit" editRecord)
+                onSave=(action "keyChanged" editRecord)
+                onLostFocus=(action "inputLostFocus" "key" editRecord)
+                inputPlaceholder=(tt this "key")
+                ignoreInitialFocus=true
+                class="show-edit-icon"}}
+              {{#unless (eq editRecord activeParamEditRecords.lastObject)}}
+                {{one-icon icon="close" class="form-field-right-addon remove-param" click=(action "removeRecord" editRecord)}}
+              {{/unless}}  
+            {{/if}}
+            {{#if editRecord.hasKeyError}}
+              <div class="form-message">
+                {{#if editRecord.isDuplicate}}
+                  {{tt this "keyDuplicate"}}
+                {{else if editRecord.hasValueWithoutKey}}
+                  {{tt this "keyCantBeBlank"}}
+                {{else if editRecord.keyValidationMessage}}
+                  {{#if (eq editRecord.keyValidationMessage true)}}
+                    {{tt this "keyValidationError"}}
+                  {{else}}
+                    {{editRecord.keyValidationMessage}}
+                  {{/if}}
                 {{/if}}
-              {{/if}}
-            </div>
-          {{/if}}
+              </div>
+            {{/if}}
+          </div>
+          <div class="form-control-column {{layoutConfig.formInputColumns}}">
+            {{#if (eq entryType "readonly")}}
+              {{clipboard-line value=editRecord.value btnType="primary" class="qos-field"}}
+            {{else}}
+              <input
+                type="text"
+                class="form-control qos-field"
+                value={{editRecord.value}}
+                placeholder={{tt this "value"}}
+                oninput={{action "valueChanged" editRecord}}
+                onblur={{action "inputLostFocus" "value" editRecord}}>
+            {{/if}}
+          </div>
         </div>
-        <div class="form-control-column {{layoutConfig.formInputColumns}}">
-          <input
-            type="text"
-            class="form-control qos-field"
-            value={{editRecord.value}}
-            placeholder={{tt this "value"}}
-            oninput={{action "valueChanged" editRecord}}
-            onblur={{action "inputLostFocus" "value" editRecord}}>
-        </div>
-      </div>
+      {{/with}}
     </div>
   {{/each}}
 {{/if}}
