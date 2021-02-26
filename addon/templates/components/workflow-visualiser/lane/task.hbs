@@ -37,6 +37,6 @@
     {{/click-outside}}
   {{/one-webui-popover}}
 {{else}}
-  <span class="task-name">{{name}}</span>
+  {{#truncated-string class="task-name"}}{{name}}{{/truncated-string}}
 {{/if}}
 {{yield}}

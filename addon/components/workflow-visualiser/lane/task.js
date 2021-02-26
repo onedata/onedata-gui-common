@@ -34,8 +34,8 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  showProgress: computed('task.progressPercent', function showProgress() {
-    return Number.isFinite(this.get('task.progressPercent'));
+  showProgress: computed('progressPercent', function showProgress() {
+    return Number.isFinite(this.get('progressPercent'));
   }),
 
   /**

@@ -29,7 +29,7 @@
     {{/click-outside}}
   {{/one-webui-popover}}
 {{else}}
-  <span class="block-name">{{name}}</span>
+  {{#truncated-string class="block-name"}}{{name}}{{/truncated-string}}
 {{/if}}
 <div class="block-elements">
   {{#each blockElements as |blockElement|}}

@@ -1,4 +1,6 @@
-<div class="add-lane-action-trigger" {{action "addLane"}}>
-  {{one-icon icon="plus"}}
-</div>
+{{#if (eq mode "edit")}}
+  <div class="add-lane-action-trigger" {{action "addLane"}}>
+    {{one-icon icon="plus"}}
+  </div>
+{{/if}}
 {{yield}}

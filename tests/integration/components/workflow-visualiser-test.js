@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach } from 'mocha';
+import { describe, it, beforeEach, context } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
@@ -10,6 +10,7 @@ import $ from 'jquery';
 
 const noLanesExample = [];
 const twoEmptyLanesExample = generateExample(2, 0, 0);
+const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 
 describe('Integration | Component | workflow visualiser', function () {
@@ -17,16 +18,218 @@ describe('Integration | Component | workflow visualiser', function () {
     integration: true,
   });
 
-  beforeEach(function () {
-    this.set('changeStub', sinon.stub().resolves());
-  });
-
   it('has class "workflow-visualiser"', function () {
-    this.render(hbs `{{workflow-visualiser}}`);
+    const rawLanes = noLanesExample;
+
+    renderWithRawLanes(this, rawLanes);
 
     expect(this.$('.workflow-visualiser')).to.exist;
   });
 
+  context('in "edit" mode', function () {
+    beforeEach(function () {
+      this.setProperties({
+        mode: 'edit',
+        changeStub: sinon.stub().resolves(),
+      });
+    });
+
+    itHasModeClass('edit');
+    itShowsVisualiserElements();
+
+    itAddsNewLane('adds a first lane', noLanesExample, 0);
+    itAddsNewLane('adds a lane before the first lane', twoNonEmptyLanesExample, 0);
+    itAddsNewLane('adds a lane between existing lanes', twoNonEmptyLanesExample, 1);
+    itAddsNewLane('adds a lane after the last lane', twoNonEmptyLanesExample, 2);
+
+    itAddsNewParallelBlock('adds the first parallel block', twoEmptyLanesExample, 0, 0);
+    itAddsNewParallelBlock(
+      'adds a parallel block before the first parallel block',
+      twoNonEmptyLanesExample,
+      0
+    );
+    itAddsNewParallelBlock(
+      'adds a parallel block between existing parallel blocks',
+      twoNonEmptyLanesExample,
+      1
+    );
+    itAddsNewParallelBlock(
+      'adds a parallel block after the last parallel block',
+      twoNonEmptyLanesExample,
+      2
+    );
+
+    itAddsNewTask('adds the first task', generateExample(2, 2, 0), 0);
+    itAddsNewTask('adds a task after the last task', twoNonEmptyLanesExample, 2);
+
+    itChangesName(
+      'lane',
+      `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-name`,
+      (rawDump, newName) => rawDump[0].name = newName
+    );
+    itChangesName(
+      'parallel block',
+      `[data-visualiser-element-id="${parallelBlockIdFromExample(0, 0)}"] .block-name`,
+      (rawDump, newName) => rawDump[0].tasks[0].name = newName
+    );
+    itChangesName(
+      'task',
+      `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-name`,
+      (rawDump, newName) => rawDump[0].tasks[0].tasks[0].name = newName
+    );
+
+    itRemoves(
+      'lane',
+      `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
+      '.remove-lane-action-trigger',
+      rawDump => rawDump.splice(0, 1)
+    );
+    itRemoves(
+      'parallel block',
+      `[data-visualiser-element-id="${parallelBlockIdFromExample(0, 0)}"] .parallel-block-actions-trigger`,
+      '.remove-block-action-trigger',
+      rawDump => rawDump[0].tasks.splice(0, 1)
+    );
+    itRemoves(
+      'task',
+      `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-actions-trigger`,
+      '.remove-task-action-trigger',
+      rawDump => rawDump[0].tasks[0].tasks.splice(0, 1)
+    );
+
+    it('does not show tasks progress', function () {
+      const rawLanes = twoNonEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$('.task-progress-bar')).to.not.exist;
+    });
+  });
+
+  context('in "view" mode', function () {
+    beforeEach(function () {
+      this.set('mode', 'view');
+    });
+
+    itHasModeClass('view');
+    itShowsVisualiserElements();
+
+    it('shows tasks progress', function () {
+      const rawLanes = twoNonEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+      // TODO VFS-7330 add detailed tests when progress will be calculated
+      expect(this.$('.task-progress-bar')).to.exist;
+    });
+
+    it('does not show edition-related elements in empty visualiser', function () {
+      const rawLanes = noLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$('.add-lane-action-trigger')).to.not.exist;
+    });
+
+    it('does not allow to change lane name', function () {
+      const rawLanes = twoEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.lane-name .one-label')).to.not.exist;
+    });
+
+    it('does not show edition-related elements in lanes and interlane spaces', function () {
+      const rawLanes = twoNonEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$('.lane-actions-trigger')).to.not.exist;
+      expect(this.$('.add-lane-action-trigger')).to.not.exist;
+    });
+
+    it('does not show edition-related elements in empty lane', function () {
+      const rawLanes = twoEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$(
+        '.workflow-visualiser-interblock-space .add-block-action-trigger'
+      )).to.not.exist;
+    });
+
+    it('does not allow to change parallel block name', function () {
+      const rawLanes = twoEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.block-name .one-label')).to.not.exist;
+    });
+
+    it('does not show edition-related elements of parallel blocks and spaces between them', function () {
+      const rawLanes = twoNonEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
+      expect(this.$(
+        '.workflow-visualiser-interblock-space.between-parallel-blocks-space .add-block-action-trigger'
+      )).to.not.exist;
+    });
+
+    it('does not show edition-related elements in empty parallel block', function () {
+      const rawLanes = twoLanesWithEmptyBlocksExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$(
+        '.workflow-visualiser-parallel-block .workflow-visualiser-interblock-space .add-block-action-trigger'
+      )).to.not.exist;
+    });
+
+    it('does not allow to change task name', function () {
+      const rawLanes = twoEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.task-name .one-label')).to.not.exist;
+    });
+
+    it('does not show edition-related elements of tasks and spaces between them', function () {
+      const rawLanes = twoNonEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      expect(this.$('.task-actions-trigger')).to.not.exist;
+      expect(this.$(
+        '.workflow-visualiser-interblock-space.between-task-space .add-block-action-trigger'
+      )).to.not.exist;
+    });
+  });
+});
+
+function renderWithRawLanes(testCase, rawLanes) {
+  testCase.set('rawLanes', rawLanes);
+  testCase.render(hbs `{{workflow-visualiser
+    mode=mode
+    rawLanes=rawLanes
+    onChange=changeStub
+  }}`);
+}
+
+function itHasModeClass(mode) {
+  it(`has class "mode-${mode}"`, function () {
+    const rawLanes = noLanesExample;
+
+    renderWithRawLanes(this, rawLanes);
+
+    expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
+  });
+}
+
+function itShowsVisualiserElements() {
   it('shows one interlane space when there are no lanes', function () {
     const rawLanes = noLanesExample;
 
@@ -45,74 +248,6 @@ describe('Integration | Component | workflow visualiser', function () {
 
     checkRenderingLanes(this, rawLanes);
   });
-
-  itAddsNewLane('adds a first lane', noLanesExample, 0);
-  itAddsNewLane('adds a lane before the first lane', twoNonEmptyLanesExample, 0);
-  itAddsNewLane('adds a lane between existing lanes', twoNonEmptyLanesExample, 1);
-  itAddsNewLane('adds a lane after the last lane', twoNonEmptyLanesExample, 2);
-
-  itAddsNewParallelBlock('adds the first parallel block', twoEmptyLanesExample, 0, 0);
-  itAddsNewParallelBlock(
-    'adds a parallel block before the first parallel block',
-    twoNonEmptyLanesExample,
-    0
-  );
-  itAddsNewParallelBlock(
-    'adds a parallel block between existing parallel blocks',
-    twoNonEmptyLanesExample,
-    1
-  );
-  itAddsNewParallelBlock(
-    'adds a parallel block after the last parallel block',
-    twoNonEmptyLanesExample,
-    2
-  );
-
-  itAddsNewTask('adds the first task', generateExample(2, 2, 0), 0);
-  itAddsNewTask('adds a task after the last task', twoNonEmptyLanesExample, 2);
-
-  itChangesName(
-    'lane',
-    `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-name`,
-    (rawDump, newName) => rawDump[0].name = newName
-  );
-  itChangesName(
-    'parallel block',
-    `[data-visualiser-element-id="${parallelBlockIdFromExample(0, 0)}"] .block-name`,
-    (rawDump, newName) => rawDump[0].tasks[0].name = newName
-  );
-  itChangesName(
-    'task',
-    `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-name`,
-    (rawDump, newName) => rawDump[0].tasks[0].tasks[0].name = newName
-  );
-
-  itRemoves(
-    'lane',
-    `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
-    '.remove-lane-action-trigger',
-    rawDump => rawDump.splice(0, 1)
-  );
-  itRemoves(
-    'parallel block',
-    `[data-visualiser-element-id="${parallelBlockIdFromExample(0, 0)}"] .parallel-block-actions-trigger`,
-    '.remove-block-action-trigger',
-    rawDump => rawDump[0].tasks.splice(0, 1)
-  );
-  itRemoves(
-    'task',
-    `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-actions-trigger`,
-    '.remove-task-action-trigger',
-    rawDump => rawDump[0].tasks[0].tasks.splice(0, 1)
-  );
-});
-
-function renderWithRawLanes(testCase, rawLanes) {
-  testCase.set('rawLanes', rawLanes);
-  testCase.render(hbs `{{workflow-visualiser
-    rawLanes=rawLanes
-    onChange=changeStub
-  }}`);
 }
 
 function checkInterblockSpaces(testCase, idsPerLanePerBlock) {

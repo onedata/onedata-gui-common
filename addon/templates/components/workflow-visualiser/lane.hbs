@@ -1,13 +1,17 @@
 <div class="lane-header">
+  <div class="lane-menu-trigger-space"></div>
   {{#if (eq mode "edit")}}
-    <div class="lane-menu-trigger-space"></div>
     {{one-inline-editor
       class="lane-name"
       value=name
       hideViewIcons=true
       onSave=(action "changeName")
     }}
-    <div class="lane-menu-trigger-space">
+  {{else}}
+    {{#truncated-string class="lane-name"}}{{name}}{{/truncated-string}}
+  {{/if}}
+  <div class="lane-menu-trigger-space">
+    {{#if (eq mode "edit")}}
       {{one-menu-toggle
         class=(concat-classes
           "lane-actions-trigger"
@@ -16,24 +20,22 @@
         )
         click=(action (mut areActionsOpened) (not areActionsOpened))
       }}
-    </div>
-    {{#one-webui-popover
-      class="lane-actions"
-      padding=false
-      popoverStyle="with-dropdown"
-      triggerSelector=(concat ".actions-trigger-" elementId)
-      open=areActionsOpened
-      onToggle=(action (mut areActionsOpened)) as |popover|}}
-      {{#click-outside action=(action (mut areActionsOpened) false) except-selector=(concat ".actions-trigger-" elementId)}}
-        {{actions-popover-content
-          actionsArray=laneActions
-          actionClicked=(action (mut areActionsOpened) false)
-        }}
-      {{/click-outside}}
-    {{/one-webui-popover}}
-  {{else}}
-    <span class="lane-name">{{name}}</span>
-  {{/if}}
+      {{#one-webui-popover
+        class="lane-actions"
+        padding=false
+        popoverStyle="with-dropdown"
+        triggerSelector=(concat ".actions-trigger-" elementId)
+        open=areActionsOpened
+        onToggle=(action (mut areActionsOpened)) as |popover|}}
+        {{#click-outside action=(action (mut areActionsOpened) false) except-selector=(concat ".actions-trigger-" elementId)}}
+          {{actions-popover-content
+            actionsArray=laneActions
+            actionClicked=(action (mut areActionsOpened) false)
+          }}
+        {{/click-outside}}
+      {{/one-webui-popover}}
+    {{/if}}
+  </div>
 </div>
 {{#perfect-scrollbar-element class="lane-elements"}}
   {{#each laneElements as |laneElement|}}

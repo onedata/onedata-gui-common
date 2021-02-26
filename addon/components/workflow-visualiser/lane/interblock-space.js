@@ -2,7 +2,7 @@ import LaneElement from 'onedata-gui-common/components/workflow-visualiser/lane/
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/interblock-space';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { conditional, equal, raw, string, tag, and, notEqual, or, not } from 'ember-awesome-macros';
+import { conditional, equal, raw, string, tag } from 'ember-awesome-macros';
 
 export default LaneElement.extend({
   layout,
@@ -79,22 +79,42 @@ export default LaneElement.extend({
    * One of: 'between', 'start', 'end', 'none'
    * @type {ComputedProperty<String>}
    */
-  arrowType: conditional(
-    and(
-      equal('siblingsType', raw('parallelBlock')),
-      notEqual('positionType', raw('empty'))
-    ),
-    'positionType',
-    raw('none')
-  ),
+  arrowType: computed('siblingsType', 'positionType', 'mode', function arrowType() {
+    const {
+      siblingsType,
+      positionType,
+      mode,
+    } = this.getProperties('siblingsType', 'positionType', 'mode');
+
+    if (siblingsType !== 'parallelBlock') {
+      return 'none';
+    }
+
+    if (mode === 'view') {
+      return positionType === 'between' ? positionType : 'none';
+    } else {
+      return positionType !== 'empty' ? positionType : 'none';
+    }
+  }),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  allowAdding: not(and(
-    equal('siblingsType', raw('task')),
-    or(equal('positionType', raw('start')), equal('positionType', raw('between')))
-  )),
+  allowAdding: computed('siblingsType', 'positionType', 'mode', function allowAdding() {
+    const {
+      siblingsType,
+      positionType,
+      mode,
+    } = this.getProperties('siblingsType', 'positionType', 'mode');
+
+    if (mode === 'view') {
+      return false;
+    } else if (siblingsType !== 'task') {
+      return true;
+    } else {
+      return positionType !== 'start' && positionType !== 'between';
+    }
+  }),
 
   actions: {
     addBlock() {

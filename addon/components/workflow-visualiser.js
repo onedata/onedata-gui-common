@@ -11,10 +11,12 @@ import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
+import { tag } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
   classNames: ['workflow-visualiser'],
+  classNameBindings: ['modeClass'],
 
   i18n: service(),
 
@@ -68,6 +70,11 @@ export default Component.extend(I18n, {
   visualiserElements: computed('rawLanes.[]', function visualiserElements() {
     return this.getVisualiserElements();
   }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  modeClass: tag `mode-${'mode'}`,
 
   init() {
     this._super(...arguments);

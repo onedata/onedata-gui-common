@@ -88,23 +88,29 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     [{
       siblings: [null, ParallelBlock.create()],
       type: 'start',
-      hasArrow: true,
+      hasArrowInEdition: true,
+      hasArrowInView: false,
     }, {
       siblings: [ParallelBlock.create(), null],
       type: 'end',
-      hasArrow: true,
+      hasArrowInEdition: true,
+      hasArrowInView: false,
     }, {
       siblings: [ParallelBlock.create(), ParallelBlock.create()],
       type: 'between',
-      hasArrow: true,
+      hasArrowInEdition: true,
+      hasArrowInView: true,
     }, {
       siblings: [null, null],
       type: 'empty',
-      hasArrow: false,
-    }].forEach(({ siblings, type, hasArrow }) => {
+      hasArrowInEdition: false,
+      hasArrowInView: false,
+    }].forEach(({ siblings, type, hasArrowInEdition, hasArrowInView }) => {
       itIsOfType(type, ParallelBlock.create(), siblings);
-      itAllowsToAddElement(Lane.create(), siblings);
-      itHasArrow(hasArrow, Lane.create(), siblings);
+      itAllowsToAddElement(Lane.create(), siblings, 'edit');
+      itDoesNotAllowToAddElement(Lane.create(), siblings, 'view');
+      itHasArrow(hasArrowInEdition, Lane.create(), siblings, 'edit');
+      itHasArrow(hasArrowInView, Lane.create(), siblings, 'view');
     });
   });
 
@@ -128,11 +134,13 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }].forEach(({ siblings, type, allowsToAdd }) => {
       itIsOfType(type, ParallelBlock.create(), siblings);
       if (allowsToAdd) {
-        itAllowsToAddElement(ParallelBlock.create(), siblings);
+        itAllowsToAddElement(ParallelBlock.create(), siblings, 'edit');
       } else {
-        itDoesNotAllowToAddElement(ParallelBlock.create(), siblings);
+        itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'edit');
       }
-      itHasArrow(false, ParallelBlock.create(), siblings);
+      itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'view');
+      itHasArrow(false, ParallelBlock.create(), siblings, 'edit');
+      itHasArrow(false, ParallelBlock.create(), siblings, 'view');
     });
   });
 });
@@ -155,12 +163,13 @@ function itIsOfType(type, parent, [firstBlock, secondBlock]) {
     });
 }
 
-function itAllowsToAddElement(parent, [firstBlock, secondBlock]) {
+function itAllowsToAddElement(parent, [firstBlock, secondBlock], mode) {
   it(
-    `allows to add element when ${siblingsDescription(firstBlock, secondBlock)}`,
+    `allows to add element when is in "${mode}" mode and ${siblingsDescription(firstBlock, secondBlock)}`,
     async function () {
       const onAddBlock = sinon.spy();
       this.set('blockSpace', InterblockSpace.create({
+        mode,
         firstBlock,
         secondBlock,
         parent,
@@ -177,11 +186,12 @@ function itAllowsToAddElement(parent, [firstBlock, secondBlock]) {
   );
 }
 
-function itDoesNotAllowToAddElement(parent, [firstBlock, secondBlock]) {
+function itDoesNotAllowToAddElement(parent, [firstBlock, secondBlock], mode) {
   it(
-    `does not allow to add element when ${siblingsDescription(firstBlock, secondBlock)}`,
+    `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(firstBlock, secondBlock)}`,
     async function () {
       this.set('blockSpace', InterblockSpace.create({
+        mode,
         firstBlock,
         secondBlock,
         parent,
@@ -196,11 +206,12 @@ function itDoesNotAllowToAddElement(parent, [firstBlock, secondBlock]) {
   );
 }
 
-function itHasArrow(hasArrow, parent, [firstBlock, secondBlock]) {
+function itHasArrow(hasArrow, parent, [firstBlock, secondBlock], mode) {
   it(
-    `${hasArrow ? 'renders' : 'does not render any'} arrow when ${siblingsDescription(firstBlock, secondBlock)}`,
+    `${hasArrow ? 'renders' : 'does not render any'} arrow when is in "${mode}" mode and ${siblingsDescription(firstBlock, secondBlock)}`,
     async function () {
       this.set('blockSpace', InterblockSpace.create({
+        mode,
         firstBlock,
         secondBlock,
         parent,

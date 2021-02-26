@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, context } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
@@ -55,20 +55,39 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
     });
   });
 
-  it('notifies about triggered "add lane" action', async function () {
-    const onAddLane = sinon.spy();
-    const firstLane = Lane.create();
-    this.set('interlaneSpace', InterlaneSpace.create({
-      firstLane,
-      secondLane: Lane.create(),
-      onAddLane,
-    }));
-    this.render(hbs `{{workflow-visualiser/interlane-space
-      visualiserElement=interlaneSpace
-    }}`);
+  context('in "edit" mode', function () {
+    it('notifies about triggered "add lane" action', async function () {
+      const onAddLane = sinon.spy();
+      const firstLane = Lane.create();
+      this.set('interlaneSpace', InterlaneSpace.create({
+        mode: 'edit',
+        firstLane,
+        secondLane: Lane.create(),
+        onAddLane,
+      }));
+      this.render(hbs `{{workflow-visualiser/interlane-space
+        visualiserElement=interlaneSpace
+      }}`);
 
-    await click('.add-lane-action-trigger');
+      await click('.add-lane-action-trigger');
 
-    expect(onAddLane).to.be.calledOnce.and.to.be.calledWith(firstLane);
+      expect(onAddLane).to.be.calledOnce.and.to.be.calledWith(firstLane);
+    });
+  });
+
+  context('in "view" mode', function () {
+    it('does not allow to trigger "add lane" action', async function () {
+      const firstLane = Lane.create();
+      this.set('interlaneSpace', InterlaneSpace.create({
+        mode: 'view',
+        firstLane,
+        secondLane: Lane.create(),
+      }));
+      this.render(hbs `{{workflow-visualiser/interlane-space
+        visualiserElement=interlaneSpace
+      }}`);
+
+      expect(this.$('.add-lane-action-trigger')).to.not.exist;
+    });
   });
 });
