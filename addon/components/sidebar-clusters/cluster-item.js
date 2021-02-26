@@ -15,6 +15,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/sidebar-clusters/cluster-item';
 import { next } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { collect } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -23,6 +24,7 @@ export default Component.extend(I18n, {
 
   i18n: service(),
   router: service(),
+  globalClipboard: service(),
 
   /**
    * @override
@@ -63,6 +65,41 @@ export default Component.extend(I18n, {
       default:
         return 'menu-clusters';
     }
+  }),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.Action>>}
+   */
+  itemActions: collect('copyIdAction', 'copyDomainAction'),
+
+  /**
+   * @type {Ember.ComputedProperty<Action>}
+   */
+  copyIdAction: computed(function copyIdAction() {
+    return {
+      action: () => this.get('globalClipboard').copy(
+        this.get('item.entityId'),
+        this.t('clusterId')
+      ),
+      title: this.t('copyClusterIdAction'),
+      class: 'copy-cluster-id-action-trigger',
+      icon: 'copy',
+    };
+  }),
+
+  /**
+   * @type {Ember.ComputedProperty<Action>}
+   */
+  copyDomainAction: computed(function copyDomainAction() {
+    return {
+      action: () => this.get('globalClipboard').copy(
+        this.get('item.domain'),
+        this.t('clusterDomain')
+      ),
+      title: this.t('copyDomainAction'),
+      class: 'copy-cluster-domain-action-trigger',
+      icon: 'copy',
+    };
   }),
 
   offlineObserver: observer('cluster.isOnline', function offlineObserver() {

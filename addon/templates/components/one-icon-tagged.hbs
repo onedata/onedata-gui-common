@@ -4,7 +4,13 @@
 }}
   {{yield}}
   {{#if (eq shadowType "icon")}}
-    {{one-icon class="one-icon-tag one-icon-tag-shadow one-icon-internal" icon=tagIcon}}
+    {{one-icon
+      class=(concat-classes
+        "one-icon-tag one-icon-tag-shadow one-icon-internal"
+        tagIconClass
+      )
+      icon=tagIcon
+    }}
   {{else if (eq shadowType "circle")}}
     <div class="one-icon-tag-circle"></div>
   {{/if}}

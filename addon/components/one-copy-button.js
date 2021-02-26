@@ -21,9 +21,9 @@
  */
 
 import Component from '@ember/component';
-import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import { capitalize } from '@ember/string';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from 'onedata-gui-common/templates/components/one-copy-button';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -102,10 +102,15 @@ export default Component.extend(I18n, {
   }),
 
   _success() {
-    this.get('notify')(true);
-    this.get('globalNotify').info(this.t(
+    const {
+      notify,
+      globalNotify,
+      textType,
+    } = this.getProperties('notify', 'globalNotify', 'textType');
+    notify(true);
+    globalNotify.info(this.t(
       'copySuccess', {
-        textType: _.startCase(this.get('textType')),
+        textType: capitalize(String(textType)),
       }
     ));
   },

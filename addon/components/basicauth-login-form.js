@@ -96,13 +96,14 @@ export default Component.extend(I18n, {
     safeMethodExecution(this, 'set', 'isDisabled', false);
   },
 
-  onLoginFailure(username, password) {
+  onLoginFailure(username, password, error) {
     console.debug(
-      `component:basicauth-login-form: Credentials provided for ${username} are invalid`
+      `component:basicauth-login-form: Basicauth for "${username}" failed`
     );
     this.get('authenticationFailure')({
       username,
       password,
+      error,
     });
     safeMethodExecution(this, 'setProperties', {
       isDisabled: false,
@@ -132,7 +133,7 @@ export default Component.extend(I18n, {
       });
 
       loginCalling.then(() => this.onLoginSuccess(username, password));
-      loginCalling.catch(() => this.onLoginFailure(username, password));
+      loginCalling.catch(error => this.onLoginFailure(username, password, error));
 
       return loginCalling;
     },
