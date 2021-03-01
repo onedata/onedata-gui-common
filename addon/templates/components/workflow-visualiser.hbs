@@ -1,4 +1,14 @@
-{{#each visualiserElements as |visualiserElement|}}
-  {{workflow-visualiser/visualiser-element-renderer visualiserElement=visualiserElement}}
-{{/each}}
+{{#perfect-scrollbar-element class="visualiser-elements" onScroll=(action "horizonalScroll")}}
+  {{#each visualiserElements as |visualiserElement|}}
+    {{workflow-visualiser/visualiser-element-renderer visualiserElement=visualiserElement}}
+  {{/each}}
+{{/perfect-scrollbar-element}}
+<button
+  class="left-edge-scroll-step-trigger {{if (not-eq scrollLeftNextLane null) "visible"}}"
+  {{action "scrollLeft"}}
+></button>
+<button
+  class="right-edge-scroll-step-trigger {{if (not-eq scrollRightNextLane null) "visible"}}"
+  {{action "scrollRight"}}
+></button>
 {{yield}}

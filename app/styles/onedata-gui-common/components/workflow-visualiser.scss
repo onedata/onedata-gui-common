@@ -31,7 +31,6 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   }
 
   display: flex;
-  flex-wrap: nowrap;
   align-items: stretch;
   height: 100%;
 
@@ -41,6 +40,13 @@ $workflow-visualiser-last-between-task-space-size: 30px;
       height: auto;
       text-align: center;
     }
+  }
+
+  .visualiser-elements {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex-grow: 1;
   }
 
   .workflow-visualiser-interlane-space {

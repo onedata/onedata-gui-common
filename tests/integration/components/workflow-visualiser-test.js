@@ -7,6 +7,7 @@ import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import _ from 'lodash';
 import $ from 'jquery';
+import { htmlSafe } from '@ember/string';
 
 const noLanesExample = [];
 const twoEmptyLanesExample = generateExample(2, 0, 0);
@@ -208,6 +209,60 @@ describe('Integration | Component | workflow visualiser', function () {
       )).to.not.exist;
     });
   });
+
+  context('regarding left edge scroll', function () {
+    it('does not show scroll button, when there is no overflow', function () {
+      renderForScrollTest(this, 5, 99999);
+
+      expect(this.$('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
+    });
+
+    itScrollsToLane(
+      'scrolls via button to the start, when overflow is on the first lane',
+      ['left', 0],
+      ['left'],
+      ['left', 0]
+    );
+    itScrollsToLane(
+      'scrolls via button to the second lane, when overflow is on the second lane',
+      ['left', 1],
+      ['left'],
+      ['left', 1]
+    );
+    itScrollsToLane(
+      'scrolls via button to the third lane on double scroll, when overflow is on the fourth lane',
+      ['left', 3],
+      ['left', 'left'],
+      ['left', 2]
+    );
+  });
+
+  context('regarding right edge scroll', function () {
+    it('does not show scroll button, when there is no overflow', function () {
+      renderForScrollTest(this, 5, 99999);
+
+      expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
+    });
+
+    itScrollsToLane(
+      'scrolls via button to the end, when overflow is on the last lane',
+      ['right', 4],
+      ['right'],
+      ['right', 4]
+    );
+    itScrollsToLane(
+      'scrolls via button to the second lane from the end, when overflow is on the second lane from the end',
+      ['right', 3],
+      ['right'],
+      ['right', 3]
+    );
+    itScrollsToLane(
+      'scrolls via button to the third lane from the end on double scroll, when overflow is on the fourth lane from the end',
+      ['right', 1],
+      ['right', 'right'],
+      ['right', 2]
+    );
+  });
 });
 
 function renderWithRawLanes(testCase, rawLanes) {
@@ -217,6 +272,92 @@ function renderWithRawLanes(testCase, rawLanes) {
     rawLanes=rawLanes
     onChange=changeStub
   }}`);
+}
+
+function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+  testCase.setProperties({
+    rawLanes: generateExample(lanesNumber, 0, 0),
+    containerStyle: htmlSafe(
+      `min-width: ${containerWidth}px; max-width: ${containerWidth}px`
+    ),
+  });
+  testCase.render(hbs `
+    <div style={{containerStyle}}>
+      {{workflow-visualiser
+        mode="view"
+        rawLanes=rawLanes
+      }}
+    </div>
+  `);
+}
+
+function itScrollsToLane(message, [overflowSide, overflowOnLane], operations, [edgeToCheck, laneToCheck]) {
+  it(message, async function () {
+    renderForScrollTest(this, 5, 200);
+
+    await scrollToLane(this, overflowSide, overflowOnLane, 2);
+
+    for (let operation of operations) {
+      const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
+      expect($scrollTrigger).to.have.class('visible');
+      await click($scrollTrigger[0]);
+    }
+
+    const $lanesContainer = this.$('.visualiser-elements');
+    const $lanes = this.$('.workflow-visualiser-lane');
+    const $targetLane = $lanes.eq(laneToCheck);
+    if (edgeToCheck === 'left') {
+      if (laneToCheck === 0) {
+        expect($lanesContainer.scrollLeft()).to.equal(0);
+      } else {
+        expect($targetLane.offset().left).to.be.closeTo($lanesContainer.offset().left, 1);
+      }
+    } else {
+      if (laneToCheck === $lanes.length - 1) {
+        expect($lanesContainer.scrollLeft())
+          .to.be.closeTo($lanesContainer.prop('scrollWidth') - $lanesContainer.width(), 1);
+      } else {
+        expect($targetLane.offset().left + $targetLane.width())
+          .to.be.closeTo($lanesContainer.offset().left + $lanesContainer.width(), 1);
+      }
+    }
+  });
+}
+
+async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 0) {
+  const $lanesContainer = testCase.$('.visualiser-elements');
+  const $lanes = testCase.$('.workflow-visualiser-lane');
+  const $targetLane = targetLane >= 0 ? $lanes.eq(targetLane) : null;
+  const laneWidth = $lanes.width();
+  let scrollXPosition;
+
+  if (targetLane >= $lanes.length) {
+    scrollXPosition = $lanesContainer.prop('scrollWidth');
+  } else if (targetLane < 0) {
+    scrollXPosition = 0;
+  } else {
+    if (overflowSide === 'left') {
+      if (targetLane === 0 && !offsetPercent) {
+        scrollXPosition = 0;
+      } else {
+        const targetLaneOffset = $targetLane.offset().left -
+          $lanesContainer.offset().left;
+        scrollXPosition = targetLaneOffset + (offsetPercent / 100) * laneWidth;
+      }
+    } else {
+      if (targetLane === $lanes.length - 1 && !offsetPercent) {
+        scrollXPosition = $lanesContainer.prop('scrollWidth');
+      } else {
+        const targetLaneOffset = $targetLane.offset().left + $targetLane.width() -
+          ($lanesContainer.offset().left + $lanesContainer.width());
+
+        scrollXPosition = targetLaneOffset - (offsetPercent / 100) * laneWidth;
+      }
+    }
+  }
+
+  $lanesContainer.scrollLeft(scrollXPosition);
+  await wait();
 }
 
 function itHasModeClass(mode) {

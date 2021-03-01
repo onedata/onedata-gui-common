@@ -11,9 +11,12 @@ import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { tag } from 'ember-awesome-macros';
+import { tag, conditional, equal, raw } from 'ember-awesome-macros';
+import config from 'ember-get-config';
+import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
+import { debounce } from '@ember/runloop';
 
-export default Component.extend(I18n, {
+export default Component.extend(I18n, WindowResizeHandler, {
   layout,
   classNames: ['workflow-visualiser'],
   classNameBindings: ['modeClass'],
@@ -65,6 +68,16 @@ export default Component.extend(I18n, {
   elementsCache: undefined,
 
   /**
+   * @type {Number|null}
+   */
+  scrollLeftNextLane: null,
+
+  /**
+   * @type {Number|null}
+   */
+  scrollRightNextLane: null,
+
+  /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
   visualiserElements: computed('rawLanes.[]', function visualiserElements() {
@@ -76,6 +89,18 @@ export default Component.extend(I18n, {
    */
   modeClass: tag `mode-${'mode'}`,
 
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  scrollBehavior: conditional(
+    equal(raw(config.environment), raw('test')),
+    raw('auto'),
+    raw('smooth')
+  ),
+
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
 
@@ -85,6 +110,78 @@ export default Component.extend(I18n, {
       parallelBlock: [],
       task: [],
       interblockSpace: [],
+    });
+  },
+
+  /**
+   * @override
+   */
+  didRender() {
+    this.detectHorizontalOverflow();
+  },
+
+  /**
+   * @override
+   */
+  onWindowResize() {
+    debounce(this, 'detectHorizontalOverflow', 100);
+  },
+
+  detectHorizontalOverflow() {
+    const $lanes = this.$('.workflow-visualiser-lane');
+    const $visualiserElements = this.$('.visualiser-elements');
+    const viewOffset = $visualiserElements.offset().left;
+    const viewWidth = $visualiserElements.width();
+
+    let scrollLeftNextLane = null;
+    for (let i = 0; i < $lanes.length; i++) {
+      if (viewOffset - $lanes.eq(i).offset().left <= 0) {
+        break;
+      }
+      scrollLeftNextLane = i;
+    }
+
+    let scrollRightNextLane = null;
+    for (let i = $lanes.length - 1; i >= 0; i--) {
+      if ($lanes.eq(i).offset().left + $lanes.eq(i).width() - (viewOffset + viewWidth) <= 0) {
+        break;
+      }
+      scrollRightNextLane = i;
+    }
+
+    this.setProperties({
+      scrollLeftNextLane,
+      scrollRightNextLane,
+    });
+  },
+
+  scrollToLane(laneIdx, edge) {
+    if (laneIdx === null) {
+      return;
+    }
+
+    const $lanesContainer = this.$('.visualiser-elements');
+    const $lanes = this.$('.workflow-visualiser-lane');
+    let scrollXPosition;
+    if (laneIdx <= 0) {
+      scrollXPosition = 0;
+    } else if (laneIdx >= $lanes.length - 1) {
+      scrollXPosition = $lanesContainer.prop('scrollWidth');
+    } else {
+      const $targetLane = $lanes.eq(laneIdx);
+      let targetLaneOffset;
+      if (edge === 'left') {
+        targetLaneOffset = $targetLane.offset().left - $lanesContainer.offset().left;
+      } else {
+        targetLaneOffset = $targetLane.offset().left + $targetLane.width() -
+          ($lanesContainer.offset().left + $lanesContainer.width());
+      }
+      scrollXPosition = $lanesContainer.scrollLeft() + targetLaneOffset;
+    }
+
+    $lanesContainer[0].scroll({
+      left: scrollXPosition,
+      behavior: this.get('scrollBehavior'),
     });
   },
 
@@ -449,5 +546,17 @@ export default Component.extend(I18n, {
       );
       return rawBlock;
     }
+  },
+
+  actions: {
+    horizonalScroll() {
+      this.detectHorizontalOverflow();
+    },
+    scrollLeft() {
+      this.scrollToLane(this.get('scrollLeftNextLane'), 'left');
+    },
+    scrollRight() {
+      this.scrollToLane(this.get('scrollRightNextLane'), 'right');
+    },
   },
 });
