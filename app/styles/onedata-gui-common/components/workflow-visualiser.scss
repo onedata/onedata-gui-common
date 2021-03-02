@@ -30,6 +30,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     }
   }
 
+  position: relative;
   display: flex;
   align-items: stretch;
   height: 100%;
@@ -39,6 +40,50 @@ $workflow-visualiser-last-between-task-space-size: 30px;
       padding: $padding-small-vertical $padding-small-vertical;
       height: auto;
       text-align: center;
+    }
+  }
+
+  .left-edge-scroll-step-trigger,
+  .right-edge-scroll-step-trigger {
+    position: absolute;
+    bottom: $padding-base-vertical;
+    padding: $padding-small-vertical;
+    font-size: 200%;
+    font-weight: bold;
+    border-radius: 100%;
+    border: 2px solid $workflow-visualiser-arrow-color;
+    background-color: lighten($workflow-visualiser-arrow-color, 15%);
+    transition: transition-ease(opacity);
+    z-index: 1;
+
+    &:not(.visible) {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    &:hover {
+      background-color: lighten($workflow-visualiser-arrow-color, 10%);
+    }
+
+    &::before {
+      top: 0.02em;
+      position: relative;
+    }
+  }
+
+  .left-edge-scroll-step-trigger {
+    left: $padding-base-vertical;
+
+    &::before {
+      left: -0.04em;
+    }
+  }
+
+  .right-edge-scroll-step-trigger {
+    right: $padding-base-vertical;
+
+    &::before {
+      left: 0.04em;
     }
   }
 

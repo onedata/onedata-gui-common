@@ -3,12 +3,12 @@
     {{workflow-visualiser/visualiser-element-renderer visualiserElement=visualiserElement}}
   {{/each}}
 {{/perfect-scrollbar-element}}
-<button
-  class="left-edge-scroll-step-trigger {{if (not-eq scrollLeftNextLane null) "visible"}}"
-  {{action "scrollLeft"}}
-></button>
-<button
-  class="right-edge-scroll-step-trigger {{if (not-eq scrollRightNextLane null) "visible"}}"
-  {{action "scrollRight"}}
-></button>
+{{one-icon icon="arrow-left" click=(action "scrollLeft") class=(concat-classes
+  "left-edge-scroll-step-trigger"
+  (if (not-eq scrollLeftNextLane null) "visible")
+)}}
+{{one-icon icon="arrow-right" click=(action "scrollRight") class=(concat-classes
+  "right-edge-scroll-step-trigger"
+  (if (not-eq scrollRightNextLane null) "visible")
+)}}
 {{yield}}
