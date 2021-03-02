@@ -6,6 +6,12 @@ export default {
   },
   lane: {
     actions: {
+      moveLeftLane: {
+        title: 'Move left',
+      },
+      moveRightLane: {
+        title: 'Move right',
+      },
       removeLane: {
         title: 'Remove',
       },

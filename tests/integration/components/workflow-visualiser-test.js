@@ -13,6 +13,7 @@ const noLanesExample = [];
 const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
+const threeNonEmptyLanesExample = generateExample(3, 2, 2);
 
 const laneWidth = 300;
 
@@ -80,6 +81,13 @@ describe('Integration | Component | workflow visualiser', function () {
       `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-name`,
       (rawDump, newName) => rawDump[0].tasks[0].tasks[0].name = newName
     );
+
+    itMovesLane('first lane', 0, 'right');
+    itMovesLane('middle lane', 1, 'right');
+    itDoesNotMoveLane('last lane', 2, 'right');
+    itMovesLane('last lane', 2, 'left');
+    itMovesLane('middle lane', 1, 'left');
+    itDoesNotMoveLane('first lane', 0, 'left');
 
     itRemoves(
       'lane',
@@ -672,6 +680,48 @@ function itChangesName(elementTypeDesc, nameElementSelector, applyUpdate) {
     await wait();
 
     checkRenderingLanes(this, newRawLanes);
+  });
+}
+
+function itMovesLane(laneName, laneIdx, moveDirection) {
+  it(`moves ${laneName} to the ${moveDirection}`, async function () {
+    const intitialRawLanes = threeNonEmptyLanesExample;
+    renderWithRawLanes(this, intitialRawLanes);
+
+    await click(
+      `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`
+    );
+    await click(
+      $(`body .webui-popover.in .move-${moveDirection}-lane-action-trigger`)[0]
+    );
+
+    const changeStub = this.get('changeStub');
+    const newRawLanes = _.cloneDeep(intitialRawLanes);
+    const movedRawLane = newRawLanes[laneIdx];
+    newRawLanes.splice(laneIdx, 1);
+    newRawLanes.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
+    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
+    checkRenderingLanes(this, intitialRawLanes);
+
+    this.set('rawLanes', changeStub.lastCall.args[0]);
+    await wait();
+
+    checkRenderingLanes(this, newRawLanes);
+  });
+}
+
+function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
+  it(`does not allow to move ${laneName} to the ${moveDirection}`, async function () {
+    const rawLanes = threeNonEmptyLanesExample;
+    renderWithRawLanes(this, rawLanes);
+
+    await click(
+      `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`
+    );
+
+    const $actionParent =
+      $(`body .webui-popover.in .move-${moveDirection}-lane-action-trigger`).parent();
+    expect($actionParent).to.have.class('disabled');
   });
 }
 

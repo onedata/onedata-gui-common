@@ -27,4 +27,11 @@ describe('Unit | Utility | workflow visualiser/lane', function () {
 
     expect(get(lane, 'elements')).to.be.an('array').and.to.have.length(0);
   });
+
+  it('has false "isFirst" and "isLast" on init', function () {
+    const lane = Lane.create();
+
+    expect(get(lane, 'isFirst')).to.be.false;
+    expect(get(lane, 'isLast')).to.be.false;
+  });
 });

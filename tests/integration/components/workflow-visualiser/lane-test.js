@@ -12,6 +12,14 @@ import $ from 'jquery';
 import sinon from 'sinon';
 
 const laneActionsSpec = [{
+  className: 'move-left-lane-action-trigger',
+  label: 'Move left',
+  icon: 'move-left',
+}, {
+  className: 'move-right-lane-action-trigger',
+  label: 'Move right',
+  icon: 'move-right',
+}, {
   className: 'remove-lane-action-trigger',
   label: 'Remove',
   icon: 'x',
@@ -128,6 +136,39 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
 
     expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(lane);
+  });
+
+  [
+    ['left', -1, 'isFirst'],
+    ['right', 1, 'isLast'],
+  ].forEach(([direction, moveStep, disablingProp]) => {
+    it(`allows to move ${direction} the lane`, async function () {
+      const onMoveSpy = sinon.spy();
+      const lane = this.set('lane', Lane.create({
+        mode: 'edit',
+        onMove: onMoveSpy,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+
+      await click('.lane-actions-trigger');
+      await click($(`body .webui-popover.in .move-${direction}-lane-action-trigger`)[0]);
+
+      expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(lane, moveStep);
+    });
+
+    it(`disables moving ${direction} the lane when "${disablingProp}" is true`, async function () {
+      this.set('lane', Lane.create({
+        mode: 'edit',
+        [disablingProp]: true,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+
+      await click('.lane-actions-trigger');
+      const $actionParent =
+        $(`body .webui-popover.in .move-${direction}-lane-action-trigger`).parent();
+
+      expect($actionParent).to.have.class('disabled');
+    });
   });
 
   it('renders lane elements', function () {

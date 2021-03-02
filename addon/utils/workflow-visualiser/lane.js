@@ -25,6 +25,19 @@ export default VisualiserElement.extend({
   elements: undefined,
 
   /**
+   * @virtual
+   * @type {Boolean}
+   */
+  isFirst: false,
+
+  /**
+   * @virtual
+   * @type {Boolean}
+   */
+  isLast: false,
+
+  /**
+   * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane
    * @param {Object} modifiedProps
@@ -33,6 +46,16 @@ export default VisualiserElement.extend({
   onModify: undefined,
 
   /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {Number} moveStep
+   * @returns {Promise}
+   */
+  onMove: undefined,
+
+  /**
+   * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane
    * @returns {Promise}
@@ -50,6 +73,11 @@ export default VisualiserElement.extend({
   modify(modifiedProps) {
     const onModify = this.get('onModify');
     return onModify ? onModify(this, modifiedProps) : resolve();
+  },
+
+  move(moveStep) {
+    const onMove = this.get('onMove');
+    return onMove ? onMove(this, moveStep) : resolve();
   },
 
   remove() {

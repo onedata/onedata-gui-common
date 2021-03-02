@@ -216,7 +216,24 @@ export default Component.extend(I18n, WindowResizeHandler, {
       rawLanes,
     } = this.getProperties('visualiserElementsCache', 'rawLanes');
 
-    const lanes = (rawLanes || []).map(rawLane => this.getLaneForUpdate(rawLane));
+    const lanes = (rawLanes || []).map((rawLane, idx) => {
+      const lane = this.getLaneForUpdate(rawLane);
+      const {
+        isFirst,
+        isLast,
+      } = getProperties(lane, 'isFirst', 'isLast');
+      if (idx === 0 && !isFirst) {
+        set(lane, 'isFirst', true);
+      } else if (idx !== 0 && isFirst) {
+        set(lane, 'isFirst', false);
+      }
+      if (idx === rawLanes.length - 1 && !isLast) {
+        set(lane, 'isLast', true);
+      } else if (idx !== rawLanes.length - 1 && isLast) {
+        set(lane, 'isLast', false);
+      }
+      return lane;
+    });
 
     const newVisualiserElements = [
       this.getInterlaneSpaceFor(null, lanes[0] || null),
@@ -270,6 +287,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         mode: this.get('mode'),
         onModify: (lane, modifiedProps) => this.modifyLane(lane, modifiedProps),
+        onMove: (lane, moveStep) => this.moveLane(lane, moveStep),
         onRemove: lane => this.removeLane(lane),
       });
       set(
@@ -514,6 +532,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (rawElement && modifiedProps) {
       Object.assign(rawElement, modifiedProps);
     }
+
+    return this.applyChange(rawDump);
+  },
+
+  moveLane(lane, moveStep) {
+    const rawDump = this.dumpRawLanes();
+    const rawLane = this.getRawElement(rawDump, lane);
+    const rawLaneIdx = rawDump.indexOf(rawLane);
+
+    rawDump.splice(rawLaneIdx, 1);
+    rawDump.splice(rawLaneIdx + moveStep, 0, rawLane);
 
     return this.applyChange(rawDump);
   },

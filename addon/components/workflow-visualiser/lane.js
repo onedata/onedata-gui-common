@@ -4,6 +4,7 @@ import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import Action from 'onedata-gui-common/utils/action';
 import computedT from 'onedata-gui-common/utils/computed-t';
+import { tag, string } from 'ember-awesome-macros';
 
 export default VisualiserElement.extend({
   layout,
@@ -32,6 +33,26 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  moveLeftLaneAction: computed('lane', function moveLeftLaneAction() {
+    return MoveLeftLaneAction.create({
+      ownerSource: this,
+      lane: this.get('lane'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  moveRightLaneAction: computed('lane', function moveRightLaneAction() {
+    return MoveRightLaneAction.create({
+      ownerSource: this,
+      lane: this.get('lane'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   removeLaneAction: computed('lane', function removeLaneAction() {
     return RemoveLaneAction.create({
       ownerSource: this,
@@ -42,7 +63,11 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
-  laneActions: collect('removeLaneAction'),
+  laneActions: collect(
+    'moveLeftLaneAction',
+    'moveRightLaneAction',
+    'removeLaneAction'
+  ),
 
   actions: {
     changeName(newName) {
@@ -51,11 +76,17 @@ export default VisualiserElement.extend({
   },
 });
 
-const RemoveLaneAction = Action.extend({
+const LaneActionBase = Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.lane.actions.removeLane',
+  i18nPrefix: tag `components.workflowVisualiser.lane.actions.${'actionName'}Lane`,
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  actionName: undefined,
 
   /**
    * @virtual
@@ -66,7 +97,19 @@ const RemoveLaneAction = Action.extend({
   /**
    * @override
    */
-  className: 'remove-lane-action-trigger',
+  className: tag `${string.dasherize('actionName')}-lane-action-trigger`,
+
+  /**
+   * @override
+   */
+  title: computedT('title'),
+});
+
+const RemoveLaneAction = LaneActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'remove',
 
   /**
    * @override
@@ -76,12 +119,55 @@ const RemoveLaneAction = Action.extend({
   /**
    * @override
    */
-  title: computedT('title'),
+  execute() {
+    return this.get('lane').remove();
+  },
+});
+
+const MoveLeftLaneAction = LaneActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'moveLeft',
+
+  /**
+   * @override
+   */
+  icon: 'move-left',
+
+  /**
+   * @override
+   */
+  disabled: reads('lane.isFirst'),
 
   /**
    * @override
    */
   execute() {
-    return this.get('lane').remove();
+    return this.get('lane').move(-1);
+  },
+});
+
+const MoveRightLaneAction = LaneActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'moveRight',
+
+  /**
+   * @override
+   */
+  icon: 'move-right',
+
+  /**
+   * @override
+   */
+  disabled: reads('lane.isLast'),
+
+  /**
+   * @override
+   */
+  execute() {
+    return this.get('lane').move(1);
   },
 });
