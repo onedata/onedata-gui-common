@@ -14,6 +14,8 @@ const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 
+const laneWidth = 300;
+
 describe('Integration | Component | workflow visualiser', function () {
   setupComponentTest('workflow-visualiser', {
     integration: true,
@@ -212,7 +214,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
   context('regarding left edge scroll', function () {
     it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, 99999);
+      renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -235,11 +237,17 @@ describe('Integration | Component | workflow visualiser', function () {
       ['left', 'left'],
       ['left', 2]
     );
+    itScrollsToLane(
+      'scrolls via button to the fourth lane on scroll, when overflow is on the fifth lane and container becomes wider',
+      ['left', 4],
+      [`width:${laneWidth * 1.3}`, 'left'],
+      ['left', 3]
+    );
   });
 
   context('regarding right edge scroll', function () {
     it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, 99999);
+      renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -262,8 +270,43 @@ describe('Integration | Component | workflow visualiser', function () {
       ['right', 'right'],
       ['right', 2]
     );
+    itScrollsToLane(
+      'scrolls via button to the fourth lane from the end on scroll, when overflow is on the fifth lane from the end and container becomes wider',
+      ['right', 0],
+      [`width:${laneWidth * 1.3}`, 'right'],
+      ['right', 1]
+    );
+  });
+
+  context('regarding both edges scroll', function () {
+    itScrollsToLane(
+      'scrolls via button back to the second lane on double right scroll and double left scroll, when overflow is on the second lane',
+      ['left', 1],
+      ['right', 'right', 'left', 'left'],
+      ['left', 1]
+    );
+    itScrollsToLane(
+      'scrolls via button back to the fourth lane on double left scroll and double right scroll, when overflow is on the fourth lane',
+      ['right', 3],
+      ['left', 'left', 'right', 'right'],
+      ['right', 3]
+    );
   });
 });
+
+class WindowStub {
+  constructor() {
+    this.resizeListeners = [];
+  }
+
+  addEventListener(eventName, listener) {
+    if (eventName === 'resize') {
+      this.resizeListeners.push(listener);
+    }
+  }
+
+  removeEventListener() {}
+}
 
 function renderWithRawLanes(testCase, rawLanes) {
   testCase.set('rawLanes', rawLanes);
@@ -277,30 +320,46 @@ function renderWithRawLanes(testCase, rawLanes) {
 function renderForScrollTest(testCase, lanesNumber, containerWidth) {
   testCase.setProperties({
     rawLanes: generateExample(lanesNumber, 0, 0),
-    containerStyle: htmlSafe(
-      `min-width: ${containerWidth}px; max-width: ${containerWidth}px`
-    ),
+    _window: new WindowStub(),
   });
+  changeContainerWidthForScrollTest(testCase, containerWidth);
+
   testCase.render(hbs `
     <div style={{containerStyle}}>
       {{workflow-visualiser
         mode="view"
         rawLanes=rawLanes
+        _window=_window
       }}
     </div>
   `);
 }
 
-function itScrollsToLane(message, [overflowSide, overflowOnLane], operations, [edgeToCheck, laneToCheck]) {
-  it(message, async function () {
-    renderForScrollTest(this, 5, 200);
+async function changeContainerWidthForScrollTest(testCase, newWidth) {
+  testCase.set(
+    'containerStyle',
+    htmlSafe(`min-width: ${newWidth}px; max-width: ${newWidth}px`)
+  );
+  await wait();
+  testCase.get('_window').resizeListeners.forEach(f => f());
+  await wait();
+}
 
-    await scrollToLane(this, overflowSide, overflowOnLane, 2);
+function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
+  it(message, async function () {
+    renderForScrollTest(this, 5, laneWidth * 0.6);
+
+    await scrollToLane(this, overflowEdge, overflowLane, 10);
 
     for (let operation of operations) {
-      const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
-      expect($scrollTrigger).to.have.class('visible');
-      await click($scrollTrigger[0]);
+      if (operation.startsWith('width:')) {
+        const width = Number(operation.slice('width:'.length));
+        await changeContainerWidthForScrollTest(this, width);
+      } else {
+        const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
+        expect($scrollTrigger).to.have.class('visible');
+        await click($scrollTrigger[0]);
+      }
     }
 
     const $lanesContainer = this.$('.visualiser-elements');

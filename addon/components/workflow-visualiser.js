@@ -11,10 +11,13 @@ import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { tag, conditional, equal, raw } from 'ember-awesome-macros';
+import { tag } from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
-import { debounce } from '@ember/runloop';
+import { scheduleOnce, run } from '@ember/runloop';
+
+const isInTestingEnv = config.environment === 'test';
+const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
 
 export default Component.extend(I18n, WindowResizeHandler, {
   layout,
@@ -42,11 +45,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
   mode: 'edit',
 
   /**
+   * @virtual optional
    * @type {Function}
    * @param {Array<Object>} rawLanesDump
    * @returns {Promise}
    */
   onChange: undefined,
+
+  /**
+   * @override
+   */
+  callWindowResizeHandlerOnInsert: false,
+
+  /**
+   * @override
+   */
+  windowResizeDebounceTime,
 
   /**
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
@@ -90,15 +104,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
   modeClass: tag `mode-${'mode'}`,
 
   /**
-   * @type {ComputedProperty<String>}
-   */
-  scrollBehavior: conditional(
-    equal(raw(config.environment), raw('test')),
-    raw('auto'),
-    raw('smooth')
-  ),
-
-  /**
    * @override
    */
   init() {
@@ -117,17 +122,28 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @override
    */
   didRender() {
-    this.detectHorizontalOverflow();
+    this.scheduleHorizontalOverflowDetection();
   },
 
   /**
    * @override
    */
   onWindowResize() {
-    debounce(this, 'detectHorizontalOverflow', 100);
+    run(() => this.scheduleHorizontalOverflowDetection());
+  },
+
+  scheduleHorizontalOverflowDetection() {
+    scheduleOnce('afterRender', this, 'detectHorizontalOverflow');
   },
 
   detectHorizontalOverflow() {
+    if (!this.$()) {
+      return;
+    }
+
+    // Scrolling is not pixel-perfect. Without that epsilon test cases break down.
+    const checksPxEpsilon = 1;
+
     const $lanes = this.$('.workflow-visualiser-lane');
     const $visualiserElements = this.$('.visualiser-elements');
     const viewOffset = $visualiserElements.offset().left;
@@ -135,7 +151,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     let scrollLeftNextLane = null;
     for (let i = 0; i < $lanes.length; i++) {
-      if (viewOffset - $lanes.eq(i).offset().left <= 0) {
+      if (viewOffset - $lanes.eq(i).offset().left <= checksPxEpsilon) {
         break;
       }
       scrollLeftNextLane = i;
@@ -143,7 +159,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     let scrollRightNextLane = null;
     for (let i = $lanes.length - 1; i >= 0; i--) {
-      if ($lanes.eq(i).offset().left + $lanes.eq(i).width() - (viewOffset + viewWidth) <= 0) {
+      if (
+        $lanes.eq(i).offset().left + $lanes.eq(i).width() - (viewOffset + viewWidth) <=
+        checksPxEpsilon
+      ) {
         break;
       }
       scrollRightNextLane = i;
@@ -181,8 +200,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     $lanesContainer[0].scroll({
       left: scrollXPosition,
-      behavior: this.get('scrollBehavior'),
+      behavior: isInTestingEnv ? 'auto' : 'smooth',
     });
+
+    // `scrollToLane` should trigger scroll event, so
+    // `scheduleHorizontalOverflowDetection` would be called without the line below.
+    // But sometimes scroll event is not triggered at all (scrollbar bug?) and we need
+    // to kick the detection manually.
+    this.scheduleHorizontalOverflowDetection();
   },
 
   getVisualiserElements() {
@@ -550,7 +575,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   actions: {
     horizonalScroll() {
-      this.detectHorizontalOverflow();
+      this.scheduleHorizontalOverflowDetection();
     },
     scrollLeft() {
       this.scrollToLane(this.get('scrollLeftNextLane'), 'left');
