@@ -96,6 +96,20 @@ describe('Integration | Component | workflow visualiser', function () {
     itMovesParallelBlock('middle parallel block', 1, 'up');
     itDoesNotMoveParallelBlock('last parallel block', 0, 'up');
 
+    itPerformsAction({
+      description: 'clears non-empty lane',
+      actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
+      actionTriggerSelector: '.clear-lane-action-trigger',
+      applyUpdate: rawDump => rawDump[0].tasks.length = 0,
+    });
+
+    itDoesNotPerformAction({
+      description: 'does not clear empty lane',
+      actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
+      actionTriggerSelector: '.clear-lane-action-trigger',
+      initialRawLanes: twoEmptyLanesExample,
+    });
+
     itRemoves(
       'lane',
       `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
@@ -690,24 +704,24 @@ function itChangesName(elementTypeDesc, nameElementSelector, applyUpdate) {
   });
 }
 
-function itPerformsAction(
+function itPerformsAction({
   description,
   actionsTriggerSelector,
   actionTriggerSelector,
-  applyUpdate
-) {
+  applyUpdate,
+  initialRawLanes = threeNonEmptyLanesExample,
+}) {
   it(description, async function () {
-    const intitialRawLanes = threeNonEmptyLanesExample;
-    renderWithRawLanes(this, intitialRawLanes);
+    renderWithRawLanes(this, initialRawLanes);
 
     await click(actionsTriggerSelector);
     await click($(`body .webui-popover.in ${actionTriggerSelector}`)[0]);
 
     const changeStub = this.get('changeStub');
-    const newRawLanes = _.cloneDeep(intitialRawLanes);
+    const newRawLanes = _.cloneDeep(initialRawLanes);
     applyUpdate(newRawLanes);
     expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
-    checkRenderingLanes(this, intitialRawLanes);
+    checkRenderingLanes(this, initialRawLanes);
 
     this.set('rawLanes', changeStub.lastCall.args[0]);
     await wait();
@@ -716,14 +730,14 @@ function itPerformsAction(
   });
 }
 
-function itDoesNotPerformAction(
+function itDoesNotPerformAction({
   description,
   actionsTriggerSelector,
-  actionTriggerSelector
-) {
+  actionTriggerSelector,
+  initialRawLanes = threeNonEmptyLanesExample,
+}) {
   it(description, async function () {
-    const rawLanes = threeNonEmptyLanesExample;
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawLanes(this, initialRawLanes);
 
     await click(actionsTriggerSelector);
 
@@ -733,46 +747,46 @@ function itDoesNotPerformAction(
 }
 
 function itMovesLane(laneName, laneIdx, moveDirection) {
-  itPerformsAction(
-    `moves ${moveDirection} ${laneName}`,
-    `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
-    `.move-${moveDirection}-lane-action-trigger`,
-    rawDump => {
+  itPerformsAction({
+    description: `moves ${moveDirection} ${laneName}`,
+    actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
+    actionTriggerSelector: `.move-${moveDirection}-lane-action-trigger`,
+    applyUpdate: rawDump => {
       const movedRawLane = rawDump[laneIdx];
       rawDump.splice(laneIdx, 1);
       rawDump.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
-    }
-  );
+    },
+  });
 }
 
 function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
-  itDoesNotPerformAction(
-    `does not allow to move ${moveDirection} ${laneName}`,
-    `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
-    `.move-${moveDirection}-lane-action-trigger`
-  );
+  itDoesNotPerformAction({
+    description: `does not allow to move ${moveDirection} ${laneName}`,
+    actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
+    actionTriggerSelector: `.move-${moveDirection}-lane-action-trigger`,
+  });
 }
 
 function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
-  itPerformsAction(
-    `moves ${moveDirection} ${parallelBlockName}`,
-    `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
-    `.move-${moveDirection}-block-action-trigger`,
-    rawDump => {
+  itPerformsAction({
+    description: `moves ${moveDirection} ${parallelBlockName}`,
+    actionsTriggerSelector: `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
+    actionTriggerSelector: `.move-${moveDirection}-block-action-trigger`,
+    applyUpdate: rawDump => {
       const blocksArray = rawDump[0].tasks;
       const movedRawBlock = blocksArray[blockIdx];
       blocksArray.splice(blockIdx, 1);
       blocksArray.splice(blockIdx + (moveDirection === 'up' ? -1 : 1), 0, movedRawBlock);
-    }
-  );
+    },
+  });
 }
 
 function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) {
-  itDoesNotPerformAction(
-    `does not allow to move ${moveDirection} ${parallelBlockName}`,
-    `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
-    `.move-${moveDirection}-block-action-trigger`
-  );
+  itDoesNotPerformAction({
+    description: `does not allow to move ${moveDirection} ${parallelBlockName}`,
+    actionsTriggerSelector: `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
+    actionTriggerSelector: `.move-${moveDirection}-block-action-trigger`,
+  });
 }
 
 function itRemoves(
@@ -781,12 +795,12 @@ function itRemoves(
   removeTriggerSelector,
   applyUpdate
 ) {
-  itPerformsAction(
-    `removes ${elementTypeDesc}`,
-    actionsTriggerSelector,
-    removeTriggerSelector,
-    applyUpdate
-  );
+  itPerformsAction({
+    description: `removes ${elementTypeDesc}`,
+    actionsTriggerSelector: actionsTriggerSelector,
+    actionTriggerSelector: removeTriggerSelector,
+    applyUpdate,
+  });
 }
 
 function generateExample(lanesNumber, parallelBlocksPerLane, tasksPerParallelBlock) {

@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import Action from 'onedata-gui-common/utils/action';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import { tag, string } from 'ember-awesome-macros';
+import { tag, string, array, raw, not } from 'ember-awesome-macros';
 
 export default VisualiserElement.extend({
   layout,
@@ -53,6 +53,16 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  clearLaneAction: computed('lane', function clearLaneAction() {
+    return ClearLaneAction.create({
+      ownerSource: this,
+      lane: this.get('lane'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   removeLaneAction: computed('lane', function removeLaneAction() {
     return RemoveLaneAction.create({
       ownerSource: this,
@@ -66,6 +76,7 @@ export default VisualiserElement.extend({
   laneActions: collect(
     'moveLeftLaneAction',
     'moveRightLaneAction',
+    'clearLaneAction',
     'removeLaneAction'
   ),
 
@@ -103,6 +114,30 @@ const LaneActionBase = Action.extend({
    * @override
    */
   title: computedT('title'),
+});
+
+const ClearLaneAction = LaneActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'clear',
+
+  /**
+   * @override
+   */
+  icon: 'remove',
+
+  /**
+   * @override
+   */
+  disabled: not(array.isAny('lane.elements', raw('type'), raw('parallelBlock'))),
+
+  /**
+   * @override
+   */
+  execute() {
+    return this.get('lane').clear();
+  },
 });
 
 const RemoveLaneAction = LaneActionBase.extend({

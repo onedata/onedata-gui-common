@@ -60,6 +60,14 @@ export default VisualiserElement.extend({
    * @param {Utils.WorkflowVisualiser.Lane} lane
    * @returns {Promise}
    */
+  onClear: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @returns {Promise}
+   */
   onRemove: undefined,
 
   init() {
@@ -78,6 +86,11 @@ export default VisualiserElement.extend({
   move(moveStep) {
     const onMove = this.get('onMove');
     return onMove ? onMove(this, moveStep) : resolve();
+  },
+
+  clear() {
+    const onClear = this.get('onClear');
+    return onClear ? onClear(this) : resolve();
   },
 
   remove() {

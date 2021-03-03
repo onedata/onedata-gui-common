@@ -293,6 +293,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         mode: this.get('mode'),
         onModify: (lane, modifiedProps) => this.modifyLane(lane, modifiedProps),
         onMove: (lane, moveStep) => this.moveLane(lane, moveStep),
+        onClear: lane => this.clearLane(lane),
         onRemove: lane => this.removeLane(lane),
       });
       set(
@@ -564,6 +565,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
       rawParent.tasks.splice(rawBlockIdx, 1);
       rawParent.tasks.splice(rawBlockIdx + moveStep, 0, rawBlock);
     }
+
+    return this.applyChange(rawDump);
+  },
+
+  clearLane(lane) {
+    const rawDump = this.dumpRawLanes();
+
+    const rawLane = this.getRawElement(rawDump, lane);
+    rawLane.tasks.length = 0;
 
     return this.applyChange(rawDump);
   },

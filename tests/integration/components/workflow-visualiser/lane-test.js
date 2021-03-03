@@ -20,6 +20,10 @@ const laneActionsSpec = [{
   label: 'Move right',
   icon: 'move-right',
 }, {
+  className: 'clear-lane-action-trigger',
+  label: 'Clear',
+  icon: 'remove',
+}, {
   className: 'remove-lane-action-trigger',
   label: 'Remove',
   icon: 'x',
@@ -124,20 +128,6 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     expect(this.$('.lane-actions-trigger')).to.not.exist;
   });
 
-  it('allows to remove lane', async function () {
-    const onRemoveSpy = sinon.spy();
-    const lane = this.set('lane', Lane.create({
-      mode: 'edit',
-      onRemove: onRemoveSpy,
-    }));
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
-
-    await click('.lane-actions-trigger');
-    await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
-
-    expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(lane);
-  });
-
   [
     ['left', -1, 'isFirst'],
     ['right', 1, 'isLast'],
@@ -164,11 +154,59 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
 
       await click('.lane-actions-trigger');
+
       const $actionParent =
         $(`body .webui-popover.in .move-${direction}-lane-action-trigger`).parent();
-
       expect($actionParent).to.have.class('disabled');
     });
+  });
+
+  it('allows to clear lane, when it is not empty', async function () {
+    const onClearSpy = sinon.spy();
+    const block = ParallelBlock.create({ id: 'b1' });
+    const lane = this.set('lane', Lane.create({
+      mode: 'edit',
+      onClear: onClearSpy,
+      elements: [
+        InterblockSpace.create({ secondBlock: block }),
+        block,
+        InterblockSpace.create({ firstBlock: block }),
+      ],
+    }));
+    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+
+    await click('.lane-actions-trigger');
+    await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
+
+    expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
+  });
+
+  it('does not allow to clear lane, when it is empty', async function () {
+    this.set('lane', Lane.create({
+      mode: 'edit',
+      elements: [InterblockSpace.create()],
+    }));
+    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+
+    await click('.lane-actions-trigger');
+
+    const $actionParent =
+      $('body .webui-popover.in .clear-lane-action-trigger').parent();
+    expect($actionParent).to.have.class('disabled');
+  });
+
+  it('allows to remove lane', async function () {
+    const onRemoveSpy = sinon.spy();
+    const lane = this.set('lane', Lane.create({
+      mode: 'edit',
+      onRemove: onRemoveSpy,
+    }));
+    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+
+    await click('.lane-actions-trigger');
+    await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
+
+    expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(lane);
   });
 
   it('renders lane elements', function () {

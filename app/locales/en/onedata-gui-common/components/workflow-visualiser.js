@@ -12,6 +12,9 @@ export default {
       moveRightLane: {
         title: 'Move right',
       },
+      clearLane: {
+        title: 'Clear',
+      },
       removeLane: {
         title: 'Remove',
       },
