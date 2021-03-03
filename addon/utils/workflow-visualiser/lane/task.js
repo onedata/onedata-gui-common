@@ -27,9 +27,9 @@ export default LaneElement.extend({
 
   /**
    * @virtual
-   * @type {Number}
+   * @type {Number|null}
    */
-  progressPercent: 0,
+  progressPercent: null,
 
   /**
    * @type {Function}

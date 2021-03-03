@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import Action from 'onedata-gui-common/utils/action';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import { tag, math, raw, string, gte } from 'ember-awesome-macros';
+import { tag, math, raw, string, gte, notEqual } from 'ember-awesome-macros';
 
 export default LaneElement.extend({
   layout,
@@ -34,14 +34,19 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  showProgress: computed('progressPercent', function showProgress() {
-    return Number.isFinite(this.get('progressPercent'));
-  }),
+  showProgress: notEqual('progressPercent', raw(null)),
 
   /**
-   * @type {ComputedProperty<Number>}
+   * @type {ComputedProperty<Number|null>}
    */
-  progressPercent: math.min(math.max('task.progressPercent', raw(0)), raw(100)),
+  progressPercent: computed('task.progressPercent', function progressPercent() {
+    const taskProgressPercent = this.get('task.progressPercent');
+    if (Number.isFinite(taskProgressPercent)) {
+      return Math.min(Math.max(taskProgressPercent, 0), 100);
+    } else {
+      return null;
+    }
+  }),
 
   /**
    * @type {ComputedProperty<String>}

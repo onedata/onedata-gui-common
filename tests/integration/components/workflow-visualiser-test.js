@@ -14,6 +14,7 @@ const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 const threeNonEmptyLanesExample = generateExample(3, 3, 2);
+const threeNonEmptyLanesNoProgressExample = generateExample(3, 3, 2, false);
 
 const laneWidth = 300;
 
@@ -146,12 +147,33 @@ describe('Integration | Component | workflow visualiser', function () {
     itHasModeClass('view');
     itShowsVisualiserElements();
 
-    it('shows tasks progress', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+    it('does not show tasks progress when progress is not available', function () {
+      const rawLanes = threeNonEmptyLanesNoProgressExample;
 
       renderWithRawLanes(this, rawLanes);
-      // TODO VFS-7330 add detailed tests when progress will be calculated
-      expect(this.$('.task-progress-bar')).to.exist;
+
+      checkTasksProgress(this, rawLanes);
+    });
+
+    it('shows tasks progress', function () {
+      const rawLanes = threeNonEmptyLanesExample;
+
+      renderWithRawLanes(this, rawLanes);
+
+      checkRenderingLanes(this, rawLanes);
+    });
+
+    it('updates rendered tasks progress', async function () {
+      const rawLanes = threeNonEmptyLanesExample;
+      renderWithRawLanes(this, rawLanes);
+
+      const updatedRawLanes = _.cloneDeep(rawLanes);
+      const firstTask = updatedRawLanes[0].tasks[0].tasks[0];
+      firstTask.progressPercent = (firstTask.progressPercent + 25) % 100;
+      this.set('rawLanes', updatedRawLanes);
+      await wait();
+
+      checkRenderingLanes(this, updatedRawLanes);
     });
 
     it('does not show edition-related elements in empty visualiser', function () {
@@ -574,6 +596,18 @@ function checkRenderingLanes(testCase, rawLanes) {
   checkInterlaneSpaces(testCase, rawLanes.mapBy('id'));
 }
 
+function checkTasksProgress(testCase, rawLanes) {
+  const tasks = _.flatten(_.flatten(rawLanes.mapBy('tasks')).mapBy('tasks'));
+  tasks.forEach(({ id, progressPercent }) => {
+    const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
+    if (progressPercent !== null) {
+      expect($task).to.contain(`${Math.floor(progressPercent)}%`);
+    } else {
+      expect($task.find('.task-progress-bar')).to.not.exist;
+    }
+  });
+}
+
 function itAddsNewLane(message, intitialRawLanes, insertIndex) {
   it(message, async function () {
     renderWithRawLanes(this, intitialRawLanes);
@@ -803,7 +837,12 @@ function itRemoves(
   });
 }
 
-function generateExample(lanesNumber, parallelBlocksPerLane, tasksPerParallelBlock) {
+function generateExample(
+  lanesNumber,
+  parallelBlocksPerLane,
+  tasksPerParallelBlock,
+  includeProgress = true
+) {
   return _.range(lanesNumber).map(laneNo => ({
     id: laneIdFromExample(laneNo),
     type: 'lane',
@@ -816,6 +855,8 @@ function generateExample(lanesNumber, parallelBlocksPerLane, tasksPerParallelBlo
         id: taskIdFromExample(laneNo, blockNo, taskNo),
         type: 'task',
         name: `task${laneNo}.${blockNo}.${taskNo}`,
+        progressPercent: includeProgress ?
+          getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
       })),
     })),
   }));
@@ -831,4 +872,8 @@ function parallelBlockIdFromExample(laneNo, blockNo) {
 
 function taskIdFromExample(laneNo, blockNo, taskNo) {
   return `t${laneNo}.${blockNo}.${taskNo}`;
+}
+
+function getTaskProgressFromExample(laneNo, blockNo, taskNo) {
+  return (laneNo * 10 + blockNo * 5 + taskNo) % 100 + 1;
 }

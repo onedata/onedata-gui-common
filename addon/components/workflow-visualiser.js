@@ -387,7 +387,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
-    } = getProperties(taskUpdate, 'id', 'name');
+      progressPercent,
+    } = getProperties(taskUpdate, 'id', 'name', 'progressPercent');
 
     const existingTask = this.getCachedElement('task', { id });
 
@@ -395,11 +396,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const {
         name: oldName,
         parent: oldParent,
-      } = getProperties(existingTask, 'name', 'tasks', 'parent');
+        progressPercent: oldProgressPercent,
+      } = getProperties(existingTask, 'name', 'tasks', 'parent', 'progressPercent');
 
       this.performModelUpdate(existingTask, [
         ['name', oldName, name],
         ['parent', oldParent, parent],
+        ['progressPercent', oldProgressPercent, progressPercent],
       ]);
 
       return existingTask;
@@ -409,6 +412,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         parent,
         mode: this.get('mode'),
+        progressPercent,
         onModify: (block, modifiedProps) => this.modifyBlock(block, modifiedProps),
         onRemove: lane => this.removeBlock(lane),
       });

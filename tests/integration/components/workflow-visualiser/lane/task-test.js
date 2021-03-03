@@ -137,12 +137,18 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     itShowsProgressBarForPercent(55.5);
     itShowsProgressBarForPercent(100);
 
-    it('does not show progress bar when task "progressPercent" is not a number', function () {
-      this.set('task', Task.create({ progressPercent: NaN }));
+    [
+      ['not a number', NaN],
+      ['null', null],
+      ['undefined', undefined],
+    ].forEach(([valueDescription, value]) => {
+      it(`does not show progress bar when task "progressPercent" is ${valueDescription}`, function () {
+        this.set('task', Task.create({ progressPercent: value }));
 
-      render(this);
+        render(this);
 
-      expect(this.$('.task-progress-bar')).to.not.exist;
+        expect(this.$('.task-progress-bar')).to.not.exist;
+      });
     });
   });
 });

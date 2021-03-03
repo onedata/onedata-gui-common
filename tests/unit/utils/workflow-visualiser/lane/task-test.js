@@ -28,9 +28,9 @@ describe('Unit | Utility | workflow visualiser/lane/task', function () {
     expect(get(task, 'status')).to.equal('default');
   });
 
-  it('has "progressPercent" equal to 0 on init', function () {
+  it('has "progressPercent" equal to null on init', function () {
     const task = Task.create();
 
-    expect(get(task, 'progressPercent')).to.equal(0);
+    expect(get(task, 'progressPercent')).to.be.null;
   });
 });
