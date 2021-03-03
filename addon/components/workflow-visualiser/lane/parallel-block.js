@@ -4,6 +4,7 @@ import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import Action from 'onedata-gui-common/utils/action';
 import computedT from 'onedata-gui-common/utils/computed-t';
+import { tag, string } from 'ember-awesome-macros';
 
 export default LaneElement.extend({
   layout,
@@ -32,6 +33,26 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  moveUpBlockAction: computed('block', function moveUpBlockAction() {
+    return MoveUpBlockAction.create({
+      ownerSource: this,
+      block: this.get('block'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  moveDownBlockAction: computed('block', function moveDownBlockAction() {
+    return MoveDownBlockAction.create({
+      ownerSource: this,
+      block: this.get('block'),
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   removeBlockAction: computed('block', function removeBlockAction() {
     return RemoveBlockAction.create({
       ownerSource: this,
@@ -42,7 +63,11 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
-  blockActions: collect('removeBlockAction'),
+  blockActions: collect(
+    'moveUpBlockAction',
+    'moveDownBlockAction',
+    'removeBlockAction'
+  ),
 
   actions: {
     changeName(newName) {
@@ -51,11 +76,17 @@ export default LaneElement.extend({
   },
 });
 
-const RemoveBlockAction = Action.extend({
+const BlockActionBase = Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.parallelBlock.actions.removeBlock',
+  i18nPrefix: tag `components.workflowVisualiser.parallelBlock.actions.${'actionName'}Block`,
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  actionName: undefined,
 
   /**
    * @virtual
@@ -66,7 +97,19 @@ const RemoveBlockAction = Action.extend({
   /**
    * @override
    */
-  className: 'remove-block-action-trigger',
+  className: tag `${string.dasherize('actionName')}-block-action-trigger`,
+
+  /**
+   * @override
+   */
+  title: computedT('title'),
+});
+
+const RemoveBlockAction = BlockActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'remove',
 
   /**
    * @override
@@ -76,12 +119,55 @@ const RemoveBlockAction = Action.extend({
   /**
    * @override
    */
-  title: computedT('title'),
+  execute() {
+    return this.get('block').remove();
+  },
+});
+
+const MoveUpBlockAction = BlockActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'moveUp',
+
+  /**
+   * @override
+   */
+  icon: 'move-up',
+
+  /**
+   * @override
+   */
+  disabled: reads('block.isFirst'),
 
   /**
    * @override
    */
   execute() {
-    return this.get('block').remove();
+    return this.get('block').move(-1);
+  },
+});
+
+const MoveDownBlockAction = BlockActionBase.extend({
+  /**
+   * @override
+   */
+  actionName: 'moveDown',
+
+  /**
+   * @override
+   */
+  icon: 'move-down',
+
+  /**
+   * @override
+   */
+  disabled: reads('block.isLast'),
+
+  /**
+   * @override
+   */
+  execute() {
+    return this.get('block').move(1);
   },
 });

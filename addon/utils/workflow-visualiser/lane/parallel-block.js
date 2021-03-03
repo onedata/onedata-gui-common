@@ -19,6 +19,18 @@ export default LaneElement.extend({
   name: undefined,
 
   /**
+   * @virtual
+   * @type {Boolean}
+   */
+  isFirst: false,
+
+  /**
+   * @virtual
+   * @type {Boolean}
+   */
+  isLast: false,
+
+  /**
    * @virtual optional
    * @type {Array<Utils.WorkflowVisualiser.Lane.LaneElement>}
    */
@@ -31,6 +43,15 @@ export default LaneElement.extend({
    * @returns {Promise}
    */
   onModify: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} parallelBlock
+   * @param {Number} moveStep
+   * @returns {Promise}
+   */
+  onMove: undefined,
 
   /**
    * @type {Function}
@@ -50,6 +71,11 @@ export default LaneElement.extend({
   modify(modifiedProps) {
     const onModify = this.get('onModify');
     return onModify ? onModify(this, modifiedProps) : resolve();
+  },
+
+  move(moveStep) {
+    const onMove = this.get('onMove');
+    return onMove ? onMove(this, moveStep) : resolve();
   },
 
   remove() {

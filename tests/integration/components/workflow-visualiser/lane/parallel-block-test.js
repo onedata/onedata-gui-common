@@ -12,6 +12,14 @@ import sinon from 'sinon';
 import $ from 'jquery';
 
 const blockActionsSpec = [{
+  className: 'move-up-block-action-trigger',
+  label: 'Move up',
+  icon: 'move-up',
+}, {
+  className: 'move-down-block-action-trigger',
+  label: 'Move down',
+  icon: 'move-down',
+}, {
   className: 'remove-block-action-trigger',
   label: 'Remove',
   icon: 'x',
@@ -104,6 +112,39 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
 
     expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
+  });
+
+  [
+    ['up', -1, 'isFirst'],
+    ['down', 1, 'isLast'],
+  ].forEach(([direction, moveStep, disablingProp]) => {
+    it(`allows to move ${direction} the block`, async function () {
+      const onMoveSpy = sinon.spy();
+      const block = this.set('block', ParallelBlock.create({
+        mode: 'edit',
+        onMove: onMoveSpy,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+
+      await click('.parallel-block-actions-trigger');
+      await click($(`body .webui-popover.in .move-${direction}-block-action-trigger`)[0]);
+
+      expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(block, moveStep);
+    });
+
+    it(`disables moving ${direction} the block when "${disablingProp}" is true`, async function () {
+      this.set('block', ParallelBlock.create({
+        mode: 'edit',
+        [disablingProp]: true,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+
+      await click('.parallel-block-actions-trigger');
+      const $actionParent =
+        $(`body .webui-popover.in .move-${direction}-block-action-trigger`).parent();
+
+      expect($actionParent).to.have.class('disabled');
+    });
   });
 
   it('allows to remove block', async function () {

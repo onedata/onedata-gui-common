@@ -216,24 +216,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
       rawLanes,
     } = this.getProperties('visualiserElementsCache', 'rawLanes');
 
-    const lanes = (rawLanes || []).map((rawLane, idx) => {
-      const lane = this.getLaneForUpdate(rawLane);
-      const {
-        isFirst,
-        isLast,
-      } = getProperties(lane, 'isFirst', 'isLast');
-      if (idx === 0 && !isFirst) {
-        set(lane, 'isFirst', true);
-      } else if (idx !== 0 && isFirst) {
-        set(lane, 'isFirst', false);
-      }
-      if (idx === rawLanes.length - 1 && !isLast) {
-        set(lane, 'isLast', true);
-      } else if (idx !== rawLanes.length - 1 && isLast) {
-        set(lane, 'isLast', false);
-      }
-      return lane;
-    });
+    const lanes = (rawLanes || []).map(rawLane => this.getLaneForUpdate(rawLane));
+    this.updateFirstLastFlagsInCollection(lanes);
 
     const newVisualiserElements = [
       this.getInterlaneSpaceFor(null, lanes[0] || null),
@@ -256,6 +240,27 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return newVisualiserElements;
     } else {
       return visualiserElementsCache;
+    }
+  },
+
+  updateFirstLastFlagsInCollection(collection) {
+    for (let i = 0; i < collection.length; i++) {
+      const item = collection[i];
+      const {
+        isFirst,
+        isLast,
+      } = getProperties(item, 'isFirst', 'isLast');
+
+      if (i === 0 && !isFirst) {
+        set(item, 'isFirst', true);
+      } else if (i !== 0 && isFirst) {
+        set(item, 'isFirst', false);
+      }
+      if (i === collection.length - 1 && !isLast) {
+        set(item, 'isLast', true);
+      } else if (isFirst !== collection.length - 1 && isLast) {
+        set(item, 'isLast', false);
+      }
     }
   },
 
@@ -311,6 +316,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           return this.getTaskForUpdate(elementUpdate, parent);
       }
     });
+    this.updateFirstLastFlagsInCollection(elementsForUpdate);
 
     const newLaneElements = [
       this.getInterblockSpaceFor(null, elementsForUpdate[0] || null, parent),
@@ -362,7 +368,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         parent,
         mode: this.get('mode'),
         onModify: (block, modifiedProps) => this.modifyBlock(block, modifiedProps),
-        onRemove: lane => this.removeBlock(lane),
+        onMove: (block, moveStep) => this.moveBlock(block, moveStep),
+        onRemove: block => this.removeBlock(block),
       });
       set(
         newParallelBlock,
@@ -543,6 +550,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     rawDump.splice(rawLaneIdx, 1);
     rawDump.splice(rawLaneIdx + moveStep, 0, rawLane);
+
+    return this.applyChange(rawDump);
+  },
+
+  moveBlock(block, moveStep) {
+    const rawDump = this.dumpRawLanes();
+
+    const rawParent = this.getRawElement(rawDump, get(block, 'parent'));
+    if (rawParent) {
+      const rawBlock = this.getRawElement(rawDump, block);
+      const rawBlockIdx = rawParent.tasks.indexOf(rawBlock);
+      rawParent.tasks.splice(rawBlockIdx, 1);
+      rawParent.tasks.splice(rawBlockIdx + moveStep, 0, rawBlock);
+    }
 
     return this.applyChange(rawDump);
   },

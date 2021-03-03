@@ -19,6 +19,12 @@ export default {
   },
   parallelBlock: {
     actions: {
+      moveUpBlock: {
+        title: 'Move up',
+      },
+      moveDownBlock: {
+        title: 'Move down',
+      },
       removeBlock: {
         title: 'Remove',
       },

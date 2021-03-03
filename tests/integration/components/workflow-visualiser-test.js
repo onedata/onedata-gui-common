@@ -13,7 +13,7 @@ const noLanesExample = [];
 const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
-const threeNonEmptyLanesExample = generateExample(3, 2, 2);
+const threeNonEmptyLanesExample = generateExample(3, 3, 2);
 
 const laneWidth = 300;
 
@@ -88,6 +88,13 @@ describe('Integration | Component | workflow visualiser', function () {
     itMovesLane('last lane', 2, 'left');
     itMovesLane('middle lane', 1, 'left');
     itDoesNotMoveLane('first lane', 0, 'left');
+
+    itMovesParallelBlock('last parallel block', 0, 'down');
+    itMovesParallelBlock('middle parallel block', 1, 'down');
+    itDoesNotMoveParallelBlock('last parallel block', 2, 'down');
+    itMovesParallelBlock('last parallel block', 2, 'up');
+    itMovesParallelBlock('middle parallel block', 1, 'up');
+    itDoesNotMoveParallelBlock('last parallel block', 0, 'up');
 
     itRemoves(
       'lane',
@@ -683,23 +690,22 @@ function itChangesName(elementTypeDesc, nameElementSelector, applyUpdate) {
   });
 }
 
-function itMovesLane(laneName, laneIdx, moveDirection) {
-  it(`moves ${laneName} to the ${moveDirection}`, async function () {
+function itPerformsAction(
+  description,
+  actionsTriggerSelector,
+  actionTriggerSelector,
+  applyUpdate
+) {
+  it(description, async function () {
     const intitialRawLanes = threeNonEmptyLanesExample;
     renderWithRawLanes(this, intitialRawLanes);
 
-    await click(
-      `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`
-    );
-    await click(
-      $(`body .webui-popover.in .move-${moveDirection}-lane-action-trigger`)[0]
-    );
+    await click(actionsTriggerSelector);
+    await click($(`body .webui-popover.in ${actionTriggerSelector}`)[0]);
 
     const changeStub = this.get('changeStub');
     const newRawLanes = _.cloneDeep(intitialRawLanes);
-    const movedRawLane = newRawLanes[laneIdx];
-    newRawLanes.splice(laneIdx, 1);
-    newRawLanes.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
+    applyUpdate(newRawLanes);
     expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
     checkRenderingLanes(this, intitialRawLanes);
 
@@ -710,19 +716,63 @@ function itMovesLane(laneName, laneIdx, moveDirection) {
   });
 }
 
-function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
-  it(`does not allow to move ${laneName} to the ${moveDirection}`, async function () {
+function itDoesNotPerformAction(
+  description,
+  actionsTriggerSelector,
+  actionTriggerSelector
+) {
+  it(description, async function () {
     const rawLanes = threeNonEmptyLanesExample;
     renderWithRawLanes(this, rawLanes);
 
-    await click(
-      `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`
-    );
+    await click(actionsTriggerSelector);
 
-    const $actionParent =
-      $(`body .webui-popover.in .move-${moveDirection}-lane-action-trigger`).parent();
+    const $actionParent = $(`body .webui-popover.in ${actionTriggerSelector}`).parent();
     expect($actionParent).to.have.class('disabled');
   });
+}
+
+function itMovesLane(laneName, laneIdx, moveDirection) {
+  itPerformsAction(
+    `moves ${moveDirection} ${laneName}`,
+    `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
+    `.move-${moveDirection}-lane-action-trigger`,
+    rawDump => {
+      const movedRawLane = rawDump[laneIdx];
+      rawDump.splice(laneIdx, 1);
+      rawDump.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
+    }
+  );
+}
+
+function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
+  itDoesNotPerformAction(
+    `does not allow to move ${moveDirection} ${laneName}`,
+    `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
+    `.move-${moveDirection}-lane-action-trigger`
+  );
+}
+
+function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+  itPerformsAction(
+    `moves ${moveDirection} ${parallelBlockName}`,
+    `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
+    `.move-${moveDirection}-block-action-trigger`,
+    rawDump => {
+      const blocksArray = rawDump[0].tasks;
+      const movedRawBlock = blocksArray[blockIdx];
+      blocksArray.splice(blockIdx, 1);
+      blocksArray.splice(blockIdx + (moveDirection === 'up' ? -1 : 1), 0, movedRawBlock);
+    }
+  );
+}
+
+function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+  itDoesNotPerformAction(
+    `does not allow to move ${moveDirection} ${parallelBlockName}`,
+    `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
+    `.move-${moveDirection}-block-action-trigger`
+  );
 }
 
 function itRemoves(
@@ -731,24 +781,12 @@ function itRemoves(
   removeTriggerSelector,
   applyUpdate
 ) {
-  it(`removes ${elementTypeDesc}`, async function () {
-    const rawLanes = twoNonEmptyLanesExample;
-    renderWithRawLanes(this, rawLanes);
-
-    await click(actionsTriggerSelector);
-    await click($(`body .webui-popover.in ${removeTriggerSelector}`)[0]);
-
-    const changeStub = this.get('changeStub');
-    const newRawLanes = _.cloneDeep(rawLanes);
-    applyUpdate(newRawLanes);
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
-    checkRenderingLanes(this, rawLanes);
-
-    this.set('rawLanes', changeStub.lastCall.args[0]);
-    await wait();
-
-    checkRenderingLanes(this, newRawLanes);
-  });
+  itPerformsAction(
+    `removes ${elementTypeDesc}`,
+    actionsTriggerSelector,
+    removeTriggerSelector,
+    applyUpdate
+  );
 }
 
 function generateExample(lanesNumber, parallelBlocksPerLane, tasksPerParallelBlock) {
