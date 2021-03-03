@@ -9,14 +9,15 @@ import _ from 'lodash';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 
+const possibleTaskStatuses = ['success', 'warning', 'error'];
+const laneWidth = 300;
+
 const noLanesExample = [];
 const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 const threeNonEmptyLanesExample = generateExample(3, 3, 2);
 const threeNonEmptyLanesNoProgressExample = generateExample(3, 3, 2, false);
-
-const laneWidth = 300;
 
 describe('Integration | Component | workflow visualiser', function () {
   setupComponentTest('workflow-visualiser', {
@@ -160,7 +161,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
       renderWithRawLanes(this, rawLanes);
 
-      checkRenderingLanes(this, rawLanes);
+      checkTasksProgress(this, rawLanes);
     });
 
     it('updates rendered tasks progress', async function () {
@@ -169,11 +170,13 @@ describe('Integration | Component | workflow visualiser', function () {
 
       const updatedRawLanes = _.cloneDeep(rawLanes);
       const firstTask = updatedRawLanes[0].tasks[0].tasks[0];
+      const secondTask = updatedRawLanes[0].tasks[0].tasks[1];
       firstTask.progressPercent = (firstTask.progressPercent + 25) % 100;
+      secondTask.status = possibleTaskStatuses.without(secondTask.status)[0];
       this.set('rawLanes', updatedRawLanes);
       await wait();
 
-      checkRenderingLanes(this, updatedRawLanes);
+      checkTasksProgress(this, updatedRawLanes);
     });
 
     it('does not show edition-related elements in empty visualiser', function () {
@@ -598,8 +601,9 @@ function checkRenderingLanes(testCase, rawLanes) {
 
 function checkTasksProgress(testCase, rawLanes) {
   const tasks = _.flatten(_.flatten(rawLanes.mapBy('tasks')).mapBy('tasks'));
-  tasks.forEach(({ id, progressPercent }) => {
+  tasks.forEach(({ id, status, progressPercent }) => {
     const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
+    expect($task).to.have.class(`status-${status || 'default'}`);
     if (progressPercent !== null) {
       expect($task).to.contain(`${Math.floor(progressPercent)}%`);
     } else {
@@ -855,6 +859,8 @@ function generateExample(
         id: taskIdFromExample(laneNo, blockNo, taskNo),
         type: 'task',
         name: `task${laneNo}.${blockNo}.${taskNo}`,
+        status: includeProgress ?
+          getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,
         progressPercent: includeProgress ?
           getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
       })),
@@ -876,4 +882,8 @@ function taskIdFromExample(laneNo, blockNo, taskNo) {
 
 function getTaskProgressFromExample(laneNo, blockNo, taskNo) {
   return (laneNo * 10 + blockNo * 5 + taskNo) % 100 + 1;
+}
+
+function getTaskStatusFromExample(laneNo, blockNo, taskNo) {
+  return possibleTaskStatuses[(laneNo + blockNo + taskNo) % 3];
 }

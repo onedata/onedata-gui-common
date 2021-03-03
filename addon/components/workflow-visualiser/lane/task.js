@@ -4,7 +4,9 @@ import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import Action from 'onedata-gui-common/utils/action';
 import computedT from 'onedata-gui-common/utils/computed-t';
-import { tag, math, raw, string, gte, notEqual } from 'ember-awesome-macros';
+import { tag, math, raw, string, gte, notEqual, conditional, equal, and, array } from 'ember-awesome-macros';
+
+const possibleStatuses = ['default', 'success', 'warning', 'error'];
 
 export default LaneElement.extend({
   layout,
@@ -29,12 +31,28 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  statusClass: tag `status-${'task.status'}`,
+  effectiveStatus: conditional(
+    array.includes(raw(possibleStatuses), 'task.status'),
+    'task.status',
+    raw(possibleStatuses[0])
+  ),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  statusClass: conditional(
+    equal('mode', raw('view')),
+    tag `status-${'effectiveStatus'}`,
+    raw('')
+  ),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  showProgress: notEqual('progressPercent', raw(null)),
+  showProgress: and(
+    equal('mode', raw('view')),
+    notEqual('progressPercent', raw(null))
+  ),
 
   /**
    * @type {ComputedProperty<Number|null>}

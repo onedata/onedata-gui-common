@@ -28,99 +28,108 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       .and.to.have.class('workflow-visualiser-lane-element');
   });
 
-  ['view', 'edit'].forEach(mode => {
-    it(`shows task name in "${mode}" mode`, function () {
-      const taskName = 'task1';
-      this.set('task', Task.create({
-        name: taskName,
-        mode,
-      }));
+  context('in "edit" mode', function () {
+    beforeEach(function () {
+      this.set('mode', 'edit');
+    });
 
+    itShowsTaskName();
+
+    it('allows to modify task name', async function () {
+      this.set('task', Task.create({
+        name: 'my-task',
+        mode: 'edit',
+        onModify(task, { name }) {
+          return new Promise(resolve => {
+            set(task, 'name', name);
+            resolve();
+          });
+        },
+      }));
       this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
 
-      expect(this.$('.task-name').text().trim()).to.equal(taskName);
+      await click('.task-name .one-label');
+      await fillIn('.task-name input', 'new-name');
+      await click('.task-name .save-icon');
+
+      expect(this.$('.task-name').text().trim()).to.equal('new-name');
     });
-  });
 
-  it('allows to modify task name in "edit" mode', async function () {
-    this.set('task', Task.create({
-      name: 'my-task',
-      mode: 'edit',
-      onModify(task, { name }) {
-        return new Promise(resolve => {
-          set(task, 'name', name);
-          resolve();
-        });
-      },
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+    it('renders actions', async function () {
+      this.set('task', Task.create({
+        mode: 'edit',
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
 
-    await click('.task-name .one-label');
-    await fillIn('.task-name input', 'new-name');
-    await click('.task-name .save-icon');
+      const $actionsTrigger = this.$('.task-actions-trigger');
+      expect($actionsTrigger).to.exist;
 
-    expect(this.$('.task-name').text().trim()).to.equal('new-name');
-  });
+      await click($actionsTrigger[0]);
 
-  it('does not allow to modify task name in "view" mode', async function () {
-    this.set('task', Task.create({
-      name: 'my-task',
-      mode: 'view',
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
-
-    // .one-label is a trigger for one-inline-editor
-    expect(this.$('.task-name .one-label')).to.not.exist;
-  });
-
-  it('renders actions in "edit" mode', async function () {
-    this.set('task', Task.create({
-      mode: 'edit',
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
-
-    const $actionsTrigger = this.$('.task-actions-trigger');
-    expect($actionsTrigger).to.exist;
-
-    await click($actionsTrigger[0]);
-
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(taskActionsSpec.length);
-    taskActionsSpec.forEach(({ className, label, icon }, index) => {
-      const $action = $actions.eq(index);
-      expect($action).to.have.class(className);
-      expect($action.text().trim()).to.equal(label);
-      expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      const $actions = $('body .webui-popover.in .actions-popover-content a');
+      expect($actions).to.have.length(taskActionsSpec.length);
+      taskActionsSpec.forEach(({ className, label, icon }, index) => {
+        const $action = $actions.eq(index);
+        expect($action).to.have.class(className);
+        expect($action.text().trim()).to.equal(label);
+        expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      });
     });
-  });
 
-  it('does not render actions in "view" mode', function () {
-    this.set('task', Task.create({
-      mode: 'view',
-    }));
+    it('allows to remove task', async function () {
+      const onRemoveSpy = sinon.spy();
+      const block = this.set('task', Task.create({
+        mode: 'edit',
+        onRemove: onRemoveSpy,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
 
-    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      await click('.task-actions-trigger');
+      await click($('body .webui-popover.in .remove-task-action-trigger')[0]);
 
-    expect(this.$('.task-actions-trigger')).to.not.exist;
-  });
+      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(block);
+    });
 
-  it('allows to remove task', async function () {
-    const onRemoveSpy = sinon.spy();
-    const block = this.set('task', Task.create({
-      mode: 'edit',
-      onRemove: onRemoveSpy,
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+    it('it does not shows progress and status', function () {
+      this.set('task', Task.create({
+        name: 'my-task',
+        mode: 'edit',
+        progressPercent: 20,
+        status: 'success',
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
 
-    await click('.task-actions-trigger');
-    await click($('body .webui-popover.in .remove-task-action-trigger')[0]);
-
-    expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(block);
+      expect(this.$('.task-progress-bar')).to.not.exist;
+      expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-success');
+    });
   });
 
   context('in "view" mode', function () {
     beforeEach(function () {
       this.set('mode', 'view');
+    });
+
+    itShowsTaskName();
+
+    it('does not allow to modify task name', async function () {
+      this.set('task', Task.create({
+        name: 'my-task',
+        mode: 'view',
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.task-name .one-label')).to.not.exist;
+    });
+
+    it('does not render actions', function () {
+      this.set('task', Task.create({
+        mode: 'view',
+      }));
+
+      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+
+      expect(this.$('.task-actions-trigger')).to.not.exist;
     });
 
     itShowsStatus('default');
@@ -143,7 +152,10 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       ['undefined', undefined],
     ].forEach(([valueDescription, value]) => {
       it(`does not show progress bar when task "progressPercent" is ${valueDescription}`, function () {
-        this.set('task', Task.create({ progressPercent: value }));
+        this.set('task', Task.create({
+          progressPercent: value,
+          mode: 'view',
+        }));
 
         render(this);
 
@@ -152,6 +164,20 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     });
   });
 });
+
+function itShowsTaskName() {
+  it('shows task name', function () {
+    const taskName = 'task1';
+    this.set('task', Task.create({
+      name: taskName,
+      mode: this.get('mode'),
+    }));
+
+    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+
+    expect(this.$('.task-name').text().trim()).to.equal(taskName);
+  });
+}
 
 function itShowsStatus(status) {
   it(`shows "${status}" status`, function () {
