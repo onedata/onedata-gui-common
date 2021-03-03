@@ -61,7 +61,7 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  hasPercentCounterInsideProgressBar: gte('progressPercent', raw(20)),
+  hasPercentCounterInsideProgressBar: gte('progressPercent', raw(25)),
 
   /**
    * @type {ComputedProperty<Utils.Action>}

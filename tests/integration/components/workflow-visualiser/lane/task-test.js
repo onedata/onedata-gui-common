@@ -129,10 +129,10 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     itShowsStatus('error');
 
     itShowsProgressBarForPercent(0);
-    // 20% is a breakpoint when the number of percent is shown in/outside of
+    // 25% is a breakpoint when the number of percent is shown in/outside of
     // the progress bar.
-    itShowsProgressBarForPercent(19);
-    itShowsProgressBarForPercent(21);
+    itShowsProgressBarForPercent(24);
+    itShowsProgressBarForPercent(26);
     // 55.5 to check rounding to 55%
     itShowsProgressBarForPercent(55.5);
     itShowsProgressBarForPercent(100);
@@ -172,7 +172,7 @@ function itShowsProgressBarForPercent(progressPercent) {
     const $progressBar = this.$('.task-progress-bar');
     expect($progressBar).to.exist;
     expect($progressBar.attr('style')).to.contain(`width: ${progressPercent}%;`);
-    if (progressPercent >= 20) {
+    if (progressPercent >= 25) {
       expect($progressBar).to.have.class('counter-inside-bar');
     } else {
       expect($progressBar).to.not.have.class('counter-inside-bar');
