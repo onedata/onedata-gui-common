@@ -20,7 +20,7 @@ export default VisualiserElement.extend({
 
   /**
    * @virtual optional
-   * @type {Array<Utils.WorkflowVisualiser.Lane.LaneElement>}
+   * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   elements: undefined,
 

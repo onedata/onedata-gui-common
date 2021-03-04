@@ -1,4 +1,4 @@
-import LaneElement from 'onedata-gui-common/components/workflow-visualiser/lane/lane-element';
+import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/parallel-block';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
@@ -6,7 +6,7 @@ import Action from 'onedata-gui-common/utils/action';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import { tag, string } from 'ember-awesome-macros';
 
-export default LaneElement.extend({
+export default VisualiserElement.extend({
   layout,
   classNames: ['workflow-visualiser-parallel-block'],
 
@@ -26,7 +26,7 @@ export default LaneElement.extend({
   name: reads('block.name'),
 
   /**
-   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Lane.LaneElement>>}
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
   blockElements: reads('block.elements'),
 

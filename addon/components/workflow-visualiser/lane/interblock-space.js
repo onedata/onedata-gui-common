@@ -1,10 +1,10 @@
-import LaneElement from 'onedata-gui-common/components/workflow-visualiser/lane/lane-element';
+import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/interblock-space';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { conditional, equal, raw, string, tag } from 'ember-awesome-macros';
 
-export default LaneElement.extend({
+export default VisualiserElement.extend({
   layout,
   classNames: ['workflow-visualiser-interblock-space'],
   classNameBindings: [
@@ -17,22 +17,22 @@ export default LaneElement.extend({
   ],
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneElement>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   interblockSpace: reads('elementModel'),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneElement>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   parent: reads('interblockSpace.parent'),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneElement>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   firstBlock: reads('interblockSpace.firstBlock'),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneElement>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   secondBlock: reads('interblockSpace.secondBlock'),
 

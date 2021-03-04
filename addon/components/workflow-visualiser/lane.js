@@ -26,7 +26,7 @@ export default VisualiserElement.extend({
   name: reads('lane.name'),
 
   /**
-   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Lane.LaneElement>>}
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
   laneElements: reads('lane.elements'),
 

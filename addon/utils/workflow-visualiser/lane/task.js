@@ -1,7 +1,7 @@
-import LaneElement from 'onedata-gui-common/utils/workflow-visualiser/lane/lane-element';
+import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 import { resolve } from 'rsvp';
 
-export default LaneElement.extend({
+export default VisualiserElement.extend({
   /**
    * @override
    */

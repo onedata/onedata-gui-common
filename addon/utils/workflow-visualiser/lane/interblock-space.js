@@ -1,8 +1,8 @@
-import LaneElement from 'onedata-gui-common/utils/workflow-visualiser/lane/lane-element';
+import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 import { guidFor } from '@ember/object/internals';
 import { resolve } from 'rsvp';
 
-export default LaneElement.extend({
+export default VisualiserElement.extend({
   /**
    * @override
    */
@@ -15,20 +15,20 @@ export default LaneElement.extend({
 
   /**
    * @virtual
-   * @type {Utils.WorkflowVisualiser.Lane.LaneElement}
+   * @type {Utils.WorkflowVisualiser.VisualiserElement}
    */
   firstBlock: undefined,
 
   /**
    * @virtual
-   * @type {Utils.WorkflowVisualiser.Lane.LaneElement}
+   * @type {Utils.WorkflowVisualiser.VisualiserElement}
    */
   secondBlock: undefined,
 
   /**
    * @virtual
    * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane.LaneElement} afterBlock
+   * @param {Utils.WorkflowVisualiser.VisualiserElement} afterBlock
    * @returns {Promise}
    */
   onAddBlock: undefined,

@@ -7,7 +7,7 @@ export default Component.extend({
   tagName: '',
 
   /**
-   * @type {Utils.WorkflowVisualiser.VisualiserElement|Utils.WorkflowVisualiser.Lane.LaneElement}
+   * @type {Utils.WorkflowVisualiser.VisualiserElement}
    */
   elementModel: undefined,
 

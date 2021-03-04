@@ -1,4 +1,4 @@
-import LaneElement from 'onedata-gui-common/components/workflow-visualiser/lane/lane-element';
+import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/task';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
@@ -8,7 +8,7 @@ import { tag, math, raw, string, gte, notEqual, conditional, equal, and, array }
 
 const possibleStatuses = ['default', 'success', 'warning', 'error'];
 
-export default LaneElement.extend({
+export default VisualiserElement.extend({
   layout,
   classNames: ['workflow-visualiser-task'],
   classNameBindings: ['statusClass'],

@@ -20,12 +20,12 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     integration: true,
   });
 
-  it('has classes "workflow-visualiser-task" and "workflow-visualiser-lane-element"', function () {
+  it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', function () {
     this.render(hbs `{{workflow-visualiser/lane/task}}`);
 
     expect(this.$().children()).to.have.length(1);
     expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-task')
-      .and.to.have.class('workflow-visualiser-lane-element');
+      .and.to.have.class('workflow-visualiser-element');
   });
 
   context('in "edit" mode', function () {

@@ -30,12 +30,12 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     integration: true,
   });
 
-  it('has classes "workflow-visualiser-parallel-block" and "workflow-visualiser-lane-element"', function () {
+  it('has classes "workflow-visualiser-parallel-block" and "workflow-visualiser-element"', function () {
     this.render(hbs `{{workflow-visualiser/lane/parallel-block}}`);
 
     expect(this.$().children()).to.have.length(1);
     expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-parallel-block')
-      .and.to.have.class('workflow-visualiser-lane-element');
+      .and.to.have.class('workflow-visualiser-element');
   });
 
   ['view', 'edit'].forEach(mode => {
@@ -177,7 +177,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     const $elements =
-      this.$('.workflow-visualiser-parallel-block .workflow-visualiser-lane-element');
+      this.$('.workflow-visualiser-parallel-block .workflow-visualiser-element');
     const $space1Element = $elements.eq(0);
     const $task1Element = $elements.eq(1);
     const $space2Element = $elements.eq(2);

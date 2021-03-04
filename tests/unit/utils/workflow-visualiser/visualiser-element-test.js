@@ -27,4 +27,10 @@ describe('Unit | Utility | workflow visualiser/visualiser element', function () 
 
     expect(get(element, 'id')).to.be.undefined;
   });
+
+  it('has undefined "parent"', function () {
+    const element = VisualiserElement.create();
+
+    expect(get(element, 'parent')).to.be.undefined;
+  });
 });

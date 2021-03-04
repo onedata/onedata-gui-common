@@ -25,4 +25,10 @@ export default EmberObject.extend({
    * @type {String}
    */
   id: undefined,
+
+  /**
+   * @virtual
+   * @type {Utils.WorkflowVisualiser.VisualiserElement|null}
+   */
+  parent: undefined,
 });

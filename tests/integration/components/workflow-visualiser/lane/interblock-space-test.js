@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
-import LaneElement from 'onedata-gui-common/utils/workflow-visualiser/lane/lane-element';
+import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click } from 'ember-native-dom-helpers';
@@ -15,13 +15,13 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     integration: true,
   });
 
-  it('has classes "workflow-visualiser-interblock-space" and "workflow-visualiser-lane-element"', function () {
+  it('has classes "workflow-visualiser-interblock-space" and "workflow-visualiser-element"', function () {
     this.render(hbs `{{workflow-visualiser/lane/interblock-space}}`);
 
     expect(this.$().children()).to.have.length(1);
     expect(this.$().children().eq(0))
       .to.have.class('workflow-visualiser-interblock-space')
-      .and.to.have.class('workflow-visualiser-lane-element');
+      .and.to.have.class('workflow-visualiser-element');
   });
 
   ['first', 'second'].forEach(blockPrefix => {
@@ -44,7 +44,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     it(`has specified "${htmlAttrForBlock}" attribute when "${blockName}" is specified`, function () {
       const blockId = '1234';
       this.set('blockSpace', InterblockSpace.create({
-        [blockName]: LaneElement.create({
+        [blockName]: VisualiserElement.create({
           id: blockId,
         }),
       }));

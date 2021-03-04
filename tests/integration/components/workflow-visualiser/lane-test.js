@@ -224,7 +224,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
     this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    const $elements = this.$('.workflow-visualiser-lane-element');
+    const $elements = this.$('.workflow-visualiser-lane .workflow-visualiser-element');
     const $space1Element = $elements.eq(0);
     const $block1Element = $elements.eq(1);
     const $space2Element = $elements.eq(2);
