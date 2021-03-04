@@ -21,6 +21,11 @@ export default Component.extend({
   mode: reads('elementModel.mode'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement|null>}
+   */
+  parent: reads('elementModel.parent'),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,

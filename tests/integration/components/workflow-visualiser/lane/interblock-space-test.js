@@ -4,60 +4,28 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
-import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import _ from 'lodash';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupComponentTest('workflow-visualiser/lane/interblock-space', {
     integration: true,
   });
 
-  it('has classes "workflow-visualiser-interblock-space" and "workflow-visualiser-element"', function () {
-    this.render(hbs `{{workflow-visualiser/lane/interblock-space}}`);
+  it(
+    'has classes "workflow-visualiser-interblock-space", "workflow-visualiser-space" and "workflow-visualiser-element"',
+    function () {
+      this.render(hbs `{{workflow-visualiser/lane/interblock-space}}`);
 
-    expect(this.$().children()).to.have.length(1);
-    expect(this.$().children().eq(0))
-      .to.have.class('workflow-visualiser-interblock-space')
-      .and.to.have.class('workflow-visualiser-element');
-  });
-
-  ['before', 'after'].forEach(elementSuffix => {
-    const blockName = `element${_.upperFirst(elementSuffix)}`;
-    const htmlAttrForBlock = `data-element-${elementSuffix}-id`;
-
-    it(`has not specified "${htmlAttrForBlock}" attribute when "${blockName}" is undefined`, function () {
-      this.set('blockSpace', InterblockSpace.create({
-        [blockName]: undefined,
-      }));
-
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
-
-      expect(this.$('.workflow-visualiser-interblock-space'))
-        .to.not.have.attr(htmlAttrForBlock);
-    });
-
-    it(`has specified "${htmlAttrForBlock}" attribute when "${blockName}" is specified`, function () {
-      const blockId = '1234';
-      this.set('blockSpace', InterblockSpace.create({
-        [blockName]: VisualiserElement.create({
-          id: blockId,
-        }),
-      }));
-
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        elementModel=blockSpace
-      }}`);
-
-      expect(this.$('.workflow-visualiser-interblock-space'))
-        .to.have.attr(htmlAttrForBlock, blockId);
-    });
-  });
+      expect(this.$().children()).to.have.length(1);
+      expect(this.$().children().eq(0))
+        .to.have.class('workflow-visualiser-interblock-space')
+        .and.to.have.class('workflow-visualiser-space')
+        .and.to.have.class('workflow-visualiser-element');
+    }
+  );
 
   it('has class "between-parallel-blocks-space" when "parent" is of type Lane', function () {
     this.set('blockSpace', InterblockSpace.create({

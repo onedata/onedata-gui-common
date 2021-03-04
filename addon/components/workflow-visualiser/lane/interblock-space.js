@@ -1,40 +1,21 @@
-import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
+import VisualiserSpace from 'onedata-gui-common/components/workflow-visualiser/visualiser-space';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/interblock-space';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { conditional, equal, raw, string, tag } from 'ember-awesome-macros';
 
-export default VisualiserElement.extend({
+export default VisualiserSpace.extend({
   layout,
   classNames: ['workflow-visualiser-interblock-space'],
   classNameBindings: [
     'siblingsTypeClass',
     'positionTypeClass',
   ],
-  attributeBindings: [
-    'elementBefore.id:data-element-before-id',
-    'elementAfter.id:data-element-after-id',
-  ],
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   interblockSpace: reads('elementModel'),
-
-  /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
-   */
-  parent: reads('interblockSpace.parent'),
-
-  /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
-   */
-  elementBefore: reads('interblockSpace.elementBefore'),
-
-  /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
-   */
-  elementAfter: reads('interblockSpace.elementAfter'),
 
   /**
    * @type {ComputedProperty<String>}
