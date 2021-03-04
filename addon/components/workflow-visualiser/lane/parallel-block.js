@@ -97,7 +97,7 @@ const BlockActionBase = Action.extend({
   /**
    * @override
    */
-  className: tag `${string.dasherize('actionName')}-block-action-trigger`,
+  className: tag `${string.dasherize('actionName')}-parallel-block-action-trigger`,
 
   /**
    * @override

@@ -188,7 +188,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     border-radius: $border-radius-base;
   }
 
-  .block-name {
+  .parallel-block-name {
     $name-x-offset: $workflow-visualiser-block-border-width + 2px;
     position: absolute;
     bottom: calc(100% + #{$padding-xs-vertical * 2});

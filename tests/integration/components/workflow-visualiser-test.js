@@ -8,9 +8,16 @@ import wait from 'ember-test-helpers/wait';
 import _ from 'lodash';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
+import { dasherize } from '@ember/string';
 
 const possibleTaskStatuses = ['success', 'warning', 'error'];
 const laneWidth = 300;
+
+const idGenerators = {
+  lane: laneIdFromExample,
+  parallelBlock: parallelBlockIdFromExample,
+  task: taskIdFromExample,
+};
 
 const noLanesExample = [];
 const twoEmptyLanesExample = generateExample(2, 0, 0);
@@ -65,22 +72,16 @@ describe('Integration | Component | workflow visualiser', function () {
       2
     );
 
-    itAddsNewTask('adds the first task', generateExample(2, 2, 0), 0);
+    itAddsNewTask('adds the first task', twoLanesWithEmptyBlocksExample, 0);
     itAddsNewTask('adds a task after the last task', twoNonEmptyLanesExample, 2);
 
+    itChangesName('lane', (rawDump, newName) => rawDump[0].name = newName);
     itChangesName(
-      'lane',
-      `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-name`,
-      (rawDump, newName) => rawDump[0].name = newName
-    );
-    itChangesName(
-      'parallel block',
-      `[data-visualiser-element-id="${parallelBlockIdFromExample(0, 0)}"] .block-name`,
+      'parallelBlock',
       (rawDump, newName) => rawDump[0].tasks[0].name = newName
     );
     itChangesName(
       'task',
-      `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-name`,
       (rawDump, newName) => rawDump[0].tasks[0].tasks[0].name = newName
     );
 
@@ -100,36 +101,31 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itPerformsAction({
       description: 'clears non-empty lane',
-      actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
-      actionTriggerSelector: '.clear-lane-action-trigger',
+      actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
       applyUpdate: rawDump => rawDump[0].tasks.length = 0,
     });
 
     itDoesNotPerformAction({
       description: 'does not clear empty lane',
-      actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
-      actionTriggerSelector: '.clear-lane-action-trigger',
+      actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
       initialRawLanes: twoEmptyLanesExample,
     });
 
-    itRemoves(
-      'lane',
-      `[data-visualiser-element-id="${laneIdFromExample(0)}"] .lane-actions-trigger`,
-      '.remove-lane-action-trigger',
-      rawDump => rawDump.splice(0, 1)
-    );
-    itRemoves(
-      'parallel block',
-      `[data-visualiser-element-id="${parallelBlockIdFromExample(0, 0)}"] .parallel-block-actions-trigger`,
-      '.remove-block-action-trigger',
-      rawDump => rawDump[0].tasks.splice(0, 1)
-    );
-    itRemoves(
-      'task',
-      `[data-visualiser-element-id="${taskIdFromExample(0, 0, 0)}"] .task-actions-trigger`,
-      '.remove-task-action-trigger',
-      rawDump => rawDump[0].tasks[0].tasks.splice(0, 1)
-    );
+    itPerformsAction({
+      description: 'removes lane',
+      actionTriggerGetter: () => getActionTrigger('lane', [0], 'remove'),
+      applyUpdate: rawDump => rawDump.splice(0, 1),
+    });
+    itPerformsAction({
+      description: 'removes parallel block',
+      actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, 0], 'remove'),
+      applyUpdate: rawDump => rawDump[0].tasks.splice(0, 1),
+    });
+    itPerformsAction({
+      description: 'removes task',
+      actionTriggerGetter: () => getActionTrigger('task', [0, 0, 0], 'remove'),
+      applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(0, 1),
+    });
 
     it('does not show tasks progress', function () {
       const rawLanes = twoNonEmptyLanesExample;
@@ -221,7 +217,7 @@ describe('Integration | Component | workflow visualiser', function () {
       renderWithRawLanes(this, rawLanes);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.block-name .one-label')).to.not.exist;
+      expect(this.$('.parallel-block-name .one-label')).to.not.exist;
     });
 
     it('does not show edition-related elements of parallel blocks and spaces between them', function () {
@@ -362,43 +358,6 @@ class WindowStub {
   removeEventListener() {}
 }
 
-function renderWithRawLanes(testCase, rawLanes) {
-  testCase.set('rawLanes', rawLanes);
-  testCase.render(hbs `{{workflow-visualiser
-    mode=mode
-    rawLanes=rawLanes
-    onChange=changeStub
-  }}`);
-}
-
-function renderForScrollTest(testCase, lanesNumber, containerWidth) {
-  testCase.setProperties({
-    rawLanes: generateExample(lanesNumber, 0, 0),
-    _window: new WindowStub(),
-  });
-  changeContainerWidthForScrollTest(testCase, containerWidth);
-
-  testCase.render(hbs `
-    <div style={{containerStyle}}>
-      {{workflow-visualiser
-        mode="view"
-        rawLanes=rawLanes
-        _window=_window
-      }}
-    </div>
-  `);
-}
-
-async function changeContainerWidthForScrollTest(testCase, newWidth) {
-  testCase.set(
-    'containerStyle',
-    htmlSafe(`min-width: ${newWidth}px; max-width: ${newWidth}px`)
-  );
-  await wait();
-  testCase.get('_window').resizeListeners.forEach(f => f());
-  await wait();
-}
-
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function () {
     renderForScrollTest(this, 5, laneWidth * 0.6);
@@ -437,6 +396,279 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
   });
 }
 
+function itHasModeClass(mode) {
+  it(`has class "mode-${mode}"`, function () {
+    const rawLanes = noLanesExample;
+
+    renderWithRawLanes(this, rawLanes);
+
+    expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
+  });
+}
+
+function itShowsVisualiserElements() {
+  it('shows one interlane space when there are no lanes', function () {
+    const rawLanes = noLanesExample;
+
+    renderWithRawLanes(this, rawLanes);
+
+    checkRenderedLanesStructure(this, rawLanes);
+  });
+
+  itRendersEmptyLanes('shows an empty lane', 1);
+  itRendersEmptyLanes('shows two empty lanes', 2);
+
+  it('shows a non-empty lane', function () {
+    const rawLanes = twoNonEmptyLanesExample;
+
+    renderWithRawLanes(this, rawLanes);
+
+    checkRenderedLanesStructure(this, rawLanes);
+  });
+}
+
+function itRendersEmptyLanes(message, lanesNumber) {
+  it(message, function () {
+    const rawLanes = generateExample(lanesNumber, 0, 0);
+
+    renderWithRawLanes(this, rawLanes);
+
+    checkRenderedLanesStructure(this, rawLanes);
+  });
+}
+
+function itAddsNewLane(message, initialRawLanes, insertIndex) {
+  let extraTriggerSelectorCondition = '';
+  if (initialRawLanes.length) {
+    if (insertIndex <= initialRawLanes.length - 1) {
+      extraTriggerSelectorCondition = `[data-second-lane-id="${initialRawLanes[insertIndex].id}"]`;
+    } else {
+      extraTriggerSelectorCondition = `[data-first-lane-id="${initialRawLanes[insertIndex - 1].id}"]`;
+    }
+  }
+  const addTriggerSelector =
+    `.workflow-visualiser-interlane-space${extraTriggerSelectorCondition} .add-lane-action-trigger`;
+
+  itPerformsAction({
+    description: message,
+    actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    applyUpdate: rawDump => rawDump.splice(insertIndex, 0, {
+      id: sinon.match.string,
+      type: 'lane',
+      name: 'Untitled lane',
+      tasks: [],
+    }),
+    initialRawLanes,
+  });
+}
+
+function itAddsNewParallelBlock(message, initialRawLanes, insertIndex) {
+  const targetLane = initialRawLanes[0];
+  let addTriggerSelector =
+    `[data-visualiser-element-id="${targetLane.id}"] .workflow-visualiser-interblock-space`;
+  if (targetLane.tasks.length) {
+    if (insertIndex <= targetLane.tasks.length - 1) {
+      addTriggerSelector += `[data-second-block-id="${targetLane.tasks[insertIndex].id}"]`;
+    } else {
+      addTriggerSelector = `[data-first-block-id="${targetLane.tasks[insertIndex - 1].id}"]`;
+    }
+  }
+  addTriggerSelector += ' .add-block-action-trigger';
+
+  itPerformsAction({
+    description: message,
+    actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    applyUpdate: rawDump => rawDump[0].tasks.splice(insertIndex, 0, {
+      id: sinon.match.string,
+      type: 'parallelBlock',
+      name: 'Parallel block',
+      tasks: [],
+    }),
+    initialRawLanes,
+  });
+}
+
+function itAddsNewTask(message, initialRawLanes, insertIndex) {
+  const targetBlock = initialRawLanes[0].tasks[0];
+  let addTriggerSelector =
+    `[data-visualiser-element-id="${targetBlock.id}"] .workflow-visualiser-interblock-space`;
+  if (targetBlock.tasks.length) {
+    if (insertIndex <= targetBlock.tasks.length - 1) {
+      addTriggerSelector += `[data-second-block-id="${targetBlock.tasks[insertIndex].id}"]`;
+    } else {
+      addTriggerSelector = `[data-first-block-id="${targetBlock.tasks[insertIndex - 1].id}"]`;
+    }
+  }
+  addTriggerSelector += ' .add-block-action-trigger';
+
+  itPerformsAction({
+    description: message,
+    actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(insertIndex, 0, {
+      id: sinon.match.string,
+      type: 'task',
+      name: 'Untitled task',
+    }),
+    initialRawLanes,
+  });
+}
+
+function itChangesName(elementType, applyUpdate) {
+  const newName = 'new-name';
+  const nameElementSelector =
+    `[data-visualiser-element-id="${idGenerators[elementType](0, 0, 0)}"] .${dasherize(elementType)}-name`;
+
+  itPerformsCustomAction({
+    description: `changes ${_.startCase(elementType).toLowerCase()} name`,
+    actionExecutor: async () => {
+      await click(`${nameElementSelector} .one-label`);
+      await fillIn(`${nameElementSelector} input`, newName);
+      await click(`${nameElementSelector} .save-icon`);
+    },
+    applyUpdate: rawDump => applyUpdate(rawDump, newName),
+    initialRawLanes: twoNonEmptyLanesExample,
+  });
+}
+
+function itMovesLane(laneName, laneIdx, moveDirection) {
+  itPerformsAction({
+    description: `moves ${moveDirection} ${laneName}`,
+    actionTriggerGetter: () => getActionTrigger('lane', [laneIdx], `move-${moveDirection}`),
+    applyUpdate: rawDump => {
+      const movedRawLane = rawDump[laneIdx];
+      rawDump.splice(laneIdx, 1);
+      rawDump.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
+    },
+  });
+}
+
+function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
+  itDoesNotPerformAction({
+    description: `does not allow to move ${moveDirection} ${laneName}`,
+    actionTriggerGetter: () => getActionTrigger('lane', [laneIdx], `move-${moveDirection}`),
+  });
+}
+
+function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+  itPerformsAction({
+    description: `moves ${moveDirection} ${parallelBlockName}`,
+    actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
+    applyUpdate: rawDump => {
+      const blocksArray = rawDump[0].tasks;
+      const movedRawBlock = blocksArray[blockIdx];
+      blocksArray.splice(blockIdx, 1);
+      blocksArray.splice(blockIdx + (moveDirection === 'up' ? -1 : 1), 0, movedRawBlock);
+    },
+  });
+}
+
+function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+  itDoesNotPerformAction({
+    description: `does not allow to move ${moveDirection} ${parallelBlockName}`,
+    actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
+  });
+}
+
+function itPerformsAction({
+  description,
+  actionTriggerGetter,
+  applyUpdate,
+  initialRawLanes = threeNonEmptyLanesExample,
+}) {
+  itPerformsCustomAction({
+    description,
+    actionExecutor: async testCase => {
+      const $actionTrigger = await actionTriggerGetter(testCase);
+      await click($actionTrigger[0]);
+    },
+    applyUpdate,
+    initialRawLanes,
+  });
+}
+
+function itPerformsCustomAction({
+  description,
+  actionExecutor,
+  applyUpdate,
+  initialRawLanes,
+}) {
+  it(description, async function () {
+    renderWithRawLanes(this, initialRawLanes);
+
+    await actionExecutor(this);
+
+    const changeStub = this.get('changeStub');
+    const newRawLanes = _.cloneDeep(initialRawLanes);
+    applyUpdate(newRawLanes);
+    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
+    checkRenderedLanesStructure(this, initialRawLanes);
+
+    this.set('rawLanes', changeStub.lastCall.args[0]);
+    await wait();
+
+    checkRenderedLanesStructure(this, changeStub.lastCall.args[0]);
+  });
+}
+
+function itDoesNotPerformAction({
+  description,
+  actionTriggerGetter,
+  initialRawLanes = threeNonEmptyLanesExample,
+}) {
+  it(description, async function () {
+    renderWithRawLanes(this, initialRawLanes);
+
+    const $actionTrigger = await actionTriggerGetter();
+
+    const $actionParent = $actionTrigger.parent();
+    expect($actionParent).to.have.class('disabled');
+  });
+}
+
+function renderWithRawLanes(testCase, rawLanes) {
+  testCase.set('rawLanes', rawLanes);
+  testCase.render(hbs `{{workflow-visualiser
+    mode=mode
+    rawLanes=rawLanes
+    onChange=changeStub
+  }}`);
+}
+
+function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+  testCase.setProperties({
+    rawLanes: generateExample(lanesNumber, 0, 0),
+    _window: new WindowStub(),
+  });
+  changeContainerWidthForScrollTest(testCase, containerWidth);
+
+  testCase.render(hbs `
+    <div style={{containerStyle}}>
+      {{workflow-visualiser
+        mode="view"
+        rawLanes=rawLanes
+        _window=_window
+      }}
+    </div>
+  `);
+}
+
+async function changeContainerWidthForScrollTest(testCase, newWidth) {
+  testCase.set(
+    'containerStyle',
+    htmlSafe(`min-width: ${newWidth}px; max-width: ${newWidth}px`)
+  );
+  await wait();
+  testCase.get('_window').resizeListeners.forEach(f => f());
+  await wait();
+}
+
+async function getActionTrigger(elementType, elementPath, actionName) {
+  const elementTypeForClasses = dasherize(elementType);
+  const elementId = idGenerators[elementType](...elementPath);
+  await click(`[data-visualiser-element-id="${elementId}"] .${elementTypeForClasses}-actions-trigger`);
+  return $(`body .webui-popover.in .${actionName}-${elementTypeForClasses}-action-trigger`);
+}
+
 async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 0) {
   const $lanesContainer = testCase.$('.visualiser-elements');
   const $lanes = testCase.$('.workflow-visualiser-lane');
@@ -473,72 +705,83 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
   await wait();
 }
 
-function itHasModeClass(mode) {
-  it(`has class "mode-${mode}"`, function () {
-    const rawLanes = noLanesExample;
-
-    renderWithRawLanes(this, rawLanes);
-
-    expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
+function checkTasksProgress(testCase, rawLanes) {
+  const tasks = _.flatten(_.flatten(rawLanes.mapBy('tasks')).mapBy('tasks'));
+  tasks.forEach(({ id, status, progressPercent }) => {
+    const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
+    expect($task).to.have.class(`status-${status || 'default'}`);
+    if (progressPercent !== null) {
+      expect($task).to.contain(`${Math.floor(progressPercent)}%`);
+    } else {
+      expect($task.find('.task-progress-bar')).to.not.exist;
+    }
   });
 }
 
-function itShowsVisualiserElements() {
-  it('shows one interlane space when there are no lanes', function () {
-    const rawLanes = noLanesExample;
-
-    renderWithRawLanes(this, rawLanes);
-
-    checkRenderingLanes(this, rawLanes);
-  });
-
-  itRendersEmptyLanes('shows an empty lane', 1);
-  itRendersEmptyLanes('shows two empty lanes', 2);
-
-  it('shows a non-empty lane', function () {
-    const rawLanes = twoNonEmptyLanesExample;
-
-    renderWithRawLanes(this, rawLanes);
-
-    checkRenderingLanes(this, rawLanes);
-  });
-}
-
-function checkInterblockSpaces(testCase, idsPerLanePerBlock) {
+function checkRenderedLanesStructure(testCase, rawLanes) {
   const $lanes = testCase.$('.workflow-visualiser-lane');
-  expect($lanes).to.have.length(idsPerLanePerBlock.length);
+  expect($lanes).to.have.length(rawLanes.length);
+  rawLanes.forEach(({ name: laneName, tasks: laneTasks }, laneIndex) => {
+    const $lane = $lanes.eq(laneIndex);
+    expect($lane.find('.lane-name').text().trim()).to.equal(laneName);
+    const $blocks = $lane.find('.workflow-visualiser-parallel-block');
+    expect($blocks).to.have.length(laneTasks.length);
+    laneTasks.forEach(({ name: blockName, tasks: blockTasks }, blockIndex) => {
+      const $block = $blocks.eq(blockIndex);
+      expect($block.find('.parallel-block-name').text().trim()).to.equal(blockName);
+      const $tasks = $block.find('.workflow-visualiser-task');
+      expect($tasks).to.have.length(blockTasks.length);
+      blockTasks.forEach(({ name: taskName }, taskIndex) => {
+        const $task = $tasks.eq(taskIndex);
+        expect($task.find('.task-name').text().trim()).to.equal(taskName);
+      });
+    });
+  });
 
-  idsPerLanePerBlock.forEach((blockIdAndIdsPerBlock, laneIdx) => {
-    const blockIds = blockIdAndIdsPerBlock.map(a => a[0]);
-    const idsPerBlock = blockIdAndIdsPerBlock.map(a => a[1]);
+  checkInterlaneSpaces(testCase, rawLanes);
+  checkInterblockSpaces(testCase, rawLanes);
+}
+
+function checkInterblockSpaces(testCase, rawDump) {
+  const $lanes = testCase.$('.workflow-visualiser-lane');
+  expect($lanes).to.have.length(rawDump.length);
+
+  rawDump.forEach(({ tasks: rawParallelBlocks }, laneIdx) => {
+    const parallelBlockIds = rawParallelBlocks.mapBy('id');
+    const taskIdsPerParallelBlock = rawParallelBlocks
+      .map(rawParallelBlock => rawParallelBlock.tasks.mapBy('id'));
     const $blocks = $lanes.eq(laneIdx).find('.workflow-visualiser-parallel-block');
-    expect($blocks).to.have.length(idsPerBlock.length);
+    expect($blocks).to.have.length(parallelBlockIds.length);
     const $betweenBlockSpaces = $lanes.eq(laneIdx).find(
       '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-block *)'
     );
-    checkInterXSpaces($betweenBlockSpaces, 'block', blockIds);
+    checkInterXSpaces($betweenBlockSpaces, 'block', parallelBlockIds);
 
-    idsPerBlock.forEach((ids, blockIdx) => {
+    taskIdsPerParallelBlock.forEach((taskIds, blockIdx) => {
       const $innerBlockSpaces =
         $blocks.eq(blockIdx).find('.workflow-visualiser-interblock-space');
-      checkInterXSpaces($innerBlockSpaces, 'block', ids);
+      checkInterXSpaces($innerBlockSpaces, 'block', taskIds);
     });
   });
 }
 
-function checkInterlaneSpaces(testCase, ids) {
-  checkInterXSpaces(testCase.$('.workflow-visualiser-interlane-space'), 'lane', ids);
+function checkInterlaneSpaces(testCase, rawDump) {
+  checkInterXSpaces(
+    testCase.$('.workflow-visualiser-interlane-space'),
+    'lane',
+    rawDump.mapBy('id')
+  );
 }
 
 function checkInterXSpaces($spaces, spaceType, ids) {
   expect($spaces).to.have.length(ids.length + 1);
-  let prevLaneId;
-  let laneId = ids[0];
-  checkInterXSpace($spaces.eq(0), spaceType, prevLaneId, laneId);
+  let prevElementId;
+  let elementId = ids[0];
+  checkInterXSpace($spaces.eq(0), spaceType, prevElementId, elementId);
   for (let i = 1; i <= ids.length; i++) {
-    prevLaneId = laneId;
-    laneId = ids[i];
-    checkInterXSpace($spaces.eq(i), spaceType, prevLaneId, laneId);
+    prevElementId = elementId;
+    elementId = ids[i];
+    checkInterXSpace($spaces.eq(i), spaceType, prevElementId, elementId);
   }
 }
 
@@ -553,291 +796,6 @@ function checkInterXSpace($space, spaceType, firstId, secondId) {
     } else {
       expect($space).to.not.have.attr(attrName);
     }
-  });
-}
-
-function itRendersEmptyLanes(message, lanesNumber) {
-  it(message, function () {
-    const rawLanes = _.times(lanesNumber, i => ({
-      id: `l${i}`,
-      type: 'lane',
-      name: `lane${i}`,
-      tasks: [],
-    }));
-
-    renderWithRawLanes(this, rawLanes);
-
-    checkRenderingLanes(this, rawLanes);
-  });
-}
-
-function checkRenderingLanes(testCase, rawLanes) {
-  const $lanes = testCase.$('.workflow-visualiser-lane');
-  expect($lanes).to.have.length(rawLanes.length);
-  rawLanes.forEach(({ name: laneName, tasks: laneTasks }, laneIndex) => {
-    const $lane = $lanes.eq(laneIndex);
-    expect($lane.find('.lane-name').text().trim()).to.equal(laneName);
-    const $blocks = $lane.find('.workflow-visualiser-parallel-block');
-    expect($blocks).to.have.length(laneTasks.length);
-    laneTasks.forEach(({ name: blockName, tasks: blockTasks }, blockIndex) => {
-      const $block = $blocks.eq(blockIndex);
-      expect($block.find('.block-name').text().trim()).to.equal(blockName);
-      const $tasks = $block.find('.workflow-visualiser-task');
-      expect($tasks).to.have.length(blockTasks.length);
-      blockTasks.forEach(({ name: taskName }, taskIndex) => {
-        const $task = $tasks.eq(taskIndex);
-        expect($task.find('.task-name').text().trim()).to.equal(taskName);
-      });
-    });
-  });
-
-  const interblockSpacesSpec = rawLanes.map(({ tasks }) => tasks.map(parallelBlock => [
-    parallelBlock.id,
-    parallelBlock.tasks.mapBy('id'),
-  ]));
-  checkInterblockSpaces(testCase, interblockSpacesSpec);
-  checkInterlaneSpaces(testCase, rawLanes.mapBy('id'));
-}
-
-function checkTasksProgress(testCase, rawLanes) {
-  const tasks = _.flatten(_.flatten(rawLanes.mapBy('tasks')).mapBy('tasks'));
-  tasks.forEach(({ id, status, progressPercent }) => {
-    const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
-    expect($task).to.have.class(`status-${status || 'default'}`);
-    if (progressPercent !== null) {
-      expect($task).to.contain(`${Math.floor(progressPercent)}%`);
-    } else {
-      expect($task.find('.task-progress-bar')).to.not.exist;
-    }
-  });
-}
-
-function itAddsNewLane(message, intitialRawLanes, insertIndex) {
-  it(message, async function () {
-    renderWithRawLanes(this, intitialRawLanes);
-
-    let extraTriggerSelectorCondition = '';
-    if (intitialRawLanes.length) {
-      if (insertIndex <= intitialRawLanes.length - 1) {
-        extraTriggerSelectorCondition = `[data-second-lane-id="${intitialRawLanes[insertIndex].id}"]`;
-      } else {
-        extraTriggerSelectorCondition = `[data-first-lane-id="${intitialRawLanes[insertIndex - 1].id}"]`;
-      }
-    }
-
-    await click(
-      `.workflow-visualiser-interlane-space${extraTriggerSelectorCondition} .add-lane-action-trigger`
-    );
-
-    const changeStub = this.get('changeStub');
-    const newRawLanesMatch = [...intitialRawLanes];
-    newRawLanesMatch.splice(insertIndex, 0, {
-      id: sinon.match.string,
-      type: 'lane',
-      name: 'Untitled lane',
-      tasks: [],
-    });
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanesMatch);
-    checkRenderingLanes(this, intitialRawLanes);
-
-    const newRawLanes = changeStub.lastCall.args[0];
-    this.set('rawLanes', newRawLanes);
-    await wait();
-
-    checkRenderingLanes(this, newRawLanes);
-  });
-}
-
-function itAddsNewParallelBlock(message, intitialRawLanes, insertIndex) {
-  it(message, async function () {
-    renderWithRawLanes(this, intitialRawLanes);
-
-    const targetLane = intitialRawLanes[0];
-    let addTriggerSelector =
-      `[data-visualiser-element-id="${targetLane.id}"] .workflow-visualiser-interblock-space`;
-    if (targetLane.tasks.length) {
-      if (insertIndex <= targetLane.tasks.length - 1) {
-        addTriggerSelector += `[data-second-block-id="${targetLane.tasks[insertIndex].id}"]`;
-      } else {
-        addTriggerSelector = `[data-first-block-id="${targetLane.tasks[insertIndex - 1].id}"]`;
-      }
-    }
-    addTriggerSelector += ' .add-block-action-trigger';
-    await click(addTriggerSelector);
-
-    const changeStub = this.get('changeStub');
-    const newRawLanesMatch = _.cloneDeep(intitialRawLanes);
-    newRawLanesMatch[0].tasks.splice(insertIndex, 0, {
-      id: sinon.match.string,
-      type: 'parallelBlock',
-      name: 'Parallel block',
-      tasks: [],
-    });
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanesMatch);
-    checkRenderingLanes(this, intitialRawLanes);
-
-    const newRawLanes = changeStub.lastCall.args[0];
-    this.set('rawLanes', newRawLanes);
-    await wait();
-
-    checkRenderingLanes(this, newRawLanes);
-  });
-}
-
-function itAddsNewTask(message, intitialRawLanes, insertIndex) {
-  it(message, async function () {
-    renderWithRawLanes(this, intitialRawLanes);
-
-    const targetBlock = intitialRawLanes[0].tasks[0];
-    let addTriggerSelector =
-      `[data-visualiser-element-id="${targetBlock.id}"] .workflow-visualiser-interblock-space`;
-    if (targetBlock.tasks.length) {
-      if (insertIndex <= targetBlock.tasks.length - 1) {
-        addTriggerSelector += `[data-second-block-id="${targetBlock.tasks[insertIndex].id}"]`;
-      } else {
-        addTriggerSelector = `[data-first-block-id="${targetBlock.tasks[insertIndex - 1].id}"]`;
-      }
-    }
-    addTriggerSelector += ' .add-block-action-trigger';
-    await click(addTriggerSelector);
-
-    const changeStub = this.get('changeStub');
-    const newRawLanesMatch = _.cloneDeep(intitialRawLanes);
-    newRawLanesMatch[0].tasks[0].tasks.splice(insertIndex, 0, {
-      id: sinon.match.string,
-      type: 'task',
-      name: 'Untitled task',
-    });
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanesMatch);
-    checkRenderingLanes(this, intitialRawLanes);
-
-    const newRawLanes = changeStub.lastCall.args[0];
-    this.set('rawLanes', newRawLanes);
-    await wait();
-
-    checkRenderingLanes(this, newRawLanes);
-  });
-}
-
-function itChangesName(elementTypeDesc, nameElementSelector, applyUpdate) {
-  it(`changes ${elementTypeDesc} name`, async function () {
-    const rawLanes = twoNonEmptyLanesExample;
-    renderWithRawLanes(this, rawLanes);
-
-    const newName = 'new-name';
-    await click(`${nameElementSelector} .one-label`);
-    await fillIn(`${nameElementSelector} input`, newName);
-    await click(`${nameElementSelector} .save-icon`);
-
-    const changeStub = this.get('changeStub');
-    const newRawLanes = _.cloneDeep(rawLanes);
-    applyUpdate(newRawLanes, newName);
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
-    checkRenderingLanes(this, rawLanes);
-
-    this.set('rawLanes', changeStub.lastCall.args[0]);
-    await wait();
-
-    checkRenderingLanes(this, newRawLanes);
-  });
-}
-
-function itPerformsAction({
-  description,
-  actionsTriggerSelector,
-  actionTriggerSelector,
-  applyUpdate,
-  initialRawLanes = threeNonEmptyLanesExample,
-}) {
-  it(description, async function () {
-    renderWithRawLanes(this, initialRawLanes);
-
-    await click(actionsTriggerSelector);
-    await click($(`body .webui-popover.in ${actionTriggerSelector}`)[0]);
-
-    const changeStub = this.get('changeStub');
-    const newRawLanes = _.cloneDeep(initialRawLanes);
-    applyUpdate(newRawLanes);
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
-    checkRenderingLanes(this, initialRawLanes);
-
-    this.set('rawLanes', changeStub.lastCall.args[0]);
-    await wait();
-
-    checkRenderingLanes(this, newRawLanes);
-  });
-}
-
-function itDoesNotPerformAction({
-  description,
-  actionsTriggerSelector,
-  actionTriggerSelector,
-  initialRawLanes = threeNonEmptyLanesExample,
-}) {
-  it(description, async function () {
-    renderWithRawLanes(this, initialRawLanes);
-
-    await click(actionsTriggerSelector);
-
-    const $actionParent = $(`body .webui-popover.in ${actionTriggerSelector}`).parent();
-    expect($actionParent).to.have.class('disabled');
-  });
-}
-
-function itMovesLane(laneName, laneIdx, moveDirection) {
-  itPerformsAction({
-    description: `moves ${moveDirection} ${laneName}`,
-    actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
-    actionTriggerSelector: `.move-${moveDirection}-lane-action-trigger`,
-    applyUpdate: rawDump => {
-      const movedRawLane = rawDump[laneIdx];
-      rawDump.splice(laneIdx, 1);
-      rawDump.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
-    },
-  });
-}
-
-function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
-  itDoesNotPerformAction({
-    description: `does not allow to move ${moveDirection} ${laneName}`,
-    actionsTriggerSelector: `[data-visualiser-element-id="${laneIdFromExample(laneIdx)}"] .lane-actions-trigger`,
-    actionTriggerSelector: `.move-${moveDirection}-lane-action-trigger`,
-  });
-}
-
-function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
-  itPerformsAction({
-    description: `moves ${moveDirection} ${parallelBlockName}`,
-    actionsTriggerSelector: `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
-    actionTriggerSelector: `.move-${moveDirection}-block-action-trigger`,
-    applyUpdate: rawDump => {
-      const blocksArray = rawDump[0].tasks;
-      const movedRawBlock = blocksArray[blockIdx];
-      blocksArray.splice(blockIdx, 1);
-      blocksArray.splice(blockIdx + (moveDirection === 'up' ? -1 : 1), 0, movedRawBlock);
-    },
-  });
-}
-
-function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) {
-  itDoesNotPerformAction({
-    description: `does not allow to move ${moveDirection} ${parallelBlockName}`,
-    actionsTriggerSelector: `[data-visualiser-element-id="${parallelBlockIdFromExample(0, blockIdx)}"] .parallel-block-actions-trigger`,
-    actionTriggerSelector: `.move-${moveDirection}-block-action-trigger`,
-  });
-}
-
-function itRemoves(
-  elementTypeDesc,
-  actionsTriggerSelector,
-  removeTriggerSelector,
-  applyUpdate
-) {
-  itPerformsAction({
-    description: `removes ${elementTypeDesc}`,
-    actionsTriggerSelector: actionsTriggerSelector,
-    actionTriggerSelector: removeTriggerSelector,
-    applyUpdate,
   });
 }
 

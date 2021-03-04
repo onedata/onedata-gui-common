@@ -1,6 +1,6 @@
 {{#if (eq mode "edit")}}
   {{one-inline-editor
-    class="block-name"
+    class="parallel-block-name"
     value=name
     hideViewIcons=true
     onSave=(action "changeName")
@@ -29,7 +29,7 @@
     {{/click-outside}}
   {{/one-webui-popover}}
 {{else}}
-  {{#truncated-string class="block-name"}}{{name}}{{/truncated-string}}
+  {{#truncated-string class="parallel-block-name"}}{{name}}{{/truncated-string}}
 {{/if}}
 <div class="block-elements">
   {{#each blockElements as |blockElement|}}
