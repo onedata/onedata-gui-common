@@ -29,7 +29,7 @@ describe('Integration | Component | workflow visualiser/lane/lane-element', func
       id: elementId,
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane/lane-element laneElement=laneElement}}`);
+    this.render(hbs `{{workflow-visualiser/lane/lane-element elementModel=laneElement}}`);
 
     expect(this.$('.workflow-visualiser-lane-element'))
       .to.have.attr('data-visualiser-element-id', elementId);
@@ -43,7 +43,7 @@ describe('Integration | Component | workflow visualiser/lane/lane-element', func
         mode,
       }));
 
-      this.render(hbs `{{workflow-visualiser/lane/lane-element laneElement=laneElement}}`);
+      this.render(hbs `{{workflow-visualiser/lane/lane-element elementModel=laneElement}}`);
 
       expect(this.$('.workflow-visualiser-lane-element')).to.have.class(modeClass);
     });

@@ -39,7 +39,7 @@
 </div>
 {{#perfect-scrollbar-element class="lane-elements"}}
   {{#each laneElements as |laneElement|}}
-    {{workflow-visualiser/lane/lane-element-renderer laneElement=laneElement}}
+    {{workflow-visualiser/visualiser-element-renderer elementModel=laneElement}}
   {{/each}}
 {{/perfect-scrollbar-element}}
 {{yield}}

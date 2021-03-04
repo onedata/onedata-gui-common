@@ -33,7 +33,7 @@
 {{/if}}
 <div class="block-elements">
   {{#each blockElements as |blockElement|}}
-    {{workflow-visualiser/lane/lane-element-renderer laneElement=blockElement}}
+    {{workflow-visualiser/visualiser-element-renderer elementModel=blockElement}}
   {{/each}}
 </div>
 {{yield}}

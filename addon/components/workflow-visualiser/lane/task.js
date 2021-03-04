@@ -21,7 +21,7 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.Task>}
    */
-  task: reads('laneElement'),
+  task: reads('elementModel'),
 
   /**
    * @type {ComputedProperty<String>}

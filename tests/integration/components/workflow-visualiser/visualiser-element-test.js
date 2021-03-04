@@ -29,7 +29,7 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
       id: elementId,
     }));
 
-    this.render(hbs `{{workflow-visualiser/visualiser-element visualiserElement=visualiserElement}}`);
+    this.render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
 
     expect(this.$('.workflow-visualiser-element'))
       .to.have.attr('data-visualiser-element-id', elementId);
@@ -43,7 +43,7 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
         mode,
       }));
 
-      this.render(hbs `{{workflow-visualiser/visualiser-element visualiserElement=visualiserElement}}`);
+      this.render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
 
       expect(this.$('.workflow-visualiser-element')).to.have.class(modeClass);
     });

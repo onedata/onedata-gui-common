@@ -1,6 +1,6 @@
 {{#perfect-scrollbar-element class="visualiser-elements" onScroll=(action "horizonalScroll")}}
   {{#each visualiserElements as |visualiserElement|}}
-    {{workflow-visualiser/visualiser-element-renderer visualiserElement=visualiserElement}}
+    {{workflow-visualiser/visualiser-element-renderer elementModel=visualiserElement}}
   {{/each}}
 {{/perfect-scrollbar-element}}
 {{one-icon icon="arrow-left" click=(action "scrollLeft") class=(concat-classes

@@ -13,7 +13,7 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.InterlaneSpace>}
    */
-  interlaneSpace: reads('visualiserElement'),
+  interlaneSpace: reads('elementModel'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}

@@ -46,7 +46,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
         mode,
       }));
 
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       expect(this.$('.parallel-block-name').text().trim()).to.equal(name);
     });
@@ -63,7 +63,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
         });
       },
     }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     await click('.parallel-block-name .one-label');
     await fillIn('.parallel-block-name input', 'new-name');
@@ -77,7 +77,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       name: 'my-block',
       mode: 'view',
     }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     // .one-label is a trigger for one-inline-editor
     expect(this.$('.parallel-block-name .one-label')).to.not.exist;
@@ -87,7 +87,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     this.set('block', ParallelBlock.create({
       mode: 'edit',
     }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     const $actionsTrigger = this.$('.parallel-block-actions-trigger');
     expect($actionsTrigger).to.exist;
@@ -109,7 +109,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       mode: 'view',
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
   });
@@ -124,7 +124,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
         mode: 'edit',
         onMove: onMoveSpy,
       }));
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       await click('.parallel-block-actions-trigger');
       await click($(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`)[0]);
@@ -137,7 +137,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
         mode: 'edit',
         [disablingProp]: true,
       }));
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       await click('.parallel-block-actions-trigger');
       const $actionParent =
@@ -153,7 +153,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       mode: 'edit',
       onRemove: onRemoveSpy,
     }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     await click('.parallel-block-actions-trigger');
     await click($('body .webui-popover.in .remove-parallel-block-action-trigger')[0]);
@@ -174,7 +174,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       ],
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block laneElement=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
     const $elements =
       this.$('.workflow-visualiser-parallel-block .workflow-visualiser-lane-element');

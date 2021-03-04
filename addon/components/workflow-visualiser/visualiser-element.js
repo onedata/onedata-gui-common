@@ -7,18 +7,18 @@ export default Component.extend({
   layout,
   classNames: ['workflow-visualiser-element'],
   classNameBindings: ['modeClass'],
-  attributeBindings: ['visualiserElement.id:data-visualiser-element-id'],
+  attributeBindings: ['elementModel.id:data-visualiser-element-id'],
 
   /**
    * @virtual
    * @type {Utils.WorkflowVisualiser.VisualiserElement}
    */
-  visualiserElement: undefined,
+  elementModel: undefined,
 
   /**
    * @type {ComputedProperty<String>}
    */
-  mode: reads('visualiserElement.mode'),
+  mode: reads('elementModel.mode'),
 
   /**
    * @type {ComputedProperty<String>}

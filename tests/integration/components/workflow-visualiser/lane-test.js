@@ -46,7 +46,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         mode,
       }));
 
-      this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       expect(this.$('.workflow-visualiser-lane')).to.have.class(modeClass);
     });
@@ -58,7 +58,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         mode,
       }));
 
-      this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       expect(this.$('.lane-name').text().trim()).to.equal(laneName);
     });
@@ -76,7 +76,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       },
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
     await click('.lane-name .one-label');
     await fillIn('.lane-name input', 'new-name');
     await click('.lane-name .save-icon');
@@ -90,7 +90,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       mode: 'view',
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     // .one-label is a trigger for one-inline-editor
     expect(this.$('.lane-name .one-label')).to.not.exist;
@@ -101,7 +101,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       mode: 'edit',
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     const $actionsTrigger = this.$('.lane-actions-trigger');
     expect($actionsTrigger).to.exist;
@@ -123,7 +123,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       mode: 'view',
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     expect(this.$('.lane-actions-trigger')).to.not.exist;
   });
@@ -138,7 +138,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         mode: 'edit',
         onMove: onMoveSpy,
       }));
-      this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       await click('.lane-actions-trigger');
       await click($(`body .webui-popover.in .move-${direction}-lane-action-trigger`)[0]);
@@ -151,7 +151,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         mode: 'edit',
         [disablingProp]: true,
       }));
-      this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       await click('.lane-actions-trigger');
 
@@ -173,7 +173,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         InterblockSpace.create({ firstBlock: block }),
       ],
     }));
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     await click('.lane-actions-trigger');
     await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
@@ -186,7 +186,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       mode: 'edit',
       elements: [InterblockSpace.create()],
     }));
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     await click('.lane-actions-trigger');
 
@@ -201,7 +201,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       mode: 'edit',
       onRemove: onRemoveSpy,
     }));
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     await click('.lane-actions-trigger');
     await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
@@ -222,7 +222,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       ],
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane visualiserElement=lane}}`);
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
     const $elements = this.$('.workflow-visualiser-lane-element');
     const $space1Element = $elements.eq(0);

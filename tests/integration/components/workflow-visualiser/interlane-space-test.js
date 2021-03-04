@@ -31,7 +31,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       }));
 
       this.render(hbs `{{workflow-visualiser/interlane-space
-        visualiserElement=interlaneSpace
+        elementModel=interlaneSpace
       }}`);
 
       expect(this.$('.workflow-visualiser-interlane-space'))
@@ -47,7 +47,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       }));
 
       this.render(hbs `{{workflow-visualiser/interlane-space
-        visualiserElement=interlaneSpace
+        elementModel=interlaneSpace
       }}`);
 
       expect(this.$('.workflow-visualiser-interlane-space'))
@@ -66,7 +66,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
         onAddLane,
       }));
       this.render(hbs `{{workflow-visualiser/interlane-space
-        visualiserElement=interlaneSpace
+        elementModel=interlaneSpace
       }}`);
 
       await click('.add-lane-action-trigger');
@@ -84,7 +84,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
         secondLane: Lane.create(),
       }));
       this.render(hbs `{{workflow-visualiser/interlane-space
-        visualiserElement=interlaneSpace
+        elementModel=interlaneSpace
       }}`);
 
       expect(this.$('.add-lane-action-trigger')).to.not.exist;

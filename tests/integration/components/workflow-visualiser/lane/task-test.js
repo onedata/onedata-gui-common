@@ -46,7 +46,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
           });
         },
       }));
-      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
       await click('.task-name .one-label');
       await fillIn('.task-name input', 'new-name');
@@ -59,7 +59,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       this.set('task', Task.create({
         mode: 'edit',
       }));
-      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
       const $actionsTrigger = this.$('.task-actions-trigger');
       expect($actionsTrigger).to.exist;
@@ -82,7 +82,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         mode: 'edit',
         onRemove: onRemoveSpy,
       }));
-      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
       await click('.task-actions-trigger');
       await click($('body .webui-popover.in .remove-task-action-trigger')[0]);
@@ -97,7 +97,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         progressPercent: 20,
         status: 'success',
       }));
-      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
       expect(this.$('.task-progress-bar')).to.not.exist;
       expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-success');
@@ -116,7 +116,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         name: 'my-task',
         mode: 'view',
       }));
-      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.task-name .one-label')).to.not.exist;
@@ -127,7 +127,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         mode: 'view',
       }));
 
-      this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
       expect(this.$('.task-actions-trigger')).to.not.exist;
     });
@@ -173,7 +173,7 @@ function itShowsTaskName() {
       mode: this.get('mode'),
     }));
 
-    this.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+    this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 
     expect(this.$('.task-name').text().trim()).to.equal(taskName);
   });
@@ -210,5 +210,5 @@ function itShowsProgressBarForPercent(progressPercent) {
 
 function render(testCase) {
   testCase.set('task.mode', testCase.get('mode'));
-  testCase.render(hbs `{{workflow-visualiser/lane/task laneElement=task}}`);
+  testCase.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
 }

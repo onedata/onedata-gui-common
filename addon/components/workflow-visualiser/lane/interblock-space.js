@@ -19,7 +19,7 @@ export default LaneElement.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneElement>}
    */
-  interblockSpace: reads('laneElement'),
+  interblockSpace: reads('elementModel'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneElement>}

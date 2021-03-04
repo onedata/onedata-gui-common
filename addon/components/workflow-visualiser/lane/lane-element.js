@@ -7,18 +7,18 @@ export default Component.extend({
   layout,
   classNames: ['workflow-visualiser-lane-element'],
   classNameBindings: ['modeClass'],
-  attributeBindings: ['laneElement.id:data-visualiser-element-id'],
+  attributeBindings: ['elementModel.id:data-visualiser-element-id'],
 
   /**
    * @virtual
    * @type {Utils.WorkflowVisualiser.Lane.LaneElement}
    */
-  laneElement: undefined,
+  elementModel: undefined,
 
   /**
    * @type {ComputedProperty<String>}
    */
-  mode: reads('laneElement.mode'),
+  mode: reads('elementModel.mode'),
 
   /**
    * @type {ComputedProperty<String>}

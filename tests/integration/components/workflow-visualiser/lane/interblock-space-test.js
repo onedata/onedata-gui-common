@@ -34,7 +34,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        laneElement=blockSpace
+        elementModel=blockSpace
       }}`);
 
       expect(this.$('.workflow-visualiser-interblock-space'))
@@ -50,7 +50,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        laneElement=blockSpace
+        elementModel=blockSpace
       }}`);
 
       expect(this.$('.workflow-visualiser-interblock-space'))
@@ -64,7 +64,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }));
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
-      laneElement=blockSpace
+      elementModel=blockSpace
     }}`);
 
     expect(this.$('.workflow-visualiser-interblock-space'))
@@ -77,7 +77,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }));
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
-      laneElement=blockSpace
+      elementModel=blockSpace
     }}`);
 
     expect(this.$('.workflow-visualiser-interblock-space'))
@@ -156,8 +156,8 @@ function itIsOfType(type, parent, [firstBlock, secondBlock]) {
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-      laneElement=blockSpace
-    }}`);
+          elementModel=blockSpace
+      }}`);
 
       expect(this.$('.workflow-visualiser-interblock-space')).to.have.class(className);
     });
@@ -176,7 +176,7 @@ function itAllowsToAddElement(parent, [firstBlock, secondBlock], mode) {
         onAddBlock,
       }));
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        laneElement=blockSpace
+        elementModel=blockSpace
       }}`);
 
       await click('.add-block-action-trigger');
@@ -198,7 +198,7 @@ function itDoesNotAllowToAddElement(parent, [firstBlock, secondBlock], mode) {
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        laneElement=blockSpace
+        elementModel=blockSpace
       }}`);
 
       expect(this.$('.add-block-action-trigger')).to.not.exist;
@@ -218,7 +218,7 @@ function itHasArrow(hasArrow, parent, [firstBlock, secondBlock], mode) {
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-        laneElement=blockSpace
+        elementModel=blockSpace
       }}`);
 
       const $arrow = this.$('.arrow');
