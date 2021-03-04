@@ -17,13 +17,13 @@ export default VisualiserElement.extend({
    * @virtual
    * @type {Utils.WorkflowVisualiser.VisualiserElement}
    */
-  firstBlock: undefined,
+  elementBefore: undefined,
 
   /**
    * @virtual
    * @type {Utils.WorkflowVisualiser.VisualiserElement}
    */
-  secondBlock: undefined,
+  elementAfter: undefined,
 
   /**
    * @virtual
@@ -45,11 +45,11 @@ export default VisualiserElement.extend({
     const {
       onAddBlock,
       parent,
-      firstBlock,
-    } = this.getProperties('onAddBlock', 'parent', 'firstBlock');
+      elementBefore,
+    } = this.getProperties('onAddBlock', 'parent', 'elementBefore');
 
     if (onAddBlock) {
-      return onAddBlock(parent, firstBlock);
+      return onAddBlock(parent, elementBefore);
     } else {
       return resolve();
     }

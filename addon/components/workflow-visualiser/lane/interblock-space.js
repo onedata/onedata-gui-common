@@ -12,8 +12,8 @@ export default VisualiserElement.extend({
     'positionTypeClass',
   ],
   attributeBindings: [
-    'firstBlock.id:data-first-block-id',
-    'secondBlock.id:data-second-block-id',
+    'elementBefore.id:data-element-before-id',
+    'elementAfter.id:data-element-after-id',
   ],
 
   /**
@@ -29,12 +29,12 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
-  firstBlock: reads('interblockSpace.firstBlock'),
+  elementBefore: reads('interblockSpace.elementBefore'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
-  secondBlock: reads('interblockSpace.secondBlock'),
+  elementAfter: reads('interblockSpace.elementAfter'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -53,17 +53,17 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  positionType: computed('firstBlock', 'secondBlock', function positionType() {
+  positionType: computed('elementBefore', 'elementAfter', function positionType() {
     const {
-      firstBlock,
-      secondBlock,
-    } = this.getProperties('firstBlock', 'secondBlock');
+      elementBefore,
+      elementAfter,
+    } = this.getProperties('elementBefore', 'elementAfter');
 
-    if (firstBlock && secondBlock) {
+    if (elementBefore && elementAfter) {
       return 'between';
-    } else if (firstBlock) {
+    } else if (elementBefore) {
       return 'end';
-    } else if (secondBlock) {
+    } else if (elementAfter) {
       return 'start';
     } else {
       return 'empty';

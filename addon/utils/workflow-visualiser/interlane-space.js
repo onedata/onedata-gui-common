@@ -17,13 +17,13 @@ export default VisualiserElement.extend({
    * @virtual
    * @type {Utils.WorkflowVisualiser.Lane}
    */
-  firstLane: undefined,
+  elementBefore: undefined,
 
   /**
    * @virtual
    * @type {Utils.WorkflowVisualiser.Lane}
    */
-  secondLane: undefined,
+  elementAfter: undefined,
 
   /**
    * @virtual
@@ -44,11 +44,11 @@ export default VisualiserElement.extend({
   addLane() {
     const {
       onAddLane,
-      firstLane,
-    } = this.getProperties('onAddLane', 'firstLane');
+      elementBefore,
+    } = this.getProperties('onAddLane', 'elementBefore');
 
     if (onAddLane) {
-      return onAddLane(firstLane);
+      return onAddLane(elementBefore);
     } else {
       return resolve();
     }

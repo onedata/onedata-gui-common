@@ -17,11 +17,11 @@ describe('Unit | Utility | workflow visualiser/interlane space', function () {
     expect(get(interlaneSpace, 'type')).to.equal('interlaneSpace');
   });
 
-  it('has undefined "firstLane" and "secondLane" on init', function () {
+  it('has undefined "elementBefore" and "elementAfter" on init', function () {
     const interlaneSpace = InterlaneSpace.create();
 
-    expect(get(interlaneSpace, 'firstLane')).to.be.undefined;
-    expect(get(interlaneSpace, 'secondLane')).to.be.undefined;
+    expect(get(interlaneSpace, 'elementBefore')).to.be.undefined;
+    expect(get(interlaneSpace, 'elementAfter')).to.be.undefined;
   });
 
   it('has non-empty "id" on init', function () {

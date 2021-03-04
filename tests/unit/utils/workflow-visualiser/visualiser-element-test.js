@@ -4,33 +4,17 @@ import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visu
 import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/visualiser element', function () {
-  it('has undefined "renderer"', function () {
-    const element = VisualiserElement.create();
+  [
+    'renderer',
+    'mode',
+    'type',
+    'id',
+    'parent',
+  ].forEach(propName => {
+    it(`has undefined "${propName}"`, function () {
+      const element = VisualiserElement.create();
 
-    expect(get(element, 'renderer')).to.be.undefined;
-  });
-
-  it('has undefined "mode"', function () {
-    const element = VisualiserElement.create();
-
-    expect(get(element, 'mode')).to.be.undefined;
-  });
-
-  it('has undefined "type"', function () {
-    const element = VisualiserElement.create();
-
-    expect(get(element, 'type')).to.be.undefined;
-  });
-
-  it('has undefined "id"', function () {
-    const element = VisualiserElement.create();
-
-    expect(get(element, 'id')).to.be.undefined;
-  });
-
-  it('has undefined "parent"', function () {
-    const element = VisualiserElement.create();
-
-    expect(get(element, 'parent')).to.be.undefined;
+      expect(get(element, 'propName')).to.be.undefined;
+    });
   });
 });

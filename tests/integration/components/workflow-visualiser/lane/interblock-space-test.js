@@ -9,6 +9,7 @@ import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/par
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import _ from 'lodash';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupComponentTest('workflow-visualiser/lane/interblock-space', {
@@ -24,9 +25,9 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       .and.to.have.class('workflow-visualiser-element');
   });
 
-  ['first', 'second'].forEach(blockPrefix => {
-    const blockName = `${blockPrefix}Block`;
-    const htmlAttrForBlock = `data-${blockPrefix}-block-id`;
+  ['before', 'after'].forEach(elementSuffix => {
+    const blockName = `element${_.upperFirst(elementSuffix)}`;
+    const htmlAttrForBlock = `data-element-${elementSuffix}-id`;
 
     it(`has not specified "${htmlAttrForBlock}" attribute when "${blockName}" is undefined`, function () {
       this.set('blockSpace', InterblockSpace.create({
@@ -145,14 +146,14 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
   });
 });
 
-function itIsOfType(type, parent, [firstBlock, secondBlock]) {
+function itIsOfType(type, parent, [elementBefore, elementAfter]) {
   const className = `space-position-${type}`;
-  it(`has class "${className}" when first block is ${firstBlock ? 'not ' : ''}empty and second block is ${secondBlock ? 'not ' : ''}empty`,
+  it(`has class "${className}" when first block is ${elementBefore ? 'not ' : ''}empty and second block is ${elementAfter ? 'not ' : ''}empty`,
     function () {
       this.set('blockSpace', InterblockSpace.create({
         parent,
-        firstBlock,
-        secondBlock,
+        elementBefore,
+        elementAfter,
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
@@ -163,15 +164,15 @@ function itIsOfType(type, parent, [firstBlock, secondBlock]) {
     });
 }
 
-function itAllowsToAddElement(parent, [firstBlock, secondBlock], mode) {
+function itAllowsToAddElement(parent, [elementBefore, elementAfter], mode) {
   it(
-    `allows to add element when is in "${mode}" mode and ${siblingsDescription(firstBlock, secondBlock)}`,
+    `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
       const onAddBlock = sinon.spy();
       this.set('blockSpace', InterblockSpace.create({
         mode,
-        firstBlock,
-        secondBlock,
+        elementBefore,
+        elementAfter,
         parent,
         onAddBlock,
       }));
@@ -181,19 +182,19 @@ function itAllowsToAddElement(parent, [firstBlock, secondBlock], mode) {
 
       await click('.add-block-action-trigger');
 
-      expect(onAddBlock).to.be.calledOnce.and.to.be.calledWith(parent, firstBlock);
+      expect(onAddBlock).to.be.calledOnce.and.to.be.calledWith(parent, elementBefore);
     }
   );
 }
 
-function itDoesNotAllowToAddElement(parent, [firstBlock, secondBlock], mode) {
+function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], mode) {
   it(
-    `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(firstBlock, secondBlock)}`,
+    `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
       this.set('blockSpace', InterblockSpace.create({
         mode,
-        firstBlock,
-        secondBlock,
+        elementBefore,
+        elementAfter,
         parent,
       }));
 
@@ -206,14 +207,14 @@ function itDoesNotAllowToAddElement(parent, [firstBlock, secondBlock], mode) {
   );
 }
 
-function itHasArrow(hasArrow, parent, [firstBlock, secondBlock], mode) {
+function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
   it(
-    `${hasArrow ? 'renders' : 'does not render any'} arrow when is in "${mode}" mode and ${siblingsDescription(firstBlock, secondBlock)}`,
+    `${hasArrow ? 'renders' : 'does not render any'} arrow when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
       this.set('blockSpace', InterblockSpace.create({
         mode,
-        firstBlock,
-        secondBlock,
+        elementBefore,
+        elementAfter,
         parent,
       }));
 
@@ -231,6 +232,6 @@ function itHasArrow(hasArrow, parent, [firstBlock, secondBlock], mode) {
   );
 }
 
-function siblingsDescription(firstBlock, secondBlock) {
-  return `first block is ${firstBlock ? 'not ' : ''}empty and second block is ${secondBlock ? 'not ' : ''}empty`;
+function siblingsDescription(elementBefore, elementAfter) {
+  return `before block is ${elementBefore ? 'not ' : ''}empty and after block is ${elementAfter ? 'not ' : ''}empty`;
 }

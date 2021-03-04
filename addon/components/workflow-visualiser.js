@@ -426,10 +426,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
-  getInterlaneSpaceFor(firstLane, secondLane) {
+  getInterlaneSpaceFor(elementBefore, elementAfter) {
     const existingInterlaneSpace = this.getCachedElement('interlaneSpace', {
-      firstLane,
-      secondLane,
+      elementBefore,
+      elementAfter,
     });
 
     if (existingInterlaneSpace) {
@@ -437,8 +437,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       const newSpace = InterlaneSpace.create({
         mode: this.get('mode'),
-        firstLane,
-        secondLane,
+        elementBefore,
+        elementAfter,
         onAddLane: afterLane => this.addLane(afterLane),
       });
       this.addElementToCache('interlaneSpace', newSpace);
@@ -446,10 +446,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
-  getInterblockSpaceFor(firstBlock, secondBlock, parent) {
+  getInterblockSpaceFor(elementBefore, elementAfter, parent) {
     const existingInterblockSpace = this.getCachedElement('interblockSpace', {
-      firstBlock,
-      secondBlock,
+      elementBefore,
+      elementAfter,
       parent,
     });
 
@@ -458,8 +458,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       const newSpace = InterblockSpace.create({
         mode: this.get('mode'),
-        firstBlock,
-        secondBlock,
+        elementBefore,
+        elementAfter,
         parent,
         onAddBlock: (parent, afterBlock) => this.addBlock(parent, afterBlock),
       });

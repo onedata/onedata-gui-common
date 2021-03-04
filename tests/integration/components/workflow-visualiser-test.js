@@ -441,9 +441,9 @@ function itAddsNewLane(message, initialRawLanes, insertIndex) {
   let extraTriggerSelectorCondition = '';
   if (initialRawLanes.length) {
     if (insertIndex <= initialRawLanes.length - 1) {
-      extraTriggerSelectorCondition = `[data-second-lane-id="${initialRawLanes[insertIndex].id}"]`;
+      extraTriggerSelectorCondition = `[data-element-after-id="${initialRawLanes[insertIndex].id}"]`;
     } else {
-      extraTriggerSelectorCondition = `[data-first-lane-id="${initialRawLanes[insertIndex - 1].id}"]`;
+      extraTriggerSelectorCondition = `[data-element-before-id="${initialRawLanes[insertIndex - 1].id}"]`;
     }
   }
   const addTriggerSelector =
@@ -468,9 +468,9 @@ function itAddsNewParallelBlock(message, initialRawLanes, insertIndex) {
     `[data-visualiser-element-id="${targetLane.id}"] .workflow-visualiser-interblock-space`;
   if (targetLane.tasks.length) {
     if (insertIndex <= targetLane.tasks.length - 1) {
-      addTriggerSelector += `[data-second-block-id="${targetLane.tasks[insertIndex].id}"]`;
+      addTriggerSelector += `[data-element-after-id="${targetLane.tasks[insertIndex].id}"]`;
     } else {
-      addTriggerSelector = `[data-first-block-id="${targetLane.tasks[insertIndex - 1].id}"]`;
+      addTriggerSelector = `[data-element-before-id="${targetLane.tasks[insertIndex - 1].id}"]`;
     }
   }
   addTriggerSelector += ' .add-block-action-trigger';
@@ -494,9 +494,9 @@ function itAddsNewTask(message, initialRawLanes, insertIndex) {
     `[data-visualiser-element-id="${targetBlock.id}"] .workflow-visualiser-interblock-space`;
   if (targetBlock.tasks.length) {
     if (insertIndex <= targetBlock.tasks.length - 1) {
-      addTriggerSelector += `[data-second-block-id="${targetBlock.tasks[insertIndex].id}"]`;
+      addTriggerSelector += `[data-element-after-id="${targetBlock.tasks[insertIndex].id}"]`;
     } else {
-      addTriggerSelector = `[data-first-block-id="${targetBlock.tasks[insertIndex - 1].id}"]`;
+      addTriggerSelector = `[data-element-before-id="${targetBlock.tasks[insertIndex - 1].id}"]`;
     }
   }
   addTriggerSelector += ' .add-block-action-trigger';
@@ -755,12 +755,12 @@ function checkInterblockSpaces(testCase, rawDump) {
     const $betweenBlockSpaces = $lanes.eq(laneIdx).find(
       '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-block *)'
     );
-    checkInterXSpaces($betweenBlockSpaces, 'block', parallelBlockIds);
+    checkInterXSpaces($betweenBlockSpaces, parallelBlockIds);
 
     taskIdsPerParallelBlock.forEach((taskIds, blockIdx) => {
       const $innerBlockSpaces =
         $blocks.eq(blockIdx).find('.workflow-visualiser-interblock-space');
-      checkInterXSpaces($innerBlockSpaces, 'block', taskIds);
+      checkInterXSpaces($innerBlockSpaces, taskIds);
     });
   });
 }
@@ -768,29 +768,28 @@ function checkInterblockSpaces(testCase, rawDump) {
 function checkInterlaneSpaces(testCase, rawDump) {
   checkInterXSpaces(
     testCase.$('.workflow-visualiser-interlane-space'),
-    'lane',
     rawDump.mapBy('id')
   );
 }
 
-function checkInterXSpaces($spaces, spaceType, ids) {
+function checkInterXSpaces($spaces, ids) {
   expect($spaces).to.have.length(ids.length + 1);
   let prevElementId;
   let elementId = ids[0];
-  checkInterXSpace($spaces.eq(0), spaceType, prevElementId, elementId);
+  checkInterXSpace($spaces.eq(0), prevElementId, elementId);
   for (let i = 1; i <= ids.length; i++) {
     prevElementId = elementId;
     elementId = ids[i];
-    checkInterXSpace($spaces.eq(i), spaceType, prevElementId, elementId);
+    checkInterXSpace($spaces.eq(i), prevElementId, elementId);
   }
 }
 
-function checkInterXSpace($space, spaceType, firstId, secondId) {
+function checkInterXSpace($space, beforeId, afterId) {
   [
-    ['first', firstId],
-    ['second', secondId],
+    ['before', beforeId],
+    ['after', afterId],
   ].forEach(([idName, idValue]) => {
-    const attrName = `data-${idName}-${spaceType}-id`;
+    const attrName = `data-element-${idName}-id`;
     if (idValue) {
       expect($space).to.have.attr(attrName, idValue);
     } else {

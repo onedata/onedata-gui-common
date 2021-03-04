@@ -6,6 +6,7 @@ import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interla
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import _ from 'lodash';
 
 describe('Integration | Component | workflow visualiser/interlane space', function () {
   setupComponentTest('workflow-visualiser/interlane-space', {
@@ -21,9 +22,9 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       .and.to.have.class('workflow-visualiser-element');
   });
 
-  ['first', 'second'].forEach(lanePrefix => {
-    const laneName = `${lanePrefix}Lane`;
-    const htmlAttrForLane = `data-${lanePrefix}-lane-id`;
+  ['before', 'after'].forEach(elementSuffix => {
+    const laneName = `element${_.upperFirst(elementSuffix)}`;
+    const htmlAttrForLane = `data-element-${elementSuffix}-id`;
 
     it(`has not specified "${htmlAttrForLane}" attribute when "${laneName}" is undefined`, function () {
       this.set('interlaneSpace', InterlaneSpace.create({
@@ -58,11 +59,11 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
   context('in "edit" mode', function () {
     it('notifies about triggered "add lane" action', async function () {
       const onAddLane = sinon.spy();
-      const firstLane = Lane.create();
+      const elementBefore = Lane.create();
       this.set('interlaneSpace', InterlaneSpace.create({
         mode: 'edit',
-        firstLane,
-        secondLane: Lane.create(),
+        elementBefore,
+        elementAfter: Lane.create(),
         onAddLane,
       }));
       this.render(hbs `{{workflow-visualiser/interlane-space
@@ -71,17 +72,17 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
       await click('.add-lane-action-trigger');
 
-      expect(onAddLane).to.be.calledOnce.and.to.be.calledWith(firstLane);
+      expect(onAddLane).to.be.calledOnce.and.to.be.calledWith(elementBefore);
     });
   });
 
   context('in "view" mode', function () {
     it('does not allow to trigger "add lane" action', async function () {
-      const firstLane = Lane.create();
+      const elementBefore = Lane.create();
       this.set('interlaneSpace', InterlaneSpace.create({
         mode: 'view',
-        firstLane,
-        secondLane: Lane.create(),
+        elementBefore,
+        elementAfter: Lane.create(),
       }));
       this.render(hbs `{{workflow-visualiser/interlane-space
         elementModel=interlaneSpace

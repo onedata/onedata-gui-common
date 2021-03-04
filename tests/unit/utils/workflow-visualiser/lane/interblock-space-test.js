@@ -17,11 +17,11 @@ describe('Unit | Utility | workflow visualiser/lane/interblock space', function 
     expect(get(interblockSpace, 'type')).to.equal('interblockSpace');
   });
 
-  it('has undefined "firstBlock" and "secondBlock" on init', function () {
+  it('has undefined "elementBefore" and "elementAfter" on init', function () {
     const interblockSpace = InterblockSpace.create();
 
-    expect(get(interblockSpace, 'firstBlock')).to.be.undefined;
-    expect(get(interblockSpace, 'secondBlock')).to.be.undefined;
+    expect(get(interblockSpace, 'elementBefore')).to.be.undefined;
+    expect(get(interblockSpace, 'elementAfter')).to.be.undefined;
   });
 
   it('has non-empty "id" on init', function () {

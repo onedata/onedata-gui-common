@@ -166,11 +166,11 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     const task2 = Task.create({ id: 't2', name: 'task2' });
     this.set('block', ParallelBlock.create({
       elements: [
-        InterblockSpace.create({ secondBlock: task1 }),
+        InterblockSpace.create({ elementAfter: task1 }),
         task1,
-        InterblockSpace.create({ firstBlock: task1, secondBlock: task2 }),
+        InterblockSpace.create({ elementBefore: task1, elementAfter: task2 }),
         task2,
-        InterblockSpace.create({ firstBlock: task2 }),
+        InterblockSpace.create({ elementBefore: task2 }),
       ],
     }));
 
@@ -185,17 +185,17 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     const $space3Element = $elements.eq(4);
     expect($elements).to.have.length(5);
     expect($space1Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space1Element).to.not.have.attr('data-first-block-id');
-    expect($space1Element).to.have.attr('data-second-block-id', 't1');
+    expect($space1Element).to.not.have.attr('data-element-before-id');
+    expect($space1Element).to.have.attr('data-element-after-id', 't1');
     expect($task1Element.text().trim()).to.contain('task1');
     expect($task1Element.is('.workflow-visualiser-task')).to.be.true;
     expect($space2Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space2Element).to.have.attr('data-first-block-id', 't1');
-    expect($space2Element).to.have.attr('data-second-block-id', 't2');
+    expect($space2Element).to.have.attr('data-element-before-id', 't1');
+    expect($space2Element).to.have.attr('data-element-after-id', 't2');
     expect($task2Element.text().trim()).to.contain('task2');
     expect($task2Element.is('.workflow-visualiser-task')).to.be.true;
     expect($space3Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space3Element).to.have.attr('data-first-block-id', 't2');
-    expect($space3Element).to.not.have.attr('data-second-block-id');
+    expect($space3Element).to.have.attr('data-element-before-id', 't2');
+    expect($space3Element).to.not.have.attr('data-element-after-id');
   });
 });

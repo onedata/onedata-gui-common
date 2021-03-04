@@ -168,9 +168,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       mode: 'edit',
       onClear: onClearSpy,
       elements: [
-        InterblockSpace.create({ secondBlock: block }),
+        InterblockSpace.create({ elementAfter: block }),
         block,
-        InterblockSpace.create({ firstBlock: block }),
+        InterblockSpace.create({ elementBefore: block }),
       ],
     }));
     this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
@@ -214,11 +214,11 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     const block2 = ParallelBlock.create({ id: 'b2', name: 'block2' });
     this.set('lane', Lane.create({
       elements: [
-        InterblockSpace.create({ secondBlock: block1 }),
+        InterblockSpace.create({ elementAfter: block1 }),
         block1,
-        InterblockSpace.create({ firstBlock: block1, secondBlock: block2 }),
+        InterblockSpace.create({ elementBefore: block1, elementAfter: block2 }),
         block2,
-        InterblockSpace.create({ firstBlock: block2 }),
+        InterblockSpace.create({ elementBefore: block2 }),
       ],
     }));
 
@@ -232,17 +232,17 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     const $space3Element = $elements.eq(4);
     expect($elements).to.have.length(5);
     expect($space1Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space1Element).to.not.have.attr('data-first-block-id');
-    expect($space1Element).to.have.attr('data-second-block-id', 'b1');
+    expect($space1Element).to.not.have.attr('data-element-before-id');
+    expect($space1Element).to.have.attr('data-element-after-id', 'b1');
     expect($block1Element.text().trim()).to.contain('block1');
     expect($block1Element.is('.workflow-visualiser-parallel-block')).to.be.true;
     expect($space2Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space2Element).to.have.attr('data-first-block-id', 'b1');
-    expect($space2Element).to.have.attr('data-second-block-id', 'b2');
+    expect($space2Element).to.have.attr('data-element-before-id', 'b1');
+    expect($space2Element).to.have.attr('data-element-after-id', 'b2');
     expect($block2Element.text().trim()).to.contain('block2');
     expect($block2Element.is('.workflow-visualiser-parallel-block')).to.be.true;
     expect($space3Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space3Element).to.have.attr('data-first-block-id', 'b2');
-    expect($space3Element).to.not.have.attr('data-second-block-id');
+    expect($space3Element).to.have.attr('data-element-before-id', 'b2');
+    expect($space3Element).to.not.have.attr('data-element-after-id');
   });
 });

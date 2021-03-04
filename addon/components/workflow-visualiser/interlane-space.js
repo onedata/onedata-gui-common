@@ -6,8 +6,8 @@ export default VisualiserElement.extend({
   layout,
   classNames: ['workflow-visualiser-interlane-space'],
   attributeBindings: [
-    'firstLane.id:data-first-lane-id',
-    'secondLane.id:data-second-lane-id',
+    'elementBefore.id:data-element-before-id',
+    'elementAfter.id:data-element-after-id',
   ],
 
   /**
@@ -18,12 +18,12 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
    */
-  firstLane: reads('interlaneSpace.firstLane'),
+  elementBefore: reads('interlaneSpace.elementBefore'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
    */
-  secondLane: reads('interlaneSpace.secondLane'),
+  elementAfter: reads('interlaneSpace.elementAfter'),
 
   actions: {
     addLane() {
