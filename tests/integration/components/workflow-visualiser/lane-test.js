@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, context } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -39,180 +39,186 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     expect(this.$('.workflow-visualiser-lane')).to.exist;
   });
 
-  ['view', 'edit'].forEach(mode => {
-    const modeClass = `mode-${mode}`;
-    it(`has "${modeClass}" class when in "lane.mode" is "${mode}"`, function () {
+  context('in "view" mode', function () {
+    const contextMode = 'view';
+
+    itShowsNameInMode(contextMode);
+    itRendersLaneElementsInMode(contextMode);
+
+    it('does not allow to modify lane name', async function () {
       this.set('lane', Lane.create({
-        mode,
+        name: 'my-lane',
+        mode: contextMode,
       }));
 
       this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-      expect(this.$('.workflow-visualiser-lane')).to.have.class(modeClass);
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.lane-name .one-label')).to.not.exist;
     });
 
-    it(`shows lane name in "${mode}" mode`, function () {
-      const laneName = 'my-lane';
+    it('does not render actions', function () {
       this.set('lane', Lane.create({
-        name: laneName,
-        mode,
+        mode: contextMode,
       }));
 
       this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-      expect(this.$('.lane-name').text().trim()).to.equal(laneName);
+      expect(this.$('.lane-actions-trigger')).to.not.exist;
     });
   });
 
-  it('allows to modify lane name in "edit" mode', async function () {
-    this.set('lane', Lane.create({
-      name: 'my-lane',
-      mode: 'edit',
-      onModify(lane, { name }) {
-        return new Promise(resolve => {
-          set(lane, 'name', name);
-          resolve();
-        });
-      },
-    }));
+  context('in "edit" mode', function () {
+    const contextMode = 'edit';
 
-    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
-    await click('.lane-name .one-label');
-    await fillIn('.lane-name input', 'new-name');
-    await click('.lane-name .save-icon');
+    itShowsNameInMode(contextMode);
+    itRendersLaneElementsInMode(contextMode);
 
-    expect(this.$('.lane-name').text().trim()).to.equal('new-name');
-  });
+    it('allows to modify lane name', async function () {
+      this.set('lane', Lane.create({
+        name: 'my-lane',
+        mode: contextMode,
+        onModify(lane, { name }) {
+          return new Promise(resolve => {
+            set(lane, 'name', name);
+            resolve();
+          });
+        },
+      }));
 
-  it('does not allow to modify lane name in "view" mode', async function () {
-    this.set('lane', Lane.create({
-      name: 'my-lane',
-      mode: 'view',
-    }));
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+      await click('.lane-name .one-label');
+      await fillIn('.lane-name input', 'new-name');
+      await click('.lane-name .save-icon');
 
-    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
-
-    // .one-label is a trigger for one-inline-editor
-    expect(this.$('.lane-name .one-label')).to.not.exist;
-  });
-
-  it('renders actions in "edit" mode', async function () {
-    this.set('lane', Lane.create({
-      mode: 'edit',
-    }));
-
-    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
-
-    const $actionsTrigger = this.$('.lane-actions-trigger');
-    expect($actionsTrigger).to.exist;
-
-    await click($actionsTrigger[0]);
-
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(laneActionsSpec.length);
-    laneActionsSpec.forEach(({ className, label, icon }, index) => {
-      const $action = $actions.eq(index);
-      expect($action).to.have.class(className);
-      expect($action.text().trim()).to.equal(label);
-      expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      expect(this.$('.lane-name').text().trim()).to.equal('new-name');
     });
-  });
 
-  it('does not render actions in "view" mode', function () {
-    this.set('lane', Lane.create({
-      mode: 'view',
-    }));
+    it('renders actions', async function () {
+      this.set('lane', Lane.create({
+        mode: contextMode,
+      }));
 
-    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    expect(this.$('.lane-actions-trigger')).to.not.exist;
-  });
+      const $actionsTrigger = this.$('.lane-actions-trigger');
+      expect($actionsTrigger).to.exist;
 
-  [
-    ['left', -1, 'isFirst'],
-    ['right', 1, 'isLast'],
-  ].forEach(([direction, moveStep, disablingProp]) => {
-    it(`allows to move ${direction} the lane`, async function () {
-      const onMoveSpy = sinon.spy();
+      await click($actionsTrigger[0]);
+
+      const $actions = $('body .webui-popover.in .actions-popover-content a');
+      expect($actions).to.have.length(laneActionsSpec.length);
+      laneActionsSpec.forEach(({ className, label, icon }, index) => {
+        const $action = $actions.eq(index);
+        expect($action).to.have.class(className);
+        expect($action.text().trim()).to.equal(label);
+        expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      });
+    });
+
+    [
+      ['left', -1, 'isFirst'],
+      ['right', 1, 'isLast'],
+    ].forEach(([direction, moveStep, disablingProp]) => {
+      it(`allows to move ${direction} the lane`, async function () {
+        const onMoveSpy = sinon.spy();
+        const lane = this.set('lane', Lane.create({
+          mode: contextMode,
+          onMove: onMoveSpy,
+        }));
+        this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+
+        await click('.lane-actions-trigger');
+        await click($(`body .webui-popover.in .move-${direction}-lane-action-trigger`)[0]);
+
+        expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(lane, moveStep);
+      });
+
+      it(`disables moving ${direction} the lane when "${disablingProp}" is true`, async function () {
+        this.set('lane', Lane.create({
+          mode: contextMode,
+          [disablingProp]: true,
+        }));
+        this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+
+        await click('.lane-actions-trigger');
+
+        const $actionParent =
+          $(`body .webui-popover.in .move-${direction}-lane-action-trigger`).parent();
+        expect($actionParent).to.have.class('disabled');
+      });
+    });
+
+    it('allows to clear lane, when it is not empty', async function () {
+      const onClearSpy = sinon.spy();
+      const block = ParallelBlock.create({ id: 'b1' });
       const lane = this.set('lane', Lane.create({
-        mode: 'edit',
-        onMove: onMoveSpy,
+        mode: contextMode,
+        onClear: onClearSpy,
+        elements: [
+          InterblockSpace.create({ elementAfter: block }),
+          block,
+          InterblockSpace.create({ elementBefore: block }),
+        ],
       }));
       this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       await click('.lane-actions-trigger');
-      await click($(`body .webui-popover.in .move-${direction}-lane-action-trigger`)[0]);
+      await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
 
-      expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(lane, moveStep);
+      expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
     });
 
-    it(`disables moving ${direction} the lane when "${disablingProp}" is true`, async function () {
+    it('does not allow to clear lane, when it is empty', async function () {
       this.set('lane', Lane.create({
-        mode: 'edit',
-        [disablingProp]: true,
+        mode: contextMode,
+        elements: [InterblockSpace.create()],
       }));
       this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       await click('.lane-actions-trigger');
 
       const $actionParent =
-        $(`body .webui-popover.in .move-${direction}-lane-action-trigger`).parent();
+        $('body .webui-popover.in .clear-lane-action-trigger').parent();
       expect($actionParent).to.have.class('disabled');
     });
+
+    it('allows to remove lane', async function () {
+      const onRemoveSpy = sinon.spy();
+      const lane = this.set('lane', Lane.create({
+        mode: contextMode,
+        onRemove: onRemoveSpy,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+
+      await click('.lane-actions-trigger');
+      await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
+
+      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(lane);
+    });
   });
+});
 
-  it('allows to clear lane, when it is not empty', async function () {
-    const onClearSpy = sinon.spy();
-    const block = ParallelBlock.create({ id: 'b1' });
-    const lane = this.set('lane', Lane.create({
-      mode: 'edit',
-      onClear: onClearSpy,
-      elements: [
-        InterblockSpace.create({ elementAfter: block }),
-        block,
-        InterblockSpace.create({ elementBefore: block }),
-      ],
-    }));
-    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
-
-    await click('.lane-actions-trigger');
-    await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
-
-    expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
-  });
-
-  it('does not allow to clear lane, when it is empty', async function () {
+function itShowsNameInMode(mode) {
+  it('shows lane name', function () {
+    const laneName = 'my-lane';
     this.set('lane', Lane.create({
-      mode: 'edit',
-      elements: [InterblockSpace.create()],
+      name: laneName,
+      mode,
     }));
+
     this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    await click('.lane-actions-trigger');
-
-    const $actionParent =
-      $('body .webui-popover.in .clear-lane-action-trigger').parent();
-    expect($actionParent).to.have.class('disabled');
+    expect(this.$('.lane-name').text().trim()).to.equal(laneName);
   });
+}
 
-  it('allows to remove lane', async function () {
-    const onRemoveSpy = sinon.spy();
-    const lane = this.set('lane', Lane.create({
-      mode: 'edit',
-      onRemove: onRemoveSpy,
-    }));
-    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
-
-    await click('.lane-actions-trigger');
-    await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
-
-    expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(lane);
-  });
-
+function itRendersLaneElementsInMode(mode) {
   it('renders lane elements', function () {
     const block1 = ParallelBlock.create({ id: 'b1', name: 'block1' });
     const block2 = ParallelBlock.create({ id: 'b2', name: 'block2' });
     this.set('lane', Lane.create({
+      mode,
       elements: [
         InterblockSpace.create({ elementAfter: block1 }),
         block1,
@@ -245,4 +251,4 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     expect($space3Element).to.have.attr('data-element-before-id', 'b2');
     expect($space3Element).to.not.have.attr('data-element-after-id');
   });
-});
+}

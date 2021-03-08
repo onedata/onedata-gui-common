@@ -718,7 +718,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * @param {Array<Object>} rawDump
-   * @param {Utils.WorkflowVisualiser.VisualiserElement} element
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord} element
    * @returns {Object|undefined} raw representation of given `element` in passed `rawDump`
    */
   getRawElement(rawDump, element) {

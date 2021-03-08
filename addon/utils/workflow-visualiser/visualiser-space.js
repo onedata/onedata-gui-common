@@ -4,13 +4,13 @@ import { guidFor } from '@ember/object/internals';
 export default VisualiserElement.extend({
   /**
    * @virtual
-   * @type {Utils.WorkflowVisualiser.VisualiserElement}
+   * @type {Utils.WorkflowVisualiser.VisualiserRecord|null}
    */
   elementBefore: undefined,
 
   /**
    * @virtual
-   * @type {Utils.WorkflowVisualiser.VisualiserElement}
+   * @type {Utils.WorkflowVisualiser.VisualiserRecord|null}
    */
   elementAfter: undefined,
 

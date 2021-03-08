@@ -15,7 +15,7 @@ export default VisualiserSpace.extend({
   /**
    * @virtual
    * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane} afterLane
+   * @param {Utils.WorkflowVisualiser.Lane|null} afterLane
    * @returns {Promise}
    */
   onAddLane: undefined,

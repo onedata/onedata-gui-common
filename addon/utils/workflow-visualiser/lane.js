@@ -1,7 +1,7 @@
-import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
+import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import { resolve } from 'rsvp';
 
-export default VisualiserElement.extend({
+export default VisualiserRecord.extend({
   /**
    * @override
    */
@@ -13,46 +13,10 @@ export default VisualiserElement.extend({
   type: 'lane',
 
   /**
-   * @virtual
-   * @type {String}
-   */
-  name: undefined,
-
-  /**
    * @virtual optional
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   elements: undefined,
-
-  /**
-   * @virtual
-   * @type {Boolean}
-   */
-  isFirst: false,
-
-  /**
-   * @virtual
-   * @type {Boolean}
-   */
-  isLast: false,
-
-  /**
-   * @virtual optional
-   * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {Object} modifiedProps
-   * @returns {Promise}
-   */
-  onModify: undefined,
-
-  /**
-   * @virtual optional
-   * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {Number} moveStep
-   * @returns {Promise}
-   */
-  onMove: undefined,
 
   /**
    * @virtual optional
@@ -62,14 +26,6 @@ export default VisualiserElement.extend({
    */
   onClear: undefined,
 
-  /**
-   * @virtual optional
-   * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @returns {Promise}
-   */
-  onRemove: undefined,
-
   init() {
     this._super(...arguments);
 
@@ -78,23 +34,8 @@ export default VisualiserElement.extend({
     }
   },
 
-  modify(modifiedProps) {
-    const onModify = this.get('onModify');
-    return onModify ? onModify(this, modifiedProps) : resolve();
-  },
-
-  move(moveStep) {
-    const onMove = this.get('onMove');
-    return onMove ? onMove(this, moveStep) : resolve();
-  },
-
   clear() {
     const onClear = this.get('onClear');
     return onClear ? onClear(this) : resolve();
-  },
-
-  remove() {
-    const onRemove = this.get('onRemove');
-    return onRemove ? onRemove(this) : resolve();
   },
 });

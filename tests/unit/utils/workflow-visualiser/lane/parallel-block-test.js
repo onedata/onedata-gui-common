@@ -17,22 +17,9 @@ describe('Unit | Utility | workflow visualiser/lane/parallel block', function ()
     expect(get(parallelBlock, 'type')).to.equal('parallelBlock');
   });
 
-  it('has undefined "name" on init', function () {
-    const parallelBlock = ParallelBlock.create();
-
-    expect(get(parallelBlock, 'name')).to.be.undefined;
-  });
-
   it('has an empty array "elements" on init', function () {
     const parallelBlock = ParallelBlock.create();
 
     expect(get(parallelBlock, 'elements')).to.be.an('array').and.to.have.length(0);
-  });
-
-  it('has false "isFirst" and "isLast" on init', function () {
-    const parallelBlock = ParallelBlock.create();
-
-    expect(get(parallelBlock, 'isFirst')).to.be.false;
-    expect(get(parallelBlock, 'isLast')).to.be.false;
   });
 });

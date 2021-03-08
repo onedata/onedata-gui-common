@@ -14,7 +14,7 @@ describe('Unit | Utility | workflow visualiser/visualiser element', function () 
     it(`has undefined "${propName}"`, function () {
       const element = VisualiserElement.create();
 
-      expect(get(element, 'propName')).to.be.undefined;
+      expect(get(element, propName)).to.be.undefined;
     });
   });
 });

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, context } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
@@ -38,133 +38,150 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       .and.to.have.class('workflow-visualiser-element');
   });
 
-  ['view', 'edit'].forEach(mode => {
-    it(`shows name in "${mode}" mode`, function () {
-      const name = 'block1';
+  context('in "view" mode', function () {
+    const contextMode = 'view';
+
+    itShowsNameInMode(contextMode);
+    itRendersNestedElementsInMode(contextMode);
+
+    it('does not allow to modify block name', async function () {
       this.set('block', ParallelBlock.create({
-        name,
-        mode,
+        name: 'my-block',
+        mode: contextMode,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.parallel-block-name .one-label')).to.not.exist;
+    });
+
+    it('does not render actions in "view" mode', function () {
+      this.set('block', ParallelBlock.create({
+        mode: contextMode,
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
-      expect(this.$('.parallel-block-name').text().trim()).to.equal(name);
+      expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
     });
   });
 
-  it('allows to modify block name in "edit" mode', async function () {
-    this.set('block', ParallelBlock.create({
-      name: 'my-block',
-      mode: 'edit',
-      onModify(block, { name }) {
-        return new Promise(resolve => {
-          set(block, 'name', name);
-          resolve();
-        });
-      },
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+  context('in "edit" mode', function () {
+    const contextMode = 'edit';
 
-    await click('.parallel-block-name .one-label');
-    await fillIn('.parallel-block-name input', 'new-name');
-    await click('.parallel-block-name .save-icon');
+    itShowsNameInMode(contextMode);
+    itRendersNestedElementsInMode(contextMode);
 
-    expect(this.$('.parallel-block-name').text().trim()).to.equal('new-name');
-  });
+    it('allows to modify block name', async function () {
+      this.set('block', ParallelBlock.create({
+        name: 'my-block',
+        mode: contextMode,
+        onModify(block, { name }) {
+          return new Promise(resolve => {
+            set(block, 'name', name);
+            resolve();
+          });
+        },
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
-  it('does not allow to modify block name in "view" mode', async function () {
-    this.set('block', ParallelBlock.create({
-      name: 'my-block',
-      mode: 'view',
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      await click('.parallel-block-name .one-label');
+      await fillIn('.parallel-block-name input', 'new-name');
+      await click('.parallel-block-name .save-icon');
 
-    // .one-label is a trigger for one-inline-editor
-    expect(this.$('.parallel-block-name .one-label')).to.not.exist;
-  });
-
-  it('renders actions in "edit" mode', async function () {
-    this.set('block', ParallelBlock.create({
-      mode: 'edit',
-    }));
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
-
-    const $actionsTrigger = this.$('.parallel-block-actions-trigger');
-    expect($actionsTrigger).to.exist;
-
-    await click($actionsTrigger[0]);
-
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(blockActionsSpec.length);
-    blockActionsSpec.forEach(({ className, label, icon }, index) => {
-      const $action = $actions.eq(index);
-      expect($action).to.have.class(className);
-      expect($action.text().trim()).to.equal(label);
-      expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      expect(this.$('.parallel-block-name').text().trim()).to.equal('new-name');
     });
-  });
 
-  it('does not render actions in "view" mode', function () {
-    this.set('block', ParallelBlock.create({
-      mode: 'view',
-    }));
+    it('renders actions', async function () {
+      this.set('block', ParallelBlock.create({
+        mode: contextMode,
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      const $actionsTrigger = this.$('.parallel-block-actions-trigger');
+      expect($actionsTrigger).to.exist;
 
-    expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
-  });
+      await click($actionsTrigger[0]);
 
-  [
-    ['up', -1, 'isFirst'],
-    ['down', 1, 'isLast'],
-  ].forEach(([direction, moveStep, disablingProp]) => {
-    it(`allows to move ${direction} the block`, async function () {
-      const onMoveSpy = sinon.spy();
+      const $actions = $('body .webui-popover.in .actions-popover-content a');
+      expect($actions).to.have.length(blockActionsSpec.length);
+      blockActionsSpec.forEach(({ className, label, icon }, index) => {
+        const $action = $actions.eq(index);
+        expect($action).to.have.class(className);
+        expect($action.text().trim()).to.equal(label);
+        expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      });
+    });
+
+    [
+      ['up', -1, 'isFirst'],
+      ['down', 1, 'isLast'],
+    ].forEach(([direction, moveStep, disablingProp]) => {
+      it(`allows to move ${direction} the block`, async function () {
+        const onMoveSpy = sinon.spy();
+        const block = this.set('block', ParallelBlock.create({
+          mode: contextMode,
+          onMove: onMoveSpy,
+        }));
+        this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+
+        await click('.parallel-block-actions-trigger');
+        await click($(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`)[0]);
+
+        expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(block, moveStep);
+      });
+
+      it(`disables moving ${direction} the block when "${disablingProp}" is true`, async function () {
+        this.set('block', ParallelBlock.create({
+          mode: contextMode,
+          [disablingProp]: true,
+        }));
+        this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+
+        await click('.parallel-block-actions-trigger');
+        const $actionParent =
+          $(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`).parent();
+
+        expect($actionParent).to.have.class('disabled');
+      });
+    });
+
+    it('allows to remove block', async function () {
+      const onRemoveSpy = sinon.spy();
       const block = this.set('block', ParallelBlock.create({
-        mode: 'edit',
-        onMove: onMoveSpy,
+        mode: contextMode,
+        onRemove: onRemoveSpy,
       }));
       this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       await click('.parallel-block-actions-trigger');
-      await click($(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`)[0]);
+      await click($('body .webui-popover.in .remove-parallel-block-action-trigger')[0]);
 
-      expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(block, moveStep);
-    });
-
-    it(`disables moving ${direction} the block when "${disablingProp}" is true`, async function () {
-      this.set('block', ParallelBlock.create({
-        mode: 'edit',
-        [disablingProp]: true,
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
-
-      await click('.parallel-block-actions-trigger');
-      const $actionParent =
-        $(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`).parent();
-
-      expect($actionParent).to.have.class('disabled');
+      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(block);
     });
   });
+});
 
-  it('allows to remove block', async function () {
-    const onRemoveSpy = sinon.spy();
-    const block = this.set('block', ParallelBlock.create({
-      mode: 'edit',
-      onRemove: onRemoveSpy,
+function itShowsNameInMode(mode) {
+  it('shows parallel block name', function () {
+    const name = 'block1';
+    this.set('block', ParallelBlock.create({
+      name,
+      mode,
     }));
+
     this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
-    await click('.parallel-block-actions-trigger');
-    await click($('body .webui-popover.in .remove-parallel-block-action-trigger')[0]);
-
-    expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(block);
+    expect(this.$('.parallel-block-name').text().trim()).to.equal(name);
   });
+}
 
+function itRendersNestedElementsInMode(mode) {
   it('renders nested elements', function () {
     const task1 = Task.create({ id: 't1', name: 'task1' });
     const task2 = Task.create({ id: 't2', name: 'task2' });
     this.set('block', ParallelBlock.create({
+      mode,
       elements: [
         InterblockSpace.create({ elementAfter: task1 }),
         task1,
@@ -198,4 +215,4 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     expect($space3Element).to.have.attr('data-element-before-id', 't2');
     expect($space3Element).to.not.have.attr('data-element-after-id');
   });
-});
+}

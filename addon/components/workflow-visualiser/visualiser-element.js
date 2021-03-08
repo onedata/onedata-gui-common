@@ -1,10 +1,8 @@
 import Component from '@ember/component';
-import layout from 'onedata-gui-common/templates/components/workflow-visualiser/visualiser-element';
 import { reads } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
 
 export default Component.extend({
-  layout,
   classNames: ['workflow-visualiser-element'],
   classNameBindings: ['modeClass'],
   attributeBindings: ['elementModel.id:data-visualiser-element-id'],

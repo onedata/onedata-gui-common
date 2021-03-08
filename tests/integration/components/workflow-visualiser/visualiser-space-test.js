@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
-import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
+import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visualiser-space';
+import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import _ from 'lodash';
 
 describe('Integration | Component | workflow visualiser/visualiser space', function () {
@@ -25,7 +25,7 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
     const htmlAttrForSibling = `data-element-${elementSuffix}-id`;
 
     it(`has not specified "${htmlAttrForSibling}" attribute when "${siblingName}" is undefined`, function () {
-      this.set('space', InterlaneSpace.create({
+      this.set('space', VisualiserSpace.create({
         [siblingName]: undefined,
       }));
 
@@ -36,8 +36,8 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
 
     it(`has specified "${htmlAttrForSibling}" attribute when "${siblingName}" is specified`, function () {
       const elementId = '1234';
-      this.set('space', InterlaneSpace.create({
-        [siblingName]: VisualiserElement.create({
+      this.set('space', VisualiserSpace.create({
+        [siblingName]: VisualiserRecord.create({
           id: elementId,
         }),
       }));

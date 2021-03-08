@@ -116,7 +116,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 
 function itIsOfType(type, parent, [elementBefore, elementAfter]) {
   const className = `space-position-${type}`;
-  it(`has class "${className}" when first block is ${elementBefore ? 'not ' : ''}empty and second block is ${elementAfter ? 'not ' : ''}empty`,
+  it(`has class "${className}" when ${siblingsDescription(elementBefore, elementAfter)}`,
     function () {
       this.set('blockSpace', InterblockSpace.create({
         parent,
@@ -125,7 +125,7 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
       }));
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
-          elementModel=blockSpace
+        elementModel=blockSpace
       }}`);
 
       expect(this.$('.workflow-visualiser-interblock-space')).to.have.class(className);

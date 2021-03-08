@@ -16,12 +16,6 @@ describe('Unit | Utility | workflow visualiser/lane/task', function () {
     expect(get(element, 'type')).to.equal('task');
   });
 
-  it('has undefined "name" on init', function () {
-    const task = Task.create();
-
-    expect(get(task, 'name')).to.be.undefined;
-  });
-
   it('has "status" equal to "default" on init', function () {
     const task = Task.create();
 

@@ -28,6 +28,66 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       .and.to.have.class('workflow-visualiser-element');
   });
 
+  context('in "view" mode', function () {
+    beforeEach(function () {
+      this.set('mode', 'view');
+    });
+
+    itShowsTaskName();
+
+    it('does not allow to modify task name', async function () {
+      this.set('task', Task.create({
+        name: 'my-task',
+        mode: 'view',
+      }));
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+
+      // .one-label is a trigger for one-inline-editor
+      expect(this.$('.task-name .one-label')).to.not.exist;
+    });
+
+    it('does not render actions', function () {
+      this.set('task', Task.create({
+        mode: 'view',
+      }));
+
+      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+
+      expect(this.$('.task-actions-trigger')).to.not.exist;
+    });
+
+    itShowsStatus('default');
+    itShowsStatus('success');
+    itShowsStatus('warning');
+    itShowsStatus('error');
+
+    itShowsProgressBarForPercent(0);
+    // 25% is a breakpoint when the number of percent is shown in/outside of
+    // the progress bar.
+    itShowsProgressBarForPercent(24);
+    itShowsProgressBarForPercent(26);
+    // 55.5 to check rounding to 55%
+    itShowsProgressBarForPercent(55.5);
+    itShowsProgressBarForPercent(100);
+
+    [
+      ['not a number', NaN],
+      ['null', null],
+      ['undefined', undefined],
+    ].forEach(([valueDescription, value]) => {
+      it(`does not show progress bar when task "progressPercent" is ${valueDescription}`, function () {
+        this.set('task', Task.create({
+          progressPercent: value,
+          mode: 'view',
+        }));
+
+        render(this);
+
+        expect(this.$('.task-progress-bar')).to.not.exist;
+      });
+    });
+  });
+
   context('in "edit" mode', function () {
     beforeEach(function () {
       this.set('mode', 'edit');
@@ -101,66 +161,6 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
       expect(this.$('.task-progress-bar')).to.not.exist;
       expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-success');
-    });
-  });
-
-  context('in "view" mode', function () {
-    beforeEach(function () {
-      this.set('mode', 'view');
-    });
-
-    itShowsTaskName();
-
-    it('does not allow to modify task name', async function () {
-      this.set('task', Task.create({
-        name: 'my-task',
-        mode: 'view',
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
-
-      // .one-label is a trigger for one-inline-editor
-      expect(this.$('.task-name .one-label')).to.not.exist;
-    });
-
-    it('does not render actions', function () {
-      this.set('task', Task.create({
-        mode: 'view',
-      }));
-
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
-
-      expect(this.$('.task-actions-trigger')).to.not.exist;
-    });
-
-    itShowsStatus('default');
-    itShowsStatus('success');
-    itShowsStatus('warning');
-    itShowsStatus('error');
-
-    itShowsProgressBarForPercent(0);
-    // 25% is a breakpoint when the number of percent is shown in/outside of
-    // the progress bar.
-    itShowsProgressBarForPercent(24);
-    itShowsProgressBarForPercent(26);
-    // 55.5 to check rounding to 55%
-    itShowsProgressBarForPercent(55.5);
-    itShowsProgressBarForPercent(100);
-
-    [
-      ['not a number', NaN],
-      ['null', null],
-      ['undefined', undefined],
-    ].forEach(([valueDescription, value]) => {
-      it(`does not show progress bar when task "progressPercent" is ${valueDescription}`, function () {
-        this.set('task', Task.create({
-          progressPercent: value,
-          mode: 'view',
-        }));
-
-        render(this);
-
-        expect(this.$('.task-progress-bar')).to.not.exist;
-      });
     });
   });
 });

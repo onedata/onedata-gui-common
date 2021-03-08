@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { get } from '@ember/object';
+import sinon from 'sinon';
 
 describe('Unit | Utility | workflow visualiser/lane', function () {
   it('has "renderer" equal to "workflow-visualiser/lane"', function () {
@@ -16,22 +17,20 @@ describe('Unit | Utility | workflow visualiser/lane', function () {
     expect(get(lane, 'type')).to.equal('lane');
   });
 
-  it('has undefined "name" on init', function () {
-    const lane = Lane.create();
-
-    expect(get(lane, 'name')).to.be.undefined;
-  });
-
   it('has an empty array "elements" on init', function () {
     const lane = Lane.create();
 
     expect(get(lane, 'elements')).to.be.an('array').and.to.have.length(0);
   });
 
-  it('has false "isFirst" and "isLast" on init', function () {
-    const lane = Lane.create();
+  it('calls "onClear" with element reference on "clear" call', function () {
+    const spy = sinon.spy();
+    const element = Lane.create({
+      onClear: spy,
+    });
 
-    expect(get(lane, 'isFirst')).to.be.false;
-    expect(get(lane, 'isLast')).to.be.false;
+    element.clear();
+
+    expect(spy).to.be.calledOnce.and.to.be.calledWith(element);
   });
 });

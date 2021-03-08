@@ -1,7 +1,6 @@
-import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
-import { resolve } from 'rsvp';
+import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 
-export default VisualiserElement.extend({
+export default VisualiserRecord.extend({
   /**
    * @override
    */
@@ -11,12 +10,6 @@ export default VisualiserElement.extend({
    * @override
    */
   type: 'task',
-
-  /**
-   * @virtual
-   * @type {String}
-   */
-  name: undefined,
 
   /**
    * One of: 'default', 'success', 'warning', 'error'
@@ -30,29 +23,4 @@ export default VisualiserElement.extend({
    * @type {Number|null}
    */
   progressPercent: null,
-
-  /**
-   * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane.Task} task
-   * @param {Object} modifiedProps
-   * @returns {Promise}
-   */
-  onModify: undefined,
-
-  /**
-   * @type {Function}
-   * @param {Utils.WorkflowVisualiser.Lane.Task} task
-   * @returns {Promise}
-   */
-  onRemove: undefined,
-
-  modify(modifiedProps) {
-    const onModify = this.get('onModify');
-    return onModify ? onModify(this, modifiedProps) : resolve();
-  },
-
-  remove() {
-    const onRemove = this.get('onRemove');
-    return onRemove ? onRemove(this) : resolve();
-  },
 });
