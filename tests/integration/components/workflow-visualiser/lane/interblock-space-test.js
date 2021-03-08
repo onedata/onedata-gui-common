@@ -136,13 +136,13 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], mode) {
   it(
     `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
-      const onAddBlock = sinon.spy();
+      const onAddLaneElement = sinon.spy();
       this.set('blockSpace', InterblockSpace.create({
         mode,
         elementBefore,
         elementAfter,
         parent,
-        onAddBlock,
+        onAddLaneElement,
       }));
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
@@ -150,7 +150,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], mode) {
 
       await click('.add-block-action-trigger');
 
-      expect(onAddBlock).to.be.calledOnce.and.to.be.calledWith(parent, elementBefore);
+      expect(onAddLaneElement).to.be.calledOnce.and.to.be.calledWith(parent, elementBefore);
     }
   );
 }

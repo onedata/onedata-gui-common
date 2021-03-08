@@ -15,20 +15,20 @@ export default VisualiserSpace.extend({
   /**
    * @virtual
    * @type {Function}
-   * @param {Utils.WorkflowVisualiser.VisualiserElement} afterBlock
+   * @param {Utils.WorkflowVisualiser.VisualiserElement} afterElement
    * @returns {Promise}
    */
-  onAddBlock: undefined,
+  onAddLaneElement: undefined,
 
-  addBlock() {
+  addLaneElement() {
     const {
-      onAddBlock,
+      onAddLaneElement,
       parent,
       elementBefore,
-    } = this.getProperties('onAddBlock', 'parent', 'elementBefore');
+    } = this.getProperties('onAddLaneElement', 'parent', 'elementBefore');
 
-    if (onAddBlock) {
-      return onAddBlock(parent, elementBefore);
+    if (onAddLaneElement) {
+      return onAddLaneElement(parent, elementBefore);
     } else {
       return resolve();
     }

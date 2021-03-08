@@ -5,10 +5,10 @@
 {{/perfect-scrollbar-element}}
 {{one-icon icon="arrow-left" click=(action "scrollLeft") class=(concat-classes
   "left-edge-scroll-step-trigger"
-  (if (not-eq scrollLeftNextLane null) "visible")
+  (if (not-eq laneIdxForNextLeftScroll null) "visible")
 )}}
 {{one-icon icon="arrow-right" click=(action "scrollRight") class=(concat-classes
   "right-edge-scroll-step-trigger"
-  (if (not-eq scrollRightNextLane null) "visible")
+  (if (not-eq laneIdxForNextRightScroll null) "visible")
 )}}
 {{yield}}

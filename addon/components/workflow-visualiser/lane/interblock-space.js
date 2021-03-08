@@ -98,8 +98,8 @@ export default VisualiserSpace.extend({
   }),
 
   actions: {
-    addBlock() {
-      this.get('interblockSpace').addBlock();
+    addLaneElement() {
+      this.get('interblockSpace').addLaneElement();
     },
   },
 });

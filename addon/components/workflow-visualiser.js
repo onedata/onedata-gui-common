@@ -32,10 +32,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
   i18nPrefix: 'components.workflowVisualiser',
 
   /**
+   * @override
+   */
+  callWindowResizeHandlerOnInsert: false,
+
+  /**
+   * @override
+   */
+  windowResizeDebounceTime,
+
+  /**
    * @virtual
    * @type {Array<any>}
    */
-  rawLanes: undefined,
+  rawData: undefined,
 
   /**
    * One of: 'edit', 'view'
@@ -47,31 +57,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @virtual optional
    * @type {Function}
-   * @param {Array<Object>} rawLanesDump
+   * @param {Array<any>} rawDataDump deep copy of rawData with modifications applied
    * @returns {Promise}
    */
   onChange: undefined,
 
   /**
-   * @override
-   */
-  callWindowResizeHandlerOnInsert: false,
-
-  /**
-   * @override
-   */
-  windowResizeDebounceTime,
-
-  /**
-   * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
-   */
-  visualiserElementsCache: undefined,
-
-  /**
    * @type {Object}
    * ```
    * {
-   *   lane: Array<Array<Utils.WorkflowVisualiser.VisualiserElement>,
+   *   lane: Array<Utils.WorkflowVisualiser.VisualiserElement>,
    *   interlaneSpace: Array<Utils.WorkflowVisualiser.InterlaneSpace>,
    *   parallelBlock: Array<Utils.WorkflowVisualiser.Lane.ParallelBlock>,
    *   task: Array<Utils.WorkflowVisualiser.Lane.Task>,
@@ -82,19 +77,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
   elementsCache: undefined,
 
   /**
+   * Null when left scroll should be blocked
    * @type {Number|null}
    */
-  scrollLeftNextLane: null,
+  laneIdxForNextLeftScroll: null,
 
   /**
+   * Null when right scroll should be blocked
    * @type {Number|null}
    */
-  scrollRightNextLane: null,
+  laneIdxForNextRightScroll: null,
 
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
-  visualiserElements: computed('rawLanes.[]', function visualiserElements() {
+  visualiserElements: computed('rawData.[]', function visualiserElements() {
     return this.getVisualiserElements();
   }),
 
@@ -144,62 +141,72 @@ export default Component.extend(I18n, WindowResizeHandler, {
     // Scrolling is not pixel-perfect. Without that epsilon test cases break down.
     const checksPxEpsilon = 1;
 
-    const $lanes = this.$('.workflow-visualiser-lane');
-    const $visualiserElements = this.$('.visualiser-elements');
-    const viewOffset = $visualiserElements.offset().left;
-    const viewWidth = $visualiserElements.width();
+    const $lanesContainer = this.$('.visualiser-elements');
+    const viewOffset = $lanesContainer.offset().left;
+    const viewWidth = $lanesContainer.width();
 
-    let scrollLeftNextLane = null;
+    const $lanes = this.$('.workflow-visualiser-lane');
+    const lanesOffset = $lanes.map(idx => $lanes.eq(idx).offset().left);
+    const lanesWidth = $lanes.map(idx => $lanes.eq(idx).width());
+
+    let laneIdxForNextLeftScroll = null;
     for (let i = 0; i < $lanes.length; i++) {
-      if (viewOffset - $lanes.eq(i).offset().left <= checksPxEpsilon) {
+      if (viewOffset - lanesOffset[i] <= checksPxEpsilon) {
         break;
       }
-      scrollLeftNextLane = i;
+      laneIdxForNextLeftScroll = i;
     }
 
-    let scrollRightNextLane = null;
+    let laneIdxForNextRightScroll = null;
     for (let i = $lanes.length - 1; i >= 0; i--) {
-      if (
-        $lanes.eq(i).offset().left + $lanes.eq(i).width() - (viewOffset + viewWidth) <=
-        checksPxEpsilon
-      ) {
+      if (lanesOffset[i] + lanesWidth[i] - (viewOffset + viewWidth) <= checksPxEpsilon) {
         break;
       }
-      scrollRightNextLane = i;
+      laneIdxForNextRightScroll = i;
     }
 
     this.setProperties({
-      scrollLeftNextLane,
-      scrollRightNextLane,
+      laneIdxForNextLeftScroll,
+      laneIdxForNextRightScroll,
     });
   },
 
+  /**
+   * @param {number} laneIdx
+   * @param {String} edge 'left' or 'right'
+   */
   scrollToLane(laneIdx, edge) {
     if (laneIdx === null) {
       return;
     }
 
     const $lanesContainer = this.$('.visualiser-elements');
+    const viewOffset = $lanesContainer.offset().left;
+    const viewWidth = $lanesContainer.width();
+    const viewScroll = $lanesContainer.scrollLeft();
+
     const $lanes = this.$('.workflow-visualiser-lane');
-    let scrollXPosition;
+
+    let scrollPosition;
     if (laneIdx <= 0) {
-      scrollXPosition = 0;
+      scrollPosition = 0;
     } else if (laneIdx >= $lanes.length - 1) {
-      scrollXPosition = $lanesContainer.prop('scrollWidth');
+      scrollPosition = $lanesContainer.prop('scrollWidth');
     } else {
       const $targetLane = $lanes.eq(laneIdx);
-      let targetLaneOffset;
+      const targetLaneOffset = $targetLane.offset().left;
+      const targetLaneWidth = $targetLane.width();
+      let pxToScroll;
       if (edge === 'left') {
-        targetLaneOffset = $targetLane.offset().left - $lanesContainer.offset().left;
+        pxToScroll = targetLaneOffset - viewOffset;
       } else {
-        targetLaneOffset = $targetLane.offset().left + $targetLane.width() -
-          ($lanesContainer.offset().left + $lanesContainer.width());
+        pxToScroll = targetLaneOffset + targetLaneWidth - (viewOffset + viewWidth);
       }
-      scrollXPosition = $lanesContainer.scrollLeft() + targetLaneOffset;
+      scrollPosition = viewScroll + pxToScroll;
     }
 
     $lanesContainer[0].scroll({
-      left: scrollXPosition,
+      left: scrollPosition,
       behavior: isInTestingEnv ? 'auto' : 'smooth',
     });
 
@@ -210,39 +217,53 @@ export default Component.extend(I18n, WindowResizeHandler, {
     this.scheduleHorizontalOverflowDetection();
   },
 
+  /**
+   * Generates an array of lanes and interlane spaces from `rawData`
+   * @returns {Array<Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.InterlaneSpace>}
+   */
   getVisualiserElements() {
-    const {
-      visualiserElementsCache,
-      rawLanes,
-    } = this.getProperties('visualiserElementsCache', 'rawLanes');
-
-    const lanes = (rawLanes || []).map(rawLane => this.getLaneForUpdate(rawLane));
+    const rawData = this.get('rawData') || [];
+    const lanes = rawData.map(rawLane => this.getElementForUpdate(rawLane));
     this.updateFirstLastFlagsInCollection(lanes);
 
-    const newVisualiserElements = [
+    const visualiserElements = [
       this.getInterlaneSpaceFor(null, lanes[0] || null),
     ];
-
     for (let i = 0; i < lanes.length; i++) {
       const lane = lanes[i];
       const nextLane = lanes[i + 1] || null;
-      newVisualiserElements.push(
+      visualiserElements.push(
         lane,
         this.getInterlaneSpaceFor(lane, nextLane)
       );
     }
 
-    const elementsArrayHasChanged = !visualiserElementsCache || newVisualiserElements
-      .some((element, idx) => visualiserElementsCache[idx] !== element);
+    return visualiserElements;
+  },
 
-    if (elementsArrayHasChanged) {
-      this.set('visualiserElementsCache', newVisualiserElements);
-      return newVisualiserElements;
-    } else {
-      return visualiserElementsCache;
+  /**
+   * Returns visualiser element for given backend update.
+   * @param {Object} update element representation from backend
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} [parent=null]
+   */
+  getElementForUpdate(update, parent = null) {
+    switch (update.type) {
+      case 'lane':
+        // Lane does not have any parent
+        return this.getLaneForUpdate(update);
+      case 'parallelBlock':
+        return this.getParallelBlockForUpdate(update, parent);
+      case 'task':
+        return this.getTaskForUpdate(update, parent);
+      default:
+        return undefined;
     }
   },
 
+  /**
+   * Sets correct values of `isFirst` and `isLast` flags in elements of passed collection.
+   * @param {Array<Utils.WorkflowVisualiser.VisualiserElement>} collection
+   */
   updateFirstLastFlagsInCollection(collection) {
     for (let i = 0; i < collection.length; i++) {
       const item = collection[i];
@@ -258,12 +279,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
       }
       if (i === collection.length - 1 && !isLast) {
         set(item, 'isLast', true);
-      } else if (isFirst !== collection.length - 1 && isLast) {
+      } else if (i !== collection.length - 1 && isLast) {
         set(item, 'isLast', false);
       }
     }
   },
 
+  /**
+   * Returns lane element for given backend update. If it is available in cache,
+   * then it is updated. Otherwise it is created from scratch and saved in cache for
+   * future updates.
+   * @param {Object} update lane representation from backend
+   * @returns {Utils.WorkflowVisualiser.Lane}
+   */
   getLaneForUpdate(laneUpdate) {
     const {
       id,
@@ -274,16 +302,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
-      const {
-        name: oldName,
-        elements: oldElements,
-      } = getProperties(existingLane, 'name', 'tasks');
-      const elements = this.getLaneElementsForUpdate(existingLane, rawElements);
-
-      this.performModelUpdate(existingLane, [
-        ['name', oldName, name],
-        ['elements', oldElements, elements],
-      ]);
+      const elements = this.getLaneElementsForUpdate(rawElements, existingLane);
+      this.updateElement(existingLane, { name, elements });
 
       return existingLane;
     } else {
@@ -291,7 +311,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         id,
         name,
         mode: this.get('mode'),
-        onModify: (lane, modifiedProps) => this.modifyLane(lane, modifiedProps),
+        onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
         onMove: (lane, moveStep) => this.moveLane(lane, moveStep),
         onClear: lane => this.clearLane(lane),
         onRemove: lane => this.removeLane(lane),
@@ -299,7 +319,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newLane,
         'elements',
-        this.getLaneElementsForUpdate(newLane, rawElements)
+        this.getLaneElementsForUpdate(rawElements, newLane)
       );
       this.addElementToCache('lane', newLane);
 
@@ -307,16 +327,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
-  getLaneElementsForUpdate(parent, elementsUpdate) {
+  /**
+   * Returns array of lane elements for given backend update. Handles two types of
+   * collections:
+   * - list of parallel blocks in a lane,
+   * - list of tasks in a parralel block.
+   * If the result array has the same elements as were in the existing array in `parent`,
+   * then the existing array is returned (the same reference is preserved).
+   * @param {Array<Object>} update array of task/parallel block backend representations
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @returns {Array<Utils.WorkflowVisualiser.VisualiserElement>}
+   */
+  getLaneElementsForUpdate(update, parent) {
     const existingLaneElements = get(parent || {}, 'elements') || [];
-    const elementsForUpdate = (elementsUpdate || []).map(elementUpdate => {
-      switch (elementUpdate.type) {
-        case 'parallelBlock':
-          return this.getParallelBlockForUpdate(elementUpdate, parent);
-        case 'task':
-          return this.getTaskForUpdate(elementUpdate, parent);
-      }
-    });
+    const elementsForUpdate = (update || []).map(elementUpdate =>
+      this.getElementForUpdate(elementUpdate, parent)
+    );
     this.updateFirstLastFlagsInCollection(elementsForUpdate);
 
     const newLaneElements = [
@@ -338,28 +364,26 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return elementsArrayHasChanged ? newLaneElements : existingLaneElements;
   },
 
-  getParallelBlockForUpdate(parallelBlockUpdate, parent) {
+  /**
+   * Returns parallel block element for given backend update. If it is available in cache,
+   * then it is updated. Otherwise it is created from scratch and saved in cache for
+   * future updates.
+   * @param {Object} update parallel block representation from backend
+   * @param {Utils.WorkflowVisualiser.Lane} parent
+   * @returns {Utils.WorkflowVisualiser.Lane.ParallelBlock}
+   */
+  getParallelBlockForUpdate(update, parent) {
     const {
       id,
       name,
       tasks: rawElements,
-    } = getProperties(parallelBlockUpdate, 'id', 'name', 'tasks');
+    } = getProperties(update, 'id', 'name', 'tasks');
 
     const existingParallelBlock = this.getCachedElement('parallelBlock', { id });
 
     if (existingParallelBlock) {
-      const {
-        name: oldName,
-        parent: oldParent,
-        elements: oldElements,
-      } = getProperties(existingParallelBlock, 'name', 'tasks');
-      const elements = this.getLaneElementsForUpdate(existingParallelBlock, rawElements);
-
-      this.performModelUpdate(existingParallelBlock, [
-        ['name', oldName, name],
-        ['parent', oldParent, parent],
-        ['elements', oldElements, elements],
-      ]);
+      const elements = this.getLaneElementsForUpdate(rawElements, existingParallelBlock);
+      this.updateElement(existingParallelBlock, { name, parent, elements });
 
       return existingParallelBlock;
     } else {
@@ -368,14 +392,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         parent,
         mode: this.get('mode'),
-        onModify: (block, modifiedProps) => this.modifyBlock(block, modifiedProps),
-        onMove: (block, moveStep) => this.moveBlock(block, moveStep),
-        onRemove: block => this.removeBlock(block),
+        onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
+        onMove: (block, moveStep) => this.moveLaneElement(block, moveStep),
+        onRemove: block => this.removeLaneElement(block),
       });
       set(
         newParallelBlock,
         'elements',
-        this.getLaneElementsForUpdate(newParallelBlock, rawElements)
+        this.getLaneElementsForUpdate(rawElements, newParallelBlock)
       );
       this.addElementToCache('parallelBlock', newParallelBlock);
 
@@ -383,30 +407,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
-  getTaskForUpdate(taskUpdate, parent) {
+  /**
+   * Returns task element for given backend update. If it is available in cache, then it
+   * is updated. Otherwise it is created from scratch and saved in cache for future updates.
+   * @param {Object} update task representation from backend
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @returns {Utils.WorkflowVisualiser.Lane.Task}
+   */
+  getTaskForUpdate(update, parent) {
     const {
       id,
       name,
       status,
       progressPercent,
-    } = getProperties(taskUpdate, 'id', 'name', 'status', 'progressPercent');
+    } = getProperties(update, 'id', 'name', 'status', 'progressPercent');
 
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
-      const {
-        name: oldName,
-        parent: oldParent,
-        status: oldStatus,
-        progressPercent: oldProgressPercent,
-      } = getProperties(existingTask, 'name', 'tasks', 'parent', 'progressPercent');
-
-      this.performModelUpdate(existingTask, [
-        ['name', oldName, name],
-        ['parent', oldParent, parent],
-        ['status', oldStatus, status],
-        ['progressPercent', oldProgressPercent, progressPercent],
-      ]);
+      this.updateElement(existingTask, { name, parent, status, progressPercent });
 
       return existingTask;
     } else {
@@ -417,8 +436,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         mode: this.get('mode'),
         status,
         progressPercent,
-        onModify: (block, modifiedProps) => this.modifyBlock(block, modifiedProps),
-        onRemove: lane => this.removeBlock(lane),
+        onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
+        onRemove: lane => this.removeLaneElement(lane),
       });
       this.addElementToCache('task', newTask);
 
@@ -426,6 +445,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
+  /**
+   * Generates (or returns from cache if already exists) an interlane space for given
+   * lanes.
+   * @param {Utils.WorkflowVisualiser.Lane|null} elementBefore
+   * @param {Utils.WorkflowVisualiser.Lane|null} elementAfter
+   * @returns {Utils.WorkflowVisualiser.InterlaneSpace}
+   */
   getInterlaneSpaceFor(elementBefore, elementAfter) {
     const existingInterlaneSpace = this.getCachedElement('interlaneSpace', {
       elementBefore,
@@ -435,17 +461,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (existingInterlaneSpace) {
       return existingInterlaneSpace;
     } else {
-      const newSpace = InterlaneSpace.create({
+      const newInterlaneSpace = InterlaneSpace.create({
         mode: this.get('mode'),
         elementBefore,
         elementAfter,
         onAddLane: afterLane => this.addLane(afterLane),
       });
-      this.addElementToCache('interlaneSpace', newSpace);
-      return newSpace;
+      this.addElementToCache('interlaneSpace', newInterlaneSpace);
+      return newInterlaneSpace;
     }
   },
 
+  /**
+   * Generates (or returns from cache if already exists) an interblock space for given
+   * parallel blocks/tasks.
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock|Utils.WorkflowVisualiser.Lane.Task|null} elementBefore
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock|Utils.WorkflowVisualiser.Lane.Task|null} elementAfter
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @returns {Utils.WorkflowVisualiser.InterblockSpace}
+   */
   getInterblockSpaceFor(elementBefore, elementAfter, parent) {
     const existingInterblockSpace = this.getCachedElement('interblockSpace', {
       elementBefore,
@@ -461,13 +495,23 @@ export default Component.extend(I18n, WindowResizeHandler, {
         elementBefore,
         elementAfter,
         parent,
-        onAddBlock: (parent, afterBlock) => this.addBlock(parent, afterBlock),
+        onAddLaneElement: (parent, afterElement) =>
+          this.addLaneElement(parent, afterElement),
       });
       this.addElementToCache('interblockSpace', newSpace);
       return newSpace;
     }
   },
 
+  /**
+   * Gets an already generated element from cache. It has to match properties passed
+   * via `filterProps`.
+   * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
+   *   'interblockSpace'
+   * @param {Object} filterProps an object which properties should be the same in the
+   *   searched element (e.g `{ id: '123' }`)
+   * @returns {Utils.WorkflowVisualiser.VisualiserElement|undefined}
+   */
   getCachedElement(type, filterProps) {
     const elementsOfType = this.get('elementsCache')[type] || [];
     return elementsOfType.find(element =>
@@ -477,25 +521,42 @@ export default Component.extend(I18n, WindowResizeHandler, {
     );
   },
 
+  /**
+   * Stores visualiser element in cache for future usage.
+   * @param {String} type  one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
+   *   'interblockSpace'
+   * @param {Utils.WorkflowVisualiser.VisualiserElement} element
+   * @returns {undefined}
+   */
   addElementToCache(type, element) {
     this.get('elementsCache')[type].push(element);
   },
 
-  performModelUpdate(modelRecord, updatesToCheck) {
-    const update = {};
-    updatesToCheck.forEach(([propName, oldValue, newValue]) => {
-      if (oldValue !== newValue) {
-        update[propName] = newValue;
+  /**
+   * Updates passed visualiser element with updated properties. If some property in update
+   * has the same value in the element, then it will not be set.
+   * @param {Utils.WorkflowVisualiser.VisualiserElement} element
+   * @param {Object} update an object with changed properties
+   * @returns {undefined}
+   */
+  updateElement(element, update) {
+    const changedFieldsOnlyUpdate = {};
+    for (const key in update) {
+      if (get(element, key) !== update[key]) {
+        changedFieldsOnlyUpdate[key] = update[key];
       }
-    });
-
-    if (Object.keys(update).length > 0) {
-      setProperties(modelRecord, update);
-      return true;
     }
-    return false;
+
+    if (Object.keys(changedFieldsOnlyUpdate).length > 0) {
+      setProperties(element, changedFieldsOnlyUpdate);
+    }
   },
 
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane|null} afterLane the new lane will be placed
+   * after that lane. If is `null`, then the new lane should be at the beginning.
+   * @returns {Promise}
+   */
   addLane(afterLane) {
     const newLane = {
       type: 'lane',
@@ -504,46 +565,50 @@ export default Component.extend(I18n, WindowResizeHandler, {
     };
     newLane.id = guidFor(newLane);
 
-    const lanesDump = this.dumpRawLanes();
-    const laneInsertIdx = !afterLane ? 0 :
-      lanesDump.indexOf(lanesDump.findBy('id', get(afterLane, 'id'))) + 1;
-    lanesDump.splice(laneInsertIdx, 0, newLane);
+    const rawDump = this.dumpRawData();
+    const rawAfterLane = afterLane ? this.getRawElement(rawDump, afterLane) : undefined;
+    const insertIdx = rawDump.indexOf(rawAfterLane) + 1;
+    rawDump.splice(insertIdx, 0, newLane);
 
-    return this.applyChange(lanesDump);
+    return this.applyChange(rawDump);
   },
 
-  addBlock(parent, afterBlock) {
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @param {Utils.WorkflowVisualiser.Lane.Task|Utils.WorkflowVisualiser.Lane.ParallelBlock|null} afterElement
+   *   the new element will be placed after that lane. If is `null`, then the new lane should be at the beginning.
+   * @returns {Promise}
+   */
+  addLaneElement(parent, afterElement) {
     const type = get(parent, 'type') === 'lane' ? 'parallelBlock' : 'task';
-    const newBlock = {
+    const newElement = {
       type,
       name: String(this.t(`nameForNew.${type}`)),
     };
-    newBlock.id = guidFor(newBlock);
+    newElement.id = guidFor(newElement);
     if (type === 'parallelBlock') {
-      newBlock.tasks = [];
+      newElement.tasks = [];
     }
 
-    const lanesDump = this.dumpRawLanes();
-    const rawParent = this.getRawElement(lanesDump, parent);
+    const rawDump = this.dumpRawData();
+    const rawParent = this.getRawElement(rawDump, parent);
+    const rawAfterElement = afterElement ?
+      this.getRawElement(rawDump, afterElement) : undefined;
     if (rawParent && rawParent.tasks) {
-      const blockInsertIdx = !afterBlock ? 0 :
-        rawParent.tasks.indexOf(rawParent.tasks.findBy('id', get(afterBlock, 'id'))) + 1;
-      rawParent.tasks.splice(blockInsertIdx, 0, newBlock);
+      const insertIdx = rawParent.tasks.indexOf(rawAfterElement) + 1;
+      rawParent.tasks.splice(insertIdx, 0, newElement);
     }
 
-    return this.applyChange(lanesDump);
+    return this.applyChange(rawDump);
   },
 
-  modifyLane(lane, modifiedProps) {
-    return this.modifyElement(lane, modifiedProps);
-  },
-
-  modifyBlock(block, modifiedProps) {
-    return this.modifyElement(block, modifiedProps);
-  },
-
+  /**
+   * @param {Utils.WorkflowVisualiser.VisualiserElement} element
+   * @param {Object} modifiedProps
+   * @returns {Promise}
+   */
   modifyElement(element, modifiedProps) {
-    const rawDump = this.dumpRawLanes();
+    const rawDump = this.dumpRawData();
     const rawElement = this.getRawElement(rawDump, element);
     if (rawElement && modifiedProps) {
       Object.assign(rawElement, modifiedProps);
@@ -552,8 +617,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return this.applyChange(rawDump);
   },
 
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {number} moveStep `-1` to move by one slot left, `2` to move by two slots
+   *   right etc.
+   * @returns {Promise}
+   */
   moveLane(lane, moveStep) {
-    const rawDump = this.dumpRawLanes();
+    const rawDump = this.dumpRawData();
     const rawLane = this.getRawElement(rawDump, lane);
     const rawLaneIdx = rawDump.indexOf(rawLane);
 
@@ -563,8 +634,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return this.applyChange(rawDump);
   },
 
-  moveBlock(block, moveStep) {
-    const rawDump = this.dumpRawLanes();
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task|Utils.WorkflowVisualiser.Lane.ParallelBlock} element
+   * @param {number} moveStep `-1` to move by one slot left, `2` to move by two slots
+   *   right etc.
+   * @returns {Promise}
+   */
+  moveLaneElement(block, moveStep) {
+    const rawDump = this.dumpRawData();
 
     const rawParent = this.getRawElement(rawDump, get(block, 'parent'));
     if (rawParent) {
@@ -577,8 +654,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return this.applyChange(rawDump);
   },
 
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @returns {Promise}
+   */
   clearLane(lane) {
-    const rawDump = this.dumpRawLanes();
+    const rawDump = this.dumpRawData();
 
     const rawLane = this.getRawElement(rawDump, lane);
     rawLane.tasks.length = 0;
@@ -586,40 +667,60 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return this.applyChange(rawDump);
   },
 
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @returns {Promise}
+   */
   removeLane(lane) {
-    const rawDump = this.dumpRawLanes();
+    const rawDump = this.dumpRawData();
 
-    const laneId = get(lane, 'id');
-    const updatedRawDump = rawDump.filter(({ id }) => id !== laneId);
+    const rawLane = this.getRawElement(rawDump, lane);
+    const updatedRawDump = rawDump.without(rawLane);
 
     return this.applyChange(updatedRawDump);
   },
 
-  removeBlock(block) {
-    const rawDump = this.dumpRawLanes();
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task|Utils.WorkflowVisualiser.Lane.ParallelBlock} element
+   * @returns {Promise}
+   */
+  removeLaneElement(element) {
+    const rawDump = this.dumpRawData();
 
-    const rawParent = this.getRawElement(rawDump, get(block, 'parent'));
+    const rawParent = this.getRawElement(rawDump, get(element, 'parent'));
     if (rawParent) {
-      const blockId = get(block, 'id');
-      rawParent.tasks = rawParent.tasks.filter(({ id }) => id !== blockId);
+      const rawElement = this.getRawElement(rawDump, element);
+      rawParent.tasks = rawParent.tasks.without(rawElement);
     }
 
     return this.applyChange(rawDump);
   },
 
-  applyChange(changedDump) {
+  /**
+   * @param {Array<Object>} changedRawDump
+   * @returns {Promise}
+   */
+  applyChange(changedRawDump) {
     const onChange = this.get('onChange');
     if (onChange) {
-      return resolve(onChange(changedDump));
+      return resolve(onChange(changedRawDump));
     } else {
       return resolve();
     }
   },
 
-  dumpRawLanes() {
-    return _.cloneDeep(this.get('rawLanes'));
+  /**
+   * @returns {Array<Object>} deep copy of `rawData`
+   */
+  dumpRawData() {
+    return _.cloneDeep(this.get('rawData'));
   },
 
+  /**
+   * @param {Array<Object>} rawDump
+   * @param {Utils.WorkflowVisualiser.VisualiserElement} element
+   * @returns {Object|undefined} raw representation of given `element` in passed `rawDump`
+   */
   getRawElement(rawDump, element) {
     if (get(element, 'type') === 'lane') {
       return rawDump.findBy('id', get(element, 'id'));
@@ -646,10 +747,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.scheduleHorizontalOverflowDetection();
     },
     scrollLeft() {
-      this.scrollToLane(this.get('scrollLeftNextLane'), 'left');
+      this.scrollToLane(this.get('laneIdxForNextLeftScroll'), 'left');
     },
     scrollRight() {
-      this.scrollToLane(this.get('scrollRightNextLane'), 'right');
+      this.scrollToLane(this.get('laneIdxForNextRightScroll'), 'right');
     },
   },
 });

@@ -629,7 +629,7 @@ function renderWithRawLanes(testCase, rawLanes) {
   testCase.set('rawLanes', rawLanes);
   testCase.render(hbs `{{workflow-visualiser
     mode=mode
-    rawLanes=rawLanes
+    rawData=rawLanes
     onChange=changeStub
   }}`);
 }
@@ -645,7 +645,7 @@ function renderForScrollTest(testCase, lanesNumber, containerWidth) {
     <div style={{containerStyle}}>
       {{workflow-visualiser
         mode="view"
-        rawLanes=rawLanes
+        rawData=rawLanes
         _window=_window
       }}
     </div>
