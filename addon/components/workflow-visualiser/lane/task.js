@@ -1,3 +1,12 @@
+/**
+ * Task - single job with progress.
+ *
+ * @module components/workflow-visualiser/lane/task
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/task';
 import { computed } from '@ember/object';

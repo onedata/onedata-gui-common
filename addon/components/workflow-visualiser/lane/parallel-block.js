@@ -1,3 +1,12 @@
+/**
+ * Parallel block - aggregates tasks and spaces between them.
+ *
+ * @module components/workflow-visualiser/lane/parallel-block
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/parallel-block';
 import { computed } from '@ember/object';

@@ -1,3 +1,12 @@
+/**
+ * Base component for visualiser elements spaces.
+ *
+ * @module components/workflow-visualiser/visualiser-space
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import { reads } from '@ember/object/computed';
 

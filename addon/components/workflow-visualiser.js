@@ -1,3 +1,69 @@
+/**
+ * Is responsible for showing and editing workflows.
+ *
+ * Workflow is a description of some ordered collection of files tasks. Order of the
+ * execution is described by lanes and parallel blocks - both of them are responsible for
+ * grouping tasks. Execution goes as follows:
+ * 1. Tasks are being executed lane-by-lane. Next lane is started only when the previous
+ * lane was completely done for all files.
+ * 2. Tasks inside each lane are grouped by parallel blocks. All tasks inside the same
+ * parallel block can be executed in the same time and file.
+ * 3. Each file can be processed only in one parallel block at a time. When some file was
+ * processed by all tasks in some parallel block, then it can be processed by the tasks
+ * inside the next parallel block. Files do not wait for each other during the parallel
+ * blocks execution - files have separated block-by-block execution.
+ *
+ * Model inheritance:
+ *
+ *                                  +--------------------+
+ *                                  | Visualiser element |
+ *                                  +----------^---------+
+ *                                             |
+ *                      +----------------------+--------------------+
+ *                      |                                           |
+ *            +---------+---------+                        +--------+---------+
+ *            | Visualiser record |                        | Visualiser space |
+ *            +---------^---------+                        +--------^---------+
+ *                      |                                           |
+ *     +----------------+--------------+                +-----------+----------+
+ *     |                |              |                |                      |
+ *  +--+---+   +--------+-------+   +--+---+   +--------+--------+   +---------+--------+
+ *  | Lane |   | Parallel block |   | Task |   | Interlane space |   | Interblock space |
+ *  +------+   +----------------+   +------+   +-----------------+   +------------------+
+ *
+ * Model composition:
+ *
+ *                                  +-------------------+
+ *                                  | visualierElements | (simple array)
+ *                                  +---------+---------+
+ *                                            |1
+ *                                  +---------+--------+
+ *                                  |n                 |n+1
+ *                              +---v--+     +---------v-------+
+ *                              | Lane |     | Interlane space |
+ *                              +---+--+     +-----------------+
+ *                                  |1
+ *                       +----------+------------+
+ *                       |m                      |m+1
+ *              +--------v-------+     +---------v--------+
+ *              | Parallel block |     | Interblock space |
+ *              +--------+-------+     +------------------+
+ *                       |
+ *            +----------+------+
+ *            |p                |p+1
+ *        +---v--+    +---------v--------+
+ *        | Task |    | Interblock space |
+ *        +------+    +------------------+
+ *
+ * Components inheritance and composition is very similar. Exception: there is no specific
+ * component for VisualiserRecord.
+ *
+ * @module components/workflow-visualiser
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
 import { computed, get, getProperties, set, setProperties } from '@ember/object';
