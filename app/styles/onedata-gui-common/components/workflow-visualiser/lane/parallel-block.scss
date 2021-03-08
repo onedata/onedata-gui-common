@@ -1,0 +1,49 @@
+.workflow-visualiser .workflow-visualiser-parallel-block {
+  position: relative;
+  padding: 0 $workflow-visualiser-between-task-space-size;
+  min-width: 0;
+  border: $workflow-visualiser-block-border-width dashed $workflow-visualiser-parallel-block-border-color;
+  border-radius: $border-radius-base;
+
+  .parallel-block-name {
+    $name-x-offset: $workflow-visualiser-block-border-width + 2px;
+    position: absolute;
+    bottom: calc(100% + #{$padding-xs-vertical * 2});
+    left: -$name-x-offset;
+    max-width: calc(50% + #{$name-x-offset - $workflow-visualiser-arrow-width});
+
+    &.editor {
+      padding-right: 3em;
+      width: calc(100% + #{2 * $name-x-offset});
+      max-width: initial;
+    }
+
+    &.truncated-string,
+    .one-label,
+    .form-control {
+      padding: $padding-xs-vertical $padding-small-vertical;
+      font-size: 80%;
+      text-align: left;
+      border-radius: $border-radius-small;
+    }
+
+    .action-icons {
+      font-size: 130%;
+    }
+  }
+
+  .parallel-block-actions-trigger {
+    position: absolute;
+    top: 50%;
+    transform: translateX(50%) translateY(-50%);
+    right: -$workflow-visualiser-block-border-width / 2;
+    font-size: 170%;
+
+    &:hover,
+    &.active {
+      color: $color-one-azure;
+    }
+
+    @include workflow-visualiser-action-trigger-white-background();
+  }
+}

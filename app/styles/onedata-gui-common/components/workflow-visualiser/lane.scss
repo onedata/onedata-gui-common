@@ -1,0 +1,46 @@
+.workflow-visualiser .workflow-visualiser-lane {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 $workflow-visualiser-border-width;
+  min-width: 0;
+
+  .lane-header {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    border-bottom: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
+  }
+
+  .lane-name {
+    flex-grow: 1;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .lane-menu-trigger-space {
+    flex: 0 0 45px;
+  }
+
+  .lane-actions-trigger {
+    vertical-align: middle;
+    float: right;
+
+    .icon-dot {
+      width: 3px;
+      height: 3px;
+    }
+  }
+
+  .lane-elements {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+    flex-grow: 1;
+    padding: 0 2 * $padding-large-horizontal;
+
+    > * {
+      flex-basis: 100%;
+    }
+  }
+}

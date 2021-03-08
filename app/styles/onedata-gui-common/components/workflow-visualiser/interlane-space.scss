@@ -1,0 +1,36 @@
+.workflow-visualiser {
+  .workflow-visualiser-interlane-space {
+    position: relative;
+    flex: 0 0 $workflow-visualiser-lane-border-width;
+    background-color: $workflow-visualiser-lane-border-color;
+    z-index: 1;
+
+    &:first-child {
+      width: 0;
+    }
+  }
+
+  .add-lane-action-trigger {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    background-color: $workflow-visualiser-add-trigger-color;
+    color: $color-one-white;
+    width: 1em;
+    height: 2em;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+
+    &:hover {
+      background-color: $color-one-azure;
+    }
+
+    .one-icon {
+      display: block;
+      @include absolute-align-middle-center();
+      font-size: 0.85em;
+      margin-left: -1px;
+    }
+  }
+}

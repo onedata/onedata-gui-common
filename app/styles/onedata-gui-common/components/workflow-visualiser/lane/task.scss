@@ -1,0 +1,86 @@
+.workflow-visualiser .workflow-visualiser-task {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
+  border-radius: $border-radius-base;
+  padding: 0 $padding-xs-horizontal;
+  min-height: 50px;
+
+  &.status-success {
+    .task-progress-bar {
+      background-color: lighten($color-one-success, 25%);
+
+      .percent-counter {
+        color: darken($color-one-success, 15%)
+      }
+    }
+  }
+
+  &.status-warning {
+    .task-progress-bar {
+      background-color: lighten($color-one-warning, 25%);
+
+      .percent-counter {
+        color: darken($color-one-warning, 15%)
+      }
+    }
+  }
+
+  &.status-error {
+    .task-progress-bar {
+      background-color: lighten($color-one-danger, 25%);
+
+      .percent-counter {
+        color: darken($color-one-danger, 10%);
+      }
+    }
+  }
+
+  .task-name {
+    flex: 1 1 auto;
+    font-size: 90%;
+    text-align: center;
+  }
+
+  .task-actions-trigger {
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50%);
+    font-size: 120%;
+
+    &:hover,
+    &.active {
+      color: $color-one-azure;
+    }
+
+    @include workflow-visualiser-action-trigger-white-background();
+  }
+
+  .task-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: $color-one-light-blue;
+    z-index: -1;
+    transition: transition-ease(width);
+
+    .percent-counter {
+      @include font-semibold();
+      position: absolute;
+      bottom: $padding-small-vertical;
+      right: 0;
+      transform: translateX(100%) translateX(#{$padding-small-vertical});
+      font-size: 65%;
+      line-height: 1;
+      color: darken($color-one-light-blue, 30%);
+      transition: transition-ease(transform);
+    }
+
+    &.counter-inside-bar .percent-counter {
+      transform: translateX(#{-$padding-small-vertical});
+    }
+  }
+}
