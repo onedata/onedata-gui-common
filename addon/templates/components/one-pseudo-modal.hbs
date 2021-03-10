@@ -1,0 +1,9 @@
+<div class="modal-dialog modal-xl">
+  <div class="modal-content">
+    {{yield (hash
+      header=(component "one-element" class="modal-header")
+      body=(component "one-element" class="modal-body")
+      footer=(component "one-element" class="modal-footer")
+    )}}
+  </div>
+</div>
