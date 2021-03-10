@@ -1,9 +1,23 @@
 .workflow-visualiser .workflow-visualiser-parallel-block {
   position: relative;
-  padding: 0 $workflow-visualiser-between-task-space-size;
-  min-width: 0;
-  border: $workflow-visualiser-block-border-width dashed $workflow-visualiser-parallel-block-border-color;
-  border-radius: $border-radius-base;
+
+  &,
+  .draggable-parallel-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border: $workflow-visualiser-block-border-width dashed $workflow-visualiser-parallel-block-border-color;
+    border-radius: $border-radius-base;
+    min-width: 0;
+    margin: -$workflow-visualiser-block-border-width;
+    background-color: $color-one-white;
+  }
+
+  .draggable-parallel-block {
+    padding: 0 $workflow-visualiser-between-task-space-size;
+    flex-grow: 1;
+  }
 
   .parallel-block-name {
     $name-x-offset: $workflow-visualiser-block-border-width + 2px;
@@ -16,6 +30,10 @@
       padding-right: 3em;
       width: calc(100% + #{2 * $name-x-offset});
       max-width: initial;
+
+      ~ .parallel-block-drag-handle {
+        display: none;
+      }
     }
 
     &.truncated-string,
@@ -29,6 +47,17 @@
 
     .action-icons {
       font-size: 130%;
+    }
+  }
+
+  .parallel-block-drag-handle {
+    position: absolute;
+    bottom: calc(100% + #{$padding-xs-vertical * 2});
+    right: 0;
+    cursor: grab;
+
+    .one-icon {
+      font-size: 120%;
     }
   }
 

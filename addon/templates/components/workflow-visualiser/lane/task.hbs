@@ -6,7 +6,12 @@
     <span class="percent-counter">{{progressPercentAsText}}</span>
   </div>
 {{/if}}
-{{#draggable-object content=task dragHandle=".task-drag-handle" class="draggable-task"}}
+{{#one-draggable-object
+  content=task
+  dragHandle=".task-drag-handle"
+  isDraggable=(eq mode "edit")
+  class="draggable-task"
+}}
   <div class="task-drag-handle">{{one-icon icon="play"}}</div>
   {{#if (eq mode "edit")}}
     {{one-inline-editor
@@ -41,5 +46,5 @@
   {{else}}
     {{#truncated-string class="task-name"}}{{name}}{{/truncated-string}}
   {{/if}}
-{{/draggable-object}}
+{{/one-draggable-object}}
 {{yield}}

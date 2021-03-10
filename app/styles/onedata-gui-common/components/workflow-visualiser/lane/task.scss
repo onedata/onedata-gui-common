@@ -9,6 +9,7 @@
     border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
     border-radius: $border-radius-base;
     min-width: 0;
+    background-color: $color-one-white;
   }
 
   .draggable-task {
@@ -22,7 +23,6 @@
     align-self: stretch;
     display: flex;
     align-items: center;
-    cursor: grab;
 
     .one-icon {
       font-size: 240%;
@@ -105,6 +105,12 @@
 
     &.counter-inside-bar .percent-counter {
       transform: translateX(#{-$padding-small-vertical});
+    }
+  }
+
+  &.mode-edit {
+    .task-drag-handle {
+      cursor: grab;
     }
   }
 }

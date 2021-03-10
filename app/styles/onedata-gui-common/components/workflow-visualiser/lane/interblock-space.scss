@@ -10,6 +10,7 @@
     .arrow {
       position: relative;
       flex-grow: 1;
+      transition: transition-ease(opacity);
 
       .line {
         position: absolute;
@@ -48,6 +49,10 @@
         margin-top: $workflow-visualiser-lane-vertical-padding;
         font-size: 400%;
       }
+    }
+
+    .draggable-object-target {
+      bottom: -$padding-large-vertical + 20px;
     }
   }
 
@@ -98,17 +103,14 @@
     .draggable-object-target {
       pointer-events: initial;
 
-      &::before {
+      &.accepts-drag::before {
         background-color: rgba(#000, 0.1);
         border-color: rgba(#000, 0.2);
       }
-
-      &.accepts-drag::before {
-        background-color: rgba(#000, 0.25);
-      }
     }
 
-    .add-block-action-trigger {
+    .add-block-action-trigger,
+    .arrow {
       opacity: 0;
     }
 

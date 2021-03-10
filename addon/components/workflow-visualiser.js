@@ -687,7 +687,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       droppedElementRawParent.tasks =
         droppedElementRawParent.tasks.without(rawDroppedElement);
       const insertIdx = rawParent.tasks.indexOf(rawAfterElement) + 1;
-      rawParent.tasks.splice(insertIdx, 0, droppedElement);
+      rawParent.tasks.splice(insertIdx, 0, rawDroppedElement);
     }
 
     return this.applyChange(rawDump);
