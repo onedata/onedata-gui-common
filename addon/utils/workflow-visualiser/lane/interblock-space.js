@@ -8,7 +8,13 @@
  */
 
 import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visualiser-space';
+import { getBy, raw } from 'ember-awesome-macros';
 import { resolve } from 'rsvp';
+
+const siblingsTypePerParentType = Object.freeze({
+  lane: 'parallelBlock',
+  parallelBlock: 'task',
+});
 
 export default VisualiserSpace.extend({
   /**
@@ -31,13 +37,9 @@ export default VisualiserSpace.extend({
   onAddLaneElement: undefined,
 
   /**
-   * @virtual
-   * @type {Function}
-   * @param {Utils.WorkflowVisualiser.VisualiserRecord} parent
-   * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} afterElement
-   * @returns {Promise}
+   * @override
    */
-  onDropLaneElement: undefined,
+  siblingsType: getBy(raw(siblingsTypePerParentType), 'parent.type'),
 
   addLaneElement() {
     const {
@@ -48,20 +50,6 @@ export default VisualiserSpace.extend({
 
     if (onAddLaneElement) {
       return onAddLaneElement(parent, elementBefore);
-    } else {
-      return resolve();
-    }
-  },
-
-  dropLaneElement(droppedElement) {
-    const {
-      onDropLaneElement,
-      parent,
-      elementBefore,
-    } = this.getProperties('onDropLaneElement', 'parent', 'elementBefore');
-
-    if (onDropLaneElement) {
-      return onDropLaneElement(parent, elementBefore, droppedElement);
     } else {
       return resolve();
     }

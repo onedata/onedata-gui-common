@@ -532,6 +532,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         elementBefore,
         elementAfter,
         onAddLane: afterLane => this.addLane(afterLane),
+        onDragDropElement: (parent, afterElement, droppedElement) =>
+          this.dragDropElement(parent, afterElement, droppedElement),
       });
       this.addElementToCache('interlaneSpace', newInterlaneSpace);
       return newInterlaneSpace;
@@ -563,8 +565,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         parent,
         onAddLaneElement: (parent, afterElement) =>
           this.addLaneElement(parent, afterElement),
-        dropLaneElement: (parent, afterElement, droppedElement) =>
-          this.dropLaneElement(parent, afterElement, droppedElement),
+        onDragDropElement: (parent, afterElement, droppedElement) =>
+          this.dragDropElement(parent, afterElement, droppedElement),
       });
       this.addElementToCache('interblockSpace', newSpace);
       return newSpace;
@@ -670,25 +672,52 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return this.applyChange(rawDump);
   },
 
-  dropLaneElement(parent, afterElement, droppedElement) {
-    if (afterElement === droppedElement) {
+  /**
+   * @param {Utils.WorkflowVisualiser.Record|null} parent null for lanes
+   * @param {Utils.WorkflowVisualiser.Record|null} afterElement the new element will
+   *  be placed after that element. If is `null`, then the dropped element should be at
+   *  the beginning.
+   * @param {Utils.WorkflowVisualiser.Record} droppedElement
+   * @returns {Promise}
+   */
+  dragDropElement(parent, afterElement, droppedElement) {
+    if (!droppedElement || afterElement === droppedElement) {
       return resolve();
     }
 
     const rawDump = this.dumpRawData();
-    const rawDroppedElement = this.getRawElement(rawDump, droppedElement);
-    const droppedElementRawParent =
-      this.getRawElement(rawDump, get(droppedElement, 'parent'));
-    const rawParent = this.getRawElement(rawDump, parent);
+    const droppedElementParent = get(droppedElement, 'parent');
     const rawAfterElement = afterElement ?
       this.getRawElement(rawDump, afterElement) : undefined;
+    const rawDroppedElement = this.getRawElement(rawDump, droppedElement);
 
-    if (rawParent && rawParent.tasks) {
-      droppedElementRawParent.tasks =
-        droppedElementRawParent.tasks.without(rawDroppedElement);
-      const insertIdx = rawParent.tasks.indexOf(rawAfterElement) + 1;
-      rawParent.tasks.splice(insertIdx, 0, rawDroppedElement);
+    let sourceElementsArray = rawDump;
+    let targetElementsArray = rawDump;
+    if (droppedElementParent) {
+      const rawDroppedElementParent = this.getRawElement(rawDump, droppedElementParent);
+      sourceElementsArray = rawDroppedElementParent ?
+        rawDroppedElementParent.tasks : undefined;
     }
+    if (parent) {
+      const rawParent = this.getRawElement(rawDump, parent);
+      targetElementsArray = rawParent ? rawParent.tasks : undefined;
+    }
+
+    if (
+      !rawDroppedElement ||
+      !sourceElementsArray ||
+      !sourceElementsArray.includes(rawDroppedElement) ||
+      !targetElementsArray
+    ) {
+      return resolve();
+    }
+
+    sourceElementsArray.splice(sourceElementsArray.indexOf(rawDroppedElement), 1);
+    targetElementsArray.splice(
+      targetElementsArray.indexOf(rawAfterElement) + 1,
+      0,
+      rawDroppedElement
+    );
 
     return this.applyChange(rawDump);
   },

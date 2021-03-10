@@ -1,4 +1,8 @@
 {{#if (eq mode "edit")}}
+  {{one-draggable-object-target
+    validateDragEvent=(action "validateDragEvent")
+    action=(action "acceptDraggedElement")
+  }}
   <div class="add-lane-action-trigger clickable" {{action "addLane"}}>
     {{one-icon icon="plus"}}
   </div>

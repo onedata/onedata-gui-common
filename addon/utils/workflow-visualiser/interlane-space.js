@@ -22,6 +22,11 @@ export default VisualiserSpace.extend({
   type: 'interlaneSpace',
 
   /**
+   * @override
+   */
+  siblingsType: 'lane',
+
+  /**
    * @virtual
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane|null} afterLane
