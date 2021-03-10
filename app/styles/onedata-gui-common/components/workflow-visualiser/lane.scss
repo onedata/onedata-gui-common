@@ -15,6 +15,10 @@
     flex-grow: 1;
     min-width: 0;
     text-align: center;
+
+    .form-control {
+      text-align: center;
+    }
   }
 
   .lane-menu-trigger-space {

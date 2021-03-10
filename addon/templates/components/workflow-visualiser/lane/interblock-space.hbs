@@ -1,3 +1,8 @@
+{{draggable-object-target
+  class=(if isTargetForDrop "may-accept-drag")
+  validateDragEvent=(action "validateDragEvent")
+  action=(action "acceptDraggedElement")
+}}
 {{#if (not-eq arrowType "none")}}
   <div class="arrow">
     <div class="line"></div>

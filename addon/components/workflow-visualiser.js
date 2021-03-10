@@ -563,6 +563,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         parent,
         onAddLaneElement: (parent, afterElement) =>
           this.addLaneElement(parent, afterElement),
+        dropLaneElement: (parent, afterElement, droppedElement) =>
+          this.dropLaneElement(parent, afterElement, droppedElement),
       });
       this.addElementToCache('interblockSpace', newSpace);
       return newSpace;
@@ -663,6 +665,29 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (rawParent && rawParent.tasks) {
       const insertIdx = rawParent.tasks.indexOf(rawAfterElement) + 1;
       rawParent.tasks.splice(insertIdx, 0, newElement);
+    }
+
+    return this.applyChange(rawDump);
+  },
+
+  dropLaneElement(parent, afterElement, droppedElement) {
+    if (afterElement === droppedElement) {
+      return resolve();
+    }
+
+    const rawDump = this.dumpRawData();
+    const rawDroppedElement = this.getRawElement(rawDump, droppedElement);
+    const droppedElementRawParent =
+      this.getRawElement(rawDump, get(droppedElement, 'parent'));
+    const rawParent = this.getRawElement(rawDump, parent);
+    const rawAfterElement = afterElement ?
+      this.getRawElement(rawDump, afterElement) : undefined;
+
+    if (rawParent && rawParent.tasks) {
+      droppedElementRawParent.tasks =
+        droppedElementRawParent.tasks.without(rawDroppedElement);
+      const insertIdx = rawParent.tasks.indexOf(rawAfterElement) + 1;
+      rawParent.tasks.splice(insertIdx, 0, droppedElement);
     }
 
     return this.applyChange(rawDump);

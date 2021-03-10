@@ -10,9 +10,11 @@
 
 import VisualiserSpace from 'onedata-gui-common/components/workflow-visualiser/visualiser-space';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/interblock-space';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { conditional, equal, raw, string, tag } from 'ember-awesome-macros';
+import { inject as service } from '@ember/service';
+import { next } from '@ember/runloop';
 
 export default VisualiserSpace.extend({
   layout,
@@ -20,7 +22,10 @@ export default VisualiserSpace.extend({
   classNameBindings: [
     'siblingsTypeClass',
     'positionTypeClass',
+    'isTargetForDrop:may-accept-drag',
   ],
+
+  dragCoordinator: service(),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
@@ -107,9 +112,54 @@ export default VisualiserSpace.extend({
     }
   }),
 
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isTargetForDrop: computed(
+    'dragCoordinator.currentDragObject',
+    'elementBefore',
+    'elementAfter',
+    'siblingsType',
+    function isTargetForDrop() {
+      const {
+        elementBefore,
+        elementAfter,
+        siblingsType,
+      } = this.getProperties(
+        'elementBefore',
+        'elementAfter',
+        'siblingsType'
+      );
+      const currentDragObject = this.get('dragCoordinator.currentDragObject');
+      const draggedElement = currentDragObject &&
+        get(currentDragObject, get(currentDragObject, 'unwrappingKey'));
+
+      return draggedElement &&
+        get(draggedElement, 'type') === siblingsType &&
+        draggedElement !== elementBefore &&
+        draggedElement !== elementAfter;
+    }
+  ),
+
   actions: {
     addLaneElement() {
       this.get('interblockSpace').addLaneElement();
+    },
+    validateDragEvent() {
+      return this.get('isTargetForDrop');
+    },
+    acceptDraggedElement(draggedElement) {
+      const {
+        parent,
+        elementBefore,
+        interblockSpace,
+      } = this.getProperties('parent', 'elementBefore', 'interblockSpace');
+
+      // Using `next` to allows dragged component to notify `dragEnd` before destroy
+      // due to incoming update and rerender.
+      next(() =>
+        interblockSpace.dropLaneElement(parent, elementBefore, draggedElement)
+      );
     },
   },
 });
