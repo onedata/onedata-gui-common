@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
-import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParalallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import { get } from '@ember/object';
-import sinon from 'sinon';
 
 describe('Unit | Utility | workflow visualiser/lane/interblock space', function () {
   it('has "renderer" equal to "workflow-visualiser/lane/interblock-space"', function () {
@@ -35,20 +33,5 @@ describe('Unit | Utility | workflow visualiser/lane/interblock space', function 
     });
 
     expect(get(interblockSpace, 'siblingsType')).to.equal('task');
-  });
-
-  it('calls "onAddLaneElement" with "parent" and "elementBefore" references on "addLaneElement" call', function () {
-    const spy = sinon.spy();
-    const elementBefore = VisualiserRecord.create();
-    const parent = VisualiserRecord.create();
-    const element = InterblockSpace.create({
-      elementBefore,
-      parent,
-      onAddLaneElement: spy,
-    });
-
-    element.addLaneElement();
-
-    expect(spy).to.be.calledOnce.and.to.be.calledWith(parent, elementBefore);
   });
 });

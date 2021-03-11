@@ -34,7 +34,17 @@ export default VisualiserElement.extend({
   /**
    * @virtual
    * @type {Function}
-   * @param {Utils.WorkflowVisualiser.VisualiserRecord} parent
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} parent
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} afterElement
+   * @param {Object} newElementProps
+   * @returns {Promise}
+   */
+  onAddElement: undefined,
+
+  /**
+   * @virtual
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} parent
    * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} afterElement
    * @param {Utils.WorkflowVisualiser.VisualiserRecord} droppedElement
    * @returns {Promise}
@@ -49,6 +59,28 @@ export default VisualiserElement.extend({
     }
   },
 
+  /**
+   * @param {Object} newElementProps
+   * @returns {Promise}
+   */
+  addElement(newElementProps) {
+    const {
+      onAddElement,
+      parent,
+      elementBefore,
+    } = this.getProperties('onAddElement', 'parent', 'elementBefore');
+
+    if (onAddElement) {
+      return onAddElement(parent, elementBefore, newElementProps);
+    } else {
+      return resolve();
+    }
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord} newElementProps
+   * @returns {Promise}
+   */
   dragDropElement(droppedElement) {
     const {
       onDragDropElement,
