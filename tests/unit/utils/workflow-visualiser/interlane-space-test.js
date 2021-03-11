@@ -16,4 +16,16 @@ describe('Unit | Utility | workflow visualiser/interlane space', function () {
 
     expect(get(interlaneSpace, 'type')).to.equal('interlaneSpace');
   });
+
+  it('has "parent" equal to null', function () {
+    const interlaneSpace = InterlaneSpace.create();
+
+    expect(get(interlaneSpace, 'parent')).to.be.null;
+  });
+
+  it('has "siblingsType" equal to "lane"', function () {
+    const interlaneSpace = InterlaneSpace.create();
+
+    expect(get(interlaneSpace, 'siblingsType')).to.equal('lane');
+  });
 });

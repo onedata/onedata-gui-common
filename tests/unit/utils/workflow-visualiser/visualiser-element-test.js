@@ -17,4 +17,10 @@ describe('Unit | Utility | workflow visualiser/visualiser element', function () 
       expect(get(element, propName)).to.be.undefined;
     });
   });
+
+  it('has "objectOrigin" equal to "workflowVisualiser"', function () {
+    const element = VisualiserElement.create();
+
+    expect(get(element, 'objectOrigin')).to.equal('workflowVisualiser');
+  });
 });

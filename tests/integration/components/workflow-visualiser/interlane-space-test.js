@@ -27,13 +27,13 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
   context('in "edit" mode', function () {
     it('notifies about triggered "add lane" action', async function () {
-      const onAddLane = sinon.spy();
+      const onAddElement = sinon.spy();
       const elementBefore = Lane.create();
       this.set('interlaneSpace', InterlaneSpace.create({
         mode: 'edit',
         elementBefore,
         elementAfter: Lane.create(),
-        onAddLane,
+        onAddElement,
       }));
       this.render(hbs `{{workflow-visualiser/interlane-space
         elementModel=interlaneSpace
@@ -41,7 +41,13 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
       await click('.add-lane-action-trigger');
 
-      expect(onAddLane).to.be.calledOnce.and.to.be.calledWith(elementBefore);
+      const newElementMatcher = {
+        type: 'lane',
+        name: 'Untitled lane',
+        tasks: [],
+      };
+      expect(onAddElement).to.be.calledOnce
+        .and.to.be.calledWith(null, elementBefore, newElementMatcher);
     });
   });
 
@@ -53,6 +59,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
         elementBefore,
         elementAfter: Lane.create(),
       }));
+
       this.render(hbs `{{workflow-visualiser/interlane-space
         elementModel=interlaneSpace
       }}`);

@@ -12,7 +12,7 @@ import VisualiserSpace from 'onedata-gui-common/components/workflow-visualiser/v
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/interblock-space';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { conditional, equal, raw, string, tag } from 'ember-awesome-macros';
+import { string, tag } from 'ember-awesome-macros';
 
 export default VisualiserSpace.extend({
   layout,
@@ -26,15 +26,6 @@ export default VisualiserSpace.extend({
    * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   interblockSpace: reads('elementModel'),
-
-  /**
-   * @type {ComputedProperty<String>}
-   */
-  siblingsType: conditional(
-    equal('parent.type', raw('lane')),
-    raw('parallelBlock'),
-    raw('task'),
-  ),
 
   /**
    * @type {ComputedProperty<String>}
@@ -109,7 +100,21 @@ export default VisualiserSpace.extend({
 
   actions: {
     addLaneElement() {
-      this.get('interblockSpace').addLaneElement();
+      const {
+        interblockSpace,
+        siblingsType,
+      } = this.getProperties('interblockSpace', 'siblingsType');
+      const defaultNameTranslationKey =
+        `components.workflowVisualiser.nameForNew.${siblingsType}`;
+
+      const newElementProps = {
+        type: siblingsType,
+        name: String(this.t(defaultNameTranslationKey, {}, { usePrefix: false })),
+      };
+      if (siblingsType !== 'task') {
+        newElementProps.tasks = [];
+      }
+      return interblockSpace.addElement(newElementProps);
     },
   },
 });

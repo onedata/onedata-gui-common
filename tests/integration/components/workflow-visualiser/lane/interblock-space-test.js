@@ -8,6 +8,7 @@ import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/par
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import { get } from '@ember/object';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupComponentTest('workflow-visualiser/lane/interblock-space', {
@@ -136,13 +137,13 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], mode) {
   it(
     `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
-      const onAddLaneElement = sinon.spy();
+      const onAddElement = sinon.spy();
       this.set('blockSpace', InterblockSpace.create({
         mode,
         elementBefore,
         elementAfter,
         parent,
-        onAddLaneElement,
+        onAddElement,
       }));
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
@@ -150,7 +151,16 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], mode) {
 
       await click('.add-block-action-trigger');
 
-      expect(onAddLaneElement).to.be.calledOnce.and.to.be.calledWith(parent, elementBefore);
+      const addsTask = get(parent, 'type') === 'parallelBlock';
+      const newElementMatcher = {
+        type: addsTask ? 'task' : 'parallelBlock',
+        name: addsTask ? 'Untitled task' : 'Parallel block',
+      };
+      if (!addsTask) {
+        newElementMatcher.tasks = [];
+      }
+      expect(onAddElement).to.be.calledOnce
+        .and.to.be.calledWith(parent, elementBefore, sinon.match(newElementMatcher));
     }
   );
 }

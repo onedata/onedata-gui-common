@@ -40,4 +40,11 @@ export default EmberObject.extend({
    * @type {Utils.WorkflowVisualiser.VisualiserElement|null}
    */
   parent: undefined,
+
+  /**
+   * Special field to distinguish workflow elements from all other objects during
+   * drag&drop.
+   * @type {String}
+   */
+  objectOrigin: 'workflowVisualiser',
 });

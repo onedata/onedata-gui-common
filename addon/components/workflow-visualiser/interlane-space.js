@@ -22,7 +22,12 @@ export default VisualiserSpace.extend({
 
   actions: {
     addLane() {
-      this.get('interlaneSpace').addLane();
+      const defaultNameTranslationKey = 'components.workflowVisualiser.nameForNew.lane';
+      this.get('interlaneSpace').addElement({
+        type: 'lane',
+        name: String(this.t(defaultNameTranslationKey, {}, { usePrefix: false })),
+        tasks: [],
+      });
     },
   },
 });

@@ -10,6 +10,7 @@
     .arrow {
       position: relative;
       flex-grow: 1;
+      transition: transition-ease(opacity);
 
       .line {
         position: absolute;
@@ -49,6 +50,10 @@
         font-size: 400%;
       }
     }
+
+    .draggable-object-target {
+      bottom: -$padding-large-vertical + 20px;
+    }
   }
 
   &.between-tasks-space {
@@ -63,9 +68,49 @@
     position: absolute;
     color: $workflow-visualiser-add-trigger-color;
     font-size: 1.7em;
+    transition: transition-ease(opacity);
 
     &:hover {
       color: $color-one-azure;
+    }
+  }
+
+  .draggable-object-target {
+    position: absolute;
+    top: -$padding-large-vertical;
+    bottom: -$padding-large-vertical;
+    left: 0;
+    right: 0;
+    transition: transition-ease(background-color);
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: $padding-large-vertical + $padding-small-vertical;
+      bottom: $padding-large-vertical + $padding-small-vertical;
+      left: 0;
+      right: 0;
+      border-radius: $border-radius-small;
+      border: 2px dashed transparent;
+    }
+  }
+
+  &.may-accept-drag {
+    z-index: 1;
+
+    .draggable-object-target {
+      pointer-events: initial;
+
+      &.accepts-drag::before {
+        background-color: rgba(#000, 0.1);
+        border-color: rgba(#000, 0.2);
+      }
+    }
+
+    *:not(.draggable-object-target) {
+      pointer-events: none;
     }
   }
 
@@ -134,6 +179,23 @@
         font-size: 1.4em;
         @include vertical-align-middle;
       }
+    }
+  }
+}
+
+.workflow-visualiser.during-parallel-block-dragdrop .workflow-visualiser-interblock-space {
+  &.between-parallel-blocks-space {
+    .add-block-action-trigger,
+    .arrow {
+      opacity: 0;
+    }
+  }
+}
+
+.workflow-visualiser.during-task-dragdrop .workflow-visualiser-interblock-space {
+  &.between-tasks-space {
+    .add-block-action-trigger {
+      opacity: 0;
     }
   }
 }

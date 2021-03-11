@@ -1,8 +1,18 @@
 .workflow-visualiser .workflow-visualiser-lane {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 $workflow-visualiser-border-width;
   min-width: 0;
+
+  &,
+  .draggable-lane {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 $workflow-visualiser-lane-width;
+    min-height: 0;
+    background-color: $color-one-white;
+  }
+
+  .draggable-lane {
+    flex-grow: 1;
+  }
 
   .lane-header {
     display: flex;
@@ -11,10 +21,20 @@
     border-bottom: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
   }
 
+  .lane-drag-handle {
+    .one-icon {
+      font-size: 200%;
+    }
+  }
+
   .lane-name {
     flex-grow: 1;
     min-width: 0;
     text-align: center;
+
+    .form-control {
+      text-align: center;
+    }
   }
 
   .lane-menu-trigger-space {
@@ -41,6 +61,12 @@
 
     > * {
       flex-basis: 100%;
+    }
+  }
+
+  &.mode-edit {
+    .lane-drag-handle {
+      cursor: grab;
     }
   }
 }
