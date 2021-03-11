@@ -24,17 +24,17 @@ export default VisualiserElement.extend({
   dragCoordinator: service(),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserRecord>}
    */
   elementBefore: reads('elementModel.elementBefore'),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserRecord>}
    */
   elementAfter: reads('elementModel.elementAfter'),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
+   * @type {ComputedProperty<String>}
    */
   siblingsType: reads('elementModel.siblingsType'),
 

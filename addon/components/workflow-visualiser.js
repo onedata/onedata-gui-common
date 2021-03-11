@@ -631,9 +631,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
-   * @param {Utils.WorkflowVisualiser.Lane.Task|Utils.WorkflowVisualiser.Lane.ParallelBlock|null} afterElement
-   *   the new element will be placed after that lane. If is `null`, then the new lane should be at the beginning.
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord} parent
+   * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} afterElement the new element
+   *   will be placed after that element. If is `null`, then the new element should be at
+   *   the beginning.
    * @param {Object} newElementProps
    * @returns {Promise}
    */
@@ -847,7 +848,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @param {Array<Object>} rawDump
    * @param {Utils.WorkflowVisualiser.VisualiserRecord|null} parentElement `null` is when
    *   we consider parents of lanes.
-   * @returns {Array<Object>|undefined} raw representation of a collection, is inside
+   * @returns {Array<Object>|undefined} raw representation of a collection that is inside
    *   passed parent.
    */
   getRawCollectionForParent(rawDump, parentElement) {
