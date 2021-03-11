@@ -42,10 +42,6 @@
       }
     }
 
-    .add-lane-action-trigger {
-      opacity: 0;
-    }
-
     *:not(.draggable-object-target) {
       pointer-events: none;
     }
@@ -74,5 +70,11 @@
       font-size: 0.85em;
       margin-left: -1px;
     }
+  }
+}
+
+.workflow-visualiser.during-lane-dragdrop .workflow-visualiser-interlane-space {
+  .add-lane-action-trigger {
+    opacity: 0;
   }
 }

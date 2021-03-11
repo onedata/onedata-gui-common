@@ -77,7 +77,7 @@ import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { tag } from 'ember-awesome-macros';
+import { conditional, raw, tag, string } from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { scheduleOnce, run } from '@ember/runloop';
@@ -88,9 +88,13 @@ const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
 export default Component.extend(I18n, WindowResizeHandler, {
   layout,
   classNames: ['workflow-visualiser'],
-  classNameBindings: ['modeClass'],
+  classNameBindings: [
+    'modeClass',
+    'duringDragDropClass',
+  ],
 
   i18n: service(),
+  dragCoordinator: service(),
 
   /**
    * @override
@@ -165,6 +169,37 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,
+
+  /**
+   * @type {ComputedProperty<String|undefined>}
+   */
+  typeOfDraggedElement: computed(
+    'dragCoordinator.currentDragObject',
+    function typeOfDraggedElement() {
+      const currentDragObject = this.get('dragCoordinator.currentDragObject');
+      const draggedElement = currentDragObject &&
+        get(currentDragObject, get(currentDragObject, 'unwrappingKey'));
+
+      if (draggedElement) {
+        const {
+          objectOrigin,
+          type,
+        } = getProperties(draggedElement, 'objectOrigin', 'type');
+        return objectOrigin === 'workflowVisualiser' ? type : undefined;
+      }
+
+      return undefined;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  duringDragDropClass: conditional(
+    'typeOfDraggedElement',
+    tag `during-${string.dasherize('typeOfDraggedElement')}-dragdrop`,
+    raw('')
+  ),
 
   /**
    * @override

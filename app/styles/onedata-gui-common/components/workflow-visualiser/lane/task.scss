@@ -73,6 +73,7 @@
     transform: translateX(-50%) translateY(50%);
     font-size: 120%;
     z-index: 1;
+    transition: transition-ease(opacity);
 
     &:hover,
     &.active {
@@ -112,5 +113,12 @@
     .task-drag-handle {
       cursor: grab;
     }
+  }
+}
+
+.workflow-visualiser.during-task-dragdrop .workflow-visualiser-task {
+  .task-actions-trigger {
+    opacity: 0;
+    pointer-events: none;
   }
 }

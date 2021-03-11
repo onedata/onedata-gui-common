@@ -109,11 +109,6 @@
       }
     }
 
-    .add-block-action-trigger,
-    .arrow {
-      opacity: 0;
-    }
-
     *:not(.draggable-object-target) {
       pointer-events: none;
     }
@@ -184,6 +179,23 @@
         font-size: 1.4em;
         @include vertical-align-middle;
       }
+    }
+  }
+}
+
+.workflow-visualiser.during-parallel-block-dragdrop .workflow-visualiser-interblock-space {
+  &.between-parallel-blocks-space {
+    .add-block-action-trigger,
+    .arrow {
+      opacity: 0;
+    }
+  }
+}
+
+.workflow-visualiser.during-task-dragdrop .workflow-visualiser-interblock-space {
+  &.between-tasks-space {
+    .add-block-action-trigger {
+      opacity: 0;
     }
   }
 }
