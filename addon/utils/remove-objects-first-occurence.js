@@ -18,20 +18,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { get } from '@ember/object';
-
 export default function removeObjectsFirstOccurence(emberArray, objectsToRemove) {
   emberArray.beginPropertyChanges();
   for (const objectToRemove of objectsToRemove) {
-    let arrayIndex = get(emberArray, 'length') || 0;
-    while (--arrayIndex >= 0) {
-      const arrayObject = emberArray.objectAt(arrayIndex);
-      if (arrayObject === objectToRemove) {
-        emberArray.removeAt(arrayIndex);
-        break;
-      }
+    const idxToRemove = emberArray.lastIndexOf(objectToRemove);
+    if (idxToRemove !== -1) {
+      emberArray.removeAt(idxToRemove);
     }
   }
   emberArray.endPropertyChanges();
-  return this;
+  return emberArray;
 }
