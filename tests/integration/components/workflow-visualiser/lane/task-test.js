@@ -2,12 +2,14 @@ import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
+import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
-import { set } from '@ember/object';
+import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
 import $ from 'jquery';
+import { getModalFooter } from '../../../../helpers/modal';
 
 const taskActionsSpec = [{
   className: 'remove-task-action-trigger',
@@ -20,8 +22,14 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     integration: true,
   });
 
+  beforeEach(function () {
+    this.set('task', Task.create({
+      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+    }));
+  });
+
   it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', function () {
-    this.render(hbs `{{workflow-visualiser/lane/task}}`);
+    render(this);
 
     expect(this.$().children()).to.have.length(1);
     expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-task')
@@ -30,28 +38,21 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
   context('in "view" mode', function () {
     beforeEach(function () {
-      this.set('mode', 'view');
+      this.set('task.mode', 'view');
     });
 
     itShowsTaskName();
 
     it('does not allow to modify task name', async function () {
-      this.set('task', Task.create({
-        name: 'my-task',
-        mode: 'view',
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+      this.set('task.name', 'my-task');
+      render(this);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.task-name .one-label')).to.not.exist;
     });
 
     it('does not render actions', function () {
-      this.set('task', Task.create({
-        mode: 'view',
-      }));
-
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+      render(this);
 
       expect(this.$('.task-actions-trigger')).to.not.exist;
     });
@@ -76,10 +77,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       ['undefined', undefined],
     ].forEach(([valueDescription, value]) => {
       it(`does not show progress bar when task "progressPercent" is ${valueDescription}`, function () {
-        this.set('task', Task.create({
-          progressPercent: value,
-          mode: 'view',
-        }));
+        this.set('task.progressPercent', value);
 
         render(this);
 
@@ -90,23 +88,22 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
   context('in "edit" mode', function () {
     beforeEach(function () {
-      this.set('mode', 'edit');
+      this.set('task.mode', 'edit');
     });
 
     itShowsTaskName();
 
     it('allows to modify task name', async function () {
-      this.set('task', Task.create({
+      setProperties(this.get('task'), {
         name: 'my-task',
-        mode: 'edit',
         onModify(task, { name }) {
           return new Promise(resolve => {
             set(task, 'name', name);
             resolve();
           });
         },
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+      });
+      render(this);
 
       await click('.task-name .one-label');
       await fillIn('.task-name input', 'new-name');
@@ -116,10 +113,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     });
 
     it('renders actions', async function () {
-      this.set('task', Task.create({
-        mode: 'edit',
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+      render(this);
 
       const $actionsTrigger = this.$('.task-actions-trigger');
       expect($actionsTrigger).to.exist;
@@ -137,27 +131,24 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     });
 
     it('allows to remove task', async function () {
-      const onRemoveSpy = sinon.spy();
-      const block = this.set('task', Task.create({
-        mode: 'edit',
-        onRemove: onRemoveSpy,
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+      const onRemoveSpy = sinon.stub().resolves();
+      this.set('task.onRemove', onRemoveSpy);
+      render(this);
 
       await click('.task-actions-trigger');
       await click($('body .webui-popover.in .remove-task-action-trigger')[0]);
+      await click(getModalFooter().find('.question-yes')[0]);
 
-      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(block);
+      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('task'));
     });
 
     it('it does not shows progress and status', function () {
-      this.set('task', Task.create({
+      setProperties(this.get('task'), {
         name: 'my-task',
-        mode: 'edit',
         progressPercent: 20,
         status: 'success',
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+      });
+      render(this);
 
       expect(this.$('.task-progress-bar')).to.not.exist;
       expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-success');
@@ -168,12 +159,9 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 function itShowsTaskName() {
   it('shows task name', function () {
     const taskName = 'task1';
-    this.set('task', Task.create({
-      name: taskName,
-      mode: this.get('mode'),
-    }));
+    this.set('task.name', taskName);
 
-    this.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+    render(this);
 
     expect(this.$('.task-name').text().trim()).to.equal(taskName);
   });
@@ -181,7 +169,7 @@ function itShowsTaskName() {
 
 function itShowsStatus(status) {
   it(`shows "${status}" status`, function () {
-    this.set('task', Task.create({ status }));
+    this.set('task.status', status);
 
     render(this);
 
@@ -191,7 +179,7 @@ function itShowsStatus(status) {
 
 function itShowsProgressBarForPercent(progressPercent) {
   it(`shows progress bar for ${progressPercent}%`, function () {
-    this.set('task', Task.create({ progressPercent }));
+    this.set('task.progressPercent', progressPercent);
 
     render(this);
 
@@ -209,6 +197,8 @@ function itShowsProgressBarForPercent(progressPercent) {
 }
 
 function render(testCase) {
-  testCase.set('task.mode', testCase.get('mode'));
-  testCase.render(hbs `{{workflow-visualiser/lane/task elementModel=task}}`);
+  testCase.render(hbs `
+    {{global-modal-mounter}}
+    {{workflow-visualiser/lane/task elementModel=task}}
+  `);
 }

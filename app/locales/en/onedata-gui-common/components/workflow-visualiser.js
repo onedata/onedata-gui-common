@@ -46,6 +46,9 @@ export default {
     actions: {
       removeTask: {
         title: 'Remove',
+        modalHeader: 'Remove task',
+        modalDescription: 'You are about to delete the task "{{taskName}}".',
+        modalYes: 'Remove',
       },
     },
   },

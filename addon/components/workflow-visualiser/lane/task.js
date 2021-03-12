@@ -11,8 +11,6 @@ import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/task';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
-import Action from 'onedata-gui-common/utils/action';
-import computedT from 'onedata-gui-common/utils/computed-t';
 import { tag, math, raw, string, gte, notEqual, conditional, equal, and, array } from 'ember-awesome-macros';
 
 const possibleStatuses = ['default', 'success', 'warning', 'error'];
@@ -93,11 +91,13 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  removeTaskAction: computed('task', function removeTaskAction() {
-    return RemoveTaskAction.create({
-      ownerSource: this,
-      task: this.get('task'),
-    });
+  removeTaskAction: computed('actionsFactory', 'task', function removeTaskAction() {
+    const {
+      actionsFactory,
+      task,
+    } = this.getProperties('actionsFactory', 'task');
+
+    return actionsFactory.createRemoveTaskAction({ task });
   }),
 
   /**
@@ -109,40 +109,5 @@ export default VisualiserElement.extend({
     changeName(newName) {
       return this.get('task').modify({ name: newName });
     },
-  },
-});
-
-const RemoveTaskAction = Action.extend({
-  /**
-   * @override
-   */
-  i18nPrefix: 'components.workflowVisualiser.task.actions.removeTask',
-
-  /**
-   * @virtual
-   * @type {Utils.WorkflowVisualiser.Lane.Task}
-   */
-  task: undefined,
-
-  /**
-   * @override
-   */
-  className: 'remove-task-action-trigger',
-
-  /**
-   * @override
-   */
-  icon: 'x',
-
-  /**
-   * @override
-   */
-  title: computedT('title'),
-
-  /**
-   * @override
-   */
-  execute() {
-    return this.get('task').remove();
   },
 });

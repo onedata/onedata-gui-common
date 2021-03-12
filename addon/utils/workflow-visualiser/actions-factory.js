@@ -7,6 +7,7 @@ import RemoveLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actio
 import MoveUpParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-block-action';
 import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-block-action';
 import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
+import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 
 export default EmberObject.extend(OwnerInjector, {
   /**
@@ -63,5 +64,13 @@ export default EmberObject.extend(OwnerInjector, {
    */
   createRemoveParallelBlockAction(context) {
     return RemoveParallelBlockAction.create({ ownerSource: this, context });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task} context.task
+   * @returns {Utils.WorkflowVisualiser.Actions.RemoveTaskAction}
+   */
+  createRemoveTaskAction(context) {
+    return RemoveTaskAction.create({ ownerSource: this, context });
   },
 });

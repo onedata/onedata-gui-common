@@ -121,7 +121,7 @@ describe('Integration | Component | workflow visualiser', function () {
       actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, 0], 'remove'),
       applyUpdate: rawDump => rawDump[0].tasks.splice(0, 1),
     });
-    itPerformsAction({
+    itPerformsActionWithConfirmation({
       description: 'removes task',
       actionTriggerGetter: () => getActionTrigger('task', [0, 0, 0], 'remove'),
       applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(0, 1),
