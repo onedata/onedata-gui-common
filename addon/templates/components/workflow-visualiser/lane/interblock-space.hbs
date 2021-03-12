@@ -10,7 +10,7 @@
 {{/if}}
 {{#if allowAdding}}
   {{one-icon
-    class=createElementAction.className
+    class=(concat-classes createElementAction.className "create-block-action-trigger")
     icon=createElementAction.icon
     click=createElementAction.executeCallback
   }}

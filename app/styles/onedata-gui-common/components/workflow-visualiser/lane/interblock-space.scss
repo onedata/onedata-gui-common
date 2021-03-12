@@ -45,7 +45,7 @@
     &.space-position-empty {
       height: 100%;
 
-      .add-block-action-trigger {
+      .create-block-action-trigger {
         margin-top: $workflow-visualiser-lane-vertical-padding;
         font-size: 400%;
       }
@@ -64,7 +64,7 @@
     }
   }
 
-  .add-block-action-trigger {
+  .create-block-action-trigger {
     position: absolute;
     color: $workflow-visualiser-add-trigger-color;
     font-size: 1.7em;
@@ -124,7 +124,7 @@
       }
 
       &.space-position-start {
-        .add-block-action-trigger {
+        .create-block-action-trigger {
           top: $workflow-visualiser-lane-vertical-padding;
         }
 
@@ -134,7 +134,7 @@
       }
 
       &.space-position-end {
-        .add-block-action-trigger {
+        .create-block-action-trigger {
           bottom: $workflow-visualiser-lane-vertical-padding;
         }
 
@@ -148,7 +148,7 @@
           display: initial;
         }
 
-        .add-block-action-trigger {
+        .create-block-action-trigger {
           display: none;
           top: 50%;
           transform: translateY(-50%) translateY(#{-2 * $workflow-visualiser-arrow-width});
@@ -157,7 +157,7 @@
         }
 
         &:hover {
-          .add-block-action-trigger {
+          .create-block-action-trigger {
             display: initial;
           }
         }
@@ -170,12 +170,12 @@
       }
 
       &.space-position-empty {
-        .add-block-action-trigger {
+        .create-block-action-trigger {
           font-size: 400%;
         }
       }
 
-      .add-block-action-trigger {
+      .create-block-action-trigger {
         font-size: 1.4em;
         @include vertical-align-middle;
       }
@@ -185,7 +185,7 @@
 
 .workflow-visualiser.during-parallel-block-dragdrop .workflow-visualiser-interblock-space {
   &.between-parallel-blocks-space {
-    .add-block-action-trigger,
+    .create-block-action-trigger,
     .arrow {
       opacity: 0;
     }
@@ -194,7 +194,7 @@
 
 .workflow-visualiser.during-task-dragdrop .workflow-visualiser-interblock-space {
   &.between-tasks-space {
-    .add-block-action-trigger {
+    .create-block-action-trigger {
       opacity: 0;
     }
   }
