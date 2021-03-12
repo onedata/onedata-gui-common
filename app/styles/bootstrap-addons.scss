@@ -182,6 +182,9 @@ $token-border-radius: 3px;
 
 .form-group.without-margin {
   margin-bottom: 0;
+  p:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 .form-control-static {
@@ -190,6 +193,12 @@ $token-border-radius: 3px;
   .field-suffix {
     color: $color-one-light-gray;
   }
+}
+
+// this fixes unnecessary right border for second and next addons
+// on the left of input
+.input-group-addon-left {
+  border-right: 0;
 }
 
 .form-group-light {

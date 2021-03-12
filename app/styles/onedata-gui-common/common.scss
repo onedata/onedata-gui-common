@@ -709,6 +709,7 @@ textarea[style^="touch-action: manipulation"] {
         margin-top: -10px;
         &.property-name {
           padding-left: 10px;
+          width: auto;
         }
         &.property-value {
           margin-bottom: 10px;
