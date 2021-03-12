@@ -33,12 +33,6 @@ export default EmberObject.extend(I18n, OwnerInjector, {
 
   /**
    * @virtual
-   * @type {string}
-   */
-  title: undefined,
-
-  /**
-   * @virtual
    * @type {Function}
    * @returns {Promise<Utils.ActionResult>}
    * Performs action
@@ -75,6 +69,14 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * Action context. Can be used as a data source for execute().
    */
   context: null,
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  title: computed('i18nPrefix', function title() {
+    return this.t('title', {}, { defaultValue: '' });
+  }),
 
   /**
    * Will be called just after the onExecute() method. Are executed in order and if some

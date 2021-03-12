@@ -125,6 +125,35 @@ describe('Integration | Utility | action', function () {
     }
   );
 
+  it('has default translation for title', function () {
+    const i18n = lookupService(this, 'i18n');
+    const targetTranslation = 'someTranslation';
+    sinon.stub(i18n, 't')
+      .withArgs('prefix.title')
+      .returns(targetTranslation);
+
+    const action = Action.create({
+      ownerSource: this,
+      i18nPrefix: 'prefix',
+    });
+
+    expect(get(action, 'title')).to.equal(targetTranslation);
+  });
+
+  it('fallbacks default translation for title to empty string, when translation does not exist', function () {
+    const i18n = lookupService(this, 'i18n');
+    sinon.stub(i18n, 't')
+      .withArgs('prefix.title')
+      .returns('<missing-...');
+
+    const action = Action.create({
+      ownerSource: this,
+      i18nPrefix: 'prefix',
+    });
+
+    expect(get(action, 'title')).to.equal('');
+  });
+
   it('loads success translation via getSuccessNotificationText()', function () {
     const i18n = lookupService(this, 'i18n');
     const targetTranslation = 'someTranslation';
