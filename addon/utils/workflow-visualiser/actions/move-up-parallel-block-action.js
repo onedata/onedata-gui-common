@@ -1,3 +1,12 @@
+/**
+ * Moves up parallel block. Needs parallel block instance passed via context.
+ *
+ * @module utils/workflow-visualiser/actions/move-up-parallel-block-action
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
 import { reads } from '@ember/object/computed';

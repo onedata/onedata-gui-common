@@ -1,3 +1,14 @@
+/**
+ * Is responsible for creating actions used by workflow visualiser. This abstraction
+ * is introduced to allow extending default actions via passing custom (extended)
+ * actions factory to the visualiser.
+ *
+ * @module utils/workflow-visualiser/actions-factory
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import EmberObject from '@ember/object';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
