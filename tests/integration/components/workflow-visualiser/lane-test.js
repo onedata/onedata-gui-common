@@ -8,7 +8,7 @@ import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/par
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
-import { set, setProperties } from '@ember/object';
+import { get, set, setProperties } from '@ember/object';
 import $ from 'jquery';
 import sinon from 'sinon';
 import { getModalFooter } from '../../../helpers/modal';
@@ -149,12 +149,13 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       const onClearSpy = sinon.stub().resolves();
       const block = ParallelBlock.create({ id: 'b1' });
       const lane = this.get('lane');
+      const actionsFactory = get(lane, 'actionsFactory');
       setProperties(lane, {
         onClear: onClearSpy,
         elements: [
-          InterblockSpace.create({ elementAfter: block }),
+          InterblockSpace.create({ elementAfter: block, actionsFactory }),
           block,
-          InterblockSpace.create({ elementBefore: block }),
+          InterblockSpace.create({ elementBefore: block, actionsFactory }),
         ],
       });
       this.render(hbs `
@@ -170,7 +171,8 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     });
 
     it('does not allow to clear lane, when it is empty', async function () {
-      this.set('lane.elements', [InterblockSpace.create()]);
+      const actionsFactory = this.get('lane.actionsFactory');
+      this.set('lane.elements', [InterblockSpace.create({ actionsFactory })]);
       this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       await click('.lane-actions-trigger');
@@ -210,14 +212,19 @@ function itShowsName() {
 
 function itRendersLaneElements() {
   it('renders lane elements', function () {
+    const actionsFactory = this.get('lane.actionsFactory');
     const block1 = ParallelBlock.create({ id: 'b1', name: 'block1' });
     const block2 = ParallelBlock.create({ id: 'b2', name: 'block2' });
     this.set('lane.elements', [
-      InterblockSpace.create({ elementAfter: block1 }),
+      InterblockSpace.create({ elementAfter: block1, actionsFactory }),
       block1,
-      InterblockSpace.create({ elementBefore: block1, elementAfter: block2 }),
+      InterblockSpace.create({
+        elementBefore: block1,
+        elementAfter: block2,
+        actionsFactory,
+      }),
       block2,
-      InterblockSpace.create({ elementBefore: block2 }),
+      InterblockSpace.create({ elementBefore: block2, actionsFactory }),
     ]);
 
     this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);

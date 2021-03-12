@@ -1,8 +1,4 @@
 export default {
-  nameForNew: {
-    parallelBlock: 'Parallel block',
-    task: 'Untitled task',
-  },
   lane: {
     actions: {
       createLane: {
@@ -30,6 +26,9 @@ export default {
   },
   parallelBlock: {
     actions: {
+      createBlock: {
+        newParallelBlockName: 'Parallel block',
+      },
       moveUpBlock: {
         title: 'Move up',
       },
@@ -46,6 +45,9 @@ export default {
   },
   task: {
     actions: {
+      createTask: {
+        newTaskName: 'Untitled task',
+      },
       removeTask: {
         title: 'Remove',
         modalHeader: 'Remove task',

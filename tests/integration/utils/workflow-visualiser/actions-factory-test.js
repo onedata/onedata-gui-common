@@ -10,9 +10,11 @@ import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/act
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import RemoveLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-lane-action';
+import CreateParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-block-action';
 import MoveUpParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-block-action';
 import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-block-action';
 import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
+import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 import { get } from '@ember/object';
 
@@ -20,11 +22,6 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   setupComponentTest('test-component', {
     integration: true,
   });
-
-  itCreatesLaneAction('MoveLeftLaneAction', MoveLeftLaneAction);
-  itCreatesLaneAction('MoveRightLaneAction', MoveRightLaneAction);
-  itCreatesLaneAction('ClearLaneAction', ClearLaneAction);
-  itCreatesLaneAction('RemoveLaneAction', RemoveLaneAction);
 
   it('creates action "CreateLaneAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this });
@@ -36,9 +33,37 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
   });
 
+  itCreatesLaneAction('MoveLeftLaneAction', MoveLeftLaneAction);
+  itCreatesLaneAction('MoveRightLaneAction', MoveRightLaneAction);
+  itCreatesLaneAction('ClearLaneAction', ClearLaneAction);
+  itCreatesLaneAction('RemoveLaneAction', RemoveLaneAction);
+
+  it('creates action "CreateParallelBlockAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const createParallelBlockCallback = () => {};
+
+    const action = factory.createCreateParallelBlockAction({
+      createParallelBlockCallback,
+    });
+
+    expect(action).to.be.instanceOf(CreateParallelBlockAction);
+    expect(get(action, 'createParallelBlockCallback'))
+      .to.equal(createParallelBlockCallback);
+  });
+
   itCreatesParallelBlockAction('MoveUpParallelBlockAction', MoveUpParallelBlockAction);
   itCreatesParallelBlockAction('MoveDownParallelBlockAction', MoveDownParallelBlockAction);
   itCreatesParallelBlockAction('RemoveParallelBlockAction', RemoveParallelBlockAction);
+
+  it('creates action "CreateTaskAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const createTaskCallback = () => {};
+
+    const action = factory.createCreateTaskAction({ createTaskCallback });
+
+    expect(action).to.be.instanceOf(CreateTaskAction);
+    expect(get(action, 'createTaskCallback')).to.equal(createTaskCallback);
+  });
 
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);
 });

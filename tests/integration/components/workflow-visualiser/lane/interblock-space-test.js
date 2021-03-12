@@ -1,24 +1,34 @@
 import { expect } from 'chai';
-import { describe, it, context } from 'mocha';
+import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
+import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import { get } from '@ember/object';
+import { setProperties } from '@ember/object';
+import { dasherize } from '@ember/string';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupComponentTest('workflow-visualiser/lane/interblock-space', {
     integration: true,
   });
 
+  beforeEach(function () {
+    this.set('blockSpace', InterblockSpace.create({
+      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+    }));
+  });
+
   it(
     'has classes "workflow-visualiser-interblock-space", "workflow-visualiser-space" and "workflow-visualiser-element"',
     function () {
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space}}`);
+      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+        elementModel=blockSpace
+      }}`);
 
       expect(this.$().children()).to.have.length(1);
       expect(this.$().children().eq(0))
@@ -29,9 +39,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
   );
 
   it('has class "between-parallel-blocks-space" when "parent" is of type Lane', function () {
-    this.set('blockSpace', InterblockSpace.create({
-      parent: Lane.create(),
-    }));
+    this.set('blockSpace.parent', Lane.create());
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
@@ -42,9 +50,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
   });
 
   it('has class "between-tasks-space" when "parent" is of type ParallelBlock', function () {
-    this.set('blockSpace', InterblockSpace.create({
-      parent: ParallelBlock.create(),
-    }));
+    this.set('blockSpace.parent', ParallelBlock.create());
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
@@ -77,8 +83,8 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       hasArrowInView: false,
     }].forEach(({ siblings, type, hasArrowInEdition, hasArrowInView }) => {
       itIsOfType(type, ParallelBlock.create(), siblings);
-      itAllowsToAddElement(Lane.create(), siblings, 'edit');
-      itDoesNotAllowToAddElement(Lane.create(), siblings, 'view');
+      itAllowsToAddElement(Lane.create(), siblings, 'parallelBlock', 'edit');
+      itDoesNotAllowToAddElement(Lane.create(), siblings, 'parallelBlock', 'view');
       itHasArrow(hasArrowInEdition, Lane.create(), siblings, 'edit');
       itHasArrow(hasArrowInView, Lane.create(), siblings, 'view');
     });
@@ -104,11 +110,11 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }].forEach(({ siblings, type, allowsToAdd }) => {
       itIsOfType(type, ParallelBlock.create(), siblings);
       if (allowsToAdd) {
-        itAllowsToAddElement(ParallelBlock.create(), siblings, 'edit');
+        itAllowsToAddElement(ParallelBlock.create(), siblings, 'task', 'edit');
       } else {
-        itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'edit');
+        itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'task', 'edit');
       }
-      itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'view');
+      itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'task', 'view');
       itHasArrow(false, ParallelBlock.create(), siblings, 'edit');
       itHasArrow(false, ParallelBlock.create(), siblings, 'view');
     });
@@ -119,11 +125,11 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
   const className = `space-position-${type}`;
   it(`has class "${className}" when ${siblingsDescription(elementBefore, elementAfter)}`,
     function () {
-      this.set('blockSpace', InterblockSpace.create({
+      setProperties(this.get('blockSpace'), {
         parent,
         elementBefore,
         elementAfter,
-      }));
+      });
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
@@ -133,54 +139,49 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
     });
 }
 
-function itAllowsToAddElement(parent, [elementBefore, elementAfter], mode) {
+function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
   it(
     `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
-      const onAddElement = sinon.spy();
-      this.set('blockSpace', InterblockSpace.create({
+      const onAddElement = sinon.stub().resolves();
+      setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
         elementAfter,
         parent,
         onAddElement,
-      }));
+      });
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
-      await click('.add-block-action-trigger');
+      await click(`.create-${dasherize(newElementType)}-action-trigger`);
 
-      const addsTask = get(parent, 'type') === 'parallelBlock';
       const newElementMatcher = {
-        type: addsTask ? 'task' : 'parallelBlock',
-        name: addsTask ? 'Untitled task' : 'Parallel block',
+        name: newElementType === 'task' ? 'Untitled task' : 'Parallel block',
       };
-      if (!addsTask) {
-        newElementMatcher.tasks = [];
-      }
       expect(onAddElement).to.be.calledOnce
         .and.to.be.calledWith(parent, elementBefore, sinon.match(newElementMatcher));
     }
   );
 }
 
-function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], mode) {
+function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
   it(
     `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
-      this.set('blockSpace', InterblockSpace.create({
+      setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
         elementAfter,
         parent,
-      }));
+      });
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
-      expect(this.$('.add-block-action-trigger')).to.not.exist;
+      expect(this.$(`.create-${dasherize(newElementType)}-action-trigger`)).to.not.exist;
     }
   );
 }
@@ -189,12 +190,12 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
   it(
     `${hasArrow ? 'renders' : 'does not render any'} arrow when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
     async function () {
-      this.set('blockSpace', InterblockSpace.create({
+      setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
         elementAfter,
         parent,
-      }));
+      });
 
       this.render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace

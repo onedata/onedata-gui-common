@@ -98,23 +98,30 @@ export default VisualiserSpace.extend({
     }
   }),
 
-  actions: {
-    addLaneElement() {
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  createElementAction: computed(
+    'actionsFactory',
+    'interblockSpace',
+    'siblingsType',
+    function createElementAction() {
       const {
+        actionsFactory,
         interblockSpace,
         siblingsType,
-      } = this.getProperties('interblockSpace', 'siblingsType');
-      const defaultNameTranslationKey =
-        `components.workflowVisualiser.nameForNew.${siblingsType}`;
+      } = this.getProperties('actionsFactory', 'interblockSpace', 'siblingsType');
 
-      const newElementProps = {
-        type: siblingsType,
-        name: String(this.t(defaultNameTranslationKey, {}, { usePrefix: false })),
-      };
-      if (siblingsType !== 'task') {
-        newElementProps.tasks = [];
-      }
-      return interblockSpace.addElement(newElementProps);
-    },
-  },
+      const createCallback =
+        newElementProps => interblockSpace.addElement(newElementProps);
+
+      return siblingsType === 'parallelBlock' ?
+        actionsFactory.createCreateParallelBlockAction({
+          createParallelBlockCallback: createCallback,
+        }) :
+        actionsFactory.createCreateTaskAction({
+          createTaskCallback: createCallback,
+        });
+    }
+  ),
 });

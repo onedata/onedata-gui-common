@@ -473,7 +473,7 @@ function itAddsNewParallelBlock(message, initialRawLanes, insertIndex) {
       addTriggerSelector = `[data-element-before-id="${targetLane.tasks[insertIndex - 1].id}"]`;
     }
   }
-  addTriggerSelector += ' .add-block-action-trigger';
+  addTriggerSelector += ' .create-parallel-block-action-trigger';
 
   itPerformsAction({
     description: message,
@@ -499,7 +499,7 @@ function itAddsNewTask(message, initialRawLanes, insertIndex) {
       addTriggerSelector = `[data-element-before-id="${targetBlock.tasks[insertIndex - 1].id}"]`;
     }
   }
-  addTriggerSelector += ' .add-block-action-trigger';
+  addTriggerSelector += ' .create-task-action-trigger';
 
   itPerformsAction({
     description: message,

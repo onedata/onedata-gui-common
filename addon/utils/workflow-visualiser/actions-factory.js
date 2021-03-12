@@ -5,9 +5,11 @@ import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/act
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import RemoveLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-lane-action';
+import CreateParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-block-action';
 import MoveUpParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-block-action';
 import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-block-action';
 import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
+import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -52,6 +54,14 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
+   * @param {(newElementProps: Object) => Promise} context.createParallelBlockCallback
+   * @returns {Utils.WorkflowVisualiser.Actions.CreateParallelBlockAction}
+   */
+  createCreateParallelBlockAction(context) {
+    return CreateParallelBlockAction.create({ ownerSource: this, context });
+  },
+
+  /**
    * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} context.parallelBlock
    * @returns {Utils.WorkflowVisualiser.Actions.MoveUpParallelBlockAction}
    */
@@ -73,6 +83,14 @@ export default EmberObject.extend(OwnerInjector, {
    */
   createRemoveParallelBlockAction(context) {
     return RemoveParallelBlockAction.create({ ownerSource: this, context });
+  },
+
+  /**
+   * @param {(newElementProps: Object) => Promise} context.createTaskCallback
+   * @returns {Utils.WorkflowVisualiser.Actions.CreateTaskAction}
+   */
+  createCreateTaskAction(context) {
+    return CreateTaskAction.create({ ownerSource: this, context });
   },
 
   /**

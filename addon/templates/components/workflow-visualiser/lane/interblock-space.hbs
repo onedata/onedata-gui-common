@@ -10,9 +10,9 @@
 {{/if}}
 {{#if allowAdding}}
   {{one-icon
-    class="add-block-action-trigger"
-    icon="add-filled"
-    click=(action "addLaneElement")
+    class=createElementAction.className
+    icon=createElementAction.icon
+    click=createElementAction.executeCallback
   }}
 {{/if}}
 {{yield}}

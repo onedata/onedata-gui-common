@@ -173,14 +173,19 @@ function itShowsName() {
 
 function itRendersNestedElements() {
   it('renders nested elements', function () {
+    const actionsFactory = this.get('block.actionsFactory');
     const task1 = Task.create({ id: 't1', name: 'task1' });
     const task2 = Task.create({ id: 't2', name: 'task2' });
     this.set('block.elements', [
-      InterblockSpace.create({ elementAfter: task1 }),
+      InterblockSpace.create({ elementAfter: task1, actionsFactory }),
       task1,
-      InterblockSpace.create({ elementBefore: task1, elementAfter: task2 }),
+      InterblockSpace.create({
+        elementBefore: task1,
+        elementAfter: task2,
+        actionsFactory,
+      }),
       task2,
-      InterblockSpace.create({ elementBefore: task2 }),
+      InterblockSpace.create({ elementBefore: task2, actionsFactory }),
     ]);
 
     this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
