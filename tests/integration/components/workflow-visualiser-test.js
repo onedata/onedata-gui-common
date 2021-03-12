@@ -105,7 +105,6 @@ describe('Integration | Component | workflow visualiser', function () {
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
       applyUpdate: rawDump => rawDump[0].tasks.length = 0,
     });
-
     itDoesNotPerformAction({
       description: 'does not clear empty lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
@@ -117,7 +116,7 @@ describe('Integration | Component | workflow visualiser', function () {
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'remove'),
       applyUpdate: rawDump => rawDump.splice(0, 1),
     });
-    itPerformsAction({
+    itPerformsActionWithConfirmation({
       description: 'removes parallel block',
       actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, 0], 'remove'),
       applyUpdate: rawDump => rawDump[0].tasks.splice(0, 1),

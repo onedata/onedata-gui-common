@@ -3,10 +3,14 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
+import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import RemoveLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-lane-action';
+import MoveUpParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-block-action';
+import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-block-action';
+import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
 import { get } from '@ember/object';
 
 describe('Integration | Utility | workflow visualiser/actions factory', function () {
@@ -18,6 +22,10 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesLaneAction('MoveRightLaneAction', MoveRightLaneAction);
   itCreatesLaneAction('ClearLaneAction', ClearLaneAction);
   itCreatesLaneAction('RemoveLaneAction', RemoveLaneAction);
+
+  itCreatesParallelBlockAction('MoveUpParallelBlockAction', MoveUpParallelBlockAction);
+  itCreatesParallelBlockAction('MoveDownParallelBlockAction', MoveDownParallelBlockAction);
+  itCreatesParallelBlockAction('RemoveParallelBlockAction', RemoveParallelBlockAction);
 });
 
 function itCreatesLaneAction(actionName, actionClass) {
@@ -29,5 +37,17 @@ function itCreatesLaneAction(actionName, actionClass) {
 
     expect(action).to.be.instanceOf(actionClass);
     expect(get(action, 'lane')).to.equal(lane);
+  });
+}
+
+function itCreatesParallelBlockAction(actionName, actionClass) {
+  it(`creates action "${actionName}"`, function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const parallelBlock = ParallelBlock.create();
+
+    const action = factory[`create${actionName}`]({ parallelBlock });
+
+    expect(action).to.be.instanceOf(actionClass);
+    expect(get(action, 'parallelBlock')).to.equal(parallelBlock);
   });
 }

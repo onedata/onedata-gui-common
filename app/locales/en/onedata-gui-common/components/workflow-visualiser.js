@@ -36,6 +36,9 @@ export default {
       },
       removeBlock: {
         title: 'Remove',
+        modalHeader: 'Remove parallel block',
+        modalDescription: 'You are about to delete the parallel block "{{parallelBlockName}}".',
+        modalYes: 'Remove',
       },
     },
   },

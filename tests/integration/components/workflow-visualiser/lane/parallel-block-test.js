@@ -1,15 +1,17 @@
 import { expect } from 'chai';
-import { describe, it, context } from 'mocha';
+import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
+import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
-import { set } from '@ember/object';
+import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
 import $ from 'jquery';
+import { getModalFooter } from '../../../../helpers/modal';
 
 const blockActionsSpec = [{
   className: 'move-up-parallel-block-action-trigger',
@@ -30,6 +32,12 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     integration: true,
   });
 
+  beforeEach(function () {
+    this.set('block', ParallelBlock.create({
+      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+    }));
+  });
+
   it('has classes "workflow-visualiser-parallel-block" and "workflow-visualiser-element"', function () {
     this.render(hbs `{{workflow-visualiser/lane/parallel-block}}`);
 
@@ -39,16 +47,16 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
   });
 
   context('in "view" mode', function () {
-    const contextMode = 'view';
+    beforeEach(function () {
+      this.set('block.mode', 'view');
+    });
 
-    itShowsNameInMode(contextMode);
-    itRendersNestedElementsInMode(contextMode);
+    itShowsName();
+    itRendersNestedElements();
 
     it('does not allow to modify block name', async function () {
-      this.set('block', ParallelBlock.create({
-        name: 'my-block',
-        mode: contextMode,
-      }));
+      this.set('block.name', 'my-block');
+
       this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       // .one-label is a trigger for one-inline-editor
@@ -56,10 +64,6 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     });
 
     it('does not render actions in "view" mode', function () {
-      this.set('block', ParallelBlock.create({
-        mode: contextMode,
-      }));
-
       this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
@@ -67,22 +71,23 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
   });
 
   context('in "edit" mode', function () {
-    const contextMode = 'edit';
+    beforeEach(function () {
+      this.set('block.mode', 'edit');
+    });
 
-    itShowsNameInMode(contextMode);
-    itRendersNestedElementsInMode(contextMode);
+    itShowsName();
+    itRendersNestedElements();
 
     it('allows to modify block name', async function () {
-      this.set('block', ParallelBlock.create({
+      setProperties(this.get('block'), {
         name: 'my-block',
-        mode: contextMode,
         onModify(block, { name }) {
           return new Promise(resolve => {
             set(block, 'name', name);
             resolve();
           });
         },
-      }));
+      });
       this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       await click('.parallel-block-name .one-label');
@@ -93,9 +98,6 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     });
 
     it('renders actions', async function () {
-      this.set('block', ParallelBlock.create({
-        mode: contextMode,
-      }));
       this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
       const $actionsTrigger = this.$('.parallel-block-actions-trigger');
@@ -118,24 +120,19 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       ['down', 1, 'isLast'],
     ].forEach(([direction, moveStep, disablingProp]) => {
       it(`allows to move ${direction} the block`, async function () {
-        const onMoveSpy = sinon.spy();
-        const block = this.set('block', ParallelBlock.create({
-          mode: contextMode,
-          onMove: onMoveSpy,
-        }));
+        const onMoveSpy = sinon.stub().resolves();
+        this.set('block.onMove', onMoveSpy);
         this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
         await click('.parallel-block-actions-trigger');
         await click($(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`)[0]);
 
-        expect(onMoveSpy).to.be.calledOnce.and.to.be.calledWith(block, moveStep);
+        expect(onMoveSpy).to.be.calledOnce
+          .and.to.be.calledWith(this.get('block'), moveStep);
       });
 
       it(`disables moving ${direction} the block when "${disablingProp}" is true`, async function () {
-        this.set('block', ParallelBlock.create({
-          mode: contextMode,
-          [disablingProp]: true,
-        }));
+        this.set(`block.${disablingProp}`, true);
         this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
         await click('.parallel-block-actions-trigger');
@@ -147,28 +144,26 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     });
 
     it('allows to remove block', async function () {
-      const onRemoveSpy = sinon.spy();
-      const block = this.set('block', ParallelBlock.create({
-        mode: contextMode,
-        onRemove: onRemoveSpy,
-      }));
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      const onRemoveSpy = sinon.stub().resolves();
+      this.set('block.onRemove', onRemoveSpy);
+      this.render(hbs `
+        {{global-modal-mounter}}
+        {{workflow-visualiser/lane/parallel-block elementModel=block}}
+      `);
 
       await click('.parallel-block-actions-trigger');
       await click($('body .webui-popover.in .remove-parallel-block-action-trigger')[0]);
+      await click(getModalFooter().find('.question-yes')[0]);
 
-      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(block);
+      expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('block'));
     });
   });
 });
 
-function itShowsNameInMode(mode) {
+function itShowsName() {
   it('shows parallel block name', function () {
     const name = 'block1';
-    this.set('block', ParallelBlock.create({
-      name,
-      mode,
-    }));
+    this.set('block.name', name);
 
     this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
@@ -176,20 +171,17 @@ function itShowsNameInMode(mode) {
   });
 }
 
-function itRendersNestedElementsInMode(mode) {
+function itRendersNestedElements() {
   it('renders nested elements', function () {
     const task1 = Task.create({ id: 't1', name: 'task1' });
     const task2 = Task.create({ id: 't2', name: 'task2' });
-    this.set('block', ParallelBlock.create({
-      mode,
-      elements: [
-        InterblockSpace.create({ elementAfter: task1 }),
-        task1,
-        InterblockSpace.create({ elementBefore: task1, elementAfter: task2 }),
-        task2,
-        InterblockSpace.create({ elementBefore: task2 }),
-      ],
-    }));
+    this.set('block.elements', [
+      InterblockSpace.create({ elementAfter: task1 }),
+      task1,
+      InterblockSpace.create({ elementBefore: task1, elementAfter: task2 }),
+      task2,
+      InterblockSpace.create({ elementBefore: task2 }),
+    ]);
 
     this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
 
