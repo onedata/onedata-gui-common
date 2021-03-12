@@ -632,6 +632,11 @@
     content: $oneicon-rerun; 
   }
 }
+.oneicon-rest {
+  &:before {
+    content: $oneicon-rest; 
+  }
+}
 .oneicon-role-holders {
   &:before {
     content: $oneicon-role-holders; 
