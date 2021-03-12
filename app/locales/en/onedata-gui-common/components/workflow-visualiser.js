@@ -1,11 +1,13 @@
 export default {
   nameForNew: {
-    lane: 'Untitled lane',
     parallelBlock: 'Parallel block',
     task: 'Untitled task',
   },
   lane: {
     actions: {
+      createLane: {
+        newLaneName: 'Untitled lane',
+      },
       moveLeftLane: {
         title: 'Move left',
       },

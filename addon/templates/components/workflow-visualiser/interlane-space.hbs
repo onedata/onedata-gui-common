@@ -3,8 +3,11 @@
     validateDragEvent=(action "validateDragEvent")
     action=(action "acceptDraggedElement")
   }}
-  <div class="add-lane-action-trigger clickable" {{action "addLane"}}>
-    {{one-icon icon="plus"}}
+  <div
+    class="{{createLaneAction.className}} clickable"
+    {{action createLaneAction.executeCallback}}
+  >
+    {{one-icon icon=createLaneAction.icon}}
   </div>
 {{/if}}
 {{yield}}

@@ -47,7 +47,7 @@
     }
   }
 
-  .add-lane-action-trigger {
+  .create-lane-action-trigger {
     position: absolute;
     top: 50%;
     left: 100%;
@@ -74,7 +74,7 @@
 }
 
 .workflow-visualiser.during-lane-dragdrop .workflow-visualiser-interlane-space {
-  .add-lane-action-trigger {
+  .create-lane-action-trigger {
     opacity: 0;
   }
 }

@@ -5,6 +5,7 @@ import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
+import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
@@ -24,6 +25,16 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesLaneAction('MoveRightLaneAction', MoveRightLaneAction);
   itCreatesLaneAction('ClearLaneAction', ClearLaneAction);
   itCreatesLaneAction('RemoveLaneAction', RemoveLaneAction);
+
+  it('creates action "CreateLaneAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const createLaneCallback = () => {};
+
+    const action = factory.createCreateLaneAction({ createLaneCallback });
+
+    expect(action).to.be.instanceOf(CreateLaneAction);
+    expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
+  });
 
   itCreatesParallelBlockAction('MoveUpParallelBlockAction', MoveUpParallelBlockAction);
   itCreatesParallelBlockAction('MoveDownParallelBlockAction', MoveDownParallelBlockAction);

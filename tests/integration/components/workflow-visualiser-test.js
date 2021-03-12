@@ -180,7 +180,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
       renderWithRawLanes(this, rawLanes);
 
-      expect(this.$('.add-lane-action-trigger')).to.not.exist;
+      expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
     it('does not allow to change lane name', function () {
@@ -198,7 +198,7 @@ describe('Integration | Component | workflow visualiser', function () {
       renderWithRawLanes(this, rawLanes);
 
       expect(this.$('.lane-actions-trigger')).to.not.exist;
-      expect(this.$('.add-lane-action-trigger')).to.not.exist;
+      expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
     it('does not show edition-related elements in empty lane', function () {
@@ -447,7 +447,7 @@ function itAddsNewLane(message, initialRawLanes, insertIndex) {
     }
   }
   const addTriggerSelector =
-    `.workflow-visualiser-interlane-space${extraTriggerSelectorCondition} .add-lane-action-trigger`;
+    `.workflow-visualiser-interlane-space${extraTriggerSelectorCondition} .create-lane-action-trigger`;
 
   itPerformsAction({
     description: message,

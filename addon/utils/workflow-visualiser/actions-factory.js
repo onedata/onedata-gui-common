@@ -1,5 +1,6 @@
 import EmberObject from '@ember/object';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
@@ -10,6 +11,14 @@ import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visuali
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 
 export default EmberObject.extend(OwnerInjector, {
+  /**
+   * @param {(newElementProps: Object) => Promise} context.createLaneCallback
+   * @returns {Utils.WorkflowVisualiser.Actions.CreateLaneAction}
+   */
+  createCreateLaneAction(context) {
+    return CreateLaneAction.create({ ownerSource: this, context });
+  },
+
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
    * @returns {Utils.WorkflowVisualiser.Actions.MoveLeftLaneAction}
