@@ -37,6 +37,11 @@ export default Component.extend(I18n, {
   parent: reads('elementModel.parent'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ActionsFactory>}
+   */
+  actionsFactory: reads('elementModel.actionsFactory'),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,

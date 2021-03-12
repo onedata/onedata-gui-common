@@ -9,6 +9,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
+import { getModalFooter } from '../../helpers/modal';
 
 const possibleTaskStatuses = ['success', 'warning', 'error'];
 const laneWidth = 300;
@@ -99,7 +100,7 @@ describe('Integration | Component | workflow visualiser', function () {
     itMovesParallelBlock('middle parallel block', 1, 'up');
     itDoesNotMoveParallelBlock('last parallel block', 0, 'up');
 
-    itPerformsAction({
+    itPerformsActionWithConfirmation({
       description: 'clears non-empty lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
       applyUpdate: rawDump => rawDump[0].tasks.length = 0,
@@ -111,7 +112,7 @@ describe('Integration | Component | workflow visualiser', function () {
       initialRawLanes: twoEmptyLanesExample,
     });
 
-    itPerformsAction({
+    itPerformsActionWithConfirmation({
       description: 'removes lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'remove'),
       applyUpdate: rawDump => rawDump.splice(0, 1),
@@ -569,6 +570,24 @@ function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) 
   });
 }
 
+function itPerformsActionWithConfirmation({
+  description,
+  actionTriggerGetter,
+  applyUpdate,
+  initialRawLanes = threeNonEmptyLanesExample,
+}) {
+  itPerformsCustomAction({
+    description,
+    actionExecutor: async testCase => {
+      const $actionTrigger = await actionTriggerGetter(testCase);
+      await click($actionTrigger[0]);
+      await click(getModalFooter().find('.question-yes')[0]);
+    },
+    applyUpdate,
+    initialRawLanes,
+  });
+}
+
 function itPerformsAction({
   description,
   actionTriggerGetter,
@@ -627,11 +646,14 @@ function itDoesNotPerformAction({
 
 function renderWithRawLanes(testCase, rawLanes) {
   testCase.set('rawLanes', rawLanes);
-  testCase.render(hbs `{{workflow-visualiser
-    mode=mode
-    rawData=rawLanes
-    onChange=changeStub
-  }}`);
+  testCase.render(hbs `
+    {{global-modal-mounter}}
+    {{workflow-visualiser
+      mode=mode
+      rawData=rawLanes
+      onChange=changeStub
+    }}
+  `);
 }
 
 function renderForScrollTest(testCase, lanesNumber, containerWidth) {

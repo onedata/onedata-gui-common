@@ -11,9 +11,6 @@ import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
-import Action from 'onedata-gui-common/utils/action';
-import computedT from 'onedata-gui-common/utils/computed-t';
-import { tag, string, array, raw, not } from 'ember-awesome-macros';
 
 export default VisualiserElement.extend({
   layout,
@@ -42,41 +39,49 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  moveLeftLaneAction: computed('lane', function moveLeftLaneAction() {
-    return MoveLeftLaneAction.create({
-      ownerSource: this,
-      lane: this.get('lane'),
-    });
+  moveLeftLaneAction: computed('actionsFactory', 'lane', function moveLeftLaneAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
+    return actionsFactory.createMoveLeftLaneAction({ lane });
   }),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  moveRightLaneAction: computed('lane', function moveRightLaneAction() {
-    return MoveRightLaneAction.create({
-      ownerSource: this,
-      lane: this.get('lane'),
-    });
+  moveRightLaneAction: computed('actionsFactory', 'lane', function moveRightLaneAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
+    return actionsFactory.createMoveRightLaneAction({ lane });
   }),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  clearLaneAction: computed('lane', function clearLaneAction() {
-    return ClearLaneAction.create({
-      ownerSource: this,
-      lane: this.get('lane'),
-    });
+  clearLaneAction: computed('actionsFactory', 'lane', function clearLaneAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
+    return actionsFactory.createClearLaneAction({ lane });
   }),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  removeLaneAction: computed('lane', function removeLaneAction() {
-    return RemoveLaneAction.create({
-      ownerSource: this,
-      lane: this.get('lane'),
-    });
+  removeLaneAction: computed('actionsFactory', 'lane', function removeLaneAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
+    return actionsFactory.createRemoveLaneAction({ lane });
   }),
 
   /**
@@ -93,125 +98,5 @@ export default VisualiserElement.extend({
     changeName(newName) {
       return this.get('lane').modify({ name: newName });
     },
-  },
-});
-
-const LaneActionBase = Action.extend({
-  /**
-   * @override
-   */
-  i18nPrefix: tag `components.workflowVisualiser.lane.actions.${'actionName'}Lane`,
-
-  /**
-   * @virtual
-   * @type {String}
-   */
-  actionName: undefined,
-
-  /**
-   * @virtual
-   * @type {Utils.WorkflowVisualiser.Lane}
-   */
-  lane: undefined,
-
-  /**
-   * @override
-   */
-  className: tag `${string.dasherize('actionName')}-lane-action-trigger`,
-
-  /**
-   * @override
-   */
-  title: computedT('title'),
-});
-
-const ClearLaneAction = LaneActionBase.extend({
-  /**
-   * @override
-   */
-  actionName: 'clear',
-
-  /**
-   * @override
-   */
-  icon: 'remove',
-
-  /**
-   * @override
-   */
-  disabled: not(array.isAny('lane.elements', raw('type'), raw('parallelBlock'))),
-
-  /**
-   * @override
-   */
-  execute() {
-    return this.get('lane').clear();
-  },
-});
-
-const RemoveLaneAction = LaneActionBase.extend({
-  /**
-   * @override
-   */
-  actionName: 'remove',
-
-  /**
-   * @override
-   */
-  icon: 'x',
-
-  /**
-   * @override
-   */
-  execute() {
-    return this.get('lane').remove();
-  },
-});
-
-const MoveLeftLaneAction = LaneActionBase.extend({
-  /**
-   * @override
-   */
-  actionName: 'moveLeft',
-
-  /**
-   * @override
-   */
-  icon: 'move-left',
-
-  /**
-   * @override
-   */
-  disabled: reads('lane.isFirst'),
-
-  /**
-   * @override
-   */
-  execute() {
-    return this.get('lane').move(-1);
-  },
-});
-
-const MoveRightLaneAction = LaneActionBase.extend({
-  /**
-   * @override
-   */
-  actionName: 'moveRight',
-
-  /**
-   * @override
-   */
-  icon: 'move-right',
-
-  /**
-   * @override
-   */
-  disabled: reads('lane.isLast'),
-
-  /**
-   * @override
-   */
-  execute() {
-    return this.get('lane').move(1);
   },
 });

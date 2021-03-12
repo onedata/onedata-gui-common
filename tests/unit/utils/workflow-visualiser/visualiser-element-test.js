@@ -10,6 +10,7 @@ describe('Unit | Utility | workflow visualiser/visualiser element', function () 
     'type',
     'id',
     'parent',
+    'actionsFactory',
   ].forEach(propName => {
     it(`has undefined "${propName}"`, function () {
       const element = VisualiserElement.create();

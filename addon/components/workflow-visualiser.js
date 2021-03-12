@@ -67,6 +67,7 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
 import { computed, get, getProperties, set, setProperties } from '@ember/object';
+import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
@@ -131,6 +132,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Promise}
    */
   onChange: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.WorkflowVisualiser.ActionsFactory}
+   */
+  actionsFactory: undefined,
 
   /**
    * @type {Object}
@@ -206,6 +213,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   init() {
     this._super(...arguments);
+
+    if (!this.get('actionsFactory')) {
+      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
+    }
 
     this.set('elementsCache', {
       lane: [],
@@ -408,10 +419,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       return existingLane;
     } else {
+      const {
+        mode,
+        actionsFactory,
+      } = this.getProperties('mode', 'actionsFactory');
+
       const newLane = Lane.create({
         id,
         name,
-        mode: this.get('mode'),
+        mode,
+        actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
         onMove: (lane, moveStep) => this.moveElement(lane, moveStep),
         onClear: lane => this.clearLane(lane),
@@ -488,11 +505,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       return existingParallelBlock;
     } else {
+      const {
+        mode,
+        actionsFactory,
+      } = this.getProperties('mode', 'actionsFactory');
+
       const newParallelBlock = ParallelBlock.create({
         id,
         name,
         parent,
-        mode: this.get('mode'),
+        mode,
+        actionsFactory,
         onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
         onMove: (block, moveStep) => this.moveElement(block, moveStep),
         onRemove: block => this.removeElement(block),
@@ -530,11 +553,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       return existingTask;
     } else {
+      const {
+        mode,
+        actionsFactory,
+      } = this.getProperties('mode', 'actionsFactory');
+
       const newTask = Task.create({
         id,
         name,
         parent,
-        mode: this.get('mode'),
+        mode,
+        actionsFactory,
         status,
         progressPercent,
         onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
@@ -565,9 +594,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (existingSpace) {
       return existingSpace;
     } else {
+      const {
+        mode,
+        actionsFactory,
+      } = this.getProperties('mode', 'actionsFactory');
+
       const SpaceClass = type === 'interblockSpace' ? InterblockSpace : InterlaneSpace;
       const newSpace = SpaceClass.create({
-        mode: this.get('mode'),
+        mode,
+        actionsFactory,
         elementBefore,
         elementAfter,
         parent,

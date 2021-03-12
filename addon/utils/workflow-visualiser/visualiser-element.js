@@ -42,6 +42,12 @@ export default EmberObject.extend({
   parent: undefined,
 
   /**
+   * @virtual
+   * @type {Utils.WorkflowVisualiser.ActionsFactory}
+   */
+  actionsFactory: undefined,
+
+  /**
    * Special field to distinguish workflow elements from all other objects during
    * drag&drop.
    * @type {String}

@@ -14,9 +14,15 @@ export default {
       },
       clearLane: {
         title: 'Clear',
+        modalHeader: 'Clear lane',
+        modalDescription: 'You are about to clear the lane "{{laneName}}".',
+        modalYes: 'Clear',
       },
       removeLane: {
         title: 'Remove',
+        modalHeader: 'Remove lane',
+        modalDescription: 'You are about to delete the lane "{{laneName}}".',
+        modalYes: 'Remove',
       },
     },
   },
