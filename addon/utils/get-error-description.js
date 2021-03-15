@@ -13,6 +13,7 @@ import Ember from 'ember';
 import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
+import moment from 'moment';
 
 const i18nPrefix = 'errors.backendErrors.';
 
@@ -41,6 +42,7 @@ const detailsTranslateFunctions = {
   ]),
   fileRegistrationNotSupported: createArrayDetailsToStringsTranslator(['objectStorages']),
   badData: badDataDetailsTranslator,
+  tokenCaveatUnverified: caveatDetailsTranslator,
 };
 
 /**
@@ -121,6 +123,128 @@ function posixDetailsTranslator(i18n, errorDetails) {
   const errnoTranslation =
     findTranslation(i18n, `${i18nPrefix}translationParts.posixErrno.${errorDetails.errno}`);
   return Object.assign({}, errorDetails, { errno: errnoTranslation });
+}
+
+function caveatDetailsTranslator(i18n, errorDetails) {
+  const type = errorDetails.caveat.type.replace('.', '');
+  let placeholders;
+  let users = [],
+    groups = [],
+    providers = [];
+  let consumers = '';
+  switch (type) {
+    case 'time':
+      placeholders = {
+        expiredTime: moment
+          .utc(0)
+          .add(errorDetails.caveat.validUntil, 'seconds')
+          .format('D MMM YYYY H:mm:ss'),
+      };
+      break;
+    case 'ip':
+      placeholders = {
+        ips: errorDetails.caveat.whitelist.join(', '),
+      };
+      break;
+    case 'asn':
+      placeholders = {
+        asns: errorDetails.caveat.whitelist.join(', '),
+      };
+      break;
+    case 'georegion':
+      if (errorDetails.caveat.filter == 'whitelist') {
+        placeholders = {
+          listType: findTranslation(
+            i18n,
+            `${i18nPrefix}translationParts.caveatErrors.whitelist`
+          ).string,
+          regions: errorDetails.caveat.list.join(', '),
+        };
+      } else {
+        placeholders = {
+          listType: findTranslation(
+            i18n,
+            `${i18nPrefix}translationParts.caveatErrors.blacklist`
+          ).string,
+          regions: errorDetails.caveat.list.join(', '),
+        };
+      }
+      break;
+    case 'geocountry':
+      if (errorDetails.caveat.filter == 'whitelist') {
+        placeholders = {
+          listType: findTranslation(
+            i18n,
+            `${i18nPrefix}translationParts.caveatErrors.whitelist`
+          ).string,
+          countries: errorDetails.caveat.list.join(', '),
+        };
+      } else {
+        placeholders = {
+          listType: findTranslation(
+            i18n,
+            `${i18nPrefix}translationParts.caveatErrors.blacklist`
+          ).string,
+          countries: errorDetails.caveat.list.join(', '),
+        };
+      }
+      break;
+    case 'consumer':
+      for (const element of errorDetails.caveat.whitelist) {
+        const elemType = element.split('-')[0];
+        const elemName = element.split('-')[1] == '*' ?
+          findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.any`).string :
+          element.split('-')[1];
+        switch (elemType) {
+          case 'usr':
+            users.push(elemName);
+            break;
+          case 'grp':
+            groups.push(elemName);
+            break;
+          case 'prv':
+            providers.add(elemName);
+            break;
+        }
+      }
+      if (users.length > 0) {
+        if (consumers) {
+          consumers += ', ';
+        }
+        consumers += findTranslation(
+          i18n,
+          `${i18nPrefix}translationParts.caveatErrors.userIdsLabel`
+        ).string + users.join(', ');
+      }
+      if (groups.length > 0) {
+        if (consumers) {
+          consumers += ', ';
+        }
+        consumers += findTranslation(
+          i18n,
+          `${i18nPrefix}translationParts.caveatErrors.groupIdsLabel`
+        ).string + groups.join(', ');
+      }
+      if (providers.length > 0) {
+        if (consumers) {
+          consumers += ', ';
+        }
+        consumers += findTranslation(
+          i18n,
+          `${i18nPrefix}translationParts.caveatErrors.providerIdsLabel`
+        ).string + providers.join(', ');
+      }
+      placeholders = {
+        consumers: consumers,
+      };
+      break;
+  }
+  const errnoTranslation = findTranslation(
+    i18n,
+    `${i18nPrefix}translationParts.caveatErrors.${type}`,
+    placeholders
+  );
+  return Object.assign({}, errorDetails, { caveatDescription: errnoTranslation });
 }
 
 function notAnXTokenDetailsTranslator(i18n, errorDetails) {
