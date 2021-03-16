@@ -31,9 +31,6 @@ describe('Integration | Component | record icon', function () {
     modelName: 'share',
     icon: 'browser-share',
   }, {
-    modelName: 'shared-user',
-    icon: 'user',
-  }, {
     modelName: 'space',
     icon: 'space',
   }, {
@@ -158,12 +155,6 @@ describe('Integration | Component | record icon', function () {
     }, {
       properties: {},
       icon: 'browser-share',
-    }],
-  }, {
-    modelName: 'shared-user',
-    subtypes: [{
-      properties: {},
-      icon: 'user',
     }],
   }, {
     modelName: 'space',

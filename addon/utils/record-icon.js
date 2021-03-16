@@ -1,12 +1,12 @@
 /**
  * Returns icon name for a record or model name.
- * 
+ *
  * To get a more detailed icon (e.g. icon dedicated for a specific group type)
  * you must pass record object and set `useSubtypeIcon` argument to true.
- * 
+ *
  * Icon mappings are also exported to allow global, per-project custom modifications
  * of these objects.
- * 
+ *
  * TODO: add more icons when used in projects other than onezone-gui.
  *
  * @module utils/record-icon
@@ -45,7 +45,6 @@ export default function recordIcon(recordOrModelName, useSubtypeIcon = false) {
 export const modelToIconMapping = {
   harvester: 'light-bulb',
   share: 'browser-share',
-  sharedUser: 'user',
   token: 'tokens',
 };
 [
