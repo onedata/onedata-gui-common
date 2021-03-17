@@ -39,6 +39,9 @@ describe('Integration | Component | record icon', function () {
   }, {
     modelName: 'token',
     icon: 'tokens',
+  }, {
+    modelName: 'workflowDirectory',
+    icon: 'view-grid',
   }].forEach(({ modelName, icon }) => {
     it(
       `shows "${icon}" when passed record is an instance of "${modelName}" model`,

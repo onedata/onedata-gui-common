@@ -46,6 +46,7 @@ export const modelToIconMapping = {
   harvester: 'light-bulb',
   share: 'browser-share',
   token: 'tokens',
+  workflowDirectory: 'view-grid',
 };
 [
   'cluster',
