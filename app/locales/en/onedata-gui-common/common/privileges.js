@@ -10,14 +10,12 @@ export default {
     space_write_data: 'write files',
     space_register_files: 'register files',
     space_manage_shares: 'manage shares',
+    space_manage_datasets: 'manage datasets',
     space_view_views: 'view database views',
     space_manage_views: 'manage database views',
     space_query_views: 'query database views',
     space_view_statistics: 'view statistics',
     space_view_changes_stream: 'view changes stream',
-    // TODO: VFS-7402 decide if it should be in data management group;
-    // add to onedata-gui-websocket-client/addon/utils/space-privileges-flags.js 
-    space_manage_datasets: 'manage datasets',
 
     space_view_transfers: 'view transfers',
     space_schedule_replication: 'schedule replication',
