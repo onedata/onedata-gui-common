@@ -126,12 +126,9 @@ function posixDetailsTranslator(i18n, errorDetails) {
 }
 
 function caveatDetailsTranslator(i18n, errorDetails) {
-  const type = errorDetails.caveat.type.replace('.', '');
+  let type = errorDetails.caveat.type.replace('.', '');
   let placeholders;
-  let users = [],
-    groups = [],
-    providers = [];
-  let consumers = '';
+
   switch (type) {
     case 'time':
       placeholders = {
@@ -152,99 +149,75 @@ function caveatDetailsTranslator(i18n, errorDetails) {
       };
       break;
     case 'georegion':
-      if (errorDetails.caveat.filter == 'whitelist') {
-        placeholders = {
-          listType: findTranslation(
-            i18n,
-            `${i18nPrefix}translationParts.caveatErrors.whitelist`
-          ).string,
-          regions: errorDetails.caveat.list.join(', '),
-        };
-      } else {
-        placeholders = {
-          listType: findTranslation(
-            i18n,
-            `${i18nPrefix}translationParts.caveatErrors.blacklist`
-          ).string,
-          regions: errorDetails.caveat.list.join(', '),
-        };
-      }
+    case 'geocountry': {
+      const placeholderListKey = type === 'georegion' ? 'regions' : 'countries';
+      const rawFilterType = errorDetails.caveat.filter;
+      const normaliziedFilterType = ['whitelist', 'blacklist'].includes(rawFilterType) ?
+        rawFilterType : 'whitelist';
+      placeholders = {
+        inclusionType: String(findTranslation(
+          i18n,
+          `${i18nPrefix}translationParts.caveatErrors.${normaliziedFilterType}`
+        )),
+        [placeholderListKey]: errorDetails.caveat.list.join(', '),
+      };
       break;
-    case 'geocountry':
-      if (errorDetails.caveat.filter == 'whitelist') {
-        placeholders = {
-          listType: findTranslation(
-            i18n,
-            `${i18nPrefix}translationParts.caveatErrors.whitelist`
-          ).string,
-          countries: errorDetails.caveat.list.join(', '),
-        };
-      } else {
-        placeholders = {
-          listType: findTranslation(
-            i18n,
-            `${i18nPrefix}translationParts.caveatErrors.blacklist`
-          ).string,
-          countries: errorDetails.caveat.list.join(', '),
-        };
-      }
-      break;
-    case 'consumer':
+    }
+    case 'consumer': {
+      const elements = {
+        user: [],
+        group: [],
+        provider: [],
+      };
+      let consumers = '';
+
       for (const element of errorDetails.caveat.whitelist) {
         const elemType = element.split('-')[0];
-        const elemName = element.split('-')[1] == '*' ?
+        const elemName = element.split('-')[1] === '*' ?
           findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.any`).string :
           element.split('-')[1];
         switch (elemType) {
           case 'usr':
-            users.push(elemName);
+            elements.user.push(elemName);
             break;
           case 'grp':
-            groups.push(elemName);
+            elements.group.push(elemName);
             break;
           case 'prv':
-            providers.add(elemName);
+            elements.provider.push(elemName);
             break;
         }
       }
-      if (users.length > 0) {
+
+      for (const elementType of ['user', 'group', 'provider']) {
+        const elementList = elements[elementType];
+        if (!elementList.length) {
+          continue;
+        }
         if (consumers) {
           consumers += ', ';
         }
-        consumers += findTranslation(
+        consumers += String(findTranslation(
           i18n,
-          `${i18nPrefix}translationParts.caveatErrors.userIdsLabel`
-        ).string + users.join(', ');
+          `${i18nPrefix}translationParts.caveatErrors.idsLabel.${elementType}`
+        )) + elementList.join(', ');
       }
-      if (groups.length > 0) {
-        if (consumers) {
-          consumers += ', ';
-        }
-        consumers += findTranslation(
-          i18n,
-          `${i18nPrefix}translationParts.caveatErrors.groupIdsLabel`
-        ).string + groups.join(', ');
-      }
-      if (providers.length > 0) {
-        if (consumers) {
-          consumers += ', ';
-        }
-        consumers += findTranslation(
-          i18n,
-          `${i18nPrefix}translationParts.caveatErrors.providerIdsLabel`
-        ).string + providers.join(', ');
-      }
+
       placeholders = {
         consumers: consumers,
       };
       break;
+    }
+    default:
+      type = 'otherCaveat';
+      placeholders = {};
   }
-  const errnoTranslation = findTranslation(
+  const caveatDescription = findTranslation(
     i18n,
     `${i18nPrefix}translationParts.caveatErrors.${type}`,
     placeholders
   );
-  return Object.assign({}, errorDetails, { caveatDescription: errnoTranslation });
+  return Object.assign({}, errorDetails, { caveatDescription: caveatDescription });
 }
 
 function notAnXTokenDetailsTranslator(i18n, errorDetails) {
