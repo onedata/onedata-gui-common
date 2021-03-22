@@ -83,7 +83,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {HtmlSafe}
    */
   getSuccessNotificationText(actionResult) {
-    return this.t('successNotificationText', get(actionResult || {}, 'result'));
+    return this.t('successNotificationText', get(actionResult || {}, 'result') || {}, {
+      defaultValue: '',
+    });
   },
 
   /**
@@ -92,7 +94,12 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {HtmlSafe}
    */
   getFailureNotificationActionName(actionResult) {
-    return this.t('failureNotificationActionName', get(actionResult || {}, 'error'));
+    return this.t(
+      'failureNotificationActionName',
+      get(actionResult || {}, 'error') || {}, {
+        defaultValue: '',
+      }
+    );
   },
 
   /**
@@ -100,7 +107,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    */
   notifySuccess(actionResult) {
     const successText = this.getSuccessNotificationText(actionResult);
-    this.get('globalNotify').success(successText);
+    if (successText) {
+      this.get('globalNotify').success(successText);
+    }
   },
 
   /**
@@ -108,8 +117,10 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    */
   notifyFailure(actionResult) {
     const failureActionName = this.getFailureNotificationActionName(actionResult);
-    this.get('globalNotify')
-      .backendError(failureActionName, get(actionResult || {}, 'error'));
+    if (failureActionName) {
+      this.get('globalNotify')
+        .backendError(failureActionName, get(actionResult || {}, 'error'));
+    }
   },
 
   /**

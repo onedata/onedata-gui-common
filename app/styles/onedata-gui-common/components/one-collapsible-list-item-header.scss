@@ -11,6 +11,7 @@
     transform: translateY(-50%) rotate(0deg);
     transition: transition-ease(transform);
   }
+  
   @include btn-toolbar-float-right();
   &.toolbar-when-opened {
     .btn-toolbar {
@@ -78,4 +79,10 @@
     font-weight: normal;
     white-space: nowrap;
   }
+}
+
+a.one-collapsible-list-item-header {
+  color: inherit;
+  display: block;
+  @extend .hoverable;
 }
