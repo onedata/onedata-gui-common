@@ -150,10 +150,10 @@ function caveatDetailsTranslator(i18n, errorDetails) {
       const normalizedFilterType = ['whitelist', 'blacklist'].includes(rawFilterType) ?
         rawFilterType : 'whitelist';
       placeholders = {
-        inclusionType: String(findTranslation(
+        inclusionType: findTranslation(
           i18n,
-          `${i18nPrefix}translationParts.caveatErrors.${normalizedFilterType}`
-        )),
+          `${i18nPrefix}translationParts.caveatErrors.inclusionTypes.${normalizedFilterType}`
+        ),
         [placeholderListKey]: errorDetails.caveat.list.join(', '),
       };
       break;
@@ -169,7 +169,7 @@ function caveatDetailsTranslator(i18n, errorDetails) {
       for (const element of errorDetails.caveat.whitelist) {
         const elemType = element.split('-')[0];
         const elemName = element.split('-')[1] === '*' ?
-          findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.any`).string :
+          findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.any`) :
           element.split('-')[1];
         switch (elemType) {
           case 'usr':
@@ -186,16 +186,17 @@ function caveatDetailsTranslator(i18n, errorDetails) {
 
       for (const elementType of ['user', 'group', 'provider']) {
         const elementList = elements[elementType];
+        const or = findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.or`);
         if (!elementList.length) {
           continue;
         }
         if (consumers) {
-          consumers += ', ';
+          consumers += `, ${or} `;
         }
-        consumers += String(findTranslation(
+        consumers += findTranslation(
           i18n,
           `${i18nPrefix}translationParts.caveatErrors.idsLabel.${elementType}`
-        )) + elementList.join(', ');
+        ) + elementList.join(', ');
       }
 
       placeholders = {
