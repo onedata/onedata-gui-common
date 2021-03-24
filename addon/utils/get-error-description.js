@@ -133,31 +133,26 @@ function caveatDetailsTranslator(i18n, errorDetails) {
     case 'time':
       placeholders = {
         expiredTime: moment
-          .utc(0)
-          .add(errorDetails.caveat.validUntil, 'seconds')
+          .unix(errorDetails.caveat.validUntil)
           .format('D MMM YYYY H:mm:ss'),
       };
       break;
     case 'ip':
-      placeholders = {
-        ips: errorDetails.caveat.whitelist.join(', '),
-      };
-      break;
     case 'asn':
       placeholders = {
-        asns: errorDetails.caveat.whitelist.join(', '),
+        [`${type}s`]: errorDetails.caveat.whitelist.join(', '),
       };
       break;
     case 'georegion':
     case 'geocountry': {
       const placeholderListKey = type === 'georegion' ? 'regions' : 'countries';
       const rawFilterType = errorDetails.caveat.filter;
-      const normaliziedFilterType = ['whitelist', 'blacklist'].includes(rawFilterType) ?
+      const normalizedFilterType = ['whitelist', 'blacklist'].includes(rawFilterType) ?
         rawFilterType : 'whitelist';
       placeholders = {
         inclusionType: String(findTranslation(
           i18n,
-          `${i18nPrefix}translationParts.caveatErrors.${normaliziedFilterType}`
+          `${i18nPrefix}translationParts.caveatErrors.${normalizedFilterType}`
         )),
         [placeholderListKey]: errorDetails.caveat.list.join(', '),
       };
