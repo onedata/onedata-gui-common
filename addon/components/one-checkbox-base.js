@@ -15,7 +15,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
  */
 
 const threeStatesValues = [false, 2, true];
-const threeStatesClasses = ['', 'maybe', 'checked'];
+const threeStatesClasses = ['unchecked', 'maybe', 'checked'];
 const threeStatesLoop = threeStatesValues.concat(threeStatesValues[0]);
 const twoStatesLoop = [
   threeStatesValues[0],

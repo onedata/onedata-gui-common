@@ -8,6 +8,7 @@ import { run } from '@ember/runloop';
 import wait from 'ember-test-helpers/wait';
 import { Promise } from 'rsvp';
 import $ from 'jquery';
+import OneTooltipHelper from '../../helpers/one-tooltip';
 
 describe('Integration | Component | one way toggle', function () {
   setupComponentTest('one-way-toggle', {
@@ -199,37 +200,60 @@ describe('Integration | Component | one way toggle', function () {
     });
   });
 
-  it('cannot be toggled when in progress', function (done) {
-    this.set('checked', false);
-    const updateHandler = (value) => {
-      return new Promise(resolve => {
-        run.later(() => {
-          this.set('checked', value);
-          resolve();
-        }, 100);
-      });
-    };
+  it('has tooltip when "tip" is specified', async function () {
+    this.render(hbs `{{one-way-toggle tip="my tip"}}`);
 
-    this.on('update', updateHandler);
-
-    this.render(hbs `
-      {{one-way-toggle
-        checked=checked
-        update=(action "update")}}
-    `);
-
-    const $oneWayToggle = this.$('.one-way-toggle');
-
-    $('.one-way-toggle').click();
-
-    run.later(() => {
-      $('.one-way-toggle').click();
-      run.later(() => {
-        expect($oneWayToggle, 'checked after action resolve')
-          .to.have.class('checked');
-        done();
-      }, 200);
-    }, 50);
+    const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
+    expect(await tooltipHelper.getText()).to.equal('my tip');
   });
 
+  it('has tooltip when is readonly', async function () {
+    this.render(hbs `{{one-way-toggle isReadOnly=true}}`);
+
+    const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
+    expect(await tooltipHelper.getText()).to.equal('Locked');
+  });
+
+  it('has tooltip from "tip" when "tip" is specified and is readonly', async function () {
+    this.render(hbs `{{one-way-toggle isReadOnly=true tip="my tip"}}`);
+
+    const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
+    expect(await tooltipHelper.getText()).to.equal('my tip');
+  });
+
+  it('has no tooltip by default', async function () {
+    this.render(hbs `{{one-way-toggle}}`);
+
+    const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
+    expect(await tooltipHelper.hasTooltip()).to.be.false;
+  });
+
+  it('has tooltip when "tip" is specified', async function () {
+    this.render(hbs `{{one-way-toggle tip="my tip"}}`);
+
+    const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
+    expect(await tooltipHelper.getText()).to.equal('my tip');
+  });
+
+  it('has "lock" icon when is readonly', async function () {
+    this.render(hbs `{{one-way-toggle isReadOnly=true}}`);
+
+    expect(getToggle(this).find('.one-icon')).to.have.class('oneicon-lock');
+  });
+
+  it('has no "lock" icon when is not readonly', async function () {
+    this.render(hbs `{{one-way-toggle isReadOnly=false}}`);
+
+    expect(getToggle(this).find('.one-icon')).to.not.exist;
+  });
+
+  it('has no "lock" icon when is readonly but "showLockForReadOnly" is false', async function () {
+    this.render(hbs `{{one-way-toggle isReadOnly=true showLockForReadOnly=false}}`);
+
+    expect(getToggle(this).find('.one-icon')).to.not.exist;
+  });
+
+  function getToggle(testCase) {
+    return testCase.$('.one-way-toggle');
+  }
 });
