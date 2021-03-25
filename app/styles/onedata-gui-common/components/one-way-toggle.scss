@@ -129,8 +129,9 @@ $toggle-icon-size: 1.24em;
 
   .one-way-toggle-readonly-icon {
     display: inline-block;
-    margin-left: 0.5em;
+    margin-left: 0.2em;
     font-size: 120%;
+    line-height: 0;
   }
   
   &.in-progress {
@@ -139,7 +140,7 @@ $toggle-icon-size: 1.24em;
       position: absolute;
       right: 0.55 * $toggle-width;
       transform: translateX(12px);
-      top: 45%;
+      top: 50%;
     }
     &.spinner-left {
       .spin-spinner-block {
