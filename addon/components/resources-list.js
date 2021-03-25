@@ -65,6 +65,13 @@ export const ResourceListItem = EmberObject.extend({
    */
   actions: undefined,
 
+  /**
+   * If that property is defined, the item is link.
+   * @virtual optional
+   * @type {String}
+   */
+  link: undefined,
+
   init() {
     this._super(...arguments);
 
