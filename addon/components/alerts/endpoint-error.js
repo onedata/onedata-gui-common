@@ -45,4 +45,10 @@ export default Component.extend(I18n, {
   }),
 
   tlsUrl: reads('options.url'),
+
+  actions: {
+    changeFrequency() {
+      this.set('options.changeFrequency', true);
+    },
+  },
 });
