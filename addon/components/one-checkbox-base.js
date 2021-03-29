@@ -15,7 +15,8 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
  */
 
 const threeStatesValues = [false, 2, true];
-const threeStatesClasses = ['unchecked', 'maybe', 'checked'];
+// TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
+const threeStatesClasses = ['unselected', 'maybe', 'checked'];
 const threeStatesLoop = threeStatesValues.concat(threeStatesValues[0]);
 const twoStatesLoop = [
   threeStatesValues[0],

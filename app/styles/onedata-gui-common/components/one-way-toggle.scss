@@ -64,7 +64,8 @@ $toggle-icon-size: 1.24em;
     }
   }
 
-  &.unchecked {
+  // TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
+  &.unselected {
     @include toggle-color($toggle-bg-color-unchecked);
   }
   

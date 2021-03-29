@@ -27,6 +27,8 @@ describe('Integration | Component | one way toggle', function () {
 
     let $toggle = this.$('.one-way-toggle');
     expect($toggle).to.not.have.class('checked');
+    // TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
+    expect($toggle).to.have.class('unselected');
   });
 
   it('renders half-selected toggle when passed checked value 2 and threeState=true',
