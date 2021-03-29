@@ -1,14 +1,19 @@
-<input type="checkbox" id={{inputId}} disabled={{or isReadOnly _isInProgress}}>
-<div class="one-way-toggle-control"></div>
+<input type="checkbox" id={{inputId}} disabled={{isEffectivelyDisabled}}>
+<div class="one-way-toggle-control">
+  <div class="one-way-toggle-track"></div>
+  <div class="one-way-toggle-thumb">
+    {{#if icon}}
+      {{one-icon class="thumb-icon" icon=icon}}
+    {{/if}}
+  </div>
+</div>
 {{#if (and isReadOnly showLockForReadOnly)}}
   <div class="one-way-toggle-readonly-icon">
     {{one-icon icon="lock"}}
-    {{one-tooltip
-      title=_lockHint
-      placement="top"
-      triggerEvents="hover"
-    }}
   </div>
+{{/if}}
+{{#if effectiveTip}}
+  {{one-tooltip title=effectiveTip placement="top" triggerEvents="hover"}}
 {{/if}}
 {{#if _isInProgress}}
   {{spin-spinner-block

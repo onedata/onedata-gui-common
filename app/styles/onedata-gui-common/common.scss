@@ -556,7 +556,7 @@ h1 .header-addon {
   text-transform: none;
   font-size: 90%;
   font-weight: normal;
-  opacity: 0.6;
+  opacity: $disabled-opacity;
 }
 
 textarea + .btn-container {
