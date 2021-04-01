@@ -1,23 +1,26 @@
-<input type="checkbox" id={{inputId}} disabled={{isEffectivelyDisabled}}>
-<div class="one-way-toggle-control">
-  <div class="one-way-toggle-track"></div>
-  <div class="one-way-toggle-thumb">
-    {{#if icon}}
-      {{one-icon class="thumb-icon" icon=icon}}
-    {{/if}}
+<input type="checkbox" id={{inputId}} disabled={{or isReadOnly _isInProgress}}>
+<div class="one-way-toggle-elements-container tooltip-container">
+  <div class="one-way-toggle-control">
+    <div class="one-way-toggle-track"></div>
+    <div class="one-way-toggle-thumb">
+      {{#if icon}}
+        {{one-icon class="thumb-icon" icon=icon}}
+      {{/if}}
+    </div>
   </div>
+  {{#if (and isReadOnly showLockForReadOnly)}}
+    <div class="one-way-toggle-readonly-icon">
+      {{one-icon icon="lock"}}
+    </div>
+  {{/if}}
+  {{#if _isInProgress}}
+    {{spin-spinner-block
+      class="one-way-toggle-spinner"
+      sizeClass="xxs"
+    }}
+  {{/if}}
+  {{#if effectiveTip}}
+    {{one-tooltip title=effectiveTip placement="top" triggerEvents="hover"}}
+  {{/if}}
 </div>
-{{#if (and isReadOnly showLockForReadOnly)}}
-  <div class="one-way-toggle-readonly-icon">
-    {{one-icon icon="lock"}}
-  </div>
-{{/if}}
-{{#if effectiveTip}}
-  {{one-tooltip title=effectiveTip placement="top" triggerEvents="hover"}}
-{{/if}}
-{{#if _isInProgress}}
-  {{spin-spinner-block
-    class="one-way-toggle-spinner"
-    sizeClass="xxs"
-  }}
-{{/if}}
+
