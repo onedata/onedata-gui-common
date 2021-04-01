@@ -1,12 +1,12 @@
 /**
- * Creates a function that ivokes provided `func` only if time from last invocation
+ * Creates a function that invokes provided `func` only if time from last invocation
  * (`timeSpacing`) elapsed.
- * In contrast to Ember throttle, this makes last invocation of function after limit
- * time if there is no invocations.
+ * In contrast to Ember throttle, this makes last invocation of function after
+ * timeSpacing if there is no invocations.
  *
  * @module utils/create-throttled-function
  * @author Jakub Liput
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
