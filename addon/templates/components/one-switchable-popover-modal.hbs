@@ -12,9 +12,9 @@
     }}
       {{yield (hash
         modal=(hash
-          header=(component "test-component")
-          body=(component "test-component")
-          footer=(component "test-component")
+          header=(component "one-generic-component" class="switchable-popover-header")
+          body=(component "one-generic-component" class="switchable-popover-body")
+          footer=(component "one-generic-component" class="switchable-popover-footer")
         )
         close=(action "close")
         submit=(action "submit")
