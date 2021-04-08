@@ -535,6 +535,63 @@ textarea.no-resize  {
   }
 }
 
+.hint-trigger {
+  margin-left: 0.4em;
+  opacity: 0.4;
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.header-with-tags {
+  display: flex;
+  justify-content: space-between;
+  .header-text-container {
+    flex-grow: 1;
+    overflow: hidden;
+    padding-right: 2em;
+  }
+  .header-tags-container {
+    align-self: flex-start;
+    text-align: right;
+    // same as h1 margin-top
+    margin-top: $line-height-computed;
+    .labels-container {
+      margin-top: 0.5em;
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    .label.label-modal-header-large {
+      font-size: 96%;
+      padding: 0.1em 0.5em;
+      font-weight: normal;
+      @include font-semibold;
+      color: inherit;
+      line-height: 2em;
+      display: inline-flex;
+      align-items: center;
+      border-width: 2px;
+      border-style: solid;
+      border-radius: 0.5em;
+      .one-icon.tag-icon {
+        margin-right: 0.2em;
+      }
+      .hint-trigger {
+        font-size: 1em;
+        margin-right: 0.2em;
+      }
+      &.label-disabled {
+        @include tag-colors-disabled;
+      }
+      // text color is always default
+      .label-text {
+        color: $main-text-color;
+      }
+    }
+  }
+}
+
 .alert-simple-info {
   .alert-simple-info-btn {
     margin-top: 20px;
@@ -556,7 +613,7 @@ h1 .header-addon {
   text-transform: none;
   font-size: 90%;
   font-weight: normal;
-  opacity: 0.6;
+  opacity: $disabled-opacity;
 }
 
 textarea + .btn-container {

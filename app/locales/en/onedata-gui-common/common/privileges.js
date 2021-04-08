@@ -10,6 +10,7 @@ export default {
     space_write_data: 'write files',
     space_register_files: 'register files',
     space_manage_shares: 'manage shares',
+    space_manage_datasets: 'manage datasets',
     space_view_views: 'view database views',
     space_manage_views: 'manage database views',
     space_query_views: 'query database views',
