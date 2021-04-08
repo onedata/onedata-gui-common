@@ -1,19 +1,19 @@
 /**
- * A component for displaying information in popover or modal (in which one 
- * depends on screen width). To work, it needs at least triggersConfiguration 
- * property set. 
- * By default, component handles open/close actions by itself. This behaviour 
+ * A component for displaying information in popover or modal (in which one
+ * depends on screen width). To work, it needs at least triggersConfiguration
+ * property set.
+ * By default, component handles open/close actions by itself. This behaviour
  * can be overwritten by setting ``open`` property to true/false values.
- * 
- * The component supports multiple triggers with separate rendering strategies 
- * for each one. More information can be found in the comment for 
+ *
+ * The component supports multiple triggers with separate rendering strategies
+ * for each one. More information can be found in the comment for
  * triggersConfiguration property
- * 
+ *
  * It triggers events onHide, onHidden, onShow, onShown. If ``open`` is set,
- * onHide and onShow are triggered when component would hide/show as 
+ * onHide and onShow are triggered when component would hide/show as
  * if ``open`` was undefined, but then these events do not launch any internal actions -
  * it can be used to handle interaction with user from outside of the component.
- * 
+ *
  * Example:
  * ```
  *  <button class="trigger">Show popover/modal</button>
@@ -43,8 +43,9 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default Component.extend(ClickOutside, {
   layout,
+
   /**
-   * Status of component visibility. If not boolean, then component 
+   * Status of component visibility. If not boolean, then component
    * handles its close and open actions by itself.
    * @type {boolean|null}
    */
@@ -59,24 +60,24 @@ export default Component.extend(ClickOutside, {
   /**
    * List of triggers configuration strings separated by ; (semicolon) character.
    * To inject.
-   * 
+   *
    * @type {string}
-   * 
+   *
    * Each configuration can be written using two formats:
    * - selector:mode,
    * - selector
    * So, in general, whole string should look like this:
    * ``selector1;selector2:mode2;selector3:mode3;selector4...``
-   * 
+   *
    * A selector should be in format acceptable by jQuery.
    * Of course the ':' character is forbidden.
-   * 
+   *
    * There are three modes:
    * - popover - content shows always in a popover,
    * - modal - content is always in a modal,
    * - dynamic - content is in a popover or a modal according to the screen width.
    * dynamic mode is default and is used when the 'mode' string part is not provided.
-   * 
+   *
    * Examples:
    * ``.simple-trigger``
    * ``button.show-modal:modal;.general-trigger:dynamic;a.another-trigger:popover``
@@ -99,7 +100,7 @@ export default Component.extend(ClickOutside, {
   popoverPadding: true,
 
   /**
-   * Popover style. It will add webui-popover-{popoverStyle} 
+   * Popover style. It will add webui-popover-{popoverStyle}
    * class to popover element
    * @type {string}
    */
@@ -129,6 +130,16 @@ export default Component.extend(ClickOutside, {
   componentClass: '',
 
   /**
+   * One of: simple, modal.
+   * - simple - yields content directly into popover or modal body
+   * - modal - yields `modal` object in hash with header, body and footer to use modal
+   *   layout; in popover mode it simply renders three block elements
+   * @virtual
+   * @type {String}
+   */
+  layoutType: 'simple',
+
+  /**
    * Submit action. Component will close when promise returned by that action
    * will finish (but only if open property is not set).
    * @type {Function}
@@ -136,14 +147,14 @@ export default Component.extend(ClickOutside, {
   submit: null,
 
   /**
-   * Screen width breakpoint, at which component will switch between modal 
+   * Screen width breakpoint, at which component will switch between modal
    * and popover.
    * @type {number}
    */
   switchBreakpoint: 768,
 
   /**
-   * Callback called when popover/modal is going to close. If open property 
+   * Callback called when popover/modal is going to close. If open property
    * is not set and function returns false, hide action is stopped
    * @type {Function}
    */
@@ -156,10 +167,10 @@ export default Component.extend(ClickOutside, {
   onHidden: null,
 
   /**
-   * Callback called when popover/modal is going to show. Trigger selector is 
+   * Callback called when popover/modal is going to show. Trigger selector is
    * passed as a first argument.
-   * 
-   * If open property is not set and function returns false, show 
+   *
+   * If open property is not set and function returns false, show
    * action is stopped.
    * @type {Function}
    */
@@ -188,7 +199,7 @@ export default Component.extend(ClickOutside, {
   _activeTriggerConfiguration: null,
 
   /**
-   * Rendering mode used by component. It depends on actual 
+   * Rendering mode used by component. It depends on actual
    * screen size and active trigger.
    * Possible values: none, popover, modal
    * @type {string}
@@ -196,7 +207,7 @@ export default Component.extend(ClickOutside, {
   _renderMode: 'none',
 
   /**
-   * Old list of trigger configuration objects. Stored for cleanup purposes, 
+   * Old list of trigger configuration objects. Stored for cleanup purposes,
    * used after each _triggersConfiguration change.
    * @type {Array.Object}
    */
@@ -219,7 +230,7 @@ export default Component.extend(ClickOutside, {
   /**
    * List of trigger configuration objects.
    * @type {computed.Array.Object}
-   * 
+   *
    * Each object has format:
    * {
    *   element: jQuery - jQuery object that represents trigger element
@@ -251,7 +262,7 @@ export default Component.extend(ClickOutside, {
   }),
 
   /**
-   * Class for popover - concatenation of componentClass, popoverClass 
+   * Class for popover - concatenation of componentClass, popoverClass
    * and _popoverIdClass
    * @type {computed.string}
    */
@@ -279,7 +290,7 @@ export default Component.extend(ClickOutside, {
   }),
 
   /**
-   * Class for modal - concatenation of componentClass, modalClass 
+   * Class for modal - concatenation of componentClass, modalClass
    * and _modalIdClass
    * @type {computed.string}
    */
@@ -413,7 +424,7 @@ export default Component.extend(ClickOutside, {
 
   /**
    * Trigger click handler. Shows/hides popover/modal
-   * @param {jQuery.Event} event 
+   * @param {jQuery.Event} event
    */
   onTriggerClick(event) {
     if (this.isDestroyed) {
@@ -437,7 +448,7 @@ export default Component.extend(ClickOutside, {
     let targetTrigger = $(event.currentTarget);
     if (_activeTriggerConfiguration &&
       _activeTriggerConfiguration.element.is(targetTrigger)) {
-      // this trigger is the same as the last used one so only toggle 
+      // this trigger is the same as the last used one so only toggle
       // content visibility
       if (invokeAction(this,
           _contentVisible ? 'onHide' : 'onShow',
@@ -447,7 +458,7 @@ export default Component.extend(ClickOutside, {
       }
     } else {
       // this trigger is different than the last used trigger so
-      // find appropriate configuration and show content according to 
+      // find appropriate configuration and show content according to
       // that configuration
       _triggersConfiguration.forEach(conf => {
         if (conf.element.is($(event.currentTarget))) {
@@ -466,7 +477,7 @@ export default Component.extend(ClickOutside, {
   },
 
   /**
-   * Sets modal/popover rendering mode using screen width and 
+   * Sets modal/popover rendering mode using screen width and
    * _activeTriggerConfiguration
    */
   recomputeRenderMode() {
@@ -499,7 +510,7 @@ export default Component.extend(ClickOutside, {
   },
 
   /**
-   * Uses actual values of open and activeTriggerSelector properties 
+   * Uses actual values of open and activeTriggerSelector properties
    * to set _activeTriggerConfiguration and open
    */
   handleManualTriggering() {

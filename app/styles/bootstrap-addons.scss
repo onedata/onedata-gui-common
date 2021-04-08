@@ -72,6 +72,25 @@ $token-border-radius: 3px;
   }
 }
 
+// style for compact modals used for displaying tips in switchable popover mode
+.modal.in.modal-compact-help .modal-dialog {
+  .modal-header {
+    h1 {
+      margin-bottom: 0;
+    }
+  }
+  .modal-footer {
+    padding: $modal-inner-padding;
+    padding-bottom: calc(#{$modal-inner-padding} + 5px);
+    .btn-toolbar {
+      margin-top: 0;
+      .btn {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
 .has-error {
   .form-message {
     color: $state-danger-text;
@@ -224,21 +243,21 @@ $token-border-radius: 3px;
     height: $input-height-base;
     font-size: $font-size-base;
     border-left: none;
-    
+
     &.btn-primary {
-      @include input-btn-variant($btn-primary-border); 
+      @include input-btn-variant($btn-primary-border);
     }
     &.btn-info {
-      @include input-btn-variant($btn-info-border); 
+      @include input-btn-variant($btn-info-border);
     }
     &.btn-default {
-      @include input-btn-variant($btn-default-border); 
+      @include input-btn-variant($btn-default-border);
     }
     &.btn-danger {
-      @include input-btn-variant($btn-danger-border); 
+      @include input-btn-variant($btn-danger-border);
     }
     &.btn-warning {
-      @include input-btn-variant($btn-warning-border); 
+      @include input-btn-variant($btn-warning-border);
     }
   }
   &.input-group-sm .input-group-btn .btn {
@@ -362,7 +381,7 @@ $token-border-radius: 3px;
   [class*="col-"] {
     padding-left: 5px;
     padding-right: 5px;
-    
+
     &:first-of-type {
       padding-left: 0;
     }
@@ -405,7 +424,7 @@ $token-border-radius: 3px;
       > a {
         .tab-name {
           &.truncate {
-            max-width: 200px;  
+            max-width: 200px;
           }
           &.tab-state {
             $size: 10px;
@@ -425,7 +444,7 @@ $token-border-radius: 3px;
             }
             display: inline-block;
             position: relative;
-            margin-right: $size * 0.5;       
+            margin-right: $size * 0.5;
             &::after {
               position: absolute;
               background-color: map-get($stateColors, inactive);
@@ -540,7 +559,7 @@ $token-border-radius: 3px;
       }
     }
   }
-  
+
   .tab-content {
     border: 1px solid $main-border-color;
     border-top: 0;
@@ -667,12 +686,12 @@ label.align-left {
     left: 0;
     height: 48px;
     padding: 4px 3px 4px 0;
-    
+
     border-right: 1px solid rgba(255,255,255,0.3);
   }
 }
-    
-.input-group-basic-dropdown {  
+
+.input-group-basic-dropdown {
   display: table-cell;
   width: 1%;
   white-space: nowrap;
