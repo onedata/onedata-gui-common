@@ -6,7 +6,7 @@
  * `product="oneprovider" anchor="tag/File-registration"`
  * generates:
  * `https://onedata.org/#/home/api/stable/oneprovider?anchor=tag/File-registration`
- * 
+ *
  * @module helpers/one-api-doc-url
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -15,7 +15,8 @@
 
 import { helper } from '@ember/component/helper';
 
-const urlPrefix = 'https://onedata.org/#/home/api/stable/';
+const defaultVersion = 'stable';
+const urlPrefix = 'https://onedata.org/#/home/api/';
 
 /**
  * @param {String} urlSpec.product one of 'oneprovider', 'onezone' or 'onepanel' (or other
@@ -24,7 +25,7 @@ const urlPrefix = 'https://onedata.org/#/home/api/stable/';
  * @returns {String}
  */
 export function oneApiDocUrl(urlSpec) {
-  let url = `${urlPrefix}${urlSpec.product || ''}`;
+  let url = `${urlPrefix}${urlSpec.version || defaultVersion}/${urlSpec.product || ''}`;
   if (urlSpec.anchor) {
     url += `?anchor=${urlSpec.anchor}`;
   }
