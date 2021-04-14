@@ -110,7 +110,7 @@ label {
   }
   &[disabled] {
     @include box-shadow(none);
-    opacity: 0.6;
+    opacity: $disabled-opacity;
   }
   &[readonly] {
     background-color: $input-bg;
