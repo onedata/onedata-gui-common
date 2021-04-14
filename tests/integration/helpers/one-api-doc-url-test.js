@@ -8,11 +8,19 @@ describe('Integration | Helper | one api doc url', function () {
     integration: true,
   });
 
-  it('generates valid URL without anchor', function () {
+  it('generates valid URL without anchor with stable version as default', function () {
     this.render(hbs `{{one-api-doc-url product="oneprovider"}}`);
 
     expect(this.$().text().trim()).to.equal(
       'https://onedata.org/#/home/api/stable/oneprovider'
+    );
+  });
+
+  it('generates valid URL without anchor with specified version', function () {
+    this.render(hbs `{{one-api-doc-url product="oneprovider" version="latest"}}`);
+
+    expect(this.$().text().trim()).to.equal(
+      'https://onedata.org/#/home/api/latest/oneprovider'
     );
   });
 
@@ -22,6 +30,8 @@ describe('Integration | Helper | one api doc url', function () {
     `);
 
     expect(this.$().text().trim())
-      .to.equal('https://onedata.org/#/home/api/stable/oneprovider?anchor=tag/File-registration');
+      .to.equal(
+        'https://onedata.org/#/home/api/stable/oneprovider?anchor=tag/File-registration'
+      );
   });
 });
