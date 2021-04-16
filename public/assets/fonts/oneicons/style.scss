@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?mgd4yj') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?mgd4yj') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?mgd4yj##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -517,6 +517,16 @@
     content: $oneicon-move-down; 
   }
 }
+.oneicon-move-left {
+  &:before {
+    content: $oneicon-move-left; 
+  }
+}
+.oneicon-move-right {
+  &:before {
+    content: $oneicon-move-right; 
+  }
+}
 .oneicon-move-up {
   &:before {
     content: $oneicon-move-up; 
@@ -820,6 +830,16 @@
 .oneicon-star {
   &:before {
     content: $oneicon-star; 
+  }
+}
+.oneicon-start {
+  &:before {
+    content: $oneicon-start; 
+  }
+}
+.oneicon-stop {
+  &:before {
+    content: $oneicon-stop; 
   }
 }
 .oneicon-support {

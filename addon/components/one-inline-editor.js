@@ -29,6 +29,7 @@ export default Component.extend(I18n, {
     '_whileSaving:saving',
     'controlledManually:manual',
     'hideEditIcons:without-edit-icons',
+    'hideViewIcons:without-view-icons',
   ],
 
   i18n: service(),
@@ -82,6 +83,12 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   hideEditIcons: false,
+
+  /**
+   * Hides icons visible in view mode (e.g. icon which starts edition).
+   * @type {Boolean}
+   */
+  hideViewIcons: false,
 
   /**
    * If true. editor will not focus input on first render

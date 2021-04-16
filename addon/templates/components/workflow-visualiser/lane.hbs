@@ -1,0 +1,63 @@
+{{#one-draggable-object
+  content=lane
+  dragHandle=".lane-drag-handle"
+  isDraggable=(eq mode "edit")
+  class="draggable-lane"
+}}
+  <div class="lane-header">
+    <div class="lane-menu-trigger-space lane-drag-handle">
+      {{one-icon icon="checkbox-empty"}}
+    </div>
+    {{#if (eq mode "edit")}}
+      {{one-inline-editor
+        class="lane-name"
+        value=name
+        hideViewIcons=true
+        onSave=(action "changeName")
+      }}
+    {{else}}
+      {{#truncated-string class="lane-name"}}{{name}}{{/truncated-string}}
+    {{/if}}
+    <div class="lane-menu-trigger-space">
+      {{#if (eq mode "edit")}}
+        {{one-menu-toggle
+          class=(concat-classes
+            "lane-actions-trigger"
+            (concat "actions-trigger-" elementId)
+            (if areActionsOpened "active")
+          )
+          click=(action "toggleActionsOpen" (not areActionsOpened))
+        }}
+        {{#render-later triggerRender=areActionsOpened}}
+          {{#one-webui-popover
+            class="lane-actions"
+            padding=false
+            popoverStyle="with-dropdown"
+            triggerSelector=(concat ".actions-trigger-" elementId)
+            open=areActionsOpened
+            onToggle=(action "toggleActionsOpen")
+            as |popover|
+          }}
+            {{#click-outside
+              action=(action (mut areActionsOpened) false)
+              except-selector=(concat ".actions-trigger-" elementId)
+            }}
+              {{actions-popover-content
+                actionsArray=laneActions
+                actionClicked=(action "toggleActionsOpen" false)
+              }}
+            {{/click-outside}}
+          {{/one-webui-popover}}
+        {{/render-later}}
+      {{/if}}
+    </div>
+  </div>
+  {{#perfect-scrollbar-element class="lane-elements"}}
+    {{#each laneElements as |laneElement|}}
+      {{workflow-visualiser/visualiser-element-renderer
+        elementModel=laneElement
+      }}
+    {{/each}}
+  {{/perfect-scrollbar-element}}
+{{/one-draggable-object}}
+{{yield}}

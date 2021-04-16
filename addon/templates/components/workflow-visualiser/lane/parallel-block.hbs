@@ -1,0 +1,56 @@
+{{#one-draggable-object
+  content=block
+  dragHandle=".parallel-block-drag-handle"
+  isDraggable=(eq mode "edit")
+  class="draggable-parallel-block"
+}}
+  {{#if (eq mode "edit")}}
+    {{one-inline-editor
+      class="parallel-block-name"
+      value=name
+      hideViewIcons=true
+      onSave=(action "changeName")
+    }}
+    {{one-icon
+      icon="settings-circle-filled"
+      class=(concat-classes
+        "parallel-block-actions-trigger"
+        (concat "actions-trigger-" elementId)
+        (if areActionsOpened "active")
+      )
+      click=(action "toggleActionsOpen" (not areActionsOpened))
+    }}
+    {{#render-later triggerRender=areActionsOpened}}
+      {{#one-webui-popover
+        class="parallel-block-actions"
+        padding=false
+        popoverStyle="with-dropdown"
+        triggerSelector=(concat ".actions-trigger-" elementId)
+        open=areActionsOpened
+        onToggle=(action "toggleActionsOpen")
+        as |popover|
+      }}
+        {{#click-outside
+          action=(action "toggleActionsOpen" false)
+          except-selector=(concat ".actions-trigger-" elementId)
+        }}
+          {{actions-popover-content
+            actionsArray=blockActions
+            actionClicked=(action (mut areActionsOpened) false)
+          }}
+        {{/click-outside}}
+      {{/one-webui-popover}}
+    {{/render-later}}
+    <div class="parallel-block-drag-handle">
+      {{one-icon icon="checkbox-empty"}}
+    </div>
+  {{else}}
+    {{#truncated-string class="parallel-block-name"}}{{name}}{{/truncated-string}}
+  {{/if}}
+  <div class="block-elements">
+    {{#each blockElements as |blockElement|}}
+      {{workflow-visualiser/visualiser-element-renderer elementModel=blockElement}}
+    {{/each}}
+  </div>
+{{/one-draggable-object}}
+{{yield}}

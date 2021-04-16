@@ -1,0 +1,71 @@
+.workflow-visualiser .workflow-visualiser-lane {
+  flex: 0 0 $workflow-visualiser-lane-width;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  .draggable-lane {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+    min-width: 0;
+    background-color: $color-one-white;
+  }
+
+  .lane-header {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    border-bottom: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
+  }
+
+  .lane-drag-handle {
+    .one-icon {
+      font-size: 200%;
+    }
+  }
+
+  .lane-name {
+    flex-grow: 1;
+    min-width: 0;
+    text-align: center;
+
+    .form-control {
+      text-align: center;
+    }
+  }
+
+  .lane-menu-trigger-space {
+    flex: 0 0 45px;
+  }
+
+  .lane-actions-trigger {
+    vertical-align: middle;
+    float: right;
+
+    .icon-dot {
+      width: 3px;
+      height: 3px;
+    }
+  }
+
+  .lane-elements {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+    flex-grow: 1;
+    padding: 0 2 * $padding-large-horizontal;
+
+    > * {
+      flex-basis: 100%;
+    }
+  }
+
+  &.mode-edit {
+    .lane-drag-handle {
+      cursor: grab;
+    }
+  }
+}

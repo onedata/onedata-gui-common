@@ -10,7 +10,8 @@
     border-color: transparent;
     border-radius: $border-radius-small;
   }
-  &:hover {
+  &:hover,
+  &.active {
     .menu-toggle-frame {
       background-color: $color-sidebar-item-bg;
       border-color: $color-one-list-item-separator;

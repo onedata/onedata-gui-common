@@ -44,4 +44,5 @@ export default [
   'status-toolbar',
   'support-size-info',
   'tags-input',
+  'workflow-visualiser',
 ];

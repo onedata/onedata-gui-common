@@ -1,0 +1,114 @@
+$workflow-visualiser-lane-width: 300px;
+$workflow-visualiser-lane-border-width: 1px;
+$workflow-visualiser-lane-border-color: $main-border-color;
+$workflow-visualiser-lane-vertical-padding: $padding-large-vertical;
+$workflow-visualiser-block-border-width: 2px;
+$workflow-visualiser-parallel-block-border-color: $color-one-azure;
+$workflow-visualiser-task-border-color: $main-border-color;
+$workflow-visualiser-arrow-width: 2px;
+$workflow-visualiser-add-trigger-color: darken($color-one-light-blue, 17%);
+$workflow-visualiser-arrow-color: lighten($workflow-visualiser-add-trigger-color, 3%);
+$workflow-visualiser-interblock-space-size: $padding-small-horizontal;
+$workflow-visualiser-between-parallel-block-space-size: 40px;
+$workflow-visualiser-between-task-space-size: $padding-small-horizontal;
+$workflow-visualiser-last-between-task-space-size: 30px;
+
+@mixin workflow-visualiser-action-trigger-white-background() {
+  &::after {
+    @include absolute-align-middle-center();
+    content: "";
+    display: block;
+    width: 1em;
+    height: 1em;
+    background-color: #fff;
+    border-radius: 100%;
+    z-index: -1;
+  }
+}
+
+.workflow-visualiser {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+
+  .one-inline-editor {
+    .one-label, .form-control {
+      padding: $padding-small-vertical $padding-small-vertical;
+      height: auto;
+    }
+  }
+
+  .visualiser-elements {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex-grow: 1;
+  }
+
+  .left-edge-scroll-step-trigger,
+  .right-edge-scroll-step-trigger {
+    position: absolute;
+    bottom: $padding-base-vertical;
+    padding: $padding-small-vertical;
+    font-size: 200%;
+    font-weight: bold;
+    border-radius: 100%;
+    border: 2px solid $workflow-visualiser-arrow-color;
+    background-color: lighten($workflow-visualiser-arrow-color, 15%);
+    transition: transition-ease(opacity);
+    z-index: 1;
+
+    &:not(.visible) {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    &:hover {
+      background-color: lighten($workflow-visualiser-arrow-color, 10%);
+    }
+
+    &::before {
+      top: 0.02em;
+      position: relative;
+    }
+  }
+
+  $edge-scroll-step-trigger-icon-x-offset: 0.04em;
+
+  .left-edge-scroll-step-trigger {
+    left: $padding-base-vertical;
+
+    &::before {
+      left: -$edge-scroll-step-trigger-icon-x-offset;
+    }
+  }
+
+  .right-edge-scroll-step-trigger {
+    right: $padding-base-vertical;
+
+    &::before {
+      left: $edge-scroll-step-trigger-icon-x-offset;
+    }
+  }
+
+  .draggable-object-target {
+    position: absolute;
+    transition: transition-ease(background-color);
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      border-radius: $border-radius-small;
+      border: 2px dashed transparent;
+    }
+  }
+}
+
+@import './workflow-visualiser/interlane-space';
+@import './workflow-visualiser/lane';
+@import './workflow-visualiser/lane/parallel-block';
+@import './workflow-visualiser/lane/task';
+@import './workflow-visualiser/lane/interblock-space';

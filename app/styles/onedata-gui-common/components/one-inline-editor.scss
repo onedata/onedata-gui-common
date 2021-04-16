@@ -8,6 +8,9 @@
   &.static, &.editor.saving {
     padding-right: 30px;
   }
+  &.static.without-view-icons {
+    padding-right: 0;
+  }
   &.editor.without-edit-icons {
     padding-right: 0;
   }
@@ -93,7 +96,7 @@
     @media screen and (max-width: $screen-sm-max) {
       max-width: 100%
     }
-    
+
     @media screen and (min-width: $screen-sm-min) {
       display: inline-block;
       .one-label {
@@ -108,7 +111,7 @@
         margin-top: -$padding-base-vertical;
         margin-bottom: -$padding-small-vertical;
       }
-      
+
       // &.editor {
       //   display: block;
       // }
