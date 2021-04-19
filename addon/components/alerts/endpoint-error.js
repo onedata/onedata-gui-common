@@ -45,4 +45,13 @@ export default Component.extend(I18n, {
   }),
 
   tlsUrl: reads('options.url'),
+
+  actions: {
+    setFastPolling() {
+      const setFastPollingCallback = this.get('options.setFastPollingCallback');
+      if (setFastPollingCallback) {
+        setFastPollingCallback(true);
+      }
+    },
+  },
 });
