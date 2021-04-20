@@ -1,14 +1,25 @@
-{{#perfect-scrollbar-element class="visualiser-elements" onScroll=(action "horizonalScroll")}}
+{{#perfect-scrollbar-element
+  class="visualiser-elements"
+  onScroll=(action "horizonalScroll")
+}}
   {{#each visualiserElements as |visualiserElement|}}
     {{workflow-visualiser/visualiser-element-renderer elementModel=visualiserElement}}
   {{/each}}
 {{/perfect-scrollbar-element}}
-{{one-icon icon="arrow-left" click=(action "scrollLeft") class=(concat-classes
-  "left-edge-scroll-step-trigger"
-  (if (not-eq laneIdxForNextLeftScroll null) "visible")
-)}}
-{{one-icon icon="arrow-right" click=(action "scrollRight") class=(concat-classes
-  "right-edge-scroll-step-trigger"
-  (if (not-eq laneIdxForNextRightScroll null) "visible")
-)}}
+{{one-icon
+  icon="arrow-left"
+  click=(action "scrollLeft")
+  class=(concat-classes
+    "left-edge-scroll-step-trigger"
+    (if (not-eq laneIdxForNextLeftScroll null) "visible")
+  )
+}}
+{{one-icon
+  icon="arrow-right"
+  click=(action "scrollRight")
+  class=(concat-classes
+    "right-edge-scroll-step-trigger"
+    (if (not-eq laneIdxForNextRightScroll null) "visible")
+  )
+}}
 {{yield}}

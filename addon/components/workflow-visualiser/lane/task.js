@@ -12,6 +12,7 @@ import layout from 'onedata-gui-common/templates/components/workflow-visualiser/
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { tag, math, raw, string, gte, notEqual, conditional, equal, and, array } from 'ember-awesome-macros';
+import { scheduleOnce } from '@ember/runloop';
 
 const possibleStatuses = ['default', 'success', 'warning', 'error'];
 
@@ -108,6 +109,9 @@ export default VisualiserElement.extend({
   actions: {
     changeName(newName) {
       return this.get('task').modify({ name: newName });
+    },
+    toggleActionsOpen(state) {
+      scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
     },
   },
 });

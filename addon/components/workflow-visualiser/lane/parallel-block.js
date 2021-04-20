@@ -11,6 +11,7 @@ import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/parallel-block';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
+import { scheduleOnce } from '@ember/runloop';
 
 export default VisualiserElement.extend({
   layout,
@@ -84,6 +85,9 @@ export default VisualiserElement.extend({
   actions: {
     changeName(newName) {
       return this.get('block').modify({ name: newName });
+    },
+    toggleActionsOpen(state) {
+      scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
     },
   },
 });

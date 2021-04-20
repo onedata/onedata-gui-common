@@ -1,5 +1,5 @@
 /**
- * Base component for visualiser elements spaces.
+ * Base component for spacings between visualiser elements.
  *
  * @module components/workflow-visualiser/visualiser-space
  * @author Michał Borzęcki
@@ -21,7 +21,7 @@ export default VisualiserElement.extend({
     'elementAfter.id:data-element-after-id',
   ],
 
-  dragCoordinator: service(),
+  dragDrop: service(),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.VisualiserRecord>}
@@ -42,7 +42,7 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<Boolean>}
    */
   isTargetForDrop: computed(
-    'dragCoordinator.currentDragObject',
+    'dragDrop.draggedElementModel',
     'elementBefore',
     'elementAfter',
     'siblingsType',
@@ -56,14 +56,12 @@ export default VisualiserElement.extend({
         'elementAfter',
         'siblingsType'
       );
-      const currentDragObject = this.get('dragCoordinator.currentDragObject');
-      const draggedElement = currentDragObject &&
-        get(currentDragObject, get(currentDragObject, 'unwrappingKey'));
+      const draggedElementModel = this.get('dragDrop.draggedElementModel');
 
-      return draggedElement &&
-        get(draggedElement, 'type') === siblingsType &&
-        draggedElement !== elementBefore &&
-        draggedElement !== elementAfter;
+      return draggedElementModel &&
+        get(draggedElementModel, 'type') === siblingsType &&
+        draggedElementModel !== elementBefore &&
+        draggedElementModel !== elementAfter;
     }
   ),
 

@@ -8,12 +8,7 @@
  */
 
 import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visualiser-space';
-import { getBy, raw } from 'ember-awesome-macros';
-
-const siblingsTypePerParentType = Object.freeze({
-  lane: 'parallelBlock',
-  parallelBlock: 'task',
-});
+import { getBy } from 'ember-awesome-macros';
 
 export default VisualiserSpace.extend({
   /**
@@ -27,7 +22,15 @@ export default VisualiserSpace.extend({
   type: 'interblockSpace',
 
   /**
+   * @type {Object}
+   */
+  siblingsTypePerParentType: Object.freeze({
+    lane: 'parallelBlock',
+    parallelBlock: 'task',
+  }),
+
+  /**
    * @override
    */
-  siblingsType: getBy(raw(siblingsTypePerParentType), 'parent.type'),
+  siblingsType: getBy('siblingsTypePerParentType', 'parent.type'),
 });

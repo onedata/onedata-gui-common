@@ -9,24 +9,16 @@
   }
 
   .draggable-object-target {
-    position: absolute;
     left: -$padding-large-vertical;
     right: -$padding-large-vertical;
     top: 0;
     bottom: 0;
-    transition: transition-ease(background-color);
-    pointer-events: none;
 
     &::before {
-      content: '';
-      display: block;
-      position: absolute;
       left: $padding-large-vertical - $padding-small-vertical;
       right: $padding-large-vertical - $padding-small-vertical;
       top: 0;
       bottom: 0;
-      border-radius: $border-radius-small;
-      border: 2px dashed transparent;
     }
   }
 

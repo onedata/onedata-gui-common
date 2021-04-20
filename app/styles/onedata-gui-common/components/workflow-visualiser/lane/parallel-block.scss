@@ -1,22 +1,15 @@
 .workflow-visualiser .workflow-visualiser-parallel-block {
-  position: relative;
+  min-width: 0;
 
-  &,
   .draggable-parallel-block {
     position: relative;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    min-width: 0;
+    padding: 0 $workflow-visualiser-between-task-space-size;
     border: $workflow-visualiser-block-border-width dashed $workflow-visualiser-parallel-block-border-color;
     border-radius: $border-radius-base;
-    min-width: 0;
-    margin: -$workflow-visualiser-block-border-width;
     background-color: $color-one-white;
-  }
-
-  .draggable-parallel-block {
-    padding: 0 $workflow-visualiser-between-task-space-size;
-    flex-grow: 1;
   }
 
   .parallel-block-name {

@@ -13,6 +13,13 @@
  * inside the next parallel block. Files do not wait for each other during the parallel
  * blocks execution - files have separated block-by-block execution.
  *
+ * Model, which compounds of workflow data and action callbacks, describes each
+ * workflow element and space between them (for drag&drop and creating new elements).
+ * Each model element (lane, task, etc.) is passed to the dedicated component (usually
+ * with the corresponding name). Nested components interact with the main
+ * workflow-visualiser component only via actions in model. Also all data needed
+ * by the component to render is available in passed model object.
+ *
  * Model inheritance:
  *
  *                                  +--------------------+
@@ -95,7 +102,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   ],
 
   i18n: service(),
-  dragCoordinator: service(),
+  dragDrop: service(),
 
   /**
    * @override
@@ -140,7 +147,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
   actionsFactory: undefined,
 
   /**
-   * @type {Object}
+   * Contains model objects which were created during the workflow editor
+   * lifetime. Is used to build new model structure from existing entries on
+   * data update, which prevents from unnecessary rerendering.
    * ```
    * {
    *   lane: Array<Utils.WorkflowVisualiser.VisualiserElement>,
@@ -150,16 +159,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
    *   interblockSpace: Array<Utils.WorkflowVisualiser.Lane.InterblockSpace>,
    * }
    * ```
+   * @type {Object}
    */
   elementsCache: undefined,
 
   /**
-   * Null when left scroll should be blocked
+   * Index of the lane, to which the visualiser will scroll on `scrollLeft` action.
+   * Null when left scroll should be blocked.
    * @type {Number|null}
    */
   laneIdxForNextLeftScroll: null,
 
   /**
+   * Index of the lane, to which the visualiser will scroll on `scrollRight` action.
    * Null when right scroll should be blocked
    * @type {Number|null}
    */
@@ -180,22 +192,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<String|undefined>}
    */
-  typeOfDraggedElement: computed(
-    'dragCoordinator.currentDragObject',
-    function typeOfDraggedElement() {
-      const currentDragObject = this.get('dragCoordinator.currentDragObject');
-      const draggedElement = currentDragObject &&
-        get(currentDragObject, get(currentDragObject, 'unwrappingKey'));
-
-      if (draggedElement) {
+  typeOfDraggedElementModel: computed(
+    'dragDrop.draggedElementModel.type',
+    function typeOfDraggedElementModel() {
+      const draggedElementModel = this.get('dragDrop.draggedElementModel');
+      if (draggedElementModel) {
         const {
           objectOrigin,
           type,
-        } = getProperties(draggedElement, 'objectOrigin', 'type');
+        } = getProperties(draggedElementModel, 'objectOrigin', 'type');
         return objectOrigin === 'workflowVisualiser' ? type : undefined;
       }
-
-      return undefined;
     }
   ),
 
@@ -203,8 +210,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<String>}
    */
   duringDragDropClass: conditional(
-    'typeOfDraggedElement',
-    tag `during-${string.dasherize('typeOfDraggedElement')}-dragdrop`,
+    'typeOfDraggedElementModel',
+    tag `during-${string.dasherize('typeOfDraggedElementModel')}-dragdrop`,
     raw('')
   ),
 
@@ -335,18 +342,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getVisualiserElements() {
     const rawData = this.get('rawData') || [];
-    const lanes = rawData.map(rawLane => this.getElementForUpdate(rawLane));
+    const lanes = rawData.map(rawLane => this.getElementForRawData(rawLane));
     this.updateFirstLastFlagsInCollection(lanes);
 
     const visualiserElements = [
-      this.getSpaceFor(null, lanes[0] || null, null),
+      this.getInterelementSpaceFor(null, lanes[0] || null, null),
     ];
     for (let i = 0; i < lanes.length; i++) {
       const lane = lanes[i];
       const nextLane = lanes[i + 1] || null;
       visualiserElements.push(
         lane,
-        this.getSpaceFor(lane, nextLane, null)
+        this.getInterelementSpaceFor(lane, nextLane, null)
       );
     }
 
@@ -354,19 +361,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns visualiser element for given backend update.
-   * @param {Object} update element representation from backend
+   * Returns visualiser element for given raw data.
+   * @param {Object} rawData element representation from backend
    * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} [parent=null]
    */
-  getElementForUpdate(update, parent = null) {
-    switch (update.type) {
+  getElementForRawData(rawData, parent = null) {
+    switch (rawData.type) {
       case 'lane':
         // Lane does not have any parent
-        return this.getLaneForUpdate(update);
+        return this.getLaneForRawData(rawData);
       case 'parallelBlock':
-        return this.getParallelBlockForUpdate(update, parent);
+        return this.getParallelBlockForRawData(rawData, parent);
       case 'task':
-        return this.getTaskForUpdate(update, parent);
+        return this.getTaskForRawData(rawData, parent);
       default:
         return undefined;
     }
@@ -398,25 +405,24 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns lane element for given backend update. If it is available in cache,
+   * Returns lane element for given raw data. If it is available in cache,
    * then it is updated. Otherwise it is created from scratch and saved in cache for
    * future updates.
-   * @param {Object} update lane representation from backend
+   * @param {Object} laneRawData lane representation from backend
    * @returns {Utils.WorkflowVisualiser.Lane}
    */
-  getLaneForUpdate(laneUpdate) {
+  getLaneForRawData(laneRawData) {
     const {
       id,
       name,
       tasks: rawElements,
-    } = getProperties(laneUpdate, 'id', 'name', 'tasks');
+    } = getProperties(laneRawData, 'id', 'name', 'tasks');
 
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
-      const elements = this.getLaneElementsForUpdate(rawElements, existingLane);
+      const elements = this.getLaneElementsForRawData(rawElements, existingLane);
       this.updateElement(existingLane, { name, elements });
-
       return existingLane;
     } else {
       const {
@@ -437,7 +443,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newLane,
         'elements',
-        this.getLaneElementsForUpdate(rawElements, newLane)
+        this.getLaneElementsForRawData(rawElements, newLane)
       );
       this.addElementToCache('lane', newLane);
 
@@ -446,33 +452,33 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns array of lane elements for given backend update. Handles two types of
+   * Returns array of lane elements for given raw data. Handles two types of
    * collections:
    * - list of parallel blocks in a lane,
    * - list of tasks in a parralel block.
    * If the result array has the same elements as were in the existing array in `parent`,
    * then the existing array is returned (the same reference is preserved).
-   * @param {Array<Object>} update array of task/parallel block backend representations
+   * @param {Array<Object>} elementsRawData array of task/parallel block backend representations
    * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
    * @returns {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
-  getLaneElementsForUpdate(update, parent) {
+  getLaneElementsForRawData(elementsRawData, parent) {
     const existingLaneElements = get(parent || {}, 'elements') || [];
-    const elementsForUpdate = (update || []).map(elementUpdate =>
-      this.getElementForUpdate(elementUpdate, parent)
+    const elementsForRawData = (elementsRawData || []).map(elementRawData =>
+      this.getElementForRawData(elementRawData, parent)
     );
-    this.updateFirstLastFlagsInCollection(elementsForUpdate);
+    this.updateFirstLastFlagsInCollection(elementsForRawData);
 
     const newLaneElements = [
-      this.getSpaceFor(null, elementsForUpdate[0] || null, parent),
+      this.getInterelementSpaceFor(null, elementsForRawData[0] || null, parent),
     ];
 
-    for (let i = 0; i < elementsForUpdate.length; i++) {
-      const updatedElement = elementsForUpdate[i];
-      const nextUpdatedElement = elementsForUpdate[i + 1] || null;
+    for (let i = 0; i < elementsForRawData.length; i++) {
+      const element = elementsForRawData[i];
+      const nextElement = elementsForRawData[i + 1] || null;
       newLaneElements.push(
-        updatedElement,
-        this.getSpaceFor(updatedElement, nextUpdatedElement, parent)
+        element,
+        this.getInterelementSpaceFor(element, nextElement, parent)
       );
     }
 
@@ -483,26 +489,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns parallel block element for given backend update. If it is available in cache,
+   * Returns parallel block element for given raw data. If it is available in cache,
    * then it is updated. Otherwise it is created from scratch and saved in cache for
    * future updates.
-   * @param {Object} update parallel block representation from backend
+   * @param {Object} parallelBlockRawData parallel block representation from backend
    * @param {Utils.WorkflowVisualiser.Lane} parent
    * @returns {Utils.WorkflowVisualiser.Lane.ParallelBlock}
    */
-  getParallelBlockForUpdate(update, parent) {
+  getParallelBlockForRawData(parallelBlockRawData, parent) {
     const {
       id,
       name,
       tasks: rawElements,
-    } = getProperties(update, 'id', 'name', 'tasks');
+    } = getProperties(parallelBlockRawData, 'id', 'name', 'tasks');
 
     const existingParallelBlock = this.getCachedElement('parallelBlock', { id });
 
     if (existingParallelBlock) {
-      const elements = this.getLaneElementsForUpdate(rawElements, existingParallelBlock);
+      const elements = this.getLaneElementsForRawData(rawElements, existingParallelBlock);
       this.updateElement(existingParallelBlock, { name, parent, elements });
-
       return existingParallelBlock;
     } else {
       const {
@@ -523,7 +528,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newParallelBlock,
         'elements',
-        this.getLaneElementsForUpdate(rawElements, newParallelBlock)
+        this.getLaneElementsForRawData(rawElements, newParallelBlock)
       );
       this.addElementToCache('parallelBlock', newParallelBlock);
 
@@ -532,25 +537,24 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns task element for given backend update. If it is available in cache, then it
+   * Returns task element for given raw data. If it is available in cache, then it
    * is updated. Otherwise it is created from scratch and saved in cache for future updates.
-   * @param {Object} update task representation from backend
+   * @param {Object} taskRawData task representation from backend
    * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
    * @returns {Utils.WorkflowVisualiser.Lane.Task}
    */
-  getTaskForUpdate(update, parent) {
+  getTaskForRawData(taskRawData, parent) {
     const {
       id,
       name,
       status,
       progressPercent,
-    } = getProperties(update, 'id', 'name', 'status', 'progressPercent');
+    } = getProperties(taskRawData, 'id', 'name', 'status', 'progressPercent');
 
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
       this.updateElement(existingTask, { name, parent, status, progressPercent });
-
       return existingTask;
     } else {
       const {
@@ -583,7 +587,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @param {Utils.WorkflowVisualiser.Record|null} parent
    * @returns {Utils.WorkflowVisualiser.VisualiserSpace}
    */
-  getSpaceFor(elementBefore, elementAfter, parent) {
+  getInterelementSpaceFor(elementBefore, elementAfter, parent) {
     const type = parent ? 'interblockSpace' : 'interlaneSpace';
     const existingSpace = this.getCachedElement(type, {
       elementBefore,
@@ -802,7 +806,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return resolve();
     }
 
-    rawLane.tasks.length = 0;
+    rawLane.tasks = [];
 
     return this.applyChange(rawDump);
   },
