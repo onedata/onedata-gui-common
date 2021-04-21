@@ -33,6 +33,13 @@ export default Component.extend({
     'disableToggleIcon:disable-toggle-icon',
     '_isItemFixed:header-fixed',
   ],
+  attributeBindings: ['href'],
+
+  /**
+   * @virtual optional
+   * @type {string}
+   */
+  href: '',
 
   /**
    * If true, text inside will be truncated with `truncate` css class.
