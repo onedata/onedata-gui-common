@@ -141,7 +141,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
 
   &[aria-disabled=true] {
     background-color: $input-bg;
-    opacity: 0.6;
+    opacity: $disabled-opacity;
     cursor: not-allowed;
   }
 

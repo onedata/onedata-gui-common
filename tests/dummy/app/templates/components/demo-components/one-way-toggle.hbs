@@ -27,7 +27,7 @@
     checked=delayedToggle1
     update=(action "promisedToggle" "delayedToggle1")
   }}
-    Value: {{delayedToggle}}
+    Value: {{delayedToggle1}}
 </p>
 <p>
   <label for="toggle5">Delayed toggle (spinner on the left):</label>
@@ -41,5 +41,25 @@
     }}
   </div>
     Value: {{delayedToggle2}}
+</p>
+<p>
+  <label for="toggle6">Toggle with tooltip:</label>
+  {{one-way-toggle
+    inputId="toggle6"
+    checked=tooltipToggle
+    update=(action (mut tooltipToggle))
+    tip="Custom tooltip"
+  }}
+    Value: {{tooltipToggle}}
+</p>
+<p>
+  <label for="toggle7">Toggle with custom icon:</label>
+  {{one-way-toggle
+    inputId="toggle7"
+    checked=iconToggle
+    update=(action (mut iconToggle))
+    icon="x"
+  }}
+    Value: {{iconToggle}}
 </p>
 

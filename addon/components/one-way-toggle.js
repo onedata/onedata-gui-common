@@ -1,29 +1,46 @@
 /**
  * Creates toggle-like checkbox component. Allows to use three-state selection.
  *
- * @module components/one-way-toggle.js
+ * @module components/one-way-toggle
  * @author Michał Borzęcki, Jakub Liput
- * @copyright (C) 2017-2018 ACK CYFRONET AGH
+ * @copyright (C) 2017-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { or } from '@ember/object/computed';
+import { or, conditional, equal, raw } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import { next } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-way-toggle';
 import RecognizerMixin from 'ember-gestures/mixins/recognizers';
 import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
 import { inject as service } from '@ember/service';
+import computedT from 'onedata-gui-common/utils/computed-t';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-// TODO: handle three state in progress
-
-export default OneCheckboxBase.extend(RecognizerMixin, {
+export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
   layout,
   classNames: ['one-way-toggle'],
-  classNameBindings: ['_checkedClass', '_toggleClassFromId'],
+  classNameBindings: ['_toggleClassFromId'],
   recognizers: 'pan',
 
   i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneWayToggle',
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  tip: undefined,
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  icon: undefined,
 
   /**
    * If true, shows 'lock' icon when toogle is readonly.
@@ -38,10 +55,18 @@ export default OneCheckboxBase.extend(RecognizerMixin, {
    */
   lockHint: undefined,
 
-  _lockHint: computed('lockHint', function _lockHint() {
-    return this.get('lockHint') ||
-      this.get('i18n').t('components.oneWayToggle.locked');
-  }),
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  effectiveTip: conditional(
+    equal('tip', raw(undefined)),
+    conditional(
+      'isReadOnly',
+      or('lockHint', computedT('locked')),
+      raw(undefined)
+    ),
+    'tip'
+  ),
 
   /**
    * If true, click action handler will be disabled

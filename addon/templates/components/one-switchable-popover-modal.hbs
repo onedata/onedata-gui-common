@@ -8,8 +8,14 @@
       triggerSelector=_activeTriggerConfiguration.selector
       open=_contentVisible
       animation=null
-      windowEvent=popoverWindowEvent}}
+      windowEvent=popoverWindowEvent
+    }}
       {{yield (hash
+        modal=(hash
+          header=(component "one-generic-component" class="switchable-popover-header")
+          body=(component "one-generic-component" class="switchable-popover-body")
+          footer=(component "one-generic-component" class="switchable-popover-footer")
+        )
         close=(action "close")
         submit=(action "submit")
       )}}
@@ -21,12 +27,21 @@
     onHide=(action "onModalHide")
     class=_modalClass
     transitionDuration=modalTransitionDuration
-    as |modal|}}
-    {{#modal.body}}
+    as |modal|
+  }}
+    {{#if (eq layoutType "modal")}}
       {{yield (hash
+        modal=modal
         close=(action "close")
         submit=(action "submit")
       )}}
-    {{/modal.body}}
+    {{else}}
+      {{#modal.body}}
+        {{yield (hash
+          close=(action "close")
+          submit=(action "submit")
+        )}}
+      {{/modal.body}}
+    {{/if}}
   {{/one-modal}}
 {{/if}}

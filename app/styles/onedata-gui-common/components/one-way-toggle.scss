@@ -1,17 +1,48 @@
-$toggle-size-base: 1.4em;
-$toggle-width: 2 * $toggle-size-base;
-$one-way-toggle-control-color-active: $brand-primary;
-$one-way-toggle-control-color-maybe: $color-one-yellow;
+$toggle-height: 1.74em;
+$toggle-width: 1.7 * $toggle-height;
+$toggle-track-height: $toggle-height * 0.7;
+$toggle-thumb-size: $toggle-height;
+$toggle-slide-space: $toggle-width - $toggle-thumb-size;
+$toggle-bg-color-unchecked: $color-one-light-gray;
+$toggle-bg-color-checked: $brand-primary;
+$toggle-bg-color-indeterminate: $color-one-yellow;
 $toggle-disabled-desaturation: 20%;
-$toggle-color-transition: transition-ease(background-color), transition-ease(opacity);
+$toggle-icon-size: 1.24em;
+
+@mixin toggle-color($base-color) {
+  $thumb-color: darken($base-color, 10%);
+  
+  .one-way-toggle-track {
+    background-color: $base-color;
+  }
+  
+  .one-way-toggle-thumb .thumb-icon {
+    color: $thumb-color;
+  }
+  
+  &.disabled {
+    .one-way-toggle-track {
+      background-color: desaturate($base-color, $toggle-disabled-desaturation);
+    }
+    .one-way-toggle-thumb .thumb-icon {
+      color: desaturate($thumb-color, $toggle-disabled-desaturation);
+    }
+  }
+}
 
 .one-way-toggle {
   position: relative;
-  display: inline-block;
-  height: $toggle-size-base;
+  display: inline-flex;
+  align-items: baseline;
+  height: $toggle-height;
   font-size: inherit;
   vertical-align: middle;
 
+  .one-way-toggle-elements-container {
+    display: inline-flex;
+    align-self: center;
+  }
+  
   &.form-control {
     background-color: inherit;
     border: 0;
@@ -32,64 +63,73 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
     position: absolute;
     z-index: -1;
 
-    &:focus + .one-way-toggle-control::before {
+    &:focus + * .one-way-toggle-thumb {
       @include box-shadow($control-box-shadow-focus);
       border: 1px solid $input-border-focus;
     }
   }
 
+  // TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
+  &.unselected {
+    @include toggle-color($toggle-bg-color-unchecked);
+  }
+  
   &.checked {
-    .one-way-toggle-control {
-      background-color: $one-way-toggle-control-color-active;
-      &::before {
-        margin-left: $toggle-width / 2;
-      }
-    }
-    &.disabled .one-way-toggle-control {
-      background-color: desaturate($one-way-toggle-control-color-active, $toggle-disabled-desaturation);
-      transition: $toggle-color-transition;
+    @include toggle-color($toggle-bg-color-checked);
+    
+    .one-way-toggle-thumb {
+      transform: translateX(#{$toggle-slide-space});
     }
   }
 
   &.maybe {
-    .one-way-toggle-control {
-      background-color: $one-way-toggle-control-color-maybe;
-      &::before {
-        margin-left: $toggle-width / 4;
-      }
-    }
-    &.disabled .one-way-toggle-control {
-      background-color: desaturate($one-way-toggle-control-color-maybe, $toggle-disabled-desaturation);
-      transition: $toggle-color-transition;
+    @include toggle-color($toggle-bg-color-indeterminate);
+    
+    .one-way-toggle-thumb {
+      transform: translateX(#{$toggle-slide-space / 2});
     }
   }
 
-  .one-way-toggle-control,
-  .one-way-toggle-control::before {
+  .one-way-toggle-track,
+  .one-way-toggle-thumb {
+    height: $toggle-height;
     border: 1px solid $input-border;
-    border-radius: $toggle-size-base / 2;
-    box-sizing: border-box;
-    content: "";
-    height: $toggle-size-base;
-    @include box-shadow(none);
+    border-radius: $toggle-height / 2;
   }
 
   .one-way-toggle-control {
-    display: inline-block;
-    background-color: $color-one-light-gray;
-    transition: $toggle-color-transition;
-    width: $toggle-width;
-    vertical-align: top;
-  }
-
-  .one-way-toggle-control::before {
-    display: block;
-    background-color: $input-bg;
     position: relative;
-    transition: transition-ease(margin-left), $control-focus-transition;
-    width: $toggle-size-base;
-    left: -1px;
-    top: -1px;
+    display: inline-flex;
+    align-items: center;
+    width: $toggle-width;
+    height: 100%;
+  }
+  
+  &.spinner-left {
+    flex-direction: row-reverse;
+  }
+  
+  .one-way-toggle-track {
+    height: $toggle-track-height;
+    flex-basis: 100%;
+    transition: transition-ease(background-color), transition-ease(opacity);
+    border-radius: $toggle-track-height / 2;
+  }
+  
+  .one-way-toggle-thumb {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $toggle-thumb-size;
+    width: $toggle-thumb-size;
+    transition: transition-ease(transform), $control-focus-transition;
+    background-color: $input-bg;
+    border-radius: $toggle-thumb-size / 2;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+    .one-icon.thumb-icon {
+      font-size: $toggle-icon-size;
+    }
   }
 
   &.disabled .one-way-toggle-control {
@@ -98,30 +138,28 @@ $toggle-color-transition: transition-ease(background-color), transition-ease(opa
 
   .one-way-toggle-readonly-icon {
     display: inline-block;
+    margin-left: 0.2em;
     font-size: 120%;
-    vertical-align: top;
+    line-height: 0;
   }
   
   &.in-progress {
+    $spinner-position-delta: 12px;
     width: 1.55 * $toggle-width;
     .spin-spinner-block {
       position: absolute;
       right: 0.55 * $toggle-width;
-      transform: translateX(12px);
-      top: 45%;
+      transform: translateX($spinner-position-delta);
+      // fix vertical position a little bit
+      top: calc(50% - 1px);
     }
     &.spinner-left {
       .spin-spinner-block {
-        right: initial;
-      }
-      .one-way-toggle-control {
-        position: relative;
-        right: -0.55 * $toggle-width;
+        transform: translateX(calc(-#{$toggle-width} + #{$spinner-position-delta}));
       }
     }
   }
   
-
   div.clickable::before {
     cursor: pointer;
   }

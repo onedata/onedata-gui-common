@@ -32,6 +32,8 @@ $main-content-light-background: lighten($color-one-semiwhite, 5%);
 
 $large-social-box-size: 50px;
 
+$disabled-opacity: 0.6;
+
 @import 'bootstrap-config';
 @import 'bootstrap-addons';
 
@@ -80,8 +82,6 @@ $height-collapse-transition: transition-linear(max-height);
 $width-collapse-transition: transition-linear(max-width);
 $collapse-transition: $height-collapse-transition, transition-linear(padding), transition-linear(opacity);
 $collapse-transition-vertical: $width-collapse-transition, transition-linear(padding), transition-linear(opacity), transition-linear(margin);
-
-$disabled-opacity: 0.6;
 
 @import 'onedata-gui-common/animate';
 @import 'onedata-gui-common/custom-animations';
@@ -182,3 +182,4 @@ $disabled-opacity: 0.6;
 @import 'onedata-gui-common/components/query-builder';
 @import 'onedata-gui-common/components/one-carousel';
 @import 'onedata-gui-common/components/workflow-visualiser';
+@import 'onedata-gui-common/components/one-pseudo-modal';

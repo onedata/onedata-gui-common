@@ -57,7 +57,8 @@ $form-component-view-margin: $padding-base-vertical;
     align-items: center;
 
     .one-way-toggle {
-      display: block;
+      display: flex;
+      align-items: center;
     }
 
     .field-component {

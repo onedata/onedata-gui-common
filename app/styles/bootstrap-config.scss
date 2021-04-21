@@ -110,7 +110,7 @@ label {
   }
   &[disabled] {
     @include box-shadow(none);
-    opacity: 0.6;
+    opacity: $disabled-opacity;
   }
   &[readonly] {
     background-color: $input-bg;
@@ -251,7 +251,7 @@ label {
 
 .input-group-addon.input-group-addon-icon {
   padding-left: $padding-small-vertical;
-  padding-right: $padding-small-vertical;
+  padding-right: $padding-small-vertical - 2px;
 }
 
 .table {
