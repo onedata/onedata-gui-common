@@ -8,13 +8,37 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject, { get } from '@ember/object';
+import EmberObject, { get, computed } from '@ember/object';
 import Service from '@ember/service';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import { Promise, resolve } from 'rsvp';
+import { camelize } from '@ember/string';
 
 export default Service.extend({
+  /**
+   * @type {Map<String,String>}
+   */
+  modelNameToRouteResourceTypeMapping: Object.freeze(new Map()),
+
+  /**
+   * @type {Ember.ComputedProperty<Map<String,String>>}
+   */
+  routeResourceTypeToModelNameMapping: computed(
+    'modelNameToRouteResourceTypeMapping',
+    function routeResourceTypeToModelNameMapping() {
+      const modelNameToRouteResourceTypeMapping =
+        this.get('modelNameToRouteResourceTypeMapping');
+      const routeResourceTypeMap = new Map();
+
+      modelNameToRouteResourceTypeMapping.forEach((resourceType, modelName) =>
+        routeResourceTypeMap.set(resourceType, modelName)
+      );
+
+      return routeResourceTypeMap;
+    }
+  ),
+
   /**
    * @abstract
    * @param {string} type
@@ -26,7 +50,7 @@ export default Service.extend({
 
   /**
    * Returns Promise ready to be consumed by sidebar
-   * @param {string} resourceType 
+   * @param {string} resourceType
    */
   getSidebarModelFor(resourceType) {
     const collectionProxy = this.getCollectionFor(resourceType);
@@ -60,7 +84,7 @@ export default Service.extend({
   },
 
   /**
-   * @param {string} resourceType 
+   * @param {string} resourceType
    * @returns {Array<string>}
    */
   getItemsSortingFor(resourceType) {
@@ -86,5 +110,25 @@ export default Service.extend({
    */
   getSidebarComponentNameFor(resourceType) {
     return `sidebar-${resourceType}`;
+  },
+
+  /**
+   * Returns resource type (compatible with the one used in other methods of this
+   * service) for given model name.
+   * @param {String} modelName
+   * @returns {String}
+   */
+  getRouteResourceTypeForModelName(modelName) {
+    return this.get('modelNameToRouteResourceTypeMapping').get(modelName) ||
+      `${modelName}s`;
+  },
+
+  /**
+   * @param {String} resourceType
+   * @returns {String}
+   */
+  getModelNameForRouteResourceType(resourceType) {
+    return this.get('routeResourceTypeToModelNameMapping').get(resourceType) ||
+      camelize(resourceType).replace(/s$/, '');
   },
 });

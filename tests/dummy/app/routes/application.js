@@ -1,12 +1,13 @@
 import Route from '@ember/routing/route';
-import componentsList from 'dummy/components-list';
 import smoothscroll from 'npm:smoothscroll-polyfill';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
-  model() {
-    return {
-      components: componentsList,
-    };
+  browser: service(),
+
+  beforeModel() {
+    this._super(...arguments);
+    this.smoothScrollPolyfill();
   },
 
   smoothScrollPolyfill() {

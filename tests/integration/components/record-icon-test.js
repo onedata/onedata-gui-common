@@ -40,7 +40,7 @@ describe('Integration | Component | record icon', function () {
     modelName: 'token',
     icon: 'tokens',
   }, {
-    modelName: 'workflowDirectory',
+    modelName: 'atmInventory',
     icon: 'view-grid',
   }].forEach(({ modelName, icon }) => {
     it(

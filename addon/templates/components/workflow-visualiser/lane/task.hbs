@@ -27,22 +27,29 @@
         (concat "actions-trigger-" elementId)
         (if areActionsOpened "active")
       )
-      click=(action (mut areActionsOpened) (not areActionsOpened))
+      click=(action "toggleActionsOpen" (not areActionsOpened))
     }}
-    {{#one-webui-popover
-      class="task-actions"
-      padding=false
-      popoverStyle="with-dropdown"
-      triggerSelector=(concat ".actions-trigger-" elementId)
-      open=areActionsOpened
-      onToggle=(action (mut areActionsOpened)) as |popover|}}
-      {{#click-outside action=(action (mut areActionsOpened) false) except-selector=(concat ".actions-trigger-" elementId)}}
-        {{actions-popover-content
-          actionsArray=taskActions
-          actionClicked=(action (mut areActionsOpened) false)
+    {{#render-later triggerRender=areActionsOpened}}
+      {{#one-webui-popover
+        class="task-actions"
+        padding=false
+        popoverStyle="with-dropdown"
+        triggerSelector=(concat ".actions-trigger-" elementId)
+        open=areActionsOpened
+        onToggle=(action "toggleActionsOpen")
+        as |popover|
+      }}
+        {{#click-outside
+          action=(action "toggleActionsOpen" false)
+          except-selector=(concat ".actions-trigger-" elementId)
         }}
-      {{/click-outside}}
-    {{/one-webui-popover}}
+          {{actions-popover-content
+            actionsArray=taskActions
+            actionClicked=(action (mut areActionsOpened) false)
+          }}
+        {{/click-outside}}
+      {{/one-webui-popover}}
+    {{/render-later}}
   {{else}}
     {{#truncated-string class="task-name"}}{{name}}{{/truncated-string}}
   {{/if}}

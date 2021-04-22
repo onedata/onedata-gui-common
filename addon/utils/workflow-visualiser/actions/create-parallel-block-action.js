@@ -16,6 +16,7 @@ import { inject as service } from '@ember/service';
 export default Action.extend({
   modalManager: service(),
 
+  // TODO: VFS-7577 change "block" to full "parallel block" name
   /**
    * @override
    */

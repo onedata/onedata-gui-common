@@ -1,22 +1,14 @@
 .workflow-visualiser .workflow-visualiser-task {
   position: relative;
-  min-height: 50px;
-  align-items: stretch;
 
-  &,
   .draggable-task {
     display: flex;
+    align-items: center;
+    padding-right: $padding-xs-horizontal;
     border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
     border-radius: $border-radius-base;
-    min-width: 0;
+    min-height: 50px;
     background-color: $color-one-white;
-  }
-
-  .draggable-task {
-    align-items: center;
-    flex-grow: 1;
-    padding-right: $padding-xs-horizontal;
-    margin: -$workflow-visualiser-block-border-width;
   }
 
   .task-drag-handle {

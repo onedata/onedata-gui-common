@@ -1,7 +1,7 @@
 {{#one-collapsible-list as |list|}}
   {{#each sortedItems as |item|}}
     {{#list.item class="resource-item" as |listItem|}}
-      {{#listItem.header isCollapsible=false}}
+      {{#listItem.header tagName=(if item.link "a" "div") href=item.link isCollapsible=false}}
         {{#if item.icon}}
           <span class="item-icon-container">
             {{one-icon class="item-icon" icon=item.icon}}

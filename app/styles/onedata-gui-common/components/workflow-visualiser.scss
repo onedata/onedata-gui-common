@@ -15,11 +15,8 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 
 @mixin workflow-visualiser-action-trigger-white-background() {
   &::after {
+    @include absolute-align-middle-center();
     content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
     display: block;
     width: 1em;
     height: 1em;
@@ -77,11 +74,13 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     }
   }
 
+  $edge-scroll-step-trigger-icon-x-offset: 0.04em;
+
   .left-edge-scroll-step-trigger {
     left: $padding-base-vertical;
 
     &::before {
-      left: -0.04em;
+      left: -$edge-scroll-step-trigger-icon-x-offset;
     }
   }
 
@@ -89,7 +88,21 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     right: $padding-base-vertical;
 
     &::before {
-      left: 0.04em;
+      left: $edge-scroll-step-trigger-icon-x-offset;
+    }
+  }
+
+  .draggable-object-target {
+    position: absolute;
+    transition: transition-ease(background-color);
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      border-radius: $border-radius-small;
+      border: 2px dashed transparent;
     }
   }
 }

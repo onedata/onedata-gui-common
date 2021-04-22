@@ -13,6 +13,7 @@ import Ember from 'ember';
 import _ from 'lodash';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import { isMissingMessage } from 'onedata-gui-common/utils/i18n/missing-message';
+import moment from 'moment';
 
 const i18nPrefix = 'errors.backendErrors.';
 
@@ -41,6 +42,7 @@ const detailsTranslateFunctions = {
   ]),
   fileRegistrationNotSupported: createArrayDetailsToStringsTranslator(['objectStorages']),
   badData: badDataDetailsTranslator,
+  tokenCaveatUnverified: caveatDetailsTranslator,
 };
 
 /**
@@ -121,6 +123,97 @@ function posixDetailsTranslator(i18n, errorDetails) {
   const errnoTranslation =
     findTranslation(i18n, `${i18nPrefix}translationParts.posixErrno.${errorDetails.errno}`);
   return Object.assign({}, errorDetails, { errno: errnoTranslation });
+}
+
+function caveatDetailsTranslator(i18n, errorDetails) {
+  let type = errorDetails.caveat.type.replace('.', '');
+  let placeholders;
+
+  switch (type) {
+    case 'time':
+      placeholders = {
+        expiredTime: moment
+          .unix(errorDetails.caveat.validUntil)
+          .format('D MMM YYYY H:mm:ss'),
+      };
+      break;
+    case 'ip':
+    case 'asn':
+      placeholders = {
+        [`${type}s`]: errorDetails.caveat.whitelist.join(', '),
+      };
+      break;
+    case 'georegion':
+    case 'geocountry': {
+      const placeholderListKey = type === 'georegion' ? 'regions' : 'countries';
+      const rawFilterType = errorDetails.caveat.filter;
+      const normalizedFilterType = ['whitelist', 'blacklist'].includes(rawFilterType) ?
+        rawFilterType : 'whitelist';
+      placeholders = {
+        inclusionType: findTranslation(
+          i18n,
+          `${i18nPrefix}translationParts.caveatErrors.inclusionTypes.${normalizedFilterType}`
+        ),
+        [placeholderListKey]: errorDetails.caveat.list.join(', '),
+      };
+      break;
+    }
+    case 'consumer': {
+      const elements = {
+        user: [],
+        group: [],
+        provider: [],
+      };
+      let consumers = '';
+
+      for (const element of errorDetails.caveat.whitelist) {
+        const elemType = element.split('-')[0];
+        const elemName = element.split('-')[1] === '*' ?
+          findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.any`) :
+          element.split('-')[1];
+        switch (elemType) {
+          case 'usr':
+            elements.user.push(elemName);
+            break;
+          case 'grp':
+            elements.group.push(elemName);
+            break;
+          case 'prv':
+            elements.provider.push(elemName);
+            break;
+        }
+      }
+
+      for (const elementType of ['user', 'group', 'provider']) {
+        const elementList = elements[elementType];
+        const or = findTranslation(i18n, `${i18nPrefix}translationParts.caveatErrors.or`);
+        if (!elementList.length) {
+          continue;
+        }
+        if (consumers) {
+          consumers += `, ${or} `;
+        }
+        consumers += findTranslation(
+          i18n,
+          `${i18nPrefix}translationParts.caveatErrors.idsLabel.${elementType}`
+        ) + elementList.join(', ');
+      }
+
+      placeholders = {
+        consumers: consumers,
+      };
+      break;
+    }
+    default:
+      type = 'otherCaveat';
+      placeholders = {};
+  }
+  const caveatDescription = findTranslation(
+    i18n,
+    `${i18nPrefix}translationParts.caveatErrors.${type}`,
+    placeholders
+  );
+  return Object.assign({}, errorDetails, { caveatDescription: caveatDescription });
 }
 
 function notAnXTokenDetailsTranslator(i18n, errorDetails) {

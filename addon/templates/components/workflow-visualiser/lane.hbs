@@ -26,28 +26,37 @@
             (concat "actions-trigger-" elementId)
             (if areActionsOpened "active")
           )
-          click=(action (mut areActionsOpened) (not areActionsOpened))
+          click=(action "toggleActionsOpen" (not areActionsOpened))
         }}
-        {{#one-webui-popover
-          class="lane-actions"
-          padding=false
-          popoverStyle="with-dropdown"
-          triggerSelector=(concat ".actions-trigger-" elementId)
-          open=areActionsOpened
-          onToggle=(action (mut areActionsOpened)) as |popover|}}
-          {{#click-outside action=(action (mut areActionsOpened) false) except-selector=(concat ".actions-trigger-" elementId)}}
-            {{actions-popover-content
-              actionsArray=laneActions
-              actionClicked=(action (mut areActionsOpened) false)
+        {{#render-later triggerRender=areActionsOpened}}
+          {{#one-webui-popover
+            class="lane-actions"
+            padding=false
+            popoverStyle="with-dropdown"
+            triggerSelector=(concat ".actions-trigger-" elementId)
+            open=areActionsOpened
+            onToggle=(action "toggleActionsOpen")
+            as |popover|
+          }}
+            {{#click-outside
+              action=(action (mut areActionsOpened) false)
+              except-selector=(concat ".actions-trigger-" elementId)
             }}
-          {{/click-outside}}
-        {{/one-webui-popover}}
+              {{actions-popover-content
+                actionsArray=laneActions
+                actionClicked=(action "toggleActionsOpen" false)
+              }}
+            {{/click-outside}}
+          {{/one-webui-popover}}
+        {{/render-later}}
       {{/if}}
     </div>
   </div>
   {{#perfect-scrollbar-element class="lane-elements"}}
     {{#each laneElements as |laneElement|}}
-      {{workflow-visualiser/visualiser-element-renderer elementModel=laneElement}}
+      {{workflow-visualiser/visualiser-element-renderer
+        elementModel=laneElement
+      }}
     {{/each}}
   {{/perfect-scrollbar-element}}
 {{/one-draggable-object}}

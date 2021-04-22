@@ -1,17 +1,16 @@
 .workflow-visualiser .workflow-visualiser-lane {
+  flex: 0 0 $workflow-visualiser-lane-width;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 
-  &,
   .draggable-lane {
     display: flex;
     flex-direction: column;
-    flex: 0 0 $workflow-visualiser-lane-width;
-    min-height: 0;
-    background-color: $color-one-white;
-  }
-
-  .draggable-lane {
     flex-grow: 1;
+    min-height: 0;
+    min-width: 0;
+    background-color: $color-one-white;
   }
 
   .lane-header {
