@@ -1,7 +1,13 @@
 /**
- * Extends link-to component from Ember and fixes bug with text inputs inside
- * links in Firefox. Without that fix, text inputs cannot handle cursor move
- * and text selection by mouse events.
+ * Extends link-to component from Ember and fixes bugs related to inputs
+ * inside anchors:
+ * 1. It is impossible to change text cursor position with mouse inside input in Firefox.
+ *    Solved using `draggable="false"`. See: https://stackoverflow.com/a/31733408 for more.
+ * 2. Using `Enter` key inside input causes anchor activation and redirect in Firefox.
+ *    Solved by preventing keyDown event when was triggered on input.
+ * 3. Some selections using mouse trigger drag event in Chrome and causes
+ *    pasting anchor url into the input. Solved by cancelling drag event when input
+ *    inside the anchor is active.
  *
  * @module components/one-link-to
  * @author Michał Borzęcki
@@ -38,6 +44,16 @@ export default LinkComponent.extend({
     if (draggable === undefined && isInFirefox) {
       this.set('draggable', false);
     }
+  },
+
+  dragStart(event) {
+    const nestedInputs = [...this.get('element').querySelectorAll('input')];
+    if (nestedInputs.includes(document.activeElement)) {
+      event.preventDefault();
+      return;
+    }
+
+    return this._super(...arguments);
   },
 
   keyDown(event) {
