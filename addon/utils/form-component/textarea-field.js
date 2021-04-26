@@ -1,6 +1,6 @@
 /**
  * A textarea form field.
- * 
+ *
  * @module utils/form-component/textarea-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -9,6 +9,7 @@
 
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { computed } from '@ember/object';
+import { conditional, raw, and } from 'ember-awesome-macros';
 
 export default FormField.extend({
   /**
@@ -18,9 +19,24 @@ export default FormField.extend({
 
   /**
    * @virtual optional
+   * @type {Boolean}
+   */
+  viewModeAsStaticText: false,
+
+  /**
+   * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
   placeholder: computed('i18nPrefix', 'path', function placeholder() {
     return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
   }),
+
+  /**
+   * @override
+   */
+  internalClasses: conditional(
+    and('viewModeAsStaticText', 'isInViewMode'),
+    raw('view-as-static-text'),
+    raw('')
+  ),
 });

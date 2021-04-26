@@ -19,4 +19,9 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<SafeString>}
    */
   placeholder: reads('field.placeholder'),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  viewModeAsStaticText: reads('field.viewModeAsStaticText'),
 });

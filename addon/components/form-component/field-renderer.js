@@ -23,6 +23,7 @@ export default Component.extend({
     'fieldModeClass',
     'fieldRendererClass',
     'field.classes',
+    'field.internalClasses',
   ],
 
   /**
