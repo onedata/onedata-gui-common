@@ -12,13 +12,14 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
 import { scheduleOnce } from '@ember/runloop';
+import { camelize } from '@ember/string';
 
 const {
   onedataTabs,
 } = config;
 
 function isValidTab(tabName) {
-  return onedataTabs.map(({ id }) => id).indexOf(tabName) !== -1 ||
+  return Boolean(onedataTabs.findBy('id', camelize(tabName))) ||
     tabName === 'users';
 }
 

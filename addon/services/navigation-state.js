@@ -2,7 +2,7 @@
  * A global state of page navigation. Accumulates data about active content and
  * aspect, generates proper global bar titles, active content level and manages
  * global actions.
- * 
+ *
  * To provide custom actions for aspect, aspectActions and aspectActionsTitle
  * should be changed (and changes should be later reverted!).
  *
@@ -324,7 +324,7 @@ export default Service.extend(I18n, {
   globalBarSidebarTitle: computed(
     'activeResourceType',
     function globalBarSidebarTitle() {
-      return this.get('i18n').t(`tabs.${this.get('activeResourceType')}.menuItem`);
+      return this.get('i18n').t(`tabs.${_.camelCase(this.get('activeResourceType'))}.menuItem`);
     }
   ),
 
@@ -338,7 +338,7 @@ export default Service.extend(I18n, {
       activeAspect,
     } = this.getProperties('activeResourceType', 'activeAspect');
     return activeResourceType && activeAspect ?
-      this.t(`${activeResourceType}.aspects.${_.camelCase(activeAspect)}`) : '';
+      this.t(`${_.camelCase(activeResourceType)}.aspects.${_.camelCase(activeAspect)}`) : '';
   }),
 
   /**
@@ -446,7 +446,7 @@ export default Service.extend(I18n, {
 
   /**
    * Resolves to true if activeResourceCollections contains model with passed id
-   * @param {string} id 
+   * @param {string} id
    * @returns {Promise<Boolean>}
    */
   resourceCollectionContainsId(id) {
@@ -483,7 +483,7 @@ export default Service.extend(I18n, {
 
   /**
    * Updates queryParams if those available in transition are different than actual
-   * @param {Transition} transition 
+   * @param {Transition} transition
    */
   updateQueryParams(transition) {
     const queryParams = get(transition, 'queryParams');
