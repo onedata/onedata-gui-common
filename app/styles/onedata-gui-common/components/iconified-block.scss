@@ -5,6 +5,8 @@ $iconified-block-border-radius: $border-radius-base;
 $iconified-block-padding: $padding-base-vertical;
 $iconified-block-icon-background-color: $color-one-light-blue;
 $iconified-block-icon-color: $color-one-blue-gray;
+$iconified-block-icon-background-color-hover: darken($iconified-block-icon-background-color, 3%);
+$iconified-block-background-color-hover: $main-content-hover-background;
 
 .iconified-block {
   display: flex;
@@ -37,5 +39,17 @@ $iconified-block-icon-color: $color-one-blue-gray;
   .content-section {
     flex-grow: 1;
     min-width: 0;
+  }
+
+  &.hoverable:hover {
+    cursor: pointer;
+
+    .icon-section {
+      background-color: $iconified-block-icon-background-color-hover;
+    }
+
+    .content-section {
+      background-color: $iconified-block-background-color-hover;
+    }
   }
 }
