@@ -13,6 +13,7 @@ import { observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from '../templates/components/main-menu-column';
 import $ from 'jquery';
+import { dasherize } from '@ember/string';
 
 export default Component.extend({
   layout,
@@ -97,9 +98,10 @@ export default Component.extend({
         'activeResourceType',
         'globalSidenavResourceType'
       );
-      if ((!globalSidenavResourceType && activeResourceType !== itemId) ||
-        (globalSidenavResourceType && globalSidenavResourceType !== itemId)) {
-        this.set('navigationState.globalSidenavResourceType', itemId);
+      const clickedResourceType = dasherize(itemId);
+      if ((!globalSidenavResourceType && activeResourceType !== clickedResourceType) ||
+        (globalSidenavResourceType && globalSidenavResourceType !== clickedResourceType)) {
+        this.set('navigationState.globalSidenavResourceType', clickedResourceType);
       } else {
         this.set('navigationState.globalSidenavResourceType', null);
       }
