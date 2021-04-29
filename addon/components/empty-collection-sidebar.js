@@ -28,14 +28,19 @@ export default Component.extend(I18n, {
   noResourcesTranslation: computed(
     'resourceType',
     function noResourcesTranslation() {
+      const resourceType = this.get('resourceType');
+      if (!resourceType) {
+        return;
+      }
+
       const resourceTypeTranslation = this.t(
-        `resourceTypes.${camelize(this.get('resourceType'))}`, {}, {
+        `resourceTypes.${camelize(resourceType)}`, {}, {
           defaultValue: null,
         });
 
       return resourceTypeTranslation ? this.t('noResources', {
         resourceType: resourceTypeTranslation,
-      }) : '';
+      }) : undefined;
     }
   ),
 });
