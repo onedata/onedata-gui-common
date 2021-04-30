@@ -1,0 +1,21 @@
+{{one-icon
+  id=subjectIdInfoTriggerId
+  icon="circle-id"
+  class="icon-trigger id-trigger clickable"
+}}
+{{#one-webui-popover
+  class="id-info"
+  popoverStyle="id-info over-modals"
+  triggerSelector=(concat "#" subjectIdInfoTriggerId)
+  as |popover|
+}}
+  <div class="form-group without-margin">
+    <label class="control-label">{{tt this (concat subjectIdType "Id")}}:</label>
+    {{one-clipboard-line
+      size="sm"
+      value=subjectValue
+      showText=false
+      btnType="default"
+    }}
+  </div>
+{{/one-webui-popover}}
