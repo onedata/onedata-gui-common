@@ -12,6 +12,20 @@ $onedata-logo-width: 150px;
 $mobile-resource-name-height: 20px;
 $brand-info-height: $one-list-item-line-height;
 
+@mixin full-col-content-as-min-height {
+  @media (min-width: $screen-md-min) {
+    min-height: calc(100vh - #{2 * $content-col-padding});
+  }
+
+  @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+    min-height: calc(100vh - #{$mobile-top-height + 2 * $content-col-padding});
+  }
+
+  @media (max-width: $screen-xs-max) {
+    min-height: calc(100vh - #{$mobile-top-height + $mobile-resource-name-height});
+  }
+}
+
 .onedata-logo {
   width: $onedata-logo-width;
   height: $onedata-logo-height;
@@ -28,7 +42,7 @@ $brand-info-height: $one-list-item-line-height;
 .app-layout {
   position: absolute;
   @include fill-container();
-  
+
   &.with-bottom-bar {
     .app-grid {
       padding-left: 0;
@@ -217,23 +231,23 @@ $brand-info-height: $one-list-item-line-height;
       }
     }
   }
-  
+
   .row-account-button {
     flex-shrink: 0;
     width: $main-menu-width;
-    
+
     .groove-border {
       position: relative;
       top: 1px;
     }
-    
+
     @include before-top-shadow($shadow-alpha: 0.2);
-    
+
     &::before {
       top: -4px;
     }
   }
-  
+
   .row-app {
     @media (max-width: $screen-sm-max) {
       padding-top: $mobile-top-height;
@@ -310,7 +324,7 @@ $brand-info-height: $one-list-item-line-height;
       background-color: inherit;
       z-index: 10;
     }
-    
+
     .item-icon {
       position: relative;
       margin-right: 0.6rem;
@@ -406,7 +420,7 @@ $brand-info-height: $one-list-item-line-height;
     @media (max-width: $screen-sm-max) {
       padding: $padding-large-horizontal;
     }
-    
+
     @media (max-width: $screen-xs-max) {
       padding: 0px;
     }
@@ -456,7 +470,7 @@ $brand-info-height: $one-list-item-line-height;
         }
       }
     }
-    &.disabled {  
+    &.disabled {
       >.item-header {
         color: $color-main-menu-fg-disabled;
       }
