@@ -111,17 +111,16 @@
         margin-top: -$padding-base-vertical;
         margin-bottom: -$padding-small-vertical;
       }
-
-      // &.editor {
-      //   display: block;
-      // }
     }
     @media screen and (max-width: $screen-xs-max) {
-      .one-label, .form-control {
-        height: 57px;
+      .one-label {
+        line-height: $line-height-base;
+        padding-left: $padding-base-horizontal/2;
+        padding-right: $padding-base-horizontal/2;
+        margin-left: -$padding-base-horizontal/2;
       }
       .form-control {
-        line-height: inherit;
+        padding: $padding-base-vertical/2 $padding-base-horizontal/2;
       }
     }
     .form-control {
