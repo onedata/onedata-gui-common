@@ -12,13 +12,18 @@ $onedata-logo-width: 150px;
 $mobile-resource-name-height: 20px;
 $brand-info-height: $one-list-item-line-height;
 
-@mixin full-col-content-as-min-height {
+@mixin min-size-as-full-col-content {
   @media (min-width: $screen-md-min) {
-    min-height: calc(100vh - #{2 * $content-col-padding});
+    min-height: 100vh;
   }
 
   @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-    min-height: calc(100vh - #{$mobile-top-height + 2 * $content-col-padding});
+    min-height: calc(100vh - #{$mobile-top-height});
+    margin: -$padding-large-horizontal;
+  }
+
+  @media (min-width: $screen-md-min) {
+    margin: -$content-col-padding;
   }
 
   @media (max-width: $screen-xs-max) {
