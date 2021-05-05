@@ -4,4 +4,5 @@ export default {
   groupId: 'Group ID',
   clusterId: 'Cluster ID',
   harvesterId: 'Harvester ID',
+  id: 'ID',
 };

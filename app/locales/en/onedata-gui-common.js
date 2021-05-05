@@ -38,7 +38,7 @@ import ceaseOneproviderSupportModal from './onedata-gui-common/components/cease-
 import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
 import queryBuilder from './onedata-gui-common/components/query-builder';
 import oneStep from './onedata-gui-common/components/one-step';
-import idInfoIconPopover from './onedata-gui-common/components/id-info-icon-popover';
+import idInfo from './onedata-gui-common/components/id-info';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -106,7 +106,7 @@ const translations = {
     oneDocSeeMore,
     queryBuilder,
     oneStep,
-    idInfoIconPopover,
+    idInfo,
     alerts: {
       endpointError,
     },

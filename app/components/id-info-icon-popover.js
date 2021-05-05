@@ -1,1 +1,0 @@
-export { default } from 'onedata-gui-common/components/id-info-icon-popover';
