@@ -41,7 +41,7 @@ describe('Integration | Component | record icon', function () {
     icon: 'tokens',
   }, {
     modelName: 'atmInventory',
-    icon: 'view-grid',
+    icon: 'atm-inventory',
   }].forEach(({ modelName, icon }) => {
     it(
       `shows "${icon}" when passed record is an instance of "${modelName}" model`,
