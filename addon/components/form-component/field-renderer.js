@@ -21,6 +21,7 @@ export default Component.extend({
     'canShowValidationIcon:has-validation-icon',
     'fieldNameClass',
     'fieldModeClass',
+    'isEffectivelyEnabled:field-enabled:field-disabled',
     'fieldRendererClass',
     'field.classes',
   ],
