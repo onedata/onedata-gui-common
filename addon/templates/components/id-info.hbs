@@ -1,0 +1,21 @@
+{{one-icon
+  id=popoverTriggerId
+  icon="circle-id"
+  class="icon-trigger id-trigger clickable"
+}}
+{{#one-webui-popover
+  class="id-info"
+  popoverStyle="id-info over-modals"
+  triggerSelector=(concat "#" popoverTriggerId)
+  as |popover|
+}}
+  <div class="form-group without-margin">
+    <label class="control-label">{{idLabel}}:</label>
+    {{one-clipboard-line
+      size="sm"
+      value=idValue
+      showText=false
+      btnType="default"
+    }}
+  </div>
+{{/one-webui-popover}}
