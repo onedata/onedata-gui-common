@@ -1,6 +1,6 @@
 /**
  * Single main menu item
- * 
+ *
  * @module components/main-menu-item
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
@@ -11,6 +11,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/main-menu-item';
 import { inject as service } from '@ember/service';
+import { dasherize } from '@ember/string';
 
 export default Component.extend({
   layout,
@@ -27,6 +28,7 @@ export default Component.extend({
 
   i18n: service(),
   router: service(),
+  sidebarResources: service(),
 
   item: null,
   isActive: false,
@@ -54,7 +56,7 @@ export default Component.extend({
 
   /**
    * @override
-   * @param {MouseEvent} clickEvent 
+   * @param {MouseEvent} clickEvent
    * @returns {boolean|undefined}
    */
   click(clickEvent) {
@@ -81,7 +83,7 @@ export default Component.extend({
 
   openInNewTab() {
     window.open(
-      this.get('router').urlFor('onedata.sidebar', this.get('item.id')),
+      this.get('router').urlFor('onedata.sidebar', dasherize(this.get('item.id'))),
       '_blank'
     );
   },
