@@ -111,7 +111,7 @@ export default Component.extend({
       const errorId = error && get(error, 'responseJSON.error.details.authError.id');
       if (fatalBasicAuthErrors.includes(errorId)) {
         reason = underscore(errorId);
-      } else if (errorId && errorId !== 'badBasicCredentials') {
+      } else if (errorId !== 'badBasicCredentials') {
         reason = 'unknown';
       }
       if (reason) {
