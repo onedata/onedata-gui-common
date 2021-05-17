@@ -42,7 +42,7 @@ function shortenCamelize(flag, flagsPrefix) {
       notifyError();
       return null;
     }
-    return flagWithoutPrefix;
+    return camelize(flagWithoutPrefix);
   }
 
   const m = flag.match('.*?_(.*)');
