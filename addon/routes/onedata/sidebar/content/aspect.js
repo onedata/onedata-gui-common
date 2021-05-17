@@ -13,6 +13,7 @@ import { inject as service } from '@ember/service';
 import config from 'ember-get-config';
 import _ from 'lodash';
 import { getOwner } from '@ember/application';
+import { camelize } from '@ember/string';
 
 const notFoundAspect = 'not-found';
 
@@ -75,9 +76,10 @@ export default Route.extend({
         outlet: 'main-content',
       });
     } else {
+      const tabId = camelize(resourceType);
       const tabSettings = _.find(
         onedataTabs,
-        t => get(t, 'id') === resourceType
+        t => get(t, 'id') === tabId
       );
       const defaultAspect = tabSettings.defaultAspect || 'index';
       this.transitionTo('onedata.sidebar.content.aspect', defaultAspect);

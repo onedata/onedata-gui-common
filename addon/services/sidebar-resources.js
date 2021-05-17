@@ -13,7 +13,7 @@ import Service from '@ember/service';
 import isRecord from 'onedata-gui-common/utils/is-record';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import { Promise, resolve } from 'rsvp';
-import { camelize } from '@ember/string';
+import { camelize, dasherize } from '@ember/string';
 
 export default Service.extend({
   /**
@@ -120,7 +120,7 @@ export default Service.extend({
    */
   getRouteResourceTypeForModelName(modelName) {
     return this.get('modelNameToRouteResourceTypeMapping').get(modelName) ||
-      `${modelName}s`;
+      `${dasherize(modelName)}s`;
   },
 
   /**
