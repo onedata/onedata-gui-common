@@ -2,8 +2,7 @@
   <li class="one-list-item">
     <div class="row">
       <div class="col-xs-12">
-        {{!-- TODO translate resource name --}}
-        <p>{{tt this "noResources" resourceType=resourceType}}</p>
+        <p>{{noResourcesTranslation}}</p>
       </div>
     </div>
     {{#if showGetStarted}}
@@ -14,7 +13,7 @@
           }}
             {{tt this "getStarted"}}
           {{/link-to}}
-        </div>  
+        </div>
       </div>
     {{/if}}
   </li>

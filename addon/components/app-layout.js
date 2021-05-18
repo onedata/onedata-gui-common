@@ -17,6 +17,7 @@ import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/app-layout';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
+import { dasherize } from '@ember/string';
 
 export default Component.extend({
   layout,
@@ -160,13 +161,13 @@ export default Component.extend({
   },
 
   actions: {
-    mobileMenuItemChanged(targetResourceType) {
+    mobileMenuItemChanged(menuItemId) {
       this.get('sideMenu').close();
-      const isUsersRemoteView = targetResourceType === 'users' &&
+      const isUsersRemoteView = menuItemId === 'users' &&
         this.get('guiUtils.manageAccountExternalLink');
-      if (targetResourceType && !isUsersRemoteView) {
+      if (menuItemId && !isUsersRemoteView) {
         return this.get('router')
-          .transitionTo('onedata.sidebar', targetResourceType);
+          .transitionTo('onedata.sidebar', dasherize(menuItemId));
       }
     },
     scrollOccurred(event) {

@@ -12,4 +12,5 @@ export default {
   space: 'space',
   user: 'user',
   token: 'token',
+  atmInventory: 'automation inventory',
 };

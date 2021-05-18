@@ -13,6 +13,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/main-menu';
 import { getOwner } from '@ember/application';
+import { string } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -56,7 +57,7 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<string>}
    */
-  currentItemId: reads('navigationState.activeResourceType'),
+  currentItemId: string.camelize('navigationState.activeResourceType'),
 
   itemsObserver: observer(
     'items.@each.{id,visibilityCondition}',

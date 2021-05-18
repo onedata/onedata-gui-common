@@ -38,4 +38,20 @@ export default {
     space_add_harvester: 'add harvester',
     space_remove_harvester: 'remove harvester',
   },
+  atmInventory: {
+    atm_inventory_view: 'view inventory',
+    atm_inventory_update: 'modify inventory',
+    atm_inventory_delete: 'remove inventory',
+    atm_inventory_view_privileges: 'view privileges',
+    atm_inventory_set_privileges: 'set privileges',
+
+    atm_inventory_manage_lambdas: 'manage lambdas',
+    atm_inventory_manage_workflow_schemas: 'manage workflow schemas',
+
+    atm_inventory_add_user: 'add user',
+    atm_inventory_remove_user: 'remove user',
+
+    atm_inventory_add_group: 'add group',
+    atm_inventory_remove_group: 'remove group',
+  },
 };

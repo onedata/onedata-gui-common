@@ -12,22 +12,36 @@ $onedata-logo-width: 150px;
 $mobile-resource-name-height: 20px;
 $brand-info-height: $one-list-item-line-height;
 
-@mixin min-size-as-full-col-content {
+@mixin min-size-as-full-col-content($preserve-padding: false) {
   @media (min-width: $screen-md-min) {
     min-height: 100vh;
   }
 
   @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
     min-height: calc(100vh - #{$mobile-top-height});
-    margin: -$padding-large-horizontal;
+    @if not $preserve-padding {
+      margin: -$padding-large-horizontal;
+    }
   }
 
   @media (min-width: $screen-md-min) {
-    margin: -$content-col-padding;
+    @if not $preserve-padding {
+      margin: -$content-col-padding;
+    }
   }
 
   @media (max-width: $screen-xs-max) {
     min-height: calc(100vh - #{$mobile-top-height + $mobile-resource-name-height});
+  }
+}
+
+@mixin col-content-padding() {
+  @media (min-width: $screen-md-min) {
+    padding: $content-col-padding;
+  }
+
+  @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+    padding: $padding-large-horizontal;
   }
 }
 

@@ -15,7 +15,7 @@
  */
 
 import { get } from '@ember/object';
-import { camelize } from '@ember/string';
+import { camelize, dasherize } from '@ember/string';
 
 export default function recordIcon(recordOrModelName, useSubtypeIcon = false) {
   let modelName, record;
@@ -46,7 +46,7 @@ export const modelToIconMapping = {
   harvester: 'light-bulb',
   share: 'browser-share',
   token: 'tokens',
-  atmInventory: 'view-grid',
+  atmWorkflowSchema: 'atm-workflow',
 };
 [
   'cluster',
@@ -54,7 +54,9 @@ export const modelToIconMapping = {
   'provider',
   'space',
   'user',
-].forEach(modelName => modelToIconMapping[modelName] = modelName);
+  'atmInventory',
+  'atmLambda',
+].forEach(modelName => modelToIconMapping[modelName] = dasherize(modelName));
 
 export const subtypeIconGetters = {
   cluster: cluster => {

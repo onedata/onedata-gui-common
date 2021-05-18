@@ -5,14 +5,23 @@
         {{form-component/field-renderer field=nestedField}}
         {{#if isInEditMode}}
           <div class="remove-field-button-container">
-            {{remove-icon class="remove-field-button" onClick=(action "removeField" nestedField)}}
+            {{remove-icon
+              class="remove-field-button"
+              onClick=(action "removeField" nestedField)
+              isDisabled=(not isEffectivelyEnabled)
+            }}
           </div>
         {{/if}}
       </div>
     {{/if}}
   {{/each}}
   {{#if isInEditMode}}
-    {{#bs-button class="add-field-button" size="sm" onClick=(action "addField")}}
+    {{#bs-button
+      class="add-field-button"
+      size="sm"
+      disabled=(not isEffectivelyEnabled)
+      onClick=(action "addField")
+    }}
       {{one-icon icon="add-filled"}}{{addButtonText}}
     {{/bs-button}}
   {{/if}}
