@@ -46,6 +46,7 @@ export const modelToIconMapping = {
   harvester: 'light-bulb',
   share: 'browser-share',
   token: 'tokens',
+  atmWorkflowSchema: 'atm-workflow',
 };
 [
   'cluster',
@@ -54,6 +55,7 @@ export const modelToIconMapping = {
   'space',
   'user',
   'atmInventory',
+  'atmLambda',
 ].forEach(modelName => modelToIconMapping[modelName] = dasherize(modelName));
 
 export const subtypeIconGetters = {
