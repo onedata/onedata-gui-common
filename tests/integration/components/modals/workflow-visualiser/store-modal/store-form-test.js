@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
-import { fillIn, focus, blur } from 'ember-native-dom-helpers';
+import { click, fillIn, focus, blur } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
 
@@ -261,6 +261,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: 'list',
           dataSpec: dataTypes[0].dataSpec,
           defaultInitialValue: '',
+          requiresInitialValue: false,
         },
         isValid: false,
       });
@@ -275,6 +276,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: 'list',
           dataSpec: dataTypes[0].dataSpec,
           defaultInitialValue: '',
+          requiresInitialValue: false,
         },
         isValid: true,
       });
@@ -332,6 +334,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           await selectChoose('.dataType-field', selectedDataTypeLabel);
         }
         await fillIn('.defaultValue-field .form-control', 'someDefault');
+        await click('.needsUserInput-field .one-way-toggle');
 
         expect(this.$('.has-error')).to.not.exist;
         expect(changeSpy).to.be.calledWith({
@@ -341,6 +344,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             type,
             dataSpec: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
             defaultInitialValue: 'someDefault',
+            requiresInitialValue: true,
           },
           isValid: true,
         });
@@ -392,6 +396,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             end: 10,
             step: 2,
           },
+          requiresInitialValue: false,
         },
         isValid: true,
       });
@@ -501,10 +506,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             type: 'list',
             dataSpec,
             defaultInitialValue: '',
+            requiresInitialValue: false,
           },
           isValid: false,
         });
       });
+    });
+
+    it('renders unchecked "needs user input" toggle', async function () {
+      await render(this);
+
+      const $label = this.$('.needsUserInput-field .control-label');
+      const $toggle = this.$('.needsUserInput-field .one-way-toggle');
+      expect($label.text().trim()).to.equal('Needs user input:');
+      expect($toggle).to.not.have.class('checked');
     });
   });
 
@@ -533,6 +548,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: type,
           dataSpec: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
           defaultInitialValue: 'someDefault',
+          requiresInitialValue: true,
         });
 
         await render(this);
@@ -551,6 +567,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           expect($dataTypeField).to.have.class('field-enabled');
         }
         expect(this.$('.defaultValue-field .form-control')).to.have.value('someDefault');
+        expect(this.$('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
       });
     });
 
@@ -634,6 +651,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           type: type,
           dataSpec: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
           defaultInitialValue: 'someDefault',
+          requiresInitialValue: true,
         });
 
         await render(this);
@@ -657,6 +675,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         }
         expect(this.$('.defaultValue-field .field-component').text().trim())
           .to.equal('someDefault');
+        expect(this.$('.needsUserInput-field .one-way-toggle'))
+          .to.have.class('checked');
       });
     });
 

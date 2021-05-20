@@ -109,5 +109,8 @@ export default {
         label: 'Range step',
       },
     },
+    needsUserInput: {
+      label: 'Needs user input',
+    },
   },
 };

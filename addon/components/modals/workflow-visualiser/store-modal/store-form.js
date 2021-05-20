@@ -8,6 +8,7 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { computed, observer, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -151,12 +152,14 @@ export default Component.extend(I18n, {
       typeField,
       genericStoreConfigFieldsGroup,
       rangeStoreConfigFieldsGroup,
+      needsUserInputField,
     } = this.getProperties(
       'nameField',
       'descriptionField',
       'typeField',
       'genericStoreConfigFieldsGroup',
-      'rangeStoreConfigFieldsGroup'
+      'rangeStoreConfigFieldsGroup',
+      'needsUserInputField'
     );
 
     return FormFieldsRootGroup.extend({
@@ -174,6 +177,7 @@ export default Component.extend(I18n, {
         typeField,
         genericStoreConfigFieldsGroup,
         rangeStoreConfigFieldsGroup,
+        needsUserInputField,
       ],
     });
   }),
@@ -407,6 +411,17 @@ export default Component.extend(I18n, {
       });
   }),
 
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.ToggleField>}
+   */
+  needsUserInputField: computed(function needsUserInputField() {
+    return ToggleField
+      .extend(defaultValueGenerator(this, raw(false)))
+      .create({
+        name: 'needsUserInput',
+      });
+  }),
+
   formValuesUpdater: observer(
     'mode',
     'passedFormValues',
@@ -485,19 +500,22 @@ function storeToFormData(store) {
     type,
     dataSpec,
     defaultInitialValue,
+    requiresInitialValue,
   } = getProperties(
     store,
     'name',
     'description',
     'type',
     'dataSpec',
-    'defaultInitialValue'
+    'defaultInitialValue',
+    'requiresInitialValue'
   );
 
   const formData = {
     name,
     description,
     type,
+    needsUserInput: Boolean(requiresInitialValue),
   };
 
   switch (type) {
@@ -538,6 +556,7 @@ function formDataToStore(formData) {
     type,
     genericStoreConfig,
     rangeStoreConfig,
+    needsUserInput,
   } = getProperties(
     formData,
     'name',
@@ -545,12 +564,14 @@ function formDataToStore(formData) {
     'type',
     'genericStoreConfig',
     'rangeStoreConfig',
+    'needsUserInput'
   );
 
   const store = {
     name,
     description,
     type,
+    requiresInitialValue: Boolean(needsUserInput),
   };
 
   switch (type) {
