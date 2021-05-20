@@ -160,7 +160,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
   });
 
   beforeEach(function () {
-    this.set('changeSpy', sinon.spy());
+    this.setProperties({
+      changeSpy: sinon.spy(),
+      isDisabled: false,
+    });
   });
 
   it(`has class "${componentClass}"`, async function () {
@@ -521,6 +524,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect($label.text().trim()).to.equal('Needs user input:');
       expect($toggle).to.not.have.class('checked');
     });
+
+    itHasAllFieldsEnabledByDefault();
+    itAllowsToDisableAllFields();
   });
 
   context('in "edit" mode', function () {
@@ -624,6 +630,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       expect(this.$('.name-field .form-control')).to.have.value('store1');
     });
+
+    itHasAllFieldsEnabledByDefault();
+    itAllowsToDisableAllFields();
   });
 
   context('in "view" mode', function () {
@@ -741,7 +750,30 @@ async function render(testCase) {
   testCase.render(hbs `{{modals/workflow-visualiser/store-modal/store-form
     mode=mode
     store=store
+    isDisabled=isDisabled
     onChange=changeSpy
   }}`);
   await wait();
+}
+
+function itHasAllFieldsEnabledByDefault() {
+  it('has all fields enabled by default', async function () {
+    await render(this);
+
+    expect(this.$('.store-form')).to.have.class('form-enabled')
+      .and.to.not.have.class('form-disabled');
+    expect(this.$('.field-disabled')).to.not.exist;
+  });
+}
+
+function itAllowsToDisableAllFields() {
+  it('allows to disable all fields', async function () {
+    this.set('isDisabled', true);
+
+    await render(this);
+
+    expect(this.$('.store-form')).to.have.class('form-disabled')
+      .and.to.not.have.class('form-enabled');
+    expect(this.$('.field-enabled')).to.not.exist;
+  });
 }

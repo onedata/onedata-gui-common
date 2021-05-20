@@ -1,6 +1,16 @@
+/**
+ * A form responsible for showing and editing/creating stores. It does not persists
+ * data. Any changes are yielded using `onChange` callback.
+ *
+ * @module components/modals/workflow-visualiser/store-modal/store-form
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-form';
-import { tag, getBy, conditional, eq, neq, raw, array, or, gt } from 'ember-awesome-macros';
+import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -92,7 +102,10 @@ const defaultRangeStep = 1;
 export default Component.extend(I18n, {
   layout,
   classNames: ['store-form'],
-  classNameBindings: ['modeClass'],
+  classNameBindings: [
+    'modeClass',
+    'isDisabled:form-disabled:form-enabled',
+  ],
 
   i18n: service(),
 
@@ -115,7 +128,8 @@ export default Component.extend(I18n, {
   store: undefined,
 
   /**
-   * @virtual
+   * Needed when `mode` is `'create'` or `'edit'`
+   * @virtual optional
    * @type {Function}
    * @param {Object} change
    *   ```
@@ -126,6 +140,12 @@ export default Component.extend(I18n, {
    *   ```
    */
   onChange: notImplementedIgnore,
+
+  /**
+   * @virtual optional
+   * @type {Boolean}
+   */
+  isDisabled: false,
 
   /**
    * @type {ComputedProperty<String>}
@@ -165,6 +185,7 @@ export default Component.extend(I18n, {
     return FormFieldsRootGroup.extend({
       i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
       ownerSource: reads('component'),
+      isEnabled: not('component.isDisabled'),
       onValueChange() {
         this._super(...arguments);
         scheduleOnce('afterRender', this.get('component'), 'notifyAboutChange');
