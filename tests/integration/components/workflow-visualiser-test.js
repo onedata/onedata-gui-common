@@ -20,7 +20,7 @@ const idGenerators = {
   task: taskIdFromExample,
 };
 
-const noLanesExample = [];
+const noLanesExample = generateExample(0, 0, 0);
 const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
@@ -33,9 +33,9 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   it('has class "workflow-visualiser"', function () {
-    const rawLanes = noLanesExample;
+    const rawData = noLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
     expect(this.$('.workflow-visualiser')).to.exist;
   });
@@ -76,14 +76,14 @@ describe('Integration | Component | workflow visualiser', function () {
     itAddsNewTask('adds the first task', twoLanesWithEmptyBlocksExample, 0);
     itAddsNewTask('adds a task after the last task', twoNonEmptyLanesExample, 2);
 
-    itChangesName('lane', (rawDump, newName) => rawDump[0].name = newName);
+    itChangesName('lane', (rawDump, newName) => rawDump.lanes[0].name = newName);
     itChangesName(
       'parallelBlock',
-      (rawDump, newName) => rawDump[0].tasks[0].name = newName
+      (rawDump, newName) => rawDump.lanes[0].tasks[0].name = newName
     );
     itChangesName(
       'task',
-      (rawDump, newName) => rawDump[0].tasks[0].tasks[0].name = newName
+      (rawDump, newName) => rawDump.lanes[0].tasks[0].tasks[0].name = newName
     );
 
     itMovesLane('first lane', 0, 'right');
@@ -103,34 +103,34 @@ describe('Integration | Component | workflow visualiser', function () {
     itPerformsActionWithConfirmation({
       description: 'clears non-empty lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
-      applyUpdate: rawDump => rawDump[0].tasks.length = 0,
+      applyUpdate: rawDump => rawDump.lanes[0].tasks.length = 0,
     });
     itDoesNotPerformAction({
       description: 'does not clear empty lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
-      initialRawLanes: twoEmptyLanesExample,
+      initialRawData: twoEmptyLanesExample,
     });
 
     itPerformsActionWithConfirmation({
       description: 'removes lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'remove'),
-      applyUpdate: rawDump => rawDump.splice(0, 1),
+      applyUpdate: rawDump => rawDump.lanes.splice(0, 1),
     });
     itPerformsActionWithConfirmation({
       description: 'removes parallel block',
       actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, 0], 'remove'),
-      applyUpdate: rawDump => rawDump[0].tasks.splice(0, 1),
+      applyUpdate: rawDump => rawDump.lanes[0].tasks.splice(0, 1),
     });
     itPerformsActionWithConfirmation({
       description: 'removes task',
       actionTriggerGetter: () => getActionTrigger('task', [0, 0, 0], 'remove'),
-      applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(0, 1),
+      applyUpdate: rawDump => rawDump.lanes[0].tasks[0].tasks.splice(0, 1),
     });
 
     it('does not show tasks progress', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.task-progress-bar')).to.not.exist;
     });
@@ -145,66 +145,66 @@ describe('Integration | Component | workflow visualiser', function () {
     itShowsVisualiserElements();
 
     it('does not show tasks progress when progress is not available', function () {
-      const rawLanes = threeNonEmptyLanesNoProgressExample;
+      const rawData = threeNonEmptyLanesNoProgressExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
-      checkTasksProgress(this, rawLanes);
+      checkTasksProgress(this, rawData);
     });
 
     it('shows tasks progress', function () {
-      const rawLanes = threeNonEmptyLanesExample;
+      const rawData = threeNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
-      checkTasksProgress(this, rawLanes);
+      checkTasksProgress(this, rawData);
     });
 
     it('updates rendered tasks progress', async function () {
-      const rawLanes = threeNonEmptyLanesExample;
-      renderWithRawLanes(this, rawLanes);
+      const rawData = threeNonEmptyLanesExample;
+      renderWithRawData(this, rawData);
 
-      const updatedRawLanes = _.cloneDeep(rawLanes);
-      const firstTask = updatedRawLanes[0].tasks[0].tasks[0];
-      const secondTask = updatedRawLanes[0].tasks[0].tasks[1];
+      const updatedRawData = _.cloneDeep(rawData);
+      const firstTask = updatedRawData.lanes[0].tasks[0].tasks[0];
+      const secondTask = updatedRawData.lanes[0].tasks[0].tasks[1];
       firstTask.progressPercent = (firstTask.progressPercent + 25) % 100;
       secondTask.status = possibleTaskStatuses.without(secondTask.status)[0];
-      this.set('rawLanes', updatedRawLanes);
+      this.set('rawData', updatedRawData);
       await wait();
 
-      checkTasksProgress(this, updatedRawLanes);
+      checkTasksProgress(this, updatedRawData);
     });
 
     it('does not show edition-related elements in empty visualiser', function () {
-      const rawLanes = noLanesExample;
+      const rawData = noLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
     it('does not allow to change lane name', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.lane-name .one-label')).to.not.exist;
     });
 
     it('does not show edition-related elements in lanes and interlane spaces', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.lane-actions-trigger')).to.not.exist;
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
     it('does not show edition-related elements in empty lane', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$(
         '.workflow-visualiser-interblock-space .add-block-action-trigger'
@@ -212,18 +212,18 @@ describe('Integration | Component | workflow visualiser', function () {
     });
 
     it('does not allow to change parallel block name', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.parallel-block-name .one-label')).to.not.exist;
     });
 
     it('does not show edition-related elements of parallel blocks and spaces between them', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
       expect(this.$(
@@ -232,9 +232,9 @@ describe('Integration | Component | workflow visualiser', function () {
     });
 
     it('does not show edition-related elements in empty parallel block', function () {
-      const rawLanes = twoLanesWithEmptyBlocksExample;
+      const rawData = twoLanesWithEmptyBlocksExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$(
         '.workflow-visualiser-parallel-block .workflow-visualiser-interblock-space .add-block-action-trigger'
@@ -242,18 +242,18 @@ describe('Integration | Component | workflow visualiser', function () {
     });
 
     it('does not allow to change task name', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.task-name .one-label')).to.not.exist;
     });
 
     it('does not show edition-related elements of tasks and spaces between them', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.task-actions-trigger')).to.not.exist;
       expect(this.$(
@@ -398,9 +398,9 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
 
 function itHasModeClass(mode) {
   it(`has class "mode-${mode}"`, function () {
-    const rawLanes = noLanesExample;
+    const rawData = noLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
     expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
   });
@@ -408,42 +408,43 @@ function itHasModeClass(mode) {
 
 function itShowsVisualiserElements() {
   it('shows one interlane space when there are no lanes', function () {
-    const rawLanes = noLanesExample;
+    const rawData = noLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawLanes);
+    checkRenderedLanesStructure(this, rawData);
   });
 
   itRendersEmptyLanes('shows an empty lane', 1);
   itRendersEmptyLanes('shows two empty lanes', 2);
 
   it('shows a non-empty lane', function () {
-    const rawLanes = twoNonEmptyLanesExample;
+    const rawData = twoNonEmptyLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawLanes);
+    checkRenderedLanesStructure(this, rawData);
   });
 }
 
 function itRendersEmptyLanes(message, lanesNumber) {
   it(message, function () {
-    const rawLanes = generateExample(lanesNumber, 0, 0);
+    const rawData = generateExample(lanesNumber, 0, 0);
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawLanes);
+    checkRenderedLanesStructure(this, rawData);
   });
 }
 
-function itAddsNewLane(message, initialRawLanes, insertIndex) {
+function itAddsNewLane(message, initialRawData, insertIndex) {
   let extraTriggerSelectorCondition = '';
-  if (initialRawLanes.length) {
-    if (insertIndex <= initialRawLanes.length - 1) {
-      extraTriggerSelectorCondition = `[data-element-after-id="${initialRawLanes[insertIndex].id}"]`;
+  const rawLanes = initialRawData.lanes;
+  if (rawLanes.length) {
+    if (insertIndex <= initialRawData.lanes.length - 1) {
+      extraTriggerSelectorCondition = `[data-element-after-id="${rawLanes[insertIndex].id}"]`;
     } else {
-      extraTriggerSelectorCondition = `[data-element-before-id="${initialRawLanes[insertIndex - 1].id}"]`;
+      extraTriggerSelectorCondition = `[data-element-before-id="${rawLanes[insertIndex - 1].id}"]`;
     }
   }
   const addTriggerSelector =
@@ -452,18 +453,18 @@ function itAddsNewLane(message, initialRawLanes, insertIndex) {
   itPerformsAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
-    applyUpdate: rawDump => rawDump.splice(insertIndex, 0, {
+    applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
       type: 'lane',
       name: 'Untitled lane',
       tasks: [],
     }),
-    initialRawLanes,
+    initialRawData,
   });
 }
 
-function itAddsNewParallelBlock(message, initialRawLanes, insertIndex) {
-  const targetLane = initialRawLanes[0];
+function itAddsNewParallelBlock(message, initialRawData, insertIndex) {
+  const targetLane = initialRawData.lanes[0];
   let addTriggerSelector =
     `[data-visualiser-element-id="${targetLane.id}"] .workflow-visualiser-interblock-space`;
   if (targetLane.tasks.length) {
@@ -478,18 +479,18 @@ function itAddsNewParallelBlock(message, initialRawLanes, insertIndex) {
   itPerformsAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
-    applyUpdate: rawDump => rawDump[0].tasks.splice(insertIndex, 0, {
+    applyUpdate: rawDump => rawDump.lanes[0].tasks.splice(insertIndex, 0, {
       id: sinon.match.string,
       type: 'parallelBlock',
       name: 'Parallel block',
       tasks: [],
     }),
-    initialRawLanes,
+    initialRawData,
   });
 }
 
-function itAddsNewTask(message, initialRawLanes, insertIndex) {
-  const targetBlock = initialRawLanes[0].tasks[0];
+function itAddsNewTask(message, initialRawData, insertIndex) {
+  const targetBlock = initialRawData.lanes[0].tasks[0];
   let addTriggerSelector =
     `[data-visualiser-element-id="${targetBlock.id}"] .workflow-visualiser-interblock-space`;
   if (targetBlock.tasks.length) {
@@ -504,12 +505,12 @@ function itAddsNewTask(message, initialRawLanes, insertIndex) {
   itPerformsAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
-    applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(insertIndex, 0, {
+    applyUpdate: rawDump => rawDump.lanes[0].tasks[0].tasks.splice(insertIndex, 0, {
       id: sinon.match.string,
       type: 'task',
       name: 'Untitled task',
     }),
-    initialRawLanes,
+    initialRawData,
   });
 }
 
@@ -526,7 +527,7 @@ function itChangesName(elementType, applyUpdate) {
       await click(`${nameElementSelector} .save-icon`);
     },
     applyUpdate: rawDump => applyUpdate(rawDump, newName),
-    initialRawLanes: twoNonEmptyLanesExample,
+    initialRawData: twoNonEmptyLanesExample,
   });
 }
 
@@ -535,9 +536,9 @@ function itMovesLane(laneName, laneIdx, moveDirection) {
     description: `moves ${moveDirection} ${laneName}`,
     actionTriggerGetter: () => getActionTrigger('lane', [laneIdx], `move-${moveDirection}`),
     applyUpdate: rawDump => {
-      const movedRawLane = rawDump[laneIdx];
-      rawDump.splice(laneIdx, 1);
-      rawDump.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
+      const movedRawLane = rawDump.lanes[laneIdx];
+      rawDump.lanes.splice(laneIdx, 1);
+      rawDump.lanes.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
     },
   });
 }
@@ -554,7 +555,7 @@ function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
     description: `moves ${moveDirection} ${parallelBlockName}`,
     actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
     applyUpdate: rawDump => {
-      const blocksArray = rawDump[0].tasks;
+      const blocksArray = rawDump.lanes[0].tasks;
       const movedRawBlock = blocksArray[blockIdx];
       blocksArray.splice(blockIdx, 1);
       blocksArray.splice(blockIdx + (moveDirection === 'up' ? -1 : 1), 0, movedRawBlock);
@@ -573,7 +574,7 @@ function itPerformsActionWithConfirmation({
   description,
   actionTriggerGetter,
   applyUpdate,
-  initialRawLanes = threeNonEmptyLanesExample,
+  initialRawData = threeNonEmptyLanesExample,
 }) {
   itPerformsCustomAction({
     description,
@@ -583,7 +584,7 @@ function itPerformsActionWithConfirmation({
       await click(getModalFooter().find('.question-yes')[0]);
     },
     applyUpdate,
-    initialRawLanes,
+    initialRawData,
   });
 }
 
@@ -591,7 +592,7 @@ function itPerformsAction({
   description,
   actionTriggerGetter,
   applyUpdate,
-  initialRawLanes = threeNonEmptyLanesExample,
+  initialRawData = threeNonEmptyLanesExample,
 }) {
   itPerformsCustomAction({
     description,
@@ -600,7 +601,7 @@ function itPerformsAction({
       await click($actionTrigger[0]);
     },
     applyUpdate,
-    initialRawLanes,
+    initialRawData,
   });
 }
 
@@ -608,20 +609,20 @@ function itPerformsCustomAction({
   description,
   actionExecutor,
   applyUpdate,
-  initialRawLanes,
+  initialRawData,
 }) {
   it(description, async function () {
-    renderWithRawLanes(this, initialRawLanes);
+    renderWithRawData(this, initialRawData);
 
     await actionExecutor(this);
 
     const changeStub = this.get('changeStub');
-    const newRawLanes = _.cloneDeep(initialRawLanes);
-    applyUpdate(newRawLanes);
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
-    checkRenderedLanesStructure(this, initialRawLanes);
+    const newRawData = _.cloneDeep(initialRawData);
+    applyUpdate(newRawData);
+    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawData);
+    checkRenderedLanesStructure(this, initialRawData);
 
-    this.set('rawLanes', changeStub.lastCall.args[0]);
+    this.set('rawData', changeStub.lastCall.args[0]);
     await wait();
 
     checkRenderedLanesStructure(this, changeStub.lastCall.args[0]);
@@ -631,10 +632,10 @@ function itPerformsCustomAction({
 function itDoesNotPerformAction({
   description,
   actionTriggerGetter,
-  initialRawLanes = threeNonEmptyLanesExample,
+  initialRawData = threeNonEmptyLanesExample,
 }) {
   it(description, async function () {
-    renderWithRawLanes(this, initialRawLanes);
+    renderWithRawData(this, initialRawData);
 
     const $actionTrigger = await actionTriggerGetter();
 
@@ -643,13 +644,13 @@ function itDoesNotPerformAction({
   });
 }
 
-function renderWithRawLanes(testCase, rawLanes) {
-  testCase.set('rawLanes', rawLanes);
+function renderWithRawData(testCase, rawData) {
+  testCase.set('rawData', rawData);
   testCase.render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser
       mode=mode
-      rawData=rawLanes
+      rawData=rawData
       onChange=changeStub
     }}
   `);
@@ -657,7 +658,7 @@ function renderWithRawLanes(testCase, rawLanes) {
 
 function renderForScrollTest(testCase, lanesNumber, containerWidth) {
   testCase.setProperties({
-    rawLanes: generateExample(lanesNumber, 0, 0),
+    rawData: generateExample(lanesNumber, 0, 0),
     _window: new WindowStub(),
   });
   changeContainerWidthForScrollTest(testCase, containerWidth);
@@ -666,7 +667,7 @@ function renderForScrollTest(testCase, lanesNumber, containerWidth) {
     <div style={{containerStyle}}>
       {{workflow-visualiser
         mode="view"
-        rawData=rawLanes
+        rawData=rawData
         _window=_window
       }}
     </div>
@@ -726,8 +727,8 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
   await wait();
 }
 
-function checkTasksProgress(testCase, rawLanes) {
-  const tasks = _.flatten(_.flatten(rawLanes.mapBy('tasks')).mapBy('tasks'));
+function checkTasksProgress(testCase, rawData) {
+  const tasks = _.flatten(_.flatten(rawData.lanes.mapBy('tasks')).mapBy('tasks'));
   tasks.forEach(({ id, status, progressPercent }) => {
     const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
     expect($task).to.have.class(`status-${status || 'default'}`);
@@ -739,10 +740,10 @@ function checkTasksProgress(testCase, rawLanes) {
   });
 }
 
-function checkRenderedLanesStructure(testCase, rawLanes) {
+function checkRenderedLanesStructure(testCase, rawData) {
   const $lanes = testCase.$('.workflow-visualiser-lane');
-  expect($lanes).to.have.length(rawLanes.length);
-  rawLanes.forEach(({ name: laneName, tasks: laneTasks }, laneIndex) => {
+  expect($lanes).to.have.length(rawData.lanes.length);
+  rawData.lanes.forEach(({ name: laneName, tasks: laneTasks }, laneIndex) => {
     const $lane = $lanes.eq(laneIndex);
     expect($lane.find('.lane-name').text().trim()).to.equal(laneName);
     const $blocks = $lane.find('.workflow-visualiser-parallel-block');
@@ -759,15 +760,15 @@ function checkRenderedLanesStructure(testCase, rawLanes) {
     });
   });
 
-  checkInterlaneSpaces(testCase, rawLanes);
-  checkInterblockSpaces(testCase, rawLanes);
+  checkInterlaneSpaces(testCase, rawData);
+  checkInterblockSpaces(testCase, rawData);
 }
 
 function checkInterblockSpaces(testCase, rawDump) {
   const $lanes = testCase.$('.workflow-visualiser-lane');
-  expect($lanes).to.have.length(rawDump.length);
+  expect($lanes).to.have.length(rawDump.lanes.length);
 
-  rawDump.forEach(({ tasks: rawParallelBlocks }, laneIdx) => {
+  rawDump.lanes.forEach(({ tasks: rawParallelBlocks }, laneIdx) => {
     const parallelBlockIds = rawParallelBlocks.mapBy('id');
     const taskIdsPerParallelBlock = rawParallelBlocks
       .map(rawParallelBlock => rawParallelBlock.tasks.mapBy('id'));
@@ -789,7 +790,7 @@ function checkInterblockSpaces(testCase, rawDump) {
 function checkInterlaneSpaces(testCase, rawDump) {
   checkInterXSpaces(
     testCase.$('.workflow-visualiser-interlane-space'),
-    rawDump.mapBy('id')
+    rawDump.lanes.mapBy('id')
   );
 }
 
@@ -825,25 +826,27 @@ function generateExample(
   tasksPerParallelBlock,
   includeProgress = true
 ) {
-  return _.range(lanesNumber).map(laneNo => ({
-    id: laneIdFromExample(laneNo),
-    type: 'lane',
-    name: `lane${laneNo}`,
-    tasks: _.range(parallelBlocksPerLane).map(blockNo => ({
-      id: parallelBlockIdFromExample(laneNo, blockNo),
-      type: 'parallelBlock',
-      name: `block${laneNo}.${blockNo}`,
-      tasks: _.range(tasksPerParallelBlock).map(taskNo => ({
-        id: taskIdFromExample(laneNo, blockNo, taskNo),
-        type: 'task',
-        name: `task${laneNo}.${blockNo}.${taskNo}`,
-        status: includeProgress ?
-          getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,
-        progressPercent: includeProgress ?
-          getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
+  return {
+    lanes: _.range(lanesNumber).map(laneNo => ({
+      id: laneIdFromExample(laneNo),
+      type: 'lane',
+      name: `lane${laneNo}`,
+      tasks: _.range(parallelBlocksPerLane).map(blockNo => ({
+        id: parallelBlockIdFromExample(laneNo, blockNo),
+        type: 'parallelBlock',
+        name: `block${laneNo}.${blockNo}`,
+        tasks: _.range(tasksPerParallelBlock).map(taskNo => ({
+          id: taskIdFromExample(laneNo, blockNo, taskNo),
+          type: 'task',
+          name: `task${laneNo}.${blockNo}.${taskNo}`,
+          status: includeProgress ?
+            getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,
+          progressPercent: includeProgress ?
+            getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
+        })),
       })),
     })),
-  }));
+  };
 }
 
 function laneIdFromExample(laneNo) {

@@ -120,8 +120,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
   windowResizeDebounceTime,
 
   /**
+   * ```
+   * {
+   *   lanes: Array<Object>,
+   *   stores: Array<Object>,
+   * }
+   * ```
    * @virtual
-   * @type {Array<any>}
+   * @type {Object}
    */
   rawData: undefined,
 
@@ -180,7 +186,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
-  visualiserElements: computed('rawData.[]', function visualiserElements() {
+  visualiserElements: computed('rawData', function visualiserElements() {
     return this.getVisualiserElements();
   }),
 
@@ -341,8 +347,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Array<Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.InterlaneSpace>}
    */
   getVisualiserElements() {
-    const rawData = this.get('rawData') || [];
-    const lanes = rawData.map(rawLane => this.getElementForRawData(rawLane));
+    const rawLanes = this.get('rawData.lanes') || [];
+    const lanes = rawLanes.map(rawLane => this.getElementForRawData(rawLane));
     this.updateFirstLastFlagsInCollection(lanes);
 
     const visualiserElements = [
@@ -837,10 +843,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Object|undefined} raw representation of given `element` in passed `rawDump`
    */
   getRawElement(rawDump, element) {
+    const rawLanes = rawDump && rawDump.lanes || [];
     if (!element) {
       return undefined;
     } else if (get(element, 'type') === 'lane') {
-      return rawDump.findBy('id', get(element, 'id'));
+      return rawLanes.findBy('id', get(element, 'id'));
     } else {
       const idsPath = [];
       let parentsPathElement = element;
@@ -853,7 +860,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const rawBlock = idsPath.slice(1).reduce(
         (prevRawParent, id) =>
         prevRawParent && prevRawParent.tasks && prevRawParent.tasks.findBy('id', id),
-        rawDump.findBy('id', idsPath[0])
+        rawLanes.findBy('id', idsPath[0])
       );
       return rawBlock;
     }
@@ -873,7 +880,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     const parent = get(element, 'parent');
-    let containingCollection = rawDump;
+    let containingCollection = rawDump && rawDump.lanes || [];
     if (parent) {
       const rawParent = this.getRawElement(rawDump, parent);
       containingCollection = rawParent ? rawParent.tasks : undefined;
@@ -892,7 +899,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getRawCollectionForParent(rawDump, parentElement) {
     if (!parentElement) {
-      return rawDump;
+      return rawDump && rawDump.lanes || [];
     }
 
     const rawParent = this.getRawElement(rawDump, parentElement);
