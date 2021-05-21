@@ -6,7 +6,7 @@ export default {
   },
   p1: {
     goTo: 'To create a share, go to your files in the',
-    data: 'data tab',
+    data: 'files tab',
     inSpace: 'in this space',
     andUse: 'and use',
     share: 'share',
