@@ -5,7 +5,7 @@
 </a>
 {{else}}
   {{#if (eq buttonType "bs")}}
-    {{#bs-button class=(concat triggerClasses (concat " btn " buttonSizeClass)) type=buttonStyle onClick=(action "runAction" true) bubble=true}}
+    {{#bs-button class=(concat triggerClasses (concat " btn " buttonSizeClass)) disabled=disabled type=buttonStyle onClick=(action "runAction" true) bubble=true}}
       {{yield}}
     {{/bs-button}}
   {{/if}}

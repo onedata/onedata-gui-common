@@ -13,12 +13,13 @@
       triggerClasses=(or act.class act.className)
       itemAction=(action act.action actionsArg)
       isDisabled=act.disabled
+      disabled=act.disabled
     }}
       {{one-icon icon=act.icon}}
       <span class="text">{{act.title}}</span>
-      {{#if act.tip}}
-        {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
-      {{/if}}
     {{/dropdown.item}}
+    {{#if act.tip}}
+      {{one-tooltip title=act.tip placement=(or act.tipPlacement "top")}}
+    {{/if}}
   {{/each}}
 {{/one-collapsible-toolbar}}
