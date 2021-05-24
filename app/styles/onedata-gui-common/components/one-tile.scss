@@ -175,5 +175,6 @@ $-tile-separator-color: #dcdcdc;
   }
   .not-allowed {
     cursor: not-allowed;
+    opacity: $disabled-opacity;
   }
 }
