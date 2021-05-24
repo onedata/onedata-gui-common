@@ -434,15 +434,15 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
       if (laneToCheck === 0) {
         expect($lanesContainer.scrollLeft()).to.equal(0);
       } else {
-        expect($targetLane.offset().left).to.be.closeTo($lanesContainer.offset().left, 1);
+        expect($targetLane.offset().left).to.be.closeTo($lanesContainer.offset().left, 2);
       }
     } else {
       if (laneToCheck === $lanes.length - 1) {
         expect($lanesContainer.scrollLeft())
-          .to.be.closeTo($lanesContainer.prop('scrollWidth') - $lanesContainer.width(), 1);
+          .to.be.closeTo($lanesContainer.prop('scrollWidth') - $lanesContainer.width(), 2);
       } else {
         expect($targetLane.offset().left + $targetLane.width())
-          .to.be.closeTo($lanesContainer.offset().left + $lanesContainer.width(), 1);
+          .to.be.closeTo($lanesContainer.offset().left + $lanesContainer.width(), 2);
       }
     }
   });

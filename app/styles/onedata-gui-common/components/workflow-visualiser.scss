@@ -29,7 +29,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 .workflow-visualiser {
   position: relative;
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   height: 100%;
 
   .one-inline-editor {
