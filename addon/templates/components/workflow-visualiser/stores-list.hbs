@@ -1,4 +1,16 @@
 {{#each sortedStores as |store|}}
-  {{workflow-visualiser/stores-list/store store=store}}
+  {{workflow-visualiser/stores-list/store
+    store=store
+    mode=mode
+    actionsFactory=actionsFactory
+  }}
 {{/each}}
+{{#if (eq mode "edit")}}
+  {{#bs-button
+    class=createAction.className
+    onClick=createAction.executeCallback
+  }}
+    {{createAction.title}}
+  {{/bs-button}}
+{{/if}}
 {{yield}}

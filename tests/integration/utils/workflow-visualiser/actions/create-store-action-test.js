@@ -50,8 +50,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       createStub.resolves();
 
       const { resultPromise } = await executeAction(this);
-      const $modalBody = getModalBody();
-      await fillIn($modalBody.find('.name-field .form-control')[0], 'store1');
+      await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
       await click(getModalFooter().find('.btn-submit')[0]);
       const actionResult = await resultPromise;
 
@@ -78,8 +77,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       createStub.returns(new Promise((resolve, reject) => rejectCreate = reject));
 
       const { resultPromise } = await executeAction(this);
-      const $modalBody = getModalBody();
-      await fillIn($modalBody.find('.name-field .form-control')[0], 'store1');
+      await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
       await click(getModalFooter().find('.btn-submit')[0]);
       rejectCreate();
       await wait();
