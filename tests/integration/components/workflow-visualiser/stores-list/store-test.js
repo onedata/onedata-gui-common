@@ -4,10 +4,10 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import { click } from 'ember-native-dom-helpers';
+import { click, fillIn } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
-import { getModalFooter } from '../../../../helpers/modal';
+import { getModalBody, getModalFooter } from '../../../../helpers/modal';
 
 describe('Integration | Component | workflow visualiser/stores list/store', function () {
   setupComponentTest('workflow-visualiser/stores-list/store', {
@@ -56,6 +56,24 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       await click('.remove-store-action-trigger');
       await click(getModalFooter().find('.question-yes')[0]);
       expect(onRemoveSpy).to.be.calledOnce;
+    });
+
+    it('allows to modify store on click', async function () {
+      const onModifySpy = sinon.stub().resolves();
+      this.set('store.onModify', onModifySpy);
+      await render(this);
+
+      expect(onModifySpy).to.not.be.called;
+
+      await click('.workflow-visualiser-stores-list-store');
+      const $nameField = getModalBody().find('.name-field .form-control');
+      expect($nameField).to.have.value('store1');
+
+      await fillIn($nameField[0], 'store2');
+      await click(getModalFooter().find('.btn-submit')[0]);
+      expect(onModifySpy).to.be.calledOnce.and.to.be.calledWith(this.get('store'), {
+        name: 'store2',
+      });
     });
   });
 

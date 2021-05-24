@@ -42,4 +42,29 @@ export default Component.extend({
     } = this.getProperties('store', 'actionsFactory');
     return actionsFactory.createRemoveStoreAction({ store });
   }),
+
+  click(event) {
+    const {
+      mode,
+      store,
+      actionsFactory,
+      element,
+    } = this.getProperties('mode', 'store', 'actionsFactory', 'element');
+    const clickableElements = [...element.querySelectorAll('.clickable')];
+
+    if (
+      clickableElements.includes(event.target) ||
+      clickableElements.some(clkElement => clkElement.contains(event.target)) ||
+      !element.contains(event.target)
+    ) {
+      // Should be handled by another clickable element.
+      return;
+    }
+
+    switch (mode) {
+      case 'edit':
+        actionsFactory.createModifyStoreAction({ store }).execute();
+        break;
+    }
+  },
 });
