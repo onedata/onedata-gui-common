@@ -156,7 +156,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'store.{name,description,type}',
+    'store.{name,description,type,dataType,defaultInitialValue,requiresInitialValue}',
     function passedStoreFormValues() {
       return storeToFormData(this.get('store'));
     }
