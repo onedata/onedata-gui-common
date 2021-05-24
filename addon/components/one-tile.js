@@ -88,6 +88,16 @@ export default Component.extend(I18n, {
   footerLinkToParams: Object.freeze([]),
 
   /**
+   * @type {string}
+   */
+  footerClass: undefined,
+
+  /**
+   * @type {string}
+   */
+  tooltipText: undefined,
+
+  /**
    * If true, whole tile is a pseudo-link to aspect.
    * If false, only the "more" anchor will be a link.
    * @type {boolean}
