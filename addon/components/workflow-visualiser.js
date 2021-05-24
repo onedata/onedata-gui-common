@@ -80,6 +80,7 @@ import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interla
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { resolve } from 'rsvp';
 import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -163,6 +164,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    *   parallelBlock: Array<Utils.WorkflowVisualiser.Lane.ParallelBlock>,
    *   task: Array<Utils.WorkflowVisualiser.Lane.Task>,
    *   interblockSpace: Array<Utils.WorkflowVisualiser.Lane.InterblockSpace>,
+   *   store: Array<Utils.WorkflowVisualiser.Store>
    * }
    * ```
    * @type {Object}
@@ -188,6 +190,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   visualiserElements: computed('rawData', function visualiserElements() {
     return this.getVisualiserElements();
+  }),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   */
+  stores: computed('rawData', function stores() {
+    return this.getStores();
   }),
 
   /**
@@ -237,6 +246,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       parallelBlock: [],
       task: [],
       interblockSpace: [],
+      store: [],
     });
   },
 
@@ -627,6 +637,72 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
+   * Generates an array of stores from `rawData`
+   * @returns {Array<Utils.WorkflowVisualiser.Store>}
+   */
+  getStores() {
+    const rawStores = this.get('rawData.stores') || [];
+    return rawStores.map(rawStore => this.getStoreForRawData(rawStore));
+  },
+
+  /**
+   * Returns store for given raw data. If it is available in cache, then it
+   * is updated. Otherwise it is created from scratch and saved in cache for future updates.
+   * @param {Object} storeRawData store representation from backend
+   * @returns {Utils.WorkflowVisualiser.Store}
+   */
+  getStoreForRawData(storeRawData) {
+    const {
+      storeSchemaId: id,
+      name,
+      description,
+      type,
+      dataSpec,
+      defaultInitialValue,
+      requiresInitialValue,
+    } = getProperties(
+      storeRawData,
+      'storeSchemaId',
+      'name',
+      'description',
+      'type',
+      'dataSpec',
+      'defaultInitialValue',
+      'requiresInitialValue'
+    );
+
+    const existingStore = this.getCachedElement('store', { id });
+
+    if (existingStore) {
+      this.updateElement(existingStore, {
+        name,
+        description,
+        type,
+        dataSpec,
+        defaultInitialValue,
+        requiresInitialValue,
+      });
+      return existingStore;
+    } else {
+      const newStore = Store.create({
+        id,
+        name,
+        description,
+        type,
+        dataSpec,
+        defaultInitialValue,
+        requiresInitialValue,
+        onModify: (store, modifiedProps) => this.modifyElement(store, modifiedProps),
+        // FIXME: Implement removeStore
+        onRemove: store => this.removeStore(store),
+      });
+      this.addElementToCache('store', newStore);
+
+      return newStore;
+    }
+  },
+
+  /**
    * Gets an already generated element from cache. It has to match properties passed
    * via `filterProps`.
    * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
@@ -817,6 +893,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
     return this.applyChange(rawDump);
   },
 
+  addStore(newStoreProps) {
+    if (newStoreProps.id) {
+      newStoreProps.storeSchemaId = newStoreProps.id;
+      delete newStoreProps.id;
+    }
+    if (!newStoreProps.storeSchemaId) {
+      newStoreProps.storeSchemaId = guidFor(newStoreProps);
+    }
+
+    const rawDump = this.dumpRawData();
+    if (!rawDump.stores) {
+      rawDump.stores = [];
+    }
+
+    rawDump.stores.push(newStoreProps);
+
+    return this.applyChange(rawDump);
+  },
+
   /**
    * @param {Array<Object>} changedRawDump
    * @returns {Promise}
@@ -915,6 +1010,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     },
     scrollRight() {
       this.scrollToLane(this.get('laneIdxForNextRightScroll'), 'right');
+    },
+    createStore(newStoreProps) {
+      this.addStore(newStoreProps);
     },
   },
 });

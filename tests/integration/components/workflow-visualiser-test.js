@@ -9,7 +9,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
-import { getModalFooter } from '../../helpers/modal';
+import { getModalBody, getModalFooter } from '../../helpers/modal';
 
 const possibleTaskStatuses = ['success', 'warning', 'error'];
 const laneWidth = 300;
@@ -50,6 +50,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itHasModeClass('edit');
     itShowsVisualiserElements();
+    itShowsStoresList();
 
     itAddsNewLane('adds a first lane', noLanesExample, 0);
     itAddsNewLane('adds a lane before the first lane', twoNonEmptyLanesExample, 0);
@@ -127,6 +128,28 @@ describe('Integration | Component | workflow visualiser', function () {
       applyUpdate: rawDump => rawDump.lanes[0].tasks[0].tasks.splice(0, 1),
     });
 
+    itPerformsCustomAction({
+      description: 'allows to add new store',
+      actionExecutor: async () => {
+        await click('.create-store-action-trigger');
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'newstore');
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: rawDump => rawDump.stores.push({
+        storeSchemaId: sinon.match.string,
+        name: 'newstore',
+        description: '',
+        type: 'list',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
+        defaultInitialValue: '',
+        requiresInitialValue: false,
+      }),
+      initialRawData: noLanesExample,
+    });
+
     it('does not show tasks progress', function () {
       const rawData = twoNonEmptyLanesExample;
 
@@ -143,6 +166,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itHasModeClass('view');
     itShowsVisualiserElements();
+    itShowsStoresList();
 
     it('does not show tasks progress when progress is not available', function () {
       const rawData = threeNonEmptyLanesNoProgressExample;
@@ -427,6 +451,20 @@ function itShowsVisualiserElements() {
   });
 }
 
+function itShowsStoresList() {
+  it('shows stores list', function () {
+    const rawData = noLanesExample;
+    const mode = this.get('mode');
+
+    renderWithRawData(this, rawData);
+
+    const $storesList = this.$('.workflow-visualiser-stores-list');
+    expect($storesList).to.exist;
+    expect($storesList).to.have.class(`mode-${mode}`);
+    checkRenderedStoresList(this, rawData);
+  });
+}
+
 function itRendersEmptyLanes(message, lanesNumber) {
   it(message, function () {
     const rawData = generateExample(lanesNumber, 0, 0);
@@ -621,11 +659,14 @@ function itPerformsCustomAction({
     applyUpdate(newRawData);
     expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawData);
     checkRenderedLanesStructure(this, initialRawData);
+    checkRenderedStoresList(this, initialRawData);
 
-    this.set('rawData', changeStub.lastCall.args[0]);
+    const yieldedRawData = changeStub.lastCall.args[0];
+    this.set('rawData', yieldedRawData);
     await wait();
 
-    checkRenderedLanesStructure(this, changeStub.lastCall.args[0]);
+    checkRenderedLanesStructure(this, yieldedRawData);
+    checkRenderedStoresList(this, yieldedRawData);
   });
 }
 
@@ -820,6 +861,14 @@ function checkInterXSpace($space, beforeId, afterId) {
   });
 }
 
+function checkRenderedStoresList(testCase, rawData) {
+  const $stores = testCase.$('.workflow-visualiser-stores-list-store');
+  expect($stores).to.have.length(rawData.stores.length);
+  rawData.stores.sortBy('name').forEach(({ name }, idx) =>
+    expect($stores.eq(idx).text()).to.contain(name)
+  );
+}
+
 function generateExample(
   lanesNumber,
   parallelBlocksPerLane,
@@ -846,6 +895,29 @@ function generateExample(
         })),
       })),
     })),
+    stores: [{
+      storeSchemaId: 's1',
+      name: 'store1',
+      description: '',
+      type: 'list',
+      dataSpec: {
+        type: 'integer',
+        valueConstraints: {},
+      },
+      defaultInitialValue: '',
+      requiresInitialValue: false,
+    }, {
+      storeSchemaId: 's2',
+      name: 'store2',
+      description: 'storeDesc',
+      type: 'range',
+      defaultInitialValue: {
+        start: 1,
+        end: 10,
+        step: 2,
+      },
+      requiresInitialValue: false,
+    }],
   };
 }
 

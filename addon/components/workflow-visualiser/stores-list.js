@@ -1,12 +1,14 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/workflow-visualiser/stores-list';
 import { sort } from '@ember/object/computed';
+import { tag } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 export default Component.extend({
   layout,
   classNames: ['workflow-visualiser-stores-list'],
+  classNameBindings: ['modeClass'],
 
   /**
    * One of: `'edit'`, `'view'`
@@ -44,6 +46,11 @@ export default Component.extend({
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
   sortedStores: sort('stores', 'storesSortOrder'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  modeClass: tag `mode-${'mode'}`,
 
   /**
    * @type {ComputedProperty<Utils.Action>}

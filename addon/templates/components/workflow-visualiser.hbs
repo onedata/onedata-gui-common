@@ -22,4 +22,10 @@
     (if (not-eq laneIdxForNextRightScroll null) "visible")
   )
 }}
+{{workflow-visualiser/stores-list
+  mode=mode
+  actionsFactory=actionsFactory
+  stores=stores
+  onStoreCreate=(action "createStore")
+}}
 {{yield}}

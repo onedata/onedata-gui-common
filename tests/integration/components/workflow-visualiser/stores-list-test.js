@@ -104,6 +104,7 @@ function itRendersListOfStores(mode) {
   it('renders passed list of stores', async function () {
     render(this);
 
+    expect(this.$('.workflow-visualiser-stores-list')).to.have.class(`mode-${mode}`);
     const $stores = this.$('.workflow-visualiser-stores-list-store');
     expect($stores).to.have.length(2);
     expect($stores).to.have.class(`mode-${mode}`);
