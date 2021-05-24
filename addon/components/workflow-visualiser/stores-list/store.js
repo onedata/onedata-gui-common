@@ -65,6 +65,9 @@ export default Component.extend({
       case 'edit':
         actionsFactory.createModifyStoreAction({ store }).execute();
         break;
+      case 'view':
+        actionsFactory.createViewStoreAction({ store }).execute();
+        break;
     }
   },
 });

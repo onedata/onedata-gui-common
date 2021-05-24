@@ -90,6 +90,14 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
 
       expect(this.$('.remove-store-action-trigger')).to.not.exist;
     });
+
+    it('allows to view store details on click', async function () {
+      await render(this);
+
+      await click('.workflow-visualiser-stores-list-store');
+      expect(getModalBody().find('.name-field .field-component').text().trim())
+        .to.equal('store1');
+    });
   });
 });
 
