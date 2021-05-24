@@ -1,5 +1,8 @@
 <span class="store-name">{{store.name}}</span>
 {{#if (eq mode "edit")}}
-  <span class="remove-store-action-trigger" {{action "remove"}}></span>
+  <span
+    class={{removeAction.className}}
+    {{action removeAction.executeCallback}}
+  ></span>
 {{/if}}
 {{yield}}
