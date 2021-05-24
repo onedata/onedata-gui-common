@@ -368,6 +368,28 @@ export default Component.extend({
         }],
       }],
     }],
-    stores: [],
+    stores: [{
+      storeSchemaId: 's1',
+      name: 'store1',
+      description: '',
+      type: 'list',
+      dataSpec: {
+        type: 'integer',
+        valueConstraints: {},
+      },
+      defaultInitialValue: '',
+      requiresInitialValue: false,
+    }, {
+      storeSchemaId: 's2',
+      name: 'store2',
+      description: 'storeDesc',
+      type: 'range',
+      defaultInitialValue: {
+        start: 1,
+        end: 10,
+        step: 2,
+      },
+      requiresInitialValue: false,
+    }],
   })),
 });

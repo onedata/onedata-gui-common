@@ -6,22 +6,24 @@
     {{workflow-visualiser/visualiser-element-renderer elementModel=visualiserElement}}
   {{/each}}
 {{/perfect-scrollbar-element}}
-{{one-icon
-  icon="arrow-left"
-  click=(action "scrollLeft")
-  class=(concat-classes
-    "left-edge-scroll-step-trigger"
-    (if (not-eq laneIdxForNextLeftScroll null) "visible")
-  )
-}}
-{{one-icon
-  icon="arrow-right"
-  click=(action "scrollRight")
-  class=(concat-classes
-    "right-edge-scroll-step-trigger"
-    (if (not-eq laneIdxForNextRightScroll null) "visible")
-  )
-}}
+<div class="scrollers-container">
+  {{one-icon
+    icon="arrow-left"
+    click=(action "scrollLeft")
+    class=(concat-classes
+      "left-edge-scroll-step-trigger"
+      (if (not-eq laneIdxForNextLeftScroll null) "visible")
+    )
+  }}
+  {{one-icon
+    icon="arrow-right"
+    click=(action "scrollRight")
+    class=(concat-classes
+      "right-edge-scroll-step-trigger"
+      (if (not-eq laneIdxForNextRightScroll null) "visible")
+    )
+  }}
+</div>
 {{workflow-visualiser/stores-list
   mode=mode
   actionsFactory=actionsFactory

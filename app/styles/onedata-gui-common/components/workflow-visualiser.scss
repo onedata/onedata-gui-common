@@ -46,6 +46,10 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     flex-grow: 1;
   }
 
+  .scrollers-container {
+    position: relative;
+  }
+
   .left-edge-scroll-step-trigger,
   .right-edge-scroll-step-trigger {
     position: absolute;
@@ -112,3 +116,4 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 @import './workflow-visualiser/lane/parallel-block';
 @import './workflow-visualiser/lane/task';
 @import './workflow-visualiser/lane/interblock-space';
+@import './workflow-visualiser/stores-list';

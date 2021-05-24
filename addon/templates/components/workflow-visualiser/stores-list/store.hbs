@@ -1,8 +1,9 @@
 <span class="store-name">{{store.name}}</span>
 {{#if (eq mode "edit")}}
-  <span
-    class={{concat-classes "clickable" removeAction.className}}
-    {{action removeAction.executeCallback}}
-  ></span>
+  {{one-icon
+    icon="close"
+    class=(concat-classes "tag-remove clickable" removeAction.className)
+    click=removeAction.executeCallback
+  }}
 {{/if}}
 {{yield}}
