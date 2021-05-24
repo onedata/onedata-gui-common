@@ -22,6 +22,7 @@ import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visua
 import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
+import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
@@ -113,6 +114,14 @@ export default EmberObject.extend(OwnerInjector, {
    */
   createRemoveTaskAction(context) {
     return RemoveTaskAction.create({ ownerSource: this, context });
+  },
+
+  /**
+   * @param {(newStoreProps: Object) => Promise} context.createStoreCallback
+   * @returns {Utils.WorkflowVisualiser.Actions.CreateStoreAction}
+   */
+  createCreateStoreAction(context) {
+    return CreateStoreAction.create({ ownerSource: this, context });
   },
 
   /**

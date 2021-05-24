@@ -17,6 +17,7 @@ import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visua
 import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
+import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
@@ -70,6 +71,16 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   });
 
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);
+
+  it('creates action "CreateStoreAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const createStoreCallback = () => {};
+
+    const action = factory.createCreateStoreAction({ createStoreCallback });
+
+    expect(action).to.be.instanceOf(CreateStoreAction);
+    expect(get(action, 'createStoreCallback')).to.equal(createStoreCallback);
+  });
 
   itCreatesStoreAction('ViewStoreAction', ViewStoreAction);
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);

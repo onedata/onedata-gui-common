@@ -58,6 +58,9 @@ export default {
   },
   store: {
     actions: {
+      createStore: {
+        title: 'Add store',
+      },
       removeStore: {
         title: 'Remove',
         modalHeader: 'Remove store',
