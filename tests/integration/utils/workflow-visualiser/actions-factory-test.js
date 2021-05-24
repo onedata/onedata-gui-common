@@ -5,6 +5,7 @@ import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
@@ -16,6 +17,7 @@ import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visua
 import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
+import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import { get } from '@ember/object';
 
 describe('Integration | Utility | workflow visualiser/actions factory', function () {
@@ -66,6 +68,8 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   });
 
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);
+
+  itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
 });
 
 function itCreatesLaneAction(actionName, actionClass) {
@@ -101,5 +105,17 @@ function itCreatesTaskAction(actionName, actionClass) {
 
     expect(action).to.be.instanceOf(actionClass);
     expect(get(action, 'task')).to.equal(task);
+  });
+}
+
+function itCreatesStoreAction(actionName, actionClass) {
+  it(`creates action "${actionName}"`, function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const store = Store.create();
+
+    const action = factory[`create${actionName}`]({ store });
+
+    expect(action).to.be.instanceOf(actionClass);
+    expect(get(action, 'store')).to.equal(store);
   });
 }
