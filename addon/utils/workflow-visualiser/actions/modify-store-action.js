@@ -18,11 +18,6 @@ export default Action.extend({
   modalManager: service(),
 
   /**
-   * @override
-   */
-  i18nPrefix: 'components.workflowVisualiser.store.actions.modifyStore',
-
-  /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
   store: reads('context.store'),

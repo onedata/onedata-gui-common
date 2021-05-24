@@ -23,6 +23,7 @@ import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visuali
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
+import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 
 export default EmberObject.extend(OwnerInjector, {
   /**
@@ -119,5 +120,12 @@ export default EmberObject.extend(OwnerInjector, {
    */
   createModifyStoreAction(context) {
     return ModifyStoreAction.create({ ownerSource: this, context });
+  },
+  /**
+   * @param {Utils.WorkflowVisualiser.Store} context.store
+   * @returns {Utils.WorkflowVisualiser.Actions.RemoveStoreAction}
+   */
+  createRemoveStoreAction(context) {
+    return RemoveStoreAction.create({ ownerSource: this, context });
   },
 });

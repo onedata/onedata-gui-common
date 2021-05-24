@@ -18,6 +18,7 @@ import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visuali
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
+import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import { get } from '@ember/object';
 
 describe('Integration | Utility | workflow visualiser/actions factory', function () {
@@ -70,6 +71,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);
 
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
+  itCreatesStoreAction('RemoveStoreAction', RemoveStoreAction);
 });
 
 function itCreatesLaneAction(actionName, actionClass) {

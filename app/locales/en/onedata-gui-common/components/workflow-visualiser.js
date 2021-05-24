@@ -56,4 +56,14 @@ export default {
       },
     },
   },
+  store: {
+    actions: {
+      removeStore: {
+        title: 'Remove',
+        modalHeader: 'Remove store',
+        modalDescription: 'You are about to delete the store "{{storeName}}".',
+        modalYes: 'Remove',
+      },
+    },
+  },
 };
