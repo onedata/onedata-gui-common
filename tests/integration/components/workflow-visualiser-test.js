@@ -150,6 +150,24 @@ describe('Integration | Component | workflow visualiser', function () {
       initialRawData: noLanesExample,
     });
 
+    itPerformsCustomAction({
+      description: 'allows to modify store',
+      actionExecutor: async () => {
+        await click('.workflow-visualiser-stores-list-store');
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'xyz');
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: rawDump => rawDump.stores.findBy('name', 'store1').name = 'xyz',
+      initialRawData: noLanesExample,
+    });
+
+    itPerformsActionWithConfirmation({
+      description: 'allows to remove store',
+      actionTriggerGetter: testCase => testCase.$('.remove-store-action-trigger'),
+      applyUpdate: rawDump => rawDump.stores = rawDump.stores.rejectBy('name', 'store1'),
+      initialRawData: noLanesExample,
+    });
+
     it('does not show tasks progress', function () {
       const rawData = twoNonEmptyLanesExample;
 
@@ -197,6 +215,16 @@ describe('Integration | Component | workflow visualiser', function () {
       await wait();
 
       checkTasksProgress(this, updatedRawData);
+    });
+
+    it('shows store information in modal', async function () {
+      const rawData = noLanesExample;
+      renderWithRawData(this, rawData);
+
+      await click('.workflow-visualiser-stores-list-store');
+
+      expect(getModalBody().find('.name-field .field-component').text().trim())
+        .to.equal('store1');
     });
 
     it('does not show edition-related elements in empty visualiser', function () {

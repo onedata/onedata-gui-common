@@ -693,8 +693,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         defaultInitialValue,
         requiresInitialValue,
         onModify: (store, modifiedProps) => this.modifyElement(store, modifiedProps),
-        // FIXME: Implement removeStore
-        onRemove: store => this.removeStore(store),
+        onRemove: store => this.removeElement(store),
       });
       this.addElementToCache('store', newStore);
 
@@ -938,6 +937,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Object|undefined} raw representation of given `element` in passed `rawDump`
    */
   getRawElement(rawDump, element) {
+    if (!rawDump || !element) {
+      return resolve();
+    }
+    const elementType = get(element, '__type');
+    if (elementType === 'store') {
+      return (rawDump.stores || []).findBy('storeSchemaId', get(element, 'id'));
+    }
+
     const rawLanes = rawDump && rawDump.lanes || [];
     if (!element) {
       return undefined;
@@ -972,6 +979,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     if (!rawElement) {
       return;
+    }
+
+    const elementType = get(element, '__type');
+    if (elementType === 'store') {
+      return rawDump.stores;
     }
 
     const parent = get(element, 'parent');

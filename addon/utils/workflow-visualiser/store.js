@@ -12,6 +12,11 @@ import { resolve } from 'rsvp';
 
 export default EmberObject.extend({
   /**
+   * @type {String}
+   */
+  __type: 'store',
+
+  /**
    * @virtual
    * @type {String}
    */
