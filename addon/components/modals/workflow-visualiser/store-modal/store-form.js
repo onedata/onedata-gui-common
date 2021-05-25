@@ -18,6 +18,7 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { computed, observer, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -293,7 +294,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
    */
   defaultValueField: computed(function defaultValueField() {
-    return TextField
+    return JsonField
       .extend(defaultValueGenerator(this, raw('')))
       .create({
         name: 'defaultValue',
@@ -562,7 +563,8 @@ function storeToFormData(store) {
     default:
       formData.genericStoreConfig = {
         dataType: dataSpec && dataSpecToType(dataSpec) || undefined,
-        defaultValue: defaultInitialValue,
+        defaultValue: defaultInitialValue !== undefined ?
+          JSON.stringify(defaultInitialValue, null, 2) : '',
       };
       break;
   }
@@ -621,9 +623,21 @@ function formDataToStore(formData) {
         defaultValue,
       } = getProperties(genericStoreConfig || {}, 'dataType', 'defaultValue');
 
+      const dataSpec = dataType && typeToDataSpec(dataType) || undefined;
+      let defaultInitialValue;
+      if (defaultValue && defaultValue.trim()) {
+        try {
+          defaultInitialValue = JSON.parse(defaultValue);
+        } catch (e) {
+          defaultInitialValue = undefined;
+        }
+      } else {
+        defaultInitialValue = undefined;
+      }
+
       Object.assign(store, {
-        dataSpec: dataType && typeToDataSpec(dataType) || undefined,
-        defaultInitialValue: defaultValue || '',
+        dataSpec,
+        defaultInitialValue,
       });
       break;
     }

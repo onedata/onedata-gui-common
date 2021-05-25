@@ -263,7 +263,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: '',
           type: 'list',
           dataSpec: dataTypes[0].dataSpec,
-          defaultInitialValue: '',
+          defaultInitialValue: undefined,
           requiresInitialValue: false,
         },
         isValid: false,
@@ -278,7 +278,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           description: '',
           type: 'list',
           dataSpec: dataTypes[0].dataSpec,
-          defaultInitialValue: '',
+          defaultInitialValue: undefined,
           requiresInitialValue: false,
         },
         isValid: true,
@@ -336,7 +336,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         if (!disabledDataTypeSelection) {
           await selectChoose('.dataType-field', selectedDataTypeLabel);
         }
-        await fillIn('.defaultValue-field .form-control', 'someDefault');
+        await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
 
         expect(this.$('.has-error')).to.not.exist;
@@ -508,7 +508,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             description: '',
             type: 'list',
             dataSpec,
-            defaultInitialValue: '',
+            defaultInitialValue: undefined,
             requiresInitialValue: false,
           },
           isValid: false,
@@ -572,7 +572,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         } else {
           expect($dataTypeField).to.have.class('field-enabled');
         }
-        expect(this.$('.defaultValue-field .form-control')).to.have.value('someDefault');
+        expect(this.$('.defaultValue-field .form-control')).to.have.value('"someDefault"');
         expect(this.$('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
       });
     });
@@ -682,8 +682,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         } else {
           expect($dataTypeField).to.have.class('field-enabled');
         }
-        expect(this.$('.defaultValue-field .field-component').text().trim())
-          .to.equal('someDefault');
+        expect(this.$('.defaultValue-field .form-control'))
+          .to.have.value('"someDefault"');
         expect(this.$('.needsUserInput-field .one-way-toggle'))
           .to.have.class('checked');
       });

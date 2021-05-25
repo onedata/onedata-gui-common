@@ -369,7 +369,7 @@ export default Component.extend({
       }],
     }],
     stores: [{
-      storeSchemaId: 's1',
+      id: 's1',
       name: 'store1',
       description: '',
       type: 'list',
@@ -377,10 +377,10 @@ export default Component.extend({
         type: 'integer',
         valueConstraints: {},
       },
-      defaultInitialValue: '',
+      defaultInitialValue: undefined,
       requiresInitialValue: false,
     }, {
-      storeSchemaId: 's2',
+      id: 's2',
       name: 'store2',
       description: 'storeDesc',
       type: 'range',

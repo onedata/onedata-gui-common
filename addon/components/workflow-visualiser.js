@@ -653,7 +653,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getStoreForRawData(storeRawData) {
     const {
-      storeSchemaId: id,
+      id,
       name,
       description,
       type,
@@ -662,7 +662,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       requiresInitialValue,
     } = getProperties(
       storeRawData,
-      'storeSchemaId',
+      'id',
       'name',
       'description',
       'type',
@@ -893,12 +893,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   addStore(newStoreProps) {
-    if (newStoreProps.id) {
-      newStoreProps.storeSchemaId = newStoreProps.id;
-      delete newStoreProps.id;
-    }
-    if (!newStoreProps.storeSchemaId) {
-      newStoreProps.storeSchemaId = guidFor(newStoreProps);
+    if (!newStoreProps.id) {
+      newStoreProps.id = guidFor(newStoreProps);
     }
 
     const rawDump = this.dumpRawData();
@@ -942,7 +938,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
     const elementType = get(element, '__type');
     if (elementType === 'store') {
-      return (rawDump.stores || []).findBy('storeSchemaId', get(element, 'id'));
+      return (rawDump.stores || []).findBy('id', get(element, 'id'));
     }
 
     const rawLanes = rawDump && rawDump.lanes || [];

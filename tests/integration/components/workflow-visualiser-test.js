@@ -136,7 +136,7 @@ describe('Integration | Component | workflow visualiser', function () {
         await click(getModalFooter().find('.btn-submit')[0]);
       },
       applyUpdate: rawDump => rawDump.stores.push({
-        storeSchemaId: sinon.match.string,
+        id: sinon.match.string,
         name: 'newstore',
         description: '',
         type: 'list',
@@ -924,7 +924,7 @@ function generateExample(
       })),
     })),
     stores: [{
-      storeSchemaId: 's1',
+      id: 's1',
       name: 'store1',
       description: '',
       type: 'list',
@@ -935,7 +935,7 @@ function generateExample(
       defaultInitialValue: '',
       requiresInitialValue: false,
     }, {
-      storeSchemaId: 's2',
+      id: 's2',
       name: 'store2',
       description: 'storeDesc',
       type: 'range',
