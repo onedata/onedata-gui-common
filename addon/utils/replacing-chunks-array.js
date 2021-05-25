@@ -234,7 +234,11 @@ export default ArraySlice.extend(Evented, {
           // it can remove items from update, while they should stay there
           // because some entries "fallen down" from further part of array
           // it should be tested
-          _.pullAllBy(arrayUpdate, sourceArray, 'id');
+          _.pullAllWith(
+            arrayUpdate,
+            sourceArray,
+            (a, b) => get(a, 'id') === get(b, 'id')
+          );
           const fetchedArraySize = get(arrayUpdate, 'length');
           let insertIndex = emptyIndex + 1 - fetchedArraySize;
           if (fetchedArraySize) {
@@ -331,7 +335,11 @@ export default ArraySlice.extend(Evented, {
         .then(({ arrayUpdate, endReached }) => {
           // after asynchronous fetch, other fetch could modify array, so we need to
           // ensure that pulled data does not already contain new records
-          _.pullAllBy(arrayUpdate, sourceArray, 'id');
+          _.pullAllWith(
+            arrayUpdate,
+            sourceArray,
+            (a, b) => get(a, 'id') === get(b, 'id')
+          );
           if (endReached === undefined) {
             endReached = get(arrayUpdate, 'length') < chunkSize;
           }
