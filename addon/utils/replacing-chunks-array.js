@@ -234,11 +234,7 @@ export default ArraySlice.extend(Evented, {
           // it can remove items from update, while they should stay there
           // because some entries "fallen down" from further part of array
           // it should be tested
-          _.pullAllWith(
-            arrayUpdate,
-            sourceArray,
-            (a, b) => get(a, 'id') === get(b, 'id')
-          );
+          this.removeDuplicateRecords(arrayUpdate, sourceArray);
           const fetchedArraySize = get(arrayUpdate, 'length');
           let insertIndex = emptyIndex + 1 - fetchedArraySize;
           if (fetchedArraySize) {
@@ -335,11 +331,7 @@ export default ArraySlice.extend(Evented, {
         .then(({ arrayUpdate, endReached }) => {
           // after asynchronous fetch, other fetch could modify array, so we need to
           // ensure that pulled data does not already contain new records
-          _.pullAllWith(
-            arrayUpdate,
-            sourceArray,
-            (a, b) => get(a, 'id') === get(b, 'id')
-          );
+          this.removeDuplicateRecords(arrayUpdate, sourceArray);
           if (endReached === undefined) {
             endReached = get(arrayUpdate, 'length') < chunkSize;
           }
@@ -539,5 +531,13 @@ export default ArraySlice.extend(Evented, {
       );
       safeExec(this, 'set', 'error', error);
     });
+  },
+
+  removeDuplicateRecords(arrayUpdateData, sourceArray) {
+    _.pullAllWith(
+      arrayUpdateData,
+      sourceArray,
+      (a, b) => (a && get(a, 'id')) === (b && get(b, 'id'))
+    );
   },
 });
