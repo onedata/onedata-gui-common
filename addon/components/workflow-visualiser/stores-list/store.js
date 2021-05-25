@@ -1,3 +1,12 @@
+/**
+ * Shows single workflow store.
+ *
+ * @module components/workflow-visualiser/stores-list/store
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../../templates/components/workflow-visualiser/stores-list/store';
 import { tag } from 'ember-awesome-macros';

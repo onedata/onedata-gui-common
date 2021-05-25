@@ -66,7 +66,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
           type: 'integer',
           valueConstraints: {},
         },
-        defaultInitialValue: '',
+        defaultInitialValue: undefined,
         requiresInitialValue: false,
       });
     });

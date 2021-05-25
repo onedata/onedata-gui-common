@@ -109,7 +109,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect($cancelBtn).to.have.class('btn-default');
       expect($cancelBtn.text().trim()).to.equal('Cancel');
       expect($submitBtn).to.have.class('btn-primary');
-      expect($submitBtn.text().trim()).to.equal('Save');
+      expect($submitBtn.text().trim()).to.equal('OK');
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',

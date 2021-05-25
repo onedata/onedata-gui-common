@@ -15,7 +15,7 @@ export default {
     },
     submit: {
       create: 'Create',
-      edit: 'Save',
+      edit: 'OK',
     },
   },
 };

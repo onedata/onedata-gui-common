@@ -144,7 +144,7 @@ describe('Integration | Component | workflow visualiser', function () {
           type: 'integer',
           valueConstraints: {},
         },
-        defaultInitialValue: '',
+        defaultInitialValue: undefined,
         requiresInitialValue: false,
       }),
       initialRawData: noLanesExample,
