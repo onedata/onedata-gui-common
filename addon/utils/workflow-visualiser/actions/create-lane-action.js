@@ -32,6 +32,12 @@ export default Action.extend({
   icon: 'plus',
 
   /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   * @returns {Promise}
+   */
+  stores: reads('context.stores'),
+
+  /**
    * @type {ComputedProperty<Function>}
    * @param {Object} newElementProps
    * @returns {Promise}
@@ -42,14 +48,26 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const newLaneProps = {
-      type: 'lane',
-      name: String(this.t('newLaneName')),
-      tasks: [],
-    };
+    const {
+      modalManager,
+      stores,
+    } = this.getProperties('modalManager', 'stores');
 
     const result = ActionResult.create();
-    return result.interceptPromise(this.get('createLaneCallback')(newLaneProps))
-      .then(() => result, () => result);
+    return modalManager
+      .show('workflow-visualiser/lane-modal', {
+        mode: 'create',
+        stores,
+        onSubmit: laneFromForm =>
+          result.interceptPromise(this.createLane(laneFromForm)),
+      }).hiddenPromise
+      .then(() => {
+        result.cancelIfPending();
+        return result;
+      });
+  },
+
+  createLane(laneFromForm) {
+    return this.get('createLaneCallback')(laneFromForm);
   },
 });
