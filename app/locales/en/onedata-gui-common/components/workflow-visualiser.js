@@ -4,6 +4,9 @@ export default {
       createLane: {
         newLaneName: 'Untitled lane',
       },
+      modifyLane: {
+        title: 'Modify',
+      },
       moveLeftLane: {
         title: 'Move left',
       },

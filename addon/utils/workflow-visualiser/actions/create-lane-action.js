@@ -1,6 +1,6 @@
 /**
- * Creates new lane. Needs createLaneCallback passed via context. It will then be used
- * to save a new lane.
+ * Creates new lane. Needs stores and createLaneCallback passed via context.
+ * The latter will be used to save a new lane.
  *
  * @module utils/workflow-visualiser/actions/create-lane-action
  * @author Michał Borzęcki
@@ -33,7 +33,6 @@ export default Action.extend({
 
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
-   * @returns {Promise}
    */
   stores: reads('context.stores'),
 

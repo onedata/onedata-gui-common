@@ -64,6 +64,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
+        type: 'lane',
         name: 'lane1',
         iteratorSpec: {
           strategy: {
@@ -71,6 +72,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
           },
           storeSchemaId: 's1',
         },
+        tasks: [],
       });
       expect(get(actionResult, 'status')).to.equal('done');
     }
