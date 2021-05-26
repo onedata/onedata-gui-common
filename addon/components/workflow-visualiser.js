@@ -81,8 +81,8 @@ import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/par
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import generateId from 'onedata-gui-common/utils/workflow-visualiser/generate-id';
 import { resolve } from 'rsvp';
-import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
@@ -768,7 +768,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     if (!newElementProps.id) {
-      newElementProps.id = guidFor(newElementProps);
+      newElementProps.id = generateId();
     }
 
     targetElementsArray.splice(
@@ -894,7 +894,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   addStore(newStoreProps) {
     if (!newStoreProps.id) {
-      newStoreProps.id = guidFor(newStoreProps);
+      newStoreProps.id = generateId();
     }
 
     const rawDump = this.dumpRawData();
