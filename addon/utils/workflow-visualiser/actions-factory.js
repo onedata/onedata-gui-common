@@ -3,6 +3,9 @@
  * is introduced to allow extending default actions via passing custom (extended)
  * actions factory to the visualiser.
  *
+ * NOTE: single instance of the factory can be used only by the one workflow
+ * visualiser at a time.
+ *
  * @module utils/workflow-visualiser/actions-factory
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
@@ -27,7 +30,25 @@ import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/action
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 
+/**
+ * @typedef {EmberObject} WorkflowDataProvider
+ * @property {Array<Utils.WorkflowVisualiser.Store>} stores
+ */
+
 export default EmberObject.extend(OwnerInjector, {
+  /**
+   * @type {WorkflowDataProvider}
+   */
+  workflowDataProvider: undefined,
+
+  /**
+   * @param {WorkflowDataProvider} workflowDataProvider
+   * @returns {undefined}
+   */
+  registerWorkflowDataProvider(workflowDataProvider) {
+    this.set('workflowDataProvider', workflowDataProvider);
+  },
+
   /**
    * @param {(newElementProps: Object) => Promise} context.createLaneCallback
    * @returns {Utils.WorkflowVisualiser.Actions.CreateLaneAction}
