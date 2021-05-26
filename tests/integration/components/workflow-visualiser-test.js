@@ -516,13 +516,24 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
   const addTriggerSelector =
     `.workflow-visualiser-interlane-space${extraTriggerSelectorCondition} .create-lane-action-trigger`;
 
-  itPerformsAction({
+  itPerformsCustomAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    actionExecutor: async () => {
+      await click(addTriggerSelector);
+      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane999');
+      await click(getModalFooter().find('.btn-submit')[0]);
+    },
     applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
       type: 'lane',
-      name: 'Untitled lane',
+      name: 'lane999',
+      iteratorSpec: {
+        strategy: {
+          type: 'serial',
+        },
+        storeSchemaId: 's1',
+      },
       tasks: [],
     }),
     initialRawData,

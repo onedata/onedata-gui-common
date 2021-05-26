@@ -13,6 +13,8 @@
  */
 
 import EmberObject from '@ember/object';
+import ArrayProxy from '@ember/array/proxy';
+import { reads } from '@ember/object/computed';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
@@ -54,7 +56,16 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.CreateLaneAction}
    */
   createCreateLaneAction(context) {
-    return CreateLaneAction.create({ ownerSource: this, context });
+    const storesArrayProxy = ArrayProxy
+      .extend({ content: reads('factory.workflowDataProvider.stores') })
+      .create({ factory: this });
+
+    return CreateLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        stores: storesArrayProxy,
+      }, context),
+    });
   },
 
   /**

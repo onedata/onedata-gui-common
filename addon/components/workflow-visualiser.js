@@ -73,7 +73,7 @@
 
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
-import { computed, get, getProperties, set, setProperties } from '@ember/object';
+import { computed, observer, get, getProperties, set, setProperties } from '@ember/object';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
@@ -230,6 +230,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
     raw('')
   ),
 
+  actionsFactoryObserver: observer(
+    'actionsFactory',
+    function actionsFactoryObserver() {
+      const actionsFactory = this.get('actionsFactory');
+      if (actionsFactory) {
+        actionsFactory.registerWorkflowDataProvider(this);
+      }
+    }
+  ),
+
   /**
    * @override
    */
@@ -239,6 +249,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (!this.get('actionsFactory')) {
       this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
     }
+    this.actionsFactoryObserver();
 
     this.set('elementsCache', {
       lane: [],

@@ -30,11 +30,19 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
   it('creates action "CreateLaneAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this });
+    const store = Store.create({
+      id: 's1',
+      name: 'store1',
+    });
+    factory.registerWorkflowDataProvider({
+      stores: [store],
+    });
     const createLaneCallback = () => {};
 
     const action = factory.createCreateLaneAction({ createLaneCallback });
 
     expect(action).to.be.instanceOf(CreateLaneAction);
+    expect(get(action, 'stores').objectAt(0)).to.equal(store);
     expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
   });
 
