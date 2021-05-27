@@ -15,13 +15,19 @@
 
 import Component from '@ember/component';
 import layout from '../templates/components/actions-popover-content';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   tagName: 'ul',
   classNames: ['actions-popover-content', 'dropdown-menu'],
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.actionsPopoverContent',
 
   /**
    * @type {Array<Action>>}
@@ -49,6 +55,15 @@ export default Component.extend({
    * @type {Action|null}
    */
   nestedActionsOpened: null,
+
+  /**
+   * True, if there are no functional actions in `actionsArray` (eg. only separators)
+   * @type {ComputedProperty<Boolean>}
+   */
+  noRealActions: computed('actionsArray.@each.separator', function noRealActions() {
+    const actionsArray = this.get('actionsArray');
+    return !actionsArray || !get(actionsArray.rejectBy('separator'), 'length');
+  }),
 
   toggleNestedActions(item, isOpened) {
     if (item === null) {
