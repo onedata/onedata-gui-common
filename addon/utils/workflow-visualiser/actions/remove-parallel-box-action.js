@@ -1,5 +1,5 @@
 /**
- * Removes parallel block. Needs parallel block instance passed via context.
+ * Removes parallel box. Needs parallel box instance passed via context.
  *
  * @module utils/workflow-visualiser/actions/remove-task-action
  * @author Michał Borzęcki
@@ -19,12 +19,12 @@ export default Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.parallelBlock.actions.removeBlock',
+  i18nPrefix: 'components.workflowVisualiser.parallelBox.actions.removeParallelBox',
 
   /**
    * @override
    */
-  className: 'remove-parallel-block-action-trigger',
+  className: 'remove-parallel-box-action-trigger',
 
   /**
    * @override
@@ -32,19 +32,19 @@ export default Action.extend({
   icon: 'x',
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.ParallelBlock>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.ParallelBox>}
    */
-  parallelBlock: reads('context.parallelBlock'),
+  parallelBox: reads('context.parallelBox'),
 
   /**
    * @override
    */
   onExecute() {
     const {
-      parallelBlock,
+      parallelBox,
       modalManager,
     } = this.getProperties(
-      'parallelBlock',
+      'parallelBox',
       'modalManager'
     );
 
@@ -55,13 +55,13 @@ export default Action.extend({
         headerText: this.t('modalHeader'),
         descriptionParagraphs: [{
           text: this.t('modalDescription', {
-            parallelBlockName: get(parallelBlock, 'name'),
+            parallelBoxName: get(parallelBox, 'name'),
           }),
         }],
         yesButtonText: this.t('modalYes'),
         yesButtonClassName: 'btn-danger',
         onSubmit: () =>
-          result.interceptPromise(parallelBlock.remove()),
+          result.interceptPromise(parallelBox.remove()),
       }).hiddenPromise
       .then(() => {
         result.cancelIfPending();

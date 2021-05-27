@@ -1,27 +1,27 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
-import CreateParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-block-action';
+import CreateParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-box-action';
 import { getProperties, get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
-const newParallelBlockMatcher = sinon.match({
-  name: 'Parallel block',
+const newParallelBoxMatcher = sinon.match({
+  name: 'Parallel box',
   tasks: [],
 });
 
-describe('Integration | Utility | workflow visualiser/actions/create parallel block action', function () {
+describe('Integration | Utility | workflow visualiser/actions/create parallel box action', function () {
   setupComponentTest('test-component', {
     integration: true,
   });
 
   beforeEach(function () {
     const createStub = sinon.stub();
-    const action = CreateParallelBlockAction.create({
+    const action = CreateParallelBoxAction.create({
       ownerSource: this,
-      createParallelBlockCallback: createStub,
+      createParallelBoxCallback: createStub,
     });
     this.setProperties({ action, createStub });
   });
@@ -31,12 +31,12 @@ describe('Integration | Utility | workflow visualiser/actions/create parallel bl
       className,
       icon,
     } = getProperties(this.get('action'), 'className', 'icon');
-    expect(className).to.equal('create-parallel-block-action-trigger');
+    expect(className).to.equal('create-parallel-box-action-trigger');
     expect(icon).to.equal('add-filled');
   });
 
   it(
-    'executes creating parallel block on execute and returns promise with successful ActionResult',
+    'executes creating parallel box on execute and returns promise with successful ActionResult',
     async function () {
       const createStub = this.get('createStub');
       createStub.resolves();
@@ -44,13 +44,13 @@ describe('Integration | Utility | workflow visualiser/actions/create parallel bl
       const { resultPromise } = await executeAction(this);
       const actionResult = await resultPromise;
 
-      expect(createStub).to.be.calledOnce.and.to.be.calledWith(newParallelBlockMatcher);
+      expect(createStub).to.be.calledOnce.and.to.be.calledWith(newParallelBoxMatcher);
       expect(get(actionResult, 'status')).to.equal('done');
     }
   );
 
   it(
-    'executes creating parallel block on execute and returns promise with failed ActionResult on error',
+    'executes creating parallel box on execute and returns promise with failed ActionResult on error',
     async function () {
       let rejectCreate;
       const createStub = this.get('createStub');
@@ -61,7 +61,7 @@ describe('Integration | Utility | workflow visualiser/actions/create parallel bl
       await wait();
       const actionResult = await resultPromise;
 
-      expect(createStub).to.be.calledOnce.and.to.be.calledWith(newParallelBlockMatcher);
+      expect(createStub).to.be.calledOnce.and.to.be.calledWith(newParallelBoxMatcher);
       expect(get(actionResult, 'status')).to.equal('failed');
     }
   );

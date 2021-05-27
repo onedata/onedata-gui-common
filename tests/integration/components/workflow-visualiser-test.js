@@ -17,7 +17,7 @@ const laneWidth = 300;
 
 const idGenerators = {
   lane: laneIdFromExample,
-  parallelBlock: parallelBlockIdFromExample,
+  parallelBox: parallelBoxIdFromExample,
   task: taskIdFromExample,
 };
 
@@ -58,19 +58,19 @@ describe('Integration | Component | workflow visualiser', function () {
     itAddsNewLane('adds a lane between existing lanes', twoNonEmptyLanesExample, 1);
     itAddsNewLane('adds a lane after the last lane', twoNonEmptyLanesExample, 2);
 
-    itAddsNewParallelBlock('adds the first parallel block', twoEmptyLanesExample, 0, 0);
-    itAddsNewParallelBlock(
-      'adds a parallel block before the first parallel block',
+    itAddsNewParallelBox('adds the first parallel box', twoEmptyLanesExample, 0, 0);
+    itAddsNewParallelBox(
+      'adds a parallel box before the first parallel box',
       twoNonEmptyLanesExample,
       0
     );
-    itAddsNewParallelBlock(
-      'adds a parallel block between existing parallel blocks',
+    itAddsNewParallelBox(
+      'adds a parallel box between existing parallel boxs',
       twoNonEmptyLanesExample,
       1
     );
-    itAddsNewParallelBlock(
-      'adds a parallel block after the last parallel block',
+    itAddsNewParallelBox(
+      'adds a parallel box after the last parallel box',
       twoNonEmptyLanesExample,
       2
     );
@@ -80,7 +80,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itChangesName('lane', (rawDump, newName) => rawDump.lanes[0].name = newName);
     itChangesName(
-      'parallelBlock',
+      'parallelBox',
       (rawDump, newName) => rawDump.lanes[0].parallelBoxes[0].name = newName
     );
     itChangesName(
@@ -115,12 +115,12 @@ describe('Integration | Component | workflow visualiser', function () {
     itMovesLane('middle lane', 1, 'left');
     itDoesNotMoveLane('first lane', 0, 'left');
 
-    itMovesParallelBlock('last parallel block', 0, 'down');
-    itMovesParallelBlock('middle parallel block', 1, 'down');
-    itDoesNotMoveParallelBlock('last parallel block', 2, 'down');
-    itMovesParallelBlock('last parallel block', 2, 'up');
-    itMovesParallelBlock('middle parallel block', 1, 'up');
-    itDoesNotMoveParallelBlock('last parallel block', 0, 'up');
+    itMovesParallelBox('last parallel box', 0, 'down');
+    itMovesParallelBox('middle parallel box', 1, 'down');
+    itDoesNotMoveParallelBox('last parallel box', 2, 'down');
+    itMovesParallelBox('last parallel box', 2, 'up');
+    itMovesParallelBox('middle parallel box', 1, 'up');
+    itDoesNotMoveParallelBox('last parallel box', 0, 'up');
 
     itPerformsActionWithConfirmation({
       description: 'clears non-empty lane',
@@ -139,8 +139,8 @@ describe('Integration | Component | workflow visualiser', function () {
       applyUpdate: rawDump => rawDump.lanes.splice(0, 1),
     });
     itPerformsActionWithConfirmation({
-      description: 'removes parallel block',
-      actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, 0], 'remove'),
+      description: 'removes parallel box',
+      actionTriggerGetter: () => getActionTrigger('parallelBox', [0, 0], 'remove'),
       applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes.splice(0, 1),
     });
     itPerformsActionWithConfirmation({
@@ -295,33 +295,33 @@ describe('Integration | Component | workflow visualiser', function () {
       )).to.not.exist;
     });
 
-    it('does not allow to change parallel block name', function () {
+    it('does not allow to change parallel box name', function () {
       const rawData = twoEmptyLanesExample;
 
       renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.parallel-block-name .one-label')).to.not.exist;
+      expect(this.$('.parallel-box-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements of parallel blocks and spaces between them', function () {
+    it('does not show edition-related elements of parallel boxs and spaces between them', function () {
       const rawData = twoNonEmptyLanesExample;
 
       renderWithRawData(this, rawData);
 
-      expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
+      expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
       expect(this.$(
-        '.workflow-visualiser-interblock-space.between-parallel-blocks-space .add-block-action-trigger'
+        '.workflow-visualiser-interblock-space.between-parallel-boxs-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
-    it('does not show edition-related elements in empty parallel block', function () {
+    it('does not show edition-related elements in empty parallel box', function () {
       const rawData = twoLanesWithEmptyBlocksExample;
 
       renderWithRawData(this, rawData);
 
       expect(this.$(
-        '.workflow-visualiser-parallel-block .workflow-visualiser-interblock-space .add-block-action-trigger'
+        '.workflow-visualiser-parallel-box .workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
@@ -571,7 +571,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
   });
 }
 
-function itAddsNewParallelBlock(message, initialRawData, insertIndex) {
+function itAddsNewParallelBox(message, initialRawData, insertIndex) {
   const targetLane = initialRawData.lanes[0];
   let addTriggerSelector =
     `[data-visualiser-element-id="${targetLane.id}"] .workflow-visualiser-interblock-space`;
@@ -582,14 +582,14 @@ function itAddsNewParallelBlock(message, initialRawData, insertIndex) {
       addTriggerSelector = `[data-element-before-id="${targetLane.parallelBoxes[insertIndex - 1].id}"]`;
     }
   }
-  addTriggerSelector += ' .create-parallel-block-action-trigger';
+  addTriggerSelector += ' .create-parallel-box-action-trigger';
 
   itPerformsAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
     applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes.splice(insertIndex, 0, {
       id: sinon.match.string,
-      name: 'Parallel block',
+      name: 'Parallel box',
       tasks: [],
     }),
     initialRawData,
@@ -656,10 +656,10 @@ function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
   });
 }
 
-function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+function itMovesParallelBox(parallelBoxName, blockIdx, moveDirection) {
   itPerformsAction({
-    description: `moves ${moveDirection} ${parallelBlockName}`,
-    actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
+    description: `moves ${moveDirection} ${parallelBoxName}`,
+    actionTriggerGetter: () => getActionTrigger('parallelBox', [0, blockIdx], `move-${moveDirection}`),
     applyUpdate: rawDump => {
       const blocksArray = rawDump.lanes[0].parallelBoxes;
       const movedRawBlock = blocksArray[blockIdx];
@@ -669,10 +669,10 @@ function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
   });
 }
 
-function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+function itDoesNotMoveParallelBox(parallelBoxName, blockIdx, moveDirection) {
   itDoesNotPerformAction({
-    description: `does not allow to move ${moveDirection} ${parallelBlockName}`,
-    actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
+    description: `does not allow to move ${moveDirection} ${parallelBoxName}`,
+    actionTriggerGetter: () => getActionTrigger('parallelBox', [0, blockIdx], `move-${moveDirection}`),
   });
 }
 
@@ -855,11 +855,11 @@ function checkRenderedLanesStructure(testCase, rawData) {
   rawData.lanes.forEach(({ name: laneName, parallelBoxes }, laneIndex) => {
     const $lane = $lanes.eq(laneIndex);
     expect($lane.find('.lane-name').text().trim()).to.equal(laneName);
-    const $blocks = $lane.find('.workflow-visualiser-parallel-block');
+    const $blocks = $lane.find('.workflow-visualiser-parallel-box');
     expect($blocks).to.have.length(parallelBoxes.length);
     parallelBoxes.forEach(({ name: blockName, tasks }, blockIndex) => {
       const $block = $blocks.eq(blockIndex);
-      expect($block.find('.parallel-block-name').text().trim()).to.equal(blockName);
+      expect($block.find('.parallel-box-name').text().trim()).to.equal(blockName);
       const $tasks = $block.find('.workflow-visualiser-task');
       expect($tasks).to.have.length(tasks.length);
       tasks.forEach(({ name: taskName }, taskIndex) => {
@@ -878,17 +878,17 @@ function checkInterblockSpaces(testCase, rawDump) {
   expect($lanes).to.have.length(rawDump.lanes.length);
 
   rawDump.lanes.forEach(({ parallelBoxes }, laneIdx) => {
-    const parallelBlockIds = parallelBoxes.mapBy('id');
-    const taskIdsPerParallelBlock = parallelBoxes
-      .map(rawParallelBlock => rawParallelBlock.tasks.mapBy('id'));
-    const $blocks = $lanes.eq(laneIdx).find('.workflow-visualiser-parallel-block');
-    expect($blocks).to.have.length(parallelBlockIds.length);
+    const parallelBoxIds = parallelBoxes.mapBy('id');
+    const taskIdsPerParallelBox = parallelBoxes
+      .map(rawParallelBox => rawParallelBox.tasks.mapBy('id'));
+    const $blocks = $lanes.eq(laneIdx).find('.workflow-visualiser-parallel-box');
+    expect($blocks).to.have.length(parallelBoxIds.length);
     const $betweenBlockSpaces = $lanes.eq(laneIdx).find(
-      '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-block *)'
+      '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-box *)'
     );
-    checkInterXSpaces($betweenBlockSpaces, parallelBlockIds);
+    checkInterXSpaces($betweenBlockSpaces, parallelBoxIds);
 
-    taskIdsPerParallelBlock.forEach((taskIds, blockIdx) => {
+    taskIdsPerParallelBox.forEach((taskIds, blockIdx) => {
       const $innerBlockSpaces =
         $blocks.eq(blockIdx).find('.workflow-visualiser-interblock-space');
       checkInterXSpaces($innerBlockSpaces, taskIds);
@@ -939,8 +939,8 @@ function checkRenderedStoresList(testCase, rawData) {
 
 function generateExample(
   lanesNumber,
-  parallelBlocksPerLane,
-  tasksPerParallelBlock,
+  parallelBoxsPerLane,
+  tasksPerParallelBox,
   includeProgress = true
 ) {
   return {
@@ -953,10 +953,10 @@ function generateExample(
         },
         storeSchemaId: storeIdFromExample(0),
       },
-      parallelBoxes: _.range(parallelBlocksPerLane).map(blockNo => ({
-        id: parallelBlockIdFromExample(laneNo, blockNo),
+      parallelBoxes: _.range(parallelBoxsPerLane).map(blockNo => ({
+        id: parallelBoxIdFromExample(laneNo, blockNo),
         name: `block${laneNo}.${blockNo}`,
-        tasks: _.range(tasksPerParallelBlock).map(taskNo => ({
+        tasks: _.range(tasksPerParallelBox).map(taskNo => ({
           id: taskIdFromExample(laneNo, blockNo, taskNo),
           name: `task${laneNo}.${blockNo}.${taskNo}`,
           status: includeProgress ?
@@ -985,7 +985,7 @@ function laneIdFromExample(laneNo) {
   return `l${laneNo}`;
 }
 
-function parallelBlockIdFromExample(laneNo, blockNo) {
+function parallelBoxIdFromExample(laneNo, blockNo) {
   return `b${laneNo}.${blockNo}`;
 }
 

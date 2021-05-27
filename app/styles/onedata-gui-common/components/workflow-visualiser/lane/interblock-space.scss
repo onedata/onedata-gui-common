@@ -4,8 +4,8 @@
   flex-direction: column;
   align-items: center;
 
-  &.between-parallel-blocks-space {
-    height: $workflow-visualiser-between-parallel-block-space-size;
+  &.between-parallel-boxs-space {
+    height: $workflow-visualiser-between-parallel-box-space-size;
 
     .arrow {
       position: relative;
@@ -107,12 +107,12 @@
   }
 
   &.mode-edit {
-    &.between-parallel-blocks-space {
+    &.between-parallel-boxs-space {
       $arrow-offset-for-add-trigger: 17px;
 
       &.space-position-start,
       &.space-position-end {
-        height: $workflow-visualiser-between-parallel-block-space-size + $workflow-visualiser-lane-vertical-padding;
+        height: $workflow-visualiser-between-parallel-box-space-size + $workflow-visualiser-lane-vertical-padding;
       }
 
       &.space-position-start {
@@ -175,8 +175,8 @@
   }
 }
 
-.workflow-visualiser.during-parallel-block-dragdrop .workflow-visualiser-interblock-space {
-  &.between-parallel-blocks-space {
+.workflow-visualiser.during-parallel-box-dragdrop .workflow-visualiser-interblock-space {
+  &.between-parallel-boxs-space {
     .create-block-action-trigger,
     .arrow {
       opacity: 0;

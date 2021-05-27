@@ -35,7 +35,7 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: not(array.isAny('lane.elements', raw('__type'), raw('parallelBlock'))),
+  disabled: not(array.isAny('lane.elements', raw('__type'), raw('parallelBox'))),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}

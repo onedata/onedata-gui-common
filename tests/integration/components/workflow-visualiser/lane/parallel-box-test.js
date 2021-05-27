@@ -3,7 +3,7 @@ import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import { click, fillIn } from 'ember-native-dom-helpers';
@@ -14,35 +14,35 @@ import $ from 'jquery';
 import { getModalFooter } from '../../../../helpers/modal';
 
 const blockActionsSpec = [{
-  className: 'move-up-parallel-block-action-trigger',
+  className: 'move-up-parallel-box-action-trigger',
   label: 'Move up',
   icon: 'move-up',
 }, {
-  className: 'move-down-parallel-block-action-trigger',
+  className: 'move-down-parallel-box-action-trigger',
   label: 'Move down',
   icon: 'move-down',
 }, {
-  className: 'remove-parallel-block-action-trigger',
+  className: 'remove-parallel-box-action-trigger',
   label: 'Remove',
   icon: 'x',
 }];
 
-describe('Integration | Component | workflow visualiser/lane/parallel block', function () {
+describe('Integration | Component | workflow visualiser/lane/parallel box', function () {
   setupComponentTest('workflow-visualiser/lane/task', {
     integration: true,
   });
 
   beforeEach(function () {
-    this.set('block', ParallelBlock.create({
+    this.set('block', ParallelBox.create({
       actionsFactory: ActionsFactory.create({ ownerSource: this }),
     }));
   });
 
-  it('has classes "workflow-visualiser-parallel-block" and "workflow-visualiser-element"', function () {
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block}}`);
+  it('has classes "workflow-visualiser-parallel-box" and "workflow-visualiser-element"', function () {
+    this.render(hbs `{{workflow-visualiser/lane/parallel-box}}`);
 
     expect(this.$().children()).to.have.length(1);
-    expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-parallel-block')
+    expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-parallel-box')
       .and.to.have.class('workflow-visualiser-element');
   });
 
@@ -57,16 +57,16 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
     it('does not allow to modify block name', async function () {
       this.set('block.name', 'my-block');
 
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.parallel-block-name .one-label')).to.not.exist;
+      expect(this.$('.parallel-box-name .one-label')).to.not.exist;
     });
 
     it('does not render actions in "view" mode', function () {
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
-      expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
+      expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
     });
   });
 
@@ -88,19 +88,19 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
           });
         },
       });
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
-      await click('.parallel-block-name .one-label');
-      await fillIn('.parallel-block-name input', 'new-name');
-      await click('.parallel-block-name .save-icon');
+      await click('.parallel-box-name .one-label');
+      await fillIn('.parallel-box-name input', 'new-name');
+      await click('.parallel-box-name .save-icon');
 
-      expect(this.$('.parallel-block-name').text().trim()).to.equal('new-name');
+      expect(this.$('.parallel-box-name').text().trim()).to.equal('new-name');
     });
 
     it('renders actions', async function () {
-      this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+      this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
-      const $actionsTrigger = this.$('.parallel-block-actions-trigger');
+      const $actionsTrigger = this.$('.parallel-box-actions-trigger');
       expect($actionsTrigger).to.exist;
 
       await click($actionsTrigger[0]);
@@ -122,10 +122,10 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       it(`allows to move ${direction} the block`, async function () {
         const onMoveSpy = sinon.stub().resolves();
         this.set('block.onMove', onMoveSpy);
-        this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+        this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
-        await click('.parallel-block-actions-trigger');
-        await click($(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`)[0]);
+        await click('.parallel-box-actions-trigger');
+        await click($(`body .webui-popover.in .move-${direction}-parallel-box-action-trigger`)[0]);
 
         expect(onMoveSpy).to.be.calledOnce
           .and.to.be.calledWith(this.get('block'), moveStep);
@@ -133,11 +133,11 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
 
       it(`disables moving ${direction} the block when "${disablingProp}" is true`, async function () {
         this.set(`block.${disablingProp}`, true);
-        this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+        this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
-        await click('.parallel-block-actions-trigger');
+        await click('.parallel-box-actions-trigger');
         const $actionParent =
-          $(`body .webui-popover.in .move-${direction}-parallel-block-action-trigger`).parent();
+          $(`body .webui-popover.in .move-${direction}-parallel-box-action-trigger`).parent();
 
         expect($actionParent).to.have.class('disabled');
       });
@@ -148,11 +148,11 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
       this.set('block.onRemove', onRemoveSpy);
       this.render(hbs `
         {{global-modal-mounter}}
-        {{workflow-visualiser/lane/parallel-block elementModel=block}}
+        {{workflow-visualiser/lane/parallel-box elementModel=block}}
       `);
 
-      await click('.parallel-block-actions-trigger');
-      await click($('body .webui-popover.in .remove-parallel-block-action-trigger')[0]);
+      await click('.parallel-box-actions-trigger');
+      await click($('body .webui-popover.in .remove-parallel-box-action-trigger')[0]);
       await click(getModalFooter().find('.question-yes')[0]);
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('block'));
@@ -161,13 +161,13 @@ describe('Integration | Component | workflow visualiser/lane/parallel block', fu
 });
 
 function itShowsName() {
-  it('shows parallel block name', function () {
+  it('shows parallel box name', function () {
     const name = 'block1';
     this.set('block.name', name);
 
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
-    expect(this.$('.parallel-block-name').text().trim()).to.equal(name);
+    expect(this.$('.parallel-box-name').text().trim()).to.equal(name);
   });
 }
 
@@ -188,10 +188,10 @@ function itRendersNestedElements() {
       InterblockSpace.create({ elementBefore: task2, actionsFactory }),
     ]);
 
-    this.render(hbs `{{workflow-visualiser/lane/parallel-block elementModel=block}}`);
+    this.render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
     const $elements =
-      this.$('.workflow-visualiser-parallel-block .workflow-visualiser-element');
+      this.$('.workflow-visualiser-parallel-box .workflow-visualiser-element');
     const $space1Element = $elements.eq(0);
     const $task1Element = $elements.eq(1);
     const $space2Element = $elements.eq(2);

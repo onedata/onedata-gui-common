@@ -1,12 +1,12 @@
 {{#one-draggable-object
-  content=block
-  dragHandle=".parallel-block-drag-handle"
+  content=parallelBox
+  dragHandle=".parallel-box-drag-handle"
   isDraggable=(eq mode "edit")
-  class="draggable-parallel-block"
+  class="draggable-parallel-box"
 }}
   {{#if (eq mode "edit")}}
     {{one-inline-editor
-      class="parallel-block-name"
+      class="parallel-box-name"
       value=name
       hideViewIcons=true
       onSave=(action "changeName")
@@ -14,7 +14,7 @@
     {{one-icon
       icon="settings-circle-filled"
       class=(concat-classes
-        "parallel-block-actions-trigger"
+        "parallel-box-actions-trigger"
         (concat "actions-trigger-" elementId)
         (if areActionsOpened "active")
       )
@@ -22,7 +22,7 @@
     }}
     {{#render-later triggerRender=areActionsOpened}}
       {{#one-webui-popover
-        class="parallel-block-actions"
+        class="parallel-box-actions"
         padding=false
         popoverStyle="with-dropdown"
         triggerSelector=(concat ".actions-trigger-" elementId)
@@ -35,21 +35,23 @@
           except-selector=(concat ".actions-trigger-" elementId)
         }}
           {{actions-popover-content
-            actionsArray=blockActions
+            actionsArray=parallelBoxActions
             actionClicked=(action (mut areActionsOpened) false)
           }}
         {{/click-outside}}
       {{/one-webui-popover}}
     {{/render-later}}
-    <div class="parallel-block-drag-handle">
+    <div class="parallel-box-drag-handle">
       {{one-icon icon="checkbox-empty"}}
     </div>
   {{else}}
-    {{#truncated-string class="parallel-block-name"}}{{name}}{{/truncated-string}}
+    {{#truncated-string class="parallel-box-name"}}{{name}}{{/truncated-string}}
   {{/if}}
-  <div class="block-elements">
-    {{#each blockElements as |blockElement|}}
-      {{workflow-visualiser/visualiser-element-renderer elementModel=blockElement}}
+  <div class="box-elements">
+    {{#each parallelBoxElements as |parallelBoxElement|}}
+      {{workflow-visualiser/visualiser-element-renderer
+        elementModel=parallelBoxElement
+      }}
     {{/each}}
   </div>
 {{/one-draggable-object}}

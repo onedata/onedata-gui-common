@@ -23,10 +23,10 @@ import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/act
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import RemoveLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-lane-action';
-import CreateParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-block-action';
-import MoveUpParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-block-action';
-import MoveDownParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-block-action';
-import RemoveParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-block-action';
+import CreateParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-box-action';
+import MoveUpParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-box-action';
+import MoveDownParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-box-action';
+import RemoveParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-box-action';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
@@ -125,35 +125,35 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @param {(newElementProps: Object) => Promise} context.createParallelBlockCallback
-   * @returns {Utils.WorkflowVisualiser.Actions.CreateParallelBlockAction}
+   * @param {(newElementProps: Object) => Promise} context.createParallelBoxCallback
+   * @returns {Utils.WorkflowVisualiser.Actions.CreateParallelBoxAction}
    */
-  createCreateParallelBlockAction(context) {
-    return CreateParallelBlockAction.create({ ownerSource: this, context });
+  createCreateParallelBoxAction(context) {
+    return CreateParallelBoxAction.create({ ownerSource: this, context });
   },
 
   /**
-   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} context.parallelBlock
-   * @returns {Utils.WorkflowVisualiser.Actions.MoveUpParallelBlockAction}
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBox} context.parallelBox
+   * @returns {Utils.WorkflowVisualiser.Actions.MoveUpParallelBoxAction}
    */
-  createMoveUpParallelBlockAction(context) {
-    return MoveUpParallelBlockAction.create({ ownerSource: this, context });
+  createMoveUpParallelBoxAction(context) {
+    return MoveUpParallelBoxAction.create({ ownerSource: this, context });
   },
 
   /**
-   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} context.parallelBlock
-   * @returns {Utils.WorkflowVisualiser.Actions.MoveDownParallelBlockAction}
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBox} context.parallelBox
+   * @returns {Utils.WorkflowVisualiser.Actions.MoveDownParallelBoxAction}
    */
-  createMoveDownParallelBlockAction(context) {
-    return MoveDownParallelBlockAction.create({ ownerSource: this, context });
+  createMoveDownParallelBoxAction(context) {
+    return MoveDownParallelBoxAction.create({ ownerSource: this, context });
   },
 
   /**
-   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} context.parallelBlock
-   * @returns {Utils.WorkflowVisualiser.Actions.RemoveParallelBlockAction}
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBox} context.parallelBox
+   * @returns {Utils.WorkflowVisualiser.Actions.RemoveParallelBoxAction}
    */
-  createRemoveParallelBlockAction(context) {
-    return RemoveParallelBlockAction.create({ ownerSource: this, context });
+  createRemoveParallelBoxAction(context) {
+    return RemoveParallelBoxAction.create({ ownerSource: this, context });
   },
 
   /**

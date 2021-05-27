@@ -1,5 +1,5 @@
 /**
- * Lane - aggregates parallel blocks and spaces between them.
+ * Lane - aggregates parallel boxs and spaces between them.
  *
  * @module utils/workflow-visualiser/lane
  * @author Michał Borzęcki

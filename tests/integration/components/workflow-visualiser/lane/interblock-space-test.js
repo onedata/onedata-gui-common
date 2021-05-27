@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
@@ -38,7 +38,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }
   );
 
-  it('has class "between-parallel-blocks-space" when "parent" is of type Lane', function () {
+  it('has class "between-parallel-boxs-space" when "parent" is of type Lane', function () {
     this.set('blockSpace.parent', Lane.create());
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
@@ -46,11 +46,11 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }}`);
 
     expect(this.$('.workflow-visualiser-interblock-space'))
-      .to.have.class('between-parallel-blocks-space');
+      .to.have.class('between-parallel-boxs-space');
   });
 
-  it('has class "between-tasks-space" when "parent" is of type ParallelBlock', function () {
-    this.set('blockSpace.parent', ParallelBlock.create());
+  it('has class "between-tasks-space" when "parent" is of type ParallelBox', function () {
+    this.set('blockSpace.parent', ParallelBox.create());
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
@@ -60,19 +60,19 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       .to.have.class('between-tasks-space');
   });
 
-  context('between parallel blocks', function () {
+  context('between parallel boxs', function () {
     [{
-      siblings: [null, ParallelBlock.create()],
+      siblings: [null, ParallelBox.create()],
       type: 'start',
       hasArrowInEdition: true,
       hasArrowInView: false,
     }, {
-      siblings: [ParallelBlock.create(), null],
+      siblings: [ParallelBox.create(), null],
       type: 'end',
       hasArrowInEdition: true,
       hasArrowInView: false,
     }, {
-      siblings: [ParallelBlock.create(), ParallelBlock.create()],
+      siblings: [ParallelBox.create(), ParallelBox.create()],
       type: 'between',
       hasArrowInEdition: true,
       hasArrowInView: true,
@@ -82,9 +82,9 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       hasArrowInEdition: false,
       hasArrowInView: false,
     }].forEach(({ siblings, type, hasArrowInEdition, hasArrowInView }) => {
-      itIsOfType(type, ParallelBlock.create(), siblings);
-      itAllowsToAddElement(Lane.create(), siblings, 'parallelBlock', 'edit');
-      itDoesNotAllowToAddElement(Lane.create(), siblings, 'parallelBlock', 'view');
+      itIsOfType(type, ParallelBox.create(), siblings);
+      itAllowsToAddElement(Lane.create(), siblings, 'parallelBox', 'edit');
+      itDoesNotAllowToAddElement(Lane.create(), siblings, 'parallelBox', 'view');
       itHasArrow(hasArrowInEdition, Lane.create(), siblings, 'edit');
       itHasArrow(hasArrowInView, Lane.create(), siblings, 'view');
     });
@@ -108,15 +108,15 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       type: 'empty',
       allowsToAdd: true,
     }].forEach(({ siblings, type, allowsToAdd }) => {
-      itIsOfType(type, ParallelBlock.create(), siblings);
+      itIsOfType(type, ParallelBox.create(), siblings);
       if (allowsToAdd) {
-        itAllowsToAddElement(ParallelBlock.create(), siblings, 'task', 'edit');
+        itAllowsToAddElement(ParallelBox.create(), siblings, 'task', 'edit');
       } else {
-        itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'task', 'edit');
+        itDoesNotAllowToAddElement(ParallelBox.create(), siblings, 'task', 'edit');
       }
-      itDoesNotAllowToAddElement(ParallelBlock.create(), siblings, 'task', 'view');
-      itHasArrow(false, ParallelBlock.create(), siblings, 'edit');
-      itHasArrow(false, ParallelBlock.create(), siblings, 'view');
+      itDoesNotAllowToAddElement(ParallelBox.create(), siblings, 'task', 'view');
+      itHasArrow(false, ParallelBox.create(), siblings, 'edit');
+      itHasArrow(false, ParallelBox.create(), siblings, 'view');
     });
   });
 });
@@ -158,7 +158,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
       await click(`.create-${dasherize(newElementType)}-action-trigger`);
 
       const newElementMatcher = {
-        name: newElementType === 'task' ? 'Untitled task' : 'Parallel block',
+        name: newElementType === 'task' ? 'Untitled task' : 'Parallel box',
       };
       expect(onAddElement).to.be.calledOnce
         .and.to.be.calledWith(parent, elementBefore, sinon.match(newElementMatcher));

@@ -1,8 +1,8 @@
 /**
- * Creates new parallel block. Needs createParallelBlockCallback passed via context.
- * It will then be used to save a new parallel block.
+ * Creates new parallel box. Needs createParallelBoxCallback passed via context.
+ * It will then be used to save a new parallel box.
  *
- * @module utils/workflow-visualiser/actions/create-parallel-block-action
+ * @module utils/workflow-visualiser/actions/create-parallel-box-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -16,16 +16,15 @@ import { inject as service } from '@ember/service';
 export default Action.extend({
   modalManager: service(),
 
-  // TODO: VFS-7577 change "block" to full "parallel block" name
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.parallelBlock.actions.createBlock',
+  i18nPrefix: 'components.workflowVisualiser.parallelBox.actions.createParallelBox',
 
   /**
    * @override
    */
-  className: 'create-parallel-block-action-trigger',
+  className: 'create-parallel-box-action-trigger',
 
   /**
    * @override
@@ -37,20 +36,20 @@ export default Action.extend({
    * @param {Object} newElementProps
    * @returns {Promise}
    */
-  createParallelBlockCallback: reads('context.createParallelBlockCallback'),
+  createParallelBoxCallback: reads('context.createParallelBoxCallback'),
 
   /**
    * @override
    */
   onExecute() {
-    const newParallelBlockProps = {
-      name: String(this.t('newParallelBlockName')),
+    const newParallelBoxProps = {
+      name: String(this.t('newParallelBoxName')),
       tasks: [],
     };
 
     const result = ActionResult.create();
     return result.interceptPromise(
-      this.get('createParallelBlockCallback')(newParallelBlockProps)
+      this.get('createParallelBoxCallback')(newParallelBoxProps)
     ).then(() => result, () => result);
   },
 });

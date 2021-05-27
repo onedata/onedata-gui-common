@@ -1,7 +1,7 @@
 /**
- * Moves up parallel block. Needs parallel block instance passed via context.
+ * Moves down parallel box. Needs parallel box instance passed via context.
  *
- * @module utils/workflow-visualiser/actions/move-up-parallel-block-action
+ * @module utils/workflow-visualiser/actions/move-down-parallel-box-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -18,34 +18,34 @@ export default Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.parallelBlock.actions.moveUpBlock',
+  i18nPrefix: 'components.workflowVisualiser.parallelBox.actions.moveDownParallelBox',
 
   /**
    * @override
    */
-  className: 'move-up-parallel-block-action-trigger',
+  className: 'move-down-parallel-box-action-trigger',
 
   /**
    * @override
    */
-  icon: 'move-up',
+  icon: 'move-down',
 
   /**
    * @override
    */
-  disabled: reads('parallelBlock.isFirst'),
+  disabled: reads('parallelBox.isLast'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
    */
-  parallelBlock: reads('context.parallelBlock'),
+  parallelBox: reads('context.parallelBox'),
 
   /**
    * @override
    */
   onExecute() {
     const result = ActionResult.create();
-    return result.interceptPromise(this.get('parallelBlock').move(-1))
+    return result.interceptPromise(this.get('parallelBox').move(1))
       .then(() => result, () => result);
   },
 });

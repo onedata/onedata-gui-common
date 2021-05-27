@@ -3,13 +3,13 @@ $workflow-visualiser-lane-border-width: 1px;
 $workflow-visualiser-lane-border-color: $main-border-color;
 $workflow-visualiser-lane-vertical-padding: $padding-large-vertical;
 $workflow-visualiser-block-border-width: 2px;
-$workflow-visualiser-parallel-block-border-color: $color-one-azure;
+$workflow-visualiser-parallel-box-border-color: $color-one-azure;
 $workflow-visualiser-task-border-color: $main-border-color;
 $workflow-visualiser-arrow-width: 2px;
 $workflow-visualiser-add-trigger-color: darken($color-one-light-blue, 17%);
 $workflow-visualiser-arrow-color: lighten($workflow-visualiser-add-trigger-color, 3%);
 $workflow-visualiser-interblock-space-size: $padding-small-horizontal;
-$workflow-visualiser-between-parallel-block-space-size: 40px;
+$workflow-visualiser-between-parallel-box-space-size: 40px;
 $workflow-visualiser-between-task-space-size: $padding-small-horizontal;
 $workflow-visualiser-last-between-task-space-size: 30px;
 
@@ -113,7 +113,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 
 @import './workflow-visualiser/interlane-space';
 @import './workflow-visualiser/lane';
-@import './workflow-visualiser/lane/parallel-block';
+@import './workflow-visualiser/lane/parallel-box';
 @import './workflow-visualiser/lane/task';
 @import './workflow-visualiser/lane/interblock-space';
 @import './workflow-visualiser/stores-list';

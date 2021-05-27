@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import { getProperties, get } from '@ember/object';
@@ -23,7 +23,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
   beforeEach(function () {
     const lane = Lane.create({
       name: laneName,
-      elements: [ParallelBlock.create()],
+      elements: [ParallelBox.create()],
     });
     const action = ClearLaneAction.create({
       ownerSource: this,
@@ -43,13 +43,13 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
     expect(String(title)).to.equal('Clear');
   });
 
-  it('is enabled when lane has at least one parallel block', function () {
-    this.set('lane.elements', [ParallelBlock.create()]);
+  it('is enabled when lane has at least one parallel box', function () {
+    this.set('lane.elements', [ParallelBox.create()]);
 
     expect(this.get('action.disabled')).to.be.false;
   });
 
-  it('is disabled when lane has no parallel block', function () {
+  it('is disabled when lane has no parallel box', function () {
     this.set('lane.elements', [InterblockSpace.create()]);
 
     expect(this.get('action.disabled')).to.be.true;

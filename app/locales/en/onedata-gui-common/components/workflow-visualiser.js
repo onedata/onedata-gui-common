@@ -30,21 +30,21 @@ export default {
       },
     },
   },
-  parallelBlock: {
+  parallelBox: {
     actions: {
-      createBlock: {
-        newParallelBlockName: 'Parallel block',
+      createParallelBox: {
+        newParallelBoxName: 'Parallel box',
       },
-      moveUpBlock: {
+      moveUpParallelBox: {
         title: 'Move up',
       },
-      moveDownBlock: {
+      moveDownParallelBox: {
         title: 'Move down',
       },
-      removeBlock: {
+      removeParallelBox: {
         title: 'Remove',
-        modalHeader: 'Remove parallel block',
-        modalDescription: 'You are about to delete the parallel block "{{parallelBlockName}}".',
+        modalHeader: 'Remove parallel box',
+        modalDescription: 'You are about to delete the parallel box "{{parallelBoxName}}".',
         modalYes: 'Remove',
       },
     },

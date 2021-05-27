@@ -1,7 +1,7 @@
 /**
- * Parallel block - aggregates tasks and spaces between them.
+ * Parallel box - aggregates tasks and spaces between them.
  *
- * @module utils/workflow-visualiser/lane/parallel-block
+ * @module utils/workflow-visualiser/lane/parallel-box
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -13,12 +13,12 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  __type: 'parallelBlock',
+  __type: 'parallelBox',
 
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane/parallel-block',
+  renderer: 'workflow-visualiser/lane/parallel-box',
 
   /**
    * @virtual optional

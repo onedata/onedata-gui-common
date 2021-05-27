@@ -1,25 +1,25 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
-import MoveUpParallelBlockAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-up-parallel-block-action';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
+import MoveDownParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-box-action';
 import { getProperties, get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
-describe('Integration | Utility | workflow visualiser/actions/move up parallel block action', function () {
+describe('Integration | Utility | workflow visualiser/actions/move down parallel box action', function () {
   setupComponentTest('test-component', {
     integration: true,
   });
 
   beforeEach(function () {
-    const parallelBlock = ParallelBlock.create({ isLast: false });
-    const action = MoveUpParallelBlockAction.create({
+    const parallelBox = ParallelBox.create({ isLast: false });
+    const action = MoveDownParallelBoxAction.create({
       ownerSource: this,
-      context: { parallelBlock },
+      context: { parallelBox },
     });
-    this.setProperties({ parallelBlock, action });
+    this.setProperties({ parallelBox, action });
   });
 
   it('has correct className, icon and title', function () {
@@ -28,41 +28,41 @@ describe('Integration | Utility | workflow visualiser/actions/move up parallel b
       icon,
       title,
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
-    expect(className).to.equal('move-up-parallel-block-action-trigger');
-    expect(icon).to.equal('move-up');
-    expect(String(title)).to.equal('Move up');
+    expect(className).to.equal('move-down-parallel-box-action-trigger');
+    expect(icon).to.equal('move-down');
+    expect(String(title)).to.equal('Move down');
   });
 
-  it('is enabled when parallel block has false "isFirst"', function () {
-    this.set('parallelBlock.isFirst', false);
+  it('is enabled when parallel box has false "isLast"', function () {
+    this.set('parallelBox.isLast', false);
 
     expect(this.get('action.disabled')).to.be.false;
   });
 
-  it('is disabled when parallel block has true "isFirst', function () {
-    this.set('parallelBlock.isFirst', true);
+  it('is disabled when parallel box has true "isLast', function () {
+    this.set('parallelBox.isLast', true);
 
     expect(this.get('action.disabled')).to.be.true;
   });
 
   it(
-    'executes moving parallel block on execute and returns promise with successful ActionResult',
+    'executes moving parallel box on execute and returns promise with successful ActionResult',
     async function () {
-      const clearLaneStub = sinon.stub(this.get('parallelBlock'), 'move').resolves();
+      const clearLaneStub = sinon.stub(this.get('parallelBox'), 'move').resolves();
 
       const { resultPromise } = await executeAction(this);
       const actionResult = await resultPromise;
 
-      expect(clearLaneStub).to.be.calledOnce.and.to.be.calledWith(-1);
+      expect(clearLaneStub).to.be.calledOnce.and.to.be.calledWith(1);
       expect(get(actionResult, 'status')).to.equal('done');
     }
   );
 
   it(
-    'executes moving parallel block on execute and returns promise with failed ActionResult on error',
+    'executes moving parallel box on execute and returns promise with failed ActionResult on error',
     async function () {
       let rejectMove;
-      const moveLaneStub = sinon.stub(this.get('parallelBlock'), 'move')
+      const moveLaneStub = sinon.stub(this.get('parallelBox'), 'move')
         .returns(new Promise((resolve, reject) => rejectMove = reject));
 
       const { resultPromise } = await executeAction(this);
@@ -70,7 +70,7 @@ describe('Integration | Utility | workflow visualiser/actions/move up parallel b
       await wait();
       const actionResult = await resultPromise;
 
-      expect(moveLaneStub).to.be.calledOnce.and.to.be.calledWith(-1);
+      expect(moveLaneStub).to.be.calledOnce.and.to.be.calledWith(1);
       expect(get(actionResult, 'status')).to.equal('failed');
     }
   );

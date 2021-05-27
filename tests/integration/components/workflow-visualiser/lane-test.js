@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
@@ -184,7 +184,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
     it('allows to clear lane, when it is not empty', async function () {
       const onClearSpy = sinon.stub().resolves();
-      const block = ParallelBlock.create({ id: 'b1' });
+      const block = ParallelBox.create({ id: 'b1' });
       const lane = this.get('lane');
       const actionsFactory = get(lane, 'actionsFactory');
       setProperties(lane, {
@@ -250,8 +250,8 @@ function itShowsName() {
 function itRendersLaneElements() {
   it('renders lane elements', function () {
     const actionsFactory = this.get('lane.actionsFactory');
-    const block1 = ParallelBlock.create({ id: 'b1', name: 'block1' });
-    const block2 = ParallelBlock.create({ id: 'b2', name: 'block2' });
+    const block1 = ParallelBox.create({ id: 'b1', name: 'block1' });
+    const block2 = ParallelBox.create({ id: 'b2', name: 'block2' });
     this.set('lane.elements', [
       InterblockSpace.create({ elementAfter: block1, actionsFactory }),
       block1,
@@ -277,12 +277,12 @@ function itRendersLaneElements() {
     expect($space1Element).to.not.have.attr('data-element-before-id');
     expect($space1Element).to.have.attr('data-element-after-id', 'b1');
     expect($block1Element.text().trim()).to.contain('block1');
-    expect($block1Element.is('.workflow-visualiser-parallel-block')).to.be.true;
+    expect($block1Element.is('.workflow-visualiser-parallel-box')).to.be.true;
     expect($space2Element.is('.workflow-visualiser-interblock-space')).to.be.true;
     expect($space2Element).to.have.attr('data-element-before-id', 'b1');
     expect($space2Element).to.have.attr('data-element-after-id', 'b2');
     expect($block2Element.text().trim()).to.contain('block2');
-    expect($block2Element.is('.workflow-visualiser-parallel-block')).to.be.true;
+    expect($block2Element.is('.workflow-visualiser-parallel-box')).to.be.true;
     expect($space3Element.is('.workflow-visualiser-interblock-space')).to.be.true;
     expect($space3Element).to.have.attr('data-element-before-id', 'b2');
     expect($space3Element).to.not.have.attr('data-element-after-id');

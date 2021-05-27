@@ -2,16 +2,16 @@
  * Is responsible for showing and editing workflows.
  *
  * Workflow is a description of some ordered collection of files tasks. Order of the
- * execution is described by lanes and parallel blocks - both of them are responsible for
+ * execution is described by lanes and parallel boxs - both of them are responsible for
  * grouping tasks. Execution goes as follows:
  * 1. Tasks are being executed lane-by-lane. Next lane is started only when the previous
  * lane was completely done for all files.
- * 2. Tasks inside each lane are grouped by parallel blocks. All tasks inside the same
- * parallel block can be executed in the same time and file.
- * 3. Each file can be processed only in one parallel block at a time. When some file was
- * processed by all tasks in some parallel block, then it can be processed by the tasks
- * inside the next parallel block. Files do not wait for each other during the parallel
- * blocks execution - files have separated block-by-block execution.
+ * 2. Tasks inside each lane are grouped by parallel boxs. All tasks inside the same
+ * parallel box can be executed in the same time and file.
+ * 3. Each file can be processed only in one parallel box at a time. When some file was
+ * processed by all tasks in some parallel box, then it can be processed by the tasks
+ * inside the next parallel box. Files do not wait for each other during the parallel
+ * boxes execution - files have separated box-by-box execution.
  *
  * Model, which compounds of workflow data and action callbacks, describes each
  * workflow element and space between them (for drag&drop and creating new elements).
@@ -35,7 +35,7 @@
  *     +----------------+--------------+                +-----------+----------+
  *     |                |              |                |                      |
  *  +--+---+   +--------+-------+   +--+---+   +--------+--------+   +---------+--------+
- *  | Lane |   | Parallel block |   | Task |   | Interlane space |   | Interblock space |
+ *  | Lane |   | Parallel box |   | Task |   | Interlane space |   | Interblock space |
  *  +------+   +----------------+   +------+   +-----------------+   +------------------+
  *
  * Model composition:
@@ -53,7 +53,7 @@
  *                       +----------+------------+
  *                       |m                      |m+1
  *              +--------v-------+     +---------v--------+
- *              | Parallel block |     | Interblock space |
+ *              | Parallel box |     | Interblock space |
  *              +--------+-------+     +------------------+
  *                       |
  *            +----------+------+
@@ -77,7 +77,7 @@ import { computed, observer, get, getProperties, set, setProperties } from '@emb
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -161,7 +161,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * {
    *   lane: Array<Utils.WorkflowVisualiser.VisualiserElement>,
    *   interlaneSpace: Array<Utils.WorkflowVisualiser.InterlaneSpace>,
-   *   parallelBlock: Array<Utils.WorkflowVisualiser.Lane.ParallelBlock>,
+   *   parallelBox: Array<Utils.WorkflowVisualiser.Lane.ParallelBox>,
    *   task: Array<Utils.WorkflowVisualiser.Lane.Task>,
    *   interblockSpace: Array<Utils.WorkflowVisualiser.Lane.InterblockSpace>,
    *   store: Array<Utils.WorkflowVisualiser.Store>
@@ -254,7 +254,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     this.set('elementsCache', {
       lane: [],
       interlaneSpace: [],
-      parallelBlock: [],
+      parallelBox: [],
       task: [],
       interblockSpace: [],
       store: [],
@@ -399,15 +399,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Returns visualiser element for given raw data.
    * @param {Object} rawData element representation from backend
-   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} [parent=null]
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBox} [parent=null]
    */
   getElementForRawData(type, rawData, parent = null) {
     switch (type) {
       case 'lane':
         // Lane does not have any parent
         return this.getLaneForRawData(rawData);
-      case 'parallelBlock':
-        return this.getParallelBlockForRawData(rawData, parent);
+      case 'parallelBox':
+        return this.getParallelBoxForRawData(rawData, parent);
       case 'task':
         return this.getTaskForRawData(rawData, parent);
       case 'store':
@@ -461,7 +461,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     if (existingLane) {
       const elements = this.getLaneElementsForRawData(
-        'parallelBlock',
+        'parallelBox',
         rawParallelBoxes,
         existingLane
       );
@@ -487,7 +487,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newLane,
         'elements',
-        this.getLaneElementsForRawData('parallelBlock', rawParallelBoxes, newLane)
+        this.getLaneElementsForRawData('parallelBox', rawParallelBoxes, newLane)
       );
       this.addElementToCache('lane', newLane);
 
@@ -498,12 +498,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Returns array of lane elements for given raw data. Handles two types of
    * collections:
-   * - list of parallel blocks in a lane,
-   * - list of tasks in a parralel block.
+   * - list of parallel boxs in a lane,
+   * - list of tasks in a parallel box.
    * If the result array has the same elements as were in the existing array in `parent`,
    * then the existing array is returned (the same reference is preserved).
-   * @param {Array<Object>} elementsRawData array of task/parallel block backend representations
-   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @param {Array<Object>} elementsRawData array of task/parallel box backend representations
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBox} parent
    * @returns {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   getLaneElementsForRawData(elementType, elementsRawData, parent) {
@@ -533,54 +533,54 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns parallel block element for given raw data. If it is available in cache,
+   * Returns parallel box element for given raw data. If it is available in cache,
    * then it is updated. Otherwise it is created from scratch and saved in cache for
    * future updates.
-   * @param {Object} parallelBlockRawData parallel block representation from backend
+   * @param {Object} parallelBoxRawData parallel box representation from backend
    * @param {Utils.WorkflowVisualiser.Lane} parent
-   * @returns {Utils.WorkflowVisualiser.Lane.ParallelBlock}
+   * @returns {Utils.WorkflowVisualiser.Lane.ParallelBox}
    */
-  getParallelBlockForRawData(parallelBlockRawData, parent) {
+  getParallelBoxForRawData(parallelBoxRawData, parent) {
     const {
       id,
       name,
       tasks: rawTasks,
-    } = getProperties(parallelBlockRawData, 'id', 'name', 'tasks');
+    } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
-    const existingParallelBlock = this.getCachedElement('parallelBlock', { id });
+    const existingParallelBox = this.getCachedElement('parallelBox', { id });
 
-    if (existingParallelBlock) {
+    if (existingParallelBox) {
       const elements = this.getLaneElementsForRawData(
         'task',
         rawTasks,
-        existingParallelBlock
+        existingParallelBox
       );
-      this.updateElement(existingParallelBlock, { name, parent, elements });
-      return existingParallelBlock;
+      this.updateElement(existingParallelBox, { name, parent, elements });
+      return existingParallelBox;
     } else {
       const {
         mode,
         actionsFactory,
       } = this.getProperties('mode', 'actionsFactory');
 
-      const newParallelBlock = ParallelBlock.create({
+      const newParallelBox = ParallelBox.create({
         id,
         name,
         parent,
         mode,
         actionsFactory,
-        onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
-        onMove: (block, moveStep) => this.moveElement(block, moveStep),
-        onRemove: block => this.removeElement(block),
+        onModify: (box, modifiedProps) => this.modifyElement(box, modifiedProps),
+        onMove: (box, moveStep) => this.moveElement(box, moveStep),
+        onRemove: box => this.removeElement(box),
       });
       set(
-        newParallelBlock,
+        newParallelBox,
         'elements',
-        this.getLaneElementsForRawData('task', rawTasks, newParallelBlock)
+        this.getLaneElementsForRawData('task', rawTasks, newParallelBox)
       );
-      this.addElementToCache('parallelBlock', newParallelBlock);
+      this.addElementToCache('parallelBox', newParallelBox);
 
-      return newParallelBlock;
+      return newParallelBox;
     }
   },
 
@@ -588,7 +588,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * Returns task element for given raw data. If it is available in cache, then it
    * is updated. Otherwise it is created from scratch and saved in cache for future updates.
    * @param {Object} taskRawData task representation from backend
-   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBox} parent
    * @returns {Utils.WorkflowVisualiser.Lane.Task}
    */
   getTaskForRawData(taskRawData, parent) {
@@ -618,8 +618,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         actionsFactory,
         status,
         progressPercent,
-        onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
-        onRemove: lane => this.removeElement(lane),
+        onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
+        onRemove: task => this.removeElement(task),
       });
       this.addElementToCache('task', newTask);
 
@@ -727,7 +727,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Gets an already generated element from cache. It has to match properties passed
    * via `filterProps`.
-   * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
+   * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBox', 'task',
    *   'interblockSpace'
    * @param {Object} filterProps an object which properties should be the same in the
    *   searched element (e.g `{ id: '123' }`)
@@ -744,7 +744,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * Stores visualiser element in cache for future usage.
-   * @param {String} type  one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
+   * @param {String} type  one of: 'lane', 'interlaneSpace', 'parallelBox', 'task',
    *   'interblockSpace'
    * @param {Utils.WorkflowVisualiser.VisualiserElement} element
    * @returns {undefined}
@@ -1050,7 +1050,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
     switch (parentType) {
       case 'lane':
         return rawParent.parallelBoxes;
-      case 'parallelBlock':
       case 'parallelBox':
         return rawParent.tasks;
       default:
