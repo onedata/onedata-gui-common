@@ -71,7 +71,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
           },
           storeSchemaId: 's1',
         },
-        tasks: [],
+        parallelBoxes: [],
       });
       expect(get(actionResult, 'status')).to.equal('done');
     }

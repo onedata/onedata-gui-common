@@ -454,15 +454,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
       id,
       name,
       iteratorSpec,
-      tasks: rawElements,
-    } = getProperties(laneRawData, 'id', 'name', 'iteratorSpec', 'tasks');
+      parallelBoxes: rawParallelBoxes,
+    } = getProperties(laneRawData, 'id', 'name', 'iteratorSpec', 'parallelBoxes');
 
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
       const elements = this.getLaneElementsForRawData(
         'parallelBlock',
-        rawElements,
+        rawParallelBoxes,
         existingLane
       );
       this.updateElement(existingLane, { name, iteratorSpec, elements });
@@ -487,7 +487,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newLane,
         'elements',
-        this.getLaneElementsForRawData('parallelBlock', rawElements, newLane)
+        this.getLaneElementsForRawData('parallelBlock', rawParallelBoxes, newLane)
       );
       this.addElementToCache('lane', newLane);
 
@@ -544,7 +544,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
-      tasks: rawElements,
+      tasks: rawTasks,
     } = getProperties(parallelBlockRawData, 'id', 'name', 'tasks');
 
     const existingParallelBlock = this.getCachedElement('parallelBlock', { id });
@@ -552,7 +552,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (existingParallelBlock) {
       const elements = this.getLaneElementsForRawData(
         'task',
-        rawElements,
+        rawTasks,
         existingParallelBlock
       );
       this.updateElement(existingParallelBlock, { name, parent, elements });
@@ -576,7 +576,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newParallelBlock,
         'elements',
-        this.getLaneElementsForRawData('task', rawElements, newParallelBlock)
+        this.getLaneElementsForRawData('task', rawTasks, newParallelBlock)
       );
       this.addElementToCache('parallelBlock', newParallelBlock);
 
@@ -910,7 +910,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return resolve();
     }
 
-    rawLane.tasks = [];
+    rawLane.parallelBoxes = [];
 
     return this.applyChange(rawDump);
   },
@@ -957,33 +957,36 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getRawElement(rawDump, element) {
     if (!rawDump || !element) {
-      return resolve();
+      return undefined;
     }
+
     const elementType = get(element, '__type');
     if (elementType === 'store') {
       return (rawDump.stores || []).findBy('id', get(element, 'id'));
-    }
-
-    const rawLanes = rawDump && rawDump.lanes || [];
-    if (!element) {
-      return undefined;
-    } else if (get(element, 'type') === 'lane') {
-      return rawLanes.findBy('id', get(element, 'id'));
     } else {
-      const idsPath = [];
-      let parentsPathElement = element;
-      while (parentsPathElement) {
-        idsPath.push(get(parentsPathElement, 'id'));
-        parentsPathElement = get(parentsPathElement, 'parent');
+      const elementPath = [];
+      let elementPathItem = element;
+      while (elementPathItem) {
+        if (elementPathItem !== element) {
+          elementPath.unshift(elementPathItem);
+        }
+        elementPathItem = get(elementPathItem, 'parent');
       }
-      idsPath.reverse();
 
-      const rawBlock = idsPath.slice(1).reduce(
-        (prevRawParent, id) =>
-        prevRawParent && prevRawParent.tasks && prevRawParent.tasks.findBy('id', id),
-        rawLanes.findBy('id', idsPath[0])
+      const rawElementContainingCollection = elementPath.reduce(
+        (containingCollection, pathElement) => {
+          const rawPathElement = containingCollection &&
+            containingCollection.findBy('id', get(pathElement, 'id'));
+          return this.getRawCollectionForRawParent(
+            get(pathElement, '__type'),
+            rawPathElement
+          );
+        },
+        rawDump.lanes || []
       );
-      return rawBlock;
+      return rawElementContainingCollection &&
+        rawElementContainingCollection.findBy('id', get(element, 'id')) ||
+        undefined;
     }
   },
 
@@ -1009,7 +1012,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     let containingCollection = rawDump && rawDump.lanes || [];
     if (parent) {
       const rawParent = this.getRawElement(rawDump, parent);
-      containingCollection = rawParent ? rawParent.tasks : undefined;
+      const parentType = get(parent, '__type');
+      containingCollection = this.getRawCollectionForRawParent(parentType, rawParent);
     }
 
     return containingCollection && containingCollection.includes(rawElement) ?
@@ -1029,7 +1033,29 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     const rawParent = this.getRawElement(rawDump, parentElement);
-    return rawParent && rawParent.tasks ? rawParent.tasks : undefined;
+    const parentType = parentElement && get(parentElement, '__type');
+    return this.getRawCollectionForRawParent(parentType, rawParent);
+  },
+
+  /**
+   * @param {String} parentType
+   * @param {Object} rawParent
+   * @returns {Array<Object>|undefined}
+   */
+  getRawCollectionForRawParent(parentType, rawParent) {
+    if (!rawParent) {
+      return undefined;
+    }
+
+    switch (parentType) {
+      case 'lane':
+        return rawParent.parallelBoxes;
+      case 'parallelBlock':
+      case 'parallelBox':
+        return rawParent.tasks;
+      default:
+        return undefined;
+    }
   },
 
   actions: {

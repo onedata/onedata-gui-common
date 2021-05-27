@@ -12,7 +12,7 @@ export default Component.extend({
         },
         storeSchemaId: 's1',
       },
-      tasks: [{
+      parallelBoxes: [{
         id: 'b0.0',
         name: 'block0.0',
         tasks: [{
@@ -94,7 +94,7 @@ export default Component.extend({
         },
         storeSchemaId: 's1',
       },
-      tasks: [{
+      parallelBoxes: [{
         id: 'b1.0',
         name: 'block1.0',
         tasks: [{
@@ -168,7 +168,7 @@ export default Component.extend({
         },
         storeSchemaId: 's1',
       },
-      tasks: [{
+      parallelBoxes: [{
         id: 'b2.0',
         name: 'block2.0',
         tasks: [{
@@ -236,7 +236,7 @@ export default Component.extend({
     }, {
       id: 'l3',
       name: 'lane3',
-      tasks: [{
+      parallelBoxes: [{
         id: 'b3.0',
         name: 'block3.0',
         tasks: [{
