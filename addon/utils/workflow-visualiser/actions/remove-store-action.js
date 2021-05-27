@@ -13,6 +13,8 @@ import { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
+// TODO: VFS-7715 Block removing store, when referenced by at least one lane iterator or task
+
 export default Action.extend({
   modalManager: service(),
 
