@@ -10,6 +10,7 @@ import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
 import { getModalBody, getModalFooter } from '../../helpers/modal';
+import { selectChoose } from '../../helpers/ember-power-select';
 
 const possibleTaskStatuses = ['success', 'warning', 'error'];
 const laneWidth = 300;
@@ -87,6 +88,26 @@ describe('Integration | Component | workflow visualiser', function () {
       (rawDump, newName) => rawDump.lanes[0].tasks[0].tasks[0].name = newName
     );
 
+    itPerformsCustomAction({
+      description: 'modifies lane details',
+      actionExecutor: async () => {
+        await click((await getActionTrigger('lane', [0], 'modify'))[0]);
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
+        await selectChoose(getModalBody().find('.sourceStore-field')[0], 'store1');
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
+        name: 'othername',
+        iteratorSpec: {
+          strategy: {
+            type: 'serial',
+          },
+          storeSchemaId: 's1',
+        },
+      }),
+      initialRawData: twoEmptyLanesExample,
+    });
+
     itMovesLane('first lane', 0, 'right');
     itMovesLane('middle lane', 1, 'right');
     itDoesNotMoveLane('last lane', 2, 'right');
@@ -157,14 +178,14 @@ describe('Integration | Component | workflow visualiser', function () {
         await fillIn(getModalBody().find('.name-field .form-control')[0], 'xyz');
         await click(getModalFooter().find('.btn-submit')[0]);
       },
-      applyUpdate: rawDump => rawDump.stores.findBy('name', 'store1').name = 'xyz',
+      applyUpdate: rawDump => rawDump.stores.findBy('name', 'store0').name = 'xyz',
       initialRawData: noLanesExample,
     });
 
     itPerformsActionWithConfirmation({
       description: 'allows to remove store',
       actionTriggerGetter: testCase => testCase.$('.remove-store-action-trigger'),
-      applyUpdate: rawDump => rawDump.stores = rawDump.stores.rejectBy('name', 'store1'),
+      applyUpdate: rawDump => rawDump.stores = rawDump.stores.rejectBy('name', 'store0'),
       initialRawData: noLanesExample,
     });
 
@@ -185,6 +206,16 @@ describe('Integration | Component | workflow visualiser', function () {
     itHasModeClass('view');
     itShowsVisualiserElements();
     itShowsStoresList();
+
+    it('shows lane details', async function () {
+      const rawData = twoEmptyLanesExample;
+
+      renderWithRawData(this, rawData);
+      await click((await getActionTrigger('lane', [0], 'view'))[0]);
+
+      expect(getModalBody().find('.name-field .field-component').text().trim())
+        .to.equal('lane0');
+    });
 
     it('does not show tasks progress when progress is not available', function () {
       const rawData = threeNonEmptyLanesNoProgressExample;
@@ -224,7 +255,7 @@ describe('Integration | Component | workflow visualiser', function () {
       await click('.workflow-visualiser-stores-list-store');
 
       expect(getModalBody().find('.name-field .field-component').text().trim())
-        .to.equal('store1');
+        .to.equal('store0');
     });
 
     it('does not show edition-related elements in empty visualiser', function () {
@@ -244,12 +275,13 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(this.$('.lane-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements in lanes and interlane spaces', function () {
+    it('does not show edition-related elements in lanes and interlane spaces', async function () {
       const rawData = twoNonEmptyLanesExample;
 
       renderWithRawData(this, rawData);
+      const modifyTrigger = await getActionTrigger('lane', [0], 'modify');
 
-      expect(this.$('.lane-actions-trigger')).to.not.exist;
+      expect(modifyTrigger).to.not.exist;
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
@@ -532,7 +564,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
         strategy: {
           type: 'serial',
         },
-        storeSchemaId: 's1',
+        storeSchemaId: storeIdFromExample(0),
       },
       tasks: [],
     }),
@@ -919,6 +951,12 @@ function generateExample(
       id: laneIdFromExample(laneNo),
       type: 'lane',
       name: `lane${laneNo}`,
+      iteratorSpec: {
+        strategy: {
+          type: 'serial',
+        },
+        storeSchemaId: storeIdFromExample(0),
+      },
       tasks: _.range(parallelBlocksPerLane).map(blockNo => ({
         id: parallelBlockIdFromExample(laneNo, blockNo),
         type: 'parallelBlock',
@@ -934,9 +972,9 @@ function generateExample(
         })),
       })),
     })),
-    stores: [{
-      id: 's1',
-      name: 'store1',
+    stores: _.range(2).map(storeNo => ({
+      id: storeIdFromExample(storeNo),
+      name: `store${storeNo}`,
       description: '',
       type: 'list',
       dataSpec: {
@@ -945,18 +983,7 @@ function generateExample(
       },
       defaultInitialValue: '',
       requiresInitialValue: false,
-    }, {
-      id: 's2',
-      name: 'store2',
-      description: 'storeDesc',
-      type: 'range',
-      defaultInitialValue: {
-        start: 1,
-        end: 10,
-        step: 2,
-      },
-      requiresInitialValue: false,
-    }],
+    })),
   };
 }
 
@@ -978,4 +1005,8 @@ function getTaskProgressFromExample(laneNo, blockNo, taskNo) {
 
 function getTaskStatusFromExample(laneNo, blockNo, taskNo) {
   return possibleTaskStatuses[(laneNo + blockNo + taskNo) % 3];
+}
+
+function storeIdFromExample(storeNo) {
+  return `s${storeNo}`;
 }

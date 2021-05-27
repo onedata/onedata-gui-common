@@ -10,7 +10,7 @@
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane';
 import { computed } from '@ember/object';
-import { reads, collect } from '@ember/object/computed';
+import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 
 export default VisualiserElement.extend({
@@ -36,6 +36,30 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
   laneElements: reads('lane.elements'),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  modifyLaneAction: computed('actionsFactory', 'lane', function modifyLaneAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
+    return actionsFactory.createModifyLaneAction({ lane });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  viewLaneAction: computed('actionsFactory', 'lane', function viewLaneAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
+    return actionsFactory.createViewLaneAction({ lane });
+  }),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
@@ -88,11 +112,44 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
-  laneActions: collect(
+  laneActions: computed(
+    'mode',
+    'modifyLaneAction',
+    'viewLaneAction',
     'moveLeftLaneAction',
     'moveRightLaneAction',
     'clearLaneAction',
-    'removeLaneAction'
+    'removeLaneAction',
+    function laneActions() {
+      const {
+        mode,
+        modifyLaneAction,
+        viewLaneAction,
+        moveLeftLaneAction,
+        moveRightLaneAction,
+        clearLaneAction,
+        removeLaneAction,
+      } = this.getProperties(
+        'mode',
+        'modifyLaneAction',
+        'viewLaneAction',
+        'moveLeftLaneAction',
+        'moveRightLaneAction',
+        'clearLaneAction',
+        'removeLaneAction'
+      );
+
+      if (mode === 'edit') {
+        return [
+          modifyLaneAction,
+          moveLeftLaneAction,
+          moveRightLaneAction,
+          clearLaneAction,
+          removeLaneAction,
+        ];
+      }
+      return [viewLaneAction];
+    }
   ),
 
   actions: {

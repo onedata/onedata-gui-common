@@ -17,6 +17,8 @@ import ArrayProxy from '@ember/array/proxy';
 import { reads } from '@ember/object/computed';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
+import ModifyLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-action';
+import ViewLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-action';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
@@ -56,14 +58,36 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.CreateLaneAction}
    */
   createCreateLaneAction(context) {
-    const storesArrayProxy = ArrayProxy
-      .extend({ content: reads('factory.workflowDataProvider.stores') })
-      .create({ factory: this });
-
     return CreateLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: storesArrayProxy,
+        stores: this.getStoresArrayProxy(),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @returns {Utils.WorkflowVisualiser.Actions.ModifyLaneAction}
+   */
+  createModifyLaneAction(context) {
+    return ModifyLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        stores: this.getStoresArrayProxy(),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneAction}
+   */
+  createViewLaneAction(context) {
+    return ViewLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        stores: this.getStoresArrayProxy(),
       }, context),
     });
   },
@@ -178,5 +202,15 @@ export default EmberObject.extend(OwnerInjector, {
    */
   createRemoveStoreAction(context) {
     return RemoveStoreAction.create({ ownerSource: this, context });
+  },
+
+  /**
+   * @private
+   * @returns {ArrayProxy<Utils.WorkflowVisualiser.Store>}
+   */
+  getStoresArrayProxy() {
+    return ArrayProxy
+      .extend({ content: reads('factory.workflowDataProvider.stores') })
+      .create({ factory: this });
   },
 });

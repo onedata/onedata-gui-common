@@ -23,6 +23,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual optional
+   * @type {Object}
+   */
+  iteratorSpec: undefined,
+
+  /**
+   * @virtual optional
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   elements: undefined,

@@ -442,14 +442,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
+      iteratorSpec,
       tasks: rawElements,
-    } = getProperties(laneRawData, 'id', 'name', 'tasks');
+    } = getProperties(laneRawData, 'id', 'name', 'iteratorSpec', 'tasks');
 
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
       const elements = this.getLaneElementsForRawData(rawElements, existingLane);
-      this.updateElement(existingLane, { name, elements });
+      this.updateElement(existingLane, { name, iteratorSpec, elements });
       return existingLane;
     } else {
       const {
@@ -460,6 +461,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const newLane = Lane.create({
         id,
         name,
+        iteratorSpec,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
@@ -751,7 +753,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   updateElement(element, update) {
     const changedFieldsOnlyUpdate = {};
     for (const key in update) {
-      if (get(element, key) !== update[key]) {
+      if (!_.isEqual(get(element, key), update[key])) {
         changedFieldsOnlyUpdate[key] = update[key];
       }
     }

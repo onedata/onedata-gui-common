@@ -7,6 +7,8 @@ import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/par
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
+import ModifyLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-action';
+import ViewLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-action';
 import MoveLeftLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-left-lane-action';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
@@ -46,6 +48,8 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
   });
 
+  itCreatesLaneAction('ModifyLaneAction', ModifyLaneAction, true);
+  itCreatesLaneAction('ViewLaneAction', ViewLaneAction, true);
   itCreatesLaneAction('MoveLeftLaneAction', MoveLeftLaneAction);
   itCreatesLaneAction('MoveRightLaneAction', MoveRightLaneAction);
   itCreatesLaneAction('ClearLaneAction', ClearLaneAction);
@@ -95,15 +99,28 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesStoreAction('RemoveStoreAction', RemoveStoreAction);
 });
 
-function itCreatesLaneAction(actionName, actionClass) {
+function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
   it(`creates action "${actionName}"`, function () {
     const factory = ActionsFactory.create({ ownerSource: this });
+    let store;
+    if (includeStores) {
+      store = Store.create({
+        id: 's1',
+        name: 'store1',
+      });
+      factory.registerWorkflowDataProvider({
+        stores: [store],
+      });
+    }
     const lane = Lane.create();
 
     const action = factory[`create${actionName}`]({ lane });
 
     expect(action).to.be.instanceOf(actionClass);
     expect(get(action, 'lane')).to.equal(lane);
+    if (includeStores) {
+      expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    }
   });
 }
 

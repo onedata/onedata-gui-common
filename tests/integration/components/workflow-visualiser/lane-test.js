@@ -3,6 +3,7 @@ import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
@@ -11,9 +12,13 @@ import { Promise } from 'rsvp';
 import { get, set, setProperties } from '@ember/object';
 import $ from 'jquery';
 import sinon from 'sinon';
-import { getModalFooter } from '../../../helpers/modal';
+import { getModalBody, getModalFooter } from '../../../helpers/modal';
 
-const laneActionsSpec = [{
+const editLaneActionsSpec = [{
+  className: 'modify-lane-action-trigger',
+  label: 'Modify',
+  icon: 'rename',
+}, {
   className: 'move-left-lane-action-trigger',
   label: 'Move left',
   icon: 'move-left',
@@ -31,14 +36,40 @@ const laneActionsSpec = [{
   icon: 'x',
 }];
 
+const viewLaneActionsSpec = [{
+  className: 'view-lane-action-trigger',
+  label: 'View details',
+  icon: 'browser-info',
+}];
+
 describe('Integration | Component | workflow visualiser/lane', function () {
   setupComponentTest('workflow-visualiser/lane', {
     integration: true,
   });
 
   beforeEach(function () {
+    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    actionsFactory.registerWorkflowDataProvider({
+      stores: [
+        Store.create({
+          id: 's1',
+          name: 'store1',
+        }),
+        Store.create({
+          id: 's2',
+          name: 'store2',
+        }),
+      ],
+    });
     this.set('lane', Lane.create({
-      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+      actionsFactory,
+      name: 'lane1',
+      iteratorSpec: {
+        strategy: {
+          type: 'serial',
+        },
+        storeSchemaId: 's1',
+      },
     }));
   });
 
@@ -54,20 +85,26 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
     itShowsName();
     itRendersLaneElements();
+    itRendersActions(viewLaneActionsSpec);
 
     it('does not allow to modify lane name', async function () {
-      this.set('lane.name', 'my-lane');
-
       this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.lane-name .one-label')).to.not.exist;
     });
 
-    it('does not render actions', function () {
-      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+    it('allows to show lane details', async function () {
+      this.render(hbs `
+        {{global-modal-mounter}}
+        {{workflow-visualiser/lane elementModel=lane}}
+      `);
 
-      expect(this.$('.lane-actions-trigger')).to.not.exist;
+      await click('.lane-actions-trigger');
+      await click($('body .webui-popover.in .view-lane-action-trigger')[0]);
+
+      expect(getModalBody().find('.name-field .field-component').text().trim())
+        .to.equal('lane1');
     });
   });
 
@@ -78,6 +115,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
     itShowsName();
     itRendersLaneElements();
+    itRendersActions(editLaneActionsSpec);
 
     it('allows to modify lane name', async function () {
       setProperties(this.get('lane'), {
@@ -98,22 +136,21 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       expect(this.$('.lane-name').text().trim()).to.equal('new-name');
     });
 
-    it('renders actions', async function () {
-      this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+    it('allows to modify lane details', async function () {
+      const onModifySpy = sinon.stub().resolves();
+      this.set('lane.onModify', onModifySpy);
+      this.render(hbs `
+        {{global-modal-mounter}}
+        {{workflow-visualiser/lane elementModel=lane}}
+      `);
 
-      const $actionsTrigger = this.$('.lane-actions-trigger');
-      expect($actionsTrigger).to.exist;
+      await click('.lane-actions-trigger');
+      await click($('body .webui-popover.in .modify-lane-action-trigger')[0]);
+      await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
+      await click(getModalFooter().find('.btn-submit')[0]);
 
-      await click($actionsTrigger[0]);
-
-      const $actions = $('body .webui-popover.in .actions-popover-content a');
-      expect($actions).to.have.length(laneActionsSpec.length);
-      laneActionsSpec.forEach(({ className, label, icon }, index) => {
-        const $action = $actions.eq(index);
-        expect($action).to.have.class(className);
-        expect($action.text().trim()).to.equal(label);
-        expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
-      });
+      expect(onModifySpy).to.be.calledOnce
+        .and.to.be.calledWith(this.get('lane'), { name: 'othername' });
     });
 
     [
@@ -249,5 +286,22 @@ function itRendersLaneElements() {
     expect($space3Element.is('.workflow-visualiser-interblock-space')).to.be.true;
     expect($space3Element).to.have.attr('data-element-before-id', 'b2');
     expect($space3Element).to.not.have.attr('data-element-after-id');
+  });
+}
+
+function itRendersActions(actionsSpec) {
+  it('renders actions', async function () {
+    this.render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
+
+    await click(this.$('.lane-actions-trigger')[0]);
+
+    const $actions = $('body .webui-popover.in .actions-popover-content a');
+    expect($actions).to.have.length(actionsSpec.length);
+    actionsSpec.forEach(({ className, label, icon }, index) => {
+      const $action = $actions.eq(index);
+      expect($action).to.have.class(className);
+      expect($action.text().trim()).to.equal(label);
+      expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+    });
   });
 }
