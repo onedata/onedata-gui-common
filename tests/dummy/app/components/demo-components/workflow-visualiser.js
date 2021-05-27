@@ -6,7 +6,7 @@ export default Component.extend({
     lanes: [{
       id: 'l0',
       name: 'lane0',
-      iteratorSpec: {
+      storeIteratorSpec: {
         strategy: {
           type: 'serial',
         },
@@ -88,7 +88,7 @@ export default Component.extend({
     }, {
       id: 'l1',
       name: 'lane1',
-      iteratorSpec: {
+      storeIteratorSpec: {
         strategy: {
           type: 'serial',
         },
@@ -162,7 +162,7 @@ export default Component.extend({
     }, {
       id: 'l2',
       name: 'lane2',
-      iteratorSpec: {
+      storeIteratorSpec: {
         strategy: {
           type: 'serial',
         },

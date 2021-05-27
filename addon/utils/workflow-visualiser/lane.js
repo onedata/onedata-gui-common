@@ -25,7 +25,7 @@ export default VisualiserRecord.extend({
    * @virtual optional
    * @type {Object}
    */
-  iteratorSpec: undefined,
+  storeIteratorSpec: undefined,
 
   /**
    * @virtual optional

@@ -17,7 +17,7 @@ import { Promise } from 'rsvp';
 
 const simpliestLane = {
   name: 'lane1',
-  iteratorSpec: {
+  storeIteratorSpec: {
     strategy: {
       type: 'serial',
     },

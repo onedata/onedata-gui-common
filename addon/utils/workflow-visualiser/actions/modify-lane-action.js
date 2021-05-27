@@ -84,7 +84,7 @@ export default Action.extend({
 
     const keysToCheck = [
       'name',
-      'iteratorSpec',
+      'storeIteratorSpec',
     ];
 
     const modifiedKeys = keysToCheck.filter(key =>

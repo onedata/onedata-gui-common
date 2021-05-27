@@ -98,7 +98,7 @@ describe('Integration | Component | workflow visualiser', function () {
       },
       applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
         name: 'othername',
-        iteratorSpec: {
+        storeIteratorSpec: {
           strategy: {
             type: 'serial',
           },
@@ -559,7 +559,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
     applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
       name: 'lane999',
-      iteratorSpec: {
+      storeIteratorSpec: {
         strategy: {
           type: 'serial',
         },
@@ -947,7 +947,7 @@ function generateExample(
     lanes: _.range(lanesNumber).map(laneNo => ({
       id: laneIdFromExample(laneNo),
       name: `lane${laneNo}`,
-      iteratorSpec: {
+      storeIteratorSpec: {
         strategy: {
           type: 'serial',
         },

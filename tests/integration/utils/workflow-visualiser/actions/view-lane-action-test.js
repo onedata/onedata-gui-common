@@ -18,7 +18,7 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
   beforeEach(function () {
     const lane = Lane.create({
       name: 'lane1',
-      iteratorSpec: {
+      storeIteratorSpec: {
         strategy: {
           type: 'serial',
         },

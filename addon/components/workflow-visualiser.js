@@ -453,9 +453,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
-      iteratorSpec,
+      storeIteratorSpec,
       parallelBoxes: rawParallelBoxes,
-    } = getProperties(laneRawData, 'id', 'name', 'iteratorSpec', 'parallelBoxes');
+    } = getProperties(laneRawData, 'id', 'name', 'storeIteratorSpec', 'parallelBoxes');
 
     const existingLane = this.getCachedElement('lane', { id });
 
@@ -465,7 +465,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         rawParallelBoxes,
         existingLane
       );
-      this.updateElement(existingLane, { name, iteratorSpec, elements });
+      this.updateElement(existingLane, { name, storeIteratorSpec, elements });
       return existingLane;
     } else {
       const {
@@ -476,7 +476,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const newLane = Lane.create({
         id,
         name,
-        iteratorSpec,
+        storeIteratorSpec,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),

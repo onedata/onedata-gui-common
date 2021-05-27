@@ -192,7 +192,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: '',
-          iteratorSpec: {
+          storeIteratorSpec: {
             strategy: {
               type: 'serial',
             },
@@ -208,7 +208,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
-          iteratorSpec: {
+          storeIteratorSpec: {
             strategy: {
               type: 'serial',
             },
@@ -231,7 +231,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
-          iteratorSpec: {
+          storeIteratorSpec: {
             strategy: {
               type: 'serial',
             },
@@ -255,7 +255,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
-          iteratorSpec: {
+          storeIteratorSpec: {
             strategy: {
               type: 'batch',
               batchSize: 30,
@@ -280,7 +280,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "serial" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
-        iteratorSpec: {
+        storeIteratorSpec: {
           strategy: {
             type: 'serial',
           },
@@ -301,7 +301,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "batch" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
-        iteratorSpec: {
+        storeIteratorSpec: {
           strategy: {
             type: 'batch',
             batchSize: 30,
@@ -344,7 +344,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "serial" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
-        iteratorSpec: {
+        storeIteratorSpec: {
           strategy: {
             type: 'serial',
           },
@@ -365,7 +365,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "batch" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
-        iteratorSpec: {
+        storeIteratorSpec: {
           strategy: {
             type: 'batch',
             batchSize: 30,

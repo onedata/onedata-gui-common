@@ -86,7 +86,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'lane.{name,iteratorSpec}',
+    'lane.{name,storeIteratorSpec}',
     function passedStoreFormValues() {
       return laneToFormData(this.get('lane'));
     }
@@ -299,12 +299,12 @@ function defaultValueGenerator(component, createDefaultValue) {
 function laneToFormData(lane) {
   const {
     name,
-    iteratorSpec,
-  } = getProperties(lane || {}, 'name', 'iteratorSpec');
+    storeIteratorSpec,
+  } = getProperties(lane || {}, 'name', 'storeIteratorSpec');
   const {
     strategy,
     storeSchemaId,
-  } = getProperties(iteratorSpec || {}, 'strategy', 'storeSchemaId');
+  } = getProperties(storeIteratorSpec || {}, 'strategy', 'storeSchemaId');
   const {
     type,
     batchSize,
@@ -343,7 +343,7 @@ function formDataToLane(formData) {
   );
   const batchSize = get(batchOptions || {}, 'batchSize');
 
-  const iteratorSpec = {
+  const storeIteratorSpec = {
     strategy: {
       type: strategy,
     },
@@ -351,11 +351,11 @@ function formDataToLane(formData) {
   };
 
   if (strategy === 'batch') {
-    iteratorSpec.strategy.batchSize = Number.parseInt(batchSize) || undefined;
+    storeIteratorSpec.strategy.batchSize = Number.parseInt(batchSize) || undefined;
   }
 
   return {
     name,
-    iteratorSpec,
+    storeIteratorSpec,
   };
 }
