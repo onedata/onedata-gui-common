@@ -65,7 +65,7 @@ describe('Integration | Component | workflow visualiser', function () {
       0
     );
     itAddsNewParallelBox(
-      'adds a parallel box between existing parallel boxs',
+      'adds a parallel box between existing parallel boxes',
       twoNonEmptyLanesExample,
       1
     );
@@ -304,14 +304,14 @@ describe('Integration | Component | workflow visualiser', function () {
       expect(this.$('.parallel-box-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements of parallel boxs and spaces between them', function () {
+    it('does not show edition-related elements of parallel boxes and spaces between them', function () {
       const rawData = twoNonEmptyLanesExample;
 
       renderWithRawData(this, rawData);
 
       expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
       expect(this.$(
-        '.workflow-visualiser-interblock-space.between-parallel-boxs-space .add-block-action-trigger'
+        '.workflow-visualiser-interblock-space.between-parallel-box-space .add-block-action-trigger'
       )).to.not.exist;
     });
 

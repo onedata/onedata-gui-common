@@ -38,7 +38,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }
   );
 
-  it('has class "between-parallel-boxs-space" when "parent" is of type Lane', function () {
+  it('has class "between-parallel-box-space" when "parent" is of type Lane', function () {
     this.set('blockSpace.parent', Lane.create());
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
@@ -46,10 +46,10 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }}`);
 
     expect(this.$('.workflow-visualiser-interblock-space'))
-      .to.have.class('between-parallel-boxs-space');
+      .to.have.class('between-parallel-box-space');
   });
 
-  it('has class "between-tasks-space" when "parent" is of type ParallelBox', function () {
+  it('has class "between-task-space" when "parent" is of type ParallelBox', function () {
     this.set('blockSpace.parent', ParallelBox.create());
 
     this.render(hbs `{{workflow-visualiser/lane/interblock-space
@@ -57,10 +57,10 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }}`);
 
     expect(this.$('.workflow-visualiser-interblock-space'))
-      .to.have.class('between-tasks-space');
+      .to.have.class('between-task-space');
   });
 
-  context('between parallel boxs', function () {
+  context('between parallel boxes', function () {
     [{
       siblings: [null, ParallelBox.create()],
       type: 'start',

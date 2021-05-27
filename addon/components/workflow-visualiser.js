@@ -2,11 +2,11 @@
  * Is responsible for showing and editing workflows.
  *
  * Workflow is a description of some ordered collection of files tasks. Order of the
- * execution is described by lanes and parallel boxs - both of them are responsible for
+ * execution is described by lanes and parallel boxes - both of them are responsible for
  * grouping tasks. Execution goes as follows:
  * 1. Tasks are being executed lane-by-lane. Next lane is started only when the previous
  * lane was completely done for all files.
- * 2. Tasks inside each lane are grouped by parallel boxs. All tasks inside the same
+ * 2. Tasks inside each lane are grouped by parallel boxes. All tasks inside the same
  * parallel box can be executed in the same time and file.
  * 3. Each file can be processed only in one parallel box at a time. When some file was
  * processed by all tasks in some parallel box, then it can be processed by the tasks
@@ -34,9 +34,9 @@
  *                      |                                           |
  *     +----------------+--------------+                +-----------+----------+
  *     |                |              |                |                      |
- *  +--+---+   +--------+-------+   +--+---+   +--------+--------+   +---------+--------+
- *  | Lane |   | Parallel box |   | Task |   | Interlane space |   | Interblock space |
- *  +------+   +----------------+   +------+   +-----------------+   +------------------+
+ *  +--+---+    +-------+------+    +--+---+   +--------+--------+   +---------+--------+
+ *  | Lane |    | Parallel box |    | Task |   | Interlane space |   | Interblock space |
+ *  +------+    +--------------+    +------+   +-----------------+   +------------------+
  *
  * Model composition:
  *
@@ -52,9 +52,9 @@
  *                                  |1
  *                       +----------+------------+
  *                       |m                      |m+1
- *              +--------v-------+     +---------v--------+
- *              | Parallel box |     | Interblock space |
- *              +--------+-------+     +------------------+
+ *               +-------v------+      +---------v--------+
+ *               | Parallel box |      | Interblock space |
+ *               +-------+------+      +------------------+
  *                       |
  *            +----------+------+
  *            |p                |p+1
@@ -498,7 +498,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Returns array of lane elements for given raw data. Handles two types of
    * collections:
-   * - list of parallel boxs in a lane,
+   * - list of parallel boxes in a lane,
    * - list of tasks in a parallel box.
    * If the result array has the same elements as were in the existing array in `parent`,
    * then the existing array is returned (the same reference is preserved).

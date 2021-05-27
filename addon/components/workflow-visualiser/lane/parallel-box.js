@@ -40,38 +40,50 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  moveUpParallelBoxAction: computed('actionsFactory', 'parallelBox', function moveUpParallelBoxAction() {
-    const {
-      actionsFactory,
-      parallelBox,
-    } = this.getProperties('actionsFactory', 'parallelBox');
+  moveUpParallelBoxAction: computed(
+    'actionsFactory',
+    'parallelBox',
+    function moveUpParallelBoxAction() {
+      const {
+        actionsFactory,
+        parallelBox,
+      } = this.getProperties('actionsFactory', 'parallelBox');
 
-    return actionsFactory.createMoveUpParallelBoxAction({ parallelBox });
-  }),
-
-  /**
-   * @type {ComputedProperty<Utils.Action>}
-   */
-  moveDownParallelBoxAction: computed('actionsFactory', 'parallelBox', function moveDownParallelBoxAction() {
-    const {
-      actionsFactory,
-      parallelBox,
-    } = this.getProperties('actionsFactory', 'parallelBox');
-
-    return actionsFactory.createMoveDownParallelBoxAction({ parallelBox });
-  }),
+      return actionsFactory.createMoveUpParallelBoxAction({ parallelBox });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  removeParallelBoxAction: computed('actionsFactory', 'parallelBox', function removeParallelBoxAction() {
-    const {
-      actionsFactory,
-      parallelBox,
-    } = this.getProperties('actionsFactory', 'parallelBox');
+  moveDownParallelBoxAction: computed(
+    'actionsFactory',
+    'parallelBox',
+    function moveDownParallelBoxAction() {
+      const {
+        actionsFactory,
+        parallelBox,
+      } = this.getProperties('actionsFactory', 'parallelBox');
 
-    return actionsFactory.createRemoveParallelBoxAction({ parallelBox });
-  }),
+      return actionsFactory.createMoveDownParallelBoxAction({ parallelBox });
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  removeParallelBoxAction: computed(
+    'actionsFactory',
+    'parallelBox',
+    function removeParallelBoxAction() {
+      const {
+        actionsFactory,
+        parallelBox,
+      } = this.getProperties('actionsFactory', 'parallelBox');
+
+      return actionsFactory.createRemoveParallelBoxAction({ parallelBox });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}

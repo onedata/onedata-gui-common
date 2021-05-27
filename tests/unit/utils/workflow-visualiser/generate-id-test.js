@@ -15,6 +15,5 @@ describe('Unit | Utility | workflow visualiser/generate id', function () {
     }
 
     expect(results.size).to.equal(1000);
-    console.log(results);
   });
 });

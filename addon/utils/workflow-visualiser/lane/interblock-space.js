@@ -1,5 +1,5 @@
 /**
- * Space between parallel boxs or tasks. Allows creating new elements.
+ * Space between parallel boxes or tasks. Allows creating new elements.
  *
  * @module utils/workflow-visualiser/lane/interblock-space
  * @author Michał Borzęcki
