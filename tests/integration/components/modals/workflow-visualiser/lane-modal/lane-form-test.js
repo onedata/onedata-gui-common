@@ -85,7 +85,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await render(this);
 
       expect(this.$('.iteratorOptions-field .control-label').eq(0).text().trim())
-        .to.equal('Iterator options:');
+        .to.equal('Iterator options');
     });
 
     it('renders "source store" field with first store preselected', async function () {

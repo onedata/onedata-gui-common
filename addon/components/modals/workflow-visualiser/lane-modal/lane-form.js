@@ -148,6 +148,7 @@ export default Component.extend(I18n, {
 
     return FormFieldsGroup.create({
       name: 'iteratorOptions',
+      addColonToLabel: false,
       fields: [
         sourceStoreField,
         strategyField,
