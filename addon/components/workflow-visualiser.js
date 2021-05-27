@@ -214,9 +214,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
       if (draggedElementModel) {
         const {
           objectOrigin,
-          type,
-        } = getProperties(draggedElementModel, 'objectOrigin', 'type');
-        return objectOrigin === 'workflowVisualiser' ? type : undefined;
+          __type,
+        } = getProperties(draggedElementModel, 'objectOrigin', '__type');
+        return objectOrigin === 'workflowVisualiser' ? __type : undefined;
       }
     }
   ),
@@ -364,12 +364,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
+   * Generates an array of stores from `rawData`
+   * @returns {Array<Utils.WorkflowVisualiser.Store>}
+   */
+  getStores() {
+    const rawStores = this.get('rawData.stores') || [];
+    return rawStores.map(rawStore => this.getElementForRawData('store', rawStore));
+  },
+
+  /**
    * Generates an array of lanes and interlane spaces from `rawData`
    * @returns {Array<Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.InterlaneSpace>}
    */
   getVisualiserElements() {
     const rawLanes = this.get('rawData.lanes') || [];
-    const lanes = rawLanes.map(rawLane => this.getElementForRawData(rawLane));
+    const lanes = rawLanes.map(rawLane => this.getElementForRawData('lane', rawLane));
     this.updateFirstLastFlagsInCollection(lanes);
 
     const visualiserElements = [
@@ -392,8 +401,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @param {Object} rawData element representation from backend
    * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} [parent=null]
    */
-  getElementForRawData(rawData, parent = null) {
-    switch (rawData.type) {
+  getElementForRawData(type, rawData, parent = null) {
+    switch (type) {
       case 'lane':
         // Lane does not have any parent
         return this.getLaneForRawData(rawData);
@@ -401,6 +410,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         return this.getParallelBlockForRawData(rawData, parent);
       case 'task':
         return this.getTaskForRawData(rawData, parent);
+      case 'store':
+        return this.getStoreForRawData(rawData);
       default:
         return undefined;
     }
@@ -449,7 +460,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
-      const elements = this.getLaneElementsForRawData(rawElements, existingLane);
+      const elements = this.getLaneElementsForRawData(
+        'parallelBlock',
+        rawElements,
+        existingLane
+      );
       this.updateElement(existingLane, { name, iteratorSpec, elements });
       return existingLane;
     } else {
@@ -472,7 +487,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newLane,
         'elements',
-        this.getLaneElementsForRawData(rawElements, newLane)
+        this.getLaneElementsForRawData('parallelBlock', rawElements, newLane)
       );
       this.addElementToCache('lane', newLane);
 
@@ -491,10 +506,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
    * @returns {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
-  getLaneElementsForRawData(elementsRawData, parent) {
+  getLaneElementsForRawData(elementType, elementsRawData, parent) {
     const existingLaneElements = get(parent || {}, 'elements') || [];
     const elementsForRawData = (elementsRawData || []).map(elementRawData =>
-      this.getElementForRawData(elementRawData, parent)
+      this.getElementForRawData(elementType, elementRawData, parent)
     );
     this.updateFirstLastFlagsInCollection(elementsForRawData);
 
@@ -535,7 +550,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const existingParallelBlock = this.getCachedElement('parallelBlock', { id });
 
     if (existingParallelBlock) {
-      const elements = this.getLaneElementsForRawData(rawElements, existingParallelBlock);
+      const elements = this.getLaneElementsForRawData(
+        'task',
+        rawElements,
+        existingParallelBlock
+      );
       this.updateElement(existingParallelBlock, { name, parent, elements });
       return existingParallelBlock;
     } else {
@@ -557,7 +576,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newParallelBlock,
         'elements',
-        this.getLaneElementsForRawData(rawElements, newParallelBlock)
+        this.getLaneElementsForRawData('task', rawElements, newParallelBlock)
       );
       this.addElementToCache('parallelBlock', newParallelBlock);
 
@@ -647,15 +666,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.addElementToCache(type, newSpace);
       return newSpace;
     }
-  },
-
-  /**
-   * Generates an array of stores from `rawData`
-   * @returns {Array<Utils.WorkflowVisualiser.Store>}
-   */
-  getStores() {
-    const rawStores = this.get('rawData.stores') || [];
-    return rawStores.map(rawStore => this.getStoreForRawData(rawStore));
   },
 
   /**

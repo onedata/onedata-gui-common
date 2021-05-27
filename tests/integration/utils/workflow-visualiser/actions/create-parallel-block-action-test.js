@@ -8,7 +8,6 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 const newParallelBlockMatcher = sinon.match({
-  type: 'parallelBlock',
   name: 'Parallel block',
   tasks: [],
 });

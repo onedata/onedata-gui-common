@@ -8,7 +8,6 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 const newTaskMatcher = sinon.match({
-  type: 'task',
   name: 'Untitled task',
 });
 

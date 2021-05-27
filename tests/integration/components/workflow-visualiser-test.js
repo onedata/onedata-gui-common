@@ -558,7 +558,6 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
     },
     applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
-      type: 'lane',
       name: 'lane999',
       iteratorSpec: {
         strategy: {
@@ -590,7 +589,6 @@ function itAddsNewParallelBlock(message, initialRawData, insertIndex) {
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
     applyUpdate: rawDump => rawDump.lanes[0].tasks.splice(insertIndex, 0, {
       id: sinon.match.string,
-      type: 'parallelBlock',
       name: 'Parallel block',
       tasks: [],
     }),
@@ -616,7 +614,6 @@ function itAddsNewTask(message, initialRawData, insertIndex) {
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
     applyUpdate: rawDump => rawDump.lanes[0].tasks[0].tasks.splice(insertIndex, 0, {
       id: sinon.match.string,
-      type: 'task',
       name: 'Untitled task',
     }),
     initialRawData,
@@ -949,7 +946,6 @@ function generateExample(
   return {
     lanes: _.range(lanesNumber).map(laneNo => ({
       id: laneIdFromExample(laneNo),
-      type: 'lane',
       name: `lane${laneNo}`,
       iteratorSpec: {
         strategy: {
@@ -959,11 +955,9 @@ function generateExample(
       },
       tasks: _.range(parallelBlocksPerLane).map(blockNo => ({
         id: parallelBlockIdFromExample(laneNo, blockNo),
-        type: 'parallelBlock',
         name: `block${laneNo}.${blockNo}`,
         tasks: _.range(tasksPerParallelBlock).map(taskNo => ({
           id: taskIdFromExample(laneNo, blockNo, taskNo),
-          type: 'task',
           name: `task${laneNo}.${blockNo}.${taskNo}`,
           status: includeProgress ?
             getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,

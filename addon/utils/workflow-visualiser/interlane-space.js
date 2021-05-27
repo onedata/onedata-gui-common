@@ -13,12 +13,12 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/interlane-space',
+  __type: 'interlaneSpace',
 
   /**
    * @override
    */
-  type: 'interlaneSpace',
+  renderer: 'workflow-visualiser/interlane-space',
 
   /**
    * @override

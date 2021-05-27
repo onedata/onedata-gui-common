@@ -44,7 +44,6 @@ export default Action.extend({
    */
   onExecute() {
     const newParallelBlockProps = {
-      type: 'parallelBlock',
       name: String(this.t('newParallelBlockName')),
       tasks: [],
     };

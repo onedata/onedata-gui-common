@@ -68,7 +68,6 @@ export default Action.extend({
 
   createLane(laneFromForm) {
     return this.get('createLaneCallback')(Object.assign({
-      type: 'lane',
       tasks: [],
     }, laneFromForm));
   },

@@ -14,12 +14,12 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane',
+  __type: 'lane',
 
   /**
    * @override
    */
-  type: 'lane',
+  renderer: 'workflow-visualiser/lane',
 
   /**
    * @virtual optional

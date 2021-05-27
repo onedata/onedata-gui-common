@@ -43,7 +43,6 @@ export default Action.extend({
    */
   onExecute() {
     const newTaskProps = {
-      type: 'task',
       name: String(this.t('newTaskName')),
     };
 

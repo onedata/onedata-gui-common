@@ -5,16 +5,16 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Unit | Utility | workflow visualiser/lane', function () {
+  it('has "__type" equal to "lane"', function () {
+    const lane = Lane.create();
+
+    expect(get(lane, '__type')).to.equal('lane');
+  });
+
   it('has "renderer" equal to "workflow-visualiser/lane"', function () {
     const lane = Lane.create();
 
     expect(get(lane, 'renderer')).to.equal('workflow-visualiser/lane');
-  });
-
-  it('has "type" equal to "lane"', function () {
-    const lane = Lane.create();
-
-    expect(get(lane, 'type')).to.equal('lane');
   });
 
   it('has an empty array "elements" on init', function () {

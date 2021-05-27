@@ -64,7 +64,6 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
-        type: 'lane',
         name: 'lane1',
         iteratorSpec: {
           strategy: {

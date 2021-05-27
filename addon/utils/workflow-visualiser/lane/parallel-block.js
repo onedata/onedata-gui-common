@@ -13,12 +13,12 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane/parallel-block',
+  __type: 'parallelBlock',
 
   /**
    * @override
    */
-  type: 'parallelBlock',
+  renderer: 'workflow-visualiser/lane/parallel-block',
 
   /**
    * @virtual optional

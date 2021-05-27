@@ -5,9 +5,9 @@ import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/visualiser element', function () {
   [
+    '__type',
     'renderer',
     'mode',
-    'type',
     'id',
     'parent',
     'actionsFactory',

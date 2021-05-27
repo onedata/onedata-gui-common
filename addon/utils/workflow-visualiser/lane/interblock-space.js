@@ -14,12 +14,12 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane/interblock-space',
+  __type: 'interblockSpace',
 
   /**
    * @override
    */
-  type: 'interblockSpace',
+  renderer: 'workflow-visualiser/lane/interblock-space',
 
   /**
    * @type {Object}
@@ -32,5 +32,5 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  siblingsType: getBy('siblingsTypePerParentType', 'parent.type'),
+  siblingsType: getBy('siblingsTypePerParentType', 'parent.__type'),
 });

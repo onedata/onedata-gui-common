@@ -6,17 +6,17 @@ import ParalallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/p
 import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/lane/interblock space', function () {
+  it('has "__type" equal to "interblockSpace"', function () {
+    const interblockSpace = InterblockSpace.create();
+
+    expect(get(interblockSpace, '__type')).to.equal('interblockSpace');
+  });
+
   it('has "renderer" equal to "workflow-visualiser/lane/interblock-space"', function () {
     const interblockSpace = InterblockSpace.create();
 
     expect(get(interblockSpace, 'renderer'))
       .to.equal('workflow-visualiser/lane/interblock-space');
-  });
-
-  it('has "type" equal to "interblockSpace"', function () {
-    const interblockSpace = InterblockSpace.create();
-
-    expect(get(interblockSpace, 'type')).to.equal('interblockSpace');
   });
 
   it('has "siblingsType" equal to "parallelBlock" when parent is a lane', function () {

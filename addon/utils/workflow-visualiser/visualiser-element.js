@@ -14,6 +14,12 @@ export default EmberObject.extend({
    * @virtual
    * @type {String}
    */
+  __type: undefined,
+
+  /**
+   * @virtual
+   * @type {String}
+   */
   renderer: undefined,
 
   /**
@@ -22,12 +28,6 @@ export default EmberObject.extend({
    * @type {String}
    */
   mode: undefined,
-
-  /**
-   * @virtual
-   * @type {String}
-   */
-  type: undefined,
 
   /**
    * @virtual
