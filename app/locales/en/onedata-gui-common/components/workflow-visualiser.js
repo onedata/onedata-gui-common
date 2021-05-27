@@ -7,6 +7,9 @@ export default {
       modifyLane: {
         title: 'Modify',
       },
+      viewLane: {
+        title: 'View details',
+      },
       moveLeftLane: {
         title: 'Move left',
       },

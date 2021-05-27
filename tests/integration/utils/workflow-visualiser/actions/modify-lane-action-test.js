@@ -63,6 +63,8 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
     expect(getModal()).to.have.class('lane-modal');
     expect(getModalHeader().find('h1').text().trim()).to.equal('Modify lane');
     expect(getModalBody().find('.name-field .form-control')).to.have.value('lane1');
+    expect(getModalBody().find('.sourceStore-field .dropdown-field-trigger').text().trim())
+      .to.equal('store1');
   });
 
   it(
