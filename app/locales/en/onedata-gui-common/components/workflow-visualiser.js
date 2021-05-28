@@ -1,4 +1,7 @@
+import taskForm from './workflow-visualiser/task-form';
+
 export default {
+  taskForm,
   lane: {
     actions: {
       createLane: {
