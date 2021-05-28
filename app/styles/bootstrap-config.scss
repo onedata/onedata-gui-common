@@ -189,13 +189,17 @@ label {
     &:first-child {
       border-top: 0;
     }
-    a {
+    a, .dropdown-menu-item {
       padding: $padding-base-vertical * 0.8;
       .one-icon + .truncated-string.one-label {
         display: inline-block;
         vertical-align: middle;
         max-width: calc(100% - 30px);
       }
+    }
+    .no-actions-info {
+      font-style: italic;
+      user-select: none;
     }
   }
 }

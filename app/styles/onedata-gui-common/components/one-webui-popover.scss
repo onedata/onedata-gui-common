@@ -69,11 +69,15 @@ $webui-popover-offset: 4px;
       &.separator a {
         background-color: lighten($color-one-semiblack, 10%);
       }
-      &.disabled a {
-        color: lighten($main-text-color, 20%);
+      &.disabled {
+        a, .dropdown-menu-item {
+          color: lighten($main-text-color, 20%);
+        }
+      }
+      a, .dropdown-menu-item {
+        color: $color-one-white;
       }
       a {
-        color: $color-one-white;
         &:hover {
           background-color: lighten($color-one-semiblack, 7%);
         }
