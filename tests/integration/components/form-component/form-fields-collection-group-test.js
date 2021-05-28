@@ -187,5 +187,42 @@ describe(
       expect(this.$('.add-field-button')).to.have.attr('disabled');
       expect(this.$('.remove-icon')).to.have.class('disabled');
     });
+
+    it('hides add and remove buttons when "isCollectionManipulationAllowed" is false',
+      async function () {
+        const valuesSource = EmberObject.create({
+          collection: EmberObject.create(),
+        });
+        const collectionGroup = FormFieldsCollectionGroup.extend({
+          fieldFactoryMethod() {
+            return TextField.create({
+              name: 'textField',
+              valueName: `textField${this.get('fields.length')}`,
+            });
+          },
+        }).create({
+          name: 'collection',
+          ownerSource: this,
+          parent: {
+            isEffectivelyEnabled: true,
+            onValueChange(value) {
+              set(valuesSource, 'collection', value);
+            },
+          },
+          valuesSource,
+        });
+        this.set('collectionGroup', collectionGroup);
+
+        this.render(hbs `
+          {{form-component/form-fields-collection-group field=collectionGroup}}
+        `);
+
+        await click('.add-field-button');
+        set(collectionGroup, 'isCollectionManipulationAllowed', false);
+        await wait();
+
+        expect(this.$('.remove-field-button')).to.not.exist;
+        expect(this.$('.add-field-button')).to.not.exist;
+      });
   }
 );

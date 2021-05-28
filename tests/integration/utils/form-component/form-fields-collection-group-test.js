@@ -15,6 +15,12 @@ describe(
       integration: true,
     });
 
+    it('has "isCollectionManipulationAllowed" set to true by default', function () {
+      const collectionGroup = FormFieldsCollectionGroup.create();
+
+      expect(get(collectionGroup, 'isCollectionManipulationAllowed')).to.be.true;
+    });
+
     it(
       'adds field through addNewField() (with usage of fieldFactoryMethod())',
       function () {
