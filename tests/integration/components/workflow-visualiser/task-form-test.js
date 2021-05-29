@@ -4,12 +4,209 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { fillIn } from 'ember-native-dom-helpers';
+import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import sinon from 'sinon';
+import $ from 'jquery';
+import _ from 'lodash';
 
 const componentClass = 'task-form';
+
+const dataSpecs = [{
+  label: 'Integer',
+  dataSpec: {
+    type: 'integer',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'String',
+  dataSpec: {
+    type: 'string',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Object',
+  dataSpec: {
+    type: 'object',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
+}, {
+  label: 'Histogram',
+  dataSpec: {
+    type: 'histogram',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Any file',
+  dataSpec: {
+    type: 'file',
+    valueConstraints: {
+      fileType: 'ANY',
+    },
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Regular file',
+  dataSpec: {
+    type: 'file',
+    valueConstraints: {
+      fileType: 'REG',
+    },
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Directory',
+  dataSpec: {
+    type: 'file',
+    valueConstraints: {
+      fileType: 'DIR',
+    },
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Dataset',
+  dataSpec: {
+    type: 'dataset',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Archive',
+  dataSpec: {
+    type: 'archive',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
+  label: 'Single value store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'singleValue',
+    },
+  },
+  preferredNestedType: 'Object',
+  valueBuilderTypes: ['storeCredentials'],
+}, {
+  label: 'List store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'list',
+    },
+  },
+  preferredNestedType: 'Object',
+  valueBuilderTypes: ['storeCredentials'],
+}, {
+  label: 'Map store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'map',
+    },
+  },
+  preferredNestedType: 'Object',
+  valueBuilderTypes: ['storeCredentials'],
+}, {
+  label: 'Tree forest store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'treeForest',
+    },
+  },
+  preferredNestedType: 'Any file',
+  valueBuilderTypes: ['storeCredentials'],
+}, {
+  label: 'Range store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'range',
+    },
+  },
+  valueBuilderTypes: ['storeCredentials'],
+}, {
+  label: 'Histogram store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'histogram',
+    },
+  },
+  preferredNestedType: 'Histogram',
+  valueBuilderTypes: ['storeCredentials'],
+}, {
+  label: 'OnedataFS credentials',
+  dataSpec: {
+    type: 'onedatafsCredentials',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['onedatafsCredentials'],
+}];
+
+const valueBuilderTypeLabels = {
+  iteratedItem: 'Iterated item',
+  const: 'Constant value',
+  storeCredentials: 'Store credentials',
+  onedatafsCredentials: 'OnedataFS credentials',
+};
+
+const exampleStores = dataSpecs
+  .filter(({ dataSpec: { valueConstraints } }) => valueConstraints.storeType)
+  .map(({ dataSpec, preferredNestedType }) => ({
+    id: dataSpec.valueConstraints.storeType + 'Id',
+    name: dataSpec.valueConstraints.storeType + 'Store',
+    type: dataSpec.valueConstraints.storeType,
+    dataSpec: preferredNestedType &&
+      dataSpecs.findBy('label', preferredNestedType).dataSpec,
+    requiresInitialValue: false,
+  }));
+const rangeStore = exampleStores.findBy('type', 'range');
+rangeStore.defaultInitialValue = {
+  start: 1,
+  end: 10,
+  step: 2,
+};
+delete rangeStore.dataSpec;
+
 const exampleAtmLambda = {
   name: 'function1',
   summary: 'function1 summary',
+  argumentSpecs: [{
+    name: 'argint',
+    dataSpec: {
+      type: 'integer',
+      valueConstraints: {},
+    },
+    isOptional: true,
+  }, {
+    name: 'argstring',
+    dataSpec: {
+      type: 'string',
+      valueConstraints: {},
+    },
+    isOptional: true,
+  }, {
+    name: 'argstore',
+    dataSpec: {
+      type: 'storeCredentials',
+      valueConstraints: {
+        storeType: 'singleValue',
+      },
+    },
+    isOptional: true,
+  }, {
+    name: 'argodfs',
+    dataSpec: {
+      type: 'onedatafsCredentials',
+      valueConstraints: {},
+    },
+    isOptional: true,
+  }],
 };
 const exampleTask = {
   id: 't1',
@@ -23,7 +220,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
   beforeEach(function () {
     this.setProperties({
-      atmLambda: Object.assign({}, exampleAtmLambda),
+      atmLambda: _.cloneDeep(exampleAtmLambda),
+      stores: _.cloneDeep(exampleStores),
     });
   });
 
@@ -87,6 +285,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(changeSpy).to.be.calledWith({
         data: {
           name: exampleAtmLambda.name,
+          argumentMappings: [],
         },
         isValid: true,
       });
@@ -97,9 +296,244 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
+          argumentMappings: [],
         },
         isValid: true,
       });
+    });
+
+    it('does not render arguments section, if lambda does not specify any',
+      async function () {
+        this.set('atmLambda.argumentSpecs', []);
+
+        await render(this);
+
+        expect(this.$('.argumentMappings-field')).to.not.exist;
+      });
+
+    it('renders arguments section', async function () {
+      await render(this);
+
+      const $argumentMappings = this.$('.argumentMappings-field');
+      expect($argumentMappings).to.exist;
+      expect($argumentMappings.find('.control-label').eq(0).text().trim())
+        .to.equal('Arguments');
+      const $arguments = $argumentMappings.find('.argumentMapping-field');
+      expect($arguments).to.have.length(exampleAtmLambda.argumentSpecs.length);
+      exampleAtmLambda.argumentSpecs.forEach(({ name }, idx) => {
+        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+          .to.equal(`${name}:`);
+      });
+    });
+
+    dataSpecs.forEach(({ label, dataSpec, valueBuilderTypes }) => {
+      it(`providers available value builder types for argument of type "${label}"`,
+        async function () {
+          this.set('atmLambda.argumentSpecs', [{
+            name: 'arg1',
+            dataSpec,
+            isOptional: false,
+          }]);
+
+          await render(this);
+          await clickTrigger('.argumentMapping-field .valueBuilderType-field');
+
+          expect(this.$('.valueBuilderType-field .dropdown-field-trigger').text().trim())
+            .to.equal(valueBuilderTypeLabels[valueBuilderTypes[0]]);
+          const $options = $('.ember-power-select-option');
+          expect($options).to.have.length(valueBuilderTypes.length);
+          valueBuilderTypes.forEach((type, idx) =>
+            expect($options.eq(idx).text().trim())
+            .to.equal(valueBuilderTypeLabels[type])
+          );
+        });
+
+      it(`providers available value builder types for optional argument of type "${label}"`,
+        async function () {
+          this.set('atmLambda.argumentSpecs', [{
+            name: 'arg1',
+            dataSpec,
+            isOptional: true,
+          }]);
+
+          await render(this);
+          await clickTrigger('.argumentMapping-field .valueBuilderType-field');
+
+          expect(this.$('.valueBuilderType-field .dropdown-field-trigger').text().trim())
+            .to.equal('Leave unassigned');
+          const $options = $('.ember-power-select-option');
+          expect($options).to.have.length(valueBuilderTypes.length + 1);
+          expect($options.eq(0).text().trim()).to.equal('Leave unassigned');
+          valueBuilderTypes.forEach((type, idx) =>
+            expect($options.eq(idx + 1).text().trim())
+            .to.equal(valueBuilderTypeLabels[type])
+          );
+        });
+
+      it(`allows to setup optional argument of type "${label}" using "Leave unassigned" value builder`,
+        async function () {
+          this.set('atmLambda.argumentSpecs', [{
+            name: 'arg1',
+            dataSpec,
+            isOptional: true,
+          }]);
+
+          await render(this);
+          await selectChoose(
+            '.argumentMapping-field .valueBuilderType-field',
+            'Leave unassigned'
+          );
+
+          expect(this.get('changeSpy')).to.be.calledWith({
+            data: {
+              name: 'function1',
+              argumentMappings: [],
+            },
+            isValid: true,
+          });
+        });
+
+      if (valueBuilderTypes.includes('iteratedItem')) {
+        it(`allows to setup argument of type "${label}" using "Iterated item" value builder`,
+          async function () {
+            this.set('atmLambda.argumentSpecs', [{
+              name: 'arg1',
+              dataSpec,
+              isOptional: false,
+            }]);
+
+            await render(this);
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderType-field',
+              'Iterated item'
+            );
+
+            expect(this.get('changeSpy')).to.be.calledWith({
+              data: {
+                name: 'function1',
+                argumentMappings: [{
+                  argumentName: 'arg1',
+                  valueBuilder: {
+                    valueBuilderType: 'iteratedItem',
+                  },
+                }],
+              },
+              isValid: true,
+            });
+          });
+      }
+
+      if (valueBuilderTypes.includes('const')) {
+        it(`allows to setup argument of type "${label}" using "Constant value" value builder`,
+          async function () {
+            this.set('atmLambda.argumentSpecs', [{
+              name: 'arg1',
+              dataSpec,
+              isOptional: false,
+            }]);
+
+            await render(this);
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderType-field',
+              'Constant value'
+            );
+            await fillIn('.valueBuilderConstValue-field .form-control', '123');
+
+            expect(this.get('changeSpy')).to.be.calledWith({
+              data: {
+                name: 'function1',
+                argumentMappings: [{
+                  argumentName: 'arg1',
+                  valueBuilder: {
+                    valueBuilderType: 'const',
+                    valueBuilderRecipe: 123,
+                  },
+                }],
+              },
+              isValid: true,
+            });
+          });
+      }
+
+      if (valueBuilderTypes.includes('storeCredentials')) {
+        it(`allows to setup argument of type "${label}" using "Store credentials" value builder`,
+          async function () {
+            this.set('atmLambda.argumentSpecs', [{
+              name: 'arg1',
+              dataSpec,
+              isOptional: false,
+            }]);
+
+            const possibleStoreType = dataSpec.valueConstraints.storeType;
+            const possibleStores = possibleStoreType ?
+              exampleStores.filterBy('type', possibleStoreType) :
+              exampleStores;
+            const sortedPossibleStores = possibleStores.sortBy('name');
+
+            await render(this);
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderType-field',
+              'Store credentials'
+            );
+            await clickTrigger('.argumentMapping-field .valueBuilderStore-field');
+
+            const $options = $('.ember-power-select-option');
+            expect($options).to.have.length(sortedPossibleStores.length);
+            sortedPossibleStores.forEach(({ name }, idx) =>
+              expect($options.eq(idx).text().trim()).to.equal(name)
+            );
+
+            const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderStore-field',
+              storeToSelect.name
+            );
+
+            expect(this.get('changeSpy')).to.be.calledWith({
+              data: {
+                name: 'function1',
+                argumentMappings: [{
+                  argumentName: 'arg1',
+                  valueBuilder: {
+                    valueBuilderType: 'storeCredentials',
+                    valueBuilderRecipe: storeToSelect.id,
+                  },
+                }],
+              },
+              isValid: true,
+            });
+          });
+      }
+
+      if (valueBuilderTypes.includes('onedatafsCredentials')) {
+        it(`allows to setup argment of type "${label}" using "OnedataFS credentials" value builder`,
+          async function () {
+            this.set('atmLambda.argumentSpecs', [{
+              name: 'arg1',
+              dataSpec,
+              isOptional: false,
+            }]);
+
+            await render(this);
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderType-field',
+              'OnedataFS credentials'
+            );
+
+            expect(this.get('changeSpy')).to.be.calledWith({
+              data: {
+                name: 'function1',
+                argumentMappings: [{
+                  argumentName: 'arg1',
+                  valueBuilder: {
+                    valueBuilderType: 'onedatafsCredentials',
+                  },
+                }],
+              },
+              isValid: true,
+            });
+          });
+      }
     });
   });
 
@@ -107,7 +541,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     beforeEach(function () {
       this.setProperties({
         mode: 'edit',
-        task: Object.assign({}, exampleTask),
+        task: _.cloneDeep(exampleTask),
       });
     });
 
@@ -136,7 +570,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     beforeEach(function () {
       this.setProperties({
         mode: 'view',
-        task: Object.assign({}, exampleTask),
+        task: _.cloneDeep(exampleTask),
       });
     });
 

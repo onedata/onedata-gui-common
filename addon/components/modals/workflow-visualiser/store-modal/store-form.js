@@ -93,6 +93,9 @@ const dataTypes = [{
   value: 'histogramStore',
   forbiddenIn: ['treeForest', 'histogram'],
 }, {
+  value: 'auditLogStore',
+  forbiddenIn: ['treeForest', 'histogram'],
+}, {
   value: 'onedatafsCredentials',
   forbiddenIn: ['treeForest', 'histogram'],
 }];

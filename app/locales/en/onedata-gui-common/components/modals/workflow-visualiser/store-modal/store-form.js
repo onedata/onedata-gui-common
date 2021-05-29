@@ -81,6 +81,9 @@ export default {
           histogramStore: {
             label: 'Histogram store cred.',
           },
+          auditLogStore: {
+            label: 'Audit log store cred.',
+          },
           onedatafsCredentials: {
             label: 'OnedataFS credentials',
           },

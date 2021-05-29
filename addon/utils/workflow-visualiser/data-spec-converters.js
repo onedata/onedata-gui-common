@@ -25,6 +25,7 @@ const typeForStoreCredentialsTypeStoreType = {
   treeForest: 'treeForestStore',
   range: 'rangeStore',
   histogram: 'histogramStore',
+  auditLog: 'auditLogStore',
 };
 const storeCredentialsTypeStoreTypeForType =
   _.invert(typeForStoreCredentialsTypeStoreType);

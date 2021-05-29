@@ -145,6 +145,14 @@ const dataTypes = [{
     },
   },
 }, {
+  label: 'Audit log store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'auditLog',
+    },
+  },
+}, {
   label: 'OnedataFS credentials',
   dataSpec: {
     type: 'onedatafsCredentials',
