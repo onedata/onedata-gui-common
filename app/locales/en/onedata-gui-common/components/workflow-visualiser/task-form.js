@@ -8,7 +8,7 @@ export default {
       argumentMapping: {
         valueBuilderType: {
           options: {
-            leaveUnassigned: {
+            __leaveUnassigned: {
               label: 'Leave unassigned',
             },
             iteratedItem: {
@@ -22,6 +22,37 @@ export default {
             },
             onedatafsCredentials: {
               label: 'OnedataFS credentials',
+            },
+          },
+        },
+      },
+    },
+    resultMappings: {
+      label: 'Results',
+      resultMapping: {
+        targetStore: {
+          options: {
+            __leaveUnassigned: {
+              label: 'Leave unassigned',
+            },
+          },
+        },
+        dispatchFunction: {
+          options: {
+            add: {
+              label: 'Add',
+            },
+            remove: {
+              label: 'Remove',
+            },
+            append: {
+              label: 'Append',
+            },
+            prepend: {
+              label: 'Prepend',
+            },
+            set: {
+              label: 'Set',
             },
           },
         },

@@ -8,6 +8,7 @@ import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select'
 import sinon from 'sinon';
 import $ from 'jquery';
 import _ from 'lodash';
+import { classify } from '@ember/string';
 
 const componentClass = 'task-form';
 
@@ -32,6 +33,7 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
+  canContain: ['Any file', 'Regular file', 'Directory', 'Dataset', 'Archive'],
 }, {
   label: 'Histogram',
   dataSpec: {
@@ -48,6 +50,7 @@ const dataSpecs = [{
     },
   },
   valueBuilderTypes: ['iteratedItem', 'const'],
+  canContain: ['Regular file', 'Directory'],
 }, {
   label: 'Regular file',
   dataSpec: {
@@ -165,23 +168,88 @@ const valueBuilderTypeLabels = {
   onedatafsCredentials: 'OnedataFS credentials',
 };
 
-const exampleStores = dataSpecs
-  .filter(({ dataSpec: { valueConstraints } }) => valueConstraints.storeType)
-  .map(({ dataSpec, preferredNestedType }) => ({
-    id: dataSpec.valueConstraints.storeType + 'Id',
-    name: dataSpec.valueConstraints.storeType + 'Store',
-    type: dataSpec.valueConstraints.storeType,
-    dataSpec: preferredNestedType &&
-      dataSpecs.findBy('label', preferredNestedType).dataSpec,
-    requiresInitialValue: false,
-  }));
-const rangeStore = exampleStores.findBy('type', 'range');
-rangeStore.defaultInitialValue = {
-  start: 1,
-  end: 10,
-  step: 2,
+const allSimpleDataSpecNames = [
+  'Integer',
+  'String',
+  'Object',
+  'Histogram',
+  'Any file',
+  'Regular file',
+  'Directory',
+  'Dataset',
+  'Archive',
+];
+const allPossibleStoreSpecs = [{
+  type: 'singleValue',
+  allowedDataSpecNames: allSimpleDataSpecNames,
+  acceptsBatch: false,
+  dispatchFunctions: ['set'],
+}, {
+  type: 'list',
+  allowedDataSpecNames: allSimpleDataSpecNames,
+  acceptsBatch: true,
+  dispatchFunctions: ['append', 'prepend'],
+}, {
+  type: 'map',
+  allowedDataSpecNames: allSimpleDataSpecNames,
+  acceptsBatch: true,
+  dispatchFunctions: ['add', 'remove'],
+}, {
+  type: 'treeForest',
+  allowedDataSpecNames: ['Any file', 'Regular file', 'Directory', 'Dataset'],
+  acceptsBatch: true,
+  dispatchFunctions: ['add', 'remove'],
+}, {
+  type: 'range',
+  allowedDataSpecNames: [],
+  acceptsBatch: false,
+  dispatchFunctions: [],
+}, {
+  type: 'histogram',
+  allowedDataSpecNames: ['Histogram'],
+  acceptsBatch: true,
+  dispatchFunctions: ['add'],
+}, {
+  type: 'auditLog',
+  allowedDataSpecNames: allSimpleDataSpecNames,
+  acceptsBatch: true,
+  dispatchFunctions: ['add'],
+}];
+const allPossibleStores = [];
+allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
+    type,
+    allowedDataSpecNames,
+  }) =>
+  allPossibleStores.push(...allowedDataSpecNames.map(dataSpecName => {
+    const storeLabel = `${type}${classify(dataSpecName)}`;
+    return {
+      id: `${storeLabel}Id`,
+      name: `${storeLabel}Store`,
+      type,
+      dataSpec: dataSpecs.findBy('label', dataSpecName).dataSpec,
+      requiresInitialValue: false,
+    };
+  }))
+);
+allPossibleStores.push({
+  id: 'rangeId',
+  name: 'rangeStore',
+  type: 'range',
+  defaultInitialValue: {
+    start: 1,
+    end: 10,
+    step: 2,
+  },
+  requiresInitialValue: false,
+});
+
+const dispatchFunctionLabels = {
+  add: 'Add',
+  remove: 'Remove',
+  append: 'Append',
+  prepend: 'Prepend',
+  set: 'Set',
 };
-delete rangeStore.dataSpec;
 
 const exampleAtmLambda = {
   name: 'function1',
@@ -193,6 +261,7 @@ const exampleAtmLambda = {
       valueConstraints: {},
     },
     isOptional: true,
+    isBatch: false,
   }, {
     name: 'argstring',
     dataSpec: {
@@ -200,6 +269,7 @@ const exampleAtmLambda = {
       valueConstraints: {},
     },
     isOptional: true,
+    isBatch: false,
   }, {
     name: 'argstore',
     dataSpec: {
@@ -209,6 +279,7 @@ const exampleAtmLambda = {
       },
     },
     isOptional: true,
+    isBatch: false,
   }, {
     name: 'argodfs',
     dataSpec: {
@@ -216,6 +287,24 @@ const exampleAtmLambda = {
       valueConstraints: {},
     },
     isOptional: true,
+    isBatch: false,
+  }],
+  resultSpecs: [{
+    name: 'resstring',
+    dataSpec: {
+      type: 'string',
+      valueConstraints: {},
+    },
+    isBatch: false,
+  }, {
+    name: 'resanyfile',
+    dataSpec: {
+      type: 'file',
+      valueConstraints: {
+        fileType: 'ANY',
+      },
+    },
+    isBatch: false,
   }],
 };
 const exampleTask = {
@@ -230,13 +319,22 @@ const exampleTask = {
     argumentName: 'argstore',
     valueBuilder: {
       valueBuilderType: 'storeCredentials',
-      valueBuilderRecipe: 'singleValueId',
+      valueBuilderRecipe: 'singleValueObjectId',
     },
   }, {
     argumentName: 'argodfs',
     valueBuilder: {
       valueBuilderType: 'onedatafsCredentials',
     },
+  }],
+  resultMappings: [{
+    name: 'resstring',
+    storeSchemaId: 'singleValueStringId',
+    dispatchFunction: 'set',
+  }, {
+    name: 'resanyfile',
+    storeSchemaId: 'treeForestAnyFileId',
+    dispatchFunction: 'add',
   }],
 };
 
@@ -248,7 +346,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   beforeEach(function () {
     this.setProperties({
       atmLambda: _.cloneDeep(exampleAtmLambda),
-      stores: _.cloneDeep(exampleStores),
+      stores: _.cloneDeep(allPossibleStores),
     });
   });
 
@@ -313,6 +411,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           name: exampleAtmLambda.name,
           argumentMappings: [],
+          resultMappings: [],
         },
         isValid: true,
       });
@@ -324,6 +423,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         data: {
           name: 'someName',
           argumentMappings: [],
+          resultMappings: [],
         },
         isValid: true,
       });
@@ -354,7 +454,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     dataSpecs.forEach(({ label, dataSpec, valueBuilderTypes }) => {
-      it(`providers available value builder types for argument of type "${label}"`,
+      it(`provides available value builder types for argument of type "${label}"`,
         async function () {
           this.set('atmLambda.argumentSpecs', [{
             name: 'arg1',
@@ -375,7 +475,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           );
         });
 
-      it(`providers available value builder types for optional argument of type "${label}"`,
+      it(`provides available value builder types for optional argument of type "${label}"`,
         async function () {
           this.set('atmLambda.argumentSpecs', [{
             name: 'arg1',
@@ -415,6 +515,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             data: {
               name: 'function1',
               argumentMappings: [],
+              resultMappings: [],
             },
             isValid: true,
           });
@@ -444,6 +545,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                     valueBuilderType: 'iteratedItem',
                   },
                 }],
+                resultMappings: [],
               },
               isValid: true,
             });
@@ -476,6 +578,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                     valueBuilderRecipe: 123,
                   },
                 }],
+                resultMappings: [],
               },
               isValid: true,
             });
@@ -493,8 +596,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
             const possibleStoreType = dataSpec.valueConstraints.storeType;
             const possibleStores = possibleStoreType ?
-              exampleStores.filterBy('type', possibleStoreType) :
-              exampleStores;
+              allPossibleStores.filterBy('type', possibleStoreType) :
+              allPossibleStores;
             const sortedPossibleStores = possibleStores.sortBy('name');
 
             await render(this);
@@ -526,6 +629,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                     valueBuilderRecipe: storeToSelect.id,
                   },
                 }],
+                resultMappings: [],
               },
               isValid: true,
             });
@@ -556,12 +660,216 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                     valueBuilderType: 'onedatafsCredentials',
                   },
                 }],
+                resultMappings: [],
               },
               isValid: true,
             });
           });
       }
     });
+
+    it('does not render results section, if lambda does not specify any',
+      async function () {
+        this.set('atmLambda.resultSpecs', []);
+
+        await render(this);
+
+        expect(this.$('.resultMappings-field')).to.not.exist;
+      });
+
+    it('renders results section', async function () {
+      await render(this);
+
+      const $resultMappings = this.$('.resultMappings-field');
+      expect($resultMappings).to.exist;
+      expect($resultMappings.find('.control-label').eq(0).text().trim())
+        .to.equal('Results');
+      const $results = $resultMappings.find('.resultMapping-field');
+      expect($results).to.have.length(exampleAtmLambda.resultSpecs.length);
+      exampleAtmLambda.resultSpecs.forEach(({ name }, idx) => {
+        expect($results.eq(idx).find('.control-label').eq(0).text().trim())
+          .to.equal(`${name}:`);
+      });
+    });
+
+    allSimpleDataSpecNames.forEach(dataSpecName => {
+      const dataSpec = dataSpecs.findBy('label', dataSpecName).dataSpec;
+      const compatibleDataSpecNames = dataSpecs.filter(({ label, canContain }) => {
+        return label === dataSpecName || (canContain || []).includes(dataSpecName);
+      }).mapBy('label');
+      const possibleStores = allPossibleStores.filter(({ name }) =>
+        compatibleDataSpecNames.some(compatibleDataSpecName =>
+          name.endsWith(`${classify(compatibleDataSpecName)}Store`)
+        )
+      );
+      const sortedPossibleStores = possibleStores.sortBy('name');
+      const sortedPossibleStoresWithBatch = sortedPossibleStores.filter(({ type }) =>
+        allPossibleStoreSpecs.findBy('type', type).acceptsBatch
+      );
+
+      it(`provides available stores for result of type "${dataSpecName}"`,
+        async function () {
+          this.set('atmLambda.resultSpecs', [{
+            name: 'res1',
+            dataSpec,
+            isBatch: false,
+          }]);
+
+          await render(this);
+          await clickTrigger('.resultMapping-field .targetStore-field');
+
+          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+            .to.equal('Leave unassigned');
+          const $options = $('.ember-power-select-option');
+          expect($options).to.have.length(sortedPossibleStores.length + 1);
+          expect($options.eq(0).text().trim()).to.equal('Leave unassigned');
+          sortedPossibleStores.forEach((store, idx) =>
+            expect($options.eq(idx + 1).text().trim()).to.equal(store.name)
+          );
+        });
+
+      it(`provides available stores for result of batched type "${dataSpecName}"`,
+        async function () {
+          this.set('atmLambda.resultSpecs', [{
+            name: 'res1',
+            dataSpec,
+            isBatch: true,
+          }]);
+
+          await render(this);
+          await clickTrigger('.resultMapping-field .targetStore-field');
+
+          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+            .to.equal('Leave unassigned');
+          const $options = $('.ember-power-select-option');
+          expect($options).to.have.length(sortedPossibleStoresWithBatch.length + 1);
+          expect($options.eq(0).text().trim()).to.equal('Leave unassigned');
+          sortedPossibleStoresWithBatch.forEach((store, idx) =>
+            expect($options.eq(idx + 1).text().trim()).to.equal(store.name)
+          );
+        });
+    });
+
+    it('allows to setup result to be unassigned',
+      async function () {
+        this.set('atmLambda.resultSpecs', [{
+          name: 'res1',
+          dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+          isBatch: false,
+        }]);
+
+        await render(this);
+        await selectChoose(
+          '.resultMapping-field .targetStore-field',
+          'Leave unassigned'
+        );
+
+        expect(this.get('changeSpy')).to.be.calledWith({
+          data: {
+            name: 'function1',
+            argumentMappings: [],
+            resultMappings: [],
+          },
+          isValid: true,
+        });
+      });
+
+    it('does not allow to choose dispatch function when result store is left unassigned',
+      async function () {
+        this.set('atmLambda.resultSpecs', [{
+          name: 'res1',
+          dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+          isBatch: false,
+        }]);
+
+        await render(this);
+
+        expect(this.$('.dispatchFunction-field')).to.not.exist;
+      });
+
+    allPossibleStoreSpecs
+      .filterBy('allowedDataSpecNames.length')
+      .forEach(({ type, allowedDataSpecNames, dispatchFunctions }) => {
+        const targetStore = allPossibleStores
+          .findBy('name', `${type}${classify(allowedDataSpecNames[0])}Store`);
+        it(`provides possible dispatch functions for result with store "${type}" attached`,
+          async function () {
+            this.set('atmLambda.resultSpecs', [{
+              name: 'res1',
+              dataSpec: targetStore.dataSpec,
+              isBatch: false,
+            }]);
+
+            await render(this);
+            await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
+            await clickTrigger('.resultMapping-field .dispatchFunction-field');
+
+            expect(this.$('.dispatchFunction-field .dropdown-field-trigger').text().trim())
+              .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
+            const $options = $('.ember-power-select-option');
+            expect($options).to.have.length(dispatchFunctions.length);
+            dispatchFunctions.forEach((dispatchFunction, idx) =>
+              expect($options.eq(idx).text().trim())
+              .to.equal(dispatchFunctionLabels[dispatchFunction])
+            );
+          });
+
+        dispatchFunctions.forEach(dispatchFunction => {
+          it(`allows to setup result to use "${type}" store with "${dispatchFunction}" dispatch function`,
+            async function () {
+              this.set('atmLambda.resultSpecs', [{
+                name: 'res1',
+                dataSpec: targetStore.dataSpec,
+                isBatch: false,
+              }]);
+
+              await render(this);
+              await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
+              await selectChoose(
+                '.resultMapping-field .dispatchFunction-field',
+                dispatchFunctionLabels[dispatchFunction]
+              );
+
+              expect(this.get('changeSpy')).to.be.calledWith({
+                data: {
+                  name: 'function1',
+                  argumentMappings: [],
+                  resultMappings: [{
+                    resultName: 'res1',
+                    storeSchemaId: targetStore.id,
+                    dispatchFunction,
+                  }],
+                },
+                isValid: true,
+              });
+            });
+        });
+      });
+
+    it('changes available dispatch functions when result store type changes',
+      async function () {
+        this.set('atmLambda.resultSpecs', [{
+          name: 'res1',
+          dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+          isBatch: false,
+        }]);
+
+        await render(this);
+        await selectChoose('.resultMapping-field .targetStore-field', 'listIntegerStore');
+        await selectChoose('.resultMapping-field .targetStore-field', 'singleValueIntegerStore');
+        await clickTrigger('.resultMapping-field .dispatchFunction-field');
+
+        const dispatchFunctions =
+          allPossibleStoreSpecs.findBy('type', 'singleValue').dispatchFunctions;
+        expect(this.$('.dispatchFunction-field .dropdown-field-trigger').text().trim())
+          .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
+        const $options = $('.ember-power-select-option');
+        expect($options).to.have.length(dispatchFunctions.length);
+        dispatchFunctions.forEach((dispatchFunction, idx) =>
+          expect($options.eq(idx).text().trim())
+          .to.equal(dispatchFunctionLabels[dispatchFunction])
+        );
+      });
   });
 
   context('in "edit" mode', function () {
@@ -705,7 +1013,7 @@ function itFillsFieldsWithDataOfPassedTask() {
       expect($argumentValueBuilderTypes.eq(idx).text().trim()).to.equal(builderLabel)
     );
     expect($arguments.eq(2).find('.valueBuilderStore-field').text().trim())
-      .to.equal('singleValueStore');
+      .to.equal('singleValueObjectStore');
     expect(this.$(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
   });
 }
@@ -793,8 +1101,8 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder
       })));
       const usedStores = possibleDataSpecs.map(({ valueConstraints: { storeType } }) => {
         const possibleStores = storeType ?
-          exampleStores.filterBy('type', storeType) :
-          exampleStores;
+          allPossibleStores.filterBy('type', storeType) :
+          allPossibleStores;
         return possibleStores[0];
       });
       this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => {
