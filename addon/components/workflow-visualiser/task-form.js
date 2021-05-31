@@ -217,6 +217,7 @@ export default Component.extend({
       }).create({
         name: 'argumentMappings',
         addColonToLabel: false,
+        isCollectionManipulationAllowed: false,
       });
     }
   ),
@@ -308,6 +309,7 @@ export default Component.extend({
       }).create({
         name: 'resultMappings',
         addColonToLabel: false,
+        isCollectionManipulationAllowed: false,
       });
     }
   ),

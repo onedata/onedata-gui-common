@@ -889,6 +889,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
+    itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods();
+    itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
 
     it('does not update form values on passed task change', async function () {
       await render(this);
@@ -915,6 +917,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
+    itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods();
+    itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
 
     it('updates form values on passed task change', async function () {
       await render(this);
@@ -1014,6 +1018,12 @@ function itFillsFieldsWithDataOfPassedTask() {
     );
     expect($arguments.eq(2).find('.valueBuilderStore-field').text().trim())
       .to.equal('singleValueObjectStore');
+    const $results = this.$('.resultMapping-field');
+    expect($results).to.have.length(exampleAtmLambda.resultSpecs.length);
+    exampleAtmLambda.resultSpecs.forEach(({ name }, idx) => {
+      expect($results.eq(idx).find('.control-label').eq(0).text().trim())
+        .to.equal(`${name}:`);
+    });
     expect(this.$(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
   });
 }
@@ -1164,5 +1174,75 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBui
           .text().trim()
         ).to.equal('OnedataFS credentials');
       });
+    });
+}
+
+function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() {
+  allPossibleStoreSpecs
+    .filterBy('allowedDataSpecNames.length')
+    .forEach(({ type, allowedDataSpecNames, dispatchFunctions }) => {
+      it(`fills fields with data about results that uses "${type}" stores and all possible dispatch methods`,
+        async function () {
+          const targetStore = allPossibleStores
+            .findBy('name', `${type}${classify(allowedDataSpecNames[0])}Store`);
+          this.set(
+            'atmLambda.resultSpecs',
+            dispatchFunctions.map((dispatchFunction, idx) => ({
+              name: `res${idx}`,
+              dataSpec: targetStore.dataSpec,
+              isOptional: false,
+              isBatch: false,
+            }))
+          );
+          this.set(
+            'task.resultMappings',
+            dispatchFunctions.map((dispatchFunction, idx) => ({
+              resultName: `res${idx}`,
+              storeSchemaId: targetStore.id,
+              dispatchFunction,
+            }))
+          );
+
+          await render(this);
+
+          const $results = this.$('.resultMapping-field');
+          expect($results).to.have.length(dispatchFunctions.length);
+          dispatchFunctions.forEach((dispatchFunction, idx) => {
+            expect($results.eq(idx).find('.control-label').eq(0).text().trim())
+              .to.equal(`res${idx}:`);
+            expect(
+              $results.eq(idx).find('.targetStore-field .field-component')
+              .text().trim()
+            ).to.equal(targetStore.name);
+            expect(
+              $results.eq(idx).find('.dispatchFunction-field .field-component')
+              .text().trim()
+            ).to.equal(dispatchFunctionLabels[dispatchFunction]);
+          });
+        });
+    });
+}
+
+function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
+  it('fills fields with data about results that are left unassigned',
+    async function () {
+      this.set('atmLambda.resultSpecs', [{
+        name: 'res1',
+        dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+        isOptional: false,
+        isBatch: false,
+      }]);
+      this.set('task.resultMappings', []);
+
+      await render(this);
+
+      const $results = this.$('.resultMapping-field');
+      expect($results).to.have.length(1);
+      expect($results.find('.control-label').eq(0).text().trim()).to.equal('res1:');
+      expect(
+        $results.find('.targetStore-field .field-component')
+        .text().trim()
+      ).to.equal('Leave unassigned');
+      expect($results.find('.dispatchFunction-field')).to.not.exist;
     });
 }
