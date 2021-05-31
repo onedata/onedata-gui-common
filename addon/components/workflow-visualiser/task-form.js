@@ -311,21 +311,28 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     if (!name || !dataSpec) {
       return;
     }
-    const existingMapping = (argumentMappings || []).findBy('argumentName', name) || {};
+    const existingMapping = (argumentMappings || []).findBy('argumentName', name);
 
     const valueName = `argument${idx}`;
     formArgumentMappings.__fieldsValueNames.push(valueName);
     const argumentType = dataSpecToType(dataSpec);
-    let valueBuilderType = get(existingMapping, 'valueBuilder.valueBuilderType');
+    let valueBuilderType = get(existingMapping || {}, 'valueBuilder.valueBuilderType');
     if (!valueBuilderType) {
-      valueBuilderType = (isOptional || defaultValue !== undefined) ?
+      valueBuilderType = (isOptional || defaultValue !== undefined || existingMapping) ?
         'leaveUnassigned' : getValueBuilderTypesForArgType(argumentType)[0];
     }
+    const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
+    const valueBuilderConstValue = valueBuilderType === 'const' ?
+      JSON.stringify(valueBuilderRecipe, null, 2) : undefined;
+    const valueBuilderStore = valueBuilderType === 'storeCredentials' ?
+      valueBuilderRecipe : undefined;
     formArgumentMappings[valueName] = {
       argumentName: name,
       argumentType,
       argumentIsOptional: isOptional,
       valueBuilderType,
+      valueBuilderConstValue,
+      valueBuilderStore,
     };
   });
 

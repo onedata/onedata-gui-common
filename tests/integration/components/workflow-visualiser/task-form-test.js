@@ -211,6 +211,23 @@ const exampleAtmLambda = {
 const exampleTask = {
   id: 't1',
   name: 'task1',
+  argumentMappings: [{
+    argumentName: 'argint',
+    valueBuilder: {
+      valueBuilderType: 'iteratedItem',
+    },
+  }, {
+    argumentName: 'argstore',
+    valueBuilder: {
+      valueBuilderType: 'storeCredentials',
+      valueBuilderRecipe: 'singleValueId',
+    },
+  }, {
+    argumentName: 'argodfs',
+    valueBuilder: {
+      valueBuilderType: 'onedatafsCredentials',
+    },
+  }],
 };
 
 describe('Integration | Component | workflow visualiser/task form', function () {
@@ -549,12 +566,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itHasAllFieldsEnabledByDefault();
     itAllowsToDisableAllFields();
     itShowsLambdaInfo();
-
-    it('fills fields with data of passed task on init', async function () {
-      await render(this);
-
-      expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
-    });
+    itFillsFieldsWithDataOfPassedTask();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
 
     it('does not update form values on passed task change', async function () {
       await render(this);
@@ -576,13 +592,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     itHasModeClass('view');
     itShowsLambdaInfo();
-
-    it('fills fields with data of passed task on init', async function () {
-      await render(this);
-
-      expect(this.$('.name-field .field-component').text().trim())
-        .to.equal(exampleTask.name);
-    });
+    itFillsFieldsWithDataOfPassedTask();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
+    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
 
     it('updates form values on passed task change', async function () {
       await render(this);
@@ -652,4 +666,185 @@ function itShowsLambdaInfo() {
     expect(this.$('.atm-lambda-summary').text().trim())
       .to.equal(exampleAtmLambda.summary);
   });
+}
+
+function itFillsFieldsWithDataOfPassedTask() {
+  it('fills fields with data of passed task', async function () {
+    const inEditMode = this.get('mode') !== 'view';
+    await render(this);
+
+    if (inEditMode) {
+      expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
+    } else {
+      expect(this.$('.name-field .field-component').text().trim())
+        .to.equal(exampleTask.name);
+    }
+    const $arguments = this.$('.argumentMapping-field');
+    expect($arguments).to.have.length(exampleAtmLambda.argumentSpecs.length);
+    exampleAtmLambda.argumentSpecs.forEach(({ name }, idx) => {
+      expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+        .to.equal(`${name}:`);
+    });
+    const $argumentValueBuilderTypes = $arguments.find('.valueBuilderType-field');
+    [
+      'Iterated item',
+      'Leave unassigned',
+      'Store credentials',
+      'OnedataFS credentials',
+    ].forEach((builderLabel, idx) =>
+      expect($argumentValueBuilderTypes.eq(idx).text().trim()).to.equal(builderLabel)
+    );
+    expect($arguments.eq(2).find('.valueBuilderStore-field').text().trim())
+      .to.equal('singleValueStore');
+    expect(this.$(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
+  });
+}
+
+function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder() {
+  it('fills fields with data about arguments of all possible types, that uses "Iterated item" value builder',
+    async function () {
+      const possibleDataSpecs = dataSpecs
+        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('iteratedItem'))
+        .mapBy('dataSpec');
+      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+        name: `arg${idx}`,
+        dataSpec,
+        isOptional: false,
+      })));
+      this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => ({
+        argumentName: `arg${idx}`,
+        valueBuilder: {
+          valueBuilderType: 'iteratedItem',
+        },
+      })));
+
+      await render(this);
+
+      const $arguments = this.$('.argumentMapping-field');
+      expect($arguments).to.have.length(possibleDataSpecs.length);
+      possibleDataSpecs.forEach((dataSpec, idx) => {
+        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+          .to.equal(`arg${idx}:`);
+        expect(
+          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
+          .text().trim()
+        ).to.equal('Iterated item');
+      });
+    });
+}
+
+function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder() {
+  it('fills fields with data about arguments of all possible types, that uses "Constant value" value builder',
+    async function () {
+      const possibleDataSpecs = dataSpecs
+        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('const'))
+        .mapBy('dataSpec');
+      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+        name: `arg${idx}`,
+        dataSpec,
+        isOptional: false,
+      })));
+      this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => ({
+        argumentName: `arg${idx}`,
+        valueBuilder: {
+          valueBuilderType: 'const',
+          valueBuilderRecipe: String(idx),
+        },
+      })));
+
+      await render(this);
+
+      const $arguments = this.$('.argumentMapping-field');
+      expect($arguments).to.have.length(possibleDataSpecs.length);
+      possibleDataSpecs.forEach((dataSpec, idx) => {
+        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+          .to.equal(`arg${idx}:`);
+        expect(
+          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
+          .text().trim()
+        ).to.equal('Constant value');
+        expect(
+          $arguments.eq(idx).find('.valueBuilderConstValue-field .form-control')
+        ).to.have.value(`"${idx}"`);
+      });
+    });
+}
+
+function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder() {
+  it('fills fields with data about arguments of all possible types, that uses "Store credentials" value builder',
+    async function () {
+      const possibleDataSpecs = dataSpecs
+        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('storeCredentials'))
+        .mapBy('dataSpec');
+      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+        name: `arg${idx}`,
+        dataSpec,
+        isOptional: false,
+      })));
+      const usedStores = possibleDataSpecs.map(({ valueConstraints: { storeType } }) => {
+        const possibleStores = storeType ?
+          exampleStores.filterBy('type', storeType) :
+          exampleStores;
+        return possibleStores[0];
+      });
+      this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => {
+        return {
+          argumentName: `arg${idx}`,
+          valueBuilder: {
+            valueBuilderType: 'storeCredentials',
+            valueBuilderRecipe: usedStores[idx].id,
+          },
+        };
+      }));
+
+      await render(this);
+
+      const $arguments = this.$('.argumentMapping-field');
+      expect($arguments).to.have.length(possibleDataSpecs.length);
+      possibleDataSpecs.forEach((dataSpec, idx) => {
+        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+          .to.equal(`arg${idx}:`);
+        expect(
+          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
+          .text().trim()
+        ).to.equal('Store credentials');
+        expect(
+          $arguments.eq(idx).find('.valueBuilderStore-field .field-component')
+          .text().trim()
+        ).to.equal(usedStores[idx].name);
+      });
+    });
+}
+
+function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder() {
+  it('fills fields with data about arguments of all possible types, that uses "OnedataFS credentials" value builder',
+    async function () {
+      const possibleDataSpecs = dataSpecs
+        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('onedatafsCredentials'))
+        .mapBy('dataSpec');
+      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+        name: `arg${idx}`,
+        dataSpec,
+        isOptional: false,
+      })));
+      this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => ({
+        argumentName: `arg${idx}`,
+        valueBuilder: {
+          valueBuilderType: 'onedatafsCredentials',
+        },
+      })));
+
+      await render(this);
+
+      const $arguments = this.$('.argumentMapping-field');
+      expect($arguments).to.have.length(possibleDataSpecs.length);
+      possibleDataSpecs.forEach((dataSpec, idx) => {
+        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+          .to.equal(`arg${idx}:`);
+        expect(
+          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
+          .text().trim()
+        ).to.equal('OnedataFS credentials');
+      });
+    });
 }
