@@ -140,6 +140,16 @@ const dataSpecs = [{
   preferredNestedType: 'Histogram',
   valueBuilderTypes: ['storeCredentials'],
 }, {
+  label: 'Audit log store cred.',
+  dataSpec: {
+    type: 'storeCredentials',
+    valueConstraints: {
+      storeType: 'auditLog',
+    },
+  },
+  preferredNestedType: 'Object',
+  valueBuilderTypes: ['storeCredentials'],
+}, {
   label: 'OnedataFS credentials',
   dataSpec: {
     type: 'onedatafsCredentials',
