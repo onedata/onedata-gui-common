@@ -5,4 +5,6 @@ export default {
   header,
   loginFormContainer,
   signIn: 'Sign in',
+  errorBackToSignIn: 'Back to sign-in',
+  errorTitle: 'Authentication error!',
 };
