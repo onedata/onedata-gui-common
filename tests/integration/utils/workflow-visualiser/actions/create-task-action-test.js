@@ -5,10 +5,11 @@ import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actio
 import { getProperties, get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import { Promise } from 'rsvp';
+import { Promise, resolve, reject } from 'rsvp';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const newTaskMatcher = sinon.match({
-  name: 'Untitled task',
+  name: 'task1',
 });
 
 describe('Integration | Utility | workflow visualiser/actions/create task action', function () {
@@ -20,6 +21,19 @@ describe('Integration | Utility | workflow visualiser/actions/create task action
     const createStub = sinon.stub();
     const action = CreateTaskAction.create({
       ownerSource: this,
+      stores: [
+        Store.create({
+          id: 's1',
+          name: 'store1',
+        }),
+        Store.create({
+          id: 's2',
+          name: 'store2',
+        }),
+      ],
+      taskDetailsProviderCallback: () => resolve({
+        name: 'task1',
+      }),
       createTaskCallback: createStub,
     });
     this.setProperties({ action, createStub });
@@ -49,7 +63,22 @@ describe('Integration | Utility | workflow visualiser/actions/create task action
   );
 
   it(
-    'executes creating task on execute and returns promise with failed ActionResult on error',
+    'executes creating task on execute and returns promise with failed ActionResult on data provider error',
+    async function () {
+      const createStub = this.get('createStub');
+      this.set('action.taskDetailsProviderCallback', () => reject());
+
+      const { resultPromise } = await executeAction(this);
+      await wait();
+      const actionResult = await resultPromise;
+
+      expect(createStub).to.not.be.called;
+      expect(get(actionResult, 'status')).to.equal('failed');
+    }
+  );
+
+  it(
+    'executes creating task on execute and returns promise with failed ActionResult on create error',
     async function () {
       let rejectCreate;
       const createStub = this.get('createStub');

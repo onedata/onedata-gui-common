@@ -54,9 +54,6 @@ export default {
   },
   task: {
     actions: {
-      createTask: {
-        newTaskName: 'Untitled task',
-      },
       removeTask: {
         title: 'Remove',
         modalHeader: 'Remove task',

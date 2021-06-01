@@ -314,6 +314,10 @@ export default Component.extend({
     }
   ),
 
+  atmLambdaObserver: observer('atmLambda', function atmLambdaObserver() {
+    this.get('fields').reset();
+  }),
+
   formValuesUpdater: observer(
     'mode',
     'passedFormValues',
@@ -341,7 +345,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.get('passedFormValues');
+    this.getProperties('passedFormValues', 'atmLambda');
     this.formModeUpdater();
   },
 

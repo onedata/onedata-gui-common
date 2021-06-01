@@ -19,17 +19,25 @@ export default Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.task.actions.createTask',
-
-  /**
-   * @override
-   */
   className: 'create-task-action-trigger',
 
   /**
    * @override
    */
   icon: 'add-filled',
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   */
+  stores: reads('context.stores'),
+
+  /**
+   * @type {ComputedProperty<Function>}
+   * @param {String} mode one of `'create'`, `'edit'`
+   * @param {Array<Object>} [initialData.stores]
+   * @returns {Promise<Object>} task details
+   */
+  taskDetailsProviderCallback: reads('context.taskDetailsProviderCallback'),
 
   /**
    * @type {ComputedProperty<Function>}
@@ -42,12 +50,19 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const newTaskProps = {
-      name: String(this.t('newTaskName')),
-    };
-
+    const {
+      stores,
+      taskDetailsProviderCallback,
+      createTaskCallback,
+    } = this.getProperties(
+      'stores',
+      'taskDetailsProviderCallback',
+      'createTaskCallback'
+    );
     const result = ActionResult.create();
-    return result.interceptPromise(this.get('createTaskCallback')(newTaskProps))
+    const createPromise = taskDetailsProviderCallback('create', { stores })
+      .then(taskData => createTaskCallback(taskData));
+    return result.interceptPromise(createPromise)
       .then(() => result, () => result);
   },
 });

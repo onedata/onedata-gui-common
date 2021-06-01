@@ -33,6 +33,7 @@ import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 /**
  * @typedef {EmberObject} WorkflowDataProvider
@@ -46,11 +47,27 @@ export default EmberObject.extend(OwnerInjector, {
   workflowDataProvider: undefined,
 
   /**
+   * @type {Function}
+   * @param {String} mode one of `'create'`, `'edit'`
+   * @param {Array<Object>} [initialData.stores]
+   * @param {Object} [initialData.task] needed only if `mode` is `'edit'`
+   * @returns {Promise<Object>} task details
+   */
+  taskDetailsProviderCallback: notImplementedIgnore,
+
+  /**
    * @param {WorkflowDataProvider} workflowDataProvider
    * @returns {undefined}
    */
   registerWorkflowDataProvider(workflowDataProvider) {
     this.set('workflowDataProvider', workflowDataProvider);
+  },
+
+  /**
+   * @param {Function} taskDetailsProviderCallback
+   */
+  registerTaskDetailsProviderCallback(taskDetailsProviderCallback) {
+    this.set('taskDetailsProviderCallback', taskDetailsProviderCallback);
   },
 
   /**
@@ -161,7 +178,13 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.CreateTaskAction}
    */
   createCreateTaskAction(context) {
-    return CreateTaskAction.create({ ownerSource: this, context });
+    return CreateTaskAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        stores: this.getStoresArrayProxy(),
+        taskDetailsProviderCallback: this.get('taskDetailsProviderCallback'),
+      }, context),
+    });
   },
 
   /**

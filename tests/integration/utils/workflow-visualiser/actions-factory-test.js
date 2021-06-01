@@ -74,11 +74,23 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
   it('creates action "CreateTaskAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this });
+    const store = Store.create({
+      id: 's1',
+      name: 'store1',
+    });
+    factory.registerWorkflowDataProvider({
+      stores: [store],
+    });
+    const taskDetailsProviderCallback = () => {};
+    factory.registerTaskDetailsProviderCallback(taskDetailsProviderCallback);
     const createTaskCallback = () => {};
 
     const action = factory.createCreateTaskAction({ createTaskCallback });
 
     expect(action).to.be.instanceOf(CreateTaskAction);
+    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'taskDetailsProviderCallback'))
+      .to.equal(taskDetailsProviderCallback);
     expect(get(action, 'createTaskCallback')).to.equal(createTaskCallback);
   });
 
