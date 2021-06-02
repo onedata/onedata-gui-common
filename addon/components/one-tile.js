@@ -88,11 +88,13 @@ export default Component.extend(I18n, {
   footerLinkToParams: Object.freeze([]),
 
   /**
+   * @virtual optional
    * @type {string}
    */
   footerClass: undefined,
 
   /**
+   * @virtual optional
    * @type {string}
    */
   tooltipText: undefined,
