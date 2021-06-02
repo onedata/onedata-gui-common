@@ -22,7 +22,7 @@
   </div>
 </div>
 {{#if footerText}}
-  <div class={{concat-classes "tile-footer" footerClass}}>
+  <div class="tile-footer">
     {{#if footerLinkToParams}}
       {{#link-to params=footerLinkToParams class="tile-footer-text tile-footer-link black"}}
         {{#if footerTextIcon}}
@@ -39,9 +39,6 @@
         </div>
       {{/if}}
       <span class="tile-footer-text">{{footerText}}</span>
-      {{#if tooltipText}}
-        {{one-tooltip title=tooltipText}}
-      {{/if}}
     {{/if}}
   </div>
 {{/if}}
