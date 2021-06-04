@@ -96,68 +96,6 @@ const dataTypes = [{
     type: 'archive',
     valueConstraints: {},
   },
-}, {
-  label: 'Single value store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'singleValue',
-    },
-  },
-}, {
-  label: 'List store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'list',
-    },
-  },
-}, {
-  label: 'Map store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'map',
-    },
-  },
-}, {
-  label: 'Tree forest store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'treeForest',
-    },
-  },
-}, {
-  label: 'Range store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'range',
-    },
-  },
-}, {
-  label: 'Histogram store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'histogram',
-    },
-  },
-}, {
-  label: 'Audit log store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'auditLog',
-    },
-  },
-}, {
-  label: 'OnedataFS credentials',
-  dataSpec: {
-    type: 'onedatafsCredentials',
-    valueConstraints: {},
-  },
 }];
 
 const storeTypesWithGenericConfig = storeTypes.rejectBy('type', 'range');

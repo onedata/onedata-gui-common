@@ -74,30 +74,6 @@ const dataTypes = [{
 }, {
   value: 'archive',
   forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'singleValueStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'listStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'mapStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'treeForestStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'rangeStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'histogramStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'auditLogStore',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'onedatafsCredentials',
-  forbiddenIn: ['treeForest', 'histogram'],
 }];
 
 const defaultRangeStart = 0;
