@@ -18,6 +18,7 @@ import MoveUpParallelBoxAction from 'onedata-gui-common/utils/workflow-visualise
 import MoveDownParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-box-action';
 import RemoveParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-box-action';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
+import ModifyTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
@@ -82,7 +83,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       stores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.registerTaskDetailsProviderCallback(taskDetailsProviderCallback);
+    factory.registerTaskDetailsCreateProviderCallback(taskDetailsProviderCallback);
     const createTaskCallback = () => {};
 
     const action = factory.createCreateTaskAction({ createTaskCallback });
@@ -92,6 +93,28 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     expect(get(action, 'taskDetailsProviderCallback'))
       .to.equal(taskDetailsProviderCallback);
     expect(get(action, 'createTaskCallback')).to.equal(createTaskCallback);
+  });
+
+  it('creates action "ModifyTaskAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const store = Store.create({
+      id: 's1',
+      name: 'store1',
+    });
+    factory.registerWorkflowDataProvider({
+      stores: [store],
+    });
+    const taskDetailsProviderCallback = () => {};
+    factory.registerTaskDetailsModifyProviderCallback(taskDetailsProviderCallback);
+    const task = Task.create();
+
+    const action = factory.createModifyTaskAction({ task });
+
+    expect(action).to.be.instanceOf(ModifyTaskAction);
+    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'taskDetailsProviderCallback'))
+      .to.equal(taskDetailsProviderCallback);
+    expect(get(action, 'task')).to.equal(task);
   });
 
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);

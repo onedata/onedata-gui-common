@@ -21,6 +21,23 @@ export default VisualiserRecord.extend({
   renderer: 'workflow-visualiser/lane/task',
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  lambdaId: undefined,
+
+  /**
+   * @virtual
+   * @type {Array<Object>}
+   */
+  argumentMappings: undefined,
+
+  /**
+   * @type {Array<Object>}
+   */
+  resultMappings: undefined,
+
+  /**
    * One of: 'default', 'success', 'warning', 'error'
    * @virtual
    * @type {String}

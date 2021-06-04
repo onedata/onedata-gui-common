@@ -1014,9 +1014,10 @@ function itFillsFieldsWithDataOfPassedTask() {
       'Store credentials',
       'OnedataFS credentials',
     ].forEach((builderLabel, idx) =>
-      expect($argumentValueBuilderTypes.eq(idx).text().trim()).to.equal(builderLabel)
+      expect($argumentValueBuilderTypes.eq(idx).find('.field-component').text().trim())
+      .to.equal(builderLabel)
     );
-    expect($arguments.eq(2).find('.valueBuilderStore-field').text().trim())
+    expect($arguments.eq(2).find('.valueBuilderStore-field .field-component').text().trim())
       .to.equal('singleValueObjectStore');
     const $results = this.$('.resultMapping-field');
     expect($results).to.have.length(exampleAtmLambda.resultSpecs.length);

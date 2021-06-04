@@ -11,6 +11,8 @@ import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
 import { getModalBody, getModalFooter } from '../../helpers/modal';
 import { selectChoose } from '../../helpers/ember-power-select';
+import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
+import { resolve } from 'rsvp';
 
 const possibleTaskStatuses = ['success', 'warning', 'error'];
 const laneWidth = 300;
@@ -31,6 +33,17 @@ const threeNonEmptyLanesNoProgressExample = generateExample(3, 3, 2, false);
 describe('Integration | Component | workflow visualiser', function () {
   setupComponentTest('workflow-visualiser', {
     integration: true,
+  });
+
+  beforeEach(function () {
+    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    actionsFactory.registerTaskDetailsCreateProviderCallback(
+      () => resolve({ name: 'Untitled task' })
+    );
+    actionsFactory.registerTaskDetailsModifyProviderCallback(
+      () => resolve({ name: 'othername' })
+    );
+    this.set('actionsFactory', actionsFactory);
   });
 
   it('has class "workflow-visualiser"', function () {
@@ -106,6 +119,15 @@ describe('Integration | Component | workflow visualiser', function () {
         },
       }),
       initialRawData: twoEmptyLanesExample,
+    });
+
+    itPerformsAction({
+      description: 'modifies task details',
+      actionTriggerGetter: () => getActionTrigger('task', [0, 0, 0], 'modify'),
+      applyUpdate: rawDump => Object.assign(rawDump.lanes[0].parallelBoxes[0].tasks[0], {
+        name: 'othername',
+      }),
+      initialRawData: twoNonEmptyLanesExample,
     });
 
     itMovesLane('first lane', 0, 'right');
@@ -760,6 +782,7 @@ function renderWithRawData(testCase, rawData) {
     {{workflow-visualiser
       mode=mode
       rawData=rawData
+      actionsFactory=actionsFactory
       onChange=changeStub
     }}
   `);

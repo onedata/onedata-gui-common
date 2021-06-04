@@ -28,6 +28,7 @@ import MoveUpParallelBoxAction from 'onedata-gui-common/utils/workflow-visualise
 import MoveDownParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-down-parallel-box-action';
 import RemoveParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-box-action';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
+import ModifyTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-task-action';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
 import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
@@ -48,12 +49,18 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @type {Function}
-   * @param {String} mode one of `'create'`, `'edit'`
-   * @param {Array<Object>} [initialData.stores]
-   * @param {Object} [initialData.task] needed only if `mode` is `'edit'`
+   * @param {Array<Object>} initialData.stores
    * @returns {Promise<Object>} task details
    */
-  taskDetailsProviderCallback: notImplementedIgnore,
+  taskDetailsCreateProviderCallback: notImplementedIgnore,
+
+  /**
+   * @type {Function}
+   * @param {Array<Object>} initialData.stores
+   * @param {Object} initialData.task
+   * @returns {Promise<Object>} task details
+   */
+  taskDetailsModifyProviderCallback: notImplementedIgnore,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
@@ -64,10 +71,17 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @param {Function} taskDetailsProviderCallback
+   * @param {Function} taskDetailsCreateProviderCallback
    */
-  registerTaskDetailsProviderCallback(taskDetailsProviderCallback) {
-    this.set('taskDetailsProviderCallback', taskDetailsProviderCallback);
+  registerTaskDetailsCreateProviderCallback(taskDetailsCreateProviderCallback) {
+    this.set('taskDetailsCreateProviderCallback', taskDetailsCreateProviderCallback);
+  },
+
+  /**
+   * @param {Function} taskDetailsModifyProviderCallback
+   */
+  registerTaskDetailsModifyProviderCallback(taskDetailsModifyProviderCallback) {
+    this.set('taskDetailsModifyProviderCallback', taskDetailsModifyProviderCallback);
   },
 
   /**
@@ -182,7 +196,21 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
-        taskDetailsProviderCallback: this.get('taskDetailsProviderCallback'),
+        taskDetailsProviderCallback: this.get('taskDetailsCreateProviderCallback'),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task} context.task
+   * @returns {Utils.WorkflowVisualiser.Actions.ModifyTaskAction}
+   */
+  createModifyTaskAction(context) {
+    return ModifyTaskAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        stores: this.getStoresArrayProxy(),
+        taskDetailsProviderCallback: this.get('taskDetailsModifyProviderCallback'),
       }, context),
     });
   },

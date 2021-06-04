@@ -11,6 +11,7 @@ import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { dasherize } from '@ember/string';
+import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupComponentTest('workflow-visualiser/lane/interblock-space', {
@@ -18,9 +19,11 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
   });
 
   beforeEach(function () {
-    this.set('blockSpace', InterblockSpace.create({
-      actionsFactory: ActionsFactory.create({ ownerSource: this }),
-    }));
+    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    actionsFactory.registerTaskDetailsCreateProviderCallback(
+      () => resolve({ name: 'Untitled task' })
+    );
+    this.set('blockSpace', InterblockSpace.create({ actionsFactory }));
   });
 
   it(

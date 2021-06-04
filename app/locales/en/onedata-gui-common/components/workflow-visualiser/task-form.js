@@ -1,4 +1,6 @@
 export default {
+  usedLambdaHeader: 'Used lambda',
+  taskDetailsHeader: 'Task details',
   fields: {
     name: {
       label: 'Name',
@@ -7,6 +9,7 @@ export default {
       label: 'Arguments',
       argumentMapping: {
         valueBuilderType: {
+          label: 'Value builder',
           options: {
             __leaveUnassigned: {
               label: 'Leave unassigned',
@@ -25,12 +28,19 @@ export default {
             },
           },
         },
+        valueBuilderConstValue: {
+          label: 'Value',
+        },
+        valueBuilderStore: {
+          label: 'Store',
+        },
       },
     },
     resultMappings: {
       label: 'Results',
       resultMapping: {
         targetStore: {
+          label: 'Target store',
           options: {
             __leaveUnassigned: {
               label: 'Leave unassigned',
@@ -38,6 +48,7 @@ export default {
           },
         },
         dispatchFunction: {
+          label: 'Dispatch function',
           options: {
             add: {
               label: 'Add',

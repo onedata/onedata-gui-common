@@ -23,16 +23,18 @@ import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { dataSpecToType } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
-  classNames: ['task-form'],
+  classNames: ['workflow-visualiser-task-form', 'task-form'],
   classNameBindings: [
     'modeClass',
     'isDisabled:form-disabled:form-enabled',
   ],
 
   i18n: service(),
+  media: service(),
 
   /**
    * @override
@@ -160,9 +162,11 @@ export default Component.extend({
         fieldFactoryMethod(uniqueFieldValueName) {
           return FormFieldsGroup.extend({
             label: reads('value.argumentName'),
+            addColonToLabel: not('component.media.isMobile'),
           }).create({
             name: 'argumentMapping',
             valueName: uniqueFieldValueName,
+            component,
             fields: [
               DropdownField.extend({
                 options: computed(
@@ -233,9 +237,11 @@ export default Component.extend({
         fieldFactoryMethod(uniqueFieldValueName) {
           return FormFieldsGroup.extend({
             label: reads('value.resultName'),
+            addColonToLabel: not('component.media.isMobile'),
           }).create({
             name: 'resultMapping',
             valueName: uniqueFieldValueName,
+            component,
             fields: [
               DropdownField.extend({
                 options: computed(
@@ -571,7 +577,9 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
 }
 
 function getValueBuilderTypesForArgType(argType) {
-  if (argType.endsWith('Store')) {
+  if (!argType) {
+    return [];
+  } else if (argType.endsWith('Store')) {
     return ['storeCredentials'];
   } else if (argType === 'onedatafsCredentials') {
     return ['onedatafsCredentials'];

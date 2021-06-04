@@ -1,8 +1,10 @@
 <div class="atm-lambda-info">
+  <div class="section-header">{{tt this "usedLambdaHeader"}}</div>
   <div class="atm-lambda-name">{{atmLambda.name}}</div>
   <div class="atm-lambda-summary">{{atmLambda.summary}}</div>
 </div>
 <form class="form form-horizontal form-component">
+  <div class="section-header">{{tt this "taskDetailsHeader"}}</div>
   {{form-component/field-renderer field=fields}}
 </form>
 {{yield}}

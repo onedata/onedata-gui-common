@@ -54,6 +54,9 @@ export default {
   },
   task: {
     actions: {
+      modifyTask: {
+        title: 'Modify',
+      },
       removeTask: {
         title: 'Remove',
         modalHeader: 'Remove task',

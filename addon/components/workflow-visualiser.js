@@ -595,14 +595,34 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
+      lambdaId,
+      argumentMappings,
+      resultMapppings,
       status,
       progressPercent,
-    } = getProperties(taskRawData, 'id', 'name', 'status', 'progressPercent');
+    } = getProperties(
+      taskRawData,
+      'id',
+      'name',
+      'lambdaId',
+      'argumentMappings',
+      'resultMappings',
+      'status',
+      'progressPercent'
+    );
 
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
-      this.updateElement(existingTask, { name, parent, status, progressPercent });
+      this.updateElement(existingTask, {
+        name,
+        parent,
+        lambdaId,
+        argumentMappings,
+        resultMapppings,
+        status,
+        progressPercent,
+      });
       return existingTask;
     } else {
       const {
@@ -614,8 +634,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
         id,
         name,
         parent,
+        lambdaId,
         mode,
         actionsFactory,
+        argumentMappings,
+        resultMapppings,
         status,
         progressPercent,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
