@@ -458,6 +458,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   valuesSourceObserver: observer('valuesSource', function valuesSourceObserver() {
+    this.notifyPropertyChange('valuePath');
     this.notifyPropertyChange('value');
   }),
 
