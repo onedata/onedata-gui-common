@@ -47,6 +47,23 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
     }
   );
 
+  it('has class "full-view-space", when it does not have any sibling elements',
+    async function () {
+      await render(this);
+
+      expect(this.$('.workflow-visualiser-interlane-space'))
+        .to.have.class('full-view-space');
+    });
+
+  it('does not have class "full-view-space", when it has an after element',
+    async function () {
+      await render(this);
+      this.set('interlaneSpace.elementAfter', Lane.create());
+
+      expect(this.$('.workflow-visualiser-interlane-space'))
+        .to.not.have.class('full-view-space');
+    });
+
   context('in "edit" mode', function () {
     beforeEach(function () {
       this.set('interlaneSpace.mode', 'edit');

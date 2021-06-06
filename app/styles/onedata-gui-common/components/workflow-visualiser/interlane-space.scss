@@ -63,6 +63,28 @@
       margin-left: -1px;
     }
   }
+
+  &.full-view-space {
+    flex-basis: 100%;
+    background-color: initial;
+
+    .draggable-object-target {
+      display: none;
+    }
+
+    .create-lane-action-trigger {
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+      width: 4em;
+      height: 4em;
+      border-radius: 100%;
+
+      .one-icon {
+        font-size: 300%;
+        margin: 0;
+      }
+    }
+  }
 }
 
 .workflow-visualiser.during-lane-dragdrop .workflow-visualiser-interlane-space {
