@@ -246,11 +246,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
   init() {
     this._super(...arguments);
 
-    if (!this.get('actionsFactory')) {
-      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
-    }
-    this.actionsFactoryObserver();
-
     this.set('elementsCache', {
       lane: [],
       interlaneSpace: [],
@@ -259,6 +254,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
       interblockSpace: [],
       store: [],
     });
+
+    if (!this.get('actionsFactory')) {
+      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
+    }
+    this.actionsFactoryObserver();
   },
 
   /**
