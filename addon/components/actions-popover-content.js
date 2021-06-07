@@ -1,10 +1,10 @@
 /**
  * A component that renders list of actions in dropdown-friendly form. Usually it
  * will be used inside dropdown popovers.
- * 
+ *
  * Needs actionsArray to be provided. It is an array of Action objects.
- * Between normal actions, special separator action can be provided (Action 
- * object with field `separator: true`) - it will be rendered as a header 
+ * Between normal actions, special separator action can be provided (Action
+ * object with field `separator: true`) - it will be rendered as a header
  * for all following actions.
  *
  * @module components/actions-popover-content
@@ -60,7 +60,7 @@ export default Component.extend(I18n, {
    * True, if there are no functional actions in `actionsArray` (eg. only separators)
    * @type {ComputedProperty<Boolean>}
    */
-  noRealActions: computed('actionsArray.@each.separator', function noRealActions() {
+  noRealActions: computed('actionsArray.[]', function noRealActions() {
     const actionsArray = this.get('actionsArray');
     return !actionsArray || !get(actionsArray.rejectBy('separator'), 'length');
   }),
