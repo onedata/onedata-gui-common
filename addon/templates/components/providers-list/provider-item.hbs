@@ -43,11 +43,15 @@
       {{#dropdown.item
         itemAction=(action providerAction.action provider)
         triggerClasses=providerAction.class
+        isDisabled=providerAction.isDisabled
       }}
         {{#if providerAction.icon}}
           {{one-icon icon=providerAction.icon}}
         {{/if}}
         <span class="one-label">{{providerAction.text}}</span>
+        {{#if providerAction.tip}}
+          {{one-tooltip title=providerAction.tip placement="right"}}
+        {{/if}}
       {{/dropdown.item}}
     {{/each}}
   {{/one-collapsible-toolbar}}
