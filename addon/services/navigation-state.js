@@ -434,8 +434,9 @@ export default Service.extend(I18n, {
     return newAspectOptions;
   },
 
-  setAspectOptions(options) {
-    return this.set('aspectOptions', Object.freeze(this.mergedAspectOptions(options)));
+  setAspectOptions(options, replaceHistory = false) {
+    const mergedOptions = Object.freeze(this.mergedAspectOptions(options));
+    return this.changeRouteAspectOptions(mergedOptions, replaceHistory);
   },
 
   changeRouteAspectOptions(options, replaceHistory = false) {
