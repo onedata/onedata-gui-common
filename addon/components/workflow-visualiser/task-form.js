@@ -599,7 +599,9 @@ function getValueBuilderTypesForArgType(argType) {
 }
 
 function getStoreTypesForArgType(argType) {
-  if (argType.endsWith('Store')) {
+  if (!argType) {
+    return [];
+  } else if (argType.endsWith('Store')) {
     return argType.slice(0, -('Store'.length));
   } else if (argType === 'object') {
     return [
