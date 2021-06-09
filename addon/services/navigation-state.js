@@ -434,14 +434,33 @@ export default Service.extend(I18n, {
     return newAspectOptions;
   },
 
-  setAspectOptions(options) {
-    return this.set('aspectOptions', Object.freeze(this.mergedAspectOptions(options)));
+  /**
+   * Sets __only__ provided options overriding all currently set route aspect options.
+   * @param {Object} options 
+   * @param {Boolean} [replaceHistory=false] if true, there will be no entry in history
+   *   for options state before options set (only entry with new options)
+   */
+  setRouteAspectOptions(options, replaceHistory = false) {
+    const serializedOptions = serializeAspectOptions(options);
+    const routerMethod = replaceHistory ? 'replaceWith' : 'transitionTo';
+    return this.get('router')[routerMethod]({
+      queryParams: { options: serializedOptions },
+    });
   },
 
-  changeRouteAspectOptions(options, replaceHistory = false) {
-    const newOptions = serializeAspectOptions(this.mergedAspectOptions(options));
-    const routerMethod = replaceHistory ? 'replaceWith' : 'transitionTo';
-    return this.get('router')[routerMethod]({ queryParams: { options: newOptions } });
+  /**
+   * Changes currently set aspect options using diff from provided options argument.
+   * If some provided option is set to `null`, the currently set option value will be
+   * removed from current options string (cleared).
+   * @param {Object} optionsDiff
+   * @param {Boolean} [replaceHistory=false] if true, there will be no entry in history
+   *   for options state before options set (only entry with new options)
+   */
+  changeRouteAspectOptions(optionsDiff, replaceHistory) {
+    return this.setRouteAspectOptions(
+      this.mergedAspectOptions(optionsDiff),
+      replaceHistory
+    );
   },
 
   /**
