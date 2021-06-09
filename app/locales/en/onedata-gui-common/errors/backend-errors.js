@@ -172,7 +172,7 @@ export default {
       ceph_mon: 'Ceph Monitor',
     },
     posixErrno: {
-      eperm: 'Not super-user',
+      eperm: 'Operation not permitted',
       enoent: 'No such file or directory',
       esrch: 'No such process',
       eintr: 'Interrupted system call',
