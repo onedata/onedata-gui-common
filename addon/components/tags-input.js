@@ -155,6 +155,21 @@ export default Component.extend(I18n, {
   }),
 
   /**
+   * @type {ComputedProperty<Number|undefined>}
+   */
+  tagsLimitForEditor: computed('tagsLimit', 'tags.length', function tagsLimitForEditor() {
+    const {
+      tags,
+      tagsLimit,
+    } = this.getProperties('tags', 'tagsLimit');
+
+    if (Number.isInteger(tagsLimit)) {
+      const normalizedTagsLimit = Math.max(tagsLimit, 0);
+      return Math.max(normalizedTagsLimit - get(tags || [], 'length'), 0);
+    }
+  }),
+
+  /**
    * @type {ComputedProperty<Array<Tag>>}
    */
   newTagsToHighlight: computed(() => []),
@@ -193,6 +208,17 @@ export default Component.extend(I18n, {
 
   disabledObserver: observer('disabled', function disabledObserver() {
     if (this.get('disabled')) {
+      this.endTagCreation();
+    }
+  }),
+
+  allowCreationObserver: observer('allowCreation', function allowCreationObserver() {
+    const {
+      isCreatingTag,
+      allowCreation,
+    } = this.getProperties('isCreatingTag', 'allowCreation');
+
+    if (!allowCreation && isCreatingTag) {
       this.endTagCreation();
     }
   }),

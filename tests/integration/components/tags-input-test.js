@@ -213,6 +213,34 @@ describe('Integration | Component | tags input', function () {
     }
   );
 
+  it('injects tags limit into creation editor', async function () {
+    this.render(hbs `{{tags-input
+      tags=tags
+      tagsLimit=10
+      tagEditorComponentName="test-component"
+    }}`);
+
+    await click('.tag-creator-trigger');
+
+    const testComponent =
+      this.$('.tag-creator .test-component')[0].componentInstance;
+    expect(get(testComponent, 'tagsLimit')).to.equal(10 - this.get('tags.length'));
+  });
+
+  it('injects undefined tags limit into creation editor when tags limit is not defined',
+    async function () {
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      await click('.tag-creator-trigger');
+
+      const testComponent =
+        this.$('.tag-creator .test-component')[0].componentInstance;
+      expect(get(testComponent, 'tagsLimit')).to.be.undefined;
+    });
+
   it(
     'passess tagEditorSettings to the tag creation editor',
     function () {
@@ -393,6 +421,60 @@ describe('Integration | Component | tags input', function () {
 
       expect(this.$('.tag-creator')).to.exist;
       expect(await getCreateTriggerTip()).to.be.undefined;
+    });
+
+  it('stops tag creation when tags limit changes and tags number exceeds it',
+    async function () {
+      this.set('tagsLimit', 10);
+
+      this.render(hbs `{{tags-input
+        tagsLimit=tagsLimit
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      await click('.tag-creator-trigger');
+      this.set('tagsLimit', 1);
+      await wait();
+
+      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
+    });
+
+  it('does not stop tag creation when tags limit changes and tags number is within it',
+    async function () {
+      this.set('tagsLimit', 10);
+
+      this.render(hbs `{{tags-input
+        tagsLimit=tagsLimit
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      await click('.tag-creator-trigger');
+      this.set('tagsLimit', 8);
+      await wait();
+
+      expect(this.$('.tags-input')).to.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.exist;
+    });
+
+  it('stops tag creation when tags number changes and it exceeds tags limit',
+    async function () {
+      const tags = this.get('tags');
+
+      this.render(hbs `{{tags-input
+        tagsLimit=3
+        tags=tags
+        tagEditorComponentName="test-component"
+      }}`);
+
+      await click('.tag-creator-trigger');
+      this.set('tags', [...tags, ...tags]);
+      await wait();
+
+      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
     });
 });
 
