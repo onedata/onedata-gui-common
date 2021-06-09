@@ -1,4 +1,7 @@
 export default {
+  disabledCreateTriggerTip: {
+    limitReached: 'Maximum number of elements has been reached.',
+  },
   modelSelectorEditor: {
     modelTypes: {
       user: 'User',
