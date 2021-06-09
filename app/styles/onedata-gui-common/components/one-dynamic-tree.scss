@@ -2,7 +2,7 @@
   @media (min-width: $screen-sm-min) {
     $field-width: 11em;
     $toggle-in-group-size-ratio: 0.85;
-    max-width: 350px;
+    max-width: 360px;
 
     @each $border-style in $one-tree-border-styles {
       &.border-#{$border-style},
@@ -107,7 +107,7 @@
                 }
                 .form-group {
                   padding-right: $padding-small-horizontal;
-                }                
+                }
               }
             }
             .one-tree {

@@ -37,6 +37,9 @@ export default {
 
     space_add_harvester: 'add harvester',
     space_remove_harvester: 'remove harvester',
+
+    space_view_atm_workflow_executions: 'view atm. worfklow executions',
+    space_schedule_atm_workflow_executions: 'schedule atm. worfklow executions',
   },
   atmInventory: {
     atm_inventory_view: 'view inventory',
