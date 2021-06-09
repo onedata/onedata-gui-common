@@ -132,4 +132,13 @@ describe('Integration | Component | form component/tags field', function () {
 
     expect(this.$('.tags-input')).to.have.class('readonly');
   });
+
+  it('limits tags number via "tagsLimit"', function () {
+    this.set('field.value', ['test', 'test2']);
+    this.set('field.tagsLimit', 1);
+
+    this.render(hbs `{{form-component/tags-field field=field}}`);
+
+    expect(this.$('.tag-creator-trigger')).to.have.class('disabled');
+  });
 });

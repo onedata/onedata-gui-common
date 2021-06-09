@@ -21,8 +21,14 @@
   </li>
 {{/if}}
 {{#if allowModification}}
-  <li class="tag-creator-trigger input-element" {{action "startTagCreation"}}>
+  <li
+    class="tag-creator-trigger input-element {{if (not allowCreation) "disabled"}}"
+    {{action "startTagCreation"}}
+  >
     {{one-icon icon="plus"}}
+    {{#if createTriggerTip}}
+      {{one-tooltip title=createTriggerTip}}
+    {{/if}}
   </li>
 {{/if}}
 {{yield}}

@@ -6,6 +6,9 @@ import sinon from 'sinon';
 import { click, focus, blur } from 'ember-native-dom-helpers';
 import { get, set } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
+import OneTooltipHelper from '../../helpers/one-tooltip';
+
+const disabledCreateTriggerTip = 'Maximum number of elements has been reached.';
 
 describe('Integration | Component | tags input', function () {
   setupComponentTest('tags-input', {
@@ -342,4 +345,58 @@ describe('Integration | Component | tags input', function () {
         });
     }
   );
+
+  it('disables tag creation when number of already provided tags is equal to the limit',
+    async function () {
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagsLimit=tags.length
+        tagEditorComponentName="test-component"
+      }}`);
+
+      const $createTrigger = this.$('.tag-creator-trigger');
+      expect($createTrigger).to.have.class('disabled');
+      await click($createTrigger[0]);
+
+      expect(this.$('.tag-creator')).to.not.exist;
+      expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
+    });
+
+  it('disables tag creation when number of already provided tags is greater that the limit',
+    async function () {
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagsLimit=0
+        tagEditorComponentName="test-component"
+      }}`);
+
+      const $createTrigger = this.$('.tag-creator-trigger');
+      expect($createTrigger).to.have.class('disabled');
+      await click($createTrigger[0]);
+
+      expect(this.$('.tag-creator')).to.not.exist;
+      expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
+    });
+
+  it('does not disable tag creation when number of already provided tags is lower that the limit',
+    async function () {
+      this.set('tagsLimit', this.get('tags.length') + 1);
+      this.render(hbs `{{tags-input
+        tags=tags
+        tagsLimit=9999
+        tagEditorComponentName="test-component"
+      }}`);
+
+      const $createTrigger = this.$('.tag-creator-trigger');
+      expect($createTrigger).to.not.have.class('disabled');
+      await click($createTrigger[0]);
+
+      expect(this.$('.tag-creator')).to.exist;
+      expect(await getCreateTriggerTip()).to.be.undefined;
+    });
 });
+
+async function getCreateTriggerTip() {
+  const helper = new OneTooltipHelper('.tag-creator-trigger');
+  return (await helper.hasTooltip()) ? (await helper.getText()) : undefined;
+}

@@ -2,7 +2,7 @@
  * A tags (tokenizer) input, which allows adding and removing tags. New tags
  * are added through dedicated tags editors which can be specified using
  * tagEditorComponentName property.
- * 
+ *
  * @module components/tags-input
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -13,10 +13,12 @@ import Component from '@ember/component';
 import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
-import { computed, observer, getProperties } from '@ember/object';
+import { computed, observer, get, getProperties } from '@ember/object';
 import { writable, conditional, not, or } from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { inject as service } from '@ember/service';
 
 /**
  * @typedef {Object} Tag
@@ -24,7 +26,7 @@ import config from 'ember-get-config';
  * @property {string} [icon]
  */
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   tagName: 'ul',
   classNames: ['tags-input'],
@@ -36,10 +38,17 @@ export default Component.extend({
   ],
   attributeBindings: ['tabindex', 'disabled'],
 
+  i18n: service(),
+
   /**
    * @override
    */
   touchActionProperties: '',
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.tagsInput',
 
   /**
    * @virtual optional
@@ -64,6 +73,15 @@ export default Component.extend({
    * @type {Array<Tag>}
    */
   tags: computed(() => []),
+
+  /**
+   * If provided, limits number of tags. When the number of existing tags
+   * is greater than or equal to the limit, then creating new tags
+   * becomes disabled.
+   * @virtual optional
+   * @type {Number}
+   */
+  tagsLimit: undefined,
 
   /**
    * @virtual optional
@@ -99,9 +117,42 @@ export default Component.extend({
   isCreatingTag: false,
 
   /**
-   * @type {ComputedProperty<boolean>}
+   * @type {ComputedProperty<Boolean>}
    */
   allowModification: not(or('readonly', 'disabled')),
+
+  /**
+   * @type {ComputedProperty<String|undefined>}
+   */
+  creationDisabledReason: computed('tags.length', 'tagsLimit', function allowCreation() {
+    const {
+      tags,
+      tagsLimit,
+    } = this.getProperties('tags', 'tagsLimit');
+
+    if (Number.isInteger(tagsLimit) && tagsLimit <= get(tags || [], 'length')) {
+      return 'limitReached';
+    }
+  }),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  allowCreation: not('creationDisabledReason'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  createTriggerTip: computed('creationDisabledReason', function createTriggerTip() {
+    const creationDisabledReason = this.get('creationDisabledReason');
+    if (creationDisabledReason) {
+      return this.t(
+        `disabledCreateTriggerTip.${creationDisabledReason}`, {}, {
+          defaultValue: '',
+        });
+    }
+    return '';
+  }),
 
   /**
    * @type {ComputedProperty<Array<Tag>>}
@@ -205,7 +256,9 @@ export default Component.extend({
       onChange(tags.without(tag));
     },
     startTagCreation() {
-      if (this.get('isCreatingTag')) {
+      if (!this.get('allowCreation')) {
+        return;
+      } else if (this.get('isCreatingTag')) {
         // Focus editor - send focus to the root element of the editor and
         // let the editor to handle that focus on its own
         const event = document.createEvent('Event');
