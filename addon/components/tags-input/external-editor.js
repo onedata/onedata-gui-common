@@ -58,6 +58,8 @@ export default Component.extend({
    *     //     // of new tags.
    *     //   onEndTagCreationCallback: Function // should be called by the external
    *     //     // editor when creation process should been ended.
+   *     //   tagsLimit: Number|undefined // if available, specifies the maximum
+   *     //     // number of tags, that can be created.
    *     // }
    *     // ```
    *   endTagCreationCallback: Function // Notifies the external editor component,
