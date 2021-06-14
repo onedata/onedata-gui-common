@@ -56,3 +56,10 @@
     {{/if}}
   </li>
 {{/each}}
+{{#if noRealActions}}
+  <li class="disabled">
+    <div class="dropdown-menu-item no-actions-info">
+      {{tt this "noActions"}}
+    </div>
+  </li>
+{{/if}}

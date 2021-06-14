@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?xyl0qc') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?xyl0qc') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?xyl0qc##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?vdnomd') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?vdnomd') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?vdnomd##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -76,6 +76,16 @@
     content: $oneicon-atm-inventory; 
   }
 }
+.oneicon-atm-lambda {
+  &:before {
+    content: $oneicon-atm-lambda; 
+  }
+}
+.oneicon-atm-workflow {
+  &:before {
+    content: $oneicon-atm-workflow; 
+  }
+}
 .oneicon-ban-left-thin {
   &:before {
     content: $oneicon-ban-left-thin;     
@@ -85,6 +95,16 @@
 .oneicon-ban-left {
   &:before {
     content: $oneicon-ban-left; 
+  }
+}
+.oneicon-browser-archive-add {
+  &:before {
+    content: $oneicon-browser-archive-add; 
+  }
+}
+.oneicon-browser-archive {
+  &:before {
+    content: $oneicon-browser-archive; 
   }
 }
 .oneicon-browser-attribute {
@@ -100,6 +120,11 @@
 .oneicon-browser-cut {
   &:before {
     content: $oneicon-browser-cut; 
+  }
+}
+.oneicon-browser-dataset-file {
+  &:before {
+    content: $oneicon-browser-dataset-file; 
   }
 }
 .oneicon-browser-dataset {
@@ -432,11 +457,6 @@
     content: $oneicon-key; 
   }
 }
-.oneicon-lambda {
-  &:before {
-    content: $oneicon-lambda; 
-  }
-}
 .oneicon-leave-space {
   &:before {
     content: $oneicon-leave-space; 
@@ -600,6 +620,16 @@
 .oneicon-play {
   &:before {
     content: $oneicon-play; 
+  }
+}
+.oneicon-plug-in {
+  &:before {
+    content: $oneicon-plug-in; 
+  }
+}
+.oneicon-plug-out {
+  &:before {
+    content: $oneicon-plug-out; 
   }
 }
 .oneicon-plus {

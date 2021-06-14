@@ -14,11 +14,12 @@ import { inject as service } from '@ember/service';
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/login-box';
 import safeMethodExecution from 'onedata-gui-common/utils/safe-method-execution';
+import AuthenticationErrorMessage from 'onedata-gui-common/mixins/authentication-error-message';
 import { underscore } from '@ember/string';
 
 export const sessionExpiredKey = 'sessionExpired';
 
-export default Component.extend({
+export default Component.extend(AuthenticationErrorMessage, {
   layout,
   classNames: ['login-box'],
 
@@ -111,7 +112,7 @@ export default Component.extend({
       const errorId = error && get(error, 'responseJSON.error.details.authError.id');
       if (fatalBasicAuthErrors.includes(errorId)) {
         reason = underscore(errorId);
-      } else if (errorId && errorId !== 'badBasicCredentials') {
+      } else if (errorId !== 'badBasicCredentials') {
         reason = 'unknown';
       }
       if (reason) {

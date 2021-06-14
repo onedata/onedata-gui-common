@@ -39,6 +39,8 @@ import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
 import queryBuilder from './onedata-gui-common/components/query-builder';
 import oneStep from './onedata-gui-common/components/one-step';
 import workflowVisualiser from './onedata-gui-common/components/workflow-visualiser';
+import idInfo from './onedata-gui-common/components/id-info';
+import actionsPopoverContent from './onedata-gui-common/components/actions-popover-content';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -107,6 +109,8 @@ const translations = {
     queryBuilder,
     oneStep,
     workflowVisualiser,
+    idInfo,
+    actionsPopoverContent,
     alerts: {
       endpointError,
     },

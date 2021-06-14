@@ -46,7 +46,7 @@ To copy dependencies launch a script (requires Python ^2.7) from root of parent 
 #### Setting up Sass
 
 The addon depends on some globally set Sass variables - main colors used in the
-application theme and window size breakpoints. These variables needs to be injected 
+application theme and window size breakpoints. These variables needs to be injected
 using `ember-cli-build.js` configuration file.
 
 At the top of that file, add `require` statements to import the Sass setup functions and configurations:
@@ -116,7 +116,7 @@ On Bamboo or other CI server, the best way is to use following script from Oneda
 
 ## Organization of files
 
-The project has structure of standard Ember CLI in-repo addon. See: https://ember-cli.com/extending/#addon-project-structure  
+The project has structure of standard Ember CLI in-repo addon. See: https://ember-cli.com/extending/#addon-project-structure
 
 ## Features highlight
 
@@ -144,9 +144,9 @@ They are currently not published in any repository.
 To use icons, you can import a ``onedata-common`` (all common onedata styles) SCSS file to your main SCSS or ``oneicons`` for only icons.
 
 Settings of Icomoon for generating icons are:
-- Font name: ``oneicons``
-- Class prefix: ``icon-``
-- Support IE8
+- Font name: `oneicons`
+- Class prefix: `oneicon-`
+- Support IE8: false
 - Generate stylesheet variables for: Sass
 - CSS Selector: Use attribute selector
 - Em square height: 1024

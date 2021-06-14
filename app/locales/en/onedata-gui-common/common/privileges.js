@@ -37,6 +37,11 @@ export default {
 
     space_add_harvester: 'add harvester',
     space_remove_harvester: 'remove harvester',
+
+    space_view_archives: 'view archives',
+    space_create_archives: 'create archives',
+    space_remove_archives: 'remove archives',
+    space_recall_archives: 'recall archives',
   },
   atmInventory: {
     atm_inventory_view: 'view inventory',
