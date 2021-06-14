@@ -86,13 +86,16 @@ import { resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { conditional, raw, tag, string } from 'ember-awesome-macros';
+import { conditional, raw, tag, string, promise } from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { scheduleOnce, run } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import Looper from 'onedata-gui-common/utils/looper';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
+const statsUpdateInterval = 3000;
 
 export default Component.extend(I18n, WindowResizeHandler, {
   layout,
@@ -152,6 +155,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {Utils.WorkflowVisualiser.ActionsFactory}
    */
   actionsFactory: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.WorkflowVisualiser.StatsFetcher}
+   */
+  statsFetcher: undefined,
+
+  /**
+   * @type {Utils.Looper}
+   */
+  statsUpdater: undefined,
 
   /**
    * Contains model objects which were created during the workflow editor
@@ -230,6 +244,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
     raw('')
   ),
 
+  /**
+   * @type {ComputedProperty<PromiseObject>}
+   */
+  initialLoadingProxy: promise.object(computed(async function initialLoading() {
+    if (this.get('mode') === 'view') {
+      return this.updateStatuses();
+    }
+  })),
+
   actionsFactoryObserver: observer(
     'actionsFactory',
     function actionsFactoryObserver() {
@@ -259,6 +282,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
     }
     this.actionsFactoryObserver();
+    this.get('visualiserElements');
+    if (this.get('mode') === 'view') {
+      this.get('initialLoadingProxy')
+        .then(() => safeExec(this, 'setupStatsUpdater'));
+    }
   },
 
   /**
@@ -271,8 +299,35 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @override
    */
+  willDestroyElement() {
+    try {
+      this.stopStatsUpdater();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   onWindowResize() {
     run(() => this.scheduleHorizontalOverflowDetection());
+  },
+
+  setupStatsUpdater() {
+    const statsUpdater = Looper.create({
+      immediate: false,
+      interval: statsUpdateInterval,
+    });
+    statsUpdater.on('tick', () => this.updateStatuses());
+    this.set('statsUpdater', statsUpdater);
+  },
+
+  stopStatsUpdater() {
+    const statsUpdater = this.get('statsUpdater');
+    if (statsUpdater) {
+      statsUpdater.destroy();
+    }
   },
 
   scheduleHorizontalOverflowDetection() {
@@ -288,6 +343,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const checksPxEpsilon = 1;
 
     const $lanesContainer = this.$('.visualiser-elements');
+    if (!$lanesContainer.length) {
+      return;
+    }
     const viewOffset = $lanesContainer.offset().left;
     const viewWidth = $lanesContainer.width();
 
@@ -1078,6 +1136,33 @@ export default Component.extend(I18n, WindowResizeHandler, {
       default:
         return undefined;
     }
+  },
+
+  async updateStatuses() {
+    const statsFetcher = this.get('statsFetcher');
+    if (!statsFetcher) {
+      return;
+    }
+
+    const statuses = await statsFetcher.fetchStatuses();
+    ['lane', 'parallelBox', 'task'].forEach(elementType => {
+      Object.keys(statuses[elementType] || {}).forEach(id => {
+        const element = this.getCachedElement(elementType, { id });
+        if (!element) {
+          return;
+        }
+
+        set(element, 'status', statuses[elementType][id].status);
+        if (elementType === 'task') {
+          setProperties(element, getProperties(
+            statuses[elementType][id],
+            'itemsFailed',
+            'itemsInProcessing',
+            'itemsProcessed'
+          ));
+        }
+      });
+    });
   },
 
   actions: {

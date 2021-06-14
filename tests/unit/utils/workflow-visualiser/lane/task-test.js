@@ -24,15 +24,11 @@ describe('Unit | Utility | workflow visualiser/lane/task', function () {
     });
   });
 
-  it('has "status" equal to "default" on init', function () {
-    const task = Task.create();
+  ['itemsFailed', 'itemsInProcessing', 'itemsProcessed'].forEach(propName => {
+    it(`has "${propName}" equal to 0 on init`, function () {
+      const task = Task.create();
 
-    expect(get(task, 'status')).to.equal('default');
-  });
-
-  it('has "progressPercent" equal to null on init', function () {
-    const task = Task.create();
-
-    expect(get(task, 'progressPercent')).to.be.null;
+      expect(get(task, propName)).to.equal(0);
+    });
   });
 });

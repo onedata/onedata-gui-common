@@ -33,20 +33,26 @@ export default VisualiserRecord.extend({
   argumentMappings: undefined,
 
   /**
+   * @virtual
    * @type {Array<Object>}
    */
   resultMappings: undefined,
 
   /**
-   * One of: 'default', 'success', 'warning', 'error'
    * @virtual
-   * @type {String}
+   * @type {Number}
    */
-  status: 'default',
+  itemsFailed: 0,
 
   /**
    * @virtual
-   * @type {Number|null}
+   * @type {Number}
    */
-  progressPercent: null,
+  itemsInProcessing: 0,
+
+  /**
+   * @virtual
+   * @type {Number}
+   */
+  itemsProcessed: 0,
 });
