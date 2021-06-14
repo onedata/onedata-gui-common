@@ -168,6 +168,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
   statsUpdater: undefined,
 
   /**
+   * @type {String}
+   */
+  executionStatus: undefined,
+
+  /**
    * Contains model objects which were created during the workflow editor
    * lifetime. Is used to build new model structure from existing entries on
    * data update, which prevents from unnecessary rerendering.
@@ -315,6 +320,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   setupStatsUpdater() {
+    if (this.executionHasEnded()) {
+      return;
+    }
+
     const statsUpdater = Looper.create({
       immediate: false,
       interval: statsUpdateInterval,
@@ -1145,24 +1154,34 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     const statuses = await statsFetcher.fetchStatuses();
-    ['lane', 'parallelBox', 'task'].forEach(elementType => {
-      Object.keys(statuses[elementType] || {}).forEach(id => {
-        const element = this.getCachedElement(elementType, { id });
-        if (!element) {
-          return;
-        }
+    safeExec(this, () => {
+      ['lane', 'parallelBox', 'task'].forEach(elementType => {
+        Object.keys(statuses[elementType] || {}).forEach(id => {
+          const element = this.getCachedElement(elementType, { id });
+          if (!element) {
+            return;
+          }
 
-        set(element, 'status', statuses[elementType][id].status);
-        if (elementType === 'task') {
-          setProperties(element, getProperties(
-            statuses[elementType][id],
-            'itemsFailed',
-            'itemsInProcessing',
-            'itemsProcessed'
-          ));
-        }
+          set(element, 'status', statuses[elementType][id].status);
+          if (elementType === 'task') {
+            setProperties(element, getProperties(
+              statuses[elementType][id],
+              'itemsFailed',
+              'itemsInProcessing',
+              'itemsProcessed'
+            ));
+          }
+        });
       });
+      this.set('executionStatus', get(statuses, 'global.status'));
+      if (this.executionHasEnded()) {
+        this.stopStatsUpdater();
+      }
     });
+  },
+
+  executionHasEnded() {
+    return ['finished', 'failed'].includes(this.get('executionStatus'));
   },
 
   actions: {
