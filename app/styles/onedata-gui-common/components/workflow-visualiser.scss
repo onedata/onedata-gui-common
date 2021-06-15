@@ -27,10 +27,48 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 }
 
 .workflow-visualiser {
+  $main-border: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
+
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  .workflow-status-container {
+    padding: 0.7em;
+    border: $main-border;
+    text-align: center;
+
+    .one-label {
+      @include font-semibold();
+    }
+  }
+
+  &.status-scheduled,
+  &.status-preparing,
+  &.status-enqueued {
+    .workflow-status-container {
+      background-color: $color-one-light-blue;
+    }
+  }
+
+  &.status-active {
+    .workflow-status-container {
+      background-color: lighten($color-one-warning, 30%);
+    }
+  }
+
+  &.status-failed {
+    .workflow-status-container {
+      background-color: lighten($color-one-danger, 30%);
+    }
+  }
+
+  &.status-finished {
+    .workflow-status-container {
+      background-color: lighten($color-one-success, 30%);
+    }
+  }
 
   .one-inline-editor {
     .one-label, .form-control {
@@ -44,6 +82,12 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     flex-wrap: nowrap;
     align-items: stretch;
     flex-grow: 1;
+    border-left: $main-border;
+    border-right: $main-border;
+
+    .workflow-visualiser-interlane-space:first-child {
+      margin-left: -$workflow-visualiser-lane-border-width;
+    }
   }
 
   .scrollers-container {

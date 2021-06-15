@@ -102,6 +102,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   classNames: ['workflow-visualiser'],
   classNameBindings: [
     'modeClass',
+    'statusClass',
     'duringDragDropClass',
   ],
 
@@ -222,6 +223,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  statusClass: tag `status-${'executionStatus'}`,
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  statusTranslation: computed('executionStatus', function statusTranslation() {
+    return this.t(`statuses.${this.get('executionStatus')}`, {}, {
+      defaultValue: this.t('statuses.unknown'),
+    });
+  }),
 
   /**
    * @type {ComputedProperty<String|undefined>}

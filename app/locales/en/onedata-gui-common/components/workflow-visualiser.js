@@ -1,6 +1,16 @@
 import taskForm from './workflow-visualiser/task-form';
 
 export default {
+  status: 'Status',
+  statuses: {
+    scheduled: 'Scheduled',
+    preparing: 'Preparing',
+    enqueued: 'Enqueued',
+    active: 'Active',
+    finished: 'Finished',
+    failed: 'Failed',
+    unknown: 'Unknown',
+  },
   taskForm,
   lane: {
     actions: {
