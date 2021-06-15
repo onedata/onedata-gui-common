@@ -64,6 +64,18 @@ export default {
         modalYes: 'Remove',
       },
     },
+    details: {
+      status: 'Status',
+      statuses: {
+        pending: 'Pending',
+        active: 'Active',
+        finished: 'Finished',
+        failed: 'Failed',
+      },
+      itemsInProcessing: 'In processing',
+      itemsProcessed: 'Processed',
+      itemsFailed: 'Failed',
+    },
   },
   store: {
     actions: {

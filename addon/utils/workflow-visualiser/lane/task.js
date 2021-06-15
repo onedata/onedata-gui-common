@@ -42,12 +42,6 @@ export default VisualiserRecord.extend({
    * @virtual
    * @type {Number}
    */
-  itemsFailed: 0,
-
-  /**
-   * @virtual
-   * @type {Number}
-   */
   itemsInProcessing: 0,
 
   /**
@@ -55,4 +49,10 @@ export default VisualiserRecord.extend({
    * @type {Number}
    */
   itemsProcessed: 0,
+
+  /**
+   * @virtual
+   * @type {Number}
+   */
+  itemsFailed: 0,
 });

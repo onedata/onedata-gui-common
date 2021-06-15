@@ -1,14 +1,17 @@
 .workflow-visualiser .workflow-visualiser-task {
   position: relative;
+  border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
+  border-radius: $border-radius-base;
 
   .draggable-task {
     display: flex;
     align-items: center;
     padding-right: $padding-xs-horizontal;
-    border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
+    border: inherit;
     border-radius: $border-radius-base;
     min-height: 50px;
     background-color: $color-one-white;
+    margin: -$workflow-visualiser-block-border-width;
   }
 
   .task-drag-handle {
@@ -68,7 +71,31 @@
     @include workflow-visualiser-action-trigger-white-background();
   }
 
+  .task-details {
+    padding: 0.5em;
+    padding-top: calc(0.5em + #{$workflow-visualiser-block-border-width});
+    font-size: 90%;
+  }
+
+  .detail-entry {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .detail-label {
+    @include font-semibold();
+  }
+
+  .detail-value {
+    flex-grow: 1;
+    text-align: right;
+  }
+
   &.mode-edit {
+    .draggable-task {
+      cursor: initial !important;
+    }
+
     .task-drag-handle {
       cursor: grab;
     }

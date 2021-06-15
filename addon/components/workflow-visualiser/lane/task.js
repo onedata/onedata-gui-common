@@ -11,7 +11,7 @@ import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/task';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
-import { tag, raw, conditional, equal, array } from 'ember-awesome-macros';
+import { tag, raw, conditional, equal, array, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
 
 const possibleStatuses = ['pending', 'active', 'finished', 'failed'];
@@ -22,9 +22,19 @@ export default VisualiserElement.extend({
   classNameBindings: ['statusClass'],
 
   /**
+   * @override
+   */
+  i18nPrefix: 'components.workflowVisualiser.task',
+
+  /**
    * @type {Boolean}
    */
   areActionsOpened: false,
+
+  /**
+   * @type {Boolean}
+   */
+  areDetailsExpanded: false,
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.Task>}
@@ -35,6 +45,30 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<String>}
    */
   name: reads('task.name'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  statusTranslation: computed('effectiveStatus', function statusTranslation() {
+    return this.t(`details.statuses.${this.get('effectiveStatus')}`, {}, {
+      defaultValue: '–',
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  itemsInProcessing: or('task.itemsInProcessing', raw(0)),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  itemsProcessed: or('task.itemsProcessed', raw(0)),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  itemsFailed: or('task.itemsFailed', raw(0)),
 
   /**
    * @type {ComputedProperty<String>}
@@ -89,6 +123,13 @@ export default VisualiserElement.extend({
     },
     toggleActionsOpen(state) {
       scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
+    },
+    headerClick() {
+      if (this.get('mode') !== 'view') {
+        return;
+      }
+
+      this.toggleProperty('areDetailsExpanded');
     },
   },
 });
