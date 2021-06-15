@@ -1,11 +1,3 @@
-{{#if showProgress}}
-  <div
-    class="task-progress-bar {{if hasPercentCounterInsideProgressBar "counter-inside-bar"}}"
-    style={{progressBarStyle}}
-  >
-    <span class="percent-counter">{{progressPercentAsText}}</span>
-  </div>
-{{/if}}
 {{#one-draggable-object
   content=task
   dragHandle=".task-drag-handle"
