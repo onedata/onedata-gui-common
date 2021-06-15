@@ -61,6 +61,7 @@ import guiUtils from './onedata-gui-common/services/gui-utils';
 import clusterActions from './onedata-gui-common/services/cluster-actions';
 
 import insufficientPrivilegesMessage from './onedata-gui-common/utils/i18n/insufficient-privileges-message';
+import joinStrings from './onedata-gui-common/utils/i18n/join-strings';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -146,6 +147,7 @@ const translations = {
   },
   utils: {
     insufficientPrivilegesMessage,
+    joinStrings,
   },
   errors: {
     backendErrors,
