@@ -68,6 +68,12 @@ export default Component.extend(I18n, {
   task: undefined,
 
   /**
+   * @virtual
+   * @type {Boolean}
+   */
+  isShown: false,
+
+  /**
    * @virtual optional
    * @type {Boolean}
    */
@@ -346,6 +352,13 @@ export default Component.extend(I18n, {
 
     fields.changeMode(mode === 'view' ? 'view' : 'edit');
     fields.reset();
+  }),
+
+  isShownObserver: observer('isShown', function isShownObserver() {
+    const isShown = this.get('isShown');
+    if (isShown) {
+      this.get('fields').reset();
+    }
   }),
 
   init() {

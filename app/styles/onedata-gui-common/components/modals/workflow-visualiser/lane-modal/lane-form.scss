@@ -6,4 +6,12 @@
       padding-right: 0;
     }
   }
+
+  .control-label {
+    min-width: 120px;
+  }
+
+  .dropdown-field-renderer {
+    flex-wrap: nowrap;
+  }
 }

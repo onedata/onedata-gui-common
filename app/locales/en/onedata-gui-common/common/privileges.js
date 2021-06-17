@@ -43,8 +43,8 @@ export default {
     space_remove_archives: 'remove archives',
     space_recall_archives: 'recall archives',
 
-    space_view_atm_workflow_executions: 'view atm. worfklow executions',
-    space_schedule_atm_workflow_executions: 'schedule atm. worfklow executions',
+    space_view_atm_workflow_executions: 'view workflow executions',
+    space_schedule_atm_workflow_executions: 'schedule workflow executions',
   },
   atmInventory: {
     atm_inventory_view: 'view inventory',

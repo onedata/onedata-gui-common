@@ -6,7 +6,9 @@
 }}
   <div class="lane-header">
     <div class="lane-menu-trigger-space lane-drag-handle">
-      {{one-icon icon="checkbox-empty"}}
+      {{#if (eq mode "edit")}}
+        {{one-icon icon="move"}}
+      {{/if}}
     </div>
     {{#if (eq mode "edit")}}
       {{one-inline-editor
