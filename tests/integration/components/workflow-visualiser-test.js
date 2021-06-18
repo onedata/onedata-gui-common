@@ -369,8 +369,8 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding left edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, laneWidth * 10);
+    it('does not show scroll button, when there is no overflow', async function () {
+      await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -402,8 +402,8 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding right edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, laneWidth * 10);
+    it('does not show scroll button, when there is no overflow', async function () {
+      await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -466,7 +466,7 @@ class WindowStub {
 
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function () {
-    renderForScrollTest(this, 5, laneWidth * 0.6);
+    await renderForScrollTest(this, 5, laneWidth * 0.6);
 
     await scrollToLane(this, overflowEdge, overflowLane, 10);
 
@@ -788,12 +788,12 @@ function renderWithRawData(testCase, rawData) {
   `);
 }
 
-function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
   testCase.setProperties({
     rawData: generateExample(lanesNumber, 0, 0),
     _window: new WindowStub(),
   });
-  changeContainerWidthForScrollTest(testCase, containerWidth);
+  await changeContainerWidthForScrollTest(testCase, containerWidth);
 
   testCase.render(hbs `
     <div style={{containerStyle}}>
