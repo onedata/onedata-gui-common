@@ -1,5 +1,5 @@
 /**
- * Space between parallel blocks or tasks. Allows creating new elements.
+ * Space between parallel boxes or tasks. Allows creating new elements.
  *
  * @module utils/workflow-visualiser/lane/interblock-space
  * @author Michał Borzęcki
@@ -14,23 +14,23 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane/interblock-space',
+  __modelType: 'interblockSpace',
 
   /**
    * @override
    */
-  type: 'interblockSpace',
+  renderer: 'workflow-visualiser/lane/interblock-space',
 
   /**
    * @type {Object}
    */
   siblingsTypePerParentType: Object.freeze({
-    lane: 'parallelBlock',
-    parallelBlock: 'task',
+    lane: 'parallelBox',
+    parallelBox: 'task',
   }),
 
   /**
    * @override
    */
-  siblingsType: getBy('siblingsTypePerParentType', 'parent.type'),
+  siblingsType: getBy('siblingsTypePerParentType', 'parent.__modelType'),
 });

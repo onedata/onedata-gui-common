@@ -13,12 +13,30 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane/task',
+  __modelType: 'task',
 
   /**
    * @override
    */
-  type: 'task',
+  renderer: 'workflow-visualiser/lane/task',
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  lambdaId: undefined,
+
+  /**
+   * @virtual
+   * @type {Array<Object>}
+   */
+  argumentMappings: undefined,
+
+  /**
+   * @virtual
+   * @type {Array<Object>}
+   */
+  resultMappings: undefined,
 
   /**
    * One of: 'default', 'success', 'warning', 'error'

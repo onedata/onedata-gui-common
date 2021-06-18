@@ -1,8 +1,17 @@
+import taskForm from './workflow-visualiser/task-form';
+
 export default {
+  taskForm,
   lane: {
     actions: {
       createLane: {
         newLaneName: 'Untitled lane',
+      },
+      modifyLane: {
+        title: 'Modify',
+      },
+      viewLane: {
+        title: 'View details',
       },
       moveLeftLane: {
         title: 'Move left',
@@ -24,34 +33,47 @@ export default {
       },
     },
   },
-  parallelBlock: {
+  parallelBox: {
     actions: {
-      createBlock: {
-        newParallelBlockName: 'Parallel block',
+      createParallelBox: {
+        newParallelBoxName: 'Parallel box',
       },
-      moveUpBlock: {
+      moveUpParallelBox: {
         title: 'Move up',
       },
-      moveDownBlock: {
+      moveDownParallelBox: {
         title: 'Move down',
       },
-      removeBlock: {
+      removeParallelBox: {
         title: 'Remove',
-        modalHeader: 'Remove parallel block',
-        modalDescription: 'You are about to delete the parallel block "{{parallelBlockName}}".',
+        modalHeader: 'Remove parallel box',
+        modalDescription: 'You are about to delete the parallel box "{{parallelBoxName}}".',
         modalYes: 'Remove',
       },
     },
   },
   task: {
     actions: {
-      createTask: {
-        newTaskName: 'Untitled task',
+      modifyTask: {
+        title: 'Modify',
       },
       removeTask: {
         title: 'Remove',
         modalHeader: 'Remove task',
         modalDescription: 'You are about to delete the task "{{taskName}}".',
+        modalYes: 'Remove',
+      },
+    },
+  },
+  store: {
+    actions: {
+      createStore: {
+        title: 'Add store',
+      },
+      removeStore: {
+        title: 'Remove',
+        modalHeader: 'Remove store',
+        modalDescription: 'You are about to delete the store "{{storeName}}".',
         modalYes: 'Remove',
       },
     },

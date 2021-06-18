@@ -13,7 +13,9 @@ describe('Integration | Component | form component/json field', function () {
   });
 
   beforeEach(function () {
-    this.set('field', JsonField.create());
+    this.set('field', JsonField.create({
+      ownerSource: this,
+    }));
   });
 
   it(
@@ -98,5 +100,13 @@ describe('Integration | Component | form component/json field', function () {
 
     expect(this.$('textarea').val()).to.equal('"test"');
     expect(this.$('textarea')).to.have.attr('readonly');
+  });
+
+  it('sets placeholder according to "placeholder"', function () {
+    this.set('field.placeholder', 'test');
+
+    this.render(hbs `{{form-component/json-field field=field}}`);
+
+    expect(this.$('textarea').attr('placeholder')).to.equal('test');
   });
 });

@@ -42,14 +42,19 @@ export default {
     space_create_archives: 'create archives',
     space_remove_archives: 'remove archives',
     space_recall_archives: 'recall archives',
+
+    space_view_atm_workflow_executions: 'view workflow executions',
+    space_schedule_atm_workflow_executions: 'schedule workflow executions',
   },
   atmInventory: {
     atm_inventory_view: 'view inventory',
     atm_inventory_update: 'modify inventory',
-    atm_inventory_manage_lambdas: 'manage lambdas',
     atm_inventory_delete: 'remove inventory',
     atm_inventory_view_privileges: 'view privileges',
     atm_inventory_set_privileges: 'set privileges',
+
+    atm_inventory_manage_lambdas: 'manage lambdas',
+    atm_inventory_manage_workflow_schemas: 'manage workflow schemas',
 
     atm_inventory_add_user: 'add user',
     atm_inventory_remove_user: 'remove user',

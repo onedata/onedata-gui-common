@@ -12,6 +12,10 @@ import $ from 'jquery';
 import { getModalFooter } from '../../../../helpers/modal';
 
 const taskActionsSpec = [{
+  className: 'modify-task-action-trigger',
+  label: 'Modify',
+  icon: 'rename',
+}, {
   className: 'remove-task-action-trigger',
   label: 'Remove',
   icon: 'x',
@@ -128,6 +132,26 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         expect($action.text().trim()).to.equal(label);
         expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
       });
+    });
+
+    it('allows to modify task', async function () {
+      const taskDiff = { name: 'someName' };
+      const detailsProviderStub = sinon.stub().resolves(taskDiff);
+      this.get('task.actionsFactory')
+        .registerGetTaskModificationDataCallback(detailsProviderStub);
+      const onModifySpy = sinon.stub().resolves();
+      this.set('task.onModify', onModifySpy);
+      render(this);
+
+      await click('.task-actions-trigger');
+      await click($('body .webui-popover.in .modify-task-action-trigger')[0]);
+
+      expect(detailsProviderStub).to.be.calledWith({
+        stores: sinon.match.any,
+        task: this.get('task'),
+      });
+      expect(onModifySpy).to.be.calledOnce
+        .and.to.be.calledWith(this.get('task'), taskDiff);
     });
 
     it('allows to remove task', async function () {

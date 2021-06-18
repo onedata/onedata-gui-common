@@ -14,9 +14,9 @@
  */
 
 import EmberObject, { observer } from '@ember/object';
-
 import Evented, { on } from '@ember/object/evented';
-import { run } from '@ember/runloop';
+import { cancel, later } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default EmberObject.extend(Evented, {
   _intervalId: null,
@@ -24,10 +24,15 @@ export default EmberObject.extend(Evented, {
   interval: null,
 
   /**
-   * If true, the tick notify will be launched right after changing interval 
+   * If true, the tick notify will be launched right after changing interval
    * @type {boolean}
    */
   immediate: false,
+
+  /**
+   * @type {any}
+   */
+  nextNotifyTimer: undefined,
 
   resetInterval: on('init', observer('interval', function () {
     let {
@@ -52,6 +57,7 @@ export default EmberObject.extend(Evented, {
   destroy() {
     try {
       this.stop();
+      cancel(this.get('nextNotifyTimer'));
     } catch (error) {
       console.warn('util:looper: stopping on destroy failed');
     }
@@ -63,6 +69,9 @@ export default EmberObject.extend(Evented, {
   },
 
   notify() {
-    run.later(() => this.trigger('tick'));
+    this.set(
+      'nextNotifyTimer',
+      later(() => safeExec(this, () => this.trigger('tick')))
+    );
   },
 });

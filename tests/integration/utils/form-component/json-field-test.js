@@ -3,6 +3,8 @@ import { describe, it } from 'mocha';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import { get, set } from '@ember/object';
 import { setupComponentTest } from 'ember-mocha';
+import sinon from 'sinon';
+import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form component/json field', function () {
   setupComponentTest('test-component', {
@@ -33,4 +35,32 @@ describe('Integration | Utility | form component/json field', function () {
       expect(errors[0].message).to.equal('JSON is not valid');
     }
   );
+
+  it('translates placeholder', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('somePrefix.field1.placeholder')
+      .returns('field tip');
+
+    const field = JsonField.create({
+      ownerSource: this,
+      i18nPrefix: 'somePrefix',
+      name: 'field1',
+    });
+
+    expect(get(field, 'placeholder')).to.equal('field tip');
+  });
+
+  it('has empty placeholder if translation for it cannot be found', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('somePrefix.field1.placeholder')
+      .returns('<missing-...');
+
+    const field = JsonField.create({
+      ownerSource: this,
+      i18nPrefix: 'somePrefix',
+      name: 'field1',
+    });
+
+    expect(get(field, 'placeholder')).to.be.empty;
+  });
 });

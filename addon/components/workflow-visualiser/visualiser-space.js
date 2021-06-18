@@ -59,7 +59,7 @@ export default VisualiserElement.extend({
       const draggedElementModel = this.get('dragDrop.draggedElementModel');
 
       return draggedElementModel &&
-        get(draggedElementModel, 'type') === siblingsType &&
+        get(draggedElementModel, '__modelType') === siblingsType &&
         draggedElementModel !== elementBefore &&
         draggedElementModel !== elementAfter;
     }

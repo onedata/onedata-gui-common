@@ -4,8 +4,8 @@
   flex-direction: column;
   align-items: center;
 
-  &.between-parallel-blocks-space {
-    height: $workflow-visualiser-between-parallel-block-space-size;
+  &.between-parallel-box-space {
+    height: $workflow-visualiser-between-parallel-box-space-size;
 
     .arrow {
       position: relative;
@@ -56,7 +56,7 @@
     }
   }
 
-  &.between-tasks-space {
+  &.between-task-space {
     height: $workflow-visualiser-between-task-space-size;
 
     &.space-position-empty {
@@ -107,12 +107,12 @@
   }
 
   &.mode-edit {
-    &.between-parallel-blocks-space {
+    &.between-parallel-box-space {
       $arrow-offset-for-add-trigger: 17px;
 
       &.space-position-start,
       &.space-position-end {
-        height: $workflow-visualiser-between-parallel-block-space-size + $workflow-visualiser-lane-vertical-padding;
+        height: $workflow-visualiser-between-parallel-box-space-size + $workflow-visualiser-lane-vertical-padding;
       }
 
       &.space-position-start {
@@ -156,7 +156,7 @@
       }
     }
 
-    &.between-tasks-space {
+    &.between-task-space {
       &.space-position-end {
         height: $workflow-visualiser-last-between-task-space-size;
       }
@@ -175,8 +175,8 @@
   }
 }
 
-.workflow-visualiser.during-parallel-block-dragdrop .workflow-visualiser-interblock-space {
-  &.between-parallel-blocks-space {
+.workflow-visualiser.during-parallel-box-dragdrop .workflow-visualiser-interblock-space {
+  &.between-parallel-box-space {
     .create-block-action-trigger,
     .arrow {
       opacity: 0;
@@ -185,7 +185,7 @@
 }
 
 .workflow-visualiser.during-task-dragdrop .workflow-visualiser-interblock-space {
-  &.between-tasks-space {
+  &.between-task-space {
     .create-block-action-trigger {
       opacity: 0;
     }

@@ -6,7 +6,9 @@
 }}
   <div class="lane-header">
     <div class="lane-menu-trigger-space lane-drag-handle">
-      {{one-icon icon="checkbox-empty"}}
+      {{#if (eq mode "edit")}}
+        {{one-icon icon="move"}}
+      {{/if}}
     </div>
     {{#if (eq mode "edit")}}
       {{one-inline-editor
@@ -19,37 +21,35 @@
       {{#truncated-string class="lane-name"}}{{name}}{{/truncated-string}}
     {{/if}}
     <div class="lane-menu-trigger-space">
-      {{#if (eq mode "edit")}}
-        {{one-menu-toggle
-          class=(concat-classes
-            "lane-actions-trigger"
-            (concat "actions-trigger-" elementId)
-            (if areActionsOpened "active")
-          )
-          click=(action "toggleActionsOpen" (not areActionsOpened))
+      {{one-menu-toggle
+        class=(concat-classes
+          "lane-actions-trigger"
+          (concat "actions-trigger-" elementId)
+          (if areActionsOpened "active")
+        )
+        click=(action "toggleActionsOpen" (not areActionsOpened))
+      }}
+      {{#render-later triggerRender=areActionsOpened}}
+        {{#one-webui-popover
+          class="lane-actions"
+          padding=false
+          popoverStyle="with-dropdown"
+          triggerSelector=(concat ".actions-trigger-" elementId)
+          open=areActionsOpened
+          onToggle=(action "toggleActionsOpen")
+          as |popover|
         }}
-        {{#render-later triggerRender=areActionsOpened}}
-          {{#one-webui-popover
-            class="lane-actions"
-            padding=false
-            popoverStyle="with-dropdown"
-            triggerSelector=(concat ".actions-trigger-" elementId)
-            open=areActionsOpened
-            onToggle=(action "toggleActionsOpen")
-            as |popover|
+          {{#click-outside
+            action=(action (mut areActionsOpened) false)
+            except-selector=(concat ".actions-trigger-" elementId)
           }}
-            {{#click-outside
-              action=(action (mut areActionsOpened) false)
-              except-selector=(concat ".actions-trigger-" elementId)
+            {{actions-popover-content
+              actionsArray=laneActions
+              actionClicked=(action "toggleActionsOpen" false)
             }}
-              {{actions-popover-content
-                actionsArray=laneActions
-                actionClicked=(action "toggleActionsOpen" false)
-              }}
-            {{/click-outside}}
-          {{/one-webui-popover}}
-        {{/render-later}}
-      {{/if}}
+          {{/click-outside}}
+        {{/one-webui-popover}}
+      {{/render-later}}
     </div>
   </div>
   {{#perfect-scrollbar-element class="lane-elements"}}

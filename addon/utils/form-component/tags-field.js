@@ -1,6 +1,6 @@
 /**
  * A tags form field.
- * 
+ *
  * @module utils/form-component/tags-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -31,6 +31,11 @@ export default FormField.extend({
    * @type {any}
    */
   tagEditorSettings: undefined,
+
+  /**
+   * @type {Number|undefined}
+   */
+  tagsLimit: undefined,
 
   /**
    * @virtual optional

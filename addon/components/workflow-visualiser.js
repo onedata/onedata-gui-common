@@ -2,16 +2,16 @@
  * Is responsible for showing and editing workflows.
  *
  * Workflow is a description of some ordered collection of files tasks. Order of the
- * execution is described by lanes and parallel blocks - both of them are responsible for
+ * execution is described by lanes and parallel boxes - both of them are responsible for
  * grouping tasks. Execution goes as follows:
  * 1. Tasks are being executed lane-by-lane. Next lane is started only when the previous
  * lane was completely done for all files.
- * 2. Tasks inside each lane are grouped by parallel blocks. All tasks inside the same
- * parallel block can be executed in the same time and file.
- * 3. Each file can be processed only in one parallel block at a time. When some file was
- * processed by all tasks in some parallel block, then it can be processed by the tasks
- * inside the next parallel block. Files do not wait for each other during the parallel
- * blocks execution - files have separated block-by-block execution.
+ * 2. Tasks inside each lane are grouped by parallel boxes. All tasks inside the same
+ * parallel box can be executed in the same time and file.
+ * 3. Each file can be processed only in one parallel box at a time. When some file was
+ * processed by all tasks in some parallel box, then it can be processed by the tasks
+ * inside the next parallel box. Files do not wait for each other during the parallel
+ * boxes execution - files have separated box-by-box execution.
  *
  * Model, which compounds of workflow data and action callbacks, describes each
  * workflow element and space between them (for drag&drop and creating new elements).
@@ -34,9 +34,9 @@
  *                      |                                           |
  *     +----------------+--------------+                +-----------+----------+
  *     |                |              |                |                      |
- *  +--+---+   +--------+-------+   +--+---+   +--------+--------+   +---------+--------+
- *  | Lane |   | Parallel block |   | Task |   | Interlane space |   | Interblock space |
- *  +------+   +----------------+   +------+   +-----------------+   +------------------+
+ *  +--+---+    +-------+------+    +--+---+   +--------+--------+   +---------+--------+
+ *  | Lane |    | Parallel box |    | Task |   | Interlane space |   | Interblock space |
+ *  +------+    +--------------+    +------+   +-----------------+   +------------------+
  *
  * Model composition:
  *
@@ -52,9 +52,9 @@
  *                                  |1
  *                       +----------+------------+
  *                       |m                      |m+1
- *              +--------v-------+     +---------v--------+
- *              | Parallel block |     | Interblock space |
- *              +--------+-------+     +------------------+
+ *               +-------v------+      +---------v--------+
+ *               | Parallel box |      | Interblock space |
+ *               +-------+------+      +------------------+
  *                       |
  *            +----------+------+
  *            |p                |p+1
@@ -73,15 +73,16 @@
 
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
-import { computed, get, getProperties, set, setProperties } from '@ember/object';
+import { computed, observer, get, getProperties, set, setProperties } from '@ember/object';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
-import ParallelBlock from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-block';
+import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import generateId from 'onedata-gui-common/utils/workflow-visualiser/generate-id';
 import { resolve } from 'rsvp';
-import { guidFor } from '@ember/object/internals';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
@@ -120,8 +121,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
   windowResizeDebounceTime,
 
   /**
+   * ```
+   * {
+   *   lanes: Array<Object>,
+   *   stores: Array<Object>,
+   * }
+   * ```
    * @virtual
-   * @type {Array<any>}
+   * @type {Object}
    */
   rawData: undefined,
 
@@ -154,9 +161,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * {
    *   lane: Array<Utils.WorkflowVisualiser.VisualiserElement>,
    *   interlaneSpace: Array<Utils.WorkflowVisualiser.InterlaneSpace>,
-   *   parallelBlock: Array<Utils.WorkflowVisualiser.Lane.ParallelBlock>,
+   *   parallelBox: Array<Utils.WorkflowVisualiser.Lane.ParallelBox>,
    *   task: Array<Utils.WorkflowVisualiser.Lane.Task>,
    *   interblockSpace: Array<Utils.WorkflowVisualiser.Lane.InterblockSpace>,
+   *   store: Array<Utils.WorkflowVisualiser.Store>
    * }
    * ```
    * @type {Object}
@@ -180,8 +188,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
-  visualiserElements: computed('rawData.[]', function visualiserElements() {
+  visualiserElements: computed('rawData', function visualiserElements() {
     return this.getVisualiserElements();
+  }),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   */
+  stores: computed('rawData', function stores() {
+    return this.getStores();
   }),
 
   /**
@@ -198,10 +213,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const draggedElementModel = this.get('dragDrop.draggedElementModel');
       if (draggedElementModel) {
         const {
-          objectOrigin,
-          type,
-        } = getProperties(draggedElementModel, 'objectOrigin', 'type');
-        return objectOrigin === 'workflowVisualiser' ? type : undefined;
+          __modelOrigin,
+          __modelType,
+        } = getProperties(draggedElementModel, '__modelOrigin', '__modelType');
+        return __modelOrigin === 'workflowVisualiser' ? __modelType : undefined;
       }
     }
   ),
@@ -215,23 +230,35 @@ export default Component.extend(I18n, WindowResizeHandler, {
     raw('')
   ),
 
+  actionsFactoryObserver: observer(
+    'actionsFactory',
+    function actionsFactoryObserver() {
+      const actionsFactory = this.get('actionsFactory');
+      if (actionsFactory) {
+        actionsFactory.registerWorkflowDataProvider(this);
+      }
+    }
+  ),
+
   /**
    * @override
    */
   init() {
     this._super(...arguments);
 
-    if (!this.get('actionsFactory')) {
-      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
-    }
-
     this.set('elementsCache', {
       lane: [],
       interlaneSpace: [],
-      parallelBlock: [],
+      parallelBox: [],
       task: [],
       interblockSpace: [],
+      store: [],
     });
+
+    if (!this.get('actionsFactory')) {
+      this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
+    }
+    this.actionsFactoryObserver();
   },
 
   /**
@@ -337,12 +364,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
+   * Generates an array of stores from `rawData`
+   * @returns {Array<Utils.WorkflowVisualiser.Store>}
+   */
+  getStores() {
+    const rawStores = this.get('rawData.stores') || [];
+    return rawStores.map(rawStore => this.getElementForRawData('store', rawStore));
+  },
+
+  /**
    * Generates an array of lanes and interlane spaces from `rawData`
    * @returns {Array<Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.InterlaneSpace>}
    */
   getVisualiserElements() {
-    const rawData = this.get('rawData') || [];
-    const lanes = rawData.map(rawLane => this.getElementForRawData(rawLane));
+    const rawLanes = this.get('rawData.lanes') || [];
+    const lanes = rawLanes.map(rawLane => this.getElementForRawData('lane', rawLane));
     this.updateFirstLastFlagsInCollection(lanes);
 
     const visualiserElements = [
@@ -363,17 +399,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Returns visualiser element for given raw data.
    * @param {Object} rawData element representation from backend
-   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} [parent=null]
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBox} [parent=null]
    */
-  getElementForRawData(rawData, parent = null) {
-    switch (rawData.type) {
+  getElementForRawData(type, rawData, parent = null) {
+    switch (type) {
       case 'lane':
         // Lane does not have any parent
         return this.getLaneForRawData(rawData);
-      case 'parallelBlock':
-        return this.getParallelBlockForRawData(rawData, parent);
+      case 'parallelBox':
+        return this.getParallelBoxForRawData(rawData, parent);
       case 'task':
         return this.getTaskForRawData(rawData, parent);
+      case 'store':
+        return this.getStoreForRawData(rawData);
       default:
         return undefined;
     }
@@ -415,14 +453,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
-      tasks: rawElements,
-    } = getProperties(laneRawData, 'id', 'name', 'tasks');
+      storeIteratorSpec,
+      parallelBoxes: rawParallelBoxes,
+    } = getProperties(laneRawData, 'id', 'name', 'storeIteratorSpec', 'parallelBoxes');
 
     const existingLane = this.getCachedElement('lane', { id });
 
     if (existingLane) {
-      const elements = this.getLaneElementsForRawData(rawElements, existingLane);
-      this.updateElement(existingLane, { name, elements });
+      const elements = this.getLaneElementsForRawData(
+        'parallelBox',
+        rawParallelBoxes,
+        existingLane
+      );
+      this.updateElement(existingLane, { name, storeIteratorSpec, elements });
       return existingLane;
     } else {
       const {
@@ -433,6 +476,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const newLane = Lane.create({
         id,
         name,
+        storeIteratorSpec,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
@@ -443,7 +487,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       set(
         newLane,
         'elements',
-        this.getLaneElementsForRawData(rawElements, newLane)
+        this.getLaneElementsForRawData('parallelBox', rawParallelBoxes, newLane)
       );
       this.addElementToCache('lane', newLane);
 
@@ -454,18 +498,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Returns array of lane elements for given raw data. Handles two types of
    * collections:
-   * - list of parallel blocks in a lane,
-   * - list of tasks in a parralel block.
+   * - list of parallel boxes in a lane,
+   * - list of tasks in a parallel box.
    * If the result array has the same elements as were in the existing array in `parent`,
    * then the existing array is returned (the same reference is preserved).
-   * @param {Array<Object>} elementsRawData array of task/parallel block backend representations
-   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @param {Array<Object>} elementsRawData array of task/parallel box backend representations
+   * @param {Utils.WorkflowVisualiser.Lane|Utils.WorkflowVisualiser.Lane.ParallelBox} parent
    * @returns {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
-  getLaneElementsForRawData(elementsRawData, parent) {
+  getLaneElementsForRawData(elementType, elementsRawData, parent) {
     const existingLaneElements = get(parent || {}, 'elements') || [];
     const elementsForRawData = (elementsRawData || []).map(elementRawData =>
-      this.getElementForRawData(elementRawData, parent)
+      this.getElementForRawData(elementType, elementRawData, parent)
     );
     this.updateFirstLastFlagsInCollection(elementsForRawData);
 
@@ -489,50 +533,54 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Returns parallel block element for given raw data. If it is available in cache,
+   * Returns parallel box element for given raw data. If it is available in cache,
    * then it is updated. Otherwise it is created from scratch and saved in cache for
    * future updates.
-   * @param {Object} parallelBlockRawData parallel block representation from backend
+   * @param {Object} parallelBoxRawData parallel box representation from backend
    * @param {Utils.WorkflowVisualiser.Lane} parent
-   * @returns {Utils.WorkflowVisualiser.Lane.ParallelBlock}
+   * @returns {Utils.WorkflowVisualiser.Lane.ParallelBox}
    */
-  getParallelBlockForRawData(parallelBlockRawData, parent) {
+  getParallelBoxForRawData(parallelBoxRawData, parent) {
     const {
       id,
       name,
-      tasks: rawElements,
-    } = getProperties(parallelBlockRawData, 'id', 'name', 'tasks');
+      tasks: rawTasks,
+    } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
-    const existingParallelBlock = this.getCachedElement('parallelBlock', { id });
+    const existingParallelBox = this.getCachedElement('parallelBox', { id });
 
-    if (existingParallelBlock) {
-      const elements = this.getLaneElementsForRawData(rawElements, existingParallelBlock);
-      this.updateElement(existingParallelBlock, { name, parent, elements });
-      return existingParallelBlock;
+    if (existingParallelBox) {
+      const elements = this.getLaneElementsForRawData(
+        'task',
+        rawTasks,
+        existingParallelBox
+      );
+      this.updateElement(existingParallelBox, { name, parent, elements });
+      return existingParallelBox;
     } else {
       const {
         mode,
         actionsFactory,
       } = this.getProperties('mode', 'actionsFactory');
 
-      const newParallelBlock = ParallelBlock.create({
+      const newParallelBox = ParallelBox.create({
         id,
         name,
         parent,
         mode,
         actionsFactory,
-        onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
-        onMove: (block, moveStep) => this.moveElement(block, moveStep),
-        onRemove: block => this.removeElement(block),
+        onModify: (box, modifiedProps) => this.modifyElement(box, modifiedProps),
+        onMove: (box, moveStep) => this.moveElement(box, moveStep),
+        onRemove: box => this.removeElement(box),
       });
       set(
-        newParallelBlock,
+        newParallelBox,
         'elements',
-        this.getLaneElementsForRawData(rawElements, newParallelBlock)
+        this.getLaneElementsForRawData('task', rawTasks, newParallelBox)
       );
-      this.addElementToCache('parallelBlock', newParallelBlock);
+      this.addElementToCache('parallelBox', newParallelBox);
 
-      return newParallelBlock;
+      return newParallelBox;
     }
   },
 
@@ -540,21 +588,41 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * Returns task element for given raw data. If it is available in cache, then it
    * is updated. Otherwise it is created from scratch and saved in cache for future updates.
    * @param {Object} taskRawData task representation from backend
-   * @param {Utils.WorkflowVisualiser.Lane.ParallelBlock} parent
+   * @param {Utils.WorkflowVisualiser.Lane.ParallelBox} parent
    * @returns {Utils.WorkflowVisualiser.Lane.Task}
    */
   getTaskForRawData(taskRawData, parent) {
     const {
       id,
       name,
+      lambdaId,
+      argumentMappings,
+      resultMapppings,
       status,
       progressPercent,
-    } = getProperties(taskRawData, 'id', 'name', 'status', 'progressPercent');
+    } = getProperties(
+      taskRawData,
+      'id',
+      'name',
+      'lambdaId',
+      'argumentMappings',
+      'resultMappings',
+      'status',
+      'progressPercent'
+    );
 
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
-      this.updateElement(existingTask, { name, parent, status, progressPercent });
+      this.updateElement(existingTask, {
+        name,
+        parent,
+        lambdaId,
+        argumentMappings,
+        resultMapppings,
+        status,
+        progressPercent,
+      });
       return existingTask;
     } else {
       const {
@@ -566,12 +634,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
         id,
         name,
         parent,
+        lambdaId,
         mode,
         actionsFactory,
+        argumentMappings,
+        resultMapppings,
         status,
         progressPercent,
-        onModify: (block, modifiedProps) => this.modifyElement(block, modifiedProps),
-        onRemove: lane => this.removeElement(lane),
+        onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
+        onRemove: task => this.removeElement(task),
       });
       this.addElementToCache('task', newTask);
 
@@ -621,9 +692,65 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
+   * Returns store for given raw data. If it is available in cache, then it
+   * is updated. Otherwise it is created from scratch and saved in cache for future updates.
+   * @param {Object} storeRawData store representation from backend
+   * @returns {Utils.WorkflowVisualiser.Store}
+   */
+  getStoreForRawData(storeRawData) {
+    const {
+      id,
+      name,
+      description,
+      type,
+      dataSpec,
+      defaultInitialValue,
+      requiresInitialValue,
+    } = getProperties(
+      storeRawData,
+      'id',
+      'name',
+      'description',
+      'type',
+      'dataSpec',
+      'defaultInitialValue',
+      'requiresInitialValue'
+    );
+
+    const existingStore = this.getCachedElement('store', { id });
+
+    if (existingStore) {
+      this.updateElement(existingStore, {
+        name,
+        description,
+        type,
+        dataSpec,
+        defaultInitialValue,
+        requiresInitialValue,
+      });
+      return existingStore;
+    } else {
+      const newStore = Store.create({
+        id,
+        name,
+        description,
+        type,
+        dataSpec,
+        defaultInitialValue,
+        requiresInitialValue,
+        onModify: (store, modifiedProps) => this.modifyElement(store, modifiedProps),
+        onRemove: store => this.removeElement(store),
+      });
+      this.addElementToCache('store', newStore);
+
+      return newStore;
+    }
+  },
+
+  /**
    * Gets an already generated element from cache. It has to match properties passed
    * via `filterProps`.
-   * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
+   * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBox', 'task',
    *   'interblockSpace'
    * @param {Object} filterProps an object which properties should be the same in the
    *   searched element (e.g `{ id: '123' }`)
@@ -640,7 +767,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * Stores visualiser element in cache for future usage.
-   * @param {String} type  one of: 'lane', 'interlaneSpace', 'parallelBlock', 'task',
+   * @param {String} type  one of: 'lane', 'interlaneSpace', 'parallelBox', 'task',
    *   'interblockSpace'
    * @param {Utils.WorkflowVisualiser.VisualiserElement} element
    * @returns {undefined}
@@ -659,7 +786,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   updateElement(element, update) {
     const changedFieldsOnlyUpdate = {};
     for (const key in update) {
-      if (get(element, key) !== update[key]) {
+      if (!_.isEqual(get(element, key), update[key])) {
         changedFieldsOnlyUpdate[key] = update[key];
       }
     }
@@ -687,7 +814,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     if (!newElementProps.id) {
-      newElementProps.id = guidFor(newElementProps);
+      newElementProps.id = generateId();
     }
 
     targetElementsArray.splice(
@@ -806,7 +933,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return resolve();
     }
 
-    rawLane.tasks = [];
+    rawLane.parallelBoxes = [];
+
+    return this.applyChange(rawDump);
+  },
+
+  addStore(newStoreProps) {
+    if (!newStoreProps.id) {
+      newStoreProps.id = generateId();
+    }
+
+    const rawDump = this.dumpRawData();
+    if (!rawDump.stores) {
+      rawDump.stores = [];
+    }
+
+    rawDump.stores.push(newStoreProps);
 
     return this.applyChange(rawDump);
   },
@@ -837,25 +979,37 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Object|undefined} raw representation of given `element` in passed `rawDump`
    */
   getRawElement(rawDump, element) {
-    if (!element) {
+    if (!rawDump || !element) {
       return undefined;
-    } else if (get(element, 'type') === 'lane') {
-      return rawDump.findBy('id', get(element, 'id'));
-    } else {
-      const idsPath = [];
-      let parentsPathElement = element;
-      while (parentsPathElement) {
-        idsPath.push(get(parentsPathElement, 'id'));
-        parentsPathElement = get(parentsPathElement, 'parent');
-      }
-      idsPath.reverse();
+    }
 
-      const rawBlock = idsPath.slice(1).reduce(
-        (prevRawParent, id) =>
-        prevRawParent && prevRawParent.tasks && prevRawParent.tasks.findBy('id', id),
-        rawDump.findBy('id', idsPath[0])
+    const elementType = get(element, '__modelType');
+    if (elementType === 'store') {
+      return (rawDump.stores || []).findBy('id', get(element, 'id'));
+    } else {
+      const elementPath = [];
+      let elementPathItem = element;
+      while (elementPathItem) {
+        if (elementPathItem !== element) {
+          elementPath.unshift(elementPathItem);
+        }
+        elementPathItem = get(elementPathItem, 'parent');
+      }
+
+      const rawElementContainingCollection = elementPath.reduce(
+        (containingCollection, pathElement) => {
+          const rawPathElement = containingCollection &&
+            containingCollection.findBy('id', get(pathElement, 'id'));
+          return this.getRawCollectionForRawParent(
+            get(pathElement, '__modelType'),
+            rawPathElement
+          );
+        },
+        rawDump.lanes || []
       );
-      return rawBlock;
+      return rawElementContainingCollection &&
+        rawElementContainingCollection.findBy('id', get(element, 'id')) ||
+        undefined;
     }
   },
 
@@ -872,11 +1026,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return;
     }
 
+    const elementType = get(element, '__modelType');
+    if (elementType === 'store') {
+      return rawDump.stores;
+    }
+
     const parent = get(element, 'parent');
-    let containingCollection = rawDump;
+    let containingCollection = rawDump && rawDump.lanes || [];
     if (parent) {
       const rawParent = this.getRawElement(rawDump, parent);
-      containingCollection = rawParent ? rawParent.tasks : undefined;
+      const parentType = get(parent, '__modelType');
+      containingCollection = this.getRawCollectionForRawParent(parentType, rawParent);
     }
 
     return containingCollection && containingCollection.includes(rawElement) ?
@@ -892,11 +1052,32 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getRawCollectionForParent(rawDump, parentElement) {
     if (!parentElement) {
-      return rawDump;
+      return rawDump && rawDump.lanes || [];
     }
 
     const rawParent = this.getRawElement(rawDump, parentElement);
-    return rawParent && rawParent.tasks ? rawParent.tasks : undefined;
+    const parentType = parentElement && get(parentElement, '__modelType');
+    return this.getRawCollectionForRawParent(parentType, rawParent);
+  },
+
+  /**
+   * @param {String} parentType
+   * @param {Object} rawParent
+   * @returns {Array<Object>|undefined}
+   */
+  getRawCollectionForRawParent(parentType, rawParent) {
+    if (!rawParent) {
+      return undefined;
+    }
+
+    switch (parentType) {
+      case 'lane':
+        return rawParent.parallelBoxes;
+      case 'parallelBox':
+        return rawParent.tasks;
+      default:
+        return undefined;
+    }
   },
 
   actions: {
@@ -908,6 +1089,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     },
     scrollRight() {
       this.scrollToLane(this.get('laneIdxForNextRightScroll'), 'right');
+    },
+    createStore(newStoreProps) {
+      this.addStore(newStoreProps);
     },
   },
 });

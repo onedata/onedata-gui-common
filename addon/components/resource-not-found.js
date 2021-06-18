@@ -13,6 +13,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default Component.extend(I18n, {
   layout,
+  classNames: ['resource-not-found'],
 
   /**
    * @override

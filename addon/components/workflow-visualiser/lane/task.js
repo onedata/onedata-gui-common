@@ -92,6 +92,18 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  modifyTaskAction: computed('actionsFactory', 'task', function modifyTaskAction() {
+    const {
+      actionsFactory,
+      task,
+    } = this.getProperties('actionsFactory', 'task');
+
+    return actionsFactory.createModifyTaskAction({ task });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   removeTaskAction: computed('actionsFactory', 'task', function removeTaskAction() {
     const {
       actionsFactory,
@@ -104,7 +116,7 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
-  taskActions: collect('removeTaskAction'),
+  taskActions: collect('modifyTaskAction', 'removeTaskAction'),
 
   actions: {
     changeName(newName) {

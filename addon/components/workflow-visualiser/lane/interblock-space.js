@@ -1,5 +1,5 @@
 /**
- * Space between parallel blocks or tasks. Allows creating new elements and renders
+ * Space between parallel boxes or tasks. Allows creating new elements and renders
  * arrows, lines etc.
  *
  * @module components/workflow-visualiser/lane/interblock-space
@@ -30,7 +30,7 @@ export default VisualiserSpace.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  siblingsTypeClass: tag `between-${string.dasherize('siblingsType')}s-space`,
+  siblingsTypeClass: tag `between-${string.dasherize('siblingsType')}-space`,
 
   /**
    * @type {ComputedProperty<String>}
@@ -68,7 +68,7 @@ export default VisualiserSpace.extend({
       mode,
     } = this.getProperties('siblingsType', 'positionType', 'mode');
 
-    if (siblingsType !== 'parallelBlock') {
+    if (siblingsType !== 'parallelBox') {
       return 'none';
     }
 
@@ -115,9 +115,9 @@ export default VisualiserSpace.extend({
       const createCallback =
         newElementProps => interblockSpace.addElement(newElementProps);
 
-      return siblingsType === 'parallelBlock' ?
-        actionsFactory.createCreateParallelBlockAction({
-          createParallelBlockCallback: createCallback,
+      return siblingsType === 'parallelBox' ?
+        actionsFactory.createCreateParallelBoxAction({
+          createParallelBoxCallback: createCallback,
         }) :
         actionsFactory.createCreateTaskAction({
           createTaskCallback: createCallback,

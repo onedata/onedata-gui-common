@@ -24,6 +24,7 @@ export default Component.extend({
     'isEffectivelyEnabled:field-enabled:field-disabled',
     'fieldRendererClass',
     'field.classes',
+    'field.internalClasses',
   ],
 
   /**

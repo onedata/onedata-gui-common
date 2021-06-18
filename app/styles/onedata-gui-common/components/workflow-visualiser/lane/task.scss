@@ -4,7 +4,7 @@
   .draggable-task {
     display: flex;
     align-items: center;
-    padding-right: $padding-xs-horizontal;
+    padding: 0 $padding-xs-horizontal;
     border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
     border-radius: $border-radius-base;
     min-height: 50px;

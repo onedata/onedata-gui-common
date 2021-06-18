@@ -1,0 +1,20 @@
+<div class="tags-input">
+  {{#if (eq mode "edit")}}
+    {{#bs-button
+      class=(concat-classes createAction.className "input-element")
+      onClick=createAction.executeCallback
+      size="sm"
+    }}
+      {{one-icon icon=createAction.icon}}
+      {{createAction.title}}
+    {{/bs-button}}
+  {{/if}}
+  {{#each sortedStores as |store|}}
+    {{workflow-visualiser/stores-list/store
+      store=store
+      mode=mode
+      actionsFactory=actionsFactory
+    }}
+  {{/each}}
+</div>
+{{yield}}

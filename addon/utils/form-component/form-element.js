@@ -3,7 +3,7 @@
  * The form component mechanism is built using Composite design pattern where
  * FormElement is Component, FormFieldsGroup is Composite and FormField is Leaf.
  * Forms framework classes inheritance is shown below:
- * 
+ *
  *                            +-------------+
  *                            | FormElement |
  *                            +-----+-------+
@@ -66,13 +66,13 @@
  *       | +------------+
  *       +-+ RadioField |
  *         +------------+
- * 
+ *
  * Each new form should start with creating FormFieldsRootGroup instance, which
  * contains all form elements. Then it can contain fields and field-groups depending
  * on requirements. Basically fields should be grouped into a field-group when
  * they have some behaviour or state in common (like they should be hidden in the
  * same time and grouping them allows to animate hiding).
- * 
+ *
  * The simpliest example of form declaration with one text input:
  * ```
  * const component = this;
@@ -95,11 +95,11 @@
  * `set(form, 'isEnabled', false)` will block all fields in the form
  * `set(form.getFieldByPath('name'), 'isEnabled', false)` will block only one field
  * `form.reset()` to reset form to default values
- * 
+ *
  * Notice: extending form elements in place is a very common practice. You can
  * do separate configuration in extend and create or do everything in extend and
  * then only create() without no extra config - it's up to you.
- * 
+ *
  * It is very common to build form fields, which depend on each other. Example:
  * ```
  * const component = this;
@@ -145,9 +145,9 @@
  * * parent.value is a tree of values for the parent group.
  * All these field properties are available in every form element (except root
  * group, which has no parent).
- * 
+ *
  * # Values tree
- * 
+ *
  * All form values are persisted in so-called values tree. Values tree is a simple
  * EmberObject with keys equal to field/group name and value equal to field value /
  * group subtree value. In earlier example with depending fields we have a tree:
@@ -169,9 +169,9 @@
  * After changing a value, form field updates its value stored in `value` property
  * which is basically `reads('valuesSource.' + fieldPath)`. Notice that `value`
  * property of the group will be an EmberObject with values of nested fields.
- * 
+ *
  * # Translations
- * 
+ *
  * Each form element tries to find corresponding translations, that it can use
  * for itself. The most generic example is label translation. It tries to load
  * translation from `i18nPrefix + '.' + fieldPath + '.label` and if it exists then
@@ -180,9 +180,9 @@
  * is taken from root group and is the same for all form element (until overridden).
  * Also the label/placeholder/sth-else "guessing" algorithm can be customized - you
  * need only to override label/placeholder/sth-else computed property of a field.
- * 
+ *
  * # Advanced extending
- * 
+ *
  * Form element can be extended like any other EmberObject. More than that, it can
  * have injected serivces (because all form elements has an owner the same as root
  * group). So you are allowed to:
@@ -196,9 +196,9 @@
  * * double use the same field (!) - two references to the same field in `fields`
  *   array will cause double render of that field with the same shared state
  *   of validation, visibility and value
- * 
+ *
  * # When you want a list of the same fields, but each with a different value
- * 
+ *
  * A common case is to create a field, that allows to dynamically add new fields
  * (like in a list), and each of these fields is basically a clone of the previous one.
  * All these fields have the same label, placeholder, validation rules etc. Only
@@ -224,7 +224,7 @@
  * share the same translations (due to the same name which is used to create a path
  * in translations), but different values (due to the different valueName which
  * is used to create a path in values tree).
- * 
+ *
  * @module utils/form-component/form-element
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -347,6 +347,13 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   isGroup: false,
 
   /**
+   * CSS classes for field component, which are calculated internally by field
+   * itself (to not override custom CSS classes passed via `classes`).
+   * @type {String}
+   */
+  internalClasses: '',
+
+  /**
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
@@ -451,6 +458,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   valuesSourceObserver: observer('valuesSource', function valuesSourceObserver() {
+    this.notifyPropertyChange('valuePath');
     this.notifyPropertyChange('value');
   }),
 

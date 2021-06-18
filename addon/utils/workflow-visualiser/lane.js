@@ -1,5 +1,5 @@
 /**
- * Lane - aggregates parallel blocks and spaces between them.
+ * Lane - aggregates parallel boxes and spaces between them.
  *
  * @module utils/workflow-visualiser/lane
  * @author Michał Borzęcki
@@ -14,12 +14,18 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  renderer: 'workflow-visualiser/lane',
+  __modelType: 'lane',
 
   /**
    * @override
    */
-  type: 'lane',
+  renderer: 'workflow-visualiser/lane',
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  storeIteratorSpec: undefined,
 
   /**
    * @virtual optional

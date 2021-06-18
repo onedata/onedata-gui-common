@@ -1,6 +1,8 @@
 /**
- * Creates new task. Needs createTaskCallback passed via context. It will then be used
- * to save a new task.
+ * Creates new task. Needs:
+ * - stores,
+ * - taskDetailsProviderCallback - it will be called to obtain new task details,
+ * - createTaskCallback - it will be used to save a new task.
  *
  * @module utils/workflow-visualiser/actions/create-task-action
  * @author Michał Borzęcki
@@ -19,17 +21,24 @@ export default Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.task.actions.createTask',
-
-  /**
-   * @override
-   */
   className: 'create-task-action-trigger',
 
   /**
    * @override
    */
   icon: 'add-filled',
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   */
+  stores: reads('context.stores'),
+
+  /**
+   * @type {ComputedProperty<Function>}
+   * @param {Array<Object>} initialData.stores
+   * @returns {Promise<Object>} task details
+   */
+  taskDetailsProviderCallback: reads('context.taskDetailsProviderCallback'),
 
   /**
    * @type {ComputedProperty<Function>}
@@ -42,13 +51,19 @@ export default Action.extend({
    * @override
    */
   onExecute() {
-    const newTaskProps = {
-      type: 'task',
-      name: String(this.t('newTaskName')),
-    };
-
+    const {
+      stores,
+      taskDetailsProviderCallback,
+      createTaskCallback,
+    } = this.getProperties(
+      'stores',
+      'taskDetailsProviderCallback',
+      'createTaskCallback'
+    );
     const result = ActionResult.create();
-    return result.interceptPromise(this.get('createTaskCallback')(newTaskProps))
+    const createPromise = taskDetailsProviderCallback({ stores })
+      .then(taskData => createTaskCallback(taskData));
+    return result.interceptPromise(createPromise)
       .then(() => result, () => result);
   },
 });

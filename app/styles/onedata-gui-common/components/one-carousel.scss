@@ -40,7 +40,7 @@ $one-carousel-slides-gap: 100px;
       }
     }
   }
-  
+
   &.one-carousel-static {
     .one-carousel-slide {
       &.active-from-left {
@@ -60,21 +60,21 @@ $one-carousel-slides-gap: 100px;
       }
     }
   }
-  
+
   .one-carousel-slide {
     position: relative;
     width: 100%;
     min-width: 0;
     flex-shrink: 0;
-    
+
     &.hidden-to-left {
       overflow: hidden;
     }
-    
+
     &.hidden-to-right {
       overflow: hidden;
     }
-    
+
     &.hidden {
       transform: translateX(100%) translateX(#{$one-carousel-slides-gap});
       overflow: hidden;
@@ -90,7 +90,7 @@ $one-carousel-slides-gap: 100px;
     width: 100%;
     height: initial;
   }
-  99.9999% {
+  99.9999%, 99.999999% {
     transform: translateX(-100%) translateX(#{-$one-carousel-slides-gap});
     width: 100%;
     height: initial;
@@ -101,6 +101,9 @@ $one-carousel-slides-gap: 100px;
   // any place. To achive that solution, `99.9999% keyframe hack` is used. That last
   // animation frame changes size of the slide to 0x0, to force it to not take any place
   // (so scrollbars does not calculate them as content).
+  // NOTE: 99.9999% is not enough for Safari to let the hack work. In the other hand
+  // 99.999999% value breaks down rendering in Firefox. To solve it, both percentages
+  // are used.
   100% {
     @include one-carousel-hidden-final-state;
   }
@@ -112,7 +115,7 @@ $one-carousel-slides-gap: 100px;
     width: 100%;
     height: initial;
   }
-  99.9999% {
+  99.9999%, 99.999999% {
     transform: translateX(#{$one-carousel-slides-gap});
     width: 100%;
     height: initial;
@@ -139,7 +142,7 @@ $one-carousel-slides-gap: 100px;
     width: 100%;
     height: initial;
   }
-  99.9999% {
+  99.9999%, 99.999999% {
     transform: translateX(-100%);
     width: 100%;
     height: initial;

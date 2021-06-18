@@ -9,18 +9,21 @@ import _ from 'lodash';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
-import { getModalFooter } from '../../helpers/modal';
+import { getModalBody, getModalFooter } from '../../helpers/modal';
+import { selectChoose } from '../../helpers/ember-power-select';
+import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
+import { resolve } from 'rsvp';
 
 const possibleTaskStatuses = ['success', 'warning', 'error'];
 const laneWidth = 300;
 
 const idGenerators = {
   lane: laneIdFromExample,
-  parallelBlock: parallelBlockIdFromExample,
+  parallelBox: parallelBoxIdFromExample,
   task: taskIdFromExample,
 };
 
-const noLanesExample = [];
+const noLanesExample = generateExample(0, 0, 0);
 const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
@@ -32,10 +35,21 @@ describe('Integration | Component | workflow visualiser', function () {
     integration: true,
   });
 
-  it('has class "workflow-visualiser"', function () {
-    const rawLanes = noLanesExample;
+  beforeEach(function () {
+    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    actionsFactory.registerGetTaskCreationDataCallback(
+      () => resolve({ name: 'Untitled task' })
+    );
+    actionsFactory.registerGetTaskModificationDataCallback(
+      () => resolve({ name: 'othername' })
+    );
+    this.set('actionsFactory', actionsFactory);
+  });
 
-    renderWithRawLanes(this, rawLanes);
+  it('has class "workflow-visualiser"', function () {
+    const rawData = noLanesExample;
+
+    renderWithRawData(this, rawData);
 
     expect(this.$('.workflow-visualiser')).to.exist;
   });
@@ -50,25 +64,26 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itHasModeClass('edit');
     itShowsVisualiserElements();
+    itShowsStoresList();
 
     itAddsNewLane('adds a first lane', noLanesExample, 0);
     itAddsNewLane('adds a lane before the first lane', twoNonEmptyLanesExample, 0);
     itAddsNewLane('adds a lane between existing lanes', twoNonEmptyLanesExample, 1);
     itAddsNewLane('adds a lane after the last lane', twoNonEmptyLanesExample, 2);
 
-    itAddsNewParallelBlock('adds the first parallel block', twoEmptyLanesExample, 0, 0);
-    itAddsNewParallelBlock(
-      'adds a parallel block before the first parallel block',
+    itAddsNewParallelBox('adds the first parallel box', twoEmptyLanesExample, 0, 0);
+    itAddsNewParallelBox(
+      'adds a parallel box before the first parallel box',
       twoNonEmptyLanesExample,
       0
     );
-    itAddsNewParallelBlock(
-      'adds a parallel block between existing parallel blocks',
+    itAddsNewParallelBox(
+      'adds a parallel box between existing parallel boxes',
       twoNonEmptyLanesExample,
       1
     );
-    itAddsNewParallelBlock(
-      'adds a parallel block after the last parallel block',
+    itAddsNewParallelBox(
+      'adds a parallel box after the last parallel box',
       twoNonEmptyLanesExample,
       2
     );
@@ -76,15 +91,44 @@ describe('Integration | Component | workflow visualiser', function () {
     itAddsNewTask('adds the first task', twoLanesWithEmptyBlocksExample, 0);
     itAddsNewTask('adds a task after the last task', twoNonEmptyLanesExample, 2);
 
-    itChangesName('lane', (rawDump, newName) => rawDump[0].name = newName);
+    itChangesName('lane', (rawDump, newName) => rawDump.lanes[0].name = newName);
     itChangesName(
-      'parallelBlock',
-      (rawDump, newName) => rawDump[0].tasks[0].name = newName
+      'parallelBox',
+      (rawDump, newName) => rawDump.lanes[0].parallelBoxes[0].name = newName
     );
     itChangesName(
       'task',
-      (rawDump, newName) => rawDump[0].tasks[0].tasks[0].name = newName
+      (rawDump, newName) => rawDump.lanes[0].parallelBoxes[0].tasks[0].name = newName
     );
+
+    itPerformsCustomAction({
+      description: 'modifies lane details',
+      actionExecutor: async () => {
+        await click((await getActionTrigger('lane', [0], 'modify'))[0]);
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
+        await selectChoose(getModalBody().find('.sourceStore-field')[0], 'store1');
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
+        name: 'othername',
+        storeIteratorSpec: {
+          strategy: {
+            type: 'serial',
+          },
+          storeSchemaId: 's1',
+        },
+      }),
+      initialRawData: twoEmptyLanesExample,
+    });
+
+    itPerformsAction({
+      description: 'modifies task details',
+      actionTriggerGetter: () => getActionTrigger('task', [0, 0, 0], 'modify'),
+      applyUpdate: rawDump => Object.assign(rawDump.lanes[0].parallelBoxes[0].tasks[0], {
+        name: 'othername',
+      }),
+      initialRawData: twoNonEmptyLanesExample,
+    });
 
     itMovesLane('first lane', 0, 'right');
     itMovesLane('middle lane', 1, 'right');
@@ -93,44 +137,84 @@ describe('Integration | Component | workflow visualiser', function () {
     itMovesLane('middle lane', 1, 'left');
     itDoesNotMoveLane('first lane', 0, 'left');
 
-    itMovesParallelBlock('last parallel block', 0, 'down');
-    itMovesParallelBlock('middle parallel block', 1, 'down');
-    itDoesNotMoveParallelBlock('last parallel block', 2, 'down');
-    itMovesParallelBlock('last parallel block', 2, 'up');
-    itMovesParallelBlock('middle parallel block', 1, 'up');
-    itDoesNotMoveParallelBlock('last parallel block', 0, 'up');
+    itMovesParallelBox('last parallel box', 0, 'down');
+    itMovesParallelBox('middle parallel box', 1, 'down');
+    itDoesNotMoveParallelBox('last parallel box', 2, 'down');
+    itMovesParallelBox('last parallel box', 2, 'up');
+    itMovesParallelBox('middle parallel box', 1, 'up');
+    itDoesNotMoveParallelBox('last parallel box', 0, 'up');
 
     itPerformsActionWithConfirmation({
       description: 'clears non-empty lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
-      applyUpdate: rawDump => rawDump[0].tasks.length = 0,
+      applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes.length = 0,
     });
     itDoesNotPerformAction({
       description: 'does not clear empty lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'clear'),
-      initialRawLanes: twoEmptyLanesExample,
+      initialRawData: twoEmptyLanesExample,
     });
 
     itPerformsActionWithConfirmation({
       description: 'removes lane',
       actionTriggerGetter: () => getActionTrigger('lane', [0], 'remove'),
-      applyUpdate: rawDump => rawDump.splice(0, 1),
+      applyUpdate: rawDump => rawDump.lanes.splice(0, 1),
     });
     itPerformsActionWithConfirmation({
-      description: 'removes parallel block',
-      actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, 0], 'remove'),
-      applyUpdate: rawDump => rawDump[0].tasks.splice(0, 1),
+      description: 'removes parallel box',
+      actionTriggerGetter: () => getActionTrigger('parallelBox', [0, 0], 'remove'),
+      applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes.splice(0, 1),
     });
     itPerformsActionWithConfirmation({
       description: 'removes task',
       actionTriggerGetter: () => getActionTrigger('task', [0, 0, 0], 'remove'),
-      applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(0, 1),
+      applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes[0].tasks.splice(0, 1),
+    });
+
+    itPerformsCustomAction({
+      description: 'allows to add new store',
+      actionExecutor: async () => {
+        await click('.create-store-action-trigger');
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'newstore');
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: rawDump => rawDump.stores.push({
+        id: sinon.match.string,
+        name: 'newstore',
+        description: '',
+        type: 'list',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
+        defaultInitialValue: undefined,
+        requiresInitialValue: false,
+      }),
+      initialRawData: noLanesExample,
+    });
+
+    itPerformsCustomAction({
+      description: 'allows to modify store',
+      actionExecutor: async () => {
+        await click('.workflow-visualiser-stores-list-store');
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'xyz');
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: rawDump => rawDump.stores.findBy('name', 'store0').name = 'xyz',
+      initialRawData: noLanesExample,
+    });
+
+    itPerformsActionWithConfirmation({
+      description: 'allows to remove store',
+      actionTriggerGetter: testCase => testCase.$('.remove-store-action-trigger'),
+      applyUpdate: rawDump => rawDump.stores = rawDump.stores.rejectBy('name', 'store0'),
+      initialRawData: noLanesExample,
     });
 
     it('does not show tasks progress', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.task-progress-bar')).to.not.exist;
     });
@@ -143,117 +227,139 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itHasModeClass('view');
     itShowsVisualiserElements();
+    itShowsStoresList();
+
+    it('shows lane details', async function () {
+      const rawData = twoEmptyLanesExample;
+
+      renderWithRawData(this, rawData);
+      await click((await getActionTrigger('lane', [0], 'view'))[0]);
+
+      expect(getModalBody().find('.name-field .field-component').text().trim())
+        .to.equal('lane0');
+    });
 
     it('does not show tasks progress when progress is not available', function () {
-      const rawLanes = threeNonEmptyLanesNoProgressExample;
+      const rawData = threeNonEmptyLanesNoProgressExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
-      checkTasksProgress(this, rawLanes);
+      checkTasksProgress(this, rawData);
     });
 
     it('shows tasks progress', function () {
-      const rawLanes = threeNonEmptyLanesExample;
+      const rawData = threeNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
-      checkTasksProgress(this, rawLanes);
+      checkTasksProgress(this, rawData);
     });
 
     it('updates rendered tasks progress', async function () {
-      const rawLanes = threeNonEmptyLanesExample;
-      renderWithRawLanes(this, rawLanes);
+      const rawData = threeNonEmptyLanesExample;
+      renderWithRawData(this, rawData);
 
-      const updatedRawLanes = _.cloneDeep(rawLanes);
-      const firstTask = updatedRawLanes[0].tasks[0].tasks[0];
-      const secondTask = updatedRawLanes[0].tasks[0].tasks[1];
+      const updatedRawData = _.cloneDeep(rawData);
+      const firstTask = updatedRawData.lanes[0].parallelBoxes[0].tasks[0];
+      const secondTask = updatedRawData.lanes[0].parallelBoxes[0].tasks[1];
       firstTask.progressPercent = (firstTask.progressPercent + 25) % 100;
       secondTask.status = possibleTaskStatuses.without(secondTask.status)[0];
-      this.set('rawLanes', updatedRawLanes);
+      this.set('rawData', updatedRawData);
       await wait();
 
-      checkTasksProgress(this, updatedRawLanes);
+      checkTasksProgress(this, updatedRawData);
+    });
+
+    it('shows store information in modal', async function () {
+      const rawData = noLanesExample;
+      renderWithRawData(this, rawData);
+
+      await click('.workflow-visualiser-stores-list-store');
+
+      expect(getModalBody().find('.name-field .field-component').text().trim())
+        .to.equal('store0');
     });
 
     it('does not show edition-related elements in empty visualiser', function () {
-      const rawLanes = noLanesExample;
+      const rawData = noLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
     it('does not allow to change lane name', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.lane-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements in lanes and interlane spaces', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+    it('does not show edition-related elements in lanes and interlane spaces', async function () {
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
+      const modifyTrigger = await getActionTrigger('lane', [0], 'modify');
 
-      expect(this.$('.lane-actions-trigger')).to.not.exist;
+      expect(modifyTrigger).to.not.exist;
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
     it('does not show edition-related elements in empty lane', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$(
         '.workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
-    it('does not allow to change parallel block name', function () {
-      const rawLanes = twoEmptyLanesExample;
+    it('does not allow to change parallel box name', function () {
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.parallel-block-name .one-label')).to.not.exist;
+      expect(this.$('.parallel-box-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements of parallel blocks and spaces between them', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+    it('does not show edition-related elements of parallel boxes and spaces between them', function () {
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
-      expect(this.$('.parallel-block-actions-trigger')).to.not.exist;
+      expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
       expect(this.$(
-        '.workflow-visualiser-interblock-space.between-parallel-blocks-space .add-block-action-trigger'
+        '.workflow-visualiser-interblock-space.between-parallel-box-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
-    it('does not show edition-related elements in empty parallel block', function () {
-      const rawLanes = twoLanesWithEmptyBlocksExample;
+    it('does not show edition-related elements in empty parallel box', function () {
+      const rawData = twoLanesWithEmptyBlocksExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$(
-        '.workflow-visualiser-parallel-block .workflow-visualiser-interblock-space .add-block-action-trigger'
+        '.workflow-visualiser-parallel-box .workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
     it('does not allow to change task name', function () {
-      const rawLanes = twoEmptyLanesExample;
+      const rawData = twoEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.task-name .one-label')).to.not.exist;
     });
 
     it('does not show edition-related elements of tasks and spaces between them', function () {
-      const rawLanes = twoNonEmptyLanesExample;
+      const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawLanes(this, rawLanes);
+      renderWithRawData(this, rawData);
 
       expect(this.$('.task-actions-trigger')).to.not.exist;
       expect(this.$(
@@ -263,8 +369,8 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding left edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, laneWidth * 10);
+    it('does not show scroll button, when there is no overflow', async function () {
+      await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -296,8 +402,8 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding right edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, laneWidth * 10);
+    it('does not show scroll button, when there is no overflow', async function () {
+      await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -360,7 +466,7 @@ class WindowStub {
 
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function () {
-    renderForScrollTest(this, 5, laneWidth * 0.6);
+    await renderForScrollTest(this, 5, laneWidth * 0.6);
 
     await scrollToLane(this, overflowEdge, overflowLane, 10);
 
@@ -382,15 +488,15 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
       if (laneToCheck === 0) {
         expect($lanesContainer.scrollLeft()).to.equal(0);
       } else {
-        expect($targetLane.offset().left).to.be.closeTo($lanesContainer.offset().left, 1);
+        expect($targetLane.offset().left).to.be.closeTo($lanesContainer.offset().left, 2);
       }
     } else {
       if (laneToCheck === $lanes.length - 1) {
         expect($lanesContainer.scrollLeft())
-          .to.be.closeTo($lanesContainer.prop('scrollWidth') - $lanesContainer.width(), 1);
+          .to.be.closeTo($lanesContainer.prop('scrollWidth') - $lanesContainer.width(), 2);
       } else {
         expect($targetLane.offset().left + $targetLane.width())
-          .to.be.closeTo($lanesContainer.offset().left + $lanesContainer.width(), 1);
+          .to.be.closeTo($lanesContainer.offset().left + $lanesContainer.width(), 2);
       }
     }
   });
@@ -398,9 +504,9 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
 
 function itHasModeClass(mode) {
   it(`has class "mode-${mode}"`, function () {
-    const rawLanes = noLanesExample;
+    const rawData = noLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
     expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
   });
@@ -408,88 +514,112 @@ function itHasModeClass(mode) {
 
 function itShowsVisualiserElements() {
   it('shows one interlane space when there are no lanes', function () {
-    const rawLanes = noLanesExample;
+    const rawData = noLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawLanes);
+    checkRenderedLanesStructure(this, rawData);
   });
 
   itRendersEmptyLanes('shows an empty lane', 1);
   itRendersEmptyLanes('shows two empty lanes', 2);
 
   it('shows a non-empty lane', function () {
-    const rawLanes = twoNonEmptyLanesExample;
+    const rawData = twoNonEmptyLanesExample;
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawLanes);
+    checkRenderedLanesStructure(this, rawData);
+  });
+}
+
+function itShowsStoresList() {
+  it('shows stores list', function () {
+    const rawData = noLanesExample;
+    const mode = this.get('mode');
+
+    renderWithRawData(this, rawData);
+
+    const $storesList = this.$('.workflow-visualiser-stores-list');
+    expect($storesList).to.exist;
+    expect($storesList).to.have.class(`mode-${mode}`);
+    checkRenderedStoresList(this, rawData);
   });
 }
 
 function itRendersEmptyLanes(message, lanesNumber) {
   it(message, function () {
-    const rawLanes = generateExample(lanesNumber, 0, 0);
+    const rawData = generateExample(lanesNumber, 0, 0);
 
-    renderWithRawLanes(this, rawLanes);
+    renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawLanes);
+    checkRenderedLanesStructure(this, rawData);
   });
 }
 
-function itAddsNewLane(message, initialRawLanes, insertIndex) {
+function itAddsNewLane(message, initialRawData, insertIndex) {
   let extraTriggerSelectorCondition = '';
-  if (initialRawLanes.length) {
-    if (insertIndex <= initialRawLanes.length - 1) {
-      extraTriggerSelectorCondition = `[data-element-after-id="${initialRawLanes[insertIndex].id}"]`;
+  const rawLanes = initialRawData.lanes;
+  if (rawLanes.length) {
+    if (insertIndex <= initialRawData.lanes.length - 1) {
+      extraTriggerSelectorCondition = `[data-element-after-id="${rawLanes[insertIndex].id}"]`;
     } else {
-      extraTriggerSelectorCondition = `[data-element-before-id="${initialRawLanes[insertIndex - 1].id}"]`;
+      extraTriggerSelectorCondition = `[data-element-before-id="${rawLanes[insertIndex - 1].id}"]`;
     }
   }
   const addTriggerSelector =
     `.workflow-visualiser-interlane-space${extraTriggerSelectorCondition} .create-lane-action-trigger`;
 
-  itPerformsAction({
+  itPerformsCustomAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
-    applyUpdate: rawDump => rawDump.splice(insertIndex, 0, {
+    actionExecutor: async () => {
+      await click(addTriggerSelector);
+      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane999');
+      await click(getModalFooter().find('.btn-submit')[0]);
+    },
+    applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
-      type: 'lane',
-      name: 'Untitled lane',
-      tasks: [],
+      name: 'lane999',
+      storeIteratorSpec: {
+        strategy: {
+          type: 'serial',
+        },
+        storeSchemaId: storeIdFromExample(0),
+      },
+      parallelBoxes: [],
     }),
-    initialRawLanes,
+    initialRawData,
   });
 }
 
-function itAddsNewParallelBlock(message, initialRawLanes, insertIndex) {
-  const targetLane = initialRawLanes[0];
+function itAddsNewParallelBox(message, initialRawData, insertIndex) {
+  const targetLane = initialRawData.lanes[0];
   let addTriggerSelector =
     `[data-visualiser-element-id="${targetLane.id}"] .workflow-visualiser-interblock-space`;
-  if (targetLane.tasks.length) {
-    if (insertIndex <= targetLane.tasks.length - 1) {
-      addTriggerSelector += `[data-element-after-id="${targetLane.tasks[insertIndex].id}"]`;
+  if (targetLane.parallelBoxes.length) {
+    if (insertIndex <= targetLane.parallelBoxes.length - 1) {
+      addTriggerSelector += `[data-element-after-id="${targetLane.parallelBoxes[insertIndex].id}"]`;
     } else {
-      addTriggerSelector = `[data-element-before-id="${targetLane.tasks[insertIndex - 1].id}"]`;
+      addTriggerSelector = `[data-element-before-id="${targetLane.parallelBoxes[insertIndex - 1].id}"]`;
     }
   }
-  addTriggerSelector += ' .create-parallel-block-action-trigger';
+  addTriggerSelector += ' .create-parallel-box-action-trigger';
 
   itPerformsAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
-    applyUpdate: rawDump => rawDump[0].tasks.splice(insertIndex, 0, {
+    applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes.splice(insertIndex, 0, {
       id: sinon.match.string,
-      type: 'parallelBlock',
-      name: 'Parallel block',
+      name: 'Parallel box',
       tasks: [],
     }),
-    initialRawLanes,
+    initialRawData,
   });
 }
 
-function itAddsNewTask(message, initialRawLanes, insertIndex) {
-  const targetBlock = initialRawLanes[0].tasks[0];
+function itAddsNewTask(message, initialRawData, insertIndex) {
+  const targetBlock = initialRawData.lanes[0].parallelBoxes[0];
   let addTriggerSelector =
     `[data-visualiser-element-id="${targetBlock.id}"] .workflow-visualiser-interblock-space`;
   if (targetBlock.tasks.length) {
@@ -504,12 +634,11 @@ function itAddsNewTask(message, initialRawLanes, insertIndex) {
   itPerformsAction({
     description: message,
     actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
-    applyUpdate: rawDump => rawDump[0].tasks[0].tasks.splice(insertIndex, 0, {
+    applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes[0].tasks.splice(insertIndex, 0, {
       id: sinon.match.string,
-      type: 'task',
       name: 'Untitled task',
     }),
-    initialRawLanes,
+    initialRawData,
   });
 }
 
@@ -526,7 +655,7 @@ function itChangesName(elementType, applyUpdate) {
       await click(`${nameElementSelector} .save-icon`);
     },
     applyUpdate: rawDump => applyUpdate(rawDump, newName),
-    initialRawLanes: twoNonEmptyLanesExample,
+    initialRawData: twoNonEmptyLanesExample,
   });
 }
 
@@ -535,9 +664,9 @@ function itMovesLane(laneName, laneIdx, moveDirection) {
     description: `moves ${moveDirection} ${laneName}`,
     actionTriggerGetter: () => getActionTrigger('lane', [laneIdx], `move-${moveDirection}`),
     applyUpdate: rawDump => {
-      const movedRawLane = rawDump[laneIdx];
-      rawDump.splice(laneIdx, 1);
-      rawDump.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
+      const movedRawLane = rawDump.lanes[laneIdx];
+      rawDump.lanes.splice(laneIdx, 1);
+      rawDump.lanes.splice(laneIdx + (moveDirection === 'left' ? -1 : 1), 0, movedRawLane);
     },
   });
 }
@@ -549,12 +678,12 @@ function itDoesNotMoveLane(laneName, laneIdx, moveDirection) {
   });
 }
 
-function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+function itMovesParallelBox(parallelBoxName, blockIdx, moveDirection) {
   itPerformsAction({
-    description: `moves ${moveDirection} ${parallelBlockName}`,
-    actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
+    description: `moves ${moveDirection} ${parallelBoxName}`,
+    actionTriggerGetter: () => getActionTrigger('parallelBox', [0, blockIdx], `move-${moveDirection}`),
     applyUpdate: rawDump => {
-      const blocksArray = rawDump[0].tasks;
+      const blocksArray = rawDump.lanes[0].parallelBoxes;
       const movedRawBlock = blocksArray[blockIdx];
       blocksArray.splice(blockIdx, 1);
       blocksArray.splice(blockIdx + (moveDirection === 'up' ? -1 : 1), 0, movedRawBlock);
@@ -562,10 +691,10 @@ function itMovesParallelBlock(parallelBlockName, blockIdx, moveDirection) {
   });
 }
 
-function itDoesNotMoveParallelBlock(parallelBlockName, blockIdx, moveDirection) {
+function itDoesNotMoveParallelBox(parallelBoxName, blockIdx, moveDirection) {
   itDoesNotPerformAction({
-    description: `does not allow to move ${moveDirection} ${parallelBlockName}`,
-    actionTriggerGetter: () => getActionTrigger('parallelBlock', [0, blockIdx], `move-${moveDirection}`),
+    description: `does not allow to move ${moveDirection} ${parallelBoxName}`,
+    actionTriggerGetter: () => getActionTrigger('parallelBox', [0, blockIdx], `move-${moveDirection}`),
   });
 }
 
@@ -573,7 +702,7 @@ function itPerformsActionWithConfirmation({
   description,
   actionTriggerGetter,
   applyUpdate,
-  initialRawLanes = threeNonEmptyLanesExample,
+  initialRawData = threeNonEmptyLanesExample,
 }) {
   itPerformsCustomAction({
     description,
@@ -583,7 +712,7 @@ function itPerformsActionWithConfirmation({
       await click(getModalFooter().find('.question-yes')[0]);
     },
     applyUpdate,
-    initialRawLanes,
+    initialRawData,
   });
 }
 
@@ -591,7 +720,7 @@ function itPerformsAction({
   description,
   actionTriggerGetter,
   applyUpdate,
-  initialRawLanes = threeNonEmptyLanesExample,
+  initialRawData = threeNonEmptyLanesExample,
 }) {
   itPerformsCustomAction({
     description,
@@ -600,7 +729,7 @@ function itPerformsAction({
       await click($actionTrigger[0]);
     },
     applyUpdate,
-    initialRawLanes,
+    initialRawData,
   });
 }
 
@@ -608,33 +737,36 @@ function itPerformsCustomAction({
   description,
   actionExecutor,
   applyUpdate,
-  initialRawLanes,
+  initialRawData,
 }) {
   it(description, async function () {
-    renderWithRawLanes(this, initialRawLanes);
+    renderWithRawData(this, initialRawData);
 
     await actionExecutor(this);
 
     const changeStub = this.get('changeStub');
-    const newRawLanes = _.cloneDeep(initialRawLanes);
-    applyUpdate(newRawLanes);
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawLanes);
-    checkRenderedLanesStructure(this, initialRawLanes);
+    const newRawData = _.cloneDeep(initialRawData);
+    applyUpdate(newRawData);
+    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawData);
+    checkRenderedLanesStructure(this, initialRawData);
+    checkRenderedStoresList(this, initialRawData);
 
-    this.set('rawLanes', changeStub.lastCall.args[0]);
+    const yieldedRawData = changeStub.lastCall.args[0];
+    this.set('rawData', yieldedRawData);
     await wait();
 
-    checkRenderedLanesStructure(this, changeStub.lastCall.args[0]);
+    checkRenderedLanesStructure(this, yieldedRawData);
+    checkRenderedStoresList(this, yieldedRawData);
   });
 }
 
 function itDoesNotPerformAction({
   description,
   actionTriggerGetter,
-  initialRawLanes = threeNonEmptyLanesExample,
+  initialRawData = threeNonEmptyLanesExample,
 }) {
   it(description, async function () {
-    renderWithRawLanes(this, initialRawLanes);
+    renderWithRawData(this, initialRawData);
 
     const $actionTrigger = await actionTriggerGetter();
 
@@ -643,30 +775,31 @@ function itDoesNotPerformAction({
   });
 }
 
-function renderWithRawLanes(testCase, rawLanes) {
-  testCase.set('rawLanes', rawLanes);
+function renderWithRawData(testCase, rawData) {
+  testCase.set('rawData', rawData);
   testCase.render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser
       mode=mode
-      rawData=rawLanes
+      rawData=rawData
+      actionsFactory=actionsFactory
       onChange=changeStub
     }}
   `);
 }
 
-function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
   testCase.setProperties({
-    rawLanes: generateExample(lanesNumber, 0, 0),
+    rawData: generateExample(lanesNumber, 0, 0),
     _window: new WindowStub(),
   });
-  changeContainerWidthForScrollTest(testCase, containerWidth);
+  await changeContainerWidthForScrollTest(testCase, containerWidth);
 
   testCase.render(hbs `
     <div style={{containerStyle}}>
       {{workflow-visualiser
         mode="view"
-        rawData=rawLanes
+        rawData=rawData
         _window=_window
       }}
     </div>
@@ -726,8 +859,8 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
   await wait();
 }
 
-function checkTasksProgress(testCase, rawLanes) {
-  const tasks = _.flatten(_.flatten(rawLanes.mapBy('tasks')).mapBy('tasks'));
+function checkTasksProgress(testCase, rawData) {
+  const tasks = _.flatten(_.flatten(rawData.lanes.mapBy('parallelBoxes')).mapBy('tasks'));
   tasks.forEach(({ id, status, progressPercent }) => {
     const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
     expect($task).to.have.class(`status-${status || 'default'}`);
@@ -739,46 +872,46 @@ function checkTasksProgress(testCase, rawLanes) {
   });
 }
 
-function checkRenderedLanesStructure(testCase, rawLanes) {
+function checkRenderedLanesStructure(testCase, rawData) {
   const $lanes = testCase.$('.workflow-visualiser-lane');
-  expect($lanes).to.have.length(rawLanes.length);
-  rawLanes.forEach(({ name: laneName, tasks: laneTasks }, laneIndex) => {
+  expect($lanes).to.have.length(rawData.lanes.length);
+  rawData.lanes.forEach(({ name: laneName, parallelBoxes }, laneIndex) => {
     const $lane = $lanes.eq(laneIndex);
     expect($lane.find('.lane-name').text().trim()).to.equal(laneName);
-    const $blocks = $lane.find('.workflow-visualiser-parallel-block');
-    expect($blocks).to.have.length(laneTasks.length);
-    laneTasks.forEach(({ name: blockName, tasks: blockTasks }, blockIndex) => {
+    const $blocks = $lane.find('.workflow-visualiser-parallel-box');
+    expect($blocks).to.have.length(parallelBoxes.length);
+    parallelBoxes.forEach(({ name: blockName, tasks }, blockIndex) => {
       const $block = $blocks.eq(blockIndex);
-      expect($block.find('.parallel-block-name').text().trim()).to.equal(blockName);
+      expect($block.find('.parallel-box-name').text().trim()).to.equal(blockName);
       const $tasks = $block.find('.workflow-visualiser-task');
-      expect($tasks).to.have.length(blockTasks.length);
-      blockTasks.forEach(({ name: taskName }, taskIndex) => {
+      expect($tasks).to.have.length(tasks.length);
+      tasks.forEach(({ name: taskName }, taskIndex) => {
         const $task = $tasks.eq(taskIndex);
         expect($task.find('.task-name').text().trim()).to.equal(taskName);
       });
     });
   });
 
-  checkInterlaneSpaces(testCase, rawLanes);
-  checkInterblockSpaces(testCase, rawLanes);
+  checkInterlaneSpaces(testCase, rawData);
+  checkInterblockSpaces(testCase, rawData);
 }
 
 function checkInterblockSpaces(testCase, rawDump) {
   const $lanes = testCase.$('.workflow-visualiser-lane');
-  expect($lanes).to.have.length(rawDump.length);
+  expect($lanes).to.have.length(rawDump.lanes.length);
 
-  rawDump.forEach(({ tasks: rawParallelBlocks }, laneIdx) => {
-    const parallelBlockIds = rawParallelBlocks.mapBy('id');
-    const taskIdsPerParallelBlock = rawParallelBlocks
-      .map(rawParallelBlock => rawParallelBlock.tasks.mapBy('id'));
-    const $blocks = $lanes.eq(laneIdx).find('.workflow-visualiser-parallel-block');
-    expect($blocks).to.have.length(parallelBlockIds.length);
+  rawDump.lanes.forEach(({ parallelBoxes }, laneIdx) => {
+    const parallelBoxIds = parallelBoxes.mapBy('id');
+    const taskIdsPerParallelBox = parallelBoxes
+      .map(rawParallelBox => rawParallelBox.tasks.mapBy('id'));
+    const $blocks = $lanes.eq(laneIdx).find('.workflow-visualiser-parallel-box');
+    expect($blocks).to.have.length(parallelBoxIds.length);
     const $betweenBlockSpaces = $lanes.eq(laneIdx).find(
-      '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-block *)'
+      '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-box *)'
     );
-    checkInterXSpaces($betweenBlockSpaces, parallelBlockIds);
+    checkInterXSpaces($betweenBlockSpaces, parallelBoxIds);
 
-    taskIdsPerParallelBlock.forEach((taskIds, blockIdx) => {
+    taskIdsPerParallelBox.forEach((taskIds, blockIdx) => {
       const $innerBlockSpaces =
         $blocks.eq(blockIdx).find('.workflow-visualiser-interblock-space');
       checkInterXSpaces($innerBlockSpaces, taskIds);
@@ -789,7 +922,7 @@ function checkInterblockSpaces(testCase, rawDump) {
 function checkInterlaneSpaces(testCase, rawDump) {
   checkInterXSpaces(
     testCase.$('.workflow-visualiser-interlane-space'),
-    rawDump.mapBy('id')
+    rawDump.lanes.mapBy('id')
   );
 }
 
@@ -819,38 +952,63 @@ function checkInterXSpace($space, beforeId, afterId) {
   });
 }
 
+function checkRenderedStoresList(testCase, rawData) {
+  const $stores = testCase.$('.workflow-visualiser-stores-list-store');
+  expect($stores).to.have.length(rawData.stores.length);
+  rawData.stores.sortBy('name').forEach(({ name }, idx) =>
+    expect($stores.eq(idx).text()).to.contain(name)
+  );
+}
+
 function generateExample(
   lanesNumber,
-  parallelBlocksPerLane,
-  tasksPerParallelBlock,
+  parallelBoxsPerLane,
+  tasksPerParallelBox,
   includeProgress = true
 ) {
-  return _.range(lanesNumber).map(laneNo => ({
-    id: laneIdFromExample(laneNo),
-    type: 'lane',
-    name: `lane${laneNo}`,
-    tasks: _.range(parallelBlocksPerLane).map(blockNo => ({
-      id: parallelBlockIdFromExample(laneNo, blockNo),
-      type: 'parallelBlock',
-      name: `block${laneNo}.${blockNo}`,
-      tasks: _.range(tasksPerParallelBlock).map(taskNo => ({
-        id: taskIdFromExample(laneNo, blockNo, taskNo),
-        type: 'task',
-        name: `task${laneNo}.${blockNo}.${taskNo}`,
-        status: includeProgress ?
-          getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,
-        progressPercent: includeProgress ?
-          getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
+  return {
+    lanes: _.range(lanesNumber).map(laneNo => ({
+      id: laneIdFromExample(laneNo),
+      name: `lane${laneNo}`,
+      storeIteratorSpec: {
+        strategy: {
+          type: 'serial',
+        },
+        storeSchemaId: storeIdFromExample(0),
+      },
+      parallelBoxes: _.range(parallelBoxsPerLane).map(blockNo => ({
+        id: parallelBoxIdFromExample(laneNo, blockNo),
+        name: `block${laneNo}.${blockNo}`,
+        tasks: _.range(tasksPerParallelBox).map(taskNo => ({
+          id: taskIdFromExample(laneNo, blockNo, taskNo),
+          name: `task${laneNo}.${blockNo}.${taskNo}`,
+          status: includeProgress ?
+            getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,
+          progressPercent: includeProgress ?
+            getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
+        })),
       })),
     })),
-  }));
+    stores: _.range(2).map(storeNo => ({
+      id: storeIdFromExample(storeNo),
+      name: `store${storeNo}`,
+      description: '',
+      type: 'list',
+      dataSpec: {
+        type: 'integer',
+        valueConstraints: {},
+      },
+      defaultInitialValue: '',
+      requiresInitialValue: false,
+    })),
+  };
 }
 
 function laneIdFromExample(laneNo) {
   return `l${laneNo}`;
 }
 
-function parallelBlockIdFromExample(laneNo, blockNo) {
+function parallelBoxIdFromExample(laneNo, blockNo) {
   return `b${laneNo}.${blockNo}`;
 }
 
@@ -864,4 +1022,8 @@ function getTaskProgressFromExample(laneNo, blockNo, taskNo) {
 
 function getTaskStatusFromExample(laneNo, blockNo, taskNo) {
   return possibleTaskStatuses[(laneNo + blockNo + taskNo) % 3];
+}
+
+function storeIdFromExample(storeNo) {
+  return `s${storeNo}`;
 }
