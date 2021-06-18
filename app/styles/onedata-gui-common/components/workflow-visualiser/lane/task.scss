@@ -6,7 +6,7 @@
   .draggable-task {
     display: flex;
     align-items: center;
-    padding-right: $padding-xs-horizontal;
+    padding: 0 $padding-xs-horizontal;
     border: inherit;
     border-radius: $border-radius-base;
     min-height: 50px;

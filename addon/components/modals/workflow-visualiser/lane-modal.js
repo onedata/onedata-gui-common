@@ -42,7 +42,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Object}
    */
-  laneFromForm: undefined,
+  laneProvidedByForm: undefined,
 
   /**
    * @type {Boolean}
@@ -88,14 +88,14 @@ export default Component.extend(I18n, {
   actions: {
     formChange({ data, isValid }) {
       this.setProperties({
-        laneFromForm: data,
+        laneProvidedByForm: data,
         formIsValid: isValid,
       });
     },
     async submit(submitCallback) {
       this.set('isSubmitting', true);
       try {
-        return await submitCallback(this.get('laneFromForm'));
+        return await submitCallback(this.get('laneProvidedByForm'));
       } catch (error) {
         throw error;
       } finally {

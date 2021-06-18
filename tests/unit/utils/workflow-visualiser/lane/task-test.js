@@ -4,10 +4,10 @@ import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/lane/task', function () {
-  it('has "__type" equal to "task"', function () {
+  it('has "__modelType" equal to "task"', function () {
     const element = Task.create();
 
-    expect(get(element, '__type')).to.equal('task');
+    expect(get(element, '__modelType')).to.equal('task');
   });
 
   it('has "renderer" equal to "workflow-visualiser/lane/task"', function () {

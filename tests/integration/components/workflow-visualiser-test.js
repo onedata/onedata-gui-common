@@ -36,10 +36,10 @@ describe('Integration | Component | workflow visualiser', function () {
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
-    actionsFactory.registerTaskDetailsCreateProviderCallback(
+    actionsFactory.registerGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
-    actionsFactory.registerTaskDetailsModifyProviderCallback(
+    actionsFactory.registerGetTaskModificationDataCallback(
       () => resolve({ name: 'othername' })
     );
     this.set('actionsFactory', actionsFactory);
@@ -350,8 +350,8 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding left edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, laneWidth * 10);
+    it('does not show scroll button, when there is no overflow', async function () {
+      await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -383,8 +383,8 @@ describe('Integration | Component | workflow visualiser', function () {
   });
 
   context('regarding right edge scroll', function () {
-    it('does not show scroll button, when there is no overflow', function () {
-      renderForScrollTest(this, 5, laneWidth * 10);
+    it('does not show scroll button, when there is no overflow', async function () {
+      await renderForScrollTest(this, 5, laneWidth * 10);
 
       expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
@@ -447,10 +447,12 @@ class WindowStub {
 
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function () {
-    renderForScrollTest(this, 5, laneWidth * 0.6);
-
+    await renderForScrollTest(this, 5, laneWidth * 0.6);
+    // Additional wait() call to make scroll tests more reliable. Without them
+    // there are random test fails.
+    await wait();
     await scrollToLane(this, overflowEdge, overflowLane, 10);
-
+    await wait();
     for (let operation of operations) {
       if (operation.startsWith('width:')) {
         const width = Number(operation.slice('width:'.length));
@@ -459,6 +461,7 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
         const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
         expect($scrollTrigger).to.have.class('visible');
         await click($scrollTrigger[0]);
+        // await wait();
       }
     }
 
@@ -769,12 +772,12 @@ function renderWithRawData(testCase, rawData) {
   `);
 }
 
-function renderForScrollTest(testCase, lanesNumber, containerWidth) {
+async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
   testCase.setProperties({
     rawData: generateExample(lanesNumber, 0, 0),
     _window: new WindowStub(),
   });
-  changeContainerWidthForScrollTest(testCase, containerWidth);
+  await changeContainerWidthForScrollTest(testCase, containerWidth);
 
   testCase.render(hbs `
     <div style={{containerStyle}}>
@@ -785,6 +788,7 @@ function renderForScrollTest(testCase, lanesNumber, containerWidth) {
       }}
     </div>
   `);
+  await wait();
 }
 
 async function changeContainerWidthForScrollTest(testCase, newWidth) {
@@ -835,7 +839,7 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
       }
     }
   }
-
+  console.log('scrollByTestTo', scrollXPosition);
   $lanesContainer.scrollLeft(scrollXPosition);
   await wait();
 }

@@ -147,8 +147,9 @@ export default VisualiserElement.extend({
           clearLaneAction,
           removeLaneAction,
         ];
+      } else {
+        return [viewLaneAction];
       }
-      return [viewLaneAction];
     }
   ),
 

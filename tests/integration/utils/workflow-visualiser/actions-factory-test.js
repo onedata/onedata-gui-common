@@ -83,7 +83,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       stores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.registerTaskDetailsCreateProviderCallback(taskDetailsProviderCallback);
+    factory.registerGetTaskCreationDataCallback(taskDetailsProviderCallback);
     const createTaskCallback = () => {};
 
     const action = factory.createCreateTaskAction({ createTaskCallback });
@@ -105,7 +105,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       stores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.registerTaskDetailsModifyProviderCallback(taskDetailsProviderCallback);
+    factory.registerGetTaskModificationDataCallback(taskDetailsProviderCallback);
     const task = Task.create();
 
     const action = factory.createModifyTaskAction({ task });

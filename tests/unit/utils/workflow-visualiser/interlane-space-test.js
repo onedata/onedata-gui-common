@@ -4,10 +4,10 @@ import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interla
 import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/interlane space', function () {
-  it('has "__type" equal to "interlaneSpace"', function () {
+  it('has "__modelType" equal to "interlaneSpace"', function () {
     const interlaneSpace = InterlaneSpace.create();
 
-    expect(get(interlaneSpace, '__type')).to.equal('interlaneSpace');
+    expect(get(interlaneSpace, '__modelType')).to.equal('interlaneSpace');
   });
 
   it('has "renderer" equal to "workflow-visualiser/interlane-space"', function () {

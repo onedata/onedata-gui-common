@@ -14,7 +14,7 @@ export default EmberObject.extend({
   /**
    * @type {String}
    */
-  __type: 'store',
+  __modelType: 'store',
 
   /**
    * @virtual

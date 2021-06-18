@@ -119,12 +119,12 @@ describe('Integration | Component | form component/textarea field', function () 
   );
 
   it(
-    'renders static text when field is in "view" mode and "viewModeAsStaticText" is true',
+    'renders static text when field is in "view" mode and "showsStaticTextInViewMode" is true',
     function () {
       const field = this.get('field');
       setProperties(field, {
         value: 'test value',
-        viewModeAsStaticText: true,
+        showsStaticTextInViewMode: true,
       });
       field.changeMode('view');
 

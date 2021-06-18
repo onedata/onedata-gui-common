@@ -62,8 +62,8 @@ export default Action.extend({
         mode: 'edit',
         stores,
         lane,
-        onSubmit: laneFromForm =>
-          result.interceptPromise(this.modifyLane(laneFromForm)),
+        onSubmit: laneProvidedByForm =>
+          result.interceptPromise(this.modifyLane(laneProvidedByForm)),
       }).hiddenPromise
       .then(() => {
         result.cancelIfPending();
@@ -71,15 +71,15 @@ export default Action.extend({
       });
   },
 
-  async modifyLane(laneFromForm) {
+  async modifyLane(laneProvidedByForm) {
     const lane = this.get('lane');
-    const diff = this.getMinimalDiff(laneFromForm);
+    const diff = this.getMinimalDiff(laneProvidedByForm);
     if (diff) {
       return lane.modify(diff);
     }
   },
 
-  getMinimalDiff(laneFromForm) {
+  getMinimalDiff(laneProvidedByForm) {
     const lane = this.get('lane');
 
     const keysToCheck = [
@@ -88,10 +88,10 @@ export default Action.extend({
     ];
 
     const modifiedKeys = keysToCheck.filter(key =>
-      !_.isEqual(get(lane, key), get(laneFromForm, key))
+      !_.isEqual(get(lane, key), get(laneProvidedByForm, key))
     );
 
     return modifiedKeys.length ?
-      getProperties(laneFromForm, ...modifiedKeys) : null;
+      getProperties(laneProvidedByForm, ...modifiedKeys) : null;
   },
 });

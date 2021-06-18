@@ -39,8 +39,8 @@ export default Action.extend({
       .show('workflow-visualiser/store-modal', {
         mode: 'edit',
         store,
-        onSubmit: storeFromForm =>
-          result.interceptPromise(this.modifyStore(storeFromForm)),
+        onSubmit: storeProvidedByForm =>
+          result.interceptPromise(this.modifyStore(storeProvidedByForm)),
       }).hiddenPromise
       .then(() => {
         result.cancelIfPending();
@@ -48,15 +48,15 @@ export default Action.extend({
       });
   },
 
-  async modifyStore(storeFromForm) {
+  async modifyStore(storeProvidedByForm) {
     const store = this.get('store');
-    const diff = this.getMinimalDiff(storeFromForm);
+    const diff = this.getMinimalDiff(storeProvidedByForm);
     if (diff) {
       return store.modify(diff);
     }
   },
 
-  getMinimalDiff(storeFromForm) {
+  getMinimalDiff(storeProvidedByForm) {
     const store = this.get('store');
 
     const keysToCheck = [
@@ -69,10 +69,10 @@ export default Action.extend({
     ];
 
     const modifiedKeys = keysToCheck.filter(key =>
-      !_.isEqual(get(store, key), get(storeFromForm, key))
+      !_.isEqual(get(store, key), get(storeProvidedByForm, key))
     );
 
     return modifiedKeys.length ?
-      getProperties(storeFromForm, ...modifiedKeys) : null;
+      getProperties(storeProvidedByForm, ...modifiedKeys) : null;
   },
 });

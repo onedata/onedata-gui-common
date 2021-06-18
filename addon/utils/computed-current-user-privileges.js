@@ -35,21 +35,23 @@ function shortenCamelize(flag, flagsPrefix) {
     flag
   );
 
+  let flagWithoutPrefix;
   if (flagsPrefix) {
     const prefixToCutOff = `${flagsPrefix}_`;
-    const flagWithoutPrefix = flag.slice(prefixToCutOff.length);
+    flagWithoutPrefix = flag.slice(prefixToCutOff.length);
     if (!flagWithoutPrefix || !flag.startsWith(prefixToCutOff)) {
       notifyError();
       return null;
     }
-    return camelize(flagWithoutPrefix);
+  } else {
+    const m = flag.match('.*?_(.*)');
+    if (!m) {
+      notifyError();
+      return null;
+    }
+    flagWithoutPrefix = m ? m[1] : m;
   }
-
-  const m = flag.match('.*?_(.*)');
-  if (!m) {
-    notifyError();
-  }
-  return camelize(m ? m[1] : m);
+  return camelize(flagWithoutPrefix);
 }
 
 export function currentUserPrivileges({

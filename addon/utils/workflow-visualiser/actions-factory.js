@@ -52,7 +52,7 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Array<Object>} initialData.stores
    * @returns {Promise<Object>} task details
    */
-  taskDetailsCreateProviderCallback: notImplementedIgnore,
+  getTaskCreationDataCallback: notImplementedIgnore,
 
   /**
    * @type {Function}
@@ -60,7 +60,7 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Object} initialData.task
    * @returns {Promise<Object>} task details
    */
-  taskDetailsModifyProviderCallback: notImplementedIgnore,
+  getTaskModificationDataCallback: notImplementedIgnore,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
@@ -71,17 +71,17 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @param {Function} taskDetailsCreateProviderCallback
+   * @param {Function} getTaskCreationDataCallback
    */
-  registerTaskDetailsCreateProviderCallback(taskDetailsCreateProviderCallback) {
-    this.set('taskDetailsCreateProviderCallback', taskDetailsCreateProviderCallback);
+  registerGetTaskCreationDataCallback(getTaskCreationDataCallback) {
+    this.set('getTaskCreationDataCallback', getTaskCreationDataCallback);
   },
 
   /**
-   * @param {Function} taskDetailsModifyProviderCallback
+   * @param {Function} getTaskModificationDataCallback
    */
-  registerTaskDetailsModifyProviderCallback(taskDetailsModifyProviderCallback) {
-    this.set('taskDetailsModifyProviderCallback', taskDetailsModifyProviderCallback);
+  registerGetTaskModificationDataCallback(getTaskModificationDataCallback) {
+    this.set('getTaskModificationDataCallback', getTaskModificationDataCallback);
   },
 
   /**
@@ -196,7 +196,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
-        taskDetailsProviderCallback: this.get('taskDetailsCreateProviderCallback'),
+        taskDetailsProviderCallback: this.get('getTaskCreationDataCallback'),
       }, context),
     });
   },
@@ -210,7 +210,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
-        taskDetailsProviderCallback: this.get('taskDetailsModifyProviderCallback'),
+        taskDetailsProviderCallback: this.get('getTaskModificationDataCallback'),
       }, context),
     });
   },

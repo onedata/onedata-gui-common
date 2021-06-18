@@ -14,7 +14,7 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  __type: 'interblockSpace',
+  __modelType: 'interblockSpace',
 
   /**
    * @override
@@ -32,5 +32,5 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  siblingsType: getBy('siblingsTypePerParentType', 'parent.__type'),
+  siblingsType: getBy('siblingsTypePerParentType', 'parent.__modelType'),
 });

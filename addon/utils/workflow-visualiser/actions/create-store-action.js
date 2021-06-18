@@ -46,8 +46,8 @@ export default Action.extend({
     return this.get('modalManager')
       .show('workflow-visualiser/store-modal', {
         mode: 'create',
-        onSubmit: storeFromForm =>
-          result.interceptPromise(this.createStore(storeFromForm)),
+        onSubmit: storeProvidedByForm =>
+          result.interceptPromise(this.createStore(storeProvidedByForm)),
       }).hiddenPromise
       .then(() => {
         result.cancelIfPending();
@@ -55,7 +55,7 @@ export default Action.extend({
       });
   },
 
-  createStore(storeFromForm) {
-    return this.get('createStoreCallback')(storeFromForm);
+  createStore(storeProvidedByForm) {
+    return this.get('createStoreCallback')(storeProvidedByForm);
   },
 });

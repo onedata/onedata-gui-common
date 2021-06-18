@@ -23,5 +23,5 @@ export default FieldComponentBase.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  viewModeAsStaticText: reads('field.viewModeAsStaticText'),
+  showsStaticTextInViewMode: reads('field.showsStaticTextInViewMode'),
 });

@@ -41,9 +41,11 @@
         {{/click-outside}}
       {{/one-webui-popover}}
     {{/render-later}}
-    <div class="parallel-box-drag-handle">
-      {{one-icon icon="checkbox-empty"}}
-    </div>
+    {{#if (eq mode "edit")}}
+      <div class="parallel-box-drag-handle">
+        {{one-icon icon="move"}}
+      </div>
+    {{/if}}
   {{else}}
     {{#truncated-string class="parallel-box-name"}}{{name}}{{/truncated-string}}
   {{/if}}

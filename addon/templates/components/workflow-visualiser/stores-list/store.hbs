@@ -1,4 +1,4 @@
-<span class="store-name">{{store.name}}</span>
+{{#truncated-string class="store-name"}}{{store.name}}{{/truncated-string}}
 {{#if (eq mode "edit")}}
   {{one-icon
     icon="close"

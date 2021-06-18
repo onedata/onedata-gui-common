@@ -5,10 +5,10 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Unit | Utility | workflow visualiser/lane', function () {
-  it('has "__type" equal to "lane"', function () {
+  it('has "__modelType" equal to "lane"', function () {
     const lane = Lane.create();
 
-    expect(get(lane, '__type')).to.equal('lane');
+    expect(get(lane, '__modelType')).to.equal('lane');
   });
 
   it('has "renderer" equal to "workflow-visualiser/lane"', function () {

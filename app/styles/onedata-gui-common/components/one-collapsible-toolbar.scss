@@ -21,7 +21,7 @@
 
 .btn-menu-toggle {
   border: 1px solid transparent;
-  
+
   &:hover {
     background-color: $color-sidebar-item-bg;
     border: 1px solid $color-one-list-item-separator;
@@ -78,7 +78,8 @@
     position: absolute;
     top: 50%;
     color: inherit;
-    line-height: 0;
+    line-height: 1;
+    margin-top: 0.1em;
     transform: translateY(-50%);
     .content-back-arrow-icon {
       padding-left: 8px;

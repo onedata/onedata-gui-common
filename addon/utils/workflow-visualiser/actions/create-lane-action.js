@@ -57,8 +57,8 @@ export default Action.extend({
       .show('workflow-visualiser/lane-modal', {
         mode: 'create',
         stores,
-        onSubmit: laneFromForm =>
-          result.interceptPromise(this.createLane(laneFromForm)),
+        onSubmit: laneProvidedByForm =>
+          result.interceptPromise(this.createLane(laneProvidedByForm)),
       }).hiddenPromise
       .then(() => {
         result.cancelIfPending();
@@ -66,9 +66,9 @@ export default Action.extend({
       });
   },
 
-  createLane(laneFromForm) {
+  createLane(laneProvidedByForm) {
     return this.get('createLaneCallback')(Object.assign({
       parallelBoxes: [],
-    }, laneFromForm));
+    }, laneProvidedByForm));
   },
 });

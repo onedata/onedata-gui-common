@@ -203,7 +203,7 @@ export default Component.extend(I18n, {
       .create({
         name: 'description',
         isOptional: true,
-        viewModeAsStaticText: true,
+        showsStaticTextInViewMode: true,
       });
   }),
 

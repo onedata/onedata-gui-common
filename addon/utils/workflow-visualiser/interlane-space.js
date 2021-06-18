@@ -13,7 +13,7 @@ export default VisualiserSpace.extend({
   /**
    * @override
    */
-  __type: 'interlaneSpace',
+  __modelType: 'interlaneSpace',
 
   /**
    * @override

@@ -5,7 +5,7 @@ import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/visualiser element', function () {
   [
-    '__type',
+    '__modelType',
     'renderer',
     'mode',
     'id',
@@ -19,9 +19,9 @@ describe('Unit | Utility | workflow visualiser/visualiser element', function () 
     });
   });
 
-  it('has "objectOrigin" equal to "workflowVisualiser"', function () {
+  it('has "__modelOrigin" equal to "workflowVisualiser"', function () {
     const element = VisualiserElement.create();
 
-    expect(get(element, 'objectOrigin')).to.equal('workflowVisualiser');
+    expect(get(element, '__modelOrigin')).to.equal('workflowVisualiser');
   });
 });

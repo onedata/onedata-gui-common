@@ -13,7 +13,7 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  __type: 'task',
+  __modelType: 'task',
 
   /**
    * @override

@@ -41,7 +41,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Object}
    */
-  storeFromForm: undefined,
+  storeProvidedByForm: undefined,
 
   /**
    * @type {Boolean}
@@ -68,7 +68,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  cancelBtnText: computed('mode', function submitBtnText() {
+  cancelBtnText: computed('mode', function cancelBtnText() {
     return this.t(`button.cancel.${this.get('mode')}`);
   }),
 
@@ -82,14 +82,14 @@ export default Component.extend(I18n, {
   actions: {
     formChange({ data, isValid }) {
       this.setProperties({
-        storeFromForm: data,
+        storeProvidedByForm: data,
         formIsValid: isValid,
       });
     },
     async submit(submitCallback) {
       this.set('isSubmitting', true);
       try {
-        return await submitCallback(this.get('storeFromForm'));
+        return await submitCallback(this.get('storeProvidedByForm'));
       } catch (error) {
         throw error;
       } finally {
