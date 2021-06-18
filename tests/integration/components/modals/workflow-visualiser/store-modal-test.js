@@ -83,7 +83,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
 
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'store1');
-    itPassesStoreFromFormOnSubmit(fillForm, simpliestStore);
+    itPassesStoreProvidedByFormOnSubmit(fillForm, simpliestStore);
     itDisablesAllControlsWhileSubmitting(fillForm);
     itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm);
   });
@@ -130,7 +130,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     itClosesModalOnBackdropClick();
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'store2');
-    itPassesStoreFromFormOnSubmit(fillForm, Object.assign({}, simpliestStore, {
+    itPassesStoreProvidedByFormOnSubmit(fillForm, Object.assign({}, simpliestStore, {
       name: 'store2',
     }));
     itDisablesAllControlsWhileSubmitting();
@@ -203,7 +203,7 @@ function itClosesModalOnBackdropClick() {
   });
 }
 
-function itPassesStoreFromFormOnSubmit(fillForm = () => {}, expectedData) {
+function itPassesStoreProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
   it('passes store from form on submit', async function () {
     const submitStub = sinon.stub().resolves();
     this.set('modalOptions.onSubmit', submitStub);

@@ -93,7 +93,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
 
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'lane1');
-    itPassesLaneFromFormOnSubmit(fillForm, simpliestLane);
+    itPassesLaneProvidedByFormOnSubmit(fillForm, simpliestLane);
     itDisablesAllControlsWhileSubmitting(fillForm);
     itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm);
   });
@@ -140,7 +140,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     itClosesModalOnBackdropClick();
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'lane2');
-    itPassesLaneFromFormOnSubmit(fillForm, Object.assign({}, simpliestLane, {
+    itPassesLaneProvidedByFormOnSubmit(fillForm, Object.assign({}, simpliestLane, {
       name: 'lane2',
     }));
     itDisablesAllControlsWhileSubmitting();
@@ -213,7 +213,7 @@ function itClosesModalOnBackdropClick() {
   });
 }
 
-function itPassesLaneFromFormOnSubmit(fillForm = () => {}, expectedData) {
+function itPassesLaneProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
   it('passes lane from form on submit', async function () {
     const submitStub = sinon.stub().resolves();
     this.set('modalOptions.onSubmit', submitStub);

@@ -14,7 +14,7 @@ export default EmberObject.extend({
    * @virtual
    * @type {String}
    */
-  __type: undefined,
+  __modelType: undefined,
 
   /**
    * @virtual
@@ -52,5 +52,5 @@ export default EmberObject.extend({
    * drag&drop.
    * @type {String}
    */
-  objectOrigin: 'workflowVisualiser',
+  __modelOrigin: 'workflowVisualiser',
 });

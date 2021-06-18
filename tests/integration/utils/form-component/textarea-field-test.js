@@ -44,8 +44,8 @@ describe('Integration | Utility | form component/textarea field', function () {
     expect(get(field, 'placeholder')).to.be.empty;
   });
 
-  it('has "viewModeAsStaticText" equal to false', function () {
+  it('has "showsStaticTextInViewMode" equal to false', function () {
     const field = TextareaField.create();
-    expect(get(field, 'viewModeAsStaticText')).to.be.false;
+    expect(get(field, 'showsStaticTextInViewMode')).to.be.false;
   });
 });

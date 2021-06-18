@@ -20,7 +20,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
-    actionsFactory.registerTaskDetailsCreateProviderCallback(
+    actionsFactory.registerGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
     this.set('blockSpace', InterblockSpace.create({ actionsFactory }));

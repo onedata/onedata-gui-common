@@ -13,11 +13,9 @@
  */
 
 import Component from '@ember/component';
-import layout from '../../templates/components/tags-input/external-editor';
 import { reads } from '@ember/object/computed';
 
 export default Component.extend({
-  layout,
   classNames: ['tags-input-external-editor'],
 
   /**

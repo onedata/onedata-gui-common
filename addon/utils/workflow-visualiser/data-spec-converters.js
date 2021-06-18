@@ -10,51 +10,57 @@
 
 import _ from 'lodash';
 
-const typeForFileTypeFileType = {
-  ANY: 'anyFile',
-  REG: 'regularFile',
-  DIR: 'directory',
+const dataSpecConstraintsToTypeMapping = {
+  file: {
+    ANY: 'anyFile',
+    REG: 'regularFile',
+    DIR: 'directory',
+  },
+  storeCredentials: {
+    singleValue: 'singleValueStore',
+    list: 'listStore',
+    map: 'mapStore',
+    treeForest: 'treeForestStore',
+    range: 'rangeStore',
+    histogram: 'histogramStore',
+    auditLog: 'auditLogStore',
+  },
 };
-const fileTypeFileTypeForType =
-  _.invert(typeForFileTypeFileType);
 
-const typeForStoreCredentialsTypeStoreType = {
-  singleValue: 'singleValueStore',
-  list: 'listStore',
-  map: 'mapStore',
-  treeForest: 'treeForestStore',
-  range: 'rangeStore',
-  histogram: 'histogramStore',
-  auditLog: 'auditLogStore',
-};
-const storeCredentialsTypeStoreTypeForType =
-  _.invert(typeForStoreCredentialsTypeStoreType);
+// `dataSpecConstraintsToTypeMapping` with inverted mappings per each dataSpec type
+const typeToDataSpecConstraintsMapping =
+  Object.keys(dataSpecConstraintsToTypeMapping).reduce((mapping, dataSpecType) => {
+    mapping[dataSpecType] = _.invert(dataSpecConstraintsToTypeMapping[dataSpecType]);
+    return mapping;
+  }, {});
 
 export function dataSpecToType(dataSpec) {
   const valueConstraints = dataSpec.valueConstraints || {};
   switch (dataSpec.type) {
     case 'file':
-      return typeForFileTypeFileType[valueConstraints.fileType];
+      return dataSpecConstraintsToTypeMapping
+        .file[valueConstraints.fileType];
     case 'storeCredentials':
-      return typeForStoreCredentialsTypeStoreType[valueConstraints.storeType];
+      return dataSpecConstraintsToTypeMapping
+        .storeCredentials[valueConstraints.storeType];
     default:
       return dataSpec.type;
   }
 }
 
 export function typeToDataSpec(type) {
-  if (type in fileTypeFileTypeForType) {
+  if (type in typeToDataSpecConstraintsMapping.file) {
     return {
       type: 'file',
       valueConstraints: {
-        fileType: fileTypeFileTypeForType[type],
+        fileType: typeToDataSpecConstraintsMapping.file[type],
       },
     };
-  } else if (type in storeCredentialsTypeStoreTypeForType) {
+  } else if (type in typeToDataSpecConstraintsMapping.storeCredentials) {
     return {
       type: 'storeCredentials',
       valueConstraints: {
-        storeType: storeCredentialsTypeStoreTypeForType[type],
+        storeType: typeToDataSpecConstraintsMapping.storeCredentials[type],
       },
     };
   } else {

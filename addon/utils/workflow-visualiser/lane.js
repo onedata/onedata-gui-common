@@ -14,7 +14,7 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  __type: 'lane',
+  __modelType: 'lane',
 
   /**
    * @override

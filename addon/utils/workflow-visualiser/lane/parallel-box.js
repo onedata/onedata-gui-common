@@ -13,7 +13,7 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  __type: 'parallelBox',
+  __modelType: 'parallelBox',
 
   /**
    * @override

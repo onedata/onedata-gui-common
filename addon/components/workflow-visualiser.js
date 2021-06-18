@@ -213,10 +213,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const draggedElementModel = this.get('dragDrop.draggedElementModel');
       if (draggedElementModel) {
         const {
-          objectOrigin,
-          __type,
-        } = getProperties(draggedElementModel, 'objectOrigin', '__type');
-        return objectOrigin === 'workflowVisualiser' ? __type : undefined;
+          __modelOrigin,
+          __modelType,
+        } = getProperties(draggedElementModel, '__modelOrigin', '__modelType');
+        return __modelOrigin === 'workflowVisualiser' ? __modelType : undefined;
       }
     }
   ),
@@ -983,7 +983,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return undefined;
     }
 
-    const elementType = get(element, '__type');
+    const elementType = get(element, '__modelType');
     if (elementType === 'store') {
       return (rawDump.stores || []).findBy('id', get(element, 'id'));
     } else {
@@ -1001,7 +1001,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           const rawPathElement = containingCollection &&
             containingCollection.findBy('id', get(pathElement, 'id'));
           return this.getRawCollectionForRawParent(
-            get(pathElement, '__type'),
+            get(pathElement, '__modelType'),
             rawPathElement
           );
         },
@@ -1026,7 +1026,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return;
     }
 
-    const elementType = get(element, '__type');
+    const elementType = get(element, '__modelType');
     if (elementType === 'store') {
       return rawDump.stores;
     }
@@ -1035,7 +1035,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     let containingCollection = rawDump && rawDump.lanes || [];
     if (parent) {
       const rawParent = this.getRawElement(rawDump, parent);
-      const parentType = get(parent, '__type');
+      const parentType = get(parent, '__modelType');
       containingCollection = this.getRawCollectionForRawParent(parentType, rawParent);
     }
 
@@ -1056,7 +1056,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
 
     const rawParent = this.getRawElement(rawDump, parentElement);
-    const parentType = parentElement && get(parentElement, '__type');
+    const parentType = parentElement && get(parentElement, '__modelType');
     return this.getRawCollectionForRawParent(parentType, rawParent);
   },
 

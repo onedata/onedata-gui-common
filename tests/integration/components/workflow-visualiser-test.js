@@ -37,10 +37,10 @@ describe('Integration | Component | workflow visualiser', function () {
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
-    actionsFactory.registerTaskDetailsCreateProviderCallback(
+    actionsFactory.registerGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
-    actionsFactory.registerTaskDetailsModifyProviderCallback(
+    actionsFactory.registerGetTaskModificationDataCallback(
       () => resolve({ name: 'othername' })
     );
     this.set('actionsFactory', actionsFactory);

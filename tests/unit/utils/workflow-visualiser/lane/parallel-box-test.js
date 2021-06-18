@@ -4,10 +4,10 @@ import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/paral
 import { get } from '@ember/object';
 
 describe('Unit | Utility | workflow visualiser/lane/parallel box', function () {
-  it('has "__type" equal to "parallelBox"', function () {
+  it('has "__modelType" equal to "parallelBox"', function () {
     const parallelBox = ParallelBox.create();
 
-    expect(get(parallelBox, '__type')).to.equal('parallelBox');
+    expect(get(parallelBox, '__modelType')).to.equal('parallelBox');
   });
 
   it('has "renderer" equal to "workflow-visualiser/lane/parallel-box"', function () {

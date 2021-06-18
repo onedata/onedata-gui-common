@@ -13,7 +13,7 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  __type: 'task',
+  __modelType: 'task',
 
   /**
    * @override
@@ -33,6 +33,7 @@ export default VisualiserRecord.extend({
   argumentMappings: undefined,
 
   /**
+   * @virtual
    * @type {Array<Object>}
    */
   resultMappings: undefined,

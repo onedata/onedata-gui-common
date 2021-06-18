@@ -21,7 +21,7 @@ export default FormField.extend({
    * @virtual optional
    * @type {Boolean}
    */
-  viewModeAsStaticText: false,
+  showsStaticTextInViewMode: false,
 
   /**
    * @virtual optional
@@ -35,7 +35,7 @@ export default FormField.extend({
    * @override
    */
   internalClasses: conditional(
-    and('viewModeAsStaticText', 'isInViewMode'),
+    and('showsStaticTextInViewMode', 'isInViewMode'),
     raw('view-as-static-text'),
     raw('')
   ),
