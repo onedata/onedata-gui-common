@@ -32,16 +32,26 @@ const dataSpecs = [{
     type: 'object',
     valueConstraints: {},
   },
-  valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
-  canContain: ['Any file', 'Regular file', 'Directory', 'Dataset', 'Archive'],
+  valueBuilderTypes: ['iteratedItem', 'const', 'onedatafsCredentials'],
+  canContain: [
+    'Any file',
+    'Regular file',
+    'Directory',
+    'Symbolic link',
+    'Dataset',
+  ],
+  // TODO: VFS-7816 uncomment or remove future code
+  // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
+  // canContain: ['Any file', 'Regular file', 'Directory', 'Symbolic link', 'Dataset', 'Archive'],
 }, {
-  label: 'Histogram',
-  dataSpec: {
-    type: 'histogram',
-    valueConstraints: {},
-  },
-  valueBuilderTypes: ['iteratedItem', 'const'],
-}, {
+  // TODO: VFS-7816 uncomment or remove future code
+  //   label: 'Histogram',
+  //   dataSpec: {
+  //     type: 'histogram',
+  //     valueConstraints: {},
+  //   },
+  //   valueBuilderTypes: ['iteratedItem', 'const'],
+  // }, {
   label: 'Any file',
   dataSpec: {
     type: 'file',
@@ -50,7 +60,7 @@ const dataSpecs = [{
     },
   },
   valueBuilderTypes: ['iteratedItem', 'const'],
-  canContain: ['Regular file', 'Directory'],
+  canContain: ['Regular file', 'Directory', 'Symbolic link'],
 }, {
   label: 'Regular file',
   dataSpec: {
@@ -70,88 +80,98 @@ const dataSpecs = [{
   },
   valueBuilderTypes: ['iteratedItem', 'const'],
 }, {
+  label: 'Symbolic link',
+  dataSpec: {
+    type: 'file',
+    valueConstraints: {
+      fileType: 'SYMLNK',
+    },
+  },
+  valueBuilderTypes: ['iteratedItem', 'const'],
+}, {
   label: 'Dataset',
   dataSpec: {
     type: 'dataset',
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'const'],
-}, {
-  label: 'Archive',
-  dataSpec: {
-    type: 'archive',
-    valueConstraints: {},
-  },
-  valueBuilderTypes: ['iteratedItem', 'const'],
-}, {
-  label: 'Single value store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'singleValue',
-    },
-  },
-  preferredNestedType: 'Object',
-  valueBuilderTypes: ['storeCredentials'],
-}, {
-  label: 'List store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'list',
-    },
-  },
-  preferredNestedType: 'Object',
-  valueBuilderTypes: ['storeCredentials'],
-}, {
-  label: 'Map store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'map',
-    },
-  },
-  preferredNestedType: 'Object',
-  valueBuilderTypes: ['storeCredentials'],
-}, {
-  label: 'Tree forest store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'treeForest',
-    },
-  },
-  preferredNestedType: 'Any file',
-  valueBuilderTypes: ['storeCredentials'],
-}, {
-  label: 'Range store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'range',
-    },
-  },
-  valueBuilderTypes: ['storeCredentials'],
-}, {
-  label: 'Histogram store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'histogram',
-    },
-  },
-  preferredNestedType: 'Histogram',
-  valueBuilderTypes: ['storeCredentials'],
-}, {
-  label: 'Audit log store cred.',
-  dataSpec: {
-    type: 'storeCredentials',
-    valueConstraints: {
-      storeType: 'auditLog',
-    },
-  },
-  preferredNestedType: 'Object',
-  valueBuilderTypes: ['storeCredentials'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   label: 'Archive',
+  //   dataSpec: {
+  //     type: 'archive',
+  //     valueConstraints: {},
+  //   },
+  //   valueBuilderTypes: ['iteratedItem', 'const'],
+  // }, {
+  //   label: 'Single value store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'singleValue',
+  //     },
+  //   },
+  //   preferredNestedType: 'Object',
+  //   valueBuilderTypes: ['storeCredentials'],
+  // }, {
+  //   label: 'List store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'list',
+  //     },
+  //   },
+  //   preferredNestedType: 'Object',
+  //   valueBuilderTypes: ['storeCredentials'],
+  // }, {
+  //   label: 'Map store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'map',
+  //     },
+  //   },
+  //   preferredNestedType: 'Object',
+  //   valueBuilderTypes: ['storeCredentials'],
+  // }, {
+  //   label: 'Tree forest store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'treeForest',
+  //     },
+  //   },
+  //   preferredNestedType: 'Any file',
+  //   valueBuilderTypes: ['storeCredentials'],
+  // }, {
+  //   label: 'Range store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'range',
+  //     },
+  //   },
+  //   valueBuilderTypes: ['storeCredentials'],
+  // }, {
+  //   label: 'Histogram store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'histogram',
+  //     },
+  //   },
+  //   preferredNestedType: 'Histogram',
+  //   valueBuilderTypes: ['storeCredentials'],
+  // }, {
+  //   label: 'Audit log store cred.',
+  //   dataSpec: {
+  //     type: 'storeCredentials',
+  //     valueConstraints: {
+  //       storeType: 'auditLog',
+  //     },
+  //   },
+  //   preferredNestedType: 'Object',
+  //   valueBuilderTypes: ['storeCredentials'],
 }, {
   label: 'OnedataFS credentials',
   dataSpec: {
@@ -164,7 +184,7 @@ const dataSpecs = [{
 const valueBuilderTypeLabels = {
   iteratedItem: 'Iterated item',
   const: 'Constant value',
-  storeCredentials: 'Store credentials',
+  // storeCredentials: 'Store credentials',
   onedatafsCredentials: 'OnedataFS credentials',
 };
 
@@ -172,12 +192,15 @@ const allSimpleDataSpecNames = [
   'Integer',
   'String',
   'Object',
-  'Histogram',
+  // TODO: VFS-7816 uncomment or remove future code
+  // 'Histogram',
   'Any file',
   'Regular file',
   'Directory',
+  'Symbolic link',
   'Dataset',
-  'Archive',
+  // TODO: VFS-7816 uncomment or remove future code
+  // 'Archive',
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
@@ -188,32 +211,43 @@ const allPossibleStoreSpecs = [{
   type: 'list',
   allowedDataSpecNames: allSimpleDataSpecNames,
   acceptsBatch: true,
-  dispatchFunctions: ['append', 'prepend'],
-}, {
-  type: 'map',
-  allowedDataSpecNames: allSimpleDataSpecNames,
-  acceptsBatch: true,
-  dispatchFunctions: ['add', 'remove'],
+  dispatchFunctions: ['append'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // dispatchFunctions: ['append', 'prepend'],
+  // }, {
+  //   type: 'map',
+  //   allowedDataSpecNames: allSimpleDataSpecNames,
+  //   acceptsBatch: true,
+  //   dispatchFunctions: ['add', 'remove'],
 }, {
   type: 'treeForest',
-  allowedDataSpecNames: ['Any file', 'Regular file', 'Directory', 'Dataset'],
+  allowedDataSpecNames: [
+    'Any file',
+    'Regular file',
+    'Directory',
+    'Symbolic link',
+    'Dataset',
+    // TODO: VFS-7816 uncomment or remove future code
+    // 'Archive',
+  ],
   acceptsBatch: true,
-  dispatchFunctions: ['add', 'remove'],
+  dispatchFunctions: ['append'],
 }, {
   type: 'range',
   allowedDataSpecNames: [],
   acceptsBatch: false,
   dispatchFunctions: [],
-}, {
-  type: 'histogram',
-  allowedDataSpecNames: ['Histogram'],
-  acceptsBatch: true,
-  dispatchFunctions: ['add'],
-}, {
-  type: 'auditLog',
-  allowedDataSpecNames: allSimpleDataSpecNames,
-  acceptsBatch: true,
-  dispatchFunctions: ['add'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   type: 'histogram',
+  //   allowedDataSpecNames: ['Histogram'],
+  //   acceptsBatch: true,
+  //   dispatchFunctions: ['add'],
+  // }, {
+  //   type: 'auditLog',
+  //   allowedDataSpecNames: allSimpleDataSpecNames,
+  //   acceptsBatch: true,
+  //   dispatchFunctions: ['add'],
 }];
 const allPossibleStores = [];
 allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
@@ -244,10 +278,12 @@ allPossibleStores.push({
 });
 
 const dispatchFunctionLabels = {
-  add: 'Add',
-  remove: 'Remove',
+  // TODO: VFS-7816 uncomment or remove future code
+  // add: 'Add',
+  // remove: 'Remove',
   append: 'Append',
-  prepend: 'Prepend',
+  // TODO: VFS-7816 uncomment or remove future code
+  // prepend: 'Prepend',
   set: 'Set',
 };
 
@@ -271,16 +307,17 @@ const exampleAtmLambda = {
     isOptional: true,
     isBatch: false,
   }, {
-    name: 'argstore',
-    dataSpec: {
-      type: 'storeCredentials',
-      valueConstraints: {
-        storeType: 'singleValue',
-      },
-    },
-    isOptional: true,
-    isBatch: false,
-  }, {
+    // TODO: VFS-7816 uncomment or remove future code
+    //   name: 'argstore',
+    //   dataSpec: {
+    //     type: 'storeCredentials',
+    //     valueConstraints: {
+    //       storeType: 'singleValue',
+    //     },
+    //   },
+    //   isOptional: true,
+    //   isBatch: false,
+    // }, {
     name: 'argodfs',
     dataSpec: {
       type: 'onedatafsCredentials',
@@ -316,12 +353,13 @@ const exampleTask = {
       valueBuilderType: 'iteratedItem',
     },
   }, {
-    argumentName: 'argstore',
-    valueBuilder: {
-      valueBuilderType: 'storeCredentials',
-      valueBuilderRecipe: 'singleValueObjectId',
-    },
-  }, {
+    // TODO: VFS-7816 uncomment or remove future code
+    //   argumentName: 'argstore',
+    //   valueBuilder: {
+    //     valueBuilderType: 'storeCredentials',
+    //     valueBuilderRecipe: 'singleValueObjectId',
+    //   },
+    // }, {
     argumentName: 'argodfs',
     valueBuilder: {
       valueBuilderType: 'onedatafsCredentials',
@@ -334,7 +372,7 @@ const exampleTask = {
   }, {
     name: 'resanyfile',
     storeSchemaId: 'treeForestAnyFileId',
-    dispatchFunction: 'add',
+    dispatchFunction: 'append',
   }],
 };
 
@@ -585,56 +623,57 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           });
       }
 
-      if (valueBuilderTypes.includes('storeCredentials')) {
-        it(`allows to setup argument of type "${label}" using "Store credentials" value builder`,
-          async function () {
-            this.set('atmLambda.argumentSpecs', [{
-              name: 'arg1',
-              dataSpec,
-              isOptional: false,
-            }]);
+      // TODO: VFS-7816 uncomment or remove future code
+      // if (valueBuilderTypes.includes('storeCredentials')) {
+      //   it(`allows to setup argument of type "${label}" using "Store credentials" value builder`,
+      //     async function () {
+      //       this.set('atmLambda.argumentSpecs', [{
+      //         name: 'arg1',
+      //         dataSpec,
+      //         isOptional: false,
+      //       }]);
 
-            const possibleStoreType = dataSpec.valueConstraints.storeType;
-            const possibleStores = possibleStoreType ?
-              allPossibleStores.filterBy('type', possibleStoreType) :
-              allPossibleStores;
-            const sortedPossibleStores = possibleStores.sortBy('name');
+      //       const possibleStoreType = dataSpec.valueConstraints.storeType;
+      //       const possibleStores = possibleStoreType ?
+      //         allPossibleStores.filterBy('type', possibleStoreType) :
+      //         allPossibleStores;
+      //       const sortedPossibleStores = possibleStores.sortBy('name');
 
-            await render(this);
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderType-field',
-              'Store credentials'
-            );
-            await clickTrigger('.argumentMapping-field .valueBuilderStore-field');
+      //       await render(this);
+      //       await selectChoose(
+      //         '.argumentMapping-field .valueBuilderType-field',
+      //         'Store credentials'
+      //       );
+      //       await clickTrigger('.argumentMapping-field .valueBuilderStore-field');
 
-            const $options = $('.ember-power-select-option');
-            expect($options).to.have.length(sortedPossibleStores.length);
-            sortedPossibleStores.forEach(({ name }, idx) =>
-              expect($options.eq(idx).text().trim()).to.equal(name)
-            );
+      //       const $options = $('.ember-power-select-option');
+      //       expect($options).to.have.length(sortedPossibleStores.length);
+      //       sortedPossibleStores.forEach(({ name }, idx) =>
+      //         expect($options.eq(idx).text().trim()).to.equal(name)
+      //       );
 
-            const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
-            await selectChoose(
-              '.argumentMapping-field .valueBuilderStore-field',
-              storeToSelect.name
-            );
+      //       const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
+      //       await selectChoose(
+      //         '.argumentMapping-field .valueBuilderStore-field',
+      //         storeToSelect.name
+      //       );
 
-            expect(this.get('changeSpy')).to.be.calledWith({
-              data: {
-                name: 'function1',
-                argumentMappings: [{
-                  argumentName: 'arg1',
-                  valueBuilder: {
-                    valueBuilderType: 'storeCredentials',
-                    valueBuilderRecipe: storeToSelect.id,
-                  },
-                }],
-                resultMappings: [],
-              },
-              isValid: true,
-            });
-          });
-      }
+      //       expect(this.get('changeSpy')).to.be.calledWith({
+      //         data: {
+      //           name: 'function1',
+      //           argumentMappings: [{
+      //             argumentName: 'arg1',
+      //             valueBuilder: {
+      //               valueBuilderType: 'storeCredentials',
+      //               valueBuilderRecipe: storeToSelect.id,
+      //             },
+      //           }],
+      //           resultMappings: [],
+      //         },
+      //         isValid: true,
+      //       });
+      //     });
+      // }
 
       if (valueBuilderTypes.includes('onedatafsCredentials')) {
         it(`allows to setup argment of type "${label}" using "OnedataFS credentials" value builder`,
@@ -887,7 +926,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataOfPassedTask();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder();
-    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
+    // TODO: VFS-7816 uncomment or remove future code
+    // itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
     itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods();
     itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
@@ -915,7 +955,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataOfPassedTask();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder();
-    itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
+    // TODO: VFS-7816 uncomment or remove future code
+    // itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder();
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
     itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods();
     itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
@@ -1011,14 +1052,16 @@ function itFillsFieldsWithDataOfPassedTask() {
     [
       'Iterated item',
       'Leave unassigned',
-      'Store credentials',
+      // TODO: VFS-7816 uncomment or remove future code
+      // 'Store credentials',
       'OnedataFS credentials',
     ].forEach((builderLabel, idx) =>
       expect($argumentValueBuilderTypes.eq(idx).find('.field-component').text().trim())
       .to.equal(builderLabel)
     );
-    expect($arguments.eq(2).find('.valueBuilderStore-field .field-component').text().trim())
-      .to.equal('singleValueObjectStore');
+    // TODO: VFS-7816 uncomment or remove future code
+    // expect($arguments.eq(2).find('.valueBuilderStore-field .field-component').text().trim())
+    //   .to.equal('singleValueObjectStore');
     const $results = this.$('.resultMapping-field');
     expect($results).to.have.length(exampleAtmLambda.resultSpecs.length);
     exampleAtmLambda.resultSpecs.forEach(({ name }, idx) => {
@@ -1099,51 +1142,52 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
     });
 }
 
-function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder() {
-  it('fills fields with data about arguments of all possible types, that uses "Store credentials" value builder',
-    async function () {
-      const possibleDataSpecs = dataSpecs
-        .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('storeCredentials'))
-        .mapBy('dataSpec');
-      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
-        name: `arg${idx}`,
-        dataSpec,
-        isOptional: false,
-      })));
-      const usedStores = possibleDataSpecs.map(({ valueConstraints: { storeType } }) => {
-        const possibleStores = storeType ?
-          allPossibleStores.filterBy('type', storeType) :
-          allPossibleStores;
-        return possibleStores[0];
-      });
-      this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => {
-        return {
-          argumentName: `arg${idx}`,
-          valueBuilder: {
-            valueBuilderType: 'storeCredentials',
-            valueBuilderRecipe: usedStores[idx].id,
-          },
-        };
-      }));
+// TODO: VFS-7816 uncomment or remove future code
+// function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder() {
+//   it('fills fields with data about arguments of all possible types, that uses "Store credentials" value builder',
+//     async function () {
+//       const possibleDataSpecs = dataSpecs
+//         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('storeCredentials'))
+//         .mapBy('dataSpec');
+//       this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+//         name: `arg${idx}`,
+//         dataSpec,
+//         isOptional: false,
+//       })));
+//       const usedStores = possibleDataSpecs.map(({ valueConstraints: { storeType } }) => {
+//         const possibleStores = storeType ?
+//           allPossibleStores.filterBy('type', storeType) :
+//           allPossibleStores;
+//         return possibleStores[0];
+//       });
+//       this.set('task.argumentMappings', possibleDataSpecs.map((dataSpec, idx) => {
+//         return {
+//           argumentName: `arg${idx}`,
+//           valueBuilder: {
+//             valueBuilderType: 'storeCredentials',
+//             valueBuilderRecipe: usedStores[idx].id,
+//           },
+//         };
+//       }));
 
-      await render(this);
+//       await render(this);
 
-      const $arguments = this.$('.argumentMapping-field');
-      expect($arguments).to.have.length(possibleDataSpecs.length);
-      possibleDataSpecs.forEach((dataSpec, idx) => {
-        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
-          .to.equal(`arg${idx}:`);
-        expect(
-          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
-          .text().trim()
-        ).to.equal('Store credentials');
-        expect(
-          $arguments.eq(idx).find('.valueBuilderStore-field .field-component')
-          .text().trim()
-        ).to.equal(usedStores[idx].name);
-      });
-    });
-}
+//       const $arguments = this.$('.argumentMapping-field');
+//       expect($arguments).to.have.length(possibleDataSpecs.length);
+//       possibleDataSpecs.forEach((dataSpec, idx) => {
+//         expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+//           .to.equal(`arg${idx}:`);
+//         expect(
+//           $arguments.eq(idx).find('.valueBuilderType-field .field-component')
+//           .text().trim()
+//         ).to.equal('Store credentials');
+//         expect(
+//           $arguments.eq(idx).find('.valueBuilderStore-field .field-component')
+//           .text().trim()
+//         ).to.equal(usedStores[idx].name);
+//       });
+//     });
+// }
 
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder() {
   it('fills fields with data about arguments of all possible types, that uses "OnedataFS credentials" value builder',

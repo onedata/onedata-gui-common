@@ -12,9 +12,10 @@ export default {
         list: {
           label: 'List',
         },
-        map: {
-          label: 'Map',
-        },
+        // TODO: VFS-7816 uncomment or remove future code
+        // map: {
+        //   label: 'Map',
+        // },
         treeForest: {
           label: 'Tree forest',
         },
@@ -24,12 +25,13 @@ export default {
         range: {
           label: 'Range',
         },
-        histogram: {
-          label: 'Histogram',
-        },
-        auditLog: {
-          label: 'Audit log',
-        },
+        // TODO: VFS-7816 uncomment or remove future code
+        // histogram: {
+        //   label: 'Histogram',
+        // },
+        // auditLog: {
+        //   label: 'Audit log',
+        // },
       },
     },
     genericStoreConfig: {
@@ -45,9 +47,10 @@ export default {
           object: {
             label: 'Object',
           },
-          histogram: {
-            label: 'Histogram',
-          },
+          // TODO: VFS-7816 uncomment or remove future code
+          // histogram: {
+          //   label: 'Histogram',
+          // },
           anyFile: {
             label: 'Any file',
           },
@@ -57,12 +60,16 @@ export default {
           directory: {
             label: 'Directory',
           },
+          symlink: {
+            label: 'Symbolic link',
+          },
           dataset: {
             label: 'Dataset',
           },
-          archive: {
-            label: 'Archive',
-          },
+          // TODO: VFS-7816 uncomment or remove future code
+          // archive: {
+          //   label: 'Archive',
+          // },
         },
       },
       defaultValue: {

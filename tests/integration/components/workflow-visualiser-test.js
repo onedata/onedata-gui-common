@@ -839,7 +839,6 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
       }
     }
   }
-  console.log('scrollByTestTo', scrollXPosition);
   $lanesContainer.scrollLeft(scrollXPosition);
   await wait();
 }

@@ -20,9 +20,10 @@ export default {
             const: {
               label: 'Constant value',
             },
-            storeCredentials: {
-              label: 'Store credentials',
-            },
+            // TODO: VFS-7816 uncomment or remove future code
+            // storeCredentials: {
+            //   label: 'Store credentials',
+            // },
             onedatafsCredentials: {
               label: 'OnedataFS credentials',
             },
@@ -31,9 +32,10 @@ export default {
         valueBuilderConstValue: {
           label: 'Value',
         },
-        valueBuilderStore: {
-          label: 'Store',
-        },
+        // TODO: VFS-7816 uncomment or remove future code
+        // valueBuilderStore: {
+        //   label: 'Store',
+        // },
       },
     },
     resultMappings: {
@@ -50,18 +52,20 @@ export default {
         dispatchFunction: {
           label: 'Dispatch function',
           options: {
-            add: {
-              label: 'Add',
-            },
-            remove: {
-              label: 'Remove',
-            },
+            // TODO: VFS-7816 uncomment or remove future code
+            // add: {
+            //   label: 'Add',
+            // },
+            // remove: {
+            //   label: 'Remove',
+            // },
             append: {
               label: 'Append',
             },
-            prepend: {
-              label: 'Prepend',
-            },
+            // TODO: VFS-7816 uncomment or remove future code
+            // prepend: {
+            //   label: 'Prepend',
+            // },
             set: {
               label: 'Set',
             },

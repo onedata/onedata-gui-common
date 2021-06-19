@@ -196,28 +196,29 @@ export default Component.extend(I18n, {
               }).create({
                 name: 'valueBuilderConstValue',
               }),
-              DropdownField.extend({
-                isVisible: eq('parent.value.valueBuilderType', raw('storeCredentials')),
-                options: computed(
-                  'component.stores.@each.{type,name}',
-                  'parent.value.argumentType',
-                  function options() {
-                    const argumentType = this.get('parent.value.argumentType');
-                    const stores = this.get('component.stores') || [];
-                    const possibleStoreTypes = getStoreTypesForArgType(argumentType);
-                    return stores
-                      .filter(({ type }) => possibleStoreTypes.includes(type))
-                      .sortBy('name')
-                      .map(({ id, name }) => ({
-                        value: id,
-                        label: name,
-                      }));
-                  }
-                ),
-              }).create({
-                component,
-                name: 'valueBuilderStore',
-              }),
+              // TODO: VFS-7816 uncomment or remove future code
+              // DropdownField.extend({
+              //   isVisible: eq('parent.value.valueBuilderType', raw('storeCredentials')),
+              //   options: computed(
+              //     'component.stores.@each.{type,name}',
+              //     'parent.value.argumentType',
+              //     function options() {
+              //       const argumentType = this.get('parent.value.argumentType');
+              //       const stores = this.get('component.stores') || [];
+              //       const possibleStoreTypes = getStoreTypesForArgType(argumentType);
+              //       return stores
+              //         .filter(({ type }) => possibleStoreTypes.includes(type))
+              //         .sortBy('name')
+              //         .map(({ id, name }) => ({
+              //           value: id,
+              //           label: name,
+              //         }));
+              //     }
+              //   ),
+              // }).create({
+              //   component,
+              //   name: 'valueBuilderStore',
+              // }),
             ],
           });
         },
@@ -449,15 +450,17 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
     const valueBuilderConstValue = valueBuilderType === 'const' ?
       JSON.stringify(valueBuilderRecipe, null, 2) : undefined;
-    const valueBuilderStore = valueBuilderType === 'storeCredentials' ?
-      valueBuilderRecipe : undefined;
+    // TODO: VFS-7816 uncomment or remove future code
+    // const valueBuilderStore = valueBuilderType === 'storeCredentials' ?
+    //   valueBuilderRecipe : undefined;
     formArgumentMappings[valueName] = {
       argumentName: name,
       argumentType,
       argumentIsOptional: isOptional,
       valueBuilderType,
       valueBuilderConstValue,
-      valueBuilderStore,
+      // TODO: VFS-7816 uncomment or remove future code
+      // valueBuilderStore,
     };
   });
 
@@ -527,12 +530,14 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
     const {
       valueBuilderType,
       valueBuilderConstValue,
-      valueBuilderStore,
+      // TODO: VFS-7816 uncomment or remove future code
+      // valueBuilderStore,
     } = getProperties(
       get(argumentMappings, valueName) || {},
       'valueBuilderType',
-      'valueBuilderConstValue',
-      'valueBuilderStore'
+      'valueBuilderConstValue'
+      // TODO: VFS-7816 uncomment or remove future code
+      // 'valueBuilderStore'
     );
 
     if (!argumentName || !valueBuilderType || valueBuilderType === '__leaveUnassigned') {
@@ -548,8 +553,9 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
       } catch (e) {
         valueBuilder.valueBuilderRecipe = null;
       }
-    } else if (valueBuilderType === 'storeCredentials') {
-      valueBuilder.valueBuilderRecipe = valueBuilderStore;
+      // TODO: VFS-7816 uncomment or remove future code
+      // } else if (valueBuilderType === 'storeCredentials') {
+      //   valueBuilder.valueBuilderRecipe = valueBuilderStore;
     }
 
     taskArgumentMappings.push({
@@ -592,15 +598,17 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
 function getValueBuilderTypesForArgType(argType) {
   if (!argType) {
     return [];
-  } else if (argType.endsWith('Store')) {
-    return ['storeCredentials'];
+    // TODO: VFS-7816 uncomment or remove future code
+    // } else if (argType.endsWith('Store')) {
+    //   return ['storeCredentials'];
   } else if (argType === 'onedatafsCredentials') {
     return ['onedatafsCredentials'];
   } else if (argType === 'object') {
     return [
       'iteratedItem',
       'const',
-      'storeCredentials',
+      // TODO: VFS-7816 uncomment or remove future code
+      // 'storeCredentials',
       'onedatafsCredentials',
     ];
   }
@@ -611,24 +619,25 @@ function getValueBuilderTypesForArgType(argType) {
   ];
 }
 
-function getStoreTypesForArgType(argType) {
-  if (!argType) {
-    return [];
-  } else if (argType.endsWith('Store')) {
-    return argType.slice(0, -('Store'.length));
-  } else if (argType === 'object') {
-    return [
-      'singleValue',
-      'list',
-      'map',
-      'treeForest',
-      'range',
-      'histogram',
-      'auditLog',
-    ];
-  }
-  return [];
-}
+// TODO: VFS-7816 uncomment or remove future code
+// function getStoreTypesForArgType(argType) {
+//   if (!argType) {
+//     return [];
+//   } else if (argType.endsWith('Store')) {
+//     return argType.slice(0, -('Store'.length));
+//   } else if (argType === 'object') {
+//     return [
+//       'singleValue',
+//       'list',
+//       'map',
+//       'treeForest',
+//       'range',
+//       'histogram',
+//       'auditLog',
+//     ];
+//   }
+//   return [];
+// }
 
 function getStoresForResType(availableStores, resultType, resultIsBatch) {
   return availableStores.filter(store => {
@@ -647,12 +656,14 @@ function getStoresForResType(availableStores, resultType, resultIsBatch) {
       return true;
     }
     switch (resultType) {
+      // TODO: VFS-7816 uncomment or remove future code
+      // case 'archive':
       case 'anyFile':
-      case 'archive':
       case 'dataset':
         return storeNestedType === 'object';
       case 'regularFile':
       case 'directory':
+      case 'symlink':
         return ['anyFile', 'object'].includes(storeNestedType);
     }
   });
@@ -663,13 +674,16 @@ function getDispatchFunctionsForStoreType(storeType) {
     case 'singleValue':
       return ['set'];
     case 'list':
-      return ['append', 'prepend'];
-    case 'map':
+      return ['append'];
+      // TODO: VFS-7816 uncomment or remove future code
+      // return ['append', 'prepend'];
+      // case 'map':
     case 'treeForest':
-      return ['add', 'remove'];
-    case 'histogram':
-    case 'auditLog':
-      return ['add'];
+      return ['append'];
+      // TODO: VFS-7816 uncomment or remove future code
+      // case 'histogram':
+      // case 'auditLog':
+      //   return ['add'];
     default:
       return [];
   }
