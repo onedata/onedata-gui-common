@@ -10,7 +10,7 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-form';
-import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not } from 'ember-awesome-macros';
+import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not, and, isEmpty } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -219,7 +219,9 @@ export default Component.extend(I18n, {
    */
   descriptionField: computed(function descriptionField() {
     return TextareaField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: not(and('isInViewMode', isEmpty('value'))),
+      })
       .create({
         name: 'description',
         isOptional: true,
@@ -294,7 +296,9 @@ export default Component.extend(I18n, {
    */
   defaultValueField: computed(function defaultValueField() {
     return JsonField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: not(and('isInViewMode', isEmpty('value'))),
+      })
       .create({
         name: 'defaultValue',
         isOptional: true,
@@ -562,8 +566,8 @@ function storeToFormData(store) {
     default:
       formData.genericStoreConfig = {
         dataType: dataSpec && dataSpecToType(dataSpec) || undefined,
-        defaultValue: defaultInitialValue !== undefined ?
-          JSON.stringify(defaultInitialValue, null, 2) : '',
+        defaultValue: [undefined, null].includes(defaultInitialValue) ?
+          '' : JSON.stringify(defaultInitialValue, null, 2),
       };
       break;
   }

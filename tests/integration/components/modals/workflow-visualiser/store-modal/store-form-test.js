@@ -707,6 +707,22 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       expect(this.$('.name-field .field-component').text().trim()).to.equal('store2');
     });
+
+    it('hides description field, when description is empty', async function () {
+      this.set('store', {});
+
+      await render(this);
+
+      expect(this.$('.description-field')).to.not.exist;
+    });
+
+    it('hides default value field, when default value is empty', async function () {
+      this.set('store', { defaultInitialValue: null });
+
+      await render(this);
+
+      expect(this.$('.defaultValue-field')).to.not.exist;
+    });
   });
 });
 
