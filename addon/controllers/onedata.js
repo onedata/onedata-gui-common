@@ -3,20 +3,13 @@
  *
  * @module controllers/onedata
  * @author Jakub Liput
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Controller from '@ember/controller';
-import { alias } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
+import AspectOptionsHandler from 'onedata-gui-common/mixins/controllers/aspect-options-handler';
 
-export default Controller.extend({
-  navigationState: service(),
-
+export default Controller.extend(AspectOptionsHandler, {
   queryParams: ['options'],
-
-  options: alias('navigationState.aspectOptionsString'),
-
-  aspectOptions: alias('navigationState.aspectOptions'),
 });
