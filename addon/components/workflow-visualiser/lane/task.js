@@ -14,7 +14,7 @@ import { reads, collect } from '@ember/object/computed';
 import { tag, raw, conditional, equal, array, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
 
-const possibleStatuses = ['pending', 'active', 'finished', 'failed'];
+const possibleStatuses = ['pending', 'active', 'finished', 'failed', 'unknown'];
 
 export default VisualiserElement.extend({
   layout,
@@ -50,9 +50,7 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<String>}
    */
   statusTranslation: computed('effectiveStatus', function statusTranslation() {
-    return this.t(`details.statuses.${this.get('effectiveStatus')}`, {}, {
-      defaultValue: '–',
-    });
+    return this.t(`details.statuses.${this.get('effectiveStatus')}`);
   }),
 
   /**
@@ -76,7 +74,7 @@ export default VisualiserElement.extend({
   effectiveStatus: conditional(
     array.includes(raw(possibleStatuses), 'task.status'),
     'task.status',
-    raw(possibleStatuses[0])
+    raw('unknown')
   ),
 
   /**

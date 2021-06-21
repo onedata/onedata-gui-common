@@ -81,6 +81,7 @@ export default {
         active: 'Active',
         finished: 'Finished',
         failed: 'Failed',
+        unknown: 'Unknown',
       },
       itemsInProcessing: 'In processing',
       itemsProcessed: 'Processed',
