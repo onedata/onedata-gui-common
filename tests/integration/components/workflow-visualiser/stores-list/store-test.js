@@ -45,6 +45,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
 
     itShowsStoreName();
     itHasModeClass('edit');
+    itAddsInputStoreClassWhenNeeded();
 
     it('allows to remove store', async function () {
       const onRemoveSpy = sinon.stub().resolves();
@@ -84,6 +85,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
 
     itShowsStoreName();
     itHasModeClass('view');
+    itAddsInputStoreClassWhenNeeded();
 
     it('does not show remove button', async function () {
       await render(this);
@@ -129,4 +131,26 @@ function itHasModeClass(mode) {
     expect(this.$('.workflow-visualiser-stores-list-store'))
       .to.have.class(className);
   });
+}
+
+function itAddsInputStoreClassWhenNeeded() {
+  it('has class "tag-item-warning" when "requiresInitialValue" is true',
+    async function () {
+      this.set('store.requiresInitialValue', true);
+
+      await render(this);
+
+      expect(this.$('.workflow-visualiser-stores-list-store'))
+        .to.have.class('tag-item-warning');
+    });
+
+  it('does not have class "tag-item-warning" when "requiresInitialValue" is false',
+    async function () {
+      this.set('store.requiresInitialValue', false);
+
+      await render(this);
+
+      expect(this.$('.workflow-visualiser-stores-list-store'))
+        .to.not.have.class('tag-item-warning');
+    });
 }
