@@ -107,6 +107,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
+        createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
   },
@@ -120,6 +121,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
+        createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
   },

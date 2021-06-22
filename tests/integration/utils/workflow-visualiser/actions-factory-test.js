@@ -46,10 +46,30 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
     expect(action).to.be.instanceOf(CreateLaneAction);
     expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
     expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
   });
 
-  itCreatesLaneAction('ModifyLaneAction', ModifyLaneAction, true);
+  it('creates action "ModifyLaneAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    let store;
+    store = Store.create({
+      id: 's1',
+      name: 'store1',
+    });
+    factory.registerWorkflowDataProvider({
+      stores: [store],
+    });
+    const lane = Lane.create();
+
+    const action = factory.createModifyLaneAction({ lane });
+
+    expect(action).to.be.instanceOf(ModifyLaneAction);
+    expect(get(action, 'lane')).to.equal(lane);
+    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
+  });
+
   itCreatesLaneAction('ViewLaneAction', ViewLaneAction, true);
   itCreatesLaneAction('MoveLeftLaneAction', MoveLeftLaneAction);
   itCreatesLaneAction('MoveRightLaneAction', MoveRightLaneAction);

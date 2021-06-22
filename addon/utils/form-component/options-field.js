@@ -1,6 +1,6 @@
 /**
  * A form field base for all fields which selects one value from a defined set.
- * 
+ *
  * @module utils/options-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -12,10 +12,10 @@ import { computed, get } from '@ember/object';
 
 /**
  * @typedef {Object} FieldOption
- * @property {string} [name]
+ * @property {String} [name]
  * @property {any} value
- * @property {string|HtmlSafe} [label]
- * @property {string} [icon]
+ * @property {String|HtmlSafe} [label]
+ * @property {String} [icon]
  */
 
 export default FormField.extend({

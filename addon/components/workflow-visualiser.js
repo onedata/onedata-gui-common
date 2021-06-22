@@ -1035,7 +1035,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     rawDump.stores.push(newStoreProps);
 
-    return this.applyChange(rawDump);
+    return this.applyChange(rawDump).then(() => {
+      this.get('stores');
+      return this.getCachedElement('store', newStoreProps.id);
+    });
   },
 
   /**
