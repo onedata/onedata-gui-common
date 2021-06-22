@@ -76,6 +76,51 @@ describe('Integration | Component | workflow visualiser', function () {
     itAddsNewLane('adds a lane between existing lanes', twoNonEmptyLanesExample, 1);
     itAddsNewLane('adds a lane after the last lane', twoNonEmptyLanesExample, 2);
 
+    itPerformsCustomAction({
+      description: 'adds a lane with store created in place',
+      actionExecutor: async () => {
+        await click('.workflow-visualiser-interlane-space .create-lane-action-trigger');
+        await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
+        await selectChoose(
+          getModalBody().find('.sourceStore-field')[0],
+          'Create store...'
+        );
+        await fillIn(
+          getModalBody('store-modal').find('.name-field .form-control')[0],
+          'new store'
+        );
+        await click(getModalFooter('store-modal').find('.btn-submit')[0]);
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: (rawDump, newDump) => {
+        const lastStoreId = newDump.stores[newDump.stores.length - 1].id;
+        rawDump.stores.push({
+          id: lastStoreId,
+          name: 'new store',
+          description: '',
+          type: 'list',
+          dataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
+          defaultInitialValue: undefined,
+          requiresInitialValue: false,
+        });
+        rawDump.lanes.push({
+          id: sinon.match.string,
+          name: 'lane1',
+          storeIteratorSpec: {
+            strategy: {
+              type: 'serial',
+            },
+            storeSchemaId: lastStoreId,
+          },
+          parallelBoxes: [],
+        });
+      },
+      initialRawData: noLanesExample,
+    });
+
     itAddsNewParallelBox('adds the first parallel box', twoEmptyLanesExample, 0, 0);
     itAddsNewParallelBox(
       'adds a parallel box before the first parallel box',
@@ -127,17 +172,24 @@ describe('Integration | Component | workflow visualiser', function () {
     });
 
     itPerformsCustomAction({
-      description: 'modifies lane details by creating new store in place',
+      description: 'modifies lane details by creating new store in place and using it as source store',
       actionExecutor: async () => {
         await click((await getActionTrigger('lane', [0], 'modify'))[0]);
-        await selectChoose(getModalBody().find('.sourceStore-field')[0], 'Create store...');
-        await fillIn(getModalBody('store-modal').find('.name-field .form-control')[0], 'new store');
+        await selectChoose(
+          getModalBody().find('.sourceStore-field')[0],
+          'Create store...'
+        );
+        await fillIn(
+          getModalBody('store-modal').find('.name-field .form-control')[0],
+          'new store'
+        );
         await click(getModalFooter('store-modal').find('.btn-submit')[0]);
         await click(getModalFooter().find('.btn-submit')[0]);
       },
       applyUpdate: (rawDump, newDump) => {
+        const lastStoreId = newDump.stores[newDump.stores.length - 1].id;
         rawDump.stores.push({
-          id: newDump.stores[2].id,
+          id: lastStoreId,
           name: 'new store',
           description: '',
           type: 'list',
@@ -153,7 +205,7 @@ describe('Integration | Component | workflow visualiser', function () {
             strategy: {
               type: 'serial',
             },
-            storeSchemaId: newDump.stores[2].id,
+            storeSchemaId: lastStoreId,
           },
         });
       },
