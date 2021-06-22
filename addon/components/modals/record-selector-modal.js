@@ -6,7 +6,7 @@
  * - descriptionText - (optional) description rendered above the selector
  * - selectorPlaceholderText - (optional) selector placeholder
  * - submitText - submit button text
- * 
+ *
  * @module components/modals/record-selector-modal
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -34,6 +34,12 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.modals.recordSelectorModal',
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
 
   /**
    * Is described in the file header

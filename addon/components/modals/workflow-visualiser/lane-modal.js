@@ -29,6 +29,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.workflowVisualiser.laneModal',
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
+
+  /**
    * Is described in the file header
    * @virtual
    */

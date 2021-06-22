@@ -1,9 +1,10 @@
 {{#global-modal
   classNames="question-modal"
   allowClose=(not isSubmitting)
+  modalId=modalId
   as |modal|
 }}
-  
+
   {{#modal.header}}
     <h1>
       {{#if headerIcon}}
@@ -19,7 +20,7 @@
     {{/each}}
     {{#if isCheckboxVisible}}
       <div class="row content-row no-border row-understand-notice">
-        {{one-checkbox 
+        {{one-checkbox
           class="danger one-checkbox-danger one-checkbox-understand"
           checked=isCheckboxChecked
           update=(action (mut isCheckboxChecked))

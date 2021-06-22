@@ -1,9 +1,10 @@
 {{#global-modal
   classNames="record-selector-modal"
   allowClose=(not isSubmitting)
+  modalId=modalId
   as |modal|
 }}
-  
+
   {{#modal.header}}
     <h1>{{headerText}}</h1>
   {{/modal.header}}

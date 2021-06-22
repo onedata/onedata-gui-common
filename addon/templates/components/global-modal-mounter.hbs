@@ -1,8 +1,13 @@
-{{#if componentName}}
-  {{#if testMode}}
-    <div class="rendered-component">{{componentName}}</div>
-  {{else}}
-    {{component componentName modalOptions=modalManager.modalOptions}}
+{{#each modalInstances key="id" as |modalInstance|}}
+  {{#if modalInstance.fullComponentName}}
+    {{#if testMode}}
+      <div class="rendered-component">{{modalInstance.fullComponentName}}</div>
+    {{else}}
+      {{component modalInstance.fullComponentName
+        modalId=modalInstance.id
+        modalOptions=modalInstance.options
+      }}
+    {{/if}}
   {{/if}}
-{{/if}}
+{{/each}}
 {{yield}}

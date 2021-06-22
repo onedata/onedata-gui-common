@@ -28,6 +28,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.workflowVisualiser.storeModal',
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
+
+  /**
    * Is described in the file header
    * @virtual
    */
