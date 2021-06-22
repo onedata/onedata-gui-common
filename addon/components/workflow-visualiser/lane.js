@@ -12,6 +12,7 @@ import layout from 'onedata-gui-common/templates/components/workflow-visualiser/
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default VisualiserElement.extend({
   layout,
@@ -158,7 +159,11 @@ export default VisualiserElement.extend({
       return this.get('lane').modify({ name: newName });
     },
     toggleActionsOpen(state) {
-      scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
+      scheduleOnce(
+        'afterRender',
+        this,
+        () => safeExec(this, () => this.set('areActionsOpened', state))
+      );
     },
   },
 });

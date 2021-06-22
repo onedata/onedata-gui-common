@@ -14,6 +14,7 @@ import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { setProperties } from '@ember/object';
 import { Promise } from 'rsvp';
+import { selectChoose } from '../../../../helpers/ember-power-select';
 
 const simpliestLane = {
   name: 'lane1',
@@ -91,6 +92,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     itClosesModalOnCancelClick();
     itClosesModalOnBackdropClick();
 
+    itInjectsCreateStoreAction();
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'lane1');
     itPassesLaneProvidedByFormOnSubmit(fillForm, simpliestLane);
@@ -138,6 +140,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
 
     itClosesModalOnCancelClick();
     itClosesModalOnBackdropClick();
+    itInjectsCreateStoreAction();
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'lane2');
     itPassesLaneProvidedByFormOnSubmit(fillForm, Object.assign({}, simpliestLane, {
@@ -210,6 +213,20 @@ function itClosesModalOnBackdropClick() {
 
     await click(getModal()[0]);
     expect(onHideSpy).to.be.calledOnce;
+  });
+}
+
+function itInjectsCreateStoreAction() {
+  it('injects createStoreAction to form', async function () {
+    const executeStub = sinon.stub().resolves({ status: 'failed' });
+    this.set('modalOptions.createStoreAction', { execute: executeStub });
+
+    await showModal(this);
+
+    expect(executeStub).to.not.be.called;
+    await selectChoose('.sourceStore-field', 'Create store...');
+
+    expect(executeStub).to.be.calledOnce;
   });
 }
 

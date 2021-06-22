@@ -27,56 +27,12 @@
 
 import Service from '@ember/service';
 import { Promise, resolve } from 'rsvp';
-import { writable, raw, conditional, tag } from 'ember-awesome-macros';
+import { raw, conditional, tag } from 'ember-awesome-macros';
 import EmberObject, { get, getProperties, set } from '@ember/object';
 import { guidFor } from '@ember/object/internals';
 import { A } from '@ember/array';
 
 export default Service.extend({
-  /**
-   * If true, then modal `open` property is true.
-   * Should not be changed directly!
-   * @type {boolean}
-   */
-  isModalOpened: false,
-
-  /**
-   * Resolve callback called to notify about modal `shown` event
-   * @type {Function}
-   */
-  resolveModalShownPromise: resolve,
-
-  /**
-   * Promise, which resolves when active modal gets hidden
-   * @type {Promise}
-   */
-  modalHiddenPromise: writable(raw(resolve())),
-
-  /**
-   * Resolve callback for `modalHiddenPromise`. Called to notify about modal
-   * `hidden` event
-   * @type {Function}
-   */
-  resolveModalHiddenPromise: resolve,
-
-  /**
-   * Name of a modal component, which should be rendered after current modal close.
-   * @type {string|null}
-   */
-  queuedShowModalComponentName: null,
-
-  /**
-   * Name of a current visible modal component.
-   * @type {string}
-   */
-  modalComponentName: null,
-
-  /**
-   * Options passed via `show()` to customize modal.
-   * @type {Object}
-   */
-  modalOptions: Object.freeze({}),
-
   /**
    * @type {Array<Object>}
    */
@@ -100,6 +56,7 @@ export default Service.extend({
    *   - [*]: any - all other options, that can be accessed by modal component via
    *     `modalManager.modalOptions`.
    * @returns {Object} Object with fields:
+   *   - id: String - modal instance id
    *   - shownPromise: Promise - resolves when modal is fully visible (after all transitions),
    *   - hiddenPromise: Promise - resolves when modal is fully closed (after all transitions).
    */
@@ -113,59 +70,6 @@ export default Service.extend({
     set(modalInstance, 'isOpened', true);
 
     return getProperties(modalInstance, 'id', 'shownPromise', 'hiddenPromise');
-
-    // const {
-    //   queuedShowModalComponentName,
-    //   isModalOpened,
-    // } = this.getProperties(
-    //   'isModalOpened',
-    //   'queuedShowModalComponentName'
-    // );
-
-    // if (queuedShowModalComponentName) {
-    //   const componentsInfo =
-    //     `First modal component: ${queuedShowModalComponentName}, second modal component: ${modalComponentName}.`;
-    //   throw new Error(
-    //     `modal-manager: You tried to render modal twice in the same runloop frame. ${componentsInfo}`,
-    //   );
-    // }
-
-    // this.set('queuedShowModalComponentName', modalComponentName);
-
-    // // Hide previous modal if it is still opened
-    // let shownPromise = isModalOpened ? this.hide() : resolve();
-    // let hideResolve;
-    // const hidePromise = new Promise(resolve => {
-    //   hideResolve = resolve;
-    // }).then(() => {
-    //   this.setProperties({
-    //     resolveModalHiddenPromise: resolve,
-    //     modalHiddenPromise: resolve(),
-    //     modalComponentName: null,
-    //     modalOptions: {},
-    //   });
-    // });
-
-    // shownPromise = shownPromise.then(() => {
-    //   return new Promise(showResolve => {
-    //     this.setProperties({
-    //       isModalOpened: true,
-    //       modalComponentName: modalComponentName,
-    //       modalOptions: modalOptions,
-    //       modalHiddenPromise: hidePromise,
-    //       resolveModalHiddenPromise: hideResolve,
-    //       resolveModalShownPromise: showResolve,
-    //       queuedShowModalComponentName: null,
-    //     });
-    //   }).then(() => {
-    //     this.set('resolveModalShownPromise', resolve);
-    //   });
-    // });
-
-    // return {
-    //   shownPromise,
-    //   hiddenPromise: hidePromise,
-    // };
   },
 
   /**
@@ -183,20 +87,6 @@ export default Service.extend({
 
     set(modalInstance, 'isOpened', false);
     return get(modalInstance, 'hiddenPromise');
-
-    // const {
-    //   isModalOpened,
-    //   modalHiddenPromise,
-    // } = this.getProperties(
-    //   'isModalOpened',
-    //   'modalHiddenPromise'
-    // );
-
-    // if (isModalOpened) {
-    //   this.set('isModalOpened', false);
-    // }
-
-    // return modalHiddenPromise;
   },
 
   onModalSubmit(modalId, data) {
@@ -210,13 +100,6 @@ export default Service.extend({
     return submitPromise.finally(() => {
       this.hideAfterSubmit(modalId);
     });
-
-    // const onSubmit = this.get('modalOptions.onSubmit');
-
-    // const submitPromise = resolve(onSubmit && onSubmit(data));
-    // return submitPromise.finally(() => {
-    //   this.hideAfterSubmit();
-    // });
   },
 
   /**
@@ -234,7 +117,6 @@ export default Service.extend({
     if (modalInstance) {
       get(modalInstance, 'resolveShownPromise')();
     }
-    // this.get('resolveModalShownPromise')();
   },
 
   onModalHide(modalId) {
@@ -247,15 +129,6 @@ export default Service.extend({
     } else {
       return this.hide(modalId);
     }
-
-    // const onHide = this.get('modalOptions.onHide');
-
-    // if (onHide && onHide() === false) {
-    //   // Cancel modal hide
-    //   return false;
-    // } else {
-    //   return this.hide();
-    // }
   },
 
   onModalHidden(modalId) {
@@ -263,7 +136,7 @@ export default Service.extend({
     if (modalInstance) {
       get(modalInstance, 'resolveHiddenPromise')();
     }
-    // this.get('resolveModalHiddenPromise')();
+    this.get('modalInstances').removeObject(modalInstance);
   },
 
   hideAfterSubmit(modalId) {
@@ -271,9 +144,6 @@ export default Service.extend({
     if (modalInstance && get(modalInstance, 'options.hideAfterSubmit') !== false) {
       this.hide(modalId);
     }
-    // if (this.get('modalOptions.hideAfterSubmit') !== false) {
-    //   this.hide();
-    // }
   },
 
   createModalInstance({ componentName, options }) {

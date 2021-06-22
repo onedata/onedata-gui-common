@@ -66,6 +66,11 @@ export default Component.extend(I18n, {
   stores: reads('modalOptions.stores'),
 
   /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  createStoreAction: reads('modalOptions.createStoreAction'),
+
+  /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
    */
   lane: reads('modalOptions.lane'),

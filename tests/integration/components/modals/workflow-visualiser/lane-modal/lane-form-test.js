@@ -8,6 +8,8 @@ import { fillIn, focus, blur } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
+import { A } from '@ember/array';
+import { resolve } from 'rsvp';
 
 const componentClass = 'lane-form';
 
@@ -17,24 +19,32 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
   });
 
   beforeEach(function () {
+    const stores = A([
+      // random order to test sorting
+      Store.create({
+        id: 's3',
+        name: 'store3',
+      }),
+      Store.create({
+        id: 's1',
+        name: 'store1',
+      }),
+      Store.create({
+        id: 's2',
+        name: 'store2',
+      }),
+    ]);
     this.setProperties({
       changeSpy: sinon.spy(),
       isDisabled: false,
-      stores: [
-        // random order to test sorting
-        Store.create({
-          id: 's3',
-          name: 'store3',
-        }),
-        Store.create({
-          id: 's1',
-          name: 'store1',
-        }),
-        Store.create({
-          id: 's2',
-          name: 'store2',
-        }),
-      ],
+      stores,
+      createStoreAction: {
+        execute: () => {
+          const newStore = { id: 'snew', name: 'new store' };
+          stores.pushObject(newStore);
+          return resolve({ status: 'done', result: newStore });
+        },
+      },
     });
   });
 
@@ -104,9 +114,10 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       const $options = $('.ember-power-select-option');
       const stores = this.get('stores');
-      expect($options).to.have.length(stores.length);
+      expect($options).to.have.length(stores.length + 1);
+      expect($options.eq(0).text().trim()).to.equal('Create store...');
       stores.sortBy('name').forEach(({ name }, idx) =>
-        expect($options.eq(idx).text().trim()).to.equal(name)
+        expect($options.eq(idx + 1).text().trim()).to.equal(name)
       );
     });
 
@@ -242,7 +253,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       });
     });
 
-    it('allows to configure new lane with "Serial" iterator', async function () {
+    it('allows to configure new lane with "Batch" iterator', async function () {
       const changeSpy = this.get('changeSpy');
       await render(this);
 
@@ -266,6 +277,59 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         isValid: true,
       });
     });
+
+    it('allows to configure new lane with store created in place', async function () {
+      const changeSpy = this.get('changeSpy');
+      await render(this);
+
+      await fillIn('.name-field .form-control', 'someName');
+      await selectChoose('.sourceStore-field', 'Create store...');
+      await selectChoose('.strategy-field', 'Serial');
+
+      expect(this.$('.has-error')).to.not.exist;
+      expect(this.$('.sourceStore-field .dropdown-field-trigger').text().trim())
+        .to.equal('new store');
+      expect(changeSpy).to.be.calledWith({
+        data: {
+          name: 'someName',
+          storeIteratorSpec: {
+            strategy: {
+              type: 'serial',
+            },
+            storeSchemaId: 'snew',
+          },
+        },
+        isValid: true,
+      });
+    });
+
+    it('does not change source store when creating new store in place failed',
+      async function () {
+        this.set('createStoreAction', { execute: () => resolve({ status: 'failed' }) });
+        const changeSpy = this.get('changeSpy');
+        await render(this);
+
+        await fillIn('.name-field .form-control', 'someName');
+        await selectChoose('.sourceStore-field', 'store2');
+        await selectChoose('.sourceStore-field', 'Create store...');
+        await selectChoose('.strategy-field', 'Serial');
+
+        expect(this.$('.has-error')).to.not.exist;
+        expect(this.$('.sourceStore-field .dropdown-field-trigger').text().trim())
+          .to.equal('store2');
+        expect(changeSpy).to.be.calledWith({
+          data: {
+            name: 'someName',
+            storeIteratorSpec: {
+              strategy: {
+                type: 'serial',
+              },
+              storeSchemaId: 's2',
+            },
+          },
+          isValid: true,
+        });
+      });
   });
 
   context('in "edit" mode', function () {
@@ -404,6 +468,7 @@ async function render(testCase) {
     mode=mode
     lane=lane
     stores=stores
+    createStoreAction=createStoreAction
     isDisabled=isDisabled
     onChange=changeSpy
   }}`);

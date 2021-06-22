@@ -10,6 +10,7 @@ import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
 import { click, fillIn } from 'ember-native-dom-helpers';
+import { selectChoose } from '../../../../helpers/ember-power-select';
 
 describe('Integration | Utility | workflow visualiser/actions/create lane action', function () {
   setupComponentTest('test-component', {
@@ -95,6 +96,18 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       expect(get(actionResult, 'status')).to.equal('failed');
     }
   );
+
+  it('injects createStoreAction to modal', async function () {
+    const executeStub = sinon.stub().resolves({ status: 'failed' });
+    this.set('action.createStoreAction', { execute: executeStub });
+
+    await executeAction(this);
+
+    expect(executeStub).to.not.be.called;
+    await selectChoose(getModalBody().find('.sourceStore-field')[0], 'Create store...');
+
+    expect(executeStub).to.be.calledOnce;
+  });
 });
 
 async function executeAction(testCase) {

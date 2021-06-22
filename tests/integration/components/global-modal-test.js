@@ -55,7 +55,7 @@ describe('Integration | Component | global modal', function () {
       .then(() => expect(getGlobalModal()).to.have.class('custom-modal-class'));
   });
 
-  it('hides modal if modalManager.isModalOpened turns from true to false', function () {
+  it('hides modal if modal instance isOpened turns from true to false', function () {
     this.set('modalInstance.isOpened', true);
 
     this.render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);

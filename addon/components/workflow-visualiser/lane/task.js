@@ -13,6 +13,7 @@ import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { tag, raw, conditional, equal, array, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 const possibleStatuses = ['pending', 'active', 'finished', 'failed'];
 
@@ -122,7 +123,11 @@ export default VisualiserElement.extend({
       return this.get('task').modify({ name: newName });
     },
     toggleActionsOpen(state) {
-      scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
+      scheduleOnce(
+        'afterRender',
+        this,
+        () => safeExec(this, () => this.set('areActionsOpened', state))
+      );
     },
     headerClick() {
       if (this.get('mode') !== 'view') {
