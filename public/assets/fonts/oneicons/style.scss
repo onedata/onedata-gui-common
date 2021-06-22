@@ -3,9 +3,9 @@
 @font-face {
   font-family: '#{$icomoon-font-family}';
   src:
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?osw72q') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?osw72q') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?osw72q##{$icomoon-font-family}') format('svg');
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?4nkqda') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?4nkqda') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?4nkqda##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -74,6 +74,16 @@
 .oneicon-atm-inventory {
   &:before {
     content: $oneicon-atm-inventory; 
+  }
+}
+.oneicon-atm-lambda {
+  &:before {
+    content: $oneicon-atm-lambda; 
+  }
+}
+.oneicon-atm-workflow {
+  &:before {
+    content: $oneicon-atm-workflow; 
   }
 }
 .oneicon-ban-left-thin {
@@ -447,11 +457,6 @@
     content: $oneicon-key; 
   }
 }
-.oneicon-lambda {
-  &:before {
-    content: $oneicon-lambda; 
-  }
-}
 .oneicon-leave-space {
   &:before {
     content: $oneicon-leave-space; 
@@ -565,6 +570,11 @@
 .oneicon-move-up {
   &:before {
     content: $oneicon-move-up; 
+  }
+}
+.oneicon-move {
+  &:before {
+    content: $oneicon-move; 
   }
 }
 .oneicon-no-view {

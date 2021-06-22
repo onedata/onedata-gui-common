@@ -1,0 +1,89 @@
+.workflow-visualiser-task-form {
+  $section-border: 1px solid $main-border-color;
+
+  .atm-lambda-info {
+    margin-bottom: $padding-large-vertical;
+    padding-bottom: $padding-large-vertical;
+    border-bottom: $section-border;
+  }
+
+  .atm-lambda-name {
+    @include font-semibold();
+  }
+
+  .control-label {
+    text-align: left;
+  }
+
+  .argumentMappings-field,
+  .resultMappings-field {
+    border-top: $section-border;
+    margin-bottom: 0;
+  }
+
+  .argumentMappings-field > .control-label,
+  .resultMappings-field > .control-label,
+  .section-header {
+    @include font-semibold();
+    text-transform: uppercase;
+    margin-bottom: 0.7em;
+  }
+
+  .argumentMappings-field,
+  .resultMappings-field {
+    > .control-label {
+      flex-basis: 100%;
+      padding-top: $padding-large-vertical;
+    }
+  }
+
+  .valueBuilderConstValue-field .form-control {
+    height: 6em;
+  }
+
+  .valueBuilderType-field,
+  .valueBuilderConstValue-field,
+  .valueBuilderStore-field,
+  .targetStore-field,
+  .dispatchFunction-field {
+    .control-label {
+      font-size: 85%;
+    }
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .collection-item + .collection-item {
+      margin-top: 0.5em;
+    }
+
+    .argumentMapping-field,
+    .resultMapping-field {
+      flex-wrap: nowrap;
+    }
+
+    .argumentMapping-children,
+    .resultMapping-children {
+      display: flex;
+    }
+
+    .valueBuilderType-field,
+    .targetStore-field {
+      flex: 0 0 50%;
+      min-width: 0;
+      margin-right: $padding-base-horizontal;
+    }
+
+    .valueBuilderType-field,
+    .valueBuilderConstValue-field,
+    .valueBuilderStore-field,
+    .targetStore-field,
+    .dispatchFunction-field {
+      .control-label {
+        position: absolute;
+        bottom: calc(100% + 0.3em);
+        padding: 0;
+        width: 100%;
+      }
+    }
+  }
+}

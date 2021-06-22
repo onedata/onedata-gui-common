@@ -2,7 +2,7 @@
  * A container for dynamically generated fields. Use `addNewField` to add field, and
  * `removeField` to remove it from fields list. DO NOT modify fields array on your own.
  * Before usage you have to override `fieldFactoryMethod` so it returns form element.
- * 
+ *
  * @module utils/form-component/form-fields-collection-group
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -23,6 +23,11 @@ export default FormFieldsGroup.extend({
    * @virtual
    */
   fieldFactoryMethod: notImplementedThrow,
+
+  /**
+   * @virtual optional
+   */
+  isCollectionManipulationAllowed: true,
 
   /**
    * @type {number}
@@ -108,7 +113,7 @@ export default FormFieldsGroup.extend({
 
   /**
    * @public
-   * @param {Utils.FormComponent.FormElement} field 
+   * @param {Utils.FormComponent.FormElement} field
    */
   removeField(field) {
     const fieldValueName = get(field, 'valueName');

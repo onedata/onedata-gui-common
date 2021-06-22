@@ -11,6 +11,7 @@ import Route from '@ember/routing/route';
 import _ from 'lodash';
 import config from 'ember-get-config';
 import { get } from '@ember/object';
+import { camelize } from '@ember/string';
 
 // TODO: copied from content route
 // TODO: refactor to create route-, or application-specific special ids
@@ -37,10 +38,11 @@ export default Route.extend({
 
   redirect({ resourceId }) {
     const sidebarModel = this.modelFor('onedata.sidebar');
+    const tabId = camelize(sidebarModel.resourceType);
     /** @type {object} */
     const tabModel = _.find(
       onedataTabs,
-      t => get(t, 'id') === sidebarModel.resourceType
+      t => get(t, 'id') === tabId
     );
 
     /** @type {string} */

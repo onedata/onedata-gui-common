@@ -1,0 +1,94 @@
+.workflow-visualiser .workflow-visualiser-interlane-space {
+  position: relative;
+  flex: 0 0 $workflow-visualiser-lane-border-width;
+  background-color: $workflow-visualiser-lane-border-color;
+  z-index: 1;
+
+  &:first-child {
+    width: 0;
+  }
+
+  .draggable-object-target {
+    left: -$padding-large-vertical;
+    right: -$padding-large-vertical;
+    top: 0;
+    bottom: 0;
+
+    &::before {
+      left: $padding-large-vertical - $padding-small-vertical;
+      right: $padding-large-vertical - $padding-small-vertical;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  &.may-accept-drag {
+    z-index: 1;
+
+    .draggable-object-target {
+      pointer-events: initial;
+
+      &.accepts-drag::before {
+        background-color: rgba(#000, 0.1);
+        border-color: rgba(#000, 0.2);
+      }
+    }
+
+    *:not(.draggable-object-target) {
+      pointer-events: none;
+    }
+  }
+
+  .create-lane-action-trigger {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    background-color: $workflow-visualiser-add-trigger-color;
+    color: $color-one-white;
+    width: 1em;
+    height: 2em;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    transition: transition-ease(opacity);
+
+    &:hover {
+      background-color: $color-one-azure;
+    }
+
+    .one-icon {
+      display: block;
+      @include absolute-align-middle-center();
+      font-size: 0.85em;
+      margin-left: -1px;
+    }
+  }
+
+  &.full-view-space {
+    flex-basis: 100%;
+    background-color: initial;
+
+    .draggable-object-target {
+      display: none;
+    }
+
+    .create-lane-action-trigger {
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
+      width: 4em;
+      height: 4em;
+      border-radius: 100%;
+
+      .one-icon {
+        font-size: 300%;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.workflow-visualiser.during-lane-dragdrop .workflow-visualiser-interlane-space {
+  .create-lane-action-trigger {
+    opacity: 0;
+  }
+}

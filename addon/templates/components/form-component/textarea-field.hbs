@@ -1,11 +1,15 @@
-<textarea
-  id={{fieldId}}
-  class="form-control"
-  readonly={{isInViewMode}}
-  disabled={{not isEffectivelyEnabled}}
-  placeholder={{or placeholder null}}
-  onblur={{action "focusLost"}}
-  oninput={{action "valueChanged" value="target.value"}}
-  value={{value}}
-></textarea>
+{{#if (and showsStaticTextInViewMode isInViewMode)}}
+  {{value}}
+{{else}}
+  <textarea
+    id={{fieldId}}
+    class="form-control"
+    readonly={{isInViewMode}}
+    disabled={{not isEffectivelyEnabled}}
+    placeholder={{or placeholder null}}
+    onblur={{action "focusLost"}}
+    oninput={{action "valueChanged" value="target.value"}}
+    value={{value}}
+  ></textarea>
+{{/if}}
 {{yield}}

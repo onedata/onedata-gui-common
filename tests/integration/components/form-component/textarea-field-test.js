@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import { set } from '@ember/object';
+import { set, setProperties } from '@ember/object';
 
 describe('Integration | Component | form component/textarea field', function () {
   setupComponentTest('form-component/textarea-field', {
@@ -115,6 +115,23 @@ describe('Integration | Component | form component/textarea field', function () 
       this.render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea')).to.have.attr('readonly');
+    }
+  );
+
+  it(
+    'renders static text when field is in "view" mode and "showsStaticTextInViewMode" is true',
+    function () {
+      const field = this.get('field');
+      setProperties(field, {
+        value: 'test value',
+        showsStaticTextInViewMode: true,
+      });
+      field.changeMode('view');
+
+      this.render(hbs `{{form-component/textarea-field field=field}}`);
+
+      expect(this.$('textarea')).to.not.exist;
+      expect(this.$().text().trim()).to.equal('test value');
     }
   );
 });

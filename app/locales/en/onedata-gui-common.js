@@ -38,6 +38,7 @@ import ceaseOneproviderSupportModal from './onedata-gui-common/components/cease-
 import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
 import queryBuilder from './onedata-gui-common/components/query-builder';
 import oneStep from './onedata-gui-common/components/one-step';
+import workflowVisualiser from './onedata-gui-common/components/workflow-visualiser';
 import idInfo from './onedata-gui-common/components/id-info';
 import actionsPopoverContent from './onedata-gui-common/components/actions-popover-content';
 
@@ -47,6 +48,8 @@ import cannotInitWebsocket from './onedata-gui-common/components/errors/cannot-i
 
 import recordSelectorModal from './onedata-gui-common/components/modals/record-selector-modal';
 import questionModal from './onedata-gui-common/components/modals/question-modal';
+import workflowVisualiserStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/store-modal';
+import workflowVisualiserLaneModal from './onedata-gui-common/components/modals/workflow-visualiser/lane-modal';
 
 import authenticationErrorMessage from './onedata-gui-common/mixins/authentication-error-message';
 import autoSaveForm from './onedata-gui-common/mixins/components/auto-save-form';
@@ -108,6 +111,7 @@ const translations = {
     oneDocSeeMore,
     queryBuilder,
     oneStep,
+    workflowVisualiser,
     idInfo,
     actionsPopoverContent,
     alerts: {
@@ -121,6 +125,10 @@ const translations = {
     modals: {
       recordSelectorModal,
       questionModal,
+      workflowVisualiser: {
+        storeModal: workflowVisualiserStoreModal,
+        laneModal: workflowVisualiserLaneModal,
+      },
     },
   },
   mixins: {

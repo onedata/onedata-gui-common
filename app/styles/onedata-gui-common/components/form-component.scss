@@ -89,7 +89,7 @@ $form-component-view-margin: $padding-base-vertical;
       align-items: center;
       height: $input-height-base;
     }
-  
+
     .remove-field-button {
       margin-left: $padding-base-horizontal;
     }
@@ -108,7 +108,7 @@ $form-component-view-margin: $padding-base-vertical;
   }
 
   .static-text-field-renderer .field-component {
-      word-wrap: break-word;
+    word-wrap: break-word;
   }
 
   .field-view-mode {
@@ -120,7 +120,7 @@ $form-component-view-margin: $padding-base-vertical;
       padding-top: 0;
     }
 
-    &.textarea-field-renderer {
+    &.textarea-field-renderer:not(.view-as-static-text) {
       .control-label {
         padding-top: $padding-base-vertical + 1;
       }

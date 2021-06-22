@@ -39,4 +39,10 @@ describe('Integration | Utility | form component/tags field', function () {
 
     expect(get(field, 'sort')).to.be.false;
   });
+
+  it('defines "tagsLimit" as undefined', function () {
+    const field = TagsField.create();
+
+    expect(get(field, 'tagsLimit')).to.be.undefined;
+  });
 });

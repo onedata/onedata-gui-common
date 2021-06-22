@@ -1,0 +1,18 @@
+{{one-draggable-object-target
+  validateDragEvent=(action "validateDragEvent")
+  action=(action "acceptDraggedElement")
+}}
+{{#if (not-eq arrowType "none")}}
+  <div class="arrow">
+    <div class="line"></div>
+    <div class="arrowhead"></div>
+  </div>
+{{/if}}
+{{#if allowAdding}}
+  {{one-icon
+    class=(concat-classes createElementAction.className "create-block-action-trigger")
+    icon=createElementAction.icon
+    click=createElementAction.executeCallback
+  }}
+{{/if}}
+{{yield}}

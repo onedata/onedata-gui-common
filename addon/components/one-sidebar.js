@@ -16,6 +16,7 @@ import EmberObject, { computed, observer, get, setProperties } from '@ember/obje
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import { array, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { camelize } from '@ember/string';
 
 export default Component.extend(I18n, {
   layout,
@@ -78,13 +79,13 @@ export default Component.extend(I18n, {
   title: computed('model.resourceType', function title() {
     const resourcesType = this.get('model.resourceType');
     return resourcesType ?
-      this.get('i18n').t(`tabs.${resourcesType}.menuItem`) : '';
+      this.get('i18n').t(`tabs.${camelize(resourcesType)}.menuItem`) : '';
   }),
 
   /**
    * Name of oneicon that should be displayed for each first-level element
    * To inject.
-   * 
+   *
    * @type {string}
    */
   // TODO some generic icon

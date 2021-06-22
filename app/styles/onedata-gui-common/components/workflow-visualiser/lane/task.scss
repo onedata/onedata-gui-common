@@ -1,0 +1,110 @@
+.workflow-visualiser .workflow-visualiser-task {
+  position: relative;
+  border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
+  border-radius: $border-radius-base;
+
+  .draggable-task {
+    display: flex;
+    align-items: center;
+    padding: 0 $padding-xs-horizontal;
+    border: inherit;
+    border-radius: $border-radius-base;
+    min-height: 50px;
+    background-color: $color-one-white;
+    margin: -$workflow-visualiser-block-border-width;
+  }
+
+  .task-drag-handle {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+
+    .one-icon {
+      font-size: 240%;
+    }
+  }
+
+  &.status-active {
+    .draggable-task {
+      @extend .animated;
+      @extend .infinite;
+      @extend .hinge;
+      @extend .pulse-bg-light-mint;
+    }
+  }
+
+  &.status-finished {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-success;
+      background-color: lighten($color-one-success, 30%);
+    }
+  }
+
+  &.status-failed {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-danger;
+      background-color: lighten($color-one-danger, 30%);
+    }
+  }
+
+  .task-name {
+    flex: 1 1 auto;
+    font-size: 90%;
+    text-align: left;
+    min-width: 0;
+  }
+
+  .task-actions-trigger {
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50%);
+    font-size: 120%;
+    z-index: 1;
+    transition: transition-ease(opacity);
+
+    &:hover,
+    &.active {
+      color: $color-one-azure;
+    }
+
+    @include workflow-visualiser-action-trigger-white-background();
+  }
+
+  .task-details {
+    padding: 0.5em;
+    padding-top: calc(0.5em + #{$workflow-visualiser-block-border-width});
+    font-size: 90%;
+  }
+
+  .detail-entry {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .detail-label {
+    @include font-semibold();
+  }
+
+  .detail-value {
+    flex-grow: 1;
+    text-align: right;
+  }
+
+  &.mode-edit {
+    .draggable-task {
+      cursor: initial !important;
+    }
+
+    .task-drag-handle {
+      cursor: grab;
+    }
+  }
+}
+
+.workflow-visualiser.during-task-dragdrop .workflow-visualiser-task {
+  .task-actions-trigger {
+    opacity: 0;
+    pointer-events: none;
+  }
+}

@@ -3,16 +3,25 @@
     {{#if nestedField.isVisible}}
       <div class="collection-item">
         {{form-component/field-renderer field=nestedField}}
-        {{#if isInEditMode}}
+        {{#if (and isInEditMode isCollectionManipulationAllowed)}}
           <div class="remove-field-button-container">
-            {{remove-icon class="remove-field-button" onClick=(action "removeField" nestedField)}}
+            {{remove-icon
+              class="remove-field-button"
+              onClick=(action "removeField" nestedField)
+              isDisabled=(not isEffectivelyEnabled)
+            }}
           </div>
         {{/if}}
       </div>
     {{/if}}
   {{/each}}
-  {{#if isInEditMode}}
-    {{#bs-button class="add-field-button" size="sm" onClick=(action "addField")}}
+  {{#if (and isInEditMode isCollectionManipulationAllowed)}}
+    {{#bs-button
+      class="add-field-button"
+      size="sm"
+      disabled=(not isEffectivelyEnabled)
+      onClick=(action "addField")
+    }}
       {{one-icon icon="add-filled"}}{{addButtonText}}
     {{/bs-button}}
   {{/if}}

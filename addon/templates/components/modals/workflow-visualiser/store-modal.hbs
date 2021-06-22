@@ -1,0 +1,40 @@
+{{#global-modal
+  classNames="store-modal"
+  allowClose=(not isSubmitting)
+  as |modal|
+}}
+
+  {{#modal.header}}
+    <h1>{{headerText}}</h1>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    {{modals/workflow-visualiser/store-modal/store-form
+      mode=mode
+      store=store
+      onChange=(action "formChange")
+      isDisabled=isSubmitting
+    }}
+  {{/modal.body}}
+
+  {{#modal.footer class="btn-toolbar"}}
+    {{#bs-button
+      type="default"
+      class="btn-cancel"
+      onClick=modal.close
+      disabled=isSubmitting
+    }}
+      {{cancelBtnText}}
+    {{/bs-button}}
+    {{#if (not-eq mode "view")}}
+      {{#one-spin-button
+        class="btn btn-primary btn-submit"
+        action=(action "submit" modal.submit)
+        disabled=(not formIsValid)
+      }}
+        {{submitBtnText}}
+      {{/one-spin-button}}
+    {{/if}}
+  {{/modal.footer}}
+
+{{/global-modal}}

@@ -106,6 +106,15 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     &:hover {
       background-color: lighten($color-one-blue-gray, 10%);
     }
+
+    &.disabled {
+      background-color: $color-one-light-gray;
+      cursor: initial !important;
+
+      &:hover {
+        background-color: $color-one-light-gray;
+      }
+    }
   }
 
   .tag-creator {
@@ -137,6 +146,10 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
   .tags-input-model-selector-editor {
     width: 250px;
+  }
+
+  .tags-input-external-editor {
+    margin: 0;
   }
 }
 

@@ -214,4 +214,22 @@ describe('Integration | Component | form component/field renderer', function () 
       expect(this.$('.field-renderer')).to.have.class(`field-${mode}-mode`);
     });
   });
+
+  it('has class "field-enabled" when field is enabled', function () {
+    this.set('textField.isEnabled', true);
+
+    this.render(hbs `{{form-component/field-renderer field=textField}}`);
+
+    expect(this.$('.field-renderer')).to.have.class('field-enabled')
+      .and.to.not.have.class('field-disabled');
+  });
+
+  it('has class "field-disabled" when field is disabled', function () {
+    this.set('textField.isEnabled', false);
+
+    this.render(hbs `{{form-component/field-renderer field=textField}}`);
+
+    expect(this.$('.field-renderer')).to.have.class('field-disabled')
+      .and.to.not.have.class('field-enabled');
+  });
 });

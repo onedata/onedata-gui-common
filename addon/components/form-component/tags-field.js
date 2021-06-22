@@ -41,6 +41,11 @@ export default FieldComponentBase.extend({
   tagEditorSettings: reads('field.tagEditorSettings'),
 
   /**
+   * @type {ComputedProperty<Number|undefined>}
+   */
+  tagsLimit: reads('field.tagsLimit'),
+
+  /**
    * @type {ComputedProperty<boolean>}
    */
   sort: reads('field.sort'),

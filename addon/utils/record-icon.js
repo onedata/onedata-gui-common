@@ -1,12 +1,12 @@
 /**
  * Returns icon name for a record or model name.
- * 
+ *
  * To get a more detailed icon (e.g. icon dedicated for a specific group type)
  * you must pass record object and set `useSubtypeIcon` argument to true.
- * 
+ *
  * Icon mappings are also exported to allow global, per-project custom modifications
  * of these objects.
- * 
+ *
  * TODO: add more icons when used in projects other than onezone-gui.
  *
  * @module utils/record-icon
@@ -15,7 +15,7 @@
  */
 
 import { get } from '@ember/object';
-import { camelize } from '@ember/string';
+import { camelize, dasherize } from '@ember/string';
 
 export default function recordIcon(recordOrModelName, useSubtypeIcon = false) {
   let modelName, record;
@@ -45,8 +45,8 @@ export default function recordIcon(recordOrModelName, useSubtypeIcon = false) {
 export const modelToIconMapping = {
   harvester: 'light-bulb',
   share: 'browser-share',
-  sharedUser: 'user',
   token: 'tokens',
+  atmWorkflowSchema: 'atm-workflow',
 };
 [
   'cluster',
@@ -54,7 +54,9 @@ export const modelToIconMapping = {
   'provider',
   'space',
   'user',
-].forEach(modelName => modelToIconMapping[modelName] = modelName);
+  'atmInventory',
+  'atmLambda',
+].forEach(modelName => modelToIconMapping[modelName] = dasherize(modelName));
 
 export const subtypeIconGetters = {
   cluster: cluster => {

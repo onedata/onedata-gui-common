@@ -14,6 +14,7 @@ import { observer } from '@ember/object';
 import _ from 'lodash';
 import config from 'ember-get-config';
 import sortByProperties from 'onedata-gui-common/utils/ember/sort-by-properties';
+import { camelize } from '@ember/string';
 
 const {
   onedataTabs,
@@ -30,8 +31,8 @@ export default Route.extend({
   },
 
   afterModel(model, transition) {
-    const sidebarType = transition.params['onedata.sidebar'].type;
-    const tab = _.find(onedataTabs, t => t.id === sidebarType);
+    const tabId = camelize(transition.params['onedata.sidebar'].type);
+    const tab = _.find(onedataTabs, t => t.id === tabId);
     if (!this.get('media.isMobile')) {
       if (tab && tab.allowIndex) {
         this.transitionTo('onedata.sidebar.content', 'not-selected');

@@ -1,0 +1,21 @@
+.lane-form {
+  .iteratorOptions-field {
+    flex-wrap: wrap;
+
+    > .control-label {
+      flex-basis: 100%;
+      text-align: center;
+      padding-right: 0;
+    }
+  }
+
+  .control-label {
+    min-width: 120px;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .dropdown-field {
+      flex: 0 0 calc(100% - 120px);
+    }
+  }
+}
