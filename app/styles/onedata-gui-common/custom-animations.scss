@@ -29,6 +29,12 @@
 );
 
 @include animation-bg-color-change(
+  pulse-bg-light-mint,
+  inherit,
+  lighten($color-one-mint, 30%)
+);
+
+@include animation-bg-color-change(
   pulse-bg-one-main,
   $color-one-main,
   darken($color-one-main, 30%)

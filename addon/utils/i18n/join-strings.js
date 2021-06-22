@@ -2,7 +2,7 @@
  * Joins array of strings to create list-sentences, eg. for conjunction 'or' should
  * generate: `["one", "two", "three"]` -> `one, two or three`.
  * Uses translations of conjuctions - if it is not available it uses passed conjunction.
- * 
+ *
  * @module utils/i18n/join-string
  * @author Jakub Liput
  * @copyright (C) 2021 ACK CYFRONET AGH
@@ -25,7 +25,7 @@ export default function joinStrings(i18n, array, conjunction) {
   } else {
     conjunctionTranslation = middleConjunction;
   }
-  return [
+  return array.length < 2 ? array[0] : [
     array.slice(0, array.length - 1).join(middleConjunction),
     array[array.length - 1],
   ].join(conjunctionTranslation);

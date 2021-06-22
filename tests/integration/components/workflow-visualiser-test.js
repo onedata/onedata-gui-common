@@ -14,7 +14,7 @@ import { selectChoose } from '../../helpers/ember-power-select';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import { resolve } from 'rsvp';
 
-const possibleTaskStatuses = ['success', 'warning', 'error'];
+const possibleTaskStatuses = ['pending', 'active', 'finished', 'failed'];
 const laneWidth = 300;
 
 const idGenerators = {
@@ -28,7 +28,6 @@ const twoEmptyLanesExample = generateExample(2, 0, 0);
 const twoLanesWithEmptyBlocksExample = generateExample(2, 2, 0);
 const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 const threeNonEmptyLanesExample = generateExample(3, 3, 2);
-const threeNonEmptyLanesNoProgressExample = generateExample(3, 3, 2, false);
 
 describe('Integration | Component | workflow visualiser', function () {
   setupComponentTest('workflow-visualiser', {
@@ -210,14 +209,6 @@ describe('Integration | Component | workflow visualiser', function () {
       applyUpdate: rawDump => rawDump.stores = rawDump.stores.rejectBy('name', 'store0'),
       initialRawData: noLanesExample,
     });
-
-    it('does not show tasks progress', function () {
-      const rawData = twoNonEmptyLanesExample;
-
-      renderWithRawData(this, rawData);
-
-      expect(this.$('.task-progress-bar')).to.not.exist;
-    });
   });
 
   context('in "view" mode', function () {
@@ -239,20 +230,12 @@ describe('Integration | Component | workflow visualiser', function () {
         .to.equal('lane0');
     });
 
-    it('does not show tasks progress when progress is not available', function () {
-      const rawData = threeNonEmptyLanesNoProgressExample;
-
-      renderWithRawData(this, rawData);
-
-      checkTasksProgress(this, rawData);
-    });
-
-    it('shows tasks progress', function () {
+    it('shows tasks status', function () {
       const rawData = threeNonEmptyLanesExample;
 
       renderWithRawData(this, rawData);
 
-      checkTasksProgress(this, rawData);
+      checkTasksStatus(this, rawData);
     });
 
     it('updates rendered tasks progress', async function () {
@@ -261,13 +244,11 @@ describe('Integration | Component | workflow visualiser', function () {
 
       const updatedRawData = _.cloneDeep(rawData);
       const firstTask = updatedRawData.lanes[0].parallelBoxes[0].tasks[0];
-      const secondTask = updatedRawData.lanes[0].parallelBoxes[0].tasks[1];
-      firstTask.progressPercent = (firstTask.progressPercent + 25) % 100;
-      secondTask.status = possibleTaskStatuses.without(secondTask.status)[0];
+      firstTask.status = possibleTaskStatuses.without(firstTask.status)[0];
       this.set('rawData', updatedRawData);
       await wait();
 
-      checkTasksProgress(this, updatedRawData);
+      checkTasksStatus(this, updatedRawData);
     });
 
     it('shows store information in modal', async function () {
@@ -467,9 +448,11 @@ class WindowStub {
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function () {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
-
+    // Additional wait() call to make scroll tests more reliable. Without them
+    // there are random test fails.
+    await wait();
     await scrollToLane(this, overflowEdge, overflowLane, 10);
-
+    await wait();
     for (let operation of operations) {
       if (operation.startsWith('width:')) {
         const width = Number(operation.slice('width:'.length));
@@ -478,6 +461,7 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
         const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
         expect($scrollTrigger).to.have.class('visible');
         await click($scrollTrigger[0]);
+        // await wait();
       }
     }
 
@@ -804,6 +788,7 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
       }}
     </div>
   `);
+  await wait();
 }
 
 async function changeContainerWidthForScrollTest(testCase, newWidth) {
@@ -854,21 +839,15 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
       }
     }
   }
-
   $lanesContainer.scrollLeft(scrollXPosition);
   await wait();
 }
 
-function checkTasksProgress(testCase, rawData) {
+function checkTasksStatus(testCase, rawData) {
   const tasks = _.flatten(_.flatten(rawData.lanes.mapBy('parallelBoxes')).mapBy('tasks'));
-  tasks.forEach(({ id, status, progressPercent }) => {
+  tasks.forEach(({ id, status }) => {
     const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
-    expect($task).to.have.class(`status-${status || 'default'}`);
-    if (progressPercent !== null) {
-      expect($task).to.contain(`${Math.floor(progressPercent)}%`);
-    } else {
-      expect($task.find('.task-progress-bar')).to.not.exist;
-    }
+    expect($task).to.have.class(`status-${status || 'pending'}`);
   });
 }
 

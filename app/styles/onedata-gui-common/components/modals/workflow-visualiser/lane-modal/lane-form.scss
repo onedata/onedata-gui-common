@@ -1,5 +1,7 @@
 .lane-form {
   .iteratorOptions-field {
+    flex-wrap: wrap;
+
     > .control-label {
       flex-basis: 100%;
       text-align: center;
@@ -11,7 +13,9 @@
     min-width: 120px;
   }
 
-  .dropdown-field-renderer {
-    flex-wrap: nowrap;
+  @media (min-width: $screen-sm-min) {
+    .dropdown-field {
+      flex: 0 0 calc(100% - 120px);
+    }
   }
 }

@@ -34,46 +34,66 @@ import { validator } from 'ember-cp-validations';
 const storeTypes = [{
   value: 'list',
 }, {
-  value: 'map',
-}, {
   value: 'treeForest',
 }, {
   value: 'singleValue',
 }, {
   value: 'range',
-}, {
-  value: 'histogram',
-}, {
-  value: 'auditLog',
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   value: 'map',
+  // }, {
+  //   value: 'histogram',
+  // }, {
+  //   value: 'auditLog',
 }];
 
 const dataTypes = [{
   value: 'integer',
-  forbiddenIn: ['treeForest', 'histogram'],
+  forbiddenIn: ['treeForest'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['treeForest', 'histogram'],
 }, {
   value: 'string',
-  forbiddenIn: ['treeForest', 'histogram'],
+  forbiddenIn: ['treeForest'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['treeForest', 'histogram'],
 }, {
   value: 'object',
-  forbiddenIn: ['treeForest', 'histogram'],
-}, {
-  value: 'histogram',
   forbiddenIn: ['treeForest'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['treeForest', 'histogram'],
+  // }, {
+  //   value: 'histogram',
+  //   forbiddenIn: ['treeForest'],
 }, {
   value: 'anyFile',
-  forbiddenIn: ['histogram'],
+  forbiddenIn: [],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['histogram'],
 }, {
   value: 'regularFile',
-  forbiddenIn: ['histogram'],
+  forbiddenIn: [],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['histogram'],
 }, {
   value: 'directory',
-  forbiddenIn: ['histogram'],
+  forbiddenIn: [],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['histogram'],
+}, {
+  value: 'symlink',
+  forbiddenIn: [],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['histogram'],
 }, {
   value: 'dataset',
-  forbiddenIn: ['histogram'],
-}, {
-  value: 'archive',
-  forbiddenIn: ['treeForest', 'histogram'],
+  forbiddenIn: [],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['histogram'],
+  // }, {
+  //   value: 'archive',
+  //   forbiddenIn: ['histogram'],
 }];
 
 const defaultRangeStart = 0;

@@ -11,6 +11,12 @@ describe('Unit | Utility | workflow visualiser/visualiser record', function () {
     expect(get(element, 'name')).to.be.undefined;
   });
 
+  it('has undefined "status"', function () {
+    const element = VisualiserRecord.create();
+
+    expect(get(element, 'status')).to.be.undefined;
+  });
+
   it('has false "isFirst" and "isLast" on init', function () {
     const lane = VisualiserRecord.create();
 

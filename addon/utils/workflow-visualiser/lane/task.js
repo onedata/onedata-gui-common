@@ -39,15 +39,20 @@ export default VisualiserRecord.extend({
   resultMappings: undefined,
 
   /**
-   * One of: 'default', 'success', 'warning', 'error'
    * @virtual
-   * @type {String}
+   * @type {Number}
    */
-  status: 'default',
+  itemsInProcessing: 0,
 
   /**
    * @virtual
-   * @type {Number|null}
+   * @type {Number}
    */
-  progressPercent: null,
+  itemsProcessed: 0,
+
+  /**
+   * @virtual
+   * @type {Number}
+   */
+  itemsFailed: 0,
 });

@@ -19,6 +19,12 @@ export default VisualiserElement.extend({
 
   /**
    * @virtual
+   * @type {String}
+   */
+  status: undefined,
+
+  /**
+   * @virtual
    * @type {Boolean}
    */
   isFirst: false,

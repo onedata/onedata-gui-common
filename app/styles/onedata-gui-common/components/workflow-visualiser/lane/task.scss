@@ -1,14 +1,17 @@
 .workflow-visualiser .workflow-visualiser-task {
   position: relative;
+  border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
+  border-radius: $border-radius-base;
 
   .draggable-task {
     display: flex;
     align-items: center;
     padding: 0 $padding-xs-horizontal;
-    border: $workflow-visualiser-block-border-width solid $workflow-visualiser-task-border-color;
+    border: inherit;
     border-radius: $border-radius-base;
     min-height: 50px;
     background-color: $color-one-white;
+    margin: -$workflow-visualiser-block-border-width;
   }
 
   .task-drag-handle {
@@ -21,33 +24,26 @@
     }
   }
 
-  &.status-success {
-    .task-progress-bar {
-      background-color: lighten($color-one-success, 25%);
-
-      .percent-counter {
-        color: darken($color-one-success, 15%)
-      }
+  &.status-active {
+    .draggable-task {
+      @extend .animated;
+      @extend .infinite;
+      @extend .hinge;
+      @extend .pulse-bg-light-mint;
     }
   }
 
-  &.status-warning {
-    .task-progress-bar {
-      background-color: lighten($color-one-warning, 25%);
-
-      .percent-counter {
-        color: darken($color-one-warning, 15%)
-      }
+  &.status-finished {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-success;
+      background-color: lighten($color-one-success, 30%);
     }
   }
 
-  &.status-error {
-    .task-progress-bar {
-      background-color: lighten($color-one-danger, 25%);
-
-      .percent-counter {
-        color: darken($color-one-danger, 10%);
-      }
+  &.status-failed {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-danger;
+      background-color: lighten($color-one-danger, 30%);
     }
   }
 
@@ -75,33 +71,31 @@
     @include workflow-visualiser-action-trigger-white-background();
   }
 
-  .task-progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-color: $color-one-light-blue;
-    z-index: -1;
-    transition: transition-ease(width);
+  .task-details {
+    padding: 0.5em;
+    padding-top: calc(0.5em + #{$workflow-visualiser-block-border-width});
+    font-size: 90%;
+  }
 
-    .percent-counter {
-      @include font-semibold();
-      position: absolute;
-      bottom: $padding-small-vertical;
-      right: 0;
-      transform: translateX(100%) translateX(#{$padding-small-vertical});
-      font-size: 65%;
-      line-height: 1;
-      color: darken($color-one-light-blue, 30%);
-      transition: transition-ease(transform);
-    }
+  .detail-entry {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-    &.counter-inside-bar .percent-counter {
-      transform: translateX(#{-$padding-small-vertical});
-    }
+  .detail-label {
+    @include font-semibold();
+  }
+
+  .detail-value {
+    flex-grow: 1;
+    text-align: right;
   }
 
   &.mode-edit {
+    .draggable-task {
+      cursor: initial !important;
+    }
+
     .task-drag-handle {
       cursor: grab;
     }

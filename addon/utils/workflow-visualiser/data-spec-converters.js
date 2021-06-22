@@ -15,16 +15,18 @@ const dataSpecConstraintsToTypeMapping = {
     ANY: 'anyFile',
     REG: 'regularFile',
     DIR: 'directory',
+    SYMLNK: 'symlink',
   },
-  storeCredentials: {
-    singleValue: 'singleValueStore',
-    list: 'listStore',
-    map: 'mapStore',
-    treeForest: 'treeForestStore',
-    range: 'rangeStore',
-    histogram: 'histogramStore',
-    auditLog: 'auditLogStore',
-  },
+  // TODO: VFS-7816 uncomment or remove future code
+  // storeCredentials: {
+  //   singleValue: 'singleValueStore',
+  //   list: 'listStore',
+  //   treeForest: 'treeForestStore',
+  //   range: 'rangeStore',
+  //   map: 'mapStore',
+  //   histogram: 'histogramStore',
+  //   auditLog: 'auditLogStore',
+  // },
 };
 
 // `dataSpecConstraintsToTypeMapping` with inverted mappings per each dataSpec type
@@ -40,9 +42,10 @@ export function dataSpecToType(dataSpec) {
     case 'file':
       return dataSpecConstraintsToTypeMapping
         .file[valueConstraints.fileType];
-    case 'storeCredentials':
-      return dataSpecConstraintsToTypeMapping
-        .storeCredentials[valueConstraints.storeType];
+      // TODO: VFS-7816 uncomment or remove future code
+      // case 'storeCredentials':
+      //   return dataSpecConstraintsToTypeMapping
+      //     .storeCredentials[valueConstraints.storeType];
     default:
       return dataSpec.type;
   }
@@ -56,13 +59,14 @@ export function typeToDataSpec(type) {
         fileType: typeToDataSpecConstraintsMapping.file[type],
       },
     };
-  } else if (type in typeToDataSpecConstraintsMapping.storeCredentials) {
-    return {
-      type: 'storeCredentials',
-      valueConstraints: {
-        storeType: typeToDataSpecConstraintsMapping.storeCredentials[type],
-      },
-    };
+    // TODO: VFS-7816 uncomment or remove future code
+    // } else if (type in typeToDataSpecConstraintsMapping.storeCredentials) {
+    //   return {
+    //     type: 'storeCredentials',
+    //     valueConstraints: {
+    //       storeType: typeToDataSpecConstraintsMapping.storeCredentials[type],
+    //     },
+    //   };
   } else {
     return {
       type,

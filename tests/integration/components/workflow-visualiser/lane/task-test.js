@@ -61,33 +61,10 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       expect(this.$('.task-actions-trigger')).to.not.exist;
     });
 
-    itShowsStatus('default');
-    itShowsStatus('success');
-    itShowsStatus('warning');
-    itShowsStatus('error');
-
-    itShowsProgressBarForPercent(0);
-    // 25% is a breakpoint when the number of percent is shown in/outside of
-    // the progress bar.
-    itShowsProgressBarForPercent(24);
-    itShowsProgressBarForPercent(26);
-    // 55.5 to check rounding to 55%
-    itShowsProgressBarForPercent(55.5);
-    itShowsProgressBarForPercent(100);
-
-    [
-      ['not a number', NaN],
-      ['null', null],
-      ['undefined', undefined],
-    ].forEach(([valueDescription, value]) => {
-      it(`does not show progress bar when task "progressPercent" is ${valueDescription}`, function () {
-        this.set('task.progressPercent', value);
-
-        render(this);
-
-        expect(this.$('.task-progress-bar')).to.not.exist;
-      });
-    });
+    itShowsStatus('pending');
+    itShowsStatus('active');
+    itShowsStatus('finished');
+    itShowsStatus('failed');
   });
 
   context('in "edit" mode', function () {
@@ -166,16 +143,14 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('task'));
     });
 
-    it('it does not shows progress and status', function () {
+    it('it does not show status', function () {
       setProperties(this.get('task'), {
         name: 'my-task',
-        progressPercent: 20,
-        status: 'success',
+        status: 'finished',
       });
       render(this);
 
-      expect(this.$('.task-progress-bar')).to.not.exist;
-      expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-success');
+      expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-finished');
     });
   });
 });
@@ -198,25 +173,6 @@ function itShowsStatus(status) {
     render(this);
 
     expect(this.$('.workflow-visualiser-task')).to.have.class(`status-${status}`);
-  });
-}
-
-function itShowsProgressBarForPercent(progressPercent) {
-  it(`shows progress bar for ${progressPercent}%`, function () {
-    this.set('task.progressPercent', progressPercent);
-
-    render(this);
-
-    const $progressBar = this.$('.task-progress-bar');
-    expect($progressBar).to.exist;
-    expect($progressBar.attr('style')).to.contain(`width: ${progressPercent}%;`);
-    if (progressPercent >= 25) {
-      expect($progressBar).to.have.class('counter-inside-bar');
-    } else {
-      expect($progressBar).to.not.have.class('counter-inside-bar');
-    }
-    expect($progressBar.find('.percent-counter').text().trim())
-      .to.equal(`${Math.floor(progressPercent)}%`);
   });
 }
 

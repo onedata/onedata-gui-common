@@ -13,27 +13,35 @@ const componentClass = 'store-form';
 const storeTypes = [{
   label: 'List',
   type: 'list',
-}, {
-  label: 'Map',
-  type: 'map',
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   label: 'Map',
+  //   type: 'map',
 }, {
   label: 'Tree forest',
   type: 'treeForest',
-  availableDataTypeLabels: ['Any file', 'Regular file', 'Directory', 'Dataset'],
+  availableDataTypeLabels: [
+    'Any file',
+    'Regular file',
+    'Directory',
+    'Symbolic link',
+    'Dataset',
+  ],
 }, {
   label: 'Single value',
   type: 'singleValue',
 }, {
   label: 'Range',
   type: 'range',
-}, {
-  label: 'Histogram',
-  type: 'histogram',
-  disabledDataTypeSelection: true,
-  availableDataTypeLabels: ['Histogram'],
-}, {
-  label: 'Audit log',
-  type: 'auditLog',
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   label: 'Histogram',
+  //   type: 'histogram',
+  //   disabledDataTypeSelection: true,
+  //   availableDataTypeLabels: ['Histogram'],
+  // }, {
+  //   label: 'Audit log',
+  //   type: 'auditLog',
 }];
 
 const dataTypes = [{
@@ -54,12 +62,13 @@ const dataTypes = [{
     type: 'object',
     valueConstraints: {},
   },
-}, {
-  label: 'Histogram',
-  dataSpec: {
-    type: 'histogram',
-    valueConstraints: {},
-  },
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   label: 'Histogram',
+  //   dataSpec: {
+  //     type: 'histogram',
+  //     valueConstraints: {},
+  //   },
 }, {
   label: 'Any file',
   dataSpec: {
@@ -85,17 +94,26 @@ const dataTypes = [{
     },
   },
 }, {
+  label: 'Symbolic link',
+  dataSpec: {
+    type: 'file',
+    valueConstraints: {
+      fileType: 'SYMLNK',
+    },
+  },
+}, {
   label: 'Dataset',
   dataSpec: {
     type: 'dataset',
     valueConstraints: {},
   },
-}, {
-  label: 'Archive',
-  dataSpec: {
-    type: 'archive',
-    valueConstraints: {},
-  },
+  // TODO: VFS-7816 uncomment or remove future code
+  // }, {
+  //   label: 'Archive',
+  //   dataSpec: {
+  //     type: 'archive',
+  //     valueConstraints: {},
+  //   },
 }];
 
 const storeTypesWithGenericConfig = storeTypes.rejectBy('type', 'range');

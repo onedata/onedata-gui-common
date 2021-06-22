@@ -1,33 +1,41 @@
-{{#perfect-scrollbar-element
-  class="visualiser-elements"
-  onScroll=(action "horizonalScroll")
-}}
-  {{#each visualiserElements as |visualiserElement|}}
-    {{workflow-visualiser/visualiser-element-renderer elementModel=visualiserElement}}
-  {{/each}}
-{{/perfect-scrollbar-element}}
-<div class="scrollers-container">
-  {{one-icon
-    icon="arrow-left"
-    click=(action "scrollLeft")
-    class=(concat-classes
-      "left-edge-scroll-step-trigger"
-      (if (not-eq laneIdxForNextLeftScroll null) "visible")
-    )
+{{#promise-proxy-container proxy=initialLoadingProxy}}
+  {{#if (eq mode "view")}}
+    <div class="workflow-status-container">
+      <span class="one-label">{{tt this "status"}}:</span>
+      <span class="workflow-status">{{statusTranslation}}</span>
+    </div>
+  {{/if}}
+  {{#perfect-scrollbar-element
+    class="visualiser-elements"
+    onScroll=(action "horizonalScroll")
   }}
-  {{one-icon
-    icon="arrow-right"
-    click=(action "scrollRight")
-    class=(concat-classes
-      "right-edge-scroll-step-trigger"
-      (if (not-eq laneIdxForNextRightScroll null) "visible")
-    )
+    {{#each visualiserElements as |visualiserElement|}}
+      {{workflow-visualiser/visualiser-element-renderer elementModel=visualiserElement}}
+    {{/each}}
+  {{/perfect-scrollbar-element}}
+  <div class="scrollers-container">
+    {{one-icon
+      icon="arrow-left"
+      click=(action "scrollLeft")
+      class=(concat-classes
+        "left-edge-scroll-step-trigger"
+        (if (not-eq laneIdxForNextLeftScroll null) "visible")
+      )
+    }}
+    {{one-icon
+      icon="arrow-right"
+      click=(action "scrollRight")
+      class=(concat-classes
+        "right-edge-scroll-step-trigger"
+        (if (not-eq laneIdxForNextRightScroll null) "visible")
+      )
+    }}
+  </div>
+  {{workflow-visualiser/stores-list
+    mode=mode
+    actionsFactory=actionsFactory
+    stores=stores
+    onStoreCreate=(action "createStore")
   }}
-</div>
-{{workflow-visualiser/stores-list
-  mode=mode
-  actionsFactory=actionsFactory
-  stores=stores
-  onStoreCreate=(action "createStore")
-}}
+{{/promise-proxy-container}}
 {{yield}}

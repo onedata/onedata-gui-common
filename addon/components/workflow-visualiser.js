@@ -86,19 +86,23 @@ import { resolve } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { conditional, raw, tag, string } from 'ember-awesome-macros';
+import { conditional, raw, tag, string, promise } from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { scheduleOnce, run } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import Looper from 'onedata-gui-common/utils/looper';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
+const statsUpdateInterval = 3000;
 
 export default Component.extend(I18n, WindowResizeHandler, {
   layout,
   classNames: ['workflow-visualiser'],
   classNameBindings: [
     'modeClass',
+    'statusClass',
     'duringDragDropClass',
   ],
 
@@ -154,6 +158,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
   actionsFactory: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.WorkflowVisualiser.StatsFetcher}
+   */
+  statsFetcher: undefined,
+
+  /**
+   * @type {Utils.Looper}
+   */
+  statsUpdater: undefined,
+
+  /**
+   * @type {String}
+   */
+  executionStatus: undefined,
+
+  /**
    * Contains model objects which were created during the workflow editor
    * lifetime. Is used to build new model structure from existing entries on
    * data update, which prevents from unnecessary rerendering.
@@ -205,6 +225,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
   modeClass: tag `mode-${'mode'}`,
 
   /**
+   * @type {ComputedProperty<String>}
+   */
+  statusClass: tag `status-${'executionStatus'}`,
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  statusTranslation: computed('executionStatus', function statusTranslation() {
+    return this.t(`statuses.${this.get('executionStatus')}`, {}, {
+      defaultValue: this.t('statuses.unknown'),
+    });
+  }),
+
+  /**
    * @type {ComputedProperty<String|undefined>}
    */
   typeOfDraggedElementModel: computed(
@@ -229,6 +263,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
     tag `during-${string.dasherize('typeOfDraggedElementModel')}-dragdrop`,
     raw('')
   ),
+
+  /**
+   * @type {ComputedProperty<PromiseObject>}
+   */
+  initialLoadingProxy: promise.object(computed(async function initialLoading() {
+    if (this.get('mode') === 'view') {
+      return this.updateStatuses();
+    }
+  })),
 
   actionsFactoryObserver: observer(
     'actionsFactory',
@@ -259,6 +302,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
     }
     this.actionsFactoryObserver();
+    this.get('visualiserElements');
+    if (this.get('mode') === 'view') {
+      this.get('initialLoadingProxy')
+        .then(() => safeExec(this, 'setupStatsUpdater'));
+    }
   },
 
   /**
@@ -271,8 +319,39 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @override
    */
+  willDestroyElement() {
+    try {
+      this.stopStatsUpdater();
+    } finally {
+      this._super(...arguments);
+    }
+  },
+
+  /**
+   * @override
+   */
   onWindowResize() {
     run(() => this.scheduleHorizontalOverflowDetection());
+  },
+
+  setupStatsUpdater() {
+    if (this.executionHasEnded()) {
+      return;
+    }
+
+    const statsUpdater = Looper.create({
+      immediate: false,
+      interval: statsUpdateInterval,
+    });
+    statsUpdater.on('tick', () => this.updateStatuses());
+    this.set('statsUpdater', statsUpdater);
+  },
+
+  stopStatsUpdater() {
+    const statsUpdater = this.get('statsUpdater');
+    if (statsUpdater) {
+      statsUpdater.destroy();
+    }
   },
 
   scheduleHorizontalOverflowDetection() {
@@ -288,6 +367,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const checksPxEpsilon = 1;
 
     const $lanesContainer = this.$('.visualiser-elements');
+    if (!$lanesContainer.length) {
+      return;
+    }
     const viewOffset = $lanesContainer.offset().left;
     const viewWidth = $lanesContainer.width();
 
@@ -1078,6 +1160,43 @@ export default Component.extend(I18n, WindowResizeHandler, {
       default:
         return undefined;
     }
+  },
+
+  async updateStatuses() {
+    const statsFetcher = this.get('statsFetcher');
+    if (!statsFetcher) {
+      return;
+    }
+
+    const statuses = await statsFetcher.fetchStatuses();
+    safeExec(this, () => {
+      ['lane', 'parallelBox', 'task'].forEach(elementType => {
+        Object.keys(statuses[elementType] || {}).forEach(id => {
+          const element = this.getCachedElement(elementType, { id });
+          if (!element) {
+            return;
+          }
+
+          set(element, 'status', statuses[elementType][id].status);
+          if (elementType === 'task') {
+            setProperties(element, getProperties(
+              statuses[elementType][id],
+              'itemsFailed',
+              'itemsInProcessing',
+              'itemsProcessed'
+            ));
+          }
+        });
+      });
+      this.set('executionStatus', get(statuses, 'global.status'));
+      if (this.executionHasEnded()) {
+        this.stopStatsUpdater();
+      }
+    });
+  },
+
+  executionHasEnded() {
+    return ['finished', 'failed'].includes(this.get('executionStatus'));
   },
 
   actions: {

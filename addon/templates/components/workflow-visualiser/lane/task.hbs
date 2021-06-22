@@ -1,16 +1,9 @@
-{{#if showProgress}}
-  <div
-    class="task-progress-bar {{if hasPercentCounterInsideProgressBar "counter-inside-bar"}}"
-    style={{progressBarStyle}}
-  >
-    <span class="percent-counter">{{progressPercentAsText}}</span>
-  </div>
-{{/if}}
 {{#one-draggable-object
   content=task
   dragHandle=".task-drag-handle"
   isDraggable=(eq mode "edit")
   class="draggable-task"
+  click=(action "headerClick")
 }}
   <div class="task-drag-handle">{{record-icon modelName="atmLambda"}}</div>
   {{#if (eq mode "edit")}}
@@ -54,4 +47,31 @@
     {{#truncated-string class="task-name"}}{{name}}{{/truncated-string}}
   {{/if}}
 {{/one-draggable-object}}
+{{#if (eq mode "view")}}
+  {{#one-collapse
+    class="task-details-collapse"
+    collapsed=(not areDetailsExpanded)
+  }}
+    <div class="task-details">
+      <div class="detail-entries">
+        <div class="detail-entry status-detail">
+          <div class="detail-label">{{tt this "details.status"}}:</div>
+          <div class="detail-value">{{statusTranslation}}</div>
+        </div>
+        <div class="detail-entry items-in-processing-detail">
+          <div class="detail-label">{{tt this "details.itemsInProcessing"}}:</div>
+          <div class="detail-value">{{itemsInProcessing}}</div>
+        </div>
+        <div class="detail-entry items-processed-detail">
+          <div class="detail-label">{{tt this "details.itemsProcessed"}}:</div>
+          <div class="detail-value">{{itemsProcessed}}</div>
+        </div>
+        <div class="detail-entry items-failed-detail">
+          <div class="detail-label">{{tt this "details.itemsFailed"}}:</div>
+          <div class="detail-value">{{itemsFailed}}</div>
+        </div>
+      </div>
+    </div>
+  {{/one-collapse}}
+{{/if}}
 {{yield}}
