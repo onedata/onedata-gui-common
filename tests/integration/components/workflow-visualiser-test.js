@@ -12,7 +12,8 @@ import { dasherize } from '@ember/string';
 import { getModalBody, getModalFooter } from '../../helpers/modal';
 import { selectChoose } from '../../helpers/ember-power-select';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
-import { resolve } from 'rsvp';
+import { resolve, Promise } from 'rsvp';
+import { schedule } from '@ember/runloop';
 
 const possibleTaskStatuses = ['pending', 'active', 'finished', 'failed'];
 const laneWidth = 300;
@@ -57,7 +58,12 @@ describe('Integration | Component | workflow visualiser', function () {
     beforeEach(function () {
       this.setProperties({
         mode: 'edit',
-        changeStub: sinon.stub().resolves(),
+        changeStub: sinon.stub().callsFake(newData => new Promise(resolve => {
+          schedule('afterRender', this, () => {
+            this.set('rawData', newData);
+            wait().then(resolve);
+          });
+        })),
       });
     });
 
@@ -117,6 +123,40 @@ describe('Integration | Component | workflow visualiser', function () {
           storeSchemaId: 's1',
         },
       }),
+      initialRawData: twoEmptyLanesExample,
+    });
+
+    itPerformsCustomAction({
+      description: 'modifies lane details by creating new store in place',
+      actionExecutor: async () => {
+        await click((await getActionTrigger('lane', [0], 'modify'))[0]);
+        await selectChoose(getModalBody().find('.sourceStore-field')[0], 'Create store...');
+        await fillIn(getModalBody('store-modal').find('.name-field .form-control')[0], 'new store');
+        await click(getModalFooter('store-modal').find('.btn-submit')[0]);
+        await click(getModalFooter().find('.btn-submit')[0]);
+      },
+      applyUpdate: (rawDump, newDump) => {
+        rawDump.stores.push({
+          id: newDump.stores[2].id,
+          name: 'new store',
+          description: '',
+          type: 'list',
+          dataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
+          defaultInitialValue: undefined,
+          requiresInitialValue: false,
+        });
+        Object.assign(rawDump.lanes[0], {
+          storeIteratorSpec: {
+            strategy: {
+              type: 'serial',
+            },
+            storeSchemaId: newDump.stores[2].id,
+          },
+        });
+      },
       initialRawData: twoEmptyLanesExample,
     });
 
@@ -730,15 +770,10 @@ function itPerformsCustomAction({
 
     const changeStub = this.get('changeStub');
     const newRawData = _.cloneDeep(initialRawData);
-    applyUpdate(newRawData);
-    expect(changeStub).to.be.calledOnce.and.to.be.calledWith(newRawData);
-    checkRenderedLanesStructure(this, initialRawData);
-    checkRenderedStoresList(this, initialRawData);
+    applyUpdate(newRawData, changeStub.lastCall.args[0]);
+    expect(changeStub).and.to.be.calledWith(newRawData);
 
     const yieldedRawData = changeStub.lastCall.args[0];
-    this.set('rawData', yieldedRawData);
-    await wait();
-
     checkRenderedLanesStructure(this, yieldedRawData);
     checkRenderedStoresList(this, yieldedRawData);
   });
@@ -760,7 +795,10 @@ function itDoesNotPerformAction({
 }
 
 function renderWithRawData(testCase, rawData) {
-  testCase.set('rawData', rawData);
+  testCase.setProperties({
+    rawData,
+    initialRawData: _.cloneDeep(rawData),
+  });
   testCase.render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser
