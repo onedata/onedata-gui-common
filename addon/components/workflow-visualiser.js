@@ -279,6 +279,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const actionsFactory = this.get('actionsFactory');
       if (actionsFactory) {
         actionsFactory.registerWorkflowDataProvider(this);
+        actionsFactory.registerCreateStoreCallback(
+          newStoreProps => this.addStore(newStoreProps)
+        );
       }
     }
   ),
@@ -1208,9 +1211,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
     },
     scrollRight() {
       this.scrollToLane(this.get('laneIdxForNextRightScroll'), 'right');
-    },
-    createStore(newStoreProps) {
-      this.addStore(newStoreProps);
     },
   },
 });

@@ -63,6 +63,13 @@ export default EmberObject.extend(OwnerInjector, {
   getTaskModificationDataCallback: notImplementedIgnore,
 
   /**
+   * @type {Function}
+   * @param {Object} newStoreProperties
+   * @returns {Promise<Object>} created store
+   */
+  createStoreCallback: notImplementedIgnore,
+
+  /**
    * @param {WorkflowDataProvider} workflowDataProvider
    * @returns {undefined}
    */
@@ -82,6 +89,13 @@ export default EmberObject.extend(OwnerInjector, {
    */
   registerGetTaskModificationDataCallback(getTaskModificationDataCallback) {
     this.set('getTaskModificationDataCallback', getTaskModificationDataCallback);
+  },
+
+  /**
+   * @param {Function} createStoreCallback
+   */
+  registerCreateStoreCallback(createStoreCallback) {
+    this.set('createStoreCallback', createStoreCallback);
   },
 
   /**
@@ -224,11 +238,16 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
-   * @param {(newStoreProps: Object) => Promise} context.createStoreCallback
+   * @param {Object} context
    * @returns {Utils.WorkflowVisualiser.Actions.CreateStoreAction}
    */
   createCreateStoreAction(context) {
-    return CreateStoreAction.create({ ownerSource: this, context });
+    return CreateStoreAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        createStoreCallback: this.get('createStoreCallback'),
+      }, context),
+    });
   },
 
   /**

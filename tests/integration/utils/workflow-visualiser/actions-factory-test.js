@@ -122,8 +122,9 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   it('creates action "CreateStoreAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this });
     const createStoreCallback = () => {};
+    factory.registerCreateStoreCallback(createStoreCallback);
 
-    const action = factory.createCreateStoreAction({ createStoreCallback });
+    const action = factory.createCreateStoreAction();
 
     expect(action).to.be.instanceOf(CreateStoreAction);
     expect(get(action, 'createStoreCallback')).to.equal(createStoreCallback);
