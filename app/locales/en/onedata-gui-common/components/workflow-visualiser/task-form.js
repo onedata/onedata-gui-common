@@ -47,6 +47,9 @@ export default {
             __leaveUnassigned: {
               label: 'Leave unassigned',
             },
+            __createStore: {
+              label: 'Create store...',
+            },
           },
         },
         dispatchFunction: {

@@ -9,11 +9,14 @@ import sinon from 'sinon';
 import $ from 'jquery';
 import _ from 'lodash';
 import { classify } from '@ember/string';
+import { A } from '@ember/array';
+import { resolve } from 'rsvp';
 
 const componentClass = 'task-form';
 
 const dataSpecs = [{
   label: 'Integer',
+  name: 'integer',
   dataSpec: {
     type: 'integer',
     valueConstraints: {},
@@ -21,6 +24,7 @@ const dataSpecs = [{
   valueBuilderTypes: ['iteratedItem', 'const'],
 }, {
   label: 'String',
+  name: 'string',
   dataSpec: {
     type: 'string',
     valueConstraints: {},
@@ -28,17 +32,18 @@ const dataSpecs = [{
   valueBuilderTypes: ['iteratedItem', 'const'],
 }, {
   label: 'Object',
+  name: 'object',
   dataSpec: {
     type: 'object',
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'const', 'onedatafsCredentials'],
   canContain: [
-    'Any file',
-    'Regular file',
-    'Directory',
-    'Symbolic link',
-    'Dataset',
+    'anyFile',
+    'regularFile',
+    'directory',
+    'symlink',
+    'dataset',
   ],
   // TODO: VFS-7816 uncomment or remove future code
   // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
@@ -46,6 +51,7 @@ const dataSpecs = [{
 }, {
   // TODO: VFS-7816 uncomment or remove future code
   //   label: 'Histogram',
+  //   name: 'histogram',
   //   dataSpec: {
   //     type: 'histogram',
   //     valueConstraints: {},
@@ -53,6 +59,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['iteratedItem', 'const'],
   // }, {
   label: 'Any file',
+  name: 'anyFile',
   dataSpec: {
     type: 'file',
     valueConstraints: {
@@ -60,9 +67,10 @@ const dataSpecs = [{
     },
   },
   valueBuilderTypes: ['iteratedItem', 'const'],
-  canContain: ['Regular file', 'Directory', 'Symbolic link'],
+  canContain: ['regularFile', 'directory', 'symlink'],
 }, {
   label: 'Regular file',
+  name: 'regularFile',
   dataSpec: {
     type: 'file',
     valueConstraints: {
@@ -72,6 +80,7 @@ const dataSpecs = [{
   valueBuilderTypes: ['iteratedItem', 'const'],
 }, {
   label: 'Directory',
+  name: 'directory',
   dataSpec: {
     type: 'file',
     valueConstraints: {
@@ -81,6 +90,7 @@ const dataSpecs = [{
   valueBuilderTypes: ['iteratedItem', 'const'],
 }, {
   label: 'Symbolic link',
+  name: 'symlink',
   dataSpec: {
     type: 'file',
     valueConstraints: {
@@ -90,6 +100,7 @@ const dataSpecs = [{
   valueBuilderTypes: ['iteratedItem', 'const'],
 }, {
   label: 'Dataset',
+  name: 'dataset',
   dataSpec: {
     type: 'dataset',
     valueConstraints: {},
@@ -98,6 +109,7 @@ const dataSpecs = [{
   // TODO: VFS-7816 uncomment or remove future code
   // }, {
   //   label: 'Archive',
+  //   name: 'archive',
   //   dataSpec: {
   //     type: 'archive',
   //     valueConstraints: {},
@@ -105,6 +117,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['iteratedItem', 'const'],
   // }, {
   //   label: 'Single value store cred.',
+  //   name: 'singleValueStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -115,6 +128,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['storeCredentials'],
   // }, {
   //   label: 'List store cred.',
+  //   name: 'listStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -125,6 +139,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['storeCredentials'],
   // }, {
   //   label: 'Map store cred.',
+  //   name: 'mapStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -135,6 +150,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['storeCredentials'],
   // }, {
   //   label: 'Tree forest store cred.',
+  //   name: 'treeForestStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -145,6 +161,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['storeCredentials'],
   // }, {
   //   label: 'Range store cred.',
+  //   name: 'rangeStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -154,6 +171,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['storeCredentials'],
   // }, {
   //   label: 'Histogram store cred.',
+  //   name: 'histogramStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -164,6 +182,7 @@ const dataSpecs = [{
   //   valueBuilderTypes: ['storeCredentials'],
   // }, {
   //   label: 'Audit log store cred.',
+  //   name: 'auditLogStore',
   //   dataSpec: {
   //     type: 'storeCredentials',
   //     valueConstraints: {
@@ -189,18 +208,18 @@ const valueBuilderTypeLabels = {
 };
 
 const allSimpleDataSpecNames = [
-  'Integer',
-  'String',
-  'Object',
+  'integer',
+  'string',
+  'object',
   // TODO: VFS-7816 uncomment or remove future code
-  // 'Histogram',
-  'Any file',
-  'Regular file',
-  'Directory',
-  'Symbolic link',
-  'Dataset',
+  // 'histogram',
+  'anyFile',
+  'regularFile',
+  'directory',
+  'symlink',
+  'dataset',
   // TODO: VFS-7816 uncomment or remove future code
-  // 'Archive',
+  // 'archive',
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
@@ -222,13 +241,13 @@ const allPossibleStoreSpecs = [{
 }, {
   type: 'treeForest',
   allowedDataSpecNames: [
-    'Any file',
-    'Regular file',
-    'Directory',
-    'Symbolic link',
-    'Dataset',
+    'anyFile',
+    'regularFile',
+    'directory',
+    'symlink',
+    'dataset',
     // TODO: VFS-7816 uncomment or remove future code
-    // 'Archive',
+    // 'archive',
   ],
   acceptsBatch: true,
   dispatchFunctions: ['append'],
@@ -240,7 +259,7 @@ const allPossibleStoreSpecs = [{
   // TODO: VFS-7816 uncomment or remove future code
   // }, {
   //   type: 'histogram',
-  //   allowedDataSpecNames: ['Histogram'],
+  //   allowedDataSpecNames: ['histogram'],
   //   acceptsBatch: true,
   //   dispatchFunctions: ['add'],
   // }, {
@@ -260,7 +279,7 @@ allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
       id: `${storeLabel}Id`,
       name: `${storeLabel}Store`,
       type,
-      dataSpec: dataSpecs.findBy('label', dataSpecName).dataSpec,
+      dataSpec: dataSpecs.findBy('name', dataSpecName).dataSpec,
       requiresInitialValue: false,
     };
   }))
@@ -382,9 +401,27 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   });
 
   beforeEach(function () {
+    const createCreateStoreActionStub = sinon.stub().returns({
+      execute: () => {
+        if (this.get('createStoreSucceeds')) {
+          const newStoreFromCreation = this.get('newStoreFromCreation');
+          this.get('stores').pushObject(newStoreFromCreation);
+          return resolve({ status: 'done', result: newStoreFromCreation });
+        } else {
+          return resolve({ status: 'failed' });
+        }
+      },
+    });
+    const actionsFactory = {
+      createCreateStoreAction: createCreateStoreActionStub,
+    };
     this.setProperties({
       atmLambda: _.cloneDeep(exampleAtmLambda),
-      stores: _.cloneDeep(allPossibleStores),
+      stores: A(_.cloneDeep(allPossibleStores)),
+      createStoreSucceeds: true,
+      newStoreFromCreation: undefined,
+      actionsFactory,
+      createCreateStoreActionStub,
     });
   });
 
@@ -732,10 +769,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     allSimpleDataSpecNames.forEach(dataSpecName => {
-      const dataSpec = dataSpecs.findBy('label', dataSpecName).dataSpec;
-      const compatibleDataSpecNames = dataSpecs.filter(({ label, canContain }) => {
-        return label === dataSpecName || (canContain || []).includes(dataSpecName);
-      }).mapBy('label');
+      const dataSpec = dataSpecs.findBy('name', dataSpecName).dataSpec;
+      const compatibleDataSpecNames = dataSpecs.filter(({ name, canContain }) => {
+        return name === dataSpecName || (canContain || []).includes(dataSpecName);
+      }).mapBy('name');
       const possibleStores = allPossibleStores.filter(({ name }) =>
         compatibleDataSpecNames.some(compatibleDataSpecName =>
           name.endsWith(`${classify(compatibleDataSpecName)}Store`)
@@ -760,10 +797,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
             .to.equal('Leave unassigned');
           const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(sortedPossibleStores.length + 1);
-          expect($options.eq(0).text().trim()).to.equal('Leave unassigned');
+          expect($options).to.have.length(sortedPossibleStores.length + 2);
+          expect($options.eq(0).text().trim()).to.equal('Create store...');
+          expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
           sortedPossibleStores.forEach((store, idx) =>
-            expect($options.eq(idx + 1).text().trim()).to.equal(store.name)
+            expect($options.eq(idx + 2).text().trim()).to.equal(store.name)
           );
         });
 
@@ -781,11 +819,74 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
             .to.equal('Leave unassigned');
           const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(sortedPossibleStoresWithBatch.length + 1);
-          expect($options.eq(0).text().trim()).to.equal('Leave unassigned');
+          expect($options).to.have.length(sortedPossibleStoresWithBatch.length + 2);
+          expect($options.eq(0).text().trim()).to.equal('Create store...');
+          expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
           sortedPossibleStoresWithBatch.forEach((store, idx) =>
-            expect($options.eq(idx + 1).text().trim()).to.equal(store.name)
+            expect($options.eq(idx + 2).text().trim()).to.equal(store.name)
           );
+        });
+
+      it(`allows to create new store for result of type "${dataSpecName}"`,
+        async function () {
+          this.set('newStoreFromCreation', {
+            id: 'newstore',
+            name: 'new store',
+            dataSpec: sortedPossibleStores[0].dataSpec,
+            type: sortedPossibleStores[0].type,
+          });
+          this.set('atmLambda.resultSpecs', [{
+            name: 'res1',
+            dataSpec,
+            isBatch: false,
+          }]);
+          const allowedStoreTypes = sortedPossibleStores.mapBy('type').uniq();
+          const allowedDataTypes = [...compatibleDataSpecNames];
+
+          await render(this);
+          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
+
+          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+            .to.equal('new store');
+          const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
+          expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
+          const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
+
+          expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
+            .to.deep.equal(allowedStoreTypes.sort());
+          expect(lastCreateStoreCallArg.allowedDataTypes.sort())
+            .to.deep.equal(allowedDataTypes.sort());
+        });
+
+      it(`allows to create new store for result of batched type "${dataSpecName}"`,
+        async function () {
+          this.set('newStoreFromCreation', {
+            id: 'newstore',
+            name: 'new store',
+            dataSpec: sortedPossibleStoresWithBatch[0].dataSpec,
+            type: sortedPossibleStoresWithBatch[0].type,
+          });
+          this.set('atmLambda.resultSpecs', [{
+            name: 'res1',
+            dataSpec,
+            isBatch: true,
+          }]);
+          const allowedStoreTypes = sortedPossibleStoresWithBatch.mapBy('type').uniq();
+          const allowedDataTypes = [...compatibleDataSpecNames];
+
+          await render(this);
+          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
+
+          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+            .to.equal('new store');
+          const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
+          expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
+          const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
+
+          expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
+            .to.deep.equal(allowedStoreTypes.sort());
+          expect(lastCreateStoreCallArg.allowedDataTypes.sort())
+            .to.deep.equal(allowedDataTypes.sort());
         });
     });
 
@@ -889,7 +990,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       async function () {
         this.set('atmLambda.resultSpecs', [{
           name: 'res1',
-          dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
+          dataSpec: dataSpecs.findBy('name', 'integer').dataSpec,
           isBatch: false,
         }]);
 
@@ -980,6 +1081,7 @@ async function render(testCase) {
     atmLambda=atmLambda
     stores=stores
     isDisabled=isDisabled
+    actionsFactory=actionsFactory
     onChange=changeSpy
   }}`);
   await wait();

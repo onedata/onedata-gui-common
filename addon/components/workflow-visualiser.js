@@ -682,7 +682,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       name,
       lambdaId,
       argumentMappings,
-      resultMapppings,
+      resultMappings,
       status,
       progressPercent,
     } = getProperties(
@@ -704,7 +704,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         parent,
         lambdaId,
         argumentMappings,
-        resultMapppings,
+        resultMappings,
         status,
         progressPercent,
       });
@@ -723,7 +723,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         mode,
         actionsFactory,
         argumentMappings,
-        resultMapppings,
+        resultMappings,
         status,
         progressPercent,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),

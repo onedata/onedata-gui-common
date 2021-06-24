@@ -39,13 +39,31 @@ export default Action.extend({
   createStoreCallback: reads('context.createStoreCallback'),
 
   /**
+   * @type {ComputedProperty<Array<String>|undefined>}
+   */
+  allowedStoreTypes: reads('context.allowedStoreTypes'),
+
+  /**
+   * @type {ComputedProperty<Array<String>|undefined>}
+   */
+  allowedDataTypes: reads('context.allowedDataTypes'),
+
+  /**
    * @override
    */
   onExecute() {
+    const {
+      allowedStoreTypes,
+      allowedDataTypes,
+      modalManager,
+    } = this.getProperties('allowedStoreTypes', 'allowedDataTypes', 'modalManager');
+
     const result = ActionResult.create();
-    return this.get('modalManager')
+    return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'create',
+        allowedStoreTypes,
+        allowedDataTypes,
         onSubmit: storeProvidedByForm =>
           result.interceptPromise(this.createStore(storeProvidedByForm)),
       }).hiddenPromise

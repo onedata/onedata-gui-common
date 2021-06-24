@@ -65,6 +65,16 @@ export default Component.extend(I18n, {
   store: reads('modalOptions.store'),
 
   /**
+   * @type {ComputedProperty<Array<String>|undefined>}
+   */
+  allowedStoreTypes: reads('modalOptions.allowedStoreTypes'),
+
+  /**
+   * @type {ComputedProperty<Array<String>|undefined>}
+   */
+  allowedDataTypes: reads('modalOptions.allowedDataTypes'),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   headerText: computed('mode', function headerText() {
