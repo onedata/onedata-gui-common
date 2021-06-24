@@ -8,7 +8,7 @@ import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { click, keyEvent } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
-import { ModalInstance } from 'onedata-gui-common/services/modal-manager';
+import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance';
 import { set } from '@ember/object';
 
 describe('Integration | Component | global modal', function () {

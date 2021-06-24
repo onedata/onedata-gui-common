@@ -26,11 +26,10 @@
  */
 
 import Service from '@ember/service';
-import { Promise, resolve } from 'rsvp';
-import { raw, conditional, tag } from 'ember-awesome-macros';
-import EmberObject, { get, getProperties, set } from '@ember/object';
-import { guidFor } from '@ember/object/internals';
+import { resolve } from 'rsvp';
+import { get, getProperties, set } from '@ember/object';
 import { A } from '@ember/array';
+import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance';
 
 export default Service.extend({
   /**
@@ -73,8 +72,7 @@ export default Service.extend({
   },
 
   /**
-   * Hides currently opened modal. If there is no active modal, returns promise,
-   * that resolves immediately.
+   * Hides currently opened modal.
    * @param {String} modalId
    * @returns {Promise} resolves when modal is fully hidden (after transitions).
    *   It is the same promise as `show().hiddenPromise`.
@@ -155,92 +153,5 @@ export default Service.extend({
 
   getModalInstanceById(id) {
     return this.get('modalInstances').findBy('id', id);
-  },
-});
-
-export const ModalInstance = EmberObject.extend({
-  /**
-   * @virtual
-   * @type {String}
-   */
-  componentName: undefined,
-
-  /**
-   * @virtual optional
-   * @type {Boolean}
-   */
-  isOpened: false,
-
-  /**
-   * @virtual optional
-   * @type {Object}
-   */
-  options: undefined,
-
-  /**
-   * Resolves `shownPromise`
-   * @virtual optional
-   * @type {Function}
-   */
-  resolveShownPromise: undefined,
-
-  /**
-   * Resolves when modal is fully visible
-   * @virtual optional
-   * @type {Promise}
-   */
-  shownPromise: undefined,
-
-  /**
-   * Resolves `hiddenPromise`
-   * @virtual optional
-   * @type {Function}
-   */
-  resolveHiddenPromise: undefined,
-
-  /**
-   * Resolves when modal is completly hidden
-   * @virtual optional
-   * @type {Promise}
-   */
-  hiddenPromise: undefined,
-
-  /**
-   * @type {ComputedProperty<String|null>}
-   */
-  fullComponentName: conditional(
-    'componentName',
-    tag `modals/${'componentName'}`,
-    raw(null)
-  ),
-
-  init() {
-    const {
-      id,
-      resolveShownPromise,
-      shownPromise,
-      resolveHiddenPromise,
-      hiddenPromise,
-    } = this.getProperties(
-      'id',
-      'resolveShownPromise',
-      'shownPromise',
-      'resolveHiddenPromise',
-      'hiddenPromise'
-    );
-
-    if (!id) {
-      this.set('id', guidFor(this));
-    }
-    if (!resolveShownPromise || !shownPromise) {
-      this.set('shownPromise', new Promise(shownResolve =>
-        this.set('resolveShownPromise', shownResolve)
-      ));
-    }
-    if (!resolveHiddenPromise || !hiddenPromise) {
-      this.set('hiddenPromise', new Promise(hiddenResolve =>
-        this.set('resolveHiddenPromise', hiddenResolve)
-      ));
-    }
   },
 });

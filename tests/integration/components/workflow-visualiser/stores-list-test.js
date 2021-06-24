@@ -97,7 +97,6 @@ async function render(testCase) {
       actionsFactory=actionsFactory
       mode=mode
       stores=stores
-      onStoreCreate=createStoreStub
     }}
   `);
   await wait();

@@ -22,7 +22,7 @@ describe('Integration | Component | global modal mounter', function () {
     expect(this.$().children()).to.have.length(0);
   });
 
-  it('renders component specified by during modalManager.show call', async function () {
+  it('renders component specified by modalManager.show call', async function () {
     this.register('component:modals/some-modal', TestComponent);
     this.render(hbs `{{global-modal-mounter}}`);
 
