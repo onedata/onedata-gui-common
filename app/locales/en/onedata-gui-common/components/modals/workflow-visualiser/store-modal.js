@@ -18,6 +18,7 @@ export default {
     },
   },
   button: {
+    refresh: 'Refresh',
     cancel: {
       create: 'Cancel',
       edit: 'Cancel',
