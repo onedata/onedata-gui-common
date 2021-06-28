@@ -665,6 +665,7 @@ function formDataToStore(formData) {
         'rangeStep'
       );
 
+      store.dataSpec = typeToDataSpec('integer');
       store.defaultInitialValue = {
         start: Number(rangeStart),
         end: Number(rangeEnd),
