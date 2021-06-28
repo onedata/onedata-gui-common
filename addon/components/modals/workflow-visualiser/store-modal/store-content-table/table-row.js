@@ -8,13 +8,13 @@
  */
 
 import Component from '@ember/component';
-import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/tabel-row';
+import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-row';
 import { computed } from '@ember/object';
 
 export default Component.extend({
   layout,
   tagName: 'tr',
-  classNames: ['table-row'],
+  classNames: ['table-row', 'data-row'],
   attributeBindings: ['entry.index:data-row-id'],
 
   /**

@@ -15,6 +15,8 @@ import { inject as service } from '@ember/service';
 import layout from '../../../templates/components/modals/workflow-visualiser/store-modal';
 import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { next } from '@ember/runloop';
 
 export default Component.extend(I18n, {
   layout,
@@ -48,6 +50,11 @@ export default Component.extend(I18n, {
   /**
    * @type {Boolean}
    */
+  isContentTabRendered: true,
+
+  /**
+   * @type {Boolean}
+   */
   isSubmitting: false,
 
   /**
@@ -71,14 +78,19 @@ export default Component.extend(I18n, {
   store: reads('modalOptions.store'),
 
   /**
-   * @type {ComputedProperty<Array<String>|undefined>}
+   * @type {ComputedProperty<Array<String|undefined>>}
    */
   allowedStoreTypes: reads('modalOptions.allowedStoreTypes'),
 
   /**
-   * @type {ComputedProperty<Array<String>|undefined>}
+   * @type {ComputedProperty<Array<String|undefined>>}
    */
   allowedDataTypes: reads('modalOptions.allowedDataTypes'),
+
+  /**
+   * @type {ComputedProperty<Array<Function|undefined>>}
+   */
+  getStoreContentCallback: reads('modalOptions.getStoreContentCallback'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -104,6 +116,12 @@ export default Component.extend(I18n, {
   actions: {
     changeTab(selectedTab) {
       this.set('activeTab', selectedTab);
+    },
+    reloadContentTab() {
+      this.set('isContentTabRendered', false);
+      next(() => {
+        safeExec(this, 'set', 'isContentTabRendered', true);
+      });
     },
     formChange({ data, isValid }) {
       this.setProperties({

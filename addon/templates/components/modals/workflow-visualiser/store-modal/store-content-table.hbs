@@ -1,0 +1,49 @@
+{{#loading-container isLoading=storeEntries.isLoading}}
+  <table class="table one-infinite-list">
+    {{!-- {{modals/workflow-visualiser/store-modal/store-content-table/table-header
+      storeType=store.type
+    }} --}}
+    <tbody>
+      <tr class="first-row">
+        <td colspan="9999" style={{firstRowStyle}}></td>
+      </tr>
+      <div class="table-start-row"></div>
+      {{#unless storeEntries.length}}
+        <tr class="table-is-empty-row">
+          <td class="table-is-empty-cell" colspan="9999">
+            {{tt this "storeIsEmpty"}}
+          </td>
+        </tr>
+      {{else}}
+        {{#if (and storeEntries.initialLoad.isSettled fetchingPrev)}}
+          <tr class="loading-row">
+            <td colspan="9999" class="loading-row-cell">
+              {{spin-spinner-block
+                sizeClass="sm"
+                class="absolute-middle-centered"
+              }}
+            </td>
+          </tr>
+        {{/if}}
+        {{#each storeEntries key="index" as |storeEntry|}}
+          {{modals/workflow-visualiser/store-modal/store-content-table/table-row
+            storeType=store.type
+            dataSpec=store.dataSpec
+            entry=storeEntry
+          }}
+        {{/each}}
+        {{#if (and storeEntries.initialLoad.isSettled fetchingNext)}}
+          <tr class="loading-row">
+            <td colspan="9999" class="loading-row-cell">
+              {{spin-spinner-block
+                sizeClass="sm"
+                class="absolute-middle-centered"
+              }}
+            </td>
+          </tr>
+        {{/if}}
+      {{/unless}}
+    </tbody>
+  </table>
+{{/loading-container}}
+{{yield}}

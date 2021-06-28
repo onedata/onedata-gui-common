@@ -14,9 +14,9 @@ const columnsPerStoreType = {
   range: [valueColumn],
 };
 
-describe('Integration | Component | modals/workflow visualiser/store modal/store content table/tabel header',
+describe('Integration | Component | modals/workflow visualiser/store modal/store content table/table header',
   function () {
-    setupComponentTest('modals/workflow-visualiser/store-modal/store-content-table/tabel-header', {
+    setupComponentTest('modals/workflow-visualiser/store-modal/store-content-table/table-header', {
       integration: true,
     });
 
@@ -57,7 +57,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
 async function render(testCase) {
   testCase.render(hbs `
-    {{modals/workflow-visualiser/store-modal/store-content-table/tabel-header
+    {{modals/workflow-visualiser/store-modal/store-content-table/table-header
       storeType=storeType
     }}
   `);

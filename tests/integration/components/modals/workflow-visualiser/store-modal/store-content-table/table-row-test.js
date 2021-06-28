@@ -73,8 +73,8 @@ const layoutForStoreType = {
   },
 };
 
-describe('Integration | Component | modals/workflow visualiser/store modal/store content table/tabel row', function () {
-  setupComponentTest('modals/workflow-visualiser/store-modal/store-content-table/tabel-row', {
+describe('Integration | Component | modals/workflow visualiser/store modal/store content table/table row', function () {
+  setupComponentTest('modals/workflow-visualiser/store-modal/store-content-table/table-row', {
     integration: true,
   });
 
@@ -132,7 +132,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
 async function render(testCase) {
   testCase.render(hbs `
-    {{modals/workflow-visualiser/store-modal/store-content-table/tabel-row
+    {{modals/workflow-visualiser/store-modal/store-content-table/table-row
       storeType=storeType
       dataSpec=dataSpec
       entry=entry

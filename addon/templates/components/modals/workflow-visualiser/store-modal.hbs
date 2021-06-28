@@ -30,12 +30,24 @@
         onChange=(action "formChange")
         isDisabled=isSubmitting
       }}
-    {{else}}
-      content!
+    {{else if isContentTabRendered}}
+      {{modals/workflow-visualiser/store-modal/store-content-table
+        store=store
+        getStoreContentCallback=getStoreContentCallback
+      }}
     {{/if}}
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
+    {{#if (eq activeTab "content")}}
+      {{#bs-button
+        type="primary"
+        class="btn-cancel pull-left"
+        onClick=(action "reloadContentTab")
+      }}
+        Refresh
+      {{/bs-button}}
+    {{/if}}
     {{#bs-button
       type="default"
       class="btn-cancel"

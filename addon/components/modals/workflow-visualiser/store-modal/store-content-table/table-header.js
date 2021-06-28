@@ -8,7 +8,7 @@
  */
 
 import Component from '@ember/component';
-import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/tabel-header';
+import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-header';
 import { computed } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { tag } from 'ember-awesome-macros';
