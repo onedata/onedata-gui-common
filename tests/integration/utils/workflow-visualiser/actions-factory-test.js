@@ -25,6 +25,7 @@ import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/action
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import { get } from '@ember/object';
+import sinon from 'sinon';
 
 describe('Integration | Utility | workflow visualiser/actions factory', function () {
   setupComponentTest('test-component', {
@@ -150,7 +151,24 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     expect(get(action, 'createStoreCallback')).to.equal(createStoreCallback);
   });
 
-  itCreatesStoreAction('ViewStoreAction', ViewStoreAction);
+  it('creates action "ViewStoreAction"', function () {
+    const factory = ActionsFactory.create({ ownerSource: this });
+    const workflowDataProvider = {
+      getStoreContent: sinon.stub().resolves(),
+    };
+    factory.registerWorkflowDataProvider(workflowDataProvider);
+    const store = Store.create();
+
+    const action = factory.createViewStoreAction({ store });
+
+    expect(action).to.be.instanceOf(ViewStoreAction);
+    expect(get(action, 'store')).to.equal(store);
+    expect(workflowDataProvider.getStoreContent).to.be.not.called;
+
+    get(action, 'getStoreContentCallback')();
+    expect(workflowDataProvider.getStoreContent).to.be.calledOnce;
+  });
+
   itCreatesStoreAction('ModifyStoreAction', ModifyStoreAction);
   itCreatesStoreAction('RemoveStoreAction', RemoveStoreAction);
 });

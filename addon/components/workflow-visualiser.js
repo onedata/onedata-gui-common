@@ -75,6 +75,7 @@ import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
 import { computed, observer, get, getProperties, set, setProperties } from '@ember/object';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
+import WorkflowDataProvider from 'onedata-gui-common/utils/workflow-visualiser/workflow-data-provider';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
@@ -159,9 +160,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * @virtual optional
-   * @type {Utils.WorkflowVisualiser.StatsFetcher}
+   * @type {Utils.WorkflowVisualiser.ExecutionDataFetcher}
    */
-  statsFetcher: undefined,
+  executionDataFetcher: undefined,
 
   /**
    * @type {Utils.Looper}
@@ -278,10 +279,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     function actionsFactoryObserver() {
       const actionsFactory = this.get('actionsFactory');
       if (actionsFactory) {
-        actionsFactory.registerWorkflowDataProvider(this);
-        actionsFactory.registerCreateStoreCallback(
-          newStoreProps => this.addStore(newStoreProps)
-        );
+        this.adaptActionsFactory(actionsFactory);
       }
     }
   ),
@@ -355,6 +353,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (statsUpdater) {
       statsUpdater.destroy();
     }
+  },
+
+  adaptActionsFactory(actionsFactory) {
+    actionsFactory.registerWorkflowDataProvider(
+      WorkflowDataProvider.create({ visualiserComponent: this })
+    );
+    actionsFactory.registerCreateStoreCallback(
+      newStoreProps => this.addStore(newStoreProps)
+    );
   },
 
   scheduleHorizontalOverflowDetection() {
@@ -1171,12 +1178,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   async updateStatuses() {
-    const statsFetcher = this.get('statsFetcher');
-    if (!statsFetcher) {
+    const executionDataFetcher = this.get('executionDataFetcher');
+    if (!executionDataFetcher) {
       return;
     }
 
-    const statuses = await statsFetcher.fetchStatuses();
+    const statuses = await executionDataFetcher.fetchStatuses();
     safeExec(this, () => {
       ['lane', 'parallelBox', 'task'].forEach(elementType => {
         Object.keys(statuses[elementType] || {}).forEach(id => {

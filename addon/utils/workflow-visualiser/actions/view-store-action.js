@@ -22,14 +22,21 @@ export default Action.extend({
   store: reads('context.store'),
 
   /**
+   * @type {ComputedProperty<Function>}
+   */
+  getStoreContentCallback: reads('context.getStoreContentCallback'),
+
+  /**
    * @override
    */
   onExecute() {
     const {
       store,
+      getStoreContentCallback,
       modalManager,
     } = this.getProperties(
       'store',
+      'getStoreContentCallback',
       'modalManager'
     );
 
@@ -38,6 +45,7 @@ export default Action.extend({
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
         store,
+        getStoreContentCallback,
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');
