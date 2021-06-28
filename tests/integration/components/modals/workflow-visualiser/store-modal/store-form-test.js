@@ -358,6 +358,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           name: 'someName',
           description: 'someDescription',
           type: 'range',
+          dataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
           defaultInitialValue: {
             start: 1,
             end: 10,
@@ -546,6 +550,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         name: 'store1',
         description: 'desc',
         type: 'range',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
         defaultInitialValue: {
           start: 2,
           end: 6,
@@ -658,6 +666,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         name: 'store1',
         description: 'desc',
         type: 'range',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
         defaultInitialValue: {
           start: 2,
           end: 6,
