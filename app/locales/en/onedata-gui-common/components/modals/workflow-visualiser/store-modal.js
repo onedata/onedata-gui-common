@@ -9,6 +9,14 @@ export default {
     edit: 'Modify store',
     view: 'Store details',
   },
+  tabs: {
+    details: {
+      title: 'Details',
+    },
+    content: {
+      title: 'Content',
+    },
+  },
   button: {
     cancel: {
       create: 'Cancel',

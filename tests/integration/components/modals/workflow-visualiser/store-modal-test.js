@@ -78,6 +78,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
         expect($submitBtn).to.be.disabled;
       });
 
+    itDoesNotShowTabs();
     itClosesModalOnCancelClick();
     itClosesModalOnBackdropClick();
 
@@ -126,6 +127,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
         expect($submitBtn).to.be.disabled;
       });
 
+    itDoesNotShowTabs();
     itClosesModalOnCancelClick();
     itClosesModalOnBackdropClick();
     const fillForm = async () =>
@@ -161,6 +163,17 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect($submitBtn).to.not.exist;
     });
 
+    it('shows tabs with "details" tab preselected', async function () {
+      await showModal(this);
+
+      const $tabs = getModalBody().find('.bs-tab-onedata .nav-link');
+      expect($tabs).to.have.length(2);
+      expect($tabs.eq(0).text().trim()).to.equal('Details');
+      expect($tabs.eq(1).text().trim()).to.equal('Content');
+      expect($tabs.eq(0).parent()).to.have.class('active');
+      expect(getModalBody().find('.store-form')).to.exist;
+    });
+
     itClosesModalOnCancelClick();
     itClosesModalOnBackdropClick();
   });
@@ -177,6 +190,14 @@ async function showModal(testCase) {
   await modalManager
     .show('workflow-visualiser/store-modal', modalOptions)
     .shownPromise;
+}
+
+function itDoesNotShowTabs() {
+  it('does not show tabs', async function () {
+    await showModal(this);
+
+    expect(getModalBody().find('.bs-tab-onedata')).to.not.exist;
+  });
 }
 
 function itClosesModalOnCancelClick() {

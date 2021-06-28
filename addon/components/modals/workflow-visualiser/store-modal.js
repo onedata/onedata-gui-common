@@ -40,6 +40,12 @@ export default Component.extend(I18n, {
   modalOptions: undefined,
 
   /**
+   * One of: `'details'`, `'content'`
+   * @type {String}
+   */
+  activeTab: 'details',
+
+  /**
    * @type {Boolean}
    */
   isSubmitting: false,
@@ -96,6 +102,9 @@ export default Component.extend(I18n, {
   }),
 
   actions: {
+    changeTab(selectedTab) {
+      this.set('activeTab', selectedTab);
+    },
     formChange({ data, isValid }) {
       this.setProperties({
         storeProvidedByForm: data,
