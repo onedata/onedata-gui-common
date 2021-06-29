@@ -34,7 +34,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Number}
    */
-  rowHeight: 131,
+  rowHeight: 151,
 
   /**
    * @type {Number}
