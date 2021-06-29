@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-header';
 import { computed } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { tag } from 'ember-awesome-macros';
+import { tag, gt, raw } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -29,6 +29,11 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   storeType: undefined,
+
+  /**
+   * @override
+   */
+  isVisible: gt('columns.length', raw(1)),
 
   /**
    * @type {ComputedProperty<String>}

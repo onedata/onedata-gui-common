@@ -351,7 +351,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   stopStatsUpdater() {
     const statsUpdater = this.get('statsUpdater');
     if (statsUpdater) {
-      statsUpdater.destroy();
+      safeExec(statsUpdater, () => statsUpdater.destroy());
     }
   },
 
@@ -1206,6 +1206,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.set('executionStatus', get(statuses, 'global.status'));
       if (this.executionHasEnded()) {
         this.stopStatsUpdater();
+        this.get('stores').setEach('contentMayChange', false);
       }
     });
   },

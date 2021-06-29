@@ -96,14 +96,7 @@ export default Component.extend(I18n, {
 
   init() {
     this._super(...arguments);
-
-    const updater = Looper.create({
-      immediate: false,
-      interval: this.get('updateInterval'),
-    });
-    // updater.on('tick', () => this.updateStoreEntries());
-    this.set('updater', updater);
-    window.teest = this;
+    this.startUpdater();
   },
 
   didInsertElement() {
@@ -119,15 +112,39 @@ export default Component.extend(I18n, {
 
   willDestroyElement() {
     try {
-      const {
-        updater,
-        listWatcher,
-      } = this.getProperties('updater', 'listWatcher');
-      listWatcher.destroy();
-      updater && updater.destroy();
+      this.get('listWatcher').destroy();
+      this.stopUpdater();
     } finally {
       this._super(...arguments);
     }
+  },
+
+  startUpdater() {
+    const store = this.get('store');
+    if (!get(store, 'contentMayChange')) {
+      return;
+    }
+
+    const updater = Looper.create({
+      immediate: false,
+      interval: this.get('updateInterval'),
+    });
+    updater.on('tick', () => {
+      // FIXME: uncomment when infinite scroll reload will be fixed
+      // this.updateStoreEntries();
+      // Stopping updater after `updateStoreEntries` call, because there could be some
+      // changes in store content between moment of the last update and
+      // `contentMayChange` property change.
+      if (!get(store, 'contentMayChange')) {
+        this.stopUpdater();
+      }
+    });
+    this.set('updater', updater);
+  },
+
+  stopUpdater() {
+    const updater = this.get('updater');
+    updater && safeExec(updater, () => updater.destroy());
   },
 
   async fetchStoreEntries() {
@@ -147,7 +164,6 @@ export default Component.extend(I18n, {
     return result;
   },
 
-  // FIXME: stop update when workflow is ended
   async updateStoreEntries() {
     await this.get('storeEntries').reload();
   },
