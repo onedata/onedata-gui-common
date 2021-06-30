@@ -103,7 +103,7 @@ describe('Integration | Component | workflow visualiser', function () {
             type: 'integer',
             valueConstraints: {},
           },
-          defaultInitialValue: undefined,
+          defaultInitialValue: null,
           requiresInitialValue: false,
         });
         rawDump.lanes.push({
@@ -197,7 +197,7 @@ describe('Integration | Component | workflow visualiser', function () {
             type: 'integer',
             valueConstraints: {},
           },
-          defaultInitialValue: undefined,
+          defaultInitialValue: null,
           requiresInitialValue: false,
         });
         Object.assign(rawDump.lanes[0], {
@@ -278,7 +278,7 @@ describe('Integration | Component | workflow visualiser', function () {
           type: 'integer',
           valueConstraints: {},
         },
-        defaultInitialValue: undefined,
+        defaultInitialValue: null,
         requiresInitialValue: false,
       }),
       initialRawData: noLanesExample,
