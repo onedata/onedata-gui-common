@@ -358,6 +358,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           name: 'someName',
           description: 'someDescription',
           type: 'range',
+          dataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
           defaultInitialValue: {
             start: 1,
             end: 10,
@@ -546,6 +550,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         name: 'store1',
         description: 'desc',
         type: 'range',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
         defaultInitialValue: {
           start: 2,
           end: 6,
@@ -658,6 +666,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         name: 'store1',
         description: 'desc',
         type: 'range',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
         defaultInitialValue: {
           start: 2,
           end: 6,
@@ -706,6 +718,22 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await wait();
 
       expect(this.$('.name-field .field-component').text().trim()).to.equal('store2');
+    });
+
+    it('hides description field, when description is empty', async function () {
+      this.set('store', {});
+
+      await render(this);
+
+      expect(this.$('.description-field')).to.not.exist;
+    });
+
+    it('hides default value field, when default value is empty', async function () {
+      this.set('store', { defaultInitialValue: null });
+
+      await render(this);
+
+      expect(this.$('.defaultValue-field')).to.not.exist;
     });
   });
 });

@@ -12,7 +12,7 @@
  * - yesButtonText - accepting button text
  * - yesButtonClassName - (optional) accepting button classes
  * - noButtonText - (optional) declining button text
- * 
+ *
  * @module components/modals/question-modal
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -39,6 +39,12 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.modals.questionModal',
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
 
   /**
    * Is described in the file header

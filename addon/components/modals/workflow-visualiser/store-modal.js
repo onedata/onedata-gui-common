@@ -28,6 +28,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.workflowVisualiser.storeModal',
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
+
+  /**
    * Is described in the file header
    * @virtual
    */
@@ -57,6 +63,16 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   store: reads('modalOptions.store'),
+
+  /**
+   * @type {ComputedProperty<Array<String>|undefined>}
+   */
+  allowedStoreTypes: reads('modalOptions.allowedStoreTypes'),
+
+  /**
+   * @type {ComputedProperty<Array<String>|undefined>}
+   */
+  allowedDataTypes: reads('modalOptions.allowedDataTypes'),
 
   /**
    * @type {ComputedProperty<String>}

@@ -82,7 +82,7 @@ import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import generateId from 'onedata-gui-common/utils/workflow-visualiser/generate-id';
-import { resolve } from 'rsvp';
+import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
@@ -278,7 +278,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
     function actionsFactoryObserver() {
       const actionsFactory = this.get('actionsFactory');
       if (actionsFactory) {
-        actionsFactory.registerWorkflowDataProvider(this);
+        actionsFactory.setWorkflowDataProvider(this);
+        actionsFactory.setCreateStoreCallback(
+          newStoreProps => this.addStore(newStoreProps)
+        );
       }
     }
   ),
@@ -679,7 +682,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       name,
       lambdaId,
       argumentMappings,
-      resultMapppings,
+      resultMappings,
       status,
       progressPercent,
     } = getProperties(
@@ -701,7 +704,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         parent,
         lambdaId,
         argumentMappings,
-        resultMapppings,
+        resultMappings,
         status,
         progressPercent,
       });
@@ -720,7 +723,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         mode,
         actionsFactory,
         argumentMappings,
-        resultMapppings,
+        resultMappings,
         status,
         progressPercent,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
@@ -1032,7 +1035,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     rawDump.stores.push(newStoreProps);
 
-    return this.applyChange(rawDump);
+    return this.applyChange(rawDump).then(() => new Promise(resolve => {
+      // getting store instance in scheduleOnce to allow rawData refresh after change
+      scheduleOnce('afterRender', this, () =>
+        resolve(this.getCachedElement('store', { id: newStoreProps.id }))
+      );
+    }));
   },
 
   /**
@@ -1208,9 +1216,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
     },
     scrollRight() {
       this.scrollToLane(this.get('laneIdxForNextRightScroll'), 'right');
-    },
-    createStore(newStoreProps) {
-      this.addStore(newStoreProps);
     },
   },
 });

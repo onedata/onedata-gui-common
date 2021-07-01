@@ -29,6 +29,12 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.modals.workflowVisualiser.laneModal',
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
+
+  /**
    * Is described in the file header
    * @virtual
    */
@@ -58,6 +64,11 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
   stores: reads('modalOptions.stores'),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  createStoreAction: reads('modalOptions.createStoreAction'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}

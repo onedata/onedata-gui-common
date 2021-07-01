@@ -15,8 +15,11 @@ describe('Integration | Component | workflow visualiser/stores list', function (
   });
 
   beforeEach(function () {
+    const createStoreStub = sinon.stub().resolves();
+    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    actionsFactory.setCreateStoreCallback(createStoreStub);
     this.setProperties({
-      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+      actionsFactory,
       stores: [
         Store.create({
           name: 'store2',
@@ -25,7 +28,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
           name: 'store1',
         }),
       ],
-      createStoreStub: sinon.stub().resolves(),
+      createStoreStub,
     });
   });
 
@@ -94,7 +97,6 @@ async function render(testCase) {
       actionsFactory=actionsFactory
       mode=mode
       stores=stores
-      onStoreCreate=createStoreStub
     }}
   `);
   await wait();

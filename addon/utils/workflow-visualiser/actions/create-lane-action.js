@@ -37,6 +37,11 @@ export default Action.extend({
   stores: reads('context.stores'),
 
   /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  createStoreAction: reads('context.createStoreAction'),
+
+  /**
    * @type {ComputedProperty<Function>}
    * @param {Object} newElementProps
    * @returns {Promise}
@@ -50,13 +55,15 @@ export default Action.extend({
     const {
       modalManager,
       stores,
-    } = this.getProperties('modalManager', 'stores');
+      createStoreAction,
+    } = this.getProperties('modalManager', 'stores', 'createStoreAction');
 
     const result = ActionResult.create();
     return modalManager
       .show('workflow-visualiser/lane-modal', {
         mode: 'create',
         stores,
+        createStoreAction,
         onSubmit: laneProvidedByForm =>
           result.interceptPromise(this.createLane(laneProvidedByForm)),
       }).hiddenPromise

@@ -12,7 +12,6 @@ import layout from '../../templates/components/workflow-visualiser/stores-list';
 import { sort } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
 import { computed } from '@ember/object';
-import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 export default Component.extend({
   layout,
@@ -39,14 +38,6 @@ export default Component.extend({
   actionsFactory: undefined,
 
   /**
-   * @virtual
-   * @type {Function}
-   * @param {Object} newStoreProps
-   * @returns {|Promise}
-   */
-  onStoreCreate: notImplementedReject,
-
-  /**
    * @type {Array<String>}
    */
   storesSortOrder: Object.freeze(['name']),
@@ -64,13 +55,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
-  createAction: computed('onStoreCreate', function createAction() {
-    const {
-      onStoreCreate,
-      actionsFactory,
-    } = this.getProperties('onStoreCreate', 'actionsFactory');
-    return actionsFactory.createCreateStoreAction({
-      createStoreCallback: onStoreCreate,
-    });
+  createAction: computed(function createAction() {
+    return this.get('actionsFactory').createCreateStoreAction();
   }),
 });

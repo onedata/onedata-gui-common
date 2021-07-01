@@ -23,6 +23,8 @@ import { computed, observer, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 
+const createStoreDropdownOptionValue = '__createStore';
+
 export default Component.extend(I18n, {
   layout,
   classNames: ['lane-form'],
@@ -49,6 +51,13 @@ export default Component.extend(I18n, {
    * @type {Array<Utils.WorkflowVisualiser.Store>}
    */
   stores: undefined,
+
+  /**
+   * Needed when `mode` is `'create'` or `'edit'`
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  createStoreAction: undefined,
 
   /**
    * Needed when `mode` is `'edit'` or `'view'`
@@ -161,10 +170,12 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
    */
   sourceStoreField: computed(function sourceStoreField() {
+    const component = this;
     return DropdownField
-      .extend(defaultValueGenerator(this, 'options.firstObject.value'), {
+      // using options.1 becase options.firstObject is the "createStore" item
+      .extend(defaultValueGenerator(this, 'options.1.value'), {
         options: computed('component.stores.@each.name', function options() {
-          return (this.get('component.stores') || []).map(store => {
+          const storeOptions = (this.get('component.stores') || []).map(store => {
             const {
               id,
               name,
@@ -174,10 +185,20 @@ export default Component.extend(I18n, {
               label: name,
             };
           }).sortBy('label');
+          return [{
+            value: createStoreDropdownOptionValue,
+          }, ...storeOptions];
         }),
+        valueChanged(value) {
+          if (value === createStoreDropdownOptionValue) {
+            component.createSourceStore();
+          } else {
+            return this._super(...arguments);
+          }
+        },
       })
       .create({
-        component: this,
+        component,
         name: 'sourceStore',
         showSearch: false,
       });
@@ -186,7 +207,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
    */
-  strategyField: computed(function sourceStoreField() {
+  strategyField: computed(function strategyField() {
     return DropdownField
       .extend(defaultValueGenerator(this, 'options.firstObject.value'))
       .create({
@@ -275,6 +296,27 @@ export default Component.extend(I18n, {
       isValid: get(fields, 'isValid'),
     });
   },
+
+  async createSourceStore() {
+    const {
+      sourceStoreField,
+      createStoreAction,
+    } = this.getProperties('sourceStoreField', 'createStoreAction');
+
+    if (!createStoreAction) {
+      return;
+    }
+
+    const actionResult = await createStoreAction.execute();
+    const {
+      status,
+      result: newStore,
+    } = getProperties(actionResult, 'status', 'result');
+
+    if (status === 'done' && newStore) {
+      sourceStoreField.valueChanged(get(newStore, 'id'));
+    }
+  },
 });
 
 /**
@@ -347,7 +389,7 @@ function formDataToLane(formData) {
     strategy: {
       type: strategy,
     },
-    storeSchemaId: sourceStore,
+    storeSchemaId: sourceStore !== createStoreDropdownOptionValue ? sourceStore : null,
   };
 
   if (strategy === 'batch') {

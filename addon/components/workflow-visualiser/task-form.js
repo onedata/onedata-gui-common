@@ -24,6 +24,10 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { dataSpecToType } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import cloneAsEmberObject from 'onedata-gui-common/utils/clone-as-ember-object';
+
+const createStoreDropdownOptionValue = '__createStore';
+const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
 
 export default Component.extend(I18n, {
   layout,
@@ -92,6 +96,12 @@ export default Component.extend(I18n, {
    *   ```
    */
   onChange: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Utils.WorkflowVisualiser.ActionsFactory}
+   */
+  actionsFactory: undefined,
 
   /**
    * @type {ComputedProperty<String>}
@@ -183,7 +193,7 @@ export default Component.extend(I18n, {
                     const opts = getValueBuilderTypesForArgType(argumentType)
                       .map(vbType => ({ value: vbType }));
                     if (argumentIsOptional) {
-                      opts.unshift({ value: '__leaveUnassigned' });
+                      opts.unshift({ value: leaveUnassignedDropdownOptionValue });
                     }
                     return opts;
                   }
@@ -223,7 +233,9 @@ export default Component.extend(I18n, {
           });
         },
         dumpDefaultValue() {
-          return this.get('defaultValue') || this._super(...arguments);
+          const defaultValue = this.get('defaultValue');
+          return defaultValue ?
+            cloneAsEmberObject(defaultValue) : this._super(...arguments);
         },
       }).create({
         name: 'argumentMappings',
@@ -265,7 +277,9 @@ export default Component.extend(I18n, {
                       }))
                       .sortBy('label');
                     opts.unshift({
-                      value: '__leaveUnassigned',
+                      value: createStoreDropdownOptionValue,
+                    }, {
+                      value: leaveUnassignedDropdownOptionValue,
                     });
                     return opts;
                   }
@@ -275,16 +289,28 @@ export default Component.extend(I18n, {
                     options,
                     value,
                   } = this.getProperties('options', 'value');
-                  if (value !== null || !options.findBy('value', value)) {
-                    this.valueChanged(get(options[0], 'value'));
+                  if (!options.findBy('value', value)) {
+                    // options[1] is "leaveUnassigned"
+                    this.valueChanged(get(options[1], 'value'));
                   }
                 }),
+                valueChanged(value) {
+                  if (value === createStoreDropdownOptionValue) {
+                    const resultType = this.get('parent.value.resultType');
+                    const resultIsBatch = this.get('parent.value.resultIsBatch');
+                    component.createTargetStore(this, resultType, resultIsBatch);
+                  } else {
+                    return this._super(...arguments);
+                  }
+                },
               }).create({
                 component,
                 name: 'targetStore',
               }),
               DropdownField.extend({
-                isVisible: neq('parent.value.targetStore', raw('__leaveUnassigned')),
+                isVisible: neq(
+                  'parent.value.targetStore',
+                  raw(leaveUnassignedDropdownOptionValue)),
                 options: computed(
                   'component.stores.@each.id',
                   'parent.value.targetStore',
@@ -317,7 +343,9 @@ export default Component.extend(I18n, {
           });
         },
         dumpDefaultValue() {
-          return this.get('defaultValue') || this._super(...arguments);
+          const defaultValue = this.get('defaultValue');
+          return defaultValue ?
+            cloneAsEmberObject(defaultValue) : this._super(...arguments);
         },
       }).create({
         name: 'resultMappings',
@@ -386,6 +414,40 @@ export default Component.extend(I18n, {
       isValid: get(fields, 'isValid'),
     });
   },
+
+  async createTargetStore(targetStoreField, dataType, isBatch) {
+    const actionsFactory = this.get('actionsFactory');
+    if (!actionsFactory || !targetStoreField) {
+      return;
+    }
+
+    const allowedStoreTypes = getStoreTypesForResType(dataType, isBatch);
+    const allowedDataTypes = getDataTypesForResType(dataType);
+
+    const actionResult = await actionsFactory.createCreateStoreAction({
+      allowedStoreTypes,
+      allowedDataTypes,
+    }).execute();
+    const {
+      status,
+      result: newStore,
+    } = getProperties(actionResult, 'status', 'result');
+
+    if (status !== 'done' || !newStore) {
+      return;
+    }
+
+    const newStoreId = get(newStore, 'id');
+    if (get(targetStoreField, 'options').mapBy('value').includes(newStoreId)) {
+      targetStoreField.valueChanged(newStoreId);
+    }
+  },
+
+  actions: {
+    formNativeSubmit(event) {
+      event.preventDefault();
+    },
+  },
 });
 
 /**
@@ -445,7 +507,8 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     let valueBuilderType = get(existingMapping || {}, 'valueBuilder.valueBuilderType');
     if (!valueBuilderType) {
       valueBuilderType = (isOptional || defaultValue !== undefined || existingMapping) ?
-        '__leaveUnassigned' : getValueBuilderTypesForArgType(argumentType)[0];
+        leaveUnassignedDropdownOptionValue :
+        getValueBuilderTypesForArgType(argumentType)[0];
     }
     const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
     const valueBuilderConstValue = valueBuilderType === 'const' ?
@@ -495,7 +558,7 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
       resultName: name,
       resultType,
       resultIsBatch: Boolean(isBatch),
-      targetStore: storeSchemaId || '__leaveUnassigned',
+      targetStore: storeSchemaId || leaveUnassignedDropdownOptionValue,
       dispatchFunction: dispatchFunction,
     };
   });
@@ -540,7 +603,11 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
       // 'valueBuilderStore'
     );
 
-    if (!argumentName || !valueBuilderType || valueBuilderType === '__leaveUnassigned') {
+    if (
+      !argumentName ||
+      !valueBuilderType ||
+      valueBuilderType === leaveUnassignedDropdownOptionValue
+    ) {
       return;
     }
 
@@ -577,7 +644,11 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
       'dispatchFunction',
     );
 
-    if (!targetStore || !dispatchFunction || targetStore === '__leaveUnassigned') {
+    if (
+      !targetStore ||
+      !dispatchFunction ||
+      targetStore === leaveUnassignedDropdownOptionValue
+    ) {
       return;
     }
 
@@ -639,33 +710,50 @@ function getValueBuilderTypesForArgType(argType) {
 //   return [];
 // }
 
+function getStoreTypesForResType(resultType, resultIsBatch) {
+  const types = ['list'];
+  if (!resultIsBatch) {
+    types.push('singleValue');
+  }
+  if (
+    ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(resultType)
+  ) {
+    types.push('treeForest');
+  }
+  return types;
+}
+
+function getDataTypesForResType(resultType) {
+  const types = [resultType];
+  switch (resultType) {
+    // TODO: VFS-7816 uncomment or remove future code
+    // case 'archive':
+    case 'anyFile':
+    case 'dataset':
+      types.push('object');
+      break;
+    case 'regularFile':
+    case 'directory':
+    case 'symlink':
+      types.push('anyFile', 'object');
+      break;
+  }
+  return types;
+}
+
 function getStoresForResType(availableStores, resultType, resultIsBatch) {
+  const allowedStoreTypes = getStoreTypesForResType(resultType, resultIsBatch);
+  const allowedDataTypes = getDataTypesForResType(resultType);
   return availableStores.filter(store => {
     const {
-      type,
+      type: storeType,
       dataSpec,
     } = getProperties(store || {}, 'type', 'dataSpec');
     if (!dataSpec) {
-      return;
-    }
-    const storeNestedType = dataSpecToType(dataSpec);
-    if (type === 'singleValue' && resultIsBatch) {
       return false;
     }
-    if (resultType === storeNestedType) {
-      return true;
-    }
-    switch (resultType) {
-      // TODO: VFS-7816 uncomment or remove future code
-      // case 'archive':
-      case 'anyFile':
-      case 'dataset':
-        return storeNestedType === 'object';
-      case 'regularFile':
-      case 'directory':
-      case 'symlink':
-        return ['anyFile', 'object'].includes(storeNestedType);
-    }
+    const dataType = dataSpecToType(dataSpec);
+    return allowedStoreTypes.includes(storeType) && allowedDataTypes.includes(dataType);
   });
 }
 

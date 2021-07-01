@@ -49,7 +49,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
-    actionsFactory.registerWorkflowDataProvider({
+    actionsFactory.setWorkflowDataProvider({
       stores: [
         Store.create({
           id: 's1',

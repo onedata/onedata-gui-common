@@ -10,7 +10,7 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-form';
-import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not } from 'ember-awesome-macros';
+import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not, and, isEmpty } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -50,50 +50,50 @@ const storeTypes = [{
 
 const dataTypes = [{
   value: 'integer',
-  forbiddenIn: ['treeForest'],
+  forbiddenIn: ['treeForest', 'range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram'],
+  // forbiddenIn: ['treeForest', 'histogram', 'range'],
 }, {
   value: 'string',
-  forbiddenIn: ['treeForest'],
+  forbiddenIn: ['treeForest', 'range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram'],
+  // forbiddenIn: ['treeForest', 'histogram', 'range'],
 }, {
   value: 'object',
-  forbiddenIn: ['treeForest'],
+  forbiddenIn: ['treeForest', 'range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram'],
+  // forbiddenIn: ['treeForest', 'histogram', 'range'],
   // }, {
   //   value: 'histogram',
-  //   forbiddenIn: ['treeForest'],
+  //   forbiddenIn: ['treeForest', 'range'],
 }, {
   value: 'anyFile',
-  forbiddenIn: [],
+  forbiddenIn: ['range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram'],
+  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'regularFile',
-  forbiddenIn: [],
+  forbiddenIn: ['range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram'],
+  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'directory',
-  forbiddenIn: [],
+  forbiddenIn: ['range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram'],
+  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'symlink',
-  forbiddenIn: [],
+  forbiddenIn: ['range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram'],
+  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'dataset',
-  forbiddenIn: [],
+  forbiddenIn: ['range'],
   // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram'],
+  // forbiddenIn: ['histogram', 'range'],
   // }, {
   //   value: 'archive',
-  //   forbiddenIn: ['histogram'],
+  //   forbiddenIn: ['histogram', 'range'],
 }];
 
 const defaultRangeStart = 0;
@@ -126,6 +126,16 @@ export default Component.extend(I18n, {
    * @type {Object}
    */
   store: undefined,
+
+  /**
+   * @type {Array<String>|undefined}
+   */
+  allowedDataTypes: undefined,
+
+  /**
+   * @type {Array<String>|undefined}
+   */
+  allowedStoreTypes: undefined,
 
   /**
    * Needed when `mode` is `'create'` or `'edit'`
@@ -219,7 +229,9 @@ export default Component.extend(I18n, {
    */
   descriptionField: computed(function descriptionField() {
     return TextareaField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: not(and('isInViewMode', isEmpty('value'))),
+      })
       .create({
         name: 'description',
         isOptional: true,
@@ -231,12 +243,20 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
    */
   typeField: computed(function typeField() {
+    const component = this;
     return DropdownField
-      .extend(defaultValueGenerator(this, 'options.firstObject.value'))
+      .extend(defaultValueGenerator(this, 'options.firstObject.value'), {
+        options: computed(
+          'component.{allowedDataTypes,allowedStoreTypes}',
+          function options() {
+            return component.getTypeFieldOptions();
+          }
+        ),
+      })
       .create({
         name: 'type',
         showSearch: false,
-        options: storeTypes,
+        component,
       });
   }),
 
@@ -267,25 +287,31 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
    */
   dataTypeField: computed(function dataTypeField() {
+    const component = this;
     return DropdownField
       .extend(defaultValueGenerator(this, 'options.firstObject.value'), {
         isEnabled: gt(array.length('options'), raw(1)),
-        options: computed('valuesSource.type', function options() {
-          const storeType = this.get('valuesSource.type');
-          return dataTypes.filter(({ forbiddenIn }) => !forbiddenIn.includes(storeType));
-        }),
+        options: computed(
+          'valuesSource.type',
+          'component.allowedDataTypes',
+          function options() {
+            const storeType = this.get('valuesSource.type');
+            return component.getDataTypeFieldOptions(storeType);
+          }
+        ),
         storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
           const {
             options,
             value,
           } = this.getProperties('options', 'value');
-          if (value && !options.mapBy('value').includes(value)) {
+          if (value && options.length && !options.mapBy('value').includes(value)) {
             this.valueChanged(options[0].value);
           }
         }),
       })
       .create({
         name: 'dataType',
+        component,
       });
   }),
 
@@ -294,7 +320,9 @@ export default Component.extend(I18n, {
    */
   defaultValueField: computed(function defaultValueField() {
     return JsonField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: not(and('isInViewMode', isEmpty('value'))),
+      })
       .create({
         name: 'defaultValue',
         isOptional: true,
@@ -489,6 +517,34 @@ export default Component.extend(I18n, {
       isValid: get(fields, 'isValid'),
     });
   },
+
+  getTypeFieldOptions() {
+    const {
+      allowedDataTypes,
+      allowedStoreTypes,
+    } = this.getProperties('allowedDataTypes', 'allowedStoreTypes');
+
+    let options = storeTypes;
+    if (allowedStoreTypes && allowedStoreTypes.length) {
+      options = options.filter(({ value }) => allowedStoreTypes.includes(value));
+    }
+    if (allowedDataTypes && allowedDataTypes.length) {
+      options = options.filter(({ value }) => allowedDataTypes.some(dataType =>
+        !((dataTypes.findBy('value', dataType) || {}).forbiddenIn || []).includes(value)
+      ));
+    }
+    return options;
+  },
+
+  getDataTypeFieldOptions(storeType) {
+    const allowedDataTypes = this.get('allowedDataTypes');
+
+    let options = dataTypes.filter(({ forbiddenIn }) => !forbiddenIn.includes(storeType));
+    if (allowedDataTypes && allowedDataTypes.length) {
+      options = options.filter(({ value }) => allowedDataTypes.includes(value));
+    }
+    return options;
+  },
 });
 
 /**
@@ -562,8 +618,8 @@ function storeToFormData(store) {
     default:
       formData.genericStoreConfig = {
         dataType: dataSpec && dataSpecToType(dataSpec) || undefined,
-        defaultValue: defaultInitialValue !== undefined ?
-          JSON.stringify(defaultInitialValue, null, 2) : '',
+        defaultValue: [undefined, null].includes(defaultInitialValue) ?
+          '' : JSON.stringify(defaultInitialValue, null, 2),
       };
       break;
   }
@@ -609,6 +665,7 @@ function formDataToStore(formData) {
         'rangeStep'
       );
 
+      store.dataSpec = typeToDataSpec('integer');
       store.defaultInitialValue = {
         start: Number(rangeStart),
         end: Number(rangeEnd),

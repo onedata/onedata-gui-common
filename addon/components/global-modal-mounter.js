@@ -2,7 +2,7 @@
  * Renders modal component (which includes global-modal) specified by modal-manager.
  * There should be only one instance of global-modal-mounter across whole running
  * application.
- * 
+ *
  * @module components/global-modal-mounter
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -12,7 +12,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/global-modal-mounter';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 
 export default Component.extend({
   layout,
@@ -30,10 +30,8 @@ export default Component.extend({
   testMode: false,
 
   /**
-   * @type {Ember.ComputedProperty<string>}
+   * Array of stacked modal instances. The last one is at the top of modals rendering stack.
+   * @type {ComputedProperty<Array<ModalInstance>>}
    */
-  componentName: computed('modalManager.modalComponentName', function componentName() {
-    const componentNameFromManager = this.get('modalManager.modalComponentName');
-    return componentNameFromManager ? `modals/${componentNameFromManager}` : null;
-  }),
+  modalInstances: reads('modalManager.modalInstances'),
 });

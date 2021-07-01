@@ -1,21 +1,21 @@
 import $ from 'jquery';
 
-export function getModal() {
-  return $('.modal.in');
+export function getModal(modalClass) {
+  return $(`.modal.in${modalClass ? `.${modalClass}` : ''}`);
 }
 
-export function getModalHeader() {
-  return getModal().find('.modal-header');
+export function getModalHeader(modalClass) {
+  return getModal(modalClass).find('.modal-header');
 }
 
-export function getModalBody() {
-  return getModal().find('.modal-body');
+export function getModalBody(modalClass) {
+  return getModal(modalClass).find('.modal-body');
 }
 
-export function getModalFooter() {
-  return getModal().find('.modal-footer');
+export function getModalFooter(modalClass) {
+  return getModal(modalClass).find('.modal-footer');
 }
 
-export function isModalOpened() {
-  return Boolean(getModal().length);
+export function isModalOpened(modalClass) {
+  return Boolean(getModal(modalClass).length);
 }

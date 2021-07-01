@@ -1,7 +1,7 @@
 /**
  * Renders special instance of one-modal, which uses state of modalManager service
  * to control itself.
- * 
+ *
  * @module components/global-modal
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -16,12 +16,19 @@ import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { resolve } from 'rsvp';
 import { isArray } from '@ember/array';
+import { array, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
   tagName: '',
 
   modalManager: service(),
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  modalId: undefined,
 
   /**
    * If true, modal can be close using backdrop click and Escape key
@@ -49,9 +56,18 @@ export default Component.extend({
   onSubmit: data => data,
 
   /**
+   * @type {ComputedProperty<ModalInstance>}
+   */
+  modalInstance: array.findBy(
+    'modalManager.modalInstances',
+    raw('id'),
+    'modalId'
+  ),
+
+  /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  open: reads('modalManager.isModalOpened'),
+  open: reads('modalInstance.isOpened'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -72,31 +88,41 @@ export default Component.extend({
   actions: {
     submit(data) {
       const {
+        modalId,
         onSubmit,
         modalManager,
-      } = this.getProperties('onSubmit', 'modalManager');
+      } = this.getProperties('modalId', 'onSubmit', 'modalManager');
 
       return resolve(onSubmit(data))
-        .then(data => modalManager.onModalSubmit(data))
-        .catch(() => modalManager.onModalFailedSubmit());
+        .then(data => modalManager.onModalSubmit(modalId, data))
+        .catch(() => modalManager.onModalFailedSubmit(modalId));
     },
     shown() {
-      this.get('modalManager').onModalShown();
+      const {
+        modalId,
+        modalManager,
+      } = this.getProperties('modalId', 'modalManager');
+      modalManager.onModalShown(modalId);
     },
     hide() {
       const {
+        modalId,
         onHide,
         modalManager,
-      } = this.getProperties('onHide', 'modalManager');
+      } = this.getProperties('modalId', 'onHide', 'modalManager');
 
       if (onHide() === false) {
         return false;
       } else {
-        return modalManager.onModalHide();
+        return modalManager.onModalHide(modalId);
       }
     },
     hidden() {
-      this.get('modalManager').onModalHidden();
+      const {
+        modalId,
+        modalManager,
+      } = this.getProperties('modalId', 'modalManager');
+      modalManager.onModalHidden(modalId);
     },
   },
 });

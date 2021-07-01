@@ -20,7 +20,7 @@
     dropdownClass="dropdown-field-dropdown"
     as |option|
   }}
-    <div class="option-container">
+    <div class="option-container option-{{option.name}}">
       {{#if option.icon}}
         {{one-icon icon=option.icon}}
       {{/if}}
