@@ -47,7 +47,7 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Array<Object>} initialData.stores
    * @returns {Promise<Object>} task details
    */
-  getTaskCreationDataCallback: notImplementedIgnore,
+  getTaskCreationDataCallback: undefined,
 
   /**
    * @type {Function}
@@ -55,14 +55,14 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Object} initialData.task
    * @returns {Promise<Object>} task details
    */
-  getTaskModificationDataCallback: notImplementedIgnore,
+  getTaskModificationDataCallback: undefined,
 
   /**
    * @type {Function}
    * @param {Object} newStoreProperties
    * @returns {Promise<Object>} created store
    */
-  createStoreCallback: notImplementedIgnore,
+  createStoreCallback: undefined,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
