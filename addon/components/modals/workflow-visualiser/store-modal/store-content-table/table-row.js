@@ -15,7 +15,7 @@ export default Component.extend({
   layout,
   tagName: 'tr',
   classNames: ['table-row', 'data-row'],
-  attributeBindings: ['entry.index:data-row-id'],
+  attributeBindings: ['entry.id:data-row-id'],
 
   /**
    * @virtual
@@ -30,7 +30,7 @@ export default Component.extend({
   dataSpec: undefined,
 
   /**
-   * Must have two fields: index (string) and value (of any type)
+   * Must have three fields: id (string), index (string) and value (of any type)
    * @virtual
    * @type {Object}
    */

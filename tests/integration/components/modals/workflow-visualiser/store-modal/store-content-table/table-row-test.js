@@ -85,8 +85,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       .and.to.have.length(1);
   });
 
-  it('has current entry index in "data-row-id" attribute', async function () {
-    this.set('entry', { index: '123' });
+  it('has current entry id in "data-row-id" attribute', async function () {
+    this.set('entry', { id: '123' });
 
     await render(this);
 

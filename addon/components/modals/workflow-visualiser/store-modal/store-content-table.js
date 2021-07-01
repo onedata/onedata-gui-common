@@ -1,3 +1,12 @@
+/**
+ * Shows store content using table layout combined with infinite scroll.
+ *
+ * @module components/modals/workflow-visualiser/store-modal/store-content-table
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -6,11 +15,13 @@ import { htmlSafe } from '@ember/string';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import Looper from 'onedata-gui-common/utils/looper';
+// TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+// import Looper from 'onedata-gui-common/utils/looper';
 import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import { isEmpty } from '@ember/utils';
 
+// TODO: VFS-7874 create common initite scroll view logic
 export default Component.extend(I18n, {
   layout,
   classNames: ['store-content-table'],
@@ -36,15 +47,16 @@ export default Component.extend(I18n, {
    */
   rowHeight: 151,
 
-  /**
-   * @type {Number}
-   */
-  updateInterval: 5000,
+  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // /**
+  //  * @type {Number}
+  //  */
+  // updateInterval: 5000,
 
-  /**
-   * @type {Utils.Looper}
-   */
-  updater: undefined,
+  // /**
+  //  * @type {Utils.Looper}
+  //  */
+  // updater: undefined,
 
   /**
    * If true, should render top loading indicator
@@ -94,10 +106,11 @@ export default Component.extend(I18n, {
     });
   }),
 
-  init() {
-    this._super(...arguments);
-    this.startUpdater();
-  },
+  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // init() {
+  //   this._super(...arguments);
+  //   this.startUpdater();
+  // },
 
   didInsertElement() {
     this._super(...arguments);
@@ -113,39 +126,40 @@ export default Component.extend(I18n, {
   willDestroyElement() {
     try {
       this.get('listWatcher').destroy();
-      this.stopUpdater();
+      // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+      // this.stopUpdater();
     } finally {
       this._super(...arguments);
     }
   },
 
-  startUpdater() {
-    const store = this.get('store');
-    if (!get(store, 'contentMayChange')) {
-      return;
-    }
+  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // startUpdater() {
+  //   const store = this.get('store');
+  //   if (!get(store, 'contentMayChange')) {
+  //     return;
+  //   }
 
-    const updater = Looper.create({
-      immediate: false,
-      interval: this.get('updateInterval'),
-    });
-    updater.on('tick', () => {
-      // FIXME: uncomment when infinite scroll reload will be fixed
-      // this.updateStoreEntries();
-      // Stopping updater after `updateStoreEntries` call, because there could be some
-      // changes in store content between moment of the last update and
-      // `contentMayChange` property change.
-      if (!get(store, 'contentMayChange')) {
-        this.stopUpdater();
-      }
-    });
-    this.set('updater', updater);
-  },
+  //   const updater = Looper.create({
+  //     immediate: false,
+  //     interval: this.get('updateInterval'),
+  //   });
+  //   updater.on('tick', () => {
+  //     this.updateStoreEntries();
+  //     // Stopping updater after `updateStoreEntries` call, because there could be some
+  //     // changes in store content between moment of the last update and
+  //     // `contentMayChange` property change.
+  //     if (!get(store, 'contentMayChange')) {
+  //       this.stopUpdater();
+  //     }
+  //   });
+  //   this.set('updater', updater);
+  // },
 
-  stopUpdater() {
-    const updater = this.get('updater');
-    updater && safeExec(updater, () => updater.destroy());
-  },
+  // stopUpdater() {
+  //   const updater = this.get('updater');
+  //   updater && safeExec(updater, () => updater.destroy());
+  // },
 
   async fetchStoreEntries() {
     const {
@@ -164,9 +178,10 @@ export default Component.extend(I18n, {
     return result;
   },
 
-  async updateStoreEntries() {
-    await this.get('storeEntries').reload();
-  },
+  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // async updateStoreEntries() {
+  //   await this.get('storeEntries').reload();
+  // },
 
   createListWatcher() {
     const $closestPs = this.$().closest('.ps');
