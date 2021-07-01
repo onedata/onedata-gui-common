@@ -115,7 +115,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       const taskDiff = { name: 'someName' };
       const detailsProviderStub = sinon.stub().resolves(taskDiff);
       this.get('task.actionsFactory')
-        .registerGetTaskModificationDataCallback(detailsProviderStub);
+        .setGetTaskModificationDataCallback(detailsProviderStub);
       const onModifySpy = sinon.stub().resolves();
       this.set('task.onModify', onModifySpy);
       render(this);

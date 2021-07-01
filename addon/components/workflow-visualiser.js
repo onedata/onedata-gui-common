@@ -278,8 +278,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     function actionsFactoryObserver() {
       const actionsFactory = this.get('actionsFactory');
       if (actionsFactory) {
-        actionsFactory.registerWorkflowDataProvider(this);
-        actionsFactory.registerCreateStoreCallback(
+        actionsFactory.setWorkflowDataProvider(this);
+        actionsFactory.setCreateStoreCallback(
           newStoreProps => this.addStore(newStoreProps)
         );
       }

@@ -37,7 +37,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       id: 's1',
       name: 'store1',
     });
-    factory.registerWorkflowDataProvider({
+    factory.setWorkflowDataProvider({
       stores: [store],
     });
     const createLaneCallback = () => {};
@@ -57,7 +57,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       id: 's1',
       name: 'store1',
     });
-    factory.registerWorkflowDataProvider({
+    factory.setWorkflowDataProvider({
       stores: [store],
     });
     const lane = Lane.create();
@@ -99,11 +99,11 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       id: 's1',
       name: 'store1',
     });
-    factory.registerWorkflowDataProvider({
+    factory.setWorkflowDataProvider({
       stores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.registerGetTaskCreationDataCallback(taskDetailsProviderCallback);
+    factory.setGetTaskCreationDataCallback(taskDetailsProviderCallback);
     const createTaskCallback = () => {};
 
     const action = factory.createCreateTaskAction({ createTaskCallback });
@@ -121,11 +121,11 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       id: 's1',
       name: 'store1',
     });
-    factory.registerWorkflowDataProvider({
+    factory.setWorkflowDataProvider({
       stores: [store],
     });
     const taskDetailsProviderCallback = () => {};
-    factory.registerGetTaskModificationDataCallback(taskDetailsProviderCallback);
+    factory.setGetTaskModificationDataCallback(taskDetailsProviderCallback);
     const task = Task.create();
 
     const action = factory.createModifyTaskAction({ task });
@@ -142,7 +142,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   it('creates action "CreateStoreAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this });
     const createStoreCallback = () => {};
-    factory.registerCreateStoreCallback(createStoreCallback);
+    factory.setCreateStoreCallback(createStoreCallback);
 
     const action = factory.createCreateStoreAction();
 
@@ -164,7 +164,7 @@ function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
         id: 's1',
         name: 'store1',
       });
-      factory.registerWorkflowDataProvider({
+      factory.setWorkflowDataProvider({
         stores: [store],
       });
     }
