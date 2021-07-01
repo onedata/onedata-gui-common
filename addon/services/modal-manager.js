@@ -33,6 +33,7 @@ import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance
 
 export default Service.extend({
   /**
+   * Array of stacked modal instances. The last one is at the top of modals rendering stack.
    * @type {Array<Object>}
    */
   modalInstances: undefined,
@@ -43,12 +44,13 @@ export default Service.extend({
   },
 
   /**
-   * Shows specified modal. If another modal is already opened, it will be replaced.
+   * Shows specified modal. If another modal is already opened, it will be
+   * rendered under the new one.
    * @param {string} modalComponentName Name of a modal component (which contains global-modal).
    * Component should be placed inside `components/modals`.
    * @param {Object} modalOptions Modal options. Possible options:
    *   - [hideAfterSubmit=true]: boolean - if true, modal will hide after submit
-   *   - [onSubmit]: function - called on modal submit. Can receive submit acton data via first
+   *   - [onSubmit]: function - called on modal submit. Can receive submit action data via first
    *     argument. If returns promise, then it will be used to render spinner.
    *   - [onHide]: function - called on modal 'hide' event. If returns false, then
    *     modal close is aborted.
@@ -131,9 +133,10 @@ export default Service.extend({
 
   onModalHidden(modalId) {
     const modalInstance = this.getModalInstanceById(modalId);
-    if (modalInstance) {
-      get(modalInstance, 'resolveHiddenPromise')();
+    if (!modalInstance) {
+      return;
     }
+    get(modalInstance, 'resolveHiddenPromise')();
     this.get('modalInstances').removeObject(modalInstance);
   },
 

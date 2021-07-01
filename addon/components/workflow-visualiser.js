@@ -356,10 +356,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   adaptActionsFactory(actionsFactory) {
-    actionsFactory.registerWorkflowDataProvider(
+    actionsFactory.setWorkflowDataProvider(
       WorkflowDataProvider.create({ visualiserComponent: this })
     );
-    actionsFactory.registerCreateStoreCallback(
+    actionsFactory.setCreateStoreCallback(
       newStoreProps => this.addStore(newStoreProps)
     );
   },

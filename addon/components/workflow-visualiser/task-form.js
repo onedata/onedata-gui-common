@@ -442,6 +442,12 @@ export default Component.extend(I18n, {
       targetStoreField.valueChanged(newStoreId);
     }
   },
+
+  actions: {
+    formNativeSubmit(event) {
+      event.preventDefault();
+    },
+  },
 });
 
 /**
