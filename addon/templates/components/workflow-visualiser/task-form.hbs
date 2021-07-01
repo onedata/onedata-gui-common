@@ -3,7 +3,7 @@
   <div class="atm-lambda-name">{{atmLambda.name}}</div>
   <div class="atm-lambda-summary">{{atmLambda.summary}}</div>
 </div>
-<form class="form form-horizontal form-component" onSubmit={{action "onFormNativeSubmit"}}>
+<form class="form form-horizontal form-component" onSubmit={{action "formNativeSubmit"}}>
   <div class="section-header">{{tt this "taskDetailsHeader"}}</div>
   {{form-component/field-renderer field=fields}}
 </form>

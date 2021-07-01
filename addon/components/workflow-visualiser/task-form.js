@@ -444,7 +444,7 @@ export default Component.extend(I18n, {
   },
 
   actions: {
-    onFormSubmitEvent(event) {
+    formNativeSubmit(event) {
       event.preventDefault();
     },
   },
