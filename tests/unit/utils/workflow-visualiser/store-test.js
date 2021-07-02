@@ -6,7 +6,7 @@ import sinon from 'sinon';
 
 describe('Unit | Utility | workflow visualiser/store', function () {
   it('has undefined store data properties', function () {
-    const element = Store.create();
+    const store = Store.create();
 
     [
       'name',
@@ -15,7 +15,13 @@ describe('Unit | Utility | workflow visualiser/store', function () {
       'dataSpec',
       'defaultInitialValue',
       'requiresInitialValue',
-    ].forEach(propName => expect(get(element, propName)).to.be.undefined);
+    ].forEach(propName => expect(get(store, propName)).to.be.undefined);
+  });
+
+  it('has true "contentMayChange" property by default', function () {
+    const store = Store.create();
+
+    expect(get(store, 'contentMayChange')).to.be.true;
   });
 
   it('calls "onModify" with store reference and modified props on "modify" call', function () {

@@ -2,7 +2,7 @@
  * Provides functions for fetching workflow execution stats. Needs to be extended
  * with real implementation.
  *
- * @module utils/workflow-visualiser/stats-fetcher
+ * @module utils/workflow-visualiser/execution-data-fetcher
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -35,6 +35,17 @@ export default EmberObject.extend({
    *   ```
    */
   async fetchStatuses() {
+    return notImplementedReject();
+  },
+
+  /**
+   * @param {String} storeSchemaId
+   * @param {String} startFromIndex
+   * @param {number} limit
+   * @param {number} offset
+   * @returns {Promise<{array: Array<{ index: String, value: any }>, isLast: Boolean}>}
+   */
+  async fetchStoreContent() {
     return notImplementedReject();
   },
 });

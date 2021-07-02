@@ -36,14 +36,9 @@ import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
-/**
- * @typedef {EmberObject} WorkflowDataProvider
- * @property {Array<Utils.WorkflowVisualiser.Store>} stores
- */
-
 export default EmberObject.extend(OwnerInjector, {
   /**
-   * @type {WorkflowDataProvider}
+   * @type {Utils.WorkflowVisualiser.WorkflowDataProvider}
    */
   workflowDataProvider: undefined,
 
@@ -52,7 +47,7 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Array<Object>} initialData.stores
    * @returns {Promise<Object>} task details
    */
-  getTaskCreationDataCallback: notImplementedIgnore,
+  getTaskCreationDataCallback: undefined,
 
   /**
    * @type {Function}
@@ -60,14 +55,14 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Object} initialData.task
    * @returns {Promise<Object>} task details
    */
-  getTaskModificationDataCallback: notImplementedIgnore,
+  getTaskModificationDataCallback: undefined,
 
   /**
    * @type {Function}
    * @param {Object} newStoreProperties
    * @returns {Promise<Object>} created store
    */
-  createStoreCallback: notImplementedIgnore,
+  createStoreCallback: undefined,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
@@ -269,7 +264,13 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.ViewStoreAction}
    */
   createViewStoreAction(context) {
-    return ViewStoreAction.create({ ownerSource: this, context });
+    return ViewStoreAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        getStoreContentCallback: (...args) =>
+          this.get('workflowDataProvider').getStoreContent(...args),
+      }, context),
+    });
   },
 
   /**

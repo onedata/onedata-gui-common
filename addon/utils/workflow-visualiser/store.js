@@ -59,6 +59,14 @@ export default EmberObject.extend({
   requiresInitialValue: undefined,
 
   /**
+   * If true, then the content of this store can change, hence any content preview
+   * should be updated regularly.
+   * @virtual optional
+   * @type {Boolean}
+   */
+  contentMayChange: true,
+
+  /**
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Store} store

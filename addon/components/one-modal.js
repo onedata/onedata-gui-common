@@ -10,7 +10,7 @@
 import BsModal from 'ember-bootstrap/components/bs-modal';
 import config from 'ember-get-config';
 import { guidFor } from '@ember/object/internals';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import { or, tag } from 'ember-awesome-macros';
 import { scheduleOnce, next } from '@ember/runloop';
 
@@ -43,6 +43,12 @@ export default BsModal.extend({
    */
   recomputeScrollShadowFunction: computed(function recomputeScrollShadowFunction() {
     return this.recomputeScrollShadow.bind(this);
+  }),
+
+  sizeObserver: observer('size', function sizeObserver() {
+    // Change of modal size corrupts scroll shadow css classes, so we need to
+    // recompute them again.
+    scheduleOnce('afterRender', this, 'recomputeScrollShadow');
   }),
 
   init() {
@@ -102,7 +108,7 @@ export default BsModal.extend({
 
         // We do not add classes to the modalElement, because its classes are changing too
         // frequently,so it would clear scroll classes added below. On the other hand the
-        // class list of modalDialog is pretty constant
+        // class list of modalDialog is pretty constant (except modal size change)
         modalDialog.classList[scrolledTop ? 'add' : 'remove']('scroll-on-top');
         modalDialog.classList[scrolledBottom ? 'add' : 'remove']('scroll-on-bottom');
       }

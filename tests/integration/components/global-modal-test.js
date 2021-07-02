@@ -499,6 +499,17 @@ describe('Integration | Component | global modal', function () {
       .then(() => click(getGlobalModal()[0]))
       .then(() => expect(isGlobalModalOpened()).to.be.true);
   });
+
+  it('renders modal in specified size', function () {
+    this.set('modalInstance.isOpened', true);
+
+    this.render(hbs `{{global-modal
+      modalId=modalManager.modalInstances.lastObject.id
+      size="lg"
+    }}`);
+
+    expect(getGlobalModal().find('.modal-dialog')).to.have.class('modal-lg');
+  });
 });
 
 function getGlobalModal() {

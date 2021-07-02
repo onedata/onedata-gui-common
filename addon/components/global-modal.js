@@ -31,6 +31,14 @@ export default Component.extend({
   modalId: undefined,
 
   /**
+   * One of: `'sm'`, `'lg'`, `'xl'`.
+   * Null is the initial value because it is also an initial value of
+   * ember-bootstrap modal size.
+   * @type {String}
+   */
+  size: null,
+
+  /**
    * If true, modal can be close using backdrop click and Escape key
    * @virtual optional
    * @type {boolean}

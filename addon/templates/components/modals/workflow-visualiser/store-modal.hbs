@@ -2,6 +2,7 @@
   classNames="store-modal"
   allowClose=(not isSubmitting)
   modalId=modalId
+  size=(if (eq activeTab "content") "xl" null)
   as |modal|
 }}
 
@@ -10,17 +11,44 @@
   {{/modal.header}}
 
   {{#modal.body}}
-    {{modals/workflow-visualiser/store-modal/store-form
-      mode=mode
-      store=store
-      allowedStoreTypes=allowedStoreTypes
-      allowedDataTypes=allowedDataTypes
-      onChange=(action "formChange")
-      isDisabled=isSubmitting
-    }}
+    {{#if (eq mode "view")}}
+      {{#bs-tab
+        class="bs-tab-onedata bs-tab-modern"
+        activeId=activeTab
+        onChange=(action "changeTab")
+        as |tab|
+      }}
+        {{tab.pane id="details" title=(tt this "tabs.details.title")}}
+        {{tab.pane id="content" title=(tt this "tabs.content.title")}}
+      {{/bs-tab}}
+    {{/if}}
+    {{#if (eq activeTab "details")}}
+      {{modals/workflow-visualiser/store-modal/store-form
+        mode=mode
+        store=store
+        allowedStoreTypes=allowedStoreTypes
+        allowedDataTypes=allowedDataTypes
+        onChange=(action "formChange")
+        isDisabled=isSubmitting
+      }}
+    {{else if isContentTabRendered}}
+      {{modals/workflow-visualiser/store-modal/store-content-table
+        store=store
+        getStoreContentCallback=getStoreContentCallback
+      }}
+    {{/if}}
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
+    {{#if (eq activeTab "content")}}
+      {{#bs-button
+        type="primary"
+        class="btn-cancel pull-left"
+        onClick=(action "reloadContentTab")
+      }}
+        {{tt this "button.refresh"}}
+      {{/bs-button}}
+    {{/if}}
     {{#bs-button
       type="default"
       class="btn-cancel"

@@ -1,0 +1,8 @@
+<tr class="table-header-row">
+  {{#each columns as |column|}}
+    <th class="table-col-{{column}}">
+      {{tt this (concat "columnLabels." column)}}
+    </th>
+  {{/each}}
+</tr>
+{{yield}}
