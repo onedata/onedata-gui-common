@@ -19,7 +19,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
-    actionsFactory.registerWorkflowDataProvider({
+    actionsFactory.setWorkflowDataProvider({
       stores: [
         Store.create({
           id: 's1',

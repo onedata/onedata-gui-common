@@ -47,7 +47,7 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Array<Object>} initialData.stores
    * @returns {Promise<Object>} task details
    */
-  getTaskCreationDataCallback: notImplementedIgnore,
+  getTaskCreationDataCallback: undefined,
 
   /**
    * @type {Function}
@@ -55,41 +55,53 @@ export default EmberObject.extend(OwnerInjector, {
    * @param {Object} initialData.task
    * @returns {Promise<Object>} task details
    */
-  getTaskModificationDataCallback: notImplementedIgnore,
+  getTaskModificationDataCallback: undefined,
 
   /**
    * @type {Function}
    * @param {Object} newStoreProperties
    * @returns {Promise<Object>} created store
    */
-  createStoreCallback: notImplementedIgnore,
+  createStoreCallback: undefined,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
    * @returns {undefined}
    */
-  registerWorkflowDataProvider(workflowDataProvider) {
+  setWorkflowDataProvider(workflowDataProvider) {
+    if (this.get('workflowDataProvider')) {
+      console.warn('workflow-visualiser/actions-factory: overriding workflowDataProvider');
+    }
     this.set('workflowDataProvider', workflowDataProvider);
   },
 
   /**
    * @param {Function} getTaskCreationDataCallback
    */
-  registerGetTaskCreationDataCallback(getTaskCreationDataCallback) {
+  setGetTaskCreationDataCallback(getTaskCreationDataCallback) {
+    if (this.get('getTaskCreationDataCallback')) {
+      console.warn('workflow-visualiser/actions-factory: overriding getTaskCreationDataCallback');
+    }
     this.set('getTaskCreationDataCallback', getTaskCreationDataCallback);
   },
 
   /**
    * @param {Function} getTaskModificationDataCallback
    */
-  registerGetTaskModificationDataCallback(getTaskModificationDataCallback) {
+  setGetTaskModificationDataCallback(getTaskModificationDataCallback) {
+    if (this.get('getTaskModificationDataCallback')) {
+      console.warn('workflow-visualiser/actions-factory: overriding getTaskModificationDataCallback');
+    }
     this.set('getTaskModificationDataCallback', getTaskModificationDataCallback);
   },
 
   /**
    * @param {Function} createStoreCallback
    */
-  registerCreateStoreCallback(createStoreCallback) {
+  setCreateStoreCallback(createStoreCallback) {
+    if (this.get('createStoreCallback')) {
+      console.warn('workflow-visualiser/actions-factory: overriding createStoreCallback');
+    }
     this.set('createStoreCallback', createStoreCallback);
   },
 
@@ -207,7 +219,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
-        taskDetailsProviderCallback: this.get('getTaskCreationDataCallback'),
+        taskDetailsProviderCallback: this.get('getTaskCreationDataCallback') || notImplementedIgnore,
       }, context),
     });
   },
@@ -221,7 +233,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         stores: this.getStoresArrayProxy(),
-        taskDetailsProviderCallback: this.get('getTaskModificationDataCallback'),
+        taskDetailsProviderCallback: this.get('getTaskModificationDataCallback') || notImplementedIgnore,
       }, context),
     });
   },
@@ -242,7 +254,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateStoreAction.create({
       ownerSource: this,
       context: Object.assign({
-        createStoreCallback: this.get('createStoreCallback'),
+        createStoreCallback: this.get('createStoreCallback') || notImplementedIgnore,
       }, context),
     });
   },

@@ -17,7 +17,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
   beforeEach(function () {
     const createStoreStub = sinon.stub().resolves();
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
-    actionsFactory.registerCreateStoreCallback(createStoreStub);
+    actionsFactory.setCreateStoreCallback(createStoreStub);
     this.setProperties({
       actionsFactory,
       stores: [

@@ -30,6 +30,7 @@ export default Component.extend({
   testMode: false,
 
   /**
+   * Array of stacked modal instances. The last one is at the top of modals rendering stack.
    * @type {ComputedProperty<Array<ModalInstance>>}
    */
   modalInstances: reads('modalManager.modalInstances'),

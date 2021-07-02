@@ -1,5 +1,5 @@
 /**
- * Internal class used do manage modal instances by modal-manager service.
+ * Internal class used to manage modal instances by modal-manager service.
  *
  * @module utils/modal-manager/modal-instance
  * @author Michał Borzęcki
