@@ -62,7 +62,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
           type: 'integer',
           valueConstraints: {},
         },
-        defaultInitialValue: undefined,
+        defaultInitialValue: null,
         requiresInitialValue: false,
       });
       expect(get(actionResult, 'status')).to.equal('done');
