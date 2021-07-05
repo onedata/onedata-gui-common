@@ -21,7 +21,7 @@ const dataSpecs = [{
     type: 'integer',
     valueConstraints: {},
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
   label: 'String',
   name: 'string',
@@ -29,7 +29,7 @@ const dataSpecs = [{
     type: 'string',
     valueConstraints: {},
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
   label: 'Object',
   name: 'object',
@@ -37,7 +37,12 @@ const dataSpecs = [{
     type: 'object',
     valueConstraints: {},
   },
-  valueBuilderTypes: ['iteratedItem', 'const', 'onedatafsCredentials'],
+  valueBuilderTypes: [
+    'iteratedItem',
+    'singleValueStoreContent',
+    'const',
+    'onedatafsCredentials',
+  ],
   canContain: [
     'anyFile',
     'regularFile',
@@ -66,7 +71,7 @@ const dataSpecs = [{
       fileType: 'ANY',
     },
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   canContain: ['regularFile', 'directory', 'symlink'],
 }, {
   label: 'Regular file',
@@ -77,7 +82,7 @@ const dataSpecs = [{
       fileType: 'REG',
     },
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
   label: 'Directory',
   name: 'directory',
@@ -87,7 +92,7 @@ const dataSpecs = [{
       fileType: 'DIR',
     },
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
   label: 'Symbolic link',
   name: 'symlink',
@@ -97,7 +102,7 @@ const dataSpecs = [{
       fileType: 'SYMLNK',
     },
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
   label: 'Dataset',
   name: 'dataset',
@@ -105,7 +110,7 @@ const dataSpecs = [{
     type: 'dataset',
     valueConstraints: {},
   },
-  valueBuilderTypes: ['iteratedItem', 'const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
   // TODO: VFS-7816 uncomment or remove future code
   // }, {
   //   label: 'Archive',
@@ -202,6 +207,7 @@ const dataSpecs = [{
 
 const valueBuilderTypeLabels = {
   iteratedItem: 'Iterated item',
+  singleValueStoreContent: 'Store content',
   const: 'Constant value',
   // storeCredentials: 'Store credentials',
   onedatafsCredentials: 'OnedataFS credentials',
@@ -385,11 +391,11 @@ const exampleTask = {
     },
   }],
   resultMappings: [{
-    name: 'resstring',
+    resultName: 'resstring',
     storeSchemaId: 'singleValueStringId',
     dispatchFunction: 'set',
   }, {
-    name: 'resanyfile',
+    resultName: 'resanyfile',
     storeSchemaId: 'treeForestAnyFileId',
     dispatchFunction: 'append',
   }],
@@ -528,7 +534,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
     });
 
-    dataSpecs.forEach(({ label, dataSpec, valueBuilderTypes }) => {
+    dataSpecs.forEach(({ name, label, dataSpec, valueBuilderTypes, canContain }) => {
       it(`provides available value builder types for argument of type "${label}"`,
         async function () {
           this.set('atmLambda.argumentSpecs', [{
@@ -624,6 +630,104 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               },
               isValid: true,
             });
+          });
+      }
+
+      if (valueBuilderTypes.includes('singleValueStoreContent')) {
+        it(`allows to setup argument of type "${label}" using "Store content" value builder`,
+          async function () {
+            this.set('atmLambda.argumentSpecs', [{
+              name: 'arg1',
+              dataSpec,
+              isOptional: false,
+            }]);
+
+            const possibleDataSpecNames = dataSpecs.mapBy('name').filter(specName =>
+              name === specName || (canContain || []).includes(specName)
+            );
+            const possibleStores = possibleDataSpecNames.map(dataSpecName =>
+              allPossibleStores.findBy(
+                'name',
+                `singleValue${classify(dataSpecName)}Store`
+              )
+            ).compact();
+            const sortedPossibleStores = possibleStores.sortBy('name');
+
+            await render(this);
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderType-field',
+              'Store content'
+            );
+            await clickTrigger('.argumentMapping-field .valueBuilderStore-field');
+
+            const $options = $('.ember-power-select-option');
+            expect($options).to.have.length(sortedPossibleStores.length + 1);
+            expect($options.eq(0).text().trim()).to.equal('Create store...');
+            sortedPossibleStores.forEach(({ name }, idx) =>
+              expect($options.eq(idx + 1).text().trim()).to.equal(name)
+            );
+
+            const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderStore-field',
+              storeToSelect.name
+            );
+
+            expect(this.get('changeSpy')).to.be.calledWith({
+              data: {
+                name: 'function1',
+                argumentMappings: [{
+                  argumentName: 'arg1',
+                  valueBuilder: {
+                    valueBuilderType: 'singleValueStoreContent',
+                    valueBuilderRecipe: storeToSelect.id,
+                  },
+                }],
+                resultMappings: [],
+              },
+              isValid: true,
+            });
+          });
+
+        it(`allows to create new store for argument of type "${label}" using "Store content" value builder`,
+          async function () {
+            this.set('atmLambda.argumentSpecs', [{
+              name: 'arg1',
+              dataSpec,
+              isOptional: false,
+            }]);
+
+            this.set('newStoreFromCreation', {
+              id: 'newstore',
+              name: 'new store',
+              dataSpec: dataSpec,
+              type: 'singleValue',
+            });
+            const allowedStoreTypes = ['singleValue'];
+            const allowedDataTypes = dataSpecs.mapBy('name').filter(specName =>
+              name === specName || (canContain || []).includes(specName)
+            );
+
+            await render(this);
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderType-field',
+              'Store content'
+            );
+            await selectChoose(
+              '.argumentMapping-field .valueBuilderStore-field',
+              'Create store...'
+            );
+
+            expect(this.$('.valueBuilderStore-field .dropdown-field-trigger').text().trim())
+              .to.equal('new store');
+            const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
+            expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
+            const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
+
+            expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
+              .to.deep.equal(allowedStoreTypes.sort());
+            expect(lastCreateStoreCallArg.allowedDataTypes.sort())
+              .to.deep.equal(allowedDataTypes.sort());
           });
       }
 

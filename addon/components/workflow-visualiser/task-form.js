@@ -186,11 +186,13 @@ export default Component.extend(I18n, {
             fields: [
               DropdownField.extend({
                 options: computed(
-                  'parent.value.{argumentType,argumentIsOptional}',
+                  'parent.value.{argumentType,argumentIsBatch,argumentIsOptional}',
                   function options() {
                     const argumentType = this.get('parent.value.argumentType');
+                    const argumentIsBatch = this.get('parent.value.argumentIsBatch');
                     const argumentIsOptional = this.get('parent.value.argumentIsOptional');
-                    const opts = getValueBuilderTypesForArgType(argumentType)
+                    const opts =
+                      getValueBuilderTypesForArgType(argumentType, argumentIsBatch)
                       .map(vbType => ({ value: vbType }));
                     if (argumentIsOptional) {
                       opts.unshift({ value: leaveUnassignedDropdownOptionValue });
@@ -206,29 +208,44 @@ export default Component.extend(I18n, {
               }).create({
                 name: 'valueBuilderConstValue',
               }),
-              // TODO: VFS-7816 uncomment or remove future code
-              // DropdownField.extend({
-              //   isVisible: eq('parent.value.valueBuilderType', raw('storeCredentials')),
-              //   options: computed(
-              //     'component.stores.@each.{type,name}',
-              //     'parent.value.argumentType',
-              //     function options() {
-              //       const argumentType = this.get('parent.value.argumentType');
-              //       const stores = this.get('component.stores') || [];
-              //       const possibleStoreTypes = getStoreTypesForArgType(argumentType);
-              //       return stores
-              //         .filter(({ type }) => possibleStoreTypes.includes(type))
-              //         .sortBy('name')
-              //         .map(({ id, name }) => ({
-              //           value: id,
-              //           label: name,
-              //         }));
-              //     }
-              //   ),
-              // }).create({
-              //   component,
-              //   name: 'valueBuilderStore',
-              // }),
+              DropdownField.extend({
+                isVisible: eq(
+                  'parent.value.valueBuilderType',
+                  raw('singleValueStoreContent')
+                ),
+                options: computed(
+                  'component.stores.@each.{type,name}',
+                  'parent.value.{argumentType,argumentIsBatch}',
+                  function options() {
+                    const argumentType = this.get('parent.value.argumentType');
+                    const argumentIsBatch = this.get('parent.value.argumentIsBatch');
+                    const stores = this.get('component.stores') || [];
+                    const possibleStores =
+                      getSourceStoreForType(stores, argumentType, argumentIsBatch);
+                    const opts = possibleStores
+                      .sortBy('name')
+                      .map(({ id, name }) => ({
+                        value: id,
+                        label: name,
+                      }));
+                    opts.unshift({
+                      value: createStoreDropdownOptionValue,
+                    });
+                    return opts;
+                  }
+                ),
+                valueChanged(value) {
+                  if (value === createStoreDropdownOptionValue) {
+                    const argumentType = this.get('parent.value.argumentType');
+                    component.createSourceStore(this, argumentType);
+                  } else {
+                    return this._super(...arguments);
+                  }
+                },
+              }).create({
+                component,
+                name: 'valueBuilderStore',
+              }),
             ],
           });
         },
@@ -270,7 +287,7 @@ export default Component.extend(I18n, {
                     const stores = this.get('component.stores') || [];
                     const resultType = this.get('parent.value.resultType');
                     const resultIsBatch = this.get('parent.value.resultIsBatch');
-                    const opts = getStoresForResType(stores, resultType, resultIsBatch)
+                    const opts = getTargetStoresForType(stores, resultType, resultIsBatch)
                       .map(store => ({
                         value: get(store, 'id'),
                         label: get(store, 'name'),
@@ -415,16 +432,40 @@ export default Component.extend(I18n, {
     });
   },
 
+  async createSourceStore(sourceStoreField, dataType) {
+    const actionsFactory = this.get('actionsFactory');
+    if (!actionsFactory || !sourceStoreField) {
+      return;
+    }
+
+    const allowedStoreTypes = ['singleValue'];
+    const allowedDataTypes = getSourceDataTypesForType(dataType);
+
+    await this.createStoreForDropdown(
+      sourceStoreField,
+      allowedStoreTypes,
+      allowedDataTypes
+    );
+  },
+
   async createTargetStore(targetStoreField, dataType, isBatch) {
     const actionsFactory = this.get('actionsFactory');
     if (!actionsFactory || !targetStoreField) {
       return;
     }
 
-    const allowedStoreTypes = getStoreTypesForResType(dataType, isBatch);
-    const allowedDataTypes = getDataTypesForResType(dataType);
+    const allowedStoreTypes = getTargetStoreTypesForType(dataType, isBatch);
+    const allowedDataTypes = getTargetDataTypesForType(dataType);
 
-    const actionResult = await actionsFactory.createCreateStoreAction({
+    await this.createStoreForDropdown(
+      targetStoreField,
+      allowedStoreTypes,
+      allowedDataTypes
+    );
+  },
+
+  async createStoreForDropdown(dropdownField, allowedStoreTypes, allowedDataTypes) {
+    const actionResult = await this.get('actionsFactory').createCreateStoreAction({
       allowedStoreTypes,
       allowedDataTypes,
     }).execute();
@@ -438,8 +479,8 @@ export default Component.extend(I18n, {
     }
 
     const newStoreId = get(newStore, 'id');
-    if (get(targetStoreField, 'options').mapBy('value').includes(newStoreId)) {
-      targetStoreField.valueChanged(newStoreId);
+    if (get(dropdownField, 'options').mapBy('value').includes(newStoreId)) {
+      dropdownField.valueChanged(newStoreId);
     }
   },
 
@@ -487,12 +528,14 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     const {
       name,
       dataSpec,
+      isBatch,
       isOptional,
       defaultValue,
     } = getProperties(
       argumentSpec || {},
       'name',
       'dataSpec',
+      'isBatch',
       'isOptional',
       'defaultValue'
     );
@@ -508,22 +551,21 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     if (!valueBuilderType) {
       valueBuilderType = (isOptional || defaultValue !== undefined || existingMapping) ?
         leaveUnassignedDropdownOptionValue :
-        getValueBuilderTypesForArgType(argumentType)[0];
+        getValueBuilderTypesForArgType(argumentType, isBatch)[0];
     }
     const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
     const valueBuilderConstValue = valueBuilderType === 'const' ?
       JSON.stringify(valueBuilderRecipe, null, 2) : undefined;
-    // TODO: VFS-7816 uncomment or remove future code
-    // const valueBuilderStore = valueBuilderType === 'storeCredentials' ?
-    //   valueBuilderRecipe : undefined;
+    const valueBuilderStore = valueBuilderType === 'singleValueStoreContent' ?
+      valueBuilderRecipe : undefined;
     formArgumentMappings[valueName] = {
       argumentName: name,
       argumentType,
+      argumentIsBatch: isBatch,
       argumentIsOptional: isOptional,
       valueBuilderType,
       valueBuilderConstValue,
-      // TODO: VFS-7816 uncomment or remove future code
-      // valueBuilderStore,
+      valueBuilderStore,
     };
   });
 
@@ -593,14 +635,12 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
     const {
       valueBuilderType,
       valueBuilderConstValue,
-      // TODO: VFS-7816 uncomment or remove future code
-      // valueBuilderStore,
+      valueBuilderStore,
     } = getProperties(
       get(argumentMappings, valueName) || {},
       'valueBuilderType',
-      'valueBuilderConstValue'
-      // TODO: VFS-7816 uncomment or remove future code
-      // 'valueBuilderStore'
+      'valueBuilderConstValue',
+      'valueBuilderStore'
     );
 
     if (
@@ -620,9 +660,8 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
       } catch (e) {
         valueBuilder.valueBuilderRecipe = null;
       }
-      // TODO: VFS-7816 uncomment or remove future code
-      // } else if (valueBuilderType === 'storeCredentials') {
-      //   valueBuilder.valueBuilderRecipe = valueBuilderStore;
+    } else if (valueBuilderType === 'singleValueStoreContent') {
+      valueBuilder.valueBuilderRecipe = valueBuilderStore;
     }
 
     taskArgumentMappings.push({
@@ -666,7 +705,7 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
   };
 }
 
-function getValueBuilderTypesForArgType(argType) {
+function getValueBuilderTypesForArgType(argType, isBatch) {
   if (!argType) {
     return [];
     // TODO: VFS-7816 uncomment or remove future code
@@ -677,6 +716,7 @@ function getValueBuilderTypesForArgType(argType) {
   } else if (argType === 'object') {
     return [
       'iteratedItem',
+      ...(isBatch ? [] : ['singleValueStoreContent']),
       'const',
       // TODO: VFS-7816 uncomment or remove future code
       // 'storeCredentials',
@@ -686,6 +726,7 @@ function getValueBuilderTypesForArgType(argType) {
 
   return [
     'iteratedItem',
+    ...(isBatch ? [] : ['singleValueStoreContent']),
     'const',
   ];
 }
@@ -710,40 +751,72 @@ function getValueBuilderTypesForArgType(argType) {
 //   return [];
 // }
 
-function getStoreTypesForResType(resultType, resultIsBatch) {
-  const types = ['list'];
-  if (!resultIsBatch) {
-    types.push('singleValue');
+function getSourceDataTypesForType(type) {
+  const sourceTypes = [type];
+  switch (type) {
+    case 'object':
+      sourceTypes.push('anyFile', 'regularFile', 'directory', 'symlink', 'dataset');
+      break;
+    case 'anyFile':
+      sourceTypes.push('regularFile', 'directory', 'symlink');
+      break;
   }
-  if (
-    ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(resultType)
-  ) {
-    types.push('treeForest');
-  }
-  return types;
+  return sourceTypes;
 }
 
-function getDataTypesForResType(resultType) {
-  const types = [resultType];
-  switch (resultType) {
+function getSourceStoreForType(availableStores, type, isBatch) {
+  if (isBatch) {
+    return [];
+  }
+
+  const allowedDataTypes = getSourceDataTypesForType(type);
+  return availableStores.filter(store => {
+    const {
+      type: storeType,
+      dataSpec,
+    } = getProperties(store || {}, 'type', 'dataSpec');
+    if (!dataSpec || storeType !== 'singleValue') {
+      return false;
+    }
+    const dataType = dataSpecToType(dataSpec);
+    return allowedDataTypes.includes(dataType);
+  });
+}
+
+function getTargetStoreTypesForType(type, isBatch) {
+  const targetTypes = ['list'];
+  if (!isBatch) {
+    targetTypes.push('singleValue');
+  }
+  if (
+    ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(type)
+  ) {
+    targetTypes.push('treeForest');
+  }
+  return targetTypes;
+}
+
+function getTargetDataTypesForType(type) {
+  const targetTypes = [type];
+  switch (type) {
     // TODO: VFS-7816 uncomment or remove future code
     // case 'archive':
     case 'anyFile':
     case 'dataset':
-      types.push('object');
+      targetTypes.push('object');
       break;
     case 'regularFile':
     case 'directory':
     case 'symlink':
-      types.push('anyFile', 'object');
+      targetTypes.push('anyFile', 'object');
       break;
   }
-  return types;
+  return targetTypes;
 }
 
-function getStoresForResType(availableStores, resultType, resultIsBatch) {
-  const allowedStoreTypes = getStoreTypesForResType(resultType, resultIsBatch);
-  const allowedDataTypes = getDataTypesForResType(resultType);
+function getTargetStoresForType(availableStores, type, isBatch) {
+  const allowedStoreTypes = getTargetStoreTypesForType(type, isBatch);
+  const allowedDataTypes = getTargetDataTypesForType(type);
   return availableStores.filter(store => {
     const {
       type: storeType,
