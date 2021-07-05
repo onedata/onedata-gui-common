@@ -1,1 +1,1 @@
-export { default } from 'onedata-gui-common/utils/download-file';
+export { default, downloadData } from 'onedata-gui-common/utils/download-file';

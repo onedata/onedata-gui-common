@@ -276,15 +276,15 @@ function checkEqualityPerEachKey(obj1, obj2, checker) {
   return true;
 }
 
-function checkEqualityOfArrays(arr1, arr2, sortKey, elementsChecker) {
+function checkEqualityOfArrays(arr1, arr2, sortKey, checkElementsEqualFun) {
   if (isNoneOrEmptyArray(arr1) && isNoneOrEmptyArray(arr2)) {
     return true;
   }
   let normalizedArr1 = arr1 || [];
   let normalizedArr2 = arr2 || [];
   if (sortKey) {
-    const normalizedArr1 = _.sortBy(normalizedArr1, [sortKey]);
-    const normalizedArr2 = _.sortBy(normalizedArr2, [sortKey]);
+    normalizedArr1 = _.sortBy(normalizedArr1, [sortKey]);
+    normalizedArr2 = _.sortBy(normalizedArr2, [sortKey]);
   }
 
   if (normalizedArr1.length !== normalizedArr2.length) {
@@ -292,7 +292,7 @@ function checkEqualityOfArrays(arr1, arr2, sortKey, elementsChecker) {
   }
 
   for (let i = 0; i < normalizedArr1.length; i++) {
-    if (!elementsChecker(normalizedArr1[i], normalizedArr2[i])) {
+    if (!checkElementsEqualFun(normalizedArr1[i], normalizedArr2[i])) {
       return false;
     }
   }

@@ -23,6 +23,21 @@ export default function downloadFile({ fileUrl, isMobileService, _window }) {
   }
 }
 
+export function downloadData({ dataString, fileName, mimeType, _window }) {
+  const blobToDownload = new Blob([dataString], {
+    type: mimeType,
+    name: fileName,
+  });
+  const downloadUrl = _window.URL.createObjectURL(blobToDownload);
+
+  const link = _window.document.createElement('a');
+  link.type = mimeType;
+  link.href = downloadUrl;
+  link.download = fileName;
+  link.target = '_blank';
+  link.dispatchEvent(new MouseEvent('click'));
+}
+
 function downloadUsingIframe(fileUrl, _window) {
   const body = _window.document.body;
   const iframe = $('<iframe/>').attr({
