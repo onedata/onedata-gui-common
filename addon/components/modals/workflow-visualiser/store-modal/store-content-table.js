@@ -21,6 +21,11 @@ import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import { isEmpty } from '@ember/utils';
 
+/**
+ * @typedef {StoreContentEntry} StoreContentTableEntry
+ * @property {String} id the same as `index`
+ */
+
 // TODO: VFS-7874 create common initite scroll view logic
 export default Component.extend(I18n, {
   layout,
@@ -95,7 +100,7 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<ReplacingChunksArray<{index: String, value: any}>>}
+   * @type {ComputedProperty<ReplacingChunksArray<StoreContentTableEntry>>}
    */
   storeEntries: computed('store', function storeEntries() {
     return ReplacingChunksArray.create({

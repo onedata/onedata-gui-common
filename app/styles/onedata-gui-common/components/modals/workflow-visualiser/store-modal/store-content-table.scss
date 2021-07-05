@@ -8,4 +8,8 @@
     height: 110px;
     font-size: 90%;
   }
+
+  .error-row textarea {
+    color: $color-one-danger;
+  }
 }
