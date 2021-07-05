@@ -22,7 +22,7 @@ const simpliestStore = {
     type: 'integer',
     valueConstraints: {},
   },
-  defaultInitialValue: undefined,
+  defaultInitialValue: null,
   requiresInitialValue: false,
 };
 

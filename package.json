@@ -71,6 +71,7 @@
     "ember-hammertime": "1.3.0",
     "ember-i18n": "5.1.0",
     "ember-invoke-action": "git+https://github.com/kliput/ember-invoke-action.git#ec5bf575516ef52a2084c33c1719ff25ebf9fc5f",
+    "ember-is-mobile": "3.0.0",
     "ember-load-initializers": "1.0.0",
     "ember-lodash": "4.19.4",
     "ember-math-helpers": "2.11.3",

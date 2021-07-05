@@ -680,15 +680,13 @@ function formDataToStore(formData) {
       } = getProperties(genericStoreConfig || {}, 'dataType', 'defaultValue');
 
       const dataSpec = dataType && typeToDataSpec(dataType) || undefined;
-      let defaultInitialValue;
+      let defaultInitialValue = null;
       if (defaultValue && defaultValue.trim()) {
         try {
           defaultInitialValue = JSON.parse(defaultValue);
         } catch (e) {
-          defaultInitialValue = undefined;
+          defaultInitialValue = null;
         }
-      } else {
-        defaultInitialValue = undefined;
       }
 
       Object.assign(store, {

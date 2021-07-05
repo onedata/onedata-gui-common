@@ -25,9 +25,6 @@ package.json.ember-try
 # test results
 **/test-results.xml
 
-# do not use package-lock.json as it seems unstable
-**/package-lock.json
-
 # OSX
 .DS_Store
 ._*
