@@ -24,6 +24,9 @@ export default {
             // storeCredentials: {
             //   label: 'Store credentials',
             // },
+            singleValueStoreContent: {
+              label: 'Store content',
+            },
             onedatafsCredentials: {
               label: 'OnedataFS credentials',
             },
@@ -32,10 +35,14 @@ export default {
         valueBuilderConstValue: {
           label: 'Value',
         },
-        // TODO: VFS-7816 uncomment or remove future code
-        // valueBuilderStore: {
-        //   label: 'Store',
-        // },
+        valueBuilderStore: {
+          label: 'Store',
+          options: {
+            __createStore: {
+              label: 'Create store...',
+            },
+          },
+        },
       },
     },
     resultMappings: {
