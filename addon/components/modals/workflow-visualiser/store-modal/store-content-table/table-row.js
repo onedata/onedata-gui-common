@@ -46,7 +46,7 @@ export default Component.extend({
       value,
       error,
     } = getProperties(this.get('entry') || {}, 'success', 'value', 'error');
-    const valueToStringify = success ? value : error;
+    const valueToStringify = success !== false ? value : error;
     return JSON.stringify(valueToStringify, null, 2);
   }),
 });

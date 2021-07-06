@@ -99,7 +99,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`renders value ${JSON.stringify(exampleValue)} of ${name} data type inside ${storeType} store`,
         async function () {
           this.setProperties({
-            entry: { value: exampleValue },
+            entry: {
+              success: true,
+              value: exampleValue,
+            },
             storeType,
             dataSpec: {
               type: name,
