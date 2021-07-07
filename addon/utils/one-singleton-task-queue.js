@@ -10,6 +10,7 @@
 
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import { get } from '@ember/object';
+import { defer } from 'rsvp';
 
 export default class OneSingletonTaskQueue {
   constructor() {
@@ -17,14 +18,18 @@ export default class OneSingletonTaskQueue {
     this.executionPromiseObject = null;
   }
   scheduleTask(taskType, fun) {
-    if (this.queue.findBy('type', taskType)) {
-      return;
+    const existingTask = this.queue.findBy('type', taskType);
+    if (existingTask) {
+      return existingTask.deferred.promise;
     }
+    const deferred = defer();
     this.queue.push({
       type: taskType,
       fun,
+      deferred,
     });
-    return this.tryExecuteQueue();
+    this.tryExecuteQueue();
+    return deferred.promise;
   }
   tryExecuteQueue() {
     if (this.executionPromiseObject && get(this.executionPromiseObject, 'isPending')) {
@@ -37,7 +42,8 @@ export default class OneSingletonTaskQueue {
     let task = this.queue[0];
     while (task) {
       try {
-        await task.fun.call();
+        const result = await task.fun.call();
+        task.deferred.resolve(result);
       } finally {
         this.queue.shift();
       }
