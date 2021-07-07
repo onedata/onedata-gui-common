@@ -90,13 +90,15 @@ describe('Unit | Utility | workflow visualiser/store content table columns', fun
               const storeContentTableColumns =
                 new StoreContentTableColumns(storeType, { type: dataSpecType }, this.i18n);
 
-              storeContentTableColumns
-                .updateColumnsWithNewData([{ a: 1 }, { b: 2 }, { a: 3, c: 4 }]);
+              const data1 = [{ a: 1 }, { b: 2 }, { a: 3, c: 4 }]
+                .map(value => ({ success: true, value }));
+              storeContentTableColumns.updateColumnsWithNewData(data1);
               expect(storeContentTableColumns.getColumns().mapBy('name'))
                 .to.deep.equal([...emptyTableColumns, 'a', 'b', 'c']);
 
-              storeContentTableColumns
-                .updateColumnsWithNewData([{ a: 5, d: 6 }, { b: 7 }]);
+              const data2 = [{ a: 5, d: 6 }, { b: 7 }]
+                .map(value => ({ success: true, value }));
+              storeContentTableColumns.updateColumnsWithNewData(data2);
               expect(storeContentTableColumns.getColumns().mapBy('name'))
                 .to.deep.equal([...emptyTableColumns, 'a', 'b', 'c', 'd']);
             });
@@ -105,17 +107,52 @@ describe('Unit | Utility | workflow visualiser/store content table columns', fun
               const storeContentTableColumns =
                 new StoreContentTableColumns(storeType, { type: dataSpecType }, this.i18n);
 
-              const data = {};
-              _.range(50).forEach(i => data[`a${i}`] = 1);
-              storeContentTableColumns.updateColumnsWithNewData([data]);
+              const data = [{ success: true, value: {} }];
+              _.range(50).forEach(i => data[0].value[`a${i}`] = 1);
+              storeContentTableColumns.updateColumnsWithNewData(data);
 
               const addedKeys = _.range(50).map(i => `a${i}`).sort().slice(0, 30);
               expect(storeContentTableColumns.getColumns().mapBy('name'))
                 .to.deep.equal([...emptyTableColumns, ...addedKeys]);
             });
+
+            it('adds "error" column, when error record occurred and there were no data-based columns yet',
+              function () {
+                const storeContentTableColumns =
+                  new StoreContentTableColumns(storeType, { type: dataSpecType }, this.i18n);
+
+                storeContentTableColumns.updateColumnsWithNewData([{
+                  success: false,
+                  error: { id: 'forbidden' },
+                }]);
+
+                expect(storeContentTableColumns.getColumns().mapBy('name'))
+                  .to.deep.equal([...emptyTableColumns, 'error']);
+              });
+
+            it('replaces "error" column with data-based columns, when after error entry, new successful entries occurred',
+              function () {
+                const storeContentTableColumns =
+                  new StoreContentTableColumns(storeType, { type: dataSpecType }, this.i18n);
+
+                storeContentTableColumns.updateColumnsWithNewData([{
+                  success: false,
+                  error: { id: 'forbidden' },
+                }]);
+                storeContentTableColumns.updateColumnsWithNewData([{
+                  success: true,
+                  value: { a1: 1 },
+                }]);
+
+                expect(storeContentTableColumns.getColumns().mapBy('name'))
+                  .to.deep.equal([...emptyTableColumns, 'a1']);
+              });
           } else {
             it('does not change columns list after update with new data', function () {
-              const exampleData = dataSpecTypeDataExamples[dataSpecType];
+              const exampleData = [{
+                success: true,
+                value: dataSpecTypeDataExamples[dataSpecType],
+              }];
               const storeContentTableColumns =
                 new StoreContentTableColumns(storeType, { type: dataSpecType }, this.i18n);
               storeContentTableColumns.updateColumnsWithNewData([exampleData]);

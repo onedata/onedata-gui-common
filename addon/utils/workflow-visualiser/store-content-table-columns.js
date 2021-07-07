@@ -14,7 +14,8 @@ import { camelize } from '@ember/string';
  * @typedef {Object} StoreContentTableColumn
  * @property {String} name
  * @property {String} label
- * @property {String} [valuePropertyName] if not provided, whole value will be used
+ * @property {String} valuePath
+ * @property {String} type one of: `'storeSpecific'`, `'dataBased'`, `'error'`
  */
 
 export default class StoreContentTableColumns {
@@ -23,6 +24,7 @@ export default class StoreContentTableColumns {
     this.storeDataSpec = storeDataSpec;
     this.i18n = i18n;
     this.dataBasedColumns = [];
+    this.dataErrorOccurred = false;
   }
 
   t(translationName) {
@@ -39,11 +41,23 @@ export default class StoreContentTableColumns {
     const columns = this.getStoreTypeSpecificColumns();
 
     if (this.areColumnsBasedOnData()) {
-      columns.push(...this.dataBasedColumns);
+      if (this.dataBasedColumns.length === 0 && this.dataErrorOccurred) {
+        // There must be at least one column to show errors.
+        columns.push({
+          name: 'error',
+          label: String(this.t('error')),
+          valuePath: ['value'],
+          type: 'error',
+        });
+      } else {
+        columns.push(...this.dataBasedColumns);
+      }
     } else {
       columns.push({
         name: 'value',
         label: String(this.t('value')),
+        valuePath: ['value'],
+        type: 'dataBased',
       });
     }
 
@@ -52,24 +66,31 @@ export default class StoreContentTableColumns {
 
   /**
    * @public
-   * @param {Array<any>} newData
+   * @param {Array<StoreContentEntry>} newData
    */
   updateColumnsWithNewData(newData) {
     const freeColumnSlotsNumber = this.getFreeSlotsNumberForDataColumns();
-    if (!this.areColumnsBasedOnData() || freeColumnSlotsNumber === 0) {
+    if (!newData || !this.areColumnsBasedOnData() || freeColumnSlotsNumber === 0) {
       return;
     }
 
-    const existingDataKeys = this.dataBasedColumns.mapBy('valuePropertyName');
+    if (newData.findBy('success', false)) {
+      this.dataErrorOccurred = true;
+    }
+
+    const existingDataKeys = this.dataBasedColumns.mapBy('valuePath.1');
     const keysInEachNewEntry = (newData || [])
-      .filter(entry => entry && typeof entry === 'object')
-      .map(entry => Object.keys(entry));
+      .filter(({ success, value }) =>
+        success !== false && value && typeof value === 'object'
+      )
+      .map(entry => Object.keys(entry.value));
     const newDataKeys =
       _.difference(_.uniq(_.flatten(keysInEachNewEntry)), existingDataKeys).sort();
     const newDataColumns = newDataKeys.slice(0, freeColumnSlotsNumber).map(key => ({
       name: camelize(key),
       label: key,
-      valuePropertyName: key,
+      valuePath: ['value', key],
+      type: 'dataBased',
     }));
     this.dataBasedColumns.push(...newDataColumns);
   }
