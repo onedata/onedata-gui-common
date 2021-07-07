@@ -1,8 +1,9 @@
-<td class="entry-value">
-  <textarea
-    class="json-value form-control code-textarea"
-    value={{valueAsJson}}
-    readonly="readonly"
-  />
-</td>
+{{#each columnsData as |columnData|}}
+  <td
+    class="entry-value entry-{{columnData.name}}"
+    colspan={{if columnData.takesWholeRow "9999" "1"}}
+  >
+    {{columnData.value}}
+  </td>
+{{/each}}
 {{yield}}

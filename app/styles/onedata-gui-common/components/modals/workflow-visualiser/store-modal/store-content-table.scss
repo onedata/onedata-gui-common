@@ -4,12 +4,7 @@
     text-align: center;
   }
 
-  textarea.json-value {
-    height: 110px;
-    font-size: 90%;
-  }
-
-  .error-row textarea {
+  .error-row {
     color: $color-one-danger;
   }
 }

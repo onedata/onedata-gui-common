@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { computed, get } from '@ember/object';
+import { computed, get, getProperties } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
@@ -20,6 +20,8 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import { isEmpty } from '@ember/utils';
+import StoreContentTableColumns from 'onedata-gui-common/utils/workflow-visualiser/store-content-table-columns';
+import { inject as service } from '@ember/service';
 
 /**
  * @typedef {StoreContentEntry} StoreContentTableEntry
@@ -30,6 +32,8 @@ import { isEmpty } from '@ember/utils';
 export default Component.extend(I18n, {
   layout,
   classNames: ['store-content-table'],
+
+  i18n: service(),
 
   /**
    * @override
@@ -50,7 +54,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Number}
    */
-  rowHeight: 151,
+  rowHeight: 61,
 
   // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
   // /**
@@ -74,6 +78,16 @@ export default Component.extend(I18n, {
    * @type {Boolean}
    */
   fetchingNext: false,
+
+  /**
+   * @type {Utils.WorkflowVisualiser.StoreContentTableColumns}
+   */
+  tableColumnsGenerator: undefined,
+
+  /**
+   * @type {Array<StoreContentTableColumn>}
+   */
+  tableColumns: undefined,
 
   /**
    * @type {Window}
@@ -111,11 +125,25 @@ export default Component.extend(I18n, {
     });
   }),
 
-  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
-  // init() {
-  //   this._super(...arguments);
-  //   this.startUpdater();
-  // },
+  init() {
+    this._super(...arguments);
+
+    const {
+      store,
+      i18n,
+    } = this.getProperties('store', 'i18n');
+    const {
+      type,
+      dataSpec,
+    } = getProperties(store, 'type', 'dataSpec');
+    this.set(
+      'tableColumnsGenerator',
+      new StoreContentTableColumns(type, dataSpec, i18n)
+    );
+    this.updateTableColumns();
+    // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+    //   this.startUpdater();
+  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -166,6 +194,10 @@ export default Component.extend(I18n, {
   //   updater && safeExec(updater, () => updater.destroy());
   // },
 
+  updateTableColumns() {
+    this.set('tableColumns', this.get('tableColumnsGenerator').getColumns());
+  },
+
   async fetchStoreEntries() {
     const {
       getStoreContentCallback,
@@ -176,9 +208,12 @@ export default Component.extend(I18n, {
       get(store, 'id'),
       ...arguments,
     );
+    const entries = result && result.array;
     // Store entries does not have id, which is required by replacing chunks array.
     // Solution: using entry index as id.
-    result && result.array && result.array.forEach(entry => entry.id = entry.index);
+    entries && entries.forEach(entry => entry.id = entry.index);
+    this.get('tableColumnsGenerator').updateColumnsWithNewData(entries);
+    this.updateTableColumns();
 
     return result;
   },

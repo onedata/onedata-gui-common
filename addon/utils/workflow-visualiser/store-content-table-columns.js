@@ -15,7 +15,7 @@ import { camelize } from '@ember/string';
  * @property {String} name
  * @property {String} label
  * @property {String} valuePath
- * @property {String} type one of: `'storeSpecific'`, `'dataBased'`, `'error'`
+ * @property {String} type one of: `'storeSpecific'`, `'wholeData'`, `'dataBased'`, `'error'`
  */
 
 export default class StoreContentTableColumns {
@@ -57,7 +57,7 @@ export default class StoreContentTableColumns {
         name: 'value',
         label: String(this.t('value')),
         valuePath: ['value'],
-        type: 'dataBased',
+        type: 'wholeData',
       });
     }
 

@@ -9,7 +9,7 @@
 
 import Component from '@ember/component';
 import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-row';
-import { computed, getProperties } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   layout,
@@ -20,15 +20,9 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {String}
+   * @type {Array<StoreContentTableColumn>}
    */
-  storeType: undefined,
-
-  /**
-   * @virtual
-   * @type {Object}
-   */
-  dataSpec: undefined,
+  columns: undefined,
 
   /**
    * Must have three fields: id (string), index (string) and value (of any type)
@@ -38,15 +32,44 @@ export default Component.extend({
   entry: undefined,
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<Array<String>>}
    */
-  valueAsJson: computed('entry.{success,value,error}', function valueAsJson() {
+  columnsData: computed('columns', 'entry', function columnsData() {
     const {
-      success,
-      value,
+      columns,
+      entry,
+    } = this.getProperties('columns', 'entry');
+
+    if (!columns) {
+      return;
+    }
+
+    const {
       error,
-    } = getProperties(this.get('entry') || {}, 'success', 'value', 'error');
-    const valueToStringify = success !== false ? value : error;
-    return JSON.stringify(valueToStringify, null, 2);
+      success,
+    } = (entry || {});
+    const entryFailed = success === false;
+
+    const columnsDataEntries = columns.map(({ name, valuePath, type }) => {
+      if (entryFailed && type !== 'storeSpecific') {
+        return;
+      }
+      let value = entry || {};
+      valuePath.forEach(pathElement =>
+        value = value && typeof value === 'object' ? value[pathElement] : undefined
+      );
+      return {
+        name,
+        value: value === undefined ? '–' : JSON.stringify(value),
+      };
+    }).compact();
+    if (entryFailed) {
+      columnsDataEntries.push({
+        name: 'error',
+        value: error === undefined ? '–' : JSON.stringify(error),
+        takesWholeRow: true,
+      });
+    }
+    return columnsDataEntries;
   }),
 });

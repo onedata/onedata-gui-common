@@ -11,13 +11,11 @@ import Component from '@ember/component';
 import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-header';
 import { computed } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { tag, gt, raw } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
   tagName: 'thead',
   classNames: ['table-header'],
-  classNameBindings: ['storeTypeClass'],
 
   /**
    * @override
@@ -31,21 +29,19 @@ export default Component.extend(I18n, {
   storeType: undefined,
 
   /**
+   * @virtual
+   * @type {Array<StoreContentTableColumn>}
+   */
+  columns: undefined,
+
+  /**
    * @override
    */
-  isVisible: gt('columns.length', raw(1)),
-
-  /**
-   * @type {ComputedProperty<String>}
-   */
-  storeTypeClass: tag `${'storeType'}-table-header`,
-
-  /**
-   * @type {ComputedProperty<Array<String>>}
-   */
-  columns: computed('storeType', function columns() {
-    // Will be more complicated when new type of stores will occur, like map or
-    // auditLog.
-    return ['value'];
+  isVisible: computed('tableColumns', function isVisible() {
+    const columns = this.get('columns');
+    return columns && (
+      columns.length > 1 ||
+      (columns.length === 1 && columns[0].type === 'dataBased')
+    );
   }),
 });

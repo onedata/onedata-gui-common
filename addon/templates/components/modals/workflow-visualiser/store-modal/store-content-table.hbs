@@ -1,7 +1,7 @@
 {{#loading-container isLoading=storeEntries.isLoading}}
   <table class="table one-infinite-list">
     {{modals/workflow-visualiser/store-modal/store-content-table/table-header
-      storeType=store.type
+      columns=tableColumns
     }}
     <tbody>
       <tr class="first-row">
@@ -27,8 +27,7 @@
         {{/if}}
         {{#each storeEntries key="index" as |storeEntry|}}
           {{modals/workflow-visualiser/store-modal/store-content-table/table-row
-            storeType=store.type
-            dataSpec=store.dataSpec
+            columns=tableColumns
             entry=storeEntry
           }}
         {{/each}}
