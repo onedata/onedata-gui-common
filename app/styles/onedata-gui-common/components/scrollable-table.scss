@@ -1,0 +1,154 @@
+// Chrome and Firefox have some issues with z-index-related mechanisms in tables.
+// In Chrome, to make floating cells, we need to use `transform-style: preserve-3d`
+// and `transform: translateZ(Xpx)`. On the other hand Firefox ignores `translateZ`
+// and needs a combination of `position: relative` and `z-index: X`.
+
+.scrollable-table {
+  $label-cell-max-size: 120px;
+  $row-label-zindex: 1;
+  $column-label-zindex: $row-label-zindex + 1;
+  $row-and-column-label-zindex: $column-label-zindex + 1;
+  $bottom-shadow-zindex: $column-label-zindex + 1;
+  $right-shadow-zindex: $row-label-zindex;
+  $scrollbar-zindex: max($bottom-shadow-zindex, $right-shadow-zindex) + 1;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  transform-style: preserve-3d;
+  @include after-left-shadow;
+  @include before-top-shadow;
+
+  &::before {
+    bottom: 0;
+    transform: translateZ(#{$bottom-shadow-zindex * 1px});
+    z-index: $bottom-shadow-zindex;
+  }
+
+  &::after {
+    right: 0;
+    z-index: $right-shadow-zindex;
+  }
+
+  &.scroll-on-right {
+    @include hide-after-shadow;
+  }
+
+  &.scroll-on-bottom {
+    @include hide-before-shadow;
+  }
+
+  &.scroll-on-left {
+    .row-label,
+    .scrollable-table-header-overlay {
+      @include hide-after-shadow;
+    }
+  }
+
+  &.scroll-on-top {
+    .column-label {
+      @include hide-before-shadow;
+    }
+  }
+
+  &.standard-column-labels-direction {
+    .column-label {
+      padding: 0 $padding-small-horizontal $padding-base-vertical $padding-small-horizontal;
+    }
+
+    &::after {
+      z-index: $column-label-zindex + 1;
+      transform: translateZ(#{($column-label-zindex + 1) * 1px});
+    }
+  }
+
+  &:not(.standard-column-labels-direction) {
+    .column-label .one-label {
+      display: inline-block;
+      vertical-align: top;
+      transform: translateX(50%) rotate(-45deg);
+      transform-origin: bottom left;
+      writing-mode: vertical-rl;
+      max-height: $label-cell-max-size;
+      text-align: right;
+      max-width: 4 * $font-size-base;
+      padding: 0 0.1em;
+      overflow: hidden;
+    }
+  }
+
+  .scrollable-table-content {
+    position: relative;
+    border-collapse: separate;
+  }
+
+  td {
+    position: relative;
+  }
+
+  .scrollable-table-header-overlay {
+    position: absolute;
+    background-color: $color-one-white;
+    @include fill-container();
+    @include after-right-shadow;
+  }
+
+  .column-label {
+    @include before-bottom-shadow;
+    vertical-align: bottom;
+    text-align: center;
+    padding-top: $padding-large-vertical;
+    padding-bottom: $padding-large-vertical;
+    background-color: $color-one-white;
+    z-index: $column-label-zindex;
+
+    &.row-label {
+      z-index: $row-and-column-label-zindex;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .column-label,
+  .row-label {
+    word-wrap: break-word;
+    line-height: 1;
+  }
+
+  .row-label {
+    vertical-align: middle;
+    text-align: right;
+    padding: $padding-base-vertical $padding-large-horizontal $padding-base-vertical 0;
+    max-width: $label-cell-max-size;
+    background-color: $color-one-white;
+    border-color: $color-one-white;
+    z-index: $row-label-zindex;
+    @include after-right-shadow;
+
+    .one-label {
+      width: 100%;
+    }
+  }
+
+  .ps {
+    position: relative;
+  }
+
+  .ps__rail-x,
+  .ps__rail-y {
+    transform: translateZ(#{$scrollbar-zindex * 1px});
+    z-index: $scrollbar-zindex;
+  }
+
+  // Safari does not resize table cells with vertical text correctly. To ensure, that
+  // there is enough space for a reasonable amount of text, we have to make min-height
+  // value fixed. 80px value was selected empirically.
+  &.in-safari {
+    .column-label:not(.standard-direction) .one-label {
+      min-height: 80px;
+    }
+  }
+}
