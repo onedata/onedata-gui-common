@@ -18,8 +18,10 @@ export default class OneSingletonTaskQueue {
     this.executionPromiseObject = null;
   }
   scheduleTask(taskType, fun) {
+    console.debug('util:one-singleton-task-queue: schedule', taskType);
     const existingTask = this.queue.findBy('type', taskType);
     if (existingTask) {
+      console.debug('util:one-singleton-task-queue: already exists', taskType);
       return existingTask.deferred.promise;
     }
     const deferred = defer();
@@ -41,13 +43,16 @@ export default class OneSingletonTaskQueue {
   async _executeQueue() {
     let task = this.queue[0];
     while (task) {
+      console.debug('util:one-singleton-task-queue: exec', task.type);
       try {
         const result = await task.fun.call();
         this.queue.shift();
         task.deferred.resolve(result);
+        console.debug('util:one-singleton-task-queue: resolved', task.type);
       } catch (error) {
         this.queue.shift();
         task.deferred.reject(error);
+        console.debug('util:one-singleton-task-queue: rejected', task.type);
       }
       task = this.queue[0];
     }
