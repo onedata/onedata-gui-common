@@ -14,8 +14,7 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 
 export default Component.extend(I18n, {
   layout,
-  tagName: 'thead',
-  classNames: ['table-header'],
+  tagName: 'tr',
 
   /**
    * @override

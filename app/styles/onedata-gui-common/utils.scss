@@ -112,10 +112,10 @@ $top-shadow-zindex: 1002;
     &::before {
       position: absolute;
       @if #{$direction} == #{to bottom} {
-        top: -$shadow-height;
+        bottom: 100%;
       }
       @if #{$direction} == #{to top} {
-        bottom: -$shadow-height;
+        top: 100%;
       }
       height: $shadow-height;
       background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));
@@ -131,10 +131,10 @@ $top-shadow-zindex: 1002;
     &::after {
       position: absolute;
       @if #{$direction} == #{to left} {
-        right: -$shadow-height;
+        left: 100%;
       }
       @if #{$direction} == #{to right} {
-        left: -$shadow-height;
+        right: 100%;
       }
       width: $shadow-height;
       background: linear-gradient($direction, transparent, rgba(0, 0, 0, $shadow-alpha));

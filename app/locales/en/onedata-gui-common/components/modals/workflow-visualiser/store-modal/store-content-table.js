@@ -6,4 +6,8 @@ export default {
   columns: {
     value: 'Value',
   },
+  tableRow: {
+    storeAccessError: 'Cannot fetch entry due to error',
+    unknownError: 'Unknown error',
+  },
 };

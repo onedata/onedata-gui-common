@@ -54,7 +54,7 @@ export default Component.extend(I18n, {
   /**
    * @type {Number}
    */
-  rowHeight: 61,
+  rowHeight: 44,
 
   // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
   // /**
@@ -148,17 +148,18 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    this.set('listWatcher', this.createListWatcher());
     this.get('storeEntries.initialLoad').then(() => {
       next(() => {
-        this.get('listWatcher').scrollHandler();
+        const listWatcher = this.set('listWatcher', this.createListWatcher());
+        listWatcher.scrollHandler();
       });
     });
   },
 
   willDestroyElement() {
     try {
-      this.get('listWatcher').destroy();
+      const listWatcher = this.get('listWatcher');
+      listWatcher && listWatcher.destroy();
       // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
       // this.stopUpdater();
     } finally {
@@ -212,8 +213,10 @@ export default Component.extend(I18n, {
     // Store entries does not have id, which is required by replacing chunks array.
     // Solution: using entry index as id.
     entries && entries.forEach(entry => entry.id = entry.index);
-    this.get('tableColumnsGenerator').updateColumnsWithNewData(entries);
-    this.updateTableColumns();
+    safeExec(this, () => {
+      this.get('tableColumnsGenerator').updateColumnsWithNewData(entries);
+      this.updateTableColumns();
+    });
 
     return result;
   },
@@ -224,9 +227,8 @@ export default Component.extend(I18n, {
   // },
 
   createListWatcher() {
-    const $closestPs = this.$().closest('.ps');
     return new ListWatcher(
-      $closestPs,
+      this.$('.scrollable-table > .ps'),
       '.data-row',
       items => {
         if (this.$().parents('.store-modal').hasClass('in')) {

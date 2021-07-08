@@ -10,13 +10,22 @@
 import Component from '@ember/component';
 import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-row';
 import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   tagName: 'tr',
   classNames: ['table-row', 'data-row'],
   classNameBindings: ['entry.success::error-row'],
   attributeBindings: ['entry.id:data-row-id'],
+
+  errorExtractor: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.modals.workflowVisualiser.storeModal.storeContentTable.tableRow',
 
   /**
    * @virtual
@@ -38,7 +47,8 @@ export default Component.extend({
     const {
       columns,
       entry,
-    } = this.getProperties('columns', 'entry');
+      errorExtractor,
+    } = this.getProperties('columns', 'entry', 'errorExtractor');
 
     if (!columns) {
       return;
@@ -61,12 +71,15 @@ export default Component.extend({
       return {
         name,
         value: value === undefined ? '–' : JSON.stringify(value),
+        type: 'value',
       };
     }).compact();
     if (entryFailed) {
+      const errorDescription = errorExtractor.getMessage(error);
       columnsDataEntries.push({
         name: 'error',
-        value: error === undefined ? '–' : JSON.stringify(error),
+        type: 'error',
+        value: `${this.t('storeAccessError')}: ${errorDescription.message || this.t('unknownError')}`,
         takesWholeRow: true,
       });
     }
