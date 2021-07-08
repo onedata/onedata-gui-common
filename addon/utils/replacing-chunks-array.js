@@ -17,6 +17,7 @@ import { A, isArray } from '@ember/array';
 import _ from 'lodash';
 import { resolve, all as allFulfilled } from 'rsvp';
 import Evented from '@ember/object/evented';
+import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 
 export const emptyItem = {};
 
@@ -89,16 +90,9 @@ export default ArraySlice.extend(Evented, {
   _endReached: false,
 
   /**
-   * Prevents infinite recursion when fetching new data
-   * @type {boolean}
+   * @type {Utils.OneSingletonTaskQueue}
    */
-  _fetchNextLock: false,
-
-  /**
-   * Prevents infinite recursion when fetching new data
-   * @type {boolean}
-   */
-  _fetchPrevLock: false,
+  taskQueue: undefined,
 
   /**
    * Set to true if reloading is in progress
@@ -117,26 +111,24 @@ export default ArraySlice.extend(Evented, {
     'sourceArray.[]',
     'emptyIndex',
     function startChanged() {
-      if (!this.get('isReloading')) {
-        const {
-          _start,
-          _startReached,
-          loadMoreThreshold,
-          sourceArray,
-          emptyIndex,
-        } = this.getProperties(
-          '_start',
-          '_startReached',
-          'loadMoreThreshold',
-          'sourceArray',
-          'emptyIndex',
-        );
-        const sourceArrayLength = get(sourceArray, 'length');
-        if (!sourceArrayLength ||
-          !_startReached && _start - loadMoreThreshold <= emptyIndex
-        ) {
-          return this.fetchPrev();
-        }
+      const {
+        _start,
+        _startReached,
+        loadMoreThreshold,
+        sourceArray,
+        emptyIndex,
+      } = this.getProperties(
+        '_start',
+        '_startReached',
+        'loadMoreThreshold',
+        'sourceArray',
+        'emptyIndex',
+      );
+      const sourceArrayLength = get(sourceArray, 'length');
+      if (!sourceArrayLength ||
+        !_startReached && _start - loadMoreThreshold <= emptyIndex
+      ) {
+        return this.scheduleTask('fetchPrev');
       }
     }
   ),
@@ -160,11 +152,38 @@ export default ArraySlice.extend(Evented, {
           'sourceArray',
         );
         if (!_endReached && _end + loadMoreThreshold >= get(sourceArray, 'length')) {
-          return this.fetchNext();
+          return this.scheduleTask('fetchNext');
         }
       }
     }
   ),
+
+  /**
+   * Returns true, if `fetchPrev` and `fetchNext` (async methods expanding array)
+   * should not be scheduled.
+   * @returns {Boolean}
+   */
+  isFetchExpandLocked() {
+    const taskQueue = this.get('taskQueue');
+    const blockingTask = taskQueue.queue.find(task => {
+      return /^(reload|jump)/.test(task.type);
+    });
+    return Boolean(blockingTask);
+  },
+
+  async scheduleTask(taskName, methodName = taskName, ...args) {
+    if (
+      (taskName === 'fetchPrev' || taskName === 'fetchNext') &&
+      this.isFetchExpandLocked()
+    ) {
+      console.debug('util:replacing-chunks-array: cancelled scheduling', taskName);
+      return false;
+    }
+    return this.get('taskQueue').scheduleTask(
+      taskName,
+      () => this[methodName](...args)
+    );
+  },
 
   /**
    * @returns {{ arrayUpdate: Array, endReached: Boolean }}
@@ -197,6 +216,12 @@ export default ArraySlice.extend(Evented, {
     }
   },
 
+  /**
+   * Expand array's beginning using data retrieved with fetch.
+   * This method should be not used directly - instead use `scheduleTask('fetchPrev')`
+   * to prevent issues with async array modification.
+   * @returns {Promise}
+   */
   fetchPrev() {
     const {
       _startReached,
@@ -220,85 +245,84 @@ export default ArraySlice.extend(Evented, {
       return resolve(false);
     }
 
-    if (!this.get('_fetchPrevLock')) {
-      this.set('_fetchPrevLock', true);
-
-      this.trigger('fetchPrevStarted');
-      return this.fetchWrapper(
-          fetchStartIndex,
-          currentChunkSize,
-          -currentChunkSize,
-        )
-        .then(({ arrayUpdate }) => {
-          // TODO: use of pullAllBy is working, but it is probably unsafe
-          // it can remove items from update, while they should stay there
-          // because some entries "fallen down" from further part of array
-          // it should be tested
-          this.removeDuplicateRecords(arrayUpdate, sourceArray);
-          const fetchedArraySize = get(arrayUpdate, 'length');
-          let insertIndex = emptyIndex + 1 - fetchedArraySize;
-          if (fetchedArraySize) {
-            // check if we have enough empty items on start to put new data
-            if (insertIndex >= 0) {
-              // add new entries on the front and set new insertIndex for further use
-              for (let i = 0; i < fetchedArraySize; ++i) {
-                sourceArray[i + insertIndex] = arrayUpdate[i];
-              }
-              safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
-              sourceArray.arrayContentDidChange();
-            } else {
-              // there is more data on the array start, so we must make additional space
-              const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
-              sourceArray.unshift(..._.times(
-                additionalFrontSpace,
-                _.constant(emptyItem)
-              ));
-              // insert index is now sourceArray beginning, add new entries
-              insertIndex = 0;
-              for (let i = insertIndex; i < fetchedArraySize; ++i) {
-                sourceArray[i] = arrayUpdate[i];
-              }
-              const indexOffset = fetchedArraySize;
-              this.setProperties({
-                startIndex: this.get('startIndex') + indexOffset,
-                endIndex: this.get('endIndex') + indexOffset,
-              });
+    this.trigger('fetchPrevStarted');
+    return this.fetchWrapper(
+        fetchStartIndex,
+        currentChunkSize,
+        -currentChunkSize,
+      )
+      .then(({ arrayUpdate }) => {
+        // TODO: use of pullAllBy is working, but it is probably unsafe
+        // it can remove items from update, while they should stay there
+        // because some entries "fallen down" from further part of array
+        // it should be tested
+        this.removeDuplicateRecords(arrayUpdate, sourceArray);
+        const fetchedArraySize = get(arrayUpdate, 'length');
+        let insertIndex = emptyIndex + 1 - fetchedArraySize;
+        if (fetchedArraySize) {
+          // check if we have enough empty items on start to put new data
+          if (insertIndex >= 0) {
+            // add new entries on the front and set new insertIndex for further use
+            for (let i = 0; i < fetchedArraySize; ++i) {
+              sourceArray[i + insertIndex] = arrayUpdate[i];
             }
-          }
-          // fetched data without duplicated is less than requested,
-          // so there is nothing left on the array start
-          if (fetchedArraySize < currentChunkSize) {
-            for (let i = 0; i < insertIndex; ++i) {
-              sourceArray.shift();
-            }
-            this.setProperties({
-              startIndex: this.get('startIndex') - insertIndex,
-              endIndex: this.get('endIndex') - insertIndex,
-              _startReached: true,
-            });
+            safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
+            sourceArray.arrayContentDidChange();
           } else {
-            this.set('_startReached', false);
+            // there is more data on the array start, so we must make additional space
+            const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
+            sourceArray.unshift(..._.times(
+              additionalFrontSpace,
+              _.constant(emptyItem)
+            ));
+            // insert index is now sourceArray beginning, add new entries
+            insertIndex = 0;
+            for (let i = insertIndex; i < fetchedArraySize; ++i) {
+              sourceArray[i] = arrayUpdate[i];
+            }
+            const indexOffset = fetchedArraySize;
+            this.setProperties({
+              startIndex: this.get('startIndex') + indexOffset,
+              endIndex: this.get('endIndex') + indexOffset,
+            });
           }
-        })
-        .catch(error => {
-          this.trigger('fetchPrevRejected');
-          throw error;
-        })
-        .then(result => {
-          this.trigger('fetchPrevResolved');
-          return result;
-        })
-        .finally(() => {
-          safeExec(this, () => {
-            this.set('_fetchPrevLock', false);
-            this.notifyPropertyChange('[]');
+        }
+        // fetched data without duplicated is less than requested,
+        // so there is nothing left on the array start
+        if (fetchedArraySize < currentChunkSize) {
+          for (let i = 0; i < insertIndex; ++i) {
+            sourceArray.shift();
+          }
+          this.setProperties({
+            startIndex: this.get('startIndex') - insertIndex,
+            endIndex: this.get('endIndex') - insertIndex,
+            _startReached: true,
           });
+        } else {
+          this.set('_startReached', false);
+        }
+      })
+      .catch(error => {
+        this.trigger('fetchPrevRejected');
+        throw error;
+      })
+      .then(result => {
+        this.trigger('fetchPrevResolved');
+        return result;
+      })
+      .finally(() => {
+        safeExec(this, () => {
+          this.notifyPropertyChange('[]');
         });
-    } else {
-      return resolve(false);
-    }
+      });
   },
 
+  /**
+   * Expand array's end using data retrieved with fetch method.
+   * This method should be not used directly - instead use `scheduleTask('fetchNext')`
+   * to prevent issues with async array modification.
+   * @returns {Promise}
+   */
   fetchNext() {
     const {
       sourceArray,
@@ -310,55 +334,53 @@ export default ArraySlice.extend(Evented, {
       return resolve(false);
     }
 
-    if (!this.get('_fetchNextLock')) {
-      this.set('_fetchNextLock', true);
+    const sourceArrayLength = get(sourceArray, 'length');
+    const lastItem = sourceArray[sourceArrayLength - 1];
+    const fetchStartIndex = lastItem ? this.getIndex(lastItem) : null;
+    const duplicateCount = this.countEndDuplicates(sourceArray);
 
-      const sourceArrayLength = get(sourceArray, 'length');
-      const lastItem = sourceArray[sourceArrayLength - 1];
-      const fetchStartIndex = lastItem ? this.getIndex(lastItem) : null;
-      const duplicateCount = this.countEndDuplicates(sourceArray);
-      const fetchSize = chunkSize;
-
-      this.trigger('fetchNextStarted');
-      return this.fetchWrapper(
-          // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
-          // and items are converted from plain objects to EmberObjects
-          // the workaround is to use []
-          fetchStartIndex,
-          fetchSize,
-          (lastItem ? 1 : 0) + duplicateCount,
-        )
-        .then(({ arrayUpdate, endReached }) => {
-          // after asynchronous fetch, other fetch could modify array, so we need to
-          // ensure that pulled data does not already contain new records
-          this.removeDuplicateRecords(arrayUpdate, sourceArray);
-          if (endReached === undefined) {
-            endReached = get(arrayUpdate, 'length') < chunkSize;
-          }
-          if (endReached) {
-            safeExec(this, 'set', '_endReached', true);
-          }
-          sourceArray.push(...arrayUpdate);
-          sourceArray.arrayContentDidChange();
-        })
-        .catch(error => {
-          this.trigger('fetchNextRejected');
-          throw error;
-        })
-        .then(() => {
-          this.trigger('fetchNextResolved');
-        })
-        .finally(() => {
-          safeExec(this, () => {
-            this.set('_fetchNextLock', false);
-            this.notifyPropertyChange('[]');
-          });
+    this.trigger('fetchNextStarted');
+    return this.fetchWrapper(
+        // TODO: something is broken, because sourceArray.get('lastObject') gets wrong element
+        // and items are converted from plain objects to EmberObjects
+        // the workaround is to use []
+        fetchStartIndex,
+        fetchSize,
+        (lastItem ? 1 : 0) + duplicateCount,
+      )
+      .then(({ arrayUpdate, endReached }) => {
+        // after asynchronous fetch, other fetch could modify array, so we need to
+        // ensure that pulled data does not already contain new records
+        this.removeDuplicateRecords(arrayUpdate, sourceArray);
+        if (endReached === undefined) {
+          endReached = get(arrayUpdate, 'length') < chunkSize;
+        }
+        if (endReached) {
+          safeExec(this, 'set', '_endReached', true);
+        }
+        sourceArray.push(...arrayUpdate);
+        sourceArray.arrayContentDidChange();
+      })
+      .catch(error => {
+        this.trigger('fetchNextRejected');
+        throw error;
+      })
+      .then(() => {
+        this.trigger('fetchNextResolved');
+      })
+      .finally(() => {
+        safeExec(this, () => {
+          this.notifyPropertyChange('[]');
         });
-    } else {
-      return resolve(false);
-    }
+      });
   },
 
+  /**
+   * Reload current array view or load array from beginning (`head === true`).
+   * This method should be not used directly - instead use `scheduleReload(...)`
+   * to prevent issues with async array modification.
+   * @returns {Promise}
+   */
   reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
     const {
       _start,
@@ -433,6 +455,19 @@ export default ArraySlice.extend(Evented, {
       });
   },
 
+  scheduleReload({ head, minSize, offset } = {}) {
+    return this.scheduleTask(
+      `reload-${head}-${minSize}-${offset}`,
+      'reload', { head, minSize, offset }
+    );
+  },
+
+  /**
+   * Change current array view using `index` of item desired to be viewed in new view.
+   * This method should be not used directly - instead use `scheduleJump(...)`
+   * to prevent issues with async array modification.
+   * @returns {Promise}
+   */
   jump(index, size = 50) {
     const {
       sourceArray,
@@ -468,6 +503,15 @@ export default ArraySlice.extend(Evented, {
           return this;
         }
       });
+  },
+
+  scheduleJump(index, size) {
+    return this.scheduleTask(
+      `jump-${index}-${size}`,
+      'jump',
+      index,
+      size
+    );
   },
 
   setEmptyIndex(index) {
@@ -514,19 +558,22 @@ export default ArraySlice.extend(Evented, {
     if (!this.get('sourceArray')) {
       this.set('sourceArray', A());
     }
+    if (!this.get('taskQueue')) {
+      this.set('taskQueue', new OneSingletonTaskQueue());
+    }
     this._super(...arguments);
     const initialJumpIndex = this.get('initialJumpIndex');
     const initialLoad = promiseObject(
       initialJumpIndex ?
-      this.jump(initialJumpIndex) :
-      this.reload({ head: true }).then(() => {
+      this.scheduleJump(initialJumpIndex) :
+      this.scheduleReload({ head: true }).then(() => {
         this.set('_startReached', this.get('_start') === 0);
         return this.startEndChanged();
       })
     );
     this.set('initialLoad', initialLoad).catch(error => {
       console.debug(
-        'replacing-chunks-array#init: initial load failed: ' +
+        'util:replacing-chunks-array#init: initial load failed: ' +
         JSON.stringify(error)
       );
       safeExec(this, 'set', 'error', error);

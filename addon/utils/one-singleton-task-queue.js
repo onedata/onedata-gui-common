@@ -43,9 +43,11 @@ export default class OneSingletonTaskQueue {
     while (task) {
       try {
         const result = await task.fun.call();
-        task.deferred.resolve(result);
-      } finally {
         this.queue.shift();
+        task.deferred.resolve(result);
+      } catch (error) {
+        this.queue.shift();
+        task.deferred.reject(error);
       }
       task = this.queue[0];
     }
