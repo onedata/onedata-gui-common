@@ -15,7 +15,7 @@ import { htmlSafe } from '@ember/string';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 import ReplacingChunksArray from 'onedata-gui-common/utils/replacing-chunks-array';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-// TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+// TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
 // import Looper from 'onedata-gui-common/utils/looper';
 import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
@@ -56,7 +56,7 @@ export default Component.extend(I18n, {
    */
   rowHeight: 44,
 
-  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
   // /**
   //  * @type {Number}
   //  */
@@ -146,7 +146,7 @@ export default Component.extend(I18n, {
       new StoreContentTableColumns(type, dataSpec, i18n)
     );
     this.updateTableColumns();
-    // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+    // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
     //   this.startUpdater();
   },
 
@@ -165,14 +165,14 @@ export default Component.extend(I18n, {
     try {
       const listWatcher = this.get('listWatcher');
       listWatcher && listWatcher.destroy();
-      // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+      // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
       // this.stopUpdater();
     } finally {
       this._super(...arguments);
     }
   },
 
-  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
   // startUpdater() {
   //   const store = this.get('store');
   //   if (!get(store, 'contentMayChange')) {
@@ -226,7 +226,7 @@ export default Component.extend(I18n, {
     return result;
   },
 
-  // TODO: VFS-7855 uncomment when infinite scroll reload will be fixed
+  // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
   // async updateStoreEntries() {
   //   await this.get('storeEntries').reload();
   // },
