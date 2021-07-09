@@ -15,6 +15,8 @@ import I18n from 'onedata-gui-common/mixins/components/i18n';
 export default Component.extend(I18n, {
   layout,
   tagName: 'tr',
+  classNames: ['table-header-row'],
+  classNameBindings: ['visible::labels-hidden'],
 
   /**
    * @override
@@ -36,7 +38,7 @@ export default Component.extend(I18n, {
   /**
    * @override
    */
-  isVisible: computed('tableColumns', function isVisible() {
+  visible: computed('tableColumns', function isVisible() {
     const columns = this.get('columns');
     return columns && (
       columns.length > 1 ||

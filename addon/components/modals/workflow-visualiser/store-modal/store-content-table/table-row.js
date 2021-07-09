@@ -12,13 +12,12 @@ import layout from '../../../../../templates/components/modals/workflow-visualis
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { eq, raw, string, tag } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
-  tagName: 'tr',
-  classNames: ['table-row', 'data-row'],
-  classNameBindings: ['entry.success::error-row'],
-  attributeBindings: ['entry.id:data-row-id'],
+  tagName: '',
 
   errorExtractor: service(),
 
@@ -41,30 +40,72 @@ export default Component.extend(I18n, {
   entry: undefined,
 
   /**
-   * @type {ComputedProperty<Array<String>>}
+   * @virtual
+   * @type {Boolean}
    */
-  columnsData: computed('columns', 'entry', function columnsData() {
+  isExpanded: false,
+
+  /**
+   * Width of the area visible in scrollable table (visible viewport). May be smaller
+   * than the width of a row.
+   * @virtual
+   * @type {Number}
+   */
+  visibleAreaWidth: undefined,
+
+  /**
+   * Number of pixels by which visible area is scrolled in the X axis.
+   * @type {Number}
+   */
+  visibleAreaXOffset: undefined,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  onExpand: notImplementedIgnore,
+
+  /**
+   * @virtual
+   * @type {Function}
+   */
+  onCollapse: notImplementedIgnore,
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isEntryFailed: eq('entry.success', raw(false)),
+
+  /**
+   * Array of objects:
+   * ```
+   * {
+   *   name: String,
+   *   type: 'error' | 'value',
+   *   value: String,
+   *   takesWholeRow: Boolean,
+   * }
+   * ```
+   * @type {ComputedProperty<Array<Object>>}
+   */
+  columnsData: computed('columns', 'entry', 'isEntryFailed', function columnsData() {
     const {
       columns,
       entry,
+      isEntryFailed,
       errorExtractor,
-    } = this.getProperties('columns', 'entry', 'errorExtractor');
+    } = this.getProperties('columns', 'entry', 'isEntryFailed', 'errorExtractor');
 
     if (!columns) {
       return;
     }
 
-    const {
-      error,
-      success,
-    } = (entry || {});
-    const entryFailed = success === false;
-
+    const normalizedEntry = entry || {};
     const columnsDataEntries = columns.map(({ name, valuePath, type }) => {
-      if (entryFailed && type !== 'storeSpecific') {
+      if (isEntryFailed && type !== 'storeSpecific') {
         return;
       }
-      let value = entry || {};
+      let value = normalizedEntry;
       valuePath.forEach(pathElement =>
         value = value && typeof value === 'object' ? value[pathElement] : undefined
       );
@@ -74,7 +115,8 @@ export default Component.extend(I18n, {
         type: 'value',
       };
     }).compact();
-    if (entryFailed) {
+    if (isEntryFailed) {
+      const error = normalizedEntry.error;
       const errorDescription = errorExtractor.getMessage(error);
       columnsDataEntries.push({
         name: 'error',
@@ -85,4 +127,25 @@ export default Component.extend(I18n, {
     }
     return columnsDataEntries;
   }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  detailsData: computed('entry', 'isEntryFailed', function detailsData() {
+    const {
+      entry,
+      isEntryFailed,
+    } = this.getProperties('entry', 'isEntryFailed');
+    const data = (entry || {})[isEntryFailed ? 'error' : 'value'];
+    return JSON.stringify(data, null, 2);
+  }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  detailsContainerStyle: string.htmlSafe(
+    // Width has -1px, to prevent from overflowing on the right side due to translateX
+    // (non - pixel - perfect rendering issues).
+    tag `width: calc(${'visibleAreaWidth'}px - 1px); transform: translateX(${'visibleAreaXOffset'}px);`
+  ),
 });

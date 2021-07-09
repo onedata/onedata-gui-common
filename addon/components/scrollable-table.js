@@ -56,9 +56,9 @@ const initialScrollPosition = Object.freeze({
   left: 0,
 });
 
-const intialSize = Object.freeze({
+const initialSize = Object.freeze({
   width: 0,
-  hwight: 0,
+  height: 0,
 });
 
 export default Component.extend(WindowResizeHandler, {
@@ -88,7 +88,7 @@ export default Component.extend(WindowResizeHandler, {
    * @virtual optional
    * @type {Object}
    */
-  size: intialSize,
+  size: initialSize,
 
   /**
    * @virtual optional

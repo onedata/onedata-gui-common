@@ -90,6 +90,11 @@ export default Component.extend(I18n, {
   tableColumns: undefined,
 
   /**
+   * @type {String}
+   */
+  expandedEntryIndex: undefined,
+
+  /**
    * @type {Window}
    */
   _window: window,
@@ -290,5 +295,16 @@ export default Component.extend(I18n, {
         listWatcher.scrollHandler();
       }
     });
+  },
+
+  actions: {
+    expandEntry(entryIndex) {
+      this.set('expandedEntryIndex', entryIndex);
+    },
+    collapseEntry(entryIndex) {
+      if (entryIndex === this.get('expandedEntryIndex')) {
+        this.set('expandedEntryIndex', undefined);
+      }
+    },
   },
 });

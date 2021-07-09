@@ -1,14 +1,44 @@
-<td class="row-label"></td>
-{{#each columnsData as |columnData|}}
-  <td
-    class="entry-data entry-{{columnData.type}} entry-{{columnData.name}}"
-    colspan={{if columnData.takesWholeRow "9999" "1"}}
-  >
-    {{#if (gt columnData.value.length 20)}}
-      {{#truncated-string}}{{columnData.value}}{{/truncated-string}}
-    {{else}}
-      {{columnData.value}}
-    {{/if}}
+<tr
+  class="table-row data-row {{if isEntryFailed "error-row"}} {{if isExpanded "expanded"}}"
+  data-row-id={{entry.id}}
+>
+  <td class="row-label"></td>
+  <td class="entry-cell entry-expander">
+    {{#one-icon
+      class="clickable"
+      icon=(if isExpanded "arrow-up" "arrow-down")
+      click=(if isExpanded onCollapse onExpand)
+    }}
+      {{one-tooltip title=(tt this
+        (concat "entryExpanderTip." (if isExpanded "expanded" "collapsed"))
+      )}}
+    {{/one-icon}}
   </td>
-{{/each}}
+  {{#each columnsData as |columnData|}}
+    <td
+      class="entry-cell entry-data entry-{{columnData.type}} entry-field-{{columnData.name}}"
+      colspan={{if columnData.takesWholeRow "9999" "1"}}
+    >
+      {{#if (gt columnData.value.length 20)}}
+        {{#truncated-string}}{{columnData.value}}{{/truncated-string}}
+      {{else}}
+        {{columnData.value}}
+      {{/if}}
+    </td>
+  {{/each}}
+</tr>
+{{#if isExpanded}}
+  <tr class="table-row data-row details-row" data-row-id={{entry.id}}>
+    <td class="row-label"></td>
+    <td class="details-cell" colspan="9999">
+      <div class="details-container" style={{detailsContainerStyle}}>
+        {{one-clipboard-line
+          value=detailsData
+          type="textarea"
+          inputClass="code-textarea"
+        }}
+      </div>
+    </td>
+  </tr>
+{{/if}}
 {{yield}}

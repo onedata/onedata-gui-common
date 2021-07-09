@@ -1,6 +1,7 @@
 {{#loading-container isLoading=storeEntries.isLoading}}
   {{#scrollable-table
     class=(concat "table one-infinite-list columns-count-" tableColumns.length)
+    as |table|
   }}
     {{modals/workflow-visualiser/store-modal/store-content-table/table-header
       columns=tableColumns
@@ -30,6 +31,11 @@
         {{modals/workflow-visualiser/store-modal/store-content-table/table-row
           columns=tableColumns
           entry=storeEntry
+          isExpanded=(eq expandedEntryIndex storeEntry.index)
+          onExpand=(action "expandEntry" storeEntry.index)
+          onCollapse=(action "collapseEntry" storeEntry.index)
+          visibleAreaWidth=table.size.width
+          visibleAreaXOffset=table.scrollPosition.left
         }}
       {{/each}}
       {{#if (and storeEntries.initialLoad.isSettled fetchingNext)}}
