@@ -18,6 +18,11 @@ export default VisualiserElement.extend({
   classNames: ['workflow-visualiser-lane'],
 
   /**
+   * @override
+   */
+  i18nPrefix: 'components.workflowVisualiser.lane',
+
+  /**
    * @type {Boolean}
    */
   areActionsOpened: false,
@@ -36,6 +41,16 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
   laneElements: reads('lane.elements'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  iteratorStrategyLabel: computed('lane.storeIteratorSpec', function iterateOverLabel() {
+    const strategy = this.get('lane.storeIteratorSpec.strategy.type');
+    const batchSize = this.get('lane.storeIteratorSpec.strategy.batchSize');
+    return strategy ?
+      this.t(`iteratorStrategy.${strategy}`, { batchSize }, { defaultValue: '' }) : '';
+  }),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
