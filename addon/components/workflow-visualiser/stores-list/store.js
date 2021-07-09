@@ -40,6 +40,12 @@ export default Component.extend({
   actionsFactory: undefined,
 
   /**
+   * Meaningful only when `mode` is `'edit'`
+   * @type {Boolean}
+   */
+  isRemovingAllowed: true,
+
+  /**
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,

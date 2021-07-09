@@ -1022,7 +1022,9 @@ function checkInterXSpace($space, beforeId, afterId) {
 }
 
 function checkRenderedStoresList(testCase, rawData) {
-  const $stores = testCase.$('.workflow-visualiser-stores-list-store');
+  const $stores = testCase.$(
+    '.workflow-visualiser-stores-list .workflow-visualiser-stores-list-store'
+  );
   expect($stores).to.have.length(rawData.stores.length);
   rawData.stores.sortBy('name').forEach(({ name }, idx) =>
     expect($stores.eq(idx).text()).to.contain(name)

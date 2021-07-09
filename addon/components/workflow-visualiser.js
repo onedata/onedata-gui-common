@@ -93,6 +93,8 @@ import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-res
 import { scheduleOnce, run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
+import ArrayProxy from '@ember/array/proxy';
+import { reads } from '@ember/object/computed';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -218,6 +220,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   stores: computed('rawData', function stores() {
     return this.getStores();
+  }),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   */
+  storesArrayProxy: computed(function storesArrayProxy() {
+    return ArrayProxy
+      .extend({ content: reads('component.stores') })
+      .create({ component: this });
   }),
 
   /**
@@ -562,13 +573,15 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       const {
         mode,
+        storesArrayProxy,
         actionsFactory,
-      } = this.getProperties('mode', 'actionsFactory');
+      } = this.getProperties('mode', 'storesArrayProxy', 'actionsFactory');
 
       const newLane = Lane.create({
         id,
         name,
         storeIteratorSpec,
+        stores: storesArrayProxy,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),

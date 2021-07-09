@@ -64,9 +64,9 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
       await click(getModalFooter().find('.btn-submit')[0]);
       const actionResult = await resultPromise;
 
-      expect(modifyStoreStub).to.be.calledOnce.and.to.be.calledWith({
+      expect(modifyStoreStub).to.be.calledOnce.and.to.be.calledWith(sinon.match({
         name: 'store2',
-      });
+      }));
       expect(get(actionResult, 'status')).to.equal('done');
     }
   );

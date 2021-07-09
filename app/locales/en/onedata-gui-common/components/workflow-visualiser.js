@@ -13,6 +13,12 @@ export default {
   },
   taskForm,
   lane: {
+    iterateOver: 'Iterate over',
+    iteratorStrategy: {
+      serial: 'Serial',
+      batch: 'Batch {{batchSize}}',
+    },
+    unknownStore: 'Unknown',
     actions: {
       createLane: {
         newLaneName: 'Untitled lane',
