@@ -1,11 +1,13 @@
-{{#loading-container isLoading=storeEntries.isLoading}}
+{{#loading-container isLoading=storeEntries.isLoading sizeClass="sm"}}
   {{#scrollable-table
     class=(concat "table one-infinite-list columns-count-" tableColumns.length)
     as |table|
   }}
-    {{modals/workflow-visualiser/store-modal/store-content-table/table-header
-      columns=tableColumns
-    }}
+    {{#if storeEntries.length}}
+      {{modals/workflow-visualiser/store-modal/store-content-table/table-header
+        columns=tableColumns
+      }}
+    {{/if}}
     <tr class="first-row">
       <td colspan="9999" style={{firstRowStyle}}></td>
     </tr>
@@ -21,7 +23,7 @@
         <tr class="loading-row">
           <td colspan="9999" class="loading-row-cell">
             {{spin-spinner-block
-              sizeClass="sm"
+              sizeClass="xs"
               class="absolute-middle-centered"
             }}
           </td>
@@ -42,7 +44,7 @@
         <tr class="loading-row">
           <td colspan="9999" class="loading-row-cell">
             {{spin-spinner-block
-              sizeClass="sm"
+              sizeClass="xs"
               class="absolute-middle-centered"
             }}
           </td>

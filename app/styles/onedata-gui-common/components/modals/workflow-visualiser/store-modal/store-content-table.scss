@@ -1,17 +1,18 @@
 .store-content-table {
+  position: relative;
+  min-height: 45px;
+
   .scrollable-table-content {
     min-width: 100%;
   }
 
-  .table-header-row.labels-hidden {
-    th, td {
-      height: 0;
-      padding: 0;
-      font-size: 0;
-    }
+  .table-header-row.labels-hidden th {
+    height: 0;
+    padding: 0;
+    font-size: 0;
   }
 
-  .column-label,
+  .table-header-row th,
   .entry-cell,
   .details-cell {
     border-bottom: 1px solid $main-border-color;
@@ -83,6 +84,11 @@
     .entry-expander .one-icon {
       color: $color-one-danger;
     }
+  }
+
+  .loading-row-cell {
+    position: relative;
+    height: 44px;
   }
 
   @for $i from 1 through 10 {
