@@ -63,7 +63,7 @@ export default Action.extend({
       'name',
       'description',
       'type',
-      'dataType',
+      'dataSpec',
       'defaultInitialValue',
       'requiresInitialValue',
     ];
