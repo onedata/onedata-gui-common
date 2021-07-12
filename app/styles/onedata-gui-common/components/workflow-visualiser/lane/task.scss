@@ -24,12 +24,31 @@
     }
   }
 
-  &.status-active {
+  &.status-active,
+  &.status-cancelling {
     .draggable-task {
       @extend .animated;
       @extend .infinite;
       @extend .hinge;
+    }
+  }
+
+  &.status-active {
+    .draggable-task {
       @extend .pulse-bg-light-mint;
+    }
+  }
+
+  &.status-cancelling {
+    .draggable-task {
+      @extend .pulse-bg-light-orange;
+    }
+  }
+
+  &.status-cancelled {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-orange;
+      background-color: lighten($color-one-orange, 30%);
     }
   }
 

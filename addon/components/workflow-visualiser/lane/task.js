@@ -14,7 +14,16 @@ import { reads, collect } from '@ember/object/computed';
 import { tag, raw, conditional, equal, array, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
 
-const possibleStatuses = ['pending', 'active', 'finished', 'failed', 'unknown'];
+const possibleStatuses = [
+  'pending',
+  'active',
+  'skipped',
+  'cancelling',
+  'cancelled',
+  'finished',
+  'failed',
+  'unknown',
+];
 
 export default VisualiserElement.extend({
   layout,

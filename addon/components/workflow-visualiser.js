@@ -1225,7 +1225,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   executionHasEnded() {
-    return ['finished', 'failed'].includes(this.get('executionStatus'));
+    return [
+      'cancelled',
+      'skipped',
+      'finished',
+      'failed',
+    ].includes(this.get('executionStatus'));
   },
 
   actions: {
