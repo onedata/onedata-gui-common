@@ -1,0 +1,14 @@
+{{#perfect-scrollbar-element
+  onScroll=(action "scroll")
+  onEdgeScroll=(action "edgeScroll")
+  suppressScrollX=disableScroll
+  suppressScrollY=disableScroll
+}}
+  <table class="scrollable-table-content">
+    {{yield (hash
+      edgeScrollState=edgeScrollState
+      scrollPosition=scrollPosition
+      size=size
+    )}}
+  </table>
+{{/perfect-scrollbar-element}}

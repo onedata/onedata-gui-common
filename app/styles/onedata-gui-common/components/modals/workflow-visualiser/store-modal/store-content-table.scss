@@ -1,15 +1,102 @@
 .store-content-table {
+  position: relative;
+  min-height: 45px;
+
+  .scrollable-table-content {
+    min-width: 100%;
+  }
+
+  .table-header-row.labels-hidden th {
+    height: 0;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .table-header-row th,
+  .entry-cell,
+  .details-cell {
+    border-bottom: 1px solid $main-border-color;
+  }
+
+  .expanded .entry-cell {
+    border-bottom: 1px dashed $main-border-color;
+  }
+
+  .entry-data {
+    padding: 0 $padding-base-horizontal;
+  }
+
+  .details-container {
+    padding: $padding-base-vertical $padding-base-horizontal;
+  }
+
+  .property-label {
+    text-align: left;
+    padding: $padding-base-vertical $padding-base-horizontal;
+  }
+
+  .entry-data,
+  .property-label {
+    min-width: 100px;
+    max-width: 300px;
+  }
+
+  // It is used only to produce scroll shadow and should not take any table place.
+  .row-label {
+    min-width: 0;
+    width: 0;
+    max-width: 0;
+    padding: 0 !important;
+  }
+
+  .entry-expander {
+    width: 32px;
+    min-width: 32px;
+    text-align: right;
+
+    .one-icon {
+      vertical-align: middle;
+      color: $color-one-success;
+      font-weight: bold;
+    }
+  }
+
   .table-is-empty-cell {
     border: 0;
     text-align: center;
   }
 
-  textarea.json-value {
-    height: 110px;
-    font-size: 90%;
+  .entry-value {
+    @include font-monospace();
   }
 
-  .error-row textarea {
+  .data-row.expanded {
+    background-color: $color-one-semiwhite;
+  }
+
+  .details-row {
+    background-color: lighten($color-one-semiwhite, 4%);
+  }
+
+  .error-row {
     color: $color-one-danger;
+
+    .entry-expander .one-icon {
+      color: $color-one-danger;
+    }
+  }
+
+  .loading-row-cell {
+    position: relative;
+    height: 44px;
+  }
+
+  @for $i from 1 through 10 {
+    $pxNumber: $i * 100;
+    .columns-count-#{$i} {
+      .property-label {
+        width: 100% / $i;
+      }
+    }
   }
 }
