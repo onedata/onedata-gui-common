@@ -55,6 +55,7 @@ export default Component.extend(I18n, {
 
   /**
    * Number of pixels by which visible area is scrolled in the X axis.
+   * @virtual
    * @type {Number}
    */
   visibleAreaXOffset: undefined,

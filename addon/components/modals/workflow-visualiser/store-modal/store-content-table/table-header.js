@@ -36,9 +36,10 @@ export default Component.extend(I18n, {
   columns: undefined,
 
   /**
-   * @override
+   * NOTE: Using `visible` because `isVisible` is reserved and adds extra styling
+   * @type {ComputedProperty<Boolean>}
    */
-  visible: computed('tableColumns', function isVisible() {
+  visible: computed('tableColumns', function visible() {
     const columns = this.get('columns');
     return columns && (
       columns.length > 1 ||

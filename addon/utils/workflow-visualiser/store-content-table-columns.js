@@ -25,6 +25,7 @@ export default class StoreContentTableColumns {
     this.i18n = i18n;
     this.dataBasedColumns = [];
     this.dataErrorOccurred = false;
+    this.dataBasedColumnsLimit = 30;
   }
 
   t(translationName) {
@@ -97,6 +98,7 @@ export default class StoreContentTableColumns {
 
   /**
    * @private
+   * TODO: VFS-7974 Will be used by Map store
    */
   getStoreTypeSpecificColumns() {
     return [];
@@ -107,6 +109,7 @@ export default class StoreContentTableColumns {
    */
   areColumnsBasedOnData() {
     return ['object', 'file', 'dataset']
+      // range store has "number" dataSpec, but its value in store browser is an object
       .includes(this.storeDataSpec.type) || this.storeType === 'range';
   }
 
@@ -114,6 +117,6 @@ export default class StoreContentTableColumns {
    * @private
    */
   getFreeSlotsNumberForDataColumns() {
-    return 30 - this.dataBasedColumns.length;
+    return this.dataBasedColumnsLimit - this.dataBasedColumns.length;
   }
 }
