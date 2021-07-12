@@ -13,11 +13,28 @@
     background-color: $color-one-white;
   }
 
-  .lane-header {
+  .lane-header,
+  .lane-store-info {
     display: flex;
     align-items: center;
-    min-height: 38px;
+    min-height: 42px;
     border-bottom: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
+  }
+
+  .lane-store-info {
+    justify-content: space-between;
+    padding: 0 $padding-small-horizontal * 0.8;
+    white-space: nowrap;
+
+    .tags-input,
+    .tag-item {
+      min-width: 0;
+    }
+
+    .input-element {
+      margin: 0;
+      margin-left: $padding-xs-horizontal;
+    }
   }
 
   .lane-drag-handle {
@@ -44,6 +61,7 @@
   .lane-actions-trigger {
     vertical-align: middle;
     float: right;
+    padding: 0 ($padding-xs-horizontal * (2/3));
 
     .icon-dot {
       width: 3px;
@@ -66,7 +84,7 @@
 
   &.mode-edit {
     .lane-drag-handle {
-      margin-left: 0.2em;
+      margin-left: 0.5em;
       cursor: grab;
     }
   }

@@ -72,9 +72,10 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
 
       await fillIn($nameField[0], 'store2');
       await click(getModalFooter().find('.btn-submit')[0]);
-      expect(onModifySpy).to.be.calledOnce.and.to.be.calledWith(this.get('store'), {
-        name: 'store2',
-      });
+      expect(onModifySpy).to.be.calledOnce
+        .and.to.be.calledWith(this.get('store'), sinon.match({
+          name: 'store2',
+        }));
     });
   });
 

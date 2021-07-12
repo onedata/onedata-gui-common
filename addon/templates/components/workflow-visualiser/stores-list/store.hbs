@@ -1,5 +1,5 @@
 {{#truncated-string class="store-name"}}{{store.name}}{{/truncated-string}}
-{{#if (eq mode "edit")}}
+{{#if (and (eq mode "edit") isRemovingAllowed)}}
   {{one-icon
     icon="close"
     class=(concat-classes "tag-remove clickable" removeAction.className)

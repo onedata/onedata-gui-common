@@ -52,6 +52,21 @@
       {{/render-later}}
     </div>
   </div>
+  <div class="lane-store-info">
+    <span class="one-label">{{iteratorStrategyLabel}}</span>
+    {{#if lane.store.name}}
+      <div class="tags-input readonly">
+        {{workflow-visualiser/stores-list/store
+          store=lane.store
+          mode=mode
+          actionsFactory=actionsFactory
+          isRemovingAllowed=false
+        }}
+      </div>
+    {{else}}
+      <span class="one-label">{{tt this "unknownStore"}}</span>
+    {{/if}}
+  </div>
   {{#perfect-scrollbar-element class="lane-elements"}}
     {{#each laneElements as |laneElement|}}
       {{workflow-visualiser/visualiser-element-renderer
