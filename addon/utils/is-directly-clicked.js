@@ -1,6 +1,6 @@
 /**
- * Returns true if provided element was click directly (without no intermediate elements
- * with ".clickable" class).
+ * Returns true if provided element has been clicked directly (without intermediate
+ * elements with ".clickable" class).
  *
  * @module utils/is-directly-clicked
  * @author Michał Borzęcki

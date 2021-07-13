@@ -2,18 +2,6 @@ import taskForm from './workflow-visualiser/task-form';
 
 export default {
   status: 'Status',
-  statuses: {
-    scheduled: 'Scheduled',
-    preparing: 'Preparing',
-    enqueued: 'Enqueued',
-    active: 'Active',
-    cancelling: 'Cancelling',
-    cancelled: 'Cancelled',
-    skipped: 'Skipped',
-    finished: 'Finished',
-    failed: 'Failed',
-    unknown: 'Unknown',
-  },
   taskForm,
   lane: {
     iterateOver: 'Iterate over',
@@ -85,16 +73,6 @@ export default {
     },
     details: {
       status: 'Status',
-      statuses: {
-        pending: 'Pending',
-        active: 'Active',
-        cancelling: 'Cancelling',
-        cancelled: 'Cancelled',
-        skipped: 'Skipped',
-        finished: 'Finished',
-        failed: 'Failed',
-        unknown: 'Unknown',
-      },
       itemsInProcessing: 'In processing',
       itemsProcessed: 'Processed',
       itemsFailed: 'Failed',

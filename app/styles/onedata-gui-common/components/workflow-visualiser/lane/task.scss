@@ -25,7 +25,7 @@
   }
 
   &.status-active,
-  &.status-cancelling {
+  &.status-aborting {
     .draggable-task {
       @extend .animated;
       @extend .infinite;
@@ -39,7 +39,7 @@
     }
   }
 
-  &.status-cancelling {
+  &.status-aborting {
     .draggable-task {
       @extend .pulse-bg-light-orange;
     }

@@ -11,19 +11,9 @@ import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/task';
 import { computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
-import { tag, raw, conditional, equal, array, or } from 'ember-awesome-macros';
+import { tag, raw, conditional, equal, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
-
-const possibleStatuses = [
-  'pending',
-  'active',
-  'skipped',
-  'cancelling',
-  'cancelled',
-  'finished',
-  'failed',
-  'unknown',
-];
+import { normalizeTaskStatus, translateTaskStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
 export default VisualiserElement.extend({
   layout,
@@ -59,7 +49,11 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<String>}
    */
   statusTranslation: computed('effectiveStatus', function statusTranslation() {
-    return this.t(`details.statuses.${this.get('effectiveStatus')}`);
+    const {
+      i18n,
+      effectiveStatus,
+    } = this.getProperties('i18n', 'effectiveStatus');
+    return translateTaskStatus(i18n, effectiveStatus);
   }),
 
   /**
@@ -80,11 +74,9 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  effectiveStatus: conditional(
-    array.includes(raw(possibleStatuses), 'task.status'),
-    'task.status',
-    raw('unknown')
-  ),
+  effectiveStatus: computed('task.status', function effectiveStatus() {
+    return normalizeTaskStatus(this.get('task.status'));
+  }),
 
   /**
    * @type {ComputedProperty<String>}

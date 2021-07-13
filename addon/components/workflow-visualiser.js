@@ -95,6 +95,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
 import ArrayProxy from '@ember/array/proxy';
 import { reads } from '@ember/object/computed';
+import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -245,9 +246,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<String>}
    */
   statusTranslation: computed('executionStatus', function statusTranslation() {
-    return this.t(`statuses.${this.get('executionStatus')}`, {}, {
-      defaultValue: this.t('statuses.unknown'),
-    });
+    const {
+      i18n,
+      executionStatus,
+    } = this.getProperties('i18n', 'executionStatus');
+    return translateWorkflowStatus(i18n, executionStatus);
   }),
 
   /**
@@ -1225,12 +1228,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   executionHasEnded() {
-    return [
-      'cancelled',
-      'skipped',
-      'finished',
-      'failed',
-    ].includes(this.get('executionStatus'));
+    return workflowEndedStatuses.includes(this.get('executionStatus'));
   },
 
   actions: {

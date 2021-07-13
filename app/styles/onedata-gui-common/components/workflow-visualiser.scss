@@ -53,7 +53,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   }
 
   &.status-active,
-  &.status-cancelling,
+  &.status-aborting,
   &.status-cancelled {
     .workflow-status-container {
       background-color: lighten($color-one-warning, 30%);
