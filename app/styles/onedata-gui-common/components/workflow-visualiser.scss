@@ -35,12 +35,28 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   height: 100%;
 
   .workflow-status-container {
-    padding: 0.7em;
     border: $main-border;
+    align-items: center;
     text-align: center;
+    display: flex;
+
+    .workflow-status-text {
+      flex-grow: 1;
+      padding: $padding-base-vertical;
+      text-align: center;
+    }
 
     .one-label {
       @include font-semibold();
+    }
+
+    .execution-actions {
+      padding-right: $padding-base-vertical;
+    }
+
+    .collapsible-toolbar-buttons {
+      vertical-align: middle;
+      line-height: 0;
     }
   }
 
@@ -52,12 +68,15 @@ $workflow-visualiser-last-between-task-space-size: 30px;
     }
   }
 
-  &.status-active {
+  &.status-active,
+  &.status-skipped {
     .workflow-status-container {
       background-color: lighten($color-one-warning, 30%);
     }
   }
 
+  &.status-aborting,
+  &.status-cancelled,
   &.status-failed {
     .workflow-status-container {
       background-color: lighten($color-one-danger, 30%);
