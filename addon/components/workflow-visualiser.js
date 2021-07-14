@@ -168,6 +168,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   executionDataFetcher: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  cancelExecutionAction: undefined,
+
+  /**
    * @type {Utils.Looper}
    */
   statsUpdater: undefined,
@@ -287,6 +293,69 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return this.updateStatuses();
     }
   })),
+
+  /**
+   * @type {ComputedProperty<Function>}
+   */
+  updateStatusesAfterCancelHook: computed(function updateStatusesAfterCancelHook() {
+    return async result => {
+      if (!result || get(result, 'status') !== 'done') {
+        return;
+      }
+      try {
+        await this.updateStatuses();
+      } catch (error) {
+        console.error('Cannot update workflow status after cancel:', error);
+      }
+    };
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  normalizedCancelExecutionAction: computed(
+    'cancelExecutionAction',
+    'updateStatusesAfterCancelHook',
+    function normalizedCancelExecutionAction() {
+      const {
+        cancelExecutionAction,
+        updateStatusesAfterCancelHook,
+      } = this.getProperties(
+        'cancelExecutionAction',
+        'updateStatusesAfterCancelHook'
+      );
+      if (!cancelExecutionAction) {
+        return;
+      }
+      // Remove hook to be sure, that it wont be duplicated.
+      cancelExecutionAction.removeExecuteHook(updateStatusesAfterCancelHook);
+      cancelExecutionAction.addExecuteHook(updateStatusesAfterCancelHook);
+      return cancelExecutionAction;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.Action>>}
+   */
+  executionActions: computed(
+    'executionStatus',
+    'normalizedCancelExecutionAction',
+    function executionActions() {
+      const {
+        executionStatus,
+        normalizedCancelExecutionAction,
+      } = this.getProperties('executionStatus', 'normalizedCancelExecutionAction');
+      const actions = [];
+      if (
+        !this.executionHasEnded() &&
+        executionStatus !== 'aborting' &&
+        normalizedCancelExecutionAction
+      ) {
+        actions.push(normalizedCancelExecutionAction);
+      }
+      return actions;
+    }
+  ),
 
   actionsFactoryObserver: observer(
     'actionsFactory',

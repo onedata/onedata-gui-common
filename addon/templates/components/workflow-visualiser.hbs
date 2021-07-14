@@ -1,8 +1,18 @@
 {{#promise-proxy-container proxy=initialLoadingProxy}}
   {{#if (eq mode "view")}}
     <div class="workflow-status-container">
-      <span class="one-label">{{tt this "status"}}:</span>
-      <span class="workflow-status">{{statusTranslation}}</span>
+      <div class="workflow-status-text">
+        <span class="one-label">{{tt this "status"}}:</span>
+        <span class="workflow-status">{{statusTranslation}}</span>
+      </div>
+      {{#if executionActions.length}}
+        {{actions-toolbar
+          isMinimized=false
+          toolbarClasses="execution-actions"
+          dropdownPlacement="auto"
+          actionsArray=executionActions
+        }}
+      {{/if}}
     </div>
   {{/if}}
   {{#perfect-scrollbar-element
