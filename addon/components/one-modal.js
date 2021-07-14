@@ -125,12 +125,7 @@ export default BsModal.extend({
       const area = modalElement.querySelector('.bs-modal-body-scroll');
       if (area) {
         const methodName = `${enabled ? 'add' : 'remove'}EventListener`;
-        ['top-edge-scroll-change', 'bottom-edge-scroll-change'].forEach(eventName => {
-          area[methodName](
-            eventName,
-            recomputeScrollShadowFunction
-          );
-        });
+        area[methodName]('edge-scroll-change', recomputeScrollShadowFunction);
 
         if (enabled) {
           next(() => this.recomputeScrollShadow());

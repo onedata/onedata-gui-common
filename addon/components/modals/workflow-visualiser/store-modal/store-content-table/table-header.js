@@ -11,13 +11,12 @@ import Component from '@ember/component';
 import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/store-content-table/table-header';
 import { computed } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { tag, gt, raw } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
-  tagName: 'thead',
-  classNames: ['table-header'],
-  classNameBindings: ['storeTypeClass'],
+  tagName: 'tr',
+  classNames: ['table-header-row'],
+  classNameBindings: ['visible::labels-hidden'],
 
   /**
    * @override
@@ -31,21 +30,20 @@ export default Component.extend(I18n, {
   storeType: undefined,
 
   /**
-   * @override
+   * @virtual
+   * @type {Array<StoreContentTableColumn>}
    */
-  isVisible: gt('columns.length', raw(1)),
+  columns: undefined,
 
   /**
-   * @type {ComputedProperty<String>}
+   * NOTE: Using `visible` because `isVisible` is reserved and adds extra styling
+   * @type {ComputedProperty<Boolean>}
    */
-  storeTypeClass: tag `${'storeType'}-table-header`,
-
-  /**
-   * @type {ComputedProperty<Array<String>>}
-   */
-  columns: computed('storeType', function columns() {
-    // Will be more complicated when new type of stores will occur, like map or
-    // auditLog.
-    return ['value'];
+  visible: computed('tableColumns', function visible() {
+    const columns = this.get('columns');
+    return columns && (
+      columns.length > 1 ||
+      (columns.length === 1 && columns[0].type === 'dataBased')
+    );
   }),
 });

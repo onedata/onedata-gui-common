@@ -1,1 +1,13 @@
-@import './store-modal/store-content-table';
+.store-modal {
+  .bs-modal-body-scroll {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .store-content-table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @import './store-modal/store-content-table';
+}
