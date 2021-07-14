@@ -41,11 +41,11 @@
 
   &.status-aborting {
     .draggable-task {
-      @extend .pulse-bg-light-orange;
+      @extend .pulse-bg-light-red;
     }
   }
 
-  &.status-cancelled {
+  &.status-skipped {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-orange;
       background-color: lighten($color-one-orange, 30%);
@@ -59,7 +59,8 @@
     }
   }
 
-  &.status-failed {
+  &.status-failed,
+  &.status-cancelled {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-danger;
       background-color: lighten($color-one-danger, 30%);
