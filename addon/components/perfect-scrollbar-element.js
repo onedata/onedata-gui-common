@@ -2,7 +2,7 @@
  * Container component, that provides PerfectScrollbar mechanism.
  *
  * @module components/perfect-scrollbar-element
- * @author Jakub Liput, Michal Borzecki
+ * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
@@ -14,7 +14,13 @@ import { debounce } from '@ember/runloop';
 import PerfectScrollbarMixin from 'onedata-gui-common/mixins/perfect-scrollbar';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import _ from 'lodash';
+
+const initialEdgeScrollState = Object.freeze({
+  top: true,
+  bottom: true,
+  left: true,
+  right: true,
+});
 
 export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   classNames: ['perfect-scrollbar-element'],
@@ -38,60 +44,19 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   onScroll: notImplementedIgnore,
 
   /**
-   * Called when scroll reached the top or it just moved down from the top
+   * Called when scroll reached any edge or it just moved from the edge
    * @virtual optional
    * @type {Function}
-   * @param {boolean} reachedEdge true if reached edge, false if left it
+   * @param {Object} edgeScrollState see `edgeScrollState` property doc
    * @returns {any}
    */
-  onTopEdgeScroll: notImplementedIgnore,
+  onEdgeScroll: notImplementedIgnore,
 
   /**
-   * Called when scroll reached the bottom or it just moved up from the bottom
-   * @virtual optional
-   * @type {Function}
-   * @param {boolean} reachedEdge true if reached edge, false if left it
-   * @returns {any}
+   * Indicates if scroll has reached specific edge.
+   * @type {Object}
    */
-  onBottomEdgeScroll: notImplementedIgnore,
-
-  /**
-   * Called when scroll reached the left edge or it just moved right from the edge
-   * @virtual optional
-   * @type {Function}
-   * @param {boolean} reachedEdge true if reached edge, false if left it
-   * @returns {any}
-   */
-  onLeftEdgeScroll: notImplementedIgnore,
-
-  /**
-   * Called when scroll reached the right edge or it just moved left from the edge
-   * @virtual optional
-   * @type {Function}
-   * @param {boolean} reachedEdge true if reached edge, false if left it
-   * @returns {any}
-   */
-  onRightEdgeScroll: notImplementedIgnore,
-
-  /**
-   * @type {boolean}
-   */
-  isScrolledTop: true,
-
-  /**
-   * @type {boolean}
-   */
-  isScrolledBottom: true,
-
-  /**
-   * @type {boolean}
-   */
-  isScrolledLeft: true,
-
-  /**
-   * @type {boolean}
-   */
-  isScrolledRight: true,
+  edgeScrollState: initialEdgeScrollState,
 
   /**
    * @type {boolean}
@@ -113,8 +78,8 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Function>}
    */
-  detectReachingStartEndHandler: computed(function detectReachingStartEndHandler() {
-    return this.detectReachingStartEnd.bind(this);
+  detectEdgeScrollHandler: computed(function detectEdgeScrollHandler() {
+    return this.detectEdgeScroll.bind(this);
   }),
 
   /**
@@ -133,11 +98,11 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
   eventListeners: computed(function eventListeners() {
     const {
       onScroll,
-      detectReachingStartEndHandler,
+      detectEdgeScrollHandler,
       touchEndHandler,
     } = this.getProperties(
       'onScroll',
-      'detectReachingStartEndHandler',
+      'detectEdgeScrollHandler',
       'touchEndHandler',
     );
 
@@ -149,14 +114,14 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
       handler: onScroll,
     }, {
       eventName: 'scroll',
-      handler: detectReachingStartEndHandler,
+      handler: detectEdgeScrollHandler,
       passive: true,
     }, {
       eventName: 'transitionend',
-      handler: detectReachingStartEndHandler,
+      handler: detectEdgeScrollHandler,
     }, {
       eventName: 'touchmove',
-      handler: detectReachingStartEndHandler,
+      handler: detectEdgeScrollHandler,
       passive: true,
     }, {
       eventName: 'touchend',
@@ -205,7 +170,7 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
    */
   didRender() {
     this._super(...arguments);
-    this.detectReachingStartEnd();
+    this.detectEdgeScroll();
   },
 
   /**
@@ -220,60 +185,55 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
    */
   updateScrollbar() {
     const result = this._super(...arguments);
-    this.detectReachingStartEnd();
+    this.detectEdgeScroll();
     return result;
   },
 
-  detectReachingStartEnd(event) {
+  detectEdgeScroll(event) {
     const {
-      isScrolledTop,
-      isScrolledBottom,
       element,
+      edgeScrollState: oldEdgeScrollState,
+      onEdgeScroll,
     } = this.getProperties(
-      'isScrolledTop',
-      'isScrolledBottom',
       'element',
+      'edgeScrollState',
+      'onEdgeScroll'
     );
 
     if (!element) {
       return;
     }
 
-    const isNowScrolledTop = element.scrollTop <= 0;
-    const isNowScrolledBottom =
-      element.scrollTop + element.clientHeight >= element.scrollHeight;
-    const isNowScrolledLeft = element.scrollLeft <= 0;
-    const isNowScrolledRight =
-      element.scrollLeft + element.clientWidth >= element.scrollWidth;
+    const newEdgeScrollState = {
+      top: element.scrollTop <= 0,
+      bottom: element.scrollTop + element.clientHeight >= element.scrollHeight,
+      left: element.scrollLeft <= 0,
+      right: element.scrollLeft + element.clientWidth >= element.scrollWidth,
+    };
 
-    [
-      { side: 'top', isNowScrolledToEdge: isNowScrolledTop },
-      { side: 'bottom', isNowScrolledToEdge: isNowScrolledBottom },
-      { side: 'left', isNowScrolledToEdge: isNowScrolledLeft },
-      { side: 'right', isNowScrolledToEdge: isNowScrolledRight },
-    ].forEach(({ side, isNowScrolledToEdge }) => {
-      const sideWithUpperFirst = _.upperFirst(side);
-      const wasScrolledPropName = `isScrolled${sideWithUpperFirst}`;
-      const onScrollChangeCallback = this.get(`on${sideWithUpperFirst}EdgeScroll`);
+    const edgeScrollHasChanged = Object.keys(newEdgeScrollState).find(side =>
+      oldEdgeScrollState[side] !== newEdgeScrollState[side]
+    );
+    if (edgeScrollHasChanged || oldEdgeScrollState === initialEdgeScrollState) {
+      this.set('edgeScrollState', newEdgeScrollState);
+      this.reloadEdgeScrollClasses();
+    }
+    if (edgeScrollHasChanged) {
+      element.dispatchEvent(new Event('edge-scroll-change'));
 
-      element.classList.toggle(`on-${side}`, isNowScrolledToEdge);
-      if (this.get(wasScrolledPropName) !== isNowScrolledToEdge) {
-        this.set(wasScrolledPropName, isNowScrolledToEdge);
-        element.dispatchEvent(new Event(`${side}-edge-scroll-change`));
-        if (typeof onScrollChangeCallback === 'function') {
-          onScrollChangeCallback(isNowScrolledToEdge);
-        }
+      if (typeof onEdgeScroll === 'function') {
+        onEdgeScroll(Object.assign({}, newEdgeScrollState));
       }
-    });
+    }
 
     if (event && event.type === 'touchmove') {
       if (
         // any scroll starting from the middle of content
-        (!isScrolledTop && !isScrolledBottom) ||
+        (!oldEdgeScrollState.top && !oldEdgeScrollState.bottom) ||
         // or any scroll, that was on the top and moved down
-        isScrolledTop !== isNowScrolledTop ||
+        oldEdgeScrollState.top !== newEdgeScrollState.top ||
         // or any scroll, that was on the bottom and moved up
-        isScrolledBottom !== isNowScrolledBottom
+        oldEdgeScrollState.bottom !== newEdgeScrollState.bottom
       ) {
         this.set('hasActiveTouchScroll', true);
         // any other scroll (so being on the edge and scroll outside) will not set
@@ -288,6 +248,19 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
         event.stopPropagation();
       }
     }
+  },
+
+  reloadEdgeScrollClasses() {
+    const {
+      edgeScrollState,
+      element,
+    } = this.getProperties('edgeScrollState', 'element');
+
+    // Cannot change classes via `classNameBindings`, because it would override
+    // perfect-scrollbar dynamic classes.
+    Object.keys(edgeScrollState).forEach(side =>
+      element.classList.toggle(`on-${side}`, edgeScrollState[side])
+    );
   },
 
   actions: {

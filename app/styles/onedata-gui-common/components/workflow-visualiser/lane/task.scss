@@ -24,12 +24,31 @@
     }
   }
 
-  &.status-active {
+  &.status-active,
+  &.status-aborting {
     .draggable-task {
       @extend .animated;
       @extend .infinite;
       @extend .hinge;
+    }
+  }
+
+  &.status-active {
+    .draggable-task {
       @extend .pulse-bg-light-mint;
+    }
+  }
+
+  &.status-aborting {
+    .draggable-task {
+      @extend .pulse-bg-light-red;
+    }
+  }
+
+  &.status-skipped {
+    .draggable-task {
+      border: $workflow-visualiser-block-border-width solid $color-one-orange;
+      background-color: lighten($color-one-orange, 30%);
     }
   }
 
@@ -40,7 +59,8 @@
     }
   }
 
-  &.status-failed {
+  &.status-failed,
+  &.status-cancelled {
     .draggable-task {
       border: $workflow-visualiser-block-border-width solid $color-one-danger;
       background-color: lighten($color-one-danger, 30%);

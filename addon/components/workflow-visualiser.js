@@ -95,6 +95,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
 import ArrayProxy from '@ember/array/proxy';
 import { reads } from '@ember/object/computed';
+import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -165,6 +166,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {Utils.WorkflowVisualiser.ExecutionDataFetcher}
    */
   executionDataFetcher: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Utils.Action}
+   */
+  cancelExecutionAction: undefined,
 
   /**
    * @type {Utils.Looper}
@@ -245,9 +252,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<String>}
    */
   statusTranslation: computed('executionStatus', function statusTranslation() {
-    return this.t(`statuses.${this.get('executionStatus')}`, {}, {
-      defaultValue: this.t('statuses.unknown'),
-    });
+    const {
+      i18n,
+      executionStatus,
+    } = this.getProperties('i18n', 'executionStatus');
+    return translateWorkflowStatus(i18n, executionStatus);
   }),
 
   /**
@@ -284,6 +293,69 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return this.updateStatuses();
     }
   })),
+
+  /**
+   * @type {ComputedProperty<Function>}
+   */
+  updateStatusesAfterCancelHook: computed(function updateStatusesAfterCancelHook() {
+    return async result => {
+      if (!result || get(result, 'status') !== 'done') {
+        return;
+      }
+      try {
+        await this.updateStatuses();
+      } catch (error) {
+        console.error('Cannot update workflow status after cancel:', error);
+      }
+    };
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  normalizedCancelExecutionAction: computed(
+    'cancelExecutionAction',
+    'updateStatusesAfterCancelHook',
+    function normalizedCancelExecutionAction() {
+      const {
+        cancelExecutionAction,
+        updateStatusesAfterCancelHook,
+      } = this.getProperties(
+        'cancelExecutionAction',
+        'updateStatusesAfterCancelHook'
+      );
+      if (!cancelExecutionAction) {
+        return;
+      }
+      // Remove hook to be sure, that it wont be duplicated.
+      cancelExecutionAction.removeExecuteHook(updateStatusesAfterCancelHook);
+      cancelExecutionAction.addExecuteHook(updateStatusesAfterCancelHook);
+      return cancelExecutionAction;
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.Action>>}
+   */
+  executionActions: computed(
+    'executionStatus',
+    'normalizedCancelExecutionAction',
+    function executionActions() {
+      const {
+        executionStatus,
+        normalizedCancelExecutionAction,
+      } = this.getProperties('executionStatus', 'normalizedCancelExecutionAction');
+      const actions = [];
+      if (
+        !this.executionHasEnded() &&
+        executionStatus !== 'aborting' &&
+        normalizedCancelExecutionAction
+      ) {
+        actions.push(normalizedCancelExecutionAction);
+      }
+      return actions;
+    }
+  ),
 
   actionsFactoryObserver: observer(
     'actionsFactory',
@@ -1225,7 +1297,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   executionHasEnded() {
-    return ['finished', 'failed'].includes(this.get('executionStatus'));
+    return workflowEndedStatuses.includes(this.get('executionStatus'));
   },
 
   actions: {

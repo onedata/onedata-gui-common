@@ -2,6 +2,10 @@
 // @import "bootstrap/variables";
 @import "bootstrap-variables-config";
 
+// Custom variables
+$modal-xl: 1200px;
+$bs-modal-width-full-with-margins: calc(100% - #{$padding-small-horizontal});
+
 @import "bootstrap/mixins";
 @import "bootstrap-mixins-config";
 
@@ -338,7 +342,6 @@ label {
 .modal {  
   &.in {
     .modal-dialog {
-      $full-with-margins: calc(100% - #{$padding-small-horizontal});
       @include absolute-align-middle-center();
 
       display: flex;
@@ -356,8 +359,8 @@ label {
       }
       
       &.modal-full {
-        width: $full-with-margins;
-        height: $full-with-margins;
+        width: $bs-modal-width-full-with-margins;
+        height: $bs-modal-width-full-with-margins;
         .modal-content {
           height: 100%;
         }
@@ -368,8 +371,8 @@ label {
       
       &.modal-xl {
         @extend .modal-lg;
-        width: $full-with-margins;
-        max-width: 1200px;
+        width: $bs-modal-width-full-with-margins;
+        max-width: $modal-xl;
         .modal-content {
           height: 100%;
         }
