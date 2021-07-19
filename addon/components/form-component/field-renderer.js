@@ -61,6 +61,11 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
+  afterComponentName: reads('field.afterComponentName'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   mode: reads('field.mode'),
 
   /**
