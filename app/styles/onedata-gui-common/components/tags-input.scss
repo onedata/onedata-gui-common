@@ -27,6 +27,14 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   padding-right: $padding-base-horizontal - $padding-xs-horizontal;
   font-size: $tags-input-font-scale * 1em;
 
+  &.has-clear-button {
+    padding-right: 45px;
+  }
+
+  &.creation-disabled {
+    cursor: initial !important;
+  }
+
   &.readonly {
     padding: 0;
     min-height: initial;
@@ -93,19 +101,14 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     }
   }
 
-  .tag-creator-trigger {
+  .tags-input-button {
     align-self: center;
     color: $color-one-white;
-    background-color: $color-one-blue-gray;
     border-radius: 2px;
     line-height: 0.8;
     padding: $padding-xs-vertical;
     font-size: 90%;
     cursor: pointer;
-
-    &:hover {
-      background-color: lighten($color-one-blue-gray, 10%);
-    }
 
     &.disabled {
       background-color: $color-one-light-gray;
@@ -115,6 +118,23 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
         background-color: $color-one-light-gray;
       }
     }
+  }
+
+  .tag-creator-trigger {
+    background-color: $color-one-blue-gray;
+
+    &:hover {
+      background-color: lighten($color-one-blue-gray, 10%);
+    }
+  }
+
+  .input-clear-trigger {
+    position: absolute;
+    top: $input-height-base / 2;
+    right: $padding-base-horizontal - $padding-xs-horizontal;
+    transform: translateY(-50%);
+    margin: 0;
+    font-size: 200%;
   }
 
   .tag-creator {

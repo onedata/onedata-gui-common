@@ -476,6 +476,37 @@ describe('Integration | Component | tags input', function () {
       expect(this.$('.tags-input')).to.not.have.class('creating-tag');
       expect(this.$('.tag-creator')).to.not.exist;
     });
+
+  it('does not show clear-input button when input is not empty and isClearButtonVisible is false',
+    function () {
+      this.render(hbs `{{tags-input tags=tags isClearButtonVisible=false}}`);
+
+      expect(this.$('.input-clear-trigger')).to.not.exist;
+    });
+
+  it('does not show clear-input button when input is empty and isClearButtonVisible is true',
+    function () {
+      this.set('tags', []);
+
+      this.render(hbs `{{tags-input tags=tags isClearButtonVisible=true}}`);
+
+      expect(this.$('.input-clear-trigger')).to.not.exist;
+    });
+
+  it('has working clear-input button when input is not empty and isClearButtonVisible is true',
+    async function () {
+      this.set('change', tags => this.set('tags', tags));
+      this.render(hbs `{{tags-input
+        tags=tags
+        isClearButtonVisible=true
+        onChange=change
+      }}`);
+
+      const $clearBtn = this.$('.input-clear-trigger');
+      expect($clearBtn).to.exist;
+      await click($clearBtn[0]);
+      expect(this.get('tags')).to.have.length(0);
+    });
 });
 
 async function getCreateTriggerTip() {

@@ -23,7 +23,7 @@
 {{/if}}
 {{#if allowModification}}
   <li
-    class="tag-creator-trigger input-element {{if (not allowCreation) "disabled"}}"
+    class="tag-creator-trigger tags-input-button input-element {{if (not allowCreation) "disabled"}}"
     {{action "startTagCreation"}}
   >
     {{one-icon icon="plus"}}
@@ -31,5 +31,12 @@
       {{one-tooltip title=createTriggerTip}}
     {{/if}}
   </li>
+  {{#if isClearButtonEffectivelyVisible}}
+    {{remove-icon
+      tooltipText=(tt this "clearBtn")
+      class="input-clear-trigger"
+      onClick=(action "clearInput")
+    }}
+  {{/if}}
 {{/if}}
 {{yield}}

@@ -14,7 +14,7 @@ import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
 import { computed, observer, get, getProperties } from '@ember/object';
-import { writable, conditional, not, or } from 'ember-awesome-macros';
+import { writable, conditional, not, or, and } from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -35,6 +35,8 @@ export default Component.extend(I18n, {
     'readonly',
     'readonly::form-control',
     'readonly::clickable',
+    'allowCreation::creation-disabled',
+    'isClearButtonEffectivelyVisible:has-clear-button',
   ],
   attributeBindings: ['tabindex', 'disabled'],
 
@@ -67,6 +69,12 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   readonly: false,
+
+  /**
+   * @virtual optional
+   * @type {Boolean}
+   */
+  isClearButtonVisible: false,
 
   /**
    * @virtual
@@ -138,7 +146,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  allowCreation: not('creationDisabledReason'),
+  allowCreation: and(not('creationDisabledReason'), 'allowModification'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -153,6 +161,15 @@ export default Component.extend(I18n, {
     }
     return '';
   }),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isClearButtonEffectivelyVisible: and(
+    'isClearButtonVisible',
+    'tags.length',
+    'allowModification'
+  ),
 
   /**
    * @type {ComputedProperty<Number|undefined>}
@@ -197,15 +214,6 @@ export default Component.extend(I18n, {
     }
   ),
 
-  allowModificationObserver: observer(
-    'allowModification',
-    function allowModificationObserver() {
-      if (!this.get('allowModification')) {
-        this.endTagCreation();
-      }
-    }
-  ),
-
   disabledObserver: observer('disabled', function disabledObserver() {
     if (this.get('disabled')) {
       this.endTagCreation();
@@ -232,7 +240,7 @@ export default Component.extend(I18n, {
   },
 
   keyDown(event) {
-    if (['Enter', ' '].includes(event.key) && !this.get('isCreatingTag')) {
+    if (['Enter', ' '].includes(event.key)) {
       this.startTagCreation();
     }
   },
@@ -250,10 +258,13 @@ export default Component.extend(I18n, {
   startTagCreation() {
     const {
       isCreatingTag,
-      allowModification,
-    } = this.getProperties('isCreatingTag', 'allowModification');
+      allowCreation,
+    } = this.getProperties(
+      'isCreatingTag',
+      'allowCreation'
+    );
 
-    if (allowModification && !isCreatingTag) {
+    if (allowCreation && !isCreatingTag) {
       this.set('isCreatingTag', true);
     }
   },
@@ -282,9 +293,7 @@ export default Component.extend(I18n, {
       onChange(tags.without(tag));
     },
     startTagCreation() {
-      if (!this.get('allowCreation')) {
-        return;
-      } else if (this.get('isCreatingTag')) {
+      if (this.get('isCreatingTag')) {
         // Focus editor - send focus to the root element of the editor and
         // let the editor to handle that focus on its own
         const event = document.createEvent('Event');
@@ -313,6 +322,9 @@ export default Component.extend(I18n, {
       );
 
       onChange((tags || []).concat(newTagsToAdd).uniq());
+    },
+    clearInput() {
+      this.get('onChange')([]);
     },
   },
 });
