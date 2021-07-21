@@ -101,14 +101,19 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     }
   }
 
-  .tags-input-button {
+  .tag-creator-trigger {
     align-self: center;
     color: $color-one-white;
+    background-color: $color-one-blue-gray;
     border-radius: 2px;
     line-height: 0.8;
     padding: $padding-xs-vertical;
     font-size: 90%;
     cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-one-blue-gray, 10%);
+    }
 
     &.disabled {
       background-color: $color-one-light-gray;
@@ -117,14 +122,6 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
       &:hover {
         background-color: $color-one-light-gray;
       }
-    }
-  }
-
-  .tag-creator-trigger {
-    background-color: $color-one-blue-gray;
-
-    &:hover {
-      background-color: lighten($color-one-blue-gray, 10%);
     }
   }
 
