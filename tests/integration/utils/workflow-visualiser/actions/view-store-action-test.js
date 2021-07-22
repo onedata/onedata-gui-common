@@ -8,6 +8,7 @@ import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../..
 import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import { resolve } from 'rsvp';
 
 describe('Integration | Utility | workflow visualiser/actions/view store action', function () {
   setupComponentTest('test-component', {
@@ -19,6 +20,10 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
       name: 'store1',
       description: 'storeDesc',
       type: 'range',
+      dataSpec: {
+        type: 'integer',
+        valueConstraints: {},
+      },
       defaultInitialValue: {
         start: 1,
         end: 10,
@@ -28,7 +33,10 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
     });
     const action = ViewStoreAction.create({
       ownerSource: this,
-      context: { store },
+      context: {
+        store,
+        getStoreContentCallback: () => resolve({ array: [], isLast: true }),
+      },
     });
     this.setProperties({ store, action });
   });
@@ -38,6 +46,11 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
 
     expect(getModal()).to.have.class('store-modal');
     expect(getModalHeader().find('h1').text().trim()).to.equal('Store details');
+
+    await click(
+      getModalBody().find('.bs-tab-onedata .nav-link:contains("Details")')[0]
+    );
+
     expect(getModalBody().find('.name-field .field-component').text().trim())
       .to.equal('store1');
   });

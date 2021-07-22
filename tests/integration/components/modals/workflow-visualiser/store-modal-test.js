@@ -12,7 +12,7 @@ import {
 import { setProperties } from '@ember/object';
 import { fillIn, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import { Promise } from 'rsvp';
+import { Promise, resolve } from 'rsvp';
 
 const simpliestStore = {
   name: 'store1',
@@ -144,6 +144,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       setProperties(this.get('modalOptions'), {
         mode: 'view',
         store: simpliestStore,
+        getStoreContentCallback: () => resolve({ array: [], isLast: true }),
       });
     });
 
@@ -190,6 +191,9 @@ async function showModal(testCase) {
   await modalManager
     .show('workflow-visualiser/store-modal', modalOptions)
     .shownPromise;
+  if (testCase.get('modalOptions.mode') === 'view') {
+    await click(getModalBody().find('.bs-tab-onedata .nav-link')[0]);
+  }
 }
 
 function itDoesNotShowTabs() {
