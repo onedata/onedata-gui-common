@@ -71,26 +71,6 @@
   }
 }
 
-@mixin animation-text-color-change($name, $c1, $c2) {
-    @include pulse-keyframes($name, color, $c1, $c2);
-    .#{$name} {
-        animation-name: #{$name};
-    }
-}
-
-@mixin animation-fg-color-change($name, $c1, $c2) {
-  @include pulse-keyframes($name, color border-color, $c1, $c2);
-  .#{$name} {
-    animation-name: #{$name};
-  }
-}
-
-@mixin animation-bg-color-change($name, $c1, $c2) {
-  @include pulse-keyframes($name, background-color, $c1, $c2);
-  .#{$name} {
-    animation-name: #{$name};
-  }
-}
 
 @keyframes fadeIn {
   from {
@@ -118,4 +98,64 @@
 
 .fadeOut {
   animation-name: fadeOut;
+}
+
+@mixin flash-keyframes($name, $attributes, $val1, $val2) {
+  @keyframes #{$name} {
+    from,
+    50%,
+    to {
+      @each $attr in $attributes {
+        #{$attr}: $val1;
+      }
+    }
+  
+    25%,
+    75% {
+      @each $attr in $attributes {
+        #{$attr}: $val2;
+      }
+    }
+  }
+}
+
+
+@include flash-keyframes(
+  flash-opacity-keyframes,
+  opacity,
+  0,
+  1
+);
+
+.flash {
+  animation-name: flash-opacity-keyframes;
+}
+
+
+@mixin animation-text-color-change($name, $c1, $c2) {
+    @include pulse-keyframes($name, color, $c1, $c2);
+    .#{$name} {
+        animation-name: #{$name};
+    }
+}
+
+@mixin animation-fg-color-change($name, $c1, $c2) {
+  @include pulse-keyframes($name, color border-color, $c1, $c2);
+  .#{$name} {
+    animation-name: #{$name};
+  }
+}
+
+@mixin animation-bg-color-change($name, $c1, $c2) {
+  @include pulse-keyframes($name, background-color, $c1, $c2);
+  .#{$name} {
+    animation-name: #{$name};
+  }
+}
+
+@mixin animation-bg-color-change-flash($name, $c1, $c2) {
+  @include flash-keyframes($name, background-color, $c1, $c2);
+  .#{$name} {
+    animation-name: #{$name};
+  }
 }

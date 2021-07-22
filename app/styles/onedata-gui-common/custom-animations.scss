@@ -63,3 +63,9 @@
   inherit,
   $main-text-color-disabled
 );
+
+@include animation-bg-color-change-flash(
+  flash-bg-file-selected-mint,
+  $color-file-selected,
+  $color-one-mint
+);
