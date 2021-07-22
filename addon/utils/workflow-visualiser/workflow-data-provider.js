@@ -9,7 +9,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { reject } from 'rsvp';
 
@@ -38,5 +38,20 @@ export default EmberObject.extend({
       return reject();
     }
     return executionDataFetcher.fetchStoreContent(...arguments);
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task} task
+   * @param {String} startFromIndex
+   * @param {number} limit
+   * @param {number} offset
+   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
+   */
+  getTaskAuditLogStoreContent(task, ...args) {
+    const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
+    if (!executionDataFetcher) {
+      return reject();
+    }
+    return executionDataFetcher.fetchTaskAuditLogContent(get(task, 'id'), ...args);
   },
 });

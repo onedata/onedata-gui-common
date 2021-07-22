@@ -76,6 +76,7 @@ export default {
       itemsInProcessing: 'In processing',
       itemsProcessed: 'Processed',
       itemsFailed: 'Failed',
+      auditLog: 'Audit log',
     },
   },
   store: {
