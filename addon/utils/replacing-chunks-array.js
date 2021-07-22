@@ -381,7 +381,7 @@ export default ArraySlice.extend(Evented, {
    * to prevent issues with async array modification.
    * @returns {Promise}
    */
-  reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
+  _reload({ head = false, minSize = this.get('chunkSize'), offset = 0 } = {}) {
     const {
       _start,
       _end,
@@ -458,7 +458,7 @@ export default ArraySlice.extend(Evented, {
   scheduleReload({ head, minSize, offset } = {}) {
     return this.scheduleTask(
       `reload-${head}-${minSize}-${offset}`,
-      'reload', { head, minSize, offset }
+      '_reload', { head, minSize, offset }
     );
   },
 
@@ -466,9 +466,11 @@ export default ArraySlice.extend(Evented, {
    * Change current array view using `index` of item desired to be viewed in new view.
    * This method should be not used directly - instead use `scheduleJump(...)`
    * to prevent issues with async array modification.
+   * Resolves to `false` if fetched array update does not contain record with requested 
+   * index.
    * @returns {Promise}
    */
-  jump(index, size = 50) {
+  _jump(index, size = 50) {
     const {
       sourceArray,
       indexMargin,
@@ -508,7 +510,7 @@ export default ArraySlice.extend(Evented, {
   scheduleJump(index, size) {
     return this.scheduleTask(
       `jump-${index}-${size}`,
-      'jump',
+      '_jump',
       index,
       size
     );
