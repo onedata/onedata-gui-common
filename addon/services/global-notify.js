@@ -39,7 +39,7 @@ export default Service.extend(I18n, {
   warningAlert: aliasToShow('warning-alert'),
   errorAlert: aliasToShow('error-alert'),
 
-  // TODO i18n  
+  // TODO i18n
   backendError(operation, error) {
     const reason = error && this.get('errorExtractor').getMessage(error);
     let capitalizedOperation = capitalize(String(operation));
@@ -94,7 +94,7 @@ export default Service.extend(I18n, {
         if (_.endsWith(type, '-alert')) {
           type = type.substring(0, get(type, 'length') - '-alert'.length);
         }
-        return this.get('alert').show(type, notifyMessage, options);
+        return this.get('alert').show(type, htmlSafe(notifyMessage.html), options);
       case 'warning':
       case 'info':
       case 'success':
