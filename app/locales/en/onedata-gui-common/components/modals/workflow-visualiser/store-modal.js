@@ -7,7 +7,10 @@ export default {
   header: {
     create: 'Create new store',
     edit: 'Modify store',
-    view: 'Store details',
+    view: {
+      store: 'Store details',
+      taskAuditLog: 'Task audit log',
+    },
   },
   tabs: {
     details: {

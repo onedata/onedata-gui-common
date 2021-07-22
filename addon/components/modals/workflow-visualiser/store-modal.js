@@ -17,6 +17,7 @@ import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
+import { raw, or, and, eq } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -43,9 +44,10 @@ export default Component.extend(I18n, {
 
   /**
    * One of: `'details'`, `'content'`
+   * Initial value is set on init
    * @type {String}
    */
-  activeTab: 'details',
+  activeTab: undefined,
 
   /**
    * @type {Boolean}
@@ -73,6 +75,11 @@ export default Component.extend(I18n, {
   mode: reads('modalOptions.mode'),
 
   /**
+   * @type {ComputedProperty<String>}
+   */
+  viewModeLayout: or('modalOptions.viewModeLayout', raw('store')),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   store: reads('modalOptions.store'),
@@ -95,9 +102,24 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  headerText: computed('mode', function headerText() {
-    return this.t(`header.${this.get('mode')}`);
+  headerText: computed('mode', 'viewModeLayout', function headerText() {
+    const {
+      mode,
+      viewModeLayout,
+    } = this.getProperties('mode', 'viewModeLayout');
+
+    let translationKey = `header.${mode}`;
+    if (mode === 'view') {
+      translationKey += `.${viewModeLayout}`;
+    }
+
+    return this.t(translationKey);
   }),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  areTabsVisible: and(eq('mode', raw('view')), eq('viewModeLayout', raw('store'))),
 
   /**
    * @type {ComputedProperty<String>}
@@ -112,6 +134,11 @@ export default Component.extend(I18n, {
   submitBtnText: computed('mode', function submitBtnText() {
     return this.t(`button.submit.${this.get('mode')}`);
   }),
+
+  init() {
+    this._super(...arguments);
+    this.set('activeTab', this.get('mode') === 'view' ? 'content' : 'details');
+  },
 
   actions: {
     changeTab(selectedTab) {
