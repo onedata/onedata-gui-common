@@ -34,6 +34,7 @@ import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
+import ViewWorkflowAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-audit-log-action';
 import ViewTaskAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-audit-log-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
@@ -291,6 +292,19 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewWorkflowAuditLogAction}
+   */
+  createViewWorkflowAuditLogAction(context) {
+    return ViewWorkflowAuditLogAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        getAuditLogContentCallback: (...args) =>
+          this.get('workflowDataProvider').getWorkflowAuditLogContent(...args),
+      }, context),
+    });
+  },
+
+  /**
    * @param {Utils.WorkflowVisualiser.Lane.Task} context.task
    * @returns {Utils.WorkflowVisualiser.Actions.ViewTaskAuditLogAction}
    */
@@ -299,7 +313,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         getAuditLogContentCallback: (...args) =>
-          this.get('workflowDataProvider').getTaskAuditLogStoreContent(...args),
+          this.get('workflowDataProvider').getTaskAuditLogContent(...args),
       }, context),
     });
   },

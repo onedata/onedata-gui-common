@@ -41,13 +41,27 @@ export default EmberObject.extend({
   },
 
   /**
+   * @param {String} startFromIndex
+   * @param {number} limit
+   * @param {number} offset
+   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
+   */
+  getWorkflowAuditLogContent(...args) {
+    const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
+    if (!executionDataFetcher) {
+      return reject();
+    }
+    return executionDataFetcher.fetchWorkflowAuditLogContent(...args);
+  },
+
+  /**
    * @param {Utils.WorkflowVisualiser.Lane.Task} task
    * @param {String} startFromIndex
    * @param {number} limit
    * @param {number} offset
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
-  getTaskAuditLogStoreContent(task, ...args) {
+  getTaskAuditLogContent(task, ...args) {
     const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
     if (!executionDataFetcher) {
       return reject();

@@ -58,6 +58,16 @@ export default EmberObject.extend({
   },
 
   /**
+   * @param {String} startFromIndex
+   * @param {number} limit
+   * @param {number} offset
+   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
+   */
+  async fetchWorkflowAuditLogContent() {
+    return notImplementedReject();
+  },
+
+  /**
    * @param {String} taskSchemaId
    * @param {String} startFromIndex
    * @param {number} limit

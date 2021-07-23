@@ -90,6 +90,9 @@ export default {
         modalDescription: 'You are about to delete the store "{{storeName}}".',
         modalYes: 'Remove',
       },
+      viewWorkflowAuditLog: {
+        title: 'Audit log',
+      },
     },
   },
 };
