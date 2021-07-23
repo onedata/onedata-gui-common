@@ -32,12 +32,12 @@ export default EmberObject.extend({
    * @param {number} offset
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
-  getStoreContent( /* storeSchemaId, startFromIndex, limit, offset */ ) {
+  getStoreContent(store, ...args) {
     const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
     if (!executionDataFetcher) {
       return reject();
     }
-    return executionDataFetcher.fetchStoreContent(...arguments);
+    return executionDataFetcher.fetchStoreContent(get(store, 'id'), ...args);
   },
 
   /**

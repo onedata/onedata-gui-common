@@ -45,7 +45,7 @@ export default Action.extend({
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
         store,
-        getStoreContentCallback,
+        getStoreContentCallback: (...args) => getStoreContentCallback(store, ...args),
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

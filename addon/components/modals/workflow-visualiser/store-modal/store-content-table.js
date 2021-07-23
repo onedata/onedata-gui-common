@@ -212,15 +212,7 @@ export default Component.extend(I18n, {
   },
 
   async fetchStoreEntries() {
-    const {
-      getStoreContentCallback,
-      store,
-    } = this.getProperties('getStoreContentCallback', 'store');
-
-    const result = await getStoreContentCallback(
-      get(store, 'id'),
-      ...arguments,
-    );
+    const result = await this.get('getStoreContentCallback')(...arguments);
     const entries = result && result.array;
     // Store entries does not have id, which is required by replacing chunks array.
     // Solution: using entry index as id.
