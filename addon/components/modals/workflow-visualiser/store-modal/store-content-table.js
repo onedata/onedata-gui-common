@@ -47,9 +47,16 @@ export default Component.extend(I18n, {
   store: undefined,
 
   /**
+   * @virtual
    * @type {Function}
    */
   getStoreContentCallback: notImplementedReject,
+
+  /**
+   * @virtual
+   * @type {String}
+   */
+  emptyStoreText: undefined,
 
   /**
    * @type {Number}

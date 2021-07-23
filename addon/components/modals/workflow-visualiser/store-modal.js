@@ -124,6 +124,13 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
+  emptyStoreText: computed('viewModeLayout', function emptyStoreText() {
+    return this.t(`emptyStore.${this.get('viewModeLayout')}`);
+  }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   cancelBtnText: computed('mode', function cancelBtnText() {
     return this.t(`button.cancel.${this.get('mode')}`);
   }),

@@ -20,6 +20,10 @@ export default {
       title: 'Content',
     },
   },
+  emptyStore: {
+    store: 'Store is empty.',
+    taskAuditLog: 'Audit log is empty',
+  },
   button: {
     refresh: 'Refresh',
     cancel: {
