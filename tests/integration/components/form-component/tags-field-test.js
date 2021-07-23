@@ -141,4 +141,22 @@ describe('Integration | Component | form component/tags field', function () {
 
     expect(this.$('.tag-creator-trigger')).to.have.class('disabled');
   });
+
+  it('does not show clear button, when "isClearButtonVisible" is false', function () {
+    this.set('field.value', ['test']);
+    this.set('field.isClearButtonVisible', false);
+
+    this.render(hbs `{{form-component/tags-field field=field}}`);
+
+    expect(this.$('.input-clear-trigger')).to.not.exist;
+  });
+
+  it('shows clear button, when "isClearButtonVisible" is true', function () {
+    this.set('field.value', ['test']);
+    this.set('field.isClearButtonVisible', true);
+
+    this.render(hbs `{{form-component/tags-field field=field}}`);
+
+    expect(this.$('.input-clear-trigger')).to.exist;
+  });
 });

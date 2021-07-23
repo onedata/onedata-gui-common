@@ -22,7 +22,11 @@ import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import { dataSpecToType } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
+import {
+  getTargetStoreTypesForType,
+  getTargetDataTypesForType,
+  dataSpecToType,
+} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import cloneAsEmberObject from 'onedata-gui-common/utils/clone-as-ember-object';
 
@@ -781,37 +785,6 @@ function getSourceStoreForType(availableStores, type, isBatch) {
     const dataType = dataSpecToType(dataSpec);
     return allowedDataTypes.includes(dataType);
   });
-}
-
-function getTargetStoreTypesForType(type, isBatch) {
-  const targetTypes = ['list'];
-  if (!isBatch) {
-    targetTypes.push('singleValue');
-  }
-  if (
-    ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(type)
-  ) {
-    targetTypes.push('treeForest');
-  }
-  return targetTypes;
-}
-
-function getTargetDataTypesForType(type) {
-  const targetTypes = [type];
-  switch (type) {
-    // TODO: VFS-7816 uncomment or remove future code
-    // case 'archive':
-    case 'anyFile':
-    case 'dataset':
-      targetTypes.push('object');
-      break;
-    case 'regularFile':
-    case 'directory':
-    case 'symlink':
-      targetTypes.push('anyFile', 'object');
-      break;
-  }
-  return targetTypes;
 }
 
 function getTargetStoresForType(availableStores, type, isBatch) {

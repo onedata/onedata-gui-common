@@ -314,6 +314,12 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   addColonToLabel: true,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  afterComponentName: undefined,
+
+  /**
    * Can be modified only via `changeMode()`
    * @type {string}
    */

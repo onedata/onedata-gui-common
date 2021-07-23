@@ -11,4 +11,7 @@
 {{#if canShowValidationMessage}}
   <div class="field-message">{{error.message}}</div>
 {{/if}}
+{{#if afterComponentName}}
+  {{component afterComponentName field=field}}
+{{/if}}
 {{yield}}

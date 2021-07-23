@@ -41,6 +41,11 @@ export default FieldComponentBase.extend({
   tagEditorSettings: reads('field.tagEditorSettings'),
 
   /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isClearButtonVisible: reads('field.isClearButtonVisible'),
+
+  /**
    * @type {ComputedProperty<Number|undefined>}
    */
   tagsLimit: reads('field.tagsLimit'),

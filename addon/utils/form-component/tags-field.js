@@ -22,6 +22,12 @@ export default FormField.extend({
 
   /**
    * @virtual optional
+   * @type {Boolean}
+   */
+  isClearButtonVisible: false,
+
+  /**
+   * @virtual optional
    * @type {String}
    */
   tagEditorComponentName: 'tags-input/text-editor',

@@ -45,4 +45,10 @@ describe('Integration | Utility | form component/tags field', function () {
 
     expect(get(field, 'tagsLimit')).to.be.undefined;
   });
+
+  it('defines "isClearButtonVisible" as false', function () {
+    const field = TagsField.create();
+
+    expect(get(field, 'isClearButtonVisible')).to.be.false;
+  });
 });
