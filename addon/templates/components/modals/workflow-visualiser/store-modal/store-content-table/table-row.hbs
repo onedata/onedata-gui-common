@@ -19,10 +19,17 @@
       class="entry-cell entry-data entry-{{columnData.type}} entry-field-{{columnData.name}}"
       colspan={{if columnData.takesWholeRow "9999" "1"}}
     >
-      {{#if (gt columnData.value.length 20)}}
-        {{#truncated-string}}{{columnData.value}}{{/truncated-string}}
+      {{#if columnData.componentName}}
+        {{component
+          (concat "modals/workflow-visualiser/store-modal/store-content-table/" columnData.componentName)
+          value=columnData.value
+        }}
       {{else}}
-        {{columnData.value}}
+        {{#if (gt columnData.value.length 20)}}
+          {{#truncated-string}}{{columnData.value}}{{/truncated-string}}
+        {{else}}
+          {{columnData.value}}
+        {{/if}}
       {{/if}}
     </td>
   {{/each}}

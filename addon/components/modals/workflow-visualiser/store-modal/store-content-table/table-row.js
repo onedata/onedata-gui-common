@@ -102,7 +102,7 @@ export default Component.extend(I18n, {
     }
 
     const normalizedEntry = entry || {};
-    const columnsDataEntries = columns.map(({ name, valuePath, type }) => {
+    const columnsDataEntries = columns.map(({ name, valuePath, type, componentName }) => {
       if (isEntryFailed && type !== 'storeSpecific') {
         return;
       }
@@ -112,8 +112,10 @@ export default Component.extend(I18n, {
       );
       return {
         name,
-        value: value === undefined ? '–' : JSON.stringify(value),
+        value: componentName ?
+          value : (value === undefined ? '–' : JSON.stringify(value)),
         type: 'value',
+        componentName,
       };
     }).compact();
     if (isEntryFailed) {
