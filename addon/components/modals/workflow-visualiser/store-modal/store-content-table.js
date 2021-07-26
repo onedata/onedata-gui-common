@@ -21,6 +21,7 @@ import { next } from '@ember/runloop';
 import ListWatcher from 'onedata-gui-common/utils/list-watcher';
 import { isEmpty } from '@ember/utils';
 import StoreContentTableColumns from 'onedata-gui-common/utils/workflow-visualiser/store-content-table-columns';
+import StoreContentTableRowConfig from 'onedata-gui-common/utils/workflow-visualiser/store-content-table-row-config';
 import { inject as service } from '@ember/service';
 
 /**
@@ -92,9 +93,14 @@ export default Component.extend(I18n, {
   tableColumnsGenerator: undefined,
 
   /**
-   * @type {Array<StoreContentTableColumn>}
+   * @type {Array<StoreContentTableColumns>}
    */
   tableColumns: undefined,
+
+  /**
+   * @type {Utils.WorkflowVisualiser.StoreContentTableRowConfig}
+   */
+  tableRowsConfig: undefined,
 
   /**
    * @type {String}
@@ -148,10 +154,10 @@ export default Component.extend(I18n, {
       type,
       dataSpec,
     } = getProperties(store, 'type', 'dataSpec');
-    this.set(
-      'tableColumnsGenerator',
-      new StoreContentTableColumns(type, dataSpec, i18n)
-    );
+    this.setProperties({
+      tableColumnsGenerator: new StoreContentTableColumns(type, dataSpec, i18n),
+      tableRowsConfig: new StoreContentTableRowConfig(type, dataSpec),
+    });
     this.updateTableColumns();
     // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed
     //   this.startUpdater();

@@ -69,8 +69,25 @@
     @include font-monospace();
   }
 
-  .data-row.expanded {
-    background-color: $color-one-semiwhite;
+  .data-row {
+    &.expanded {
+      background-color: $color-one-semiwhite;
+    }
+
+    &.auditlog-severity-debug {
+      background-color: $color-one-light-blue;
+    }
+
+    &.auditlog-severity-warning,
+    &.auditlog-severity-alert {
+      background-color: lighten($color-one-warning, 35%);
+    }
+
+    &.auditlog-severity-error,
+    &.auditlog-severity-critical,
+    &.auditlog-severity-emergency {
+      background-color: lighten($color-one-danger, 35%);
+    }
   }
 
   .details-row {

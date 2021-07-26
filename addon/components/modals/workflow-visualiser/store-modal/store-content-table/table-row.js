@@ -33,6 +33,12 @@ export default Component.extend(I18n, {
   columns: undefined,
 
   /**
+   * @virtual
+   * @type {Utils.WorkflowVisualiser.StoreContentTableRowConfig}
+   */
+  config: undefined,
+
+  /**
    * Must have three fields: id (string), index (string) and value (of any type)
    * @virtual
    * @type {StoreContentTableEntry}
@@ -76,6 +82,20 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Boolean>}
    */
   isEntryFailed: eq('entry.success', raw(false)),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  classes: computed('entry', 'config', function classes() {
+    const {
+      entry,
+      config,
+    } = this.getProperties('entry', 'config');
+    if (!entry || !config) {
+      return '';
+    }
+    return config.getRowClasses(entry);
+  }),
 
   /**
    * Array of objects:
