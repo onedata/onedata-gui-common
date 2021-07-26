@@ -55,7 +55,8 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        viewModeLayout: 'workflowAuditLog',
+        viewModeLayout: 'auditLog',
+        auditLogSubjectName: this.t('auditLogSubjectName'),
         store: auditLogDummyStore,
         getStoreContentCallback: (...args) => getAuditLogContentCallback(...args),
       }).hiddenPromise

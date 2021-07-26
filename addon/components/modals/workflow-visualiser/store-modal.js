@@ -1,7 +1,13 @@
 /**
  * A modal that allows create, view and modify workflow stores. `modalOptions` fields:
- * - `mode` - one of `'create'`, `'edit'`, `'view'`
- * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`
+ * - `mode` - one of `'create'`, `'edit'`, `'view'`,
+ * - `viewModeLayout` - one of `'store'`, `'auditLog'`. Needed when mode is `'view'`,
+ * - `auditLogSubjectName` - name of a subject described by auditlog entries. Needed when
+ *   `viewModeLayout` is `'auditLog'`,
+ * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`,
+ * - 'allowedStoreTypes' - is taken into account when `mode` is `'create'`,
+ * - 'allowedDataTypes' - is taken into account when `mode` is `'create'`,
+ * - 'getStoreContentCallback' - is needed when `mode` is `'view'`
  *
  * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki
@@ -80,6 +86,11 @@ export default Component.extend(I18n, {
   viewModeLayout: or('modalOptions.viewModeLayout', raw('store')),
 
   /**
+   * @type {ComputedProperty<String|undefined>}
+   */
+  auditLogSubjectName: reads('modalOptions.auditLogSubjectName'),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   store: reads('modalOptions.store'),
@@ -102,19 +113,25 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  headerText: computed('mode', 'viewModeLayout', function headerText() {
-    const {
-      mode,
-      viewModeLayout,
-    } = this.getProperties('mode', 'viewModeLayout');
+  headerText: computed(
+    'mode',
+    'viewModeLayout',
+    'auditLogSubjectName',
+    function headerText() {
+      const {
+        mode,
+        viewModeLayout,
+        auditLogSubjectName,
+      } = this.getProperties('mode', 'viewModeLayout', 'auditLogSubjectName');
 
-    let translationKey = `header.${mode}`;
-    if (mode === 'view') {
-      translationKey += `.${viewModeLayout}`;
+      let translationKey = `header.${mode}`;
+      if (mode === 'view') {
+        translationKey += `.${viewModeLayout}`;
+      }
+
+      return this.t(translationKey, { auditLogSubjectName });
     }
-
-    return this.t(translationKey);
-  }),
+  ),
 
   /**
    * @type {ComputedProperty<Boolean>}

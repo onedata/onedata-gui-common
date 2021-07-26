@@ -9,8 +9,7 @@ export default {
     edit: 'Modify store',
     view: {
       store: 'Store details',
-      workflowAuditLog: 'Workflow audit log',
-      taskAuditLog: 'Task audit log',
+      auditLog: '{{auditLogSubjectName}} audit log',
     },
   },
   tabs: {
@@ -23,8 +22,7 @@ export default {
   },
   emptyStore: {
     store: 'Store is empty.',
-    workflowAuditLog: 'Audit log is empty.',
-    taskAuditLog: 'Audit log is empty.',
+    auditLog: 'Audit log is empty.',
   },
   button: {
     refresh: 'Refresh',

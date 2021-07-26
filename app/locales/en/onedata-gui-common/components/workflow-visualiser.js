@@ -92,6 +92,7 @@ export default {
       },
       viewWorkflowAuditLog: {
         title: 'Audit log',
+        auditLogSubjectName: 'Workflow',
       },
     },
   },
