@@ -110,6 +110,7 @@ export default class StoreContentTableColumns {
           label: String(this.t('severity')),
           valuePath: ['value', 'severity'],
           type: 'storeSpecific',
+          componentName: 'cell-severity',
         }];
         if (this.storeDataSpec.type === 'object') {
           columns.push({

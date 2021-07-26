@@ -13,7 +13,7 @@ import layout from '../../../../../templates/components/modals/workflow-visualis
 
 export default Component.extend({
   layout,
-  classNames: ['nowrap'],
+  classNames: ['custom-cell-timestamp-ms', 'nowrap'],
 
   /**
    * @virtual
