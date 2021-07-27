@@ -44,7 +44,7 @@ export default Component.extend({
    */
   severity: computed('value', function severity() {
     const value = this.get('value');
-    if (typeof value !== 'string') {
+    if (typeof value !== 'string' || !value) {
       return '–';
     }
     return _.upperFirst(value);
