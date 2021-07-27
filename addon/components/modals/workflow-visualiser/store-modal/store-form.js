@@ -44,8 +44,8 @@ const storeTypes = [{
   //   value: 'map',
   // }, {
   //   value: 'histogram',
-  // }, {
-  //   value: 'auditLog',
+}, {
+  value: 'auditLog',
 }];
 
 const dataTypes = [{

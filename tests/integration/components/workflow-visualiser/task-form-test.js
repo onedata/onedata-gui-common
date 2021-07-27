@@ -268,11 +268,11 @@ const allPossibleStoreSpecs = [{
   //   allowedDataSpecNames: ['histogram'],
   //   acceptsBatch: true,
   //   dispatchFunctions: ['add'],
-  // }, {
-  //   type: 'auditLog',
-  //   allowedDataSpecNames: allSimpleDataSpecNames,
-  //   acceptsBatch: true,
-  //   dispatchFunctions: ['add'],
+}, {
+  type: 'auditLog',
+  allowedDataSpecNames: allSimpleDataSpecNames,
+  acceptsBatch: true,
+  dispatchFunctions: ['append'],
 }];
 const allPossibleStores = [];
 allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({

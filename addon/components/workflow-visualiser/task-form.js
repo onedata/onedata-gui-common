@@ -808,6 +808,7 @@ function getDispatchFunctionsForStoreType(storeType) {
     case 'singleValue':
       return ['set'];
     case 'list':
+    case 'auditLog':
       return ['append'];
       // TODO: VFS-7816 uncomment or remove future code
       // return ['append', 'prepend'];
@@ -816,7 +817,6 @@ function getDispatchFunctionsForStoreType(storeType) {
       return ['append'];
       // TODO: VFS-7816 uncomment or remove future code
       // case 'histogram':
-      // case 'auditLog':
       //   return ['add'];
     default:
       return [];
