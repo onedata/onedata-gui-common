@@ -58,7 +58,7 @@ export default class StoreContentTableColumns {
       columns.push({
         name: 'value',
         label: String(this.t('value')),
-        valuePath: ['value'],
+        valuePath: this.getWholeDataPath(),
         type: 'wholeData',
       });
     }
@@ -94,7 +94,6 @@ export default class StoreContentTableColumns {
 
   /**
    * @private
-   * TODO: VFS-7974 Will be used by Map store
    */
   getStoreTypeSpecificColumns() {
     switch (this.storeType) {
@@ -195,5 +194,17 @@ export default class StoreContentTableColumns {
 
     columns.setEach('type', 'dataBased');
     return columns.sortBy('label');
+  }
+
+  /**
+   * @returns {Array<String>}
+   */
+  getWholeDataPath() {
+    switch (this.storeType) {
+      case 'auditLog':
+        return ['value', 'entry'];
+      default:
+        return ['value'];
+    }
   }
 }
