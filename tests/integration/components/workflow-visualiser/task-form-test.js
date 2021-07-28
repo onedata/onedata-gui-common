@@ -301,6 +301,26 @@ allPossibleStores.push({
   },
   requiresInitialValue: false,
 });
+const taskAuditLogStore = {
+  id: 'CURRENT_TASK_SYSTEM_AUDIT_LOG',
+  name: 'Current task system audit log',
+  type: 'auditLog',
+  dataSpec: {
+    type: 'object',
+    valueConstraints: {},
+  },
+  requiresInitialValue: false,
+};
+const workflowAuditLogStore = {
+  id: 'WORKFLOW_SYSTEM_AUDIT_LOG',
+  name: 'Workflow system audit log',
+  type: 'auditLog',
+  dataSpec: {
+    type: 'object',
+    valueConstraints: {},
+  },
+  requiresInitialValue: false,
+};
 
 const dispatchFunctionLabels = {
   // TODO: VFS-7816 uncomment or remove future code
@@ -886,6 +906,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       const sortedPossibleStoresWithBatch = sortedPossibleStores.filter(({ type }) =>
         allPossibleStoreSpecs.findBy('type', type).acceptsBatch
       );
+      const allowSystemAuditLogStores = compatibleDataSpecNames.includes('object');
 
       it(`provides available stores for result of type "${dataSpecName}"`,
         async function () {
@@ -901,11 +922,17 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
             .to.equal('Leave unassigned');
           const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(sortedPossibleStores.length + 2);
+          const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
+          expect($options)
+            .to.have.length(sortedPossibleStores.length + extraOptionsCount);
           expect($options.eq(0).text().trim()).to.equal('Create store...');
           expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
+          if (allowSystemAuditLogStores) {
+            expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
+            expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
+          }
           sortedPossibleStores.forEach((store, idx) =>
-            expect($options.eq(idx + 2).text().trim()).to.equal(store.name)
+            expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
           );
         });
 
@@ -923,11 +950,17 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
             .to.equal('Leave unassigned');
           const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(sortedPossibleStoresWithBatch.length + 2);
+          const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
+          expect($options)
+            .to.have.length(sortedPossibleStoresWithBatch.length + extraOptionsCount);
           expect($options.eq(0).text().trim()).to.equal('Create store...');
           expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
+          if (allowSystemAuditLogStores) {
+            expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
+            expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
+          }
           sortedPossibleStoresWithBatch.forEach((store, idx) =>
-            expect($options.eq(idx + 2).text().trim()).to.equal(store.name)
+            expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
           );
         });
 
@@ -1018,6 +1051,60 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         });
       });
 
+    it('allows to setup result to use task audit log', async function () {
+      this.set('atmLambda.resultSpecs', [{
+        name: 'res1',
+        dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
+        isBatch: false,
+      }]);
+
+      await render(this);
+      await selectChoose(
+        '.resultMapping-field .targetStore-field',
+        taskAuditLogStore.name
+      );
+
+      expect(this.get('changeSpy')).to.be.calledWith({
+        data: {
+          name: 'function1',
+          argumentMappings: [],
+          resultMappings: [{
+            resultName: 'res1',
+            storeSchemaId: taskAuditLogStore.id,
+            dispatchFunction: 'append',
+          }],
+        },
+        isValid: true,
+      });
+    });
+
+    it('allows to setup result to use workflow audit log', async function () {
+      this.set('atmLambda.resultSpecs', [{
+        name: 'res1',
+        dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
+        isBatch: false,
+      }]);
+
+      await render(this);
+      await selectChoose(
+        '.resultMapping-field .targetStore-field',
+        workflowAuditLogStore.name
+      );
+
+      expect(this.get('changeSpy')).to.be.calledWith({
+        data: {
+          name: 'function1',
+          argumentMappings: [],
+          resultMappings: [{
+            resultName: 'res1',
+            storeSchemaId: workflowAuditLogStore.id,
+            dispatchFunction: 'append',
+          }],
+        },
+        isValid: true,
+      });
+    });
+
     it('does not allow to choose dispatch function when result store is left unassigned',
       async function () {
         this.set('atmLambda.resultSpecs', [{
@@ -1036,59 +1123,37 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       .forEach(({ type, allowedDataSpecNames, dispatchFunctions }) => {
         const targetStore = allPossibleStores
           .findBy('name', `${type}${classify(allowedDataSpecNames[0])}Store`);
-        it(`provides possible dispatch functions for result with store "${type}" attached`,
-          async function () {
-            this.set('atmLambda.resultSpecs', [{
-              name: 'res1',
-              dataSpec: targetStore.dataSpec,
-              isBatch: false,
-            }]);
 
-            await render(this);
-            await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
-            await clickTrigger('.resultMapping-field .dispatchFunction-field');
-
-            expect(this.$('.dispatchFunction-field .dropdown-field-trigger').text().trim())
-              .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
-            const $options = $('.ember-power-select-option');
-            expect($options).to.have.length(dispatchFunctions.length);
-            dispatchFunctions.forEach((dispatchFunction, idx) =>
-              expect($options.eq(idx).text().trim())
-              .to.equal(dispatchFunctionLabels[dispatchFunction])
-            );
-          });
+        itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
+          type,
+          targetStore,
+          dispatchFunctions
+        );
 
         dispatchFunctions.forEach(dispatchFunction => {
-          it(`allows to setup result to use "${type}" store with "${dispatchFunction}" dispatch function`,
-            async function () {
-              this.set('atmLambda.resultSpecs', [{
-                name: 'res1',
-                dataSpec: targetStore.dataSpec,
-                isBatch: false,
-              }]);
-
-              await render(this);
-              await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
-              await selectChoose(
-                '.resultMapping-field .dispatchFunction-field',
-                dispatchFunctionLabels[dispatchFunction]
-              );
-
-              expect(this.get('changeSpy')).to.be.calledWith({
-                data: {
-                  name: 'function1',
-                  argumentMappings: [],
-                  resultMappings: [{
-                    resultName: 'res1',
-                    storeSchemaId: targetStore.id,
-                    dispatchFunction,
-                  }],
-                },
-                isValid: true,
-              });
-            });
+          itAllowsToSetupResultToUseStoreWithDispatchFunction(
+            type,
+            targetStore,
+            dispatchFunction
+          );
         });
       });
+
+    [
+      ['task audit log', taskAuditLogStore],
+      ['workflow audit log', workflowAuditLogStore],
+    ].forEach(([storeDesc, targetStore]) => {
+      itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
+        storeDesc,
+        targetStore,
+        ['append']
+      );
+      itAllowsToSetupResultToUseStoreWithDispatchFunction(
+        storeDesc,
+        targetStore,
+        'append'
+      );
+    });
 
     it('changes available dispatch functions when result store type changes',
       async function () {
@@ -1235,6 +1300,69 @@ function itShowsLambdaInfo() {
     expect(this.$('.atm-lambda-summary').text().trim())
       .to.equal(exampleAtmLambda.summary);
   });
+}
+
+function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
+  storeDescription,
+  targetStore,
+  dispatchFunctions
+) {
+  it(`provides possible dispatch functions for result with store "${storeDescription}" attached`,
+    async function () {
+      this.set('atmLambda.resultSpecs', [{
+        name: 'res1',
+        dataSpec: targetStore.dataSpec,
+        isBatch: false,
+      }]);
+
+      await render(this);
+      await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
+      await clickTrigger('.resultMapping-field .dispatchFunction-field');
+
+      expect(this.$('.dispatchFunction-field .dropdown-field-trigger').text().trim())
+        .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
+      const $options = $('.ember-power-select-option');
+      expect($options).to.have.length(dispatchFunctions.length);
+      dispatchFunctions.forEach((dispatchFunction, idx) =>
+        expect($options.eq(idx).text().trim())
+        .to.equal(dispatchFunctionLabels[dispatchFunction])
+      );
+    });
+}
+
+function itAllowsToSetupResultToUseStoreWithDispatchFunction(
+  storeDescription,
+  targetStore,
+  dispatchFunction,
+) {
+  it(`allows to setup result to use "${storeDescription}" store with "${dispatchFunction}" dispatch function`,
+    async function () {
+      this.set('atmLambda.resultSpecs', [{
+        name: 'res1',
+        dataSpec: targetStore.dataSpec,
+        isBatch: false,
+      }]);
+
+      await render(this);
+      await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
+      await selectChoose(
+        '.resultMapping-field .dispatchFunction-field',
+        dispatchFunctionLabels[dispatchFunction]
+      );
+
+      expect(this.get('changeSpy')).to.be.calledWith({
+        data: {
+          name: 'function1',
+          argumentMappings: [],
+          resultMappings: [{
+            resultName: 'res1',
+            storeSchemaId: targetStore.id,
+            dispatchFunction,
+          }],
+        },
+        isValid: true,
+      });
+    });
 }
 
 function itFillsFieldsWithDataOfPassedTask() {
@@ -1431,11 +1559,24 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBui
 function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() {
   allPossibleStoreSpecs
     .filterBy('allowedDataSpecNames.length')
-    .forEach(({ type, allowedDataSpecNames, dispatchFunctions }) => {
-      it(`fills fields with data about results that uses "${type}" stores and all possible dispatch methods`,
+    .map(({ type, allowedDataSpecNames, dispatchFunctions }) => ({
+      storeDesc: type,
+      targetStore: allPossibleStores
+        .findBy('name', `${type}${classify(allowedDataSpecNames[0])}Store`),
+      dispatchFunctions,
+    }))
+    .concat([{
+      storeDesc: 'task audit log',
+      targetStore: taskAuditLogStore,
+      dispatchFunctions: ['append'],
+    }, {
+      storeDesc: 'workflow audit log',
+      targetStore: workflowAuditLogStore,
+      dispatchFunctions: ['append'],
+    }])
+    .forEach(({ storeDesc, targetStore, dispatchFunctions }) => {
+      it(`fills fields with data about results that uses "${storeDesc}" stores and all possible dispatch methods`,
         async function () {
-          const targetStore = allPossibleStores
-            .findBy('name', `${type}${classify(allowedDataSpecNames[0])}Store`);
           this.set(
             'atmLambda.resultSpecs',
             dispatchFunctions.map((dispatchFunction, idx) => ({
