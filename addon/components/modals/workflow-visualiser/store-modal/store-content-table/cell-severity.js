@@ -29,6 +29,7 @@ export default Component.extend({
   classNames: ['custom-cell-severity'],
 
   /**
+   * Possible value should match a key of `severityIcons`
    * @virtual
    * @type {String}
    */

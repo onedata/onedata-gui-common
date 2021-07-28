@@ -21,12 +21,12 @@ export default EmberObject.extend({
 
   /**
    * @virtual
-   * @type {Array<Object>}
+   * @type {Array<Utils.WorkflowVisualiser.Store>}
    */
   stores: reads('visualiserComponent.stores'),
 
   /**
-   * @param {String} storeSchemaId
+   * @param {Utils.WorkflowVisualiser.Store} store
    * @param {String} startFromIndex
    * @param {number} limit
    * @param {number} offset
@@ -35,6 +35,9 @@ export default EmberObject.extend({
   getStoreContent(store, ...args) {
     const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
     if (!executionDataFetcher) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getStoreContent: executionDataFetcher is not set',
+      );
       return reject();
     }
     return executionDataFetcher.fetchStoreContent(get(store, 'id'), ...args);
@@ -49,6 +52,9 @@ export default EmberObject.extend({
   getWorkflowAuditLogContent(...args) {
     const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
     if (!executionDataFetcher) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getWorkflowAuditLogContent: executionDataFetcher is not set',
+      );
       return reject();
     }
     return executionDataFetcher.fetchWorkflowAuditLogContent(...args);
@@ -64,6 +70,9 @@ export default EmberObject.extend({
   getTaskAuditLogContent(task, ...args) {
     const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
     if (!executionDataFetcher) {
+      console.error(
+        'util:workflow-visualiser/workflow-data-provider#getTaskAuditLogContent: executionDataFetcher is not set',
+      );
       return reject();
     }
     return executionDataFetcher.fetchTaskAuditLogContent(get(task, 'id'), ...args);

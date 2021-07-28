@@ -5,9 +5,9 @@
  * - `auditLogSubjectName` - name of a subject described by auditlog entries. Needed when
  *   `viewModeLayout` is `'auditLog'`,
  * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`,
- * - 'allowedStoreTypes' - is taken into account when `mode` is `'create'`,
- * - 'allowedDataTypes' - is taken into account when `mode` is `'create'`,
- * - 'getStoreContentCallback' - is needed when `mode` is `'view'`
+ * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
+ * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,
+ * - `getStoreContentCallback` - is needed when `mode` is `'view'`
  *
  * @module components/modals/workflow-visualiser/store-modal
  * @author Michał Borzęcki

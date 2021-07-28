@@ -1,5 +1,5 @@
 /**
- * Shows task audit log. Needs task passed via context.
+ * Shows task audit log. Needs `task` and `getAuditLogContentCallback` passed via context.
  *
  * @module utils/workflow-visualiser/actions/view-task-audit-log-action
  * @author Michał Borzęcki
@@ -30,6 +30,7 @@ export default Action.extend({
   task: reads('context.task'),
 
   /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task} task
    * @type {ComputedProperty<Function>}
    */
   getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
