@@ -195,8 +195,6 @@ label {
     }
     a, .dropdown-menu-item {
       padding: $padding-base-vertical * 0.8;
-      // a few pixels added to visually compensate icons left internal padding
-      padding-right: $padding-base-vertical * 0.8 + 5px;
       .one-icon + .truncated-string.one-label {
         display: inline-block;
         vertical-align: middle;
@@ -206,6 +204,13 @@ label {
     .no-actions-info {
       font-style: italic;
       user-select: none;
+    }
+    .one-icon {
+      + .one-label,
+      + .text {
+        // a few pixels added to visually compensate icons left internal padding
+          padding-right: 0.5em;
+      }
     }
   }
 }
