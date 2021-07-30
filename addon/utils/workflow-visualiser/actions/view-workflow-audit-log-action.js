@@ -1,7 +1,7 @@
 /**
- * Shows store details. Needs store passed via context.
+ * Shows workflow audit log.
  *
- * @module utils/workflow-visualiser/actions/view-store-action
+ * @module utils/workflow-visualiser/actions/view-workflow-audit-log-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -13,30 +13,41 @@ import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
+const auditLogDummyStore = {
+  type: 'auditLog',
+  dataSpec: {
+    type: 'object',
+    valueConstraints: {},
+  },
+};
+
 export default Action.extend({
   modalManager: service(),
 
   /**
-   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
+   * @override
    */
-  store: reads('context.store'),
+  i18nPrefix: 'components.workflowVisualiser.store.actions.viewWorkflowAuditLog',
+
+  /**
+   * @override
+   */
+  icon: 'view-list',
 
   /**
    * @type {ComputedProperty<Function>}
    */
-  getStoreContentCallback: reads('context.getStoreContentCallback'),
+  getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
 
   /**
    * @override
    */
   onExecute() {
     const {
-      store,
-      getStoreContentCallback,
+      getAuditLogContentCallback,
       modalManager,
     } = this.getProperties(
-      'store',
-      'getStoreContentCallback',
+      'getAuditLogContentCallback',
       'modalManager'
     );
 
@@ -44,8 +55,10 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        store,
-        getStoreContentCallback: (...args) => getStoreContentCallback(store, ...args),
+        viewModeLayout: 'auditLog',
+        auditLogSubjectName: this.t('auditLogSubjectName'),
+        store: auditLogDummyStore,
+        getStoreContentCallback: (...args) => getAuditLogContentCallback(...args),
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

@@ -33,6 +33,12 @@ export default Component.extend(I18n, {
   columns: undefined,
 
   /**
+   * @virtual
+   * @type {Utils.WorkflowVisualiser.StoreContentTableRowConfig}
+   */
+  config: undefined,
+
+  /**
    * Must have three fields: id (string), index (string) and value (of any type)
    * @virtual
    * @type {StoreContentTableEntry}
@@ -78,6 +84,20 @@ export default Component.extend(I18n, {
   isEntryFailed: eq('entry.success', raw(false)),
 
   /**
+   * @type {ComputedProperty<String>}
+   */
+  classes: computed('entry', 'config', function classes() {
+    const {
+      entry,
+      config,
+    } = this.getProperties('entry', 'config');
+    if (!entry || !config) {
+      return '';
+    }
+    return config.getRowClasses(entry);
+  }),
+
+  /**
    * Array of objects:
    * ```
    * {
@@ -102,7 +122,7 @@ export default Component.extend(I18n, {
     }
 
     const normalizedEntry = entry || {};
-    const columnsDataEntries = columns.map(({ name, valuePath, type }) => {
+    const columnsDataEntries = columns.map(({ name, valuePath, type, componentName }) => {
       if (isEntryFailed && type !== 'storeSpecific') {
         return;
       }
@@ -112,8 +132,10 @@ export default Component.extend(I18n, {
       );
       return {
         name,
-        value: value === undefined ? '–' : JSON.stringify(value),
+        value: componentName ?
+          value : (value === undefined ? '–' : JSON.stringify(value)),
         type: 'value',
+        componentName,
       };
     }).compact();
     if (isEntryFailed) {

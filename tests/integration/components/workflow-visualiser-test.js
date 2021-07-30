@@ -349,6 +349,9 @@ describe('Integration | Component | workflow visualiser', function () {
 
       await click('.workflow-visualiser-stores-list-store');
 
+      await click(
+        getModalBody().find('.bs-tab-onedata .nav-link:contains("Details")')[0]
+      );
       expect(getModalBody().find('.name-field .field-component').text().trim())
         .to.equal('store0');
     });

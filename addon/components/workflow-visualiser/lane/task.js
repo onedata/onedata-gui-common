@@ -130,5 +130,16 @@ export default VisualiserElement.extend({
 
       this.toggleProperty('areDetailsExpanded');
     },
+    showAuditLog() {
+      if (this.get('mode') !== 'view') {
+        return;
+      }
+
+      const {
+        actionsFactory,
+        task,
+      } = this.getProperties('actionsFactory', 'task');
+      actionsFactory.createViewTaskAuditLogAction({ task }).execute();
+    },
   },
 });

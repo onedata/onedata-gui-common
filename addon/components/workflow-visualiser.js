@@ -313,6 +313,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  viewAuditLogAction: computed('actionsFactory', function viewAuditLogAction() {
+    return this.get('actionsFactory').createViewWorkflowAuditLogAction();
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   normalizedCancelExecutionAction: computed(
     'cancelExecutionAction',
     'updateStatusesAfterCancelHook',
@@ -339,13 +346,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   executionActions: computed(
     'executionStatus',
+    'viewAuditLogAction',
     'normalizedCancelExecutionAction',
     function executionActions() {
       const {
         executionStatus,
+        viewAuditLogAction,
         normalizedCancelExecutionAction,
-      } = this.getProperties('executionStatus', 'normalizedCancelExecutionAction');
-      const actions = [];
+      } = this.getProperties(
+        'executionStatus',
+        'viewAuditLogAction',
+        'normalizedCancelExecutionAction'
+      );
+      const actions = [viewAuditLogAction];
       if (
         !this.executionHasEnded() &&
         executionStatus !== 'aborting' &&

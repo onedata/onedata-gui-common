@@ -31,6 +31,8 @@
 
   .argumentMappings-field,
   .resultMappings-field {
+    min-width: 0;
+
     > .control-label {
       flex-basis: 100%;
       padding-top: $padding-large-vertical;

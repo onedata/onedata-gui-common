@@ -76,7 +76,7 @@ export function typeToDataSpec(type) {
 }
 
 export function getTargetStoreTypesForType(type, isBatch) {
-  const targetTypes = ['list'];
+  const targetTypes = ['list', 'auditLog'];
   if (!isBatch) {
     targetTypes.push('singleValue');
   }
