@@ -246,7 +246,7 @@ export default ArraySlice.extend(Evented, {
     }
 
     this.trigger('fetchPrevStarted');
-    return this.fetchWrapper(
+    const updatePromise = this.fetchWrapper(
         fetchStartIndex,
         currentChunkSize,
         -currentChunkSize,
@@ -269,6 +269,7 @@ export default ArraySlice.extend(Evented, {
             safeExec(this, 'set', 'emptyIndex', insertIndex - 1);
             sourceArray.arrayContentDidChange();
           } else {
+            this.trigger('willExpandArrayBeginning', updatePromise);
             // there is more data on the array start, so we must make additional space
             const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
             sourceArray.unshift(..._.times(
@@ -315,6 +316,7 @@ export default ArraySlice.extend(Evented, {
           this.notifyPropertyChange('[]');
         });
       });
+    return updatePromise;
   },
 
   /**
