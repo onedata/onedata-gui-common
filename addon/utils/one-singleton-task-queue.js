@@ -40,6 +40,13 @@ export default class OneSingletonTaskQueue {
     this.executionPromiseObject = promiseObject(this._executeQueue());
     return this.executionPromiseObject;
   }
+  async getCurrentTaskPromise() {
+    const queue = this.queue;
+    if (!queue || !queue[0] || !queue[0].deferred) {
+      return;
+    }
+    return queue[0].deferred.promise;
+  }
   async _executeQueue() {
     let task = this.queue[0];
     while (task) {
