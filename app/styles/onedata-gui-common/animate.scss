@@ -119,6 +119,24 @@
   }
 }
 
+@mixin attention-fadeout-keyframes($name, $attributes, $val1, $val2) {
+  @keyframes #{$name} {
+    from,
+    to {
+      @each $attr in $attributes {
+        #{$attr}: $val1;
+      }
+    }
+  
+    5%,
+    25% {
+      @each $attr in $attributes {
+        #{$attr}: $val2;
+      }
+    }
+  }
+}
+
 
 @include flash-keyframes(
   flash-opacity-keyframes,
@@ -155,6 +173,13 @@
 
 @mixin animation-bg-color-change-flash($name, $c1, $c2) {
   @include flash-keyframes($name, background-color, $c1, $c2);
+  .#{$name} {
+    animation-name: #{$name};
+  }
+}
+
+@mixin animation-bg-color-attention-fadeout($name, $c1, $c2) {
+  @include attention-fadeout-keyframes($name, background-color, $c1, $c2);
   .#{$name} {
     animation-name: #{$name};
   }

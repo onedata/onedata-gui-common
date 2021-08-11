@@ -64,8 +64,8 @@
   $main-text-color-disabled
 );
 
-@include animation-bg-color-change-flash(
-  flash-bg-file-selected-mint,
+@include animation-bg-color-attention-fadeout(
+  pulse-bg-selected-file-highlight,
   $color-file-selected,
-  $color-one-mint
+  $color-file-highlighted
 );

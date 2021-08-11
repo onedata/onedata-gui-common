@@ -1,4 +1,5 @@
 export default [
+  'animations',
   'bezier-curve',
   'checkbox-list',
   'fast-double-click',
