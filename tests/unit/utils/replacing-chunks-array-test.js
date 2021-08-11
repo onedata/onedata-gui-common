@@ -656,7 +656,6 @@ describe('Unit | Utility | replacing chunks array', function () {
         return array.scheduleJump(defaultMockArraySize - expectedSize, 50);
       })
       .then(() => {
-        // FIXME: after scheduling changes, fetch prev is probably not fired
         expect(get(array, 'startIndex'), 'start').to.equal(0);
         expect(get(array, 'endIndex'), 'end').to.equal(expectedSize);
       });
