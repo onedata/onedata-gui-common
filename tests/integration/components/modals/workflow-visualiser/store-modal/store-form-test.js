@@ -39,9 +39,9 @@ const storeTypes = [{
   //   type: 'histogram',
   //   disabledDataTypeSelection: true,
   //   availableDataTypeLabels: ['Histogram'],
-  // }, {
-  //   label: 'Audit log',
-  //   type: 'auditLog',
+}, {
+  label: 'Audit log',
+  type: 'auditLog',
 }];
 
 const dataTypes = [{

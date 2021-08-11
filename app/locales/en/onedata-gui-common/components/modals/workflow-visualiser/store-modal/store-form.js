@@ -29,9 +29,9 @@ export default {
         // histogram: {
         //   label: 'Histogram',
         // },
-        // auditLog: {
-        //   label: 'Audit log',
-        // },
+        auditLog: {
+          label: 'Audit log',
+        },
       },
     },
     genericStoreConfig: {

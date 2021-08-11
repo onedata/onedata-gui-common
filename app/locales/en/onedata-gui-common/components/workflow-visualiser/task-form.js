@@ -57,6 +57,12 @@ export default {
             __createStore: {
               label: 'Create store...',
             },
+            __taskAuditLog: {
+              label: 'Current task system audit log',
+            },
+            __workflowAuditLog: {
+              label: 'Workflow system audit log',
+            },
           },
         },
         dispatchFunction: {

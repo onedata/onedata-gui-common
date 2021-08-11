@@ -23,6 +23,7 @@ export default class StoreContentTableColumns {
     this.storeType = storeType;
     this.storeDataSpec = storeDataSpec;
     this.i18n = i18n;
+    this.storeTypeSpecificColumns = this.getStoreTypeSpecificColumns();
     this.dataBasedColumns = [];
     this.dataErrorOccurred = false;
     this.dataBasedColumnsLimit = 30;
@@ -39,7 +40,7 @@ export default class StoreContentTableColumns {
    * @returns {Array<StoreContentTableColumn>}
    */
   getColumns() {
-    const columns = this.getStoreTypeSpecificColumns();
+    const columns = [...this.storeTypeSpecificColumns];
 
     if (this.areColumnsBasedOnData()) {
       if (this.dataBasedColumns.length === 0 && this.dataErrorOccurred) {
@@ -57,7 +58,7 @@ export default class StoreContentTableColumns {
       columns.push({
         name: 'value',
         label: String(this.t('value')),
-        valuePath: ['value'],
+        valuePath: this.getWholeDataPath(),
         type: 'wholeData',
       });
     }
@@ -79,29 +80,50 @@ export default class StoreContentTableColumns {
       this.dataErrorOccurred = true;
     }
 
-    const existingDataKeys = this.dataBasedColumns.mapBy('valuePath.1');
-    const keysInEachNewEntry = (newData || [])
-      .filter(({ success, value }) =>
-        success !== false && value && typeof value === 'object'
-      )
-      .map(entry => Object.keys(entry.value));
-    const newDataKeys =
-      _.difference(_.uniq(_.flatten(keysInEachNewEntry)), existingDataKeys).sort();
-    const newDataColumns = newDataKeys.slice(0, freeColumnSlotsNumber).map(key => ({
-      name: camelize(key),
-      label: key,
-      valuePath: ['value', key],
-      type: 'dataBased',
-    }));
-    this.dataBasedColumns.push(...newDataColumns);
+    const existingStringifiedDataPaths = new Set([
+      ...this.storeTypeSpecificColumns,
+      ...this.dataBasedColumns,
+    ].map(col => JSON.stringify(col.valuePath)));
+    const columnsFromNewData = this.getDataBasedColumnsFromData(newData);
+    const newColumns = columnsFromNewData.filter(column =>
+      !existingStringifiedDataPaths.has(JSON.stringify(column.valuePath))
+    );
+
+    this.dataBasedColumns.push(...newColumns.slice(0, freeColumnSlotsNumber));
   }
 
   /**
    * @private
-   * TODO: VFS-7974 Will be used by Map store
    */
   getStoreTypeSpecificColumns() {
-    return [];
+    switch (this.storeType) {
+      case 'auditLog': {
+        const columns = [{
+          name: 'timestamp',
+          label: String(this.t('logTime')),
+          valuePath: ['value', 'timestamp'],
+          type: 'storeSpecific',
+          componentName: 'cell-timestamp-ms',
+        }, {
+          name: 'severity',
+          label: String(this.t('severity')),
+          valuePath: ['value', 'severity'],
+          type: 'storeSpecific',
+          componentName: 'cell-severity',
+        }];
+        if (this.storeDataSpec.type === 'object') {
+          columns.push({
+            name: 'description',
+            label: String(this.t('description')),
+            valuePath: ['value', 'entry', 'description'],
+            type: 'storeSpecific',
+          });
+        }
+        return columns;
+      }
+      default:
+        return [];
+    }
   }
 
   /**
@@ -118,5 +140,71 @@ export default class StoreContentTableColumns {
    */
   getFreeSlotsNumberForDataColumns() {
     return this.dataBasedColumnsLimit - this.dataBasedColumns.length;
+  }
+
+  /**
+   * @private
+   * @param {Array<StoreContentEntry>} newData
+   * @returns {Array<StoreContentTableColumn>}
+   */
+  getDataBasedColumnsFromData(newData) {
+    if (!Array.isArray(newData)) {
+      return [];
+    }
+
+    const newDataValues = newData.map(item => {
+      if (
+        !item ||
+        item.success === false ||
+        !item.value ||
+        typeof item.value !== 'object'
+      ) {
+        return null;
+      }
+      return item.value;
+    }).compact();
+
+    let columns = [];
+    switch (this.storeType) {
+      case 'auditLog': {
+        const newDataEntries = newDataValues.map(value => {
+          if (!value.entry || typeof value.entry !== 'object') {
+            return null;
+          }
+          return value.entry;
+        }).compact();
+        const keysInEachEntry = newDataEntries.map(value => Object.keys(value));
+        columns = _.uniq(_.flatten(keysInEachEntry)).map(key => ({
+          name: camelize(`value.${key}`),
+          label: key,
+          valuePath: ['value', 'entry', key],
+        }));
+        break;
+      }
+      default: {
+        const keysInEachValue = newDataValues.map(value => Object.keys(value));
+        columns = _.uniq(_.flatten(keysInEachValue)).map(key => ({
+          name: camelize(key),
+          label: key,
+          valuePath: ['value', key],
+        }));
+        break;
+      }
+    }
+
+    columns.setEach('type', 'dataBased');
+    return columns.sortBy('label');
+  }
+
+  /**
+   * @returns {Array<String>}
+   */
+  getWholeDataPath() {
+    switch (this.storeType) {
+      case 'auditLog':
+        return ['value', 'entry'];
+      default:
+        return ['value'];
+    }
   }
 }

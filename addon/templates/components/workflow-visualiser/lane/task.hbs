@@ -70,6 +70,11 @@
           <div class="detail-label">{{tt this "details.itemsFailed"}}:</div>
           <div class="detail-value">{{itemsFailed}}</div>
         </div>
+        <div class="detail-entry audit-log-detail">
+          <a class="clickable show-audit-log" {{action "showAuditLog"}}>
+            {{tt this "details.auditLog"}}
+          </a>
+        </div>
       </div>
     </div>
   {{/one-collapse}}

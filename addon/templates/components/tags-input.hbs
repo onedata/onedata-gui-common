@@ -31,5 +31,12 @@
       {{one-tooltip title=createTriggerTip}}
     {{/if}}
   </li>
+  {{#if isClearButtonEffectivelyVisible}}
+    {{remove-icon
+      tooltipText=(tt this "clearBtn")
+      class="input-clear-trigger"
+      onClick=(action "clearInput")
+    }}
+  {{/if}}
 {{/if}}
 {{yield}}

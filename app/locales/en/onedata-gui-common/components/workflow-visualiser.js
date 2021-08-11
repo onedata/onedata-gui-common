@@ -76,6 +76,7 @@ export default {
       itemsInProcessing: 'In processing',
       itemsProcessed: 'Processed',
       itemsFailed: 'Failed',
+      auditLog: 'Audit log',
     },
   },
   store: {
@@ -88,6 +89,10 @@ export default {
         modalHeader: 'Remove store',
         modalDescription: 'You are about to delete the store "{{storeName}}".',
         modalYes: 'Remove',
+      },
+      viewWorkflowAuditLog: {
+        title: 'Audit log',
+        auditLogSubjectName: 'Workflow',
       },
     },
   },

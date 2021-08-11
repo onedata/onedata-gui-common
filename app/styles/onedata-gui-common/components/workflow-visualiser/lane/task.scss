@@ -111,6 +111,10 @@
     text-align: right;
   }
 
+  .audit-log-detail {
+    justify-content: center;
+  }
+
   &.mode-edit {
     .draggable-task {
       cursor: initial !important;

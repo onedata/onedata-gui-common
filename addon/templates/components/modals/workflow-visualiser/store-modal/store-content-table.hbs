@@ -15,7 +15,7 @@
     {{#unless storeEntries.length}}
       <tr class="table-is-empty-row">
         <td class="table-is-empty-cell" colspan="9999">
-          {{tt this "storeIsEmpty"}}
+          {{emptyStoreText}}
         </td>
       </tr>
     {{else}}
@@ -32,6 +32,7 @@
       {{#each storeEntries key="index" as |storeEntry|}}
         {{modals/workflow-visualiser/store-modal/store-content-table/table-row
           columns=tableColumns
+          config=tableRowsConfig
           entry=storeEntry
           isExpanded=(eq expandedEntryIndex storeEntry.index)
           onExpand=(action "expandEntry" storeEntry.index)

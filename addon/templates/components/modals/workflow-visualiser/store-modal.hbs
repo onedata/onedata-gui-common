@@ -7,11 +7,11 @@
 }}
 
   {{#modal.header}}
-    <h1>{{headerText}}</h1>
+    <h1>{{#truncated-string}}{{headerText}}{{/truncated-string}}</h1>
   {{/modal.header}}
 
   {{#modal.body}}
-    {{#if (eq mode "view")}}
+    {{#if areTabsVisible}}
       {{#bs-tab
         class="bs-tab-onedata bs-tab-modern"
         activeId=activeTab
@@ -35,6 +35,7 @@
       {{modals/workflow-visualiser/store-modal/store-content-table
         store=store
         getStoreContentCallback=getStoreContentCallback
+        emptyStoreText=emptyStoreText
       }}
     {{/if}}
   {{/modal.body}}
@@ -43,7 +44,7 @@
     {{#if (eq activeTab "content")}}
       {{#bs-button
         type="primary"
-        class="btn-cancel pull-left"
+        class="btn-refresh pull-left"
         onClick=(action "reloadContentTab")
       }}
         {{tt this "button.refresh"}}

@@ -1,4 +1,5 @@
 export default {
+  clearBtn: 'Clear input',
   disabledCreateTriggerTip: {
     limitReached: 'Maximum number of elements has been reached.',
   },

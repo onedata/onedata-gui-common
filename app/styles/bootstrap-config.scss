@@ -205,6 +205,13 @@ label {
       font-style: italic;
       user-select: none;
     }
+    .one-icon {
+      + .one-label,
+      + .text {
+        // a few pixels added to visually compensate icons left internal padding
+          padding-right: 0.5em;
+      }
+    }
   }
 }
 @media (max-width: $screen-xs-max) {

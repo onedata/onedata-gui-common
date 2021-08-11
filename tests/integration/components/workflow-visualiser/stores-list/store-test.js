@@ -8,6 +8,7 @@ import { click, fillIn } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import { getModalBody, getModalFooter } from '../../../../helpers/modal';
+import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow visualiser/stores list/store', function () {
   setupComponentTest('workflow-visualiser/stores-list/store', {
@@ -16,11 +17,20 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
 
   beforeEach(function () {
     this.setProperties({
-      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+      actionsFactory: ActionsFactory.create({
+        ownerSource: this,
+        workflowDataProvider: {
+          getStoreContent: () => resolve({ array: [], isLast: true }),
+        },
+      }),
       store: Store.create({
         name: 'store1',
         description: 'storeDesc',
         type: 'range',
+        dataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
         defaultInitialValue: {
           start: 1,
           end: 10,
@@ -98,6 +108,8 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       await render(this);
 
       await click('.workflow-visualiser-stores-list-store');
+      await click(getModalBody()
+        .find('.bs-tab-onedata .nav-link:contains("Details")')[0]);
       expect(getModalBody().find('.name-field .field-component').text().trim())
         .to.equal('store1');
     });

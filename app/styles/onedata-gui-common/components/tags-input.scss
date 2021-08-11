@@ -27,6 +27,14 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   padding-right: $padding-base-horizontal - $padding-xs-horizontal;
   font-size: $tags-input-font-scale * 1em;
 
+  &.has-clear-button {
+    padding-right: 45px;
+  }
+
+  &.creation-disabled {
+    cursor: initial !important;
+  }
+
   &.readonly {
     padding: 0;
     min-height: initial;
@@ -115,6 +123,15 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
         background-color: $color-one-light-gray;
       }
     }
+  }
+
+  .input-clear-trigger {
+    position: absolute;
+    top: $input-height-base / 2;
+    right: $padding-base-horizontal - $padding-xs-horizontal;
+    transform: translateY(-50%);
+    margin: 0;
+    font-size: 200%;
   }
 
   .tag-creator {

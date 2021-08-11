@@ -74,3 +74,34 @@ export function typeToDataSpec(type) {
     };
   }
 }
+
+export function getTargetStoreTypesForType(type, isBatch) {
+  const targetTypes = ['list', 'auditLog'];
+  if (!isBatch) {
+    targetTypes.push('singleValue');
+  }
+  if (
+    ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(type)
+  ) {
+    targetTypes.push('treeForest');
+  }
+  return targetTypes;
+}
+
+export function getTargetDataTypesForType(type) {
+  const targetTypes = [type];
+  switch (type) {
+    // TODO: VFS-7816 uncomment or remove future code
+    // case 'archive':
+    case 'anyFile':
+    case 'dataset':
+      targetTypes.push('object');
+      break;
+    case 'regularFile':
+    case 'directory':
+    case 'symlink':
+      targetTypes.push('anyFile', 'object');
+      break;
+  }
+  return targetTypes;
+}

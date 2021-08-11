@@ -22,12 +22,42 @@ import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import { dataSpecToType } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
+import {
+  getTargetStoreTypesForType,
+  getTargetDataTypesForType,
+  dataSpecToType,
+} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import cloneAsEmberObject from 'onedata-gui-common/utils/clone-as-ember-object';
+import _ from 'lodash';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
+const taskAuditLogDropdownOptionValue = '__taskAuditLog';
+const workflowAuditLogDropdownOptionValue = '__workflowAuditLog';
+
+const backendStoreIdsMappings = {
+  [taskAuditLogDropdownOptionValue]: 'CURRENT_TASK_SYSTEM_AUDIT_LOG',
+  [workflowAuditLogDropdownOptionValue]: 'WORKFLOW_SYSTEM_AUDIT_LOG',
+};
+const frontendStoreIdsMappings = _.invert(backendStoreIdsMappings);
+
+const taskAuditLogStore = {
+  id: taskAuditLogDropdownOptionValue,
+  type: 'auditLog',
+  dataSpec: {
+    type: 'object',
+    valueConstraints: {},
+  },
+};
+const workflowAuditLogStore = {
+  id: workflowAuditLogDropdownOptionValue,
+  type: 'auditLog',
+  dataSpec: {
+    type: 'object',
+    valueConstraints: {},
+  },
+};
 
 export default Component.extend(I18n, {
   layout,
@@ -107,6 +137,19 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,
+
+  /**
+   * @type {ComputedProperty<Array<Object>}
+   */
+  argumentStores: reads('stores'),
+
+  /**
+   * @type {ComputedProperty<Array<Object>>}
+   */
+  resultStores: computed('stores.[]', function resultStores() {
+    const stores = this.get('stores') || [];
+    return [taskAuditLogStore, workflowAuditLogStore].concat(stores.toArray());
+  }),
 
   /**
    * @type {ComputedProperty<Object>}
@@ -214,14 +257,14 @@ export default Component.extend(I18n, {
                   raw('singleValueStoreContent')
                 ),
                 options: computed(
-                  'component.stores.@each.{type,name}',
+                  'component.argumentStores.@each.{type,name}',
                   'parent.value.{argumentType,argumentIsBatch}',
                   function options() {
                     const argumentType = this.get('parent.value.argumentType');
                     const argumentIsBatch = this.get('parent.value.argumentIsBatch');
-                    const stores = this.get('component.stores') || [];
+                    const argumentStores = this.get('component.argumentStores') || [];
                     const possibleStores =
-                      getSourceStoreForType(stores, argumentType, argumentIsBatch);
+                      getSourceStoreForType(argumentStores, argumentType, argumentIsBatch);
                     const opts = possibleStores
                       .sortBy('name')
                       .map(({ id, name }) => ({
@@ -282,12 +325,12 @@ export default Component.extend(I18n, {
               DropdownField.extend({
                 options: computed(
                   'parent.value.{resultType,resultIsBatch}',
-                  'component.stores.@each.{type,name}',
+                  'component.resultStores.@each.{type,name}',
                   function options() {
-                    const stores = this.get('component.stores') || [];
+                    const resultStores = this.get('component.resultStores') || [];
                     const resultType = this.get('parent.value.resultType');
                     const resultIsBatch = this.get('parent.value.resultIsBatch');
-                    const opts = getTargetStoresForType(stores, resultType, resultIsBatch)
+                    const opts = getTargetStoresForType(resultStores, resultType, resultIsBatch)
                       .map(store => ({
                         value: get(store, 'id'),
                         label: get(store, 'name'),
@@ -329,12 +372,12 @@ export default Component.extend(I18n, {
                   'parent.value.targetStore',
                   raw(leaveUnassignedDropdownOptionValue)),
                 options: computed(
-                  'component.stores.@each.id',
+                  'component.resultStores.@each.id',
                   'parent.value.targetStore',
                   function options() {
                     const targetStoreId = this.get('parent.value.targetStore');
                     const targetStore =
-                      (this.get('component.stores') || []).findBy('id', targetStoreId);
+                      (this.get('component.resultStores') || []).findBy('id', targetStoreId);
                     return getDispatchFunctionsForStoreType((targetStore || {}).type)
                       .map(func => ({ value: func }));
                   }
@@ -600,7 +643,9 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
       resultName: name,
       resultType,
       resultIsBatch: Boolean(isBatch),
-      targetStore: storeSchemaId || leaveUnassignedDropdownOptionValue,
+      targetStore: frontendStoreIdsMappings[storeSchemaId] ||
+        storeSchemaId ||
+        leaveUnassignedDropdownOptionValue,
       dispatchFunction: dispatchFunction,
     };
   });
@@ -693,7 +738,7 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
 
     taskResultMappings.push({
       resultName,
-      storeSchemaId: targetStore,
+      storeSchemaId: backendStoreIdsMappings[targetStore] || targetStore,
       dispatchFunction,
     });
   });
@@ -783,37 +828,6 @@ function getSourceStoreForType(availableStores, type, isBatch) {
   });
 }
 
-function getTargetStoreTypesForType(type, isBatch) {
-  const targetTypes = ['list'];
-  if (!isBatch) {
-    targetTypes.push('singleValue');
-  }
-  if (
-    ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(type)
-  ) {
-    targetTypes.push('treeForest');
-  }
-  return targetTypes;
-}
-
-function getTargetDataTypesForType(type) {
-  const targetTypes = [type];
-  switch (type) {
-    // TODO: VFS-7816 uncomment or remove future code
-    // case 'archive':
-    case 'anyFile':
-    case 'dataset':
-      targetTypes.push('object');
-      break;
-    case 'regularFile':
-    case 'directory':
-    case 'symlink':
-      targetTypes.push('anyFile', 'object');
-      break;
-  }
-  return targetTypes;
-}
-
 function getTargetStoresForType(availableStores, type, isBatch) {
   const allowedStoreTypes = getTargetStoreTypesForType(type, isBatch);
   const allowedDataTypes = getTargetDataTypesForType(type);
@@ -835,6 +849,7 @@ function getDispatchFunctionsForStoreType(storeType) {
     case 'singleValue':
       return ['set'];
     case 'list':
+    case 'auditLog':
       return ['append'];
       // TODO: VFS-7816 uncomment or remove future code
       // return ['append', 'prepend'];
@@ -843,7 +858,6 @@ function getDispatchFunctionsForStoreType(storeType) {
       return ['append'];
       // TODO: VFS-7816 uncomment or remove future code
       // case 'histogram':
-      // case 'auditLog':
       //   return ['add'];
     default:
       return [];

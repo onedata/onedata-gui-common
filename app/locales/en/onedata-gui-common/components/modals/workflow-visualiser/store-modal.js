@@ -7,7 +7,10 @@ export default {
   header: {
     create: 'Create new store',
     edit: 'Modify store',
-    view: 'Store details',
+    view: {
+      store: 'Store details',
+      auditLog: '{{auditLogSubjectName}} audit log',
+    },
   },
   tabs: {
     details: {
@@ -16,6 +19,10 @@ export default {
     content: {
       title: 'Content',
     },
+  },
+  emptyStore: {
+    store: 'Store is empty.',
+    auditLog: 'Audit log is empty.',
   },
   button: {
     refresh: 'Refresh',
