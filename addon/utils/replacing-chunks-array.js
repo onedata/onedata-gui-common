@@ -351,9 +351,6 @@ export default ArraySlice.extend(Evented, {
         (lastItem ? 1 : 0) + duplicateCount,
       )
       .then(({ arrayUpdate, endReached }) => {
-        // after asynchronous fetch, other fetch could modify array, so we need to
-        // ensure that pulled data does not already contain new records
-        this.removeDuplicateRecords(arrayUpdate, sourceArray);
         if (endReached === undefined) {
           endReached = get(arrayUpdate, 'length') < chunkSize;
         }
