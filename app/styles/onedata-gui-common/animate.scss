@@ -51,33 +51,12 @@
   animation-delay: 0.33s;
 }
 
-@mixin pulse-keyframes($name, $attributes, $val1, $val2) {
-  @keyframes #{$name} {
-    0% {
-      @each $attr in $attributes {
-        #{$attr}: $val1;
-      }
-    }
-    50% {
-      @each $attr in $attributes {
-        #{$attr}: $val2;
-      }
-    }
-    100% {
-      @each $attr in $attributes {
-        #{$attr}: $val1;
-      }
-    }
-  }
-}
-
-
 @keyframes fadeIn {
-  from {
+  0% {
     opacity: 0;
   }
 
-  to {
+  100% {
     opacity: 1;
   }
 }
@@ -87,11 +66,11 @@
 }
 
 @keyframes fadeOut {
-  from {
+  0% {
     opacity: 1;
   }
 
-  to {
+  100% {
     opacity: 0;
   }
 }
@@ -100,87 +79,97 @@
   animation-name: fadeOut;
 }
 
-@mixin flash-keyframes($name, $attributes, $val1, $val2) {
+@mixin animation-name-as-class($name) {
+  .#{$name} {
+    animation-name: #{$name};
+  }
+}
+
+@mixin pulse-keyframes($name, $fromProperties, $toProperties) {
   @keyframes #{$name} {
-    from,
+    0% {
+      @each $property, $value in $fromProperties {
+        #{$property}: $value;
+      }
+    }
+    50% {
+      @each $property, $value in $toProperties {
+        #{$property}: $value;
+      }
+    }
+    100% {
+      @each $property, $value in $fromProperties {
+        #{$property}: $value;
+      }
+    }
+  }
+}
+
+@mixin flash-keyframes($name, $fromProperties, $toProperties) {
+  @keyframes #{$name} {
+    0%,
     50%,
-    to {
-      @each $attr in $attributes {
-        #{$attr}: $val1;
+    100% {
+      @each $property, $value in $fromProperties {
+        #{$property}: $value;
       }
     }
   
     25%,
     75% {
-      @each $attr in $attributes {
-        #{$attr}: $val2;
+      @each $property, $value in $toProperties {
+        #{$property}: $value;
       }
     }
   }
 }
 
-@mixin attention-fadeout-keyframes($name, $attributes, $val1, $val2) {
+@mixin attention-fadeout-keyframes($name, $fromProperties, $toProperties) {
   @keyframes #{$name} {
-    from,
-    to {
-      @each $attr in $attributes {
-        #{$attr}: $val1;
+    0%,
+    100% {
+      @each $property, $value in $fromProperties {
+        #{$property}: $value;
       }
     }
   
     5%,
     25% {
-      @each $attr in $attributes {
-        #{$attr}: $val2;
+      @each $property, $value in $toProperties {
+        #{$property}: $value;
       }
     }
   }
 }
 
-
-@include flash-keyframes(
-  flash-opacity-keyframes,
-  opacity,
-  0,
-  1
-);
-
-.flash {
-  animation-name: flash-opacity-keyframes;
-}
-
-
 @mixin animation-text-color-change($name, $c1, $c2) {
-    @include pulse-keyframes($name, color, $c1, $c2);
-    .#{$name} {
-        animation-name: #{$name};
-    }
+  @include pulse-keyframes($name, (color: $c1), (color: $c2));
+  @include animation-name-as-class($name);
 }
 
 @mixin animation-fg-color-change($name, $c1, $c2) {
-  @include pulse-keyframes($name, color border-color, $c1, $c2);
-  .#{$name} {
-    animation-name: #{$name};
-  }
+  @include pulse-keyframes(
+    $name,
+    (color: $c1, border-color: $c1),
+    (color: $c2, border-color: $c2)
+  );
+  @include animation-name-as-class($name);
 }
 
 @mixin animation-bg-color-change($name, $c1, $c2) {
-  @include pulse-keyframes($name, background-color, $c1, $c2);
-  .#{$name} {
-    animation-name: #{$name};
-  }
-}
-
-@mixin animation-bg-color-change-flash($name, $c1, $c2) {
-  @include flash-keyframes($name, background-color, $c1, $c2);
-  .#{$name} {
-    animation-name: #{$name};
-  }
+  @include pulse-keyframes(
+    $name,
+    (background-color: $c1),
+    (background-color: $c2)
+  );
+  @include animation-name-as-class($name);
 }
 
 @mixin animation-bg-color-attention-fadeout($name, $c1, $c2) {
-  @include attention-fadeout-keyframes($name, background-color, $c1, $c2);
-  .#{$name} {
-    animation-name: #{$name};
-  }
+  @include attention-fadeout-keyframes(
+    $name,
+    (background-color: $c1),
+    (background-color: $c2)
+  );
+  @include animation-name-as-class($name);
 }
