@@ -40,12 +40,25 @@ export default class OneSingletonTaskQueue {
     this.executionPromiseObject = promiseObject(this._executeQueue());
     return this.executionPromiseObject;
   }
+  /**
+   * Get promise for currently executed task or return empty resolving promise.
+   * @returns {Promise}
+   */
   async getCurrentTaskPromise() {
     const queue = this.queue;
     if (!queue || !queue[0] || !queue[0].deferred) {
       return;
     }
     return queue[0].deferred.promise;
+  }
+  /**
+   * Get promise for task with `taskName` or return empty resolving promise.
+   * @returns {Promise}
+   */
+  async getTaskPromise(taskType) {
+    const queue = this.queue;
+    const task = queue && queue.findBy('type', taskType);
+    return task && task.deferred.promise;
   }
   async _executeQueue() {
     let task = this.queue[0];

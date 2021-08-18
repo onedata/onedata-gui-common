@@ -15,7 +15,7 @@ import { get, set, computed, observer } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
 import { A, isArray } from '@ember/array';
 import _ from 'lodash';
-import { resolve, all as allFulfilled } from 'rsvp';
+import { resolve, all as allFulfilled, allSettled } from 'rsvp';
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 
@@ -553,6 +553,20 @@ export default ArraySlice.extend(Evented, {
       arrayUpdate,
       endReached,
     };
+  },
+
+  /**
+   * Returns a promise that resolves when currently scheduled fetchPrev and fetchNext
+   * tasks settle. When there are no prev or next operations pending, returns emtpy
+   * resolving promise.
+   */
+  async getCurrentExpandPromise() {
+    const taskQueue = this.get('taskQueue');
+    const promises = [
+      taskQueue.getTaskPromise('fetchPrev'),
+      taskQueue.getTaskPromise('fetchNext'),
+    ];
+    return allSettled(promises);
   },
 
   init() {

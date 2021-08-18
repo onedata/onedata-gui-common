@@ -104,4 +104,62 @@ describe('Unit | Utility | one singleton task queue', function () {
     expect(f2Result, 'task 2 result').to.equal(3);
     expect(f1Promise).to.equal(f2Promise);
   });
+
+  it('can return current task promise', async function () {
+    const taskQueue = new OneSingletonTaskQueue();
+    const fun = async (value) => {
+      await sleep(0);
+      return value;
+    };
+
+    taskQueue.scheduleTask('fun1', () => fun(1));
+    taskQueue.scheduleTask('fun2', () => fun(2));
+    taskQueue.scheduleTask('fun3', () => fun(3));
+
+    const currentPromise = taskQueue.getCurrentTaskPromise();
+
+    expect(await currentPromise).to.equal(1);
+  });
+
+  it('returns empty promise if current task promise is requested, but queue is empty', async function () {
+    const taskQueue = new OneSingletonTaskQueue();
+
+    const currentPromise = taskQueue.getCurrentTaskPromise();
+
+    expect(currentPromise).to.have.property('then');
+    expect(await currentPromise).to.equal(undefined);
+  });
+
+  it('can return promise for task currently in queue by type', async function () {
+    const taskQueue = new OneSingletonTaskQueue();
+    const fun = async (value) => {
+      await sleep(0);
+      return value;
+    };
+
+    taskQueue.scheduleTask('fun1', () => fun(1));
+    taskQueue.scheduleTask('fun2', () => fun(2));
+    taskQueue.scheduleTask('fun3', () => fun(3));
+
+    const promiseForTask = taskQueue.getTaskPromise('fun2');
+
+    expect(await promiseForTask).to.equal(2);
+  });
+
+  it('returns empty promise if task promise by type is requested, but there is no such task', async function () {
+    const taskQueue = new OneSingletonTaskQueue();
+    const fun = async (value) => {
+      await sleep(0);
+      return value;
+    };
+
+    taskQueue.scheduleTask('fun1', () => fun(1));
+    taskQueue.scheduleTask('fun2', () => fun(2));
+    taskQueue.scheduleTask('fun3', () => fun(3));
+
+    const promiseForTask = taskQueue.getTaskPromise('fun4');
+
+    expect(promiseForTask).to.have.property('then');
+    expect(await promiseForTask).to.equal(undefined);
+  });
 });
