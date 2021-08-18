@@ -1,6 +1,6 @@
 /**
  * Util function that can be used to ignore `notFound` errors received
- * in server responses. If error is different than forbidden, it is
+ * in server responses. If error is different than `notFound`, it is
  * rethrown.
  *
  * @module utils/ignore-not-found-error
