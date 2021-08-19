@@ -12,6 +12,7 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { camelize } from '@ember/string';
 
 export default Action.extend({
   globalClipboard: service(),
@@ -59,7 +60,7 @@ export default Action.extend({
       return null;
     }
 
-    return this.t(`common.modelNames.${modelName}`, {}, {
+    return this.t(`common.modelNames.${camelize(modelName)}`, {}, {
       usePrefix: false,
       defaultValue: null,
     });
