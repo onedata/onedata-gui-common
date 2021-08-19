@@ -13,4 +13,6 @@ export default {
   user: 'user',
   token: 'token',
   atmInventory: 'automation inventory',
+  atmWorkflowSchema: 'workflow',
+  atmLambda: 'lambda',
 };
