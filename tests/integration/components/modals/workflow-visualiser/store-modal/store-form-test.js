@@ -148,6 +148,12 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(this.$(`.${componentClass}`)).to.have.class('mode-create');
     });
 
+    it('does not render "id" field', async function () {
+      await render(this);
+
+      expect(this.$('.id-field')).to.not.exist;
+    });
+
     it('renders empty "name" field', async function () {
       await render(this);
 
@@ -517,6 +523,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`fills fields with data of passed "${label}" store on init`, async function () {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', {
+          id: 'store1id',
           name: 'store1',
           description: 'desc',
           type: type,
@@ -529,6 +536,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
         expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expect(this.$('.id-field .form-control')).to.have.value('store1id');
         expect(this.$('.name-field .form-control')).to.have.value('store1');
         expect(this.$('.description-field .form-control')).to.have.value('desc');
         expect(this.$('.type-field .dropdown-field-trigger').text().trim()).to.equal(label);
@@ -547,6 +555,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('fills fields with data of passed "Range" store on init', async function () {
       this.set('store', {
+        id: 'store1id',
         name: 'store1',
         description: 'desc',
         type: 'range',
@@ -565,6 +574,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
       expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
+      expect(this.$('.id-field .form-control')).to.have.value('store1id');
       expect(this.$('.name-field .form-control')).to.have.value('store1');
       expect(this.$('.description-field .form-control')).to.have.value('desc');
       expect(this.$('.type-field .dropdown-field-trigger').text().trim())
@@ -627,6 +637,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`fills fields with data of passed "${label}" store`, async function () {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', {
+          id: 'store1id',
           name: 'store1',
           description: 'desc',
           type: type,
@@ -640,6 +651,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(this.$('.field-edit-mode')).to.not.exist;
         expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
         expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expect(this.$('.id-field .form-control')).to.have.value('store1id');
         expect(this.$('.name-field .field-component').text().trim())
           .to.equal('store1');
         expect(this.$('.description-field .field-component').text().trim())
@@ -663,6 +675,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('fills fields with data of passed "Range" store on init', async function () {
       this.set('store', {
+        id: 'store1id',
         name: 'store1',
         description: 'desc',
         type: 'range',
@@ -682,6 +695,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(this.$('.field-edit-mode')).to.not.exist;
       expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
       expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
+      expect(this.$('.id-field .form-control')).to.have.value('store1id');
       expect(this.$('.name-field .field-component').text().trim())
         .to.equal('store1');
       expect(this.$('.description-field .field-component').text().trim())

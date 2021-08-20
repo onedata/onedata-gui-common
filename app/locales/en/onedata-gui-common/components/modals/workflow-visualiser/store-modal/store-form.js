@@ -1,5 +1,8 @@
 export default {
   fields: {
+    id: {
+      label: 'Id',
+    },
     name: {
       label: 'Name',
     },

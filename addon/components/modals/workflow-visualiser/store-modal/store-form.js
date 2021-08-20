@@ -14,6 +14,7 @@ import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not, and, isEmpty
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
+import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
@@ -177,6 +178,7 @@ export default Component.extend(I18n, {
    */
   fields: computed(function fields() {
     const {
+      idField,
       nameField,
       descriptionField,
       typeField,
@@ -184,6 +186,7 @@ export default Component.extend(I18n, {
       rangeStoreConfigFieldsGroup,
       needsUserInputField,
     } = this.getProperties(
+      'idField',
       'nameField',
       'descriptionField',
       'typeField',
@@ -203,6 +206,7 @@ export default Component.extend(I18n, {
     }).create({
       component: this,
       fields: [
+        idField,
         nameField,
         descriptionField,
         typeField,
@@ -211,6 +215,19 @@ export default Component.extend(I18n, {
         needsUserInputField,
       ],
     });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.ClipboardField>}
+   */
+  idField: computed(function idField() {
+    return ClipboardField
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: neq('component.mode', raw('create')),
+      }).create({
+        component: this,
+        name: 'id',
+      });
   }),
 
   /**
@@ -572,6 +589,7 @@ function storeToFormData(store) {
   }
 
   const {
+    id,
     name,
     description,
     type,
@@ -580,6 +598,7 @@ function storeToFormData(store) {
     requiresInitialValue,
   } = getProperties(
     store,
+    'id',
     'name',
     'description',
     'type',
@@ -589,6 +608,7 @@ function storeToFormData(store) {
   );
 
   const formData = {
+    id,
     name,
     description,
     type,
