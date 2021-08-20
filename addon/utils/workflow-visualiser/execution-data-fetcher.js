@@ -47,6 +47,13 @@ export default EmberObject.extend({
   },
 
   /**
+   * @returns {Promise<Object>} Key is store schema id, value is store instance id.
+   */
+  async fetchStoreInstanceIdsMapping() {
+    return notImplementedReject();
+  },
+
+  /**
    * @param {String} storeSchemaId
    * @param {String} startFromIndex
    * @param {number} limit

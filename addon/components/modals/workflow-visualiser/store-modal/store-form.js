@@ -10,7 +10,21 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-form';
-import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not, and, isEmpty } from 'ember-awesome-macros';
+import {
+  tag,
+  getBy,
+  conditional,
+  eq,
+  neq,
+  raw,
+  array,
+  or,
+  gt,
+  not,
+  and,
+  isEmpty,
+  notEmpty,
+} from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -179,6 +193,7 @@ export default Component.extend(I18n, {
   fields: computed(function fields() {
     const {
       idField,
+      instanceIdField,
       nameField,
       descriptionField,
       typeField,
@@ -187,6 +202,7 @@ export default Component.extend(I18n, {
       needsUserInputField,
     } = this.getProperties(
       'idField',
+      'instanceIdField',
       'nameField',
       'descriptionField',
       'typeField',
@@ -207,6 +223,7 @@ export default Component.extend(I18n, {
       component: this,
       fields: [
         idField,
+        instanceIdField,
         nameField,
         descriptionField,
         typeField,
@@ -223,10 +240,23 @@ export default Component.extend(I18n, {
   idField: computed(function idField() {
     return ClipboardField
       .extend(defaultValueGenerator(this, raw('')), {
-        isVisible: neq('component.mode', raw('create')),
+        isVisible: and(neq('component.mode', raw('create')), notEmpty('value')),
       }).create({
         component: this,
         name: 'id',
+      });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.ClipboardField>}
+   */
+  instanceIdField: computed(function instanceIdField() {
+    return ClipboardField
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: and(eq('component.mode', raw('view')), notEmpty('value')),
+      }).create({
+        component: this,
+        name: 'instanceId',
       });
   }),
 
@@ -590,6 +620,7 @@ function storeToFormData(store) {
 
   const {
     id,
+    instanceId,
     name,
     description,
     type,
@@ -599,6 +630,7 @@ function storeToFormData(store) {
   } = getProperties(
     store,
     'id',
+    'instanceId',
     'name',
     'description',
     'type',
@@ -609,6 +641,7 @@ function storeToFormData(store) {
 
   const formData = {
     id,
+    instanceId,
     name,
     description,
     type,

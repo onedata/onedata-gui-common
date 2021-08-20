@@ -216,6 +216,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
   laneIdxForNextRightScroll: null,
 
   /**
+   * Mapping store schema id -> store instance id
+   * @type {Object}
+   */
+  storeInstanceIdsMapping: undefined,
+
+  /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
   visualiserElements: computed('rawData', function visualiserElements() {
@@ -225,7 +231,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: computed('rawData', function stores() {
+  stores: computed('rawData', 'storeInstanceIdsMapping', function stores() {
     return this.getStores();
   }),
 
@@ -290,7 +296,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   initialLoadingProxy: promise.object(computed(async function initialLoading() {
     if (this.get('mode') === 'view') {
-      return this.updateStatuses();
+      return Promise.all([
+        this.updateStatuses(),
+        this.updateStoreInstanceIdsMapping(),
+      ]);
     }
   })),
 
@@ -888,6 +897,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Utils.WorkflowVisualiser.Store}
    */
   getStoreForRawData(storeRawData) {
+    const storeInstanceIdsMapping = this.get('storeInstanceIdsMapping') || {};
     const {
       id,
       name,
@@ -906,11 +916,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'defaultInitialValue',
       'requiresInitialValue'
     );
+    const instanceId = storeInstanceIdsMapping[id];
 
     const existingStore = this.getCachedElement('store', { id });
 
     if (existingStore) {
       this.updateElement(existingStore, {
+        instanceId,
         name,
         description,
         type,
@@ -922,6 +934,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       const newStore = Store.create({
         id,
+        instanceId,
         name,
         description,
         type,
@@ -1311,6 +1324,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   executionHasEnded() {
     return workflowEndedStatuses.includes(this.get('executionStatus'));
+  },
+
+  async updateStoreInstanceIdsMapping() {
+    const executionDataFetcher = this.get('executionDataFetcher');
+    if (!executionDataFetcher) {
+      return;
+    }
+
+    const storeInstanceIdsMapping =
+      await executionDataFetcher.fetchStoreInstanceIdsMapping();
+    this.set('storeInstanceIdsMapping', storeInstanceIdsMapping);
   },
 
   actions: {

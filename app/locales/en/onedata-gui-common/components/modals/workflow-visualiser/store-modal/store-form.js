@@ -3,6 +3,9 @@ export default {
     id: {
       label: 'Id',
     },
+    instanceId: {
+      label: 'Instance id',
+    },
     name: {
       label: 'Name',
     },
