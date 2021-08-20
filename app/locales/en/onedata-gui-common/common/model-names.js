@@ -15,4 +15,5 @@ export default {
   atmInventory: 'automation inventory',
   atmWorkflowSchema: 'workflow',
   atmLambda: 'lambda',
+  atmWorkflowExecutionSummary: 'workflow execution',
 };
