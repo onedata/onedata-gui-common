@@ -13,6 +13,7 @@ import { computed, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { camelize } from '@ember/string';
+import { or } from 'ember-awesome-macros';
 
 export default Action.extend({
   globalClipboard: service(),
@@ -69,7 +70,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<String|undefined>}
    */
-  recordId: reads('record.entityId'),
+  recordId: or('record.entityId', 'record.id'),
 
   /**
    * @type {ComputedProperty<SafeString>}

@@ -9,7 +9,7 @@
 
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
-import { set } from '@ember/object';
+import { get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
@@ -35,6 +35,11 @@ export default Action.extend({
   icon: 'view-list',
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
+   */
+  workflow: reads('context.workflow'),
+
+  /**
    * @type {ComputedProperty<Function>}
    */
   getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
@@ -44,9 +49,11 @@ export default Action.extend({
    */
   onExecute() {
     const {
+      workflow,
       getAuditLogContentCallback,
       modalManager,
     } = this.getProperties(
+      'workflow',
       'getAuditLogContentCallback',
       'modalManager'
     );
@@ -57,7 +64,9 @@ export default Action.extend({
         mode: 'view',
         viewModeLayout: 'auditLog',
         auditLogSubjectName: this.t('auditLogSubjectName'),
-        store: auditLogDummyStore,
+        store: Object.assign({}, auditLogDummyStore, {
+          instanceId: get(workflow, 'systemAuditLogStoreInstanceId'),
+        }),
         getStoreContentCallback: (...args) => getAuditLogContentCallback(...args),
       }).hiddenPromise
       .then(() => {

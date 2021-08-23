@@ -9,6 +9,7 @@ describe('Unit | Utility | workflow visualiser/store', function () {
     const store = Store.create();
 
     [
+      'instanceId',
       'name',
       'description',
       'type',

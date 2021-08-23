@@ -265,8 +265,11 @@ export default Component.extend(I18n, {
    */
   nameField: computed(function nameField() {
     return TextField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: or(neq('component.mode', raw('view')), notEmpty('value')),
+      })
       .create({
+        component: this,
         name: 'name',
       });
   }),

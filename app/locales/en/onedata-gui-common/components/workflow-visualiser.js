@@ -72,6 +72,7 @@ export default {
       },
     },
     details: {
+      instanceId: 'Instance ID',
       status: 'Status',
       itemsInProcessing: 'In processing',
       itemsProcessed: 'Processed',
