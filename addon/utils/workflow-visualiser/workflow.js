@@ -16,6 +16,11 @@ export default EmberObject.extend({
   __modelType: 'workflow',
 
   /**
+   * @type {String}
+   */
+  instanceId: undefined,
+
+  /**
    * @virtual optional
    * @type {String}
    */
