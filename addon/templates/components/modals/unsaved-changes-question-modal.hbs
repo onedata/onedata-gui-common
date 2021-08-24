@@ -1,0 +1,45 @@
+{{#global-modal
+  classNames="unsaved-changes-question-modal"
+  allowClose=(not isSubmitting)
+  modalId=modalId
+  as |modal|
+}}
+
+  {{#modal.header}}
+    <h1>
+      {{one-icon icon="sign-warning-rounded"}}
+      <span class="one-label">{{tt this "header"}}</span>
+    </h1>
+  {{/modal.header}}
+
+  {{#modal.body}}
+    <p class="description">{{tt this "body.description"}}</p>
+    <p class="disclaimer text-danger">{{tt this "body.disclaimer"}}</p>
+  {{/modal.body}}
+
+  {{#modal.footer class="btn-toolbar"}}
+    {{#one-spin-button
+      class="btn btn-default question-dont-save"
+      action=(action "submit" modal.submit false)
+      disabled=isSubmitting
+    }}
+      {{tt this "button.dontSave"}}
+    {{/one-spin-button}}
+    {{#bs-button
+      type="default"
+      class="question-cancel"
+      onClick=modal.close
+      disabled=isSubmitting
+    }}
+      {{tt this "button.cancel"}}
+    {{/bs-button}}
+    {{#one-spin-button
+      class="btn btn-primary question-save"
+      action=(action "submit" modal.submit true)
+      disabled=isSubmitting
+    }}
+      {{tt this "button.save"}}
+    {{/one-spin-button}}
+  {{/modal.footer}}
+
+{{/global-modal}}
