@@ -23,11 +23,11 @@ export default EmberRouter.extend({
   init() {
     this._super(...arguments);
 
-    const router = this.get('router');
-    if (typeof router.trigger === 'function') {
-      this.on('willTransition', (transition) => {
+    this.on('willTransition', (transition) => {
+      const router = this.get('router');
+      if (typeof router.trigger === 'function') {
         router.trigger('routeWillChange', transition);
-      });
-    }
+      }
+    });
   },
 });
