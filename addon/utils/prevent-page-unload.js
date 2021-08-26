@@ -1,8 +1,9 @@
 /**
  * Prevents from page unload by showing alert message before page change.
  * Usage instructions:
- *  - value returned by this function should be also returned in the unload
- *    event handler,
+ *  - should be used inside `beforeunload` event listener,
+ *  - value returned by this function should be also returned by the
+ *    event listener,
  *  - `confirmationMessage` is a mandatory argument, but it is not guaranteed
  *    that it will be shown to the user. Some browsers ignore it and show
  *    some generic question.
@@ -15,10 +16,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-export default function preventPageUnload(unloadEvent, confirmationMessage) {
-  if (unloadEvent) {
-    unloadEvent.preventDefault();
+/**
+ * @param {BeforeUnloadEvent} beforeUnloadEvent
+ * @param {String} confirmationMessage
+ * @returns {String}
+ */
+export default function preventPageUnload(
+  beforeUnloadEvent,
+  confirmationMessage
+) {
+  if (beforeUnloadEvent) {
+    beforeUnloadEvent.preventDefault();
   }
-  (unloadEvent || window.unloadEvent).returnValue = confirmationMessage;
+  (beforeUnloadEvent || window.event).returnValue = confirmationMessage;
   return confirmationMessage;
 }

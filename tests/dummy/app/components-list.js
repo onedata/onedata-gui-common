@@ -9,6 +9,7 @@ export default [
   'input-group',
   'json-editor',
   'markdown-editor',
+  'modals/unsaved-changes-question-modal',
   'name-conflict',
   'nav-tabs',
   'one-arrow',
