@@ -724,7 +724,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         iteratedStore: this.getStoreByInstanceId(storeInstanceId),
       });
     });
-    const newestRunNo = Math.max(...Object.keys(runsData).map(Number));
+    const newestRunNo = Math.max(...Object.keys(runsData).map(Number), 0);
 
     const existingLane = this.getCachedElement('lane', { id });
 
