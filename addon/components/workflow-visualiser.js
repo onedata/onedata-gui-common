@@ -178,12 +178,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {Utils.Looper}
    */
-  statsUpdater: undefined,
-
-  /**
-   * @type {String}
-   */
-  executionStatus: undefined,
+  executionStateUpdater: undefined,
 
   /**
    * Contains model objects which were created during the workflow editor
@@ -219,16 +214,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
   laneIdxForNextRightScroll: null,
 
   /**
-   * Contains mapping with instance (execution) ids of workflow elements.
-   * For object format description see ExecutionDataFetcher documentation.
+   * Format of this object is defined by return type of
+   * ExecutionDataFetcher.fetchExecutionState function.
    * @type {Object}
    */
-  instanceIdsMapping: undefined,
+  executionState: undefined,
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
    */
-  workflow: computed('instanceIdsMapping', function workflow() {
+  workflow: computed('executionState', function workflow() {
     return this.getWorkflow();
   }),
 
@@ -237,7 +232,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   visualiserElements: computed(
     'rawData',
-    'instanceIdsMapping',
+    'executionState',
     function visualiserElements() {
       return this.getVisualiserElements();
     }
@@ -246,8 +241,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: computed('rawData', 'instanceIdsMapping', function stores() {
-    return this.getStores();
+  stores: computed('rawData', 'executionState', function stores() {
+    return this.getDefinedStores();
   }),
 
   /**
@@ -267,17 +262,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<String>}
    */
-  statusClass: tag `status-${'executionStatus'}`,
+  statusClass: tag `status-${'workflow.status'}`,
 
   /**
    * @type {ComputedProperty<String>}
    */
-  statusTranslation: computed('executionStatus', function statusTranslation() {
-    const {
-      i18n,
-      executionStatus,
-    } = this.getProperties('i18n', 'executionStatus');
-    return translateWorkflowStatus(i18n, executionStatus);
+  statusTranslation: computed('workflow.status', function statusTranslation() {
+    return translateWorkflowStatus(
+      this.get('i18n'),
+      this.get('workflow.status')
+    );
   }),
 
   /**
@@ -310,24 +304,20 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<PromiseObject>}
    */
   initialLoadingProxy: promise.object(computed(async function initialLoading() {
-    if (this.get('mode') === 'view') {
-      return Promise.all([
-        this.updateStatuses(),
-        this.updateInstanceIdsMapping(),
-      ]);
-    }
+    return this.get('mode') === 'view' ?
+      this.updateExecutionState() : resolve();
   })),
 
   /**
    * @type {ComputedProperty<Function>}
    */
-  updateStatusesAfterCancelHook: computed(function updateStatusesAfterCancelHook() {
+  afterCancelActionHook: computed(function afterCancelActionHook() {
     return async result => {
       if (!result || get(result, 'status') !== 'done') {
         return;
       }
       try {
-        await this.updateStatuses();
+        await this.updateExecutionState();
       } catch (error) {
         console.error('Cannot update workflow status after cancel:', error);
       }
@@ -362,21 +352,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   normalizedCancelExecutionAction: computed(
     'cancelExecutionAction',
-    'updateStatusesAfterCancelHook',
+    'afterCancelActionHook',
     function normalizedCancelExecutionAction() {
       const {
         cancelExecutionAction,
-        updateStatusesAfterCancelHook,
+        afterCancelActionHook,
       } = this.getProperties(
         'cancelExecutionAction',
-        'updateStatusesAfterCancelHook'
+        'afterCancelActionHook'
       );
       if (!cancelExecutionAction) {
         return;
       }
-      // Remove hook to be sure, that it wont be duplicated.
-      cancelExecutionAction.removeExecuteHook(updateStatusesAfterCancelHook);
-      cancelExecutionAction.addExecuteHook(updateStatusesAfterCancelHook);
+      // Remove hook to be sure, that it won't be duplicated.
+      cancelExecutionAction.removeExecuteHook(afterCancelActionHook);
+      cancelExecutionAction.addExecuteHook(afterCancelActionHook);
       return cancelExecutionAction;
     }
   ),
@@ -385,18 +375,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   executionActions: computed(
-    'executionStatus',
+    'workflow.status',
     'copyInstanceIdAction',
     'viewAuditLogAction',
     'normalizedCancelExecutionAction',
     function executionActions() {
       const {
-        executionStatus,
+        workflow,
         copyInstanceIdAction,
         viewAuditLogAction,
         normalizedCancelExecutionAction,
       } = this.getProperties(
-        'executionStatus',
+        'workflow',
         'copyInstanceIdAction',
         'viewAuditLogAction',
         'normalizedCancelExecutionAction'
@@ -404,7 +394,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const actions = [copyInstanceIdAction, viewAuditLogAction];
       if (
         !this.executionHasEnded() &&
-        executionStatus !== 'aborting' &&
+        get(workflow, 'status') !== 'aborting' &&
         normalizedCancelExecutionAction
       ) {
         actions.push(normalizedCancelExecutionAction);
@@ -443,10 +433,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
       this.set('actionsFactory', ActionsFactory.create({ ownerSource: this }));
     }
     this.actionsFactoryObserver();
-    this.get('visualiserElements');
     if (this.get('mode') === 'view') {
       this.get('initialLoadingProxy')
-        .then(() => safeExec(this, 'setupStatsUpdater'));
+        .then(() => safeExec(this, 'setupExecutionStateUpdater'));
     }
   },
 
@@ -462,7 +451,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   willDestroyElement() {
     try {
-      this.stopStatsUpdater();
+      this.stopExecutionStateUpdater();
     } finally {
       this._super(...arguments);
     }
@@ -475,23 +464,23 @@ export default Component.extend(I18n, WindowResizeHandler, {
     run(() => this.scheduleHorizontalOverflowDetection());
   },
 
-  setupStatsUpdater() {
-    if (this.executionHasEnded()) {
+  setupExecutionStateUpdater() {
+    if (this.executionHasEnded() || this.get('executionStateUpdater')) {
       return;
     }
 
-    const statsUpdater = Looper.create({
+    const executionStateUpdater = Looper.create({
       immediate: false,
       interval: statsUpdateInterval,
     });
-    statsUpdater.on('tick', () => this.updateStatuses());
-    this.set('statsUpdater', statsUpdater);
+    executionStateUpdater.on('tick', () => this.updateExecutionState());
+    this.set('executionStateUpdater', executionStateUpdater);
   },
 
-  stopStatsUpdater() {
-    const statsUpdater = this.get('statsUpdater');
-    if (statsUpdater) {
-      safeExec(statsUpdater, () => statsUpdater.destroy());
+  stopExecutionStateUpdater() {
+    const executionStateUpdater = this.get('executionStateUpdater');
+    if (executionStateUpdater) {
+      safeExec(executionStateUpdater, () => executionStateUpdater.destroy());
     }
   },
 
@@ -600,22 +589,27 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Utils.WorkflowVisualiser.Workflow}
    */
   getWorkflow() {
-    const instanceId = this.get('instanceIdsMapping.workflow');
+    const instanceId = this.get('executionState.workflow.instanceId');
+    const status = this.get('executionState.workflow.status');
     const systemAuditLogStoreInstanceId =
-      this.get('instanceIdsMapping.store.workflowSystemAuditLog');
+      this.get('executionState.workflow.systemAuditLogStoreInstanceId');
+    const systemAuditLogStore = systemAuditLogStoreInstanceId &&
+      this.getStoreByInstanceId(systemAuditLogStoreInstanceId);
 
     const existingWorkflow = this.getCachedElement('workflow');
 
     if (existingWorkflow) {
       this.updateElement(existingWorkflow, {
         instanceId,
-        systemAuditLogStoreInstanceId,
+        systemAuditLogStore,
+        status,
       });
       return existingWorkflow;
     } else {
       const newWorkflow = Workflow.create({
         instanceId,
-        systemAuditLogStoreInstanceId,
+        systemAuditLogStore,
+        status,
       });
       this.addElementToCache('workflow', newWorkflow);
 
@@ -627,7 +621,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * Generates an array of stores from `rawData`
    * @returns {Array<Utils.WorkflowVisualiser.Store>}
    */
-  getStores() {
+  getDefinedStores() {
     const rawStores = this.get('rawData.stores') || [];
     return rawStores.map(rawStore => this.getElementForRawData('store', rawStore));
   },
@@ -716,6 +710,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
       storeIteratorSpec,
       parallelBoxes: rawParallelBoxes,
     } = getProperties(laneRawData, 'id', 'name', 'storeIteratorSpec', 'parallelBoxes');
+    const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
+    const normalizedRunsData = {};
+    if (iteratedStoreSchemaId) {
+      normalizedRunsData[0] = {
+        iteratedStore: this.getStoreBySchemaId(iteratedStoreSchemaId),
+      };
+    }
+    const runsData = this.get(`executionState.lane.${id}.runs`) || {};
+    Object.keys(runsData).forEach((runNo) => {
+      const storeInstanceId = runsData[runNo].iteratedStoreInstanceId;
+      normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
+        iteratedStore: this.getStoreByInstanceId(storeInstanceId),
+      });
+    });
+    const newestRunNo = Math.max(...Object.keys(runsData).map(Number));
 
     const existingLane = this.getCachedElement('lane', { id });
 
@@ -725,20 +734,29 @@ export default Component.extend(I18n, WindowResizeHandler, {
         rawParallelBoxes,
         existingLane
       );
-      this.updateElement(existingLane, { name, storeIteratorSpec, elements });
+      this.updateElement(existingLane, {
+        name,
+        storeIteratorSpec,
+        runs: normalizedRunsData,
+        elements,
+      });
+      if (get(existingLane, 'visibleRunNo') === 0) {
+        set(existingLane, 'visibleRunNo', newestRunNo);
+      }
       return existingLane;
     } else {
       const {
         mode,
-        storesArrayProxy,
         actionsFactory,
-      } = this.getProperties('mode', 'storesArrayProxy', 'actionsFactory');
+      } = this.getProperties('mode', 'actionsFactory');
 
       const newLane = Lane.create({
         id,
+        schemaId: id,
         name,
         storeIteratorSpec,
-        stores: storesArrayProxy,
+        runs: normalizedRunsData,
+        visibleRunNo: newestRunNo,
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),
@@ -810,6 +828,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
     const existingParallelBox = this.getCachedElement('parallelBox', { id });
+    const runs = Object.assign({
+      0: { status: 'pending' },
+    }, this.get(`executionState.parallelBox.${id}.runs`) || {});
 
     if (existingParallelBox) {
       const elements = this.getLaneElementsForRawData(
@@ -817,7 +838,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         rawTasks,
         existingParallelBox
       );
-      this.updateElement(existingParallelBox, { name, parent, elements });
+      this.updateElement(existingParallelBox, { name, parent, elements, runs });
       return existingParallelBox;
     } else {
       const {
@@ -827,8 +848,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       const newParallelBox = ParallelBox.create({
         id,
+        schemaId: id,
         name,
         parent,
+        runs,
         mode,
         actionsFactory,
         onModify: (box, modifiedProps) => this.modifyElement(box, modifiedProps),
@@ -868,16 +891,29 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'argumentMappings',
       'resultMappings',
     );
-    const instanceId = this.get(`instanceIdsMapping.task.${id}`);
-    const systemAuditLogStoreInstanceId =
-      this.get(`instanceIdsMapping.store.taskSystemAuditLog.${id}`);
 
+    const runsData = this.get(`executionState.task.${id}.runs`) || {};
+    const normalizedRunsData = {
+      0: {
+        instanceId: null,
+        status: 'pending',
+        systemAuditLogStore: null,
+        itemsInProcessing: 0,
+        itemsProcessed: 0,
+        itemsFailed: 0,
+      },
+    };
+    Object.keys(runsData).forEach((runNo) => {
+      const storeInstanceId = runsData[runNo].systemAuditLogStoreInstanceId;
+      normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
+        systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
+      });
+    });
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
       this.updateElement(existingTask, {
-        instanceId,
-        systemAuditLogStoreInstanceId,
+        runs: normalizedRunsData,
         name,
         parent,
         lambdaId,
@@ -893,8 +929,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       const newTask = Task.create({
         id,
-        instanceId,
-        systemAuditLogStoreInstanceId,
+        schemaId: id,
+        runs: normalizedRunsData,
         name,
         parent,
         lambdaId,
@@ -960,7 +996,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   getStoreForRawData(storeRawData) {
     const {
-      id,
+      id: schemaId,
+      instanceId: rawInstanceId,
       name,
       description,
       type,
@@ -970,6 +1007,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } = getProperties(
       storeRawData,
       'id',
+      'instanceId',
       'name',
       'description',
       'type',
@@ -977,9 +1015,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'defaultInitialValue',
       'requiresInitialValue'
     );
-    const instanceId = this.get(`instanceIdsMapping.store.global.${id}`);
+    const instanceId = rawInstanceId || (schemaId &&
+      this.get(`executionState.store.defined.${schemaId}.instanceId`)
+    );
 
-    const existingStore = this.getCachedElement('store', { id });
+    const existingStore =
+      (instanceId && this.getCachedElement('store', { instanceId })) ||
+      (schemaId && this.getCachedElement('store', { schemaId }));
 
     if (existingStore) {
       this.updateElement(existingStore, {
@@ -994,7 +1036,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return existingStore;
     } else {
       const newStore = Store.create({
-        id,
+        id: schemaId || generateId(),
+        schemaId,
         instanceId,
         name,
         description,
@@ -1349,54 +1392,46 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
-  async updateStatuses() {
-    const executionDataFetcher = this.get('executionDataFetcher');
-    if (!executionDataFetcher) {
-      return;
-    }
-
-    const statuses = await executionDataFetcher.fetchStatuses();
-    safeExec(this, () => {
-      ['lane', 'parallelBox', 'task'].forEach(elementType => {
-        Object.keys(statuses[elementType] || {}).forEach(id => {
-          const element = this.getCachedElement(elementType, { id });
-          if (!element) {
-            return;
-          }
-
-          set(element, 'status', statuses[elementType][id].status);
-          if (elementType === 'task') {
-            setProperties(element, getProperties(
-              statuses[elementType][id],
-              'itemsFailed',
-              'itemsInProcessing',
-              'itemsProcessed'
-            ));
-          }
-        });
-      });
-      this.set('executionStatus', get(statuses, 'global.status'));
-      if (this.executionHasEnded()) {
-        this.stopStatsUpdater();
-        this.get('stores').setEach('contentMayChange', false);
-      }
-    });
-  },
-
   executionHasEnded() {
-    return workflowEndedStatuses.includes(this.get('executionStatus'));
+    return workflowEndedStatuses.includes(this.get('workflow.status'));
   },
 
-  async updateInstanceIdsMapping() {
+  async updateExecutionState() {
     const executionDataFetcher = this.get('executionDataFetcher');
     if (!executionDataFetcher) {
       return;
     }
 
     this.set(
-      'instanceIdsMapping',
-      await executionDataFetcher.fetchInstanceIdsMapping()
+      'executionState',
+      await executionDataFetcher.fetchExecutionState()
     );
+  },
+
+  getStoreBySchemaId(schemaId) {
+    // Make sure, that cache is filled with defined stores.
+    this.get('stores');
+
+    return this.getCachedElement('store', { schemaId });
+  },
+
+  getStoreByInstanceId(instanceId) {
+    // Make sure, that cache is filled with defined stores.
+    this.get('stores');
+
+    const cachedStore = this.getCachedElement('store', { instanceId });
+    if (cachedStore) {
+      return cachedStore;
+    }
+
+    // Store not found in cache so it must be a dynamically created store.
+    const storeSchema =
+      this.get(`executionState.store.generated.${instanceId}`);
+    if (!storeSchema) {
+      console.error(`Cannot find store with instance ID: ${instanceId}`);
+      return null;
+    }
+    return this.getElementForRawData('store', storeSchema);
   },
 
   actions: {

@@ -8,6 +8,8 @@
  */
 
 import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
+import { getBy, conditional, raw } from 'ember-awesome-macros';
+import { reads } from '@ember/object/computed';
 import { resolve } from 'rsvp';
 
 export default VisualiserElement.extend({
@@ -15,13 +17,19 @@ export default VisualiserElement.extend({
    * @virtual
    * @type {String}
    */
-  name: undefined,
+  schemaId: undefined,
 
   /**
    * @virtual
    * @type {String}
    */
-  status: undefined,
+  name: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Object}
+   */
+  runs: undefined,
 
   /**
    * @virtual
@@ -60,6 +68,25 @@ export default VisualiserElement.extend({
    * @returns {Promise}
    */
   onRemove: undefined,
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  visibleRunNo: conditional(
+    getBy('runs', 'parent.visibleRunNo'),
+    'parent.visibleRunNo',
+    raw(0)
+  ),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  visibleRun: getBy('runs', 'visibleRunNo'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  status: reads('visibleRun.status'),
 
   modify(modifiedProps) {
     const onModify = this.get('onModify');

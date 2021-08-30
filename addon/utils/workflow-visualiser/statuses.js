@@ -19,6 +19,13 @@ export const taskStatuses = [
   taskUnknownStatus,
 ];
 
+export const taskEndedStatuses = [
+  'cancelled',
+  'skipped',
+  'finished',
+  'failed',
+];
+
 export function normalizeTaskStatus(status) {
   return taskStatuses.includes(status) ? status : taskUnknownStatus;
 }

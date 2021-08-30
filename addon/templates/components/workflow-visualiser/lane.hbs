@@ -54,10 +54,10 @@
   </div>
   <div class="lane-store-info">
     <span class="one-label">{{iteratorStrategyLabel}}</span>
-    {{#if lane.store.name}}
+    {{#if lane.iteratedStore}}
       <div class="tags-input readonly">
         {{workflow-visualiser/stores-list/store
-          store=lane.store
+          store=lane.iteratedStore
           mode=mode
           actionsFactory=actionsFactory
           isRemovingAllowed=false

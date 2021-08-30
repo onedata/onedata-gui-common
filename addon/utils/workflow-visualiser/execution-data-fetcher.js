@@ -24,87 +24,91 @@ export default EmberObject.extend({
    * @returns {Promise<Object>} Object format:
    *   ```
    *   {
-   *     global: {
-   *       status: String,
+   *     workflow: {
+   *       instanceId: 'workflowInstanceId',
+   *       systemAuditLogStoreInstanceId: 'storeInstanceId1',
+   *       status: 'latestRunWorkflowStatus',
    *     },
-   *     lane: [..., {
-   *       status: String,
-   *     }, ...],
-   *     parallelBox: [..., {
-   *      status: String,
-   *     }, ...],
-   *     task: [..., {
-   *      status: String,
-   *      itemsInProcessing: Number,
-   *      itemsProcessed: Number,
-   *      itemsFailed: Number,
-   *     }, ...],
-   *   }
-   *   ```
-   */
-  async fetchStatuses() {
-    return notImplementedReject();
-  },
-
-  /**
-   * @returns {Promise<Object>} Object format:
-   *   ```
-   *   {
-   *     workflow: 'workflowInstanceId',
-   *     task: {
-   *       taskSchemaId1: 'taskInstanceId1',
-   *       taskSchemaId2: 'taskInstanceId2',
+   *     lane: {
+   *       lane1SchemaId: {
+   *         runs: {
+   *           1: {
+   *             iteratedStoreInstanceId: 'store1InstanceIdW1',
+   *             status: 'run1LaneStatus',
+   *           },
+   *           2: { ... },
+   *           ...
+   *         },
+   *       },
+   *       lane2SchemaId: { ... },
    *       ...
-   *     }
+   *     },
+   *     parallelBox: {
+   *       parallelBox1SchemaId: {
+   *         runs: {
+   *           1: {
+   *             status: 'run1PboxStatus',
+   *           },
+   *           2: { ... },
+   *           ...
+   *         },
+   *       },
+   *       parallelBox2SchemaId: { ... },
+   *       ...
+   *     },
+   *     task: {
+   *       task1SchemaId: {
+   *         runs: {
+   *           1: {
+   *             instanceId: 'task1InstanceId1',
+   *             systemAuditLogStoreInstanceId: 'storeInstanceIdT1',
+   *             statuse: 'run1TaskStatus',
+   *             itemsInProcessing: 123,
+   *             itemsProcessed: 123,
+   *             itemsFailed: 123,,
+   *           },
+   *           2: { ... },
+   *           ...
+   *         },
+   *       },
+   *       task2SchemaId: { ... },
+   *       ...
+   *     },
    *     store: {
-   *       global: {
-   *         storeSchemaId1: 'storeInstanceId1',
-   *         storeSchemaId2: 'storeInstanceId2',
+   *       defined: {
+   *         store1SchemaId: {
+   *           instanceId: 'store1InstanceId',
+   *         },
+   *         store2SchemaId: { ... },
    *         ...
    *       },
-   *       taskSystemAuditLog: {
-   *         taskSchemaId1: 'taskSystemAuditLogStoreInstanceId1',
-   *         taskSchemaId2: 'taskSystemAuditLogStoreInstanceId2',
-   *         ...
+   *       generated: {
+   *         store3InstanceId: {
+   *           instanceId: 'store3InstanceId',
+   *           type: 'storeType',
+   *           dataSpec: {
+   *             type: 'dataSpecType,
+   *             valueConstraints: { ... },
+   *           },
+   *           defaultInitialValue: { ... },
+   *         }
    *       }
-   *       workflowSystemAuditLog: 'workflowSystemAuditLogStoreInstanceId',
-   *     }
+   *     },
    *   }
    *   ```
    */
-  async fetchInstanceIdsMapping() {
+  async fetchExecutionState() {
     return notImplementedReject();
   },
 
   /**
-   * @param {String} storeSchemaId
+   * @param {String} storeInstanceId
    * @param {String} startFromIndex
    * @param {number} limit
    * @param {number} offset
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
   async fetchStoreContent() {
-    return notImplementedReject();
-  },
-
-  /**
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
-   */
-  async fetchWorkflowAuditLogContent() {
-    return notImplementedReject();
-  },
-
-  /**
-   * @param {String} taskSchemaId
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
-   */
-  async fetchTaskAuditLogContent() {
     return notImplementedReject();
   },
 });

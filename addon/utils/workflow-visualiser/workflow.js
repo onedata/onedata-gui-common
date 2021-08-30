@@ -22,7 +22,13 @@ export default EmberObject.extend({
 
   /**
    * @virtual optional
+   * @type {Utils.WorkflowVisualiser.Store}
+   */
+  systemAuditLogStore: undefined,
+
+  /**
+   * @virtual optional
    * @type {String}
    */
-  systemAuditLogStoreInstanceId: undefined,
+  status: undefined,
 });

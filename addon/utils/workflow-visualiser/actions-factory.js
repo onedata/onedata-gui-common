@@ -12,7 +12,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import ArrayProxy from '@ember/array/proxy';
 import { reads } from '@ember/object/computed';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
@@ -295,12 +295,16 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.ViewWorkflowAuditLogAction}
    */
   createViewWorkflowAuditLogAction(context) {
+    const workflow = this.get('workflowDataProvider.workflow');
     return ViewWorkflowAuditLogAction.create({
       ownerSource: this,
       context: Object.assign({
         workflow: this.get('workflowDataProvider.workflow'),
         getAuditLogContentCallback: (...args) =>
-          this.get('workflowDataProvider').getWorkflowAuditLogContent(...args),
+          this.get('workflowDataProvider').getStoreContent(
+            get(workflow, 'systemAuditLogStore'),
+            ...args
+          ),
       }, context),
     });
   },
@@ -314,7 +318,7 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         getAuditLogContentCallback: (...args) =>
-          this.get('workflowDataProvider').getTaskAuditLogContent(...args),
+          this.get('workflowDataProvider').getStoreContent(...args),
       }, context),
     });
   },

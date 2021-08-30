@@ -9,7 +9,7 @@
 
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import { resolve } from 'rsvp';
-import { array, raw } from 'ember-awesome-macros';
+import { reads } from '@ember/object/computed';
 
 export default VisualiserRecord.extend({
   /**
@@ -23,16 +23,15 @@ export default VisualiserRecord.extend({
   renderer: 'workflow-visualiser/lane',
 
   /**
+   * @override
+   */
+  visibleRunNo: 0,
+
+  /**
    * @virtual
    * @type {Object}
    */
   storeIteratorSpec: undefined,
-
-  /**
-   * @virtual
-   * @type {Array<Utils.WorkflowVisualiser.Store>}
-   */
-  stores: undefined,
 
   /**
    * @virtual optional
@@ -51,7 +50,7 @@ export default VisualiserRecord.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
-  store: array.findBy('stores', raw('id'), 'storeIteratorSpec.storeSchemaId'),
+  iteratedStore: reads('visibleRun.iteratedStore'),
 
   init() {
     this._super(...arguments);

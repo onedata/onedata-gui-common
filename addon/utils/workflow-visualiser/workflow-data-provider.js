@@ -49,41 +49,13 @@ export default EmberObject.extend({
       );
       return reject();
     }
-    return executionDataFetcher.fetchStoreContent(get(store, 'id'), ...args);
-  },
-
-  /**
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
-   */
-  getWorkflowAuditLogContent(...args) {
-    const executionDataFetcher = this.get('executionDataFetcher');
-    if (!executionDataFetcher) {
+    const storeInstanceId = store && get(store, 'instanceId');
+    if (!storeInstanceId) {
       console.error(
-        'util:workflow-visualiser/workflow-data-provider#getWorkflowAuditLogContent: executionDataFetcher is not set',
+        'util:workflow-visualiser/workflow-data-provider#getStoreContent: provided store does not have instance id',
       );
       return reject();
     }
-    return executionDataFetcher.fetchWorkflowAuditLogContent(...args);
-  },
-
-  /**
-   * @param {Utils.WorkflowVisualiser.Lane.Task} task
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
-   */
-  getTaskAuditLogContent(task, ...args) {
-    const executionDataFetcher = this.get('executionDataFetcher');
-    if (!executionDataFetcher) {
-      console.error(
-        'util:workflow-visualiser/workflow-data-provider#getTaskAuditLogContent: executionDataFetcher is not set',
-      );
-      return reject();
-    }
-    return executionDataFetcher.fetchTaskAuditLogContent(get(task, 'id'), ...args);
+    return executionDataFetcher.fetchStoreContent(storeInstanceId, ...args);
   },
 });
