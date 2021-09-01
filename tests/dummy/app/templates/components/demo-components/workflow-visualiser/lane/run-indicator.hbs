@@ -1,0 +1,40 @@
+<div class="workflow-visualiser">
+  {{#each (array
+    "scheduled"
+    "preparing"
+    "enqueued"
+    "active"
+    "aborting"
+    "cancelled"
+    "skipped"
+    "finished"
+    "failed"
+    "unknown"
+    "randomValue"
+  ) as |status|}}
+  <p>
+    Status {{status}}:
+    {{workflow-visualiser/lane/run-indicator status=status runNo=1}}
+    {{workflow-visualiser/lane/run-indicator
+      status=status
+      runNo=2
+      sourceRunNo=1
+      class="clickable"
+    }}
+    {{workflow-visualiser/lane/run-indicator
+      status=status
+      runNo=3
+      sourceRunNo=2
+      isActive=true
+      class="clickable"
+    }}
+  </p>
+  {{/each}}
+
+  {{#each (array 1 20 456 -1 "randomValue") as |runNo|}}
+    <p>
+      Run number {{runNo}}:
+      {{workflow-visualiser/lane/run-indicator runNo=runNo}}
+    </p>
+  {{/each}}
+</div>

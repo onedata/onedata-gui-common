@@ -39,6 +39,13 @@ export default {
         modalYes: 'Remove',
       },
     },
+    runIndicator: {
+      tooltip: {
+        runNo: 'Run',
+        sourceRunNo: 'Source run',
+        status: 'Status',
+      },
+    },
   },
   parallelBox: {
     actions: {

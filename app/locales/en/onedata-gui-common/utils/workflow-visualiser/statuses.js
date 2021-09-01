@@ -1,24 +1,48 @@
+const pending = 'Pending';
+const scheduled = 'Scheduled';
+const preparing = 'Preparing';
+const enqueued = 'Enqueued';
+const active = 'Active';
+const aborting = 'Aborting';
+const cancelled = 'Cancelled';
+const skipped = 'Skipped';
+const finished = 'Finished';
+const failed = 'Failed';
+const unknown = 'Unknown';
+
 export default {
   task: {
-    pending: 'Pending',
-    active: 'Active',
-    aborting: 'Aborting',
-    cancelled: 'Cancelled',
-    skipped: 'Skipped',
-    finished: 'Finished',
-    failed: 'Failed',
-    unknown: 'Unknown',
+    pending,
+    active,
+    aborting,
+    cancelled,
+    skipped,
+    finished,
+    failed,
+    unknown,
+  },
+  lane: {
+    scheduled,
+    preparing,
+    enqueued,
+    active,
+    aborting,
+    cancelled,
+    skipped,
+    finished,
+    failed,
+    unknown,
   },
   workflow: {
-    scheduled: 'Scheduled',
-    preparing: 'Preparing',
-    enqueued: 'Enqueued',
-    active: 'Active',
-    aborting: 'Aborting',
-    cancelled: 'Cancelled',
-    skipped: 'Skipped',
-    finished: 'Finished',
-    failed: 'Failed',
-    unknown: 'Unknown',
+    scheduled,
+    preparing,
+    enqueued,
+    active,
+    aborting,
+    cancelled,
+    skipped,
+    finished,
+    failed,
+    unknown,
   },
 };

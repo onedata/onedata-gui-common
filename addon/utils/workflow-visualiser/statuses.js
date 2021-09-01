@@ -35,6 +35,29 @@ export function translateTaskStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.task.${normalizedStatus}`);
 }
 
+const laneUnknownStatus = 'unknown';
+export const laneStatuses = [
+  'scheduled',
+  'preparing',
+  'enqueued',
+  'active',
+  'aborting',
+  'cancelled',
+  'skipped',
+  'finished',
+  'failed',
+  laneUnknownStatus,
+];
+
+export function normalizeLaneStatus(status) {
+  return laneStatuses.includes(status) ? status : laneUnknownStatus;
+}
+
+export function translateLaneStatus(i18n, status) {
+  const normalizedStatus = normalizeLaneStatus(status);
+  return i18n.t(`utils.workflowVisualiser.statuses.lane.${normalizedStatus}`);
+}
+
 const workflowUnknownStatus = 'unknown';
 export const workflowStatuses = [
   'scheduled',

@@ -45,4 +45,5 @@ export default [
   'support-size-info',
   'tags-input',
   'workflow-visualiser',
+  'workflow-visualiser/lane/run-indicator',
 ];
