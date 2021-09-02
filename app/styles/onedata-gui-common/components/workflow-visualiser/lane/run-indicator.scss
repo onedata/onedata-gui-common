@@ -97,6 +97,7 @@
 
   .run-no,
   .source-run-no {
+    line-height: 0;
     @include font-semibold();
   }
 

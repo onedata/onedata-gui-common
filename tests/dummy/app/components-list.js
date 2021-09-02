@@ -46,4 +46,5 @@ export default [
   'tags-input',
   'workflow-visualiser',
   'workflow-visualiser/lane/run-indicator',
+  'workflow-visualiser/lane/runs-list',
 ];

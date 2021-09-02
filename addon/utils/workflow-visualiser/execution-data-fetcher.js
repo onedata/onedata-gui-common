@@ -33,6 +33,7 @@ export default EmberObject.extend({
    *       lane1SchemaId: {
    *         runs: {
    *           1: {
+   *             runNo: 1,
    *             iteratedStoreInstanceId: 'store1InstanceIdW1',
    *             status: 'run1LaneStatus',
    *           },
@@ -47,6 +48,7 @@ export default EmberObject.extend({
    *       parallelBox1SchemaId: {
    *         runs: {
    *           1: {
+   *             runNo: 1,
    *             status: 'run1PboxStatus',
    *           },
    *           2: { ... },
@@ -60,6 +62,7 @@ export default EmberObject.extend({
    *       task1SchemaId: {
    *         runs: {
    *           1: {
+   *             runNo: 1,
    *             instanceId: 'task1InstanceId1',
    *             systemAuditLogStoreInstanceId: 'storeInstanceIdT1',
    *             statuse: 'run1TaskStatus',

@@ -1,0 +1,31 @@
+<button
+  class="move-runs-btn show-prev-runs"
+  disabled={{lte hiddenPrevRuns 0}}
+  {{action "showPrevRuns"}}
+>
+  {{one-icon icon="arrow-left"}}
+</button>
+<ol class="run-indicators-list">
+  {{#each visibleRunsArray key="runNo" as |run|}}
+    <li
+      class="run-indicators-item {{get visibleRunsClasses run.runNo}}"
+      style={{html-safe (get visibleRunsStyles run.runNo)}}
+    >
+      {{workflow-visualiser/lane/run-indicator
+        status=run.status
+        runNo=run.runNo
+        sourceRunNo=run.sourceRunNo
+        isActive=(eq selectedRunNo run.runNo)
+        click=(action "runSelected" run.runNo)
+      }}
+    </li>
+  {{/each}}
+</ol>
+<button
+  class="move-runs-btn show-next-runs"
+  disabled={{lte hiddenNextRuns 0}}
+  {{action "showNextRuns"}}
+>
+  {{one-icon icon="arrow-right"}}
+</button>
+{{yield}}
