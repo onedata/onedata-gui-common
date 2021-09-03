@@ -8,6 +8,13 @@
     <div class="lane-menu-trigger-space lane-drag-handle">
       {{#if (eq mode "edit")}}
         {{one-icon icon="move"}}
+      {{else}}
+        {{workflow-visualiser/lane/run-indicator
+          class="visible-run-indicator"
+          status=lane.status
+          runNo=lane.visibleRunNo
+          sourceRunNo=lane.visibleRun.sourceRunNo
+        }}
       {{/if}}
     </div>
     {{#if (eq mode "edit")}}

@@ -49,6 +49,10 @@
     }
   }
 
+  .visible-run-indicator {
+    margin-left: $padding-small-horizontal * 0.8;
+  }
+
   .lane-name {
     flex-grow: 1;
     min-width: 0;
