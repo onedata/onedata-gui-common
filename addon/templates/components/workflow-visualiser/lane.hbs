@@ -52,6 +52,16 @@
       {{/render-later}}
     </div>
   </div>
+  {{#if (eq mode "view")}}
+    <div class="lane-runs-info">
+      {{workflow-visualiser/lane/runs-list
+        visibleRunsLimit=6
+        runs=lane.runs
+        selectedRunNo=lane.visibleRunNo
+        onSelectionChange=(action "changeRun")
+      }}
+    </div>
+  {{/if}}
   <div class="lane-store-info">
     <span class="one-label">{{iteratorStrategyLabel}}</span>
     {{#if lane.iteratedStore}}

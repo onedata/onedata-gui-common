@@ -14,11 +14,16 @@
   }
 
   .lane-header,
+  .lane-runs-info,
   .lane-store-info {
     display: flex;
     align-items: center;
     min-height: 42px;
     border-bottom: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
+  }
+
+  .lane-runs-info {
+    justify-content: center;
   }
 
   .lane-store-info {

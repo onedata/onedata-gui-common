@@ -48,6 +48,15 @@ export default VisualiserRecord.extend({
   onClear: undefined,
 
   /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {Number} runNo
+   * @returns {Any}
+   */
+  onChangeRun: undefined,
+
+  /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
   iteratedStore: reads('visibleRun.iteratedStore'),
@@ -63,5 +72,10 @@ export default VisualiserRecord.extend({
   clear() {
     const onClear = this.get('onClear');
     return onClear ? onClear(this) : resolve();
+  },
+
+  changeRun(runNo) {
+    const onChangeRun = this.get('onChangeRun');
+    onChangeRun && onChangeRun(this, runNo);
   },
 });

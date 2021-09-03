@@ -1,8 +1,10 @@
+$workflow-visualiser-run-indicator-size: 25px;
+
 .workflow-visualiser .run-indicator {
-  $size: 25px;
   $border-width: 2px;
 
   $status-colors: (
+    "pending": $color-one-light-gray,
     "scheduled": $color-one-azure,
     "preparing": $color-one-azure,
     "enqueued": $color-one-azure,
@@ -17,9 +19,9 @@
 
   position: relative;
   display: inline-flex;
-  height: $size;
-  width: $size;
-  border-radius: $size * 0.5;
+  height: $workflow-visualiser-run-indicator-size;
+  width: $workflow-visualiser-run-indicator-size;
+  border-radius: $workflow-visualiser-run-indicator-size * 0.5;
   border: $border-width solid $color-one-light-gray;
   align-items: center;
   justify-content: center;
@@ -51,6 +53,7 @@
 
       &.active {
         background-color: $status-color;
+        box-shadow: 0px 0px 5px 1px $status-color;
 
         .run-no {
           color: $color-one-white;
@@ -72,8 +75,8 @@
   &.status-aborting {
     &::before {
       $margin: $border-width * 2.5;
-      $radius: $size * 0.5;
-      $spinner-size: $size - ($border-width * 3);
+      $radius: $workflow-visualiser-run-indicator-size * 0.5;
+      $spinner-size: $workflow-visualiser-run-indicator-size - ($border-width * 3);
 
       content: '';
       position: absolute;
@@ -104,10 +107,10 @@
   .source-run-no-container {
     position: absolute;
     display: flex;
-    height: $size * 0.6;
+    height: $workflow-visualiser-run-indicator-size * 0.6;
     border: 1px solid $color-one-dark-gray;
     font-size: 0.7em;
-    border-radius: $size * 0.3;
+    border-radius: $workflow-visualiser-run-indicator-size * 0.3;
     bottom: 0;
     right: 0;
     transform: translateX(50%) translateY(50%);

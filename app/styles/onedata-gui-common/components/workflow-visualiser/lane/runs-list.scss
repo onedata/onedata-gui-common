@@ -1,14 +1,17 @@
 .workflow-visualiser .runs-list {
-  $indicator-slot-size: 35px;
+  $indicator-slot-width: 35px;
+  $indicator-slot-height: 33px;
+  $padding-top: 8px;
+  $padding-horizontal: 0.3em;
 
   display: flex;
 
   .run-indicators-list {
     position: relative;
     display: inline-flex;
-    padding: 0 0.3em;
+    padding: $padding-top $padding-horizontal 0 $padding-horizontal;
     margin: 0;
-    height: $indicator-slot-size;
+    height: $indicator-slot-height + $padding-top;
     list-style-type: none;
     overflow: hidden;
   }
@@ -16,7 +19,7 @@
   .run-indicators-item {
     position: relative;
     display: inline-block;
-    width: $indicator-slot-size;
+    width: $indicator-slot-width;
     text-align: center;
 
     &.animated {
@@ -25,6 +28,11 @@
 
     &.new-item {
       position: absolute;
+      transform: translateX(#{$padding-horizontal});
+    }
+
+    &:not(.new-item) ~ .new-item {
+      transform: translateX(#{-$padding-horizontal});
     }
   }
 
@@ -33,6 +41,7 @@
     align-items: center;
     height: 25px;
     padding: 0;
+    margin-top: $padding-top;
     background: none;
     border: 0;
 

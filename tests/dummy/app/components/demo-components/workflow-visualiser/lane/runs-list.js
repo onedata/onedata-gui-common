@@ -13,7 +13,7 @@ import _ from 'lodash';
 export default Component.extend({
   runs: computed(function runs() {
     const runsMap = {};
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= 16; i++) {
       const run = {
         runNo: i,
         status: _.sample(laneStatuses),

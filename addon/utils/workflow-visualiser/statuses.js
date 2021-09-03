@@ -37,6 +37,7 @@ export function translateTaskStatus(i18n, status) {
 
 const laneUnknownStatus = 'unknown';
 export const laneStatuses = [
+  'pending',
   'scheduled',
   'preparing',
   'enqueued',

@@ -8,6 +8,9 @@ import OneTooltipHelper from '../../../../helpers/one-tooltip';
 const componentClassName = 'run-indicator';
 
 const statuses = [{
+  name: 'pending',
+  translation: 'Pending',
+}, {
   name: 'scheduled',
   translation: 'Scheduled',
 }, {

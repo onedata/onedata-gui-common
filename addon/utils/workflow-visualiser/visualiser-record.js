@@ -75,7 +75,7 @@ export default VisualiserElement.extend({
   visibleRunNo: conditional(
     getBy('runs', 'parent.visibleRunNo'),
     'parent.visibleRunNo',
-    raw(0)
+    raw(1)
   ),
 
   /**

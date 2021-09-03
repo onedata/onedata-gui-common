@@ -712,19 +712,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } = getProperties(laneRawData, 'id', 'name', 'storeIteratorSpec', 'parallelBoxes');
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
     const normalizedRunsData = {};
-    if (iteratedStoreSchemaId) {
-      normalizedRunsData[0] = {
-        iteratedStore: this.getStoreBySchemaId(iteratedStoreSchemaId),
+    const runsData = this.get(`executionState.lane.${id}.runs`) || {};
+    const runNos = Object.keys(runsData);
+    if (runNos.length) {
+      runNos.forEach((runNo) => {
+        const storeInstanceId = runsData[runNo].iteratedStoreInstanceId;
+        normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
+          iteratedStore: this.getStoreByInstanceId(storeInstanceId),
+        });
+      });
+    } else {
+      normalizedRunsData[1] = {
+        runNo: 1,
+        iteratedStore: iteratedStoreSchemaId ?
+          this.getStoreBySchemaId(iteratedStoreSchemaId) : null,
       };
     }
-    const runsData = this.get(`executionState.lane.${id}.runs`) || {};
-    Object.keys(runsData).forEach((runNo) => {
-      const storeInstanceId = runsData[runNo].iteratedStoreInstanceId;
-      normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
-        iteratedStore: this.getStoreByInstanceId(storeInstanceId),
-      });
-    });
-    const newestRunNo = Math.max(...Object.keys(runsData).map(Number), 0);
+    const newestRunNo = Math.max(
+      ...Object.keys(normalizedRunsData).map(Number)
+    );
 
     const existingLane = this.getCachedElement('lane', { id });
 
@@ -763,6 +769,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         onMove: (lane, moveStep) => this.moveElement(lane, moveStep),
         onClear: lane => this.clearLane(lane),
         onRemove: lane => this.removeElement(lane),
+        onChangeRun: (lane, runNo) => this.changeLaneRun(lane, runNo),
       });
       set(
         newLane,
@@ -827,18 +834,32 @@ export default Component.extend(I18n, WindowResizeHandler, {
       tasks: rawTasks,
     } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
-    const existingParallelBox = this.getCachedElement('parallelBox', { id });
-    const runs = Object.assign({
-      0: { status: 'pending' },
-    }, this.get(`executionState.parallelBox.${id}.runs`) || {});
+    const parentRunNos = Object.keys(get(parent, 'runs'));
+    const normalizedRunsData = Object.assign({},
+      this.get(`executionState.parallelBox.${id}.runs`) || {}
+    );
+    parentRunNos.forEach((parentRunNo) => {
+      if (!(parentRunNo in normalizedRunsData)) {
+        normalizedRunsData[parentRunNo] = {
+          runNo: parentRunNo,
+          status: 'pending',
+        };
+      }
+    });
 
+    const existingParallelBox = this.getCachedElement('parallelBox', { id });
     if (existingParallelBox) {
       const elements = this.getLaneElementsForRawData(
         'task',
         rawTasks,
         existingParallelBox
       );
-      this.updateElement(existingParallelBox, { name, parent, elements, runs });
+      this.updateElement(existingParallelBox, {
+        name,
+        parent,
+        elements,
+        runs: normalizedRunsData,
+      });
       return existingParallelBox;
     } else {
       const {
@@ -851,7 +872,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         schemaId: id,
         name,
         parent,
-        runs,
+        runs: normalizedRunsData,
         mode,
         actionsFactory,
         onModify: (box, modifiedProps) => this.modifyElement(box, modifiedProps),
@@ -892,23 +913,29 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'resultMappings',
     );
 
+    const parentRunNos = Object.keys(get(parent, 'runs'));
+    const normalizedRunsData = {};
     const runsData = this.get(`executionState.task.${id}.runs`) || {};
-    const normalizedRunsData = {
-      0: {
-        instanceId: null,
-        status: 'pending',
-        systemAuditLogStore: null,
-        itemsInProcessing: 0,
-        itemsProcessed: 0,
-        itemsFailed: 0,
-      },
-    };
     Object.keys(runsData).forEach((runNo) => {
       const storeInstanceId = runsData[runNo].systemAuditLogStoreInstanceId;
       normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
         systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
       });
     });
+    parentRunNos.forEach((parentRunNo) => {
+      if (!(parentRunNo in normalizedRunsData)) {
+        normalizedRunsData[parentRunNo] = {
+          runNo: parentRunNo,
+          instanceId: null,
+          status: 'pending',
+          systemAuditLogStore: null,
+          itemsInProcessing: 0,
+          itemsProcessed: 0,
+          itemsFailed: 0,
+        };
+      }
+    });
+
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
@@ -1390,6 +1417,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
       default:
         return undefined;
     }
+  },
+
+  changeLaneRun(lane, runNo) {
+    set(lane, 'visibleRunNo', runNo);
   },
 
   executionHasEnded() {

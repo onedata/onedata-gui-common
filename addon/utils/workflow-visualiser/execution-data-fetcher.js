@@ -34,6 +34,7 @@ export default EmberObject.extend({
    *         runs: {
    *           1: {
    *             runNo: 1,
+   *             sourceRunNo: null, // will be a number less than runNo
    *             iteratedStoreInstanceId: 'store1InstanceIdW1',
    *             status: 'run1LaneStatus',
    *           },

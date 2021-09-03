@@ -22,6 +22,7 @@ export default {
     unknown,
   },
   lane: {
+    pending,
     scheduled,
     preparing,
     enqueued,

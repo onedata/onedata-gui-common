@@ -175,5 +175,8 @@ export default VisualiserElement.extend({
     toggleActionsOpen(state) {
       scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
     },
+    changeRun(runNo) {
+      this.get('lane').changeRun(runNo);
+    },
   },
 });
