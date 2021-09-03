@@ -1,12 +1,12 @@
 <span class="run-no">{{runNoText}}</span>
-{{#if sourceRunNoText}}
+{{#if isSourceRunNoVisible}}
   <div class="source-run-no-container">
     <span class="source-run-no">{{sourceRunNoText}}</span>
   </div>
 {{/if}}
 {{#one-tooltip}}
   {{tt this "tooltip.runNo"}}: <strong>{{runNoText}}</strong><br>
-  {{#if sourceRunNoText}}
+  {{#if isSourceRunNoValid}}
     {{tt this "tooltip.sourceRunNo"}}: <strong>{{sourceRunNoText}}</strong><br>
   {{/if}}
   {{tt this "tooltip.status"}}: <strong>{{statusText}}</strong>

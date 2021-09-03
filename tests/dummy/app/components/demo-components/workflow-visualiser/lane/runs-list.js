@@ -19,7 +19,7 @@ export default Component.extend({
         status: _.sample(laneStatuses),
       };
       if (i > 1) {
-        run.sourceRunNo = i - 1;
+        run.sourceRunNo = i % 4 === 0 ? i - 2 : i - 1;
       }
       runsMap[i] = run;
     }

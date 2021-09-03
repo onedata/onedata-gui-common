@@ -140,13 +140,28 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
     expect(getComponent(this).find('.source-run-no')).to.not.exist;
   });
 
-  it('shows source run number "1" if passed number is "1"', async function () {
-    this.set('sourceRunNo', 1);
+  it('does not show source run number if passed number differs by 1 from run number', async function () {
+    this.setProperties({
+      sourceRunNo: 1,
+      runNo: 2,
+    });
 
     await render(this);
 
-    expect(getComponent(this).find('.source-run-no').text().trim()).to.equal('1');
+    expect(getComponent(this).find('.source-run-no')).to.not.exist;
   });
+
+  it('shows source run number "1" if passed number is "1" and run number differs by more than 1 from run number',
+    async function () {
+      this.setProperties({
+        sourceRunNo: 1,
+        runNo: 3,
+      });
+
+      await render(this);
+
+      expect(getComponent(this).find('.source-run-no').text().trim()).to.equal('1');
+    });
 
   it('does not have class "clickable" by default', async function () {
     await render(this);

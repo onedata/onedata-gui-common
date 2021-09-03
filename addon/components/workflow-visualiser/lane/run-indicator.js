@@ -69,21 +69,71 @@ export default Component.extend(I18n, {
   statusClass: tag `status-${'normalizedStatus'}`,
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<Boolean>}
    */
-  runNoText: computed('runNo', function runNoText() {
+  isRunNoValid: computed('runNo', function isRunNoValid() {
     const runNo = this.get('runNo');
-    return Number.isInteger(runNo) && runNo > 0 ? String(runNo) : '?';
+    return Number.isInteger(runNo) && runNo > 0;
   }),
 
   /**
-   * @type {ComputedProperty<String|null>}
+   * @type {ComputedProperty<Boolean>}
    */
-  sourceRunNoText: computed('sourceRunNo', function sourceRunNoText() {
+  isSourceRunNoValid: computed('sourceRunNo', function isSourceRunNoValid() {
     const sourceRunNo = this.get('sourceRunNo');
-    return Number.isInteger(sourceRunNo) && sourceRunNo > 0 ?
-      String(sourceRunNo) : null;
+    return Number.isInteger(sourceRunNo) && sourceRunNo > 0;
   }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  runNoText: computed('runNo', 'isRunNoValid', function runNoText() {
+    const {
+      runNo,
+      isRunNoValid,
+    } = this.getProperties('runNo', 'isRunNoValid');
+    return isRunNoValid ? String(runNo) : '?';
+  }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  sourceRunNoText: computed(
+    'sourceRunNo',
+    'isSourceRunNoValid',
+    function sourceRunNoText() {
+      const {
+        sourceRunNo,
+        isSourceRunNoValid,
+      } = this.getProperties('sourceRunNo', 'isSourceRunNoValid');
+      return isSourceRunNoValid ? String(sourceRunNo) : '?';
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isSourceRunNoVisible: computed(
+    'runNo',
+    'sourceRunNo',
+    'isRunNoValid',
+    'isSourceRunNoValid',
+    function isSourceRunNoVisible() {
+      const {
+        runNo,
+        sourceRunNo,
+        isRunNoValid,
+        isSourceRunNoValid,
+      } = this.getProperties(
+        'runNo',
+        'sourceRunNo',
+        'isRunNoValid',
+        'isSourceRunNoValid'
+      );
+
+      return isSourceRunNoValid && isRunNoValid && runNo - sourceRunNo !== 1;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<String>}

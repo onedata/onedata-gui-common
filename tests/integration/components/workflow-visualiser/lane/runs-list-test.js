@@ -333,8 +333,8 @@ function generateRuns(runsCount) {
       runNo: i,
       status: 'finished',
     };
-    if (i > 1) {
-      run.sourceRunNo = i - 1;
+    if (i > 2) {
+      run.sourceRunNo = i - 2;
     }
     runs[i] = run;
   }
@@ -350,8 +350,8 @@ function getVisibleRunNos(testCase) {
       Number(sourceRunNoElement.textContent.trim()) : null;
     const hasFinishedStatus = this.classList.contains('status-finished');
     if (
-      (runNo === 1 && sourceRunNo !== null) ||
-      (runNo > 1 && sourceRunNo !== runNo - 1) ||
+      ((runNo === 1 || runNo === 2) && sourceRunNo !== null) ||
+      (runNo > 2 && sourceRunNo !== runNo - 2) ||
       !hasFinishedStatus
     ) {
       throw new Error('Invalid run indicator');
