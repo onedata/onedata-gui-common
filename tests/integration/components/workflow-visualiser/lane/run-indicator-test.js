@@ -110,20 +110,20 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
     expect(getComponent(this)).to.have.class('many-digit-run');
   });
 
-  it('does not have class "active" when "isActive" is set to false', async function () {
-    this.set('isActive', false);
+  it('does not have class "selected" when "isSelected" is set to false', async function () {
+    this.set('isSelected', false);
 
     await render(this);
 
-    expect(getComponent(this)).to.not.have.class('active');
+    expect(getComponent(this)).to.not.have.class('selected');
   });
 
-  it('has class "active" when "isActive" is set to true', async function () {
-    this.set('isActive', true);
+  it('has class "selected" when "isSelected" is set to true', async function () {
+    this.set('isSelected', true);
 
     await render(this);
 
-    expect(getComponent(this)).to.have.class('active');
+    expect(getComponent(this)).to.have.class('selected');
   });
 
   it('does not show source run number if not provided', async function () {
@@ -213,7 +213,7 @@ async function render(testCase) {
     status=status
     runNo=runNo
     sourceRunNo=sourceRunNo
-    isActive=isActive
+    isSelected=isSelected
     click=onClick
   }}`);
   await wait();

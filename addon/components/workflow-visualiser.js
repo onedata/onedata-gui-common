@@ -1465,10 +1465,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return;
     }
 
-    this.set(
-      'executionState',
-      await executionDataFetcher.fetchExecutionState()
-    );
+    const newExecutionState = await executionDataFetcher.fetchExecutionState();
+    safeExec(this, () => this.set('executionState', newExecutionState));
   },
 
   getStoreBySchemaId(schemaId) {

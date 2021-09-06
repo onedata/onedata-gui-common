@@ -1,6 +1,106 @@
 /**
  * Shows a list of lane runs.
  *
+ * To synchronize data updates and move animations, component uses finite state
+ * machine approach (FSM). It allows to postpone data updates until the animation end
+ * to not break UX and to organize steps of the animation (which is not trivial).
+ *
+ * "Move animation" state machine:
+ *
+ *                             ┌──────────────────────────────────┐
+ *                             │                                  │
+ *                             │                                  │
+ * ┌───────────────────────────▼────────────────────────────┐     │
+ * │ State: idle                                            │     │
+ * │                                                        │     │
+ * │ Start state with no animation.                         │     │
+ * └───────────────────────────┬────────────────────────────┘     │
+ *                             │                                  │
+ *                             │                                  │
+ *                             │ addIndicators                    │
+ *                             │                                  │
+ *                             │                                  │
+ * ┌───────────────────────────▼────────────────────────────┐     │
+ * │ State: addingIndicators                                │     │
+ * │                                                        │     │
+ * │ Renders new indicators, that will become visible after │     │
+ * │ animation. On the left side for "showPrevRuns"         │     │
+ * │ and on the right side for "showNextRuns".              │     │
+ * │ These new indicators are invisible (hidden due to      │     │
+ * │ left/right overflow).                                  │     │
+ * └───────────────────────────┬────────────────────────────┘     │
+ *                             │                                  │
+ *                             │                                  │
+ *                             │ moveIndicators                   │ finishAnimation
+ *                             │                                  │
+ *                             │                                  │
+ * ┌───────────────────────────▼────────────────────────────┐     │
+ * │ State: movingIndicators                                │     │
+ * │                                                        │     │
+ * │ Applies position-related CSS to indicators to launch   │     │
+ * │ transition animation. At the end indicators are        │     │
+ * │ visible in their right places. Previous indicators     │     │
+ * │ are hidden due to the overflow and new ones are in     │     │
+ * │ a visible part of the list.                            │     │
+ * └───────────────────────────┬────────────────────────────┘     │
+ *                             │                                  │
+ *                             │                                  │
+ *                             │ removeIndicators                 │
+ *                             │                                  │
+ *                             │                                  │
+ * ┌───────────────────────────▼────────────────────────────┐     │
+ * │ State: removingIndicators                              │     │
+ * │                                                        │     │
+ * │ Removes indicators, that are no longer needed as       │     │
+ * │ they are not visible due to an overflow.               │     │
+ * └───────────────────────────┬────────────────────────────┘     │
+ *                             │                                  │
+ *                             │                                  │
+ *                             │                                  │
+ *                             └──────────────────────────────────┘
+ *
+ * Example of move FSM effects for "showNextRuns":
+ *
+ * 1. "idle" state
+ *    Visible indicators at the end: | 1 2 3 4 5 |
+ *    FSM receives (addIndicators moveStep=5)
+ * 2. "addingIndicators" state
+ *    Visible indicators at the end: | 1 2 3 4 5 | [6] [7] [8] [9] [10]
+ *    FSM receives (moveIndicators moveStep=5)
+ * 3. "movingIndicators" state
+ *    Visible indicators at the end: [1] [2] [3] [4] [5] | 6 7 8 9 10 |
+ *    FSM receives (removeIndicators moveStep=5)
+ * 4. "removingIndicators" state
+ *    Visible indicators at the end: | 6 7 8 9 10 |
+ *    FSM receives (finishAnimation)
+ * 5. "idle" state
+ *    ... and so on
+ *
+ * For "showPrevRuns" moveStep parameter is negative.
+ *
+ * The information about next indicators position (which triggers animation FSM)
+ * is passed via `visibleRunsPosition` parameter. It is an object, which has
+ * two fields:
+ * - `runNo` - describes which run (and so other runs, which are near to it)
+ *   should be positioned.
+ * - `placement` - position of the `runNo` in runs list. Possible values:
+ *   `'start'`, `'center'`, `'end'`.
+ *
+ * Example: For visible indicators | 3 4 5 6 7 | triggering `showNextRuns`
+ * would pass to the parent an information to change `visibleRunsPosition`
+ * value to `{ runNo: 12, placement: 'end' }` which means "scroll horizontally
+ * as soon as run '12' will be visible on the right (end) edge".
+ *
+ * Due to updates of `runs` object, which can happen any time, actual list of
+ * runs used in rendering and calculating animations is dumped to `runsArray`.
+ * `runsArray` is of course updated on `runs` change but only in allowed time
+ * frames to not break the animation. Also to prevent races with mixed animations
+ * and updates, there is a queue of indicators position changes. It handles cases
+ * when animation is being executed, but in the same time there is a `runs` update
+ * and `visibleRunsPosition` update. In that case the existing animation is fully
+ * finished, then new `runsArray` is generated and at the end the next animation
+ * request (from `visibleRunsPosition` change) is processed.
+ *
  * @module components/workflow-visualiser/lane/runs-list
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
@@ -70,7 +170,8 @@ export default Component.extend({
   prevRuns: undefined,
 
   /**
-   *Value of `visibleRunsPosition` from latest render
+   * Value of `visibleRunsPosition` from latest render
+   * @type {RunsListVisibleRunsPosition}
    */
   prevVisibleRunsPosition: undefined,
 
@@ -585,18 +686,23 @@ export default Component.extend({
     return (this.get('visibleRunsArray') || []).mapBy('runNo');
   },
 
+  notifyVisibleRunsPositionChange(newVisibleRunsPosition) {
+    const onVisibleRunsPositionChange = this.get('onVisibleRunsPositionChange');
+    if (onVisibleRunsPositionChange && newVisibleRunsPosition) {
+      onVisibleRunsPositionChange(newVisibleRunsPosition);
+    }
+  },
+
+  notifySelectionChange(newSelectedRunNo) {
+    const onSelectionChange = this.get('onSelectionChange');
+    if (onSelectionChange) {
+      onSelectionChange(newSelectedRunNo);
+    }
+  },
+
   actions: {
     showPrevRuns() {
-      const {
-        onVisibleRunsPositionChange,
-        visibleRunsLimit,
-      } = this.getProperties(
-        'onVisibleRunsPositionChange',
-        'visibleRunsLimit'
-      );
-      if (!onVisibleRunsPositionChange) {
-        return;
-      }
+      const visibleRunsLimit = this.get('visibleRunsLimit');
 
       const runsNos = this.getRunsNos();
       const visibleRunsNos = this.getVisibleRunsNos();
@@ -608,22 +714,13 @@ export default Component.extend({
         return;
       }
 
-      onVisibleRunsPositionChange({
+      this.notifyVisibleRunsPositionChange({
         runNo: runsNos[newFirstVisibleRunIdx],
         placement: 'start',
       });
     },
     showNextRuns() {
-      const {
-        onVisibleRunsPositionChange,
-        visibleRunsLimit,
-      } = this.getProperties(
-        'onVisibleRunsPositionChange',
-        'visibleRunsLimit'
-      );
-      if (!onVisibleRunsPositionChange) {
-        return;
-      }
+      const visibleRunsLimit = this.get('visibleRunsLimit');
 
       const runsNos = this.getRunsNos();
       const visibleRunsNos = this.getVisibleRunsNos();
@@ -636,14 +733,13 @@ export default Component.extend({
         return;
       }
 
-      onVisibleRunsPositionChange({
+      this.notifyVisibleRunsPositionChange({
         runNo: runsNos[newLastVisibleRunIdx],
         placement: 'end',
       });
     },
     runSelected(runNo) {
-      const onSelectionChange = this.get('onSelectionChange');
-      onSelectionChange && onSelectionChange(runNo);
+      this.notifySelectionChange(runNo);
     },
   },
 });

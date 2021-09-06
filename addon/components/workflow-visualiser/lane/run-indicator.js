@@ -21,7 +21,7 @@ export default Component.extend(I18n, {
   classNameBindings: [
     'statusClass',
     'digitsNoClass',
-    'isActive:active',
+    'isSelected:selected',
     'click:clickable',
   ],
 
@@ -54,7 +54,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Boolean}
    */
-  isActive: false,
+  isSelected: false,
 
   /**
    * @type {ComputedProperty<String>}

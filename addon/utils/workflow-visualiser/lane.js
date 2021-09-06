@@ -25,7 +25,7 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  visibleRunNo: 0,
+  visibleRunNo: 1,
 
   /**
    * @virtual

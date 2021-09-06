@@ -253,7 +253,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await render(this);
 
-    expect(getComponent(this).find('.run-indicator.active')).to.not.exist;
+    expect(getComponent(this).find('.run-indicator.selected')).to.not.exist;
   });
 
   it('marks run as selected', async function () {
@@ -264,9 +264,9 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await render(this);
 
-    const $activeIndicators = getComponent(this).find('.run-indicator.active');
-    expect($activeIndicators).to.have.length(1);
-    expect($activeIndicators.find('.run-no').text().trim()).to.equal('3');
+    const $selectedIndicators = getComponent(this).find('.run-indicator.selected');
+    expect($selectedIndicators).to.have.length(1);
+    expect($selectedIndicators.find('.run-no').text().trim()).to.equal('3');
   });
 
   it('notifies about run selection change via "onSelectionChange" callback', async function () {
