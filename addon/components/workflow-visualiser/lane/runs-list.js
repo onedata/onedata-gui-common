@@ -9,9 +9,16 @@
 
 import Component from '@ember/component';
 import layout from '../../../templates/components/workflow-visualiser/lane/runs-list';
-import { observer, get, computed } from '@ember/object';
+import { observer, getProperties, computed } from '@ember/object';
 import { next, later, cancel } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { scheduleOnce } from '@ember/runloop';
+
+/**
+ * @typedef {Object} RunsListVisibleRunsPosition
+ * @property {Number} runNo
+ * @property {String} placement one of: `'start'`, `'end'`, `'center'`
+ */
 
 export default Component.extend({
   layout,
@@ -25,12 +32,19 @@ export default Component.extend({
   runs: undefined,
 
   /**
+   * @virtual
+   * @type {RunsListVisibleRunsPosition}
+   */
+  visibleRunsPosition: undefined,
+
+  /**
    * @virtual optional
    * @type {Number}
    */
   visibleRunsLimit: 5,
 
   /**
+   * @virtual optional
    * @type {Number|undefined}
    */
   selectedRunNo: undefined,
@@ -41,6 +55,24 @@ export default Component.extend({
    * @returns {any}
    */
   onSelectionChange: undefined,
+
+  /**
+   * @type {Function}
+   * @param {RunsListVisibleRunsPosition} visibleRunsPosition
+   * @returns {any}
+   */
+  onVisibleRunsPositionChange: undefined,
+
+  /**
+   * Value of `runs` from latest render
+   * @type {Object}
+   */
+  prevRuns: undefined,
+
+  /**
+   *Value of `visibleRunsPosition` from latest render
+   */
+  prevVisibleRunsPosition: undefined,
 
   /**
    * @type {Number}
@@ -56,6 +88,16 @@ export default Component.extend({
    * @type {Array<Object>}
    */
   runsArray: undefined,
+
+  /**
+   * @type {RunsListVisibleRunsPosition}
+   */
+  activeVisibleRunsPosition: undefined,
+
+  /**
+   * @type {Array<RunsListVisibleRunsPosition>}
+   */
+  visibleRunsPositionChangesQueue: undefined,
 
   /**
    * @type {Array<Object>}
@@ -114,18 +156,27 @@ export default Component.extend({
     }
   ),
 
-  runsArrayUpdater: observer(
+  runsAndPositionUpdater: observer(
     'runs',
     'visibleRunsLimit',
-    function visibleRunsArraySetter() {
-      this.scheduleRunsArrayUpdate();
+    'visibleRunsPosition',
+    function runsAndPositionUpdater() {
+      scheduleOnce('afterRender', this, 'updateRunsAndPosition');
     }
   ),
 
   init() {
     this._super(...arguments);
 
+    const {
+      runs,
+      visibleRunsPosition,
+    } = this.getProperties('visibleRunsPosition');
     this.setProperties({
+      prevRuns: runs,
+      prevVisibleRunsPosition: visibleRunsPosition,
+      activeVisibleRunsPosition: this.generateInitialActiveVisibleRunsPosition(),
+      visibleRunsPositionChangesQueue: [],
       moveAnimationFsm: {
         state: 'idle',
         data: {},
@@ -137,6 +188,26 @@ export default Component.extend({
     this.updateRunsArray();
   },
 
+  updateRunsAndPosition() {
+    const {
+      runs,
+      prevRuns,
+      visibleRunsPosition,
+      prevVisibleRunsPosition,
+    } = this.getProperties(
+      'runs',
+      'prevRuns',
+      'visibleRunsPosition',
+      'prevVisibleRunsPosition'
+    );
+    if (runs !== prevRuns) {
+      this.scheduleRunsArrayUpdate();
+    }
+    if (visibleRunsPosition !== prevVisibleRunsPosition) {
+      this.scheduleVisibleRunsPositionChange();
+    }
+  },
+
   scheduleRunsArrayUpdate() {
     if (this.get('moveAnimationFsm.state') !== 'idle') {
       this.set('updateRunsArrayAfterAnimation', true);
@@ -146,51 +217,137 @@ export default Component.extend({
   },
 
   updateRunsArray() {
-    this.set(
-      'runsArray',
-      Object.values(this.get('runs') || {}).sortBy('runNo')
-    );
+    const runs = this.get('runs');
+    this.setProperties({
+      runsArray: this.generateRunsArray(),
+      prevRuns: runs,
+    });
 
     this.updateVisibleRunsArray();
   },
 
   updateVisibleRunsArray() {
+    let activeVisibleRunsPosition = this.get('activeVisibleRunsPosition');
+    if (!activeVisibleRunsPosition) {
+      activeVisibleRunsPosition = this.set('activeVisibleRunsPosition', {
+        runNo: this.getRunsNos().reverse()[0],
+        placement: 'end',
+      });
+    }
+    this.set(
+      'visibleRunsArray',
+      this.calculateVisibleRunsForPosition(activeVisibleRunsPosition)
+    );
+  },
+
+  calculateVisibleRunsForPosition(visibleRunsPosition) {
     const {
-      visibleRunsArray,
       visibleRunsLimit,
       runsArray,
     } = this.getProperties(
-      'visibleRunsArray',
       'visibleRunsLimit',
       'runsArray'
     );
 
     if (!runsArray.length) {
-      this.set('visibleRunsArray', []);
+      return [];
+    }
+
+    const {
+      runNo: positionedRunNo,
+      placement,
+    } = getProperties(visibleRunsPosition || {}, 'runNo', 'placement');
+
+    const runsNos = this.getRunsNos();
+    const positionedRunNoIdx = runsNos.indexOf(positionedRunNo);
+    if (positionedRunNoIdx === -1) {
+      return getLastNArrayElements(runsArray, visibleRunsLimit);
+    }
+    let slotsOnTheLeft;
+    let slotsOnTheRight;
+    if (placement === 'start') {
+      slotsOnTheLeft = 0;
+      slotsOnTheRight = visibleRunsLimit - 1;
+    } else if (placement === 'end') {
+      slotsOnTheLeft = visibleRunsLimit - 1;
+      slotsOnTheRight = 0;
+    } else {
+      slotsOnTheLeft = Math.floor(visibleRunsLimit / 2);
+      slotsOnTheRight = Math.floor((visibleRunsLimit - 1) / 2);
+    }
+
+    const leftRunsOnTheLeft = runsArray.slice(0, positionedRunNoIdx);
+    const leftRunsOnTheRight = runsArray.slice(positionedRunNoIdx + 1);
+    const leftRunsToAdd = leftRunsOnTheLeft.splice(
+      Math.max(0, leftRunsOnTheLeft.length - slotsOnTheLeft)
+    );
+    const rightRunsToAdd = leftRunsOnTheRight.splice(0, slotsOnTheRight);
+    if (leftRunsToAdd.length < slotsOnTheLeft) {
+      const extraSlotsOnTheRight = slotsOnTheLeft - leftRunsToAdd.length;
+      rightRunsToAdd.push(...leftRunsOnTheRight.splice(0, extraSlotsOnTheRight));
+    } else if (rightRunsToAdd.length < slotsOnTheRight) {
+      const extraSlotsOnTheLeft = slotsOnTheRight - rightRunsToAdd.length;
+      leftRunsToAdd.push(...leftRunsOnTheLeft.splice(
+        Math.max(0, leftRunsOnTheLeft.length - extraSlotsOnTheLeft)
+      ));
+    }
+    return [
+      ...leftRunsToAdd,
+      runsArray[positionedRunNoIdx],
+      ...rightRunsToAdd,
+    ];
+  },
+
+  scheduleVisibleRunsPositionChange() {
+    const {
+      visibleRunsPosition,
+      visibleRunsPositionChangesQueue,
+    } = this.getProperties(
+      'visibleRunsPosition',
+      'visibleRunsPositionChangesQueue'
+    );
+    this.set('prevVisibleRunsPosition', visibleRunsPosition);
+    const shouldApplyPositionNow =
+      visibleRunsPositionChangesQueue.length === 0 &&
+      this.get('moveAnimationFsm.state') === 'idle';
+
+    visibleRunsPositionChangesQueue.push(visibleRunsPosition);
+    if (shouldApplyPositionNow) {
+      this.applyNextVisibleRunsPosition();
+    }
+  },
+
+  applyNextVisibleRunsPosition() {
+    const {
+      visibleRunsPositionChangesQueue,
+      visibleRunsArray,
+    } = this.getProperties(
+      'visibleRunsPositionChangesQueue',
+      'visibleRunsArray'
+    );
+    const nextVisibleRunsPosition = visibleRunsPositionChangesQueue[0];
+    if (!nextVisibleRunsPosition || !visibleRunsArray.length) {
       return;
     }
 
-    const newRunsNos = runsArray.mapBy('runNo');
-    const firstVisibleRun = visibleRunsArray[0];
-    const firstVisibleRunIdx = firstVisibleRun ?
-      newRunsNos.indexOf(get(firstVisibleRun, 'runNo')) : -1;
-
-    let newVisibleRunsArray;
+    const newVisibleRunsArray =
+      this.calculateVisibleRunsForPosition(nextVisibleRunsPosition);
     if (
-      !firstVisibleRun ||
-      firstVisibleRunIdx === -1 ||
-      firstVisibleRunIdx + visibleRunsLimit >= runsArray.length
+      !newVisibleRunsArray.length ||
+      visibleRunsArray[0].runNo === newVisibleRunsArray[0].runNo
     ) {
-      newVisibleRunsArray =
-        getLastNArrayElements(runsArray, visibleRunsLimit);
-    } else {
-      newVisibleRunsArray = runsArray.slice(
-        firstVisibleRunIdx,
-        firstVisibleRunIdx + visibleRunsLimit
-      );
+      // Incorrect/non-changing position, finish this animation.
+      this.runAfterAnimationHooks();
+      return;
     }
 
-    this.set('visibleRunsArray', newVisibleRunsArray);
+    const runsNos = this.getRunsNos();
+    const firstVisibleRunIdx = runsNos.indexOf(visibleRunsArray[0].runNo);
+    const newFirstVisibleRunIdx = runsNos.indexOf(newVisibleRunsArray[0].runNo);
+    const moveStep = newFirstVisibleRunIdx - firstVisibleRunIdx;
+
+    this.set('activeVisibleRunsPosition', nextVisibleRunsPosition);
+    this.scheduleActionOnAnimationFsm('addIndicators', { moveStep });
   },
 
   performActionOnAnimationFsm(actionName, actionData) {
@@ -263,9 +420,22 @@ export default Component.extend({
   },
 
   runAfterAnimationHooks() {
-    if (this.get('updateRunsArrayAfterAnimation')) {
+    const {
+      updateRunsArrayAfterAnimation,
+      visibleRunsPositionChangesQueue,
+    } = this.getProperties(
+      'updateRunsArrayAfterAnimation',
+      'visibleRunsPositionChangesQueue'
+    );
+    if (updateRunsArrayAfterAnimation) {
       this.set('updateRunsArrayAfterAnimation', false);
       this.updateRunsArray();
+    }
+    // Remove position change that has been just applied.
+    visibleRunsPositionChangesQueue.shift();
+    // Run next position change if needed
+    if (visibleRunsPositionChangesQueue.length) {
+      this.applyNextVisibleRunsPosition();
     }
   },
 
@@ -389,34 +559,87 @@ export default Component.extend({
     this.scheduleActionOnAnimationFsm('finishAnimation');
   },
 
+  generateInitialActiveVisibleRunsPosition() {
+    // If user passed initial value, then return it.
+    const visibleRunsPosition = this.get('visibleRunsPosition');
+    if (visibleRunsPosition) {
+      return visibleRunsPosition;
+    }
+
+    const lastRunNo = this.generateRunsArray().mapBy('runNo').reverse()[0];
+    return {
+      runNo: lastRunNo,
+      placement: 'end',
+    };
+  },
+
+  generateRunsArray() {
+    return Object.values(this.get('runs') || {}).sortBy('runNo');
+  },
+
+  getRunsNos() {
+    return this.get('runsArray').mapBy('runNo');
+  },
+
+  getVisibleRunsNos() {
+    return (this.get('visibleRunsArray') || []).mapBy('runNo');
+  },
+
   actions: {
     showPrevRuns() {
       const {
-        hiddenPrevRuns,
+        onVisibleRunsPositionChange,
         visibleRunsLimit,
       } = this.getProperties(
-        'hiddenPrevRuns',
+        'onVisibleRunsPositionChange',
         'visibleRunsLimit'
       );
-      const moveStep = -Math.min(hiddenPrevRuns, visibleRunsLimit);
-      if (moveStep === 0) {
+      if (!onVisibleRunsPositionChange) {
         return;
       }
-      this.scheduleActionOnAnimationFsm('addIndicators', { moveStep });
+
+      const runsNos = this.getRunsNos();
+      const visibleRunsNos = this.getVisibleRunsNos();
+      const firstVisibleRunIdx = runsNos.indexOf(visibleRunsNos[0]);
+      const newFirstVisibleRunIdx =
+        Math.max(firstVisibleRunIdx - visibleRunsLimit, 0);
+
+      if (newFirstVisibleRunIdx === firstVisibleRunIdx) {
+        return;
+      }
+
+      onVisibleRunsPositionChange({
+        runNo: runsNos[newFirstVisibleRunIdx],
+        placement: 'start',
+      });
     },
     showNextRuns() {
       const {
-        hiddenNextRuns,
+        onVisibleRunsPositionChange,
         visibleRunsLimit,
       } = this.getProperties(
-        'hiddenNextRuns',
+        'onVisibleRunsPositionChange',
         'visibleRunsLimit'
       );
-      const moveStep = Math.min(hiddenNextRuns, visibleRunsLimit);
-      if (moveStep === 0) {
+      if (!onVisibleRunsPositionChange) {
         return;
       }
-      this.scheduleActionOnAnimationFsm('addIndicators', { moveStep });
+
+      const runsNos = this.getRunsNos();
+      const visibleRunsNos = this.getVisibleRunsNos();
+      const lastVisibleRunIdx =
+        runsNos.indexOf(visibleRunsNos[visibleRunsNos.length - 1]);
+      const newLastVisibleRunIdx =
+        Math.min(lastVisibleRunIdx + visibleRunsLimit, runsNos.length - 1);
+
+      if (newLastVisibleRunIdx === lastVisibleRunIdx) {
+        return;
+      }
+
+      onVisibleRunsPositionChange({
+        runNo: runsNos[newLastVisibleRunIdx],
+        placement: 'end',
+      });
     },
     runSelected(runNo) {
       const onSelectionChange = this.get('onSelectionChange');

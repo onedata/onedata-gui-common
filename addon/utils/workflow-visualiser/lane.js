@@ -40,6 +40,11 @@ export default VisualiserRecord.extend({
   elements: undefined,
 
   /**
+   * @type {RunsListVisibleRunsPosition}
+   */
+  visibleRunsPosition: undefined,
+
+  /**
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane

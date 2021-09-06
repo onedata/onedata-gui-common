@@ -740,15 +740,43 @@ export default Component.extend(I18n, WindowResizeHandler, {
         rawParallelBoxes,
         existingLane
       );
+      const {
+        runs: prevRuns,
+        visibleRunNo: prevVisibleRunNo,
+        visibleRunsPosition: prevVisibleRunsPosition,
+      } = getProperties(
+        existingLane,
+        'runs',
+        'visibleRunNo',
+        'visibleRunsPosition'
+      );
+      const prevDescSortedRunNos =
+        Object.keys(prevRuns).map(Number).sort((a, b) => b - a);
+      let visibleRunNo = prevVisibleRunNo;
+      let visibleRunsPosition = prevVisibleRunsPosition;
+      if (
+        prevDescSortedRunNos.indexOf(prevVisibleRunNo) === 0 &&
+        prevVisibleRunNo !== newestRunNo
+      ) {
+        visibleRunNo = newestRunNo;
+        if (
+          visibleRunsPosition.runNo === prevVisibleRunNo &&
+          visibleRunsPosition.placement === 'end'
+        ) {
+          visibleRunsPosition = {
+            runNo: newestRunNo,
+            placement: 'end',
+          };
+        }
+      }
       this.updateElement(existingLane, {
         name,
         storeIteratorSpec,
         runs: normalizedRunsData,
+        visibleRunNo,
+        visibleRunsPosition,
         elements,
       });
-      if (get(existingLane, 'visibleRunNo') === 0) {
-        set(existingLane, 'visibleRunNo', newestRunNo);
-      }
       return existingLane;
     } else {
       const {
@@ -763,6 +791,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
         storeIteratorSpec,
         runs: normalizedRunsData,
         visibleRunNo: newestRunNo,
+        visibleRunsPosition: {
+          runNo: newestRunNo,
+          placement: 'end',
+        },
         mode,
         actionsFactory,
         onModify: (lane, modifiedProps) => this.modifyElement(lane, modifiedProps),

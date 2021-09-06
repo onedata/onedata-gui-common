@@ -64,8 +64,10 @@
       {{workflow-visualiser/lane/runs-list
         visibleRunsLimit=6
         runs=lane.runs
+        visibleRunsPosition=lane.visibleRunsPosition
         selectedRunNo=lane.visibleRunNo
         onSelectionChange=(action "changeRun")
+        onVisibleRunsPositionChange=(action (mut lane.visibleRunsPosition))
       }}
     </div>
   {{/if}}

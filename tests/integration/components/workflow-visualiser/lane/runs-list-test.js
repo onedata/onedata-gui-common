@@ -285,13 +285,17 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 });
 
 async function render(testCase) {
-  testCase.set('selectionChangeSpy', sinon.spy(
-    (runNo) => testCase.set('selectedRunNo', runNo)));
+  testCase.set(
+    'selectionChangeSpy',
+    sinon.spy((runNo) => testCase.set('selectedRunNo', runNo))
+  );
   testCase.render(hbs `{{workflow-visualiser/lane/runs-list
+    visibleRunsPosition=visibleRunsPosition
     visibleRunsLimit=visibleRunsLimit
     runs=runs
     selectedRunNo=selectedRunNo
     onSelectionChange=selectionChangeSpy
+    onVisibleRunsPositionChange=(action (mut visibleRunsPosition))
   }}`);
   await wait();
 }
