@@ -1,6 +1,6 @@
 /**
  * Capacity one-way editor.
- * 
+ *
  * @module components/one-way-capacity
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
@@ -115,9 +115,12 @@ export default Component.extend({
 
     let sizeUnit;
     if (value && !isNaN(Number(value))) {
-      const { unit } = bytesToString(value, { separated: true });
-      sizeUnit = iecUnits.find(u => u.name === unit);
-    } else {
+      const { number, unit } = bytesToString(value, { separated: true });
+      if (number) {
+        sizeUnit = iecUnits.find(u => u.name === unit);
+      }
+    }
+    if (!sizeUnit) {
       sizeUnit = sizeUnits[0];
     }
 
@@ -126,8 +129,8 @@ export default Component.extend({
   },
 
   /**
-   * @param {string} scaledValue 
-   * @param {Object} sizeUnit 
+   * @param {string} scaledValue
+   * @param {Object} sizeUnit
    */
   getValueInBytes(scaledValue, sizeUnit = undefined) {
     const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||
