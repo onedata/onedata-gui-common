@@ -12,17 +12,17 @@
  */
 
 import $ from 'jquery';
-import { resolve, Promise } from 'rsvp';
+import { resolve, Promise, race } from 'rsvp';
+
+const validationRequestTimeout = 10000;
 
 export default function validateOnepanelConnection(clusterOrigin, clusterId) {
-  let timeout = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject();
-    }, 10000);
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(reject, validationRequestTimeout);
   });
-  return Promise.race([
+  return race([
     resolve($.get(`${clusterOrigin}/api/v3/onepanel/configuration`)),
-    timeout,
+    timeoutPromise,
   ]).then(({ clusterId: fetchedClusterId }) => {
       if (fetchedClusterId) {
         if (fetchedClusterId === clusterId) {
