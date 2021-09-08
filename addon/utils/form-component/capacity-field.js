@@ -78,10 +78,10 @@ export default FormField.extend({
         allowString: true,
         // empty values are handled by presenceValidator
         allowBlank: true,
-        gt,
-        gte,
-        lt,
-        lte,
+        gt: this.normalizeBoundaryValue(gt),
+        gte: this.normalizeBoundaryValue(gte),
+        lt: this.normalizeBoundaryValue(lt),
+        lte: this.normalizeBoundaryValue(lte),
         message(type, value, options) {
           const comparisons = ['gt', 'gte', 'lt', 'lte'];
           const errorMessageOptions =
@@ -114,5 +114,10 @@ export default FormField.extend({
     }
 
     this.registerInternalValidator('numberValidator');
+  },
+
+  normalizeBoundaryValue(value) {
+    const parsedValue = parseFloat(value);
+    return !Number.isNaN(value) ? parsedValue : undefined;
   },
 });

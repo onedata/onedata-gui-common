@@ -88,9 +88,9 @@ export default Component.extend({
 
     let newScaledSize;
 
-    if (value === undefined) {
+    if (!value && value !== '0') {
       newScaledSize = undefined;
-    } else if (!value || !sizeUnit) {
+    } else if (!sizeUnit) {
       newScaledSize = '0';
     } else {
       const prevValue = String(this.getValueInBytes(scaledValue));
@@ -135,8 +135,9 @@ export default Component.extend({
   getValueInBytes(scaledValue, sizeUnit = undefined) {
     const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||
       this.get('sizeUnit.multiplicator') || 1;
-
-    return Math.floor(scaledValue * multiplicator);
+    const parsedScaledValue = parseFloat(scaledValue);
+    return Number.isNaN(parsedScaledValue) ?
+      parsedScaledValue : Math.floor(parsedScaledValue * multiplicator);
   },
 
   actions: {
