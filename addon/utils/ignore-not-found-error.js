@@ -7,14 +7,14 @@
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
- *
+ */
+
+import ignoreErrorById from 'onedata-gui-common/utils/ignore-error-by-id';
+
+/**
  * @param {*} result response
  * @returns {*}
  */
 export default function ignoreNotFoundError(result) {
-  if (result && result.id !== 'notFound') {
-    throw result;
-  } else {
-    return result;
-  }
+  return ignoreErrorById(result, 'notFound');
 }
