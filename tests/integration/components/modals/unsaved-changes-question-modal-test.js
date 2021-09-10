@@ -40,9 +40,6 @@ describe('Integration | Component | modals/unsaved changes question modal', func
       expect($modalHeader.find('h1').text().trim())
         .to.equal('You have unsaved changes');
 
-      expect($modalBody.find('.description').text().trim()).to.equal(
-        'Do you want to save changes?'
-      );
       expect($modalBody.find('.disclaimer').text().trim()).to.equal(
         'Your changes will be lost if you don\'t save them.'
       );

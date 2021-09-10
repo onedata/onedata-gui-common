@@ -1,5 +1,6 @@
 /**
- * A modal that asks user if unsaved changes should be saved or ignored.
+ * A modal that asks user if unsaved changes should be saved or ignored. Does not
+ * need any extra configuration (from `modalOptions`).
  *
  * @module components/modals/unsaved-changes-question-modal
  * @author Michał Borzęcki
@@ -29,12 +30,6 @@ export default Component.extend(I18n, {
    * @type {String}
    */
   modalId: undefined,
-
-  /**
-   * Is described in the file header
-   * @virtual
-   */
-  modalOptions: undefined,
 
   /**
    * @type {boolean}

@@ -14,7 +14,7 @@ import EmberRouter from '@ember/routing/router';
 import { inject as service } from '@ember/service';
 
 export default EmberRouter.extend({
-  router: service('router'),
+  router: service(),
 
   // Clear all query params on each transition
   // WARNING: This method belongs to a private Ember API. May change in next Ember versions
