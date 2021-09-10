@@ -14,7 +14,7 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
   beforeEach(function () {
     const record = {
       constructor: {
-        modelName: 'group',
+        modelName: undefined,
       },
       entityId: 'someId',
     };
@@ -41,20 +41,10 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
     } = getProperties(this.get('action'), 'className', 'icon', 'title');
     expect(className).to.equal('copy-record-id-action-trigger');
     expect(icon).to.equal('copy');
-    expect(String(title)).to.equal('Copy group ID');
+    expect(String(title)).to.equal('Copy ID');
   });
 
-  it('has correct title for record with unknown model name', function () {
-    this.set('record.constructor.modelName', 'space2');
-    expect(String(this.get('action.title'))).to.equal('Copy ID');
-  });
-
-  it('has correct title for record with empty model name', function () {
-    this.set('record.constructor.modelName', undefined);
-    expect(String(this.get('action.title'))).to.equal('Copy ID');
-  });
-
-  it('passes record id to global-clipboard on execute', async function () {
+  it('passes record id to global-clipboard on execute (empty model name scenario)', async function () {
     const {
       action,
       record,
@@ -67,26 +57,26 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
 
     expect(globalClipboardCopyStub).to.be.calledOnce.and.to.be.calledWith(
       record.entityId, {
-        string: 'group ID',
+        string: 'ID',
       },
     );
     expect(get(result, 'status')).to.equal('done');
   });
 
-  it('passes record id to global-clipboard on execute (empty model name scenario)',
+  it('passes record id to global-clipboard on execute (known model name scenario)',
     async function () {
       const {
         action,
         record,
         globalClipboardCopyStub,
       } = this.getProperties('action', 'record', 'globalClipboardCopyStub');
-      set(record, 'constructor.modelName', undefined);
+      this.set('record.constructor.modelName', 'group');
 
       const result = await action.execute();
 
       expect(globalClipboardCopyStub).to.be.calledOnce.and.to.be.calledWith(
         record.entityId, {
-          string: 'ID',
+          string: 'group ID',
         },
       );
       expect(get(result, 'status')).to.equal('done');

@@ -1,10 +1,10 @@
 export default {
   fields: {
     id: {
-      label: 'Id',
+      label: 'ID',
     },
     instanceId: {
-      label: 'Instance id',
+      label: 'Instance ID',
     },
     name: {
       label: 'Name',
