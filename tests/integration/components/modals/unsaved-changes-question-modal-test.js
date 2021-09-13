@@ -38,7 +38,7 @@ describe('Integration | Component | modals/unsaved changes question modal', func
       expect($modalHeader.find('.oneicon'))
         .to.have.class('oneicon-sign-warning-rounded');
       expect($modalHeader.find('h1').text().trim())
-        .to.equal('You have unsaved changes');
+        .to.equal('There are unsaved changes');
 
       expect($modalBody.find('.disclaimer').text().trim()).to.equal(
         'Your changes will be lost if you don\'t save them.'

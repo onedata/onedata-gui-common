@@ -1,5 +1,5 @@
 export default {
-  header: 'You have unsaved changes',
+  header: 'There are unsaved changes',
   body: {
     disclaimer: 'Your changes will be lost if you don\'t save them.',
   },
