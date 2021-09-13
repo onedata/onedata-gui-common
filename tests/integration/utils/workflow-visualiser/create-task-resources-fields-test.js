@@ -233,6 +233,22 @@ describe('Integration | Utility | workflow visualiser/create task resources fiel
         });
     });
   });
+
+  ['cpu', 'memory', 'ephemeralStorage'].forEach((resourceName) => {
+    it(`shows "unlimited" as limit value in view mode, when ${resourceName} is null`, async function () {
+      this.set(
+        `rootGroup.valuesSource.createTaskResourcesFields.${resourceName}.${resourceName}Limit`,
+        null
+      );
+      this.get('rootGroup').changeMode('view');
+
+      await render(this);
+
+      expect(this.$(`.${resourceName}Limit-field .field-component`)).to.not.exist;
+      expect(this.$(`.${resourceName}LimitDesc-field .field-component`).text().trim())
+        .to.equal('unlimited');
+    });
+  });
 });
 
 async function render(testCase) {

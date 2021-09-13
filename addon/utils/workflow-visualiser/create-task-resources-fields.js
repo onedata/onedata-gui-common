@@ -13,7 +13,19 @@
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
+import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { reads } from '@ember/object/computed';
+import { not, and, raw, eq } from 'ember-awesome-macros';
+
+/**
+ * @typedef {Object} AtmResourceSpec
+ * @property {Number} cpuRequested
+ * @property {Number|null} cpuLimit
+ * @property {Number} memoryRequested
+ * @property {Number|null} memoryLimit
+ * @property {Number} ephemeralStorageRequested
+ * @property {Number|null} ephemeralStorageLimit
+ */
 
 /**
  * @param {String} spec.pathToGroup form path to group containing created fields
@@ -82,14 +94,14 @@ function createTaskResourcesFieldsSubgroup({
   requestedValueComparatorToZero = 'gt',
   additionalFieldProps = {},
 }) {
+  const requiredValuePath = `valuesSource.${pathToGroup}.${resourceName}.${resourceName}Requested`;
+  const limitValuePath = `valuesSource.${pathToGroup}.${resourceName}.${resourceName}Limit`;
   return FormFieldsGroup.create({
     name: resourceName,
     fields: [
       fieldClass
       .extend(requestedDefaultValueMixin, {
-        lte: reads(
-          `valuesSource.${pathToGroup}.${resourceName}.${resourceName}Limit`
-        ),
+        lte: reads(limitValuePath),
       })
       .create(Object.assign({
         name: `${resourceName}Requested`,
@@ -97,14 +109,18 @@ function createTaskResourcesFieldsSubgroup({
       }), additionalFieldProps),
       fieldClass
       .extend(limitDefaultValueMixin, {
-        gte: reads(
-          `valuesSource.${pathToGroup}.${resourceName}.${resourceName}Requested`
-        ),
+        isVisible: not(and('isInViewMode', eq('value', raw(null)))),
+        gte: reads(requiredValuePath),
       })
       .create(Object.assign({
         name: `${resourceName}Limit`,
         isOptional: true,
       }), additionalFieldProps),
+      StaticTextField.extend({
+        isVisible: and('isInViewMode', eq(limitValuePath, raw(null))),
+      }).create({
+        name: `${resourceName}LimitDesc`,
+      }),
     ],
   });
 }

@@ -8,6 +8,7 @@ import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import $ from 'jquery';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
+import { set } from '@ember/object';
 
 describe('Integration | Component | form component/capacity field', function () {
   setupComponentTest('form-component/capacity-field', {
@@ -101,6 +102,16 @@ describe('Integration | Component | form component/capacity field', function () 
     this.render(hbs `{{form-component/capacity-field field=field}}`);
 
     await expectUnits(expectedUnits);
+  });
+
+  it('renders capacity value as text when field is in "view" mode', function () {
+    const field = this.get('field');
+    set(field, 'value', '20971520');
+    field.changeMode('view');
+
+    this.render(hbs `{{form-component/capacity-field field=field}}`);
+
+    expect(this.$().text().trim()).to.equal('20 MiB');
   });
 });
 
