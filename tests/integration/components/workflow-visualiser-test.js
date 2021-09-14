@@ -15,7 +15,6 @@ import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions
 import { resolve, Promise } from 'rsvp';
 import { schedule } from '@ember/runloop';
 
-const possibleTaskStatuses = ['pending', 'active', 'finished', 'failed'];
 const laneWidth = 300;
 
 const idGenerators = {
@@ -320,27 +319,6 @@ describe('Integration | Component | workflow visualiser', function () {
 
       expect(getModalBody().find('.name-field .field-component').text().trim())
         .to.equal('lane0');
-    });
-
-    it('shows tasks status', function () {
-      const rawData = threeNonEmptyLanesExample;
-
-      renderWithRawData(this, rawData);
-
-      checkTasksStatus(this, rawData);
-    });
-
-    it('updates rendered tasks progress', async function () {
-      const rawData = threeNonEmptyLanesExample;
-      renderWithRawData(this, rawData);
-
-      const updatedRawData = _.cloneDeep(rawData);
-      const firstTask = updatedRawData.lanes[0].parallelBoxes[0].tasks[0];
-      firstTask.status = possibleTaskStatuses.without(firstTask.status)[0];
-      this.set('rawData', updatedRawData);
-      await wait();
-
-      checkTasksStatus(this, updatedRawData);
     });
 
     it('shows store information in modal', async function () {
@@ -936,14 +914,6 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
   await wait();
 }
 
-function checkTasksStatus(testCase, rawData) {
-  const tasks = _.flatten(_.flatten(rawData.lanes.mapBy('parallelBoxes')).mapBy('tasks'));
-  tasks.forEach(({ id, status }) => {
-    const $task = testCase.$(`[data-visualiser-element-id="${id}"]`);
-    expect($task).to.have.class(`status-${status || 'pending'}`);
-  });
-}
-
 function checkRenderedLanesStructure(testCase, rawData) {
   const $lanes = testCase.$('.workflow-visualiser-lane');
   expect($lanes).to.have.length(rawData.lanes.length);
@@ -1037,8 +1007,7 @@ function checkRenderedStoresList(testCase, rawData) {
 function generateExample(
   lanesNumber,
   parallelBoxsPerLane,
-  tasksPerParallelBox,
-  includeProgress = true
+  tasksPerParallelBox
 ) {
   return {
     lanes: _.range(lanesNumber).map(laneNo => ({
@@ -1056,10 +1025,6 @@ function generateExample(
         tasks: _.range(tasksPerParallelBox).map(taskNo => ({
           id: taskIdFromExample(laneNo, blockNo, taskNo),
           name: `task${laneNo}.${blockNo}.${taskNo}`,
-          status: includeProgress ?
-            getTaskStatusFromExample(laneNo, blockNo, taskNo) : null,
-          progressPercent: includeProgress ?
-            getTaskProgressFromExample(laneNo, blockNo, taskNo) : null,
         })),
       })),
     })),
@@ -1088,14 +1053,6 @@ function parallelBoxIdFromExample(laneNo, blockNo) {
 
 function taskIdFromExample(laneNo, blockNo, taskNo) {
   return `t${laneNo}.${blockNo}.${taskNo}`;
-}
-
-function getTaskProgressFromExample(laneNo, blockNo, taskNo) {
-  return (laneNo * 10 + blockNo * 5 + taskNo) % 100 + 1;
-}
-
-function getTaskStatusFromExample(laneNo, blockNo, taskNo) {
-  return possibleTaskStatuses[(laneNo + blockNo + taskNo) % 3];
 }
 
 function storeIdFromExample(storeNo) {

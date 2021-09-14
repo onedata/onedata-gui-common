@@ -23,7 +23,7 @@ import { reads } from '@ember/object/computed';
 import { computed, trySet } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { next } from '@ember/runloop';
-import { raw, or, and, eq } from 'ember-awesome-macros';
+import { raw, or, eq } from 'ember-awesome-macros';
 
 export default Component.extend(I18n, {
   layout,
@@ -136,7 +136,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  areTabsVisible: and(eq('mode', raw('view')), eq('viewModeLayout', raw('store'))),
+  areTabsVisible: eq('mode', raw('view')),
 
   /**
    * @type {ComputedProperty<String>}

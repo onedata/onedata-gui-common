@@ -1,5 +1,11 @@
 export default {
   fields: {
+    id: {
+      label: 'ID',
+    },
+    instanceId: {
+      label: 'Instance ID',
+    },
     name: {
       label: 'Name',
     },

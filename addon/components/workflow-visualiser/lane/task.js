@@ -9,16 +9,19 @@
 
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane/task';
-import { computed } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { tag, raw, conditional, equal, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
 import { normalizeTaskStatus, translateTaskStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import { inject as service } from '@ember/service';
 
 export default VisualiserElement.extend({
   layout,
   classNames: ['workflow-visualiser-task'],
   classNameBindings: ['statusClass'],
+
+  clipboardActions: service(),
 
   /**
    * @override
@@ -86,6 +89,19 @@ export default VisualiserElement.extend({
     tag `status-${'effectiveStatus'}`,
     raw('')
   ),
+
+  /**
+   * @type {ComputedProperty<Util.Action>}
+   */
+  copyInstanceIdAction: computed('task.instanceId', function copyIdAction() {
+    const {
+      clipboardActions,
+      task,
+    } = this.getProperties('clipboardActions', 'task');
+    return clipboardActions.createCopyRecordIdAction({
+      record: { entityId: get(task, 'instanceId') },
+    });
+  }),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
