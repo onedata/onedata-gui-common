@@ -55,7 +55,9 @@ export default Action.extend({
         mode: 'view',
         viewModeLayout: 'auditLog',
         auditLogSubjectName: `"${get(task, 'name')}"`,
-        store: auditLogDummyStore,
+        store: Object.assign({}, auditLogDummyStore, {
+          instanceId: get(task, 'systemAuditLogStoreInstanceId'),
+        }),
         getStoreContentCallback: (...args) => getAuditLogContentCallback(task, ...args),
       }).hiddenPromise
       .then(() => {
