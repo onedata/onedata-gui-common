@@ -1,3 +1,5 @@
+import taskResourcesFields from '../../utils/workflow-visualiser/task-resources-fields';
+
 export default {
   usedLambdaHeader: 'Used lambda',
   taskDetailsHeader: 'Task details',
@@ -89,5 +91,11 @@ export default {
         },
       },
     },
+    overrideResources: {
+      label: 'Override default resources',
+    },
+    resources: Object.assign({}, taskResourcesFields, {
+      label: 'Resources',
+    }),
   },
 };

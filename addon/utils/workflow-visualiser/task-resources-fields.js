@@ -4,7 +4,7 @@
  * Is extracted as a separate function due to multiple usages (in lambda form,
  * task form, etc.).
  *
- * @module utils/workflow-visualiser/create-task-resources-fields
+ * @module utils/workflow-visualiser/task-resources-fields
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -14,6 +14,7 @@ import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
+import { get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { not, and, raw, eq } from 'ember-awesome-macros';
 
@@ -44,7 +45,7 @@ import { not, and, raw, eq } from 'ember-awesome-macros';
  * @returns {Array<FormComponent.FormFieldsGroup>} array to be used inside `field` property
  * of some parent group
  */
-export default function createTaskResourcesFields({
+export function createTaskResourcesFields({
   pathToGroup,
   cpuRequestedDefaultValueMixin,
   cpuLimitDefaultValueMixin,
@@ -123,4 +124,43 @@ function createTaskResourcesFieldsSubgroup({
       }),
     ],
   });
+}
+
+/**
+ * Converts form fields values to a format compatible with backend
+ * @param {Object} parentGroupValue value of resource fields parent group
+ * @returns {Object}
+ */
+export function serializeTaskResourcesFieldsValues(parentGroupValue) {
+  return {
+    cpuRequested: serializeResourceValue(
+      get(parentGroupValue || {}, 'cpu.cpuRequested')
+    ),
+    cpuLimit: serializeResourceValue(
+      get(parentGroupValue || {}, 'cpu.cpuLimit')
+    ),
+    memoryRequested: serializeResourceValue(
+      get(parentGroupValue || {}, 'memory.memoryRequested')
+    ),
+    memoryLimit: serializeResourceValue(
+      get(parentGroupValue || {}, 'memory.memoryLimit')
+    ),
+    ephemeralStorageRequested: serializeResourceValue(
+      get(parentGroupValue || {}, 'ephemeralStorage.ephemeralStorageRequested')
+    ),
+    ephemeralStorageLimit: serializeResourceValue(
+      get(parentGroupValue || {}, 'ephemeralStorage.ephemeralStorageLimit')
+    ),
+  };
+}
+
+function serializeResourceValue(value) {
+  if (typeof value === 'number') {
+    return value;
+  } else if (typeof value === 'string' && value) {
+    const parsedValue = parseFloat(value);
+    return Number.isNaN(parsedValue) ? null : parsedValue;
+  } else {
+    return null;
+  }
 }

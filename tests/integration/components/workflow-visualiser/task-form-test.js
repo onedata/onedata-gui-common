@@ -3,7 +3,7 @@ import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
-import { fillIn } from 'ember-native-dom-helpers';
+import { fillIn, click } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -388,6 +388,14 @@ const exampleAtmLambda = {
     },
     isBatch: false,
   }],
+  resourceSpec: {
+    cpuRequested: 0.1,
+    cpuLimit: null,
+    memoryRequested: 128 * 1024 * 1024,
+    memoryLimit: null,
+    ephemeralStorageRequested: 0,
+    ephemeralStorageLimit: null,
+  },
 };
 const exampleTask = {
   id: 't1',
@@ -467,7 +475,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     itHasModeClass('create');
-    itHasAllFieldsEnabledByDefault();
+    itHasEnabledFieldsByDefault();
     itAllowsToDisableAllFields();
     itShowsLambdaInfo();
 
@@ -1179,6 +1187,160 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           .to.equal(dispatchFunctionLabels[dispatchFunction])
         );
       });
+
+    it('renders "override resources" toggle, which is unchecked by default', async function () {
+      await render(this);
+
+      const $overrideField = this.$('.overrideResources-field');
+      expect($overrideField).to.have.class('toggle-field-renderer');
+      expect($overrideField.find('.control-label').text().trim())
+        .to.equal('Override default resources:');
+      expect($overrideField.find('.one-way-toggle')).to.not.have.class('checked');
+    });
+
+    it('renders "resources" section with cpu, memory and storage fields groups',
+      async function () {
+        await render(this);
+
+        const $resourcesSection = this.$('.resources-field');
+        expect($resourcesSection.find('.control-label').eq(0).text().trim())
+          .to.equal('Resources');
+        // Check if translations for resources fields are loaded
+        expect($resourcesSection.text()).to.contain('Limit');
+
+        expect($resourcesSection.find('.cpuRequested-field .form-control'))
+          .to.have.value('0.1');
+        expect($resourcesSection.find('.cpuLimit-field .form-control'))
+          .to.have.value('');
+        [{
+          resourceName: 'memory',
+          requested: ['128', 'MiB'],
+          limit: ['', 'MiB'],
+        }, {
+          resourceName: 'ephemeralStorage',
+          requested: ['0', 'MiB'],
+          limit: ['', 'MiB'],
+        }].forEach(({ resourceName, requested, limit }) => {
+          const $requested = this.$(`.${resourceName}Requested-field`);
+          expect($requested.find('input')).to.have.value(requested[0]);
+          expect($requested.find('.ember-power-select-trigger').text())
+            .to.contain(requested[1]);
+          const $limit = this.$(`.${resourceName}Limit-field`);
+          expect($limit.find('input')).to.have.value(limit[0]);
+          expect($limit.find('.ember-power-select-trigger').text())
+            .to.contain(limit[1]);
+        });
+      });
+
+    it('renders "resources" section with full configuration',
+      async function () {
+        this.set('atmLambda.resourceSpec', {
+          cpuRequested: 1,
+          cpuLimit: 2,
+          memoryRequested: 128 * 1024 * 1024,
+          memoryLimit: 256 * 1024 * 1024,
+          ephemeralStorageRequested: 10 * 1024 * 1024,
+          ephemeralStorageLimit: 20 * 1024 * 1024,
+        });
+
+        await render(this);
+
+        expect(this.$('.cpuRequested-field .form-control')).to.have.value('1');
+        expect(this.$('.cpuLimit-field .form-control')).to.have.value('2');
+        expect(this.$('.memoryRequested-field .form-control')).to.have.value('128');
+        expect(this.$('.memoryLimit-field .form-control')).to.have.value('256');
+        expect(this.$('.ephemeralStorageRequested-field .form-control'))
+          .to.have.value('10');
+        expect(this.$('.ephemeralStorageLimit-field .form-control'))
+          .to.have.value('20');
+      });
+
+    it('disables "resources" section when "override resources" toggle is unchecked', async function () {
+      await render(this);
+
+      await toggleOverrideResources(this, false);
+
+      expect(this.$('.resources-field .field-enabled')).to.not.exist;
+    });
+
+    it('enables "resources" section when "override resources" toggle is checked', async function () {
+      await render(this);
+
+      await toggleOverrideResources(this, true);
+
+      expect(this.$('.resources-field .field-disabled')).to.not.exist;
+    });
+
+    it('allows to setup resources override (minimal values provided)', async function () {
+      const changeSpy = this.get('changeSpy');
+      await render(this);
+
+      await toggleOverrideResources(this, true);
+
+      expect(changeSpy).to.be.calledWith(sinon.match({
+        data: sinon.match({
+          resourceSpecOverride: {
+            cpuRequested: 0.1,
+            cpuLimit: null,
+            memoryRequested: 128 * 1024 * 1024,
+            memoryLimit: null,
+            ephemeralStorageRequested: 0,
+            ephemeralStorageLimit: null,
+          },
+        }),
+      }));
+    });
+
+    it('allows to setup resources override (all values provided)', async function () {
+      const changeSpy = this.get('changeSpy');
+      await render(this);
+
+      await toggleOverrideResources(this, true);
+      await fillIn('.cpuRequested-field input', '2');
+      await fillIn('.cpuLimit-field input', '10');
+      await fillIn('.memoryRequested-field input', '100');
+      await fillIn('.memoryLimit-field input', '200');
+      await fillIn('.ephemeralStorageRequested-field input', '300');
+      await fillIn('.ephemeralStorageLimit-field input', '400');
+
+      expect(changeSpy).to.be.calledWith(sinon.match({
+        data: sinon.match({
+          resourceSpecOverride: {
+            cpuRequested: 2,
+            cpuLimit: 10,
+            memoryRequested: 100 * 1024 * 1024,
+            memoryLimit: 200 * 1024 * 1024,
+            ephemeralStorageRequested: 300 * 1024 * 1024,
+            ephemeralStorageLimit: 400 * 1024 * 1024,
+          },
+        }),
+      }));
+    });
+
+    it('resets changes in "resources" section when it becomes disabled', async function () {
+      const changeSpy = this.get('changeSpy');
+      await render(this);
+
+      await toggleOverrideResources(this, true);
+      await fillIn('.cpuRequested-field input', '2');
+      await fillIn('.cpuLimit-field input', '10');
+      await fillIn('.memoryRequested-field input', '100');
+      await fillIn('.memoryLimit-field input', '200');
+      await fillIn('.ephemeralStorageRequested-field input', '100');
+      await fillIn('.ephemeralStorageLimit-field input', '200');
+      changeSpy.reset();
+      await toggleOverrideResources(this, false);
+
+      expect(this.$('.cpuRequested-field input')).to.have.value('0.1');
+      expect(this.$('.cpuLimit-field input')).to.have.value('');
+      expect(this.$('.memoryRequested-field input')).to.have.value('128');
+      expect(this.$('.memoryLimit-field input')).to.have.value('');
+      expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('0');
+      expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('');
+      expect(changeSpy).to.be.calledWith(
+        sinon.match((val) => !('resourceSpecOverride' in val))
+      );
+    });
   });
 
   context('in "edit" mode', function () {
@@ -1190,7 +1352,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     itHasModeClass('edit');
-    itHasAllFieldsEnabledByDefault();
+    itHasEnabledFieldsByDefault();
     itAllowsToDisableAllFields();
     itShowsLambdaInfo();
     itFillsFieldsWithDataOfPassedTask();
@@ -1201,6 +1363,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
     itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods();
     itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
+    itFillsFieldsWithDataAboutNoResourceOverride();
+    itFillsFieldsWithDataAboutResourceOverride();
 
     it('does not update form values on passed task change', async function () {
       await render(this);
@@ -1230,6 +1394,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder();
     itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods();
     itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned();
+    itFillsFieldsWithDataAboutNoResourceOverride();
+    itFillsFieldsWithDataAboutResourceOverride();
 
     it('updates form values on passed task change', async function () {
       await render(this);
@@ -1256,6 +1422,13 @@ async function render(testCase) {
   await wait();
 }
 
+async function toggleOverrideResources(testCase, value) {
+  const $overrideToggle = testCase.$('.overrideResources-field .one-way-toggle');
+  if (value !== $overrideToggle.hasClass('checked')) {
+    await click($overrideToggle[0]);
+  }
+}
+
 function getComponent(testCase) {
   return testCase.$(`.${componentClass}`);
 }
@@ -1269,13 +1442,13 @@ function itHasModeClass(mode) {
   });
 }
 
-function itHasAllFieldsEnabledByDefault() {
+function itHasEnabledFieldsByDefault() {
   it('has all fields enabled by default', async function () {
     await render(this);
 
     expect(getComponent(this)).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
-    expect(this.$('.field-disabled')).to.not.exist;
+    expect(this.$('.field-enabled')).to.exist;
   });
 }
 
@@ -1404,6 +1577,66 @@ function itFillsFieldsWithDataOfPassedTask() {
     });
     expect(this.$(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
   });
+}
+
+function itFillsFieldsWithDataAboutNoResourceOverride() {
+  it('fills fields with data about no resources override',
+    async function () {
+      const inEditMode = this.get('mode') !== 'view';
+      delete this.get('task').resourceSpecOverride;
+
+      await render(this);
+
+      expect(this.$('.overrideResources-field .one-way-toggle'))
+        .to.not.have.class('checked');
+      if (inEditMode) {
+        expect(this.$('.resources-field')).to.exist;
+        expect(this.$('.cpuRequested-field input')).to.have.value('0.1');
+        expect(this.$('.cpuLimit-field input')).to.have.value('');
+        expect(this.$('.memoryRequested-field input')).to.have.value('128');
+        expect(this.$('.memoryLimit-field input')).to.have.value('');
+        expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('0');
+        expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('');
+      } else {
+        expect(this.$('.resources-field')).to.not.exist;
+      }
+    });
+}
+
+function itFillsFieldsWithDataAboutResourceOverride() {
+  it('fills fields with data about resources override',
+    async function () {
+      const inEditMode = this.get('mode') !== 'view';
+      this.set('task.resourceSpecOverride', {
+        cpuRequested: 2,
+        cpuLimit: 10,
+        memoryRequested: 100 * 1024 * 1024,
+        memoryLimit: 200 * 1024 * 1024,
+        ephemeralStorageRequested: 300 * 1024 * 1024,
+        ephemeralStorageLimit: 400 * 1024 * 1024,
+      });
+
+      await render(this);
+
+      expect(this.$('.overrideResources-field .one-way-toggle'))
+        .to.have.class('checked');
+      expect(this.$('.resources-field')).to.exist;
+      if (inEditMode) {
+        expect(this.$('.cpuRequested-field input')).to.have.value('2');
+        expect(this.$('.cpuLimit-field input')).to.have.value('10');
+        expect(this.$('.memoryRequested-field input')).to.have.value('100');
+        expect(this.$('.memoryLimit-field input')).to.have.value('200');
+        expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('300');
+        expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('400');
+      } else {
+        expect(this.$('.cpuRequested-field .field-component').text().trim()).to.equal('2');
+        expect(this.$('.cpuLimit-field .field-component').text().trim()).to.equal('10');
+        expect(this.$('.memoryRequested-field .field-component').text().trim()).to.equal('100 MiB');
+        expect(this.$('.memoryLimit-field .field-component').text().trim()).to.equal('200 MiB');
+        expect(this.$('.ephemeralStorageRequested-field .field-component').text().trim()).to.equal('300 MiB');
+        expect(this.$('.ephemeralStorageLimit-field .field-component').text().trim()).to.equal('400 MiB');
+      }
+    });
 }
 
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder() {
