@@ -1208,10 +1208,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         // Check if translations for resources fields are loaded
         expect($resourcesSection.text()).to.contain('Limit');
 
-        expect($resourcesSection.find('.cpuRequested-field .form-control'))
-          .to.have.value('0.1');
-        expect($resourcesSection.find('.cpuLimit-field .form-control'))
-          .to.have.value('');
+        expect(this.$('.cpuRequested-field .form-control')).to.have.value('0.1');
+        expect(this.$('.cpuLimit-field .form-control')).to.have.value('');
         [{
           resourceName: 'memory',
           requested: ['128', 'MiB'],
@@ -1260,7 +1258,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await toggleOverrideResources(this, false);
 
-      expect(this.$('.resources-field .field-enabled')).to.not.exist;
+      expect(this.$('.resourcesSections-field .field-enabled')).to.not.exist;
     });
 
     it('enables "resources" section when "override resources" toggle is checked', async function () {
@@ -1268,7 +1266,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await toggleOverrideResources(this, true);
 
-      expect(this.$('.resources-field .field-disabled')).to.not.exist;
+      expect(this.$('.resourcesSections-field .field-disabled')).to.not.exist;
     });
 
     it('allows to setup resources override (minimal values provided)', async function () {
@@ -1590,7 +1588,7 @@ function itFillsFieldsWithDataAboutNoResourceOverride() {
       expect(this.$('.overrideResources-field .one-way-toggle'))
         .to.not.have.class('checked');
       if (inEditMode) {
-        expect(this.$('.resources-field')).to.exist;
+        expect(this.$('.resourcesSections-field')).to.exist;
         expect(this.$('.cpuRequested-field input')).to.have.value('0.1');
         expect(this.$('.cpuLimit-field input')).to.have.value('');
         expect(this.$('.memoryRequested-field input')).to.have.value('128');
@@ -1598,7 +1596,7 @@ function itFillsFieldsWithDataAboutNoResourceOverride() {
         expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('0');
         expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('');
       } else {
-        expect(this.$('.resources-field')).to.not.exist;
+        expect(this.$('.resourcesSections-field')).to.not.exist;
       }
     });
 }
@@ -1620,7 +1618,7 @@ function itFillsFieldsWithDataAboutResourceOverride() {
 
       expect(this.$('.overrideResources-field .one-way-toggle'))
         .to.have.class('checked');
-      expect(this.$('.resources-field')).to.exist;
+      expect(this.$('.resourcesSections-field')).to.exist;
       if (inEditMode) {
         expect(this.$('.cpuRequested-field input')).to.have.value('2');
         expect(this.$('.cpuLimit-field input')).to.have.value('10');

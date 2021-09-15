@@ -40,6 +40,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
+   * @type {Object}
+   */
+  resourceSpecOverride: undefined,
+
+  /**
+   * @virtual
    * @type {Number}
    */
   itemsInProcessing: 0,

@@ -179,13 +179,11 @@ export default Component.extend(I18n, {
       nameField,
       argumentMappingsFieldsCollectionGroup,
       resultMappingsFieldsCollectionGroup,
-      overrideResourcesField,
       resourcesFieldsGroup,
     } = this.getProperties(
       'nameField',
       'argumentMappingsFieldsCollectionGroup',
       'resultMappingsFieldsCollectionGroup',
-      'overrideResourcesField',
       'resourcesFieldsGroup'
     );
 
@@ -203,7 +201,6 @@ export default Component.extend(I18n, {
         nameField,
         argumentMappingsFieldsCollectionGroup,
         resultMappingsFieldsCollectionGroup,
-        overrideResourcesField,
         resourcesFieldsGroup,
       ],
     });
@@ -427,48 +424,46 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.ToggleField>}
-   */
-  overrideResourcesField: computed(function overrideResourcesField() {
-    return ToggleField.extend(defaultValueGenerator(this)).create({
-      name: 'overrideResources',
-    });
-  }),
-
-  /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
   resourcesFieldsGroup: computed(function resourcesFieldsGroup() {
-    const name = 'resources';
-    return FormFieldsGroup.extend({
-      isVisible: or(not('isInViewMode'), 'valuesSource.overrideResources'),
-      isEnabled: reads('valuesSource.overrideResources'),
-      overrideResourcesObserver: observer(
-        'valuesSource.overrideResources',
-        function overrideResourcesObserver() {
-          const overrideResources = this.get('valuesSource.overrideResources');
-          const isModified = this.get('isModified');
-          if (!overrideResources && isModified) {
-            scheduleOnce('afterRender', this, 'reset');
-          }
-        }
-      ),
-      init() {
-        this._super(...arguments);
-        this.overrideResourcesObserver();
-      },
-    }).create({
-      name,
+    return FormFieldsGroup.create({
+      name: 'resources',
       addColonToLabel: false,
-      fields: createTaskResourcesFields({
-        pathToGroup: name,
-        cpuRequestedDefaultValueMixin: defaultValueGenerator(this),
-        cpuLimitDefaultValueMixin: defaultValueGenerator(this),
-        memoryRequestedDefaultValueMixin: defaultValueGenerator(this),
-        memoryLimitDefaultValueMixin: defaultValueGenerator(this),
-        ephemeralStorageRequestedDefaultValueMixin: defaultValueGenerator(this),
-        ephemeralStorageLimitDefaultValueMixin: defaultValueGenerator(this),
-      }),
+      fields: [
+        ToggleField.extend(defaultValueGenerator(this)).create({
+          name: 'overrideResources',
+        }),
+        FormFieldsGroup.extend({
+          isVisible: or(not('isInViewMode'), 'valuesSource.resources.overrideResources'),
+          isEnabled: reads('valuesSource.resources.overrideResources'),
+          overrideResourcesObserver: observer(
+            'valuesSource.resources.overrideResources',
+            function overrideResourcesObserver() {
+              const overrideResources = this.get('valuesSource.resources.overrideResources');
+              const isModified = this.get('isModified');
+              if (!overrideResources && isModified) {
+                scheduleOnce('afterRender', this, 'reset');
+              }
+            }
+          ),
+          init() {
+            this._super(...arguments);
+            this.overrideResourcesObserver();
+          },
+        }).create({
+          name: 'resourcesSections',
+          fields: createTaskResourcesFields({
+            pathToGroup: 'resources.resourcesSections',
+            cpuRequestedDefaultValueMixin: defaultValueGenerator(this),
+            cpuLimitDefaultValueMixin: defaultValueGenerator(this),
+            memoryRequestedDefaultValueMixin: defaultValueGenerator(this),
+            memoryLimitDefaultValueMixin: defaultValueGenerator(this),
+            ephemeralStorageRequestedDefaultValueMixin: defaultValueGenerator(this),
+            ephemeralStorageLimitDefaultValueMixin: defaultValueGenerator(this),
+          }),
+        }),
+      ],
     });
   }),
 
@@ -720,43 +715,45 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     name: name || lambdaName,
     argumentMappings: formArgumentMappings,
     resultMappings: formResultMappings,
-    overrideResources: Boolean(resourceSpecOverride),
     resources: {
-      cpu: {
-        cpuRequested: getAtmLambdaResourceValue(
-          resourceSpecOverride,
-          resourceSpec,
-          'cpuRequested'
-        ),
-        cpuLimit: getAtmLambdaResourceValue(
-          resourceSpecOverride,
-          resourceSpec,
-          'cpuLimit'
-        ),
-      },
-      memory: {
-        memoryRequested: getAtmLambdaResourceValue(
-          resourceSpecOverride,
-          resourceSpec,
-          'memoryRequested'
-        ),
-        memoryLimit: getAtmLambdaResourceValue(
-          resourceSpecOverride,
-          resourceSpec,
-          'memoryLimit'
-        ),
-      },
-      ephemeralStorage: {
-        ephemeralStorageRequested: getAtmLambdaResourceValue(
-          resourceSpecOverride,
-          resourceSpec,
-          'ephemeralStorageRequested'
-        ),
-        ephemeralStorageLimit: getAtmLambdaResourceValue(
-          resourceSpecOverride,
-          resourceSpec,
-          'ephemeralStorageLimit'
-        ),
+      overrideResources: Boolean(resourceSpecOverride),
+      resourcesSections: {
+        cpu: {
+          cpuRequested: getAtmLambdaResourceValue(
+            resourceSpecOverride,
+            resourceSpec,
+            'cpuRequested'
+          ),
+          cpuLimit: getAtmLambdaResourceValue(
+            resourceSpecOverride,
+            resourceSpec,
+            'cpuLimit'
+          ),
+        },
+        memory: {
+          memoryRequested: getAtmLambdaResourceValue(
+            resourceSpecOverride,
+            resourceSpec,
+            'memoryRequested'
+          ),
+          memoryLimit: getAtmLambdaResourceValue(
+            resourceSpecOverride,
+            resourceSpec,
+            'memoryLimit'
+          ),
+        },
+        ephemeralStorage: {
+          ephemeralStorageRequested: getAtmLambdaResourceValue(
+            resourceSpecOverride,
+            resourceSpec,
+            'ephemeralStorageRequested'
+          ),
+          ephemeralStorageLimit: getAtmLambdaResourceValue(
+            resourceSpecOverride,
+            resourceSpec,
+            'ephemeralStorageLimit'
+          ),
+        },
       },
     },
   };
@@ -767,20 +764,22 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
     name,
     argumentMappings,
     resultMappings,
-    overrideResources,
     resources,
   } = getProperties(
     formData,
     'name',
     'argumentMappings',
     'resultMappings',
-    'overrideResources',
     'resources'
   );
   const {
     argumentSpecs,
     resultSpecs,
   } = getProperties(atmLambda || {}, 'argumentSpecs', 'resultSpecs');
+  const {
+    overrideResources,
+    resourcesSections,
+  } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
   const task = {
     name,
@@ -857,7 +856,7 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
   });
 
   if (overrideResources) {
-    task.resourceSpecOverride = serializeTaskResourcesFieldsValues(resources);
+    task.resourceSpecOverride = serializeTaskResourcesFieldsValues(resourcesSections);
   }
 
   return task;
