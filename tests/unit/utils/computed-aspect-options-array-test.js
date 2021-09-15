@@ -49,6 +49,24 @@ describe('Unit | Utility | computed aspect options array', function () {
     expect(changeRouteAspectOptions)
       .to.have.been.calledWith(sinon.match({ hello: 'one,two,three' }));
   });
+
+  it('invokes changeRouteAspectOptions with null when an empty array is set', async function () {
+    const changeRouteAspectOptions =
+      sinon.spy(this.navigationState, 'changeRouteAspectOptions');
+    set(this.testedObject, 'hello', []);
+
+    expect(changeRouteAspectOptions)
+      .to.have.been.calledWith(sinon.match({ hello: null }));
+  });
+
+  it('invokes changeRouteAspectOptions with null when non-array is set', async function () {
+    const changeRouteAspectOptions =
+      sinon.spy(this.navigationState, 'changeRouteAspectOptions');
+    set(this.testedObject, 'hello', 'world');
+
+    expect(changeRouteAspectOptions)
+      .to.have.been.calledWith(sinon.match({ hello: null }));
+  });
 });
 
 function testServiceValueToComputedValue(testCase, navigationValue, computedValue) {

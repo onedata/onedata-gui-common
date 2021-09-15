@@ -9,18 +9,19 @@
  */
 
 import { computed } from '@ember/object';
+import { isEmpty } from '@ember/utils';
+import { isArray } from '@ember/array';
 
 export default function computedAspectOptionsArray(propertyName) {
   const navigationStatePropertyPath = `navigationState.aspectOptions.${propertyName}`;
-  return computed(`${navigationStatePropertyPath}.[]`, {
+  return computed(navigationStatePropertyPath, {
     get() {
       const rawSelected = this.get(navigationStatePropertyPath);
-      console.log('rawSelected', rawSelected);
       return rawSelected && rawSelected.split(',') || [];
     },
     set(key, value) {
       this.get('navigationState').changeRouteAspectOptions({
-        [propertyName]: value && value.join(',') || null,
+        [propertyName]: !isEmpty(value) && isArray(value) && value.join(',') || null,
       });
       return value;
     },

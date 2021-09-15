@@ -298,7 +298,6 @@ export default ArraySlice.extend(Evented, {
           for (let i = 0; i < insertIndex; ++i) {
             sourceArray.shift();
           }
-          // FIXME: here!
           this.setProperties({
             startIndex: this.get('startIndex') - insertIndex,
             endIndex: this.get('endIndex') - insertIndex,
@@ -562,7 +561,7 @@ export default ArraySlice.extend(Evented, {
 
   /**
    * Returns a promise that resolves when currently scheduled fetchPrev and fetchNext
-   * tasks settle. When there are no prev or next operations pending, returns emtpy
+   * tasks settle. When there are no prev or next operations pending, returns empty
    * resolving promise.
    */
   async getCurrentExpandPromise() {
@@ -587,7 +586,6 @@ export default ArraySlice.extend(Evented, {
       initialJumpIndex ?
       this.scheduleJump(initialJumpIndex) :
       this.scheduleReload({ head: true }).then(() => {
-        // FIXME: here!
         this.set('_startReached', this.get('_start') === 0);
         return this.startEndChanged();
       })
