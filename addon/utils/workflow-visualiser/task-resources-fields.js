@@ -15,8 +15,7 @@ import CapacityField from 'onedata-gui-common/utils/form-component/capacity-fiel
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { get } from '@ember/object';
-import { reads } from '@ember/object/computed';
-import { not, and, raw, eq } from 'ember-awesome-macros';
+import { not, and, raw, eq, conditional, gte, or, math } from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} AtmResourceSpec
@@ -99,10 +98,11 @@ function createTaskResourcesFieldsSubgroup({
   const limitValuePath = `valuesSource.${pathToGroup}.${resourceName}.${resourceName}Limit`;
   return FormFieldsGroup.create({
     name: resourceName,
+    classes: 'resource-section',
     fields: [
       fieldClass
       .extend(requestedDefaultValueMixin, {
-        lte: reads(limitValuePath),
+        lte: conditional(gte(limitValuePath, raw(0)), limitValuePath, raw(undefined)),
       })
       .create(Object.assign({
         name: `${resourceName}Requested`,
@@ -111,7 +111,8 @@ function createTaskResourcesFieldsSubgroup({
       fieldClass
       .extend(limitDefaultValueMixin, {
         isVisible: not(and('isInViewMode', eq('value', raw(null)))),
-        gte: reads(requiredValuePath),
+        // using `or` as math.max can return NaN in some cases
+        gte: or(math.max(requiredValuePath, raw(0)), raw(0)),
       })
       .create(Object.assign({
         name: `${resourceName}Limit`,

@@ -91,11 +91,12 @@ export default {
         },
       },
     },
-    overrideResources: {
-      label: 'Override default resources',
-    },
-    resources: Object.assign({}, taskResourcesFields, {
+    resources: {
       label: 'Resources',
-    }),
+      overrideResources: {
+        label: 'Override default resources',
+      },
+      resourcesSections: taskResourcesFields,
+    },
   },
 };

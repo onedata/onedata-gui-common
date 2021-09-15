@@ -788,6 +788,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       lambdaId,
       argumentMappings,
       resultMappings,
+      resourceSpecOverride,
       status,
       progressPercent,
     } = getProperties(
@@ -797,6 +798,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'lambdaId',
       'argumentMappings',
       'resultMappings',
+      'resourceSpecOverride',
       'status',
       'progressPercent'
     );
@@ -810,6 +812,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         lambdaId,
         argumentMappings,
         resultMappings,
+        resourceSpecOverride,
         status,
         progressPercent,
       });
@@ -829,6 +832,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         actionsFactory,
         argumentMappings,
         resultMappings,
+        resourceSpecOverride,
         status,
         progressPercent,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),

@@ -88,6 +88,7 @@ export default Action.extend({
       'name',
       'argumentMappings',
       'resultMappings',
+      'resourceSpecOverride',
     ];
 
     const modifiedKeys = keysToCheck.filter(key =>
