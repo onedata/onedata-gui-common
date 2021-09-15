@@ -20,10 +20,19 @@ export default EmberObject.extend({
   visualiserComponent: undefined,
 
   /**
-   * @virtual
-   * @type {Array<Utils.WorkflowVisualiser.Store>}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
+   */
+  workflow: reads('visualiserComponent.workflow'),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
   stores: reads('visualiserComponent.stores'),
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.ExecutionDataFetcher>}
+   */
+  executionDataFetcher: reads('visualiserComponent.executionDataFetcher'),
 
   /**
    * @param {Utils.WorkflowVisualiser.Store} store
@@ -33,7 +42,7 @@ export default EmberObject.extend({
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
   getStoreContent(store, ...args) {
-    const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
+    const executionDataFetcher = this.get('executionDataFetcher');
     if (!executionDataFetcher) {
       console.error(
         'util:workflow-visualiser/workflow-data-provider#getStoreContent: executionDataFetcher is not set',
@@ -50,7 +59,7 @@ export default EmberObject.extend({
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
   getWorkflowAuditLogContent(...args) {
-    const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
+    const executionDataFetcher = this.get('executionDataFetcher');
     if (!executionDataFetcher) {
       console.error(
         'util:workflow-visualiser/workflow-data-provider#getWorkflowAuditLogContent: executionDataFetcher is not set',
@@ -68,7 +77,7 @@ export default EmberObject.extend({
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
   getTaskAuditLogContent(task, ...args) {
-    const executionDataFetcher = this.get('visualiserComponent.executionDataFetcher');
+    const executionDataFetcher = this.get('executionDataFetcher');
     if (!executionDataFetcher) {
       console.error(
         'util:workflow-visualiser/workflow-data-provider#getTaskAuditLogContent: executionDataFetcher is not set',

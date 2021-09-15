@@ -64,6 +64,7 @@ import clusterActions from './onedata-gui-common/services/cluster-actions';
 import insufficientPrivilegesMessage from './onedata-gui-common/utils/i18n/insufficient-privileges-message';
 import joinStrings from './onedata-gui-common/utils/i18n/join-strings';
 import utilsWorkflowVisualiser from './onedata-gui-common/utils/workflow-visualiser';
+import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -152,6 +153,7 @@ const translations = {
     insufficientPrivilegesMessage,
     joinStrings,
     workflowVisualiser: utilsWorkflowVisualiser,
+    clipboardActions,
   },
   errors: {
     backendErrors,

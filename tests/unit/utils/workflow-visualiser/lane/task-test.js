@@ -16,7 +16,13 @@ describe('Unit | Utility | workflow visualiser/lane/task', function () {
     expect(get(task, 'renderer')).to.equal('workflow-visualiser/lane/task');
   });
 
-  ['lambdaId', 'argumentMappings', 'resultMappings'].forEach(propName => {
+  [
+    'instanceId',
+    'lambdaId',
+    'systemAuditLogStoreInstanceId',
+    'argumentMappings',
+    'resultMappings',
+  ].forEach(propName => {
     it(`has "${propName}" equal to undefined on init`, function () {
       const task = Task.create();
 

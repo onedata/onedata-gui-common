@@ -100,15 +100,37 @@
   .detail-entry {
     display: flex;
     flex-wrap: wrap;
+    align-items: baseline;
   }
 
   .detail-label {
     @include font-semibold();
+    white-space: nowrap;
+    margin-right: 0.5em;
   }
 
   .detail-value {
     flex-grow: 1;
+    min-width: 0;
     text-align: right;
+  }
+
+  .instance-id-detail {
+    flex-wrap: nowrap;
+
+    .detail-value {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      .one-icon {
+        font-size: 150%;
+
+        &:hover {
+          color: $color-one-mint;
+        }
+      }
+    }
   }
 
   .audit-log-detail {

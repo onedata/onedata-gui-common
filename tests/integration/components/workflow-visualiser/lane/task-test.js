@@ -1,15 +1,16 @@
 import { expect } from 'chai';
-import { describe, it, context, beforeEach } from 'mocha';
+import { describe, it, context, before, beforeEach, afterEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import { click, fillIn } from 'ember-native-dom-helpers';
-import { Promise } from 'rsvp';
+import { Promise, resolve } from 'rsvp';
 import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
 import $ from 'jquery';
 import { getModalFooter } from '../../../../helpers/modal';
+import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-record-id-action';
 
 const taskActionsSpec = [{
   className: 'modify-task-action-trigger',
@@ -41,8 +42,21 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
   });
 
   context('in "view" mode', function () {
+    before(function () {
+      // Instatiate Action class to make its `prototype.execute` available for
+      // mocking.
+      CopyRecordIdAction.create();
+    });
+
     beforeEach(function () {
       this.set('task.mode', 'view');
+    });
+
+    afterEach(function () {
+      // Reset stubbed actions
+      if (CopyRecordIdAction.prototype.execute.restore) {
+        CopyRecordIdAction.prototype.execute.restore();
+      }
     });
 
     itShowsTaskName();
@@ -61,10 +75,70 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       expect(this.$('.task-actions-trigger')).to.not.exist;
     });
 
-    itShowsStatus('pending');
-    itShowsStatus('active');
-    itShowsStatus('finished');
-    itShowsStatus('failed');
+    it('has collapsed details section by default', function () {
+      render(this);
+
+      expect(this.$('.task-details-collapse')).to.not.have.class('in');
+    });
+
+    it('expands details section on task click', async function () {
+      render(this);
+      await expandDetails();
+
+      expect(this.$('.task-details-collapse')).to.have.class('in');
+    });
+
+    it('shows task details values', async function () {
+      setProperties(this.get('task'), {
+        instanceId: 'someId',
+        status: 'pending',
+        itemsInProcessing: 1,
+        itemsProcessed: 2,
+        itemsFailed: 3,
+      });
+      render(this);
+      await expandDetails();
+
+      const $entries = this.$('.detail-entry');
+      [
+        ['instance-id', 'Instance ID', 'someId'],
+        ['status', 'Status', 'Pending'],
+        ['items-in-processing', 'In processing', '1'],
+        ['items-processed', 'Processed', '2'],
+        ['items-failed', 'Failed', '3'],
+      ].forEach(([classNameElement, label, value], idx) => {
+        const $entry = $entries.eq(idx);
+        expect($entry).to.have.class(`${classNameElement}-detail`);
+        expect($entry.find('.detail-label').text().trim()).to.equal(`${label}:`);
+        expect($entry.find('.detail-value').text().trim()).to.equal(value);
+      });
+    });
+
+    itShowsStatus('pending', 'Pending');
+    itShowsStatus('active', 'Active');
+    itShowsStatus('aborting', 'Aborting');
+    itShowsStatus('cancelled', 'Cancelled');
+    itShowsStatus('skipped', 'Skipped');
+    itShowsStatus('finished', 'Finished');
+    itShowsStatus('failed', 'Failed');
+    itShowsStatus('unknown', 'Unknown');
+
+    it('allows to copy task instance id', async function () {
+      const executeStub = sinon.stub(
+        CopyRecordIdAction.prototype,
+        'execute'
+      ).callsFake(function () {
+        expect(this.get('context.record.entityId')).to.equal('someId');
+        return resolve({ status: 'done' });
+      });
+      this.set('task.instanceId', 'someId');
+      render(this);
+      await expandDetails();
+
+      await click('.copy-record-id-action-trigger');
+
+      expect(executeStub).to.be.calledOnce;
+    });
   });
 
   context('in "edit" mode', function () {
@@ -166,13 +240,16 @@ function itShowsTaskName() {
   });
 }
 
-function itShowsStatus(status) {
-  it(`shows "${status}" status`, function () {
+function itShowsStatus(status, statusTranslation) {
+  it(`shows "${status}" status`, async function () {
     this.set('task.status', status);
 
     render(this);
+    await expandDetails();
 
     expect(this.$('.workflow-visualiser-task')).to.have.class(`status-${status}`);
+    expect(this.$('.status-detail .detail-value').text().trim())
+      .to.equal(statusTranslation);
   });
 }
 
@@ -181,4 +258,8 @@ function render(testCase) {
     {{global-modal-mounter}}
     {{workflow-visualiser/lane/task elementModel=task}}
   `);
+}
+
+async function expandDetails() {
+  await click('.draggable-task');
 }
