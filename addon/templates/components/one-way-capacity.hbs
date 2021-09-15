@@ -8,7 +8,7 @@
   disabled={{disabled}}
 >
 <span class="input-group-basic-dropdown size-unit-select-group">
-  {{#power-select
+  {{#one-dropdown
     triggerClass=size
     dropdownClass=size
     disabled=disabled
@@ -19,6 +19,6 @@
     as |unit|
   }}
     {{unit.name}}
-  {{/power-select}}
+  {{/one-dropdown}}
   </span>
 {{yield}}
