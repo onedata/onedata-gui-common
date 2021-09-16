@@ -160,7 +160,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'task.{name,argumentMappings,resultMappings}',
+    'task.{name,argumentMappings,resultMappings,resourceSpecOverride}',
     'atmLambda',
     function passedStoreFormValues() {
       const {

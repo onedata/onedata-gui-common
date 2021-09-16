@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-way-capacity';
 import { computed, observer } from '@ember/object';
-import bytesToString, { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
+import { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
@@ -79,52 +79,39 @@ export default Component.extend({
     );
   }),
 
-  scaledValueModifier: observer('value', 'sizeUnit', function scaledValueModifier() {
+  scaledValueModifier: observer('value', function scaledValueModifier() {
     const {
       value,
       sizeUnit,
       scaledValue,
     } = this.getProperties('value', 'sizeUnit', 'scaledValue');
 
-    let newScaledSize;
+    let newScaledValue;
+    let newSizeUnit = sizeUnit;
 
     if (!value && value !== '0') {
-      newScaledSize = undefined;
-    } else if (!sizeUnit) {
-      newScaledSize = '0';
+      newScaledValue = '';
+    } else if (isNaN(Number(value))) {
+      newScaledValue = value;
     } else {
       const prevValue = String(this.getValueInBytes(scaledValue));
       if (prevValue !== value) {
-        const scaledValueCandidate =
-          Math.round(value / sizeUnit.multiplicator * 10) / 10;
-        newScaledSize = isNaN(scaledValueCandidate) ? value : scaledValueCandidate;
+        newSizeUnit = this.getUnitForBytes(value);
+        newScaledValue = Math.round(value / newSizeUnit.multiplicator * 10) / 10;
       } else {
         return;
       }
     }
-    this.set('scaledValue', newScaledSize);
+    this.setProperties({
+      scaledValue: String(newScaledValue),
+      sizeUnit: newSizeUnit,
+    });
   }),
 
   init() {
     this._super(...arguments);
 
-    const {
-      value,
-      sizeUnits,
-    } = this.getProperties('value', 'sizeUnits');
-
-    let sizeUnit;
-    if (value && !isNaN(Number(value))) {
-      const { number, unit } = bytesToString(value, { separated: true });
-      if (number) {
-        sizeUnit = iecUnits.find(u => u.name === unit);
-      }
-    }
-    if (!sizeUnit) {
-      sizeUnit = sizeUnits[0];
-    }
-
-    this.set('sizeUnit', sizeUnit);
+    this.set('sizeUnit', this.get('sizeUnits')[0]);
     this.scaledValueModifier();
   },
 
@@ -138,6 +125,12 @@ export default Component.extend({
     const parsedScaledValue = parseFloat(scaledValue);
     return Number.isNaN(parsedScaledValue) ?
       parsedScaledValue : Math.floor(parsedScaledValue * multiplicator);
+  },
+
+  getUnitForBytes(bytes) {
+    const sortedSizeUnits = this.get('sizeUnits').sortBy('multiplicator');
+    return sortedSizeUnits.reverse().find(sizeUnit => sizeUnit.multiplicator <= bytes) ||
+      sortedSizeUnits[0];
   },
 
   actions: {
@@ -159,7 +152,7 @@ export default Component.extend({
 
       this.set('sizeUnit', sizeUnit);
 
-      const newValue = this.getValueInBytes(scaledValue, sizeUnit.multiplicator);
+      const newValue = this.getValueInBytes(scaledValue, sizeUnit);
       if (!isNaN(newValue)) {
         onChange(String(newValue));
       }
