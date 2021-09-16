@@ -36,6 +36,7 @@ export default EmberObject.extend({
    *             runNo: 1,
    *             sourceRunNo: null, // will be a number less than runNo
    *             iteratedStoreInstanceId: 'store1InstanceIdW1',
+   *             exceptionStoreInstanceId: 'retryStore1InstanceIdW1',
    *             status: 'run1LaneStatus',
    *           },
    *           2: { ... },
@@ -89,6 +90,7 @@ export default EmberObject.extend({
    *       generated: {
    *         store3InstanceId: {
    *           instanceId: 'store3InstanceId',
+   *           name: 'Failed items (run 2)',
    *           type: 'storeType',
    *           dataSpec: {
    *             type: 'dataSpecType,
