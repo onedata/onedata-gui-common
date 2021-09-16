@@ -14,8 +14,8 @@ import ViewTester from 'onedata-gui-common/utils/view-tester';
 export default class ListWatcher {
   /**
    * @param {jQuery} $container 
-   * @param {string} itemsSelector 
-   * @param {function} callback `(visibleElements: Element[], headerVisible: boolean) => undefined`
+   * @param {String} itemsSelector 
+   * @param {(visibleElements: Element[], headerVisible: boolean, event: Event) => undefined} callback
    */
   constructor($container, itemsSelector, callback, topSelector) {
     this.$container = $container;
@@ -28,7 +28,7 @@ export default class ListWatcher {
     $container.on('scroll', this._scrollHandler);
   }
 
-  scrollHandler() {
+  scrollHandler(event) {
     const items = this.$container.find(this.itemsSelector).toArray();
     let visibleFragment = false;
     const visibleElements = [];
@@ -49,7 +49,7 @@ export default class ListWatcher {
       headerVisible = topElement && this.viewTester.isInView(topElement);
     }
 
-    this.callback(visibleElements, headerVisible);
+    this.callback(visibleElements, headerVisible, event);
   }
 
   destroy() {
