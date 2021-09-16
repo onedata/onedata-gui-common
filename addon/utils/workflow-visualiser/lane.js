@@ -66,6 +66,11 @@ export default VisualiserRecord.extend({
    */
   iteratedStore: reads('visibleRun.iteratedStore'),
 
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
+   */
+  exceptionStore: reads('visibleRun.exceptionStore'),
+
   init() {
     this._super(...arguments);
 

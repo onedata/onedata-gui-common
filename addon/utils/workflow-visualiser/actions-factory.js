@@ -36,6 +36,7 @@ import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import ViewWorkflowAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-audit-log-action';
 import ViewTaskAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-audit-log-action';
+import ViewLaneFailedItemsAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-failed-items-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -318,6 +319,20 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         getAuditLogContentCallback: (...args) =>
+          this.get('workflowDataProvider').getStoreContent(...args),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneFailedItemsAction}
+   */
+  createViewLaneFailedItemsAction(context) {
+    return ViewLaneFailedItemsAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        getStoreContentCallback: (...args) =>
           this.get('workflowDataProvider').getStoreContent(...args),
       }, context),
     });

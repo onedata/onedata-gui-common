@@ -125,6 +125,17 @@ export default VisualiserElement.extend({
   }),
 
   /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  viewFailedItemsAction: computed('actionsFactory', 'lane', function viewFailedItemsAction() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+    return actionsFactory.createViewLaneFailedItemsAction({ lane });
+  }),
+
+  /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   laneActions: computed(
@@ -135,6 +146,7 @@ export default VisualiserElement.extend({
     'moveRightLaneAction',
     'clearLaneAction',
     'removeLaneAction',
+    'viewFailedItemsAction',
     function laneActions() {
       const {
         mode,
@@ -144,6 +156,7 @@ export default VisualiserElement.extend({
         moveRightLaneAction,
         clearLaneAction,
         removeLaneAction,
+        viewFailedItemsAction,
       } = this.getProperties(
         'mode',
         'modifyLaneAction',
@@ -151,7 +164,8 @@ export default VisualiserElement.extend({
         'moveLeftLaneAction',
         'moveRightLaneAction',
         'clearLaneAction',
-        'removeLaneAction'
+        'removeLaneAction',
+        'viewFailedItemsAction'
       );
 
       if (mode === 'edit') {
@@ -163,7 +177,10 @@ export default VisualiserElement.extend({
           removeLaneAction,
         ];
       } else {
-        return [viewLaneAction];
+        return [
+          viewLaneAction,
+          viewFailedItemsAction,
+        ];
       }
     }
   ),

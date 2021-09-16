@@ -716,12 +716,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const runNos = Object.keys(runsData);
     if (runNos.length) {
       runNos.forEach((runNo) => {
-        const storeInstanceId = runsData[runNo].iteratedStoreInstanceId;
-        const iteratedStore = storeInstanceId ?
-          this.getStoreByInstanceId(storeInstanceId) :
+        const iteratedStoreInstanceId = runsData[runNo].iteratedStoreInstanceId;
+        const exceptionStoreInstanceId = runsData[runNo].exceptionStoreInstanceId;
+        const iteratedStore = iteratedStoreInstanceId ?
+          this.getStoreByInstanceId(iteratedStoreInstanceId) :
           this.getStoreBySchemaId(iteratedStoreSchemaId);
+        const exceptionStore = exceptionStoreInstanceId &&
+          this.getStoreByInstanceId(exceptionStoreInstanceId);
         normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
           iteratedStore,
+          exceptionStore,
         });
       });
     } else {

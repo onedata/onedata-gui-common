@@ -524,7 +524,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`fills fields with data of passed "${label}" store on init`, async function () {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', {
-          id: 'store1id',
+          schemaId: 'store1id',
           instanceId: 'incorrect value that should not exist',
           name: 'store1',
           description: 'desc',
@@ -558,7 +558,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('fills fields with data of passed "Range" store on init', async function () {
       this.set('store', {
-        id: 'store1id',
+        schemaId: 'store1id',
         instanceId: 'incorrect value that should not exist',
         name: 'store1',
         description: 'desc',
@@ -642,7 +642,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`fills fields with data of passed "${label}" store`, async function () {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', {
-          id: 'store1id',
+          schemaId: 'store1id',
           instanceId: 'store1instanceId',
           name: 'store1',
           description: 'desc',
@@ -683,7 +683,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('fills fields with data of passed "Range" store on init', async function () {
       this.set('store', {
-        id: 'store1id',
+        schemaId: 'store1id',
         instanceId: 'store1instanceId',
         name: 'store1',
         description: 'desc',

@@ -622,7 +622,7 @@ function storeToFormData(store) {
   }
 
   const {
-    id,
+    schemaId,
     instanceId,
     name,
     description,
@@ -632,7 +632,7 @@ function storeToFormData(store) {
     requiresInitialValue,
   } = getProperties(
     store,
-    'id',
+    'schemaId',
     'instanceId',
     'name',
     'description',
@@ -643,7 +643,7 @@ function storeToFormData(store) {
   );
 
   const formData = {
-    id,
+    id: schemaId,
     instanceId,
     name,
     description,

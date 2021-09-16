@@ -40,6 +40,10 @@ const viewLaneActionsSpec = [{
   className: 'view-lane-action-trigger',
   label: 'View details',
   icon: 'browser-info',
+}, {
+  className: 'view-lane-failed-items-action-trigger',
+  label: 'View failed items',
+  icon: 'warning',
 }];
 
 describe('Integration | Component | workflow visualiser/lane', function () {

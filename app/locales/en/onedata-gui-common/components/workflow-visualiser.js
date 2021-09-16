@@ -38,6 +38,9 @@ export default {
         modalDescription: 'You are about to delete the lane "{{laneName}}".',
         modalYes: 'Remove',
       },
+      viewLaneFailedItems: {
+        title: 'View failed items',
+      },
     },
     runIndicator: {
       tooltip: {
