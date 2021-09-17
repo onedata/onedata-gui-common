@@ -35,6 +35,7 @@ export default EmberObject.extend({
    *           1: {
    *             runNo: 1,
    *             sourceRunNo: null, // will be a number less than runNo
+   *             runType: 'regular',
    *             iteratedStoreInstanceId: 'store1InstanceIdW1',
    *             exceptionStoreInstanceId: 'retryStore1InstanceIdW1',
    *             status: 'run1LaneStatus',
@@ -67,7 +68,7 @@ export default EmberObject.extend({
    *             runNo: 1,
    *             instanceId: 'task1InstanceId1',
    *             systemAuditLogStoreInstanceId: 'storeInstanceIdT1',
-   *             statuse: 'run1TaskStatus',
+   *             status: 'run1TaskStatus',
    *             itemsInProcessing: 123,
    *             itemsProcessed: 123,
    *             itemsFailed: 123,,

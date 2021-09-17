@@ -9,37 +9,48 @@ const componentClassName = 'run-indicator';
 
 const statuses = [{
   name: 'pending',
-  translation: 'Pending',
+  translation: 'pending',
 }, {
   name: 'scheduled',
-  translation: 'Scheduled',
+  translation: 'scheduled',
 }, {
   name: 'preparing',
-  translation: 'Preparing',
+  translation: 'preparing',
 }, {
   name: 'enqueued',
-  translation: 'Enqueued',
+  translation: 'enqueued',
 }, {
   name: 'active',
-  translation: 'Active',
+  translation: 'active',
 }, {
   name: 'aborting',
-  translation: 'Aborting',
+  translation: 'aborting',
 }, {
   name: 'cancelled',
-  translation: 'Cancelled',
+  translation: 'cancelled',
 }, {
   name: 'skipped',
-  translation: 'Skipped',
+  translation: 'skipped',
 }, {
   name: 'finished',
-  translation: 'Finished',
+  translation: 'finished',
 }, {
   name: 'failed',
-  translation: 'Failed',
+  translation: 'failed',
 }, {
   name: 'unknown',
-  translation: 'Unknown',
+  translation: 'unknown',
+}];
+
+const runTypes = [{
+  name: 'regular',
+  translation: 'regular',
+}, {
+  name: 'rerun',
+  translation: 'rerun',
+}, {
+  name: 'retry',
+  translation: 'retry',
 }];
 
 describe('Integration | Component | workflow visualiser/lane/run indicator', function () {
@@ -181,12 +192,13 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
     this.setProperties({
       runNo: 1,
       status: 'active',
+      runType: 'regular',
     });
 
     await render(this);
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
-    expect(await tooltipHelper.getText()).to.match(/^Run: 1(\s)+Status: Active$/);
+    expect(await tooltipHelper.getText()).to.match(/^Run: 1(\s)+Run type: regular(\s)+Status: active$/);
   });
 
   it('has correct tooltip for n-th run', async function () {
@@ -194,18 +206,45 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
       runNo: 4,
       sourceRunNo: 2,
       status: 'active',
+      runType: 'rerun',
     });
 
     await render(this);
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
-    expect(await tooltipHelper.getText()).to.match(/^Run: 4(\s)+Source run: 2(\s)+Status: Active$/);
+    expect(await tooltipHelper.getText()).to.match(
+      /^Run: 4(\s)+Source run: 2(\s)+Run type: rerun(\s)+Status: active$/);
+  });
+
+  it('it does not show run type in tooltip, if its value is incorrect', async function () {
+    this.setProperties({
+      runNo: 1,
+      runType: 'abcd',
+    });
+
+    await render(this);
+
+    const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
+    expect(await tooltipHelper.getText()).to.not.contain('Run type');
+  });
+
+  it('it does not show run type in tooltip, if its value is empty', async function () {
+    this.set('runNo', 1);
+
+    await render(this);
+
+    const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
+    expect(await tooltipHelper.getText()).to.not.contain('Run type');
   });
 
   for (const { name, translation } of statuses) {
     itHasCorrectTooltipWithStatus(name, translation);
   }
-  itHasCorrectTooltipWithStatus('incorrect status', 'Unknown');
+  itHasCorrectTooltipWithStatus('incorrect status', 'unknown');
+
+  for (const { name, translation } of runTypes) {
+    itHasCorrectTooltipWithRunType(name, translation);
+  }
 });
 
 async function render(testCase) {
@@ -213,6 +252,7 @@ async function render(testCase) {
     status=status
     runNo=runNo
     sourceRunNo=sourceRunNo
+    runType=runType
     isSelected=isSelected
     click=onClick
   }}`);
@@ -246,6 +286,22 @@ function itHasCorrectTooltipWithStatus(status, statusTranslation) {
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.match(
       new RegExp(`^Run: 1(\\s)+Status: ${statusTranslation}$`)
+    );
+  });
+}
+
+function itHasCorrectTooltipWithRunType(runType, runTypeTranslation) {
+  it(`has correct tooltip for run of type "${runType}"`, async function () {
+    this.setProperties({
+      runNo: 1,
+      runType,
+    });
+
+    await render(this);
+
+    const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
+    expect(await tooltipHelper.getText()).to.match(
+      new RegExp(`^Run: 1(\\s)+Run type: ${runTypeTranslation}(\\s)+Status: unknown$`)
     );
   });
 }

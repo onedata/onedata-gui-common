@@ -52,6 +52,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {String}
+   */
+  runType: undefined,
+
+  /**
+   * @virtual
    * @type {Boolean}
    */
   isSelected: false,
@@ -143,7 +149,15 @@ export default Component.extend(I18n, {
       i18n,
       normalizedStatus,
     } = this.getProperties('i18n', 'normalizedStatus');
-    return translateLaneStatus(i18n, normalizedStatus);
+    return String(translateLaneStatus(i18n, normalizedStatus)).toLocaleLowerCase();
+  }),
+
+  /**
+   * @type {ComputedProperty<String|null>}
+   */
+  runTypeText: computed('runType', function runTypeText() {
+    const runType = this.get('runType');
+    return runType ? this.t(`runType.${runType}`, {}, { defaultValue: null }) : null;
   }),
 
   /**

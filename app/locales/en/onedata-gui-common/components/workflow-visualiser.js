@@ -43,9 +43,15 @@ export default {
       },
     },
     runIndicator: {
+      runType: {
+        regular: 'regular',
+        rerun: 'rerun',
+        retry: 'retry',
+      },
       tooltip: {
         runNo: 'Run',
         sourceRunNo: 'Source run',
+        runType: 'Run type',
         status: 'Status',
       },
     },

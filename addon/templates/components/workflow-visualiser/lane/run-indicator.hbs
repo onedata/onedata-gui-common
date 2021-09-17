@@ -9,6 +9,9 @@
   {{#if isSourceRunNoValid}}
     {{tt this "tooltip.sourceRunNo"}}: <strong>{{sourceRunNoText}}</strong><br>
   {{/if}}
+  {{#if runTypeText}}
+    {{tt this "tooltip.runType"}}: <strong>{{runTypeText}}</strong><br>
+  {{/if}}
   {{tt this "tooltip.status"}}: <strong>{{statusText}}</strong>
 {{/one-tooltip}}
 {{yield}}
