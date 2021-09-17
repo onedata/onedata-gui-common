@@ -57,9 +57,14 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneRunActionsFactory>}
    */
   laneRunActionsFactory: computed('actionsFactory', function laneRunActionsFactory() {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+
     return LaneRunActionsFactory.create({
-      actionsFactory: this.get('actionsFactory'),
-      lane: this,
+      actionsFactory,
+      lane,
     });
   }),
 

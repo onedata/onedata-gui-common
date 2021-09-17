@@ -26,7 +26,30 @@ export default EmberObject.extend({
    * @param {Number} runNo
    * @returns {Array<Util.Action>}
    */
-  createActionsForRunNo( /* runNo */ ) {
-    return [];
+  createActionsForRunNo(runNo) {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+    if (!actionsFactory || !lane) {
+      return [];
+    }
+
+    return [
+      this.createViewFailedItemsAction(runNo),
+    ].compact();
+  },
+
+  /**
+   * @private
+   * @param {Number} runNo
+   * @returns {Utils.Action}
+   */
+  createViewFailedItemsAction(runNo) {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+    return actionsFactory.createViewLaneFailedItemsAction({ lane, runNo });
   },
 });
