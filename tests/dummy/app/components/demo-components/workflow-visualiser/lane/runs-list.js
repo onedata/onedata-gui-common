@@ -11,6 +11,8 @@ import { laneStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statu
 import _ from 'lodash';
 
 export default Component.extend({
+  selectedRunNo: undefined,
+
   runs: computed(function runs() {
     const runsMap = {};
     for (let i = 1; i <= 16; i++) {
@@ -26,5 +28,12 @@ export default Component.extend({
     return runsMap;
   }),
 
-  selectedRunNo: undefined,
+  laneRunActionsFactory: computed(() => ({
+    createActionsForRunNo(runNo) {
+      return [{
+        title: 'someAction',
+        action: () => console.log('someAction', runNo),
+      }];
+    },
+  })),
 });

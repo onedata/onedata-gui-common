@@ -150,6 +150,13 @@ export default Component.extend({
   selectedRunNo: undefined,
 
   /**
+   * @virtual optional
+   * @type {Utils.WorkflowVisualiser.Lane.LaneRunActionsFactory}
+   */
+  laneRunActionsFactory: undefined,
+
+  /**
+   * @virtual optional
    * @type {Function}
    * @param {Number} runNo
    * @returns {any}
@@ -157,6 +164,7 @@ export default Component.extend({
   onSelectionChange: undefined,
 
   /**
+   * @virtual optional
    * @type {Function}
    * @param {RunsListVisibleRunsPosition} visibleRunsPosition
    * @returns {any}

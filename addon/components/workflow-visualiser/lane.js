@@ -9,6 +9,7 @@
 
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane';
+import LaneRunActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/lane/lane-run-actions-factory';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
@@ -50,6 +51,16 @@ export default VisualiserElement.extend({
     const batchSize = this.get('lane.storeIteratorSpec.strategy.batchSize');
     return strategy ?
       this.t(`iteratorStrategy.${strategy}`, { batchSize }, { defaultValue: '' }) : '';
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.LaneRunActionsFactory>}
+   */
+  laneRunActionsFactory: computed('actionsFactory', function laneRunActionsFactory() {
+    return LaneRunActionsFactory.create({
+      actionsFactory: this.get('actionsFactory'),
+      lane: this,
+    });
   }),
 
   /**

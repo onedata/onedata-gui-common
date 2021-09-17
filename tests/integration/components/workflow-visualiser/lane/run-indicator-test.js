@@ -254,7 +254,7 @@ async function render(testCase) {
     sourceRunNo=sourceRunNo
     runType=runType
     isSelected=isSelected
-    click=onClick
+    onClick=onClick
   }}`);
   await wait();
 }

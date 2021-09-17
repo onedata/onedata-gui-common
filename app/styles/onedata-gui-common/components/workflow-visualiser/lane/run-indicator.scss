@@ -26,6 +26,10 @@ $workflow-visualiser-run-indicator-size: 25px;
   align-items: center;
   justify-content: center;
 
+  &:not(.clickable) {
+    cursor: initial !important;
+  }
+
   &.two-digit-run .run-no {
     font-size: 0.9em;
   }
@@ -117,6 +121,33 @@ $workflow-visualiser-run-indicator-size: 25px;
     background-color: $color-one-white;
     padding: 0 0.3em;
     align-items: center;
+    pointer-events: none;
+  }
+
+  .run-actions-trigger {
+    @include workflow-visualiser-action-trigger-white-background();
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    transform: translateX(50%) translateY(60%);
+    font-size: 1.3em;
+
+    &:hover,
+    &.active {
+      color: $color-one-azure;
+    }
+  }
+
+  &.has-actions:hover,
+  &.actions-opened {
+    .source-run-no-container {
+      display: none;
+    }
+
+    .run-actions-trigger {
+      display: initial;
+    }
   }
 }
 

@@ -16,8 +16,9 @@
         runNo=run.runNo
         sourceRunNo=run.sourceRunNo
         runType=run.runType
+        laneRunActionsFactory=laneRunActionsFactory
         isSelected=(eq selectedRunNo run.runNo)
-        click=(action "runSelected" run.runNo)
+        onClick=(action "runSelected" run.runNo)
       }}
     </li>
   {{/each}}
