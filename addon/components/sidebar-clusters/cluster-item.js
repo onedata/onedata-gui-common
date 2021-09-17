@@ -25,6 +25,7 @@ export default Component.extend(I18n, {
   i18n: service(),
   router: service(),
   globalClipboard: service(),
+  clipboardActions: service(),
 
   /**
    * @override
@@ -75,16 +76,13 @@ export default Component.extend(I18n, {
   /**
    * @type {Ember.ComputedProperty<Action>}
    */
-  copyIdAction: computed(function copyIdAction() {
-    return {
-      action: () => this.get('globalClipboard').copy(
-        this.get('item.entityId'),
-        this.t('clusterId')
-      ),
-      title: this.t('copyClusterIdAction'),
-      class: 'copy-cluster-id-action-trigger',
-      icon: 'copy',
-    };
+  copyIdAction: computed('cluster', function copyIdAction() {
+    const {
+      cluster,
+      clipboardActions,
+    } = this.getProperties('cluster', 'clipboardActions');
+
+    return clipboardActions.createCopyRecordIdAction({ record: cluster });
   }),
 
   /**

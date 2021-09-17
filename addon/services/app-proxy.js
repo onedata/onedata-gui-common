@@ -3,13 +3,13 @@
  * window.frameElement.appProxy)
  *
  * @module services/app-proxy
- * @author Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2019-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service from '@ember/service';
-import EmberObject, { computed, set, observer } from '@ember/object';
+import EmberObject, { computed, set, setProperties, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   sharedObjectName,
@@ -39,13 +39,14 @@ export default Service.extend({
   appProxyObserver: observer('appProxy', function appProxyObserver() {
     const appProxy = this.get('appProxy');
     if (appProxy) {
+      // TODO: VFS-8360: do not add deprecated method
       set(appProxy, 'propertyChanged', this.propertyChanged.bind(this));
+      set(appProxy, 'propertiesChanged', this.propertiesChanged.bind(this));
     }
   }),
 
   init() {
     this._super(...arguments);
-
     this.appProxyObserver();
   },
 
@@ -62,15 +63,35 @@ export default Service.extend({
     }
   },
 
+  // TODO: VFS-8360: remove deprecated method
   /**
    * Handler for sharedProperties field changed event
+   * @deprecated Support for legacy Onezone's - will be removed in future releases
    * @param {string} propertyName 
    * @returns {undefined}
    */
   propertyChanged(propertyName) {
+    console.warn(
+      'DEPRECATED: appProxy#propertyChanged will be removed; please use propertiesChanged'
+    );
     this.set(
       `injectedData.${propertyName}`,
       getSharedProperty(this.get('appProxy'), propertyName)
+    );
+  },
+
+  propertiesChanged(propertiesNames) {
+    const {
+      appProxy,
+      injectedData,
+    } = this.getProperties('appProxy', 'injectedData');
+    const updatedData = propertiesNames.reduce((data, propertyName) => {
+      data[propertyName] = getSharedProperty(appProxy, propertyName);
+      return data;
+    }, {});
+    setProperties(
+      injectedData,
+      updatedData,
     );
   },
 });

@@ -9,7 +9,7 @@
 
 import Action from 'onedata-gui-common/utils/action';
 import ActionResult from 'onedata-gui-common/utils/action-result';
-import { computed, set } from '@ember/object';
+import { computed, set, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { camelize } from '@ember/string';
@@ -32,15 +32,6 @@ export default Action.extend({
    * @override
    */
   icon: 'copy',
-
-  /**
-   * @override
-   */
-  title: computed('clipboardContentTypeTranslation', function title() {
-    const clipboardContentTypeTranslation =
-      this.get('clipboardContentTypeTranslation');
-    return this.t('title', { clipboardContentType: clipboardContentTypeTranslation });
-  }),
 
   /**
    * @type {ComputedProperty<GraphSingleModel>}
@@ -105,8 +96,15 @@ export default Action.extend({
       return result;
     }
 
-    globalClipboard.copy(recordId, clipboardContentTypeTranslation);
-    set(result, 'status', 'done');
+    try {
+      globalClipboard.copy(recordId, clipboardContentTypeTranslation);
+      set(result, 'status', 'done');
+    } catch (error) {
+      setProperties(result, {
+        status: 'failed',
+        error,
+      });
+    }
     return result;
   },
 });
