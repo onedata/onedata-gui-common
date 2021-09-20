@@ -51,6 +51,14 @@ export default FormField.extend({
   lte: undefined,
 
   /**
+   * @virtual optional
+   * @type {ComputedProperty<HtmlSafe>}
+   */
+  placeholder: computed('i18nPrefix', 'path', function placeholder() {
+    return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
+  }),
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   numberValidator: computed(

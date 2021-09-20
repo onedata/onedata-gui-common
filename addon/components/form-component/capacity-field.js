@@ -16,7 +16,12 @@ export default FieldComponentBase.extend({
   classNames: ['capacity-field'],
 
   /**
-   * @type {Array<String>}
+   * @type {ComputedProperty<Array<String>>}
    */
   allowedUnits: reads('field.allowedUnits'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  placeholder: reads('field.placeholder'),
 });

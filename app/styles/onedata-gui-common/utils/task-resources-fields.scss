@@ -5,7 +5,11 @@
 
   @media (min-width: $screen-sm-min) {
     .resource-section {
-      flex-wrap: nowrap;
+      max-width: 60em;
+
+      &.field-edit-mode {
+        flex-wrap: nowrap;
+      }
 
       .form-fields-group {
         .fields-group-children {
@@ -23,15 +27,11 @@
           bottom: calc(100% + 0.3em);
           padding: 0;
           width: 100%;
-
-          .label-colon {
-            display: none;
-          }
         }
       }
 
-      & + .resource-section .form-fields-group .control-label {
-        display: none;
+      + .resource-section {
+        margin-top: 0.7em;
       }
 
       &.field-view-mode {

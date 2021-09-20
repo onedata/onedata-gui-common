@@ -25,6 +25,12 @@ export default Component.extend({
   value: undefined,
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  placeholder: undefined,
+
+  /**
    * @virtual
    * @type {Array<string>}
    */

@@ -16,7 +16,7 @@ describe('Integration | Component | form component/capacity field', function () 
   });
 
   beforeEach(function () {
-    this.set('field', CapacityField.create());
+    this.set('field', CapacityField.create({ ownerSource: this }));
   });
 
   it('has class "capacity-field"', function () {
@@ -102,6 +102,14 @@ describe('Integration | Component | form component/capacity field', function () 
     this.render(hbs `{{form-component/capacity-field field=field}}`);
 
     await expectUnits(expectedUnits);
+  });
+
+  it('sets placeholder according to "placeholder"', function () {
+    this.set('field.placeholder', 'test');
+
+    this.render(hbs `{{form-component/capacity-field field=field}}`);
+
+    expect(this.$('input').attr('placeholder')).to.equal('test');
   });
 
   it('renders capacity value as text when field is in "view" mode', function () {

@@ -3,6 +3,8 @@ import { describe, it } from 'mocha';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import { get } from '@ember/object';
 import { setupComponentTest } from 'ember-mocha';
+import sinon from 'sinon';
+import { lookupService } from '../../../helpers/stub-service';
 
 const defaultUnits = ['MiB', 'GiB', 'TiB', 'PiB'];
 
@@ -21,6 +23,34 @@ describe('Integration | Utility | form component/capacity field', function () {
     const field = CapacityField.create();
 
     expect(get(field, 'allowedUnits')).to.deep.equal(defaultUnits);
+  });
+
+  it('translates placeholder', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('somePrefix.field1.placeholder')
+      .returns('field placeholder');
+
+    const field = CapacityField.create({
+      ownerSource: this,
+      i18nPrefix: 'somePrefix',
+      name: 'field1',
+    });
+
+    expect(get(field, 'placeholder')).to.equal('field placeholder');
+  });
+
+  it('has empty placeholder if translation for it cannot be found', function () {
+    sinon.stub(lookupService(this, 'i18n'), 't')
+      .withArgs('somePrefix.field1.placeholder')
+      .returns('<missing-...');
+
+    const field = CapacityField.create({
+      ownerSource: this,
+      i18nPrefix: 'somePrefix',
+      name: 'field1',
+    });
+
+    expect(get(field, 'placeholder')).to.be.empty;
   });
 
   [
