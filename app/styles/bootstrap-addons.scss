@@ -718,17 +718,15 @@ label.align-left {
 
 .input-group-sm, .form-group-sm {
   .input-group-basic-dropdown {
-    .ember-basic-dropdown {
-      .ember-power-select-trigger {
-        height: $input-height-small;
-        line-height: $input-height-small - 12px;
-        padding-left: $input-height-small - 16px;
-        padding-right: $input-height-small - 8px;
-        // border-radius: 0;
-      }
-      .ember-basic-dropdown-content {
-        @extend .small;
-      }
+    .ember-power-select-trigger {
+      height: $input-height-small;
+      line-height: $input-height-small - 12px;
+      padding-left: $input-height-small - 16px;
+      padding-right: $input-height-small - 8px;
+      // border-radius: 0;
+    }
+    .ember-basic-dropdown-content {
+      @extend .small;
     }
   }
 }
