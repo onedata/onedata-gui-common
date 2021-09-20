@@ -6,11 +6,11 @@ export default {
     },
     cpuLimit: {
       label: 'Limit',
-      placeholder: 'unlimited',
+      placeholder: 'Unlimited',
     },
     cpuLimitUnlimitedDesc: {
       label: 'Limit',
-      text: 'unlimited',
+      text: 'Unlimited',
     },
   },
   memory: {
@@ -20,11 +20,11 @@ export default {
     },
     memoryLimit: {
       label: 'Limit',
-      placeholder: 'unlimited',
+      placeholder: 'Unlimited',
     },
     memoryLimitUnlimitedDesc: {
       label: 'Limit',
-      text: 'unlimited',
+      text: 'Unlimited',
     },
   },
   ephemeralStorage: {
@@ -34,11 +34,11 @@ export default {
     },
     ephemeralStorageLimit: {
       label: 'Limit',
-      placeholder: 'unlimited',
+      placeholder: 'Unlimited',
     },
     ephemeralStorageLimitUnlimitedDesc: {
       label: 'Limit',
-      text: 'unlimited',
+      text: 'Unlimited',
     },
   },
 };
