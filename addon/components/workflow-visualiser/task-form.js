@@ -453,6 +453,7 @@ export default Component.extend(I18n, {
           },
         }).create({
           name: 'resourcesSections',
+          classes: 'task-resources-fields',
           fields: createTaskResourcesFields({
             pathToGroup: 'resources.resourcesSections',
             cpuRequestedDefaultValueMixin: defaultValueGenerator(this),
@@ -715,45 +716,49 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     name: name || lambdaName,
     argumentMappings: formArgumentMappings,
     resultMappings: formResultMappings,
-    resources: {
-      overrideResources: Boolean(resourceSpecOverride),
-      resourcesSections: {
-        cpu: {
-          cpuRequested: getAtmLambdaResourceValue(
-            resourceSpecOverride,
-            resourceSpec,
-            'cpuRequested'
-          ),
-          cpuLimit: getAtmLambdaResourceValue(
-            resourceSpecOverride,
-            resourceSpec,
-            'cpuLimit'
-          ),
-        },
-        memory: {
-          memoryRequested: getAtmLambdaResourceValue(
-            resourceSpecOverride,
-            resourceSpec,
-            'memoryRequested'
-          ),
-          memoryLimit: getAtmLambdaResourceValue(
-            resourceSpecOverride,
-            resourceSpec,
-            'memoryLimit'
-          ),
-        },
-        ephemeralStorage: {
-          ephemeralStorageRequested: getAtmLambdaResourceValue(
-            resourceSpecOverride,
-            resourceSpec,
-            'ephemeralStorageRequested'
-          ),
-          ephemeralStorageLimit: getAtmLambdaResourceValue(
-            resourceSpecOverride,
-            resourceSpec,
-            'ephemeralStorageLimit'
-          ),
-        },
+    resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
+  };
+}
+
+function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
+  return {
+    overrideResources: Boolean(resourceSpecOverride),
+    resourcesSections: {
+      cpu: {
+        cpuRequested: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'cpuRequested'
+        ),
+        cpuLimit: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'cpuLimit'
+        ),
+      },
+      memory: {
+        memoryRequested: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'memoryRequested'
+        ),
+        memoryLimit: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'memoryLimit'
+        ),
+      },
+      ephemeralStorage: {
+        ephemeralStorageRequested: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'ephemeralStorageRequested'
+        ),
+        ephemeralStorageLimit: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'ephemeralStorageLimit'
+        ),
       },
     },
   };

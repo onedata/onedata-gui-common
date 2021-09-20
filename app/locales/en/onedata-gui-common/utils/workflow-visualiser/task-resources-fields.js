@@ -7,7 +7,7 @@ export default {
     cpuLimit: {
       label: 'Limit',
     },
-    cpuLimitDesc: {
+    cpuLimitUnlimitedDesc: {
       label: 'Limit',
       text: 'unlimited',
     },
@@ -20,7 +20,7 @@ export default {
     memoryLimit: {
       label: 'Limit',
     },
-    memoryLimitDesc: {
+    memoryLimitUnlimitedDesc: {
       label: 'Limit',
       text: 'unlimited',
     },
@@ -33,7 +33,7 @@ export default {
     ephemeralStorageLimit: {
       label: 'Limit',
     },
-    ephemeralStorageLimitDesc: {
+    ephemeralStorageLimitUnlimitedDesc: {
       label: 'Limit',
       text: 'unlimited',
     },

@@ -1,18 +1,4 @@
-@mixin taskResourcesFieldsStyles($group-name: 'resources') {
-  .#{$group-name}-field {
-    flex-wrap: wrap;
-
-    > .control-label {
-      @include font-semibold();
-      padding-top: $padding-large-vertical;
-      margin-bottom: 0.7em;
-      flex-basis: 100%;
-      max-width: initial;
-      border-top: 1px solid $main-border-color;
-      text-transform: uppercase;
-    }
-  }
-
+.task-resources-fields {
   .resource-section .form-fields-group .control-label {
     font-size: 85%;
   }

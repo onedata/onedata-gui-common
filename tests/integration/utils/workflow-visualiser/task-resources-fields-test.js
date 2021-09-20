@@ -246,7 +246,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
         await render(this);
 
         expect(this.$(`.${resourceName}Limit-field .field-component`)).to.not.exist;
-        expect(this.$(`.${resourceName}LimitDesc-field .field-component`).text().trim())
+        expect(this.$(`.${resourceName}LimitUnlimitedDesc-field .field-component`).text().trim())
           .to.equal('unlimited');
       });
     });

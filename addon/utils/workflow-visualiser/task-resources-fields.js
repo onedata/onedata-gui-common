@@ -40,7 +40,7 @@ import { not, and, raw, eq, conditional, gte, or, math } from 'ember-awesome-mac
  * @param {Object} spec.ephemeralStorageRequestedDefaultValueMixin mixin providing `defaultValue`
  * for requested ephemeral storage field
  * @param {Object} spec.ephemeralStoragLimitDefaultValueMixin mixin providing `defaultValue`
- * for limit ephemeral storag field
+ * for limit ephemeral storage field
  * @returns {Array<FormComponent.FormFieldsGroup>} array to be used inside `field` property
  * of some parent group
  */
@@ -111,7 +111,7 @@ function createTaskResourcesFieldsSubgroup({
       fieldClass
       .extend(limitDefaultValueMixin, {
         isVisible: not(and('isInViewMode', eq('value', raw(null)))),
-        // using `or` as math.max can return NaN in some cases
+        // using `or` because math.max can return NaN in some cases
         gte: or(math.max(requiredValuePath, raw(0)), raw(0)),
       })
       .create(Object.assign({
@@ -121,7 +121,7 @@ function createTaskResourcesFieldsSubgroup({
       StaticTextField.extend({
         isVisible: and('isInViewMode', eq(limitValuePath, raw(null))),
       }).create({
-        name: `${resourceName}LimitDesc`,
+        name: `${resourceName}LimitUnlimitedDesc`,
       }),
     ],
   });

@@ -64,6 +64,8 @@ export default Component.extend({
   onKeyUp: notImplementedIgnore,
 
   /**
+   * Value displayed inside text input (so is should be `value` divided by
+   * `sizeUnit.multiplicator`).
    * @type {string}
    */
   scaledValue: '0',
