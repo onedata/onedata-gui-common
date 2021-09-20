@@ -55,7 +55,7 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @virtual optional
    * @type {string}
    */
-  classNames: undefined,
+  className: undefined,
 
   /**
    * @virtual optional

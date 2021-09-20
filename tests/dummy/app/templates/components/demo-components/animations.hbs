@@ -1,0 +1,11 @@
+<div class="animated-element animated-browser-item">
+  hello
+</div>
+
+{{#each animationNames as |animationName|}}
+  <div class="row">
+    <button {{action "startAnimation" animationName}}>
+      Animate {{animationName}}
+    </button>
+  </div>
+{{/each}}

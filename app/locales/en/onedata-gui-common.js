@@ -48,6 +48,7 @@ import cannotInitWebsocket from './onedata-gui-common/components/errors/cannot-i
 
 import recordSelectorModal from './onedata-gui-common/components/modals/record-selector-modal';
 import questionModal from './onedata-gui-common/components/modals/question-modal';
+import unsavedChangesQuestionModal from './onedata-gui-common/components/modals/unsaved-changes-question-modal';
 import workflowVisualiserStoreModal from './onedata-gui-common/components/modals/workflow-visualiser/store-modal';
 import workflowVisualiserLaneModal from './onedata-gui-common/components/modals/workflow-visualiser/lane-modal';
 
@@ -63,6 +64,7 @@ import clusterActions from './onedata-gui-common/services/cluster-actions';
 import insufficientPrivilegesMessage from './onedata-gui-common/utils/i18n/insufficient-privileges-message';
 import joinStrings from './onedata-gui-common/utils/i18n/join-strings';
 import utilsWorkflowVisualiser from './onedata-gui-common/utils/workflow-visualiser';
+import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -126,6 +128,7 @@ const translations = {
     modals: {
       recordSelectorModal,
       questionModal,
+      unsavedChangesQuestionModal,
       workflowVisualiser: {
         storeModal: workflowVisualiserStoreModal,
         laneModal: workflowVisualiserLaneModal,
@@ -150,6 +153,7 @@ const translations = {
     insufficientPrivilegesMessage,
     joinStrings,
     workflowVisualiser: utilsWorkflowVisualiser,
+    clipboardActions,
   },
   errors: {
     backendErrors,

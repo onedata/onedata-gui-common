@@ -47,6 +47,36 @@ export default EmberObject.extend({
   },
 
   /**
+   * @returns {Promise<Object>} Object format:
+   *   ```
+   *   {
+   *     workflow: 'workflowInstanceId',
+   *     task: {
+   *       taskSchemaId1: 'taskInstanceId1',
+   *       taskSchemaId2: 'taskInstanceId2',
+   *       ...
+   *     }
+   *     store: {
+   *       global: {
+   *         storeSchemaId1: 'storeInstanceId1',
+   *         storeSchemaId2: 'storeInstanceId2',
+   *         ...
+   *       },
+   *       taskSystemAuditLog: {
+   *         taskSchemaId1: 'taskSystemAuditLogStoreInstanceId1',
+   *         taskSchemaId2: 'taskSystemAuditLogStoreInstanceId2',
+   *         ...
+   *       }
+   *       workflowSystemAuditLog: 'workflowSystemAuditLogStoreInstanceId',
+   *     }
+   *   }
+   *   ```
+   */
+  async fetchInstanceIdsMapping() {
+    return notImplementedReject();
+  },
+
+  /**
    * @param {String} storeSchemaId
    * @param {String} startFromIndex
    * @param {number} limit

@@ -7,14 +7,15 @@
  * @author Michal Borzecki
  * @copyright (C) 2018 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
- * 
+ *
+ */
+
+import ignoreErrorById from 'onedata-gui-common/utils/ignore-error-by-id';
+
+/**
  * @param {*} result response
  * @returns {*}
  */
 export default function ignoreForbiddenError(result) {
-  if (result && result.id !== 'forbidden') {
-    throw result;
-  } else {
-    return result;
-  }
+  return ignoreErrorById(result, 'forbidden');
 }

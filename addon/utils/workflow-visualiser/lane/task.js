@@ -21,6 +21,18 @@ export default VisualiserRecord.extend({
   renderer: 'workflow-visualiser/lane/task',
 
   /**
+   * @virtual optional
+   * @type {String}
+   */
+  instanceId: undefined,
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  systemAuditLogStoreInstanceId: undefined,
+
+  /**
    * @virtual
    * @type {String}
    */

@@ -82,6 +82,7 @@ import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/paral
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import Workflow from 'onedata-gui-common/utils/workflow-visualiser/workflow';
 import generateId from 'onedata-gui-common/utils/workflow-visualiser/generate-id';
 import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -112,6 +113,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   i18n: service(),
   dragDrop: service(),
+  clipboardActions: service(),
 
   /**
    * @override
@@ -194,7 +196,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
    *   parallelBox: Array<Utils.WorkflowVisualiser.Lane.ParallelBox>,
    *   task: Array<Utils.WorkflowVisualiser.Lane.Task>,
    *   interblockSpace: Array<Utils.WorkflowVisualiser.Lane.InterblockSpace>,
-   *   store: Array<Utils.WorkflowVisualiser.Store>
+   *   store: Array<Utils.WorkflowVisualiser.Store>,
+   *   workflow: Array<Utils.WorkflowVisualiser.Workflow>,
    * }
    * ```
    * @type {Object}
@@ -216,16 +219,34 @@ export default Component.extend(I18n, WindowResizeHandler, {
   laneIdxForNextRightScroll: null,
 
   /**
+   * Contains mapping with instance (execution) ids of workflow elements.
+   * For object format description see ExecutionDataFetcher documentation.
+   * @type {Object}
+   */
+  instanceIdsMapping: undefined,
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
+   */
+  workflow: computed('instanceIdsMapping', function workflow() {
+    return this.getWorkflow();
+  }),
+
+  /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.VisualiserElement>>}
    */
-  visualiserElements: computed('rawData', function visualiserElements() {
-    return this.getVisualiserElements();
-  }),
+  visualiserElements: computed(
+    'rawData',
+    'instanceIdsMapping',
+    function visualiserElements() {
+      return this.getVisualiserElements();
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: computed('rawData', function stores() {
+  stores: computed('rawData', 'instanceIdsMapping', function stores() {
     return this.getStores();
   }),
 
@@ -290,7 +311,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   initialLoadingProxy: promise.object(computed(async function initialLoading() {
     if (this.get('mode') === 'view') {
-      return this.updateStatuses();
+      return Promise.all([
+        this.updateStatuses(),
+        this.updateInstanceIdsMapping(),
+      ]);
     }
   })),
 
@@ -309,6 +333,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
       }
     };
   }),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  copyInstanceIdAction: computed(
+    'workflow.instanceId',
+    function copyInstanceIdAction() {
+      const {
+        workflow,
+        clipboardActions,
+      } = this.getProperties('workflow', 'clipboardActions');
+      return clipboardActions.createCopyRecordIdAction({
+        record: { id: get(workflow, 'instanceId') },
+      });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
@@ -346,19 +386,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
    */
   executionActions: computed(
     'executionStatus',
+    'copyInstanceIdAction',
     'viewAuditLogAction',
     'normalizedCancelExecutionAction',
     function executionActions() {
       const {
         executionStatus,
+        copyInstanceIdAction,
         viewAuditLogAction,
         normalizedCancelExecutionAction,
       } = this.getProperties(
         'executionStatus',
+        'copyInstanceIdAction',
         'viewAuditLogAction',
         'normalizedCancelExecutionAction'
       );
-      const actions = [viewAuditLogAction];
+      const actions = [copyInstanceIdAction, viewAuditLogAction];
       if (
         !this.executionHasEnded() &&
         executionStatus !== 'aborting' &&
@@ -393,6 +436,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       task: [],
       interblockSpace: [],
       store: [],
+      workflow: [],
     });
 
     if (!this.get('actionsFactory')) {
@@ -549,6 +593,34 @@ export default Component.extend(I18n, WindowResizeHandler, {
     // But sometimes scroll event is not triggered at all (scrollbar bug?) and we need
     // to kick the detection manually.
     this.scheduleHorizontalOverflowDetection();
+  },
+
+  /**
+   * Generates an object, which describes a workflow as a whole
+   * @returns {Utils.WorkflowVisualiser.Workflow}
+   */
+  getWorkflow() {
+    const instanceId = this.get('instanceIdsMapping.workflow');
+    const systemAuditLogStoreInstanceId =
+      this.get('instanceIdsMapping.store.workflowSystemAuditLog');
+
+    const existingWorkflow = this.getCachedElement('workflow');
+
+    if (existingWorkflow) {
+      this.updateElement(existingWorkflow, {
+        instanceId,
+        systemAuditLogStoreInstanceId,
+      });
+      return existingWorkflow;
+    } else {
+      const newWorkflow = Workflow.create({
+        instanceId,
+        systemAuditLogStoreInstanceId,
+      });
+      this.addElementToCache('workflow', newWorkflow);
+
+      return newWorkflow;
+    }
   },
 
   /**
@@ -789,8 +861,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
       argumentMappings,
       resultMappings,
       resourceSpecOverride,
-      status,
-      progressPercent,
     } = getProperties(
       taskRawData,
       'id',
@@ -798,23 +868,24 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'lambdaId',
       'argumentMappings',
       'resultMappings',
-      'resourceSpecOverride',
-      'status',
-      'progressPercent'
+      'resourceSpecOverride'
     );
+    const instanceId = this.get(`instanceIdsMapping.task.${id}`);
+    const systemAuditLogStoreInstanceId =
+      this.get(`instanceIdsMapping.store.taskSystemAuditLog.${id}`);
 
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
       this.updateElement(existingTask, {
+        instanceId,
+        systemAuditLogStoreInstanceId,
         name,
         parent,
         lambdaId,
         argumentMappings,
         resultMappings,
         resourceSpecOverride,
-        status,
-        progressPercent,
       });
       return existingTask;
     } else {
@@ -825,6 +896,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
       const newTask = Task.create({
         id,
+        instanceId,
+        systemAuditLogStoreInstanceId,
         name,
         parent,
         lambdaId,
@@ -833,8 +906,6 @@ export default Component.extend(I18n, WindowResizeHandler, {
         argumentMappings,
         resultMappings,
         resourceSpecOverride,
-        status,
-        progressPercent,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),
       });
@@ -910,11 +981,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'defaultInitialValue',
       'requiresInitialValue'
     );
+    const instanceId = this.get(`instanceIdsMapping.store.global.${id}`);
 
     const existingStore = this.getCachedElement('store', { id });
 
     if (existingStore) {
       this.updateElement(existingStore, {
+        instanceId,
         name,
         description,
         type,
@@ -926,6 +999,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       const newStore = Store.create({
         id,
+        instanceId,
         name,
         description,
         type,
@@ -945,12 +1019,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * Gets an already generated element from cache. It has to match properties passed
    * via `filterProps`.
    * @param {String} type one of: 'lane', 'interlaneSpace', 'parallelBox', 'task',
-   *   'interblockSpace'
+   *   'interblockSpace', 'store', 'workflow'
    * @param {Object} filterProps an object which properties should be the same in the
    *   searched element (e.g `{ id: '123' }`)
    * @returns {Utils.WorkflowVisualiser.VisualiserElement|undefined}
    */
-  getCachedElement(type, filterProps) {
+  getCachedElement(type, filterProps = {}) {
     const elementsOfType = this.get('elementsCache')[type] || [];
     return elementsOfType.find(element =>
       Object.keys(filterProps).every(filterKey =>
@@ -1315,6 +1389,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   executionHasEnded() {
     return workflowEndedStatuses.includes(this.get('executionStatus'));
+  },
+
+  async updateInstanceIdsMapping() {
+    const executionDataFetcher = this.get('executionDataFetcher');
+    if (!executionDataFetcher) {
+      return;
+    }
+
+    this.set(
+      'instanceIdsMapping',
+      await executionDataFetcher.fetchInstanceIdsMapping()
+    );
   },
 
   actions: {

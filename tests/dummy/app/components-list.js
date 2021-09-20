@@ -1,4 +1,5 @@
 export default [
+  'animations',
   'bezier-curve',
   'checkbox-list',
   'fast-double-click',
@@ -9,6 +10,7 @@ export default [
   'input-group',
   'json-editor',
   'markdown-editor',
+  'modals/unsaved-changes-question-modal',
   'name-conflict',
   'nav-tabs',
   'one-arrow',

@@ -63,3 +63,9 @@
   inherit,
   $main-text-color-disabled
 );
+
+@include animation-bg-color-attention-fadeout(
+  pulse-bg-selected-file-highlight,
+  $color-file-selected,
+  $color-file-highlighted
+);

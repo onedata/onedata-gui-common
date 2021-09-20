@@ -10,10 +10,25 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-form';
-import { tag, getBy, conditional, eq, neq, raw, array, or, gt, not, and, isEmpty } from 'ember-awesome-macros';
+import {
+  tag,
+  getBy,
+  conditional,
+  eq,
+  neq,
+  raw,
+  array,
+  or,
+  gt,
+  not,
+  and,
+  isEmpty,
+  notEmpty,
+} from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
+import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
@@ -177,6 +192,8 @@ export default Component.extend(I18n, {
    */
   fields: computed(function fields() {
     const {
+      idField,
+      instanceIdField,
       nameField,
       descriptionField,
       typeField,
@@ -184,6 +201,8 @@ export default Component.extend(I18n, {
       rangeStoreConfigFieldsGroup,
       needsUserInputField,
     } = this.getProperties(
+      'idField',
+      'instanceIdField',
       'nameField',
       'descriptionField',
       'typeField',
@@ -203,6 +222,8 @@ export default Component.extend(I18n, {
     }).create({
       component: this,
       fields: [
+        idField,
+        instanceIdField,
         nameField,
         descriptionField,
         typeField,
@@ -214,12 +235,41 @@ export default Component.extend(I18n, {
   }),
 
   /**
+   * @type {ComputedProperty<Utils.FormComponent.ClipboardField>}
+   */
+  idField: computed(function idField() {
+    return ClipboardField
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: and(neq('component.mode', raw('create')), notEmpty('value')),
+      }).create({
+        component: this,
+        name: 'id',
+      });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.ClipboardField>}
+   */
+  instanceIdField: computed(function instanceIdField() {
+    return ClipboardField
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: and(eq('component.mode', raw('view')), notEmpty('value')),
+      }).create({
+        component: this,
+        name: 'instanceId',
+      });
+  }),
+
+  /**
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
    */
   nameField: computed(function nameField() {
     return TextField
-      .extend(defaultValueGenerator(this, raw('')))
+      .extend(defaultValueGenerator(this, raw('')), {
+        isVisible: or(neq('component.mode', raw('view')), notEmpty('value')),
+      })
       .create({
+        component: this,
         name: 'name',
       });
   }),
@@ -572,6 +622,8 @@ function storeToFormData(store) {
   }
 
   const {
+    id,
+    instanceId,
     name,
     description,
     type,
@@ -580,6 +632,8 @@ function storeToFormData(store) {
     requiresInitialValue,
   } = getProperties(
     store,
+    'id',
+    'instanceId',
     'name',
     'description',
     'type',
@@ -589,6 +643,8 @@ function storeToFormData(store) {
   );
 
   const formData = {
+    id,
+    instanceId,
     name,
     description,
     type,
