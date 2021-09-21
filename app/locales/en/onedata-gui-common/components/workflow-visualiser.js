@@ -9,6 +9,10 @@ export default {
       serial: 'Serial',
       batch: 'Batch {{batchSize}}',
     },
+    runTiming: {
+      latest: 'Latest',
+      past: 'Past',
+    },
     unknownStore: 'Unknown',
     actions: {
       createLane: {

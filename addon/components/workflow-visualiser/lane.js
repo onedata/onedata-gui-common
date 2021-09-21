@@ -10,9 +10,10 @@
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane';
 import LaneRunActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/lane/lane-run-actions-factory';
-import { computed } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { computed, getProperties } from '@ember/object';
+import { reads, collect } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
+import { translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
 export default VisualiserElement.extend({
   layout,
@@ -27,6 +28,11 @@ export default VisualiserElement.extend({
    * @type {Boolean}
    */
   areActionsOpened: false,
+
+  /**
+   * @type {Boolean}
+   */
+  areRunActionsOpened: false,
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}
@@ -51,6 +57,30 @@ export default VisualiserElement.extend({
     const batchSize = this.get('lane.storeIteratorSpec.strategy.batchSize');
     return strategy ?
       this.t(`iteratorStrategy.${strategy}`, { batchSize }, { defaultValue: '' }) : '';
+  }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  visibleRunTimingLabel: computed(
+    'lane.{runs,visibleRun}',
+    function visibleRunTimingLabel() {
+      const {
+        visibleRun,
+        runs,
+      } = getProperties(this.get('lane') || {}, 'visibleRun', 'runs');
+      const sortedRuns = Object.values(runs || {}).sortBy('runNo');
+      const timing = sortedRuns.indexOf(visibleRun) === (sortedRuns.length - 1) ?
+        'latest' : 'past';
+      return this.t(`runTiming.${timing}`);
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  visibleRunStatusLabel: computed('lane.status', function visibleRunStatusLabel() {
+    return translateLaneStatus(this.get('i18n'), this.get('lane.status'));
   }),
 
   /**
@@ -172,7 +202,6 @@ export default VisualiserElement.extend({
         moveRightLaneAction,
         clearLaneAction,
         removeLaneAction,
-        viewFailedItemsAction,
       } = this.getProperties(
         'mode',
         'modifyLaneAction',
@@ -181,7 +210,6 @@ export default VisualiserElement.extend({
         'moveRightLaneAction',
         'clearLaneAction',
         'removeLaneAction',
-        'viewFailedItemsAction'
       );
 
       if (mode === 'edit') {
@@ -195,11 +223,15 @@ export default VisualiserElement.extend({
       } else {
         return [
           viewLaneAction,
-          viewFailedItemsAction,
         ];
       }
     }
   ),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.Action>>}
+   */
+  laneRunActions: collect('viewFailedItemsAction'),
 
   actions: {
     changeName(newName) {
@@ -207,6 +239,9 @@ export default VisualiserElement.extend({
     },
     toggleActionsOpen(state) {
       scheduleOnce('afterRender', this, 'set', 'areActionsOpened', state);
+    },
+    toggleRunActionsOpen(state) {
+      scheduleOnce('afterRender', this, 'set', 'areRunActionsOpened', state);
     },
     changeRun(runNo) {
       this.get('lane').changeRun(runNo);

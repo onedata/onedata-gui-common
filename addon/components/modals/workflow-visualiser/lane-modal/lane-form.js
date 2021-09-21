@@ -95,48 +95,9 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'lane.{name,storeIteratorSpec,iteratedStore}',
-    'mode',
+    'lane.{name,storeIteratorSpec}',
     function passedStoreFormValues() {
-      const {
-        lane,
-        mode,
-      } = this.getProperties('lane', 'mode');
-      return laneToFormData(lane, mode);
-    }
-  ),
-
-  /**
-   * @type {ComputedProperty<Array<FieldOption>>}
-   */
-  sourceStoreDropdownOptions: computed(
-    'mode',
-    'lane.iteratedStore.name',
-    'stores.@each.name',
-    function storeDropdownOptions() {
-      const {
-        lane,
-        stores,
-      } = this.getProperties('lane', 'stores');
-      const createStorePseudoStore = {
-        id: createStoreDropdownOptionValue,
-      };
-      const iteratedStore = lane && get(lane, 'iteratedStore');
-      const allowedStores = [
-        createStorePseudoStore,
-        ...(stores || []).slice().concat([iteratedStore]).uniq().compact().sortBy('name'),
-      ];
-
-      return allowedStores.map(store => {
-        const {
-          id,
-          name,
-        } = getProperties(store, 'id', 'name');
-        return {
-          value: id,
-          label: name,
-        };
-      });
+      return laneToFormData(this.get('lane'));
     }
   ),
 
@@ -213,7 +174,21 @@ export default Component.extend(I18n, {
     return DropdownField
       // using options.1 becase options.firstObject is the "createStore" item
       .extend(defaultValueGenerator(this, 'options.1.value'), {
-        options: reads('component.sourceStoreDropdownOptions'),
+        options: computed('component.stores.@each.name', function options() {
+          const storeOptions = (this.get('component.stores') || []).map(store => {
+            const {
+              id,
+              name,
+            } = getProperties(store, 'id', 'name');
+            return {
+              value: id,
+              label: name,
+            };
+          }).sortBy('label');
+          return [{
+            value: createStoreDropdownOptionValue,
+          }, ...storeOptions];
+        }),
         valueChanged(value) {
           if (value === createStoreDropdownOptionValue) {
             component.createSourceStore();
@@ -363,12 +338,11 @@ function defaultValueGenerator(component, createDefaultValue) {
   };
 }
 
-function laneToFormData(lane, mode) {
+function laneToFormData(lane) {
   const {
     name,
     storeIteratorSpec,
-    iteratedStore,
-  } = getProperties(lane || {}, 'name', 'storeIteratorSpec', 'iteratedStore');
+  } = getProperties(lane || {}, 'name', 'storeIteratorSpec');
   const {
     strategy,
     storeSchemaId,
@@ -377,12 +351,11 @@ function laneToFormData(lane, mode) {
     type,
     batchSize,
   } = getProperties(strategy || {}, 'type', 'batchSize');
-  const iteratedStoreId = iteratedStore && get(iteratedStore, 'id');
 
   return {
     name,
     iteratorOptions: {
-      sourceStore: mode === 'view' && iteratedStoreId ? iteratedStoreId : storeSchemaId,
+      sourceStore: storeSchemaId,
       strategy: type,
       batchOptions: type === 'batch' ? {
         batchSize,

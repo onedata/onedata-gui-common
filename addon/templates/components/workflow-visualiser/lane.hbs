@@ -7,16 +7,7 @@
   <div class="lane-header">
     <div class="lane-menu-trigger-space lane-drag-handle">
       {{#if (eq mode "edit")}}
-        {{one-icon class="lane-drag-handle-icon" icon="move"}}
-      {{else}}
-        {{workflow-visualiser/lane/run-indicator
-          class="visible-run-indicator"
-          status=lane.status
-          runNo=lane.visibleRunNo
-          sourceRunNo=lane.visibleRun.sourceRunNo
-          runType=lane.visibleRun.runType
-          laneRunActionsFactory=laneRunActionsFactory
-        }}
+        {{one-icon icon="move"}}
       {{/if}}
     </div>
     {{#if (eq mode "edit")}}
@@ -72,6 +63,47 @@
         onSelectionChange=(action "changeRun")
         onVisibleRunsPositionChange=(action (mut lane.visibleRunsPosition))
       }}
+    </div>
+    <div class="lane-visible-run-info">
+      {{workflow-visualiser/lane/run-indicator
+        class="visible-run-indicator"
+        status=lane.status
+        runNo=lane.visibleRunNo
+        sourceRunNo=lane.visibleRun.sourceRunNo
+        runType=lane.visibleRun.runType
+        laneRunActionsFactory=laneRunActionsFactory
+      }}
+      <span class="visible-run-timing-label">{{visibleRunTimingLabel}}</span>
+      <span class="visible-run-status-label">{{visibleRunStatusLabel}}</span>
+      {{one-menu-toggle
+        class=(concat-classes
+          "lane-run-actions-trigger"
+          (concat "run-actions-trigger-" elementId)
+          (if areRunActionsOpened "active")
+        )
+        click=(action "toggleRunActionsOpen" (not areRunActionsOpened))
+      }}
+      {{#render-later triggerRender=areRunActionsOpened}}
+        {{#one-webui-popover
+          class="lane-run-actions"
+          padding=false
+          popoverStyle="with-dropdown"
+          triggerSelector=(concat ".run-actions-trigger-" elementId)
+          open=areRunActionsOpened
+          onToggle=(action "toggleRunActionsOpen")
+          as |popover|
+        }}
+          {{#click-outside
+            action=(action (mut areRunActionsOpened) false)
+            except-selector=(concat ".run-actions-trigger-" elementId)
+          }}
+            {{actions-popover-content
+              actionsArray=laneRunActions
+              actionClicked=(action "toggleRunActionsOpen" false)
+            }}
+          {{/click-outside}}
+        {{/one-webui-popover}}
+      {{/render-later}}
     </div>
   {{/if}}
   <div class="lane-store-info">
