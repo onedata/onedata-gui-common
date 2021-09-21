@@ -236,7 +236,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     ['cpu', 'memory', 'ephemeralStorage'].forEach((resourceName) => {
-      it(`shows "unlimited" as limit value in view mode, when ${resourceName} is null`, async function () {
+      it(`shows "Unlimited" as limit value in view mode, when ${resourceName} is null`, async function () {
         this.set(
           `rootGroup.valuesSource.taskResourcesFields.${resourceName}.${resourceName}Limit`,
           null
@@ -247,7 +247,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
 
         expect(this.$(`.${resourceName}Limit-field .field-component`)).to.not.exist;
         expect(this.$(`.${resourceName}LimitUnlimitedDesc-field .field-component`).text().trim())
-          .to.equal('unlimited');
+          .to.equal('Unlimited');
       });
     });
   });
