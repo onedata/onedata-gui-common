@@ -731,6 +731,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     } else {
       normalizedRunsData[1] = {
         runNo: 1,
+        status: 'pending',
         iteratedStore: iteratedStoreSchemaId ?
           this.getStoreBySchemaId(iteratedStoreSchemaId) : null,
       };
