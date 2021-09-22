@@ -944,6 +944,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       lambdaId,
       argumentMappings,
       resultMappings,
+      resourceSpecOverride,
     } = getProperties(
       taskRawData,
       'id',
@@ -951,6 +952,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'lambdaId',
       'argumentMappings',
       'resultMappings',
+      'resourceSpecOverride'
     );
 
     const parentRunNos = Object.keys(get(parent, 'runs'));
@@ -986,6 +988,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         lambdaId,
         argumentMappings,
         resultMappings,
+        resourceSpecOverride,
       });
       return existingTask;
     } else {
@@ -1005,6 +1008,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         actionsFactory,
         argumentMappings,
         resultMappings,
+        resourceSpecOverride,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),
       });

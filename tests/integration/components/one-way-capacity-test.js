@@ -9,7 +9,7 @@ import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
 
 class UnitSelectHelper extends EmberPowerSelectHelper {
   constructor() {
-    super('.ember-basic-dropdown');
+    super('.one-way-capacity', '.ember-basic-dropdown-content');
   }
 }
 

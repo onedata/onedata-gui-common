@@ -41,6 +41,13 @@ export default VisualiserRecord.extend({
   resultMappings: undefined,
 
   /**
+   * @virtual
+   * @type {Object}
+   */
+  resourceSpecOverride: undefined,
+
+  /**
+   * @virtual
    * @type {ComputedProperty<String>}
    */
   instanceId: reads('visibleRun.instanceId'),

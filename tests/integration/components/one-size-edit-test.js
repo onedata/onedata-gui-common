@@ -9,7 +9,7 @@ import { click, fillIn } from 'ember-native-dom-helpers';
 
 class SizeUnitSelectHelper extends EmberPowerSelectHelper {
   constructor() {
-    super('.size-unit-select-group');
+    super('.size-unit-select-group', '.ember-basic-dropdown-content');
   }
 }
 
