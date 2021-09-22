@@ -14,6 +14,7 @@ import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { isEmpty, conditional, getBy, raw } from 'ember-awesome-macros';
+import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default Action.extend({
   modalManager: service(),
@@ -37,6 +38,15 @@ export default Action.extend({
    * @override
    */
   disabled: isEmpty('exceptionStore'),
+
+  /**
+   * @override
+   */
+  tip: conditional(
+    'disabled',
+    computedT('disabledTip'),
+    raw(null)
+  ),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane>}

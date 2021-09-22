@@ -14,6 +14,7 @@
 
 import EmberObject, { get } from '@ember/object';
 import ArrayProxy from '@ember/array/proxy';
+import ObjectProxy from '@ember/object/proxy';
 import { reads } from '@ember/object/computed';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
@@ -37,6 +38,8 @@ import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import ViewWorkflowAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-audit-log-action';
 import ViewTaskAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-audit-log-action';
 import ViewLaneFailedItemsAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-failed-items-action';
+import RetryLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/retry-lane-action';
+import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/rerun-lane-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -66,6 +69,22 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Promise<Object>} created store
    */
   createStoreCallback: undefined,
+
+  /**
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {Number} runNo
+   * @returns {Promise}
+   */
+  retryLaneCallback: undefined,
+
+  /**
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {Number} runNo
+   * @returns {Promise}
+   */
+  rerunLaneCallback: undefined,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
@@ -106,6 +125,26 @@ export default EmberObject.extend(OwnerInjector, {
       console.warn('workflow-visualiser/actions-factory: overriding createStoreCallback');
     }
     this.set('createStoreCallback', createStoreCallback);
+  },
+
+  /**
+   * @param {Function} retryLaneCallback
+   */
+  setRetryLaneCallback(retryLaneCallback) {
+    if (this.get('retryLaneCallback')) {
+      console.warn('workflow-visualiser/actions-factory: overriding retryLaneCallback');
+    }
+    this.set('retryLaneCallback', retryLaneCallback);
+  },
+
+  /**
+   * @param {Function} rerunLaneCallback
+   */
+  setRerunLaneCallback(rerunLaneCallback) {
+    if (this.get('rerunLaneCallback')) {
+      console.warn('workflow-visualiser/actions-factory: overriding rerunLaneCallback');
+    }
+    this.set('rerunLaneCallback', rerunLaneCallback);
   },
 
   /**
@@ -326,6 +365,7 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {Number} [context.runNo]
    * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneFailedItemsAction}
    */
   createViewLaneFailedItemsAction(context) {
@@ -339,12 +379,52 @@ export default EmberObject.extend(OwnerInjector, {
   },
 
   /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {Number} context.runNo
+   * @returns {Utils.WorkflowVisualiser.Actions.RetryLaneAction}
+   */
+  createRetryLaneAction(context) {
+    return RetryLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        workflow: this.getWorkflowProxy(),
+        retryLaneCallback: (...args) => this.get('retryLaneCallback')(...args),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {Number} context.runNo
+   * @returns {Utils.WorkflowVisualiser.Actions.RerunLaneAction}
+   */
+  createRerunLaneAction(context) {
+    return RerunLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        workflow: this.getWorkflowProxy(),
+        rerunLaneCallback: (...args) => this.get('rerunLaneCallback')(...args),
+      }, context),
+    });
+  },
+
+  /**
    * @private
    * @returns {ArrayProxy<Utils.WorkflowVisualiser.Store>}
    */
   getStoresArrayProxy() {
     return ArrayProxy
       .extend({ content: reads('factory.workflowDataProvider.stores') })
+      .create({ factory: this });
+  },
+
+  /**
+   * @private
+   * @returns {ObjectProxy<Utils.WorkflowVisualiser.Workflow>}
+   */
+  getWorkflowProxy() {
+    return ObjectProxy
+      .extend({ content: reads('factory.workflowDataProvider.workflow') })
       .create({ factory: this });
   },
 });

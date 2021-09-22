@@ -37,7 +37,9 @@ export default EmberObject.extend({
 
     return [
       this.createViewFailedItemsAction(runNo),
-    ].compact();
+      this.createRetryAction(runNo),
+      this.createRerunAction(runNo),
+    ];
   },
 
   /**
@@ -51,5 +53,31 @@ export default EmberObject.extend({
       lane,
     } = this.getProperties('actionsFactory', 'lane');
     return actionsFactory.createViewLaneFailedItemsAction({ lane, runNo });
+  },
+
+  /**
+   * @private
+   * @param {Number} runNo
+   * @returns {Utils.Action}
+   */
+  createRetryAction(runNo) {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+    return actionsFactory.createRetryLaneAction({ lane, runNo });
+  },
+
+  /**
+   * @private
+   * @param {Number} runNo
+   * @returns {Utils.Action}
+   */
+  createRerunAction(runNo) {
+    const {
+      actionsFactory,
+      lane,
+    } = this.getProperties('actionsFactory', 'lane');
+    return actionsFactory.createRerunLaneAction({ lane, runNo });
   },
 });

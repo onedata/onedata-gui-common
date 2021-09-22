@@ -10,8 +10,8 @@
 import VisualiserElement from 'onedata-gui-common/components/workflow-visualiser/visualiser-element';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser/lane';
 import LaneRunActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/lane/lane-run-actions-factory';
-import { computed, getProperties } from '@ember/object';
-import { reads, collect } from '@ember/object/computed';
+import { computed, getProperties, get } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
@@ -171,17 +171,6 @@ export default VisualiserElement.extend({
   }),
 
   /**
-   * @type {ComputedProperty<Utils.Action>}
-   */
-  viewFailedItemsAction: computed('actionsFactory', 'lane', function viewFailedItemsAction() {
-    const {
-      actionsFactory,
-      lane,
-    } = this.getProperties('actionsFactory', 'lane');
-    return actionsFactory.createViewLaneFailedItemsAction({ lane });
-  }),
-
-  /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
   laneActions: computed(
@@ -231,7 +220,17 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
-  laneRunActions: collect('viewFailedItemsAction'),
+  laneRunActions: computed(
+    'laneRunActionsFactory',
+    'lane.visibleRunNo',
+    function laneRunActions() {
+      const {
+        lane,
+        laneRunActionsFactory,
+      } = this.getProperties('lane', 'laneRunActionsFactory');
+      return laneRunActionsFactory.createActionsForRunNo(get(lane, 'visibleRunNo'));
+    }
+  ),
 
   actions: {
     changeName(newName) {

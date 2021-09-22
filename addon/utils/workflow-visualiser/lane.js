@@ -62,6 +62,14 @@ export default VisualiserRecord.extend({
   onChangeRun: undefined,
 
   /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @returns {Promise}
+   */
+  onShowLatestRun: undefined,
+
+  /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
   iteratedStore: reads('visibleRun.iteratedStore'),
@@ -86,6 +94,11 @@ export default VisualiserRecord.extend({
 
   changeRun(runNo) {
     const onChangeRun = this.get('onChangeRun');
-    onChangeRun && onChangeRun(this, runNo);
+    return onChangeRun && onChangeRun(this, runNo);
+  },
+
+  showLatestRun() {
+    const onShowLatestRun = this.get('onShowLatestRun');
+    return onShowLatestRun ? onShowLatestRun(this) : resolve();
   },
 });

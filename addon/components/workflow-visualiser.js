@@ -465,7 +465,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   setupExecutionStateUpdater() {
-    if (this.executionHasEnded() || this.get('executionStateUpdater')) {
+    if (this.get('executionStateUpdater')) {
       return;
     }
 
@@ -809,6 +809,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         onClear: lane => this.clearLane(lane),
         onRemove: lane => this.removeElement(lane),
         onChangeRun: (lane, runNo) => this.changeLaneRun(lane, runNo),
+        onShowLatestRun: (lane) => this.showLatestLaneRun(lane),
       });
       set(
         newLane,
@@ -1460,6 +1461,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   changeLaneRun(lane, runNo) {
     set(lane, 'visibleRunNo', runNo);
+  },
+
+  async showLatestLaneRun(lane) {
+    await this.updateExecutionState();
+    const newestRun = Object.values(get(lane, 'runs')).sortBy('runNo').slice(-1)[0];
+    set(lane, 'visibleRunsPosition', {
+      runNo: newestRun.runNo,
+      placement: 'end',
+    });
+    this.changeLaneRun(lane, newestRun.runNo);
   },
 
   executionHasEnded() {

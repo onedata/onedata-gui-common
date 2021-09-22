@@ -44,6 +44,23 @@ export default {
       },
       viewLaneFailedItems: {
         title: 'View failed items',
+        disabledTip: 'Failed items list is available only for a correctly started lane.',
+      },
+      retryLane: {
+        title: 'Retry failed items',
+        successNotificationText: 'Lane retry has been scheduled successfully.',
+        failureNotificationActionName: 'scheduling lane retry',
+        disabledTip: {
+          workflowNotEnded: 'Retry can be scheduled only in an ended workflow execution.',
+          laneNotFailed: 'Retry can be scheduled only for a failed lane run.',
+          noExceptionStoreAvailable: 'Retry can be scheduled only for a correctly started lane.',
+        },
+      },
+      rerunLane: {
+        title: 'Rerun all items',
+        successNotificationText: 'Lane rerun has been scheduled successfully.',
+        failureNotificationActionName: 'scheduling lane rerun',
+        disabledTip: 'Rerun can be scheduled only in an ended workflow execution.',
       },
     },
     runIndicator: {
