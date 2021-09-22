@@ -1,0 +1,56 @@
+.task-resources-fields {
+  .resource-section .form-fields-group .control-label {
+    font-size: 85%;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .resource-section {
+      max-width: 60em;
+
+      &.field-edit-mode {
+        flex-wrap: nowrap;
+      }
+
+      .form-fields-group {
+        .fields-group-children {
+          display: flex;
+        }
+
+        .field-renderer:first-child {
+          flex: 0 0 calc(50% - #{$padding-base-horizontal * 0.5});
+          min-width: 0;
+          margin-right: $padding-base-horizontal;
+        }
+
+        .control-label {
+          position: absolute;
+          bottom: calc(100% + 0.3em);
+          padding: 0;
+          width: 100%;
+        }
+      }
+
+      + .resource-section {
+        margin-top: 0.7em;
+      }
+
+      &.field-view-mode {
+        .form-fields-group {
+          .field-renderer:first-child {
+            flex: 0 0 calc(120px - #{$padding-base-horizontal * 0.5});
+          }
+
+          .control-label {
+            bottom: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .resource-section > .control-label .label-colon {
+      display: none;
+    }
+  }
+}

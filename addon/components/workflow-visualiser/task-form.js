@@ -11,7 +11,7 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/workflow-visualiser/task-form';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { tag, not, eq, neq, raw, getBy, notEmpty } from 'ember-awesome-macros';
+import { tag, not, eq, neq, raw, getBy, notEmpty, or } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import { computed, observer, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -19,6 +19,7 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
+import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -30,6 +31,10 @@ import {
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import cloneAsEmberObject from 'onedata-gui-common/utils/clone-as-ember-object';
 import _ from 'lodash';
+import {
+  createTaskResourcesFields,
+  serializeTaskResourcesFieldsValues,
+} from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -155,7 +160,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'task.{name,argumentMappings,resultMappings}',
+    'task.{name,argumentMappings,resultMappings,resourceSpecOverride}',
     'atmLambda',
     function passedStoreFormValues() {
       const {
@@ -174,10 +179,12 @@ export default Component.extend(I18n, {
       nameField,
       argumentMappingsFieldsCollectionGroup,
       resultMappingsFieldsCollectionGroup,
+      resourcesFieldsGroup,
     } = this.getProperties(
       'nameField',
       'argumentMappingsFieldsCollectionGroup',
-      'resultMappingsFieldsCollectionGroup'
+      'resultMappingsFieldsCollectionGroup',
+      'resourcesFieldsGroup'
     );
 
     return FormFieldsRootGroup.extend({
@@ -194,6 +201,7 @@ export default Component.extend(I18n, {
         nameField,
         argumentMappingsFieldsCollectionGroup,
         resultMappingsFieldsCollectionGroup,
+        resourcesFieldsGroup,
       ],
     });
   }),
@@ -415,6 +423,51 @@ export default Component.extend(I18n, {
     }
   ),
 
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
+  resourcesFieldsGroup: computed(function resourcesFieldsGroup() {
+    return FormFieldsGroup.create({
+      name: 'resources',
+      addColonToLabel: false,
+      fields: [
+        ToggleField.extend(defaultValueGenerator(this)).create({
+          name: 'overrideResources',
+        }),
+        FormFieldsGroup.extend({
+          isVisible: or(not('isInViewMode'), 'valuesSource.resources.overrideResources'),
+          isEnabled: reads('valuesSource.resources.overrideResources'),
+          overrideResourcesObserver: observer(
+            'valuesSource.resources.overrideResources',
+            function overrideResourcesObserver() {
+              const overrideResources = this.get('valuesSource.resources.overrideResources');
+              const isModified = this.get('isModified');
+              if (!overrideResources && isModified) {
+                scheduleOnce('afterRender', this, 'reset');
+              }
+            }
+          ),
+          init() {
+            this._super(...arguments);
+            this.overrideResourcesObserver();
+          },
+        }).create({
+          name: 'resourcesSections',
+          classes: 'task-resources-fields',
+          fields: createTaskResourcesFields({
+            pathToGroup: 'resources.resourcesSections',
+            cpuRequestedDefaultValueMixin: defaultValueGenerator(this),
+            cpuLimitDefaultValueMixin: defaultValueGenerator(this),
+            memoryRequestedDefaultValueMixin: defaultValueGenerator(this),
+            memoryLimitDefaultValueMixin: defaultValueGenerator(this),
+            ephemeralStorageRequestedDefaultValueMixin: defaultValueGenerator(this),
+            ephemeralStorageLimitDefaultValueMixin: defaultValueGenerator(this),
+          }),
+        }),
+      ],
+    });
+  }),
+
   atmLambdaObserver: observer('atmLambda', function atmLambdaObserver() {
     this.get('fields').reset();
   }),
@@ -551,18 +604,27 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     name,
     argumentMappings,
     resultMappings,
+    resourceSpecOverride,
   } = getProperties(
     task || {},
     'name',
     'argumentMappings',
-    'resultMappings'
+    'resultMappings',
+    'resourceSpecOverride'
   );
 
   const {
     name: lambdaName,
     argumentSpecs,
     resultSpecs,
-  } = getProperties(atmLambda || {}, 'name', 'argumentSpecs', 'resultSpecs');
+    resourceSpec,
+  } = getProperties(
+    atmLambda || {},
+    'name',
+    'argumentSpecs',
+    'resultSpecs',
+    'resourceSpec'
+  );
 
   const formArgumentMappings = {
     __fieldsValueNames: [],
@@ -654,6 +716,51 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     name: name || lambdaName,
     argumentMappings: formArgumentMappings,
     resultMappings: formResultMappings,
+    resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
+  };
+}
+
+function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
+  return {
+    overrideResources: Boolean(resourceSpecOverride),
+    resourcesSections: {
+      cpu: {
+        cpuRequested: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'cpuRequested'
+        ),
+        cpuLimit: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'cpuLimit'
+        ),
+      },
+      memory: {
+        memoryRequested: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'memoryRequested'
+        ),
+        memoryLimit: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'memoryLimit'
+        ),
+      },
+      ephemeralStorage: {
+        ephemeralStorageRequested: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'ephemeralStorageRequested'
+        ),
+        ephemeralStorageLimit: getAtmLambdaResourceValue(
+          resourceSpecOverride,
+          resourceSpec,
+          'ephemeralStorageLimit'
+        ),
+      },
+    },
   };
 }
 
@@ -662,18 +769,29 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
     name,
     argumentMappings,
     resultMappings,
+    resources,
   } = getProperties(
     formData,
     'name',
     'argumentMappings',
-    'resultMappings'
+    'resultMappings',
+    'resources'
   );
   const {
     argumentSpecs,
     resultSpecs,
   } = getProperties(atmLambda || {}, 'argumentSpecs', 'resultSpecs');
+  const {
+    overrideResources,
+    resourcesSections,
+  } = getProperties(resources || {}, 'overrideResources', 'resourcesSections');
 
-  const taskArgumentMappings = [];
+  const task = {
+    name,
+    argumentMappings: [],
+    resultMappings: [],
+  };
+
   (get(argumentMappings || {}, '__fieldsValueNames') || []).forEach((valueName, idx) => {
     const lambdaArgumentSpec = argumentSpecs && argumentSpecs[idx] || {};
     const argumentName = get(lambdaArgumentSpec, 'name');
@@ -709,13 +827,12 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
       valueBuilder.valueBuilderRecipe = valueBuilderStore;
     }
 
-    taskArgumentMappings.push({
+    task.argumentMappings.push({
       argumentName,
       valueBuilder,
     });
   });
 
-  const taskResultMappings = [];
   (get(resultMappings || {}, '__fieldsValueNames') || []).forEach((valueName, idx) => {
     const lambdaResultSpec = resultSpecs && resultSpecs[idx] || {};
     const resultName = get(lambdaResultSpec, 'name');
@@ -736,18 +853,24 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
       return;
     }
 
-    taskResultMappings.push({
+    task.resultMappings.push({
       resultName,
       storeSchemaId: backendStoreIdsMappings[targetStore] || targetStore,
       dispatchFunction,
     });
   });
 
-  return {
-    name,
-    argumentMappings: taskArgumentMappings,
-    resultMappings: taskResultMappings,
-  };
+  if (overrideResources) {
+    task.resourceSpecOverride = serializeTaskResourcesFieldsValues(resourcesSections);
+  }
+
+  return task;
+}
+
+function getAtmLambdaResourceValue(resourceSpecOverride, resourceSpec, propName) {
+  const spec = resourceSpecOverride ? resourceSpecOverride : resourceSpec;
+  const value = spec && spec[propName];
+  return typeof value === 'number' ? String(value) : '';
 }
 
 function getValueBuilderTypesForArgType(argType, isBatch) {

@@ -1,5 +1,5 @@
 /**
- * Checks if two provided workflow schemas has equal stores and lanes.
+ * Checks if two provided workflow schemas have equal stores and lanes.
  * It cannot be done via simple _.isEqual, because some notations are equivalent
  * but different in JavaScript object - like null and undefined etc.
  *

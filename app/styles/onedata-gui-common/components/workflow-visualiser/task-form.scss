@@ -16,21 +16,25 @@
   }
 
   .argumentMappings-field,
-  .resultMappings-field {
+  .resultMappings-field,
+  .resources-field {
     border-top: $section-border;
     margin-bottom: 0;
   }
 
   .argumentMappings-field > .control-label,
   .resultMappings-field > .control-label,
+  .resources-field > .control-label,
   .section-header {
     @include font-semibold();
     text-transform: uppercase;
     margin-bottom: 0.7em;
+    max-width: initial;
   }
 
   .argumentMappings-field,
-  .resultMappings-field {
+  .resultMappings-field,
+  .resources-field {
     min-width: 0;
 
     > .control-label {
@@ -54,6 +58,10 @@
   }
 
   @media (min-width: $screen-sm-min) {
+    .control-label {
+      max-width: 11em;
+    }
+
     .collection-item + .collection-item {
       margin-top: 0.5em;
     }
@@ -86,6 +94,10 @@
         padding: 0;
         width: 100%;
       }
+    }
+
+    .resourcesSections-field {
+      margin-top: 2.5em;
     }
   }
 }

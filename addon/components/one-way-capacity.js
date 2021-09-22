@@ -1,6 +1,6 @@
 /**
  * Capacity one-way editor.
- * 
+ *
  * @module components/one-way-capacity
  * @author Michał Borzęcki
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/one-way-capacity';
 import { computed, observer } from '@ember/object';
-import bytesToString, { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
+import { iecUnits } from 'onedata-gui-common/utils/bytes-to-string';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default Component.extend({
@@ -23,6 +23,12 @@ export default Component.extend({
    * @type {string}
    */
   value: undefined,
+
+  /**
+   * @virtual optional
+   * @type {String}
+   */
+  placeholder: undefined,
 
   /**
    * @virtual
@@ -64,6 +70,8 @@ export default Component.extend({
   onKeyUp: notImplementedIgnore,
 
   /**
+   * Value displayed inside text input (so is should be `value` divided by
+   * `sizeUnit.multiplicator`).
    * @type {string}
    */
   scaledValue: '0',
@@ -79,61 +87,58 @@ export default Component.extend({
     );
   }),
 
-  scaledValueModifier: observer('value', 'sizeUnit', function scaledValueModifier() {
+  scaledValueModifier: observer('value', function scaledValueModifier() {
     const {
       value,
       sizeUnit,
       scaledValue,
     } = this.getProperties('value', 'sizeUnit', 'scaledValue');
 
-    let newScaledSize;
+    let newScaledValue;
+    let newSizeUnit = sizeUnit;
 
-    if (value === undefined) {
-      newScaledSize = undefined;
-    } else if (!value || !sizeUnit) {
-      newScaledSize = '0';
+    if (!value && value !== '0') {
+      newScaledValue = '';
+    } else if (isNaN(Number(value))) {
+      newScaledValue = value;
     } else {
       const prevValue = String(this.getValueInBytes(scaledValue));
       if (prevValue !== value) {
-        const scaledValueCandidate =
-          Math.round(value / sizeUnit.multiplicator * 10) / 10;
-        newScaledSize = isNaN(scaledValueCandidate) ? value : scaledValueCandidate;
+        newSizeUnit = this.getUnitForBytes(value);
+        newScaledValue = Math.round(value / newSizeUnit.multiplicator * 10) / 10;
       } else {
         return;
       }
     }
-    this.set('scaledValue', newScaledSize);
+    this.setProperties({
+      scaledValue: String(newScaledValue),
+      sizeUnit: newSizeUnit,
+    });
   }),
 
   init() {
     this._super(...arguments);
 
-    const {
-      value,
-      sizeUnits,
-    } = this.getProperties('value', 'sizeUnits');
-
-    let sizeUnit;
-    if (value && !isNaN(Number(value))) {
-      const { unit } = bytesToString(value, { separated: true });
-      sizeUnit = iecUnits.find(u => u.name === unit);
-    } else {
-      sizeUnit = sizeUnits[0];
-    }
-
-    this.set('sizeUnit', sizeUnit);
+    this.set('sizeUnit', this.get('sizeUnits')[0]);
     this.scaledValueModifier();
   },
 
   /**
-   * @param {string} scaledValue 
-   * @param {Object} sizeUnit 
+   * @param {string} scaledValue
+   * @param {Object} sizeUnit
    */
   getValueInBytes(scaledValue, sizeUnit = undefined) {
     const multiplicator = (sizeUnit && sizeUnit.multiplicator) ||
       this.get('sizeUnit.multiplicator') || 1;
+    const parsedScaledValue = parseFloat(scaledValue);
+    return Number.isNaN(parsedScaledValue) ?
+      parsedScaledValue : Math.floor(parsedScaledValue * multiplicator);
+  },
 
-    return Math.floor(scaledValue * multiplicator);
+  getUnitForBytes(bytes) {
+    const sortedSizeUnits = this.get('sizeUnits').sortBy('multiplicator');
+    return sortedSizeUnits.reverse().find(sizeUnit => sizeUnit.multiplicator <= bytes) ||
+      sortedSizeUnits[0];
   },
 
   actions: {
@@ -155,7 +160,7 @@ export default Component.extend({
 
       this.set('sizeUnit', sizeUnit);
 
-      const newValue = this.getValueInBytes(scaledValue, sizeUnit.multiplicator);
+      const newValue = this.getValueInBytes(scaledValue, sizeUnit);
       if (!isNaN(newValue)) {
         onChange(String(newValue));
       }

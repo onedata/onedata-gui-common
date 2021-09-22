@@ -1,6 +1,6 @@
 /**
  * A number form field.
- * 
+ *
  * @module utils/form-component/number-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -75,10 +75,10 @@ export default TextField.extend({
         allowString: true,
         // empty values are handled by presenceValidator
         allowBlank: true,
-        gt,
-        gte,
-        lt,
-        lte,
+        gt: this.normalizeBoundaryValue(gt),
+        gte: this.normalizeBoundaryValue(gte),
+        lt: this.normalizeBoundaryValue(lt),
+        lte: this.normalizeBoundaryValue(lte),
         integer,
       });
     }
@@ -88,5 +88,10 @@ export default TextField.extend({
     this._super(...arguments);
 
     this.registerInternalValidator('numberValidator');
+  },
+
+  normalizeBoundaryValue(value) {
+    const parsedValue = parseFloat(value);
+    return !Number.isNaN(value) ? parsedValue : undefined;
   },
 });
