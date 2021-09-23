@@ -707,9 +707,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const {
       id,
       name,
+      maxRetries,
       storeIteratorSpec,
       parallelBoxes: rawParallelBoxes,
-    } = getProperties(laneRawData, 'id', 'name', 'storeIteratorSpec', 'parallelBoxes');
+    } = getProperties(
+      laneRawData,
+      'id',
+      'name',
+      'maxRetries',
+      'storeIteratorSpec',
+      'parallelBoxes'
+    );
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
     const normalizedRunsData = {};
     const runsData = this.get(`executionState.lane.${id}.runs`) || {};
@@ -779,6 +787,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       }
       this.updateElement(existingLane, {
         name,
+        maxRetries,
         storeIteratorSpec,
         runs: normalizedRunsData,
         visibleRunNo,
@@ -796,6 +805,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         id,
         schemaId: id,
         name,
+        maxRetries,
         storeIteratorSpec,
         runs: normalizedRunsData,
         visibleRunNo: newestRunNo,

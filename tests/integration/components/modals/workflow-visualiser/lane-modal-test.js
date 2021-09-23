@@ -18,6 +18,7 @@ import { selectChoose } from '../../../../helpers/ember-power-select';
 
 const simpliestLane = {
   name: 'lane1',
+  maxRetries: 0,
   storeIteratorSpec: {
     strategy: {
       type: 'serial',

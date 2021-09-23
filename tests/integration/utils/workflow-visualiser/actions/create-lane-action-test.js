@@ -66,6 +66,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
         name: 'lane1',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'serial',

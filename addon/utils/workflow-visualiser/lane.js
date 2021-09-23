@@ -29,6 +29,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
+   * @type {Number}
+   */
+  maxRetries: undefined,
+
+  /**
+   * @virtual
    * @type {Object}
    */
   storeIteratorSpec: undefined,
