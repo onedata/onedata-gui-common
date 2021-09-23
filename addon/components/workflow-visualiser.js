@@ -1500,6 +1500,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   getStoreByInstanceId(instanceId) {
+    if (!instanceId) {
+      return null;
+    }
+
     // Make sure, that cache is filled with defined stores.
     this.get('stores');
 
