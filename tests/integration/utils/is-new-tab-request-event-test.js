@@ -5,7 +5,6 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Component from '@ember/component';
 import isNewTabRequestEvent from 'onedata-gui-common/utils/is-new-tab-request-event';
-import wait from 'ember-test-helpers/wait';
 import { click, keyEvent } from 'ember-native-dom-helpers';
 
 const DummyComponent = Component.extend({
