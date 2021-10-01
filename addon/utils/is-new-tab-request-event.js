@@ -25,6 +25,9 @@ export default function isNewTabRequestEvent(event) {
   } else if (event.type === 'keydown') {
     return event.key === 'Enter' && isWitchCtrlOpt(event);
   }
+
+  // if none of the above
+  return false;
 }
 
 function isWitchCtrlOpt(event) {

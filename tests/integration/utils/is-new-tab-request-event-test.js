@@ -66,23 +66,6 @@ describe('Integration | Mixin | is new tab request event', function () {
     expect(myActionSpy).to.have.been.calledOnce;
   });
 
-  it('returns false for plain enter keydown', async function () {
-    const myAction = (event) => {
-      expect(isNewTabRequestEvent(event)).to.be.true;
-    };
-    const myActionSpy = sinon.spy(myAction);
-    this.set('myActionSpy', myActionSpy);
-
-    this.render(hbs `{{dummy-component myAction=myActionSpy}}`);
-
-    await keyEvent(this.$('#btn')[0], 'keydown', 13, {
-      key: 'Enter',
-      ctrlKey: true,
-    });
-
-    expect(myActionSpy).to.have.been.calledOnce;
-  });
-
   it('returns true for middle click', async function () {
     const myAction = (event) => {
       expect(isNewTabRequestEvent(event)).to.be.true;
