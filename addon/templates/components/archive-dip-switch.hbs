@@ -1,0 +1,34 @@
+{{#bs-button-group
+  value=archiveDipMode
+  class=(concat-classes
+    class
+    "dip-switch archive-dip-switch"
+    (if disabled "disabled")
+  )
+  type="radio"
+  onChange=(action onArchiveDipModeChange) as |bg|
+}}
+  <div class="btn-group" role="group">
+    {{#bg.button
+      type="default"
+      disabled=disabled
+      class="btn-sm select-archive-aip-btn"
+      value="aip"
+    }}
+      {{tt this "aip"}}
+    {{/bg.button}}
+  </div>
+  <div class="btn-group" role="group">
+    {{#bg.button
+      type="default"
+      disabled=disabled
+      class="btn-sm select-archive-dip-btn"
+      value="dip"
+    }}
+      {{tt this "dip"}}
+    {{/bg.button}}
+  </div>
+  {{#if disabled}}
+    {{one-tooltip title=(tt this "disabledTip")}}
+  {{/if}}
+{{/bs-button-group}}
