@@ -3,19 +3,20 @@
  * window.frameElement.appProxy)
  *
  * @module services/app-proxy
- * @author Michał Borzęcki
- * @copyright (C) 2019-2020 ACK CYFRONET AGH
+ * @author Michał Borzęcki, Jakub Liput
+ * @copyright (C) 2019-2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Service from '@ember/service';
-import EmberObject, { computed, set, observer } from '@ember/object';
+import EmberObject, { computed, set, observer, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   sharedObjectName,
   sharedDataPropertyName,
   getSharedProperty,
 } from 'onedata-gui-common/utils/one-embedded-common';
+import createThrottledFunction from '../utils/create-throttled-function';
 
 export default Service.extend({
   /**
@@ -47,12 +48,16 @@ export default Service.extend({
     this._super(...arguments);
 
     this.appProxyObserver();
+    this.clearPropertiesToChangeCache();
+    this.scheduleFlushCache = createThrottledFunction(() => {
+      this.flushCache();
+    }, 20, true);
   },
 
   /**
    * Calls action in parent application
-   * @param {string} methodName 
-   * @param  {Array<any>} args 
+   * @param {string} methodName
+   * @param  {Array<any>} args
    * @returns {any}
    */
   callParent(methodName, ...args) {
@@ -64,13 +69,41 @@ export default Service.extend({
 
   /**
    * Handler for sharedProperties field changed event
-   * @param {string} propertyName 
+   * @param {string} propertyName
    * @returns {undefined}
    */
   propertyChanged(propertyName) {
-    this.set(
-      `injectedData.${propertyName}`,
-      getSharedProperty(this.get('appProxy'), propertyName)
+    const propertiesToChange = this.get('propertiesToChange');
+    propertiesToChange.add(propertyName);
+    this.scheduleFlushCache();
+  },
+
+  /**
+   * Accumulates shared properties that should be read from `appProxy`
+   * collectively and set collectively with throttling.
+   * @type {Set}
+   */
+  propertiesToChange: undefined,
+
+  flushCache() {
+    const {
+      injectedData,
+      propertiesToChange,
+      appProxy,
+    } = this.getProperties('injectedData', 'propertiesToChange', 'appProxy');
+    this.clearPropertiesToChangeCache();
+    const sharedData = Array.from(propertiesToChange.values())
+      .reduce((data, propertyName) => {
+        data[propertyName] = getSharedProperty(appProxy, propertyName);
+        return data;
+      }, {});
+    setProperties(
+      injectedData,
+      sharedData
     );
+  },
+
+  clearPropertiesToChangeCache() {
+    this.set('propertiesToChange', new Set());
   },
 });

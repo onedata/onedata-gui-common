@@ -31,6 +31,36 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
   });
 
+  it('throttles on first call in debounce mode', function () {
+    const throttled = createThrottledFunction(this.spy, 100, true);
+
+    throttled();
+
+    expect(this.spy).to.have.not.been.calledOnce;
+
+    this.clock.tick(200);
+
+    expect(this.spy).to.have.been.calledOnce;
+  });
+
+  it('throttles on first and next call in debounce mode', function () {
+    const throttled = createThrottledFunction(this.spy, 100, true);
+
+    throttled();
+
+    expect(this.spy).to.have.not.been.calledOnce;
+
+    this.clock.tick(200);
+
+    throttled();
+
+    expect(this.spy).to.have.been.calledOnce;
+
+    this.clock.tick(200);
+
+    expect(this.spy).to.have.been.calledTwice;
+  });
+
   it('throttles two immediate calls', function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
