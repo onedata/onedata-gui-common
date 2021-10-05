@@ -51,7 +51,7 @@ export default Service.extend({
     this.clearPropertiesToChangeCache();
     this.scheduleFlushCache = createThrottledFunction(() => {
       this.flushCache();
-    }, 20, true);
+    }, 100, true);
   },
 
   /**
