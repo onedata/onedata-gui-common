@@ -88,14 +88,12 @@ import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { conditional, raw, tag, string, promise } from 'ember-awesome-macros';
+import { conditional, raw, tag, string, promise, array } from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { scheduleOnce, run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
-import ArrayProxy from '@ember/array/proxy';
-import { reads } from '@ember/object/computed';
 import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
 const isInTestingEnv = config.environment === 'test';
@@ -216,7 +214,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * Format of this object is defined by return type of
    * ExecutionDataFetcher.fetchExecutionState function.
-   * @type {Object}
+   * @type {AtmExecutionState}
    */
   executionState: undefined,
 
@@ -241,18 +239,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: computed('rawData', 'executionState', function stores() {
+  definedStores: computed('rawData', 'executionState', function definedStores() {
     return this.getDefinedStores();
   }),
 
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  storesArrayProxy: computed(function storesArrayProxy() {
-    return ArrayProxy
-      .extend({ content: reads('component.stores') })
-      .create({ component: this });
+  generatedStores: computed('executionState', function generatedStores() {
+    return this.getGeneratedStores();
   }),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
+   */
+  stores: array.concat('definedStores', 'generatedStores'),
 
   /**
    * @type {ComputedProperty<String>}
@@ -304,8 +305,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {ComputedProperty<PromiseObject>}
    */
   initialLoadingProxy: promise.object(computed(async function initialLoading() {
-    return this.get('mode') === 'view' ?
-      this.updateExecutionState() : resolve();
+    if (this.get('mode') === 'view') {
+      return this.updateExecutionState();
+    }
   })),
 
   /**
@@ -589,10 +591,16 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @returns {Utils.WorkflowVisualiser.Workflow}
    */
   getWorkflow() {
-    const instanceId = this.get('executionState.workflow.instanceId');
-    const status = this.get('executionState.workflow.status');
-    const systemAuditLogStoreInstanceId =
-      this.get('executionState.workflow.systemAuditLogStoreInstanceId');
+    const {
+      instanceId,
+      status,
+      systemAuditLogStoreInstanceId,
+    } = getProperties(
+      this.get('executionState.workflow') || {},
+      'instanceId',
+      'status',
+      'systemAuditLogStoreInstanceId',
+    );
     const systemAuditLogStore = systemAuditLogStoreInstanceId &&
       this.getStoreByInstanceId(systemAuditLogStoreInstanceId);
 
@@ -618,12 +626,22 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   /**
-   * Generates an array of stores from `rawData`
+   * Generates an array of defined stores from `rawData`
    * @returns {Array<Utils.WorkflowVisualiser.Store>}
    */
   getDefinedStores() {
     const rawStores = this.get('rawData.stores') || [];
     return rawStores.map(rawStore => this.getElementForRawData('store', rawStore));
+  },
+
+  /**
+   * Generates an array of generated stores from `executionState`
+   * @returns {Array<Utils.WorkflowVisualiser.Store>}
+   */
+  getGeneratedStores() {
+    const rawGeneratedStoresRegistry = this.get('executionState.store.generated') || {};
+    return Object.values(rawGeneratedStoresRegistry)
+      .map(rawStore => this.getElementForRawData('store', rawStore));
   },
 
   /**
@@ -719,25 +737,25 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'parallelBoxes'
     );
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
-    const normalizedRunsData = {};
-    const runsData = this.get(`executionState.lane.${id}.runs`) || {};
-    const runNos = Object.keys(runsData);
+    const normalizedRunsRegistry = {};
+    const runsRegistry = this.get(`executionState.lane.${id}.runsRegistry`) || {};
+    const runNos = Object.keys(runsRegistry);
     if (runNos.length) {
       runNos.forEach((runNo) => {
-        const iteratedStoreInstanceId = runsData[runNo].iteratedStoreInstanceId;
-        const exceptionStoreInstanceId = runsData[runNo].exceptionStoreInstanceId;
+        const iteratedStoreInstanceId = runsRegistry[runNo].iteratedStoreInstanceId;
+        const exceptionStoreInstanceId = runsRegistry[runNo].exceptionStoreInstanceId;
         const iteratedStore = iteratedStoreInstanceId ?
           this.getStoreByInstanceId(iteratedStoreInstanceId) :
           this.getStoreBySchemaId(iteratedStoreSchemaId);
         const exceptionStore = exceptionStoreInstanceId &&
           this.getStoreByInstanceId(exceptionStoreInstanceId);
-        normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
+        normalizedRunsRegistry[runNo] = Object.assign({}, runsRegistry[runNo], {
           iteratedStore,
           exceptionStore,
         });
       });
     } else {
-      normalizedRunsData[1] = {
+      normalizedRunsRegistry[1] = {
         runNo: 1,
         status: 'pending',
         iteratedStore: iteratedStoreSchemaId ?
@@ -745,7 +763,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       };
     }
     const newestRunNo = Math.max(
-      ...Object.keys(normalizedRunsData).map(Number)
+      ...Object.keys(normalizedRunsRegistry).map(Number)
     );
 
     const existingLane = this.getCachedElement('lane', { id });
@@ -757,17 +775,17 @@ export default Component.extend(I18n, WindowResizeHandler, {
         existingLane
       );
       const {
-        runs: prevRuns,
+        runsRegistry: prevRunsRegistry,
         visibleRunNo: prevVisibleRunNo,
         visibleRunsPosition: prevVisibleRunsPosition,
       } = getProperties(
         existingLane,
-        'runs',
+        'runsRegistry',
         'visibleRunNo',
         'visibleRunsPosition'
       );
       const prevDescSortedRunNos =
-        Object.keys(prevRuns).map(Number).sort((a, b) => b - a);
+        Object.keys(prevRunsRegistry).map(Number).sort((a, b) => b - a);
       let visibleRunNo = prevVisibleRunNo;
       let visibleRunsPosition = prevVisibleRunsPosition;
       if (
@@ -789,7 +807,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         maxRetries,
         storeIteratorSpec,
-        runs: normalizedRunsData,
+        runsRegistry: normalizedRunsRegistry,
         visibleRunNo,
         visibleRunsPosition,
         elements,
@@ -807,7 +825,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         maxRetries,
         storeIteratorSpec,
-        runs: normalizedRunsData,
+        runsRegistry: normalizedRunsRegistry,
         visibleRunNo: newestRunNo,
         visibleRunsPosition: {
           runNo: newestRunNo,
@@ -885,13 +903,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
       tasks: rawTasks,
     } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
-    const parentRunNos = Object.keys(get(parent, 'runs'));
-    const normalizedRunsData = Object.assign({},
-      this.get(`executionState.parallelBox.${id}.runs`) || {}
+    const parentRunNos = Object.keys(get(parent, 'runsRegistry'));
+    const normalizedRunsRegistry = Object.assign({},
+      this.get(`executionState.parallelBox.${id}.runsRegistry`) || {}
     );
     parentRunNos.forEach((parentRunNo) => {
-      if (!(parentRunNo in normalizedRunsData)) {
-        normalizedRunsData[parentRunNo] = {
+      if (!(parentRunNo in normalizedRunsRegistry)) {
+        normalizedRunsRegistry[parentRunNo] = {
           runNo: parentRunNo,
           status: 'pending',
         };
@@ -909,7 +927,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         parent,
         elements,
-        runs: normalizedRunsData,
+        runsRegistry: normalizedRunsRegistry,
       });
       return existingParallelBox;
     } else {
@@ -923,7 +941,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         schemaId: id,
         name,
         parent,
-        runs: normalizedRunsData,
+        runsRegistry: normalizedRunsRegistry,
         mode,
         actionsFactory,
         onModify: (box, modifiedProps) => this.modifyElement(box, modifiedProps),
@@ -966,18 +984,18 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'resourceSpecOverride'
     );
 
-    const parentRunNos = Object.keys(get(parent, 'runs'));
-    const normalizedRunsData = {};
-    const runsData = this.get(`executionState.task.${id}.runs`) || {};
-    Object.keys(runsData).forEach((runNo) => {
-      const storeInstanceId = runsData[runNo].systemAuditLogStoreInstanceId;
-      normalizedRunsData[runNo] = Object.assign({}, runsData[runNo], {
+    const parentRunNos = Object.keys(get(parent, 'runsRegistry'));
+    const normalizedRunsRegistry = {};
+    const runsRegistry = this.get(`executionState.task.${id}.runsRegistry`) || {};
+    Object.keys(runsRegistry).forEach((runNo) => {
+      const storeInstanceId = runsRegistry[runNo].systemAuditLogStoreInstanceId;
+      normalizedRunsRegistry[runNo] = Object.assign({}, runsRegistry[runNo], {
         systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
       });
     });
     parentRunNos.forEach((parentRunNo) => {
-      if (!(parentRunNo in normalizedRunsData)) {
-        normalizedRunsData[parentRunNo] = {
+      if (!(parentRunNo in normalizedRunsRegistry)) {
+        normalizedRunsRegistry[parentRunNo] = {
           runNo: parentRunNo,
           instanceId: null,
           status: 'pending',
@@ -993,7 +1011,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
     if (existingTask) {
       this.updateElement(existingTask, {
-        runs: normalizedRunsData,
+        runsRegistry: normalizedRunsRegistry,
         name,
         parent,
         lambdaId,
@@ -1011,7 +1029,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       const newTask = Task.create({
         id,
         schemaId: id,
-        runs: normalizedRunsData,
+        runsRegistry: normalizedRunsRegistry,
         name,
         parent,
         lambdaId,
@@ -1106,6 +1124,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
       (schemaId && this.getCachedElement('store', { schemaId }));
 
     if (existingStore) {
+      const prevInstanceId = get(existingStore, 'instanceId');
+      if (prevInstanceId && prevInstanceId !== instanceId) {
+        console.error(
+          `component:workflow-visualiser#getStoreForRawData: instanceId of a store changed during runtime. schemaId: ${schemaId}, previous instanceId: ${prevInstanceId}, new instanceId: ${instanceId}`
+        );
+      }
+
       this.updateElement(existingStore, {
         instanceId,
         name,
@@ -1480,7 +1505,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   async showLatestLaneRun(lane) {
     await this.updateExecutionState();
-    const newestRun = Object.values(get(lane, 'runs')).sortBy('runNo').slice(-1)[0];
+    const newestRun = _.maxBy(Object.values(get(lane, 'runsRegistry')), 'runNo');
     set(lane, 'visibleRunsPosition', {
       runNo: newestRun.runNo,
       placement: 'end',
@@ -1503,10 +1528,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   getStoreBySchemaId(schemaId) {
-    // Make sure, that cache is filled with defined stores.
-    this.get('stores');
+    if (!schemaId) {
+      return null;
+    }
 
-    return this.getCachedElement('store', { schemaId });
+    return this.get('stores').findBy('schemaId', schemaId) || null;
   },
 
   getStoreByInstanceId(instanceId) {
@@ -1514,22 +1540,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       return null;
     }
 
-    // Make sure, that cache is filled with defined stores.
-    this.get('stores');
-
-    const cachedStore = this.getCachedElement('store', { instanceId });
-    if (cachedStore) {
-      return cachedStore;
-    }
-
-    // Store not found in cache so it must be a dynamically created store.
-    const storeSchema =
-      this.get(`executionState.store.generated.${instanceId}`);
-    if (!storeSchema) {
-      console.error(`Cannot find store with instance ID: ${instanceId}`);
-      return null;
-    }
-    return this.getElementForRawData('store', storeSchema);
+    return this.get('stores').findBy('instanceId', instanceId) || null;
   },
 
   actions: {

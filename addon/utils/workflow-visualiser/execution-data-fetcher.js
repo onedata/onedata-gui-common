@@ -12,6 +12,109 @@ import EmberObject from '@ember/object';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 /**
+ * @typedef {Object} AtmExecutionState
+ * @property {AtmWorkflowExecutionState} workflow
+ * @property {AtmLanesExecutionState} lane
+ * @property {AtmParallelBoxesExecutionState} parallelBox
+ * @property {AtmTasksExecutionState} tasks
+ * @property {AtmStoresExecutionState} store
+ */
+
+/**
+ * @typedef {Object} AtmWorkflowExecutionState
+ * @property {String} instanceId
+ * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} status
+ */
+
+/**
+ * @typedef {Object<String,AtmLaneExecutionState>} AtmLanesExecutionState
+ * keys are lane schema ids
+ */
+
+/**
+ * @typedef {Object} AtmLaneExecutionState
+ * @property {Object<Number,AtmLaneRunExecutionState>} runsRegistry keys are
+ * run numbers
+ */
+
+/**
+ * @typedef {Object} AtmLaneRunExecutionState
+ * @property {Number|null} runNo
+ * @property {Number|null} sourceRunNo
+ * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} status
+ */
+
+/**
+ * @typedef {Object<String,AtmParallelBoxExecutionState>} AtmParallelBoxesExecutionState
+ * keys are parallel box schema ids
+ */
+
+/**
+ * @typedef {Object} AtmParallelBoxExecutionState
+ * @property {Object<Number,AtmParallelBoxRunExecutionState>} runsRegistry keys are
+ * run numbers
+ */
+
+/**
+ * @typedef {Object} AtmParallelBoxRunExecutionState
+ * @property {Number} runNo
+ * @property {String} status
+ */
+
+/**
+ * @typedef {Object<String,AtmTaskExecutionState>} AtmTasksExecutionState
+ * keys are task schema ids
+ */
+
+/**
+ * @typedef {Object} AtmTaskExecutionState
+ * @property {Object<Number,AtmTaskRunExecutionState>} runsRegistry keys are
+ * run numbers
+ */
+
+/**
+ * @typedef {Object} AtmTaskRunExecutionState
+ * @property {Number} runNo
+ * @property {String} instanceId
+ * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} status
+ * @property {Number} itemsInProcessing
+ * @property {Number} itemsProcessed
+ * @property {Number} itemsFailed
+ */
+
+/**
+ * @typedef {Object} AtmStoresExecutionState
+ * @property {AtmDefinedStoresExecutionState} defined
+ * @property {AtmGeneratedStoresExecutionState} generated
+ */
+
+/**
+ * @typedef {Object<String,AtmDefinedStoreExecutionState>} AtmDefinedStoresExecutionState
+ * keys are store schema ids
+ */
+
+/**
+ * @typedef {Object} AtmDefinedStoreExecutionState
+ * @property {String} instanceId
+ */
+
+/**
+ * @typedef {Object<String,AtmGeneratedStoreExecutionState>} AtmGeneratedStoresExecutionState
+ * keys are store instance ids
+ */
+
+/**
+ * @typedef {Object} AtmGeneratedStoreExecutionState
+ * @property {String} instanceId
+ * @property {String} name
+ * @property {String} type
+ * @property {Object} dataSpec
+ */
+
+/**
  * @typedef {Object} StoreContentEntry
  * @property {String} index
  * @property {Boolean} success
@@ -21,88 +124,7 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 
 export default EmberObject.extend({
   /**
-   * @returns {Promise<Object>} Object format:
-   *   ```
-   *   {
-   *     workflow: {
-   *       instanceId: 'workflowInstanceId',
-   *       systemAuditLogStoreInstanceId: 'storeInstanceId1',
-   *       status: 'latestRunWorkflowStatus',
-   *     },
-   *     lane: {
-   *       lane1SchemaId: {
-   *         runs: {
-   *           1: {
-   *             runNo: 1,
-   *             sourceRunNo: null, // will be a number less than runNo
-   *             runType: 'regular',
-   *             iteratedStoreInstanceId: 'store1InstanceIdW1',
-   *             exceptionStoreInstanceId: 'retryStore1InstanceIdW1',
-   *             status: 'run1LaneStatus',
-   *           },
-   *           2: { ... },
-   *           ...
-   *         },
-   *       },
-   *       lane2SchemaId: { ... },
-   *       ...
-   *     },
-   *     parallelBox: {
-   *       parallelBox1SchemaId: {
-   *         runs: {
-   *           1: {
-   *             runNo: 1,
-   *             status: 'run1PboxStatus',
-   *           },
-   *           2: { ... },
-   *           ...
-   *         },
-   *       },
-   *       parallelBox2SchemaId: { ... },
-   *       ...
-   *     },
-   *     task: {
-   *       task1SchemaId: {
-   *         runs: {
-   *           1: {
-   *             runNo: 1,
-   *             instanceId: 'task1InstanceId1',
-   *             systemAuditLogStoreInstanceId: 'storeInstanceIdT1',
-   *             status: 'run1TaskStatus',
-   *             itemsInProcessing: 123,
-   *             itemsProcessed: 123,
-   *             itemsFailed: 123,,
-   *           },
-   *           2: { ... },
-   *           ...
-   *         },
-   *       },
-   *       task2SchemaId: { ... },
-   *       ...
-   *     },
-   *     store: {
-   *       defined: {
-   *         store1SchemaId: {
-   *           instanceId: 'store1InstanceId',
-   *         },
-   *         store2SchemaId: { ... },
-   *         ...
-   *       },
-   *       generated: {
-   *         store3InstanceId: {
-   *           instanceId: 'store3InstanceId',
-   *           name: 'Failed items (run 2)',
-   *           type: 'storeType',
-   *           dataSpec: {
-   *             type: 'dataSpecType,
-   *             valueConstraints: { ... },
-   *           },
-   *           defaultInitialValue: { ... },
-   *         }
-   *       }
-   *     },
-   *   }
-   *   ```
+   * @returns {Promise<AtmExecutionState>}
    */
   async fetchExecutionState() {
     return notImplementedReject();

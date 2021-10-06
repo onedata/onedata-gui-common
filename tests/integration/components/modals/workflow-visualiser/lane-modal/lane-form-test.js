@@ -19,7 +19,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
   });
 
   beforeEach(function () {
-    const stores = A([
+    const definedStores = A([
       // random order to test sorting
       Store.create({
         id: 's3',
@@ -37,11 +37,11 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     this.setProperties({
       changeSpy: sinon.spy(),
       isDisabled: false,
-      stores,
+      definedStores,
       createStoreAction: {
         execute: () => {
           const newStore = { id: 'snew', name: 'new store' };
-          stores.pushObject(newStore);
+          definedStores.pushObject(newStore);
           return resolve({ status: 'done', result: newStore });
         },
       },
@@ -113,10 +113,10 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await clickTrigger('.sourceStore-field');
 
       const $options = $('.ember-power-select-option');
-      const stores = this.get('stores');
-      expect($options).to.have.length(stores.length + 1);
+      const definedStores = this.get('definedStores');
+      expect($options).to.have.length(definedStores.length + 1);
       expect($options.eq(0).text().trim()).to.equal('Create store...');
-      stores.sortBy('name').forEach(({ name }, idx) =>
+      definedStores.sortBy('name').forEach(({ name }, idx) =>
         expect($options.eq(idx + 1).text().trim()).to.equal(name)
       );
     });
@@ -477,7 +477,7 @@ async function render(testCase) {
   testCase.render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form
     mode=mode
     lane=lane
-    stores=stores
+    definedStores=definedStores
     createStoreAction=createStoreAction
     isDisabled=isDisabled
     onChange=changeSpy

@@ -9,7 +9,7 @@
 
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import { reads } from '@ember/object/computed';
-import { raw, or, writable } from 'ember-awesome-macros';
+import { raw, or } from 'ember-awesome-macros';
 
 export default VisualiserRecord.extend({
   /**
@@ -60,15 +60,15 @@ export default VisualiserRecord.extend({
   /**
    * @type {ComputedProperty<Number>}
    */
-  itemsInProcessing: writable(or('visibleRun.itemsInProcessing', raw(0))),
+  itemsInProcessing: or('visibleRun.itemsInProcessing', raw(0)),
 
   /**
    * @type {ComputedProperty<Number>}
    */
-  itemsProcessed: writable(or('visibleRun.itemsProcessed', raw(0))),
+  itemsProcessed: or('visibleRun.itemsProcessed', raw(0)),
 
   /**
    * @type {ComputedProperty<Number>}
    */
-  itemsFailed: writable(or('visibleRunNo.itemsFailed', raw(0))),
+  itemsFailed: or('visibleRun.itemsFailed', raw(0)),
 });

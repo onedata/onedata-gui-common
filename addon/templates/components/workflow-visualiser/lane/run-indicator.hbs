@@ -37,7 +37,7 @@
   {{/render-later}}
 {{/if}}
 {{#unless areActionsOpened}}
-  {{#one-tooltip}}
+  {{#one-tooltip placement="top"}}
     {{tt this "tooltip.runNo"}}: <strong>{{runNoText}}</strong><br>
     {{#if isSourceRunNoValid}}
       {{tt this "tooltip.sourceRunNo"}}: <strong>{{sourceRunNoText}}</strong><br>

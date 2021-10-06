@@ -50,7 +50,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Utils.WorkflowVisualiser.Store>}
    */
-  stores: undefined,
+  definedStores: undefined,
 
   /**
    * Needed when `mode` is `'create'` or `'edit'`
@@ -191,8 +191,8 @@ export default Component.extend(I18n, {
     return DropdownField
       // using options.1 becase options.firstObject is the "createStore" item
       .extend(defaultValueGenerator(this, 'options.1.value'), {
-        options: computed('component.stores.@each.name', function options() {
-          const storeOptions = (this.get('component.stores') || []).map(store => {
+        options: computed('component.definedStores.@each.name', function options() {
+          const storeOptions = (this.get('component.definedStores') || []).map(store => {
             const {
               id,
               name,

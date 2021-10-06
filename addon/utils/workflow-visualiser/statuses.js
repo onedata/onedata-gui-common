@@ -7,23 +7,19 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-const taskUnknownStatus = 'unknown';
-export const taskStatuses = [
-  'pending',
-  'active',
-  'aborting',
-  'cancelled',
-  'skipped',
-  'finished',
-  'failed',
-  taskUnknownStatus,
-];
-
 export const taskEndedStatuses = [
   'cancelled',
   'skipped',
   'finished',
   'failed',
+];
+const taskUnknownStatus = 'unknown';
+export const taskStatuses = [
+  'pending',
+  'active',
+  'aborting',
+  ...taskEndedStatuses,
+  taskUnknownStatus,
 ];
 
 export function normalizeTaskStatus(status) {
@@ -43,6 +39,7 @@ export const laneStatuses = [
   'enqueued',
   'active',
   'aborting',
+  'interrupted',
   'cancelled',
   'skipped',
   'finished',
@@ -59,6 +56,12 @@ export function translateLaneStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.lane.${normalizedStatus}`);
 }
 
+export const workflowEndedStatuses = [
+  'cancelled',
+  'skipped',
+  'finished',
+  'failed',
+];
 const workflowUnknownStatus = 'unknown';
 export const workflowStatuses = [
   'scheduled',
@@ -66,18 +69,8 @@ export const workflowStatuses = [
   'enqueued',
   'active',
   'aborting',
-  'cancelled',
-  'skipped',
-  'finished',
-  'failed',
+  ...workflowEndedStatuses,
   workflowUnknownStatus,
-];
-
-export const workflowEndedStatuses = [
-  'cancelled',
-  'skipped',
-  'finished',
-  'failed',
 ];
 
 export function normalizeWorkflowStatus(status) {

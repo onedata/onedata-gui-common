@@ -1,5 +1,5 @@
 /**
- * Modifies lane. Needs stores and lane passed via context.
+ * Modifies lane. Needs definedStores and lane passed via context.
  *
  * @module utils/workflow-visualiser/actions/modify-lane-action
  * @author Michał Borzęcki
@@ -35,7 +35,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('context.stores'),
+  definedStores: reads('context.definedStores'),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
@@ -52,12 +52,12 @@ export default Action.extend({
    */
   onExecute() {
     const {
-      stores,
+      definedStores,
       createStoreAction,
       lane,
       modalManager,
     } = this.getProperties(
-      'stores',
+      'definedStores',
       'createStoreAction',
       'lane',
       'modalManager'
@@ -67,7 +67,7 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/lane-modal', {
         mode: 'edit',
-        stores,
+        definedStores,
         createStoreAction,
         lane,
         onSubmit: laneProvidedByForm =>

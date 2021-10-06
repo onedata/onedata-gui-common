@@ -29,7 +29,7 @@ export default VisualiserElement.extend({
    * @virtual optional
    * @type {Object}
    */
-  runs: undefined,
+  runsRegistry: undefined,
 
   /**
    * @virtual
@@ -73,7 +73,7 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<Number>}
    */
   visibleRunNo: conditional(
-    getBy('runs', 'parent.visibleRunNo'),
+    getBy('runsRegistry', 'parent.visibleRunNo'),
     'parent.visibleRunNo',
     raw(1)
   ),
@@ -81,7 +81,7 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  visibleRun: getBy('runs', 'visibleRunNo'),
+  visibleRun: getBy('runsRegistry', 'visibleRunNo'),
 
   /**
    * @type {ComputedProperty<String>}

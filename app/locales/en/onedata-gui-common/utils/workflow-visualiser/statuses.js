@@ -4,6 +4,7 @@ const preparing = 'Preparing';
 const enqueued = 'Enqueued';
 const active = 'Active';
 const aborting = 'Aborting';
+const interrupted = 'Interrupted';
 const cancelled = 'Cancelled';
 const skipped = 'Skipped';
 const finished = 'Finished';
@@ -28,6 +29,7 @@ export default {
     enqueued,
     active,
     aborting,
+    interrupted,
     cancelled,
     skipped,
     finished,

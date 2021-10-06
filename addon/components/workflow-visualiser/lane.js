@@ -63,13 +63,13 @@ export default VisualiserElement.extend({
    * @type {ComputedProperty<String>}
    */
   visibleRunTimingLabel: computed(
-    'lane.{runs,visibleRun}',
+    'lane.{runsRegistry,visibleRun}',
     function visibleRunTimingLabel() {
       const {
         visibleRun,
-        runs,
-      } = getProperties(this.get('lane') || {}, 'visibleRun', 'runs');
-      const sortedRuns = Object.values(runs || {}).sortBy('runNo');
+        runsRegistry,
+      } = getProperties(this.get('lane') || {}, 'visibleRun', 'runsRegistry');
+      const sortedRuns = Object.values(runsRegistry || {}).sortBy('runNo');
       const timing = sortedRuns.indexOf(visibleRun) === (sortedRuns.length - 1) ?
         'latest' : 'past';
       return this.t(`runTiming.${timing}`);

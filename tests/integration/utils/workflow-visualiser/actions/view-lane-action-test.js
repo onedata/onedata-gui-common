@@ -28,7 +28,7 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
     const action = ViewLaneAction.create({
       ownerSource: this,
       context: {
-        stores: [
+        definedStores: [
           Store.create({
             id: 's1',
             name: 'store1',

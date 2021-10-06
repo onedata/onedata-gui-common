@@ -1,6 +1,6 @@
 /**
  * Creates new task. Needs:
- * - stores,
+ * - definedStores,
  * - taskDetailsProviderCallback - it will be called to obtain new task details,
  * - createTaskCallback - it will be used to save a new task.
  *
@@ -31,11 +31,11 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('context.stores'),
+  definedStores: reads('context.definedStores'),
 
   /**
    * @type {ComputedProperty<Function>}
-   * @param {Array<Object>} initialData.stores
+   * @param {Array<Object>} initialData.definedStores
    * @returns {Promise<Object>} task details
    */
   taskDetailsProviderCallback: reads('context.taskDetailsProviderCallback'),
@@ -52,16 +52,16 @@ export default Action.extend({
    */
   onExecute() {
     const {
-      stores,
+      definedStores,
       taskDetailsProviderCallback,
       createTaskCallback,
     } = this.getProperties(
-      'stores',
+      'definedStores',
       'taskDetailsProviderCallback',
       'createTaskCallback'
     );
     const result = ActionResult.create();
-    const createPromise = taskDetailsProviderCallback({ stores })
+    const createPromise = taskDetailsProviderCallback({ definedStores })
       .then(taskData => createTaskCallback(taskData));
     return result.interceptPromise(createPromise)
       .then(() => result, () => result);

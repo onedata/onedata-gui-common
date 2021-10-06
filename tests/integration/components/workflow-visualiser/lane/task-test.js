@@ -91,10 +91,15 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     it('shows task details values', async function () {
       setProperties(this.get('task'), {
         instanceId: 'someId',
-        status: 'pending',
-        itemsInProcessing: 1,
-        itemsProcessed: 2,
-        itemsFailed: 3,
+        runsRegistry: {
+          1: {
+            runNo: 1,
+            status: 'pending',
+            itemsInProcessing: 1,
+            itemsProcessed: 2,
+            itemsFailed: 3,
+          },
+        },
       });
       render(this);
       await expandDetails();
@@ -198,7 +203,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await click($('body .webui-popover.in .modify-task-action-trigger')[0]);
 
       expect(detailsProviderStub).to.be.calledWith({
-        stores: sinon.match.any,
+        definedStores: sinon.match.any,
         task: this.get('task'),
       });
       expect(onModifySpy).to.be.calledOnce

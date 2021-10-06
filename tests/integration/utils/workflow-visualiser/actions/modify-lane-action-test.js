@@ -31,7 +31,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
     const action = ModifyLaneAction.create({
       ownerSource: this,
       context: {
-        stores: [
+        definedStores: [
           Store.create({
             id: 's1',
             name: 'store1',

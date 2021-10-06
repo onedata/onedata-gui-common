@@ -29,7 +29,7 @@ export default Component.extend({
    * @virtual
    * @type {Array<Utils.WorkflowVisualiser.Store>}
    */
-  stores: undefined,
+  definedStores: undefined,
 
   /**
    * @virtual
@@ -45,7 +45,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  sortedStores: sort('stores', 'storesSortOrder'),
+  sortedStores: sort('definedStores', 'storesSortOrder'),
 
   /**
    * @type {ComputedProperty<String>}

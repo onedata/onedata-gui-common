@@ -39,14 +39,14 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       name: 'store1',
     });
     factory.setWorkflowDataProvider({
-      stores: [store],
+      definedStores: [store],
     });
     const createLaneCallback = () => {};
 
     const action = factory.createCreateLaneAction({ createLaneCallback });
 
     expect(action).to.be.instanceOf(CreateLaneAction);
-    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
     expect(get(action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
     expect(get(action, 'createLaneCallback')).to.equal(createLaneCallback);
   });
@@ -59,7 +59,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       name: 'store1',
     });
     factory.setWorkflowDataProvider({
-      stores: [store],
+      definedStores: [store],
     });
     const lane = Lane.create();
 
@@ -67,7 +67,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
     expect(action).to.be.instanceOf(ModifyLaneAction);
     expect(get(action, 'lane')).to.equal(lane);
-    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
     expect(get(action, 'createStoreAction')).to.be.instanceOf(CreateStoreAction);
   });
 
@@ -101,7 +101,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       name: 'store1',
     });
     factory.setWorkflowDataProvider({
-      stores: [store],
+      definedStores: [store],
     });
     const taskDetailsProviderCallback = () => {};
     factory.setGetTaskCreationDataCallback(taskDetailsProviderCallback);
@@ -110,7 +110,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     const action = factory.createCreateTaskAction({ createTaskCallback });
 
     expect(action).to.be.instanceOf(CreateTaskAction);
-    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
     expect(get(action, 'taskDetailsProviderCallback'))
       .to.equal(taskDetailsProviderCallback);
     expect(get(action, 'createTaskCallback')).to.equal(createTaskCallback);
@@ -123,7 +123,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
       name: 'store1',
     });
     factory.setWorkflowDataProvider({
-      stores: [store],
+      definedStores: [store],
     });
     const taskDetailsProviderCallback = () => {};
     factory.setGetTaskModificationDataCallback(taskDetailsProviderCallback);
@@ -132,7 +132,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
     const action = factory.createModifyTaskAction({ task });
 
     expect(action).to.be.instanceOf(ModifyTaskAction);
-    expect(get(action, 'stores').objectAt(0)).to.equal(store);
+    expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
     expect(get(action, 'taskDetailsProviderCallback'))
       .to.equal(taskDetailsProviderCallback);
     expect(get(action, 'task')).to.equal(task);
@@ -183,7 +183,7 @@ function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
         name: 'store1',
       });
       factory.setWorkflowDataProvider({
-        stores: [store],
+        definedStores: [store],
       });
     }
     const lane = Lane.create();
@@ -193,7 +193,7 @@ function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
     expect(action).to.be.instanceOf(actionClass);
     expect(get(action, 'lane')).to.equal(lane);
     if (includeStores) {
-      expect(get(action, 'stores').objectAt(0)).to.equal(store);
+      expect(get(action, 'definedStores').objectAt(0)).to.equal(store);
     }
   });
 }

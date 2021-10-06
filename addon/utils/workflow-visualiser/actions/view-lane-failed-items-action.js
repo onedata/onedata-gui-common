@@ -1,6 +1,6 @@
 /**
  * Shows failed items of specific lane. Needs `lane`, `runNo` and `getStoreContentCallback`
- * passed via context. If `runNo` is not provided, the the visible one will be used.
+ * passed via context. If `runNo` is not provided, the visible one will be used.
  *
  * @module utils/workflow-visualiser/actions/view-lane-failed-items-action
  * @author Michał Borzęcki
@@ -13,7 +13,7 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { isEmpty, conditional, getBy, raw } from 'ember-awesome-macros';
+import { isEmpty, conditional, getBy, raw, or } from 'ember-awesome-macros';
 import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default Action.extend({
@@ -69,18 +69,14 @@ export default Action.extend({
    */
   run: conditional(
     'runNo',
-    getBy('lane.runs', 'runNo'),
+    getBy('lane.runsRegistry', 'runNo'),
     'lane.visibleRun'
   ),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store|undefined>}
    */
-  exceptionStore: conditional(
-    'run',
-    getBy('run', raw('exceptionStore')),
-    raw(null)
-  ),
+  exceptionStore: or('run.exceptionStore', raw(null)),
 
   /**
    * @override

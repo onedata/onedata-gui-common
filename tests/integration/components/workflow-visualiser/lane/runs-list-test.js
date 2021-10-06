@@ -22,7 +22,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('shows all runs, when number of runs is smaller than visible runs limit', async function () {
     this.setProperties({
       visibleRunsLimit: 3,
-      runs: generateRuns(2),
+      runsRegistry: generateRunsRegistry(2),
     });
 
     await render(this);
@@ -33,7 +33,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('shows latest runs, when number of runs is larger than visible runs limit', async function () {
     this.setProperties({
       visibleRunsLimit: 3,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
 
     await render(this);
@@ -44,11 +44,11 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('does not show newest runs from update, if already rendered runs fill the whole space', async function () {
     this.setProperties({
       visibleRunsLimit: 3,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
 
-    this.set('runs', generateRuns(8));
+    this.set('runs', generateRunsRegistry(8));
     await wait();
 
     expect(getVisibleRunNos(this)).to.deep.equal([3, 4, 5]);
@@ -57,11 +57,11 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('shows some new runs from update, if already rendered runs do not fill the whole space', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(3),
+      runsRegistry: generateRunsRegistry(3),
     });
     await render(this);
 
-    this.set('runs', generateRuns(6));
+    this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
 
     expect(getVisibleRunNos(this)).to.deep.equal([1, 2, 3, 4, 5]);
@@ -70,7 +70,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move to the left', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(15),
+      runsRegistry: generateRunsRegistry(15),
     });
     await render(this);
 
@@ -82,7 +82,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move to the left and back to the right', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(15),
+      runsRegistry: generateRunsRegistry(15),
     });
     await render(this);
 
@@ -95,10 +95,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move to the right to see new runs after update', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
-    this.set('runs', generateRuns(8));
+    this.set('runsRegistry', generateRunsRegistry(8));
     await wait();
 
     await moveRight();
@@ -109,7 +109,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move to the left by partial move', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(8),
+      runsRegistry: generateRunsRegistry(8),
     });
     await render(this);
 
@@ -121,7 +121,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows only one move left at a time', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(15),
+      runsRegistry: generateRunsRegistry(15),
     });
     await render(this);
 
@@ -134,10 +134,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows only one move right at a time', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
-    this.set('runs', generateRuns(15));
+    this.set('runsRegistry', generateRunsRegistry(15));
     await wait();
 
     await moveRight(false);
@@ -149,10 +149,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows only one move (right) at a time, when moving right and then left', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
-    this.set('runs', generateRuns(10));
+    this.set('runsRegistry', generateRunsRegistry(10));
     await wait();
 
     await moveRight(false);
@@ -164,7 +164,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows only one move (left) at a time, when moving left and then right', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(10),
+      runsRegistry: generateRunsRegistry(10),
     });
     await render(this);
 
@@ -177,7 +177,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move left twice', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(12),
+      runsRegistry: generateRunsRegistry(12),
     });
     await render(this);
 
@@ -190,10 +190,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move right twice', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
-    this.set('runs', generateRuns(12));
+    this.set('runsRegistry', generateRunsRegistry(12));
     await wait();
 
     await moveRight();
@@ -205,7 +205,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('does not allow to move right, if there is no place to move', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(10),
+      runsRegistry: generateRunsRegistry(10),
     });
     await render(this);
 
@@ -215,10 +215,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move right, if there is a place to move', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
-    this.set('runs', generateRuns(6));
+    this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
 
     expect(this.$('.show-next-runs')).to.not.be.disabled;
@@ -227,10 +227,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('does not allow to move left, if there is no place to move', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
-    this.set('runs', generateRuns(6));
+    this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
 
     expect(this.$('.show-prev-runs')).to.be.disabled;
@@ -239,7 +239,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('allows to move right, if there is a place to move', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(6),
+      runsRegistry: generateRunsRegistry(6),
     });
     await render(this);
 
@@ -249,7 +249,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('has no run selected by default', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
     });
     await render(this);
 
@@ -259,7 +259,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('marks run as selected', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
       selectedRunNo: 3,
     });
     await render(this);
@@ -272,7 +272,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it('notifies about run selection change via "onSelectionChange" callback', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
-      runs: generateRuns(5),
+      runsRegistry: generateRunsRegistry(5),
       selectedRunNo: 3,
     });
     await render(this);
@@ -292,7 +292,7 @@ async function render(testCase) {
   testCase.render(hbs `{{workflow-visualiser/lane/runs-list
     visibleRunsPosition=visibleRunsPosition
     visibleRunsLimit=visibleRunsLimit
-    runs=runs
+    runsRegistry=runsRegistry
     selectedRunNo=selectedRunNo
     onSelectionChange=selectionChangeSpy
     onVisibleRunsPositionChange=(action (mut visibleRunsPosition))
@@ -330,8 +330,8 @@ async function waitForMoveToSettle() {
   }
 }
 
-function generateRuns(runsCount) {
-  const runs = {};
+function generateRunsRegistry(runsCount) {
+  const runsRegistry = {};
   for (let i = 1; i <= runsCount; i++) {
     const run = {
       runNo: i,
@@ -340,9 +340,9 @@ function generateRuns(runsCount) {
     if (i > 2) {
       run.sourceRunNo = i - 2;
     }
-    runs[i] = run;
+    runsRegistry[i] = run;
   }
-  return runs;
+  return runsRegistry;
 }
 
 function getVisibleRunNos(testCase) {

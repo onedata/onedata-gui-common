@@ -10,8 +10,8 @@ export default {
       batch: 'Batch {{batchSize}}',
     },
     runTiming: {
-      latest: 'Latest',
-      past: 'Past',
+      latest: 'Latest run',
+      past: 'Past run',
     },
     unknownStore: 'Unknown',
     actions: {
@@ -51,9 +51,9 @@ export default {
         successNotificationText: 'Lane retry has been scheduled successfully.',
         failureNotificationActionName: 'scheduling lane retry',
         disabledTip: {
-          workflowNotEnded: 'Retry can be scheduled only in an ended workflow execution.',
+          workflowNotEnded: 'Retry can be scheduled only when the workflow execution is ended.',
           laneNotFailed: 'Retry can be scheduled only for a failed lane run.',
-          noExceptionStoreAvailable: 'Retry can be scheduled only for a correctly started lane.',
+          noExceptionStoreAvailable: 'Retry can be scheduled only for a lane that has passed the preparation phase.',
         },
       },
       rerunLane: {

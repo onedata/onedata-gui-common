@@ -13,7 +13,7 @@ import _ from 'lodash';
 export default Component.extend({
   selectedRunNo: undefined,
 
-  runs: computed(function runs() {
+  runsRegistry: computed(function runsRegistry() {
     const runsMap = {};
     for (let i = 1; i <= 16; i++) {
       const run = {

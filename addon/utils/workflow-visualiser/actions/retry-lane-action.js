@@ -50,7 +50,7 @@ export default Action.extend({
     'isWorkflowEnded',
     'isLaneRunFailed',
     'doesLaneRunExceptionStoreExist',
-    function disabled() {
+    function tip() {
       const {
         isWorkflowEnded,
         isLaneRunFailed,
@@ -107,7 +107,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  laneRun: getBy('lane.runs', 'runNo'),
+  laneRun: getBy('lane.runsRegistry', 'runNo'),
 
   /**
    * @type {ComputedProperty<Boolean>}

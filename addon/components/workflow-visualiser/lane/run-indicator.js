@@ -162,8 +162,7 @@ export default Component.extend(I18n, {
 
       return !areActionsOpened &&
         isSourceRunNoValid &&
-        isRunNoValid &&
-        runNo - sourceRunNo !== 1;
+        (!isRunNoValid || runNo - sourceRunNo !== 1);
     }
   ),
 
@@ -179,7 +178,7 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<String|null>}
+   * @type {ComputedProperty<SafeString|null>}
    */
   runTypeText: computed('runType', function runTypeText() {
     const runType = this.get('runType');
@@ -221,6 +220,9 @@ export default Component.extend(I18n, {
    */
   hasRunActions: notEmpty('runActions'),
 
+  /**
+   * @override
+   */
   click(event) {
     this._super(...arguments);
 

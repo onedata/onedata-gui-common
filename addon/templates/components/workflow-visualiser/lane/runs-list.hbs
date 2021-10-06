@@ -1,6 +1,6 @@
 <button
   class="move-runs-btn show-prev-runs"
-  disabled={{lte hiddenPrevRuns 0}}
+  disabled={{lte hiddenPrevRunsCount 0}}
   {{action "showPrevRuns"}}
 >
   {{one-icon icon="arrow-left"}}
@@ -18,14 +18,14 @@
         runType=run.runType
         laneRunActionsFactory=laneRunActionsFactory
         isSelected=(eq selectedRunNo run.runNo)
-        onClick=(action "runSelected" run.runNo)
+        onClick=(action "selectRun" run.runNo)
       }}
     </li>
   {{/each}}
 </ol>
 <button
   class="move-runs-btn show-next-runs"
-  disabled={{lte hiddenNextRuns 0}}
+  disabled={{lte hiddenNextRunsCount 0}}
   {{action "showNextRuns"}}
 >
   {{one-icon icon="arrow-right"}}

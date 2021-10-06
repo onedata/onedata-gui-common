@@ -27,7 +27,7 @@ export default EmberObject.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('visualiserComponent.stores'),
+  definedStores: reads('visualiserComponent.definedStores'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.ExecutionDataFetcher>}

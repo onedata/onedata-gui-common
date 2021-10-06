@@ -10,6 +10,7 @@ $workflow-visualiser-run-indicator-size: 25px;
     "enqueued": $color-one-azure,
     "active": $color-one-success,
     "aborting": $color-one-warning,
+    "interrupted": $color-one-warning,
     "cancelled": $color-one-warning,
     "skipped": $color-one-light-gray,
     "finished": $color-one-success,
@@ -121,7 +122,7 @@ $workflow-visualiser-run-indicator-size: 25px;
     background-color: $color-one-white;
     padding: 0 0.3em;
     align-items: center;
-    pointer-events: none;
+    // pointer-events: none;
   }
 
   .run-actions-trigger {
@@ -142,7 +143,8 @@ $workflow-visualiser-run-indicator-size: 25px;
   &.has-actions:hover,
   &.actions-opened {
     .source-run-no-container {
-      display: none;
+      visibility: hidden;
+      // display: none;
     }
 
     .run-actions-trigger {

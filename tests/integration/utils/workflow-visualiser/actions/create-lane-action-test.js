@@ -21,7 +21,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
     const createStub = sinon.stub();
     const action = CreateLaneAction.create({
       ownerSource: this,
-      stores: [
+      definedStores: [
         Store.create({
           id: 's1',
           name: 'store1',

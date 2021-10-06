@@ -36,7 +36,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     this.setProperties({
       modalManager: lookupService(this, 'modal-manager'),
       modalOptions: {
-        stores: [
+        definedStores: [
           Store.create({
             id: 's1',
             name: 'store1',

@@ -50,14 +50,14 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @type {Function}
-   * @param {Array<Object>} initialData.stores
+   * @param {Array<Object>} initialData.definedStores
    * @returns {Promise<Object>} task details
    */
   getTaskCreationDataCallback: undefined,
 
   /**
    * @type {Function}
-   * @param {Array<Object>} initialData.stores
+   * @param {Array<Object>} initialData.definedStores
    * @param {Object} initialData.task
    * @returns {Promise<Object>} task details
    */
@@ -92,7 +92,8 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setWorkflowDataProvider(workflowDataProvider) {
     if (this.get('workflowDataProvider')) {
-      console.warn('workflow-visualiser/actions-factory: overriding workflowDataProvider');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setWorkflowDataProvider: overriding workflowDataProvider');
     }
     this.set('workflowDataProvider', workflowDataProvider);
   },
@@ -102,7 +103,9 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setGetTaskCreationDataCallback(getTaskCreationDataCallback) {
     if (this.get('getTaskCreationDataCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding getTaskCreationDataCallback');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setGetTaskCreationDataCallback: overriding getTaskCreationDataCallback'
+      );
     }
     this.set('getTaskCreationDataCallback', getTaskCreationDataCallback);
   },
@@ -112,7 +115,9 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setGetTaskModificationDataCallback(getTaskModificationDataCallback) {
     if (this.get('getTaskModificationDataCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding getTaskModificationDataCallback');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setGetTaskModificationDataCallback: overriding getTaskModificationDataCallback'
+      );
     }
     this.set('getTaskModificationDataCallback', getTaskModificationDataCallback);
   },
@@ -122,7 +127,8 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setCreateStoreCallback(createStoreCallback) {
     if (this.get('createStoreCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding createStoreCallback');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setCreateStoreCallback: overriding createStoreCallback');
     }
     this.set('createStoreCallback', createStoreCallback);
   },
@@ -132,7 +138,7 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setRetryLaneCallback(retryLaneCallback) {
     if (this.get('retryLaneCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding retryLaneCallback');
+      console.warn('util:workflow-visualiser/actions-factory#setRetryLaneCallback: overriding retryLaneCallback');
     }
     this.set('retryLaneCallback', retryLaneCallback);
   },
@@ -142,7 +148,7 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setRerunLaneCallback(rerunLaneCallback) {
     if (this.get('rerunLaneCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding rerunLaneCallback');
+      console.warn('util:workflow-visualiser/actions-factory#setRerunLaneCallback: overriding rerunLaneCallback');
     }
     this.set('rerunLaneCallback', rerunLaneCallback);
   },
@@ -155,7 +161,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
@@ -169,7 +175,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
@@ -183,7 +189,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
       }, context),
     });
   },
@@ -260,7 +266,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateTaskAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         taskDetailsProviderCallback: this.get('getTaskCreationDataCallback') || notImplementedIgnore,
       }, context),
     });
@@ -274,7 +280,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyTaskAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         taskDetailsProviderCallback: this.get('getTaskModificationDataCallback') || notImplementedIgnore,
       }, context),
     });
@@ -412,9 +418,9 @@ export default EmberObject.extend(OwnerInjector, {
    * @private
    * @returns {ArrayProxy<Utils.WorkflowVisualiser.Store>}
    */
-  getStoresArrayProxy() {
+  getDefinedStoresArrayProxy() {
     return ArrayProxy
-      .extend({ content: reads('factory.workflowDataProvider.stores') })
+      .extend({ content: reads('factory.workflowDataProvider.definedStores') })
       .create({ factory: this });
   },
 

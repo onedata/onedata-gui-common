@@ -91,12 +91,12 @@
  * value to `{ runNo: 12, placement: 'end' }` which means "scroll horizontally
  * as soon as run '12' will be visible on the right (end) edge".
  *
- * Due to updates of `runs` object, which can happen any time, actual list of
+ * Due to updates of `runsRegistry` object, which can happen any time, actual list of
  * runs used in rendering and calculating animations is dumped to `runsArray`.
- * `runsArray` is of course updated on `runs` change but only in allowed time
+ * `runsArray` is of course updated on `runsRegistry` change but only in allowed time
  * frames to not break the animation. Also to prevent races with mixed animations
  * and updates, there is a queue of indicators position changes. It handles cases
- * when animation is being executed, but in the same time there is a `runs` update
+ * when animation is being executed, but in the same time there is a `runsRegistry` update
  * and `visibleRunsPosition` update. In that case the existing animation is fully
  * finished, then new `runsArray` is generated and at the end the next animation
  * request (from `visibleRunsPosition` change) is processed.
@@ -110,9 +110,9 @@
 import Component from '@ember/component';
 import layout from '../../../templates/components/workflow-visualiser/lane/runs-list';
 import { observer, getProperties, computed } from '@ember/object';
-import { next, later, cancel } from '@ember/runloop';
+import { next, later, cancel, scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { scheduleOnce } from '@ember/runloop';
+import { array, raw } from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} RunsListVisibleRunsPosition
@@ -125,11 +125,11 @@ export default Component.extend({
   classNames: ['runs-list'],
 
   /**
-   * The same as `runs` field in Lane object.
+   * The same as `runsRegistry` field in Lane object.
    * @virtual
    * @type {Object}
    */
-  runs: undefined,
+  runsRegistry: undefined,
 
   /**
    * @virtual
@@ -175,7 +175,7 @@ export default Component.extend({
    * Value of `runs` from latest render
    * @type {Object}
    */
-  prevRuns: undefined,
+  prevRunsRegistry: undefined,
 
   /**
    * Value of `visibleRunsPosition` from latest render
@@ -231,12 +231,22 @@ export default Component.extend({
   updateRunsArrayAfterAnimation: false,
 
   /**
+   * @type {ComputedProperty<Array<Number>>}
+   */
+  runsNos: array.mapBy('runsArray', raw('runNo')),
+
+  /**
+   * @type {ComputedProperty<Array<Number>>}
+   */
+  visibleRunsNos: array.mapBy('visibleRunsArray', raw('runNo')),
+
+  /**
    * @type {ComputedProperty<Number>}
    */
-  hiddenPrevRuns: computed(
+  hiddenPrevRunsCount: computed(
     'visibleRunsArray',
     'runsArray',
-    function hiddenNextRuns() {
+    function hiddenPrevRunsCount() {
       const {
         visibleRunsArray,
         runsArray,
@@ -248,10 +258,10 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<Number>}
    */
-  hiddenNextRuns: computed(
+  hiddenNextRunsCount: computed(
     'visibleRunsArray',
     'runsArray',
-    function hiddenNextRuns() {
+    function hiddenNextRunsCount() {
       const {
         visibleRunsArray,
         runsArray,
@@ -266,7 +276,7 @@ export default Component.extend({
   ),
 
   runsAndPositionUpdater: observer(
-    'runs',
+    'runsRegistry',
     'visibleRunsLimit',
     'visibleRunsPosition',
     function runsAndPositionUpdater() {
@@ -278,13 +288,12 @@ export default Component.extend({
     this._super(...arguments);
 
     const {
-      runs,
+      runsRegistry,
       visibleRunsPosition,
-    } = this.getProperties('visibleRunsPosition');
+    } = this.getProperties('runsRegistry', 'visibleRunsPosition');
     this.setProperties({
-      prevRuns: runs,
+      prevRunsRegistry: runsRegistry,
       prevVisibleRunsPosition: visibleRunsPosition,
-      activeVisibleRunsPosition: this.generateInitialActiveVisibleRunsPosition(),
       visibleRunsPositionChangesQueue: [],
       moveAnimationFsm: {
         state: 'idle',
@@ -299,17 +308,17 @@ export default Component.extend({
 
   updateRunsAndPosition() {
     const {
-      runs,
-      prevRuns,
+      runsRegistry,
+      prevRunsRegistry,
       visibleRunsPosition,
       prevVisibleRunsPosition,
     } = this.getProperties(
-      'runs',
-      'prevRuns',
+      'runsRegistry',
+      'prevRunsRegistry',
       'visibleRunsPosition',
       'prevVisibleRunsPosition'
     );
-    if (runs !== prevRuns) {
+    if (runsRegistry !== prevRunsRegistry) {
       this.scheduleRunsArrayUpdate();
     }
     if (visibleRunsPosition !== prevVisibleRunsPosition) {
@@ -326,10 +335,10 @@ export default Component.extend({
   },
 
   updateRunsArray() {
-    const runs = this.get('runs');
+    const runsRegistry = this.get('runsRegistry');
     this.setProperties({
       runsArray: this.generateRunsArray(),
-      prevRuns: runs,
+      prevRunsRegistry: runsRegistry,
     });
 
     this.updateVisibleRunsArray();
@@ -339,7 +348,7 @@ export default Component.extend({
     let activeVisibleRunsPosition = this.get('activeVisibleRunsPosition');
     if (!activeVisibleRunsPosition) {
       activeVisibleRunsPosition = this.set('activeVisibleRunsPosition', {
-        runNo: this.getRunsNos().reverse()[0],
+        runNo: [...this.get('runsNos')].reverse()[0],
         placement: 'end',
       });
     }
@@ -353,9 +362,11 @@ export default Component.extend({
     const {
       visibleRunsLimit,
       runsArray,
+      runsNos,
     } = this.getProperties(
       'visibleRunsLimit',
-      'runsArray'
+      'runsArray',
+      'runsNos'
     );
 
     if (!runsArray.length) {
@@ -367,10 +378,9 @@ export default Component.extend({
       placement,
     } = getProperties(visibleRunsPosition || {}, 'runNo', 'placement');
 
-    const runsNos = this.getRunsNos();
     const positionedRunNoIdx = runsNos.indexOf(positionedRunNo);
     if (positionedRunNoIdx === -1) {
-      return getLastNArrayElements(runsArray, visibleRunsLimit);
+      return runsArray.slice(-visibleRunsLimit);
     }
     let slotsOnTheLeft;
     let slotsOnTheRight;
@@ -385,25 +395,25 @@ export default Component.extend({
       slotsOnTheRight = Math.floor((visibleRunsLimit - 1) / 2);
     }
 
-    const leftRunsOnTheLeft = runsArray.slice(0, positionedRunNoIdx);
-    const leftRunsOnTheRight = runsArray.slice(positionedRunNoIdx + 1);
-    const leftRunsToAdd = leftRunsOnTheLeft.splice(
-      Math.max(0, leftRunsOnTheLeft.length - slotsOnTheLeft)
+    const availableRunsOnTheLeft = runsArray.slice(0, positionedRunNoIdx);
+    const availableRunsOnTheRight = runsArray.slice(positionedRunNoIdx + 1);
+    const runsToAddOnTheLeft = availableRunsOnTheLeft.splice(
+      Math.max(0, availableRunsOnTheLeft.length - slotsOnTheLeft)
     );
-    const rightRunsToAdd = leftRunsOnTheRight.splice(0, slotsOnTheRight);
-    if (leftRunsToAdd.length < slotsOnTheLeft) {
-      const extraSlotsOnTheRight = slotsOnTheLeft - leftRunsToAdd.length;
-      rightRunsToAdd.push(...leftRunsOnTheRight.splice(0, extraSlotsOnTheRight));
-    } else if (rightRunsToAdd.length < slotsOnTheRight) {
-      const extraSlotsOnTheLeft = slotsOnTheRight - rightRunsToAdd.length;
-      leftRunsToAdd.push(...leftRunsOnTheLeft.splice(
-        Math.max(0, leftRunsOnTheLeft.length - extraSlotsOnTheLeft)
+    const runsToAddOnTheRight = availableRunsOnTheRight.splice(0, slotsOnTheRight);
+    if (runsToAddOnTheLeft.length < slotsOnTheLeft) {
+      const extraSlotsOnTheRight = slotsOnTheLeft - runsToAddOnTheLeft.length;
+      runsToAddOnTheRight.push(...availableRunsOnTheRight.splice(0, extraSlotsOnTheRight));
+    } else if (runsToAddOnTheRight.length < slotsOnTheRight) {
+      const extraSlotsOnTheLeft = slotsOnTheRight - runsToAddOnTheRight.length;
+      runsToAddOnTheLeft.push(...availableRunsOnTheLeft.splice(
+        Math.max(0, availableRunsOnTheLeft.length - extraSlotsOnTheLeft)
       ));
     }
     return [
-      ...leftRunsToAdd,
+      ...runsToAddOnTheLeft,
       runsArray[positionedRunNoIdx],
-      ...rightRunsToAdd,
+      ...runsToAddOnTheRight,
     ];
   },
 
@@ -430,9 +440,11 @@ export default Component.extend({
     const {
       visibleRunsPositionChangesQueue,
       visibleRunsArray,
+      runsNos,
     } = this.getProperties(
       'visibleRunsPositionChangesQueue',
-      'visibleRunsArray'
+      'visibleRunsArray',
+      'runsNos'
     );
     const nextVisibleRunsPosition = visibleRunsPositionChangesQueue[0];
     if (!nextVisibleRunsPosition || !visibleRunsArray.length) {
@@ -450,7 +462,6 @@ export default Component.extend({
       return;
     }
 
-    const runsNos = this.getRunsNos();
     const firstVisibleRunIdx = runsNos.indexOf(visibleRunsArray[0].runNo);
     const newFirstVisibleRunIdx = runsNos.indexOf(newVisibleRunsArray[0].runNo);
     const moveStep = newFirstVisibleRunIdx - firstVisibleRunIdx;
@@ -492,6 +503,11 @@ export default Component.extend({
           nextData = {};
         }
         break;
+      default:
+        console.warn(
+          `component:workfow-visualiser/lane/runs-list#performActionOnAnimationFsm: ignoring unknown animation state "${state}".`
+        );
+        return;
     }
 
     if (nextState !== state) {
@@ -619,7 +635,7 @@ export default Component.extend({
           `left: ${(-moveStep) * runIndicatorWidth}px`;
       });
     } else {
-      const newRuns = getLastNArrayElements(visibleRunsArray, moveStep);
+      const newRuns = visibleRunsArray.slice(-moveStep);
       const existingRuns = visibleRunsArray.slice(0, -moveStep);
       newRuns.forEach((run, idx) => {
         newVisibleRunsStyles[run.runNo] =
@@ -668,30 +684,8 @@ export default Component.extend({
     this.scheduleActionOnAnimationFsm('finishAnimation');
   },
 
-  generateInitialActiveVisibleRunsPosition() {
-    // If user passed initial value, then return it.
-    const visibleRunsPosition = this.get('visibleRunsPosition');
-    if (visibleRunsPosition) {
-      return visibleRunsPosition;
-    }
-
-    const lastRunNo = this.generateRunsArray().mapBy('runNo').reverse()[0];
-    return {
-      runNo: lastRunNo,
-      placement: 'end',
-    };
-  },
-
   generateRunsArray() {
-    return Object.values(this.get('runs') || {}).sortBy('runNo');
-  },
-
-  getRunsNos() {
-    return this.get('runsArray').mapBy('runNo');
-  },
-
-  getVisibleRunsNos() {
-    return (this.get('visibleRunsArray') || []).mapBy('runNo');
+    return Object.values(this.get('runsRegistry') || {}).sortBy('runNo');
   },
 
   notifyVisibleRunsPositionChange(newVisibleRunsPosition) {
@@ -710,10 +704,12 @@ export default Component.extend({
 
   actions: {
     showPrevRuns() {
-      const visibleRunsLimit = this.get('visibleRunsLimit');
+      const {
+        visibleRunsLimit,
+        runsNos,
+        visibleRunsNos,
+      } = this.getProperties('visibleRunsLimit', 'runsNos', 'visibleRunsNos');
 
-      const runsNos = this.getRunsNos();
-      const visibleRunsNos = this.getVisibleRunsNos();
       const firstVisibleRunIdx = runsNos.indexOf(visibleRunsNos[0]);
       const newFirstVisibleRunIdx =
         Math.max(firstVisibleRunIdx - visibleRunsLimit, 0);
@@ -728,10 +724,12 @@ export default Component.extend({
       });
     },
     showNextRuns() {
-      const visibleRunsLimit = this.get('visibleRunsLimit');
+      const {
+        visibleRunsLimit,
+        runsNos,
+        visibleRunsNos,
+      } = this.getProperties('visibleRunsLimit', 'runsNos', 'visibleRunsNos');
 
-      const runsNos = this.getRunsNos();
-      const visibleRunsNos = this.getVisibleRunsNos();
       const lastVisibleRunIdx =
         runsNos.indexOf(visibleRunsNos[visibleRunsNos.length - 1]);
       const newLastVisibleRunIdx =
@@ -746,12 +744,8 @@ export default Component.extend({
         placement: 'end',
       });
     },
-    runSelected(runNo) {
+    selectRun(runNo) {
       this.notifySelectionChange(runNo);
     },
   },
 });
-
-function getLastNArrayElements(arr, n) {
-  return arr.slice(Math.max(arr.length - n, 0));
-}
