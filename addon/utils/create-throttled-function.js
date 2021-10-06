@@ -15,29 +15,30 @@ import { later } from '@ember/runloop';
 /**
  * @param {Function} func
  * @param {Number} timeSpacing in milliseconds
- * @param {Boolean} [debounce=false] if true, calls will be debounced (not invoked
- *   immediately even if throttling time elapsed)
+ * @param {Boolean} [immediate=true] trigger the function on the leading instead of
+ *   the trailing edge of the wait interval
  * @returns {Function}
  */
-export default function createThrottledFunction(func, timeSpacing, debounce = false) {
-  let lastFunc;
+export default function createThrottledFunction(func, timeSpacing, immediate = true) {
+  let timeoutId;
   let lastRan;
-  let runDebounced = !debounce;
+  let runPostponed = immediate;
   return function throttledFunction() {
-    if (!runDebounced) {
+    if (!immediate && !runPostponed) {
       lastRan = Date.now();
-      runDebounced = true;
+      runPostponed = true;
     }
     if (!lastRan || timeSpacing - (Date.now() - lastRan) <= 0) {
       func();
       lastRan = Date.now();
-    } else {
-      clearTimeout(lastFunc);
-      lastFunc = later(function () {
+    } else if (!timeoutId) {
+      timeoutId = later(function () {
         if ((Date.now() - lastRan) >= timeSpacing) {
           func();
           lastRan = Date.now();
-          runDebounced = false;
+          runPostponed = false;
+          clearTimeout(timeoutId);
+          timeoutId = null;
         }
       }, timeSpacing - (Date.now() - lastRan));
     }

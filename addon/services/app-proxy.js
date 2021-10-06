@@ -25,6 +25,13 @@ export default Service.extend({
   _window: window,
 
   /**
+   * Accumulates shared properties that should be read from `appProxy`
+   * collectively and set collectively with throttling.
+   * @type {Set}
+   */
+  propertiesToChange: undefined,
+
+  /**
    * @type {Ember.ComputedProperty<Object>}
    */
   appProxy: reads(`_window.frameElement.${sharedObjectName}`),
@@ -77,13 +84,6 @@ export default Service.extend({
     propertiesToChange.add(propertyName);
     this.scheduleFlushCache();
   },
-
-  /**
-   * Accumulates shared properties that should be read from `appProxy`
-   * collectively and set collectively with throttling.
-   * @type {Set}
-   */
-  propertiesToChange: undefined,
 
   flushCache() {
     const {
