@@ -10,7 +10,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { later } from '@ember/runloop';
+import { later, cancel } from '@ember/runloop';
 
 /**
  * @param {Function} func
@@ -28,7 +28,7 @@ export default function createThrottledFunction(func, timeSpacing, immediate = t
       lastRan = Date.now();
       runPostponed = true;
       if (timeoutId) {
-        clearTimeout(timeoutId);
+        cancel(timeoutId);
         timeoutId = null;
       }
     }
@@ -41,7 +41,7 @@ export default function createThrottledFunction(func, timeSpacing, immediate = t
           func();
           lastRan = Date.now();
           runPostponed = false;
-          clearTimeout(timeoutId);
+          cancel(timeoutId);
           timeoutId = null;
         }
       }, timeSpacing - (Date.now() - lastRan));
