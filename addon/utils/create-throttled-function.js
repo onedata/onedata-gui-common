@@ -27,6 +27,10 @@ export default function createThrottledFunction(func, timeSpacing, immediate = t
     if (!immediate && !runPostponed) {
       lastRan = Date.now();
       runPostponed = true;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
     }
     if (!lastRan || timeSpacing - (Date.now() - lastRan) <= 0) {
       func();
