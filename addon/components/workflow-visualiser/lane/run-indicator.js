@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import layout from '../../../templates/components/workflow-visualiser/lane/run-indicator';
 import { computed } from '@ember/object';
 import { normalizeLaneStatus, translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
-import { tag, notEmpty } from 'ember-awesome-macros';
+import { tag } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import isDirectlyClicked from 'onedata-gui-common/utils/is-directly-clicked';
@@ -24,8 +24,6 @@ export default Component.extend(I18n, {
     'digitsNoClass',
     'isSelected:selected',
     'onClick:clickable',
-    'hasRunActions:has-actions',
-    'areActionsOpened:actions-opened',
   ],
 
   i18n: service(),
@@ -66,21 +64,10 @@ export default Component.extend(I18n, {
   isSelected: false,
 
   /**
-   * @virtual
-   * @type {Utils.WorkflowVisualiser.Lane.LaneRunActionsFactory}
-   */
-  laneRunActionsFactory: undefined,
-
-  /**
    * @virtual optional
    * @type {Function}
    */
   onClick: undefined,
-
-  /**
-   * @type {Boolean}
-   */
-  areActionsOpened: false,
 
   /**
    * @type {ComputedProperty<String>}
@@ -203,24 +190,6 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<Array<Util.Action>>}
-   */
-  runActions: computed('runNo', 'runActionsFactory', function runActions() {
-    const {
-      runNo,
-      laneRunActionsFactory,
-    } = this.getProperties('runNo', 'laneRunActionsFactory');
-
-    return laneRunActionsFactory ?
-      laneRunActionsFactory.createActionsForRunNo(runNo) : [];
-  }),
-
-  /**
-   * @type {ComputedProperty<Boolean>}
-   */
-  hasRunActions: notEmpty('runActions'),
-
-  /**
    * @override
    */
   click(event) {
@@ -234,11 +203,5 @@ export default Component.extend(I18n, {
     if (isDirectlyClicked(event, element) && onClick) {
       onClick();
     }
-  },
-
-  actions: {
-    toggleActionsOpen(state) {
-      this.set('areActionsOpened', state);
-    },
   },
 });

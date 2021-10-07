@@ -27,13 +27,4 @@ export default Component.extend({
     }
     return runsMap;
   }),
-
-  laneRunActionsFactory: computed(() => ({
-    createActionsForRunNo(runNo) {
-      return [{
-        title: 'someAction',
-        action: () => console.log('someAction', runNo),
-      }];
-    },
-  })),
 });

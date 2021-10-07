@@ -59,7 +59,6 @@
         runsRegistry=lane.runsRegistry
         visibleRunsPosition=lane.visibleRunsPosition
         selectedRunNo=lane.visibleRunNo
-        laneRunActionsFactory=laneRunActionsFactory
         onSelectionChange=(action "changeRun")
         onVisibleRunsPositionChange=(action (mut lane.visibleRunsPosition))
       }}
@@ -72,7 +71,6 @@
         runNo=lane.visibleRunNo
         sourceRunNo=lane.visibleRun.sourceRunNo
         runType=lane.visibleRun.runType
-        laneRunActionsFactory=laneRunActionsFactory
       }}
       <span class="visible-run-timing-label">{{visibleRunTimingLabel}}</span>
       <span class="visible-run-status-label">{{visibleRunStatusLabel}}</span>

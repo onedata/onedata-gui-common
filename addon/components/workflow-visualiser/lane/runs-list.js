@@ -151,12 +151,6 @@ export default Component.extend({
 
   /**
    * @virtual optional
-   * @type {Utils.WorkflowVisualiser.Lane.LaneRunActionsFactory}
-   */
-  laneRunActionsFactory: undefined,
-
-  /**
-   * @virtual optional
    * @type {Function}
    * @param {Number} runNo
    * @returns {any}
