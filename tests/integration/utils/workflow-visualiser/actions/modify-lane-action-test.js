@@ -21,6 +21,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
   beforeEach(function () {
     const lane = Lane.create({
       name: 'lane1',
+      maxRetries: 0,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',

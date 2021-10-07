@@ -91,6 +91,48 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(this.$('.name-field')).to.have.class('has-success');
     });
 
+    it('renders "max retries" field with "0" as default value', async function () {
+      await render(this);
+
+      const $label = this.$('.maxRetries-field .control-label');
+      const $field = this.$('.maxRetries-field .form-control');
+      expect($label.text().trim()).to.equal('Max. retries:');
+      expect($field).to.have.attr('type', 'number');
+      expect($field).to.have.value('0');
+    });
+
+    it('marks "max retries" field as invalid when it is empty', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-error');
+    });
+
+    it('marks "max retries" field as invalid when it contains negative number', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '-3');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-error');
+    });
+
+    it('marks "max retries" field as invalid when it contains a float number', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '3.5');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-error');
+    });
+
+    it('marks "max retries" field as valid when it contains a positive integer number', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '3');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-success');
+    });
+
     it('has fields group "Iterator options"', async function () {
       await render(this);
 

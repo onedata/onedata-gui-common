@@ -64,6 +64,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     this.set('lane', Lane.create({
       actionsFactory,
       name: 'lane1',
+      maxRetries: 0,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',
