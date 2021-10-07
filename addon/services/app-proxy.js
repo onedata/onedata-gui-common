@@ -9,19 +9,27 @@
  */
 
 import Service from '@ember/service';
-import EmberObject, { computed, set, setProperties, observer } from '@ember/object';
+import EmberObject, { computed, set, observer, setProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   sharedObjectName,
   sharedDataPropertyName,
   getSharedProperty,
 } from 'onedata-gui-common/utils/one-embedded-common';
+import createThrottledFunction from '../utils/create-throttled-function';
 
 export default Service.extend({
   /**
    * @type {Window}
    */
   _window: window,
+
+  /**
+   * Accumulates shared properties that should be read from `appProxy`
+   * collectively and set collectively with throttling.
+   * @type {Set}
+   */
+  propertiesToChange: undefined,
 
   /**
    * @type {Ember.ComputedProperty<Object>}
@@ -39,21 +47,24 @@ export default Service.extend({
   appProxyObserver: observer('appProxy', function appProxyObserver() {
     const appProxy = this.get('appProxy');
     if (appProxy) {
-      // TODO: VFS-8360: do not add deprecated method
       set(appProxy, 'propertyChanged', this.propertyChanged.bind(this));
-      set(appProxy, 'propertiesChanged', this.propertiesChanged.bind(this));
     }
   }),
 
   init() {
     this._super(...arguments);
+
     this.appProxyObserver();
+    this.clearPropertiesToChangeCache();
+    this.scheduleFlushCache = createThrottledFunction(() => {
+      this.flushCache();
+    }, 100, false);
   },
 
   /**
    * Calls action in parent application
-   * @param {string} methodName 
-   * @param  {Array<any>} args 
+   * @param {string} methodName
+   * @param  {Array<any>} args
    * @returns {any}
    */
   callParent(methodName, ...args) {
@@ -63,35 +74,36 @@ export default Service.extend({
     }
   },
 
-  // TODO: VFS-8360: remove deprecated method
   /**
    * Handler for sharedProperties field changed event
-   * @deprecated Support for legacy Onezone's - will be removed in future releases
-   * @param {string} propertyName 
+   * @param {string} propertyName
    * @returns {undefined}
    */
   propertyChanged(propertyName) {
-    console.warn(
-      'DEPRECATED: appProxy#propertyChanged will be removed; please use propertiesChanged'
-    );
-    this.set(
-      `injectedData.${propertyName}`,
-      getSharedProperty(this.get('appProxy'), propertyName)
+    const propertiesToChange = this.get('propertiesToChange');
+    propertiesToChange.add(propertyName);
+    this.scheduleFlushCache();
+  },
+
+  flushCache() {
+    const {
+      injectedData,
+      propertiesToChange,
+      appProxy,
+    } = this.getProperties('injectedData', 'propertiesToChange', 'appProxy');
+    this.clearPropertiesToChangeCache();
+    const sharedData = Array.from(propertiesToChange.values())
+      .reduce((data, propertyName) => {
+        data[propertyName] = getSharedProperty(appProxy, propertyName);
+        return data;
+      }, {});
+    setProperties(
+      injectedData,
+      sharedData
     );
   },
 
-  propertiesChanged(propertiesNames) {
-    const {
-      appProxy,
-      injectedData,
-    } = this.getProperties('appProxy', 'injectedData');
-    const updatedData = propertiesNames.reduce((data, propertyName) => {
-      data[propertyName] = getSharedProperty(appProxy, propertyName);
-      return data;
-    }, {});
-    setProperties(
-      injectedData,
-      updatedData,
-    );
+  clearPropertiesToChangeCache() {
+    this.set('propertiesToChange', new Set());
   },
 });

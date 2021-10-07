@@ -34,7 +34,6 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { assert } from '@ember/debug';
 import $ from 'jquery';
-import { once } from '@ember/runloop';
 
 export default EmberObject.extend({
   guiUtils: service(),
@@ -84,13 +83,6 @@ export default EmberObject.extend({
   relatedData: undefined,
 
   /**
-   * Array of shared property names that should be changed together in one runloop.
-   * Initialized on init.
-   * @type {Array<String>}
-   */
-  propertiesToChange: undefined,
-
-  /**
    * @type {boolean}
    */
   iframeIsLoading: true,
@@ -136,9 +128,7 @@ export default EmberObject.extend({
     iframe.id = iframeId;
     iframe.addEventListener('load', iframeOnLoadHandler);
     iframe[sharedObjectName] = {
-      // TODO: VFS-8360: do not add deprecated method
       propertyChanged: notImplementedIgnore,
-      propertiesChanged: notImplementedIgnore,
       callParent: this.callParent.bind(this),
       [sharedDataPropertyName]: {},
     };
@@ -245,8 +235,6 @@ export default EmberObject.extend({
       'iframeElement',
     );
 
-    this.clearPropertiesToChange();
-
     this.setSharedProperty('parentInfo', parentInfo);
 
     this.srcObserver();
@@ -282,28 +270,7 @@ export default EmberObject.extend({
    * @returns {undefined}
    */
   notifySharedPropertyChanged(name) {
-    const propertiesToChange = this.get('propertiesToChange');
-    propertiesToChange.push(name);
-    once(this, 'commitPropertiesChange');
-  },
-
-  commitPropertiesChange() {
-    const propertiesToChange = this.get('propertiesToChange');
-    this.notifySharedPropertiesChanged(propertiesToChange);
-    this.clearPropertiesToChange();
-  },
-
-  clearPropertiesToChange() {
-    this.set('propertiesToChange', []);
-  },
-
-  /**
-   * @param {array} properties keys of properties that have changed in `appProxy` data
-   *  in embedded app
-   * @returns {undefined}
-   */
-  notifySharedPropertiesChanged(properties) {
-    this.get('iframeElement')[sharedObjectName].propertiesChanged(properties);
+    this.get('iframeElement')[sharedObjectName].propertyChanged(name);
   },
 
   /**
