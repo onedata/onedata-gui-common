@@ -34,13 +34,12 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 
 /**
  * @typedef {Object} AtmLaneExecutionState
- * @property {Object<Number,AtmLaneRunExecutionState>} runsRegistry keys are
- * run numbers
+ * @property {Object<AtmLaneRunNo,AtmLaneRunExecutionState>} runsRegistry
  */
 
 /**
  * @typedef {Object} AtmLaneRunExecutionState
- * @property {Number|null} runNo
+ * @property {AtmLaneRunNo} runNo
  * @property {Number|null} sourceRunNo
  * @property {String} systemAuditLogStoreInstanceId
  * @property {String} status
@@ -53,13 +52,12 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 
 /**
  * @typedef {Object} AtmParallelBoxExecutionState
- * @property {Object<Number,AtmParallelBoxRunExecutionState>} runsRegistry keys are
- * run numbers
+ * @property {Object<AtmLaneRunNo,AtmParallelBoxRunExecutionState>} runsRegistry
  */
 
 /**
  * @typedef {Object} AtmParallelBoxRunExecutionState
- * @property {Number} runNo
+ * @property {AtmLaneRunNo} runNo
  * @property {String} status
  */
 
@@ -70,13 +68,12 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 
 /**
  * @typedef {Object} AtmTaskExecutionState
- * @property {Object<Number,AtmTaskRunExecutionState>} runsRegistry keys are
- * run numbers
+ * @property {Object<AtmLaneRunNo,AtmTaskRunExecutionState>} runsRegistry
  */
 
 /**
  * @typedef {Object} AtmTaskRunExecutionState
- * @property {Number} runNo
+ * @property {AtmLaneRunNo} runNo
  * @property {String} instanceId
  * @property {String} systemAuditLogStoreInstanceId
  * @property {String} status

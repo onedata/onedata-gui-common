@@ -41,7 +41,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Number}
+   * @type {AtmLaneRunNo}
    */
   runNo: undefined,
 
@@ -84,7 +84,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isRunNoValid: computed('runNo', function isRunNoValid() {
+  isRunNoAValidNumber: computed('runNo', function isRunNoAValidNumber() {
     const runNo = this.get('runNo');
     return Number.isInteger(runNo) && runNo > 0;
   }),
@@ -100,12 +100,12 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  runNoText: computed('runNo', 'isRunNoValid', function runNoText() {
+  runNoText: computed('runNo', 'isRunNoAValidNumber', function runNoText() {
     const {
       runNo,
-      isRunNoValid,
-    } = this.getProperties('runNo', 'isRunNoValid');
-    return isRunNoValid ? String(runNo) : '?';
+      isRunNoAValidNumber,
+    } = this.getProperties('runNo', 'isRunNoAValidNumber');
+    return isRunNoAValidNumber ? String(runNo) : '?';
   }),
 
   /**
@@ -129,27 +129,27 @@ export default Component.extend(I18n, {
   isSourceRunNoVisible: computed(
     'runNo',
     'sourceRunNo',
-    'isRunNoValid',
+    'isRunNoAValidNumber',
     'isSourceRunNoValid',
     'areActionsOpened',
     function isSourceRunNoVisible() {
       const {
         runNo,
         sourceRunNo,
-        isRunNoValid,
+        isRunNoAValidNumber,
         isSourceRunNoValid,
         areActionsOpened,
       } = this.getProperties(
         'runNo',
         'sourceRunNo',
-        'isRunNoValid',
+        'isRunNoAValidNumber',
         'isSourceRunNoValid',
         'areActionsOpened'
       );
 
       return !areActionsOpened &&
         isSourceRunNoValid &&
-        (!isRunNoValid || runNo - sourceRunNo !== 1);
+        (!isRunNoAValidNumber || runNo - sourceRunNo !== 1);
     }
   ),
 

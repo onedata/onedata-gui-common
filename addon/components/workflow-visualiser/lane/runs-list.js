@@ -113,10 +113,11 @@ import { observer, getProperties, computed } from '@ember/object';
 import { next, later, cancel, scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { array, raw } from 'ember-awesome-macros';
+import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 /**
  * @typedef {Object} RunsListVisibleRunsPosition
- * @property {Number} runNo
+ * @property {AtmLaneRunNo} runNo
  * @property {String} placement one of: `'start'`, `'end'`, `'center'`
  */
 
@@ -145,14 +146,14 @@ export default Component.extend({
 
   /**
    * @virtual optional
-   * @type {Number|undefined}
+   * @type {AtmLaneRunNo|undefined}
    */
   selectedRunNo: undefined,
 
   /**
    * @virtual optional
    * @type {Function}
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {any}
    */
   onSelectionChange: undefined,
@@ -208,13 +209,13 @@ export default Component.extend({
   visibleRunsArray: undefined,
 
   /**
-   * Mapping: (runNo: number) -> string
+   * Mapping: (runNo: AtmLaneRunNo) -> string
    * @type {Object}
    */
   visibleRunsStyles: undefined,
 
   /**
-   * Mapping: (runNo: number) -> string
+   * Mapping: (runNo: AtmLaneRunNo) -> string
    * @type {Object}
    */
   visibleRunsClasses: undefined,
@@ -225,12 +226,12 @@ export default Component.extend({
   updateRunsArrayAfterAnimation: false,
 
   /**
-   * @type {ComputedProperty<Array<Number>>}
+   * @type {ComputedProperty<Array<AtmLaneRunNo>>}
    */
   runsNos: array.mapBy('runsArray', raw('runNo')),
 
   /**
-   * @type {ComputedProperty<Array<Number>>}
+   * @type {ComputedProperty<Array<AtmLaneRunNo>>}
    */
   visibleRunsNos: array.mapBy('visibleRunsArray', raw('runNo')),
 
@@ -329,9 +330,9 @@ export default Component.extend({
   },
 
   updateRunsArray() {
-    const runsRegistry = this.get('runsRegistry');
+    const runsRegistry = this.get('runsRegistry') || {};
     this.setProperties({
-      runsArray: this.generateRunsArray(),
+      runsArray: runsRegistryToSortedArray(runsRegistry),
       prevRunsRegistry: runsRegistry,
     });
 
@@ -341,8 +342,9 @@ export default Component.extend({
   updateVisibleRunsArray() {
     let activeVisibleRunsPosition = this.get('activeVisibleRunsPosition');
     if (!activeVisibleRunsPosition) {
+      const runsNos = this.get('runsNos');
       activeVisibleRunsPosition = this.set('activeVisibleRunsPosition', {
-        runNo: [...this.get('runsNos')].reverse()[0],
+        runNo: runsNos[runsNos.length - 1],
         placement: 'end',
       });
     }
@@ -676,10 +678,6 @@ export default Component.extend({
       visibleRunsClasses: {},
     });
     this.scheduleActionOnAnimationFsm('finishAnimation');
-  },
-
-  generateRunsArray() {
-    return Object.values(this.get('runsRegistry') || {}).sortBy('runNo');
   },
 
   notifyVisibleRunsPositionChange(newVisibleRunsPosition) {

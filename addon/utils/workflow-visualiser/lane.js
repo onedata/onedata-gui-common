@@ -62,7 +62,7 @@ export default VisualiserRecord.extend({
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {Any}
    */
   onChangeRun: undefined,

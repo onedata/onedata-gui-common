@@ -9,12 +9,19 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { laneStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import _ from 'lodash';
+import { inAdvanceRunNo } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 export default Component.extend({
   selectedRunNo: undefined,
 
   runsRegistry: computed(function runsRegistry() {
-    const runsMap = {};
+    const runsMap = {
+      [inAdvanceRunNo]: {
+        runNo: inAdvanceRunNo,
+        sourceRunNo: null,
+        status: 'preparing',
+      },
+    };
     for (let i = 1; i <= 16; i++) {
       const run = {
         runNo: i,
