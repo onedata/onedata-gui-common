@@ -45,9 +45,18 @@
     background-color: $color-one-white;
   }
 
-  &.danger {
-    .one-icon-tag-icon {
-      color: $brand-danger;
+  $brand-colors: (
+    danger: $brand-danger,
+    warning: $brand-warning,
+    success: $brand-success,
+  );
+
+
+  @each $brand-level in danger warning success {
+    &.#{$brand-level} {
+      .one-icon-tag-icon {
+        color: map-get($brand-colors, $brand-level);
+      }
     }
   }
 
