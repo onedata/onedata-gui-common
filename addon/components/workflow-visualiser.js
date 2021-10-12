@@ -740,7 +740,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.lane.${id}.runsRegistry`) || {};
-    const sortedRuns = Object.values(runsRegistry);
+    const sortedRuns = runsRegistryToSortedArray(runsRegistry);
+    let newestRunNo;
     if (sortedRuns.length) {
       sortedRuns.forEach((run) => {
         const runNo = run.runNo;
@@ -756,6 +757,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           exceptionStore,
         });
       });
+      newestRunNo = sortedRuns[sortedRuns.length - 1].runNo;
     } else {
       normalizedRunsRegistry[1] = {
         runNo: 1,
@@ -763,8 +765,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         iteratedStore: iteratedStoreSchemaId ?
           this.getStoreBySchemaId(iteratedStoreSchemaId) : null,
       };
+      newestRunNo = 1;
     }
-    const newestRunNo = sortedRuns[sortedRuns.length - 1].runNo;
 
     const existingLane = this.getCachedElement('lane', { id });
 
