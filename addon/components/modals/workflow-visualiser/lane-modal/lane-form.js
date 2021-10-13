@@ -105,14 +105,13 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   fields: computed(function fields() {
-    // TODO: VFS-8287 Uncomment `maxRetriesField` usage and fix tests
     const {
       nameField,
-      // maxRetriesField,
+      maxRetriesField,
       iteratorOptionsFieldsGroup,
     } = this.getProperties(
       'nameField',
-      // 'maxRetriesField',
+      'maxRetriesField',
       'iteratorOptionsFieldsGroup'
     );
 
@@ -128,7 +127,7 @@ export default Component.extend(I18n, {
       component: this,
       fields: [
         nameField,
-        // maxRetriesField,
+        maxRetriesField,
         iteratorOptionsFieldsGroup,
       ],
     });
