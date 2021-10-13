@@ -70,7 +70,7 @@ export default VisualiserElement.extend({
   onRemove: undefined,
 
   /**
-   * @type {ComputedProperty<Number>}
+   * @type {ComputedProperty<AtmLaneRunNo>}
    */
   visibleRunNo: conditional(
     getBy('runsRegistry', 'parent.visibleRunNo'),

@@ -23,7 +23,7 @@ export default EmberObject.extend({
   lane: undefined,
 
   /**
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {Array<Util.Action>}
    */
   createActionsForRunNo(runNo) {
@@ -45,7 +45,7 @@ export default EmberObject.extend({
 
   /**
    * @private
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {Utils.Action}
    */
   createViewFailedItemsAction(runNo) {
@@ -58,7 +58,7 @@ export default EmberObject.extend({
 
   /**
    * @private
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {Utils.Action}
    */
   createRetryAction(runNo) {
@@ -71,7 +71,7 @@ export default EmberObject.extend({
 
   /**
    * @private
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {Utils.Action}
    */
   createRerunAction(runNo) {

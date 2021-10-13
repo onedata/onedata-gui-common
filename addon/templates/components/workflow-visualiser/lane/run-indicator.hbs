@@ -4,48 +4,14 @@
     <span class="source-run-no">{{sourceRunNoText}}</span>
   </div>
 {{/if}}
-{{#if hasRunActions}}
-  {{one-icon
-    icon="settings-circle-filled"
-    class=(concat-classes
-      "run-actions-trigger clickable"
-      (concat "actions-trigger-" elementId)
-      (if areActionsOpened "active")
-    )
-    click=(action "toggleActionsOpen" (not areActionsOpened))
-  }}
-  {{#render-later triggerRender=areActionsOpened}}
-    {{#one-webui-popover
-      class="run-actions"
-      padding=false
-      popoverStyle="with-dropdown"
-      triggerSelector=(concat ".actions-trigger-" elementId)
-      open=areActionsOpened
-      onToggle=(action "toggleActionsOpen")
-      as |popover|
-    }}
-      {{#click-outside
-        action=(action "toggleActionsOpen" false)
-        except-selector=(concat ".actions-trigger-" elementId)
-      }}
-        {{actions-popover-content
-          actionsArray=runActions
-          actionClicked=(action (mut areActionsOpened) false)
-        }}
-      {{/click-outside}}
-    {{/one-webui-popover}}
-  {{/render-later}}
-{{/if}}
-{{#unless areActionsOpened}}
-  {{#one-tooltip placement="top"}}
-    {{tt this "tooltip.runNo"}}: <strong>{{runNoText}}</strong><br>
-    {{#if isSourceRunNoValid}}
-      {{tt this "tooltip.sourceRunNo"}}: <strong>{{sourceRunNoText}}</strong><br>
-    {{/if}}
-    {{#if runTypeText}}
-      {{tt this "tooltip.runType"}}: <strong>{{runTypeText}}</strong><br>
-    {{/if}}
-    {{tt this "tooltip.status"}}: <strong>{{statusText}}</strong>
-  {{/one-tooltip}}
-{{/unless}}
+{{#one-tooltip}}
+  {{tt this "tooltip.runNo"}}: <strong>{{runNoText}}</strong><br>
+  {{#if isSourceRunNoValid}}
+    {{tt this "tooltip.sourceRunNo"}}: <strong>{{sourceRunNoText}}</strong><br>
+  {{/if}}
+  {{#if runTypeText}}
+    {{tt this "tooltip.runType"}}: <strong>{{runTypeText}}</strong><br>
+  {{/if}}
+  {{tt this "tooltip.status"}}: <strong>{{statusText}}</strong>
+{{/one-tooltip}}
 {{yield}}

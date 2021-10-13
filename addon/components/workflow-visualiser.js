@@ -95,6 +95,7 @@ import { scheduleOnce, run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
 import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -739,9 +740,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const iteratedStoreSchemaId = get(storeIteratorSpec || {}, 'storeSchemaId');
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.lane.${id}.runsRegistry`) || {};
-    const runNos = Object.keys(runsRegistry);
-    if (runNos.length) {
-      runNos.forEach((runNo) => {
+    const sortedRuns = runsRegistryToSortedArray(runsRegistry);
+    let newestRunNo;
+    if (sortedRuns.length) {
+      sortedRuns.forEach((run) => {
+        const runNo = run.runNo;
         const iteratedStoreInstanceId = runsRegistry[runNo].iteratedStoreInstanceId;
         const exceptionStoreInstanceId = runsRegistry[runNo].exceptionStoreInstanceId;
         const iteratedStore = iteratedStoreInstanceId ?
@@ -749,11 +752,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
           this.getStoreBySchemaId(iteratedStoreSchemaId);
         const exceptionStore = exceptionStoreInstanceId &&
           this.getStoreByInstanceId(exceptionStoreInstanceId);
-        normalizedRunsRegistry[runNo] = Object.assign({}, runsRegistry[runNo], {
+        normalizedRunsRegistry[runNo] = Object.assign({}, run, {
           iteratedStore,
           exceptionStore,
         });
       });
+      newestRunNo = sortedRuns[sortedRuns.length - 1].runNo;
     } else {
       normalizedRunsRegistry[1] = {
         runNo: 1,
@@ -761,10 +765,8 @@ export default Component.extend(I18n, WindowResizeHandler, {
         iteratedStore: iteratedStoreSchemaId ?
           this.getStoreBySchemaId(iteratedStoreSchemaId) : null,
       };
+      newestRunNo = 1;
     }
-    const newestRunNo = Math.max(
-      ...Object.keys(normalizedRunsRegistry).map(Number)
-    );
 
     const existingLane = this.getCachedElement('lane', { id });
 
@@ -785,7 +787,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         'visibleRunsPosition'
       );
       const prevDescSortedRunNos =
-        Object.keys(prevRunsRegistry).map(Number).sort((a, b) => b - a);
+        runsRegistryToSortedArray(prevRunsRegistry).mapBy('runNo').reverse();
       let visibleRunNo = prevVisibleRunNo;
       let visibleRunsPosition = prevVisibleRunsPosition;
       if (
@@ -903,7 +905,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       tasks: rawTasks,
     } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
-    const parentRunNos = Object.keys(get(parent, 'runsRegistry'));
+    const parentRunNos = Object.values(get(parent, 'runsRegistry')).mapBy('runNo');
     const normalizedRunsRegistry = Object.assign({},
       this.get(`executionState.parallelBox.${id}.runsRegistry`) || {}
     );
@@ -984,10 +986,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'resourceSpecOverride'
     );
 
-    const parentRunNos = Object.keys(get(parent, 'runsRegistry'));
+    const parentRunNos = Object.values(get(parent, 'runsRegistry')).mapBy('runNo');
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.task.${id}.runsRegistry`) || {};
-    Object.keys(runsRegistry).forEach((runNo) => {
+    Object.values(runsRegistry).forEach(({ runNo }) => {
       const storeInstanceId = runsRegistry[runNo].systemAuditLogStoreInstanceId;
       normalizedRunsRegistry[runNo] = Object.assign({}, runsRegistry[runNo], {
         systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
@@ -1499,13 +1501,21 @@ export default Component.extend(I18n, WindowResizeHandler, {
     }
   },
 
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {AtmLaneRunNo} runNo
+   */
   changeLaneRun(lane, runNo) {
     set(lane, 'visibleRunNo', runNo);
   },
 
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   */
   async showLatestLaneRun(lane) {
     await this.updateExecutionState();
-    const newestRun = _.maxBy(Object.values(get(lane, 'runsRegistry')), 'runNo');
+    const sortedRuns = runsRegistryToSortedArray(get(lane, 'runsRegistry'));
+    const newestRun = sortedRuns[sortedRuns.length - 1];
     set(lane, 'visibleRunsPosition', {
       runNo: newestRun.runNo,
       placement: 'end',

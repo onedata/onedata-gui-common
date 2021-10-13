@@ -14,6 +14,7 @@ import { computed, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 import { translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 export default VisualiserElement.extend({
   layout,
@@ -69,7 +70,7 @@ export default VisualiserElement.extend({
         visibleRun,
         runsRegistry,
       } = getProperties(this.get('lane') || {}, 'visibleRun', 'runsRegistry');
-      const sortedRuns = Object.values(runsRegistry || {}).sortBy('runNo');
+      const sortedRuns = runsRegistryToSortedArray(runsRegistry);
       const timing = sortedRuns.indexOf(visibleRun) === (sortedRuns.length - 1) ?
         'latest' : 'past';
       return this.t(`runTiming.${timing}`);

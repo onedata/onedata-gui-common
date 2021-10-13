@@ -85,13 +85,13 @@ export default Action.extend({
   lane: reads('context.lane'),
 
   /**
-   * @type {ComputedProperty<Number>}
+   * @type {ComputedProperty<AtmLaneRunNo>}
    */
   runNo: reads('context.runNo'),
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {Number} runNo
+   * @param {AtmLaneRunNo} runNo
    * @returns {Promise}
    * @type {ComputedProperty<Function>}
    */

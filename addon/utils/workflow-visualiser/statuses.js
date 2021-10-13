@@ -31,6 +31,13 @@ export function translateTaskStatus(i18n, status) {
   return i18n.t(`utils.workflowVisualiser.statuses.task.${normalizedStatus}`);
 }
 
+export const laneEndedStatuses = [
+  'interrupted',
+  'cancelled',
+  'skipped',
+  'finished',
+  'failed',
+];
 const laneUnknownStatus = 'unknown';
 export const laneStatuses = [
   'pending',
@@ -39,11 +46,7 @@ export const laneStatuses = [
   'enqueued',
   'active',
   'aborting',
-  'interrupted',
-  'cancelled',
-  'skipped',
-  'finished',
-  'failed',
+  ...laneEndedStatuses,
   laneUnknownStatus,
 ];
 
