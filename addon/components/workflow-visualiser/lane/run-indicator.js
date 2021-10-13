@@ -41,15 +41,15 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {AtmLaneRunNo}
+   * @type {AtmLaneRunNumber}
    */
-  runNo: undefined,
+  runNumber: undefined,
 
   /**
    * @virtual
    * @type {Number}
    */
-  sourceRunNo: undefined,
+  originRunNumber: undefined,
 
   /**
    * @virtual
@@ -84,72 +84,72 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isRunNoAValidNumber: computed('runNo', function isRunNoAValidNumber() {
-    const runNo = this.get('runNo');
-    return Number.isInteger(runNo) && runNo > 0;
+  isRunNumberAValidInteger: computed('runNumber', function isRunNumberAValidInteger() {
+    const runNumber = this.get('runNumber');
+    return Number.isInteger(runNumber) && runNumber > 0;
   }),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isSourceRunNoValid: computed('sourceRunNo', function isSourceRunNoValid() {
-    const sourceRunNo = this.get('sourceRunNo');
-    return Number.isInteger(sourceRunNo) && sourceRunNo > 0;
+  isOriginRunNumberValid: computed('originRunNumber', function isOriginRunNumberValid() {
+    const originRunNumber = this.get('originRunNumber');
+    return Number.isInteger(originRunNumber) && originRunNumber > 0;
   }),
 
   /**
    * @type {ComputedProperty<String>}
    */
-  runNoText: computed('runNo', 'isRunNoAValidNumber', function runNoText() {
+  runNumberText: computed('runNumber', 'isRunNumberAValidInteger', function runNumberText() {
     const {
-      runNo,
-      isRunNoAValidNumber,
-    } = this.getProperties('runNo', 'isRunNoAValidNumber');
-    return isRunNoAValidNumber ? String(runNo) : '?';
+      runNumber,
+      isRunNumberAValidInteger,
+    } = this.getProperties('runNumber', 'isRunNumberAValidInteger');
+    return isRunNumberAValidInteger ? String(runNumber) : '?';
   }),
 
   /**
    * @type {ComputedProperty<String>}
    */
-  sourceRunNoText: computed(
-    'sourceRunNo',
-    'isSourceRunNoValid',
-    function sourceRunNoText() {
+  originRunNumberText: computed(
+    'originRunNumber',
+    'isOriginRunNumberValid',
+    function originRunNumberText() {
       const {
-        sourceRunNo,
-        isSourceRunNoValid,
-      } = this.getProperties('sourceRunNo', 'isSourceRunNoValid');
-      return isSourceRunNoValid ? String(sourceRunNo) : '?';
+        originRunNumber,
+        isOriginRunNumberValid,
+      } = this.getProperties('originRunNumber', 'isOriginRunNumberValid');
+      return isOriginRunNumberValid ? String(originRunNumber) : '?';
     }
   ),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isSourceRunNoVisible: computed(
-    'runNo',
-    'sourceRunNo',
-    'isRunNoAValidNumber',
-    'isSourceRunNoValid',
+  isOriginRunNumberVisible: computed(
+    'runNumber',
+    'originRunNumber',
+    'isRunNumberAValidInteger',
+    'isOriginRunNumberValid',
     'areActionsOpened',
-    function isSourceRunNoVisible() {
+    function isOriginRunNumberVisible() {
       const {
-        runNo,
-        sourceRunNo,
-        isRunNoAValidNumber,
-        isSourceRunNoValid,
+        runNumber,
+        originRunNumber,
+        isRunNumberAValidInteger,
+        isOriginRunNumberValid,
         areActionsOpened,
       } = this.getProperties(
-        'runNo',
-        'sourceRunNo',
-        'isRunNoAValidNumber',
-        'isSourceRunNoValid',
+        'runNumber',
+        'originRunNumber',
+        'isRunNumberAValidInteger',
+        'isOriginRunNumberValid',
         'areActionsOpened'
       );
 
       return !areActionsOpened &&
-        isSourceRunNoValid &&
-        (!isRunNoAValidNumber || runNo - sourceRunNo !== 1);
+        isOriginRunNumberValid &&
+        (!isRunNumberAValidInteger || runNumber - originRunNumber !== 1);
     }
   ),
 
@@ -175,12 +175,12 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  digitsNoClass: computed('runNoText', function digitsNoClass() {
+  digitsNoClass: computed('runNumberText', function digitsNoClass() {
     let digitsCount;
-    const runNoTextLength = this.get('runNoText').length;
-    if (runNoTextLength === 1) {
+    const runNumberTextLength = this.get('runNumberText').length;
+    if (runNumberTextLength === 1) {
       digitsCount = 'one';
-    } else if (runNoTextLength === 2) {
+    } else if (runNumberTextLength === 2) {
       digitsCount = 'two';
     } else {
       digitsCount = 'many';

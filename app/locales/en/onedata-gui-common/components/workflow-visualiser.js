@@ -70,8 +70,8 @@ export default {
         retry: 'retry',
       },
       tooltip: {
-        runNo: 'Run',
-        sourceRunNo: 'Source run',
+        runNumber: 'Run',
+        originRunNumber: 'Origin run',
         runType: 'Run type',
         status: 'Status',
       },

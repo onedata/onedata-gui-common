@@ -741,31 +741,31 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.lane.${id}.runsRegistry`) || {};
     const sortedRuns = runsRegistryToSortedArray(runsRegistry);
-    let newestRunNo;
+    let newestRunNumber;
     if (sortedRuns.length) {
       sortedRuns.forEach((run) => {
-        const runNo = run.runNo;
-        const iteratedStoreInstanceId = runsRegistry[runNo].iteratedStoreInstanceId;
-        const exceptionStoreInstanceId = runsRegistry[runNo].exceptionStoreInstanceId;
+        const runNumber = run.runNumber;
+        const iteratedStoreInstanceId = runsRegistry[runNumber].iteratedStoreInstanceId;
+        const exceptionStoreInstanceId = runsRegistry[runNumber].exceptionStoreInstanceId;
         const iteratedStore = iteratedStoreInstanceId ?
           this.getStoreByInstanceId(iteratedStoreInstanceId) :
           this.getStoreBySchemaId(iteratedStoreSchemaId);
         const exceptionStore = exceptionStoreInstanceId &&
           this.getStoreByInstanceId(exceptionStoreInstanceId);
-        normalizedRunsRegistry[runNo] = Object.assign({}, run, {
+        normalizedRunsRegistry[runNumber] = Object.assign({}, run, {
           iteratedStore,
           exceptionStore,
         });
       });
-      newestRunNo = sortedRuns[sortedRuns.length - 1].runNo;
+      newestRunNumber = sortedRuns[sortedRuns.length - 1].runNumber;
     } else {
       normalizedRunsRegistry[1] = {
-        runNo: 1,
+        runNumber: 1,
         status: 'pending',
         iteratedStore: iteratedStoreSchemaId ?
           this.getStoreBySchemaId(iteratedStoreSchemaId) : null,
       };
-      newestRunNo = 1;
+      newestRunNumber = 1;
     }
 
     const existingLane = this.getCachedElement('lane', { id });
@@ -778,29 +778,29 @@ export default Component.extend(I18n, WindowResizeHandler, {
       );
       const {
         runsRegistry: prevRunsRegistry,
-        visibleRunNo: prevVisibleRunNo,
+        visibleRunNumber: prevVisibleRunNumber,
         visibleRunsPosition: prevVisibleRunsPosition,
       } = getProperties(
         existingLane,
         'runsRegistry',
-        'visibleRunNo',
+        'visibleRunNumber',
         'visibleRunsPosition'
       );
-      const prevDescSortedRunNos =
-        runsRegistryToSortedArray(prevRunsRegistry).mapBy('runNo').reverse();
-      let visibleRunNo = prevVisibleRunNo;
+      const prevDescSortedRunNumbers =
+        runsRegistryToSortedArray(prevRunsRegistry).mapBy('runNumber').reverse();
+      let visibleRunNumber = prevVisibleRunNumber;
       let visibleRunsPosition = prevVisibleRunsPosition;
       if (
-        prevDescSortedRunNos.indexOf(prevVisibleRunNo) === 0 &&
-        prevVisibleRunNo !== newestRunNo
+        prevDescSortedRunNumbers.indexOf(prevVisibleRunNumber) === 0 &&
+        prevVisibleRunNumber !== newestRunNumber
       ) {
-        visibleRunNo = newestRunNo;
+        visibleRunNumber = newestRunNumber;
         if (
-          visibleRunsPosition.runNo === prevVisibleRunNo &&
+          visibleRunsPosition.runNumber === prevVisibleRunNumber &&
           visibleRunsPosition.placement === 'end'
         ) {
           visibleRunsPosition = {
-            runNo: newestRunNo,
+            runNumber: newestRunNumber,
             placement: 'end',
           };
         }
@@ -810,7 +810,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         maxRetries,
         storeIteratorSpec,
         runsRegistry: normalizedRunsRegistry,
-        visibleRunNo,
+        visibleRunNumber,
         visibleRunsPosition,
         elements,
       });
@@ -828,9 +828,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
         maxRetries,
         storeIteratorSpec,
         runsRegistry: normalizedRunsRegistry,
-        visibleRunNo: newestRunNo,
+        visibleRunNumber: newestRunNumber,
         visibleRunsPosition: {
-          runNo: newestRunNo,
+          runNumber: newestRunNumber,
           placement: 'end',
         },
         mode,
@@ -839,7 +839,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         onMove: (lane, moveStep) => this.moveElement(lane, moveStep),
         onClear: lane => this.clearLane(lane),
         onRemove: lane => this.removeElement(lane),
-        onChangeRun: (lane, runNo) => this.changeLaneRun(lane, runNo),
+        onChangeRun: (lane, runNumber) => this.changeLaneRun(lane, runNumber),
         onShowLatestRun: (lane) => this.showLatestLaneRun(lane),
       });
       set(
@@ -905,14 +905,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
       tasks: rawTasks,
     } = getProperties(parallelBoxRawData, 'id', 'name', 'tasks');
 
-    const parentRunNos = Object.values(get(parent, 'runsRegistry')).mapBy('runNo');
+    const parentRunNumbers = Object.values(get(parent, 'runsRegistry')).mapBy('runNumber');
     const normalizedRunsRegistry = Object.assign({},
       this.get(`executionState.parallelBox.${id}.runsRegistry`) || {}
     );
-    parentRunNos.forEach((parentRunNo) => {
-      if (!(parentRunNo in normalizedRunsRegistry)) {
-        normalizedRunsRegistry[parentRunNo] = {
-          runNo: parentRunNo,
+    parentRunNumbers.forEach((parentRunNumber) => {
+      if (!(parentRunNumber in normalizedRunsRegistry)) {
+        normalizedRunsRegistry[parentRunNumber] = {
+          runNumber: parentRunNumber,
           status: 'pending',
         };
       }
@@ -986,19 +986,19 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'resourceSpecOverride'
     );
 
-    const parentRunNos = Object.values(get(parent, 'runsRegistry')).mapBy('runNo');
+    const parentRunNumbers = Object.values(get(parent, 'runsRegistry')).mapBy('runNumber');
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.task.${id}.runsRegistry`) || {};
-    Object.values(runsRegistry).forEach(({ runNo }) => {
-      const storeInstanceId = runsRegistry[runNo].systemAuditLogStoreInstanceId;
-      normalizedRunsRegistry[runNo] = Object.assign({}, runsRegistry[runNo], {
+    Object.values(runsRegistry).forEach(({ runNumber }) => {
+      const storeInstanceId = runsRegistry[runNumber].systemAuditLogStoreInstanceId;
+      normalizedRunsRegistry[runNumber] = Object.assign({}, runsRegistry[runNumber], {
         systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
       });
     });
-    parentRunNos.forEach((parentRunNo) => {
-      if (!(parentRunNo in normalizedRunsRegistry)) {
-        normalizedRunsRegistry[parentRunNo] = {
-          runNo: parentRunNo,
+    parentRunNumbers.forEach((parentRunNumber) => {
+      if (!(parentRunNumber in normalizedRunsRegistry)) {
+        normalizedRunsRegistry[parentRunNumber] = {
+          runNumber: parentRunNumber,
           instanceId: null,
           status: 'pending',
           systemAuditLogStore: null,
@@ -1503,10 +1503,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    */
-  changeLaneRun(lane, runNo) {
-    set(lane, 'visibleRunNo', runNo);
+  changeLaneRun(lane, runNumber) {
+    set(lane, 'visibleRunNumber', runNumber);
   },
 
   /**
@@ -1517,10 +1517,10 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const sortedRuns = runsRegistryToSortedArray(get(lane, 'runsRegistry'));
     const newestRun = sortedRuns[sortedRuns.length - 1];
     set(lane, 'visibleRunsPosition', {
-      runNo: newestRun.runNo,
+      runNumber: newestRun.runNumber,
       placement: 'end',
     });
-    this.changeLaneRun(lane, newestRun.runNo);
+    this.changeLaneRun(lane, newestRun.runNumber);
   },
 
   executionHasEnded() {

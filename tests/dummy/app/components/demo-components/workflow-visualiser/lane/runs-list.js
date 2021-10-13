@@ -9,26 +9,26 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { laneStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import _ from 'lodash';
-import { inAdvanceRunNo } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import { inAdvanceRunNumber } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 export default Component.extend({
-  selectedRunNo: undefined,
+  selectedRunNumber: undefined,
 
   runsRegistry: computed(function runsRegistry() {
     const runsMap = {
-      [inAdvanceRunNo]: {
-        runNo: inAdvanceRunNo,
-        sourceRunNo: null,
+      [inAdvanceRunNumber]: {
+        runNumber: inAdvanceRunNumber,
+        originRunNumber: null,
         status: 'preparing',
       },
     };
     for (let i = 1; i <= 16; i++) {
       const run = {
-        runNo: i,
+        runNumber: i,
         status: _.sample(laneStatuses),
       };
       if (i > 1) {
-        run.sourceRunNo = i % 4 === 0 ? i - 2 : i - 1;
+        run.originRunNumber = i % 4 === 0 ? i - 2 : i - 1;
       }
       runsMap[i] = run;
     }

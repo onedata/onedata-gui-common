@@ -223,13 +223,13 @@ export default VisualiserElement.extend({
    */
   laneRunActions: computed(
     'laneRunActionsFactory',
-    'lane.visibleRunNo',
+    'lane.visibleRunNumber',
     function laneRunActions() {
       const {
         lane,
         laneRunActionsFactory,
       } = this.getProperties('lane', 'laneRunActionsFactory');
-      return laneRunActionsFactory.createActionsForRunNo(get(lane, 'visibleRunNo'));
+      return laneRunActionsFactory.createActionsForRunNumber(get(lane, 'visibleRunNumber'));
     }
   ),
 
@@ -243,8 +243,8 @@ export default VisualiserElement.extend({
     toggleRunActionsOpen(state) {
       scheduleOnce('afterRender', this, 'set', 'areRunActionsOpened', state);
     },
-    changeRun(runNo) {
-      this.get('lane').changeRun(runNo);
+    changeRun(runNumber) {
+      this.get('lane').changeRun(runNumber);
     },
   },
 });

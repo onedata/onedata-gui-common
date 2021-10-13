@@ -73,7 +73,7 @@ export default EmberObject.extend(OwnerInjector, {
   /**
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Promise}
    */
   retryLaneCallback: undefined,
@@ -81,7 +81,7 @@ export default EmberObject.extend(OwnerInjector, {
   /**
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Promise}
    */
   rerunLaneCallback: undefined,
@@ -371,7 +371,7 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
-   * @param {AtmLaneRunNo} [context.runNo]
+   * @param {AtmLaneRunNumber} [context.runNumber]
    * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneFailedItemsAction}
    */
   createViewLaneFailedItemsAction(context) {
@@ -386,7 +386,7 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
-   * @param {AtmLaneRunNo} context.runNo
+   * @param {AtmLaneRunNumber} context.runNumber
    * @returns {Utils.WorkflowVisualiser.Actions.RetryLaneAction}
    */
   createRetryLaneAction(context) {
@@ -401,7 +401,7 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} context.lane
-   * @param {AtmLaneRunNo} context.runNo
+   * @param {AtmLaneRunNumber} context.runNumber
    * @returns {Utils.WorkflowVisualiser.Actions.RerunLaneAction}
    */
   createRerunLaneAction(context) {

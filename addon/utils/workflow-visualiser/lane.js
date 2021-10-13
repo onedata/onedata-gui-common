@@ -25,7 +25,7 @@ export default VisualiserRecord.extend({
   /**
    * @override
    */
-  visibleRunNo: 1,
+  visibleRunNumber: 1,
 
   /**
    * @virtual
@@ -62,7 +62,7 @@ export default VisualiserRecord.extend({
    * @virtual optional
    * @type {Function}
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Any}
    */
   onChangeRun: undefined,
@@ -98,9 +98,9 @@ export default VisualiserRecord.extend({
     return onClear ? onClear(this) : resolve();
   },
 
-  changeRun(runNo) {
+  changeRun(runNumber) {
     const onChangeRun = this.get('onChangeRun');
-    return onChangeRun && onChangeRun(this, runNo);
+    return onChangeRun && onChangeRun(this, runNumber);
   },
 
   showLatestRun() {

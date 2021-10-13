@@ -1,5 +1,5 @@
 /**
- * Reruns specific lane run. Needs `workflow`, `lane`, `runNo` and `rerunLaneCallback`
+ * Reruns specific lane run. Needs `workflow`, `lane`, `runNumber` and `rerunLaneCallback`
  * passed via context.
  *
  * @module utils/workflow-visualiser/actions/rerun-lane-action
@@ -62,13 +62,13 @@ export default Action.extend({
   lane: reads('context.lane'),
 
   /**
-   * @type {ComputedProperty<AtmLaneRunNo>}
+   * @type {ComputedProperty<AtmLaneRunNumber>}
    */
-  runNo: reads('context.runNo'),
+  runNumber: reads('context.runNumber'),
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Promise}
    * @type {ComputedProperty<Function>}
    */
@@ -81,15 +81,15 @@ export default Action.extend({
     const {
       rerunLaneCallback,
       lane,
-      runNo,
+      runNumber,
     } = this.getProperties(
       'rerunLaneCallback',
       'lane',
-      'runNo'
+      'runNumber'
     );
 
     const result = ActionResult.create();
-    return await result.interceptPromise(rerunLaneCallback(lane, runNo))
+    return await result.interceptPromise(rerunLaneCallback(lane, runNumber))
       .then(() => lane.showLatestRun())
       .then(() => result, () => result);
   },

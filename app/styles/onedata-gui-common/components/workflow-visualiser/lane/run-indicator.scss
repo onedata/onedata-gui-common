@@ -31,11 +31,11 @@ $workflow-visualiser-run-indicator-size: 25px;
     cursor: initial !important;
   }
 
-  &.two-digit-run .run-no {
+  &.two-digit-run .run-number {
     font-size: 0.9em;
   }
 
-  &.many-digit-run .run-no {
+  &.many-digit-run .run-number {
     font-size: 0.8em;
   }
 
@@ -43,7 +43,7 @@ $workflow-visualiser-run-indicator-size: 25px;
     &.status-#{$status} {
       border-color: $status-color;
 
-      .run-no {
+      .run-number {
         color: $status-color;
       }
 
@@ -51,7 +51,7 @@ $workflow-visualiser-run-indicator-size: 25px;
         border-color: scale-color($status-color, $lightness: -20%);
         background-color: scale-color($status-color, $lightness: 85%);
 
-        .run-no {
+        .run-number {
           color: scale-color($status-color, $lightness: -20%);
         }
       }
@@ -60,7 +60,7 @@ $workflow-visualiser-run-indicator-size: 25px;
         background-color: $status-color;
         box-shadow: 0px 0px 5px 1px $status-color;
 
-        .run-no {
+        .run-number {
           color: $color-one-white;
         }
 
@@ -68,7 +68,7 @@ $workflow-visualiser-run-indicator-size: 25px;
           border-color: scale-color($status-color, $lightness: 30%);
           background-color: scale-color($status-color, $lightness: 30%);
 
-          .run-no {
+          .run-number {
             color: $color-one-white;
           }
         }
@@ -103,13 +103,13 @@ $workflow-visualiser-run-indicator-size: 25px;
     }
   }
 
-  .run-no,
-  .source-run-no {
+  .run-number,
+  .origin-run-number {
     line-height: 0;
     @include font-semibold();
   }
 
-  .source-run-no-container {
+  .origin-run-number-container {
     position: absolute;
     display: flex;
     height: $workflow-visualiser-run-indicator-size * 0.6;

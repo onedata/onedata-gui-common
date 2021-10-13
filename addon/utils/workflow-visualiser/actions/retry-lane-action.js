@@ -1,5 +1,5 @@
 /**
- * Retries specific lane run. Needs `workflow`, `lane`, `runNo` and `retryLaneCallback`
+ * Retries specific lane run. Needs `workflow`, `lane`, `runNumber` and `retryLaneCallback`
  * passed via context.
  *
  * @module utils/workflow-visualiser/actions/retry-lane-action
@@ -85,13 +85,13 @@ export default Action.extend({
   lane: reads('context.lane'),
 
   /**
-   * @type {ComputedProperty<AtmLaneRunNo>}
+   * @type {ComputedProperty<AtmLaneRunNumber>}
    */
-  runNo: reads('context.runNo'),
+  runNumber: reads('context.runNumber'),
 
   /**
    * @param {Utils.WorkflowVisualiser.Lane} lane
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Promise}
    * @type {ComputedProperty<Function>}
    */
@@ -107,7 +107,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Object>}
    */
-  laneRun: getBy('lane.runsRegistry', 'runNo'),
+  laneRun: getBy('lane.runsRegistry', 'runNumber'),
 
   /**
    * @type {ComputedProperty<Boolean>}
@@ -126,15 +126,15 @@ export default Action.extend({
     const {
       retryLaneCallback,
       lane,
-      runNo,
+      runNumber,
     } = this.getProperties(
       'retryLaneCallback',
       'lane',
-      'runNo'
+      'runNumber'
     );
 
     const result = ActionResult.create();
-    return await result.interceptPromise(retryLaneCallback(lane, runNo))
+    return await result.interceptPromise(retryLaneCallback(lane, runNumber))
       .then(() => lane.showLatestRun())
       .then(() => result, () => result);
   },

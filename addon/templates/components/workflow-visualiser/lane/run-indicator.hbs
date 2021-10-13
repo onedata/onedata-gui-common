@@ -1,13 +1,13 @@
-<span class="run-no">{{runNoText}}</span>
-{{#if isSourceRunNoVisible}}
-  <div class="source-run-no-container">
-    <span class="source-run-no">{{sourceRunNoText}}</span>
+<span class="run-number">{{runNumberText}}</span>
+{{#if isOriginRunNumberVisible}}
+  <div class="origin-run-number-container">
+    <span class="origin-run-number">{{originRunNumberText}}</span>
   </div>
 {{/if}}
 {{#one-tooltip}}
-  {{tt this "tooltip.runNo"}}: <strong>{{runNoText}}</strong><br>
-  {{#if isSourceRunNoValid}}
-    {{tt this "tooltip.sourceRunNo"}}: <strong>{{sourceRunNoText}}</strong><br>
+  {{tt this "tooltip.runNumber"}}: <strong>{{runNumberText}}</strong><br>
+  {{#if isOriginRunNumberValid}}
+    {{tt this "tooltip.originRunNumber"}}: <strong>{{originRunNumberText}}</strong><br>
   {{/if}}
   {{#if runTypeText}}
     {{tt this "tooltip.runType"}}: <strong>{{runTypeText}}</strong><br>

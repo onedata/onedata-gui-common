@@ -8,31 +8,31 @@
  */
 
 /**
- * @typedef {Number|'inAdvance'} AtmLaneRunNo
+ * @typedef {Number|'inAdvance'} AtmLaneRunNumber
  */
 
 /**
- * Special value, which should be used as a `runNo` for runs prepared in advance.
+ * Special value, which should be used as a `runNumber` for runs prepared in advance.
  * @type {String}
  */
-export const inAdvanceRunNo = 'inAdvance';
+export const inAdvanceRunNumber = 'inAdvance';
 
 /**
  * Converts runs registry (an object with runs as a values) to a sorted array of runs.
  * Runs are sorted in ascending order. If prepared in advance run exists, then
  * it is placed at the end of the array.
- * @param {Object<AtmLaneRunNo,{ runNo: AtmLaneRunNo }>} runsRegistry
+ * @param {Object<AtmLaneRunNumber,{ runNumber: AtmLaneRunNumber }>} runsRegistry
  * @returns {Array<Object>}
  */
 export function runsRegistryToSortedArray(runsRegistry) {
-  const runsArr = Object.values(runsRegistry || {}).uniqBy('runNo');
+  const runsArr = Object.values(runsRegistry || {}).uniqBy('runNumber');
 
   let runsArrWithoutRunInAdvance;
-  const runInAdvance = runsArr.findBy('runNo', inAdvanceRunNo);
+  const runInAdvance = runsArr.findBy('runNumber', inAdvanceRunNumber);
   runsArrWithoutRunInAdvance = runInAdvance ?
     runsArr.without(runInAdvance) : runsArr;
 
-  const sortedRuns = runsArrWithoutRunInAdvance.sortBy('runNo');
+  const sortedRuns = runsArrWithoutRunInAdvance.sortBy('runNumber');
   if (runInAdvance) {
     sortedRuns.push(runInAdvance);
   }

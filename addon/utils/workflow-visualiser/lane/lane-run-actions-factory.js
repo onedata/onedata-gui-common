@@ -23,10 +23,10 @@ export default EmberObject.extend({
   lane: undefined,
 
   /**
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Array<Util.Action>}
    */
-  createActionsForRunNo(runNo) {
+  createActionsForRunNumber(runNumber) {
     const {
       actionsFactory,
       lane,
@@ -36,49 +36,49 @@ export default EmberObject.extend({
     }
 
     return [
-      this.createViewFailedItemsAction(runNo),
+      this.createViewFailedItemsAction(runNumber),
       // TODO: VFS-8287 uncomment
-      // this.createRetryAction(runNo),
-      // this.createRerunAction(runNo),
+      // this.createRetryAction(runNumber),
+      // this.createRerunAction(runNumber),
     ];
   },
 
   /**
    * @private
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Utils.Action}
    */
-  createViewFailedItemsAction(runNo) {
+  createViewFailedItemsAction(runNumber) {
     const {
       actionsFactory,
       lane,
     } = this.getProperties('actionsFactory', 'lane');
-    return actionsFactory.createViewLaneFailedItemsAction({ lane, runNo });
+    return actionsFactory.createViewLaneFailedItemsAction({ lane, runNumber });
   },
 
   /**
    * @private
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Utils.Action}
    */
-  createRetryAction(runNo) {
+  createRetryAction(runNumber) {
     const {
       actionsFactory,
       lane,
     } = this.getProperties('actionsFactory', 'lane');
-    return actionsFactory.createRetryLaneAction({ lane, runNo });
+    return actionsFactory.createRetryLaneAction({ lane, runNumber });
   },
 
   /**
    * @private
-   * @param {AtmLaneRunNo} runNo
+   * @param {AtmLaneRunNumber} runNumber
    * @returns {Utils.Action}
    */
-  createRerunAction(runNo) {
+  createRerunAction(runNumber) {
     const {
       actionsFactory,
       lane,
     } = this.getProperties('actionsFactory', 'lane');
-    return actionsFactory.createRerunLaneAction({ lane, runNo });
+    return actionsFactory.createRerunLaneAction({ lane, runNumber });
   },
 });

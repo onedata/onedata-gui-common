@@ -70,18 +70,18 @@ export default VisualiserElement.extend({
   onRemove: undefined,
 
   /**
-   * @type {ComputedProperty<AtmLaneRunNo>}
+   * @type {ComputedProperty<AtmLaneRunNumber>}
    */
-  visibleRunNo: conditional(
-    getBy('runsRegistry', 'parent.visibleRunNo'),
-    'parent.visibleRunNo',
+  visibleRunNumber: conditional(
+    getBy('runsRegistry', 'parent.visibleRunNumber'),
+    'parent.visibleRunNumber',
     raw(1)
   ),
 
   /**
    * @type {ComputedProperty<Object>}
    */
-  visibleRun: getBy('runsRegistry', 'visibleRunNo'),
+  visibleRun: getBy('runsRegistry', 'visibleRunNumber'),
 
   /**
    * @type {ComputedProperty<String>}

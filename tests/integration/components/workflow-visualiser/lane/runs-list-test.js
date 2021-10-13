@@ -27,7 +27,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 
     await render(this);
 
-    expect(getVisibleRunNos(this)).to.deep.equal([1, 2]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2]);
   });
 
   it('shows latest runs, when number of runs is larger than visible runs limit', async function () {
@@ -38,7 +38,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 
     await render(this);
 
-    expect(getVisibleRunNos(this)).to.deep.equal([3, 4, 5]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([3, 4, 5]);
   });
 
   it('does not show newest runs from update, if already rendered runs fill the whole space', async function () {
@@ -51,7 +51,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     this.set('runs', generateRunsRegistry(8));
     await wait();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([3, 4, 5]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([3, 4, 5]);
   });
 
   it('shows some new runs from update, if already rendered runs do not fill the whole space', async function () {
@@ -64,7 +64,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([1, 2, 3, 4, 5]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2, 3, 4, 5]);
   });
 
   it('allows to move to the left', async function () {
@@ -76,7 +76,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 
     await moveLeft();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([6, 7, 8, 9, 10]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([6, 7, 8, 9, 10]);
   });
 
   it('allows to move to the left and back to the right', async function () {
@@ -89,7 +89,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveLeft();
     await moveRight();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([11, 12, 13, 14, 15]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([11, 12, 13, 14, 15]);
   });
 
   it('allows to move to the right to see new runs after update', async function () {
@@ -103,7 +103,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 
     await moveRight();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([4, 5, 6, 7, 8]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([4, 5, 6, 7, 8]);
   });
 
   it('allows to move to the left by partial move', async function () {
@@ -115,7 +115,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 
     await moveLeft();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([1, 2, 3, 4, 5]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2, 3, 4, 5]);
   });
 
   it('allows only one move left at a time', async function () {
@@ -128,7 +128,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveLeft(false);
     await moveLeft();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([6, 7, 8, 9, 10]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([6, 7, 8, 9, 10]);
   });
 
   it('allows only one move right at a time', async function () {
@@ -143,7 +143,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveRight(false);
     await moveRight();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([6, 7, 8, 9, 10]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([6, 7, 8, 9, 10]);
   });
 
   it('allows only one move (right) at a time, when moving right and then left', async function () {
@@ -158,7 +158,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveRight(false);
     await moveLeft();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([6, 7, 8, 9, 10]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([6, 7, 8, 9, 10]);
   });
 
   it('allows only one move (left) at a time, when moving left and then right', async function () {
@@ -171,7 +171,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveLeft(false);
     await moveRight();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([1, 2, 3, 4, 5]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2, 3, 4, 5]);
   });
 
   it('allows to move left twice', async function () {
@@ -184,7 +184,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveLeft();
     await moveLeft();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([1, 2, 3, 4, 5]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2, 3, 4, 5]);
   });
 
   it('allows to move right twice', async function () {
@@ -199,7 +199,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await moveRight();
     await moveRight();
 
-    expect(getVisibleRunNos(this)).to.deep.equal([8, 9, 10, 11, 12]);
+    expect(getVisibleRunNumbers(this)).to.deep.equal([8, 9, 10, 11, 12]);
   });
 
   it('does not allow to move right, if there is no place to move', async function () {
@@ -260,20 +260,20 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     this.setProperties({
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
-      selectedRunNo: 3,
+      selectedRunNumber: 3,
     });
     await render(this);
 
     const $selectedIndicators = getComponent(this).find('.run-indicator.selected');
     expect($selectedIndicators).to.have.length(1);
-    expect($selectedIndicators.find('.run-no').text().trim()).to.equal('3');
+    expect($selectedIndicators.find('.run-number').text().trim()).to.equal('3');
   });
 
   it('notifies about run selection change via "onSelectionChange" callback', async function () {
     this.setProperties({
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
-      selectedRunNo: 3,
+      selectedRunNumber: 3,
     });
     await render(this);
 
@@ -287,13 +287,13 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
 async function render(testCase) {
   testCase.set(
     'selectionChangeSpy',
-    sinon.spy((runNo) => testCase.set('selectedRunNo', runNo))
+    sinon.spy((runNumber) => testCase.set('selectedRunNumber', runNumber))
   );
   testCase.render(hbs `{{workflow-visualiser/lane/runs-list
     visibleRunsPosition=visibleRunsPosition
     visibleRunsLimit=visibleRunsLimit
     runsRegistry=runsRegistry
-    selectedRunNo=selectedRunNo
+    selectedRunNumber=selectedRunNumber
     onSelectionChange=selectionChangeSpy
     onVisibleRunsPositionChange=(action (mut visibleRunsPosition))
   }}`);
@@ -334,32 +334,32 @@ function generateRunsRegistry(runsCount) {
   const runsRegistry = {};
   for (let i = 1; i <= runsCount; i++) {
     const run = {
-      runNo: i,
+      runNumber: i,
       status: 'finished',
     };
     if (i > 2) {
-      run.sourceRunNo = i - 2;
+      run.originRunNumber = i - 2;
     }
     runsRegistry[i] = run;
   }
   return runsRegistry;
 }
 
-function getVisibleRunNos(testCase) {
+function getVisibleRunNumbers(testCase) {
   const $runIndicators = getComponent(testCase).find('.run-indicator');
   return $runIndicators.map(function () {
-    const runNo = Number(this.querySelector('.run-no').textContent.trim());
-    const sourceRunNoElement = this.querySelector('.source-run-no');
-    const sourceRunNo = sourceRunNoElement ?
-      Number(sourceRunNoElement.textContent.trim()) : null;
+    const runNumber = Number(this.querySelector('.run-number').textContent.trim());
+    const originRunNumberElement = this.querySelector('.origin-run-number');
+    const originRunNumber = originRunNumberElement ?
+      Number(originRunNumberElement.textContent.trim()) : null;
     const hasFinishedStatus = this.classList.contains('status-finished');
     if (
-      ((runNo === 1 || runNo === 2) && sourceRunNo !== null) ||
-      (runNo > 2 && sourceRunNo !== runNo - 2) ||
+      ((runNumber === 1 || runNumber === 2) && originRunNumber !== null) ||
+      (runNumber > 2 && originRunNumber !== runNumber - 2) ||
       !hasFinishedStatus
     ) {
       throw new Error('Invalid run indicator');
     }
-    return runNo;
+    return runNumber;
   }).toArray();
 }

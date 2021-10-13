@@ -6,18 +6,18 @@
   {{one-icon icon="arrow-left"}}
 </button>
 <ol class="run-indicators-list">
-  {{#each visibleRunsArray key="runNo" as |run|}}
+  {{#each visibleRunsArray key="runNumber" as |run|}}
     <li
-      class="run-indicators-item {{get visibleRunsClasses run.runNo}}"
-      style={{html-safe (get visibleRunsStyles run.runNo)}}
+      class="run-indicators-item {{get visibleRunsClasses run.runNumber}}"
+      style={{html-safe (get visibleRunsStyles run.runNumber)}}
     >
       {{workflow-visualiser/lane/run-indicator
         status=run.status
-        runNo=run.runNo
-        sourceRunNo=run.sourceRunNo
+        runNumber=run.runNumber
+        originRunNumber=run.originRunNumber
         runType=run.runType
-        isSelected=(eq selectedRunNo run.runNo)
-        onClick=(action "selectRun" run.runNo)
+        isSelected=(eq selectedRunNumber run.runNumber)
+        onClick=(action "selectRun" run.runNumber)
       }}
     </li>
   {{/each}}

@@ -1,6 +1,6 @@
 /**
- * Shows failed items of specific lane. Needs `lane`, `runNo` and `getStoreContentCallback`
- * passed via context. If `runNo` is not provided, the visible one will be used.
+ * Shows failed items of specific lane. Needs `lane`, `runNumber` and `getStoreContentCallback`
+ * passed via context. If `runNumber` is not provided, the visible one will be used.
  *
  * @module utils/workflow-visualiser/actions/view-lane-failed-items-action
  * @author Michał Borzęcki
@@ -54,9 +54,9 @@ export default Action.extend({
   lane: reads('context.lane'),
 
   /**
-   * @type {ComputedProperty<AtmLaneRunNo>}
+   * @type {ComputedProperty<AtmLaneRunNumber>}
    */
-  runNo: reads('context.runNo'),
+  runNumber: reads('context.runNumber'),
 
   /**
    * @param {Utils.WorkflowVisualiser.Store} store
@@ -68,8 +68,8 @@ export default Action.extend({
    * @type {ComputedProperty<Object>}
    */
   run: conditional(
-    'runNo',
-    getBy('lane.runsRegistry', 'runNo'),
+    'runNumber',
+    getBy('lane.runsRegistry', 'runNumber'),
     'lane.visibleRun'
   ),
 

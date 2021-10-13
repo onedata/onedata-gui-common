@@ -58,7 +58,7 @@
         visibleRunsLimit=6
         runsRegistry=lane.runsRegistry
         visibleRunsPosition=lane.visibleRunsPosition
-        selectedRunNo=lane.visibleRunNo
+        selectedRunNumber=lane.visibleRunNumber
         onSelectionChange=(action "changeRun")
         onVisibleRunsPositionChange=(action (mut lane.visibleRunsPosition))
       }}
@@ -68,8 +68,8 @@
         class="visible-run-indicator"
         isSelected=true
         status=lane.status
-        runNo=lane.visibleRunNo
-        sourceRunNo=lane.visibleRun.sourceRunNo
+        runNumber=lane.visibleRunNumber
+        originRunNumber=lane.visibleRun.originRunNumber
         runType=lane.visibleRun.runType
       }}
       <span class="visible-run-timing-label">{{visibleRunTimingLabel}}</span>

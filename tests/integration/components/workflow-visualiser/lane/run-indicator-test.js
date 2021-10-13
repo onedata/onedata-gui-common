@@ -78,27 +78,27 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('shows "?" as a run number, when it is not specified', async function () {
     await render(this);
 
-    expect(getComponent(this).find('.run-no').text().trim()).to.equal('?');
+    expect(getComponent(this).find('.run-number').text().trim()).to.equal('?');
   });
 
   it('shows "?" as a run number, when passed number is not correct', async function () {
-    this.set('runNo', -1);
+    this.set('runNumber', -1);
 
     await render(this);
 
-    expect(getComponent(this).find('.run-no').text().trim()).to.equal('?');
+    expect(getComponent(this).find('.run-number').text().trim()).to.equal('?');
   });
 
   it('shows "1" as a run number, when passed number is "1"', async function () {
-    this.set('runNo', 1);
+    this.set('runNumber', 1);
 
     await render(this);
 
-    expect(getComponent(this).find('.run-no').text().trim()).to.equal('1');
+    expect(getComponent(this).find('.run-number').text().trim()).to.equal('1');
   });
 
   it('has class "one-digit-run" when run number is < 10', async function () {
-    this.set('runNo', 4);
+    this.set('runNumber', 4);
 
     await render(this);
 
@@ -106,7 +106,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   });
 
   it('has class "two-digit-run" when run number is >= 10 && < 100', async function () {
-    this.set('runNo', 34);
+    this.set('runNumber', 34);
 
     await render(this);
 
@@ -114,7 +114,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   });
 
   it('has class "many-digit-run" when run number is >= 10', async function () {
-    this.set('runNo', 456);
+    this.set('runNumber', 456);
 
     await render(this);
 
@@ -137,41 +137,41 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
     expect(getComponent(this)).to.have.class('selected');
   });
 
-  it('does not show source run number if not provided', async function () {
+  it('does not show origin run number if not provided', async function () {
     await render(this);
 
-    expect(getComponent(this).find('.source-run-no')).to.not.exist;
+    expect(getComponent(this).find('.origin-run-number')).to.not.exist;
   });
 
-  it('does not show source run number if passed number is not correct', async function () {
-    this.set('sourceRunNo', -1);
+  it('does not show origin run number if passed number is not correct', async function () {
+    this.set('originRunNumber', -1);
 
     await render(this);
 
-    expect(getComponent(this).find('.source-run-no')).to.not.exist;
+    expect(getComponent(this).find('.origin-run-number')).to.not.exist;
   });
 
-  it('does not show source run number if passed number differs by 1 from run number', async function () {
+  it('does not show origin run number if passed number differs by 1 from run number', async function () {
     this.setProperties({
-      sourceRunNo: 1,
-      runNo: 2,
+      originRunNumber: 1,
+      runNumber: 2,
     });
 
     await render(this);
 
-    expect(getComponent(this).find('.source-run-no')).to.not.exist;
+    expect(getComponent(this).find('.origin-run-number')).to.not.exist;
   });
 
-  it('shows source run number "1" if passed number is "1" and run number differs by more than 1 from run number',
+  it('shows origin run number "1" if passed number is "1" and run number differs by more than 1 from run number',
     async function () {
       this.setProperties({
-        sourceRunNo: 1,
-        runNo: 3,
+        originRunNumber: 1,
+        runNumber: 3,
       });
 
       await render(this);
 
-      expect(getComponent(this).find('.source-run-no').text().trim()).to.equal('1');
+      expect(getComponent(this).find('.origin-run-number').text().trim()).to.equal('1');
     });
 
   it('does not have class "clickable" by default', async function () {
@@ -190,7 +190,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
   it('has correct tooltip for first run', async function () {
     this.setProperties({
-      runNo: 1,
+      runNumber: 1,
       status: 'active',
       runType: 'regular',
     });
@@ -203,8 +203,8 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
   it('has correct tooltip for n-th run', async function () {
     this.setProperties({
-      runNo: 4,
-      sourceRunNo: 2,
+      runNumber: 4,
+      originRunNumber: 2,
       status: 'active',
       runType: 'rerun',
     });
@@ -213,12 +213,12 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.match(
-      /^Run: 4(\s)+Source run: 2(\s)+Run type: rerun(\s)+Status: active$/);
+      /^Run: 4(\s)+Origin run: 2(\s)+Run type: rerun(\s)+Status: active$/);
   });
 
   it('it does not show run type in tooltip, if its value is incorrect', async function () {
     this.setProperties({
-      runNo: 1,
+      runNumber: 1,
       runType: 'abcd',
     });
 
@@ -229,7 +229,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   });
 
   it('it does not show run type in tooltip, if its value is empty', async function () {
-    this.set('runNo', 1);
+    this.set('runNumber', 1);
 
     await render(this);
 
@@ -250,8 +250,8 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 async function render(testCase) {
   testCase.render(hbs `{{workflow-visualiser/lane/run-indicator
     status=status
-    runNo=runNo
-    sourceRunNo=sourceRunNo
+    runNumber=runNumber
+    originRunNumber=originRunNumber
     runType=runType
     isSelected=isSelected
     onClick=onClick
@@ -277,7 +277,7 @@ function itHasStatusClass(status, statusInClass) {
 function itHasCorrectTooltipWithStatus(status, statusTranslation) {
   it(`has correct tooltip for run with status "${status}"`, async function () {
     this.setProperties({
-      runNo: 1,
+      runNumber: 1,
       status,
     });
 
@@ -293,7 +293,7 @@ function itHasCorrectTooltipWithStatus(status, statusTranslation) {
 function itHasCorrectTooltipWithRunType(runType, runTypeTranslation) {
   it(`has correct tooltip for run of type "${runType}"`, async function () {
     this.setProperties({
-      runNo: 1,
+      runNumber: 1,
       runType,
     });
 

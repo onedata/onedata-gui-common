@@ -15,21 +15,21 @@
   ) as |status|}}
   <p>
     Status {{status}}:
-    {{workflow-visualiser/lane/run-indicator status=status runNo=1}}
+    {{workflow-visualiser/lane/run-indicator status=status runNumber=1}}
     {{workflow-visualiser/lane/run-indicator
       status=status
-      runNo=3
-      sourceRunNo=1
+      runNumber=3
+      originRunNumber=1
       isActive=true
       class="clickable"
     }}
   </p>
   {{/each}}
 
-  {{#each (array 1 20 456 -1 "randomValue") as |runNo|}}
+  {{#each (array 1 20 456 -1 "randomValue") as |runNumber|}}
     <p>
-      Run number {{runNo}}:
-      {{workflow-visualiser/lane/run-indicator runNo=runNo}}
+      Run number {{runNumber}}:
+      {{workflow-visualiser/lane/run-indicator runNumber=runNumber}}
     </p>
   {{/each}}
 </div>

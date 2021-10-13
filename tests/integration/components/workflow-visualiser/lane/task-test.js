@@ -93,7 +93,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         instanceId: 'someId',
         runsRegistry: {
           1: {
-            runNo: 1,
+            runNumber: 1,
             status: 'pending',
             itemsInProcessing: 1,
             itemsProcessed: 2,
