@@ -45,9 +45,17 @@
     background-color: $color-one-white;
   }
 
-  &.danger {
-    .one-icon-tag-icon {
-      color: $brand-danger;
+  $brand-level-colors: (
+    danger: $brand-danger,
+    warning: $brand-warning,
+    success: $brand-success,
+  );
+
+  @each $brand-level, $brand-color in $brand-level-colors {
+    &.#{$brand-level} {
+      .one-icon-tag-icon {
+        color: $brand-color;
+      }
     }
   }
 
