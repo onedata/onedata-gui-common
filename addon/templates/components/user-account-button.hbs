@@ -31,6 +31,7 @@
             {{#list.item isCollapsible=false as |listItem|}}
               {{#listItem.header click=(action "privacyPolicy") class=(concat-classes menuItemClasses "privacy-policy-action")}}
                 {{tt this "privacyPolicy"}}
+                <span class="oneicon oneicon-link-external"></span>
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
@@ -88,6 +89,7 @@
         <li>
           <a class="clickable" {{action "privacyPolicy"}}>
             {{tt this "privacyPolicy"}}
+            <span class="oneicon oneicon-link-external"></span>
           </a>
         </li>
       {{/if}}
