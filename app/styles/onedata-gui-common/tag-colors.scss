@@ -31,3 +31,7 @@
   border-color: change-color($main-text-color, $lightness: 65%);
   background-color: change-color($main-text-color, $lightness: 90%);
 }
+
+@mixin tag-colors-inherited-highlight {
+  @include tag-colors($color-one-success, -10%, 20%);
+}
