@@ -1,0 +1,40 @@
+.public-footer {
+  height: 88px;
+  width: 100%;
+  border-top: 2px solid $color-one-semiwhite;
+  line-height: 88px;
+  padding-left: $content-col-padding;
+  padding-right: $content-col-padding;
+  margin-top: auto; 
+  background: white;
+  display: flex;
+  .onedata-logo-public {
+    align-self: center;
+    width: 136px;
+    height: 26px;
+    background-image: url($root-url + 'images/logo-dark.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+
+  }
+  .onedata-copyright-public {
+    font-size: 16px;
+    padding-left: $content-col-padding;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+  }
+  .back-to-main-page {
+    font-size: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .oneicon-home {
+    position: relative;
+    top: 5px;
+    font-size: 22px;
+  }
+}
