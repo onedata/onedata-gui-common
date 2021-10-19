@@ -27,11 +27,12 @@
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
-          {{#if privacyPolicyManager.showPrivacyPolicyAction}}
+          {{#if privacyPolicyManager.privacyPolicyUrl}}
             {{#list.item isCollapsible=false as |listItem|}}
               {{#listItem.header click=(action "privacyPolicy") class=(concat-classes menuItemClasses "privacy-policy-action")}}
-                {{tt this "privacyPolicy"}}
-                <span class="oneicon oneicon-link-external"></span>
+                <a href={{privacyPolicyManager.privacyPolicyUrl}}>
+                  {{tt this "privacyPolicy"}}
+                </a>
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
@@ -85,11 +86,10 @@
           {{/if}}
         </li>
       {{/if}}
-      {{#if privacyPolicyManager.showPrivacyPolicyAction}}
+      {{#if privacyPolicyManager.privacyPolicyUrl}}
         <li>
-          <a class="clickable" {{action "privacyPolicy"}}>
+          <a href={{privacyPolicyManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
             {{tt this "privacyPolicy"}}
-            <span class="oneicon oneicon-link-external"></span>
           </a>
         </li>
       {{/if}}

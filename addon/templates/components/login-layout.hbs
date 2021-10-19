@@ -5,10 +5,9 @@
   {{yield}}
 </div>
 <div class="login-service-version">
-  {{#if privacyPolicyManager.showPrivacyPolicyAction}}
-    <a class="clickable" {{action privacyPolicyManager.showPrivacyPolicyAction}}>
+  {{#if privacyPolicyManager.privacyPolicyUrl}}
+    <a href={{privacyPolicyManager.privacyPolicyUrl}} class="clickable">
       {{tt this "privacyPolicy"}}
-      <span class="oneicon oneicon-link-external"></span>
     </a> |
   {{/if}}
   <span class="login-service-version-string">

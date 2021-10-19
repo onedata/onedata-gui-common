@@ -164,7 +164,11 @@ export default Component.extend({
       this.get('sideMenu').close();
       const isUsersRemoteView = targetResourceType === 'users' &&
         this.get('guiUtils.manageAccountExternalLink');
-      if (targetResourceType && !isUsersRemoteView) {
+      if (targetResourceType === 'privacy-policy') {
+        return this.get('router')
+          .transitionTo('public.privacy-policy');
+      }
+      else if (targetResourceType && !isUsersRemoteView) {
         return this.get('router')
           .transitionTo('onedata.sidebar', targetResourceType);
       }
