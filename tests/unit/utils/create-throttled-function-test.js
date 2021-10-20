@@ -31,6 +31,36 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
   });
 
+  it('postpones execution on first call in non-immediate mode', function () {
+    const throttled = createThrottledFunction(this.spy, 100, false);
+
+    throttled();
+
+    expect(this.spy).to.have.not.been.called;
+
+    this.clock.tick(100);
+
+    expect(this.spy).to.have.been.calledOnce;
+  });
+
+  it('postpones execution on first and next call in non-immediate mode', function () {
+    const throttled = createThrottledFunction(this.spy, 100, false);
+
+    throttled();
+
+    expect(this.spy).to.have.not.been.called;
+
+    this.clock.tick(100);
+
+    throttled();
+
+    expect(this.spy).to.have.been.calledOnce;
+
+    this.clock.tick(100);
+
+    expect(this.spy).to.have.been.calledTwice;
+  });
+
   it('throttles two immediate calls', function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
