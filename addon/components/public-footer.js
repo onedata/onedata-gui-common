@@ -1,5 +1,5 @@
 /**
- * A component 
+ * Renders footer for public view 
  *
  * @module components/public-footer.js
  * @author Agnieszka Warchoł
@@ -20,5 +20,4 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.publicFooter',
-
 });
