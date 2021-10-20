@@ -22,7 +22,7 @@
 
 @mixin tag-colors-disabled {
   color: $main-text-color-inactive;
-  border-color: change-color(white, $lightness: 75%);
+  border-color: change-color(white, $lightness: 65%);
   background-color: change-color(white, $lightness: 90%);
 }
 
