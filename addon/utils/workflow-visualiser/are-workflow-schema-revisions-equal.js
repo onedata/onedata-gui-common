@@ -1,9 +1,9 @@
 /**
- * Checks if two provided workflow schemas have equal stores and lanes.
+ * Checks if two provided workflow schema revisions have equal properties.
  * It cannot be done via simple _.isEqual, because some notations are equivalent
  * but different in JavaScript object - like null and undefined etc.
  *
- * @module utils/workflow-visualiser/are-workflow-schemas-equal
+ * @module utils/workflow-visualiser/are-workflow-schema-revisions-equal
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -11,16 +11,31 @@
 
 import _ from 'lodash';
 
-export default function areWorkflowSchemasEqual(schema1, schema2) {
-  if (!schema1 || !schema2) {
+export default function areWorkflowSchemaRevisionsEqual(revision1, revision2) {
+  if (!revision1 || !revision2) {
     return false;
   }
 
-  let result = areLaneListsEqual(schema1.lanes, schema2.lanes);
-  if (result) {
-    result = areStoreListsEqual(schema1.stores, schema2.stores);
-  }
-  return result;
+  return checkEqualityPerEachKey(revision1, revision2, (key, val1, val2) => {
+    switch (key) {
+      case 'lanes':
+        if (!areLaneListsEqual(val1, val2)) {
+          return false;
+        }
+        break;
+      case 'stores':
+        if (!areStoreListsEqual(val1, val2)) {
+          return false;
+        }
+        break;
+      default:
+        if (!_.isEqual(val1, val2)) {
+          return false;
+        }
+        break;
+    }
+    return true;
+  });
 }
 
 function areLaneListsEqual(lanesList1, lanesList2) {
