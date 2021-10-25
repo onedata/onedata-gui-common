@@ -101,7 +101,7 @@ export default Component.extend(ClickOutside, I18n, {
     },
     privacyPolicy() {
       this.set('menuOpen', false);
-      this.get('onItemClick')('privacy-policy');
+      this.get('onItemClick')();
     },
     logout() {
       return this.get('guiUtils').logout().finally(() =>
