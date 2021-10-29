@@ -2,11 +2,15 @@
   {{#if upperTitle}}
     <div class="login-upper-title">{{upperTitle}}</div>
   {{/if}}
-  <div class="col-xs-12 col-user-profile-icon">
+  <div class="col-user-profile-icon">
     <div class="login-logo"></div>
     <div class="login-titles">
-      <div class="login-main-title {{loginMainTitleClass}}">{{brandTitle}}</div>
-      <div class="login-main-subtitle">{{brandSubtitle}}</div>
+      <div class="login-main-title {{loginMainTitleClass}}">
+        {{#truncated-string}}{{brandTitle}}{{/truncated-string}}
+      </div>
+      <div class="login-main-subtitle">
+        {{#truncated-string}}{{brandSubtitle}}{{/truncated-string}}
+      </div>
     </div>
   </div>
 </div>
