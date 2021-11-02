@@ -37,11 +37,7 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: not(and(
-    'isWorkflowEnded',
-    'isLaneRunFailed',
-    'doesLaneRunExceptionStoreExist'
-  )),
+  disabled: not(and('isWorkflowEnded', 'laneRun.canBeRetried')),
 
   /**
    * @override
@@ -50,15 +46,18 @@ export default Action.extend({
     'isWorkflowEnded',
     'isLaneRunFailed',
     'doesLaneRunExceptionStoreExist',
+    'disabled',
     function tip() {
       const {
         isWorkflowEnded,
         isLaneRunFailed,
         doesLaneRunExceptionStoreExist,
+        disabled,
       } = this.getProperties(
         'isWorkflowEnded',
         'isLaneRunFailed',
-        'doesLaneRunExceptionStoreExist'
+        'doesLaneRunExceptionStoreExist',
+        'disabled'
       );
 
       let translationName;
@@ -68,6 +67,9 @@ export default Action.extend({
         translationName = 'laneNotFailed';
       } else if (!doesLaneRunExceptionStoreExist) {
         translationName = 'noExceptionStoreAvailable';
+      } else if (disabled) {
+        // Lane run cannot be retried due to some backend constraints we don't know
+        translationName = 'unknownReason';
       }
 
       return translationName ? this.t(`disabledTip.${translationName}`) : null;

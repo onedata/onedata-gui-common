@@ -60,6 +60,7 @@ export function translateLaneStatus(i18n, status) {
 }
 
 export const workflowEndedStatuses = [
+  'interrupted',
   'cancelled',
   'skipped',
   'finished',

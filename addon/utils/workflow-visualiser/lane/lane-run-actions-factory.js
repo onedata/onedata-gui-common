@@ -37,9 +37,8 @@ export default EmberObject.extend({
 
     return [
       this.createViewFailedItemsAction(runNumber),
-      // TODO: VFS-8287 uncomment
-      // this.createRetryAction(runNumber),
-      // this.createRerunAction(runNumber),
+      this.createRetryAction(runNumber),
+      this.createRerunAction(runNumber),
     ];
   },
 

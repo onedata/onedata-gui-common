@@ -13,9 +13,9 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { conditional, raw } from 'ember-awesome-macros';
+import { raw, eq, or, not } from 'ember-awesome-macros';
 import { workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
-import computedT from 'onedata-gui-common/utils/computed-t';
+import { inAdvanceRunNumber } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 export default Action.extend({
   modalManager: service(),
@@ -38,18 +38,26 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: computed('workflow.status', function disabled() {
-    return !workflowEndedStatuses.includes(this.get('workflow.status'));
-  }),
+  disabled: or('isRunPreparedInAdvance', not('isWorkflowEnded')),
 
   /**
    * @override
    */
-  tip: conditional(
-    'disabled',
-    computedT('disabledTip'),
-    raw(null)
-  ),
+  tip: computed('isRunPreparedInAdvance', 'isWorkflowEnded', function tip() {
+    const {
+      isRunPreparedInAdvance,
+      isWorkflowEnded,
+    } = this.getProperties('isRunPreparedInAdvance', 'isWorkflowEnded');
+
+    let translationName;
+    if (!isWorkflowEnded) {
+      translationName = 'workflowNotEnded';
+    } else if (isRunPreparedInAdvance) {
+      translationName = 'preparedInAdvance';
+    }
+
+    return translationName ? this.t(`disabledTip.${translationName}`) : null;
+  }),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
@@ -73,6 +81,18 @@ export default Action.extend({
    * @type {ComputedProperty<Function>}
    */
   rerunLaneCallback: reads('context.rerunLaneCallback'),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isRunPreparedInAdvance: eq('runNumber', raw(inAdvanceRunNumber)),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isWorkflowEnded: computed('workflow.status', function isWorkflowEnded() {
+    return workflowEndedStatuses.includes(this.get('workflow.status'));
+  }),
 
   /**
    * @override
