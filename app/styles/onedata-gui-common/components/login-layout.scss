@@ -1,18 +1,5 @@
 $screen-fixed-service-version-height-min: 640px !default;
 
-.login-layout::before {
-  position: absolute;
-  top: 0;
-  background-image: url($root-url + 'images/main-background.jpg');
-  background-size: cover;
-  background-position-x: center;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  content: ' ';
-  filter: grayscale(0.9);
-}
-
 .login-layout {
   position: absolute;
   top: 0;
