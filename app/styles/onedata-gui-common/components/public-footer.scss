@@ -1,0 +1,26 @@
+.public-footer {
+  height: 88px;
+  border-top: 2px solid $color-one-semiwhite;
+  line-height: 88px;
+  padding-left: $content-col-padding;
+  padding-right: $content-col-padding;
+  background: white;
+  display: flex;
+  .onedata-logo-public {
+    align-self: center;
+    width: 136px;
+    height: 26px;
+    background-image: url($root-url + 'images/logo-dark.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+  }
+  .onedata-copyright-public {
+    font-size: 16px;
+    padding-left: $content-col-padding;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+  }
+}

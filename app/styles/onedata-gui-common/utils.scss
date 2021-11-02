@@ -32,6 +32,7 @@ $top-shadow-zindex: 1002;
   top: 0;
   left: 0;
   right: 0;
+  bottom: initial;
 }
 
 @mixin bottom-line($border-style) {
@@ -39,6 +40,7 @@ $top-shadow-zindex: 1002;
   bottom: 0;
   left: 0;
   right: 0;
+  top: initial;
 }
 
 @mixin left-line($border-style) {
