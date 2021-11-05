@@ -9,7 +9,7 @@
 
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import { resolve } from 'rsvp';
-import { array, raw } from 'ember-awesome-macros';
+import { reads } from '@ember/object/computed';
 
 export default VisualiserRecord.extend({
   /**
@@ -23,22 +23,32 @@ export default VisualiserRecord.extend({
   renderer: 'workflow-visualiser/lane',
 
   /**
+   * @override
+   */
+  visibleRunNumber: 1,
+
+  /**
+   * @virtual
+   * @type {Number}
+   */
+  maxRetries: undefined,
+
+  /**
    * @virtual
    * @type {Object}
    */
   storeIteratorSpec: undefined,
 
   /**
-   * @virtual
-   * @type {Array<Utils.WorkflowVisualiser.Store>}
-   */
-  stores: undefined,
-
-  /**
    * @virtual optional
    * @type {Array<Utils.WorkflowVisualiser.VisualiserElement>}
    */
   elements: undefined,
+
+  /**
+   * @type {RunsListVisibleRunsPosition}
+   */
+  visibleRunsPosition: undefined,
 
   /**
    * @virtual optional
@@ -49,9 +59,31 @@ export default VisualiserRecord.extend({
   onClear: undefined,
 
   /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {AtmLaneRunNumber} runNumber
+   * @returns {Any}
+   */
+  onChangeRun: undefined,
+
+  /**
+   * @virtual optional
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @returns {Promise}
+   */
+  onShowLatestRun: undefined,
+
+  /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
-  store: array.findBy('stores', raw('id'), 'storeIteratorSpec.storeSchemaId'),
+  iteratedStore: reads('visibleRun.iteratedStore'),
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
+   */
+  exceptionStore: reads('visibleRun.exceptionStore'),
 
   init() {
     this._super(...arguments);
@@ -64,5 +96,15 @@ export default VisualiserRecord.extend({
   clear() {
     const onClear = this.get('onClear');
     return onClear ? onClear(this) : resolve();
+  },
+
+  changeRun(runNumber) {
+    const onChangeRun = this.get('onChangeRun');
+    return onChangeRun && onChangeRun(this, runNumber);
+  },
+
+  showLatestRun() {
+    const onShowLatestRun = this.get('onShowLatestRun');
+    return onShowLatestRun ? onShowLatestRun(this) : resolve();
   },
 });

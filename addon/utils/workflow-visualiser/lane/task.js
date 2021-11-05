@@ -8,6 +8,8 @@
  */
 
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
+import { reads } from '@ember/object/computed';
+import { raw, or } from 'ember-awesome-macros';
 
 export default VisualiserRecord.extend({
   /**
@@ -19,18 +21,6 @@ export default VisualiserRecord.extend({
    * @override
    */
   renderer: 'workflow-visualiser/lane/task',
-
-  /**
-   * @virtual optional
-   * @type {String}
-   */
-  instanceId: undefined,
-
-  /**
-   * @virtual optional
-   * @type {String}
-   */
-  systemAuditLogStoreInstanceId: undefined,
 
   /**
    * @virtual
@@ -58,19 +48,27 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
-   * @type {Number}
+   * @type {ComputedProperty<String>}
    */
-  itemsInProcessing: 0,
+  instanceId: reads('visibleRun.instanceId'),
 
   /**
-   * @virtual
-   * @type {Number}
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
-  itemsProcessed: 0,
+  systemAuditLogStore: reads('visibleRun.systemAuditLogStore'),
 
   /**
-   * @virtual
-   * @type {Number}
+   * @type {ComputedProperty<Number>}
    */
-  itemsFailed: 0,
+  itemsInProcessing: or('visibleRun.itemsInProcessing', raw(0)),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  itemsProcessed: or('visibleRun.itemsProcessed', raw(0)),
+
+  /**
+   * @type {ComputedProperty<Number>}
+   */
+  itemsFailed: or('visibleRun.itemsFailed', raw(0)),
 });

@@ -18,7 +18,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify task action
     const task = Task.create();
     const action = ModifyTaskAction.create({
       ownerSource: this,
-      stores: [
+      definedStores: [
         Store.create({
           id: 's1',
           name: 'store1',

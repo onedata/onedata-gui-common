@@ -1,6 +1,6 @@
 /**
  * Creates new task. Needs:
- * - stores,
+ * - definedStores,
  * - taskDetailsProviderCallback - it will be called to obtain new task details,
  * - task.
  *
@@ -43,11 +43,11 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('context.stores'),
+  definedStores: reads('context.definedStores'),
 
   /**
    * @type {ComputedProperty<Function>}
-   * @param {Array<Object>} initialData.stores
+   * @param {Array<Object>} initialData.definedStores
    * @param {Array<Object>} initialData.task
    * @returns {Promise<Object>} task details
    */
@@ -59,15 +59,15 @@ export default Action.extend({
   onExecute() {
     const {
       task,
-      stores,
+      definedStores,
       taskDetailsProviderCallback,
     } = this.getProperties(
       'task',
-      'stores',
+      'definedStores',
       'taskDetailsProviderCallback',
     );
     const result = ActionResult.create();
-    const modifyPromise = taskDetailsProviderCallback({ stores, task })
+    const modifyPromise = taskDetailsProviderCallback({ definedStores, task })
       .then(taskData => this.modifyTask(taskData));
     return result.interceptPromise(modifyPromise)
       .then(() => result, () => result);

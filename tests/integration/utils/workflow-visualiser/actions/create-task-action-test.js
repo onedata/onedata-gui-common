@@ -21,7 +21,7 @@ describe('Integration | Utility | workflow visualiser/actions/create task action
     const createStub = sinon.stub();
     const action = CreateTaskAction.create({
       ownerSource: this,
-      stores: [
+      definedStores: [
         Store.create({
           id: 's1',
           name: 'store1',

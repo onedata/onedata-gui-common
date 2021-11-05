@@ -12,6 +12,106 @@ import EmberObject from '@ember/object';
 import notImplementedReject from 'onedata-gui-common/utils/not-implemented-reject';
 
 /**
+ * @typedef {Object} AtmExecutionState
+ * @property {AtmWorkflowExecutionState} workflow
+ * @property {AtmLanesExecutionState} lane
+ * @property {AtmParallelBoxesExecutionState} parallelBox
+ * @property {AtmTasksExecutionState} tasks
+ * @property {AtmStoresExecutionState} store
+ */
+
+/**
+ * @typedef {Object} AtmWorkflowExecutionState
+ * @property {String} instanceId
+ * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} status
+ */
+
+/**
+ * @typedef {Object<String,AtmLaneExecutionState>} AtmLanesExecutionState
+ * keys are lane schema ids
+ */
+
+/**
+ * @typedef {Object} AtmLaneExecutionState
+ * @property {Object<AtmLaneRunNumber,AtmLaneRunExecutionState>} runsRegistry
+ */
+
+/**
+ * @typedef {Object} AtmLaneRunExecutionState
+ * @property {AtmLaneRunNumber} runNumber
+ * @property {Number|null} originRunNumber
+ * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} status
+ */
+
+/**
+ * @typedef {Object<String,AtmParallelBoxExecutionState>} AtmParallelBoxesExecutionState
+ * keys are parallel box schema ids
+ */
+
+/**
+ * @typedef {Object} AtmParallelBoxExecutionState
+ * @property {Object<AtmLaneRunNumber,AtmParallelBoxRunExecutionState>} runsRegistry
+ */
+
+/**
+ * @typedef {Object} AtmParallelBoxRunExecutionState
+ * @property {AtmLaneRunNumber} runNumber
+ * @property {String} status
+ */
+
+/**
+ * @typedef {Object<String,AtmTaskExecutionState>} AtmTasksExecutionState
+ * keys are task schema ids
+ */
+
+/**
+ * @typedef {Object} AtmTaskExecutionState
+ * @property {Object<AtmLaneRunNumber,AtmTaskRunExecutionState>} runsRegistry
+ */
+
+/**
+ * @typedef {Object} AtmTaskRunExecutionState
+ * @property {AtmLaneRunNumber} runNumber
+ * @property {String} instanceId
+ * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} status
+ * @property {Number} itemsInProcessing
+ * @property {Number} itemsProcessed
+ * @property {Number} itemsFailed
+ */
+
+/**
+ * @typedef {Object} AtmStoresExecutionState
+ * @property {AtmDefinedStoresExecutionState} defined
+ * @property {AtmGeneratedStoresExecutionState} generated
+ */
+
+/**
+ * @typedef {Object<String,AtmDefinedStoreExecutionState>} AtmDefinedStoresExecutionState
+ * keys are store schema ids
+ */
+
+/**
+ * @typedef {Object} AtmDefinedStoreExecutionState
+ * @property {String} instanceId
+ */
+
+/**
+ * @typedef {Object<String,AtmGeneratedStoreExecutionState>} AtmGeneratedStoresExecutionState
+ * keys are store instance ids
+ */
+
+/**
+ * @typedef {Object} AtmGeneratedStoreExecutionState
+ * @property {String} instanceId
+ * @property {String} name
+ * @property {String} type
+ * @property {Object} dataSpec
+ */
+
+/**
  * @typedef {Object} StoreContentEntry
  * @property {String} index
  * @property {Boolean} success
@@ -21,90 +121,20 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
 
 export default EmberObject.extend({
   /**
-   * @returns {Promise<Object>} Object format:
-   *   ```
-   *   {
-   *     global: {
-   *       status: String,
-   *     },
-   *     lane: [..., {
-   *       status: String,
-   *     }, ...],
-   *     parallelBox: [..., {
-   *      status: String,
-   *     }, ...],
-   *     task: [..., {
-   *      status: String,
-   *      itemsInProcessing: Number,
-   *      itemsProcessed: Number,
-   *      itemsFailed: Number,
-   *     }, ...],
-   *   }
-   *   ```
+   * @returns {Promise<AtmExecutionState>}
    */
-  async fetchStatuses() {
+  async fetchExecutionState() {
     return notImplementedReject();
   },
 
   /**
-   * @returns {Promise<Object>} Object format:
-   *   ```
-   *   {
-   *     workflow: 'workflowInstanceId',
-   *     task: {
-   *       taskSchemaId1: 'taskInstanceId1',
-   *       taskSchemaId2: 'taskInstanceId2',
-   *       ...
-   *     }
-   *     store: {
-   *       global: {
-   *         storeSchemaId1: 'storeInstanceId1',
-   *         storeSchemaId2: 'storeInstanceId2',
-   *         ...
-   *       },
-   *       taskSystemAuditLog: {
-   *         taskSchemaId1: 'taskSystemAuditLogStoreInstanceId1',
-   *         taskSchemaId2: 'taskSystemAuditLogStoreInstanceId2',
-   *         ...
-   *       }
-   *       workflowSystemAuditLog: 'workflowSystemAuditLogStoreInstanceId',
-   *     }
-   *   }
-   *   ```
-   */
-  async fetchInstanceIdsMapping() {
-    return notImplementedReject();
-  },
-
-  /**
-   * @param {String} storeSchemaId
+   * @param {String} storeInstanceId
    * @param {String} startFromIndex
    * @param {number} limit
    * @param {number} offset
    * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
    */
   async fetchStoreContent() {
-    return notImplementedReject();
-  },
-
-  /**
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
-   */
-  async fetchWorkflowAuditLogContent() {
-    return notImplementedReject();
-  },
-
-  /**
-   * @param {String} taskSchemaId
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
-   */
-  async fetchTaskAuditLogContent() {
     return notImplementedReject();
   },
 });

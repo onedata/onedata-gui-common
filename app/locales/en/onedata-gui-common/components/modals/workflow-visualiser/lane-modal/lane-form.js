@@ -3,6 +3,9 @@ export default {
     name: {
       label: 'Name',
     },
+    maxRetries: {
+      label: 'Max. retries',
+    },
     iteratorOptions: {
       label: 'Iterator options',
       sourceStore: {

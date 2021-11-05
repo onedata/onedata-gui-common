@@ -9,6 +9,10 @@ export default {
       serial: 'Serial',
       batch: 'Batch {{batchSize}}',
     },
+    runTiming: {
+      latest: 'Latest run',
+      past: 'Past run',
+    },
     unknownStore: 'Unknown',
     actions: {
       createLane: {
@@ -37,6 +41,39 @@ export default {
         modalHeader: 'Remove lane',
         modalDescription: 'You are about to delete the lane "{{laneName}}".',
         modalYes: 'Remove',
+      },
+      viewLaneFailedItems: {
+        title: 'View failed items',
+        disabledTip: 'Failed items list is available only for a correctly started lane.',
+      },
+      retryLane: {
+        title: 'Retry failed items',
+        successNotificationText: 'Lane retry has been scheduled successfully.',
+        failureNotificationActionName: 'scheduling lane retry',
+        disabledTip: {
+          workflowNotEnded: 'Retry can be scheduled only when the workflow execution is ended.',
+          laneNotFailed: 'Retry can be scheduled only for a failed lane run.',
+          noExceptionStoreAvailable: 'Retry can be scheduled only for a lane that has passed the preparation phase.',
+        },
+      },
+      rerunLane: {
+        title: 'Rerun all items',
+        successNotificationText: 'Lane rerun has been scheduled successfully.',
+        failureNotificationActionName: 'scheduling lane rerun',
+        disabledTip: 'Rerun can be scheduled only in an ended workflow execution.',
+      },
+    },
+    runIndicator: {
+      runType: {
+        regular: 'regular',
+        rerun: 'rerun',
+        retry: 'retry',
+      },
+      tooltip: {
+        runNumber: 'Run',
+        originRunNumber: 'Origin run',
+        runType: 'Run type',
+        status: 'Status',
       },
     },
   },

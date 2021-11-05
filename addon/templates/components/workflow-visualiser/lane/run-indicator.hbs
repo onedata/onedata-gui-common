@@ -1,0 +1,17 @@
+<span class="run-number">{{runNumberText}}</span>
+{{#if isOriginRunNumberVisible}}
+  <div class="origin-run-number-container">
+    <span class="origin-run-number">{{originRunNumberText}}</span>
+  </div>
+{{/if}}
+{{#one-tooltip}}
+  {{tt this "tooltip.runNumber"}}: <strong>{{runNumberText}}</strong><br>
+  {{#if isOriginRunNumberValid}}
+    {{tt this "tooltip.originRunNumber"}}: <strong>{{originRunNumberText}}</strong><br>
+  {{/if}}
+  {{#if runTypeText}}
+    {{tt this "tooltip.runType"}}: <strong>{{runTypeText}}</strong><br>
+  {{/if}}
+  {{tt this "tooltip.status"}}: <strong>{{statusText}}</strong>
+{{/one-tooltip}}
+{{yield}}

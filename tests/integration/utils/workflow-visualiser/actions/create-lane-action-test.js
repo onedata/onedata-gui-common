@@ -21,7 +21,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
     const createStub = sinon.stub();
     const action = CreateLaneAction.create({
       ownerSource: this,
-      stores: [
+      definedStores: [
         Store.create({
           id: 's1',
           name: 'store1',
@@ -66,6 +66,7 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
         name: 'lane1',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'serial',

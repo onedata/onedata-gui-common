@@ -91,7 +91,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Object>}
    */
-  stores: undefined,
+  definedStores: undefined,
 
   /**
    * @virtual
@@ -146,14 +146,14 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Array<Object>}
    */
-  argumentStores: reads('stores'),
+  argumentStores: reads('definedStores'),
 
   /**
    * @type {ComputedProperty<Array<Object>>}
    */
-  resultStores: computed('stores.[]', function resultStores() {
-    const stores = this.get('stores') || [];
-    return [taskAuditLogStore, workflowAuditLogStore].concat(stores.toArray());
+  resultStores: computed('definedStores.[]', function resultStores() {
+    const definedStores = this.get('definedStores') || [];
+    return [taskAuditLogStore, workflowAuditLogStore].concat(definedStores.toArray());
   }),
 
   /**

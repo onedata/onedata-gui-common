@@ -1,5 +1,5 @@
 /**
- * Creates new lane. Needs stores and createLaneCallback passed via context.
+ * Creates new lane. Needs definedStores and createLaneCallback passed via context.
  * The latter will be used to save a new lane.
  *
  * @module utils/workflow-visualiser/actions/create-lane-action
@@ -34,7 +34,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('context.stores'),
+  definedStores: reads('context.definedStores'),
 
   /**
    * @type {ComputedProperty<Utils.Action>}
@@ -54,15 +54,15 @@ export default Action.extend({
   onExecute() {
     const {
       modalManager,
-      stores,
+      definedStores,
       createStoreAction,
-    } = this.getProperties('modalManager', 'stores', 'createStoreAction');
+    } = this.getProperties('modalManager', 'definedStores', 'createStoreAction');
 
     const result = ActionResult.create();
     return modalManager
       .show('workflow-visualiser/lane-modal', {
         mode: 'create',
-        stores,
+        definedStores,
         createStoreAction,
         onSubmit: laneProvidedByForm =>
           result.interceptPromise(this.createLane(laneProvidedByForm)),

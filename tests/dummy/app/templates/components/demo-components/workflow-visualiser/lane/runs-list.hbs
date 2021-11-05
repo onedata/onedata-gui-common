@@ -1,0 +1,9 @@
+<div class="workflow-visualiser">
+  {{workflow-visualiser/lane/runs-list
+    runsRegistry=runsRegistry
+    selectedRunNumber=selectedRunNumber
+    visibleRunsPosition=visibleRunsPosition
+    onSelectionChange=(action (mut selectedRunNumber))
+    onVisibleRunsPositionChange=(action (mut visibleRunsPosition))
+  }}
+</div>

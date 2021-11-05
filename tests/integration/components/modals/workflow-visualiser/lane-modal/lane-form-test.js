@@ -19,7 +19,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
   });
 
   beforeEach(function () {
-    const stores = A([
+    const definedStores = A([
       // random order to test sorting
       Store.create({
         id: 's3',
@@ -37,11 +37,11 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     this.setProperties({
       changeSpy: sinon.spy(),
       isDisabled: false,
-      stores,
+      definedStores,
       createStoreAction: {
         execute: () => {
           const newStore = { id: 'snew', name: 'new store' };
-          stores.pushObject(newStore);
+          definedStores.pushObject(newStore);
           return resolve({ status: 'done', result: newStore });
         },
       },
@@ -91,6 +91,48 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(this.$('.name-field')).to.have.class('has-success');
     });
 
+    it('renders "max retries" field with "0" as default value', async function () {
+      await render(this);
+
+      const $label = this.$('.maxRetries-field .control-label');
+      const $field = this.$('.maxRetries-field .form-control');
+      expect($label.text().trim()).to.equal('Max. retries:');
+      expect($field).to.have.attr('type', 'number');
+      expect($field).to.have.value('0');
+    });
+
+    it('marks "max retries" field as invalid when it is empty', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-error');
+    });
+
+    it('marks "max retries" field as invalid when it contains negative number', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '-3');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-error');
+    });
+
+    it('marks "max retries" field as invalid when it contains a float number', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '3.5');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-error');
+    });
+
+    it('marks "max retries" field as valid when it contains a positive integer number', async function () {
+      await render(this);
+
+      await fillIn('.maxRetries-field .form-control', '3');
+
+      expect(this.$('.maxRetries-field')).to.have.class('has-success');
+    });
+
     it('has fields group "Iterator options"', async function () {
       await render(this);
 
@@ -113,10 +155,10 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await clickTrigger('.sourceStore-field');
 
       const $options = $('.ember-power-select-option');
-      const stores = this.get('stores');
-      expect($options).to.have.length(stores.length + 1);
+      const definedStores = this.get('definedStores');
+      expect($options).to.have.length(definedStores.length + 1);
       expect($options.eq(0).text().trim()).to.equal('Create store...');
-      stores.sortBy('name').forEach(({ name }, idx) =>
+      definedStores.sortBy('name').forEach(({ name }, idx) =>
         expect($options.eq(idx + 1).text().trim()).to.equal(name)
       );
     });
@@ -203,6 +245,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: '',
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'serial',
@@ -219,6 +262,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'serial',
@@ -242,6 +286,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'serial',
@@ -266,6 +311,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'batch',
@@ -292,6 +338,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'serial',
@@ -320,6 +367,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         expect(changeSpy).to.be.calledWith({
           data: {
             name: 'someName',
+            maxRetries: 0,
             storeIteratorSpec: {
               strategy: {
                 type: 'serial',
@@ -344,6 +392,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "serial" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'serial',
@@ -365,6 +414,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "batch" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'batch',
@@ -408,6 +458,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "serial" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'serial',
@@ -429,6 +480,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     it('fills fields with data of passed lane with "batch" iterator', async function () {
       this.set('lane', {
         name: 'lane1',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'batch',
@@ -467,7 +519,7 @@ async function render(testCase) {
   testCase.render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form
     mode=mode
     lane=lane
-    stores=stores
+    definedStores=definedStores
     createStoreAction=createStoreAction
     isDisabled=isDisabled
     onChange=changeSpy
