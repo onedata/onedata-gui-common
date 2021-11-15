@@ -814,6 +814,16 @@ p.text-separated {
   margin-top: $padding-large-vertical;
 }
 
+.string-path-tooltip {
+  .tooltip-inner {
+    @include font-monospace;
+    max-width: 80vw;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    text-align: left;
+  }
+}
+
 // defined outside .clipboard-line, because it can be placed anywhere
 // semi-hidden element - display: none; or zero-spaced elements do allow copy
 .hidden-clipboard-source {
