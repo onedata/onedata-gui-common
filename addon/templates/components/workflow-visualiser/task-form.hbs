@@ -1,7 +1,19 @@
 <div class="atm-lambda-info">
-  <div class="section-header">{{tt this "usedLambdaHeader"}}</div>
-  <div class="atm-lambda-name">{{atmLambda.name}}</div>
-  <div class="atm-lambda-summary">{{atmLambda.summary}}</div>
+  <div class="section-header">{{tt this "usedLambda.header"}}</div>
+  <div class="atm-lambda-name">
+    <strong>{{tt this "usedLambda.name"}}:</strong>
+    <span class="value">{{atmLambdaRevision.name}}</span>
+  </div>
+  <div class="atm-lambda-revision-number">
+    <strong>{{tt this "usedLambda.revisionNumber"}}:</strong>
+    <span class="value">{{atmLambdaRevisionNumber}}</span>
+  </div>
+  {{#if atmLambdaRevision.summary}}
+    <div class="atm-lambda-summary">
+      <strong>{{tt this "usedLambda.summary"}}:</strong>
+      <span class="value">{{atmLambdaRevision.summary}}</span>
+    </div>
+  {{/if}}
 </div>
 <form class="form form-horizontal form-component" onSubmit={{action "formNativeSubmit"}}>
   <div class="section-header">{{tt this "taskDetailsHeader"}}</div>

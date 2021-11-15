@@ -100,6 +100,12 @@ export default Component.extend(I18n, {
   atmLambda: undefined,
 
   /**
+   * @virtual
+   * @type {number}
+   */
+  atmLambdaRevisionNumber: undefined,
+
+  /**
    * Needed when `mode` is `'edit'` or `'view'`
    * @virtual optional
    * @type {Object}
@@ -149,6 +155,20 @@ export default Component.extend(I18n, {
   argumentStores: reads('stores'),
 
   /**
+   * @type {ComputedProperty<AtmLambdaRevision>}
+   */
+  atmLambdaRevision: computed(
+    'atmLambda.revisionRegistry',
+    'atmLambdaRevisionNumber',
+    function atmLambdaRevision() {
+      const atmLambdaRevisionNumber = this.get('atmLambdaRevisionNumber');
+      return atmLambdaRevisionNumber && this.get(
+        `atmLambda.revisionRegistry.${atmLambdaRevisionNumber}`
+      );
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Array<Object>>}
    */
   resultStores: computed('stores.[]', function resultStores() {
@@ -161,13 +181,13 @@ export default Component.extend(I18n, {
    */
   passedFormValues: computed(
     'task.{name,argumentMappings,resultMappings,resourceSpecOverride}',
-    'atmLambda',
+    'atmLambdaRevision',
     function passedStoreFormValues() {
       const {
         task,
-        atmLambda,
-      } = this.getProperties('task', 'atmLambda');
-      return taskAndAtmLambdaToFormData(task, atmLambda);
+        atmLambdaRevision,
+      } = this.getProperties('task', 'atmLambdaRevision');
+      return taskToFormData(task, atmLambdaRevision);
     }
   ),
 
@@ -468,9 +488,12 @@ export default Component.extend(I18n, {
     });
   }),
 
-  atmLambdaObserver: observer('atmLambda', function atmLambdaObserver() {
-    this.get('fields').reset();
-  }),
+  atmLambdaRevisionObserver: observer(
+    'atmLambdaRevision',
+    function atmLambdaRevisionObserver() {
+      this.get('fields').reset();
+    }
+  ),
 
   formValuesUpdater: observer(
     'mode',
@@ -506,7 +529,7 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
 
-    this.getProperties('passedFormValues', 'atmLambda');
+    this.getProperties('passedFormValues', 'atmLambdaRevision');
     this.formModeUpdater();
   },
 
@@ -515,15 +538,15 @@ export default Component.extend(I18n, {
       onChange,
       fields,
       mode,
-      atmLambda,
-    } = this.getProperties('onChange', 'fields', 'mode', 'atmLambda');
+      atmLambdaRevision,
+    } = this.getProperties('onChange', 'fields', 'mode', 'atmLambdaRevision');
 
     if (mode === 'view') {
       return;
     }
 
     onChange && onChange({
-      data: formDataAndAtmLambdaToTask(fields.dumpValue(), atmLambda),
+      data: formDataToTask(fields.dumpValue(), atmLambdaRevision),
       isValid: get(fields, 'isValid'),
     });
   },
@@ -599,7 +622,7 @@ function defaultValueGenerator(component) {
   };
 }
 
-function taskAndAtmLambdaToFormData(task, atmLambda) {
+function taskToFormData(task, atmLambdaRevision) {
   const {
     name,
     argumentMappings,
@@ -619,7 +642,7 @@ function taskAndAtmLambdaToFormData(task, atmLambda) {
     resultSpecs,
     resourceSpec,
   } = getProperties(
-    atmLambda || {},
+    atmLambdaRevision || {},
     'name',
     'argumentSpecs',
     'resultSpecs',
@@ -764,7 +787,7 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
   };
 }
 
-function formDataAndAtmLambdaToTask(formData, atmLambda) {
+function formDataToTask(formData, atmLambdaRevision) {
   const {
     name,
     argumentMappings,
@@ -780,7 +803,7 @@ function formDataAndAtmLambdaToTask(formData, atmLambda) {
   const {
     argumentSpecs,
     resultSpecs,
-  } = getProperties(atmLambda || {}, 'argumentSpecs', 'resultSpecs');
+  } = getProperties(atmLambdaRevision || {}, 'argumentSpecs', 'resultSpecs');
   const {
     overrideResources,
     resourcesSections,
