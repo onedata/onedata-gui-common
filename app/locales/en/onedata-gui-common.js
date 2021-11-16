@@ -42,6 +42,7 @@ import workflowVisualiser from './onedata-gui-common/components/workflow-visuali
 import idInfo from './onedata-gui-common/components/id-info';
 import actionsPopoverContent from './onedata-gui-common/components/actions-popover-content';
 import archiveDipSwitch from './onedata-gui-common/components/archive-dip-switch';
+import publicFooter from './onedata-gui-common/components/public-footer';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -119,6 +120,7 @@ const translations = {
     idInfo,
     actionsPopoverContent,
     archiveDipSwitch,
+    publicFooter,
     alerts: {
       endpointError,
     },

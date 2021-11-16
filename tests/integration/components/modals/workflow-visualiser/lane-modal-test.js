@@ -18,6 +18,7 @@ import { selectChoose } from '../../../../helpers/ember-power-select';
 
 const simpliestLane = {
   name: 'lane1',
+  maxRetries: 0,
   storeIteratorSpec: {
     strategy: {
       type: 'serial',
@@ -35,7 +36,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     this.setProperties({
       modalManager: lookupService(this, 'modal-manager'),
       modalOptions: {
-        stores: [
+        definedStores: [
           Store.create({
             id: 's1',
             name: 'store1',

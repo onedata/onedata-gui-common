@@ -52,12 +52,65 @@
       {{/render-later}}
     </div>
   </div>
+  {{#if (eq mode "view")}}
+    <div class="lane-runs-info">
+      {{workflow-visualiser/lane/runs-list
+        visibleRunsLimit=6
+        runsRegistry=lane.runsRegistry
+        visibleRunsPosition=lane.visibleRunsPosition
+        selectedRunNumber=lane.visibleRunNumber
+        onSelectionChange=(action "changeRun")
+        onVisibleRunsPositionChange=(action (mut lane.visibleRunsPosition))
+      }}
+    </div>
+    <div class="lane-visible-run-info">
+      {{workflow-visualiser/lane/run-indicator
+        class="visible-run-indicator"
+        isSelected=true
+        status=lane.status
+        runNumber=lane.visibleRunNumber
+        originRunNumber=lane.visibleRun.originRunNumber
+        runType=lane.visibleRun.runType
+      }}
+      <span class="visible-run-timing-label">{{visibleRunTimingLabel}}</span>
+      <span class="visible-run-status-label">{{visibleRunStatusLabel}}</span>
+      {{one-menu-toggle
+        class=(concat-classes
+          "lane-run-actions-trigger"
+          (concat "run-actions-trigger-" elementId)
+          (if areRunActionsOpened "active")
+        )
+        click=(action "toggleRunActionsOpen" (not areRunActionsOpened))
+      }}
+      {{#render-later triggerRender=areRunActionsOpened}}
+        {{#one-webui-popover
+          class="lane-run-actions"
+          padding=false
+          popoverStyle="with-dropdown"
+          triggerSelector=(concat ".run-actions-trigger-" elementId)
+          open=areRunActionsOpened
+          onToggle=(action "toggleRunActionsOpen")
+          as |popover|
+        }}
+          {{#click-outside
+            action=(action (mut areRunActionsOpened) false)
+            except-selector=(concat ".run-actions-trigger-" elementId)
+          }}
+            {{actions-popover-content
+              actionsArray=laneRunActions
+              actionClicked=(action "toggleRunActionsOpen" false)
+            }}
+          {{/click-outside}}
+        {{/one-webui-popover}}
+      {{/render-later}}
+    </div>
+  {{/if}}
   <div class="lane-store-info">
     <span class="one-label">{{iteratorStrategyLabel}}</span>
-    {{#if lane.store.name}}
+    {{#if lane.iteratedStore}}
       <div class="tags-input readonly">
         {{workflow-visualiser/stores-list/store
-          store=lane.store
+          store=lane.iteratedStore
           mode=mode
           actionsFactory=actionsFactory
           isRemovingAllowed=false

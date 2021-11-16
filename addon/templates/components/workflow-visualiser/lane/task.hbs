@@ -54,17 +54,19 @@
   }}
     <div class="task-details">
       <div class="detail-entries">
-        <div class="detail-entry instance-id-detail">
-          <div class="detail-label">{{tt this "details.instanceId"}}:</div>
-          <div class="detail-value">
-            {{#truncated-string}}{{task.instanceId}}{{/truncated-string}}
-            {{one-icon
-              icon=copyInstanceIdAction.icon
-              class=copyInstanceIdAction.className
-              click=copyInstanceIdAction.executeCallback
-            }}
+        {{#if task.instanceId}}
+          <div class="detail-entry instance-id-detail">
+            <div class="detail-label">{{tt this "details.instanceId"}}:</div>
+            <div class="detail-value">
+              {{#truncated-string}}{{task.instanceId}}{{/truncated-string}}
+              {{one-icon
+                icon=copyInstanceIdAction.icon
+                class=copyInstanceIdAction.className
+                click=copyInstanceIdAction.executeCallback
+              }}
+            </div>
           </div>
-        </div>
+        {{/if}}
         <div class="detail-entry status-detail">
           <div class="detail-label">{{tt this "details.status"}}:</div>
           <div class="detail-value">{{statusTranslation}}</div>
@@ -81,11 +83,13 @@
           <div class="detail-label">{{tt this "details.itemsFailed"}}:</div>
           <div class="detail-value">{{itemsFailed}}</div>
         </div>
-        <div class="detail-entry audit-log-detail">
-          <a class="clickable show-audit-log" {{action "showAuditLog"}}>
-            {{tt this "details.auditLog"}}
-          </a>
-        </div>
+        {{#if task.systemAuditLogStore}}
+          <div class="detail-entry audit-log-detail">
+            <a class="clickable show-audit-log" {{action "showAuditLog"}}>
+              {{tt this "details.auditLog"}}
+            </a>
+          </div>
+        {{/if}}
       </div>
     </div>
   {{/one-collapse}}

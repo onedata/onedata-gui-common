@@ -176,6 +176,8 @@ $workflow-visualiser-last-between-task-space-size: 30px;
 
 @import './workflow-visualiser/interlane-space';
 @import './workflow-visualiser/lane';
+@import './workflow-visualiser/lane/run-indicator';
+@import './workflow-visualiser/lane/runs-list';
 @import './workflow-visualiser/lane/parallel-box';
 @import './workflow-visualiser/lane/task';
 @import './workflow-visualiser/lane/interblock-space';

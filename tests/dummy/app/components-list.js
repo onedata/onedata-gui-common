@@ -39,6 +39,7 @@ export default [
   'provider-spaces-support-chart',
   'providers-list',
   'providers-map-tile',
+  'public-footer',
   'query-builder',
   'remove-icon',
   'resource-load-error',
@@ -47,4 +48,6 @@ export default [
   'support-size-info',
   'tags-input',
   'workflow-visualiser',
+  'workflow-visualiser/lane/run-indicator',
+  'workflow-visualiser/lane/runs-list',
 ];

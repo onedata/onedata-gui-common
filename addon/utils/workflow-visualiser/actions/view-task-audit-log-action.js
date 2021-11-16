@@ -13,14 +13,6 @@ import { set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
-const auditLogDummyStore = {
-  type: 'auditLog',
-  dataSpec: {
-    type: 'object',
-    valueConstraints: {},
-  },
-};
-
 export default Action.extend({
   modalManager: service(),
 
@@ -30,7 +22,7 @@ export default Action.extend({
   task: reads('context.task'),
 
   /**
-   * @param {Utils.WorkflowVisualiser.Lane.Task} task
+   * @param {Utils.WorkflowVisualiser.Store} store
    * @type {ComputedProperty<Function>}
    */
   getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
@@ -48,6 +40,7 @@ export default Action.extend({
       'getAuditLogContentCallback',
       'modalManager'
     );
+    const systemAuditLogStore = get(task, 'systemAuditLogStore');
 
     const result = ActionResult.create();
     return modalManager
@@ -55,10 +48,9 @@ export default Action.extend({
         mode: 'view',
         viewModeLayout: 'auditLog',
         auditLogSubjectName: `"${get(task, 'name')}"`,
-        store: Object.assign({}, auditLogDummyStore, {
-          instanceId: get(task, 'systemAuditLogStoreInstanceId'),
-        }),
-        getStoreContentCallback: (...args) => getAuditLogContentCallback(task, ...args),
+        store: systemAuditLogStore,
+        getStoreContentCallback: (...args) =>
+          getAuditLogContentCallback(systemAuditLogStore, ...args),
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

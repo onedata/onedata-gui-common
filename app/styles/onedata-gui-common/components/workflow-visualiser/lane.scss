@@ -1,4 +1,6 @@
 .workflow-visualiser .workflow-visualiser-lane {
+  $header-section-horizontal-padding: $padding-small-horizontal * 0.8;
+
   flex: 0 0 $workflow-visualiser-lane-width;
   display: flex;
   flex-direction: column;
@@ -14,6 +16,8 @@
   }
 
   .lane-header,
+  .lane-runs-info,
+  .lane-visible-run-info,
   .lane-store-info {
     display: flex;
     align-items: center;
@@ -21,9 +25,13 @@
     border-bottom: $workflow-visualiser-lane-border-width solid $workflow-visualiser-lane-border-color;
   }
 
+  .lane-runs-info {
+    justify-content: center;
+  }
+
   .lane-store-info {
     justify-content: space-between;
-    padding: 0 $padding-small-horizontal * 0.8;
+    padding: 0 $header-section-horizontal-padding;
     white-space: nowrap;
 
     .tags-input,
@@ -35,6 +43,18 @@
       margin: 0;
       margin-left: $padding-xs-horizontal;
     }
+  }
+
+  .lane-visible-run-info {
+    padding-left: $header-section-horizontal-padding;
+  }
+
+  .visible-run-indicator {
+    margin-right: $header-section-horizontal-padding;
+  }
+
+  .visible-run-status-label {
+    margin-left: auto;
   }
 
   .lane-drag-handle {
@@ -58,7 +78,8 @@
     flex: 0 0 45px;
   }
 
-  .lane-actions-trigger {
+  .lane-actions-trigger,
+  .lane-run-actions-trigger {
     vertical-align: middle;
     float: right;
     padding: 0 ($padding-xs-horizontal * (2/3));

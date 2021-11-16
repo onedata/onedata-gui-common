@@ -1,0 +1,64 @@
+.workflow-visualiser .runs-list {
+  $indicator-slot-width: 35px;
+  $indicator-slot-height: 33px;
+  $padding-top: 8px;
+  $padding-horizontal: 0.3em;
+
+  display: flex;
+
+  .run-indicators-list {
+    position: relative;
+    display: inline-flex;
+    padding: $padding-top $padding-horizontal 0 $padding-horizontal;
+    margin: 0;
+    height: $indicator-slot-height + $padding-top;
+    list-style-type: none;
+    overflow: hidden;
+  }
+
+  .run-indicators-item {
+    position: relative;
+    display: inline-block;
+    width: $indicator-slot-width;
+    text-align: center;
+
+    &.animated {
+      transition: transition-ease(left), transition-ease(right);
+    }
+
+    &.new-item {
+      position: absolute;
+      transform: translateX(#{$padding-horizontal});
+    }
+
+    &:not(.new-item) ~ .new-item {
+      transform: translateX(#{-$padding-horizontal});
+    }
+  }
+
+  .move-runs-btn {
+    display: flex;
+    align-items: center;
+    height: 25px;
+    padding: 0;
+    margin-top: $padding-top;
+    background: none;
+    border: 0;
+
+    &:hover {
+      color: scale-color($main-text-color, $lightness: 30%);
+    }
+
+    &[disabled] {
+      &, &:hover {
+        color: $main-text-color-disabled;
+      }
+    }
+
+    .one-icon {
+      font-weight: bold;
+      font-size: 1.5em;
+      line-height: 0;
+    }
+  }
+}

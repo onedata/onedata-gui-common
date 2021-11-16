@@ -20,7 +20,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
     actionsFactory.setCreateStoreCallback(createStoreStub);
     this.setProperties({
       actionsFactory,
-      stores: [
+      definedStores: [
         Store.create({
           name: 'store2',
         }),
@@ -96,7 +96,7 @@ async function render(testCase) {
     {{workflow-visualiser/stores-list
       actionsFactory=actionsFactory
       mode=mode
-      stores=stores
+      definedStores=definedStores
     }}
   `);
   await wait();

@@ -12,8 +12,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { get } from '@ember/object';
 import ArrayProxy from '@ember/array/proxy';
+import ObjectProxy from '@ember/object/proxy';
 import { reads } from '@ember/object/computed';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import CreateLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-lane-action';
@@ -36,6 +37,9 @@ import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import ViewWorkflowAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-audit-log-action';
 import ViewTaskAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-audit-log-action';
+import ViewLaneFailedItemsAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-failed-items-action';
+import RetryLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/retry-lane-action';
+import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/rerun-lane-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -46,14 +50,14 @@ export default EmberObject.extend(OwnerInjector, {
 
   /**
    * @type {Function}
-   * @param {Array<Object>} initialData.stores
+   * @param {Array<Object>} initialData.definedStores
    * @returns {Promise<Object>} task details
    */
   getTaskCreationDataCallback: undefined,
 
   /**
    * @type {Function}
-   * @param {Array<Object>} initialData.stores
+   * @param {Array<Object>} initialData.definedStores
    * @param {Object} initialData.task
    * @returns {Promise<Object>} task details
    */
@@ -67,12 +71,29 @@ export default EmberObject.extend(OwnerInjector, {
   createStoreCallback: undefined,
 
   /**
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {AtmLaneRunNumber} runNumber
+   * @returns {Promise}
+   */
+  retryLaneCallback: undefined,
+
+  /**
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane} lane
+   * @param {AtmLaneRunNumber} runNumber
+   * @returns {Promise}
+   */
+  rerunLaneCallback: undefined,
+
+  /**
    * @param {WorkflowDataProvider} workflowDataProvider
    * @returns {undefined}
    */
   setWorkflowDataProvider(workflowDataProvider) {
     if (this.get('workflowDataProvider')) {
-      console.warn('workflow-visualiser/actions-factory: overriding workflowDataProvider');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setWorkflowDataProvider: overriding workflowDataProvider');
     }
     this.set('workflowDataProvider', workflowDataProvider);
   },
@@ -82,7 +103,9 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setGetTaskCreationDataCallback(getTaskCreationDataCallback) {
     if (this.get('getTaskCreationDataCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding getTaskCreationDataCallback');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setGetTaskCreationDataCallback: overriding getTaskCreationDataCallback'
+      );
     }
     this.set('getTaskCreationDataCallback', getTaskCreationDataCallback);
   },
@@ -92,7 +115,9 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setGetTaskModificationDataCallback(getTaskModificationDataCallback) {
     if (this.get('getTaskModificationDataCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding getTaskModificationDataCallback');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setGetTaskModificationDataCallback: overriding getTaskModificationDataCallback'
+      );
     }
     this.set('getTaskModificationDataCallback', getTaskModificationDataCallback);
   },
@@ -102,9 +127,30 @@ export default EmberObject.extend(OwnerInjector, {
    */
   setCreateStoreCallback(createStoreCallback) {
     if (this.get('createStoreCallback')) {
-      console.warn('workflow-visualiser/actions-factory: overriding createStoreCallback');
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setCreateStoreCallback: overriding createStoreCallback');
     }
     this.set('createStoreCallback', createStoreCallback);
+  },
+
+  /**
+   * @param {Function} retryLaneCallback
+   */
+  setRetryLaneCallback(retryLaneCallback) {
+    if (this.get('retryLaneCallback')) {
+      console.warn('util:workflow-visualiser/actions-factory#setRetryLaneCallback: overriding retryLaneCallback');
+    }
+    this.set('retryLaneCallback', retryLaneCallback);
+  },
+
+  /**
+   * @param {Function} rerunLaneCallback
+   */
+  setRerunLaneCallback(rerunLaneCallback) {
+    if (this.get('rerunLaneCallback')) {
+      console.warn('util:workflow-visualiser/actions-factory#setRerunLaneCallback: overriding rerunLaneCallback');
+    }
+    this.set('rerunLaneCallback', rerunLaneCallback);
   },
 
   /**
@@ -115,7 +161,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
@@ -129,7 +175,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         createStoreAction: this.createCreateStoreAction(),
       }, context),
     });
@@ -143,7 +189,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ViewLaneAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
       }, context),
     });
   },
@@ -220,7 +266,7 @@ export default EmberObject.extend(OwnerInjector, {
     return CreateTaskAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         taskDetailsProviderCallback: this.get('getTaskCreationDataCallback') || notImplementedIgnore,
       }, context),
     });
@@ -234,7 +280,7 @@ export default EmberObject.extend(OwnerInjector, {
     return ModifyTaskAction.create({
       ownerSource: this,
       context: Object.assign({
-        stores: this.getStoresArrayProxy(),
+        definedStores: this.getDefinedStoresArrayProxy(),
         taskDetailsProviderCallback: this.get('getTaskModificationDataCallback') || notImplementedIgnore,
       }, context),
     });
@@ -295,12 +341,16 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Utils.WorkflowVisualiser.Actions.ViewWorkflowAuditLogAction}
    */
   createViewWorkflowAuditLogAction(context) {
+    const workflow = this.get('workflowDataProvider.workflow');
     return ViewWorkflowAuditLogAction.create({
       ownerSource: this,
       context: Object.assign({
         workflow: this.get('workflowDataProvider.workflow'),
         getAuditLogContentCallback: (...args) =>
-          this.get('workflowDataProvider').getWorkflowAuditLogContent(...args),
+          this.get('workflowDataProvider').getStoreContent(
+            get(workflow, 'systemAuditLogStore'),
+            ...args
+          ),
       }, context),
     });
   },
@@ -314,7 +364,52 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         getAuditLogContentCallback: (...args) =>
-          this.get('workflowDataProvider').getTaskAuditLogContent(...args),
+          this.get('workflowDataProvider').getStoreContent(...args),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {AtmLaneRunNumber} [context.runNumber]
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewLaneFailedItemsAction}
+   */
+  createViewLaneFailedItemsAction(context) {
+    return ViewLaneFailedItemsAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        getStoreContentCallback: (...args) =>
+          this.get('workflowDataProvider').getStoreContent(...args),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {AtmLaneRunNumber} context.runNumber
+   * @returns {Utils.WorkflowVisualiser.Actions.RetryLaneAction}
+   */
+  createRetryLaneAction(context) {
+    return RetryLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        workflow: this.getWorkflowProxy(),
+        retryLaneCallback: (...args) => this.get('retryLaneCallback')(...args),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane} context.lane
+   * @param {AtmLaneRunNumber} context.runNumber
+   * @returns {Utils.WorkflowVisualiser.Actions.RerunLaneAction}
+   */
+  createRerunLaneAction(context) {
+    return RerunLaneAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        workflow: this.getWorkflowProxy(),
+        rerunLaneCallback: (...args) => this.get('rerunLaneCallback')(...args),
       }, context),
     });
   },
@@ -323,9 +418,19 @@ export default EmberObject.extend(OwnerInjector, {
    * @private
    * @returns {ArrayProxy<Utils.WorkflowVisualiser.Store>}
    */
-  getStoresArrayProxy() {
+  getDefinedStoresArrayProxy() {
     return ArrayProxy
-      .extend({ content: reads('factory.workflowDataProvider.stores') })
+      .extend({ content: reads('factory.workflowDataProvider.definedStores') })
+      .create({ factory: this });
+  },
+
+  /**
+   * @private
+   * @returns {ObjectProxy<Utils.WorkflowVisualiser.Workflow>}
+   */
+  getWorkflowProxy() {
+    return ObjectProxy
+      .extend({ content: reads('factory.workflowDataProvider.workflow') })
       .create({ factory: this });
   },
 });

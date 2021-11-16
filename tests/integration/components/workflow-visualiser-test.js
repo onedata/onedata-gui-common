@@ -108,6 +108,7 @@ describe('Integration | Component | workflow visualiser', function () {
         rawDump.lanes.push({
           id: sinon.match.string,
           name: 'lane1',
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'serial',
@@ -160,6 +161,7 @@ describe('Integration | Component | workflow visualiser', function () {
       },
       applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
         name: 'othername',
+        maxRetries: 0,
         storeIteratorSpec: {
           strategy: {
             type: 'serial',
@@ -200,6 +202,7 @@ describe('Integration | Component | workflow visualiser', function () {
           requiresInitialValue: false,
         });
         Object.assign(rawDump.lanes[0], {
+          maxRetries: 0,
           storeIteratorSpec: {
             strategy: {
               type: 'serial',
@@ -638,6 +641,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
     applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
       name: 'lane999',
+      maxRetries: 0,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',
@@ -1013,6 +1017,7 @@ function generateExample(
     lanes: _.range(lanesNumber).map(laneNo => ({
       id: laneIdFromExample(laneNo),
       name: `lane${laneNo}`,
+      maxRetries: 0,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',

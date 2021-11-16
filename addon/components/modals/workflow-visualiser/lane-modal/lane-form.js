@@ -50,7 +50,7 @@ export default Component.extend(I18n, {
    * @virtual
    * @type {Array<Utils.WorkflowVisualiser.Store>}
    */
-  stores: undefined,
+  definedStores: undefined,
 
   /**
    * Needed when `mode` is `'create'` or `'edit'`
@@ -107,9 +107,11 @@ export default Component.extend(I18n, {
   fields: computed(function fields() {
     const {
       nameField,
+      maxRetriesField,
       iteratorOptionsFieldsGroup,
     } = this.getProperties(
       'nameField',
+      'maxRetriesField',
       'iteratorOptionsFieldsGroup'
     );
 
@@ -125,6 +127,7 @@ export default Component.extend(I18n, {
       component: this,
       fields: [
         nameField,
+        maxRetriesField,
         iteratorOptionsFieldsGroup,
       ],
     });
@@ -138,6 +141,19 @@ export default Component.extend(I18n, {
       .extend(defaultValueGenerator(this, raw('')))
       .create({
         name: 'name',
+      });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.NumberField>}
+   */
+  maxRetriesField: computed(function maxRetriesField() {
+    return NumberField
+      .extend(defaultValueGenerator(this, raw('0')))
+      .create({
+        name: 'maxRetries',
+        gte: 0,
+        integer: true,
       });
   }),
 
@@ -174,8 +190,8 @@ export default Component.extend(I18n, {
     return DropdownField
       // using options.1 becase options.firstObject is the "createStore" item
       .extend(defaultValueGenerator(this, 'options.1.value'), {
-        options: computed('component.stores.@each.name', function options() {
-          const storeOptions = (this.get('component.stores') || []).map(store => {
+        options: computed('component.definedStores.@each.name', function options() {
+          const storeOptions = (this.get('component.definedStores') || []).map(store => {
             const {
               id,
               name,
@@ -341,8 +357,9 @@ function defaultValueGenerator(component, createDefaultValue) {
 function laneToFormData(lane) {
   const {
     name,
+    maxRetries,
     storeIteratorSpec,
-  } = getProperties(lane || {}, 'name', 'storeIteratorSpec');
+  } = getProperties(lane || {}, 'name', 'maxRetries', 'storeIteratorSpec');
   const {
     strategy,
     storeSchemaId,
@@ -354,6 +371,7 @@ function laneToFormData(lane) {
 
   return {
     name,
+    maxRetries,
     iteratorOptions: {
       sourceStore: storeSchemaId,
       strategy: type,
@@ -367,10 +385,12 @@ function laneToFormData(lane) {
 function formDataToLane(formData) {
   const {
     name,
+    maxRetries,
     iteratorOptions,
   } = getProperties(
     formData,
     'name',
+    'maxRetries',
     'iteratorOptions',
   );
   const {
@@ -398,6 +418,7 @@ function formDataToLane(formData) {
 
   return {
     name,
+    maxRetries: Number.parseInt(maxRetries) || 0,
     storeIteratorSpec,
   };
 }

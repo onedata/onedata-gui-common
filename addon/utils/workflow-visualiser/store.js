@@ -23,6 +23,12 @@ export default EmberObject.extend({
   id: undefined,
 
   /**
+   * @virtual
+   * @type {String}
+   */
+  schemaId: undefined,
+
+  /**
    * @virtual optional
    * @type {String}
    */

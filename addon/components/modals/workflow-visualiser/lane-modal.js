@@ -1,7 +1,7 @@
 /**
  * A modal that allows create, view and modify workflow lanes. `modalOptions` fields:
  * - `mode` - one of `'create'`, `'edit'`, `'view'`
- * - `stores` - collection of available workflow stores
+ * - `definedStores` - collection of available workflow stores
  * - `lane` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`
  *
  * @module components/modals/workflow-visualiser/lane-modal
@@ -63,7 +63,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('modalOptions.stores'),
+  definedStores: reads('modalOptions.definedStores'),
 
   /**
    * @type {ComputedProperty<Utils.Action>}

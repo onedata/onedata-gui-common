@@ -1,5 +1,5 @@
 /**
- * Shows lane details. Needs stores and lane passed via context.
+ * Shows lane details. Needs definedStores and lane passed via context.
  *
  * @module utils/workflow-visualiser/actions/view-lane-action
  * @author Michał Borzęcki
@@ -34,7 +34,7 @@ export default Action.extend({
   /**
    * @type {ComputedProperty<Array<Utils.WorkflowVisualiser.Store>>}
    */
-  stores: reads('context.stores'),
+  definedStores: reads('context.definedStores'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.lane>}
@@ -46,11 +46,11 @@ export default Action.extend({
    */
   onExecute() {
     const {
-      stores,
+      definedStores,
       lane,
       modalManager,
     } = this.getProperties(
-      'stores',
+      'definedStores',
       'lane',
       'modalManager'
     );
@@ -59,7 +59,7 @@ export default Action.extend({
     return modalManager
       .show('workflow-visualiser/lane-modal', {
         mode: 'view',
-        stores,
+        definedStores,
         lane,
       }).hiddenPromise
       .then(() => {

@@ -445,7 +445,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       execute: () => {
         if (this.get('createStoreSucceeds')) {
           const newStoreFromCreation = this.get('newStoreFromCreation');
-          this.get('stores').pushObject(newStoreFromCreation);
+          this.get('definedStores').pushObject(newStoreFromCreation);
           return resolve({ status: 'done', result: newStoreFromCreation });
         } else {
           return resolve({ status: 'failed' });
@@ -458,7 +458,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     this.setProperties({
       atmLambda: _.cloneDeep(exampleAtmLambda),
       atmLambdaRevisionNumber: 1,
-      stores: A(_.cloneDeep(allPossibleStores)),
+      definedStores: A(_.cloneDeep(allPossibleStores)),
       createStoreSucceeds: true,
       newStoreFromCreation: undefined,
       actionsFactory,
@@ -1420,7 +1420,7 @@ async function render(testCase) {
     task=task
     atmLambda=atmLambda
     atmLambdaRevisionNumber=atmLambdaRevisionNumber
-    stores=stores
+    definedStores=definedStores
     isDisabled=isDisabled
     actionsFactory=actionsFactory
     onChange=changeSpy

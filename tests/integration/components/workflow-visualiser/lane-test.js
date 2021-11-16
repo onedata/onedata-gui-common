@@ -50,7 +50,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
   beforeEach(function () {
     const actionsFactory = ActionsFactory.create({ ownerSource: this });
     actionsFactory.setWorkflowDataProvider({
-      stores: [
+      definedStores: [
         Store.create({
           id: 's1',
           name: 'store1',
@@ -64,6 +64,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
     this.set('lane', Lane.create({
       actionsFactory,
       name: 'lane1',
+      maxRetries: 0,
       storeIteratorSpec: {
         strategy: {
           type: 'serial',
