@@ -1,3 +1,10 @@
 <td class="revision-number">{{one-icon icon=createRevisionAction.icon}}</td>
-<td colspan={{sub columnsCount 1}}>{{createRevisionAction.title}}</td>
+<td colspan={{sub columnsCount 1}}>
+  <span class="action-title">
+    {{createRevisionAction.title}}
+    {{#if createRevisionAction.tip}}
+      {{one-tooltip title=createRevisionAction.tip}}
+    {{/if}}
+  </span>
+</td>
 {{yield}}

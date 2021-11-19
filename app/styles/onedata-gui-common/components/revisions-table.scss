@@ -26,17 +26,24 @@
   }
 
   .revisions-table-create-revision-entry {
-    color: $color-one-mint;
+    &.enabled {
+      color: $color-one-mint;
+
+      &:hover {
+        background-color: $main-content-hover-background;
+      }
+    }
+
+    &.disabled {
+      color: $main-text-color-disabled;
+      cursor: initial !important;
+    }
 
     .one-icon {
       display: inline-block;
       font-size: 130%;
       vertical-align: text-top;
       transform: translateX(-0.25em);
-    }
-
-    &:hover {
-      background-color: $main-content-hover-background;
     }
   }
 

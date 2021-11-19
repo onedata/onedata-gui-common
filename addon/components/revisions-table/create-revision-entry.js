@@ -1,12 +1,15 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/revisions-table/create-revision-entry';
-import { computed } from '@ember/object';
+import { computed, get } from '@ember/object';
 
 export default Component.extend({
   layout,
   tagName: 'tr',
   classNames: ['revisions-table-create-revision-entry'],
-  classNameBindings: ['createRevisionAction.className'],
+  classNameBindings: [
+    'createRevisionAction.className',
+    'createRevisionAction.disabled:disabled:enabled',
+  ],
 
   /**
    * @virtual
@@ -34,6 +37,9 @@ export default Component.extend({
    * @override
    */
   click() {
-    this.get('createRevisionAction').execute();
+    const createRevisionAction = this.get('createRevisionAction');
+    if (createRevisionAction && !get(createRevisionAction, 'disabled')) {
+      createRevisionAction.execute();
+    }
   },
 });
