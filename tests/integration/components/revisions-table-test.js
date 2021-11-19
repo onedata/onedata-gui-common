@@ -281,6 +281,16 @@ describe('Integration | Component | revisions table', function () {
       expect(this.$('.revisions-table-create-revision-entry')).to.not.exist;
       expect(this.$('.revision-actions-trigger')).to.not.exist;
     });
+
+  it('shows "no revisions" row when there are no revisions to show', async function () {
+    this.set('revisionRegistry', {});
+    await render(this);
+
+    expect(this.$('.revisions-table-revision-entry')).to.not.exist;
+    const $emptyEntry = this.$('.revisions-table-empty-entry');
+    expect($emptyEntry).to.exist;
+    expect($emptyEntry.text().trim()).to.equal('No revisions');
+  });
 });
 
 async function render(testCase) {

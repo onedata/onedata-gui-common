@@ -15,7 +15,13 @@
       revisionActionsFactory=revisionActionsFactory
     }}
   {{/unless}}
-  {{#if (not-eq latestRevNum null)}}
+  {{#if (eq latestRevNum null)}}
+    <tr class="revisions-table-empty-entry">
+      <td colspan={{columnsCount}} class="small text-muted text-center">
+        {{tt this "noRevisions"}}
+      </td>
+    </tr>
+  {{else}}
     {{#revisions-table/revision-entry
       revisionNumber=latestRevNum
       revision=(get revisionRegistry latestRevNum)
@@ -26,63 +32,63 @@
     }}
       {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
     {{/revisions-table/revision-entry}}
-  {{/if}}
-  {{#if revNumsBetweenStableAndLatest.length}}
-    {{#if areRevNumsBetweenStableAndLatestExpanded}}
-      {{#each revNumsBetweenStableAndLatest as |revNum|}}
-        {{#revisions-table/revision-entry
-          revisionNumber=revNum
-          revision=(get revisionRegistry revNum)
-          revisionActionsFactory=revisionActionsFactory
-          onClick=onRevisionClick
-          isReadOnly=isReadOnly
-          as |revision revisionNumber|
+    {{#if revNumsBetweenStableAndLatest.length}}
+      {{#if areRevNumsBetweenStableAndLatestExpanded}}
+        {{#each revNumsBetweenStableAndLatest as |revNum|}}
+          {{#revisions-table/revision-entry
+            revisionNumber=revNum
+            revision=(get revisionRegistry revNum)
+            revisionActionsFactory=revisionActionsFactory
+            onClick=onRevisionClick
+            isReadOnly=isReadOnly
+            as |revision revisionNumber|
+          }}
+            {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
+          {{/revisions-table/revision-entry}}
+        {{/each}}
+      {{else}}
+        {{revisions-table/revision-entries-expander
+          class="between-revisions-expander"
+          columnsCount=columnsCount
+          entriesCount=revNumsBetweenStableAndLatest.length
+          onExpand=(action "expandRevsBetweenStableAndLatest")
         }}
-          {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
-        {{/revisions-table/revision-entry}}
-      {{/each}}
-    {{else}}
-      {{revisions-table/revision-entries-expander
-        class="between-revisions-expander"
-        columnsCount=columnsCount
-        entriesCount=revNumsBetweenStableAndLatest.length
-        onExpand=(action "expandRevsBetweenStableAndLatest")
-      }}
+      {{/if}}
     {{/if}}
-  {{/if}}
-  {{#if (and (not-eq latestStableRevNum null) (not-eq latestStableRevNum latestRevNum))}}
-    {{#revisions-table/revision-entry
-      revisionNumber=latestStableRevNum
-      revision=(get revisionRegistry latestStableRevNum)
-      revisionActionsFactory=revisionActionsFactory
-      onClick=onRevisionClick
-      isReadOnly=isReadOnly
-      as |revision revisionNumber|
-    }}
-      {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
-    {{/revisions-table/revision-entry}}
-  {{/if}}
-  {{#if revNumsBeforeStable.length}}
-    {{#if areRevNumsBeforeStableExpanded}}
-      {{#each revNumsBeforeStable as |revNum|}}
-        {{#revisions-table/revision-entry
-          revisionNumber=revNum
-          revision=(get revisionRegistry revNum)
-          revisionActionsFactory=revisionActionsFactory
-          onClick=onRevisionClick
-          isReadOnly=isReadOnly
-          as |revision revisionNumber|
-        }}
-          {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
-        {{/revisions-table/revision-entry}}
-      {{/each}}
-    {{else}}
-      {{revisions-table/revision-entries-expander
-        class="older-revisions-expander"
-        columnsCount=columnsCount
-        entriesCount=revNumsBeforeStable.length
-        onExpand=(action "expandRevsBeforeStable")
+    {{#if (and (not-eq latestStableRevNum null) (not-eq latestStableRevNum latestRevNum))}}
+      {{#revisions-table/revision-entry
+        revisionNumber=latestStableRevNum
+        revision=(get revisionRegistry latestStableRevNum)
+        revisionActionsFactory=revisionActionsFactory
+        onClick=onRevisionClick
+        isReadOnly=isReadOnly
+        as |revision revisionNumber|
       }}
+        {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
+      {{/revisions-table/revision-entry}}
+    {{/if}}
+    {{#if revNumsBeforeStable.length}}
+      {{#if areRevNumsBeforeStableExpanded}}
+        {{#each revNumsBeforeStable as |revNum|}}
+          {{#revisions-table/revision-entry
+            revisionNumber=revNum
+            revision=(get revisionRegistry revNum)
+            revisionActionsFactory=revisionActionsFactory
+            onClick=onRevisionClick
+            isReadOnly=isReadOnly
+            as |revision revisionNumber|
+          }}
+            {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
+          {{/revisions-table/revision-entry}}
+        {{/each}}
+      {{else}}
+        {{revisions-table/revision-entries-expander
+          class="older-revisions-expander"
+          columnsCount=columnsCount
+          entriesCount=revNumsBeforeStable.length
+          onExpand=(action "expandRevsBeforeStable")
+        }}
+      {{/if}}
     {{/if}}
   {{/if}}
 </tbody>

@@ -6,6 +6,7 @@ export default {
   stateTag,
   revisionEntry,
   revisionEntriesExpander,
+  noRevisions: 'No revisions',
   column: {
     revisionNumber: 'Rev.',
     state: 'State',
