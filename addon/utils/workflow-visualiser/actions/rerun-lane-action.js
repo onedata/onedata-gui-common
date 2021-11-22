@@ -13,7 +13,7 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { raw, eq, or, not } from 'ember-awesome-macros';
+import { raw, eq, and, not, getBy } from 'ember-awesome-macros';
 import { workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { inAdvanceRunNumber } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
@@ -38,26 +38,39 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: or('isRunPreparedInAdvance', not('isWorkflowEnded')),
+  disabled: not(and('isWorkflowEnded', 'laneRun.isRerunable')),
 
   /**
    * @override
    */
-  tip: computed('isRunPreparedInAdvance', 'isWorkflowEnded', function tip() {
-    const {
-      isRunPreparedInAdvance,
-      isWorkflowEnded,
-    } = this.getProperties('isRunPreparedInAdvance', 'isWorkflowEnded');
+  tip: computed(
+    'isRunPreparedInAdvance',
+    'isWorkflowEnded',
+    'disabled',
+    function tip() {
+      const {
+        isRunPreparedInAdvance,
+        isWorkflowEnded,
+        disabled,
+      } = this.getProperties(
+        'isRunPreparedInAdvance',
+        'isWorkflowEnded',
+        'disabled'
+      );
 
-    let translationName;
-    if (!isWorkflowEnded) {
-      translationName = 'workflowNotEnded';
-    } else if (isRunPreparedInAdvance) {
-      translationName = 'preparedInAdvance';
+      let translationName;
+      if (!isWorkflowEnded) {
+        translationName = 'workflowNotEnded';
+      } else if (isRunPreparedInAdvance) {
+        translationName = 'preparedInAdvance';
+      } else if (disabled) {
+        // Lane run cannot be rerun due to some backend constraints we don't know
+        translationName = 'unknownReason';
+      }
+
+      return translationName ? this.t(`disabledTip.${translationName}`) : null;
     }
-
-    return translationName ? this.t(`disabledTip.${translationName}`) : null;
-  }),
+  ),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Workflow>}
@@ -86,6 +99,11 @@ export default Action.extend({
    * @type {ComputedProperty<Boolean>}
    */
   isRunPreparedInAdvance: eq('runNumber', raw(inAdvanceRunNumber)),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  laneRun: getBy('lane.runsRegistry', 'runNumber'),
 
   /**
    * @type {ComputedProperty<Boolean>}

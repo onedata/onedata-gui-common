@@ -64,6 +64,7 @@ export default {
         disabledTip: {
           workflowNotEnded: 'Rerun can be scheduled only when the workflow execution is ended.',
           preparedInAdvance: 'Rerun cannot be scheduled for runs prepared in advance.',
+          unknownReason: 'Rerun of this lane run is not possible.',
         },
       },
     },

@@ -37,7 +37,7 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: not(and('isWorkflowEnded', 'laneRun.canBeRetried')),
+  disabled: not(and('isWorkflowEnded', 'laneRun.isRetriable')),
 
   /**
    * @override
