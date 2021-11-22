@@ -18,7 +18,7 @@ describe('Unit | Utility | revisions/sort revision numbers', function () {
     expect(result).to.deep.equal([]);
   });
 
-  it('returns only valid revision numbers, when some of passed number are invalid',
+  it('returns only valid revision numbers, when some of passed numbers are invalid',
     function () {
       const result = sortRevisionNumbers(
         [1, 11, 2, 10, null, undefined, -4, 2.5, 'test']

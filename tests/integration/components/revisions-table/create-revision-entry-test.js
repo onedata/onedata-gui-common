@@ -36,7 +36,7 @@ describe('Integration | Component | revisions table/create revision entry', func
       .and.to.have.length(1);
   });
 
-  it('shows correct icon text', async function () {
+  it('shows correct icon and text', async function () {
     await render(this);
 
     expect(this.$('.one-icon')).to.have.class('oneicon-plus');

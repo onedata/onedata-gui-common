@@ -42,7 +42,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.RevisionActionsFactory}
+   * @type {Utils.Revisions.RevisionActionsFactory}
    */
   revisionActionsFactory: undefined,
 

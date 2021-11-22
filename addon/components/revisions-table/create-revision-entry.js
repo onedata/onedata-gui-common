@@ -1,3 +1,12 @@
+/**
+ * Renders a special revisions table entry, which allows to create new revision.
+ *
+ * @module components/revisions-table/create-revision-entry
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import layout from '../../templates/components/revisions-table/create-revision-entry';
 import { computed, get } from '@ember/object';
@@ -19,7 +28,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Utils.AtmWorkflow.RevisionActionsFactory}
+   * @type {Utils.Revisions.RevisionActionsFactory}
    */
   revisionActionsFactory: undefined,
 
