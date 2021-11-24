@@ -12,6 +12,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
   it('returns true when dataSpec.valueConstraints changed from {} to empty', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
+    revision1.stores[0].dataSpec.valueConstraints = {};
     delete revision2.stores[0].dataSpec.valueConstraints;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
@@ -19,6 +20,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
   it('returns true when store.defaultInitialValue changed from null to empty', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
+    revision1.stores[0].defaultInitialValue = null;
     delete revision2.stores[0].defaultInitialValue;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });

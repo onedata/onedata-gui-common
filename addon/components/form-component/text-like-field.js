@@ -11,6 +11,7 @@
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from '../../templates/components/form-component/text-like-field';
 import { reads } from '@ember/object/computed';
+import { computed } from '@ember/object';
 
 export default FieldComponentBase.extend({
   layout,
@@ -25,4 +26,13 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<String>}
    */
   inputType: reads('field.inputType'),
+
+  /**
+   * Field used by numeric inputs only
+   * @type {ComputedProperty<String>}
+   */
+  step: computed('field.step', function step() {
+    const fieldStep = this.get('field.step');
+    return (fieldStep === null || fieldStep === undefined) ? 'any' : String(fieldStep);
+  }),
 });
