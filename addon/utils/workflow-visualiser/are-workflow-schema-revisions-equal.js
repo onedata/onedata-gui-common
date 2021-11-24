@@ -45,49 +45,8 @@ function areLaneListsEqual(lanesList1, lanesList2) {
 function areLanesEqual(lane1, lane2) {
   return checkEqualityPerEachKey(lane1, lane2, (key, val1, val2) => {
     switch (key) {
-      case 'storeIteratorSpec':
-        if (!areStoreIteratorSpecsEqual(val1, val2)) {
-          return false;
-        }
-        break;
       case 'parallelBoxes':
         if (!areParallelBoxListsEqual(val1, val2)) {
-          return false;
-        }
-        break;
-      default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
-    }
-    return true;
-  });
-}
-
-function areStoreIteratorSpecsEqual(spec1, spec2) {
-  return checkEqualityPerEachKey(spec1, spec2, (key, val1, val2) => {
-    switch (key) {
-      case 'strategy':
-        if (!areStoreIteratorStrategiesEqual(val1, val2)) {
-          return false;
-        }
-        break;
-      default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
-    }
-    return true;
-  });
-}
-
-function areStoreIteratorStrategiesEqual(strategy1, strategy2) {
-  return checkEqualityPerEachKey(strategy1, strategy2, (key, val1, val2) => {
-    switch (key) {
-      case 'batchSize':
-        if (strategy1.type === 'batch' && !_.isEqual(val1, val2)) {
           return false;
         }
         break;

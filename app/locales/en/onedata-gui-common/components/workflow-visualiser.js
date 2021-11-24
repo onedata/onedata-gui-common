@@ -4,11 +4,7 @@ export default {
   status: 'Status',
   taskForm,
   lane: {
-    iterateOver: 'Iterate over',
-    iteratorStrategy: {
-      serial: 'Serial',
-      batch: 'Batch {{batchSize}}',
-    },
+    iterator: 'Batch {{maxBatchSize}}',
     runTiming: {
       latest: 'Latest run',
       past: 'Past run',

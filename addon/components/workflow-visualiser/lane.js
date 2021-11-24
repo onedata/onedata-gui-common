@@ -53,12 +53,13 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  iteratorStrategyLabel: computed('lane.storeIteratorSpec', function iterateOverLabel() {
-    const strategy = this.get('lane.storeIteratorSpec.strategy.type');
-    const batchSize = this.get('lane.storeIteratorSpec.strategy.batchSize');
-    return strategy ?
-      this.t(`iteratorStrategy.${strategy}`, { batchSize }, { defaultValue: '' }) : '';
-  }),
+  iteratorLabel: computed(
+    'lane.storeIteratorSpec.maxBatchSize',
+    function iteratorLabel() {
+      const maxBatchSize = this.get('lane.storeIteratorSpec.maxBatchSize') || 1;
+      return this.t('iterator', { maxBatchSize });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<String>}

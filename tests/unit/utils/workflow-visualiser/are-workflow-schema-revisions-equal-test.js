@@ -49,13 +49,6 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns true when batchSize was added to lane without batch iterator', function () {
-    const revision1 = getExampleWorkflowSchemaRevision();
-    const revision2 = getExampleWorkflowSchemaRevision();
-    revision2.lanes[0].storeIteratorSpec.strategy.batchSize = 100;
-    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
-  });
-
   it('returns true when argumentMappings order changed', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
@@ -120,17 +113,11 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
   });
 
-  it('returns false when batchSize in lane with batch iterator changed', function () {
+  it('returns false when maxBatchSize of lane changed', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.lanes[0].storeIteratorSpec.strategy = {
-      type: 'batch',
-      batchSize: 100,
-    };
-    revision2.lanes[0].storeIteratorSpec.strategy = {
-      type: 'batch',
-      batchSize: 101,
-    };
+    revision1.lanes[0].storeIteratorSpec.maxBatchSize = 100;
+    revision2.lanes[0].storeIteratorSpec.maxBatchSize = 1;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
   });
 
