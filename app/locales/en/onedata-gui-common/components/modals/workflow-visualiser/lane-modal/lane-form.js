@@ -16,21 +16,8 @@ export default {
           },
         },
       },
-      strategy: {
-        label: 'Strategy',
-        options: {
-          serial: {
-            label: 'Serial',
-          },
-          batch: {
-            label: 'Batch',
-          },
-        },
-      },
-      batchOptions: {
-        batchSize: {
-          label: 'Batch size',
-        },
+      maxBatchSize: {
+        label: 'Max. batch size',
       },
     },
   },

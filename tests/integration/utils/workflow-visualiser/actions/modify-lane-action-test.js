@@ -23,10 +23,8 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
       name: 'lane1',
       maxRetries: 0,
       storeIteratorSpec: {
-        strategy: {
-          type: 'serial',
-        },
         storeSchemaId: 's1',
+        maxBatchSize: 100,
       },
     });
     const action = ModifyLaneAction.create({

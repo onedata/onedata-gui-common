@@ -66,10 +66,8 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       name: 'lane1',
       maxRetries: 0,
       storeIteratorSpec: {
-        strategy: {
-          type: 'serial',
-        },
         storeSchemaId: 's1',
+        maxBatchSize: 100,
       },
     }));
   });

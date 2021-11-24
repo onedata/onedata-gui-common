@@ -10,7 +10,7 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/lane-modal/lane-form';
-import { tag, getBy, raw, conditional, eq, not, or } from 'ember-awesome-macros';
+import { tag, getBy, raw, conditional, eq, not } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -163,12 +163,10 @@ export default Component.extend(I18n, {
   iteratorOptionsFieldsGroup: computed(function iteratorOptionsFieldsGroup() {
     const {
       sourceStoreField,
-      strategyField,
-      batchOptionsFieldsGroup,
+      maxBatchSizeField,
     } = this.getProperties(
       'sourceStoreField',
-      'strategyField',
-      'batchOptionsFieldsGroup'
+      'maxBatchSizeField'
     );
 
     return FormFieldsGroup.create({
@@ -176,8 +174,7 @@ export default Component.extend(I18n, {
       addColonToLabel: false,
       fields: [
         sourceStoreField,
-        strategyField,
-        batchOptionsFieldsGroup,
+        maxBatchSizeField,
       ],
     });
   }),
@@ -221,46 +218,13 @@ export default Component.extend(I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
-   */
-  strategyField: computed(function strategyField() {
-    return DropdownField
-      .extend(defaultValueGenerator(this, 'options.firstObject.value'))
-      .create({
-        component: this,
-        name: 'strategy',
-        showSearch: false,
-        options: [{
-          value: 'serial',
-        }, {
-          value: 'batch',
-        }],
-      });
-  }),
-
-  /**
-   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
-   */
-  batchOptionsFieldsGroup: computed(function batchOptionsFieldsGroup() {
-    return FormFieldsGroup.extend({
-      isExpanded: eq('valuesSource.iteratorOptions.strategy', raw('batch')),
-      isVisible: or(eq('mode', raw('edit')), 'isExpanded'),
-    }).create({
-      name: 'batchOptions',
-      fields: [
-        this.get('batchSizeField'),
-      ],
-    });
-  }),
-
-  /**
    * @type {ComputedProperty<Utils.FormComponent.NumberField>}
    */
-  batchSizeField: computed(function batchSizeField() {
+  maxBatchSizeField: computed(function maxBatchSizeField() {
     return NumberField
       .extend(defaultValueGenerator(this, raw('100')))
       .create({
-        name: 'batchSize',
+        name: 'maxBatchSize',
         integer: true,
         gt: 0,
       });
@@ -361,23 +325,16 @@ function laneToFormData(lane) {
     storeIteratorSpec,
   } = getProperties(lane || {}, 'name', 'maxRetries', 'storeIteratorSpec');
   const {
-    strategy,
     storeSchemaId,
-  } = getProperties(storeIteratorSpec || {}, 'strategy', 'storeSchemaId');
-  const {
-    type,
-    batchSize,
-  } = getProperties(strategy || {}, 'type', 'batchSize');
+    maxBatchSize,
+  } = getProperties(storeIteratorSpec || {}, 'storeSchemaId', 'maxBatchSize');
 
   return {
     name,
     maxRetries,
     iteratorOptions: {
       sourceStore: storeSchemaId,
-      strategy: type,
-      batchOptions: type === 'batch' ? {
-        batchSize,
-      } : undefined,
+      maxBatchSize,
     },
   };
 }
@@ -395,26 +352,17 @@ function formDataToLane(formData) {
   );
   const {
     sourceStore,
-    strategy,
-    batchOptions,
+    maxBatchSize,
   } = getProperties(
     iteratorOptions || {},
     'sourceStore',
-    'strategy',
-    'batchOptions',
+    'maxBatchSize',
   );
-  const batchSize = get(batchOptions || {}, 'batchSize');
 
   const storeIteratorSpec = {
-    strategy: {
-      type: strategy,
-    },
     storeSchemaId: sourceStore !== createStoreDropdownOptionValue ? sourceStore : null,
+    maxBatchSize: Number.parseInt(maxBatchSize) || 1,
   };
-
-  if (strategy === 'batch') {
-    storeIteratorSpec.strategy.batchSize = Number.parseInt(batchSize) || undefined;
-  }
 
   return {
     name,

@@ -20,10 +20,8 @@ const simpliestLane = {
   name: 'lane1',
   maxRetries: 0,
   storeIteratorSpec: {
-    strategy: {
-      type: 'serial',
-    },
     storeSchemaId: 's1',
+    maxBatchSize: 100,
   },
 };
 

@@ -163,79 +163,47 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       );
     });
 
-    it('renders "strategy" field with "serial" option preselected', async function () {
+    it('renders "max batch size" field with "100" as default value', async function () {
       await render(this);
 
-      const $label = this.$('.strategy-field .control-label');
-      const $field = this.$('.strategy-field .dropdown-field-trigger');
-      expect($label.text().trim()).to.equal('Strategy:');
-      expect($field.text().trim()).to.equal('Serial');
-    });
-
-    it('provides all possible options to choose in "strategy" field', async function () {
-      await render(this);
-
-      await clickTrigger('.strategy-field');
-
-      const $options = $('.ember-power-select-option');
-      expect($options).to.have.length(2);
-      ['Serial', 'Batch'].forEach((name, idx) =>
-        expect($options.eq(idx).text().trim()).to.equal(name)
-      );
-    });
-
-    it('does not show batch options when strategy is "Serial"', async function () {
-      await render(this);
-
-      await selectChoose('.strategy-field', 'Serial');
-
-      expect(this.$('.batchOptions-collapse')).to.not.have.class('in');
-    });
-
-    it('shows batch options when strategy is "Batch"', async function () {
-      await render(this);
-
-      await selectChoose('.strategy-field', 'Batch');
-
-      expect(this.$('.batchOptions-collapse')).to.have.class('in');
-    });
-
-    it('renders "batch size" field with "100" as default value', async function () {
-      await render(this);
-
-      const $label = this.$('.batchSize-field .control-label');
-      const $field = this.$('.batchSize-field .form-control');
-      expect($label.text().trim()).to.equal('Batch size:');
+      const $label = this.$('.maxBatchSize-field .control-label');
+      const $field = this.$('.maxBatchSize-field .form-control');
+      expect($label.text().trim()).to.equal('Max. batch size:');
       expect($field).to.have.attr('type', 'number');
       expect($field).to.have.value('100');
     });
 
-    it('marks "batch size" field as invalid when it is empty', async function () {
+    it('marks "max batch size" field as invalid when it is empty', async function () {
       await render(this);
 
-      await fillIn('.batchSize-field .form-control', '');
+      await fillIn('.maxBatchSize-field .form-control', '');
 
-      expect(this.$('.batchSize-field')).to.have.class('has-error');
+      expect(this.$('.maxBatchSize-field')).to.have.class('has-error');
     });
 
-    it('marks "batch size" field as valid when it is filled with a positive integer',
-      async function () {
-        await render(this);
+    it('marks "max batch size" field as invalid when it contains negative number', async function () {
+      await render(this);
 
-        await fillIn('.batchSize-field .form-control', '20');
+      await fillIn('.maxBatchSize-field .form-control', '-3');
 
-        expect(this.$('.batchSize-field')).to.have.class('has-success');
-      });
+      expect(this.$('.maxBatchSize-field')).to.have.class('has-error');
+    });
 
-    it('marks "batch size" field as invalid when it is filled with a negative integer, zero, real number or random text',
-      async function () {
-        await render(this);
+    it('marks "max batch size" field as invalid when it contains a float number', async function () {
+      await render(this);
 
-        for (const inputVal of ['-20', '0', '3.14', 'sometext']) {
-          await fillIn('.batchSize-field .form-control', inputVal);
-          expect(this.$('.batchSize-field')).to.have.class('has-error');
-        }
-      });
+      await fillIn('.maxBatchSize-field .form-control', '3.5');
+
+      expect(this.$('.maxBatchSize-field')).to.have.class('has-error');
+    });
+
+    it('marks "max batch size" field as valid when it contains a positive integer number', async function () {
+      await render(this);
+
+      await fillIn('.maxBatchSize-field .form-control', '3');
+
+      expect(this.$('.maxBatchSize-field')).to.have.class('has-success');
+    });
 
     it('notifies about changes of values and validation state', async function () {
       const changeSpy = this.get('changeSpy');
@@ -247,10 +215,8 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
           name: '',
           maxRetries: 0,
           storeIteratorSpec: {
-            strategy: {
-              type: 'serial',
-            },
             storeSchemaId: 's1',
+            maxBatchSize: 100,
           },
         },
         isValid: false,
@@ -264,60 +230,31 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
           name: 'someName',
           maxRetries: 0,
           storeIteratorSpec: {
-            strategy: {
-              type: 'serial',
-            },
             storeSchemaId: 's1',
+            maxBatchSize: 100,
           },
         },
         isValid: true,
       });
     });
 
-    it('allows to configure new lane with "Serial" iterator', async function () {
+    it('allows to configure new lane', async function () {
       const changeSpy = this.get('changeSpy');
       await render(this);
 
       await fillIn('.name-field .form-control', 'someName');
+      await fillIn('.maxRetries-field .form-control', '4');
       await selectChoose('.sourceStore-field', 'store2');
-      await selectChoose('.strategy-field', 'Serial');
+      await fillIn('.maxBatchSize-field .form-control', '200');
 
       expect(this.$('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
-          maxRetries: 0,
+          maxRetries: 4,
           storeIteratorSpec: {
-            strategy: {
-              type: 'serial',
-            },
             storeSchemaId: 's2',
-          },
-        },
-        isValid: true,
-      });
-    });
-
-    it('allows to configure new lane with "Batch" iterator', async function () {
-      const changeSpy = this.get('changeSpy');
-      await render(this);
-
-      await fillIn('.name-field .form-control', 'someName');
-      await selectChoose('.sourceStore-field', 'store3');
-      await selectChoose('.strategy-field', 'Batch');
-      await fillIn('.batchSize-field .form-control', '30');
-
-      expect(this.$('.has-error')).to.not.exist;
-      expect(changeSpy).to.be.calledWith({
-        data: {
-          name: 'someName',
-          maxRetries: 0,
-          storeIteratorSpec: {
-            strategy: {
-              type: 'batch',
-              batchSize: 30,
-            },
-            storeSchemaId: 's3',
+            maxBatchSize: 200,
           },
         },
         isValid: true,
@@ -330,7 +267,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.name-field .form-control', 'someName');
       await selectChoose('.sourceStore-field', 'Create store...');
-      await selectChoose('.strategy-field', 'Serial');
 
       expect(this.$('.has-error')).to.not.exist;
       expect(this.$('.sourceStore-field .dropdown-field-trigger').text().trim())
@@ -340,10 +276,8 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
           name: 'someName',
           maxRetries: 0,
           storeIteratorSpec: {
-            strategy: {
-              type: 'serial',
-            },
             storeSchemaId: 'snew',
+            maxBatchSize: 100,
           },
         },
         isValid: true,
@@ -359,7 +293,6 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         await fillIn('.name-field .form-control', 'someName');
         await selectChoose('.sourceStore-field', 'store2');
         await selectChoose('.sourceStore-field', 'Create store...');
-        await selectChoose('.strategy-field', 'Serial');
 
         expect(this.$('.has-error')).to.not.exist;
         expect(this.$('.sourceStore-field .dropdown-field-trigger').text().trim())
@@ -369,10 +302,8 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
             name: 'someName',
             maxRetries: 0,
             storeIteratorSpec: {
-              strategy: {
-                type: 'serial',
-              },
               storeSchemaId: 's2',
+              maxBatchSize: 100,
             },
           },
           isValid: true,
@@ -389,50 +320,23 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     itHasAllFieldsEnabledByDefault();
     itAllowsToDisableAllFields();
 
-    it('fills fields with data of passed lane with "serial" iterator', async function () {
+    it('fills fields with data of passed lane', async function () {
       this.set('lane', {
         name: 'lane1',
-        maxRetries: 0,
+        maxRetries: 10,
         storeIteratorSpec: {
-          strategy: {
-            type: 'serial',
-          },
           storeSchemaId: 's2',
+          maxBatchSize: 50,
         },
       });
 
       await render(this);
 
-      expect(this.$('.batchOptions-collapse')).to.not.have.class('in');
       expect(this.$('.name-field .form-control')).to.have.value('lane1');
+      expect(this.$('.maxRetries-field .form-control')).to.have.value('10');
       expect(this.$('.sourceStore-field .dropdown-field-trigger').text().trim())
         .to.equal('store2');
-      expect(this.$('.strategy-field .dropdown-field-trigger').text().trim())
-        .to.equal('Serial');
-    });
-
-    it('fills fields with data of passed lane with "batch" iterator', async function () {
-      this.set('lane', {
-        name: 'lane1',
-        maxRetries: 0,
-        storeIteratorSpec: {
-          strategy: {
-            type: 'batch',
-            batchSize: 30,
-          },
-          storeSchemaId: 's3',
-        },
-      });
-
-      await render(this);
-
-      expect(this.$('.batchOptions-collapse')).to.have.class('in');
-      expect(this.$('.name-field .form-control')).to.have.value('lane1');
-      expect(this.$('.sourceStore-field .dropdown-field-trigger').text().trim())
-        .to.equal('store3');
-      expect(this.$('.strategy-field .dropdown-field-trigger').text().trim())
-        .to.equal('Batch');
-      expect(this.$('.batchSize-field .form-control')).to.have.value('30');
+      expect(this.$('.maxBatchSize-field .form-control')).to.have.value('50');
     });
 
     it('does not update form values on passed lane change', async function () {
@@ -455,50 +359,23 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
     itHasModeClass('view');
 
-    it('fills fields with data of passed lane with "serial" iterator', async function () {
+    it('fills fields with data of passed lane', async function () {
       this.set('lane', {
         name: 'lane1',
-        maxRetries: 0,
+        maxRetries: 10,
         storeIteratorSpec: {
-          strategy: {
-            type: 'serial',
-          },
           storeSchemaId: 's2',
+          maxBatchSize: 50,
         },
       });
 
       await render(this);
 
-      expect(this.$('.batchOptions-collapse')).to.not.have.class('in');
       expect(this.$('.name-field .field-component').text().trim()).to.equal('lane1');
+      expect(this.$('.maxRetries-field .field-component').text().trim()).to.equal('10');
       expect(this.$('.sourceStore-field .field-component').text().trim())
         .to.equal('store2');
-      expect(this.$('.strategy-field .field-component').text().trim())
-        .to.equal('Serial');
-    });
-
-    it('fills fields with data of passed lane with "batch" iterator', async function () {
-      this.set('lane', {
-        name: 'lane1',
-        maxRetries: 0,
-        storeIteratorSpec: {
-          strategy: {
-            type: 'batch',
-            batchSize: 30,
-          },
-          storeSchemaId: 's3',
-        },
-      });
-
-      await render(this);
-
-      expect(this.$('.batchOptions-collapse')).to.have.class('in');
-      expect(this.$('.name-field .field-component').text().trim()).to.equal('lane1');
-      expect(this.$('.sourceStore-field .field-component').text().trim())
-        .to.equal('store3');
-      expect(this.$('.strategy-field .field-component').text().trim())
-        .to.equal('Batch');
-      expect(this.$('.batchSize-field .field-component').text().trim()).to.equal('30');
+      expect(this.$('.maxBatchSize-field .field-component').text().trim()).to.equal('50');
     });
 
     it('updates form values on passed lane change', async function () {
