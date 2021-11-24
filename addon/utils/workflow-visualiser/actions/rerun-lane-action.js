@@ -13,9 +13,9 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { conditional, raw } from 'ember-awesome-macros';
+import { raw, eq, and, not, getBy } from 'ember-awesome-macros';
 import { workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
-import computedT from 'onedata-gui-common/utils/computed-t';
+import { inAdvanceRunNumber } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 export default Action.extend({
   modalManager: service(),
@@ -38,17 +38,38 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: computed('workflow.status', function disabled() {
-    return !workflowEndedStatuses.includes(this.get('workflow.status'));
-  }),
+  disabled: not(and('isWorkflowEnded', 'laneRun.isRerunable')),
 
   /**
    * @override
    */
-  tip: conditional(
+  tip: computed(
+    'isRunPreparedInAdvance',
+    'isWorkflowEnded',
     'disabled',
-    computedT('disabledTip'),
-    raw(null)
+    function tip() {
+      const {
+        isRunPreparedInAdvance,
+        isWorkflowEnded,
+        disabled,
+      } = this.getProperties(
+        'isRunPreparedInAdvance',
+        'isWorkflowEnded',
+        'disabled'
+      );
+
+      let translationName;
+      if (!isWorkflowEnded) {
+        translationName = 'workflowNotEnded';
+      } else if (isRunPreparedInAdvance) {
+        translationName = 'preparedInAdvance';
+      } else if (disabled) {
+        // Lane run cannot be rerun due to some backend constraints we don't know
+        translationName = 'unknownReason';
+      }
+
+      return translationName ? this.t(`disabledTip.${translationName}`) : null;
+    }
   ),
 
   /**
@@ -73,6 +94,23 @@ export default Action.extend({
    * @type {ComputedProperty<Function>}
    */
   rerunLaneCallback: reads('context.rerunLaneCallback'),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isRunPreparedInAdvance: eq('runNumber', raw(inAdvanceRunNumber)),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  laneRun: getBy('lane.runsRegistry', 'runNumber'),
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isWorkflowEnded: computed('workflow.status', function isWorkflowEnded() {
+    return workflowEndedStatuses.includes(this.get('workflow.status'));
+  }),
 
   /**
    * @override

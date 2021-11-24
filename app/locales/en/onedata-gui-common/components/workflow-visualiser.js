@@ -50,13 +50,18 @@ export default {
           workflowNotEnded: 'Retry can be scheduled only when the workflow execution is ended.',
           laneNotFailed: 'Retry can be scheduled only for a failed lane run.',
           noExceptionStoreAvailable: 'Retry can be scheduled only for a lane that has passed the preparation phase.',
+          unknownReason: 'Retry of this lane run is not possible.',
         },
       },
       rerunLane: {
         title: 'Rerun all items',
         successNotificationText: 'Lane rerun has been scheduled successfully.',
         failureNotificationActionName: 'scheduling lane rerun',
-        disabledTip: 'Rerun can be scheduled only in an ended workflow execution.',
+        disabledTip: {
+          workflowNotEnded: 'Rerun can be scheduled only when the workflow execution is ended.',
+          preparedInAdvance: 'Rerun cannot be scheduled for runs prepared in advance.',
+          unknownReason: 'Rerun of this lane run is not possible.',
+        },
       },
     },
     runIndicator: {
