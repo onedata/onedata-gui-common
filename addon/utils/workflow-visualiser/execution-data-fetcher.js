@@ -43,6 +43,8 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
  * @property {Number|null} originRunNumber
  * @property {String} systemAuditLogStoreInstanceId
  * @property {String} status
+ * @property {Boolean} isRetriable
+ * @property {Boolean} isRerunable
  */
 
 /**

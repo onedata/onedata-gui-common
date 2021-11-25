@@ -42,6 +42,7 @@ export default {
     enqueued,
     active,
     aborting,
+    interrupted,
     cancelled,
     skipped,
     finished,

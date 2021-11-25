@@ -76,6 +76,7 @@ $workflow-visualiser-last-between-task-space-size: 30px;
   }
 
   &.status-aborting,
+  &.status-interrupted,
   &.status-cancelled,
   &.status-failed {
     .workflow-status-container {
