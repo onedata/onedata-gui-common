@@ -48,6 +48,11 @@ export default TextField.extend({
   integer: false,
 
   /**
+   * @type {string|number}
+   */
+  step: 'any',
+
+  /**
    * @type {ComputedProperty<Object>}
    */
   numberValidator: computed(

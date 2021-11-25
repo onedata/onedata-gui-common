@@ -531,6 +531,7 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
 
+    // Getting props to launch observers
     this.getProperties('passedFormValues', 'atmLambdaRevision');
     this.formModeUpdater();
   },

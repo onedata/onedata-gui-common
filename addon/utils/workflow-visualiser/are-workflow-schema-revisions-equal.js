@@ -19,22 +19,12 @@ export default function areWorkflowSchemaRevisionsEqual(revision1, revision2) {
   return checkEqualityPerEachKey(revision1, revision2, (key, val1, val2) => {
     switch (key) {
       case 'lanes':
-        if (!areLaneListsEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return areLaneListsEqual(val1, val2);
       case 'stores':
-        if (!areStoreListsEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return areStoreListsEqual(val1, val2);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -46,17 +36,10 @@ function areLanesEqual(lane1, lane2) {
   return checkEqualityPerEachKey(lane1, lane2, (key, val1, val2) => {
     switch (key) {
       case 'parallelBoxes':
-        if (!areParallelBoxListsEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return areParallelBoxListsEqual(val1, val2);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -68,17 +51,10 @@ function areParallelBoxesEqual(pbox1, pbox2) {
   return checkEqualityPerEachKey(pbox1, pbox2, (key, val1, val2) => {
     switch (key) {
       case 'tasks':
-        if (!areTaskListsEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return areTaskListsEqual(val1, val2);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -90,22 +66,12 @@ function areTasksEqual(task1, task2) {
   return checkEqualityPerEachKey(task1, task2, (key, val1, val2) => {
     switch (key) {
       case 'argumentMappings':
-        if (!checkEqualityOfArrays(val1, val2, 'argumentName', areArgumentMappingsEqual)) {
-          return false;
-        }
-        break;
+        return checkEqualityOfArrays(val1, val2, 'argumentName', areArgumentMappingsEqual);
       case 'resultMappings':
-        if (!checkEqualityOfArrays(val1, val2, 'resultName', _.isEqual)) {
-          return false;
-        }
-        break;
+        return checkEqualityOfArrays(val1, val2, 'resultName', _.isEqual);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -113,17 +79,10 @@ function areArgumentMappingsEqual(mapping1, mapping2) {
   return checkEqualityPerEachKey(mapping1, mapping2, (key, val1, val2) => {
     switch (key) {
       case 'valueBuilder':
-        if (!areValueBuildersEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return areValueBuildersEqual(val1, val2);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -131,17 +90,10 @@ function areValueBuildersEqual(builder1, builder2) {
   return checkEqualityPerEachKey(builder1, builder2, (key, val1, val2) => {
     switch (key) {
       case 'valueBuilderRecipe':
-        if ((!isNone(val1) || !isNone(val2)) && !_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return (isNone(val1) && isNone(val2)) || _.isEqual(val1, val2);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -153,10 +105,7 @@ function areStoresEqual(store1, store2) {
   return checkEqualityPerEachKey(store1, store2, (key, val1, val2) => {
     switch (key) {
       case 'dataSpec':
-        if (!areDataSpecsEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return areDataSpecsEqual(val1, val2);
       case 'defaultInitialValue':
         if ((!isNone(val1) || !isNone(val2)) && !_.isEqual(val1, val2)) {
           if (store1.type === 'range') {
@@ -167,14 +116,10 @@ function areStoresEqual(store1, store2) {
             return false;
           }
         }
-        break;
+        return true;
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -182,20 +127,11 @@ function areDataSpecsEqual(dataSpec1, dataSpec2) {
   return checkEqualityPerEachKey(dataSpec1, dataSpec2, (key, val1, val2) => {
     switch (key) {
       case 'valueConstraints':
-        if (
-          (!isNoneOrEmptyObject(val1) || !isNoneOrEmptyObject(val2)) &&
-          !_.isEqual(val1, val2)
-        ) {
-          return false;
-        }
-        break;
+        return (isNoneOrEmptyObject(val1) && isNoneOrEmptyObject(val2)) ||
+          _.isEqual(val1, val2);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 
@@ -203,22 +139,12 @@ function areRangeStoreDefaultValuesEqual(default1, default2) {
   return checkEqualityPerEachKey(default1, default2, (key, val1, val2) => {
     switch (key) {
       case 'start':
-        if ((val1 || 0) !== (val2 || 0)) {
-          return false;
-        }
-        break;
+        return (val1 || 0) === (val2 || 0);
       case 'step':
-        if ((val1 || 1) !== (val2 || 1)) {
-          return false;
-        }
-        break;
+        return (val1 || 1) === (val2 || 1);
       default:
-        if (!_.isEqual(val1, val2)) {
-          return false;
-        }
-        break;
+        return _.isEqual(val1, val2);
     }
-    return true;
   });
 }
 

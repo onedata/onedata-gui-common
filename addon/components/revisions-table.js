@@ -101,7 +101,7 @@ export default Component.extend(I18n, {
   latestStableRevNum: computed(
     'sortedRevNums',
     'revisionRegistry',
-    function latestStableRevisionNumber() {
+    function latestStableRevNum() {
       const {
         sortedRevNums,
         revisionRegistry,
