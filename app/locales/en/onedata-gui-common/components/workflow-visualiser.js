@@ -4,7 +4,7 @@ export default {
   status: 'Status',
   taskForm,
   lane: {
-    iterator: 'Batch {{maxBatchSize}}',
+    iterator: 'Max. batch: {{maxBatchSize}}',
     runTiming: {
       latest: 'Latest run',
       past: 'Past run',
