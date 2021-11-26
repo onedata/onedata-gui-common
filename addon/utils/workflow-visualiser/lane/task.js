@@ -30,7 +30,7 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
-   * @type {Number}
+   * @type {RevisionNumber}
    */
   lambdaRevisionNumber: undefined,
 

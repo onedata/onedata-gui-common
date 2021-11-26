@@ -7,7 +7,7 @@
     'actions': 2em,
   );
 
-  th {
+  .revisions-table-header-cell {
     @include font-semibold();
   }
 
@@ -58,7 +58,7 @@
       }
     }
 
-    td {
+    .revisions-table-data-cell {
       vertical-align: middle;
       height: 40px;
     }
@@ -76,7 +76,7 @@
   }
 
   .revisions-table-revision-entries-expander {
-    td {
+    .revisions-table-data-cell {
       position: relative;
       padding: 0;
     }
@@ -108,11 +108,11 @@
       }
     }
 
-    & + tr td {
+    & + tr .revisions-table-data-cell {
       border-top: 0;
     }
 
-    &:last-child td {
+    &:last-child .revisions-table-data-cell {
       padding-bottom: 1em;
     }
   }

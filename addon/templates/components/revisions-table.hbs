@@ -1,10 +1,14 @@
 <thead>
   <tr>
-    <th class="revision-number-column">{{tt this "column.revisionNumber"}}</th>
-    <th class="state-column">{{tt this "column.state"}}</th>
+    <th class="revisions-table-header-cell revision-number-column">
+      {{tt this "column.revisionNumber"}}
+    </th>
+    <th class="revisions-table-header-cell state-column">
+      {{tt this "column.state"}}
+    </th>
     {{yield "header"}}
     {{#unless isReadOnly}}
-      <th class="actions-column"></th>
+      <th class="revisions-table-header-cell actions-column"></th>
     {{/unless}}
   </tr>
 </thead>
@@ -17,7 +21,7 @@
   {{/unless}}
   {{#if (eq latestRevNum null)}}
     <tr class="revisions-table-empty-entry">
-      <td colspan={{columnsCount}} class="small text-muted text-center">
+      <td colspan={{columnsCount}} class="revisions-table-data-cell small text-muted text-center">
         {{tt this "noRevisions"}}
       </td>
     </tr>

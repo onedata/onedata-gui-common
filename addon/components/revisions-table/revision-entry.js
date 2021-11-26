@@ -35,7 +35,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {Number}
+   * @type {RevisionNumber}
    */
   revisionNumber: undefined,
 
@@ -53,7 +53,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {(revisionNumber: Number) => void}
+   * @type {(revisionNumber: RevisionNumber) => void}
    */
   onClick: undefined,
 
@@ -70,7 +70,7 @@ export default Component.extend(I18n, {
   areActionsOpened: false,
 
   /**
-   * @type {ComputedProperty<Number|'?'>}
+   * @type {ComputedProperty<RevisionNumber|'?'>}
    */
   normalizedRevisionNumber: computed(
     'revisionNumber',

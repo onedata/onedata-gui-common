@@ -12,7 +12,7 @@ import notImplementedThrow from 'onedata-gui-common/utils/not-implemented-throw'
 
 export default EmberObject.extend({
   /**
-   * @param {Number} revisionNumber
+   * @param {RevisionNumber} revisionNumber
    * @returns {Array<Utils.Action>}
    */
   createActionsForRevisionNumber( /* revisionNumber */ ) {
