@@ -37,13 +37,28 @@ export default FieldComponentBase.extend({
    */
   selectedOption: array.findBy('preparedOptions', raw('value'), 'value'),
 
+  /**
+   * One-dropdown item matcher used by its search engine. Allows to search
+   * options in FieldOption format.
+   * @param {FieldOption} option
+   * @param {String} term Query string
+   * @returns {Number} -1 if option does not match term, >= 0 otherwise
+   */
+  matchDropdownOption(option, term) {
+    const label = option && option.label || '';
+    return label.toLowerCase().indexOf((term || '').trim().toLowerCase());
+  },
+
   actions: {
     valueChanged(option) {
       this._super(get(option, 'value'));
     },
     triggerFocusLost() {
+      const element = this.get('element');
+      const trigger =
+        element && element.querySelector('.ember-basic-dropdown-trigger');
       // Focus lost due to opening dropdown should be omitted
-      if (this.$('.ember-basic-dropdown-trigger').attr('aria-expanded') !== 'true') {
+      if (!trigger || trigger.getAttribute('aria-expanded') !== 'true') {
         this.send('focusLost');
       }
     },

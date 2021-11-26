@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import { blur, focus } from 'ember-native-dom-helpers';
+import { blur, focus, fillIn } from 'ember-native-dom-helpers';
 import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
 import $ from 'jquery';
 import wait from 'ember-test-helpers/wait';
@@ -186,6 +186,19 @@ describe('Integration | Component | form component/dropdown field', function () 
         .then(() => expect(dropdown.getSearchInput()).to.exist);
     }
   );
+
+  it('filters available options according to query in search input', async function () {
+    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    const dropdown = new DropdownHelper();
+    await wait();
+
+    await dropdown.open();
+    await fillIn(dropdown.getSearchInput(), ' Eco');
+
+    const $option = $(dropdown.getNthOption(1));
+    expect($option.find('.text').text().trim()).to.equal('Second');
+    expect(dropdown.getNthOption(2)).to.not.exist;
+  });
 
   it(
     'does not show search input if field "showSearch" is false',

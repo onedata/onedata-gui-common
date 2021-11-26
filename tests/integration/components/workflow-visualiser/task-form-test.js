@@ -332,7 +332,7 @@ const dispatchFunctionLabels = {
   set: 'Set',
 };
 
-const exampleAtmLambda = {
+const exampleAtmLambdaRevision = {
   name: 'function1',
   summary: 'function1 summary',
   argumentSpecs: [{
@@ -397,6 +397,12 @@ const exampleAtmLambda = {
     ephemeralStorageLimit: null,
   },
 };
+
+const exampleAtmLambda = {
+  revisionRegistry: {
+    1: exampleAtmLambdaRevision,
+  },
+};
 const exampleTask = {
   id: 't1',
   name: 'task1',
@@ -451,6 +457,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     };
     this.setProperties({
       atmLambda: _.cloneDeep(exampleAtmLambda),
+      atmLambdaRevisionNumber: 1,
       definedStores: A(_.cloneDeep(allPossibleStores)),
       createStoreSucceeds: true,
       newStoreFromCreation: undefined,
@@ -491,7 +498,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('uses lambda name as default value for name field', async function () {
       await render(this);
 
-      expect(this.$('.name-field .form-control')).to.have.value(exampleAtmLambda.name);
+      expect(this.$('.name-field .form-control')).to.have.value(exampleAtmLambdaRevision.name);
     });
 
     it('marks "name" field as invalid when it is empty', async function () {
@@ -518,7 +525,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(this.$('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
-          name: exampleAtmLambda.name,
+          name: exampleAtmLambdaRevision.name,
           argumentMappings: [],
           resultMappings: [],
         },
@@ -540,7 +547,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('does not render arguments section, if lambda does not specify any',
       async function () {
-        this.set('atmLambda.argumentSpecs', []);
+        this.set('atmLambda.revisionRegistry.1.argumentSpecs', []);
 
         await render(this);
 
@@ -555,8 +562,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect($argumentMappings.find('.control-label').eq(0).text().trim())
         .to.equal('Arguments');
       const $arguments = $argumentMappings.find('.argumentMapping-field');
-      expect($arguments).to.have.length(exampleAtmLambda.argumentSpecs.length);
-      exampleAtmLambda.argumentSpecs.forEach(({ name }, idx) => {
+      expect($arguments).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
+      exampleAtmLambdaRevision.argumentSpecs.forEach(({ name }, idx) => {
         expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
           .to.equal(`${name}:`);
       });
@@ -565,7 +572,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     dataSpecs.forEach(({ name, label, dataSpec, valueBuilderTypes, canContain }) => {
       it(`provides available value builder types for argument of type "${label}"`,
         async function () {
-          this.set('atmLambda.argumentSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
             name: 'arg1',
             dataSpec,
             isOptional: false,
@@ -586,7 +593,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`provides available value builder types for optional argument of type "${label}"`,
         async function () {
-          this.set('atmLambda.argumentSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
             name: 'arg1',
             dataSpec,
             isOptional: true,
@@ -608,7 +615,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`allows to setup optional argument of type "${label}" using "Leave unassigned" value builder`,
         async function () {
-          this.set('atmLambda.argumentSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
             name: 'arg1',
             dataSpec,
             isOptional: true,
@@ -633,7 +640,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       if (valueBuilderTypes.includes('iteratedItem')) {
         it(`allows to setup argument of type "${label}" using "Iterated item" value builder`,
           async function () {
-            this.set('atmLambda.argumentSpecs', [{
+            this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
               isOptional: false,
@@ -664,7 +671,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       if (valueBuilderTypes.includes('singleValueStoreContent')) {
         it(`allows to setup argument of type "${label}" using "Store content" value builder`,
           async function () {
-            this.set('atmLambda.argumentSpecs', [{
+            this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
               isOptional: false,
@@ -719,7 +726,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
         it(`allows to create new store for argument of type "${label}" using "Store content" value builder`,
           async function () {
-            this.set('atmLambda.argumentSpecs', [{
+            this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
               isOptional: false,
@@ -762,7 +769,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       if (valueBuilderTypes.includes('const')) {
         it(`allows to setup argument of type "${label}" using "Constant value" value builder`,
           async function () {
-            this.set('atmLambda.argumentSpecs', [{
+            this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
               isOptional: false,
@@ -796,7 +803,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       // if (valueBuilderTypes.includes('storeCredentials')) {
       //   it(`allows to setup argument of type "${label}" using "Store credentials" value builder`,
       //     async function () {
-      //       this.set('atmLambda.argumentSpecs', [{
+      //       this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
       //         name: 'arg1',
       //         dataSpec,
       //         isOptional: false,
@@ -847,7 +854,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       if (valueBuilderTypes.includes('onedatafsCredentials')) {
         it(`allows to setup argment of type "${label}" using "OnedataFS credentials" value builder`,
           async function () {
-            this.set('atmLambda.argumentSpecs', [{
+            this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
               isOptional: false,
@@ -878,7 +885,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('does not render results section, if lambda does not specify any',
       async function () {
-        this.set('atmLambda.resultSpecs', []);
+        this.set('atmLambda.revisionRegistry.1.resultSpecs', []);
 
         await render(this);
 
@@ -893,8 +900,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect($resultMappings.find('.control-label').eq(0).text().trim())
         .to.equal('Results');
       const $results = $resultMappings.find('.resultMapping-field');
-      expect($results).to.have.length(exampleAtmLambda.resultSpecs.length);
-      exampleAtmLambda.resultSpecs.forEach(({ name }, idx) => {
+      expect($results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
+      exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
         expect($results.eq(idx).find('.control-label').eq(0).text().trim())
           .to.equal(`${name}:`);
       });
@@ -918,7 +925,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`provides available stores for result of type "${dataSpecName}"`,
         async function () {
-          this.set('atmLambda.resultSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
             isBatch: false,
@@ -946,7 +953,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`provides available stores for result of batched type "${dataSpecName}"`,
         async function () {
-          this.set('atmLambda.resultSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
             isBatch: true,
@@ -980,7 +987,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             dataSpec: sortedPossibleStores[0].dataSpec,
             type: sortedPossibleStores[0].type,
           });
-          this.set('atmLambda.resultSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
             isBatch: false,
@@ -1011,7 +1018,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             dataSpec: sortedPossibleStoresWithBatch[0].dataSpec,
             type: sortedPossibleStoresWithBatch[0].type,
           });
-          this.set('atmLambda.resultSpecs', [{
+          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
             isBatch: true,
@@ -1037,7 +1044,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('allows to setup result to be unassigned',
       async function () {
-        this.set('atmLambda.resultSpecs', [{
+        this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
           isBatch: false,
@@ -1060,7 +1067,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
 
     it('allows to setup result to use task audit log', async function () {
-      this.set('atmLambda.resultSpecs', [{
+      this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
         isBatch: false,
@@ -1087,7 +1094,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     it('allows to setup result to use workflow audit log', async function () {
-      this.set('atmLambda.resultSpecs', [{
+      this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
         isBatch: false,
@@ -1115,7 +1122,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('does not allow to choose dispatch function when result store is left unassigned',
       async function () {
-        this.set('atmLambda.resultSpecs', [{
+        this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
           isBatch: false,
@@ -1165,7 +1172,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('changes available dispatch functions when result store type changes',
       async function () {
-        this.set('atmLambda.resultSpecs', [{
+        this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('name', 'integer').dataSpec,
           isBatch: false,
@@ -1232,7 +1239,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('renders "resources" section with full configuration',
       async function () {
-        this.set('atmLambda.resourceSpec', {
+        this.set('atmLambda.revisionRegistry.1.resourceSpec', {
           cpuRequested: 1,
           cpuLimit: 2,
           memoryRequested: 128 * 1024 * 1024,
@@ -1412,6 +1419,7 @@ async function render(testCase) {
     mode=mode
     task=task
     atmLambda=atmLambda
+    atmLambdaRevisionNumber=atmLambdaRevisionNumber
     definedStores=definedStores
     isDisabled=isDisabled
     actionsFactory=actionsFactory
@@ -1466,10 +1474,12 @@ function itShowsLambdaInfo() {
   it('shows brief information about used lambda', async function () {
     await render(this);
 
-    expect(this.$('.atm-lambda-name').text().trim())
-      .to.equal(exampleAtmLambda.name);
-    expect(this.$('.atm-lambda-summary').text().trim())
-      .to.equal(exampleAtmLambda.summary);
+    expect(this.$('.atm-lambda-name .value').text().trim())
+      .to.equal(exampleAtmLambdaRevision.name);
+    expect(this.$('.atm-lambda-revision-number .value').text().trim())
+      .to.equal('1');
+    expect(this.$('.atm-lambda-summary .value').text().trim())
+      .to.equal(exampleAtmLambdaRevision.summary);
   });
 }
 
@@ -1480,7 +1490,7 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
 ) {
   it(`provides possible dispatch functions for result with store "${storeDescription}" attached`,
     async function () {
-      this.set('atmLambda.resultSpecs', [{
+      this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: targetStore.dataSpec,
         isBatch: false,
@@ -1508,7 +1518,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
 ) {
   it(`allows to setup result to use "${storeDescription}" store with "${dispatchFunction}" dispatch function`,
     async function () {
-      this.set('atmLambda.resultSpecs', [{
+      this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: targetStore.dataSpec,
         isBatch: false,
@@ -1548,8 +1558,8 @@ function itFillsFieldsWithDataOfPassedTask() {
         .to.equal(exampleTask.name);
     }
     const $arguments = this.$('.argumentMapping-field');
-    expect($arguments).to.have.length(exampleAtmLambda.argumentSpecs.length);
-    exampleAtmLambda.argumentSpecs.forEach(({ name }, idx) => {
+    expect($arguments).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
+    exampleAtmLambdaRevision.argumentSpecs.forEach(({ name }, idx) => {
       expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
         .to.equal(`${name}:`);
     });
@@ -1568,8 +1578,8 @@ function itFillsFieldsWithDataOfPassedTask() {
     // expect($arguments.eq(2).find('.valueBuilderStore-field .field-component').text().trim())
     //   .to.equal('singleValueObjectStore');
     const $results = this.$('.resultMapping-field');
-    expect($results).to.have.length(exampleAtmLambda.resultSpecs.length);
-    exampleAtmLambda.resultSpecs.forEach(({ name }, idx) => {
+    expect($results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
+    exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
       expect($results.eq(idx).find('.control-label').eq(0).text().trim())
         .to.equal(`${name}:`);
     });
@@ -1643,7 +1653,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('iteratedItem'))
         .mapBy('dataSpec');
-      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+      this.set('atmLambda.revisionRegistry.1.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
         name: `arg${idx}`,
         dataSpec,
         isOptional: false,
@@ -1676,7 +1686,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('const'))
         .mapBy('dataSpec');
-      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+      this.set('atmLambda.revisionRegistry.1.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
         name: `arg${idx}`,
         dataSpec,
         isOptional: false,
@@ -1714,7 +1724,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
 //       const possibleDataSpecs = dataSpecs
 //         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('storeCredentials'))
 //         .mapBy('dataSpec');
-//       this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+//       this.set('atmLambda.revisionRegistry.1.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
 //         name: `arg${idx}`,
 //         dataSpec,
 //         isOptional: false,
@@ -1760,7 +1770,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBui
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('onedatafsCredentials'))
         .mapBy('dataSpec');
-      this.set('atmLambda.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
+      this.set('atmLambda.revisionRegistry.1.argumentSpecs', possibleDataSpecs.map((dataSpec, idx) => ({
         name: `arg${idx}`,
         dataSpec,
         isOptional: false,
@@ -1809,7 +1819,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
       it(`fills fields with data about results that uses "${storeDesc}" stores and all possible dispatch methods`,
         async function () {
           this.set(
-            'atmLambda.resultSpecs',
+            'atmLambda.revisionRegistry.1.resultSpecs',
             dispatchFunctions.map((dispatchFunction, idx) => ({
               name: `res${idx}`,
               dataSpec: targetStore.dataSpec,
@@ -1849,7 +1859,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
 function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
   it('fills fields with data about results that are left unassigned',
     async function () {
-      this.set('atmLambda.resultSpecs', [{
+      this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
         isOptional: false,

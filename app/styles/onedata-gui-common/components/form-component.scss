@@ -146,6 +146,7 @@ $form-component-view-margin: $padding-base-vertical;
     }
 
     &.text-like-field-renderer,
+    &.textarea-field-renderer,
     &.dropdown-field-renderer {
       .field-component {
         word-wrap: break-word;

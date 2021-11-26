@@ -30,6 +30,12 @@ export default EmberObject.extend({
    */
   error: null,
 
+  /**
+   * Place for some additional data which is not a result/error
+   * @type {any}
+   */
+  additionalData: null,
+
   cancelIfPending() {
     if (this.get('status') === 'pending') {
       this.set('status', 'cancelled');

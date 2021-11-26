@@ -1,14 +1,19 @@
 {{#each options as |option index|}}
-  <label class={{concat-classes (if radioInline "radio-inline") (if isReadOnly "disabled" "clickable") (if option.name (concat "option-" option.name))}}>
+  <label class={{concat-classes
+    (if radioInline "radio-inline")
+    (if (or isReadOnly option.disabled) "disabled" "clickable")
+    (if option.name (concat "option-" option.name))
+  }}>
     {{one-way-radio value
       class=(concat "field-" (concat (dot-to-dash fieldName) (concat "-" option.value)))
       id=(if (eq index 0) inputId null)
       option=option.value
-      update=(action "updateHandler") 
-      focusOut=onFocusOut 
-      disabled=isReadOnly
+      update=(action "updateHandler")
+      focusOut=onFocusOut
+      disabled=(or isReadOnly option.disabled)
     }}
     <div class="one-way-radio-control"></div>
     <span class="one-label">{{option.label}}</span>
   </label>
+  {{yield option}}
 {{/each}}

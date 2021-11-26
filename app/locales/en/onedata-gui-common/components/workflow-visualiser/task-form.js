@@ -1,7 +1,12 @@
 import taskResourcesFields from '../../utils/workflow-visualiser/task-resources-fields';
 
 export default {
-  usedLambdaHeader: 'Used lambda',
+  usedLambda: {
+    header: 'Used lambda',
+    name: 'Name',
+    revisionNumber: 'Revision',
+    summary: 'Summary',
+  },
   taskDetailsHeader: 'Task details',
   fields: {
     name: {

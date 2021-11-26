@@ -1,0 +1,36 @@
+<td class="revision-number">{{normalizedRevisionNumber}}</td>
+<td class="state">{{revisions-table/state-tag state=state}}</td>
+{{yield revision revisionNumber}}
+{{#unless isReadOnly}}
+  <td class="actions">
+    {{one-menu-toggle
+      id=actionsTriggerId
+      class=(concat-classes
+        "revision-actions-trigger clickable"
+        (if areActionsOpened "active")
+      )
+      click=(action "toggleActionsOpen" (not areActionsOpened))
+    }}
+    {{#render-later triggerRender=areActionsOpened}}
+      {{#one-webui-popover
+        class="revision-actions"
+        padding=false
+        popoverStyle="with-dropdown"
+        triggerSelector=(concat "#" actionsTriggerId)
+        open=areActionsOpened
+        onToggle=(action "toggleActionsOpen")
+        as |popover|
+      }}
+        {{#click-outside
+          action=(action (mut areActionsOpened) false)
+          except-selector=(concat "#" actionsTriggerId)
+        }}
+          {{actions-popover-content
+            actionsArray=revisionActions
+            actionClicked=(action "toggleActionsOpen" false)
+          }}
+        {{/click-outside}}
+      {{/one-webui-popover}}
+    {{/render-later}}
+  </td>
+{{/unless}}

@@ -7,10 +7,6 @@
     border-bottom: $section-border;
   }
 
-  .atm-lambda-name {
-    @include font-semibold();
-  }
-
   .control-label {
     text-align: left;
   }
