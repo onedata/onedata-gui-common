@@ -38,22 +38,28 @@ const typeToDataSpecConstraintsMapping =
 
 export function dataSpecToType(dataSpec) {
   const valueConstraints = dataSpec.valueConstraints || {};
+  let isArray = false;
+  let type = dataSpec.type;
   switch (dataSpec.type) {
+    case 'array':
+      isArray = true;
+      type = dataSpecToType(valueConstraints.itemDataSpec).type;
+      break;
     case 'file':
-      return dataSpecConstraintsToTypeMapping
+      type = dataSpecConstraintsToTypeMapping
         .file[valueConstraints.fileType];
       // TODO: VFS-7816 uncomment or remove future code
       // case 'storeCredentials':
       //   return dataSpecConstraintsToTypeMapping
       //     .storeCredentials[valueConstraints.storeType];
-    default:
-      return dataSpec.type;
   }
+  return { type, isArray };
 }
 
-export function typeToDataSpec(type) {
+export function typeToDataSpec({ type, isArray }) {
+  let dataSpec;
   if (type in typeToDataSpecConstraintsMapping.file) {
-    return {
+    dataSpec = {
       type: 'file',
       valueConstraints: {
         fileType: typeToDataSpecConstraintsMapping.file[type],
@@ -68,11 +74,17 @@ export function typeToDataSpec(type) {
     //     },
     //   };
   } else {
-    return {
+    dataSpec = {
       type,
       valueConstraints: {},
     };
   }
+  return isArray ? {
+    type: 'array',
+    valueConstraints: {
+      itemDataSpec: dataSpec,
+    },
+  } : dataSpec;
 }
 
 export function getTargetStoreTypesForType(type, isBatch) {

@@ -35,6 +35,7 @@ import {
   createTaskResourcesFields,
   serializeTaskResourcesFieldsValues,
 } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -265,9 +266,10 @@ export default Component.extend(I18n, {
                   'parent.value.{argumentType,argumentIsOptional}',
                   function options() {
                     const argumentType = this.get('parent.value.argumentType');
+                    const argumentIsArray = this.get('parent.value.argumentIsArray');
                     const argumentIsOptional = this.get('parent.value.argumentIsOptional');
                     const opts =
-                      getValueBuilderTypesForArgType(argumentType)
+                      getValueBuilderTypesForArgType(argumentType, argumentIsArray)
                       .map(vbType => ({ value: vbType }));
                     if (argumentIsOptional) {
                       opts.unshift({ value: leaveUnassignedDropdownOptionValue });
@@ -413,17 +415,22 @@ export default Component.extend(I18n, {
                   }
                 ),
                 optionsObserver: observer('options.[]', function optionsObserver() {
-                  const {
-                    options,
-                    value,
-                  } = this.getProperties('options', 'value');
-                  if ((!value || !options.findBy('value', value)) && options.length) {
-                    this.valueChanged(get(options[0], 'value'));
-                  }
+                  scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
                 }),
                 init() {
                   this._super(...arguments);
                   this.optionsObserver();
+                },
+                adjustValueForNewOptions() {
+                  safeExec(this, () => {
+                    const {
+                      options,
+                      value,
+                    } = this.getProperties('options', 'value');
+                    if ((!value || !options.findBy('value', value)) && options.length) {
+                      this.valueChanged(get(options[0], 'value'));
+                    }
+                  });
                 },
               }).create({
                 component,
@@ -680,12 +687,15 @@ function taskToFormData(task, atmLambdaRevision) {
 
     const valueName = `argument${idx}`;
     formArgumentMappings.__fieldsValueNames.push(valueName);
-    const argumentType = dataSpecToType(dataSpec);
+    const {
+      type,
+      isArray,
+    } = dataSpecToType(dataSpec);
     let valueBuilderType = get(existingMapping || {}, 'valueBuilder.valueBuilderType');
     if (!valueBuilderType) {
       valueBuilderType = (isOptional || defaultValue !== undefined || existingMapping) ?
         leaveUnassignedDropdownOptionValue :
-        getValueBuilderTypesForArgType(argumentType, preferredBatchSize > 1)[0];
+        getValueBuilderTypesForArgType(type, preferredBatchSize > 1)[0];
     }
     const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
     const valueBuilderConstValue = valueBuilderType === 'const' ?
@@ -694,7 +704,8 @@ function taskToFormData(task, atmLambdaRevision) {
       valueBuilderRecipe : undefined;
     formArgumentMappings[valueName] = {
       argumentName: name,
-      argumentType,
+      argumentType: type,
+      argumentIsArray: isArray,
       argumentIsOptional: isOptional,
       valueBuilderType,
       valueBuilderConstValue,
@@ -725,7 +736,7 @@ function taskToFormData(task, atmLambdaRevision) {
 
     const valueName = `result${idx}`;
     formResultMappings.__fieldsValueNames.push(valueName);
-    const resultType = dataSpecToType(dataSpec);
+    const resultType = dataSpecToType(dataSpec).type;
 
     formResultMappings[valueName] = {
       resultName: name,
@@ -899,16 +910,18 @@ function getAtmLambdaResourceValue(resourceSpecOverride, resourceSpec, propName)
   return typeof value === 'number' ? String(value) : '';
 }
 
-function getValueBuilderTypesForArgType(argType) {
+function getValueBuilderTypesForArgType(argType, isArray) {
   if (!argType) {
     return [];
-    // TODO: VFS-7816 uncomment or remove future code
-    // } else if (argType.endsWith('Store')) {
-    //   return ['storeCredentials'];
-  } else if (argType === 'onedatafsCredentials') {
-    return ['onedatafsCredentials'];
+  }
+  let builders;
+  // TODO: VFS-7816 uncomment or remove future code
+  // if (argType.endsWith('Store')) {
+  //   return ['storeCredentials'];
+  if (argType === 'onedatafsCredentials') {
+    builders = ['onedatafsCredentials'];
   } else if (argType === 'object') {
-    return [
+    builders = [
       'iteratedItem',
       'singleValueStoreContent',
       'const',
@@ -916,13 +929,20 @@ function getValueBuilderTypesForArgType(argType) {
       // 'storeCredentials',
       'onedatafsCredentials',
     ];
+  } else {
+    builders = [
+      'iteratedItem',
+      'singleValueStoreContent',
+      'const',
+    ];
   }
 
-  return [
-    'iteratedItem',
-    'singleValueStoreContent',
-    'const',
-  ];
+  if (isArray) {
+    builders = builders.filter(builder =>
+      builder !== 'singleValueStoreContent' && builder !== 'onedatafsCredentials'
+    );
+  }
+  return builders;
 }
 
 // TODO: VFS-7816 uncomment or remove future code
@@ -968,7 +988,7 @@ function getSourceStoreForType(availableStores, type) {
     if (!dataSpec || storeType !== 'singleValue') {
       return false;
     }
-    const dataType = dataSpecToType(dataSpec);
+    const dataType = dataSpecToType(dataSpec).type;
     return allowedDataTypes.includes(dataType);
   });
 }
@@ -984,7 +1004,7 @@ function getTargetStoresForType(availableStores, type, hasBatchMode) {
     if (!dataSpec) {
       return false;
     }
-    const dataType = dataSpecToType(dataSpec);
+    const dataType = dataSpecToType(dataSpec).type;
     return allowedStoreTypes.includes(storeType) && allowedDataTypes.includes(dataType);
   });
 }
@@ -995,14 +1015,12 @@ function getDispatchFunctionsForStoreType(storeType) {
       return ['set'];
     case 'list':
     case 'auditLog':
-      return ['append'];
-      // TODO: VFS-7816 uncomment or remove future code
-      // return ['append', 'prepend'];
-      // case 'map':
     case 'treeForest':
-      return ['append'];
       // TODO: VFS-7816 uncomment or remove future code
       // case 'histogram':
+      return ['append', 'extend'];
+      // TODO: VFS-7816 uncomment or remove future code
+      // case 'map':
       //   return ['add'];
     default:
       return [];

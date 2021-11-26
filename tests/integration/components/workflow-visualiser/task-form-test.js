@@ -237,7 +237,7 @@ const allPossibleStoreSpecs = [{
   type: 'list',
   allowedDataSpecNames: allSimpleDataSpecNames,
   acceptsBatch: true,
-  dispatchFunctions: ['append'],
+  dispatchFunctions: ['append', 'extend'],
   // TODO: VFS-7816 uncomment or remove future code
   // dispatchFunctions: ['append', 'prepend'],
   // }, {
@@ -257,7 +257,7 @@ const allPossibleStoreSpecs = [{
     // 'archive',
   ],
   acceptsBatch: true,
-  dispatchFunctions: ['append'],
+  dispatchFunctions: ['append', 'extend'],
 }, {
   type: 'range',
   allowedDataSpecNames: [],
@@ -273,7 +273,7 @@ const allPossibleStoreSpecs = [{
   type: 'auditLog',
   allowedDataSpecNames: allSimpleDataSpecNames,
   acceptsBatch: true,
-  dispatchFunctions: ['append'],
+  dispatchFunctions: ['append', 'extend'],
 }];
 const allPossibleStores = [];
 allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
@@ -328,8 +328,7 @@ const dispatchFunctionLabels = {
   // add: 'Add',
   // remove: 'Remove',
   append: 'Append',
-  // TODO: VFS-7816 uncomment or remove future code
-  // prepend: 'Prepend',
+  extend: 'Extend',
   set: 'Set',
 };
 
@@ -1155,12 +1154,17 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
         storeDesc,
         targetStore,
-        ['append']
+        ['append', 'extend']
       );
       itAllowsToSetupResultToUseStoreWithDispatchFunction(
         storeDesc,
         targetStore,
         'append'
+      );
+      itAllowsToSetupResultToUseStoreWithDispatchFunction(
+        storeDesc,
+        targetStore,
+        'extend'
       );
     });
 

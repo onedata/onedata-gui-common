@@ -85,10 +85,9 @@ export default {
             append: {
               label: 'Append',
             },
-            // TODO: VFS-7816 uncomment or remove future code
-            // prepend: {
-            //   label: 'Prepend',
-            // },
+            extend: {
+              label: 'Extend',
+            },
             set: {
               label: 'Set',
             },
