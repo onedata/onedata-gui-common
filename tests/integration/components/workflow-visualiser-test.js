@@ -110,10 +110,8 @@ describe('Integration | Component | workflow visualiser', function () {
           name: 'lane1',
           maxRetries: 0,
           storeIteratorSpec: {
-            strategy: {
-              type: 'serial',
-            },
             storeSchemaId: lastStoreId,
+            maxBatchSize: 100,
           },
           parallelBoxes: [],
         });
@@ -163,10 +161,8 @@ describe('Integration | Component | workflow visualiser', function () {
         name: 'othername',
         maxRetries: 0,
         storeIteratorSpec: {
-          strategy: {
-            type: 'serial',
-          },
           storeSchemaId: 's1',
+          maxBatchSize: 100,
         },
       }),
       initialRawData: twoEmptyLanesExample,
@@ -204,10 +200,8 @@ describe('Integration | Component | workflow visualiser', function () {
         Object.assign(rawDump.lanes[0], {
           maxRetries: 0,
           storeIteratorSpec: {
-            strategy: {
-              type: 'serial',
-            },
             storeSchemaId: lastStoreId,
+            maxBatchSize: 100,
           },
         });
       },
@@ -643,10 +637,8 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
       name: 'lane999',
       maxRetries: 0,
       storeIteratorSpec: {
-        strategy: {
-          type: 'serial',
-        },
         storeSchemaId: storeIdFromExample(0),
+        maxBatchSize: 100,
       },
       parallelBoxes: [],
     }),
@@ -1019,10 +1011,8 @@ function generateExample(
       name: `lane${laneNo}`,
       maxRetries: 0,
       storeIteratorSpec: {
-        strategy: {
-          type: 'serial',
-        },
         storeSchemaId: storeIdFromExample(0),
+        maxBatchSize: 100,
       },
       parallelBoxes: _.range(parallelBoxsPerLane).map(blockNo => ({
         id: parallelBoxIdFromExample(laneNo, blockNo),

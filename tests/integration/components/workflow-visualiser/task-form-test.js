@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { classify } from '@ember/string';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
+import { setProperties } from '@ember/object';
 
 const componentClass = 'task-form';
 
@@ -335,6 +336,7 @@ const dispatchFunctionLabels = {
 const exampleAtmLambdaRevision = {
   name: 'function1',
   summary: 'function1 summary',
+  preferredBatchSize: 1,
   argumentSpecs: [{
     name: 'argint',
     dataSpec: {
@@ -342,7 +344,6 @@ const exampleAtmLambdaRevision = {
       valueConstraints: {},
     },
     isOptional: true,
-    isBatch: false,
   }, {
     name: 'argstring',
     dataSpec: {
@@ -350,7 +351,6 @@ const exampleAtmLambdaRevision = {
       valueConstraints: {},
     },
     isOptional: true,
-    isBatch: false,
   }, {
     // TODO: VFS-7816 uncomment or remove future code
     //   name: 'argstore',
@@ -361,7 +361,6 @@ const exampleAtmLambdaRevision = {
     //     },
     //   },
     //   isOptional: true,
-    //   isBatch: false,
     // }, {
     name: 'argodfs',
     dataSpec: {
@@ -369,7 +368,6 @@ const exampleAtmLambdaRevision = {
       valueConstraints: {},
     },
     isOptional: true,
-    isBatch: false,
   }],
   resultSpecs: [{
     name: 'resstring',
@@ -377,7 +375,6 @@ const exampleAtmLambdaRevision = {
       type: 'string',
       valueConstraints: {},
     },
-    isBatch: false,
   }, {
     name: 'resanyfile',
     dataSpec: {
@@ -386,7 +383,6 @@ const exampleAtmLambdaRevision = {
         fileType: 'ANY',
       },
     },
-    isBatch: false,
   }],
   resourceSpec: {
     cpuRequested: 0.1,
@@ -928,7 +924,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
-            isBatch: false,
           }]);
 
           await render(this);
@@ -953,11 +948,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`provides available stores for result of batched type "${dataSpecName}"`,
         async function () {
-          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-            name: 'res1',
-            dataSpec,
-            isBatch: true,
-          }]);
+          setProperties(this.get('atmLambda.revisionRegistry.1'), {
+            preferredBatchSize: 100,
+            resultSpecs: [{
+              name: 'res1',
+              dataSpec,
+            }],
+          });
 
           await render(this);
           await clickTrigger('.resultMapping-field .targetStore-field');
@@ -990,7 +987,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
-            isBatch: false,
           }]);
           const allowedStoreTypes = sortedPossibleStores.mapBy('type').uniq();
           const allowedDataTypes = [...compatibleDataSpecNames];
@@ -1018,11 +1014,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             dataSpec: sortedPossibleStoresWithBatch[0].dataSpec,
             type: sortedPossibleStoresWithBatch[0].type,
           });
-          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-            name: 'res1',
-            dataSpec,
-            isBatch: true,
-          }]);
+          setProperties(this.get('atmLambda.revisionRegistry.1'), {
+            preferredBatchSize: 100,
+            resultSpecs: [{
+              name: 'res1',
+              dataSpec,
+            }],
+          });
           const allowedStoreTypes = sortedPossibleStoresWithBatch.mapBy('type').uniq();
           const allowedDataTypes = [...compatibleDataSpecNames];
 
@@ -1047,7 +1045,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
-          isBatch: false,
         }]);
 
         await render(this);
@@ -1070,7 +1067,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
-        isBatch: false,
       }]);
 
       await render(this);
@@ -1097,7 +1093,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
-        isBatch: false,
       }]);
 
       await render(this);
@@ -1125,7 +1120,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
-          isBatch: false,
         }]);
 
         await render(this);
@@ -1175,7 +1169,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('name', 'integer').dataSpec,
-          isBatch: false,
         }]);
 
         await render(this);
@@ -1493,7 +1486,6 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: targetStore.dataSpec,
-        isBatch: false,
       }]);
 
       await render(this);
@@ -1521,7 +1513,6 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: targetStore.dataSpec,
-        isBatch: false,
       }]);
 
       await render(this);
@@ -1824,7 +1815,6 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
               name: `res${idx}`,
               dataSpec: targetStore.dataSpec,
               isOptional: false,
-              isBatch: false,
             }))
           );
           this.set(
@@ -1863,7 +1853,6 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
         isOptional: false,
-        isBatch: false,
       }]);
       this.set('task.resultMappings', []);
 

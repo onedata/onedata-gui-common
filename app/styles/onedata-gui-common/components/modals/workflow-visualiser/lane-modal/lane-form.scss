@@ -1,4 +1,6 @@
 .lane-form {
+  $min-label-width: 140px;
+
   .iteratorOptions-field {
     flex-wrap: wrap;
 
@@ -10,12 +12,12 @@
   }
 
   .control-label {
-    min-width: 120px;
+    min-width: $min-label-width;
   }
 
   @media (min-width: $screen-sm-min) {
     .dropdown-field {
-      flex: 0 0 calc(100% - 120px);
+      flex: 0 0 calc(100% - #{$min-label-width});
     }
   }
 }

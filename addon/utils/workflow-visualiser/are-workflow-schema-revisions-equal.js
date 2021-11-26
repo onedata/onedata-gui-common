@@ -35,32 +35,8 @@ function areLaneListsEqual(lanesList1, lanesList2) {
 function areLanesEqual(lane1, lane2) {
   return checkEqualityPerEachKey(lane1, lane2, (key, val1, val2) => {
     switch (key) {
-      case 'storeIteratorSpec':
-        return areStoreIteratorSpecsEqual(val1, val2);
       case 'parallelBoxes':
         return areParallelBoxListsEqual(val1, val2);
-      default:
-        return _.isEqual(val1, val2);
-    }
-  });
-}
-
-function areStoreIteratorSpecsEqual(spec1, spec2) {
-  return checkEqualityPerEachKey(spec1, spec2, (key, val1, val2) => {
-    switch (key) {
-      case 'strategy':
-        return areStoreIteratorStrategiesEqual(val1, val2);
-      default:
-        return _.isEqual(val1, val2);
-    }
-  });
-}
-
-function areStoreIteratorStrategiesEqual(strategy1, strategy2) {
-  return checkEqualityPerEachKey(strategy1, strategy2, (key, val1, val2) => {
-    switch (key) {
-      case 'batchSize':
-        return strategy1.type !== 'batch' || _.isEqual(val1, val2);
       default:
         return _.isEqual(val1, val2);
     }

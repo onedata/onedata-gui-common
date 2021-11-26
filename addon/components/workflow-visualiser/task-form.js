@@ -11,7 +11,7 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/workflow-visualiser/task-form';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { tag, not, eq, neq, raw, getBy, notEmpty, or } from 'ember-awesome-macros';
+import { tag, not, eq, neq, raw, getBy, notEmpty, or, gt } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import { computed, observer, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -169,6 +169,11 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  atmLambdaHasBatchMode: gt('atmLambdaRevision.preferredBatchSize', raw(1)),
+
+  /**
    * @type {ComputedProperty<Array<Object>>}
    */
   resultStores: computed('definedStores.[]', function resultStores() {
@@ -257,13 +262,12 @@ export default Component.extend(I18n, {
             fields: [
               DropdownField.extend({
                 options: computed(
-                  'parent.value.{argumentType,argumentIsBatch,argumentIsOptional}',
+                  'parent.value.{argumentType,argumentIsOptional}',
                   function options() {
                     const argumentType = this.get('parent.value.argumentType');
-                    const argumentIsBatch = this.get('parent.value.argumentIsBatch');
                     const argumentIsOptional = this.get('parent.value.argumentIsOptional');
                     const opts =
-                      getValueBuilderTypesForArgType(argumentType, argumentIsBatch)
+                      getValueBuilderTypesForArgType(argumentType)
                       .map(vbType => ({ value: vbType }));
                     if (argumentIsOptional) {
                       opts.unshift({ value: leaveUnassignedDropdownOptionValue });
@@ -286,13 +290,12 @@ export default Component.extend(I18n, {
                 ),
                 options: computed(
                   'component.argumentStores.@each.{type,name}',
-                  'parent.value.{argumentType,argumentIsBatch}',
+                  'parent.value.{argumentType}',
                   function options() {
                     const argumentType = this.get('parent.value.argumentType');
-                    const argumentIsBatch = this.get('parent.value.argumentIsBatch');
                     const argumentStores = this.get('component.argumentStores') || [];
                     const possibleStores =
-                      getSourceStoreForType(argumentStores, argumentType, argumentIsBatch);
+                      getSourceStoreForType(argumentStores, argumentType);
                     const opts = possibleStores
                       .sortBy('name')
                       .map(({ id, name }) => ({
@@ -385,8 +388,7 @@ export default Component.extend(I18n, {
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
                     const resultType = this.get('parent.value.resultType');
-                    const resultIsBatch = this.get('parent.value.resultIsBatch');
-                    component.createTargetStore(this, resultType, resultIsBatch);
+                    component.createTargetStore(this, resultType);
                   } else {
                     return this._super(...arguments);
                   }
@@ -568,13 +570,16 @@ export default Component.extend(I18n, {
     );
   },
 
-  async createTargetStore(targetStoreField, dataType, isBatch) {
-    const actionsFactory = this.get('actionsFactory');
+  async createTargetStore(targetStoreField, dataType) {
+    const {
+      actionsFactory,
+      atmLambdaHasBatchMode,
+    } = this.getProperties('actionsFactory', 'atmLambdaHasBatchMode');
     if (!actionsFactory || !targetStoreField) {
       return;
     }
 
-    const allowedStoreTypes = getTargetStoreTypesForType(dataType, isBatch);
+    const allowedStoreTypes = getTargetStoreTypesForType(dataType, atmLambdaHasBatchMode);
     const allowedDataTypes = getTargetDataTypesForType(dataType);
 
     await this.createStoreForDropdown(
@@ -639,12 +644,14 @@ function taskToFormData(task, atmLambdaRevision) {
 
   const {
     name: lambdaName,
+    preferredBatchSize,
     argumentSpecs,
     resultSpecs,
     resourceSpec,
   } = getProperties(
     atmLambdaRevision || {},
     'name',
+    'preferredBatchSize',
     'argumentSpecs',
     'resultSpecs',
     'resourceSpec'
@@ -657,14 +664,12 @@ function taskToFormData(task, atmLambdaRevision) {
     const {
       name,
       dataSpec,
-      isBatch,
       isOptional,
       defaultValue,
     } = getProperties(
       argumentSpec || {},
       'name',
       'dataSpec',
-      'isBatch',
       'isOptional',
       'defaultValue'
     );
@@ -680,7 +685,7 @@ function taskToFormData(task, atmLambdaRevision) {
     if (!valueBuilderType) {
       valueBuilderType = (isOptional || defaultValue !== undefined || existingMapping) ?
         leaveUnassignedDropdownOptionValue :
-        getValueBuilderTypesForArgType(argumentType, isBatch)[0];
+        getValueBuilderTypesForArgType(argumentType, preferredBatchSize > 1)[0];
     }
     const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
     const valueBuilderConstValue = valueBuilderType === 'const' ?
@@ -690,7 +695,6 @@ function taskToFormData(task, atmLambdaRevision) {
     formArgumentMappings[valueName] = {
       argumentName: name,
       argumentType,
-      argumentIsBatch: isBatch,
       argumentIsOptional: isOptional,
       valueBuilderType,
       valueBuilderConstValue,
@@ -705,12 +709,10 @@ function taskToFormData(task, atmLambdaRevision) {
     const {
       name,
       dataSpec,
-      isBatch,
     } = getProperties(
       resultSpec || {},
       'name',
       'dataSpec',
-      'isBatch'
     );
     if (!name || !dataSpec) {
       return;
@@ -728,7 +730,7 @@ function taskToFormData(task, atmLambdaRevision) {
     formResultMappings[valueName] = {
       resultName: name,
       resultType,
-      resultIsBatch: Boolean(isBatch),
+      resultIsBatch: Boolean(preferredBatchSize > 1),
       targetStore: frontendStoreIdsMappings[storeSchemaId] ||
         storeSchemaId ||
         leaveUnassignedDropdownOptionValue,
@@ -897,7 +899,7 @@ function getAtmLambdaResourceValue(resourceSpecOverride, resourceSpec, propName)
   return typeof value === 'number' ? String(value) : '';
 }
 
-function getValueBuilderTypesForArgType(argType, isBatch) {
+function getValueBuilderTypesForArgType(argType) {
   if (!argType) {
     return [];
     // TODO: VFS-7816 uncomment or remove future code
@@ -908,7 +910,7 @@ function getValueBuilderTypesForArgType(argType, isBatch) {
   } else if (argType === 'object') {
     return [
       'iteratedItem',
-      ...(isBatch ? [] : ['singleValueStoreContent']),
+      'singleValueStoreContent',
       'const',
       // TODO: VFS-7816 uncomment or remove future code
       // 'storeCredentials',
@@ -918,7 +920,7 @@ function getValueBuilderTypesForArgType(argType, isBatch) {
 
   return [
     'iteratedItem',
-    ...(isBatch ? [] : ['singleValueStoreContent']),
+    'singleValueStoreContent',
     'const',
   ];
 }
@@ -956,11 +958,7 @@ function getSourceDataTypesForType(type) {
   return sourceTypes;
 }
 
-function getSourceStoreForType(availableStores, type, isBatch) {
-  if (isBatch) {
-    return [];
-  }
-
+function getSourceStoreForType(availableStores, type) {
   const allowedDataTypes = getSourceDataTypesForType(type);
   return availableStores.filter(store => {
     const {
@@ -975,8 +973,8 @@ function getSourceStoreForType(availableStores, type, isBatch) {
   });
 }
 
-function getTargetStoresForType(availableStores, type, isBatch) {
-  const allowedStoreTypes = getTargetStoreTypesForType(type, isBatch);
+function getTargetStoresForType(availableStores, type, hasBatchMode) {
+  const allowedStoreTypes = getTargetStoreTypesForType(type, hasBatchMode);
   const allowedDataTypes = getTargetDataTypesForType(type);
   return availableStores.filter(store => {
     const {

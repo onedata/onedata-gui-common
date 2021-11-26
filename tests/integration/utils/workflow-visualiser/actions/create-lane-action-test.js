@@ -68,10 +68,8 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
         name: 'lane1',
         maxRetries: 0,
         storeIteratorSpec: {
-          strategy: {
-            type: 'serial',
-          },
           storeSchemaId: 's1',
+          maxBatchSize: 100,
         },
         parallelBoxes: [],
       });
