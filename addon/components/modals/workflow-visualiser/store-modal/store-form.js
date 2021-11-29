@@ -673,7 +673,7 @@ function storeToFormData(store) {
     }
     default:
       formData.genericStoreConfig = {
-        dataType: dataSpec && dataSpecToType(dataSpec) || undefined,
+        dataType: dataSpec && dataSpecToType(dataSpec).type || undefined,
         defaultValue: [undefined, null].includes(defaultInitialValue) ?
           '' : JSON.stringify(defaultInitialValue, null, 2),
       };
@@ -721,7 +721,7 @@ function formDataToStore(formData) {
         'rangeStep'
       );
 
-      store.dataSpec = typeToDataSpec('integer');
+      store.dataSpec = typeToDataSpec({ type: 'integer', isArray: false });
       store.defaultInitialValue = {
         start: Number(rangeStart),
         end: Number(rangeEnd),
@@ -735,7 +735,7 @@ function formDataToStore(formData) {
         defaultValue,
       } = getProperties(genericStoreConfig || {}, 'dataType', 'defaultValue');
 
-      const dataSpec = dataType && typeToDataSpec(dataType) || undefined;
+      const dataSpec = dataType && typeToDataSpec({ type: dataType, isArray: false }) || undefined;
       let defaultInitialValue = null;
       if (defaultValue && defaultValue.trim()) {
         try {
