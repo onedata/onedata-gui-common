@@ -1,0 +1,36 @@
+{{#if mainRevisionNumber}}
+  {{#revisions-table/revision-entry
+    revisionNumber=mainRevisionNumber
+    revision=(get revisionRegistry mainRevisionNumber)
+    revisionActionsFactory=revisionActionsFactory
+    onClick=onRevisionClick
+    isReadOnly=isReadOnly
+    columnsCount=columnsCount
+    as |revision revisionNumber|
+  }}
+    {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
+  {{/revisions-table/revision-entry}}
+{{/if}}
+{{#if collapsedRevisionNumbers.length}}
+  {{#if isExpanded}}
+    {{#each collapsedRevisionNumbers as |revNum|}}
+      {{#revisions-table/revision-entry
+        revisionNumber=revNum
+        revision=(get revisionRegistry revNum)
+        revisionActionsFactory=revisionActionsFactory
+        onClick=onRevisionClick
+        isReadOnly=isReadOnly
+        as |revision revisionNumber|
+      }}
+        {{yield "revision" (hash revision=revision revisionNumber=revisionNumber)}}
+      {{/revisions-table/revision-entry}}
+    {{/each}}
+  {{else}}
+    {{revisions-table/revision-entries-expander
+      class=expanderClass
+      columnsCount=columnsCount
+      entriesCount=collapsedRevisionNumbers.length
+      onExpand=(action "expand")
+    }}
+  {{/if}}
+{{/if}}

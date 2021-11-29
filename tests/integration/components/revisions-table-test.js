@@ -328,7 +328,7 @@ function expectRevisionEntriesLayout(testCase, layoutSpec) {
     const $row = $rows.eq(idx + 1);
     if (type === 'revision') {
       expect($row).to.have.class('revisions-table-revision-entry');
-      expect($row.find('.revision-number').text()).to.equal(String(revisionNumber));
+      expect($row.find('.revision-number').text().trim()).to.equal(String(revisionNumber));
     } else if (type === 'expander') {
       expect($row).to.have.class('revisions-table-revision-entries-expander');
       expect($row.find('.expand-button').text()).to.contain(String(revisionsCount));

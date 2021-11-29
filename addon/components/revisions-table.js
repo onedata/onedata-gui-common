@@ -61,16 +61,6 @@ export default Component.extend(I18n, {
   isReadOnly: false,
 
   /**
-   * @type {Boolean}
-   */
-  areRevNumsBetweenStableAndLatestExpanded: false,
-
-  /**
-   * @type {Boolean}
-   */
-  areRevNumsBeforeStableExpanded: false,
-
-  /**
    * @type {ComputedProperty<Number>}
    */
   columnsCount: sum(
@@ -158,13 +148,4 @@ export default Component.extend(I18n, {
         sortedRevNums.slice(latestStableRevNumIdx + 1) : [];
     }
   ),
-
-  actions: {
-    expandRevsBetweenStableAndLatest() {
-      this.set('areRevNumsBetweenStableAndLatestExpanded', true);
-    },
-    expandRevsBeforeStable() {
-      this.set('areRevNumsBeforeStableExpanded', true);
-    },
-  },
 });
