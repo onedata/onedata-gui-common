@@ -1,5 +1,9 @@
-<td class="revision-number">{{normalizedRevisionNumber}}</td>
-<td class="state">{{revisions-table/state-tag state=state}}</td>
+<td class="revisions-table-data-cell revision-number">
+  {{normalizedRevisionNumber}}
+</td>
+<td class="revisions-table-data-cell state">
+  {{revisions-table/state-tag state=state}}
+</td>
 {{yield revision revisionNumber}}
 {{#unless isReadOnly}}
   <td class="actions">

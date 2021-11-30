@@ -48,7 +48,7 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual optional
-   * @type {(revisionNumber: Number) => void}
+   * @type {(revisionNumber: RevisionNumber) => void}
    */
   onRevisionClick: undefined,
 
@@ -61,16 +61,6 @@ export default Component.extend(I18n, {
   isReadOnly: false,
 
   /**
-   * @type {Boolean}
-   */
-  areRevNumsBetweenStableAndLatestExpanded: false,
-
-  /**
-   * @type {Boolean}
-   */
-  areRevNumsBeforeStableExpanded: false,
-
-  /**
    * @type {ComputedProperty<Number>}
    */
   columnsCount: sum(
@@ -80,7 +70,7 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<Array<Number>>}
+   * @type {ComputedProperty<Array<RevisionNumber>>}
    */
   sortedRevNums: computed(
     'revisionRegistry',
@@ -91,12 +81,12 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<Number|null>}
+   * @type {ComputedProperty<RevisionNumber|null>}
    */
   latestRevNum: or('sortedRevNums.firstObject', raw(null)),
 
   /**
-   * @type {ComputedProperty<Number|null>}
+   * @type {ComputedProperty<RevisionNumber|null>}
    */
   latestStableRevNum: computed(
     'sortedRevNums',
@@ -117,7 +107,7 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<Array<Number>>}
+   * @type {ComputedProperty<Array<RevisionNumber>>}
    */
   revNumsBetweenStableAndLatest: computed(
     'latestStableRevNum',
@@ -138,7 +128,7 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * @type {ComputedProperty<Array<Number>>}
+   * @type {ComputedProperty<Array<RevisionNumber>>}
    */
   revNumsBeforeStable: computed(
     'latestStableRevNum',
@@ -158,13 +148,4 @@ export default Component.extend(I18n, {
         sortedRevNums.slice(latestStableRevNumIdx + 1) : [];
     }
   ),
-
-  actions: {
-    expandRevsBetweenStableAndLatest() {
-      this.set('areRevNumsBetweenStableAndLatestExpanded', true);
-    },
-    expandRevsBeforeStable() {
-      this.set('areRevNumsBeforeStableExpanded', true);
-    },
-  },
 });
