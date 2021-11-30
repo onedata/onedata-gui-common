@@ -21,7 +21,10 @@
   {{/unless}}
   {{#if (eq latestRevNum null)}}
     <tr class="revisions-table-empty-entry">
-      <td colspan={{columnsCount}} class="revisions-table-data-cell small text-muted text-center">
+      <td
+        colspan={{columnsCount}}
+        class="revisions-table-data-cell small text-muted text-center"
+      >
         {{tt this "noRevisions"}}
       </td>
     </tr>
