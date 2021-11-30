@@ -10,6 +10,11 @@
       {{tt this "privacyPolicy"}}
     </a> |
   {{/if}}
+  {{#if acceptableUsePolicyManager.acceptableUsePolicyUrl}}
+    <a href={{acceptableUsePolicyManager.acceptableUsePolicyUrl}} class="clickable">
+      {{tt this "acceptableUsePolicy"}}
+    </a> |
+  {{/if}}
   <span class="login-service-version-string">
     <span>{{tt this "version"}}</span>
     <span class="version">{{softwareVersionDetails.serviceVersion}}</span>

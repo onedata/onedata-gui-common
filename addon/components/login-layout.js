@@ -19,6 +19,7 @@ export default Component.extend(I18n, {
 
   guiUtils: service(),
   privacyPolicyManager: service(),
+  acceptableUsePolicyManager: service(),
 
   /**
    * @override

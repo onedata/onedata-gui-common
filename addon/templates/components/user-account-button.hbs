@@ -36,6 +36,15 @@
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
+          {{#if acceptableUsePolicyManager.acceptableUsePolicyUrl}}
+            {{#list.item isCollapsible=false as |listItem|}}
+              {{#listItem.header click=(action "acceptableUsePolicy") class=(concat-classes menuItemClasses "acceptable-use-policy-action")}}
+                <a href={{acceptableUsePolicyManager.acceptableUsePolicyUrl}}>
+                  {{tt this "acceptableUsePolicy"}}
+                </a>
+              {{/listItem.header}}
+            {{/list.item}}
+          {{/if}}
           {{#list.item isCollapsible=false as |listItem|}}
             {{#listItem.header click=(action "logout") class=(concat-classes menuItemClasses "logout-action")}}
               {{tt this "logout"}}
@@ -90,6 +99,13 @@
         <li>
           <a href={{privacyPolicyManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
             {{tt this "privacyPolicy"}}
+          </a>
+        </li>
+      {{/if}}
+      {{#if acceptableUsePolicyManager.acceptableUsePolicyUrl}}
+        <li>
+          <a href={{acceptableUsePolicyManager.acceptableUsePolicyUrl}} class="clickable" click={{action "acceptableUsePolicy"}}>
+            {{tt this "acceptableUsePolicy"}}
           </a>
         </li>
       {{/if}}

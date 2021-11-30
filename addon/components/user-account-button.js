@@ -24,6 +24,7 @@ export default Component.extend(ClickOutside, I18n, {
   classNameBindings: ['mobileMode:user-account-button-mobile'],
 
   privacyPolicyManager: service(),
+  acceptableUsePolicyManager: service(),
   guiUtils: service(),
   i18n: service(),
 
@@ -100,6 +101,10 @@ export default Component.extend(ClickOutside, I18n, {
       this.get('onItemClick')('users');
     },
     privacyPolicy() {
+      this.set('menuOpen', false);
+      this.get('onItemClick')();
+    },
+    acceptableUsePolicy() {
       this.set('menuOpen', false);
       this.get('onItemClick')();
     },
