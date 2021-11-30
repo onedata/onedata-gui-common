@@ -1,9 +1,9 @@
 /**
- * A component used by one-tree. It represents tree item content. Example of 
+ * A component used by one-tree. It represents tree item content. Example of
  * usage can be found in one-tree component comments.
- * 
+ *
  * Can be used only as a contextual component yielded by one-tree/item.
- * 
+ *
  * @module components/one-tree/item/content
  * @author Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
@@ -14,7 +14,6 @@ import Component from '@ember/component';
 
 import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-tree/item/content';
-import { invokeAction } from 'ember-invoke-action';
 
 export default Component.extend({
   layout,
@@ -33,7 +32,7 @@ export default Component.extend({
   hasSubtree: false,
 
   /**
-   * Action called, when header content contains (or not) specified. 
+   * Action called, when header content contains (or not) specified.
    * search query. Signature:
    * * isVisible {boolean} is item visible (not filtered out)
    * @type {Function}
@@ -108,6 +107,9 @@ export default Component.extend({
   },
 
   _click() {
-    invokeAction(this, '_showAction');
+    const _showAction = this.get('_showAction');
+    if (_showAction) {
+      _showAction();
+    }
   },
 });

@@ -1,13 +1,13 @@
 /**
- * Creates accordion-like list of elements. By default items can be expanded separately. 
+ * Creates accordion-like list of elements. By default items can be expanded separately.
  * If accordionMode = true then only one item can be expanded in the same time.
- * It is a contextual component - yields header and item component in hash. 
- * 
+ * It is a contextual component - yields header and item component in hash.
+ *
  * List items can be selected using checkbox. To enable this functionality,
  * property hasCheckboxes must be set to true for list, and each item, that can be
  * selected must have property selectionValue defined. After each selection change
  * selectionChanged action is invoked with an array of selectionValue item properties.
- * 
+ *
  * Example:
  * ```
  * {{#one-collapsible-list as |list|}}
@@ -37,7 +37,6 @@ import Component from '@ember/component';
 import { computed, observer } from '@ember/object';
 import { debounce, next } from '@ember/runloop';
 import { A } from '@ember/array';
-import { invoke, invokeAction } from 'ember-invoke-action';
 
 import layout from 'onedata-gui-common/templates/components/one-collapsible-list';
 
@@ -161,7 +160,12 @@ export default Component.extend({
       let {
         _selectedItemValues,
         _availableItemValues,
-      } = this.getProperties('_selectedItemValues', '_availableItemValues');
+        selectionChanged,
+      } = this.getProperties(
+        '_selectedItemValues',
+        '_availableItemValues',
+        'selectionChanged'
+      );
       let isOnList = _selectedItemValues.includes(itemValue);
       if (!selectionState && isOnList) {
         _selectedItemValues.removeObject(itemValue);
@@ -169,7 +173,9 @@ export default Component.extend({
         !isOnList && _availableItemValues.includes(itemValue)) {
         _selectedItemValues.pushObject(itemValue);
       }
-      invokeAction(this, 'selectionChanged', _selectedItemValues.toArray());
+      if (selectionChanged) {
+        selectionChanged(_selectedItemValues.toArray());
+      }
     },
     notifyValue(itemValue, exists) {
       // next() to avoid multiple modification in a single render,
@@ -182,7 +188,7 @@ export default Component.extend({
             _availableItemValues.pushObject(itemValue);
           } else if (!exists && isOnList) {
             _availableItemValues.removeObject(itemValue);
-            invoke(this, 'toggleItemSelection', itemValue, false);
+            this.send('toggleItemSelection', itemValue, false);
           }
           debounce(this, '_filtrationChanged', 1);
         }
@@ -193,17 +199,21 @@ export default Component.extend({
         _areAllItemsSelected,
         _availableItemValues,
         _selectedItemValues,
+        selectionChanged,
       } = this.getProperties(
         '_areAllItemsSelected',
         '_availableItemValues',
-        '_selectedItemValues'
+        '_selectedItemValues',
+        'selectionChanged'
       );
       if (_areAllItemsSelected) {
         _selectedItemValues.clear();
       } else {
         _selectedItemValues.addObjects(_availableItemValues);
       }
-      invokeAction(this, 'selectionChanged', _selectedItemValues.toArray());
+      if (selectionChanged) {
+        selectionChanged(_selectedItemValues.toArray());
+      }
     },
     collapseList(visibility) {
       if (visibility === undefined) {

@@ -24,10 +24,10 @@ import { get, computed, observer } from '@ember/object';
 import { run, scheduleOnce, next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-webui-popover';
-import { invokeAction } from 'ember-invoke-action';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { resolve } from 'rsvp';
 
 export default Component.extend({
   layout,
@@ -274,7 +274,7 @@ export default Component.extend({
 
   /**
    * Fixes popover position in special cases
-   * @returns {undefined} 
+   * @returns {undefined}
    */
   fixPosition() {
     if (this.get('placement') === 'context-menu') {
@@ -308,7 +308,7 @@ export default Component.extend({
 
   /**
    * Rolls back fixes introduced by `fixPosition` method
-   * @returns {undefined} 
+   * @returns {undefined}
    */
   unfixPosition() {
     if (this.get('placement') === 'context-menu') {
@@ -356,11 +356,10 @@ export default Component.extend({
     },
     submit() {
       this._popover({ dismissible: false });
-      let submitPromise = invokeAction(this, 'submit');
-      submitPromise.finally(() => {
+      const submit = this.get('submit');
+      return (submit ? submit() : resolve()).finally(() => {
         this.send('hide');
       });
-      return submitPromise;
     },
     refresh() {
       let {
@@ -386,12 +385,12 @@ export default Component.extend({
  * manually, because there is no suitable standard placement. Placement calculated
  * below is equivalent to: right-top|right-bottom|left-top|left-bottom
  * (or horizontal placement without Y-central position).
- * 
+ *
  * Code inspired by `getPlacement` method from:
  * https://github.com/sandywalker/webui-popover/blob/master/src/jquery.webui-popover.js
- * 
+ *
  * `this` context is a WebuiPopover object
- * 
+ *
  * @type {function}
  * @returns {string}
  */
