@@ -27,19 +27,19 @@
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
-          {{#if privacyPolicyManager.privacyPolicyUrl}}
+          {{#if guiMessageManager.privacyPolicyUrl}}
             {{#list.item isCollapsible=false as |listItem|}}
               {{#listItem.header click=(action "privacyPolicy") class=(concat-classes menuItemClasses "privacy-policy-action")}}
-                <a href={{privacyPolicyManager.privacyPolicyUrl}}>
+                <a href={{guiMessageManager.privacyPolicyUrl}}>
                   {{tt this "privacyPolicy"}}
                 </a>
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
-          {{#if acceptableUsePolicyManager.acceptableUsePolicyUrl}}
+          {{#if guiMessageManager.acceptableUsePolicyUrl}}
             {{#list.item isCollapsible=false as |listItem|}}
               {{#listItem.header click=(action "acceptableUsePolicy") class=(concat-classes menuItemClasses "acceptable-use-policy-action")}}
-                <a href={{acceptableUsePolicyManager.acceptableUsePolicyUrl}}>
+                <a href={{guiMessageManager.acceptableUsePolicyUrl}}>
                   {{tt this "acceptableUsePolicy"}}
                 </a>
               {{/listItem.header}}
@@ -95,16 +95,16 @@
           {{/if}}
         </li>
       {{/if}}
-      {{#if privacyPolicyManager.privacyPolicyUrl}}
+      {{#if guiMessageManager.privacyPolicyUrl}}
         <li>
-          <a href={{privacyPolicyManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
+          <a href={{guiMessageManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
             {{tt this "privacyPolicy"}}
           </a>
         </li>
       {{/if}}
-      {{#if acceptableUsePolicyManager.acceptableUsePolicyUrl}}
+      {{#if guiMessageManager.acceptableUsePolicyUrl}}
         <li>
-          <a href={{acceptableUsePolicyManager.acceptableUsePolicyUrl}} class="clickable" click={{action "acceptableUsePolicy"}}>
+          <a href={{guiMessageManager.acceptableUsePolicyUrl}} class="clickable" click={{action "acceptableUsePolicy"}}>
             {{tt this "acceptableUsePolicy"}}
           </a>
         </li>

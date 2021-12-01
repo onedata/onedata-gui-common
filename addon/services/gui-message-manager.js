@@ -1,8 +1,8 @@
 /**
- * A template of AcceptableUsePolicyManager service, that should be extended (if needed)
+ * A template of GuiMessageManager service, that should be extended (if needed)
  * in GUIs using onedata-gui-common.
  *
- * @module services/acceptable-use-policy-manager
+ * @module services/gui-message-manager
  * @author Agnieszka Warchoł
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -14,5 +14,10 @@ export default Service.extend({
   /**
    * @type {function|undefined}
    */
-  showAcceptableUsePolicyAction: undefined,
+  privacyPolicyUrl: undefined,
+
+  /**
+   * @type {function|undefined}
+   */
+  acceptableUsePolicyUrl: undefined,
 });

@@ -5,13 +5,13 @@
   {{yield}}
 </div>
 <div class="login-service-version">
-  {{#if privacyPolicyManager.privacyPolicyUrl}}
-    <a href={{privacyPolicyManager.privacyPolicyUrl}} class="clickable">
+  {{#if guiMessageManager.privacyPolicyUrl}}
+    <a href={{guiMessageManager.privacyPolicyUrl}} class="clickable">
       {{tt this "privacyPolicy"}}
     </a> |
   {{/if}}
-  {{#if acceptableUsePolicyManager.acceptableUsePolicyUrl}}
-    <a href={{acceptableUsePolicyManager.acceptableUsePolicyUrl}} class="clickable">
+  {{#if guiMessageManager.acceptableUsePolicyUrl}}
+    <a href={{guiMessageManager.acceptableUsePolicyUrl}} class="clickable">
       {{tt this "acceptableUsePolicy"}}
     </a> |
   {{/if}}
