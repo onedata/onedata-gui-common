@@ -1,49 +1,41 @@
-import { run } from '@ember/runloop';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach, afterEach } from 'mocha';
 import Looper from 'onedata-gui-common/utils/looper';
+import sinon from 'sinon';
 
 describe('Unit | Utility | looper', function () {
-  it('invokes registered events in given interval', function (done) {
-    let counter = 0;
-    let timer = Looper.create({
+  beforeEach(function () {
+    this.fakeClock = sinon.useFakeTimers({
+      now: Date.now(),
+      shouldAdvanceTime: false,
+    });
+    this.looper = Looper.create({
       immediate: false,
       interval: 50,
     });
-
-    timer.on('tick', function () {
-      counter += 1;
-    });
-
-    setTimeout(function () {
-      try {
-        expect(counter).to.be.gte(2).and.lte(3);
-      } finally {
-        run(() => timer.destroy());
-      }
-      done();
-    }, 150);
   });
 
-  it('can stop interval', function (done) {
-    let counter = 0;
-    let timer = Looper.create({
-      immediate: false,
-      interval: 50,
-    });
+  afterEach(function () {
+    this.looper.destroy();
+    this.fakeClock.restore();
+  });
 
-    timer.stop();
-    timer.on('tick', function () {
-      counter += 1;
-    });
+  it('invokes registered events in given interval', function () {
+    const tickSpy = sinon.spy();
+    this.looper.on('tick', tickSpy);
 
-    setTimeout(function () {
-      try {
-        expect(counter).to.be.equal(0);
-      } finally {
-        run(() => timer.destroy());
-      }
-      done();
-    }, 150);
+    this.fakeClock.tick(160);
+
+    expect(tickSpy).to.be.calledThrice;
+  });
+
+  it('can stop interval', function () {
+    const tickSpy = sinon.spy();
+    this.looper.on('tick', tickSpy);
+    this.looper.stop();
+
+    this.fakeClock.tick(160);
+
+    expect(tickSpy).to.not.be.called;
   });
 });
