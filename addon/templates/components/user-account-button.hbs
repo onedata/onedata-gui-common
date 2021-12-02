@@ -36,11 +36,11 @@
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
-          {{#if guiMessageManager.acceptableUsePolicyUrl}}
+          {{#if guiMessageManager.termsOfUseUrl}}
             {{#list.item isCollapsible=false as |listItem|}}
-              {{#listItem.header click=(action "acceptableUsePolicy") class=(concat-classes menuItemClasses "acceptable-use-policy-action")}}
-                <a href={{guiMessageManager.acceptableUsePolicyUrl}}>
-                  {{tt this "acceptableUsePolicy"}}
+              {{#listItem.header click=(action "termsOfUse") class=(concat-classes menuItemClasses "terms-of-use-action")}}
+                <a href={{guiMessageManager.termsOfUseUrl}}>
+                  {{tt this "termsOfUse"}}
                 </a>
               {{/listItem.header}}
             {{/list.item}}
@@ -102,10 +102,10 @@
           </a>
         </li>
       {{/if}}
-      {{#if guiMessageManager.acceptableUsePolicyUrl}}
+      {{#if guiMessageManager.termsOfUseUrl}}
         <li>
-          <a href={{guiMessageManager.acceptableUsePolicyUrl}} class="clickable" click={{action "acceptableUsePolicy"}}>
-            {{tt this "acceptableUsePolicy"}}
+          <a href={{guiMessageManager.termsOfUseUrl}} class="clickable" click={{action "termsOfUse"}}>
+            {{tt this "termsOfUse"}}
           </a>
         </li>
       {{/if}}

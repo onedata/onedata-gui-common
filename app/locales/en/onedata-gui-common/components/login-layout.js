@@ -1,6 +1,6 @@
 export default {
   privacyPolicy: 'Privacy policy',
-  acceptableUsePolicy: 'Acceptable use policy',
+  termsOfUse: 'Terms of use',
   version: 'version',
   versionBuild: 'Build',
 };

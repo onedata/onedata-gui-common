@@ -103,7 +103,7 @@ export default Component.extend(ClickOutside, I18n, {
       this.set('menuOpen', false);
       this.get('onItemClick')();
     },
-    acceptableUsePolicy() {
+    termsOfUse() {
       this.set('menuOpen', false);
       this.get('onItemClick')();
     },

@@ -19,5 +19,5 @@ export default Service.extend({
   /**
    * @type {function|undefined}
    */
-  acceptableUsePolicyUrl: undefined,
+  termsOfUseUrl: undefined,
 });
