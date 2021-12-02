@@ -12,12 +12,12 @@ import Service from '@ember/service';
 
 export default Service.extend({
   /**
-   * @type {function|undefined}
+   * @type {string|undefined}
    */
   privacyPolicyUrl: undefined,
 
   /**
-   * @type {function|undefined}
+   * @type {string|undefined}
    */
   termsOfUseUrl: undefined,
 });
