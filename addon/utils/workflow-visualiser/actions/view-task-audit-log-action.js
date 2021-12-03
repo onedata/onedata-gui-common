@@ -12,9 +12,25 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { not } from 'ember-awesome-macros';
 
 export default Action.extend({
   modalManager: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.workflowVisualiser.task.actions.viewTaskAuditLog',
+
+  /**
+   * @override
+   */
+  className: 'view-task-audit-log-action-trigger',
+
+  /**
+   * @override
+   */
+  disabled: not('task.systemAuditLogStore'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.Task>}
