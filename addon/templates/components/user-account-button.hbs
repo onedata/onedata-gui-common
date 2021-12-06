@@ -27,11 +27,20 @@
               {{/listItem.header}}
             {{/list.item}}
           {{/if}}
-          {{#if privacyPolicyManager.privacyPolicyUrl}}
+          {{#if guiMessageManager.privacyPolicyUrl}}
             {{#list.item isCollapsible=false as |listItem|}}
               {{#listItem.header click=(action "privacyPolicy") class=(concat-classes menuItemClasses "privacy-policy-action")}}
-                <a href={{privacyPolicyManager.privacyPolicyUrl}}>
+                <a href={{guiMessageManager.privacyPolicyUrl}}>
                   {{tt this "privacyPolicy"}}
+                </a>
+              {{/listItem.header}}
+            {{/list.item}}
+          {{/if}}
+          {{#if guiMessageManager.termsOfUseUrl}}
+            {{#list.item isCollapsible=false as |listItem|}}
+              {{#listItem.header click=(action "termsOfUse") class=(concat-classes menuItemClasses "terms-of-use-action")}}
+                <a href={{guiMessageManager.termsOfUseUrl}}>
+                  {{tt this "termsOfUse"}}
                 </a>
               {{/listItem.header}}
             {{/list.item}}
@@ -86,10 +95,17 @@
           {{/if}}
         </li>
       {{/if}}
-      {{#if privacyPolicyManager.privacyPolicyUrl}}
+      {{#if guiMessageManager.privacyPolicyUrl}}
         <li>
-          <a href={{privacyPolicyManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
+          <a href={{guiMessageManager.privacyPolicyUrl}} class="clickable" click={{action "privacyPolicy"}}>
             {{tt this "privacyPolicy"}}
+          </a>
+        </li>
+      {{/if}}
+      {{#if guiMessageManager.termsOfUseUrl}}
+        <li>
+          <a href={{guiMessageManager.termsOfUseUrl}} class="clickable" click={{action "termsOfUse"}}>
+            {{tt this "termsOfUse"}}
           </a>
         </li>
       {{/if}}

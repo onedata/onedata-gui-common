@@ -24,9 +24,9 @@ describe('Unit | Utility | looper', function () {
     const tickSpy = sinon.spy();
     this.looper.on('tick', tickSpy);
 
-    this.fakeClock.tick(150);
+    this.fakeClock.tick(160);
 
-    expect(tickSpy).to.be.calledTwice;
+    expect(tickSpy).to.be.calledThrice;
   });
 
   it('can stop interval', function () {
@@ -34,7 +34,7 @@ describe('Unit | Utility | looper', function () {
     this.looper.on('tick', tickSpy);
     this.looper.stop();
 
-    this.fakeClock.tick(150);
+    this.fakeClock.tick(160);
 
     expect(tickSpy).to.not.be.called;
   });
