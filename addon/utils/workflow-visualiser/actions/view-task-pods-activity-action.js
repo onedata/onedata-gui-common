@@ -10,7 +10,7 @@
 
 import Action from 'onedata-gui-common/utils/action';
 import { reads } from '@ember/object/computed';
-import { not, eq, raw } from 'ember-awesome-macros';
+import { not, eq, raw, or, notEmpty } from 'ember-awesome-macros';
 
 export default Action.extend({
   /**
@@ -26,7 +26,7 @@ export default Action.extend({
   /**
    * @override
    */
-  disabled: not('isTaskAnOpenfaasFunction'),
+  disabled: or(not('isTaskAnOpenfaasFunction'), not('wasInstantiated')),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.Task>}
@@ -45,6 +45,11 @@ export default Action.extend({
     'task.lambdaRevision.operationSpec.engine',
     raw('openfaas')
   ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  wasInstantiated: notEmpty('task.instanceId'),
 
   /**
    * @override
