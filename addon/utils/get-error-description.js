@@ -40,9 +40,46 @@ const detailsTranslateFunctions = {
     'supportedStorages',
     'supportedObjectStorages',
   ]),
-  fileRegistrationNotSupported: createArrayDetailsToStringsTranslator(['objectStorages']),
+  storageImportNotSupported: createArrayDetailsToStringsTranslator([
+    'objectStorages',
+  ]),
+  fileRegistrationNotSupported: createArrayDetailsToStringsTranslator([
+    'objectStorages',
+  ]),
+  atmLambdaInUse: createArrayDetailsToStringsTranslator(['atmWorkflowSchemas']),
   badData: badDataDetailsTranslator,
   tokenCaveatUnverified: caveatDetailsTranslator,
+  atmUnsupportedDataType: createArrayDetailsToStringsTranslator(['allowed']),
+  atmStoreCreationFailed: createNestedErrorDetailsTranslator('specificError'),
+  atmStoreTypeDisallowed: createArrayDetailsToStringsTranslator(['allowed']),
+  atmLaneExecutionCreationFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmLaneExecutionInitiationFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmParallelBoxExecutionCreationFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmParallelBoxExecutionInitiationFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmTaskExecutionCreationFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmTaskExecutionInitiationFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmTaskArgMappingFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmTaskArgMapperUnsupportedValueBuilder: createArrayDetailsToStringsTranslator(['supported']),
+  atmTaskResultMappingFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
+  atmTaskResultDispatchFailed: createNestedErrorDetailsTranslator(
+    'specificError'
+  ),
 };
 
 /**
