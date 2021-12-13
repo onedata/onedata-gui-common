@@ -39,6 +39,7 @@ import oneDocSeeMore from './onedata-gui-common/components/one-doc-see-more';
 import queryBuilder from './onedata-gui-common/components/query-builder';
 import oneStep from './onedata-gui-common/components/one-step';
 import publicFooter from './onedata-gui-common/components/public-footer';
+import wysiwygEditor from './onedata-gui-common/components/wysiwyg-editor';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -107,6 +108,7 @@ const translations = {
     queryBuilder,
     oneStep,
     publicFooter,
+    wysiwygEditor,
     alerts: {
       endpointError,
     },
