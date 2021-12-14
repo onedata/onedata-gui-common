@@ -73,7 +73,9 @@ const detailsTranslateFunctions = {
   atmTaskArgMappingFailed: createNestedErrorDetailsTranslator(
     'specificError'
   ),
-  atmTaskArgMapperUnsupportedValueBuilder: createArrayDetailsToStringsTranslator(['supported']),
+  atmTaskArgMapperUnsupportedValueBuilder: createArrayDetailsToStringsTranslator(
+    ['supported']
+  ),
   atmTaskResultMappingFailed: createNestedErrorDetailsTranslator(
     'specificError'
   ),
