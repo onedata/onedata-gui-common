@@ -149,33 +149,73 @@ describe('Unit | Utility | get error description', function () {
     }
   );
 
-  [
-    'badServiceToken',
-    'badConsumerToken',
-    'badValueToken',
-  ].forEach(errorId => {
+  [{
+    errorId: 'badServiceToken',
+    nestedErrorKey: 'tokenError',
+  }, {
+    errorId: 'badConsumerToken',
+    nestedErrorKey: 'tokenError',
+  }, {
+    errorId: 'badValueToken',
+    nestedErrorKey: 'tokenError',
+  }, {
+    errorId: 'errorOnNodes',
+    nestedErrorKey: 'error',
+  }, {
+    errorId: 'atmStoreCreationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmLaneExecutionCreationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmLaneExecutionInitiationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmParallelBoxExecutionCreationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmParallelBoxExecutionInitiationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmTaskExecutionCreationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmTaskExecutionInitiationFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmTaskArgMappingFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmTaskResultMappingFailed',
+    nestedErrorKey: 'specificError',
+  }, {
+    errorId: 'atmTaskResultDispatchFailed',
+    nestedErrorKey: 'specificError',
+  }].forEach(({ errorId, nestedErrorKey }) => {
     it(`handles errors in form { id, details } with id == "${errorId}"`,
       function () {
         const nestedErrorDetails = {
-          limit: 120,
+          value: 'abc',
         };
         const nestedError = {
-          id: 'tokenTooLarge',
+          id: 'someError',
           details: nestedErrorDetails,
         };
         sinon.stub(this.i18n, 't')
           .withArgs(
             `errors.backendErrors.${errorId}`,
-            sinon.match({ tokenError: 'token too large' })
+            sinon.match({
+              [nestedErrorKey]: 'nested error',
+            })
           ).returns(correctTranslation)
           .withArgs(
-            'errors.backendErrors.tokenTooLarge',
+            'errors.backendErrors.someError',
             nestedErrorDetails
-          ).returns('token too large');
+          ).returns('nested error');
         const error = {
           id: errorId,
           details: {
-            tokenError: nestedError,
+            [nestedErrorKey]: nestedError,
           },
         };
 
@@ -564,41 +604,6 @@ describe('Unit | Utility | get error description', function () {
   );
 
   it(
-    'handles errors in form { id, details } with id == "errorOnNodes"',
-    function () {
-      sinon.stub(this.i18n, 't')
-        .withArgs('errors.backendErrors.errorOnNodes', {
-          hostnames: ['host'],
-          error: 'some suberror',
-        })
-        .returns(correctTranslation)
-        .withArgs('errors.backendErrors.noConnectionToNewNode', {
-          hostname: 'otherhost',
-        })
-        .returns('some suberror');
-      const error = {
-        id: 'errorOnNodes',
-        details: {
-          hostnames: ['host'],
-          error: {
-            id: 'noConnectionToNewNode',
-            details: {
-              hostname: 'otherhost',
-            },
-          },
-        },
-      };
-
-      const result = getErrorDescription(error, this.i18n);
-
-      expect(result).to.deep.equal({
-        message: escapedHtmlSafe(correctTranslation),
-        errorJsonString: escapedJsonHtmlSafe(error),
-      });
-    }
-  );
-
-  it(
     'handles errors in form { id, details } with id == "noServiceNodes"',
     function () {
       sinon.stub(this.i18n, 't')
@@ -631,8 +636,23 @@ describe('Unit | Utility | get error description', function () {
     errorId: 'autoStorageImportNotSupported',
     arraysInDetails: ['supportedStorages', 'supportedObjectStorages'],
   }, {
+    errorId: 'storageImportNotSupported',
+    arraysInDetails: ['objectStorages'],
+  }, {
     errorId: 'fileRegistrationNotSupported',
     arraysInDetails: ['objectStorages'],
+  }, {
+    errorId: 'atmLambdaInUse',
+    arraysInDetails: ['atmWorkflowSchemas'],
+  }, {
+    errorId: 'atmUnsupportedDataType',
+    arraysInDetails: ['allowed'],
+  }, {
+    errorId: 'atmStoreTypeDisallowed',
+    arraysInDetails: ['allowed'],
+  }, {
+    errorId: 'atmTaskArgMapperUnsupportedValueBuilder',
+    arraysInDetails: ['supported'],
   }].forEach(({ errorId, arraysInDetails }) => {
     it(`handles errors in form { id, details } with id == "${errorId}"`,
       function () {
