@@ -18,6 +18,8 @@ import {
 } from 'onedata-gui-common/utils/one-embedded-common';
 import createThrottledFunction from '../utils/create-throttled-function';
 
+export const throttleTimeout = 50;
+
 export default Service.extend({
   /**
    * @type {Window}
@@ -58,7 +60,7 @@ export default Service.extend({
     this.clearPropertiesToChangeCache();
     this.scheduleFlushCache = createThrottledFunction(() => {
       this.flushCache();
-    }, 100, false);
+    }, throttleTimeout, false);
   },
 
   /**

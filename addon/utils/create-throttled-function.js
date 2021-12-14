@@ -23,26 +23,31 @@ export default function createThrottledFunction(func, timeSpacing, immediate = t
   let timeoutId;
   let lastRan;
   let runPostponed = immediate;
+  const clearTimeout = function clearTimeout() {
+    if (timeoutId) {
+      cancel(timeoutId);
+      timeoutId = null;
+    }
+  };
+  const clearSchedule = function clearSchedule() {
+    lastRan = Date.now();
+    runPostponed = false;
+    clearTimeout();
+  };
   return function throttledFunction() {
     if (!immediate && !runPostponed) {
       lastRan = Date.now();
       runPostponed = true;
-      if (timeoutId) {
-        cancel(timeoutId);
-        timeoutId = null;
-      }
+      clearTimeout();
     }
     if (!lastRan || timeSpacing - (Date.now() - lastRan) <= 0) {
       func();
-      lastRan = Date.now();
+      clearSchedule();
     } else if (!timeoutId) {
       timeoutId = later(function () {
         if ((Date.now() - lastRan) >= timeSpacing) {
           func();
-          lastRan = Date.now();
-          runPostponed = false;
-          cancel(timeoutId);
-          timeoutId = null;
+          clearSchedule();
         }
       }, timeSpacing - (Date.now() - lastRan));
     }
