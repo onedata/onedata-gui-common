@@ -1,9 +1,9 @@
 /**
- * A component used by one-tree. It represents item of a tree. Yields content and 
+ * A component used by one-tree. It represents item of a tree. Yields content and
  * subtree components. Example of usage can be found in one-tree component comments.
- * 
+ *
  * Can be used only as a contextual component yielded by one-tree.
- * 
+ *
  * @module components/one-tree/item
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -19,8 +19,6 @@ import { inject as service } from '@ember/service';
 import { next } from '@ember/runloop';
 import { isArray } from '@ember/array';
 import layout from 'onedata-gui-common/templates/components/one-tree/item';
-
-import { invokeAction, invoke } from 'ember-invoke-action';
 
 export default Component.extend({
   layout,
@@ -104,7 +102,7 @@ export default Component.extend({
   _subtreeFilteredOut: true,
 
   /**
-   * Property used in _activeSubtreeKeys observer to compare with new 
+   * Property used in _activeSubtreeKeys observer to compare with new
    * _activeSubtreeKeys value.
    * @type {Array.*}
    */
@@ -207,7 +205,7 @@ export default Component.extend({
       }
 
       if (_rootKey === selectedRootKey && subtreeKey === key) {
-        invoke(this, 'show', key, subtreeIsExpanded);
+        this.send('show', key, subtreeIsExpanded);
       }
     };
   }),
@@ -231,7 +229,7 @@ export default Component.extend({
     let wasParentActive = _activeSubtreeKeysOld.indexOf(_parentKey) > -1;
     if (collapseRecursively && wasParentActive && !isParentActive) {
       // collapse if parent tree has collapsed
-      next(() => invoke(this, 'show', key, false));
+      next(() => this.send('show', key, false));
     }
     this.set('_activeSubtreeKeysOld', _activeSubtreeKeys);
   }),
@@ -298,13 +296,15 @@ export default Component.extend({
         _areParentsExpanded,
         setLastExpandedKey,
         _parentKey,
+        _showAction,
       } = this.getProperties(
         '_isSubtreeExpanded',
         'key',
         '_hasSubtree',
         '_areParentsExpanded',
         'setLastExpandedKey',
-        '_parentKey'
+        '_parentKey',
+        '_showAction'
       );
 
       if (!_hasSubtree) {
@@ -324,7 +324,9 @@ export default Component.extend({
           subtreeKeys = subtreeKeys.concat(key);
         }
       }
-      invokeAction(this, '_showAction', subtreeKeys, subtreeIsExpanded);
+      if (_showAction) {
+        _showAction(subtreeKeys, subtreeIsExpanded);
+      }
     },
     hasTreeNotify(hasSubtree) {
       this.set('_hasSubtree', hasSubtree);

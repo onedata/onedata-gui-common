@@ -9,7 +9,6 @@
 
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-form-fields';
-import { invokeAction } from 'ember-invoke-action';
 import config from 'ember-get-config';
 import { computed, get } from '@ember/object';
 
@@ -44,14 +43,14 @@ const {
  * @property {string} [lockHint=undefined] text that will be shown in tooltip
  *     after hovering locked icon (works only on disabled elements)
  * @property {number|object} [lt=undefined] 'lower than' bounding for number
- *   validator. May be a number or an object in format 
+ *   validator. May be a number or an object in format
  *   `{
  *      [property]: string,
  *      [number]: number
  *      [message]: string,
  *    }`
- *   where `property` is a name of some model property, which value should be used 
- *   as an upper bound. If `number` is also provided, then value 
+ *   where `property` is a name of some model property, which value should be used
+ *   as an upper bound. If `number` is also provided, then value
  *   max(property-value, number) will be used. If property is not provided,
  *   then value falls back to number property. `message` is an i18n key, that
  *   will be translated and used as an error message.
@@ -115,10 +114,16 @@ export default Component.extend({
 
   actions: {
     inputChanged() {
-      invokeAction(this, 'inputChanged', ...arguments);
+      const inputChanged = this.get('inputChanged');
+      if (inputChanged) {
+        inputChanged(...arguments);
+      }
     },
     onFocusOut() {
-      invokeAction(this, 'onFocusOut', ...arguments);
+      const onFocusOut = this.get('onFocusOut');
+      if (onFocusOut) {
+        onFocusOut(...arguments);
+      }
     },
   },
 });

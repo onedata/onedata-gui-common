@@ -27,10 +27,9 @@ import ObjectProxy from '@ember/object/proxy';
 import { assert } from '@ember/debug';
 import { readOnly } from '@ember/object/computed';
 import EmberObject, { observer, computed } from '@ember/object';
-import { Promise } from 'rsvp';
+import { Promise, resolve } from 'rsvp';
 import layout from 'onedata-gui-common/templates/components/one-form-simple';
 import OneForm from 'onedata-gui-common/components/one-form';
-import { invoke, invokeAction } from 'ember-invoke-action';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 
 export default OneForm.extend({
@@ -157,7 +156,7 @@ export default OneForm.extend({
   },
 
   isValidChanged: observer('isValid', function () {
-    invoke(this, 'allValidChanged', this.get('isValid'));
+    this.send('allValidChanged', this.get('isValid'));
   }),
 
   actions: {
@@ -166,8 +165,12 @@ export default OneForm.extend({
      * values of form. The receiver should know what field to get from it.
      */
     submit() {
-      let submitting = this.get('_submitEnabled') ?
-        invokeAction(this, 'submit', this.get('allFieldsValues.main')) :
+      const {
+        submit,
+        _submitEnabled,
+      } = this.getProperties('submit', '_submitEnabled');
+      let submitting = _submitEnabled ?
+        resolve(submit && submit(this.get('allFieldsValues.main'))) :
         new Promise((resolve, reject) => reject());
       this.set('_disabled', true);
       submitting.finally(() => {
@@ -186,7 +189,10 @@ export default OneForm.extend({
     },
 
     allValidChanged(isValid) {
-      return invokeAction(this, 'allValidChanged', isValid);
+      const allValidChanged = this.get('allValidChanged');
+      if (allValidChanged) {
+        return allValidChanged(isValid);
+      }
     },
   },
 });

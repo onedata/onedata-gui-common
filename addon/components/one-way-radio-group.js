@@ -1,6 +1,5 @@
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/one-way-radio-group';
-import { invokeAction } from 'ember-invoke-action';
 
 /**
  * Creates radio inputs group based one the one-toggle-radio component.
@@ -56,7 +55,10 @@ export default Component.extend({
 
   actions: {
     updateHandler(value) {
-      invokeAction(this, 'update', value, this);
+      const update = this.get('update');
+      if (update) {
+        update(value, this);
+      }
     },
   },
 });

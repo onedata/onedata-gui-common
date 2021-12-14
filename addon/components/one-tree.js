@@ -1,11 +1,11 @@
 /**
- * A component that displays content using nested lists - tree view. 
+ * A component that displays content using nested lists - tree view.
  * Yields item components, which yields content and subtree components.
- * 
- * Subtree visibility can be turned on/off by item content click or by 
- * eventsBus events. To use eventsBus, key must by defined for both the one-tree 
+ *
+ * Subtree visibility can be turned on/off by item content click or by
+ * eventsBus events. To use eventsBus, key must by defined for both the one-tree
  * component and an item, which subtree we want to expand/collapse.
- * 
+ *
  * eventsBus.trigger needs arguments:
  * 'one-tree:show' - event name,
  *   * oneTreeKey - key of the one-tree component
@@ -13,8 +13,8 @@
  *   * subtreeVisibility - status of expand/collapse. May be true, false or
  *     undefined. The last one means that each event trigger will toggle
  *     item subtree visibility
- * 
- * Example: If one-tree has key property set to "rootTree", and one 
+ *
+ * Example: If one-tree has key property set to "rootTree", and one
  * of the items has key "treeItem4", then treeItem4 can be expanded by:
  * ```
  * {{#one-tree key="rootTree" as |tree|}}
@@ -27,17 +27,17 @@
  *     {{/item.subtree}}
  *   {{/tree.item}}
  * {{/one-tree}}
- * 
+ *
  * ...
- * 
+ *
  * eventsBus.trigger('one-tree:show', 'rootTree', 'treeItem4', true);
  * ```
- * 
+ *
  * By default collapse of the parent subtree will automatically collapse
  * every nested subtrees. This behavior can be changed by setting
  * collapseRecursively property to false. After that, visibility state of nested
  * subtrees will be remembered between parent subtree expand/collapse cycles.
- * 
+ *
  * Note: keys used to identify tree components and items do not have to be strings.
  * Every value, that is not recognized as an empty value in JS, is good.
  *
@@ -54,7 +54,6 @@ import { empty, oneWay } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { next, debounce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-tree';
-import { invokeAction } from 'ember-invoke-action';
 
 export default Component.extend({
   layout,
@@ -68,7 +67,7 @@ export default Component.extend({
   ],
 
   /**
-   * Key for this tree, used to determine at the root level if it 
+   * Key for this tree, used to determine at the root level if it
    * should be visible. Also used as an identifier for root tree while
    * handling eventsBus events. By user can be set only on root tree element
    * or item element.
@@ -127,15 +126,15 @@ export default Component.extend({
   _showAction: null,
 
   /**
-   * Array of visible subtree keys. Keys must be unique at the root tree level 
-   * and can be of any type. Used by all trees, modified only by root. 
+   * Array of visible subtree keys. Keys must be unique at the root tree level
+   * and can be of any type. Used by all trees, modified only by root.
    * Injected by root tree through parent trees.
    * @type {Array.*}
    */
   _activeSubtreeKeys: Object.freeze([]),
 
   /**
-   * If true, all parent trees are expanded and visible to user. 
+   * If true, all parent trees are expanded and visible to user.
    * Property injected by parent tree.
    * @type {boolean}
    */
@@ -186,8 +185,8 @@ export default Component.extend({
   ),
 
   /**
-   * If true, tree will be expanded (but it can be still invisible, because some 
-   * of parent trees may be collapsed). Used only by non-root tree. Root tree 
+   * If true, tree will be expanded (but it can be still invisible, because some
+   * of parent trees may be collapsed). Used only by non-root tree. Root tree
    * is always expanded.
    * @type {boolean}
    */
@@ -211,13 +210,19 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    invokeAction(this, '_hasTreeNotify', true);
+    const _hasTreeNotify = this.get('_hasTreeNotify');
+    if (_hasTreeNotify) {
+      _hasTreeNotify(true);
+    }
   },
 
   willDestroyElement() {
     this._super(...arguments);
 
-    invokeAction(this, '_hasTreeNotify', false);
+    const _hasTreeNotify = this.get('_hasTreeNotify');
+    if (_hasTreeNotify) {
+      _hasTreeNotify(false);
+    }
   },
 
   /**
@@ -252,14 +257,15 @@ export default Component.extend({
     /**
      * Expands/collapses specified subtrees.
      * @param {Array<any>} subtreeKeys subtree keys
-     * @param {boolean} subtreeIsExpanded visibility state. If not provided, 
+     * @param {boolean} subtreeIsExpanded visibility state. If not provided,
      * action will toggle subtree visibility
      */
     show(subtreeKeys, subtreeIsExpanded) {
       let {
         _isRoot,
         _activeSubtreeKeys,
-      } = this.getProperties('_isRoot', '_activeSubtreeKeys');
+        _showAction,
+      } = this.getProperties('_isRoot', '_activeSubtreeKeys', '_showAction');
 
       if (_isRoot) {
         let newActiveSubtreeKeys =
@@ -273,8 +279,8 @@ export default Component.extend({
         if (subtreeIsExpanded) {
           this.set('lastExpandedKey', subtreeKeys[subtreeKeys.length - 1]);
         }
-      } else {
-        invokeAction(this, '_showAction', subtreeKeys, subtreeIsExpanded);
+      } else if (_showAction) {
+        _showAction(subtreeKeys, subtreeIsExpanded);
       }
     },
 
