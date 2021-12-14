@@ -24,7 +24,7 @@ export const emptyItem = {};
 export default ArraySlice.extend(Evented, {
   /**
    * Should not be used directly internally. Instead use `fetchWrapper`.
-   * @virtual 
+   * @virtual
    * @type {function} `(fromIndex, size, offset, replacingChunksArray) => Array<any>`
    */
   fetch: undefined,
@@ -427,12 +427,12 @@ export default ArraySlice.extend(Evented, {
         size,
         offset,
       )
-      .then(({ arrayUpdate }) => {
+      .then(({ arrayUpdate, endReached }) => {
         const fetchedCount = get(arrayUpdate, 'length');
         const updatedEnd = _start + fetchedCount;
         safeExec(this, 'setProperties', {
           _startReached: false,
-          _endReached: false,
+          _endReached: Boolean(endReached),
           error: undefined,
         });
         this.setEmptyIndex(_start - 1);
@@ -469,7 +469,7 @@ export default ArraySlice.extend(Evented, {
    * Change current array view using `index` of item desired to be viewed in new view.
    * This method should be not used directly - instead use `scheduleJump(...)`
    * to prevent issues with async array modification.
-   * Resolves to `false` if fetched array update does not contain record with requested 
+   * Resolves to `false` if fetched array update does not contain record with requested
    * index.
    * @returns {Promise}
    */
@@ -483,7 +483,7 @@ export default ArraySlice.extend(Evented, {
         size + indexMargin * 2,
         -indexMargin,
       )
-      .then(({ arrayUpdate }) => {
+      .then(({ arrayUpdate, endReached }) => {
         // clear array without notify
         sourceArray.splice(0, get(sourceArray, 'length'));
         sourceArray.push(...arrayUpdate);
@@ -499,7 +499,7 @@ export default ArraySlice.extend(Evented, {
           );
           this.setProperties({
             _startReached: false,
-            _endReached: false,
+            _endReached: Boolean(endReached),
             startIndex,
             endIndex,
             emptyIndex: -1,
