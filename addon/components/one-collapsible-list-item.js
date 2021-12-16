@@ -3,12 +3,11 @@ import { notEmpty } from '@ember/object/computed';
 import { observer, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-list-item';
-import { invoke, invokeAction } from 'ember-invoke-action';
 
 /**
- * Item class of the collapsible list. For example of use case see 
+ * Item class of the collapsible list. For example of use case see
  * components/one-collapsible-list.js.
- * 
+ *
  * If isCollapsible == false then item cannot be toggled.
  * Item closes its content if eventsBus triggers closeEventName event
  *
@@ -152,9 +151,9 @@ export default Component.extend({
       // Add/remove item value from list after filter
       if (selectionValue !== null) {
         if (!_matchesSearchQuery && !_isSelected) {
-          invokeAction(this, '_notifyValue', selectionValue, false);
+          this.notifySelectionValue(selectionValue, false);
         } else if (_matchesSearchQuery) {
-          invokeAction(this, '_notifyValue', selectionValue, true);
+          this.notifySelectionValue(selectionValue, true);
         }
       }
     }
@@ -168,10 +167,10 @@ export default Component.extend({
         selectionValue,
       } = this.getProperties('oldSelectionValue', 'selectionValue');
       if (oldSelectionValue !== selectionValue && oldSelectionValue) {
-        invokeAction(this, '_notifyValue', oldSelectionValue, false);
+        this.notifySelectionValue(oldSelectionValue, false);
       }
       if (selectionValue) {
-        invokeAction(this, '_notifyValue', selectionValue, true);
+        this.notifySelectionValue(selectionValue, true);
       }
       this.set('oldSelectionValue', selectionValue);
     }
@@ -189,7 +188,7 @@ export default Component.extend({
     }
     if (selectionValue !== null) {
       this.set('oldSelectionValue', selectionValue);
-      invokeAction(this, '_notifyValue', selectionValue, true);
+      this.notifySelectionValue(selectionValue, true);
     }
   },
 
@@ -201,13 +200,20 @@ export default Component.extend({
         eventsBus,
       } = this.getProperties('closeEventName', 'selectionValue', 'eventsBus');
       if (selectionValue !== null) {
-        invokeAction(this, '_notifyValue', selectionValue, false);
+        this.notifySelectionValue(selectionValue, false);
       }
       if (closeEventName) {
         eventsBus.off(closeEventName);
       }
     } finally {
       this._super(...arguments);
+    }
+  },
+
+  notifySelectionValue(itemValue, exists) {
+    const _notifyValue = this.get('_notifyValue');
+    if (_notifyValue) {
+      _notifyValue(itemValue, exists);
     }
   },
 
@@ -222,7 +228,7 @@ export default Component.extend({
     let matches = targetElement.text().toLowerCase()
       .search(_searchQuery.trim().toLowerCase()) > -1;
     if (matches !== _matchesSearchQuery && !matches) {
-      invoke(this, 'toggle', false);
+      this.send('toggle', false);
     }
     this.set('_matchesSearchQuery', matches);
   },
@@ -232,8 +238,15 @@ export default Component.extend({
       if (!this.get('isCollapsible')) {
         return;
       }
-      if (this.get('accordionMode')) {
-        invokeAction(this, 'toggle', this.get('elementId'), opened);
+      const {
+        toggle,
+        elementId,
+        accordionMode,
+      } = this.getProperties('toggle', 'elementId', 'accordionMode');
+      if (accordionMode) {
+        if (toggle) {
+          toggle(elementId, opened);
+        }
       } else {
         if (opened !== undefined) {
           this.set('isActive', !!opened);
@@ -243,9 +256,12 @@ export default Component.extend({
       }
     },
     toggleSelection() {
-      const selectionValue = this.get('selectionValue');
-      if (selectionValue !== null) {
-        invokeAction(this, 'toggleItemSelection', this.get('selectionValue'));
+      const {
+        selectionValue,
+        toggleItemSelection,
+      } = this.getProperties('selectionValue', 'toggleItemSelection');
+      if (selectionValue !== null && toggleItemSelection) {
+        toggleItemSelection(selectionValue);
       }
     },
   },

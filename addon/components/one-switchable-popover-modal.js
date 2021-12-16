@@ -37,9 +37,9 @@ import { debounce, next } from '@ember/runloop';
 import { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-switchable-popover-modal';
 import ClickOutside from 'ember-click-outside/mixins/click-outside';
-import { invokeAction, invoke } from 'ember-invoke-action';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { resolve } from 'rsvp';
 
 export default Component.extend(ClickOutside, {
   layout,
@@ -349,7 +349,15 @@ export default Component.extend(ClickOutside, {
   ),
 
   _contentVisibleObserver: observer('_contentVisible', function () {
-    invokeAction(this, this.get('_contentVisible') ? 'onShown' : 'onHidden');
+    const {
+      _contentVisible,
+      onShown,
+      onHidden,
+    } = this.getProperties('_contentVisible', 'onShown', 'onHidden');
+    const onShownOrHidden = _contentVisible ? onShown : onHidden;
+    if (onShownOrHidden) {
+      onShownOrHidden();
+    }
   }),
 
   didInsertElement() {
@@ -395,7 +403,7 @@ export default Component.extend(ClickOutside, {
       // close only if click is outside the trigger element and the popover
       if (!clickTarget.is(excludeSelector) &&
         clickTarget.parents(excludeSelector).length === 0) {
-        invoke(this, 'close');
+        this.send('close');
       }
     }
   },
@@ -435,11 +443,15 @@ export default Component.extend(ClickOutside, {
       _activeTriggerConfiguration,
       _handleOpenClose,
       _contentVisible,
+      onHide,
+      onShow,
     } = this.getProperties(
       '_triggersConfiguration',
       '_activeTriggerConfiguration',
       '_handleOpenClose',
-      '_contentVisible'
+      '_contentVisible',
+      'onHide',
+      'onShow'
     );
 
     // avoid popover immediate close issues
@@ -450,10 +462,11 @@ export default Component.extend(ClickOutside, {
       _activeTriggerConfiguration.element.is(targetTrigger)) {
       // this trigger is the same as the last used one so only toggle
       // content visibility
-      if (invokeAction(this,
-          _contentVisible ? 'onHide' : 'onShow',
-          _activeTriggerConfiguration.selector) !== false &&
-        _handleOpenClose) {
+      const onHideOrShow = _contentVisible ? onHide : onShow;
+      if (
+        (!onHideOrShow || onHideOrShow(_activeTriggerConfiguration.selector) !== false) &&
+        _handleOpenClose
+      ) {
         this.toggleProperty('_contentVisible');
       }
     } else {
@@ -464,12 +477,11 @@ export default Component.extend(ClickOutside, {
         if (conf.element.is($(event.currentTarget))) {
           if (_handleOpenClose) {
             this.set('_activeTriggerConfiguration', conf);
-            if (!_contentVisible &&
-              invokeAction(this, 'onShow', conf.selector) !== false) {
+            if (!_contentVisible && (!onShow || onShow(conf.selector) !== false)) {
               this.set('_contentVisible', true);
             }
-          } else {
-            invokeAction(this, 'onShow', conf.selector);
+          } else if (onShow) {
+            onShow(conf.selector);
           }
         }
       });
@@ -536,22 +548,26 @@ export default Component.extend(ClickOutside, {
 
   actions: {
     close() {
-      if (invokeAction(this, 'onHide') !== false && this.get('_handleOpenClose')) {
+      const {
+        onHide,
+        _handleOpenClose,
+      } = this.getProperties('onHide', '_handleOpenClose');
+      if ((!onHide || onHide() !== false) && _handleOpenClose) {
         safeExec(this, () => {
           this.set('_contentVisible', false);
         });
       }
     },
     onModalHide() {
-      invoke(this, 'close');
+      this.send('close');
       return false;
     },
     submit() {
-      let submitPromise = invokeAction(this, 'submit');
-      submitPromise.finally(() => {
-        invoke(this, 'close');
-      });
-      return submitPromise;
+      const submit = this.get('submit');
+      return (submit ? submit() : resolve())
+        .finally(() => {
+          this.send('close');
+        });
     },
   },
 });

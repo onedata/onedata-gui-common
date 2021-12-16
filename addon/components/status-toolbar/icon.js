@@ -1,5 +1,5 @@
 /**
- * A status icon used in status-toolbar. For example of usage see 
+ * A status icon used in status-toolbar. For example of usage see
  * the status-toolbar component documentation.
  *
  * @module components/status-toolbar/icon
@@ -10,7 +10,6 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { invokeAction } from 'ember-invoke-action';
 
 import layout from 'onedata-gui-common/templates/components/status-toolbar/icon';
 
@@ -94,6 +93,9 @@ export default Component.extend({
   }),
 
   click() {
-    invokeAction(this, 'clickAction');
+    const clickAction = this.get('clickAction');
+    if (clickAction) {
+      clickAction();
+    }
   },
 });

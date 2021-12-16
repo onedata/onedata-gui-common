@@ -1,11 +1,11 @@
 /**
- * Item header class of the collapsible list. For example of use case see 
+ * Item header class of the collapsible list. For example of use case see
  * components/one-collapsible-list.js.
- * 
- * If toolbarWhenOpened == true then .btn-toolbar elements will be 
+ *
+ * If toolbarWhenOpened == true then .btn-toolbar elements will be
  * visible only if the list item is expanded.
  * isCollapsible == false disables collapse functionality.
- * 
+ *
  * Yields:
  * - toggleAction - action, that toggles list item visibility
  *
@@ -19,7 +19,6 @@ import Component from '@ember/component';
 
 import { observer } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-list-item-header';
-import { invoke, invokeAction } from 'ember-invoke-action';
 
 export default Component.extend({
   layout,
@@ -34,6 +33,12 @@ export default Component.extend({
     '_isItemFixed:header-fixed',
   ],
   attributeBindings: ['href'],
+
+  /**
+   * @virtual
+   * @type {() => void}
+   */
+  toggle: undefined,
 
   /**
    * @virtual optional
@@ -60,7 +65,7 @@ export default Component.extend({
   isCollapsible: true,
 
   /**
-   * A selector for elements, which click actions should be ignored by item 
+   * A selector for elements, which click actions should be ignored by item
    * toggle event handler
    * @type {string}
    */
@@ -90,7 +95,7 @@ export default Component.extend({
 
   /**
    * Click handler for click() component method
-   * @param {Event} event 
+   * @param {Event} event
    */
   _clickHandler(event) {
     let selector = this.get('_clickDisabledElementsSelector');
@@ -99,7 +104,7 @@ export default Component.extend({
       !event.target.parentElement) {
       event.stopPropagation();
     } else {
-      invoke(this, 'toggle');
+      this.send('toggle');
     }
   },
 
@@ -109,8 +114,13 @@ export default Component.extend({
      * @param {boolean} opened should item be opened or collapsed?
      */
     toggle(opened) {
-      if (!this.get('_isItemFixed') && this.get('isCollapsible')) {
-        invokeAction(this, 'toggle', opened);
+      const {
+        toggle,
+        _isItemFixed,
+        isCollapsible,
+      } = this.getProperties('toggle', '_isItemFixed', 'isCollapsible');
+      if (!_isItemFixed && isCollapsible && toggle) {
+        toggle(opened);
       }
     },
   },
