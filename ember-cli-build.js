@@ -6,6 +6,8 @@ const colors = require('./addon/colors').default;
 const defineSassColors = require('./addon/utils/define-sass-colors');
 const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
 const breakpointValues = require('./addon/breakpoint-values').default;
+const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
+const dynamicLibraries = require('./addon/dynamic-libraries').default;
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
@@ -65,6 +67,7 @@ module.exports = function (defaults) {
 
   defineSassColors(app, colors);
   defineSassBreakpoints(app, breakpointValues);
+  copyDynamicLibraries(app, dynamicLibraries);
 
   /*
     This build file specifies the options for the dummy test app of this
@@ -76,7 +79,6 @@ module.exports = function (defaults) {
   const BOWER_ASSETS = [];
 
   const NODE_ASSETS = [
-    'echarts/dist/echarts.min.js',
     'showdown/dist/showdown.js',
     'chartist-plugin-legend/chartist-plugin-legend.js',
     'input-tokenizer/tokenizer.min.js',

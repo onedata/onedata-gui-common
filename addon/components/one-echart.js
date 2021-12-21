@@ -1,12 +1,31 @@
+/**
+ * Renders chart using Apache ECharts library.
+ * More about that library: https://echarts.apache.org/
+ *
+ * @module components/one-echart
+ * @author Michał Borzęcki
+ * @copyright (C) 2021 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
-import { observer } from '@ember/object';
+import layout from '../templates/components/one-echart';
+import { observer, computed } from '@ember/object';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { inject as service } from '@ember/service';
 
 export default Component.extend(WindowResizeHandler, {
+  layout,
   classNames: ['one-echart'],
 
+  librariesLoader: service(),
+
   /**
+   * Options, which defines the look and input data of a chart.
+   * Note: `'option'` without ending `'s'` is not a typo. ECharts API
+   * mentions `'option'` as a parameter containing all settings. This component
+   * tries to provide similar API, hence usage of `'option'`.
    * @virtual
    * @type {ECOption}
    */
@@ -22,6 +41,13 @@ export default Component.extend(WindowResizeHandler, {
    */
   chart: undefined,
 
+  /**
+   * @type {ComputedProperty<PromiseObject<ECharts>>}
+   */
+  echartsLibraryProxy: computed(function echartsLibraryProxy() {
+    return this.get('librariesLoader').loadLibrary('echarts');
+  }),
+
   optionApplyer: observer('option', function optionsApplyer() {
     this.applyChartOption();
   }),
@@ -31,8 +57,7 @@ export default Component.extend(WindowResizeHandler, {
    */
   didInsertElement() {
     this._super(...arguments);
-
-    this.setupChart();
+    this.get('echartsLibraryProxy').then(() => this.setupChart());
   },
 
   /**
@@ -60,11 +85,12 @@ export default Component.extend(WindowResizeHandler, {
       element,
       chart: existingChart,
     } = this.getProperties('element', 'chart');
-    if (!element || existingChart) {
+    const echarts = this.get('echartsLibraryProxy.content');
+    if (!element || !echarts || existingChart) {
       return existingChart || null;
     }
 
-    this.set('chart', window.echarts.init(element));
+    this.set('chart', echarts.init(element.querySelector('.chart')));
     this.applyChartOption();
   },
 
