@@ -37,6 +37,7 @@
     "color": "2.0.1",
     "contrast": "1.0.1",
     "dompurify": "2.0.7",
+    "echarts": "5.2.2",
     "ember-awesome-macros": "5.0.1",
     "ember-bootstrap": "1.2.0",
     "ember-browser-info": "0.1.3",

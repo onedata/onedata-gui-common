@@ -18,6 +18,7 @@ export default [
   'one-datetime-picker',
   'one-dropdown',
   'one-dynamic-tree',
+  'one-echart',
   'one-icon-tagged',
   'one-inline-editor',
   'one-map',

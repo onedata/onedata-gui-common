@@ -41,7 +41,7 @@ module.exports = function (defaults) {
     },
     // a "bootstrap" should be imported into app.scss
     'ember-cli-bootstrap-sassy': {
-      // import SASS styles and some JS that is used outside of ember-bootstrap components 
+      // import SASS styles and some JS that is used outside of ember-bootstrap components
       js: [
         'transition',
         // TODO: rewrite collapses to ember-bootstrap components
@@ -76,6 +76,7 @@ module.exports = function (defaults) {
   const BOWER_ASSETS = [];
 
   const NODE_ASSETS = [
+    'echarts/dist/echarts.min.js',
     'showdown/dist/showdown.js',
     'chartist-plugin-legend/chartist-plugin-legend.js',
     'input-tokenizer/tokenizer.min.js',
