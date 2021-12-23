@@ -35,16 +35,16 @@ export default Component.extend({
           },
         },
         formatter(seriesArr) {
-          const timestamp = seriesArr[0].value[0];
-          const totalSizeSeries = seriesArr.find(series => series.seriesId === 'totalSize');
-          const countSeries = seriesArr.find(series => series.seriesId === 'filesCount');
+          const timestamp = seriesArr[0].value.timestamp;
+          const totalSizeSeries = seriesArr.findBy('seriesId', 'totalSize');
+          const filesCountSeries = seriesArr.findBy('seriesId', 'filesCount');
           const storageSeriesArr = seriesArr.filter(
-            series => series !== totalSizeSeries && series !== countSeries
+            series => series !== totalSizeSeries && series !== filesCountSeries
           );
           const headerHtml =
             `<div class="tooltip-header">${moment(timestamp).format('DD/MM/YYYY')}</div>`;
           const totalSizeHtml = tooltipSeriesEntry(totalSizeSeries, bytesToString);
-          const countHtml = tooltipSeriesEntry(countSeries);
+          const countHtml = tooltipSeriesEntry(filesCountSeries);
           const mainSeriesHtml = `${countHtml}${totalSizeHtml}`;
           let storagesHtml = '';
           storageSeriesArr.reverse().forEach(storageSeries =>
@@ -92,13 +92,13 @@ export default Component.extend({
         },
       }],
       series: [..._.times(storagesCount, (idx) => ({
+        id: `storage${idx}`,
         name: `Storage ${idx}`,
         type: 'line',
         stack: 'storages',
         areaStyle: {},
         smooth: 0.2,
         symbol: 'none',
-        data: [],
       })), {
         id: 'totalSize',
         name: 'Total size',
@@ -111,7 +111,6 @@ export default Component.extend({
           type: 'dotted',
           width: 3,
         },
-        data: [],
       }, {
         id: 'filesCount',
         name: 'Files count',
@@ -125,21 +124,31 @@ export default Component.extend({
           width: 1,
         },
         smooth: true,
-        data: [],
       }],
     };
-
+    const dataset = {
+      dimensions: ['timestamp'],
+      source: [],
+    };
     _.times(valuesCount, (idx) => {
-      const timestamp = nowTimestamp - (valuesCount - idx) * 24 * 3600 * 1000;
-      let totalSize = 0;
-      for (let storageIdx = 0; storageIdx < storagesCount; storageIdx++) {
-        const storageSize = Math.floor(Math.random() * 10 * MiB);
-        totalSize += storageSize * (Math.random() / 2 + 0.5);
-        option.series[storageIdx].data.push([timestamp, storageSize]);
-      }
-      option.series[storagesCount].data.push([timestamp, totalSize]);
-      option.series[storagesCount + 1].data.push([timestamp, Math.floor(Math.random() * 1000)]);
+      dataset.source.push({
+        timestamp: nowTimestamp - (valuesCount - idx) * 24 * 3600 * 1000,
+        totalSize: 0,
+        filesCount: Math.floor(Math.random() * 1000),
+      });
     });
+    for (let storageIdx = 0; storageIdx < storagesCount; storageIdx++) {
+      const storageName = `storage${storageIdx}`;
+      dataset.dimensions.push(storageName);
+      for (const sourceEntry of dataset.source) {
+        const storageSize = Math.floor(Math.random() * 10 * MiB);
+        sourceEntry[storageName] = storageSize;
+        sourceEntry.totalSize += Math.floor(storageSize * (Math.random() / 2 + 0.5));
+      }
+    }
+    dataset.dimensions.push('totalSize', 'filesCount');
+    option.dataset = dataset;
+
     return option;
   }),
 
@@ -182,7 +191,8 @@ function axisNameTagStyle(color) {
 }
 
 function tooltipSeriesEntry(series, valueFormatter = (val => val)) {
+  const value = series.value[series.seriesId];
   return series ?
-    `<div class="tooltip-series"><span class="tooltip-series-label">${series.marker} ${series.seriesName}</span> <span class="tooltip-series-value">${valueFormatter(series.value[1])}</span></div>` :
+    `<div class="tooltip-series"><span class="tooltip-series-label">${series.marker} ${series.seriesName}</span> <span class="tooltip-series-value">${valueFormatter(value)}</span></div>` :
     '';
 }
