@@ -191,8 +191,9 @@ function axisNameTagStyle(color) {
 }
 
 function tooltipSeriesEntry(series, valueFormatter = (val => val)) {
+  if (!series) {
+    return '';
+  }
   const value = series.value[series.seriesId];
-  return series ?
-    `<div class="tooltip-series"><span class="tooltip-series-label">${series.marker} ${series.seriesName}</span> <span class="tooltip-series-value">${valueFormatter(value)}</span></div>` :
-    '';
+  return `<div class="tooltip-series"><span class="tooltip-series-label">${series.marker} ${series.seriesName}</span> <span class="tooltip-series-value">${valueFormatter(value)}</span></div>`;
 }
