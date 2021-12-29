@@ -99,12 +99,10 @@ export default Service.extend({
       injectedData,
       propertiesToChange,
       appProxy,
-      flushDefer,
     } = this.getProperties(
       'injectedData',
       'propertiesToChange',
       'appProxy',
-      'flushDefer'
     );
     this.clearPropertiesToChangeCache();
     const sharedData = Array.from(propertiesToChange.values())
@@ -116,10 +114,7 @@ export default Service.extend({
       injectedData,
       sharedData
     );
-    if (flushDefer) {
-      flushDefer.resolve();
-      this.set('flushDefer', null);
-    }
+    this.resolveFlushDefer();
   },
 
   clearPropertiesToChangeCache() {
@@ -128,10 +123,10 @@ export default Service.extend({
 
   waitForNextFlush() {
     this.scheduleFlushCache();
-    return this.getFlushDefer();
+    return this.getFlushPromise();
   },
 
-  getFlushDefer() {
+  getFlushPromise() {
     let flushDefer = this.get('flushDefer');
     if (!flushDefer) {
       flushDefer = this.set('flushDefer', defer());
