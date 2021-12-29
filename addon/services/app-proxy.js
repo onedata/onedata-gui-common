@@ -127,11 +127,23 @@ export default Service.extend({
   },
 
   waitForNextFlush() {
+    this.scheduleFlushCache();
+    return this.getFlushDefer();
+  },
+
+  getFlushDefer() {
     let flushDefer = this.get('flushDefer');
     if (!flushDefer) {
       flushDefer = this.set('flushDefer', defer());
     }
-    this.scheduleFlushCache();
     return flushDefer.promise;
+  },
+
+  resolveFlushDefer() {
+    const flushDefer = this.get('flushDefer');
+    if (flushDefer) {
+      flushDefer.resolve();
+      this.set('flushDefer', null);
+    }
   },
 });
