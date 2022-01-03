@@ -17,6 +17,7 @@ import {
   getSharedProperty,
 } from 'onedata-gui-common/utils/one-embedded-common';
 import createThrottledFunction from '../utils/create-throttled-function';
+import { defer } from 'rsvp';
 
 export const throttleTimeout = 50;
 
@@ -32,6 +33,12 @@ export default Service.extend({
    * @type {Set}
    */
   propertiesToChange: undefined,
+
+  /**
+   * Deferred object used to hold state and notify about flush.
+   * @type {Object} RSVP's Deferred object
+   */
+  flushDefer: null,
 
   /**
    * @type {Ember.ComputedProperty<Object>}
@@ -92,7 +99,11 @@ export default Service.extend({
       injectedData,
       propertiesToChange,
       appProxy,
-    } = this.getProperties('injectedData', 'propertiesToChange', 'appProxy');
+    } = this.getProperties(
+      'injectedData',
+      'propertiesToChange',
+      'appProxy',
+    );
     this.clearPropertiesToChangeCache();
     const sharedData = Array.from(propertiesToChange.values())
       .reduce((data, propertyName) => {
@@ -103,9 +114,31 @@ export default Service.extend({
       injectedData,
       sharedData
     );
+    this.resolveFlushDefer();
   },
 
   clearPropertiesToChangeCache() {
     this.set('propertiesToChange', new Set());
+  },
+
+  waitForNextFlush() {
+    this.scheduleFlushCache();
+    return this.getFlushPromise();
+  },
+
+  getFlushPromise() {
+    let flushDefer = this.get('flushDefer');
+    if (!flushDefer) {
+      flushDefer = this.set('flushDefer', defer());
+    }
+    return flushDefer.promise;
+  },
+
+  resolveFlushDefer() {
+    const flushDefer = this.get('flushDefer');
+    if (flushDefer) {
+      flushDefer.resolve();
+      this.set('flushDefer', null);
+    }
   },
 });
