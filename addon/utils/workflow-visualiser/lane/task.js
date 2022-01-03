@@ -31,7 +31,7 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
-   * @type {Models.AtmLambda|Models.AtmLambdaSnapshot} // type depends on the project
+   * @type {Models.AtmLambda|Models.AtmLambdaSnapshot} Type depends on the project
    */
   lambda: undefined,
 

@@ -168,7 +168,7 @@ export default EmberObject.extend(OwnerInjector, {
     if (this.get('rerunLaneCallback')) {
       console.warn(
         'util:workflow-visualiser/actions-factory#setShowTaskPodsActivityCallback: overriding showTaskPodsActivityCallback'
-        );
+      );
     }
     this.set('showTaskPodsActivityCallback', showTaskPodsActivityCallback);
   },

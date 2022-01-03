@@ -2,7 +2,7 @@
  * Shows activity of pods related to a task. Needs `task` and
  * `showPodsActivityCallback` passed via context.
  *
- * @module utils/workflow-visualiser/actions/view-task-pods-action
+ * @module utils/workflow-visualiser/actions/view-task-pods-activity-action
  * @author Michał Borzęcki
  * @copyright (C) 2021 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -21,7 +21,7 @@ export default Action.extend({
   /**
    * @override
    */
-  className: 'view-task-pod-activity-action-trigger',
+  className: 'view-task-pods-activity-action-trigger',
 
   /**
    * @override
