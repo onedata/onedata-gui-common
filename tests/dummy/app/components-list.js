@@ -19,6 +19,7 @@ export default [
   'one-dropdown',
   'one-dynamic-tree',
   'one-echart',
+  'one-histogram',
   'one-icon-tagged',
   'one-inline-editor',
   'one-map',
