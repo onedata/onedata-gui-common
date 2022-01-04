@@ -2,27 +2,44 @@
  * @typedef {Object} OneHistogramStateInitOptions
  * @property {string} id
  * @property {string} title
- * @property {OneHistogramYAxisConfiguration[]} yAxes
- * @property {OneHistogramXAxisConfiguration} xAxis
+ * @property {OneHistogramYAxis[]} yAxes
+ * @property {OneHistogramXAxis} xAxis
+ * @property {OneHistogramSeries[]} series
  */
 
 /**
- * @typedef {Object} OneHistogramYAxisConfiguration
+ * @typedef {Object} OneHistogramYAxis
  * @property {string} id
  * @property {string} name
- * @property {OneHistogramFormatterConfiguration} valueFormatter
+ * @property {OneHistogramFormatter} valueFormatter
  */
 
 /**
- * @typedef {Object} OneHistogramFormatterConfiguration
+ * @typedef {Object} OneHistogramFormatter
  * @property {(value: unknown, functionArguments: Object) => string} function
  * @property {Object} functionArguments
  */
 
 /**
- * @typedef {Object} OneHistogramXAxisConfiguration
+ * @typedef {Object} OneHistogramXAxis
  * @property {string} name
  * @property {number[]} timestamps
+ */
+
+/**
+ * @typedef {Object} OneHistogramSeries
+ * @property {string} id
+ * @property {string} name
+ * @property {OneHistogramChartType} type
+ * @property {string} yAxisId
+ * @property {string|undefined} stackId
+ * @property {OneHistogramSeriesPoint[]} data
+ */
+
+/**
+ * @typedef {Object} OneHistogramSeriesPoint
+ * @property {number} timestamp
+ * @property {number} value
  */
 
 export default class OneHistogramState {
@@ -48,16 +65,23 @@ export default class OneHistogramState {
     /**
      * @public
      * @readonly
-     * @type {OneHistogramYAxisConfiguration[]}
+     * @type {OneHistogramYAxis[]}
      */
     this.yAxes = options.yAxes;
 
     /**
      * @public
      * @readonly
-     * @type {OneHistogramXAxisConfiguration}
+     * @type {OneHistogramXAxis}
      */
     this.xAxis = options.xAxis;
+
+    /**
+     * @public
+     * @readonly
+     * @type {OneHistogramSeries[]}
+     */
+    this.series = options.series;
   }
 
   /**
@@ -65,6 +89,11 @@ export default class OneHistogramState {
    * @returns {ECOption}
    */
   asEchartState() {
+    const yAxisIdToIdxMap = this.yAxes.reduce((acc, yAxis, idx) => {
+      acc[yAxis.id] = idx;
+      return acc;
+    }, {});
+
     return {
       yAxis: this.yAxes.map((yAxis) => ({
         type: 'value',
@@ -81,8 +110,16 @@ export default class OneHistogramState {
       })),
       xAxis: {
         type: 'category',
-        data: this.xAxis.timestamps,
+        data: this.xAxis.timestamps.map(timestamp => String(timestamp)),
       },
+      series: this.series.map((series) => ({
+        id: series.id,
+        name: series.name,
+        type: series.type,
+        yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
+        stack: series.stackId,
+        data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
+      })),
     };
   }
 }
