@@ -58,15 +58,7 @@ export default Component.extend({
                             },
                           },
                         },
-                      }, {
-                        functionName: 'loadSeries',
-                        functionArguments: {
-                          sourceType: 'constValue',
-                          sourceParameters: {
-                            value: 2,
-                          },
-                        },
-                      }],
+                      }, 2],
                     },
                   },
                 },

@@ -1,19 +1,19 @@
 import { all as allFulfilled } from 'rsvp';
-import _ from 'lodash';
 import emptySeries from './empty-series';
+import { isHistogramPointsArray } from './utils/points';
 
 /**
  * @typedef {Object} OneHistogramMultiplySeriesFunctionArguments
- * @property {OneHistogramRawFunction[]} operands
+ * @property {Array<OneHistogramRawFunction|number|null|Array<number|null>>} operands
  */
 
 /**
  * @param {OneHistogramSeriesFunctionContext} context
  * @param {OneHistogramMultiplySeriesFunctionArguments} args
- * @returns {Promise<Array<OneHistogramSeriesPoint[]>>}
+ * @returns {Promise<Array<OneHistogramSeriesPoint>|Array<number|null>|number|null>}
  */
 export default async function multiply(context, args) {
-  const normalizedOperands = args && args.operands && args.operands.compact() || [];
+  const normalizedOperands = args && args.operands || [];
   if (!normalizedOperands.length) {
     return emptySeries(context);
   }
@@ -21,11 +21,28 @@ export default async function multiply(context, args) {
   const evaluatedOperands = await allFulfilled(
     normalizedOperands.map(value => context.evaluateSeriesFunction(context, value))
   );
+  const multiplicationResult = context.evaluateTransformFunction(null, {
+    functionName: 'multiply',
+    functionArguments: {
+      operands: evaluatedOperands.map(operand =>
+        isHistogramPointsArray(operand) ? operand.mapBy('value') : operand
+      ),
+    },
+  });
 
-  const result = _.cloneDeep(evaluatedOperands[0]);
-  evaluatedOperands.slice(1).forEach(operand => operand.forEach(({ value }, idx) =>
-    result[idx].value *= value
-  ));
-
-  return result;
+  if (Array.isArray(multiplicationResult)) {
+    const operandWithPoints = evaluatedOperands.find(operand =>
+      isHistogramPointsArray(operand)
+    );
+    if (operandWithPoints) {
+      return multiplicationResult.map((value, idx) => ({
+        timestamp: operandWithPoints[idx].timestamp,
+        value,
+      }));
+    } else {
+      return multiplicationResult;
+    }
+  } else {
+    return multiplicationResult;
+  }
 }

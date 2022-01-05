@@ -1,12 +1,12 @@
 /**
  * @typedef {Object} OneHistogramAbsTransformFunctionArguments
- * @property {OneHistogramRawFunction|number|Array<number>} data
+ * @property {OneHistogramRawFunction|Array<number|null>|number|null} data
  */
 
 /**
  * @param {OneHistogramTransformFunctionContext} context
  * @param {OneHistogramAbsTransformFunctionArguments} args
- * @returns {number|null|Array<number|null>}
+ * @returns {Array<number|null>|number|null}
  */
 export default function abs(context, args) {
   if (!args) {
