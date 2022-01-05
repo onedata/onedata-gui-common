@@ -20,7 +20,17 @@ export default Component.extend({
           id: 'axis1',
           name: 'Axis 1',
           valueFormatter: {
-            functionName: 'asPercent',
+            functionName: 'asBytes',
+            functionArguments: {
+              data: {
+                functionName: 'abs',
+                functionArguments: {
+                  data: {
+                    functionName: 'supplyValue',
+                  },
+                },
+              },
+            },
           },
         }],
         series: [{
@@ -32,28 +42,33 @@ export default Component.extend({
               type: 'bar',
               yAxisId: 'axis1',
               data: {
-                functionName: 'multiply',
+                functionName: 'abs',
                 functionArguments: {
-                  operands: [{
-                    functionName: 'loadSeries',
+                  data: {
+                    functionName: 'multiply',
                     functionArguments: {
-                      sourceType: 'external',
-                      sourceParameters: {
-                        externalSourceName: 'customSource',
-                        externalSourceParameters: {
-                          seriesId: 'series1',
+                      operands: [{
+                        functionName: 'loadSeries',
+                        functionArguments: {
+                          sourceType: 'external',
+                          sourceParameters: {
+                            externalSourceName: 'customSource',
+                            externalSourceParameters: {
+                              seriesId: 'series1',
+                            },
+                          },
                         },
-                      },
+                      }, {
+                        functionName: 'loadSeries',
+                        functionArguments: {
+                          sourceType: 'constValue',
+                          sourceParameters: {
+                            value: 2,
+                          },
+                        },
+                      }],
                     },
-                  }, {
-                    functionName: 'loadSeries',
-                    functionArguments: {
-                      sourceType: 'constValue',
-                      sourceParameters: {
-                        value: 2,
-                      },
-                    },
-                  }],
+                  },
                 },
               },
             },
@@ -66,16 +81,18 @@ export default Component.extend({
             const pointsCount = context.endTimestamp - context.startTimestamp + 1;
             return _.times(pointsCount, (idx) => ({
               timestamp: context.startTimestamp + idx,
-              value: 0.1 + idx * (0.9 / pointsCount),
+              value: (1024 + idx * 512) * 1024,
             }));
           },
         },
       },
     });
+
     config.setViewParameters({
       startTimestamp: 1641302596,
       endTimestamp: 1641302598,
     });
+
     return config;
   }),
 });

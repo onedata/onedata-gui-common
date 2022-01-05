@@ -102,10 +102,7 @@ export default class OneHistogramState {
           show: true,
         },
         axisLabel: {
-          formatter: (value) => yAxis.valueFormatter.function(
-            value,
-            yAxis.valueFormatter.functionArguments
-          ),
+          formatter: (value) => yAxis.valueFormatter(value),
         },
       })),
       xAxis: {

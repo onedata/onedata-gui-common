@@ -1,6 +1,6 @@
 import OneHistogramState from './state';
-import valueFormattersIndex from './value-formatters';
-import dataFunctionsIndex from './data-functions';
+import transformFunctionsIndex from './transform-functions';
+import seriesFunctionsIndex from './series-functions';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 
@@ -53,11 +53,11 @@ import { all as allFulfilled } from 'rsvp';
  * @property {OneHistogramChartType} type
  * @property {string} yAxisId
  * @property {string|undefined} stackId
- * @property {OneHistogramRawDataFunction} data
+ * @property {OneHistogramRawFunction} data
  */
 
 /**
- * @typedef {Object} OneHistogramRawDataFunction
+ * @typedef {Object} OneHistogramRawFunction
  * @property {string} functionName
  * @property {Object} functionArguments
  */
@@ -91,11 +91,18 @@ import { all as allFulfilled } from 'rsvp';
  */
 
 /**
- * @typedef {Object} OneHistogramDataFunctionContext
+ * @typedef {Object} OneHistogramSeriesFunctionContext
  * @property {OneHistogramExternalDataSources} externalDataSources
- * @property {(dataFunction: OneHistogramRawDataFunction, context: OneHistogramDataFunctionContext) => Promise<OneHistogramSeriesPoint[]>} evaluateDataFunction
+ * @property {(context: OneHistogramSeriesFunctionContext, seriesFunction: OneHistogramRawFunction) => Promise<OneHistogramSeriesPoint[]>} evaluateSeriesFunction
+ * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
  * @property {number} startTimestamp
  * @property {number} endTimestamp
+ */
+
+/**
+ * @typedef {Object} OneHistogramTransformFunctionContext
+ * @property {unknown} valueToSupply
+ * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
  */
 
 /**
@@ -203,16 +210,19 @@ export default class OneHistogramConfiguration {
    */
   getYAxesState() {
     return this.rawConfiguration.yAxes.map((rawYAxis) => {
-      const valueFormatterFunction =
-        valueFormattersIndex[rawYAxis.valueFormatter.functionName] ||
-        valueFormattersIndex.default;
+      const rawValueFormatter = isRawFunction(rawYAxis.valueFormatter) ?
+        rawYAxis.valueFormatter : {
+          functionName: 'supplyValue',
+        };
+      const valueFormatter = (value) =>
+        this.evaluateTransformFunction({
+          valueToSupply: value,
+        }, rawValueFormatter);
+
       return {
         id: rawYAxis.id,
         name: rawYAxis.name,
-        valueFormatter: {
-          function: valueFormatterFunction,
-          functionArguments: rawYAxis.valueFormatter.functionArguments,
-        },
+        valueFormatter,
       };
     });
   }
@@ -268,7 +278,7 @@ export default class OneHistogramConfiguration {
    * @returns {Promise<OneHistogramSeries>}
    */
   async getSeriesState(series) {
-    const data = await this.evaluateSeriesDataFunction(series.data);
+    const data = await this.evaluateSeriesFunction(null, series.data);
     return {
       id: series.id,
       name: series.name,
@@ -280,23 +290,85 @@ export default class OneHistogramConfiguration {
   }
 
   /**
-   * @param {OneHistogramRawDataFunction} dataFunction
-   * @param {OneHistogramDataFunctionContext} context
+   * @param {OneHistogramSeriesFunctionContext} context
+   * @param {OneHistogramRawFunction} transformFunction
+   * @returns {unknown}
+   */
+  evaluateTransformFunction(context, transformFunction) {
+    if (!isRawFunction(transformFunction)) {
+      // When `transformFunction` isn't a function definition, then it is
+      // probably a constant value
+      return transformFunction;
+    }
+
+    const normalizedContext = context || {};
+    if (!normalizedContext.evaluateTransformFunction) {
+      normalizedContext.evaluateTransformFunction =
+        (...args) => this.evaluateTransformFunction(...args);
+    }
+
+    const transformFunctionCallback =
+      transformFunctionsIndex[transformFunction.functionName];
+    if (!transformFunctionCallback) {
+      throw {
+        id: 'unknownHistogramFunction',
+        details: {
+          functionName: transformFunction.functionName,
+        },
+      };
+    }
+
+    return transformFunctionCallback(
+      normalizedContext,
+      transformFunction.functionArguments
+    );
+  }
+
+  /**
+   * @param {OneHistogramSeriesFunctionContext} context
+   * @param {OneHistogramRawFunction} seriesFunction
    * @returns {Promise<OneHistogramSeriesPoint[]>}
    */
-  async evaluateSeriesDataFunction(dataFunction, context) {
-    const normalizedContext = context || {
-      externalDataSources: this.externalDataSources,
-      evaluateDataFunction: (...args) => this.evaluateSeriesDataFunction(...args),
-      startTimestamp: this.startTimestamp,
-      endTimestamp: this.endTimestamp,
-    };
-    const dataFunctionCallback =
-      dataFunctionsIndex[dataFunction.functionName] ||
-      dataFunctionsIndex.default;
-    return await dataFunctionCallback(
+  async evaluateSeriesFunction(context, seriesFunction) {
+    if (!isRawFunction(seriesFunction)) {
+      // When `seriesFunction` isn't a function definition, then it is
+      // probably a constant value
+      return seriesFunction;
+    }
+
+    const normalizedContext = context || {};
+    if (!normalizedContext.externalDataSources) {
+      normalizedContext.externalDataSources = this.externalDataSources;
+    }
+    if (!normalizedContext.evaluateSeriesFunction) {
+      normalizedContext.evaluateSeriesFunction =
+        (...args) => this.evaluateSeriesFunction(...args);
+    }
+    if (!normalizedContext.evaluateTransformFunction) {
+      normalizedContext.evaluateTransformFunction =
+        (...args) => this.evaluateTransformFunction(...args);
+    }
+    if (typeof normalizedContext.startTimestamp !== 'number') {
+      normalizedContext.startTimestamp = this.startTimestamp;
+    }
+    if (typeof normalizedContext.endTimestamp !== 'number') {
+      normalizedContext.endTimestamp = this.endTimestamp;
+    }
+
+    const seriesFunctionCallback =
+      seriesFunctionsIndex[seriesFunction.functionName];
+    if (!seriesFunctionCallback) {
+      throw {
+        id: 'unknownHistogramFunction',
+        details: {
+          functionName: seriesFunction.functionName,
+        },
+      };
+    }
+
+    return await seriesFunctionCallback(
       normalizedContext,
-      dataFunction.functionArguments
+      seriesFunction.functionArguments
     );
   }
 
@@ -308,4 +380,8 @@ export default class OneHistogramConfiguration {
   notifyStateChange() {
     this.stateChangeHandlers.forEach(callback => callback(this));
   }
+}
+
+function isRawFunction(rawFunction) {
+  return rawFunction && typeof rawFunction.functionName === 'string';
 }
