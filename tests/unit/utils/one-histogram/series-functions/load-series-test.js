@@ -4,8 +4,8 @@ import oneHistogramSeriesFunctionsLoadSeries from 'onedata-gui-common/utils/one-
 
 describe('Unit | Utility | one histogram/series functions/load series', function () {
   // Replace this with your real tests.
-  it('works', function () {
-    let result = oneHistogramSeriesFunctionsLoadSeries();
-    expect(result).to.be.ok;
-  });
+  // it('works', function () {
+  //   let result = oneHistogramSeriesFunctionsLoadSeries();
+  //   expect(result).to.be.ok;
+  // });
 });

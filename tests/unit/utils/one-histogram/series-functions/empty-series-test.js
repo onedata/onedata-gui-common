@@ -4,8 +4,8 @@ import oneHistogramSeriesFunctionsEmptySeries from 'onedata-gui-common/utils/one
 
 describe('Unit | Utility | one histogram/series functions/empty series', function () {
   // Replace this with your real tests.
-  it('works', function () {
-    let result = oneHistogramSeriesFunctionsEmptySeries();
-    expect(result).to.be.ok;
-  });
+  // it('works', function () {
+  //   let result = oneHistogramSeriesFunctionsEmptySeries();
+  //   expect(result).to.be.ok;
+  // });
 });

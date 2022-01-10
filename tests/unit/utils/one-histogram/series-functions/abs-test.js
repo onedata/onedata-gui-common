@@ -4,8 +4,8 @@ import oneHistogramSeriesFunctionsAbs from 'onedata-gui-common/utils/one-histogr
 
 describe('Unit | Utility | one histogram/series functions/abs', function () {
   // Replace this with your real tests.
-  it('works', function () {
-    let result = oneHistogramSeriesFunctionsAbs();
-    expect(result).to.be.ok;
-  });
+  // it('works', function () {
+  //   let result = oneHistogramSeriesFunctionsAbs();
+  //   expect(result).to.be.ok;
+  // });
 });
