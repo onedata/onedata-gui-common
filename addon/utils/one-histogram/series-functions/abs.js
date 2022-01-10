@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import emptySeries from './empty-series';
 import { isHistogramPointsArray } from './utils/points';
 
 /**
@@ -13,8 +12,8 @@ import { isHistogramPointsArray } from './utils/points';
  * @returns {Promise<Array<OneHistogramSeriesPoint>|Array<number|null>|number|null>}
  */
 export default async function abs(context, args) {
-  if (!args || !args.data) {
-    return emptySeries(context);
+  if (!args) {
+    return null;
   }
 
   const evaluatedData = await context.evaluateSeriesFunction(context, args.data);

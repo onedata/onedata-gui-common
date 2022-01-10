@@ -9,15 +9,18 @@ export function createContext() {
 }
 
 export function evaluateTransformFunction(context, func) {
-  if (!func) {
-    return null;
-  } else if (func.functionName === 'constValue') {
-    return func.functionArguments.value;
-  } else if (func.functionName in transformFunctionsIndex) {
-    return transformFunctionsIndex[func.functionName](context, func.functionArguments);
-  } else {
-    return func;
+  if (func) {
+    if (func.functionName === 'constValue') {
+      return func.functionArguments.value;
+    } else if (func.functionName in transformFunctionsIndex) {
+      const normalizedContext = context || createContext();
+      return transformFunctionsIndex[func.functionName](
+        normalizedContext,
+        func.functionArguments
+      );
+    }
   }
+  return func;
 }
 
 export function createConstArgument(value) {
