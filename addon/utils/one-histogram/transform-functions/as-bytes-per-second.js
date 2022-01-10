@@ -7,7 +7,7 @@
  * @param {OneHistogramAsBytesTransformFunctionArguments} args
  * @returns {string|null|Array<string|null>}
  */
-export default function asBytes(context, args) {
+export default function asBytesPerSecond(context, args) {
   const data = context.evaluateTransformFunction(context, {
     functionName: 'asBytes',
     functionArguments: args,

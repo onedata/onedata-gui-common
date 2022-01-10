@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
+import transformFunctionsIndex from 'onedata-gui-common/utils/one-histogram/transform-functions';
 
 export function createContext() {
   return {
@@ -8,8 +9,14 @@ export function createContext() {
 }
 
 export function evaluateTransformFunction(context, func) {
-  if (func && func.functionName === 'constValue') {
+  if (!func) {
+    return null;
+  } else if (func.functionName === 'constValue') {
     return func.functionArguments.value;
+  } else if (func.functionName in transformFunctionsIndex) {
+    return transformFunctionsIndex[func.functionName](context, func.functionArguments);
+  } else {
+    return func;
   }
 }
 

@@ -11,7 +11,7 @@ import _ from 'lodash';
  * @returns {number|null|Array<number|null>}
  */
 export default function multiply(context, args) {
-  if (!args || !args.operands || !args.operands.length) {
+  if (!args || !Array.isArray(args.operands)) {
     return null;
   }
 

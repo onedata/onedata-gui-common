@@ -52,9 +52,10 @@ export default Component.extend({
                         functionArguments: {
                           sourceType: 'external',
                           sourceParameters: {
-                            externalSourceName: 'customSource',
+                            externalSourceName: 'timeSeriesStoreContent',
                             externalSourceParameters: {
-                              seriesId: 'series1',
+                              storeId: 'asdfasdf',
+                              seriesId: 'bytes',
                             },
                           },
                         },
@@ -68,13 +69,16 @@ export default Component.extend({
         }],
       },
       externalDataSources: {
-        customSource: {
+        timeSeriesStoreContent: {
           fetchData: (context) => {
             const pointsCount = context.endTimestamp - context.startTimestamp + 1;
             return _.times(pointsCount, (idx) => ({
               timestamp: context.startTimestamp + idx,
               value: (1024 + idx * 512) * 1024,
             }));
+          },
+          reloadTime: {
+            hour: 1000,
           },
         },
       },
