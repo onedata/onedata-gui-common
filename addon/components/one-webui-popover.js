@@ -1,8 +1,6 @@
 /**
  * An Ember component wrapper for webui-popover: https://github.com/sandywalker/webui-popover
  *
- * Requires installation and usage of webui-popover Bower package.
- *
  * There is an alternative implementation in: https://github.com/parablesoft/ember-webui-popover
  * but it renders ``<a>`` element with each component instance and assumes
  * that the pover conent will be bound to this anchor, so binding a custom
