@@ -1,69 +1,123 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-histogram/transform-functions/multiply';
-
 import { createContext, expectFunctionsEvaluation } from './helpers';
 
-describe('Unit | Utility | one histogram/transform functions/multiply', function () {
-  testMultiply(123, null);
-  testMultiply([], null);
-  testMultiply({}, null);
-  testMultiply(null, null);
-  testMultiply(NaN, null);
-  testMultiply('abc', null);
-
-  testMultiply([2], 2);
-  testMultiply([2, 3], 6);
-  testMultiply([2, 3, -4], -24);
-  testMultiply([2, {}], null);
-  testMultiply([2, null], null);
-  testMultiply([2, NaN], null);
-  testMultiply([2, 'abc'], null);
-
-  testMultiply([2, []], []);
-  testMultiply([2, [3]], [6]);
-  testMultiply([2, [3, 4]], [6, 8]);
-  testMultiply([2, [3, {}]], [6, null]);
-  testMultiply([2, [3, null]], [6, null]);
-  testMultiply([2, [3, NaN]], [6, null]);
-  testMultiply([2, [3, 'abc']], [6, null]);
-  testMultiply([
+export const casesToCheck = [{
+  input: 123,
+  output: null,
+}, {
+  input: [],
+  output: null,
+}, {
+  input: {},
+  output: null,
+}, {
+  input: null,
+  output: null,
+}, {
+  input: NaN,
+  output: null,
+}, {
+  input: 'abc',
+  output: null,
+}, {
+  input: [2],
+  output: 2,
+}, {
+  input: [2, 3],
+  output: 6,
+}, {
+  input: [2, 3, -4],
+  output: -24,
+}, {
+  input: [2, {}],
+  output: null,
+}, {
+  input: [2, null],
+  output: null,
+}, {
+  input: [2, NaN],
+  output: null,
+}, {
+  input: [2, 'abc'],
+  output: null,
+}, {
+  input: [2, []],
+  output: [],
+}, {
+  input: [2, [3]],
+  output: [6],
+}, {
+  input: [2, [3, 4]],
+  output: [6, 8],
+}, {
+  input: [2, [3, {}]],
+  output: [6, null],
+}, {
+  input: [2, [3, null]],
+  output: [6, null],
+}, {
+  input: [2, [3, NaN]],
+  output: [6, null],
+}, {
+  input: [2, [3, 'abc']],
+  output: [6, null],
+}, {
+  input: [
     [3],
     2,
-  ], [6]);
-
-  testMultiply([
+  ],
+  output: [6],
+}, {
+  input: [
     [],
     [],
-  ], []);
-  testMultiply([
+  ],
+  output: [],
+}, {
+  input: [
     [2],
     [3],
-  ], [6]);
-  testMultiply([
+  ],
+  output: [6],
+}, {
+  input: [
     [2, 4],
     [3, 6],
-  ], [6, 24]);
-  testMultiply([
+  ],
+  output: [6, 24],
+}, {
+  input: [
     [2, 4, 8],
     [3, 6],
-  ], null);
-  testMultiply([
+  ],
+  output: null,
+}, {
+  input: [
     [2, 4],
     [3, 6, 9],
-  ], null);
-
-  testMultiply([
+  ],
+  output: null,
+}, {
+  input: [
     [1, 2],
     3,
     [4, 5],
     6,
-  ], [72, 180]);
-  testMultiply([
+  ],
+  output: [72, 180],
+}, {
+  input: [
     [1, 2, 3],
     [1, 2, null],
     [null, 2, 3],
-  ], [null, 8, null]);
+  ],
+  output: [null, 8, null],
+}];
+
+describe('Unit | Utility | one histogram/transform functions/multiply', function () {
+  casesToCheck.forEach(({ input, output }) => testMultiply(input, output));
 });
 
 function testMultiply(rawOperands, output) {

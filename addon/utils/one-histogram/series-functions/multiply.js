@@ -1,5 +1,4 @@
 import { all as allFulfilled } from 'rsvp';
-import emptySeries from './empty-series';
 import { isHistogramPointsArray } from './utils/points';
 
 /**
@@ -14,8 +13,8 @@ import { isHistogramPointsArray } from './utils/points';
  */
 export default async function multiply(context, args) {
   const normalizedOperands = args && args.operands || [];
-  if (!normalizedOperands.length) {
-    return emptySeries(context);
+  if (!Array.isArray(normalizedOperands) || !normalizedOperands.length) {
+    return null;
   }
 
   const evaluatedOperands = await allFulfilled(
@@ -39,10 +38,7 @@ export default async function multiply(context, args) {
         timestamp: operandWithPoints[idx].timestamp,
         value,
       }));
-    } else {
-      return multiplicationResult;
     }
-  } else {
-    return multiplicationResult;
   }
+  return multiplicationResult;
 }

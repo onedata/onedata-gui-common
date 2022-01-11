@@ -71,22 +71,20 @@ export default Component.extend({
       externalDataSources: {
         timeSeriesStoreContent: {
           fetchData: (context) => {
-            const pointsCount = context.endTimestamp - context.startTimestamp + 1;
-            return _.times(pointsCount, (idx) => ({
-              timestamp: context.startTimestamp + idx,
+            return _.times(context.windowsCount, (idx) => ({
+              timestamp: context.lastWindowTimestamp -
+                (context.windowsCount - idx - 1) * context.windowTimeSpan,
               value: (1024 + idx * 512) * 1024,
             }));
-          },
-          reloadTime: {
-            hour: 1000,
           },
         },
       },
     });
 
     config.setViewParameters({
-      startTimestamp: 1641302596,
-      endTimestamp: 1641302598,
+      lastWindowTimestamp: 1641302596,
+      windowTimeSpan: 60,
+      windowsCount: 60,
     });
 
     return config;

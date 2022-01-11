@@ -2,26 +2,24 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import abs from 'onedata-gui-common/utils/one-histogram/series-functions/abs';
 import { point, createContext, createConstArgument, expectFunctionsEvaluation } from './helpers';
+import { casesToCheck as transformCasesToCheck } from '../transform-functions/abs-test';
+
+const casesToCheck = [...transformCasesToCheck, {
+  input: [point(1, -10), point(2, -20)],
+  output: [point(1, 10), point(2, 20)],
+}, {
+  input: [point(1, 10), point(2, -20)],
+  output: [point(1, 10), point(2, 20)],
+}, {
+  input: [point(1, 10), point(2, null)],
+  output: [point(1, 10), point(2, null)],
+}, {
+  input: [point(1, {}), point(2, NaN)],
+  output: [point(1, null), point(2, null)],
+}];
 
 describe('Unit | Utility | one histogram/series functions/abs', function () {
-  testAbs(-10, 10);
-  testAbs(10, 10);
-  testAbs(0, 0);
-  testAbs(null, null);
-  testAbs(NaN, null);
-  testAbs('abc', null);
-
-  testAbs([], []);
-
-  testAbs([-10, -20], [10, 20]);
-  testAbs([10, -20], [10, 20]);
-  testAbs([10, null], [10, null]);
-  testAbs([{}, NaN], [null, null]);
-
-  testAbs([point(1, -10), point(2, -20)], [point(1, 10), point(2, 20)]);
-  testAbs([point(1, 10), point(2, -20)], [point(1, 10), point(2, 20)]);
-  testAbs([point(1, 10), point(2, null)], [point(1, 10), point(2, null)]);
-  testAbs([point(1, {}), point(2, NaN)], [point(1, null), point(2, null)]);
+  casesToCheck.forEach(({ input, output }) => testAbs(input, output));
 });
 
 function testAbs(input, output) {

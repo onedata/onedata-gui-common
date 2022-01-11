@@ -78,8 +78,9 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @typedef {Object} OneHistogramDataSourceFetchParams
- * @property {number} startTimestamp
- * @property {number} endTimestamp
+ * @property {number} lastWindowTimestamp
+ * @property {number} windowTimeSpan
+ * @property {number} windowsCount
  */
 
 /**
@@ -95,8 +96,9 @@ import { all as allFulfilled } from 'rsvp';
  * @property {OneHistogramExternalDataSources} externalDataSources
  * @property {(context: OneHistogramSeriesFunctionContext, seriesFunction: OneHistogramRawFunction) => Promise<OneHistogramSeriesPoint[]>} evaluateSeriesFunction
  * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
- * @property {number} startTimestamp
- * @property {number} endTimestamp
+ * @property {number} lastWindowTimestamp
+ * @property {number} windowTimeSpan
+ * @property {number} windowsCount
  */
 
 /**
@@ -111,8 +113,9 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @typedef {Object} OneHistogramViewParameters
- * @property {number} startTimestamp
- * @property {number} endTimestamp
+ * @property {number} lastWindowTimestamp
+ * @property {number} windowTimeSpan
+ * @property {number} windowsCount
  */
 
 export default class OneHistogramConfiguration {
@@ -143,13 +146,25 @@ export default class OneHistogramConfiguration {
      * @private
      * @type {number|null}
      */
-    this.startTimestamp = null;
+    this.lastWindowTimestamp = null;
 
     /**
      * @private
-     * @type {number|null}
+     * @type {number}
      */
-    this.endTimestamp = null;
+    this.windowTimeSpan = null;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this.windowTimeSpan = null;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    this.windowsCount = null;
   }
 
   /**
@@ -176,8 +191,9 @@ export default class OneHistogramConfiguration {
    * @returns {void}
    */
   setViewParameters(parameters) {
-    this.startTimestamp = parameters.startTimestamp;
-    this.endTimestamp = parameters.endTimestamp;
+    this.lastWindowTimestamp = parameters.lastWindowTimestamp;
+    this.windowTimeSpan = parameters.windowTimeSpan;
+    this.windowsCount = parameters.windowsCount;
     this.notifyStateChange();
   }
 
@@ -290,7 +306,7 @@ export default class OneHistogramConfiguration {
   }
 
   /**
-   * @param {OneHistogramSeriesFunctionContext} context
+   * @param {OneHistogramTransformFunctionContext} context
    * @param {OneHistogramRawFunction} transformFunction
    * @returns {unknown}
    */
@@ -348,11 +364,14 @@ export default class OneHistogramConfiguration {
       normalizedContext.evaluateTransformFunction =
         (...args) => this.evaluateTransformFunction(...args);
     }
-    if (typeof normalizedContext.startTimestamp !== 'number') {
-      normalizedContext.startTimestamp = this.startTimestamp;
+    if (typeof normalizedContext.lastWindowTimestamp !== 'number') {
+      normalizedContext.lastWindowTimestamp = this.lastWindowTimestamp;
     }
-    if (typeof normalizedContext.endTimestamp !== 'number') {
-      normalizedContext.endTimestamp = this.endTimestamp;
+    if (typeof normalizedContext.windowTimeSpan !== 'number') {
+      normalizedContext.windowTimeSpan = this.windowTimeSpan;
+    }
+    if (typeof normalizedContext.windowsCount !== 'number') {
+      normalizedContext.windowsCount = this.windowsCount;
     }
 
     const seriesFunctionCallback =
