@@ -24,6 +24,7 @@
  * @typedef {Object} OneHistogramXAxis
  * @property {string} name
  * @property {number[]} timestamps
+ * @property {(timestamp: number) => string} timestampFormatter
  */
 
 /**
@@ -108,6 +109,13 @@ export default class OneHistogramState {
       xAxis: {
         type: 'category',
         data: this.xAxis.timestamps.map(timestamp => String(timestamp)),
+        axisLabel: {
+          showMaxLabel: true,
+          formatter: (value) => this.xAxis.timestampFormatter(value),
+        },
+        axisTick: {
+          alignWithLabel: true,
+        },
       },
       series: this.series.map((series) => ({
         id: series.id,

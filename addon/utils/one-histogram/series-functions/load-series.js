@@ -31,7 +31,7 @@ async function loadSeries(context, args) {
       }
       const fetchParams = {
         lastWindowTimestamp: context.lastWindowTimestamp,
-        windowTimeSpan: context.windowTimeSpan,
+        timeResolution: context.timeResolution,
         windowsCount: context.windowsCount,
       };
       return await externalDataSource.fetchData(
@@ -41,7 +41,7 @@ async function loadSeries(context, args) {
     }
     case 'empty':
     default: {
-      if (!context.windowTimeSpan || !context.windowsCount) {
+      if (!context.timeResolution || !context.windowsCount) {
         return null;
       }
       let lastTimestamp = context.lastWindowTimestamp;
@@ -49,11 +49,11 @@ async function loadSeries(context, args) {
         lastTimestamp = Math.floor(Date.now() / 1000);
       }
       // The same algorithm of calculating window timestamps is used by backend
-      lastTimestamp = lastTimestamp - lastTimestamp % context.windowTimeSpan;
+      lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
 
       return _.times(context.windowsCount, (idx) => ({
         timestamp: lastTimestamp -
-          (context.windowsCount - idx - 1) * context.windowTimeSpan,
+          (context.windowsCount - idx - 1) * context.timeResolution,
         value: null,
       }));
     }

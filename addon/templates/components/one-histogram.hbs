@@ -1,3 +1,21 @@
 {{#promise-proxy-container proxy=stateProxy}}
+  {{#bs-button-group
+    value=selectedTimeResolution
+    class="time-resolution-selector"
+    type="radio"
+    onChange=(action "changeTimeResolution") as |bg|
+  }}
+    {{#each timeResolutionOptions key="value" as |timeResolutionOption|}}
+      <div class="btn-group" role="group">
+        {{#bg.button
+          type="default"
+          class="btn-sm"
+          value=timeResolutionOption.value
+        }}
+          {{timeResolutionOption.label}}
+        {{/bg.button}}
+      </div>
+    {{/each}}
+  {{/bs-button-group}}
   {{one-echart option=echartState}}
 {{/promise-proxy-container}}

@@ -3,10 +3,12 @@ import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
+import moment from 'moment';
 
 /**
  * @typedef {Object} OneHistogramConfigurationInitOptions
  * @property {OneHistogramRawConfiguration} rawConfiguration
+ * @property {OneHistogramTimeResolutionSpec[]} timeResolutionSpecs
  * @property {OneHistogramExternalDataSources} externalDataSources
  */
 
@@ -67,6 +69,12 @@ import { all as allFulfilled } from 'rsvp';
  */
 
 /**
+ * @typedef {Object} OneHistogramTimeResolutionSpec
+ * @property {number} timeResolution
+ * @property {number} windowsCount
+ */
+
+/**
  * @typedef {Object<string,OneHistogramExternalDataSource>} OneHistogramExternalDataSources
  */
 
@@ -79,7 +87,7 @@ import { all as allFulfilled } from 'rsvp';
 /**
  * @typedef {Object} OneHistogramDataSourceFetchParams
  * @property {number} lastWindowTimestamp
- * @property {number} windowTimeSpan
+ * @property {number} timeResolution
  * @property {number} windowsCount
  */
 
@@ -97,7 +105,7 @@ import { all as allFulfilled } from 'rsvp';
  * @property {(context: OneHistogramSeriesFunctionContext, seriesFunction: OneHistogramRawFunction) => Promise<OneHistogramSeriesPoint[]>} evaluateSeriesFunction
  * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
  * @property {number} lastWindowTimestamp
- * @property {number} windowTimeSpan
+ * @property {number} timeResolution
  * @property {number} windowsCount
  */
 
@@ -113,9 +121,9 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @typedef {Object} OneHistogramViewParameters
- * @property {number} lastWindowTimestamp
- * @property {number} windowTimeSpan
- * @property {number} windowsCount
+ * @property {number} [lastWindowTimestamp]
+ * @property {number} [timeResolution]
+ * @property {number} [windowsCount]
  */
 
 export default class OneHistogramConfiguration {
@@ -124,6 +132,14 @@ export default class OneHistogramConfiguration {
    * @param {OneHistogramConfigurationInitOptions} options
    */
   constructor(options) {
+    /**
+     * @public
+     * @readonly
+     * @type {OneHistogramTimeResolutionSpec[]}
+     */
+    this.timeResolutionSpecs = options.timeResolutionSpecs ?
+      options.timeResolutionSpecs.sortBy('timeResolution') : [];
+
     /**
      * @private
      * @type {OneHistogramRawConfiguration}
@@ -152,19 +168,18 @@ export default class OneHistogramConfiguration {
      * @private
      * @type {number}
      */
-    this.windowTimeSpan = null;
-
-    /**
-     * @private
-     * @type {number}
-     */
-    this.windowTimeSpan = null;
+    this.timeResolution = null;
 
     /**
      * @private
      * @type {number}
      */
     this.windowsCount = null;
+
+    if (this.timeResolutionSpecs[0]) {
+      this.timeResolution = this.timeResolutionSpecs[0].timeResolution;
+      this.windowsCount = this.timeResolutionSpecs[0].windowsCount;
+    }
   }
 
   /**
@@ -191,9 +206,20 @@ export default class OneHistogramConfiguration {
    * @returns {void}
    */
   setViewParameters(parameters) {
-    this.lastWindowTimestamp = parameters.lastWindowTimestamp;
-    this.windowTimeSpan = parameters.windowTimeSpan;
-    this.windowsCount = parameters.windowsCount;
+    if (parameters.lastWindowTimestamp !== undefined) {
+      this.lastWindowTimestamp = parameters.lastWindowTimestamp || null;
+    }
+    if (parameters.timeResolution) {
+      this.timeResolution = parameters.timeResolution;
+    }
+    if (parameters.windowsCount) {
+      this.windowsCount = parameters.windowsCount;
+    } else if (parameters.timeResolution) {
+      const usedTimeResolutionSpec =
+        this.timeResolutionSpecs.findBy('timeResolution', this.timeResolution);
+      this.windowsCount = usedTimeResolutionSpec ?
+        usedTimeResolutionSpec.windowsCount : null;
+    }
     this.notifyStateChange();
   }
 
@@ -252,6 +278,7 @@ export default class OneHistogramConfiguration {
     return {
       name: 'Time',
       timestamps,
+      timestampFormatter: (timestamp) => this.formatTimestamp(timestamp),
     };
   }
 
@@ -367,8 +394,8 @@ export default class OneHistogramConfiguration {
     if (typeof normalizedContext.lastWindowTimestamp !== 'number') {
       normalizedContext.lastWindowTimestamp = this.lastWindowTimestamp;
     }
-    if (typeof normalizedContext.windowTimeSpan !== 'number') {
-      normalizedContext.windowTimeSpan = this.windowTimeSpan;
+    if (typeof normalizedContext.timeResolution !== 'number') {
+      normalizedContext.timeResolution = this.timeResolution;
     }
     if (typeof normalizedContext.windowsCount !== 'number') {
       normalizedContext.windowsCount = this.windowsCount;
@@ -389,6 +416,25 @@ export default class OneHistogramConfiguration {
       normalizedContext,
       seriesFunction.functionArguments
     );
+  }
+
+  /**
+   * @private
+   * @param {number} timestamp
+   * @returns {string}
+   */
+  formatTimestamp(timestamp) {
+    let dateFormat;
+    if (this.timeResolution < 60) {
+      dateFormat = 'H:mm:ss[\n]DD/MM/YYYY';
+    } else if (this.timeResolution < 24 * 60 * 60) {
+      dateFormat = 'DD/MM/YYYY[\n]H:mm';
+    } else if (this.timeResolution >= 24 * 60 * 60) {
+      dateFormat = 'DD/MM/YYYY';
+    } else {
+      return '';
+    }
+    return moment.unix(timestamp).format(dateFormat);
   }
 
   /**

@@ -27,10 +27,10 @@ describe('Unit | Utility | one histogram/series functions/load series', function
 
     it('produces empty series', async function (done) {
       const normalizedLastWindowTimestamp =
-        this.context.lastWindowTimestamp - this.context.lastWindowTimestamp % this.context.windowTimeSpan;
+        this.context.lastWindowTimestamp - this.context.lastWindowTimestamp % this.context.timeResolution;
       const expectedSeries = _.times(this.context.windowsCount, (idx) => point(
         normalizedLastWindowTimestamp - (this.context.windowsCount - idx - 1) *
-        this.context.windowTimeSpan,
+        this.context.timeResolution,
         null,
       ));
       expect(await loadSeries(this.context, this.functionArguments))
@@ -47,8 +47,8 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       done();
     });
 
-    it('returns null when windowTimeSpan is not provided', async function (done) {
-      this.context.windowTimeSpan = null;
+    it('returns null when timeResolution is not provided', async function (done) {
+      this.context.timeResolution = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.be.null;
       done();
@@ -87,7 +87,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       expect(this.context.externalDataSources.customSource.fetchData).to.be.calledOnce
         .and.to.be.calledWith(sinon.match({
           lastWindowTimestamp: this.context.lastWindowTimestamp,
-          windowTimeSpan: this.context.windowTimeSpan,
+          timeResolution: this.context.timeResolution,
           windowsCount: this.context.windowsCount,
         }, this.functionArguments.sourceParameters.externalSourceParameters));
       done();
@@ -110,10 +110,10 @@ function produceExpectedEmptySeries(testCase) {
     now: fakeNow * 1000,
     shouldAdvanceTime: false,
   });
-  const expectedLastWindowTimestamp = fakeNow - fakeNow % testCase.context.windowTimeSpan;
+  const expectedLastWindowTimestamp = fakeNow - fakeNow % testCase.context.timeResolution;
   return _.times(testCase.context.windowsCount, (idx) => point(
     expectedLastWindowTimestamp - (testCase.context.windowsCount - idx - 1) *
-    testCase.context.windowTimeSpan,
+    testCase.context.timeResolution,
     null,
   ));
 }

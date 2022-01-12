@@ -68,23 +68,28 @@ export default Component.extend({
           },
         }],
       },
+      timeResolutionSpecs: [{
+        timeResolution: 5,
+        windowsCount: 24,
+      }, {
+        timeResolution: 60,
+        windowsCount: 60,
+      }, {
+        timeResolution: 60 * 60,
+        windowsCount: 24,
+      }],
       externalDataSources: {
         timeSeriesStoreContent: {
           fetchData: (context) => {
+            const nowTimestamp = Math.floor(Date.now() / 1000);
             return _.times(context.windowsCount, (idx) => ({
-              timestamp: context.lastWindowTimestamp -
-                (context.windowsCount - idx - 1) * context.windowTimeSpan,
+              timestamp: (context.lastWindowTimestamp || nowTimestamp) -
+                (context.windowsCount - idx - 1) * context.timeResolution,
               value: (1024 + idx * 512) * 1024,
             }));
           },
         },
       },
-    });
-
-    config.setViewParameters({
-      lastWindowTimestamp: 1641302596,
-      windowTimeSpan: 60,
-      windowsCount: 60,
     });
 
     return config;

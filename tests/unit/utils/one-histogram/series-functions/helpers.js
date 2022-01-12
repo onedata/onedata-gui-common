@@ -14,7 +14,7 @@ export function createContext() {
     evaluateTransformFunction: sinon.spy(evaluateTransformFunction),
     evaluateSeriesFunction: sinon.spy(evaluateSeriesFunction),
     lastWindowTimestamp: Math.floor(Date.now() / 1000),
-    windowTimeSpan: 60,
+    timeResolution: 60,
     windowsCount: 60,
   };
 }
