@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach, afterEach } from 'mocha';
 import loadSeries from 'onedata-gui-common/utils/one-histogram/series-functions/load-series';
-import { point, createContext, createConstArgument, expectFunctionsEvaluation } from './helpers';
+import { point, createContext } from './helpers';
 import _ from 'lodash';
 import sinon from 'sinon';
+
+let fakeClock;
 
 describe('Unit | Utility | one histogram/series functions/load series', function () {
   beforeEach(function () {
@@ -11,8 +13,8 @@ describe('Unit | Utility | one histogram/series functions/load series', function
   });
 
   afterEach(function () {
-    if (this.fakeClock) {
-      this.fakeClock.restore();
+    if (fakeClock) {
+      fakeClock.restore();
     }
   });
 
@@ -26,11 +28,11 @@ describe('Unit | Utility | one histogram/series functions/load series', function
     it('produces empty series', async function (done) {
       const normalizedLastWindowTimestamp =
         this.context.lastWindowTimestamp - this.context.lastWindowTimestamp % this.context.windowTimeSpan;
-      const expectedSeries = _.times(this.context.windowsCount, (idx) => ({
-        timestamp: normalizedLastWindowTimestamp - (this.context.windowsCount - idx - 1) *
-          this.context.windowTimeSpan,
-        value: null,
-      }));
+      const expectedSeries = _.times(this.context.windowsCount, (idx) => point(
+        normalizedLastWindowTimestamp - (this.context.windowsCount - idx - 1) *
+        this.context.windowTimeSpan,
+        null,
+      ));
       expect(await loadSeries(this.context, this.functionArguments))
         .to.deep.equal(expectedSeries);
       done();
@@ -62,7 +64,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
 
   context('when "sourceType" is "external"', function () {
     beforeEach(function () {
-      this.customSourceData = [{ timestamp: 1, value: 2 }];
+      this.customSourceData = [point(1, 2)];
       this.context.externalDataSources = {
         customSource: {
           fetchData: sinon.spy(() => this.customSourceData),
@@ -104,14 +106,14 @@ describe('Unit | Utility | one histogram/series functions/load series', function
 
 function produceExpectedEmptySeries(testCase) {
   const fakeNow = testCase.context.lastWindowTimestamp || 1641916475;
-  testCase.fakeClock = sinon.useFakeTimers({
+  fakeClock = sinon.useFakeTimers({
     now: fakeNow * 1000,
     shouldAdvanceTime: false,
   });
   const expectedLastWindowTimestamp = fakeNow - fakeNow % testCase.context.windowTimeSpan;
-  return _.times(testCase.context.windowsCount, (idx) => ({
-    timestamp: expectedLastWindowTimestamp - (testCase.context.windowsCount - idx - 1) *
-      testCase.context.windowTimeSpan,
-    value: null,
-  }));
+  return _.times(testCase.context.windowsCount, (idx) => point(
+    expectedLastWindowTimestamp - (testCase.context.windowsCount - idx - 1) *
+    testCase.context.windowTimeSpan,
+    null,
+  ));
 }
