@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isHistogramPointsArray } from './utils/points';
 
 /**
  * @typedef {OneHistogramExternalSourceSpec} OneHistogramLoadSeriesSeriesFunctionArguments
@@ -34,9 +34,12 @@ async function loadSeries(context, args) {
         timeResolution: context.timeResolution,
         windowsCount: context.windowsCount,
       };
-      return await externalDataSource.fetchData(
-        fetchParams,
-        args.sourceParameters.externalSourceParameters
+      return fitPointsToContext(
+        context,
+        await externalDataSource.fetchData(
+          fetchParams,
+          args.sourceParameters.externalSourceParameters
+        )
       );
     }
     case 'empty':
@@ -51,11 +54,8 @@ async function loadSeries(context, args) {
       // The same algorithm of calculating window timestamps is used by backend
       lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
 
-      return _.times(context.windowsCount, (idx) => ({
-        timestamp: lastTimestamp -
-          (context.windowsCount - idx - 1) * context.timeResolution,
-        value: null,
-      }));
+      // fitPointsToContext will add missing points and produce complete series of null values
+      return fitPointsToContext(context, [{ timestamp: lastTimestamp, value: null }]);
     }
   }
 }
@@ -66,4 +66,73 @@ async function emptySeries(context) {
   return await loadSeries(context, {
     sourceType: 'empty',
   });
+}
+
+/**
+ *
+ * @param {OneHistogramSeriesFunctionContext} context
+ * @param {OneHistogramSeriesPoint[]} points
+ */
+function fitPointsToContext(context, points) {
+  if (!isHistogramPointsArray(points)) {
+    return null;
+  }
+  // sort by timestamp descending
+  let normalizedPoints = points.sortBy('timestamp').reverse();
+
+  // remove points newer than context.lastWindowTimestamp
+  if (context.lastWindowTimestamp) {
+    normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
+      timestamp <= context.lastWindowTimestamp
+    );
+  }
+
+  // remove points, that do not describe times matching context.timeResolution
+  normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
+    (timestamp - normalizedPoints[0].timestamp) % context.timeResolution === 0
+  );
+
+  // Add missing points after received points
+  if (
+    context.lastWindowTimestamp &&
+    context.lastWindowTimestamp - context.timeResolution >= normalizedPoints[0].timestamp
+  ) {
+    const missingSeconds = context.lastWindowTimestamp - normalizedPoints[0].timestamp;
+    const normalizedMissingSeconds = missingSeconds - (missingSeconds % context.timeResolution);
+    let nextFakePointTimestamp = normalizedPoints[0].timestamp + normalizedMissingSeconds;
+    const pointsToUnshift = [];
+    while (
+      nextFakePointTimestamp > normalizedPoints[0].timestamp &&
+      pointsToUnshift.length < context.windowsCount
+    ) {
+      pointsToUnshift.push({
+        timestamp: nextFakePointTimestamp,
+        value: null,
+      });
+      nextFakePointTimestamp -= context.timeResolution;
+    }
+    normalizedPoints = [...pointsToUnshift, ...normalizedPoints];
+  }
+
+  // Add missing points between and before received points
+  const normalizedPointsWithGaps = normalizedPoints;
+  normalizedPoints = [];
+  let nextPointTimestamp = normalizedPointsWithGaps[0].timestamp;
+  let originArrayIdx = 0;
+  while (normalizedPoints.length < context.windowsCount) {
+    if (
+      originArrayIdx < normalizedPointsWithGaps.length &&
+      normalizedPointsWithGaps[originArrayIdx].timestamp === nextPointTimestamp
+    ) {
+      normalizedPoints.push(normalizedPointsWithGaps[originArrayIdx]);
+      originArrayIdx++;
+    } else {
+      normalizedPoints.push({ timestamp: nextPointTimestamp, value: null });
+    }
+    nextPointTimestamp -= context.timeResolution;
+  }
+
+  normalizedPoints = normalizedPoints.reverse();
+
+  return normalizedPoints;
 }

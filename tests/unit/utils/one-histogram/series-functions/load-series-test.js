@@ -64,7 +64,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
 
   context('when "sourceType" is "external"', function () {
     beforeEach(function () {
-      this.customSourceData = [point(1, 2)];
+      this.customSourceData = [];
       this.context.externalDataSources = {
         customSource: {
           fetchData: sinon.spy(() => this.customSourceData),
@@ -82,8 +82,15 @@ describe('Unit | Utility | one histogram/series functions/load series', function
     });
 
     it('produces series acquired from custom source', async function (done) {
+      this.customSourceData.push(point(this.context.lastWindowTimestamp, 2));
+      const expectedPoints = [
+        ...this.customSourceData,
+        ..._.times(this.context.windowsCount - 1, (idx) =>
+          point(this.context.lastWindowTimestamp - (idx + 1) * this.context.timeResolution, null)
+        ),
+      ].reverse();
       expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal(this.customSourceData);
+        .to.deep.equal(expectedPoints);
       expect(this.context.externalDataSources.customSource.fetchData).to.be.calledOnce
         .and.to.be.calledWith(sinon.match({
           lastWindowTimestamp: this.context.lastWindowTimestamp,
@@ -96,6 +103,82 @@ describe('Unit | Utility | one histogram/series functions/load series', function
     it('produces empty series when custom source does not exist', async function (done) {
       delete this.context.externalDataSources.customSource;
       const expectedSeries = produceExpectedEmptySeries(this);
+
+      expect(await loadSeries(this.context, this.functionArguments))
+        .to.deep.equal(expectedSeries);
+      done();
+    });
+
+    it('normalizes shuffled series with missing and incorrect points (lastWindowTimestamp is null)',
+      async function (done) {
+        this.customSourceData = [
+          point(4, 4),
+          point(2, 2),
+          point(6, 6),
+          point(9, 9),
+          point(12, 12),
+        ];
+        const expectedSeries = [
+          point(4, 4),
+          point(6, 6),
+          point(8, null),
+          point(10, null),
+          point(12, 12),
+        ];
+        this.context.lastWindowTimestamp = null;
+        this.context.timeResolution = 2;
+        this.context.windowsCount = 5;
+
+        expect(await loadSeries(this.context, this.functionArguments))
+          .to.deep.equal(expectedSeries);
+        done();
+      });
+
+    it('normalizes shuffled series with missing and incorrect points (lastWindowTimestamp is set)',
+      async function (done) {
+        this.customSourceData = [
+          point(4, 4),
+          point(2, 2),
+          point(5, 5),
+          point(6, 6),
+          point(10, 10),
+          point(12, 12),
+        ];
+        const expectedSeries = [
+          point(0, null),
+          point(2, 2),
+          point(4, 4),
+          point(6, 6),
+          point(8, null),
+        ];
+        this.context.lastWindowTimestamp = 9;
+        this.context.timeResolution = 2;
+        this.context.windowsCount = 5;
+
+        expect(await loadSeries(this.context, this.functionArguments))
+          .to.deep.equal(expectedSeries);
+        done();
+      });
+
+    it('adds missing newest points', async function (done) {
+      this.customSourceData = [
+        point(4, 4),
+        point(2, 2),
+        point(5, 5),
+        point(6, 6),
+        point(10, 10),
+        point(12, 12),
+      ];
+      const expectedSeries = [
+        point(8, null),
+        point(10, 10),
+        point(12, 12),
+        point(14, null),
+        point(16, null),
+      ];
+      this.context.lastWindowTimestamp = 16;
+      this.context.timeResolution = 2;
+      this.context.windowsCount = 5;
 
       expect(await loadSeries(this.context, this.functionArguments))
         .to.deep.equal(expectedSeries);
