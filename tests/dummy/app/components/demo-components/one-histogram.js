@@ -71,19 +71,26 @@ export default Component.extend({
       timeResolutionSpecs: [{
         timeResolution: 5,
         windowsCount: 24,
+        updateInterval: 5,
       }, {
         timeResolution: 60,
         windowsCount: 60,
+        updateInterval: 10,
       }, {
         timeResolution: 60 * 60,
         windowsCount: 24,
+        updateInterval: 30,
       }],
       externalDataSources: {
         timeSeriesStoreContent: {
           fetchData: (context) => {
-            const nowTimestamp = Math.floor(Date.now() / 1000);
+            let lastTimestamp = context.lastWindowTimestamp;
+            if (!lastTimestamp) {
+              const nowTimestamp = Math.floor(Date.now() / 1000);
+              lastTimestamp = nowTimestamp - nowTimestamp % context.timeResolution;
+            }
             return _.times(context.windowsCount, (idx) => ({
-              timestamp: (context.lastWindowTimestamp || nowTimestamp) -
+              timestamp: lastTimestamp -
                 (context.windowsCount - idx - 1) * context.timeResolution,
               value: (1024 + idx * 512) * 1024,
             }));

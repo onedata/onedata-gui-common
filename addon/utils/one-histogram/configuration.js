@@ -4,6 +4,8 @@ import seriesFunctionsIndex from './series-functions';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
+import Looper from 'onedata-gui-common/utils/looper';
+import { set } from '@ember/object';
 
 /**
  * @typedef {Object} OneHistogramConfigurationInitOptions
@@ -72,6 +74,7 @@ import moment from 'moment';
  * @typedef {Object} OneHistogramTimeResolutionSpec
  * @property {number} timeResolution
  * @property {number} windowsCount
+ * @property {number} updateInterval
  */
 
 /**
@@ -123,7 +126,6 @@ import moment from 'moment';
  * @typedef {Object} OneHistogramViewParameters
  * @property {number} [lastWindowTimestamp]
  * @property {number} [timeResolution]
- * @property {number} [windowsCount]
  */
 
 export default class OneHistogramConfiguration {
@@ -176,9 +178,23 @@ export default class OneHistogramConfiguration {
      */
     this.windowsCount = null;
 
+    /**
+     * @private
+     * @type {number}
+     */
+    this.updateInterval = null;
+
+    /**
+     * @private
+     * @type {Utils.Looper}
+     */
+    this.updater = new Looper({
+      immediate: false,
+    });
+    this.updater.on('tick', () => this.notifyStateChange());
+
     if (this.timeResolutionSpecs[0]) {
-      this.timeResolution = this.timeResolutionSpecs[0].timeResolution;
-      this.windowsCount = this.timeResolutionSpecs[0].windowsCount;
+      this.changeTimeResolution(this.timeResolutionSpecs[0].timeResolution);
     }
   }
 
@@ -210,15 +226,7 @@ export default class OneHistogramConfiguration {
       this.lastWindowTimestamp = parameters.lastWindowTimestamp || null;
     }
     if (parameters.timeResolution) {
-      this.timeResolution = parameters.timeResolution;
-    }
-    if (parameters.windowsCount) {
-      this.windowsCount = parameters.windowsCount;
-    } else if (parameters.timeResolution) {
-      const usedTimeResolutionSpec =
-        this.timeResolutionSpecs.findBy('timeResolution', this.timeResolution);
-      this.windowsCount = usedTimeResolutionSpec ?
-        usedTimeResolutionSpec.windowsCount : null;
+      this.changeTimeResolution(parameters.timeResolution);
     }
     this.notifyStateChange();
   }
@@ -244,6 +252,7 @@ export default class OneHistogramConfiguration {
    */
   destroy() {
     this.stateChangeHandlers.clear();
+    this.updater.destroy();
   }
 
   /**
@@ -444,6 +453,26 @@ export default class OneHistogramConfiguration {
    */
   notifyStateChange() {
     this.stateChangeHandlers.forEach(callback => callback(this));
+  }
+
+  /**
+   * @param {number} timeResolution
+   * @returns {void}
+   */
+  changeTimeResolution(timeResolution) {
+    if (this.timeResolution === timeResolution) {
+      return;
+    }
+    const timeResolutionSpec =
+      this.timeResolutionSpecs.findBy('timeResolution', timeResolution);
+    if (!timeResolutionSpec) {
+      return;
+    }
+
+    this.timeResolution = timeResolutionSpec.timeResolution;
+    this.windowsCount = timeResolutionSpec.windowsCount;
+    this.updateInterval = timeResolutionSpec.updateInterval;
+    set(this.updater, 'interval', this.updateInterval * 1000);
   }
 }
 
