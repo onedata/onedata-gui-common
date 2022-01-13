@@ -6,12 +6,14 @@ import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
 import Looper from 'onedata-gui-common/utils/looper';
 import { set } from '@ember/object';
+import { reconcileTiming } from './series-functions/utils/points';
 
 /**
  * @typedef {Object} OneHistogramConfigurationInitOptions
  * @property {OneHistogramRawConfiguration} rawConfiguration
  * @property {OneHistogramTimeResolutionSpec[]} timeResolutionSpecs
  * @property {OneHistogramExternalDataSources} externalDataSources
+ * @property {number} [nowTimestampOffset]
  */
 
 /**
@@ -84,7 +86,6 @@ import { set } from '@ember/object';
 /**
  * @typedef {Object} OneHistogramExternalDataSource
  * @property {(seriesParameters: OneHistogramDataSourceFetchParams, sourceParameters: Object) => Promise<unknown>} fetchData
- * @property {OneHistogramReloadTimePerWindow} [reloadTime]
  */
 
 /**
@@ -95,18 +96,11 @@ import { set } from '@ember/object';
  */
 
 /**
- * @typedef {Object} OneHistogramReloadTimePerWindow
- * @property {number} second
- * @property {number} minute
- * @property {number} hour
- * @property {number} day
- */
-
-/**
  * @typedef {Object} OneHistogramSeriesFunctionContext
  * @property {OneHistogramExternalDataSources} externalDataSources
  * @property {(context: OneHistogramSeriesFunctionContext, seriesFunction: OneHistogramRawFunction) => Promise<OneHistogramSeriesPoint[]>} evaluateSeriesFunction
  * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
+ * @property {number} nowTimestamp
  * @property {number} lastWindowTimestamp
  * @property {number} timeResolution
  * @property {number} windowsCount
@@ -124,6 +118,7 @@ import { set } from '@ember/object';
 
 /**
  * @typedef {Object} OneHistogramViewParameters
+ * @property {boolean} [live]
  * @property {number} [lastWindowTimestamp]
  * @property {number} [timeResolution]
  */
@@ -156,9 +151,21 @@ export default class OneHistogramConfiguration {
 
     /**
      * @private
+     * @type {number}
+     */
+    this.nowTimestampOffset = options.nowTimestampOffset || 0;
+
+    /**
+     * @private
      * @type {Set<OneHistogramStateChangeHandler>}
      */
     this.stateChangeHandlers = new Set();
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this.live = false;
 
     /**
      * @private
@@ -191,7 +198,11 @@ export default class OneHistogramConfiguration {
     this.updater = new Looper({
       immediate: false,
     });
-    this.updater.on('tick', () => this.notifyStateChange());
+    this.updater.on('tick', () => {
+      if (this.live) {
+        this.notifyStateChange();
+      }
+    });
 
     if (this.timeResolutionSpecs[0]) {
       this.changeTimeResolution(this.timeResolutionSpecs[0].timeResolution);
@@ -222,6 +233,9 @@ export default class OneHistogramConfiguration {
    * @returns {void}
    */
   setViewParameters(parameters) {
+    if (parameters.live !== undefined) {
+      this.live = parameters.live;
+    }
     if (parameters.lastWindowTimestamp !== undefined) {
       this.lastWindowTimestamp = parameters.lastWindowTimestamp || null;
     }
@@ -236,7 +250,8 @@ export default class OneHistogramConfiguration {
    * @returns {Promise<OneHistogramState>}
    */
   async getNewestState() {
-    const series = await this.getAllSeriesState();
+    const nowTimestamp = this.getNowTimestamp();
+    const series = await this.getAllSeriesState(nowTimestamp);
     return new OneHistogramState({
       id: this.rawConfiguration.id,
       title: this.rawConfiguration.title,
@@ -293,25 +308,32 @@ export default class OneHistogramConfiguration {
 
   /**
    * @private
+   * @param {number} nowTimestamp
    * @returns {Promise<OneHistogramSeries[]>}
    */
-  async getAllSeriesState() {
+  async getAllSeriesState(nowTimestamp) {
     const seriesPerFactory = await allFulfilled(
       this.rawConfiguration.series.map((seriesFactory) =>
-        this.getSeriesStateUsingFactory(seriesFactory)
+        this.getSeriesStateUsingFactory(seriesFactory, nowTimestamp)
       )
     );
-    return _.flatten(seriesPerFactory);
+    const allSeries = _.flatten(seriesPerFactory);
+    reconcileTiming(allSeries.mapBy('data'));
+    return allSeries;
   }
 
   /**
    * @param {OneHistogramRawSeriesFactory} seriesFactory
+   * @param {number} nowTimestamp
    * @returns {Promise<OneHistogramSeries[]>}
    */
-  async getSeriesStateUsingFactory(seriesFactory) {
+  async getSeriesStateUsingFactory(seriesFactory, nowTimestamp) {
     switch (seriesFactory.factoryName) {
       case 'static':
-        return this.getSeriesStateUsingStaticFactory(seriesFactory.factoryArguments);
+        return this.getSeriesStateUsingStaticFactory(
+          seriesFactory.factoryArguments,
+          nowTimestamp
+        );
       default:
         return [];
     }
@@ -319,18 +341,20 @@ export default class OneHistogramConfiguration {
 
   /**
    * @param {OneHistogramRawStaticSeriesFactoryArguments} factoryArguments
+   * @param {number} nowTimestamp
    * @returns {Promise<OneHistogramSeries[]>}
    */
-  async getSeriesStateUsingStaticFactory(factoryArguments) {
-    return await this.getSeriesState(factoryArguments.seriesTemplate);
+  async getSeriesStateUsingStaticFactory(factoryArguments, nowTimestamp) {
+    return await this.getSeriesState(factoryArguments.seriesTemplate, nowTimestamp);
   }
 
   /**
    * @param {OneHistogramRawSeries} factoryArguments
+   * @param {number} nowTimestamp
    * @returns {Promise<OneHistogramSeries>}
    */
-  async getSeriesState(series) {
-    const data = await this.evaluateSeriesFunction(null, series.data);
+  async getSeriesState(series, nowTimestamp) {
+    const data = await this.evaluateSeriesFunction({ nowTimestamp }, series.data);
     return {
       id: series.id,
       name: series.name,
@@ -400,8 +424,15 @@ export default class OneHistogramConfiguration {
       normalizedContext.evaluateTransformFunction =
         (...args) => this.evaluateTransformFunction(...args);
     }
-    if (typeof normalizedContext.lastWindowTimestamp !== 'number') {
-      normalizedContext.lastWindowTimestamp = this.lastWindowTimestamp;
+    if (!normalizedContext.nowTimestamp) {
+      normalizedContext.nowTimestamp = this.getNowTimestamp();
+    }
+    if (!('lastWindowTimestamp' in normalizedContext)) {
+      if (this.live && !this.lastWindowTimestamp) {
+        normalizedContext.lastWindowTimestamp = normalizedContext.nowTimestamp;
+      } else {
+        normalizedContext.lastWindowTimestamp = this.lastWindowTimestamp;
+      }
     }
     if (typeof normalizedContext.timeResolution !== 'number') {
       normalizedContext.timeResolution = this.timeResolution;
@@ -473,6 +504,10 @@ export default class OneHistogramConfiguration {
     this.windowsCount = timeResolutionSpec.windowsCount;
     this.updateInterval = timeResolutionSpec.updateInterval;
     set(this.updater, 'interval', this.updateInterval * 1000);
+  }
+
+  getNowTimestamp() {
+    return Math.floor(Date.now() / 1000) + this.nowTimestampOffset;
   }
 }
 

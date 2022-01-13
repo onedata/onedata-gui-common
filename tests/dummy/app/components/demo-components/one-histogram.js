@@ -86,17 +86,22 @@ export default Component.extend({
           fetchData: (context) => {
             let lastTimestamp = context.lastWindowTimestamp;
             if (!lastTimestamp) {
-              const nowTimestamp = Math.floor(Date.now() / 1000);
-              lastTimestamp = nowTimestamp - nowTimestamp % context.timeResolution;
+              lastTimestamp = Math.floor(Date.now() / 1000);
             }
-            return _.times(context.windowsCount, (idx) => ({
+            lastTimestamp -= 60;
+            lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
+            return _.times(context.windowsCount / 2, (idx) => ({
               timestamp: lastTimestamp -
-                (context.windowsCount - idx - 1) * context.timeResolution,
+                ((context.windowsCount / 2) - idx - 1) * context.timeResolution,
               value: (1024 + idx * 512) * 1024,
             }));
           },
         },
       },
+    });
+
+    config.setViewParameters({
+      live: true,
     });
 
     return config;
