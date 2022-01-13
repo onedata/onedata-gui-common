@@ -44,6 +44,13 @@ const casesToCheck = [...transformCasesToCheck, {
     [point(1, 4), point(2, 5)],
   ],
   output: [point(1, null), point(2, null)],
+}, {
+  input: [
+    [point(1, 2), point(2, 3)],
+    5,
+    [point(2, 4), point(3, 5)],
+  ],
+  output: [point(2, 60), point(3, null)],
 }];
 
 describe('Unit | Utility | one histogram/series functions/multiply', function () {

@@ -1,5 +1,5 @@
 import { all as allFulfilled } from 'rsvp';
-import { isHistogramPointsArray } from './utils/points';
+import { isHistogramPointsArray, reconcileTiming } from './utils/points';
 
 /**
  * @typedef {Object} OneHistogramMultiplySeriesFunctionArguments
@@ -20,22 +20,23 @@ export default async function multiply(context, args) {
   const evaluatedOperands = await allFulfilled(
     normalizedOperands.map(value => context.evaluateSeriesFunction(context, value))
   );
+  const operandsWithPoints = evaluatedOperands.filter(operand =>
+    isHistogramPointsArray(operand)
+  );
+  reconcileTiming(operandsWithPoints);
   const multiplicationResult = context.evaluateTransformFunction(null, {
     functionName: 'multiply',
     functionArguments: {
       operands: evaluatedOperands.map(operand =>
-        isHistogramPointsArray(operand) ? operand.mapBy('value') : operand
+        operandsWithPoints.includes(operand) ? operand.mapBy('value') : operand
       ),
     },
   });
 
   if (Array.isArray(multiplicationResult)) {
-    const operandWithPoints = evaluatedOperands.find(operand =>
-      isHistogramPointsArray(operand)
-    );
-    if (operandWithPoints) {
+    if (operandsWithPoints[0]) {
       return multiplicationResult.map((value, idx) => ({
-        timestamp: operandWithPoints[idx].timestamp,
+        timestamp: operandsWithPoints[0][idx].timestamp,
         value,
       }));
     }
