@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { isHistogramPointsArray } from './utils/points';
 
 /**
  * @typedef {Object} OneHistogramAbsSeriesFunctionArguments
@@ -13,23 +12,29 @@ import { isHistogramPointsArray } from './utils/points';
  */
 export default async function abs(context, args) {
   if (!args) {
-    return null;
+    return {
+      type: 'basic',
+      data: null,
+    };
   }
 
   const evaluatedData = await context.evaluateSeriesFunction(context, args.data);
-  const isDataAPointsArray = isHistogramPointsArray(evaluatedData);
   const absValues = context.evaluateTransformFunction(null, {
     functionName: 'abs',
     functionArguments: {
-      data: isDataAPointsArray ? evaluatedData.mapBy('value') : evaluatedData,
+      data: evaluatedData.type === 'series' ?
+        evaluatedData.data.mapBy('value') : evaluatedData.data,
     },
   });
 
-  if (isDataAPointsArray) {
+  if (evaluatedData.type === 'series') {
     const result = _.cloneDeep(evaluatedData);
-    result.forEach((point, idx) => point.value = absValues[idx]);
+    result.data.forEach((point, idx) => point.value = absValues[idx]);
     return result;
   } else {
-    return absValues;
+    return {
+      type: 'basic',
+      data: absValues,
+    };
   }
 }

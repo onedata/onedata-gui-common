@@ -1,50 +1,59 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import {
-  isHistogramPoint,
-  isHistogramPointsArray,
+  point,
   reconcileTiming,
 } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
-import { point } from '../helpers';
 
 describe('Unit | Utility | one histogram/series functions/utils/points', function () {
-  describe('isHistogramPoint', function () {
-    [null, undefined, 123, {}, { value: 123 }, { timestamp: 123 }].forEach((value) => {
-      it(`returns false for value ${JSON.stringify(value)}`, function () {
-        expect(isHistogramPoint(value)).to.be.false;
+  describe('point', function () {
+    it('creates a point', function () {
+      expect(point(1, 2)).to.deep.equal({
+        timestamp: 1,
+        value: 2,
+        newest: false,
+        oldest: false,
+        fake: false,
       });
     });
 
-    [{ timestamp: 123, value: 123 }, { timestamp: 123, value: null }].forEach((value) => {
-      it(`returns true for value ${JSON.stringify(value)}`, function () {
-        expect(isHistogramPoint(value)).to.be.true;
-      });
-    });
-  });
-
-  describe('isHistogramPointsArray', function () {
-    [
-      null,
-      undefined,
-      123,
-      {},
-      { timestamp: 123, value: 123 },
-      [],
-      [null],
-      [123],
-      [{ timestamp: 123, value: 123 }, 123],
-    ].forEach((value) => {
-      it(`returns false for value ${JSON.stringify(value)}`, function () {
-        expect(isHistogramPointsArray(value)).to.be.false;
+    it('creates a point without value', function () {
+      expect(point(1)).to.deep.equal({
+        timestamp: 1,
+        value: null,
+        newest: false,
+        oldest: false,
+        fake: false,
       });
     });
 
-    [
-      [{ timestamp: 123, value: 123 }],
-      [{ timestamp: 123, value: 123 }, { timestamp: 234, value: null }],
-    ].forEach((value) => {
-      it(`returns true for value ${JSON.stringify(value)}`, function () {
-        expect(isHistogramPointsArray(value)).to.be.true;
+    it('creates a fake point', function () {
+      expect(point(1, null, { fake: true })).to.deep.equal({
+        timestamp: 1,
+        value: null,
+        newest: false,
+        oldest: false,
+        fake: true,
+      });
+    });
+
+    it('creates a newest point', function () {
+      expect(point(1, 2, { newest: true })).to.deep.equal({
+        timestamp: 1,
+        value: 2,
+        newest: true,
+        oldest: false,
+        fake: false,
+      });
+    });
+
+    it('creates an oldest point', function () {
+      expect(point(1, 2, { oldest: true })).to.deep.equal({
+        timestamp: 1,
+        value: 2,
+        newest: false,
+        oldest: true,
+        fake: false,
       });
     });
   });
@@ -59,10 +68,34 @@ describe('Unit | Utility | one histogram/series functions/utils/points', functio
       ];
       const seriesArrayShallowCopy = seriesArray.slice();
       const expectedSeriesArray = [
-        [point(12, 12), point(13, 13), point(14, 14), point(15, null), point(16, null)],
-        [point(12, 12), point(13, 13), point(14, 14), point(15, 15), point(16, 16)],
-        [point(12, null), point(13, null), point(14, null), point(15, null), point(16, null)],
-        [point(12, null), point(13, null), point(14, null), point(15, null), point(16, null)],
+        [
+          point(12, 12),
+          point(13, 13),
+          point(14, 14),
+          point(15, null, { fake: true }),
+          point(16, null, { fake: true }),
+        ],
+        [
+          point(12, 12),
+          point(13, 13),
+          point(14, 14),
+          point(15, 15),
+          point(16, 16),
+        ],
+        [
+          point(12, null, { fake: true }),
+          point(13, null, { fake: true }),
+          point(14, null, { fake: true }),
+          point(15, null, { fake: true }),
+          point(16, null, { fake: true }),
+        ],
+        [
+          point(12, null),
+          point(13, null),
+          point(14, null),
+          point(15, null),
+          point(16, null, { fake: true }),
+        ],
       ];
 
       const result = reconcileTiming(seriesArray);

@@ -1,56 +1,66 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-histogram/series-functions/multiply';
-import { point, createContext, expectFunctionsEvaluation } from './helpers';
+import { point } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
+import { createContext, expectFunctionsEvaluation, createConstArgument, stringifyArgumentData } from './helpers';
 import { casesToCheck as transformCasesToCheck } from '../transform-functions/multiply-test';
 
-const casesToCheck = [...transformCasesToCheck, {
+const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, output }) => ({
+  input: Array.isArray(input) ?
+    input.map(operand => ({ type: 'basic', data: operand })) : { type: 'basic', data: input },
+  output: {
+    type: 'basic',
+    data: output,
+  },
+}));
+
+const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: [
-    [point(1, 2), point(2, 3)],
-    [point(1, 4), point(2, 5)],
+    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'series', data: [point(1, 4), point(2, 5)] },
   ],
-  output: [point(1, 8), point(2, 15)],
+  output: { type: 'series', data: [point(1, 8), point(2, 15)] },
 }, {
   input: [
-    [point(1, 2), point(2, null)],
-    [point(1, 4), point(2, 5)],
+    { type: 'series', data: [point(1, 2), point(2, null)] },
+    { type: 'series', data: [point(1, 4), point(2, 5)] },
   ],
-  output: [point(1, 8), point(2, null)],
+  output: { type: 'series', data: [point(1, 8), point(2, null)] },
 }, {
   input: [
-    [point(1, 2), point(2, 3)],
-    2,
-    [point(1, 4), point(2, 5)],
+    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'basic', data: 2 },
+    { type: 'series', data: [point(1, 4), point(2, 5)] },
   ],
-  output: [point(1, 16), point(2, 30)],
+  output: { type: 'series', data: [point(1, 16), point(2, 30)] },
 }, {
   input: [
-    [point(1, 2), point(2, 3)],
-    2,
-    [point(1, 4), point(2, 5)],
+    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'basic', data: 2 },
+    { type: 'series', data: [point(1, 4), point(2, 5)] },
   ],
-  output: [point(1, 16), point(2, 30)],
+  output: { type: 'series', data: [point(1, 16), point(2, 30)] },
 }, {
   input: [
-    [point(1, 2), point(2, 3)],
-    [1, 2],
-    [point(1, 4), point(2, 5)],
+    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'basic', data: [1, 2] },
+    { type: 'series', data: [point(1, 4), point(2, 5)] },
   ],
-  output: [point(1, 8), point(2, 30)],
+  output: { type: 'series', data: [point(1, 8), point(2, 30)] },
 }, {
   input: [
-    [point(1, 2), point(2, 3)],
-    null,
-    [point(1, 4), point(2, 5)],
+    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'basic', data: null },
+    { type: 'series', data: [point(1, 4), point(2, 5)] },
   ],
-  output: [point(1, null), point(2, null)],
+  output: { type: 'series', data: [point(1, null), point(2, null)] },
 }, {
   input: [
-    [point(1, 2), point(2, 3)],
-    5,
-    [point(2, 4), point(3, 5)],
+    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'basic', data: 5 },
+    { type: 'series', data: [point(2, 4), point(3, 5)] },
   ],
-  output: [point(2, 60), point(3, null)],
+  output: { type: 'series', data: [point(2, 60), point(3, null)] },
 }];
 
 describe('Unit | Utility | one histogram/series functions/multiply', function () {
@@ -58,13 +68,16 @@ describe('Unit | Utility | one histogram/series functions/multiply', function ()
 });
 
 function testMultiply(rawOperands, output) {
-  const stringifiedInput = Number.isNaN(rawOperands) ? 'NaN' : JSON.stringify(rawOperands);
-  const stringifiedOutput = JSON.stringify(output);
+  const stringifiedInput = stringifyArgumentData(rawOperands);
+  const stringifiedOutput = stringifyArgumentData(output);
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput}`, async function () {
     const context = createContext();
 
-    expect(await multiply(context, { operands: rawOperands })).to.deep.equal(output);
-    expectFunctionsEvaluation(context, Array.isArray(rawOperands) ? rawOperands : []);
+    const preparedOperands = Array.isArray(rawOperands) ?
+      rawOperands.map(operand => createConstArgument(operand)) :
+      createConstArgument(rawOperands);
+    expect(await multiply(context, { operands: preparedOperands })).to.deep.equal(output);
+    expectFunctionsEvaluation(context, Array.isArray(rawOperands) ? preparedOperands : []);
   });
 }

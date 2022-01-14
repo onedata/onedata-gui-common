@@ -1,22 +1,10 @@
 /**
- * @param {unknown} point
- * @returns {boolean}
+ * @param {number} timestamp
+ * @param {number|null} [value]
+ * @param {{ oldest: boolean, newest: boolean, fake: boolean}} [params]
  */
-export function isHistogramPoint(point) {
-  return Boolean(point) &&
-    typeof point === 'object' &&
-    'timestamp' in point &&
-    'value' in point;
-}
-
-/**
- * @param {unknown} pointsArray
- * @returns {boolean}
- */
-export function isHistogramPointsArray(pointsArray) {
-  return Array.isArray(pointsArray) &&
-    pointsArray.length > 0 &&
-    pointsArray.every(elem => isHistogramPoint(elem));
+export function point(timestamp, value = null, params = {}) {
+  return Object.assign({ timestamp, value, oldest: false, newest: false, fake: false }, params);
 }
 
 /**
@@ -44,14 +32,42 @@ export function reconcileTiming(pointsArrays) {
     const indexOfFirstTimestamp = pointsArray.findIndex(({ timestamp }) => timestamp === firstTimestamp);
     const pointsToRemoveCount = indexOfFirstTimestamp >= 0 ?
       indexOfFirstTimestamp : pointsArray.length;
-    pointsArray.splice(0, pointsToRemoveCount);
+    const removedPoints = pointsArray.splice(0, pointsToRemoveCount);
 
+    const lastNotFakePoint = pointsArray[pointsArray.length - 1] ||
+      removedPoints[removedPoints.length - 1];
     for (let i = pointsArray.length; i < arrayWithNewestPoints.length; i++) {
-      pointsArray[i] = {
-        timestamp: arrayWithNewestPoints[i].timestamp,
-        value: null,
-      };
+      pointsArray[i] = point(arrayWithNewestPoints[i].timestamp, null, {
+        oldest: lastNotFakePoint.oldest,
+        newest: lastNotFakePoint.newest,
+        fake: true,
+      });
     }
   }
   return pointsArrays;
+}
+
+/**
+ * @param {Array<Array<OneHistogramSeriesPoint>>} pointsArrays
+ * @param {Array<number|null>} newPointsValues
+ * @returns {Array<OneHistogramSeriesPoint>}
+ */
+export function mergeHistogramPointsArrays(pointsArrays, newPointsValues) {
+  if (!pointsArrays.length) {
+    return [];
+  }
+  const mergedPointsArray = pointsArrays[0].map((point, idx) =>
+    Object.assign({}, point, { value: newPointsValues[idx] })
+  );
+  for (const pointsArray of pointsArrays.slice(1)) {
+    for (let i = 0; i < mergedPointsArray.length; i++) {
+      mergedPointsArray[i].oldest =
+        mergedPointsArray[i].oldest && pointsArray[i].oldest;
+      mergedPointsArray[i].newest =
+        mergedPointsArray[i].newest && pointsArray[i].newest;
+      mergedPointsArray[i].fake =
+        mergedPointsArray[i].fake && pointsArray[i].fake;
+    }
+  }
+  return mergedPointsArray;
 }

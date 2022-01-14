@@ -355,13 +355,14 @@ export default class OneHistogramConfiguration {
    */
   async getSeriesState(series, nowTimestamp) {
     const data = await this.evaluateSeriesFunction({ nowTimestamp }, series.data);
+    const normalizedData = data.type === 'series' ? data.data : [];
     return {
       id: series.id,
       name: series.name,
       type: series.type,
       yAxisId: series.yAxisId,
       stackId: series.stackId,
-      data,
+      data: normalizedData,
     };
   }
 
@@ -409,7 +410,10 @@ export default class OneHistogramConfiguration {
     if (!isRawFunction(seriesFunction)) {
       // When `seriesFunction` isn't a function definition, then it is
       // probably a constant value
-      return seriesFunction;
+      return {
+        type: 'basic',
+        data: seriesFunction,
+      };
     }
 
     const normalizedContext = context || {};

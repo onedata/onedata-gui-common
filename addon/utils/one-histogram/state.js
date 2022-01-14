@@ -41,6 +41,9 @@
  * @typedef {Object} OneHistogramSeriesPoint
  * @property {number} timestamp
  * @property {number} value
+ * @property {boolean} oldest
+ * @property {boolean} newest
+ * @property {boolean} fake
  */
 
 export default class OneHistogramState {
@@ -83,6 +86,24 @@ export default class OneHistogramState {
      * @type {OneHistogramSeries[]}
      */
     this.series = options.series;
+
+    /**
+     * @public
+     * @readonly
+     * @type {boolean}
+     */
+    this.hasReachedOldest = this.series.every((series) =>
+      series.length && series[0].oldest
+    );
+
+    /**
+     * @public
+     * @readonly
+     * @type {boolean}
+     */
+    this.hasReachedNewest = this.series.every((series) =>
+      series.length && series[series.length - 1].newest
+    );
   }
 
   /**

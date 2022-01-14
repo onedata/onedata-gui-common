@@ -1,5 +1,5 @@
 import { all as allFulfilled } from 'rsvp';
-import { isHistogramPointsArray, reconcileTiming } from './utils/points';
+import { reconcileTiming, mergeHistogramPointsArrays } from './utils/points';
 
 /**
  * @typedef {Object} OneHistogramMultiplySeriesFunctionArguments
@@ -14,32 +14,36 @@ import { isHistogramPointsArray, reconcileTiming } from './utils/points';
 export default async function multiply(context, args) {
   const normalizedOperands = args && args.operands || [];
   if (!Array.isArray(normalizedOperands) || !normalizedOperands.length) {
-    return null;
+    return {
+      type: 'basic',
+      data: null,
+    };
   }
 
   const evaluatedOperands = await allFulfilled(
     normalizedOperands.map(value => context.evaluateSeriesFunction(context, value))
   );
-  const operandsWithPoints = evaluatedOperands.filter(operand =>
-    isHistogramPointsArray(operand)
-  );
-  reconcileTiming(operandsWithPoints);
+  const operandsWithPoints = evaluatedOperands.filterBy('type', 'series');
+  const series = operandsWithPoints.mapBy('data');
+  reconcileTiming(series);
   const multiplicationResult = context.evaluateTransformFunction(null, {
     functionName: 'multiply',
     functionArguments: {
       operands: evaluatedOperands.map(operand =>
-        operandsWithPoints.includes(operand) ? operand.mapBy('value') : operand
+        operandsWithPoints.includes(operand) ? operand.data.mapBy('value') : operand.data
       ),
     },
   });
 
-  if (Array.isArray(multiplicationResult)) {
-    if (operandsWithPoints[0]) {
-      return multiplicationResult.map((value, idx) => ({
-        timestamp: operandsWithPoints[0][idx].timestamp,
-        value,
-      }));
-    }
+  if (Array.isArray(multiplicationResult) && operandsWithPoints.length) {
+    return {
+      type: 'series',
+      data: mergeHistogramPointsArrays(series, multiplicationResult),
+    };
+  } else {
+    return {
+      type: 'basic',
+      data: multiplicationResult,
+    };
   }
-  return multiplicationResult;
 }

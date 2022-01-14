@@ -1,21 +1,57 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import abs from 'onedata-gui-common/utils/one-histogram/series-functions/abs';
-import { point, createContext, createConstArgument, expectFunctionsEvaluation } from './helpers';
+import { point } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
+import { createContext, createConstArgument, expectFunctionsEvaluation, stringifyArgumentData } from './helpers';
 import { casesToCheck as transformCasesToCheck } from '../transform-functions/abs-test';
 
-const casesToCheck = [...transformCasesToCheck, {
-  input: [point(1, -10), point(2, -20)],
-  output: [point(1, 10), point(2, 20)],
+const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, output }) => ({
+  input: {
+    type: 'basic',
+    data: input,
+  },
+  output: {
+    type: 'basic',
+    data: output,
+  },
+}));
+
+const casesToCheck = [...normalizedTransformCasesToCheck, {
+  input: {
+    type: 'series',
+    data: [point(1, -10), point(2, -20)],
+  },
+  output: {
+    type: 'series',
+    data: [point(1, 10), point(2, 20)],
+  },
 }, {
-  input: [point(1, 10), point(2, -20)],
-  output: [point(1, 10), point(2, 20)],
+  input: {
+    type: 'series',
+    data: [point(1, 10), point(2, -20)],
+  },
+  output: {
+    type: 'series',
+    data: [point(1, 10), point(2, 20)],
+  },
 }, {
-  input: [point(1, 10), point(2, null)],
-  output: [point(1, 10), point(2, null)],
+  input: {
+    type: 'series',
+    data: [point(1, 10), point(2, null)],
+  },
+  output: {
+    type: 'series',
+    data: [point(1, 10), point(2, null)],
+  },
 }, {
-  input: [point(1, {}), point(2, NaN)],
-  output: [point(1, null), point(2, null)],
+  input: {
+    type: 'series',
+    data: [point(1, {}), point(2, NaN)],
+  },
+  output: {
+    type: 'series',
+    data: [point(1, null), point(2, null)],
+  },
 }];
 
 describe('Unit | Utility | one histogram/series functions/abs', function () {
@@ -23,8 +59,8 @@ describe('Unit | Utility | one histogram/series functions/abs', function () {
 });
 
 function testAbs(input, output) {
-  const stringifiedInput = Number.isNaN(input) ? 'NaN' : JSON.stringify(input);
-  const stringifiedOutput = JSON.stringify(output);
+  const stringifiedInput = stringifyArgumentData(input.data);
+  const stringifiedOutput = stringifyArgumentData(output.data);
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput}`, async function () {
     const context = createContext();

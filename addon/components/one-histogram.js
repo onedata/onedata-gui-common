@@ -25,7 +25,7 @@ export default Component.extend(createDataProxyMixin('state'), {
   echartState: computed('state', function echartState() {
     const state = this.get('state');
     if (state) {
-      console.log(state.asEchartState());
+      console.log(state.asEchartState(), state.series);
       return state.asEchartState();
     }
   }),

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach, afterEach } from 'mocha';
 import loadSeries from 'onedata-gui-common/utils/one-histogram/series-functions/load-series';
-import { point, createContext } from './helpers';
-import _ from 'lodash';
+import { point } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
+import { createContext } from './helpers';
 import sinon from 'sinon';
 
 let fakeClock;
@@ -10,6 +10,10 @@ let fakeClock;
 describe('Unit | Utility | one histogram/series functions/load series', function () {
   beforeEach(function () {
     this.context = createContext();
+    this.context.lastWindowTimestamp = 20;
+    this.context.nowTimestamp = 22;
+    this.context.timeResolution = 2;
+    this.context.windowsCount = 5;
   });
 
   afterEach(function () {
@@ -25,39 +29,46 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       };
     });
 
-    it('produces empty series', async function (done) {
-      const normalizedLastWindowTimestamp =
-        this.context.lastWindowTimestamp - this.context.lastWindowTimestamp % this.context.timeResolution;
-      const expectedSeries = _.times(this.context.windowsCount, (idx) => point(
-        normalizedLastWindowTimestamp - (this.context.windowsCount - idx - 1) *
-        this.context.timeResolution,
-        null,
-      ));
+    it('produces fake points series', async function (done) {
+      const expectedPoints = [12, 14, 16, 18, 20].map(timestamp =>
+        point(timestamp, null, { fake: true, oldest: true, newest: true })
+      );
+
       expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal(expectedSeries);
+        .to.deep.equal({ type: 'series', data: expectedPoints });
       done();
     });
 
-    it('produces empty series even when lastWindowTimestamp is not provided', async function (done) {
+    it('produces fake points even when lastWindowTimestamp is not provided', async function (done) {
       this.context.lastWindowTimestamp = null;
-      const expectedSeries = produceExpectedEmptySeries(this);
+      const expectedPoints = [14, 16, 18, 20, 22].map(timestamp =>
+        point(timestamp, null, { fake: true, oldest: true, newest: true })
+      );
 
-      expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal(expectedSeries);
+      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+        type: 'series',
+        data: expectedPoints,
+      });
       done();
     });
 
-    it('returns null when timeResolution is not provided', async function (done) {
+    it('returns empty series when timeResolution is not provided', async function (done) {
       this.context.timeResolution = null;
 
-      expect(await loadSeries(this.context, this.functionArguments)).to.be.null;
+      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+        type: 'series',
+        data: [],
+      });
       done();
     });
 
-    it('returns null when windowsCount is not provided', async function (done) {
+    it('returns empty series when windowsCount is not provided', async function (done) {
       this.context.windowsCount = null;
 
-      expect(await loadSeries(this.context, this.functionArguments)).to.be.null;
+      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+        type: 'series',
+        data: [],
+      });
       done();
     });
   });
@@ -75,128 +86,351 @@ describe('Unit | Utility | one histogram/series functions/load series', function
         sourceParameters: {
           externalSourceName: 'customSource',
           externalSourceParameters: {
-            a: 1,
+            someParameter: 1,
           },
         },
       };
     });
 
-    it('produces series acquired from custom source', async function (done) {
-      this.customSourceData.push(point(this.context.lastWindowTimestamp, 2));
-      const expectedPoints = [
-        ...this.customSourceData,
-        ..._.times(this.context.windowsCount - 1, (idx) =>
-          point(this.context.lastWindowTimestamp - (idx + 1) * this.context.timeResolution, null)
-        ),
-      ].reverse();
-      expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal(expectedPoints);
-      expect(this.context.externalDataSources.customSource.fetchData).to.be.calledOnce
-        .and.to.be.calledWith(sinon.match({
-          lastWindowTimestamp: this.context.lastWindowTimestamp,
-          timeResolution: this.context.timeResolution,
-          windowsCount: this.context.windowsCount,
-        }, this.functionArguments.sourceParameters.externalSourceParameters));
-      done();
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (no points)',
+      sourceData: [],
+      expectedPoints: [
+        point(12, null, { fake: true, oldest: true }),
+        point(14, null, { fake: true, oldest: true }),
+        point(16, null, { fake: true, oldest: true }),
+        point(18, null, { fake: true, oldest: true }),
+        point(20, null, { fake: true, oldest: true }),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (middle of large series)',
+      sourceData: [
+        rawPoint(10, -2),
+        rawPoint(12, -1),
+        rawPoint(14, 0),
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, -1),
+        point(14, 0),
+        point(16, 1),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (oldest point in the middle)',
+      sourceData: [
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, null, { oldest: true, fake: true }),
+        point(14, null, { oldest: true, fake: true }),
+        point(16, 1, { oldest: true }),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (all points are too old)',
+      sourceData: [
+        rawPoint(0, -4),
+        rawPoint(2, -3),
+        rawPoint(4, -2),
+        rawPoint(6, -1),
+        rawPoint(8, 0),
+        rawPoint(10, 1),
+      ],
+      expectedPoints: [
+        point(12, null, { fake: true }),
+        point(14, null, { fake: true }),
+        point(16, null, { fake: true }),
+        point(18, null, { fake: true }),
+        point(20, null, { fake: true }),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (oldest point is badly time-aligned and at the end)',
+      sourceData: [
+        rawPoint(13, -1),
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, null, { oldest: true, fake: true }),
+        point(14, null, { fake: true }),
+        point(16, 1),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (newest points missing)',
+      sourceData: [
+        rawPoint(4, -2),
+        rawPoint(6, -1),
+        rawPoint(8, 0),
+        rawPoint(10, 1),
+        rawPoint(12, 2),
+        rawPoint(14, 3),
+      ],
+      expectedPoints: [
+        point(12, 2),
+        point(14, 3),
+        point(16, null, { fake: true }),
+        point(18, null, { fake: true }),
+        point(20, null, { fake: true }),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (points missing in the middle)',
+      sourceData: [
+        rawPoint(6, -1),
+        rawPoint(8, 0),
+        rawPoint(10, 2),
+        rawPoint(12, 3),
+        rawPoint(18, 4),
+        rawPoint(20, 5),
+      ],
+      expectedPoints: [
+        point(12, 3),
+        point(14, null, { fake: true }),
+        point(16, null, { fake: true }),
+        point(18, 4),
+        point(20, 5),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (one point is newer than timestamp)',
+      sourceData: [
+        rawPoint(12, 1),
+        rawPoint(14, 2),
+        rawPoint(16, 3),
+        rawPoint(18, 4),
+        rawPoint(20, 5),
+        rawPoint(22, 6),
+      ],
+      expectedPoints: [
+        point(12, 1, { oldest: true }),
+        point(14, 2),
+        point(16, 3),
+        point(18, 4),
+        point(20, 5),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (two points are newer than timestamp)',
+      sourceData: [
+        rawPoint(14, 2),
+        rawPoint(16, 3),
+        rawPoint(18, 4),
+        rawPoint(20, 5),
+        rawPoint(22, 6),
+        rawPoint(24, 7),
+      ],
+      expectedPoints: [
+        point(12, null, { oldest: true, fake: true }),
+        point(14, 2, { oldest: true }),
+        point(16, 3),
+        point(18, 4),
+        point(20, 5),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (all points are newer than timestamp)',
+      sourceData: [
+        rawPoint(22, 6),
+        rawPoint(24, 7),
+        rawPoint(26, 8),
+        rawPoint(28, 9),
+        rawPoint(29, 10),
+        rawPoint(30, 11),
+      ],
+      expectedPoints: [
+        point(12, null, { oldest: true, fake: true }),
+        point(14, null, { oldest: true, fake: true }),
+        point(16, null, { oldest: true, fake: true }),
+        point(18, null, { oldest: true, fake: true }),
+        point(20, null, { oldest: true, fake: true }),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (shuffled points)',
+      sourceData: [
+        rawPoint(12, -1),
+        rawPoint(18, 2),
+        rawPoint(14, 0),
+        rawPoint(10, -2),
+        rawPoint(20, 3),
+        rawPoint(16, 1),
+      ],
+      expectedPoints: [
+        point(12, -1),
+        point(14, 0),
+        point(16, 1),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (badly time-aligned middle points)',
+      sourceData: [
+        rawPoint(10, -2),
+        rawPoint(12, -1),
+        rawPoint(15, 0),
+        rawPoint(17, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, -1),
+        point(14, null, { fake: true }),
+        point(16, null, { fake: true }),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (badly time-aligned middle points, newest timestamp different than target lastWindowTimestamp)',
+      sourceData: [
+        rawPoint(11, -2),
+        rawPoint(12, -1),
+        rawPoint(15, 0),
+        rawPoint(17, 1),
+        rawPoint(18, 2),
+        rawPoint(19, 3),
+      ],
+      expectedPoints: [
+        point(11, -2),
+        point(13, null, { fake: true }),
+        point(15, 0),
+        point(17, 1),
+        point(19, 3),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (null lastWindowTimestamp)',
+      lastWindowTimestamp: null,
+      sourceData: [
+        rawPoint(10, -2),
+        rawPoint(12, -1),
+        rawPoint(14, 0),
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, -1),
+        point(14, 0),
+        point(16, 1),
+        point(18, 2),
+        point(20, 3, { newest: true }),
+      ],
+    });
+
+    testFetchDataScenario({
+      title: 'produces empty series from custom source (null lastWindowTimestamp, no points)',
+      lastWindowTimestamp: null,
+      sourceData: [],
+      expectedPoints: [],
+    });
+
+    testFetchDataScenario({
+      title: 'produces series acquired from custom source (lastWindowTimestamp == nowTimestamp)',
+      lastWindowTimestamp: 22,
+      sourceData: [
+        rawPoint(10, -2),
+        rawPoint(12, -1),
+        rawPoint(14, 0),
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(14, 0),
+        point(16, 1),
+        point(18, 2),
+        point(20, 3, { newest: true }),
+        point(22, null, { newest: true, fake: true }),
+      ],
     });
 
     it('produces empty series when custom source does not exist', async function (done) {
       delete this.context.externalDataSources.customSource;
-      const expectedSeries = produceExpectedEmptySeries(this);
 
-      expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal(expectedSeries);
+      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+        type: 'series',
+        data: [],
+      });
       done();
     });
 
-    it('normalizes shuffled series with missing and incorrect points (lastWindowTimestamp is null)',
-      async function (done) {
-        this.customSourceData = [
-          point(4, 4),
-          point(2, 2),
-          point(6, 6),
-          point(9, 9),
-          point(12, 12),
-        ];
-        const expectedSeries = [
-          point(4, 4),
-          point(6, 6),
-          point(8, null),
-          point(10, null),
-          point(12, 12),
-        ];
-        this.context.lastWindowTimestamp = null;
-        this.context.timeResolution = 2;
-        this.context.windowsCount = 5;
+    it('returns empty series when timeResolution is not provided', async function (done) {
+      this.context.timeResolution = null;
 
-        expect(await loadSeries(this.context, this.functionArguments))
-          .to.deep.equal(expectedSeries);
-        done();
+      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+        type: 'series',
+        data: [],
       });
+      done();
+    });
 
-    it('normalizes shuffled series with missing and incorrect points (lastWindowTimestamp is set)',
-      async function (done) {
-        this.customSourceData = [
-          point(4, 4),
-          point(2, 2),
-          point(5, 5),
-          point(6, 6),
-          point(10, 10),
-          point(12, 12),
-        ];
-        const expectedSeries = [
-          point(0, null),
-          point(2, 2),
-          point(4, 4),
-          point(6, 6),
-          point(8, null),
-        ];
-        this.context.lastWindowTimestamp = 9;
-        this.context.timeResolution = 2;
-        this.context.windowsCount = 5;
+    it('returns empty series when windowsCount is not provided', async function (done) {
+      this.context.windowsCount = null;
 
-        expect(await loadSeries(this.context, this.functionArguments))
-          .to.deep.equal(expectedSeries);
-        done();
+      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+        type: 'series',
+        data: [],
       });
-
-    it('adds missing newest points', async function (done) {
-      this.customSourceData = [
-        point(4, 4),
-        point(2, 2),
-        point(5, 5),
-        point(6, 6),
-        point(10, 10),
-        point(12, 12),
-      ];
-      const expectedSeries = [
-        point(8, null),
-        point(10, 10),
-        point(12, 12),
-        point(14, null),
-        point(16, null),
-      ];
-      this.context.lastWindowTimestamp = 16;
-      this.context.timeResolution = 2;
-      this.context.windowsCount = 5;
-
-      expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal(expectedSeries);
       done();
     });
   });
 });
 
-function produceExpectedEmptySeries(testCase) {
-  const fakeNow = testCase.context.lastWindowTimestamp || 1641916475;
-  fakeClock = sinon.useFakeTimers({
-    now: fakeNow * 1000,
-    shouldAdvanceTime: false,
+function testFetchDataScenario({ title, lastWindowTimestamp, sourceData, expectedPoints }) {
+  it(title, async function (done) {
+    this.customSourceData = sourceData;
+    if (lastWindowTimestamp !== undefined) {
+      this.context.lastWindowTimestamp = lastWindowTimestamp;
+    }
+
+    expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
+      type: 'series',
+      data: expectedPoints,
+    });
+    expectFetchDataToBeCalled(this);
+    done();
   });
-  const expectedLastWindowTimestamp = fakeNow - fakeNow % testCase.context.timeResolution;
-  return _.times(testCase.context.windowsCount, (idx) => point(
-    expectedLastWindowTimestamp - (testCase.context.windowsCount - idx - 1) *
-    testCase.context.timeResolution,
-    null,
-  ));
+}
+
+function expectFetchDataToBeCalled(testCase) {
+  expect(testCase.context.externalDataSources.customSource.fetchData).to.be.calledOnce
+    .and.to.be.calledWith(sinon.match({
+      lastWindowTimestamp: testCase.context.lastWindowTimestamp,
+      timeResolution: testCase.context.timeResolution,
+      windowsCount: testCase.context.windowsCount + 1,
+    }, testCase.functionArguments.sourceParameters.externalSourceParameters));
+}
+
+function rawPoint(timestamp, value) {
+  return { timestamp, value };
 }

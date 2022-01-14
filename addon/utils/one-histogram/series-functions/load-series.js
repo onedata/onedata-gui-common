@@ -1,4 +1,4 @@
-import { isHistogramPointsArray } from './utils/points';
+import { point } from './utils/points';
 
 /**
  * @typedef {OneHistogramExternalSourceSpec} OneHistogramLoadSeriesSeriesFunctionArguments
@@ -21,51 +21,48 @@ import { isHistogramPointsArray } from './utils/points';
  * @param {OneHistogramLoadSeriesSeriesFunctionArguments} args
  * @returns {Promise<Array<OneHistogramSeriesPoint[]>>}
  */
-async function loadSeries(context, args) {
+export default async function loadSeries(context, args) {
+  if (!context.timeResolution || !context.windowsCount) {
+    return {
+      type: 'series',
+      data: [],
+    };
+  }
+
+  let points;
   switch (args.sourceType) {
     case 'external': {
       const externalDataSource =
         context.externalDataSources[args.sourceParameters.externalSourceName];
       if (!externalDataSource) {
-        return await emptySeries(context);
-      }
-      const fetchParams = {
-        lastWindowTimestamp: context.lastWindowTimestamp,
-        timeResolution: context.timeResolution,
-        windowsCount: context.windowsCount,
-      };
-      return fitPointsToContext(
-        context,
-        await externalDataSource.fetchData(
+        points = [];
+      } else {
+        const fetchParams = {
+          lastWindowTimestamp: context.lastWindowTimestamp,
+          timeResolution: context.timeResolution,
+          windowsCount: context.windowsCount + 1,
+        };
+        const rawPoints = await externalDataSource.fetchData(
           fetchParams,
           args.sourceParameters.externalSourceParameters
-        )
-      );
+        );
+        points = fitPointsToContext(context, rawPoints);
+      }
+      break;
     }
     case 'empty':
     default: {
-      if (!context.timeResolution || !context.windowsCount) {
-        return null;
-      }
-      let lastTimestamp = context.lastWindowTimestamp;
-      if (!lastTimestamp) {
-        lastTimestamp = Math.floor(Date.now() / 1000);
-      }
-      // The same algorithm of calculating window timestamps is used by backend
-      lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
-
-      // fitPointsToContext will add missing points and produce complete series of null values
-      return fitPointsToContext(context, [{ timestamp: lastTimestamp, value: null }]);
+      points = generateFakePoints(context, getAbsoluteLastWindowTimestamp(context), {
+        newest: true,
+        oldest: true,
+      });
+      break;
     }
   }
-}
-
-export default loadSeries;
-
-async function emptySeries(context) {
-  return await loadSeries(context, {
-    sourceType: 'empty',
-  });
+  return {
+    type: 'series',
+    data: points,
+  };
 }
 
 /**
@@ -74,23 +71,52 @@ async function emptySeries(context) {
  * @param {OneHistogramSeriesPoint[]} points
  */
 function fitPointsToContext(context, points) {
-  if (!isHistogramPointsArray(points)) {
-    return null;
+  if (!isRawHistogramPointsArray(points)) {
+    return [];
   }
-  // sort by timestamp descending
-  let normalizedPoints = points.sortBy('timestamp').reverse();
+  // Sort by timestamp descending and create full points objects
+  let normalizedPoints = points
+    .sortBy('timestamp')
+    .reverse()
+    .map(({ timestamp, value }) => point(timestamp, value));
 
-  // remove points newer than context.lastWindowTimestamp
+  // Remove points newer than context.lastWindowTimestamp
   if (context.lastWindowTimestamp) {
     normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
       timestamp <= context.lastWindowTimestamp
     );
   }
 
-  // remove points, that do not describe times matching context.timeResolution
+  const isLastWindowNewest = !context.lastWindowTimestamp ||
+    (context.nowTimestamp - context.lastWindowTimestamp) < context.timeResolution;
+
+  // If there are no points, return fake ones
+  if (!normalizedPoints.length) {
+    if (context.lastWindowTimestamp) {
+      return generateFakePoints(context, context.lastWindowTimestamp, {
+        oldest: true,
+        newest: isLastWindowNewest,
+      });
+    } else {
+      return [];
+    }
+  }
+
+  // Find out timestamp of globally oldest point
+  let globallyOldestPointTimestamp = null;
+  if (normalizedPoints.length < context.windowsCount + 1) {
+    globallyOldestPointTimestamp = normalizedPoints[normalizedPoints.length - 1].timestamp;
+  }
+
+  // Remove points, that do not describe times matching context.timeResolution
   normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
     (timestamp - normalizedPoints[0].timestamp) % context.timeResolution === 0
   );
+
+  // Cut off extra window (added to check for existence of older points)
+  if (normalizedPoints.length > context.windowsCount) {
+    normalizedPoints = normalizedPoints.slice(0, context.windowsCount);
+  }
 
   // Add missing points after received points
   if (
@@ -105,10 +131,7 @@ function fitPointsToContext(context, points) {
       nextFakePointTimestamp > normalizedPoints[0].timestamp &&
       pointsToUnshift.length < context.windowsCount
     ) {
-      pointsToUnshift.push({
-        timestamp: nextFakePointTimestamp,
-        value: null,
-      });
+      pointsToUnshift.push(point(nextFakePointTimestamp, null, { fake: true }));
       nextFakePointTimestamp -= context.timeResolution;
     }
     normalizedPoints = [...pointsToUnshift, ...normalizedPoints];
@@ -127,12 +150,52 @@ function fitPointsToContext(context, points) {
       normalizedPoints.push(normalizedPointsWithGaps[originArrayIdx]);
       originArrayIdx++;
     } else {
-      normalizedPoints.push({ timestamp: nextPointTimestamp, value: null });
+      normalizedPoints.push(point(nextPointTimestamp, null, { fake: true }));
     }
     nextPointTimestamp -= context.timeResolution;
   }
 
+  // Flag newest points
+  if (isLastWindowNewest) {
+    let realPointFlaggedAsNewest = false;
+    for (let i = 0; i < normalizedPoints.length && !realPointFlaggedAsNewest; i++) {
+      if (!normalizedPoints[i].fake) {
+        realPointFlaggedAsNewest = true;
+      }
+      normalizedPoints[i].newest = true;
+    }
+  }
+
+  // Sort by timestamp ascending
   normalizedPoints = normalizedPoints.reverse();
 
+  // Flag oldest points
+  if (globallyOldestPointTimestamp !== null) {
+    for (let i = 0; i < normalizedPoints.length; i++) {
+      if (normalizedPoints[i].timestamp > globallyOldestPointTimestamp) {
+        break;
+      }
+      normalizedPoints[i].oldest = true;
+    }
+  }
+
   return normalizedPoints;
+}
+
+function isRawHistogramPointsArray(pointsArray) {
+  return Array.isArray(pointsArray) && pointsArray.every(point =>
+    point && typeof point === 'object' && 'timestamp' in point && 'value' in point
+  );
+}
+
+function generateFakePoints(context, newestTimestamp, pointParams = {}) {
+  const points = fitPointsToContext(context, [point(newestTimestamp, null)]);
+  points.forEach((point) => Object.assign(point, { fake: true }, pointParams));
+  return points;
+}
+
+function getAbsoluteLastWindowTimestamp(context) {
+  return context.lastWindowTimestamp ||
+    context.nowTimestamp ||
+    Math.floor(Date.now() / 1000);
 }
