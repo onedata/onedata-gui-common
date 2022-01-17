@@ -311,19 +311,19 @@ describe('Unit | Utility | one histogram/series functions/load series', function
     testFetchDataScenario({
       title: 'produces series acquired from custom source (badly time-aligned middle points, newest timestamp different than target lastWindowTimestamp)',
       sourceData: [
-        rawPoint(11, -2),
-        rawPoint(12, -1),
-        rawPoint(15, 0),
-        rawPoint(17, 1),
-        rawPoint(18, 2),
-        rawPoint(19, 3),
+        rawPoint(10, -2),
+        rawPoint(11, -1),
+        rawPoint(14, 0),
+        rawPoint(16, 1),
+        rawPoint(17, 2),
+        rawPoint(18, 3),
       ],
       expectedPoints: [
-        point(11, -2),
-        point(13, null, { fake: true }),
-        point(15, 0),
-        point(17, 1),
-        point(19, 3),
+        point(12, null, { fake: true }),
+        point(14, 0),
+        point(16, 1),
+        point(18, 3),
+        point(20, null, { fake: true }),
       ],
     });
 

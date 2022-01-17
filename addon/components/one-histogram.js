@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import layout from '../templates/components/one-histogram';
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 import stringifyDuration from 'onedata-gui-common/utils/i18n/stringify-duration';
@@ -46,6 +47,16 @@ export default Component.extend(createDataProxyMixin('state'), {
       }));
     }
   ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isShowOlderDisabled: reads('state.hasReachedOldest'),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isShowNewerDisabled: reads('state.hasReachedNewest'),
 
   /**
    * @type {ComputedProperty<() => void>}
@@ -98,6 +109,24 @@ export default Component.extend(createDataProxyMixin('state'), {
       this.set('selectedTimeResolution', timeResolution);
       this.get('configuration').setViewParameters({
         timeResolution,
+      });
+    },
+    showOlder() {
+      const {
+        configuration,
+        state,
+      } = this.getProperties('configuration', 'state');
+      configuration.setViewParameters({
+        lastWindowTimestamp: state.firstWindowTimestamp - state.timeResolution,
+      });
+    },
+    showNewer() {
+      const {
+        configuration,
+        state,
+      } = this.getProperties('configuration', 'state');
+      configuration.setViewParameters({
+        lastWindowTimestamp: state.lastWindowTimestamp + state.timeResolution * state.windowsCount,
       });
     },
   },

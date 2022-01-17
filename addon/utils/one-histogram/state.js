@@ -5,6 +5,9 @@
  * @property {OneHistogramYAxis[]} yAxes
  * @property {OneHistogramXAxis} xAxis
  * @property {OneHistogramSeries[]} series
+ * @property {number} timeResolution
+ * @property {number} windowsCount
+ * @property {number} newestWindowTimestamp
  */
 
 /**
@@ -90,10 +93,45 @@ export default class OneHistogramState {
     /**
      * @public
      * @readonly
+     * @type {number}
+     */
+    this.timeResolution = options.timeResolution;
+
+    /**
+     * @public
+     * @readonly
+     * @type {number}
+     */
+    this.windowsCount = options.windowsCount;
+
+    /**
+     * @public
+     * @readonly
+     * @type {number|null}
+     */
+    this.newestWindowTimestamp = options.newestWindowTimestamp;
+
+    /**
+     * @public
+     * @readonly
+     * @type {number}
+     */
+    this.firstWindowTimestamp = (this.series[0].data[0] || {}).timestamp;
+
+    /**
+     * @public
+     * @readonly
+     * @type {number}
+     */
+    this.lastWindowTimestamp = (this.series[0].data[this.series[0].data.length - 1] || {}).timestamp;
+
+    /**
+     * @public
+     * @readonly
      * @type {boolean}
      */
     this.hasReachedOldest = this.series.every((series) =>
-      series.length && series[0].oldest
+      series.data.length && series.data[0].oldest
     );
 
     /**
@@ -102,7 +140,7 @@ export default class OneHistogramState {
      * @type {boolean}
      */
     this.hasReachedNewest = this.series.every((series) =>
-      series.length && series[series.length - 1].newest
+      series.data.length && series.data[series.data.length - 1].newest
     );
   }
 

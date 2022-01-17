@@ -88,11 +88,10 @@ export default Component.extend({
             if (!lastTimestamp) {
               lastTimestamp = Math.floor(Date.now() / 1000);
             }
-            lastTimestamp -= 60;
             lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
-            return _.times(context.windowsCount / 2, (idx) => ({
+            return _.times(context.windowsCount, (idx) => ({
               timestamp: lastTimestamp -
-                ((context.windowsCount / 2) - idx - 1) * context.timeResolution,
+                ((context.windowsCount) - idx - 1) * context.timeResolution,
               value: (1024 + idx * 512) * 1024,
             }));
           },
@@ -102,6 +101,7 @@ export default Component.extend({
 
     config.setViewParameters({
       live: true,
+      // lastWindowTimestamp: Math.floor(Date.now() / 1000),
     });
 
     return config;

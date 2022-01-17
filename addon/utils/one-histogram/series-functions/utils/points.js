@@ -14,15 +14,23 @@ export function point(timestamp, value = null, params = {}) {
 export function reconcileTiming(pointsArrays) {
   if (!pointsArrays.length) {
     return [];
-  } else if (!pointsArrays[0].length) {
-    return pointsArrays;
   }
+
   let arrayWithNewestPoints = pointsArrays[0];
   for (let i = 1; i < pointsArrays.length; i++) {
-    if (pointsArrays[i][0].timestamp > arrayWithNewestPoints[0].timestamp) {
-      arrayWithNewestPoints = pointsArrays[i];
+    if (pointsArrays[i].length) {
+      if (
+        !arrayWithNewestPoints.length ||
+        arrayWithNewestPoints[0].timestamp < pointsArrays[i][0].timestamp
+      ) {
+        arrayWithNewestPoints = pointsArrays[i];
+      }
     }
   }
+  if (!arrayWithNewestPoints.length) {
+    return pointsArrays;
+  }
+
   const firstTimestamp = arrayWithNewestPoints[0].timestamp;
   for (const pointsArray of pointsArrays) {
     if (pointsArray === arrayWithNewestPoints) {
@@ -35,7 +43,11 @@ export function reconcileTiming(pointsArrays) {
     const removedPoints = pointsArray.splice(0, pointsToRemoveCount);
 
     const lastNotFakePoint = pointsArray[pointsArray.length - 1] ||
-      removedPoints[removedPoints.length - 1];
+      removedPoints[removedPoints.length - 1] || {
+        oldest: true,
+        newest: true,
+        fake: true,
+      };
     for (let i = pointsArray.length; i < arrayWithNewestPoints.length; i++) {
       pointsArray[i] = point(arrayWithNewestPoints[i].timestamp, null, {
         oldest: lastNotFakePoint.oldest,

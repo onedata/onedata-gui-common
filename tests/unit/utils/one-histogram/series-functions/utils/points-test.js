@@ -59,21 +59,22 @@ describe('Unit | Utility | one histogram/series functions/utils/points', functio
   });
 
   describe('reconcileTiming', function () {
-    it('aligns timings of passed series to the newest one (modifies arrays in-place)', function () {
-      const seriesArray = [
-        [point(10, 10), point(11, 11), point(12, 12), point(13, 13), point(14, 14)],
+    testReconcileTiming({
+      description: 'aligns timings of passed series to the newest one',
+      input: [
+        [point(10, 10), point(11, 11), point(12, 12), point(13, 13), point(14, 14, { newest: true })],
         [point(12, 12), point(13, 13), point(14, 14), point(15, 15), point(16, 16)],
-        [point(1, 1), point(2, 2), point(3, 3), point(4, 4), point(5, 5)],
+        [point(1, 1, { oldest: true }), point(2, 2), point(3, 3), point(4, 4), point(5, 5)],
+        [],
         [point(11, 11), point(12, null), point(13, null), point(14, null), point(15, null)],
-      ];
-      const seriesArrayShallowCopy = seriesArray.slice();
-      const expectedSeriesArray = [
+      ],
+      output: [
         [
           point(12, 12),
           point(13, 13),
-          point(14, 14),
-          point(15, null, { fake: true }),
-          point(16, null, { fake: true }),
+          point(14, 14, { newest: true }),
+          point(15, null, { fake: true, newest: true }),
+          point(16, null, { fake: true, newest: true }),
         ],
         [
           point(12, 12),
@@ -90,21 +91,48 @@ describe('Unit | Utility | one histogram/series functions/utils/points', functio
           point(16, null, { fake: true }),
         ],
         [
+          point(12, null, { fake: true, newest: true, oldest: true }),
+          point(13, null, { fake: true, newest: true, oldest: true }),
+          point(14, null, { fake: true, newest: true, oldest: true }),
+          point(15, null, { fake: true, newest: true, oldest: true }),
+          point(16, null, { fake: true, newest: true, oldest: true }),
+        ],
+        [
           point(12, null),
           point(13, null),
           point(14, null),
           point(15, null),
           point(16, null, { fake: true }),
         ],
-      ];
+      ],
+    });
 
-      const result = reconcileTiming(seriesArray);
-      expect(result).to.deep.equal(expectedSeriesArray);
-      // Check whether modification in-place occurred
-      expect(seriesArray).to.equal(result);
-      seriesArrayShallowCopy.forEach((series, idx) =>
-        expect(series).to.equal(result[idx])
-      );
+    testReconcileTiming({
+      description: 'returns the same empty arrays when all passed series are empty',
+      input: [
+        [],
+        [],
+        [],
+      ],
+      output: [
+        [],
+        [],
+        [],
+      ],
     });
   });
 });
+
+function testReconcileTiming({ description, input, output }) {
+  it(description, function () {
+    const inputShallowCopy = input.slice();
+
+    const result = reconcileTiming(input);
+    expect(result).to.deep.equal(output);
+    // Check whether modification in-place occurred
+    expect(input).to.equal(result);
+    inputShallowCopy.forEach((series, idx) =>
+      expect(series).to.equal(result[idx])
+    );
+  });
+}

@@ -90,6 +90,17 @@ function fitPointsToContext(context, points) {
   const isLastWindowNewest = !context.lastWindowTimestamp ||
     (context.nowTimestamp - context.lastWindowTimestamp) < context.timeResolution;
 
+  // Find out timestamp of globally oldest point
+  let globallyOldestPointTimestamp = null;
+  if (normalizedPoints.length && normalizedPoints.length < context.windowsCount + 1) {
+    globallyOldestPointTimestamp = normalizedPoints[normalizedPoints.length - 1].timestamp;
+  }
+
+  // Remove points, that do not describe times matching context.timeResolution
+  normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
+    timestamp % context.timeResolution === 0
+  );
+
   // If there are no points, return fake ones
   if (!normalizedPoints.length) {
     if (context.lastWindowTimestamp) {
@@ -101,17 +112,6 @@ function fitPointsToContext(context, points) {
       return [];
     }
   }
-
-  // Find out timestamp of globally oldest point
-  let globallyOldestPointTimestamp = null;
-  if (normalizedPoints.length < context.windowsCount + 1) {
-    globallyOldestPointTimestamp = normalizedPoints[normalizedPoints.length - 1].timestamp;
-  }
-
-  // Remove points, that do not describe times matching context.timeResolution
-  normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
-    (timestamp - normalizedPoints[0].timestamp) % context.timeResolution === 0
-  );
 
   // Cut off extra window (added to check for existence of older points)
   if (normalizedPoints.length > context.windowsCount) {
@@ -188,8 +188,10 @@ function isRawHistogramPointsArray(pointsArray) {
   );
 }
 
-function generateFakePoints(context, newestTimestamp, pointParams = {}) {
-  const points = fitPointsToContext(context, [point(newestTimestamp, null)]);
+function generateFakePoints(context, lastWindowTimestamp, pointParams = {}) {
+  const normalizedLastWindowTimestamp = lastWindowTimestamp -
+    (lastWindowTimestamp % context.timeResolution);
+  const points = fitPointsToContext(context, [point(normalizedLastWindowTimestamp, null)]);
   points.forEach((point) => Object.assign(point, { fake: true }, pointParams));
   return points;
 }
