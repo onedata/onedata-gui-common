@@ -1,9 +1,11 @@
+import abs from './abs';
+import getDynamicSeriesConfigData from './get-dynamic-series-config-data';
 import loadSeries from './load-series';
 import multiply from './multiply';
-import abs from './abs';
 
 const seriesFunctionsIndex = {
   abs,
+  getDynamicSeriesConfigData,
   loadSeries,
   multiply,
 };

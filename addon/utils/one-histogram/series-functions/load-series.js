@@ -1,3 +1,4 @@
+import { all as allFulfilled } from 'rsvp';
 import { point } from './utils/points';
 
 /**
@@ -29,11 +30,19 @@ export default async function loadSeries(context, args) {
     };
   }
 
+  const [
+    { data: sourceType },
+    { data: sourceParameters },
+  ] = await allFulfilled([
+    context.evaluateSeriesFunction(context, args.sourceType),
+    context.evaluateSeriesFunction(context, args.sourceParameters),
+  ]);
+
   let points;
-  switch (args.sourceType) {
+  switch (sourceType) {
     case 'external': {
       const externalDataSource =
-        context.externalDataSources[args.sourceParameters.externalSourceName];
+        context.externalDataSources[sourceParameters.externalSourceName];
       if (!externalDataSource) {
         points = [];
       } else {
@@ -42,9 +51,9 @@ export default async function loadSeries(context, args) {
           timeResolution: context.timeResolution,
           windowsCount: context.windowsCount + 1,
         };
-        const rawPoints = await externalDataSource.fetchData(
+        const rawPoints = await externalDataSource.fetchSeries(
           fetchParams,
-          args.sourceParameters.externalSourceParameters
+          sourceParameters.externalSourceParameters
         );
         points = fitPointsToContext(context, rawPoints);
       }

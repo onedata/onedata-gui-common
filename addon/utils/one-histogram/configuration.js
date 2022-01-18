@@ -1,6 +1,7 @@
 import OneHistogramState from './state';
 import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
+import seriesFactoriesIndex from './series-factories';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
@@ -18,7 +19,6 @@ import { reconcileTiming } from './series-functions/utils/points';
 
 /**
  * @typedef {Object} OneHistogramRawConfiguration
- * @property {string} id
  * @property {string} title
  * @property {OneHistogramRawYAxis[]} yAxes
  * @property {OneHistogramRawSeriesFactory[]} series
@@ -38,23 +38,13 @@ import { reconcileTiming } from './series-functions/utils/points';
  */
 
 /**
- * @typedef {OneHistogramRawStaticSeriesFactory} OneHistogramRawSeriesFactory
- */
-
-/**
- * @typedef {Object} OneHistogramRawStaticSeriesFactory
- * @property {'static'} factoryName
- * @property {OneHistogramRawStaticSeriesFactoryArguments} factoryArguments
- */
-
-/**
- * @typedef {Object} OneHistogramRawStaticSeriesFactoryArguments
- * @property {OneHistogramRawSeries} seriesTemplate
+ * @typedef {Object} OneHistogramRawSeriesFactory
+ * @property {string} factoryName
+ * @property {Object} factoryArguments
  */
 
 /**
  * @typedef {Object} OneHistogramRawSeries
- * @property {string} id
  * @property {string} name
  * @property {OneHistogramChartType} type
  * @property {string} yAxisId
@@ -85,7 +75,8 @@ import { reconcileTiming } from './series-functions/utils/points';
 
 /**
  * @typedef {Object} OneHistogramExternalDataSource
- * @property {(seriesParameters: OneHistogramDataSourceFetchParams, sourceParameters: Object) => Promise<unknown>} fetchData
+ * @property {(seriesParameters: OneHistogramDataSourceFetchParams, sourceParameters: Object) => Promise<unknown>} fetchSeries
+ * @property {(sourceParameters: Object) => Promise<unknown[]>} fetchDynamicSeriesConfigs
  */
 
 /**
@@ -96,10 +87,8 @@ import { reconcileTiming } from './series-functions/utils/points';
  */
 
 /**
- * @typedef {Object} OneHistogramSeriesFunctionContext
+ * @typedef {Object} OneHistogramSeriesContext
  * @property {OneHistogramExternalDataSources} externalDataSources
- * @property {(context: OneHistogramSeriesFunctionContext, seriesFunction: OneHistogramRawFunction) => Promise<OneHistogramSeriesPoint[]>} evaluateSeriesFunction
- * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
  * @property {number} nowTimestamp
  * @property {number} lastWindowTimestamp
  * @property {number} timeResolution
@@ -107,8 +96,18 @@ import { reconcileTiming } from './series-functions/utils/points';
  */
 
 /**
+ * @typedef {OneHistogramSeriesContext} OneHistogramSeriesFactoryContext
+ * @property {(context: OneHistogramSeriesFunctionContext, seriesTemplate: OneHistogramRawSeries) => Promise<OneHistogramSeries>} evaluateSeries
+ */
+
+/**
+ * @typedef {OneHistogramSeriesContext} OneHistogramSeriesFunctionContext
+ * @property {(context: OneHistogramSeriesFunctionContext, seriesFunction: OneHistogramRawFunction) => Promise<OneHistogramSeriesPoint[]>} evaluateSeriesFunction
+ * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
+ */
+
+/**
  * @typedef {Object} OneHistogramTransformFunctionContext
- * @property {unknown} valueToSupply
  * @property {(context: OneHistogramTransformFunctionContext, transformFunction: OneHistogramRawFunction) => unknown} evaluateTransformFunction
  */
 
@@ -303,7 +302,6 @@ export default class OneHistogramConfiguration {
     }
 
     return new OneHistogramState({
-      id: this.rawConfiguration.id,
       title: this.rawConfiguration.title,
       yAxes: this.getYAxesState(),
       xAxis: this.getXAxisState(series),
@@ -366,14 +364,27 @@ export default class OneHistogramConfiguration {
 
   /**
    * @private
-   * @param {Partial<OneHistogramTransformFunctionContext>} [context]
+   * @param {Partial<OneHistogramSeriesContext>} [context]
    * @returns {Promise<OneHistogramSeries[]>}
    */
   async getAllSeriesState(context) {
+    const normalizedContext = this.normalizeSeriesContext(context);
+    if (!normalizedContext.evaluateSeries) {
+      normalizedContext.evaluateSeries = (...args) => this.getSeriesState(...args);
+    }
     const seriesPerFactory = await allFulfilled(
-      this.rawConfiguration.series.map((seriesFactory) =>
-        this.getSeriesStateUsingFactory(seriesFactory, context)
-      )
+      this.rawConfiguration.series.map((seriesFactory) => {
+        const factoryFunction = seriesFactoriesIndex[seriesFactory.factoryName];
+        if (!factoryFunction) {
+          throw {
+            id: 'unknownHistogramFactory',
+            details: {
+              factoryName: seriesFactory.factoryName,
+            },
+          };
+        }
+        return factoryFunction(normalizedContext, seriesFactory.factoryArguments);
+      })
     );
     const allSeries = _.flatten(seriesPerFactory);
     reconcileTiming(allSeries.mapBy('data'));
@@ -381,42 +392,15 @@ export default class OneHistogramConfiguration {
   }
 
   /**
-   * @param {OneHistogramRawSeriesFactory} seriesFactory
-   * @param {Partial<OneHistogramTransformFunctionContext>} [context]
-   * @returns {Promise<OneHistogramSeries[]>}
-   */
-  async getSeriesStateUsingFactory(seriesFactory, context) {
-    switch (seriesFactory.factoryName) {
-      case 'static':
-        return this.getSeriesStateUsingStaticFactory(
-          seriesFactory.factoryArguments,
-          context
-        );
-      default:
-        return [];
-    }
-  }
-
-  /**
-   * @param {OneHistogramRawStaticSeriesFactoryArguments} factoryArguments
-   * @param {Partial<OneHistogramTransformFunctionContext>} [context]
-   * @returns {Promise<OneHistogramSeries[]>}
-   */
-  async getSeriesStateUsingStaticFactory(factoryArguments, context) {
-    return await this.getSeriesState(factoryArguments.seriesTemplate, context);
-  }
-
-  /**
-   * @param {OneHistogramRawSeries} factoryArguments
-   * @param {Partial<OneHistogramTransformFunctionContext>} [context]
+   * @param {Partial<OneHistogramSeriesContext>|null} context
+   * @param {OneHistogramRawSeries} series
    * @returns {Promise<OneHistogramSeries>}
    */
-  async getSeriesState(series, context) {
+  async getSeriesState(context, series) {
     const data = await this.evaluateSeriesFunction(context, series.data);
     const normalizedData = data.type === 'series' ? data.data : [];
     return {
-      id: series.id,
-      name: series.name,
+      name: await this.evaluateSeriesFunction(context, series.name).data,
       type: series.type,
       yAxisId: series.yAxisId,
       stackId: series.stackId,
@@ -570,6 +554,34 @@ export default class OneHistogramConfiguration {
 
   getNowTimestamp() {
     return Math.floor(Date.now() / 1000) + this.nowTimestampOffset;
+  }
+
+  /**
+   * @param {unknown} context
+   * @returns {OneHistogramSeriesContext}
+   */
+  normalizeSeriesContext(context) {
+    const normalizedContext = context || {};
+    if (!normalizedContext.externalDataSources) {
+      normalizedContext.externalDataSources = this.externalDataSources;
+    }
+    if (!normalizedContext.nowTimestamp) {
+      normalizedContext.nowTimestamp = this.getNowTimestamp();
+    }
+    if (!('lastWindowTimestamp' in normalizedContext)) {
+      if (this.live && !this.lastWindowTimestamp) {
+        normalizedContext.lastWindowTimestamp = normalizedContext.nowTimestamp;
+      } else {
+        normalizedContext.lastWindowTimestamp = this.lastWindowTimestamp;
+      }
+    }
+    if (typeof normalizedContext.timeResolution !== 'number') {
+      normalizedContext.timeResolution = this.timeResolution;
+    }
+    if (typeof normalizedContext.windowsCount !== 'number') {
+      normalizedContext.windowsCount = this.windowsCount;
+    }
+    return normalizedContext;
   }
 }
 

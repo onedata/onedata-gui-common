@@ -78,7 +78,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       this.customSourceData = [];
       this.context.externalDataSources = {
         customSource: {
-          fetchData: sinon.spy(() => this.customSourceData),
+          fetchSeries: sinon.spy(() => this.customSourceData),
         },
       };
       this.functionArguments = {
@@ -92,7 +92,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       };
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (no points)',
       sourceData: [],
       expectedPoints: [
@@ -104,7 +104,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (middle of large series)',
       sourceData: [
         rawPoint(10, -2),
@@ -123,7 +123,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (oldest point in the middle)',
       sourceData: [
         rawPoint(16, 1),
@@ -139,7 +139,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (all points are too old)',
       sourceData: [
         rawPoint(0, -4),
@@ -158,7 +158,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (oldest point is badly time-aligned and at the end)',
       sourceData: [
         rawPoint(13, -1),
@@ -175,7 +175,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (newest points missing)',
       sourceData: [
         rawPoint(4, -2),
@@ -194,7 +194,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (points missing in the middle)',
       sourceData: [
         rawPoint(6, -1),
@@ -213,7 +213,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (one point is newer than timestamp)',
       sourceData: [
         rawPoint(12, 1),
@@ -232,7 +232,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (two points are newer than timestamp)',
       sourceData: [
         rawPoint(14, 2),
@@ -251,7 +251,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (all points are newer than timestamp)',
       sourceData: [
         rawPoint(22, 6),
@@ -270,7 +270,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (shuffled points)',
       sourceData: [
         rawPoint(12, -1),
@@ -289,7 +289,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (badly time-aligned middle points)',
       sourceData: [
         rawPoint(10, -2),
@@ -308,7 +308,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (badly time-aligned middle points, newest timestamp different than target lastWindowTimestamp)',
       sourceData: [
         rawPoint(10, -2),
@@ -327,7 +327,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (null lastWindowTimestamp)',
       lastWindowTimestamp: null,
       sourceData: [
@@ -347,14 +347,14 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       ],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces empty series from custom source (null lastWindowTimestamp, no points)',
       lastWindowTimestamp: null,
       sourceData: [],
       expectedPoints: [],
     });
 
-    testFetchDataScenario({
+    testFetchSeriesScenario({
       title: 'produces series acquired from custom source (lastWindowTimestamp == nowTimestamp)',
       lastWindowTimestamp: 22,
       sourceData: [
@@ -406,7 +406,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
   });
 });
 
-function testFetchDataScenario({ title, lastWindowTimestamp, sourceData, expectedPoints }) {
+function testFetchSeriesScenario({ title, lastWindowTimestamp, sourceData, expectedPoints }) {
   it(title, async function (done) {
     this.customSourceData = sourceData;
     if (lastWindowTimestamp !== undefined) {
@@ -417,13 +417,13 @@ function testFetchDataScenario({ title, lastWindowTimestamp, sourceData, expecte
       type: 'series',
       data: expectedPoints,
     });
-    expectFetchDataToBeCalled(this);
+    expectFetchSeriesToBeCalled(this);
     done();
   });
 }
 
-function expectFetchDataToBeCalled(testCase) {
-  expect(testCase.context.externalDataSources.customSource.fetchData).to.be.calledOnce
+function expectFetchSeriesToBeCalled(testCase) {
+  expect(testCase.context.externalDataSources.customSource.fetchSeries).to.be.calledOnce
     .and.to.be.calledWith(sinon.match({
       lastWindowTimestamp: testCase.context.lastWindowTimestamp,
       timeResolution: testCase.context.timeResolution,

@@ -14,7 +14,6 @@ export default Component.extend({
   configuration: computed(() => {
     const config = new OneHistogramConfiguration({
       rawConfiguration: {
-        id: 'demoChart',
         title: 'Demo chart',
         yAxes: [{
           id: 'axis1',
@@ -37,7 +36,6 @@ export default Component.extend({
           factoryName: 'static',
           factoryArguments: {
             seriesTemplate: {
-              id: 'series1',
               name: 'Series 1',
               type: 'bar',
               yAxisId: 'axis1',
@@ -52,10 +50,55 @@ export default Component.extend({
                         functionArguments: {
                           sourceType: 'external',
                           sourceParameters: {
-                            externalSourceName: 'timeSeriesStoreContent',
+                            externalSourceName: 'myTimeSeriesSource',
                             externalSourceParameters: {
                               storeId: 'asdfasdf',
                               seriesId: 'bytes',
+                            },
+                          },
+                        },
+                      }, 2],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        }, {
+          factoryName: 'dynamic',
+          factoryArguments: {
+            dynamicSeriesConfigs: {
+              sourceType: 'external',
+              sourceParameters: {
+                externalSourceName: 'myTimeSeriesSource',
+                externalSourceParameters: {
+                  namePrefix: 'dynamic series #',
+                },
+              },
+            },
+            seriesTemplate: {
+              name: {
+                functionName: 'getDynamicSeriesConfigData',
+                functionArguments: {
+                  propertyName: 'name',
+                },
+              },
+              type: 'bar',
+              yAxisId: 'axis1',
+              data: {
+                functionName: 'abs',
+                functionArguments: {
+                  data: {
+                    functionName: 'multiply',
+                    functionArguments: {
+                      operands: [{
+                        functionName: 'loadSeries',
+                        functionArguments: {
+                          sourceType: 'external',
+                          sourceParameters: {
+                            functionName: 'getDynamicSeriesConfigData',
+                            functionArguments: {
+                              propertyName: 'loadSeriesSourceParameters',
                             },
                           },
                         },
@@ -82,8 +125,8 @@ export default Component.extend({
         updateInterval: 30,
       }],
       externalDataSources: {
-        timeSeriesStoreContent: {
-          fetchData: (context) => {
+        myTimeSeriesSource: {
+          fetchSeries: async (context) => {
             let lastTimestamp = context.lastWindowTimestamp;
             if (!lastTimestamp) {
               lastTimestamp = Math.floor(Date.now() / 1000);
@@ -94,6 +137,27 @@ export default Component.extend({
                 ((context.windowsCount) - idx - 1) * context.timeResolution,
               value: (1024 + idx * 512) * 1024,
             }));
+          },
+          fetchDynamicSeriesConfigs: () => {
+            return [{
+              name: 'abc',
+              loadSeriesSourceParameters: {
+                externalSourceName: 'myTimeSeriesSource',
+                externalSourceParameters: {
+                  storeId: 'asdfasdf',
+                  seriesId: 'bytes',
+                },
+              },
+            }, {
+              name: 'def',
+              loadSeriesSourceParameters: {
+                externalSourceName: 'myTimeSeriesSource',
+                externalSourceParameters: {
+                  storeId: 'asdfasdf',
+                  seriesId: 'bytes',
+                },
+              },
+            }];
           },
         },
       },

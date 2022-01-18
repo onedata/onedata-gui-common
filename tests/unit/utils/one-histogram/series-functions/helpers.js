@@ -23,7 +23,10 @@ export function evaluateSeriesFunction(context, func) {
       return seriesFunctionsIndex[func.functionName](context, func.functionArguments);
     }
   }
-  return func;
+  return {
+    type: 'basic',
+    data: func,
+  };
 }
 
 export function createConstArgument(data) {

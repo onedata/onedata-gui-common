@@ -32,7 +32,6 @@
 
 /**
  * @typedef {Object} OneHistogramSeries
- * @property {string} id
  * @property {string} name
  * @property {OneHistogramChartType} type
  * @property {string} yAxisId
@@ -177,7 +176,6 @@ export default class OneHistogramState {
         },
       },
       series: this.series.map((series) => ({
-        id: series.id,
         name: series.name,
         type: series.type,
         yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
