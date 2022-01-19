@@ -45,6 +45,7 @@ import { reconcileTiming } from './series-functions/utils/points';
 
 /**
  * @typedef {Object} OneHistogramRawSeries
+ * @property {string} id
  * @property {string} name
  * @property {OneHistogramChartType} type
  * @property {string} yAxisId
@@ -416,6 +417,7 @@ export default class OneHistogramConfiguration {
     const data = await this.evaluateSeriesFunction(context, series.data);
     const normalizedData = data.type === 'points' ? data.data : [];
     return {
+      id: (await this.evaluateSeriesFunction(context, series.id)).data,
       name: (await this.evaluateSeriesFunction(context, series.name)).data,
       type: series.type,
       yAxisId: series.yAxisId,
@@ -530,7 +532,7 @@ export default class OneHistogramConfiguration {
     if (this.timeResolution < 60) {
       dateFormat = 'H:mm:ss[\n]DD/MM/YYYY';
     } else if (this.timeResolution < 24 * 60 * 60) {
-      dateFormat = 'DD/MM/YYYY[\n]H:mm';
+      dateFormat = 'H:mm[\n]DD/MM/YYYY';
     } else if (this.timeResolution >= 24 * 60 * 60) {
       dateFormat = 'DD/MM/YYYY';
     } else {

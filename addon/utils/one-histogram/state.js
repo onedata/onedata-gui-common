@@ -1,6 +1,5 @@
 /**
  * @typedef {Object} OneHistogramStateInitOptions
- * @property {string} id
  * @property {string} title
  * @property {OneHistogramYAxis[]} yAxes
  * @property {OneHistogramXAxis} xAxis
@@ -54,13 +53,6 @@ export default class OneHistogramState {
    * @param {OneHistogramStateInitOptions} options
    */
   constructor(options) {
-    /**
-     * @public
-     * @readonly
-     * @type {string}
-     */
-    this.id = options.id;
-
     /**
      * @public
      * @readonly
@@ -154,6 +146,37 @@ export default class OneHistogramState {
     }, {});
 
     return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            show: false,
+          },
+        },
+        formatter: (paramsArray) => {
+          if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
+            return;
+          }
+          const timestamp = Number.parseInt(paramsArray[0].axisValue);
+          const formattedTimestamp = this.xAxis.timestampFormatter(timestamp);
+          const headerHtml =
+            `<div class="tooltip-header">${formattedTimestamp}</div>`;
+          const seriesHtml = paramsArray.map(({
+            seriesId,
+            seriesName,
+            value: [, yValue],
+            marker,
+          }) => {
+            const series = this.series.findBy('id', seriesId);
+            const yAxis = series && this.yAxes.findBy('id', series.yAxisId);
+            const valueFormatter = yAxis ? yAxis.valueFormatter : (val) => val;
+            return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${seriesName}</span> <span class="tooltip-series-value">${valueFormatter(yValue)}</span></div>`;
+          }).join('');
+
+          return `${headerHtml}${seriesHtml}`;
+        },
+      },
       yAxis: this.yAxes.map((yAxis) => ({
         type: 'value',
         name: yAxis.name,
@@ -176,6 +199,7 @@ export default class OneHistogramState {
         },
       },
       series: this.series.map((series) => ({
+        id: series.id,
         name: series.name,
         type: series.type,
         yAxisIndex: yAxisIdToIdxMap[series.yAxisId],

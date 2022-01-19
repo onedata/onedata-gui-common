@@ -36,6 +36,7 @@ export default Component.extend({
           factoryName: 'static',
           factoryArguments: {
             seriesTemplate: {
+              id: 'series1id',
               name: 'Series 1',
               type: 'bar',
               yAxisId: 'axis1',
@@ -77,6 +78,12 @@ export default Component.extend({
               },
             },
             seriesTemplate: {
+              id: {
+                functionName: 'getDynamicSeriesConfigData',
+                functionArguments: {
+                  propertyName: 'id',
+                },
+              },
               name: {
                 functionName: 'getDynamicSeriesConfigData',
                 functionArguments: {
@@ -140,6 +147,7 @@ export default Component.extend({
           },
           fetchDynamicSeriesConfigs: () => {
             return [{
+              id: 'abcid',
               name: 'abc',
               loadSeriesSourceParameters: {
                 externalSourceName: 'myTimeSeriesSource',
@@ -149,6 +157,7 @@ export default Component.extend({
                 },
               },
             }, {
+              id: 'defid',
               name: 'def',
               loadSeriesSourceParameters: {
                 externalSourceName: 'myTimeSeriesSource',
