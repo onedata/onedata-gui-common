@@ -49,7 +49,8 @@ import { reconcileTiming } from './series-functions/utils/points';
  * @property {string} name
  * @property {OneHistogramChartType} type
  * @property {string} yAxisId
- * @property {string|undefined} stackId
+ * @property {string} [color]
+ * @property {string} [stackId]
  * @property {OneHistogramRawFunction} data
  */
 
@@ -138,6 +139,8 @@ import { reconcileTiming } from './series-functions/utils/points';
  * @property {number} [lastWindowTimestamp]
  * @property {number} [timeResolution]
  */
+
+const colorRegexp = /^#[0-9a-f]{3}([0-9a-f]([0-9a-f]{2}([0-9a-f]{2})?)?)?$/i;
 
 export default class OneHistogramConfiguration {
   /**
@@ -414,13 +417,21 @@ export default class OneHistogramConfiguration {
    * @returns {Promise<OneHistogramSeries>}
    */
   async getSeriesState(context, series) {
-    const data = await this.evaluateSeriesFunction(context, series.data);
+    const [
+      { data: id },
+      { data: name },
+      { data: color },
+      data,
+    ] = await allFulfilled(['id', 'name', 'color', 'data'].map(propName =>
+      this.evaluateSeriesFunction(context, series[propName])
+    ));
     const normalizedData = data.type === 'points' ? data.data : [];
     return {
-      id: (await this.evaluateSeriesFunction(context, series.id)).data,
-      name: (await this.evaluateSeriesFunction(context, series.name)).data,
+      id,
+      name,
       type: series.type,
       yAxisId: series.yAxisId,
+      color: this.normalizeColor(color),
       stackId: series.stackId,
       data: normalizedData,
     };
@@ -606,6 +617,14 @@ export default class OneHistogramConfiguration {
       normalizedContext.windowsCount = this.windowsCount;
     }
     return normalizedContext;
+  }
+
+  /**
+   * @param {unknown} color
+   * @return {string|null}
+   */
+  normalizeColor(color) {
+    return (typeof color === 'string' && colorRegexp.test(color)) ? color : null;
   }
 }
 

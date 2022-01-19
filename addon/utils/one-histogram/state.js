@@ -203,6 +203,7 @@ export default class OneHistogramState {
         name: series.name,
         type: series.type,
         yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
+        color: series.color,
         stack: series.stackId,
         data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
       })),

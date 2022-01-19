@@ -100,7 +100,7 @@ export default Component.extend(WindowResizeHandler, {
       option,
     } = this.getProperties('chart', 'option');
     if (chart && option) {
-      chart.setOption(option, { notMerge: true });
+      chart.setOption(option, { replaceMerge: ['series'] });
     }
   },
 
