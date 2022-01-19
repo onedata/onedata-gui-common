@@ -269,7 +269,7 @@ export default class OneHistogramConfiguration {
     if (parameters.lastWindowTimestamp !== undefined) {
       if (this.live) {
         const nowTimestamp = this.getNowTimestamp();
-        const givenTimestampIsNow =
+        const givenTimestampIsNow = typeof parameters.lastWindowTimestamp !== 'number' ||
           parameters.lastWindowTimestamp >= nowTimestamp - (nowTimestamp % this.timeResolution);
         this.lastWindowTimestamp = givenTimestampIsNow ?
           null : parameters.lastWindowTimestamp;

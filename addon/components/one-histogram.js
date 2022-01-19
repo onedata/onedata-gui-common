@@ -56,7 +56,7 @@ export default Component.extend(createDataProxyMixin('state'), {
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isShowNewerDisabled: reads('state.hasReachedNewest'),
+  isShowNewerAndNewestDisabled: reads('state.hasReachedNewest'),
 
   /**
    * @type {ComputedProperty<() => void>}
@@ -127,6 +127,11 @@ export default Component.extend(createDataProxyMixin('state'), {
       } = this.getProperties('configuration', 'state');
       configuration.setViewParameters({
         lastWindowTimestamp: state.lastWindowTimestamp + state.timeResolution * state.windowsCount,
+      });
+    },
+    showNewest() {
+      this.get('configuration').setViewParameters({
+        lastWindowTimestamp: null,
       });
     },
   },

@@ -18,6 +18,7 @@
     {{/each}}
   {{/bs-button-group}}
   <button {{action "showOlder"}} disabled={{isShowOlderDisabled}}>&lt;</button>
-  <button {{action "showNewer"}} disabled={{isShowNewerDisabled}}>&gt;</button>
+  <button {{action "showNewer"}} disabled={{isShowNewerAndNewestDisabled}}>&gt;</button>
+  <button {{action "showNewest"}} disabled={{isShowNewerAndNewestDisabled}}>&gt;&gt;</button>
   {{one-echart option=echartState}}
 {{/promise-proxy-container}}
