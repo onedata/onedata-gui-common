@@ -16,51 +16,51 @@ const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, outp
 
 const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, 3)] },
-    { type: 'series', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
-  output: { type: 'series', data: [point(1, 8), point(2, 15)] },
+  output: { type: 'points', data: [point(1, 8), point(2, 15)] },
 }, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, null)] },
-    { type: 'series', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [point(1, 2), point(2, null)] },
+    { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
-  output: { type: 'series', data: [point(1, 8), point(2, null)] },
+  output: { type: 'points', data: [point(1, 8), point(2, null)] },
 }, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [point(1, 2), point(2, 3)] },
     { type: 'basic', data: 2 },
-    { type: 'series', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
-  output: { type: 'series', data: [point(1, 16), point(2, 30)] },
+  output: { type: 'points', data: [point(1, 16), point(2, 30)] },
 }, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [point(1, 2), point(2, 3)] },
     { type: 'basic', data: 2 },
-    { type: 'series', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
-  output: { type: 'series', data: [point(1, 16), point(2, 30)] },
+  output: { type: 'points', data: [point(1, 16), point(2, 30)] },
 }, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [point(1, 2), point(2, 3)] },
     { type: 'basic', data: [1, 2] },
-    { type: 'series', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
-  output: { type: 'series', data: [point(1, 8), point(2, 30)] },
+  output: { type: 'points', data: [point(1, 8), point(2, 30)] },
 }, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [point(1, 2), point(2, 3)] },
     { type: 'basic', data: null },
-    { type: 'series', data: [point(1, 4), point(2, 5)] },
+    { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
-  output: { type: 'series', data: [point(1, null), point(2, null)] },
+  output: { type: 'points', data: [point(1, null), point(2, null)] },
 }, {
   input: [
-    { type: 'series', data: [point(1, 2), point(2, 3)] },
+    { type: 'points', data: [point(1, 2), point(2, 3)] },
     { type: 'basic', data: 5 },
-    { type: 'series', data: [point(2, 4), point(3, 5)] },
+    { type: 'points', data: [point(2, 4), point(3, 5)] },
   ],
-  output: { type: 'series', data: [point(2, 60), point(3, null)] },
+  output: { type: 'points', data: [point(2, 60), point(3, null)] },
 }];
 
 describe('Unit | Utility | one histogram/series functions/multiply', function () {

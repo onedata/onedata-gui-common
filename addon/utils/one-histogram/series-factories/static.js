@@ -13,5 +13,5 @@ export default async function staticFactory(context, args) {
     return [];
   }
 
-  return await context.evaluateSeries(context, args.seriesTemplate);
+  return [await context.evaluateSeries(context, args.seriesTemplate)];
 }

@@ -6,7 +6,7 @@
 /**
  * @param {OneHistogramSeriesFunctionContext} context
  * @param {OneHistogramGetDSCDataSeriesFunctionArguments} args
- * @returns {Promise<unknown>}
+ * @returns {Promise<OneHistogramSeriesFunctionBasicResult<unknown>>}
  */
 export default async function getDynamicSeriesConfigData(context, args) {
   let data = null;

@@ -18,38 +18,38 @@ const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, outp
 
 const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: {
-    type: 'series',
+    type: 'points',
     data: [point(1, -10), point(2, -20)],
   },
   output: {
-    type: 'series',
+    type: 'points',
     data: [point(1, 10), point(2, 20)],
   },
 }, {
   input: {
-    type: 'series',
+    type: 'points',
     data: [point(1, 10), point(2, -20)],
   },
   output: {
-    type: 'series',
+    type: 'points',
     data: [point(1, 10), point(2, 20)],
   },
 }, {
   input: {
-    type: 'series',
+    type: 'points',
     data: [point(1, 10), point(2, null)],
   },
   output: {
-    type: 'series',
+    type: 'points',
     data: [point(1, 10), point(2, null)],
   },
 }, {
   input: {
-    type: 'series',
+    type: 'points',
     data: [point(1, {}), point(2, NaN)],
   },
   output: {
-    type: 'series',
+    type: 'points',
     data: [point(1, null), point(2, null)],
   },
 }];

@@ -59,6 +59,22 @@ import { reconcileTiming } from './series-functions/utils/points';
  */
 
 /**
+ * @typedef {OneHistogramSeriesFunctionPointsResult|OneHistogramSeriesFunctionBasicResult<T>} OneHistogramSeriesFunctionGenericResult<T>
+ */
+
+/**
+ * @typedef {Object} OneHistogramSeriesFunctionPointsResult
+ * @property {'points'} type
+ * @property {Array<OneHistogramSeriesPoint>} data
+ */
+
+/**
+ * @typedef {Object} OneHistogramSeriesFunctionBasicResult<T>
+ * @property {'basic'} type
+ * @property {T} data
+ */
+
+/**
  * @typedef {'bar'|'line'} OneHistogramChartType
  */
 
@@ -398,9 +414,9 @@ export default class OneHistogramConfiguration {
    */
   async getSeriesState(context, series) {
     const data = await this.evaluateSeriesFunction(context, series.data);
-    const normalizedData = data.type === 'series' ? data.data : [];
+    const normalizedData = data.type === 'points' ? data.data : [];
     return {
-      name: await this.evaluateSeriesFunction(context, series.name).data,
+      name: (await this.evaluateSeriesFunction(context, series.name)).data,
       type: series.type,
       yAxisId: series.yAxisId,
       stackId: series.stackId,
@@ -533,6 +549,7 @@ export default class OneHistogramConfiguration {
   }
 
   /**
+   * @private
    * @param {number} timeResolution
    * @returns {void}
    */
@@ -552,16 +569,21 @@ export default class OneHistogramConfiguration {
     set(this.updater, 'interval', this.updateInterval * 1000);
   }
 
+  /**
+   * @private
+   * @returns {number}
+   */
   getNowTimestamp() {
     return Math.floor(Date.now() / 1000) + this.nowTimestampOffset;
   }
 
   /**
+   * @private
    * @param {unknown} context
    * @returns {OneHistogramSeriesContext}
    */
   normalizeSeriesContext(context) {
-    const normalizedContext = context || {};
+    const normalizedContext = context ? Object.assign({}, context) : {};
     if (!normalizedContext.externalDataSources) {
       normalizedContext.externalDataSources = this.externalDataSources;
     }

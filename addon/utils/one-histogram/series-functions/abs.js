@@ -8,7 +8,7 @@ import _ from 'lodash';
 /**
  * @param {OneHistogramSeriesFunctionContext} context
  * @param {OneHistogramAbsSeriesFunctionArguments} args
- * @returns {Promise<Array<OneHistogramSeriesPoint>|Array<number|null>|number|null>}
+ * @returns {Promise<OneHistogramSeriesFunctionGenericResult<Array<number|null>|number|null>>}
  */
 export default async function abs(context, args) {
   if (!args) {
@@ -22,12 +22,12 @@ export default async function abs(context, args) {
   const absValues = context.evaluateTransformFunction(null, {
     functionName: 'abs',
     functionArguments: {
-      data: evaluatedData.type === 'series' ?
+      data: evaluatedData.type === 'points' ?
         evaluatedData.data.mapBy('value') : evaluatedData.data,
     },
   });
 
-  if (evaluatedData.type === 'series') {
+  if (evaluatedData.type === 'points') {
     const result = _.cloneDeep(evaluatedData);
     result.data.forEach((point, idx) => point.value = absValues[idx]);
     return result;

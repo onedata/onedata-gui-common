@@ -9,7 +9,7 @@ import { reconcileTiming, mergeHistogramPointsArrays } from './utils/points';
 /**
  * @param {OneHistogramSeriesFunctionContext} context
  * @param {OneHistogramMultiplySeriesFunctionArguments} args
- * @returns {Promise<Array<OneHistogramSeriesPoint>|Array<number|null>|number|null>}
+ * @returns {Promise<OneHistogramSeriesFunctionGenericResult<Array<number|null>|number|null>>}
  */
 export default async function multiply(context, args) {
   const normalizedOperands = args && args.operands || [];
@@ -23,7 +23,7 @@ export default async function multiply(context, args) {
   const evaluatedOperands = await allFulfilled(
     normalizedOperands.map(value => context.evaluateSeriesFunction(context, value))
   );
-  const operandsWithPoints = evaluatedOperands.filterBy('type', 'series');
+  const operandsWithPoints = evaluatedOperands.filterBy('type', 'points');
   const series = operandsWithPoints.mapBy('data');
   reconcileTiming(series);
   const multiplicationResult = context.evaluateTransformFunction(null, {
@@ -37,7 +37,7 @@ export default async function multiply(context, args) {
 
   if (Array.isArray(multiplicationResult) && operandsWithPoints.length) {
     return {
-      type: 'series',
+      type: 'points',
       data: mergeHistogramPointsArrays(series, multiplicationResult),
     };
   } else {

@@ -35,7 +35,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       );
 
       expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal({ type: 'series', data: expectedPoints });
+        .to.deep.equal({ type: 'points', data: expectedPoints });
       done();
     });
 
@@ -46,7 +46,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       );
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'series',
+        type: 'points',
         data: expectedPoints,
       });
       done();
@@ -56,7 +56,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       this.context.timeResolution = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'series',
+        type: 'points',
         data: [],
       });
       done();
@@ -66,7 +66,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       this.context.windowsCount = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'series',
+        type: 'points',
         data: [],
       });
       done();
@@ -378,7 +378,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       delete this.context.externalDataSources.customSource;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'series',
+        type: 'points',
         data: [],
       });
       done();
@@ -388,7 +388,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       this.context.timeResolution = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'series',
+        type: 'points',
         data: [],
       });
       done();
@@ -398,7 +398,7 @@ describe('Unit | Utility | one histogram/series functions/load series', function
       this.context.windowsCount = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'series',
+        type: 'points',
         data: [],
       });
       done();
@@ -414,7 +414,7 @@ function testFetchSeriesScenario({ title, lastWindowTimestamp, sourceData, expec
     }
 
     expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-      type: 'series',
+      type: 'points',
       data: expectedPoints,
     });
     expectFetchSeriesToBeCalled(this);

@@ -20,12 +20,12 @@ import { point } from './utils/points';
 /**
  * @param {OneHistogramSeriesFunctionContext} context
  * @param {OneHistogramLoadSeriesSeriesFunctionArguments} args
- * @returns {Promise<Array<OneHistogramSeriesPoint[]>>}
+ * @returns {Promise<OneHistogramSeriesFunctionPointsResult>}
  */
 export default async function loadSeries(context, args) {
   if (!context.timeResolution || !context.windowsCount) {
     return {
-      type: 'series',
+      type: 'points',
       data: [],
     };
   }
@@ -69,7 +69,7 @@ export default async function loadSeries(context, args) {
     }
   }
   return {
-    type: 'series',
+    type: 'points',
     data: points,
   };
 }
