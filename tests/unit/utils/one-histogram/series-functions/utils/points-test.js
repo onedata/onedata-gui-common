@@ -67,6 +67,13 @@ describe('Unit | Utility | one histogram/series functions/utils/points', functio
         [point(1, 1, { oldest: true }), point(2, 2), point(3, 3), point(4, 4), point(5, 5)],
         [],
         [point(11, 11), point(12, null), point(13, null), point(14, null), point(15, null)],
+        [
+          point(11, null, { oldest: true, fake: true }),
+          point(12, null, { oldest: true, fake: true }),
+          point(13, null, { oldest: true, fake: true }),
+          point(14, null, { oldest: true, fake: true }),
+          point(15, 15, { oldest: true }),
+        ],
       ],
       output: [
         [
@@ -102,6 +109,13 @@ describe('Unit | Utility | one histogram/series functions/utils/points', functio
           point(13, null),
           point(14, null),
           point(15, null),
+          point(16, null, { fake: true }),
+        ],
+        [
+          point(12, null, { oldest: true, fake: true }),
+          point(13, null, { oldest: true, fake: true }),
+          point(14, null, { oldest: true, fake: true }),
+          point(15, 15, { oldest: true }),
           point(16, null, { fake: true }),
         ],
       ],

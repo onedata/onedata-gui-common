@@ -42,7 +42,7 @@ export function reconcileTiming(pointsArrays) {
       indexOfFirstTimestamp : pointsArray.length;
     const removedPoints = pointsArray.splice(0, pointsToRemoveCount);
 
-    const lastNotFakePoint = pointsArray[pointsArray.length - 1] ||
+    const lastMeaningfulPoint = pointsArray[pointsArray.length - 1] ||
       removedPoints[removedPoints.length - 1] || {
         oldest: true,
         newest: true,
@@ -50,8 +50,8 @@ export function reconcileTiming(pointsArrays) {
       };
     for (let i = pointsArray.length; i < arrayWithNewestPoints.length; i++) {
       pointsArray[i] = point(arrayWithNewestPoints[i].timestamp, null, {
-        oldest: lastNotFakePoint.oldest,
-        newest: lastNotFakePoint.newest,
+        oldest: lastMeaningfulPoint.oldest && lastMeaningfulPoint.fake,
+        newest: lastMeaningfulPoint.newest,
         fake: true,
       });
     }

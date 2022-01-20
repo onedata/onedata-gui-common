@@ -292,7 +292,7 @@ export default class OneHistogramConfiguration {
    */
   async getNewestState() {
     const series = await this.getAllSeriesState();
-    if (!this.live && !this.newestWindowTimestamp) {
+    if (!this.live && !this.newestWindowTimestamp && this.timeResolutionSpecs.length) {
       let seriesWithNewestTimestamp = series;
       const smallestTimeResolution =
         this.timeResolutionSpecs.sortBy('timeResolution')[0].timeResolution;
@@ -310,7 +310,7 @@ export default class OneHistogramConfiguration {
       this.acquireNewestWindowTimestamp(seriesWithNewestTimestamp);
     }
 
-    if (this.newestWindowTimestamp && series[0].data.length) {
+    if (this.newestWindowTimestamp && series.length && series[0].data.length) {
       for (const singleSeries of series) {
         for (let i = singleSeries.data.length - 1; i >= 0; i--) {
           if (singleSeries.data[i].timestamp < this.newestWindowTimestamp) {
@@ -322,7 +322,7 @@ export default class OneHistogramConfiguration {
     }
 
     return new OneHistogramState({
-      title: this.rawConfiguration.title,
+      title: this.rawConfiguration && this.rawConfiguration.title,
       yAxes: this.getYAxesState(),
       xAxis: this.getXAxisState(series),
       series,
@@ -342,7 +342,7 @@ export default class OneHistogramConfiguration {
   }
 
   async acquireNewestWindowTimestamp(series) {
-    this.newestWindowTimestamp = series[0].data.length ?
+    this.newestWindowTimestamp = series.length && series[0].data.length ?
       series[0].data[series[0].data.length - 1].timestamp : this.getNowTimestamp();
   }
 
@@ -351,7 +351,8 @@ export default class OneHistogramConfiguration {
    * @returns {OneHistogramYAxisConfiguration[]}
    */
   getYAxesState() {
-    return this.rawConfiguration.yAxes.map((rawYAxis) => {
+    const rawYAxes = this.rawConfiguration && this.rawConfiguration.yAxes || [];
+    return rawYAxes.map((rawYAxis) => {
       const rawValueFormatter = isRawFunction(rawYAxis.valueFormatter) ?
         rawYAxis.valueFormatter : {
           functionName: 'supplyValue',
@@ -392,8 +393,9 @@ export default class OneHistogramConfiguration {
     if (!normalizedContext.evaluateSeries) {
       normalizedContext.evaluateSeries = (...args) => this.getSeriesState(...args);
     }
+    const rawSeries = this.rawConfiguration && this.rawConfiguration.series || [];
     const seriesPerFactory = await allFulfilled(
-      this.rawConfiguration.series.map((seriesFactory) => {
+      rawSeries.map((seriesFactory) => {
         const factoryFunction = seriesFactoriesIndex[seriesFactory.factoryName];
         if (!factoryFunction) {
           throw {
@@ -420,19 +422,30 @@ export default class OneHistogramConfiguration {
     const [
       { data: id },
       { data: name },
+      { data: type },
+      { data: yAxisId },
       { data: color },
+      { data: stackId },
       data,
-    ] = await allFulfilled(['id', 'name', 'color', 'data'].map(propName =>
+    ] = await allFulfilled([
+      'id',
+      'name',
+      'type',
+      'yAxisId',
+      'color',
+      'stackId',
+      'data',
+    ].map(propName =>
       this.evaluateSeriesFunction(context, series[propName])
     ));
     const normalizedData = data.type === 'points' ? data.data : [];
     return {
       id,
       name,
-      type: series.type,
-      yAxisId: series.yAxisId,
+      type,
+      yAxisId,
       color: this.normalizeColor(color),
-      stackId: series.stackId,
+      stackId: stackId || null,
       data: normalizedData,
     };
   }
@@ -542,12 +555,10 @@ export default class OneHistogramConfiguration {
     let dateFormat;
     if (this.timeResolution < 60) {
       dateFormat = 'H:mm:ss[\n]DD/MM/YYYY';
-    } else if (this.timeResolution < 24 * 60 * 60) {
+    } else if (this.timeResolution % (24 * 60 * 60) !== 0) {
       dateFormat = 'H:mm[\n]DD/MM/YYYY';
     } else if (this.timeResolution >= 24 * 60 * 60) {
       dateFormat = 'DD/MM/YYYY';
-    } else {
-      return '';
     }
     return moment.unix(timestamp).format(dateFormat);
   }
