@@ -620,6 +620,7 @@ export default class OneHistogramConfiguration {
   }
 
   /**
+   * @private
    * @param {unknown} color
    * @return {string|null}
    */

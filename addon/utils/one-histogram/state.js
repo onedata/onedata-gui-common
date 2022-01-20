@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @typedef {Object} OneHistogramStateInitOptions
  * @property {string} title
@@ -13,13 +15,7 @@
  * @typedef {Object} OneHistogramYAxis
  * @property {string} id
  * @property {string} name
- * @property {OneHistogramFormatter} valueFormatter
- */
-
-/**
- * @typedef {Object} OneHistogramFormatter
- * @property {(value: unknown, functionArguments: Object) => string} function
- * @property {Object} functionArguments
+ * @property {(value: unknown) => string} valueFormatter
  */
 
 /**
@@ -31,9 +27,11 @@
 
 /**
  * @typedef {Object} OneHistogramSeries
+ * @property {string} id
  * @property {string} name
  * @property {OneHistogramChartType} type
  * @property {string} yAxisId
+ * @property {string|null} color
  * @property {string|undefined} stackId
  * @property {OneHistogramSeriesPoint[]} data
  */
@@ -65,21 +63,24 @@ export default class OneHistogramState {
      * @readonly
      * @type {OneHistogramYAxis[]}
      */
-    this.yAxes = options.yAxes;
+    this.yAxes = options.yAxes || [];
 
     /**
      * @public
      * @readonly
      * @type {OneHistogramXAxis}
      */
-    this.xAxis = options.xAxis;
+    this.xAxis = options.xAxis || {
+      timestamps: [],
+      timestampFormatter: (value) => value,
+    };
 
     /**
      * @public
      * @readonly
      * @type {OneHistogramSeries[]}
      */
-    this.series = options.series;
+    this.series = options.series || [];
 
     /**
      * @public
@@ -105,24 +106,10 @@ export default class OneHistogramState {
     /**
      * @public
      * @readonly
-     * @type {number}
-     */
-    this.firstWindowTimestamp = (this.series[0].data[0] || {}).timestamp;
-
-    /**
-     * @public
-     * @readonly
-     * @type {number}
-     */
-    this.lastWindowTimestamp = (this.series[0].data[this.series[0].data.length - 1] || {}).timestamp;
-
-    /**
-     * @public
-     * @readonly
      * @type {boolean}
      */
     this.hasReachedOldest = this.series.every((series) =>
-      series.data.length && series.data[0].oldest
+      !series.data.length || series.data[0].oldest
     );
 
     /**
@@ -131,8 +118,28 @@ export default class OneHistogramState {
      * @type {boolean}
      */
     this.hasReachedNewest = this.series.every((series) =>
-      series.data.length && series.data[series.data.length - 1].newest
+      !series.data.length || series.data[series.data.length - 1].newest
     );
+
+    /**
+     * @public
+     * @readonly
+     * @type {number}
+     */
+    this.firstWindowTimestamp = null;
+
+    /**
+     * @public
+     * @readonly
+     * @type {number}
+     */
+    this.lastWindowTimestamp = null;
+
+    const firstSeriesData = this.series[0] && this.series[0].data;
+    if (firstSeriesData && firstSeriesData.length) {
+      this.firstWindowTimestamp = firstSeriesData[0].timestamp;
+      this.lastWindowTimestamp = firstSeriesData[firstSeriesData.length - 1].timestamp;
+    }
   }
 
   /**
@@ -156,12 +163,12 @@ export default class OneHistogramState {
         },
         formatter: (paramsArray) => {
           if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
-            return;
+            return null;
           }
-          const timestamp = Number.parseInt(paramsArray[0].axisValue);
+          const timestamp = Number.parseInt(paramsArray[0].value[0]);
           const formattedTimestamp = this.xAxis.timestampFormatter(timestamp);
           const headerHtml =
-            `<div class="tooltip-header">${formattedTimestamp}</div>`;
+            `<div class="tooltip-header">${_.escape(formattedTimestamp)}</div>`;
           const seriesHtml = paramsArray.map(({
             seriesId,
             seriesName,
@@ -171,7 +178,7 @@ export default class OneHistogramState {
             const series = this.series.findBy('id', seriesId);
             const yAxis = series && this.yAxes.findBy('id', series.yAxisId);
             const valueFormatter = yAxis ? yAxis.valueFormatter : (val) => val;
-            return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${seriesName}</span> <span class="tooltip-series-value">${valueFormatter(yValue)}</span></div>`;
+            return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${_.escape(seriesName)}</span> <span class="tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
           }).join('');
 
           return `${headerHtml}${seriesHtml}`;
