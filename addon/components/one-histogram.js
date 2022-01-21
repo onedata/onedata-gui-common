@@ -1,13 +1,20 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import layout from '../templates/components/one-histogram';
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 import stringifyDuration from 'onedata-gui-common/utils/i18n/stringify-duration';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
 
-export default Component.extend(createDataProxyMixin('state'), {
+export default Component.extend(I18n, createDataProxyMixin('state'), {
   layout,
   classNames: ['one-histogram'],
+  classNameBindings: ['hasDataToShow::no-data'],
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneHistogram',
 
   /**
    * @virtual
@@ -26,9 +33,20 @@ export default Component.extend(createDataProxyMixin('state'), {
   echartState: computed('state', function echartState() {
     const state = this.get('state');
     if (state) {
-      console.log(state.asEchartState(), state.series);
       return state.asEchartState();
     }
+  }),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  hasDataToShow: computed('stateProxy.{content.isPending}', function hasDataToShow() {
+    const stateProxy = this.get('stateProxy');
+    const {
+      content: state,
+      isPending,
+    } = getProperties(stateProxy, 'content', 'isPending');
+    return isPending || (state && state.timeResolution && state.yAxes.length && state.series.length);
   }),
 
   /**
@@ -101,6 +119,14 @@ export default Component.extend(createDataProxyMixin('state'), {
   },
 
   onStateChange() {
+    const {
+      configuration,
+      selectedTimeResolution,
+    } = this.getProperties('configuration', 'selectedTimeResolution');
+    const timeResolutionInConfig = configuration.getViewParameters().timeResolution;
+    if (selectedTimeResolution !== timeResolutionInConfig) {
+      this.set('selectedTimeResolution', timeResolutionInConfig);
+    }
     this.updateStateProxy({ replace: true });
   },
 

@@ -135,9 +135,9 @@ import { reconcileTiming } from './series-functions/utils/points';
 
 /**
  * @typedef {Object} OneHistogramViewParameters
- * @property {boolean} [live]
- * @property {number} [lastWindowTimestamp]
- * @property {number} [timeResolution]
+ * @property {boolean} live
+ * @property {number} lastWindowTimestamp
+ * @property {number} timeResolution
  */
 
 const colorRegexp = /^#[0-9a-f]{3}([0-9a-f]([0-9a-f]{2}([0-9a-f]{2})?)?)?$/i;
@@ -256,7 +256,7 @@ export default class OneHistogramConfiguration {
 
   /**
    * @public
-   * @param {OneHistogramViewParameters} parameters
+   * @param {Partial<OneHistogramViewParameters>} parameters
    * @returns {void}
    */
   setViewParameters(parameters) {
@@ -288,10 +288,23 @@ export default class OneHistogramConfiguration {
 
   /**
    * @public
+   * @returns {OneHistogramViewParameters}
+   */
+  getViewParameters() {
+    return {
+      live: this.live,
+      lastWindowTimestamp: this.lastWindowTimestamp,
+      timeResolution: this.timeResolution,
+    };
+  }
+
+  /**
+   * @public
    * @returns {Promise<OneHistogramState>}
    */
   async getNewestState() {
-    const series = await this.getAllSeriesState();
+    const nowTimestamp = this.getNowTimestamp();
+    const series = await this.getAllSeriesState({ nowTimestamp });
     if (!this.live && !this.newestWindowTimestamp && this.timeResolutionSpecs.length) {
       let seriesWithNewestTimestamp = series;
       const smallestTimeResolution =
@@ -305,6 +318,7 @@ export default class OneHistogramConfiguration {
           lastWindowTimestamp: null,
           timeResolution: smallestTimeResolution,
           windowsCount: 1,
+          nowTimestamp,
         });
       }
       this.acquireNewestWindowTimestamp(seriesWithNewestTimestamp);

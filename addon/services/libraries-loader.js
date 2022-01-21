@@ -117,7 +117,11 @@ export default Service.extend({
   fetchScript(libraryName, path) {
     const window = this.get('window');
     const scriptNode = window.document.createElement('script');
-    scriptNode.src = path;
+    let normalizedPath = path;
+    if (config.environment === 'test' && !path.startsWith('/')) {
+      normalizedPath = `/${normalizedPath}`;
+    }
+    scriptNode.src = normalizedPath;
     const loadingPromise = new Promise((resolve, reject) => {
       scriptNode.addEventListener('load', () => resolve());
       scriptNode.addEventListener('error', (event) => {

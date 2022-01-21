@@ -1,24 +1,28 @@
 {{#promise-proxy-container proxy=stateProxy}}
-  {{#bs-button-group
-    value=selectedTimeResolution
-    class="time-resolution-selector"
-    type="radio"
-    onChange=(action "changeTimeResolution") as |bg|
-  }}
-    {{#each timeResolutionOptions key="value" as |timeResolutionOption|}}
-      <div class="btn-group" role="group">
-        {{#bg.button
-          type="default"
-          class="btn-sm"
-          value=timeResolutionOption.value
-        }}
-          {{timeResolutionOption.label}}
-        {{/bg.button}}
-      </div>
-    {{/each}}
-  {{/bs-button-group}}
-  <button {{action "showOlder"}} disabled={{isShowOlderDisabled}}>&lt;</button>
-  <button {{action "showNewer"}} disabled={{isShowNewerAndNewestDisabled}}>&gt;</button>
-  <button {{action "showNewest"}} disabled={{isShowNewerAndNewestDisabled}}>&gt;&gt;</button>
-  {{one-echart option=echartState}}
+  {{#if hasDataToShow}}
+    {{#bs-button-group
+      value=selectedTimeResolution
+      class="time-resolution-selector"
+      type="radio"
+      onChange=(action "changeTimeResolution") as |bg|
+    }}
+      {{#each timeResolutionOptions key="value" as |timeResolutionOption|}}
+        <div class="btn-group" role="group">
+          {{#bg.button
+            type="default"
+            class="btn-sm"
+            value=timeResolutionOption.value
+          }}
+            {{timeResolutionOption.label}}
+          {{/bg.button}}
+        </div>
+      {{/each}}
+    {{/bs-button-group}}
+    <button {{action "showOlder"}} disabled={{isShowOlderDisabled}} class="show-older-btn">&lt;</button>
+    <button {{action "showNewer"}} disabled={{isShowNewerAndNewestDisabled}} class="show-newer-btn">&gt;</button>
+    <button {{action "showNewest"}} disabled={{isShowNewerAndNewestDisabled}} class="show-newest-btn">&gt;&gt;</button>
+    {{one-echart option=echartState}}
+  {{else}}
+    <p>{{tt this "noDataToShow"}}</p>
+  {{/if}}
 {{/promise-proxy-container}}
