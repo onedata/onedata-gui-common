@@ -23,8 +23,8 @@
     "clean": "rm -rf tmp dist node_modules .sass-cache tests/test-results.xml"
   },
   "dependencies": {
-    "babel-plugin-ember-modules-api-polyfill": "2.13.0",
-    "ember-cli-babel": "6.17.2",
+    "babel-plugin-ember-modules-api-polyfill": "2.13.4",
+    "ember-cli-babel": "7.3.0",
     "ember-cli-htmlbars": "2.0.3"
   },
   "devDependencies": {

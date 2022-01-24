@@ -2,22 +2,22 @@
  * A function, which generates `n` colors using `baseColors` as a source data
  * for calculation. If `baseColors` argument is not provided, default application
  * color scheme is used (from colors file).
- * 
+ *
  * @module utils/generate-colors
  * @author Michal Borzecki
- * @copyright (C) 2017 ACK CYFRONET AGH
+ * @copyright (C) 2017-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import _ from 'lodash';
 import Color from 'npm:color';
-import colors from 'onedata-gui-common/colors';
+import config from 'ember-get-config';
 
 const COLOR_CHANGE_PADDING = 0.2;
 
 export default function generateColors(n, baseColors) {
   if (!baseColors || baseColors.length === 0) {
-    baseColors = _.values(colors);
+    baseColors = _.values(config.colors);
   }
   let nPerColor = Math.ceil(n / baseColors.length);
   let generatedColors = [];
