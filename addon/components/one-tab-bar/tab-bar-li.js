@@ -11,12 +11,16 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/one-tab-bar/tab-bar-li';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import { inject as service } from '@ember/service';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   layout,
   tagName: 'span',
   classNames: ['tab-bar-li', 'clickable'],
   classNameBindings: ['isActive:active', 'disabled'],
+
+  providerManager: service(),
 
   /**
    * Notify parent about click (select) on the tab.
@@ -47,10 +51,26 @@ export default Component.extend({
   icon: undefined,
 
   /**
+   * @virtual
+   * @type {string}
+   */
+  id: undefined,
+
+  /**
    * If true, apply special style and not send anchorClicked action
    * @type {boolean}
    */
   disabled: false,
+
+
+  /**
+   * @type {ComputedProperty<PromiseObject<Model.Provider>>}
+   */
+  provider: computed('id', function provider() {
+    const { id, providerManager } = this.getProperties('id', 'providerManager');
+    console.log(id);
+    return providerManager.getRecordById(id);
+  }),
 
   actions: {
     anchorClicked(clickEvent) {
