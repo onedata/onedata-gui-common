@@ -11,10 +11,17 @@
       padding-bottom: $padding-large-vertical * 1.75;
     }
   }
+  .provider-name-info {
+    display: flex;
+    align-items: baseline;
+    padding-right: 5px;
+    .oneicon-browser-info.one-icon {
+      font-size: 180%;
+    }
+  }
   .one-collapsible-list {
     margin: 0;
     .one-collapsible-list-header {
-      padding-left: $padding-large-horizontal;
       border-width: 0;
     }
     .one-collapsible-list-item {
@@ -31,7 +38,7 @@
         border-top-width: 0;
       }
       .one-collapsible-list-item-header {
-        padding-left: 2.8em;
+        padding-left: 0;
         padding-right: 100px;
         border-bottom-width: 0;
         .item-icon-container {

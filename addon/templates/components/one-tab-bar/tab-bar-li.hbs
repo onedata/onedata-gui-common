@@ -1,13 +1,8 @@
-{{#truncated-string
-  tagName="a"
+{{
+  provider-info
+  provider=provider 
+  multiOneproviders=false 
   class=(concat "nav-link truncate " (if isActive "active"))
   click=(action "anchorClicked")
   ignoreTouchAction=true
 }}
-  {{#if icon}}
-    <div class="inline-icon-container">
-      {{one-icon icon=icon}}
-    </div>
-  {{/if}}
-  <span class="tab-name">{{name}}</span>
-{{/truncated-string}}

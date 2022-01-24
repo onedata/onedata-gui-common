@@ -1,37 +1,40 @@
-{{#truncated-string class="provider-item-name-line"}}
-  <span class="item-icon-container">
-    {{one-icon class="item-icon" icon="provider" color=color}}
-  </span>
-  <span class="one-label">{{provider.name}}</span>
-{{/truncated-string}}
+<div class="provider-name-info">
+  {{provider-info 
+    provider=provider
+    iconColor=color
+    multiOneproviders=false
+    class="provider-item-name-line"
+  }}
+</div>
+<div class="status-toolbar-container">
+  {{#if _renderStatus}}
+    {{#status-toolbar class=(unless providerActions.length "push-right") as |toolbar|}}
 
-{{#if _renderStatus}}
-  {{#status-toolbar class=(unless providerActions.length "push-right") as |toolbar|}}
-    {{#if showSupportedSpacesCount}}
-      {{toolbar.icon
-        class="supported-spaces"
-        icon="space"
-        hint=(t
-          "components.providersList.providerItem.supportedSpaces"
-          count=_spacesCount
-        )
-        innerText=_spacesCount
-      }}
-    {{/if}}
-    {{#if showSelectedSpaceSupportSize}}
-      {{toolbar.icon
-        class="space-support-size"
-        icon="provider"
-        hint=(t
-          "components.providersList.providerItem.spaceSupportSize"
-          size=_spaceSupportSize
-        )
-        outerText=_spaceSupportSize
-      }}
-    {{/if}}
-  {{/status-toolbar}}
-{{/if}}
-
+      {{#if showSupportedSpacesCount}}
+        {{toolbar.icon
+          class="supported-spaces"
+          icon="space"
+          hint=(t
+            "components.providersList.providerItem.supportedSpaces"
+            count=_spacesCount
+          )
+          innerText=_spacesCount
+        }}
+      {{/if}}
+      {{#if showSelectedSpaceSupportSize}}
+        {{toolbar.icon
+          class="space-support-size"
+          icon="provider"
+          hint=(t
+            "components.providersList.providerItem.spaceSupportSize"
+            size=_spaceSupportSize
+          )
+          outerText=_spaceSupportSize
+        }}
+      {{/if}}
+    {{/status-toolbar}}
+  {{/if}}
+</div>
 {{#if providerActions.length}}
   {{#one-collapsible-toolbar
     isMinimized=true
