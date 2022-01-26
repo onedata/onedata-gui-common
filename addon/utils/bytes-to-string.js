@@ -1,5 +1,5 @@
 /**
- * Util for converting number of bytes to size string. 
+ * Util for converting number of bytes to size string.
  *
  * @module utils/bytes-to-string
  * @author Jakub Liput, Michal Borzecki
@@ -70,13 +70,13 @@ const converters = {
 /**
  * Convert number of bytes to human readable size string. Eg. 2.34 MB.
  * IEC format (KiB, MiB, etc.) can also be used (see options).
- * 
+ *
  * @param {Number} bytes
  * @param {Object} [options]
  * @param {Boolean} [options.iecFormat=true] If true, use IEC format: KiB, MiB, GiB
  *    DEPRECATED, use `options.format` instead. If `options.format` is specified it will be ignored.
  * @param {Boolean} [options.format=si] One of: si, iec, bit
- * @param {Boolean} [options.separated=false] If true, instead of string, 
+ * @param {Boolean} [options.separated=false] If true, instead of string,
  * object with fields: number {number}, multiplicator {number}, unit {string}
  * will be returned.
  * @returns {string|object}
@@ -99,7 +99,8 @@ export default function bytesToString(bytes, options = {}) {
   if (!bytes && bytes !== 0) {
     return '';
   } else {
-    let [number, multiplicator, unit] = converters[format](bytes);
+    const isInputNegative = bytes <= -1;
+    let [number, multiplicator, unit] = converters[format](Math.abs(bytes));
     number = Math.round(number * 10) / 10;
     if (separated) {
       return {
@@ -108,7 +109,7 @@ export default function bytesToString(bytes, options = {}) {
         unit,
       };
     } else {
-      return `${number} ${unit}`;
+      return `${isInputNegative ? '-' : ''}${number} ${unit}`;
     }
   }
 }
