@@ -1,4 +1,17 @@
 /**
+ * Factory function responsible for generating series from `static`
+ * raw factory configuration.
+ *
+ * `static` factory just returns a single series generated directly from
+ * `factoryArguments.seriesTemplate`.
+ *
+ * @module utils/one-histogram/series-factories/static
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+/**
  * @typedef {Object} OneHistogramStaticSeriesFactoryArguments
  * @property {OneHistogramRawSeries} seriesTemplate
  */

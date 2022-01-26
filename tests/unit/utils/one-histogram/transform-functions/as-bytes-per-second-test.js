@@ -1,7 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import asBytesPerSecond from 'onedata-gui-common/utils/one-histogram/transform-functions/as-bytes-per-second';
-import { createContext, createConstArgument, expectFunctionsEvaluation } from './helpers';
+import {
+  createContext,
+  createConstArgument,
+  expectFunctionsEvaluation,
+  stringifyArgumentData,
+} from './helpers';
 
 describe('Unit | Utility | one histogram/transform functions/as bytes per second', function () {
   testAsBytesPerSecond(null, undefined, null);
@@ -25,9 +30,9 @@ describe('Unit | Utility | one histogram/transform functions/as bytes per second
 });
 
 function testAsBytesPerSecond(rawInput, rawFormat, output) {
-  const stringifiedInput = Number.isNaN(rawInput) ? 'NaN' : JSON.stringify(rawInput);
-  const stringifiedFormat = JSON.stringify(rawFormat);
-  const stringifiedOutput = JSON.stringify(output);
+  const stringifiedInput = stringifyArgumentData(rawInput);
+  const stringifiedFormat = stringifyArgumentData(rawFormat);
+  const stringifiedOutput = stringifyArgumentData(output);
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput} (${stringifiedFormat} format)`, function () {
     const context = createContext();

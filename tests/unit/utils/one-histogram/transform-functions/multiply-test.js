@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-histogram/transform-functions/multiply';
-import { createContext, expectFunctionsEvaluation } from './helpers';
+import { createContext, expectFunctionsEvaluation, stringifyArgumentData } from './helpers';
 
 export const casesToCheck = [{
   input: 123,
@@ -121,8 +121,8 @@ describe('Unit | Utility | one histogram/transform functions/multiply', function
 });
 
 function testMultiply(rawOperands, output) {
-  const stringifiedInput = Number.isNaN(rawOperands) ? 'NaN' : JSON.stringify(rawOperands);
-  const stringifiedOutput = JSON.stringify(output);
+  const stringifiedInput = stringifyArgumentData(rawOperands);
+  const stringifiedOutput = stringifyArgumentData(output);
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput} operand(s)`, function () {
     const context = createContext();

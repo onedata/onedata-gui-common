@@ -37,3 +37,7 @@ export function expectFunctionsEvaluation(context, functions) {
     expect(context.evaluateTransformFunction).to.be.calledWith(context, func)
   );
 }
+
+export function stringifyArgumentData(arg) {
+  return JSON.stringify(arg, (_, value) => Number.isNaN(value) ? 'NaN' : value);
+}

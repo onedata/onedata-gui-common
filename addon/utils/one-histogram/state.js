@@ -1,3 +1,14 @@
+/**
+ * A class, that represents a state (snapshot) of time series chart configuration
+ * with series evaluated according to the view parameters. It contains data
+ * ready to use by chart visualisation library.
+ *
+ * @module utils/one-histogram/state
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import _ from 'lodash';
 
 /**
@@ -20,7 +31,6 @@ import _ from 'lodash';
 
 /**
  * @typedef {Object} OneHistogramXAxis
- * @property {string} name
  * @property {number[]} timestamps
  * @property {(timestamp: number) => string} timestampFormatter
  */

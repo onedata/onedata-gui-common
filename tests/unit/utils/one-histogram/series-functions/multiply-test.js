@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-histogram/series-functions/multiply';
-import { point } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
+import point from 'onedata-gui-common/utils/one-histogram/series-functions/utils/point';
 import { createContext, expectFunctionsEvaluation, createConstArgument, stringifyArgumentData } from './helpers';
 import { casesToCheck as transformCasesToCheck } from '../transform-functions/multiply-test';
 
@@ -26,13 +26,6 @@ const casesToCheck = [...normalizedTransformCasesToCheck, {
     { type: 'points', data: [point(1, 4), point(2, 5)] },
   ],
   output: { type: 'points', data: [point(1, 8), point(2, null)] },
-}, {
-  input: [
-    { type: 'points', data: [point(1, 2), point(2, 3)] },
-    { type: 'basic', data: 2 },
-    { type: 'points', data: [point(1, 4), point(2, 5)] },
-  ],
-  output: { type: 'points', data: [point(1, 16), point(2, 30)] },
 }, {
   input: [
     { type: 'points', data: [point(1, 2), point(2, 3)] },

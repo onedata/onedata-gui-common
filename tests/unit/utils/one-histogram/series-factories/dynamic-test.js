@@ -115,7 +115,7 @@ describe('Unit | Utility | one histogram/series factories/dynamic', function () 
     expect(context.evaluateSeries).to.be.not.called;
   });
 
-  it('generates no series series when seriesTemplate is not provided',
+  it('generates no series when seriesTemplate is not provided',
     async function () {
       const context = {
         externalDataSources: {

@@ -7,7 +7,7 @@ const defineSassColors = require('./addon/utils/define-sass-colors');
 const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
 const breakpointValues = require('./addon/breakpoint-values').default;
 const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
-const dynamicLibraries = require('./addon/dynamic-libraries').default;
+const dynamicLibraries = require('./config/dynamic-libraries');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {

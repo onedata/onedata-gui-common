@@ -1,17 +1,24 @@
 /**
- * @param {number} timestamp
- * @param {number|null} [value]
- * @param {{ oldest: boolean, newest: boolean, fake: boolean}} [params]
+ * Alters points arrays so that all have the same timestamps (time domain).
+ * All arrays will be aligned to the array with the newest set of points -
+ * it means that some arrays will have some points removed and fake ones added
+ * to transform them into target time domain.
+ *
+ * NOTE: this function modifies arrays in place!
+ *
+ * @module utils/one-histogram/series-functions/utils/merge-points-arrays
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
-export function point(timestamp, value = null, params = {}) {
-  return Object.assign({ timestamp, value, oldest: false, newest: false, fake: false }, params);
-}
+
+import point from './point';
 
 /**
  * @param {Array<Array<OneHistogramSeriesPoint>>} pointsArrays
  * @returns {Array<Array<OneHistogramSeriesPoint>>}
  */
-export function reconcileTiming(pointsArrays) {
+export default function reconcilePointsTiming(pointsArrays) {
   if (!pointsArrays.length) {
     return [];
   }
@@ -57,29 +64,4 @@ export function reconcileTiming(pointsArrays) {
     }
   }
   return pointsArrays;
-}
-
-/**
- * @param {Array<Array<OneHistogramSeriesPoint>>} pointsArrays
- * @param {Array<number|null>} newPointsValues
- * @returns {Array<OneHistogramSeriesPoint>}
- */
-export function mergeHistogramPointsArrays(pointsArrays, newPointsValues) {
-  if (!pointsArrays.length) {
-    return [];
-  }
-  const mergedPointsArray = pointsArrays[0].map((point, idx) =>
-    Object.assign({}, point, { value: newPointsValues[idx] })
-  );
-  for (const pointsArray of pointsArrays.slice(1)) {
-    for (let i = 0; i < mergedPointsArray.length; i++) {
-      mergedPointsArray[i].oldest =
-        mergedPointsArray[i].oldest && pointsArray[i].oldest;
-      mergedPointsArray[i].newest =
-        mergedPointsArray[i].newest && pointsArray[i].newest;
-      mergedPointsArray[i].fake =
-        mergedPointsArray[i].fake && pointsArray[i].fake;
-    }
-  }
-  return mergedPointsArray;
 }

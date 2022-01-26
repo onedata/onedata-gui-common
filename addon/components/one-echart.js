@@ -57,7 +57,9 @@ export default Component.extend(WindowResizeHandler, {
    */
   didInsertElement() {
     this._super(...arguments);
-    this.get('echartsLibraryProxy').then(() => this.setupChart());
+    this.get('echartsLibraryProxy').then(() =>
+      safeExec(this, () => this.setupChart())
+    );
   },
 
   /**
@@ -87,7 +89,7 @@ export default Component.extend(WindowResizeHandler, {
     } = this.getProperties('element', 'chart');
     const echarts = this.get('echartsLibraryProxy.content');
     if (!element || !echarts || existingChart) {
-      return existingChart || null;
+      return;
     }
 
     this.set('chart', echarts.init(element.querySelector('.chart')));

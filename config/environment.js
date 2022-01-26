@@ -1,7 +1,7 @@
 /* eslint-env node */
 'use strict';
 
-const dynamicLibraries = require('../addon/dynamic-libraries').default;
+const dynamicLibraries = require('./dynamic-libraries');
 
 module.exports = function ( /* environment, appConfig */ ) {
   return {

@@ -1,5 +1,8 @@
 /**
- * Allows loading external libraries.
+ * Allows loading external libraries. Depends on libraries specification taken from
+ * application configuration (under `dynamicLibraries` key). When library has been
+ * loaded successfully, it is cached so any subsequent requests for that library
+ * can be resolved immediately.
  *
  * @module services/libraries-loader
  * @author Michał Borzęcki
@@ -126,7 +129,7 @@ export default Service.extend({
       scriptNode.addEventListener('load', () => resolve());
       scriptNode.addEventListener('error', (event) => {
         console.error(
-          'service:libraries-library#fetchScript: library loading error occurred',
+          'service:libraries-loader#fetchScript: library loading error occurred',
           event
         );
         reject(new Error(

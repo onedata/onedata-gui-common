@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach, afterEach } from 'mocha';
 import loadSeries from 'onedata-gui-common/utils/one-histogram/series-functions/load-series';
-import { point } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
+import point from 'onedata-gui-common/utils/one-histogram/series-functions/utils/point';
 import { createContext } from './helpers';
 import sinon from 'sinon';
 

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach, context } from 'mocha';
 import sinon from 'sinon';
 import Configuration from 'onedata-gui-common/utils/one-histogram/configuration';
-import { point } from 'onedata-gui-common/utils/one-histogram/series-functions/utils/points';
+import point from 'onedata-gui-common/utils/one-histogram/series-functions/utils/point';
 import { run } from '@ember/runloop';
 import moment from 'moment';
 
@@ -127,7 +127,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
     this.fakeClock.tick(520);
     expect(handler).to.be.calledOnce;
     // We need to use `run`, because Looper uses Ember runloop functions - in
-    // this case it is`cancel`, which throws an error.
+    // this case it is `cancel`, which throws an error.
     run(() => config.destroy());
     expect(handler).to.be.calledOnce;
     this.fakeClock.tick(2000);
@@ -141,7 +141,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.title).to.equal('abc');
   });
@@ -159,7 +159,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       }],
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.timeResolution).to.equal(1);
     expect(state.windowsCount).to.equal(10);
@@ -179,7 +179,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
     });
 
     config.setViewParameters({ timeResolution: 2 });
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.timeResolution).to.equal(2);
     expect(state.windowsCount).to.equal(5);
@@ -201,7 +201,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
 
       config.setViewParameters({ timeResolution: 2 });
       config.setViewParameters({ timeResolution: 20 });
-      const state = await config.getNewestState();
+      const state = await config.getState();
 
       expect(state.timeResolution).to.equal(2);
       expect(state.windowsCount).to.equal(5);
@@ -220,7 +220,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
@@ -267,7 +267,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
@@ -296,10 +296,9 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(asPlainJson(state.xAxis)).to.deep.equal({
-      name: 'Time',
       timestamps: [12, 14, 16, 18, 20],
     });
   });
@@ -330,7 +329,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
 
     for (const { timeResolution, formattedTimestamp } of resolutionsToCheck) {
       config.setViewParameters({ timeResolution });
-      const state = await config.getNewestState();
+      const state = await config.getState();
       expect(state.xAxis.timestampFormatter(timestamp)).to.equal(formattedTimestamp);
     }
   });
@@ -346,7 +345,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       }],
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([]);
   });
@@ -367,7 +366,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -432,7 +431,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal(['s1', 's2'].map((id) => ({
       id,
@@ -497,7 +496,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([]);
   });
@@ -539,7 +538,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -588,7 +587,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -684,7 +683,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -743,7 +742,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([{
       id: 's1',
@@ -778,7 +777,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       },
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(state.series).to.deep.equal([
       dummyStaticSeriesFactoryState(1, [
@@ -818,7 +817,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
       timeResolution: 2,
     });
 
-    const state = await config.getNewestState();
+    const state = await config.getState();
 
     expect(dummySrc.fetchSeries).to.be.calledWith({
       lastWindowTimestamp: 20,
@@ -860,7 +859,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
           lastWindowTimestamp: null,
         });
 
-        const state = await config.getNewestState();
+        const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledWith({
           lastWindowTimestamp: nowTimestamp,
@@ -904,7 +903,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
           lastWindowTimestamp: null,
         });
 
-        const state = await config.getNewestState();
+        const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledOnce.and.to.be.calledWith({
           lastWindowTimestamp: null,
@@ -952,7 +951,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
           lastWindowTimestamp: 19,
         });
 
-        const state = await config.getNewestState();
+        const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({
@@ -1010,7 +1009,7 @@ describe('Unit | Utility | one histogram/configuration', function () {
           lastWindowTimestamp: null,
         });
 
-        const state = await config.getNewestState();
+        const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({

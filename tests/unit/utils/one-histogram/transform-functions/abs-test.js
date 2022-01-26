@@ -1,7 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import abs from 'onedata-gui-common/utils/one-histogram/transform-functions/abs';
-import { createContext, createConstArgument, expectFunctionsEvaluation } from './helpers';
+import {
+  createContext,
+  createConstArgument,
+  expectFunctionsEvaluation,
+  stringifyArgumentData,
+} from './helpers';
 
 export const casesToCheck = [{
   input: -10,
@@ -43,8 +48,8 @@ describe('Unit | Utility | one histogram/transform functions/abs', function () {
 });
 
 function testAbs(input, output) {
-  const stringifiedInput = Number.isNaN(input) ? 'NaN' : JSON.stringify(input);
-  const stringifiedOutput = JSON.stringify(output);
+  const stringifiedInput = stringifyArgumentData(input);
+  const stringifiedOutput = stringifyArgumentData(output);
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput}`, function () {
     const context = createContext();

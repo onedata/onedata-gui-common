@@ -5,7 +5,8 @@
         value=selectedTimeResolution
         class="time-resolution-selector"
         type="radio"
-        onChange=(action "changeTimeResolution") as |bg|
+        onChange=(action "changeTimeResolution")
+        as |bg|
       }}
         {{#each timeResolutionOptions key="value" as |timeResolutionOption|}}
           <div class="btn-group" role="group">

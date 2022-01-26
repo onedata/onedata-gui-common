@@ -1,5 +1,5 @@
 /**
- * Copies source files related to dynamically loaded libraries.
+ * Copies source files related to dynamically loadable libraries.
  *
  * @module utils/copy-dynamic-libraries
  * @author Michał Borzęcki

@@ -1,3 +1,19 @@
+/**
+ * Renders time series chart according to settings passed via `configuration`.
+ * Uses `one-echart` component to render chart visualisation.
+ *
+ * Configuration object should neither be replaced, nor used by another chart in
+ * the same time. Options of visible data can be adjusted by altering
+ * values in `configuration` (also from outside of this component).
+ * For more information about configuration options see
+ * `Utils.OneHistogram.Configuration` class.
+ *
+ * @module components/one-histogram
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -5,11 +21,14 @@ import layout from '../templates/components/one-histogram';
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 import stringifyDuration from 'onedata-gui-common/utils/i18n/stringify-duration';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { inject as service } from '@ember/service';
 
 export default Component.extend(I18n, createDataProxyMixin('state'), {
   layout,
   classNames: ['one-histogram'],
   classNameBindings: ['hasDataToShow::no-data'],
+
+  i18n: service(),
 
   /**
    * @override
@@ -115,7 +134,7 @@ export default Component.extend(I18n, createDataProxyMixin('state'), {
    * @override
    */
   fetchState() {
-    return this.get('configuration').getNewestState();
+    return this.get('configuration').getState();
   },
 
   onStateChange() {

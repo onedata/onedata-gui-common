@@ -1,20 +1,33 @@
+/**
+ * A series function, which loads series from the source specified by arguments.
+ *
+ * Arguments:
+ * - sourceType - one of `'empty'`, `'externalSource'`
+ * - sourceParameters - additional parameters specific for each source type.
+ *
+ * For `externalSource` type `sourceParameters` are:
+ * - externalSourceName - name of an external source, which is able to provide series data.
+ * - externalSourceParameters - additional parameters, that should be passed to the
+ *   external source described by `externalSourceName` during data fetching.
+ *
+ * External source must provide method `fetchSeries`, which will be called by this
+ * series function to obtain data. That method will be invoked with arguments:
+ * - `{ lastWindowTimestamp, timeResolution, windowsCount }`,
+ * - `externalSourceParameters`.
+ * Using these arguments external source should return a promise, which will eventually
+ * resolve to an array of points.
+ *
+ * @module utils/one-histogram/series-functions/load-series
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { all as allFulfilled } from 'rsvp';
-import { point } from './utils/points';
+import point from './utils/point';
 
 /**
- * @typedef {OneHistogramExternalSourceSpec} OneHistogramLoadSeriesSeriesFunctionArguments
- */
-
-/**
- * @typedef {Object} OneHistogramExternalSourceSpec
- * @property {'external'} sourceType
- * @property {OneHistogramExternalSourceParametersSpec} sourceParameters
- */
-
-/**
- * @typedef {Object} OneHistogramExternalSourceParametersSpec
- * @property {string} externalSourceName
- * @property {Object} externalSourceParameters
+ * @typedef {OneHistogramExternalDataSourceRef} OneHistogramLoadSeriesSeriesFunctionArguments
  */
 
 /**
@@ -23,7 +36,7 @@ import { point } from './utils/points';
  * @returns {Promise<OneHistogramSeriesFunctionPointsResult>}
  */
 export default async function loadSeries(context, args) {
-  if (!context.timeResolution || !context.windowsCount) {
+  if (!context.timeResolution || !context.windowsCount || !args) {
     return {
       type: 'points',
       data: [],
@@ -49,6 +62,8 @@ export default async function loadSeries(context, args) {
         const fetchParams = {
           lastWindowTimestamp: context.lastWindowTimestamp,
           timeResolution: context.timeResolution,
+          // fetching one additional window to check whether end of series
+          // has been reached
           windowsCount: context.windowsCount + 1,
         };
         const rawPoints = await externalDataSource.fetchSeries(
@@ -60,13 +75,14 @@ export default async function loadSeries(context, args) {
       break;
     }
     case 'empty':
-    default: {
-      points = generateFakePoints(context, getAbsoluteLastWindowTimestamp(context), {
+      points = generateFakePoints(context, generateLastWindowTimestamp(context), {
         newest: true,
         oldest: true,
       });
       break;
-    }
+    default:
+      points = [];
+      break;
   }
   return {
     type: 'points',
@@ -127,7 +143,7 @@ function fitPointsToContext(context, points) {
     normalizedPoints = normalizedPoints.slice(0, context.windowsCount);
   }
 
-  // Add missing points after received points
+  // Add missing points after (newer than) received points
   if (
     context.lastWindowTimestamp &&
     context.lastWindowTimestamp - context.timeResolution >= normalizedPoints[0].timestamp
@@ -205,7 +221,7 @@ function generateFakePoints(context, lastWindowTimestamp, pointParams = {}) {
   return points;
 }
 
-function getAbsoluteLastWindowTimestamp(context) {
+function generateLastWindowTimestamp(context) {
   return context.lastWindowTimestamp ||
     context.nowTimestamp ||
     Math.floor(Date.now() / 1000);
