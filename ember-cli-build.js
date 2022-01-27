@@ -73,8 +73,6 @@ module.exports = function (defaults) {
     behave. You most likely want to be modifying `./index.js` or app's build file
   */
 
-  const BOWER_ASSETS = [];
-
   const NODE_ASSETS = [
     'showdown/dist/showdown.js',
     'chartist-plugin-legend/chartist-plugin-legend.js',
@@ -84,7 +82,6 @@ module.exports = function (defaults) {
     'webui-popover/dist/jquery.webui-popover.js',
   ];
 
-  BOWER_ASSETS.forEach(path => app.import(app.bowerDirectory + '/' + path));
   NODE_ASSETS.forEach(path => app.import(`node_modules/${path}`));
 
   return app.toTree();
