@@ -6,6 +6,10 @@
     width: 28px;
     margin-left: -$padding-base-horizontal * 1.25;
     margin-right: 0.5em;
+
+    & + .one-icon {
+      margin-left: 0;
+    }
   }
 
   .spinner {
