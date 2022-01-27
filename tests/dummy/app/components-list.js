@@ -14,6 +14,7 @@ export default [
   'nav-tabs',
   'one-arrow',
   'one-atlas',
+  'one-button',
   'one-clipboard-line',
   'one-datetime-picker',
   'one-dropdown',

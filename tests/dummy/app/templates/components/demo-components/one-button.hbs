@@ -1,0 +1,18 @@
+{{one-way-toggle checked=disabled update=(action (mut disabled))}} disabled
+{{one-way-toggle checked=isPending update=(action (mut isPending))}} isPending
+
+{{#each (array undefined "sm" "lg") as |size|}}
+  <h2>{{or size "default"}} size</h2>
+  {{#each buttonTypes as |type|}}
+    {{#one-button
+      type=type
+      disabled=disabled
+      isPending=isPending
+      size=size
+    }}
+      {{type}}
+    {{/one-button}}
+    {{!-- additional new line to add spacing between buttons  --}}
+
+  {{/each}}
+{{/each}}
