@@ -8,16 +8,29 @@
     margin-right: 0.5em;
   }
 
-  &.btn-sm {
-    .spinner-container {
-      width: 19px;
-      margin-left: -$padding-base-horizontal / 2;
-    }
+  .spinner {
+    transform: scale(0.24);
   }
 
   &.btn-lg {
     .spinner-container {
       width: 32px;
     }
+
+    .spinner {
+      transform: scale(0.26);
+    }
+  }
+}
+
+.input-group-sm .input-group-btn .one-button,
+.one-button.btn-sm {
+  .spinner-container {
+    width: 19px;
+    margin-left: -$padding-base-horizontal / 2;
+  }
+
+  .spinner {
+    transform: scale(0.15);
   }
 }

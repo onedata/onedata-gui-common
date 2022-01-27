@@ -9,19 +9,13 @@
 
 import BsButton from 'ember-bootstrap/components/bs-button';
 import layout from '../templates/components/one-button';
-import { computed } from '@ember/object';
 import { or, eq, raw, and } from 'ember-awesome-macros';
 import { reads } from '@ember/object/computed';
-
-const spinnerScalesConfig = {
-  sm: 0.15,
-  md: 0.24,
-  lg: 0.26,
-};
 
 export default BsButton.extend({
   layout,
   classNames: ['one-button'],
+  classNameBindings: ['isInPendingState:pending'],
   attributeBindings: ['isEffDisabled:disabled'],
 
   /**
@@ -29,23 +23,6 @@ export default BsButton.extend({
    * @type {boolean}
    */
   disableWhenPending: true,
-
-  /**
-   * @type {Object<string, number>}
-   */
-  spinnerScalesConfig,
-
-  /**
-   * @type {ComputedProperty<number>}
-   */
-  spinnerScale: computed('spinnerScalesConfig', 'size', function spinnerScale() {
-    const {
-      spinnerScalesConfig,
-      size,
-    } = this.getProperties('spinnerScalesConfig', 'size');
-
-    return spinnerScalesConfig[size] || spinnerScalesConfig.md;
-  }),
 
   /**
    * @type {ComputedProperty<boolean>}
