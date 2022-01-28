@@ -129,6 +129,15 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
     }
   }
 }
+.small.ember-power-select-trigger {
+  display: flex; 
+  align-items: center;
+  .ember-power-select-selected-item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
 
 .ember-power-select-trigger {
   padding-left: $ember-power-select-option-large-padding-horizontal;
