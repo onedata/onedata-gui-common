@@ -1,7 +1,7 @@
 .one-button {
   .spinner-container {
     display: inline-block;
-    top: 0.05em;
+    top: 0.1em;
     height: 1em;
     width: 28px;
     margin-left: -$padding-base-horizontal * 1.25;
@@ -13,7 +13,17 @@
   }
 
   .spinner {
-    transform: scale(0.24);
+    transform: scale(0.24) !important;
+
+    > div > div {
+      background: $color-one-white !important;
+    }
+  }
+
+  &.btn-link {
+    .spinner > div > div {
+      background: $link-color !important;
+    }
   }
 
   &.btn-lg {
@@ -22,7 +32,7 @@
     }
 
     .spinner {
-      transform: scale(0.26);
+      transform: scale(0.26) !important;
     }
   }
 }
@@ -31,10 +41,11 @@
 .one-button.btn-sm {
   .spinner-container {
     width: 19px;
+    top: 0.15em;
     margin-left: -$padding-base-horizontal / 2;
   }
 
   .spinner {
-    transform: scale(0.15);
+    transform: scale(0.15) !important;
   }
 }

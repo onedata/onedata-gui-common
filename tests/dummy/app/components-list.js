@@ -27,7 +27,6 @@ export default [
   'one-pill-button',
   'one-size-edit',
   'one-space-indicator',
-  'one-spin-button',
   'one-tab-bar',
   'one-tree',
   'one-way-capacity',
