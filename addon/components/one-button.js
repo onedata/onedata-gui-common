@@ -1,5 +1,6 @@
 /**
- * Button component with API based on ember-bootstrap button.
+ * Button component with API based on ember-bootstrap button. Renders spinner when
+ * called action returns a pending promise or when `isPending` is set to true.
  *
  * @module components/one-button
  * @author Michał Borzęcki
@@ -17,6 +18,12 @@ export default BsButton.extend({
   classNames: ['one-button'],
   classNameBindings: ['isInPendingState:pending'],
   attributeBindings: ['isEffDisabled:disabled'],
+
+  /**
+   * @virtual optional
+   * @type {boolean}
+   */
+  isPending: false,
 
   /**
    * @virtual optional

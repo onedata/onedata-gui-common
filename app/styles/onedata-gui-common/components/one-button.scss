@@ -12,6 +12,8 @@
     }
   }
 
+  // `!important` and selectors like `> div > div` are the only way to override
+  // spinner inline styles.
   .spinner {
     transform: scale(0.24) !important;
 
