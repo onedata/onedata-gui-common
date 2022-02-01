@@ -2,7 +2,7 @@
   submitOnEnter=false
   class=_formClasses
   as |form|
-}}  
+}}
   {{one-form-fields
     bsForm=form
     fields=currentFields
@@ -11,17 +11,18 @@
     onFocusOut=(action "focusOut")
     disabled=_disabled
   }}
-  
+
   {{#if submitButton}}
     <div class="row">
       <div class={{layoutConfig.formSubmitColumns}}>
-        {{#one-spin-button
-          class="btn btn-primary"
-          action=(action "submit")
+        {{#one-button
+          type="primary"
+          buttonType="submit"
+          onClick=(action "submit")
           disabled=(not _submitEnabled)
         }}
           {{submitText}}
-        {{/one-spin-button}}
+        {{/one-button}}
       </div>
     </div>
   {{/if}}

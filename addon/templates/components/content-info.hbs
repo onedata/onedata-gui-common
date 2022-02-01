@@ -18,9 +18,9 @@
       </div>
     </div>
     {{#if imagePath}}
-      {{one-image 
-        imagePath=imagePath 
-        imageTextClass=imageTextClass 
+      {{one-image
+        imagePath=imagePath
+        imageTextClass=imageTextClass
         imageText=imageText}}
     {{/if}}
     {{#if hasBlock}}
@@ -35,14 +35,16 @@
     {{#if _showButton}}
       <div class="row text-center {{unless (or text imagePath hasBlock) "row-button-margin-top"}}">
         <div class="col-xs-12">
-          {{#one-spin-button
-            class=(concat "btn btn-primary btn-content-info " buttonClass)
-            action=(action _buttonAction)
-            inFlight=_actionInProgress
+          {{#one-button
+            type="primary"
+            buttonType="submit"
+            class=(concat "btn-content-info " buttonClass)
+            onClick=(action _buttonAction)
+            isPending=_actionInProgress
             disabled=buttonDisabled
           }}
             {{buttonLabel}}
-          {{/one-spin-button}}
+          {{/one-button}}
         </div>
       </div>
     {{/if}}
