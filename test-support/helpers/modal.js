@@ -1,3 +1,5 @@
+import wait from 'ember-test-helpers/wait';
+
 import $ from 'jquery';
 
 export function getModal(modalClass) {
@@ -18,4 +20,9 @@ export function getModalFooter(modalClass) {
 
 export function isModalOpened(modalClass) {
   return Boolean(getModal(modalClass).length);
+}
+
+export async function closeModalUsingBackground() {
+  document.querySelector('.modal').click();
+  return wait();
 }
