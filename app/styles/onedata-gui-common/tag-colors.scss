@@ -1,5 +1,5 @@
 @mixin tag-colors($color, $saturate: 0%, $darken: 0%) {
-  color: change-color($color, $saturation: 55%, $lightness: 40%);
+  color: change-color($color, $saturation: 55%, $lightness: 35%);
   border-color: change-color($color, $saturation: 50% + $saturate / 2, $lightness: 70% - $darken);
   background-color: change-color($color, $saturation: 50% + $saturate, $lightness: 90%);
   &.file-status-progress {
@@ -30,12 +30,18 @@
   color: $main-text-color-inactive;
   border-color: change-color(white, $lightness: 65%);
   background-color: change-color(white, $lightness: 90%);
+  .progress-bar {
+    background-color: change-color(white, $lightness: 75%);
+  }
 }
 
 @mixin tag-colors-inherited {
   color: $main-text-color;
   border-color: change-color($main-text-color, $lightness: 65%);
   background-color: change-color($main-text-color, $lightness: 90%);
+  .progress-bar {
+    background-color: change-color($main-text-color, $lightness: 75%);
+  }
 }
 
 @mixin tag-colors-inherited-highlight {

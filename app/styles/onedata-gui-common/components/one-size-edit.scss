@@ -33,12 +33,13 @@
     left: 0;
   }
   .btn-save {
-    &.in-flight {
-      .spin-button-label {
+    &.pending {
+      .one-icon {
         color: transparent;
       }
-      .spin-button-spinner {
-        left: 50%;
+      .spinner-container {
+        margin: 0;
+        @include absolute-align-middle-center();
       }
     }
   }
