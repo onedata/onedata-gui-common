@@ -842,3 +842,14 @@ p.text-separated {
   color: inherit;
   border: none;
 }
+
+@mixin horizontal-drag-dots-background() {
+  background-color: $color-one-semiwhite;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+
+  &:hover {
+    background-color: $color-one-gray-sand;
+  }
+}
