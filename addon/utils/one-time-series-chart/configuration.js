@@ -528,7 +528,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {OTSCSeriesContext} OTSCSeriesFunctionContext
- * @property {(context: Partial<OTSCSeriesFunctionContext>, seriesFunction: OTSCRawFunction) => Promise<OTSCSeriesPoint[]>} evaluateSeriesFunction
+ * @property {(context: Partial<OTSCSeriesFunctionContext>, seriesFunction: OTSCRawFunction) => Promise<RawOTSCSeriesPoint[]>} evaluateSeriesFunction
  * @property {(context: Partial<OTSCTransformFunctionContext>, transformFunction: OTSCRawFunction) => unknown} evaluateTransformFunction
  */
 
@@ -546,6 +546,12 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {boolean} live
  * @property {number} lastWindowTimestamp
  * @property {number} timeResolution
+ */
+
+/**
+ * @typedef {Object} RawOTSCSeriesPoint
+ * @property {number} timestamp
+ * @property {number} value
  */
 
 // 3, 4, 6 or 8 hex characters prefixed by `#`

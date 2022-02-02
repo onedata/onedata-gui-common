@@ -47,9 +47,7 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {Object} OTSCSeriesPoint
- * @property {number} timestamp
- * @property {number} value
+ * @typedef {RawOTSCSeriesPoint} OTSCSeriesPoint
  * @property {boolean} oldest
  * @property {boolean} newest
  * @property {boolean} fake
