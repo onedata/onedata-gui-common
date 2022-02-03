@@ -8,6 +8,7 @@
  */
 
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
+import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { raw, or } from 'ember-awesome-macros';
 
@@ -27,6 +28,12 @@ export default VisualiserRecord.extend({
    * @type {String}
    */
   lambdaId: undefined,
+
+  /**
+   * @virtual
+   * @type {Models.AtmLambda|Models.AtmLambdaSnapshot} Type depends on the project
+   */
+  lambda: undefined,
 
   /**
    * @virtual
@@ -51,6 +58,17 @@ export default VisualiserRecord.extend({
    * @type {Object}
    */
   resourceSpecOverride: undefined,
+
+  /**
+   * @type {ComputedProperty<AtmLambdaRevision>}
+   */
+  lambdaRevision: computed(
+    'lambda',
+    'lambdaRevisionNumber',
+    function lambdaRevision() {
+      return this.get(`lambda.revisionRegistry.${this.get('lambdaRevisionNumber')}`);
+    }
+  ),
 
   /**
    * @virtual

@@ -108,6 +108,12 @@ export default {
         modalDescription: 'You are about to delete the task "{{taskName}}".',
         modalYes: 'Remove',
       },
+      viewTaskAuditLog: {
+        title: 'Audit log',
+      },
+      viewTaskPodsActivity: {
+        title: 'Pods activity',
+      },
     },
     details: {
       instanceId: 'Instance ID',

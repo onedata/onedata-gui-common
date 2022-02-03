@@ -128,9 +128,59 @@ export default VisualiserElement.extend({
   }),
 
   /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  viewTaskAuditLogAction: computed(
+    'actionsFactory',
+    'task',
+    function viewTaskAuditLogAction() {
+      const {
+        actionsFactory,
+        task,
+      } = this.getProperties('actionsFactory', 'task');
+
+      return actionsFactory.createViewTaskAuditLogAction({ task });
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
+  viewTaskPodsActivityAction: computed(
+    'actionsFactory',
+    'task',
+    function viewTaskPodsActivityAction() {
+      const {
+        actionsFactory,
+        task,
+      } = this.getProperties('actionsFactory', 'task');
+
+      return actionsFactory.createViewTaskPodsActivityAction({ task });
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<Array<Utils.Action>>}
    */
-  taskActions: collect('modifyTaskAction', 'removeTaskAction'),
+  editTaskActions: collect('modifyTaskAction', 'removeTaskAction'),
+
+  /**
+   * @type {ComputedProperty<Array<Utils.Action>>}
+   */
+  viewTaskActions: computed(
+    'viewTaskAuditLogAction.disabled',
+    'viewTaskPodsActivityAction.disabled',
+    function viewTaskActions() {
+      const {
+        viewTaskAuditLogAction,
+        viewTaskPodsActivityAction,
+      } = this.getProperties('viewTaskAuditLogAction', 'viewTaskPodsActivityAction');
+      return [
+        viewTaskAuditLogAction,
+        viewTaskPodsActivityAction,
+      ].rejectBy('disabled');
+    }
+  ),
 
   actions: {
     changeName(newName) {
@@ -145,17 +195,6 @@ export default VisualiserElement.extend({
       }
 
       this.toggleProperty('areDetailsExpanded');
-    },
-    showAuditLog() {
-      if (this.get('mode') !== 'view') {
-        return;
-      }
-
-      const {
-        actionsFactory,
-        task,
-      } = this.getProperties('actionsFactory', 'task');
-      actionsFactory.createViewTaskAuditLogAction({ task }).execute();
     },
   },
 });

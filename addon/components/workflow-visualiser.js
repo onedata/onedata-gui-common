@@ -96,6 +96,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
 import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import { typeOf } from '@ember/utils';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -147,6 +148,12 @@ export default Component.extend(I18n, WindowResizeHandler, {
    * @type {String}
    */
   mode: 'edit',
+
+  /**
+   * @virtual optional
+   * @type {Object<string,(Models.AtmLambda|Models.AtmLambdaSnapshot)>}
+   */
+  usedLambdasMap: undefined,
 
   /**
    * @virtual optional
@@ -232,6 +239,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   visualiserElements: computed(
     'rawData',
     'executionState',
+    'usedLambdasMap',
     function visualiserElements() {
       return this.getVisualiserElements();
     }
@@ -1011,6 +1019,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
       }
     });
 
+    const usedLambdasMap = this.get('usedLambdasMap') || {};
+    const lambda = usedLambdasMap[lambdaId];
+
     const existingTask = this.getCachedElement('task', { id });
 
     if (existingTask) {
@@ -1019,6 +1030,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         parent,
         lambdaId,
+        lambda,
         lambdaRevisionNumber,
         argumentMappings,
         resultMappings,
@@ -1038,6 +1050,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         parent,
         lambdaId,
+        lambda,
         lambdaRevisionNumber,
         mode,
         actionsFactory,
@@ -1206,8 +1219,11 @@ export default Component.extend(I18n, WindowResizeHandler, {
   updateElement(element, update) {
     const changedFieldsOnlyUpdate = {};
     for (const key in update) {
-      if (!_.isEqual(get(element, key), update[key])) {
-        changedFieldsOnlyUpdate[key] = update[key];
+      const prevVal = get(element, key);
+      const newVal = update[key];
+      const isEmberObj = typeOf(newVal) === 'instance';
+      if (isEmberObj ? prevVal !== newVal : !_.isEqual(prevVal, newVal)) {
+        changedFieldsOnlyUpdate[key] = newVal;
       }
     }
 
