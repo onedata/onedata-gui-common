@@ -10,7 +10,7 @@
  * - isCheckboxBlocking - (optional) if false, then deselected checkbox will not block
  *   accepting button
  * - yesButtonText - accepting button text
- * - yesButtonClassName - (optional) accepting button classes
+ * - yesButtonType - (optional) accepting button type
  * - noButtonText - (optional) declining button text
  *
  * @module components/modals/question-modal
@@ -98,7 +98,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  yesButtonClassName: or('modalOptions.yesButtonClassName', raw('btn-primary')),
+  yesButtonType: or('modalOptions.yesButtonType', raw('primary')),
 
   /**
    * @type {ComputedProperty<String>}

@@ -39,9 +39,7 @@ $disabled-opacity: 0.6;
 
 // Addons
 @import 'side-menu';
-@import '_spin-button-base';
 
-@import 'onedata-gui-common/spin-button-overrides';
 @import 'chartist';
 @import 'onedata-gui-common/chartist-overrides';
 @import 'onedata-gui-common/input-tokenizer';
@@ -191,3 +189,4 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/components/revisions-table';
 @import 'onedata-gui-common/components/one-echart';
 @import 'onedata-gui-common/components/one-time-series-chart';
+@import 'onedata-gui-common/components/one-button';

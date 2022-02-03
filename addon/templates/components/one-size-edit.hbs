@@ -9,14 +9,16 @@
     <div class="form-message">{{validationMessage}}</div>
   {{/if}}
   <span class="input-group-btn">
-    {{#one-spin-button
-      class="btn btn-primary btn-confirm-choose btn-save"
-      action=(action "saveEdition")
+    {{#one-button
+      type="primary"
+      buttonType="submit"
+      class="btn-confirm-choose btn-save"
+      onClick=(action "saveEdition")
       disabled=hasError
-      inFlight=_whileSaving
+      isPending=_whileSaving
     }}
       {{one-icon icon="checked"}}
-    {{/one-spin-button}}
+    {{/one-button}}
     {{#bs-button
       type="default"
       onClick=(action "cancelEdition")

@@ -160,7 +160,7 @@ describe('Integration | Component | modals/record selector modal', function () {
         return click($submitButton[0]);
       })
       .then(() => {
-        expect($submitButton).to.have.class('in-flight');
+        expect($submitButton).to.have.class('pending');
         expect(submitStub).to.be.calledOnce;
         expect(submitStub).to.be.calledWith(this.get('records')[1]);
       });
