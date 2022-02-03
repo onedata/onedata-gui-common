@@ -14,7 +14,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   beforeEach(function () {
     this.fetchData = sinon.stub().callsFake(({ collectionId, metrics, startTimestamp, limit }) => {
       let negativeValueOccurred = false;
-      const windows = Object.keys(metrics).reduce((seriesAcc, seriesId) => {
+      const result = Object.keys(metrics).reduce((seriesAcc, seriesId) => {
         seriesAcc[seriesId] = metrics[seriesId]
           .reduce((metricsAcc, metricId) => {
             const pointValue = pointValueFromMetricSpec({
@@ -35,7 +35,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
           }, {});
         return seriesAcc;
       }, {});
-      return negativeValueOccurred ? reject('err') : resolve({ windows });
+      return negativeValueOccurred ? reject('err') : resolve(result);
     });
     this.fakeClock = sinon.useFakeTimers({
       now: Date.now(),

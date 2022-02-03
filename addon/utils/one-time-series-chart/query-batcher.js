@@ -267,7 +267,7 @@ class QueryBatch {
             queryBatchEntry.resultDefer.reject(result);
             continue;
           }
-          const entryResult = _.get(result, `windows.${seriesId}.${metricId}`, []);
+          const entryResult = _.get(result, `${seriesId}.${metricId}`, []);
           queryBatchEntry.resultDefer.resolve(entryResult);
         }
       }
