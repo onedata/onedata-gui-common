@@ -40,6 +40,8 @@
  * Each Y axis definition consists of:
  * - id - string id which allows to reference to it later,
  * - name - short human-readable name, that will be rendered as an axis label
+ * - minInterval - optional number value, which determines minimum gap between
+ *   axis split lines.
  * - valueFormatter - optional specification of a transform function, that should be used
  *   to stringify value from Y axis and make it human-readable. E.g. it may
  *   transform an integer to a size in bytes. This function will also be used
@@ -52,6 +54,7 @@
  * {
  *   id: 'bytesAxis',
  *   name: 'Bytes',
+ *   minInterval: 1,
  *   valueFormatter: {
  *     functionName: 'asBytes',
  *     functionArguments: {
@@ -239,8 +242,8 @@
  * ```
  * {
  *   mySource: {
- *     fetchSeries: async (context, externalSourceParams) => { ... },
- *     fetchDynamicSeriesConfigs: async (externalSourceParams) => { ... },
+ *     fetchSeries: async (context, externalSourceParameters) => { ... },
+ *     fetchDynamicSeriesConfigs: async (externalSourceParameters) => { ... },
  *   }
  * }
  * ```
@@ -360,7 +363,7 @@
  *   }],
  *   externalDataSources: {
  *     throughputSource: {
- *       fetchSeries: async (context, externalSourceParams) => { ... },
+ *       fetchSeries: async (context, externalSourceParameters) => { ... },
  *     },
  *   },
  * });
@@ -430,7 +433,8 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @typedef {Object} OTSCRawYAxis
  * @property {string} id
  * @property {string} name
- * @property {OTSCRawFunction} valueFormatter
+ * @property {number} [minInterval]
+ * @property {OTSCRawFunction} [valueFormatter]
  */
 
 /**
@@ -798,6 +802,7 @@ export default class Configuration {
       return {
         id: rawYAxis.id,
         name: rawYAxis.name,
+        minInterval: rawYAxis.minInterval || null,
         valueFormatter,
       };
     });

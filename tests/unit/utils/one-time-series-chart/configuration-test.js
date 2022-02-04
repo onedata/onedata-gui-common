@@ -213,6 +213,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         yAxes: [{
           id: 'a1',
           name: 'axis1',
+          minInterval: 1,
         }, {
           id: 'a2',
           name: 'axis2',
@@ -225,9 +226,11 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
       name: 'axis1',
+      minInterval: 1,
     }, {
       id: 'a2',
       name: 'axis2',
+      minInterval: null,
     }]);
     expect(state.yAxes[0].valueFormatter(123)).to.equal(123);
     expect(state.yAxes[1].valueFormatter(123)).to.equal(123);
@@ -239,6 +242,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         yAxes: [{
           id: 'a1',
           name: 'axis1',
+          minInterval: 1,
           valueFormatter: {
             functionName: 'abs',
             functionArguments: {
@@ -272,9 +276,11 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(asPlainJson(state.yAxes)).to.deep.equal([{
       id: 'a1',
       name: 'axis1',
+      minInterval: 1,
     }, {
       id: 'a2',
       name: 'axis2',
+      minInterval: null,
     }]);
     expect(state.yAxes[0].valueFormatter(-123)).to.equal(123);
     expect(state.yAxes[1].valueFormatter(123)).to.equal('246 B');

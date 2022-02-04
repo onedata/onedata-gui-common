@@ -26,6 +26,7 @@ import _ from 'lodash';
  * @typedef {Object} OTSCYAxis
  * @property {string} id
  * @property {string} name
+ * @property {number|null} minInterval
  * @property {(value: unknown) => string} valueFormatter
  */
 
@@ -195,6 +196,7 @@ export default class State {
       yAxis: this.yAxes.map((yAxis) => ({
         type: 'value',
         name: yAxis.name,
+        minInterval: yAxis.minInterval,
         axisLine: {
           show: true,
         },

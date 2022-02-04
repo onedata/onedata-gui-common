@@ -144,9 +144,11 @@ describe('Unit | Utility | one time series chart/state', function () {
       const state = new State({
         yAxes: [{
           name: 'axis1',
+          minInterval: 1,
           valueFormatter: (value) => value + ' bytes',
         }, {
           name: 'axis2',
+          minInterval: null,
           valueFormatter: (value) => value + ' bits',
         }],
       });
@@ -155,6 +157,7 @@ describe('Unit | Utility | one time series chart/state', function () {
       expect(asPlainJson(echartState.yAxis)).to.deep.equal([{
         type: 'value',
         name: 'axis1',
+        minInterval: 1,
         axisLine: {
           show: true,
         },
@@ -162,6 +165,7 @@ describe('Unit | Utility | one time series chart/state', function () {
       }, {
         type: 'value',
         name: 'axis2',
+        minInterval: null,
         axisLine: {
           show: true,
         },
