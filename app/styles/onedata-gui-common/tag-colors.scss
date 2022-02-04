@@ -30,8 +30,11 @@
   color: $main-text-color-inactive;
   border-color: change-color(white, $lightness: 65%);
   background-color: change-color(white, $lightness: 90%);
-  .progress-bar {
-    background-color: change-color(white, $lightness: 75%);
+  &.tag-status-progress {
+    color: change-color($main-text-color-inactive, $lightness: 30%);
+    .tag-progress {
+      background-color: change-color(white, $lightness: 80%);
+    }
   }
 }
 
@@ -39,8 +42,11 @@
   color: $main-text-color;
   border-color: change-color($main-text-color, $lightness: 65%);
   background-color: change-color($main-text-color, $lightness: 90%);
-  .progress-bar {
-    background-color: change-color($main-text-color, $lightness: 75%);
+  &.tag-status-progress {
+    color: change-color($main-text-color, $saturation: 55%, $lightness: 10%);
+    .tag-progress {
+      background-color: change-color($main-text-color, $lightness: 75%);
+    }
   }
 }
 
