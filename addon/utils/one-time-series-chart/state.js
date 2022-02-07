@@ -193,6 +193,13 @@ export default class State {
           return `${headerHtml}${seriesHtml}`;
         },
       },
+      grid: {
+        containLabel: true,
+        left: 0,
+        bottom: 0,
+        top: 30,
+        right: 30,
+      },
       yAxis: this.yAxes.map((yAxis) => ({
         type: 'value',
         name: yAxis.name,

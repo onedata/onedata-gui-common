@@ -14,6 +14,7 @@ import { observer, computed } from '@ember/object';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
+import { next } from '@ember/runloop';
 
 export default Component.extend(WindowResizeHandler, {
   layout,
@@ -57,9 +58,10 @@ export default Component.extend(WindowResizeHandler, {
    */
   didInsertElement() {
     this._super(...arguments);
-    this.get('echartsLibraryProxy').then(() =>
-      safeExec(this, () => this.setupChart())
-    );
+    this.get('echartsLibraryProxy')
+      .then(() => next(() => window.requestAnimationFrame(() =>
+        safeExec(this, () => this.setupChart())
+      )));
   },
 
   /**
