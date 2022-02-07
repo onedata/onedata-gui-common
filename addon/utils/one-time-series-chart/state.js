@@ -195,7 +195,7 @@ export default class State {
       },
       grid: {
         containLabel: true,
-        left: 0,
+        left: 10,
         bottom: 0,
         top: 30,
         right: 30,
@@ -204,6 +204,8 @@ export default class State {
         type: 'value',
         name: yAxis.name,
         minInterval: yAxis.minInterval,
+        min: ({ min }) => Number.isNaN(min) ? 0 : null,
+        max: ({ max }) => Number.isNaN(max) ? 0 : null,
         axisLine: {
           show: true,
         },
