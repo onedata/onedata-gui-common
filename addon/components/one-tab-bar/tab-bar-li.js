@@ -50,7 +50,7 @@ export default Component.extend({
    * @virtual
    * @type {string}
    */
-  id: undefined,
+  itemId: undefined,
 
   /**
    * If true, apply special style and not send anchorClicked action

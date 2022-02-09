@@ -24,7 +24,7 @@ export default Component.extend({
 
   /**
    * Array of items representing each tab. Properties of each:
-   * - id - will be used to create classes and indentify tabs
+   * - id - will be used to create classes and identify tabs
    * - name - displayed text in the tab
    * - icon - name of one-icon used in item (optional)
    * - class - CSS classes added to tab-bar-li component (optional)
