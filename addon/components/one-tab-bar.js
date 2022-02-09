@@ -13,6 +13,7 @@ import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { or, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -39,6 +40,20 @@ export default Component.extend({
   selectedItem: undefined,
 
   tabsOverflow: undefined,
+
+  /**
+   * @virtual
+   * @type {string}
+   */
+  passedTabBarLiComponentName: undefined,
+
+  /**
+   * @type {string}
+   */
+  tabBarLiComponentName: or(
+    'passedTabBarLiComponentName',
+    raw('one-tab-bar/tab-bar-li')
+  ),
 
   /**
    * If set to true, sets first tab as active if `selectedItem` is undefined

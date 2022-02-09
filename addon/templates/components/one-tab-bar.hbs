@@ -10,7 +10,7 @@
       as |tabBar|
     }}
       {{#each sortedItems as |item|}}
-        {{one-tab-bar/tab-bar-li
+        {{component tabBarLiComponentName
           isActive=(eq selectedItem.id item.id)
           tabClicked=(action "selectItem" "tabClick" item)
           name=item.name
