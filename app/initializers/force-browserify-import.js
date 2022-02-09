@@ -15,6 +15,7 @@ import 'npm:basictable';
 import 'npm:contrast';
 import 'npm:dompurify';
 import 'npm:smoothscroll-polyfill';
+import 'npm:spin.js';
 
 export default {
   name: 'force-browserify-import',

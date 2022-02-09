@@ -88,7 +88,6 @@
     "ember-simple-auth": "1.8.2",
     "ember-sinon": "1.0.1",
     "ember-source": "2.18.2",
-    "ember-spin-spinner": "0.4.0",
     "ember-sticky-element": "0.2.3",
     "ember-truth-helpers": "2.1.0",
     "eslint-plugin-ember": "5.0.3",
@@ -104,6 +103,7 @@
     "sinon": "4.2.0",
     "sinon-chai": "2.14.0",
     "smoothscroll-polyfill": "git+https://github.com/michalborzecki/smoothscroll.git#d875d528259e928aa815afd1fc46fb91c18d7282",
+    "spin.js": "2.3.2",
     "webui-popover": "git+https://github.com/michalborzecki/webui-popover.git#83d0eca5b89b1dec86bdcbba463fe7b94f2e3ae0"
   },
   "engines": {
