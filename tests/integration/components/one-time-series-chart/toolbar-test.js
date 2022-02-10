@@ -7,6 +7,9 @@ import {
   createDummyChartDefinition,
   createDummyConfiguration,
   createModel,
+  expectResolutions,
+  expectActiveResolution,
+  changeResolution,
 } from '../../../helpers/one-time-series-chart';
 import { click } from 'ember-native-dom-helpers';
 import { get } from '@ember/object';
@@ -45,7 +48,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
 
       await render(this);
 
-      expectResolutions(this, ['1 min', '1 hr', '2 days']);
+      await expectResolutions(['1 min', '1 hr', '2 days']);
       expectActiveResolution(this, '2 days');
     });
 
@@ -89,7 +92,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
 
       await render(this);
 
-      expectResolutions(this, ['1 min', '1 hr', '2 days']);
+      await expectResolutions(['1 min', '1 hr', '2 days']);
       expectActiveResolution(this, '1 hr');
     });
 
@@ -123,7 +126,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     model2.setViewParameters({ timeResolution: 60 });
     await render(this);
 
-    await changeResolution(this, '1 hr');
+    await changeResolution('1 hr');
 
     expectActiveResolution(this, '1 hr');
     expect(get(model1, 'lastViewParameters.timeResolution')).to.equal(3600);
@@ -333,27 +336,6 @@ function setupModels(testCase, configInitOptionsArr) {
     'models',
     configInitOptionsArr.map(initConfig => createModel(initConfig))
   );
-}
-
-function expectResolutions(testCase, resolutionLabels) {
-  const $resolutions = testCase.$('.time-resolution-selector button');
-  expect($resolutions).to.have.length(resolutionLabels.length);
-  resolutionLabels.forEach((label, idx) =>
-    expect($resolutions.eq(idx).text().trim()).to.equal(label)
-  );
-}
-
-function expectActiveResolution(testCase, activeResolutionLabel) {
-  const $activeResolution = testCase.$(
-    `.time-resolution-selector button:contains(${activeResolutionLabel})`
-  );
-  expect($activeResolution).to.exist.and.to.have.class('active');
-}
-
-async function changeResolution(testCase, resolutionLabel) {
-  await click(testCase.$(
-    `.time-resolution-selector button:contains(${resolutionLabel})`
-  )[0]);
 }
 
 function expectDisabledNavigation(testCase, disabledButtons) {

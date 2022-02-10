@@ -1,9 +1,37 @@
 .one-time-series-chart-toolbar {
+  .time-resolutions-trigger.small {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0.2em 1.9em 0.2em 0.4em;
+    min-height: initial;
+    font-size: 85%;
+
+    .ember-power-select-status-icon {
+      right: 1.4em;
+      top: 0.3em;
+    }
+  }
+
   .navigation-buttons {
+    .btn {
+      padding: 0.2em 0.5em;
+      min-width: 2em;
+    }
+
     .one-icon {
-      font-size: 150%;
+      font-size: 140%;
       margin: 0 -0.3em;
       left: 0;
     }
+  }
+}
+
+.time-resolutions-dropdown.small {
+  font-size: 100%;
+
+  .ember-power-select-option {
+    padding: 0.2em 0.4em;
+    font-size: 85%;
+    min-height: initial;
   }
 }

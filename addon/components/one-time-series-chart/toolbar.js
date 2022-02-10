@@ -84,9 +84,9 @@ export default Component.extend({
   },
 
   actions: {
-    changeTimeResolution(timeResolution) {
+    changeTimeResolution({ value }) {
       this.getModels().forEach((model) => model.setViewParameters({
-        timeResolution,
+        timeResolution: value,
       }));
     },
     showOlder() {

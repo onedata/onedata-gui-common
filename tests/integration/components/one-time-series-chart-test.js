@@ -13,6 +13,9 @@ import {
   expectEchartDummyPoints,
   createDummyConfiguration,
   expectNoChartDataToShow,
+  expectResolutions,
+  expectActiveResolution,
+  changeResolution,
 } from '../../helpers/one-time-series-chart';
 
 describe('Integration | Component | one time series chart', function () {
@@ -69,15 +72,11 @@ describe('Integration | Component | one time series chart', function () {
 
     await render(this);
 
-    const $resolutions = this.$('.time-resolution-selector button');
-    expect($resolutions).to.have.length(3);
-    expect($resolutions.eq(0).text().trim()).to.equal('1 min');
-    expect($resolutions.eq(1).text().trim()).to.equal('1 hr');
-    expect($resolutions.eq(2).text().trim()).to.equal('2 days');
-    expect($resolutions.eq(0)).to.have.class('active');
+    await expectResolutions(['1 min', '1 hr', '2 days']);
+    expectActiveResolution(this, '1 min');
   });
 
-  it('allows to change time resolution using button', async function () {
+  it('allows to change time resolution using dropdown', async function () {
     const config = this.set('configuration', new Configuration({
       chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
@@ -96,10 +95,9 @@ describe('Integration | Component | one time series chart', function () {
     }));
 
     await render(this);
-    const $resolutions = this.$('.time-resolution-selector button');
-    await click($resolutions[1]);
+    await changeResolution('1 hr');
 
-    expect($resolutions.eq(1)).to.have.class('active');
+    expectActiveResolution(this, '1 hr');
     expect(config.getViewParameters().timeResolution).to.equal(3600);
     expectEchartDummyPoints(this, null, 3600, 11);
   });
@@ -128,8 +126,7 @@ describe('Integration | Component | one time series chart', function () {
     });
     await wait();
 
-    const $resolutions = this.$('.time-resolution-selector button');
-    expect($resolutions.eq(1)).to.have.class('active');
+    expectActiveResolution(this, '1 hr');
     expect(config.getViewParameters().timeResolution).to.equal(3600);
     expectEchartDummyPoints(this, null, 3600, 11);
   });
