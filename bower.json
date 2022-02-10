@@ -1,6 +1,0 @@
-{
-  "name": "onedata-gui-common",
-  "dependencies": {
-    "spin.js": "2.3.2"
-  }
-}

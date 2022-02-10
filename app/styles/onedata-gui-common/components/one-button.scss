@@ -1,0 +1,53 @@
+.one-button {
+  .spinner-container {
+    display: inline-block;
+    top: 0.1em;
+    height: 1em;
+    width: 28px;
+    margin-left: -$padding-base-horizontal * 1.25;
+    margin-right: 0.5em;
+
+    & + .one-icon {
+      margin-left: 0;
+    }
+  }
+
+  // `!important` and selectors like `> div > div` are the only way to override
+  // spinner inline styles.
+  .spinner {
+    transform: scale(0.24) !important;
+
+    > div > div {
+      background: $color-one-white !important;
+    }
+  }
+
+  &.btn-link {
+    .spinner > div > div {
+      background: $link-color !important;
+    }
+  }
+
+  &.btn-lg {
+    .spinner-container {
+      width: 32px;
+    }
+
+    .spinner {
+      transform: scale(0.26) !important;
+    }
+  }
+}
+
+.input-group-sm .input-group-btn .one-button,
+.one-button.btn-sm {
+  .spinner-container {
+    width: 19px;
+    top: 0.15em;
+    margin-left: -$padding-base-horizontal / 2;
+  }
+
+  .spinner {
+    transform: scale(0.15) !important;
+  }
+}

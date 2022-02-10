@@ -46,14 +46,14 @@
             {{tt this "back"}}
           </button>
         {{/if}}
-        {{#one-spin-button class="btn btn-primary"
-          buttonStyle="expand-left"
-          action=(action "submitLogin" username password)
-          disabled=submitIsDisabled
+        {{#one-button
+          type="primary"
+          buttonType="submit"
+          onClick=(action "submitLogin" username password)
         }}
           {{tt this "signIn"}}
-        {{/one-spin-button}}
+        {{/one-button}}
       </div>
-    {{/bs-form}}    
+    {{/bs-form}}
   </div>
 </div>

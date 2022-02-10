@@ -40,6 +40,7 @@ import ViewTaskAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser
 import ViewLaneFailedItemsAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-failed-items-action';
 import RetryLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/retry-lane-action';
 import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/rerun-lane-action';
+import ViewTaskPodsActivityAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-pods-activity-action';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 
 export default EmberObject.extend(OwnerInjector, {
@@ -85,6 +86,13 @@ export default EmberObject.extend(OwnerInjector, {
    * @returns {Promise}
    */
   rerunLaneCallback: undefined,
+
+  /**
+   * @type {Function}
+   * @param {Utils.WorkflowVisualiser.Lane.Task}
+   * @returns {Promise}
+   */
+  showTaskPodsActivityCallback: undefined,
 
   /**
    * @param {WorkflowDataProvider} workflowDataProvider
@@ -151,6 +159,18 @@ export default EmberObject.extend(OwnerInjector, {
       console.warn('util:workflow-visualiser/actions-factory#setRerunLaneCallback: overriding rerunLaneCallback');
     }
     this.set('rerunLaneCallback', rerunLaneCallback);
+  },
+
+  /**
+   * @param {Function} showTaskPodsActivityCallback
+   */
+  setShowTaskPodsActivityCallback(showTaskPodsActivityCallback) {
+    if (this.get('rerunLaneCallback')) {
+      console.warn(
+        'util:workflow-visualiser/actions-factory#setShowTaskPodsActivityCallback: overriding showTaskPodsActivityCallback'
+      );
+    }
+    this.set('showTaskPodsActivityCallback', showTaskPodsActivityCallback);
   },
 
   /**
@@ -410,6 +430,15 @@ export default EmberObject.extend(OwnerInjector, {
       context: Object.assign({
         workflow: this.getWorkflowProxy(),
         rerunLaneCallback: (...args) => this.get('rerunLaneCallback')(...args),
+      }, context),
+    });
+  },
+
+  createViewTaskPodsActivityAction(context) {
+    return ViewTaskPodsActivityAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        showPodsActivityCallback: (...args) => this.get('showTaskPodsActivityCallback')(...args),
       }, context),
     });
   },
