@@ -8,9 +8,11 @@
  */
 
 /**
+ * For more info about arguments see `OTSCSeriesPoint` type.
  * @param {number} timestamp
  * @param {number|null} [value]
  * @param {{ oldest?: boolean, newest?: boolean, fake?: boolean}} [params]
+ * @returns {OTSCSeriesPoint}
  */
 export default function point(timestamp, value = null, params = {}) {
   return Object.assign({

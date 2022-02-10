@@ -1,5 +1,7 @@
 /**
- * Copies source files related to dynamically loadable libraries.
+ * Copies source files of dynamically loadable libraries to a built
+ * application assets directory. It allows to fetch them later (on demand)
+ * by a browser.
  *
  * @module utils/copy-dynamic-libraries
  * @author Michał Borzęcki
@@ -9,6 +11,10 @@
 
 /* eslint-env node */
 
+/**
+ * @param {EmberApplication} app
+ * @param {DynamicLibrarySpecs} dynamicLibraries
+ */
 module.exports = function (app, dynamicLibraries) {
   Object.values(dynamicLibraries).forEach(librarySpec => {
     librarySpec.files.forEach(libraryFileSpec => {

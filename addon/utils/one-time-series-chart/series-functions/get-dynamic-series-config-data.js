@@ -7,7 +7,7 @@
  *   dynamic config. If not provided, the whole dynamic config object will be returned.
  *   If `propertyName` cannot be found in dynamic config, null will be returned.
  *
- * @module utils/one-time-series-chart/series-functions/get-dynamic-series-config
+ * @module utils/one-time-series-chart/series-functions/get-dynamic-series-config-data
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

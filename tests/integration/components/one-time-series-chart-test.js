@@ -28,7 +28,7 @@ describe('Integration | Component | one time series chart', function () {
 
   it('shows "no data to show" info, when there are no series to show', async function () {
     this.set('configuration', new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         yAxes: [{
           id: 'a1',
         }],
@@ -46,7 +46,7 @@ describe('Integration | Component | one time series chart', function () {
 
   it('shows "no data to show" info, when there are no time resolutions specified', async function () {
     this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [],
       externalDataSources: {
         dummy: {
@@ -61,10 +61,10 @@ describe('Integration | Component | one time series chart', function () {
   });
 
   it('shows "no data to show" info, when there are no yAxes specified', async function () {
-    const rawConfiguration = createDummyRawConfiguration();
-    rawConfiguration.yAxes = [];
+    const chartDefinition = createDummyChartDefinition();
+    chartDefinition.yAxes = [];
     this.set('configuration', new Configuration({
-      rawConfiguration,
+      chartDefinition,
       timeResolutionSpecs: [{
         timeResolution: 60,
       }],
@@ -82,7 +82,7 @@ describe('Integration | Component | one time series chart', function () {
 
   it('renders time resolutions according to the resolutions defined in configuration', async function () {
     this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
       }, {
@@ -109,16 +109,16 @@ describe('Integration | Component | one time series chart', function () {
 
   it('allows to change time resolution using button', async function () {
     const config = this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
-        windowsCount: 10,
+        pointsCount: 10,
       }, {
         timeResolution: 3600,
-        windowsCount: 11,
+        pointsCount: 11,
       }, {
         timeResolution: 48 * 3600,
-        windowsCount: 12,
+        pointsCount: 12,
       }],
       externalDataSources: {
         dummy: createDummySource(),
@@ -136,16 +136,16 @@ describe('Integration | Component | one time series chart', function () {
 
   it('allows to change time resolution using config', async function () {
     const config = this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
-        windowsCount: 10,
+        pointsCount: 10,
       }, {
         timeResolution: 3600,
-        windowsCount: 11,
+        pointsCount: 11,
       }, {
         timeResolution: 48 * 3600,
-        windowsCount: 12,
+        pointsCount: 12,
       }],
       externalDataSources: {
         dummy: createDummySource(),
@@ -167,7 +167,7 @@ describe('Integration | Component | one time series chart', function () {
   it('allows to show older data', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
@@ -176,14 +176,14 @@ describe('Integration | Component | one time series chart', function () {
     await click($showOlderBtn[0]);
 
     expect($showOlderBtn).to.be.not.disabled;
-    expect(config.getViewParameters().lastWindowTimestamp).to.equal(996360);
+    expect(config.getViewParameters().lastPointTimestamp).to.equal(996360);
     expectEchartPoints(this, 996360, 60, 60);
   });
 
   it('allows to show newer data', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
@@ -192,14 +192,14 @@ describe('Integration | Component | one time series chart', function () {
     await click($showNewerBtn[0]);
 
     expect($showNewerBtn).to.be.not.disabled;
-    expect(config.getViewParameters().lastWindowTimestamp).to.equal(1003560);
+    expect(config.getViewParameters().lastPointTimestamp).to.equal(1003560);
     expectEchartPoints(this, 1003560, 60, 60);
   });
 
   it('allows to show the newest data', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
@@ -209,7 +209,7 @@ describe('Integration | Component | one time series chart', function () {
 
     expect($showNewestBtn).to.be.disabled;
     expect(this.$('.show-newer-btn')).to.be.disabled;
-    expect(config.getViewParameters().lastWindowTimestamp)
+    expect(config.getViewParameters().lastPointTimestamp)
       .to.be.closeTo(Math.floor(Date.now() / 1000), 60);
     expectEchartPoints(this, null, 60, 60);
   });
@@ -225,12 +225,12 @@ describe('Integration | Component | one time series chart', function () {
     const $showNewestBtn = this.$('.show-newest-btn');
     expect($showNewestBtn).to.be.disabled;
     expectEchartPoints(this, null, 60, 60);
-    expect(config.getViewParameters().lastWindowTimestamp).to.be.null;
+    expect(config.getViewParameters().lastPointTimestamp).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
     expect($showNewestBtn).to.be.disabled;
     expectEchartPoints(this, null, 60, 60);
-    expect(config.getViewParameters().lastWindowTimestamp).to.be.null;
+    expect(config.getViewParameters().lastPointTimestamp).to.be.null;
   });
 
   it('shows continuously reloading older data in live mode', async function () {
@@ -238,29 +238,29 @@ describe('Integration | Component | one time series chart', function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
       live: true,
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
     expectEchartPoints(this, 1000000, 60, 60);
-    expect(config.getViewParameters().lastWindowTimestamp).to.equal(1000000);
+    expect(config.getViewParameters().lastPointTimestamp).to.equal(1000000);
 
     fakeClock.tick(60 * 1000 + 500);
     expectEchartPoints(this, 1000000, 60, 60);
-    expect(config.getViewParameters().lastWindowTimestamp).to.equal(1000000);
+    expect(config.getViewParameters().lastPointTimestamp).to.equal(1000000);
   });
 
-  it('moving to the newest data in live mode changes lastWindowTimestamp to null', async function () {
+  it('moving to the newest data in live mode changes lastPointTimestamp to null', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
       live: true,
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
     await click('.show-newest-btn');
     expectEchartPoints(this, null, 60, 60);
-    expect(config.getViewParameters().lastWindowTimestamp).to.be.null;
+    expect(config.getViewParameters().lastPointTimestamp).to.be.null;
   });
 });
 
@@ -275,11 +275,11 @@ function expectNoDataToShow(testCase) {
   expect(testCase.$().text().trim()).to.equal('There is no data to show.');
 }
 
-function expectEchartPoints(testCase, lastWindowTimestamp, timeResolution, windowsCount) {
+function expectEchartPoints(testCase, lastPointTimestamp, timeResolution, pointsCount) {
   const echartPoints = createDummySource().fetchSeries({
-    lastWindowTimestamp,
+    lastPointTimestamp,
     timeResolution,
-    windowsCount,
+    pointsCount,
   }).map(({ timestamp, value }) => [String(timestamp), value]);
   expect(getEchartOption(testCase).series[0].data).to.deep.equal(echartPoints);
 }
@@ -290,10 +290,10 @@ function getEchartOption(testCase) {
 
 function createDummyConfiguration() {
   return new Configuration({
-    rawConfiguration: createDummyRawConfiguration(),
+    chartDefinition: createDummyChartDefinition(),
     timeResolutionSpecs: [{
       timeResolution: 60,
-      windowsCount: 60,
+      pointsCount: 60,
       updateInterval: 10,
     }],
     externalDataSources: {
@@ -302,7 +302,7 @@ function createDummyConfiguration() {
   });
 }
 
-function createDummyRawConfiguration() {
+function createDummyChartDefinition() {
   return {
     yAxes: [{
       id: 'a1',
@@ -334,14 +334,14 @@ function createDummyRawConfiguration() {
 function createDummySource() {
   return {
     fetchSeries: (context) => {
-      let lastTimestamp = context.lastWindowTimestamp;
+      let lastTimestamp = context.lastPointTimestamp;
       if (!lastTimestamp) {
         lastTimestamp = Math.floor(Date.now() / 1000);
       }
       lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
-      return _.times(context.windowsCount, (idx) => {
+      return _.times(context.pointsCount, (idx) => {
         const timestamp = lastTimestamp -
-          ((context.windowsCount) - idx - 1) * context.timeResolution;
+          ((context.pointsCount) - idx - 1) * context.timeResolution;
         return {
           timestamp,
           value: timestamp % 123,

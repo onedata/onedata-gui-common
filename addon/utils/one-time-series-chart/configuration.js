@@ -1,28 +1,37 @@
 /**
- * A class, that contains configuration of time series chart.
+ * A class, that contains configuration of time series chart - axes look,
+ * time resolutions, actual axes position, visible points - basically everything,
+ * that is visible on the screen. Configuration is not constant - it changes
+ * over time as it contains chart points representing some variable process
+ * which happens remotely. Hence to access current chart configuration,
+ * you have to get its "state" via `getState()` method. After that
+ * the latest snapshot of configuration is prepared and returned. It is possible
+ * to listen to configuration changes (to know when to call `getState()` again and
+ * update the view) - see methods `registerStateChangeHandler`
+ * and `deregisterStateChangeHandler`.
  *
  * # Main configuration elements
  *
  * Configuration consists of 4 main configuration parts:
- * - raw configuration - contains definitions of axes, series and all settings,
- *   which don't depend on data itself. Is provided during configuration object
- *   creation and cannot be modified.
- * - data sources configuration - contains data sources definitions, which
- *   are mentioned by various elements from raw configuration. Each data source
- *   definition includes callbacks, which provide data like points arrays,
- *   dynamic series configs etc. Is provided during configuration object
- *   creation and cannot be modified.
- * - time resolutions - possible time resolutions which can be rendered by the chart.
- *   These strongly depend on characteristics of data sources (as each data source
- *   can have different set of time resolutions). Are provided during configuration object
- *   creation and cannot be modified.
- * - view parameters - navigation-like properties, that define which part of
- *   the chart is visible. Are provided after configuration object creation and
- *   can be modified during the whole chart life.
+ * - chart definition (`chartDefinition`) - contains definitions of axes, series
+ *   and all settings, which don't depend on data itself. Is provided during
+ *   configuration object creation and cannot be modified.
+ * - data sources configuration (`externalDataSources`) - contains data sources
+ *   definitions, which are mentioned by various elements from chart definition.
+ *   Each data source definition includes callbacks, which provide data like
+ *   points arrays, dynamic series configs etc. Is provided during configuration
+ *   object creation and cannot be modified.
+ * - time resolutions (`timeResolutionSpecs`) - possible time resolutions which can
+ *   be rendered by the chart. These strongly depend on characteristics of data
+ *   sources (as each data source can have different set of time resolutions).
+ *   Are provided during configuration object creation and cannot be modified.
+ * - view parameters (via `setViewParameters()`) - navigation-like properties,
+ *   that define which part of the chart is visible. Are provided after
+ *   configuration object creation and can be modified during the whole chart life.
  *
  * ## Raw configuration
  *
- * The raw configuration is that part of the configuration, which is constant regardless
+ * The chart definition is that part of the configuration, which is constant regardless
  * backend data. It is a pure definition of series and axes - basically all visual
  * settings - and is completely detached from concrete data. It consists of:
  * - title - a string, which should be rendered as a title of the whole chart,
@@ -251,7 +260,7 @@
  * It is an array of time resolution specs. Each spec consists of:
  * - timeResolution - time resolution in seconds which means how many seconds
  *   are grouped into a single point,
- * - windowsCount - number of windows (points) which should be rendered in that
+ * - pointsCount - number of points which should be rendered in that
  *   particilar resolution,
  * - updateInterval - how often (in seconds) should data be updated.
  *
@@ -263,11 +272,11 @@
  * ```
  * [{
  *   timeResolution: 5,
- *   windowsCount: 24,
+ *   pointsCount: 24,
  *   updateInterval: 5,
  * }, {
  *   timeResolution: 60,
- *   windowsCount: 60,
+ *   pointsCount: 60,
  *   updateInterval: 10,
  * }]
  * ```
@@ -277,7 +286,7 @@
  * There are three possible view parameters to setup:
  * - live - boolean flag, that tells whether the chart should be reloaded periodically
  *   and the newest points are from the "now" timestamp,
- * - lastWindowTimestamp - timestamp (in seconds) that describes which point
+ * - lastPointTimestamp - timestamp (in seconds) that describes which point
  *   should be rendered on the right edge of the chart (newer points edge).
  *   If null is provided, it is interpreted as "the newest possible timestamp".
  * - timeResolution - time resolution used to fetch and render chart points.
@@ -289,7 +298,7 @@
  * ```
  * configuration.setViewParameters({
  *   live: true,
- *   lastWindowTimestamp: null,
+ *   lastPointTimestamp: null,
  *   timeResolution: 60,
  * });
  * ```
@@ -300,7 +309,7 @@
  *
  * ```
  * const configuration = new Configuration({
- *   rawConfiguration: {
+ *   chartDefinition: {
  *     title: 'Upload chart',
  *     yAxes: [{
  *       id: 'bytesAxis',
@@ -349,31 +358,31 @@
  *       },
  *     }],
  *   },
- *   timeResolutionSpecs: [{
- *     timeResolution: 5,
- *     windowsCount: 24,
- *     updateInterval: 5,
- *   }, {
- *     timeResolution: 60,
- *     windowsCount: 60,
- *     updateInterval: 10,
- *   }],
  *   externalDataSources: {
  *     throughputSource: {
  *       fetchSeries: async (context, externalSourceParams) => { ... },
  *     },
  *   },
+ *   timeResolutionSpecs: [{
+ *     timeResolution: 5,
+ *     pointsCount: 24,
+ *     updateInterval: 5,
+ *   }, {
+ *     timeResolution: 60,
+ *     pointsCount: 60,
+ *     updateInterval: 10,
+ *   }],
  * });
  * configuration.setViewParameters({
  *   live: true,
- *   lastWindowTimestamp: null,
+ *   lastPointTimestamp: null,
  *   timeResolution: 60,
  * });
  * ```
  *
  * # Function types
  *
- * There are two function types, which can be used in raw configuration:
+ * There are two function types, which can be used in chart definition:
  * - transform functions - functions which are evaluated immediately (without promises).
  *   These functions don't accept points arrays as an input data,
  * - series functions - functions which are evaluated asynchronously (with promises).
@@ -413,24 +422,25 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCConfigurationInitOptions
- * @property {OTSCRawConfiguration} rawConfiguration
+ * @property {OTSCChartDefinition} chartDefinition
  * @property {OTSCTimeResolutionSpec[]} timeResolutionSpecs
  * @property {OTSCExternalDataSources} externalDataSources
  * @property {number} [nowTimestampOffset]
  */
 
 /**
- * @typedef {Object} OTSCRawConfiguration
+ * @typedef {Object} OTSCChartDefinition
  * @property {string} title
  * @property {OTSCRawYAxis[]} yAxes
  * @property {OTSCRawSeriesFactory[]} series
  */
 
 /**
- * @typedef {Object} OTSCRawYAxis
+ * @typedef {Object} OTSCRawYAxis Y axis definition
  * @property {string} id
- * @property {string} name
- * @property {OTSCRawFunction} valueFormatter
+ * @property {string} name will be visible as an axis label
+ * @property {OTSCRawFunction} [valueFormatter] definition of a chart values
+ * converter, that makes them more human-readable
  */
 
 /**
@@ -442,12 +452,14 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 /**
  * @typedef {Object} OTSCRawSeries
  * @property {string} id
- * @property {string} name
+ * @property {string} name will be visible as a series label
  * @property {OTSCChartType} type
- * @property {string} yAxisId
- * @property {string} [color]
- * @property {string} [stackId]
- * @property {OTSCRawFunction} data
+ * @property {string} yAxisId id of Y axis, which should be used to draw points
+ * @property {string} [color] color in hex format, e.g. `'#ff0000'`
+ * @property {string} [stackId] series with the same `stackId` will be drawed
+ *   stacked on each other (order of stack elements depends on order of series).
+ * @property {OTSCRawFunction} data definition of function responsible for
+ *   generating series points
  */
 
 /**
@@ -461,13 +473,15 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  */
 
 /**
- * @typedef {Object} OTSCSeriesFunctionPointsResult
+ * @typedef {Object} OTSCSeriesFunctionPointsResult Represents data possible to
+ *   render as points.
  * @property {'points'} type
  * @property {Array<OTSCSeriesPoint>} data
  */
 
 /**
- * @typedef {Object} OTSCSeriesFunctionBasicResult<T>
+ * @typedef {Object} OTSCSeriesFunctionBasicResult<T> Represents all types of data,
+ *   that cannot be rendered directly as points (like objects, numbers, etc.).
  * @property {'basic'} type
  * @property {T} data
  */
@@ -490,9 +504,14 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCTimeResolutionSpec
- * @property {number} timeResolution
- * @property {number} windowsCount
- * @property {number} updateInterval
+ * @property {number} timeResolution how many seconds are aggregated into a
+ *   single point. E.g. `60` means that each point represents data from one minute
+ * @property {number} pointsCount how many consecutive points should be rendered.
+ *   `pointsCount * timeResolution` is equal to total time span visible on chart.
+ *   This value describes only the points number visible to user. During the chart state
+ *   calculation some functions can try to fetch less/more points than specified here.
+ * @property {number} updateInterval interval (in seconds) describing how often
+ *   should live charts be updated
  */
 
 /**
@@ -507,18 +526,29 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCDataSourceFetchParams
- * @property {number} lastWindowTimestamp
- * @property {number} timeResolution
- * @property {number} windowsCount
+ * @property {number} lastPointTimestamp timestamp of point, which should be at
+ *   the right edge of the chart (edge of "newer" points)
+ * @property {number} timeResolution see `OTSCTimeResolutionSpec` documentation
+ * @property {number} pointsCount see `OTSCTimeResolutionSpec` documentation
  */
 
 /**
- * @typedef {Object} OTSCSeriesContext
- * @property {OTSCExternalDataSources} externalDataSources
- * @property {number} nowTimestamp
- * @property {number} lastWindowTimestamp
- * @property {number} timeResolution
- * @property {number} windowsCount
+ * @typedef {Object} OTSCSeriesContext Contains data required during chart state
+ *   calculation. It's a way to avoid passing some global structure between
+ *   all calculation stages (as each can have its own context). It also allows
+ *   to modify context data on-the-fly regarding specific needs (like fetching
+ *   additional points).
+ * @property {OTSCExternalDataSources} externalDataSources reference to data sources
+ *   so all chart functions have an access to external data
+ * @property {number} nowTimestamp timestamp (in seconds) considered to be a "now"
+ *   time. Passed to synchronize all chart element and to not depend on own
+ *   "now" timestamps calculations
+ * @property {number} lastPointTimestamp timestamp of a point, that should be the
+ *   newest point in the current view. It usually is at the right edge of the
+ *   chart (edge of "newer" points) and corresponds to `lastPointTimestamp` in
+ *   `OTSCViewParameters`
+ * @property {number} timeResolution see `OTSCTimeResolutionSpec` documentation
+ * @property {number} pointsCount see `OTSCTimeResolutionSpec` documentation
  */
 
 /**
@@ -528,7 +558,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {OTSCSeriesContext} OTSCSeriesFunctionContext
- * @property {(context: Partial<OTSCSeriesFunctionContext>, seriesFunction: OTSCRawFunction) => Promise<OTSCSeriesPoint[]>} evaluateSeriesFunction
+ * @property {(context: Partial<OTSCSeriesFunctionContext>, seriesFunction: OTSCRawFunction) => Promise<OTSCSeriesFunctionGenericResult<unknown>>} evaluateSeriesFunction
  * @property {(context: Partial<OTSCTransformFunctionContext>, transformFunction: OTSCRawFunction) => unknown} evaluateTransformFunction
  */
 
@@ -543,12 +573,16 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCViewParameters
- * @property {boolean} live
- * @property {number} lastWindowTimestamp
- * @property {number} timeResolution
+ * @property {boolean} live if true, then chart will reload its data continuously.
+ *   It also means, that "now" timestamp will always be treated as a newest point
+ *   - even if data sources does not provide points for that time.
+ * @property {number} lastPointTimestamp timestamp of point, which should be at
+ *   the right edge of the chart (edge of "newer" points). If is null, it represents
+ *   the newest possible point.
+ * @property {number} timeResolution see `OTSCTimeResolutionSpec` documentation
  */
 
-// 3, 4, 6 or 8 hex characters prefixed by `#`
+/** 3, 4, 6 or 8 hex characters prefixed by `#` */
 const colorRegexp = /^#[0-9a-f]{3}([0-9a-f]([0-9a-f]{2}([0-9a-f]{2})?)?)?$/i;
 
 export default class Configuration {
@@ -558,6 +592,8 @@ export default class Configuration {
    */
   constructor(options) {
     /**
+     * By default, time resolutions are sorted by resolution value ascending
+     * - the smallest resolutions (like seconds, minutes) will be first.
      * @public
      * @readonly
      * @type {OTSCTimeResolutionSpec[]}
@@ -567,9 +603,9 @@ export default class Configuration {
 
     /**
      * @private
-     * @type {OTSCRawConfiguration}
+     * @type {OTSCChartDefinition}
      */
-    this.rawConfiguration = options.rawConfiguration;
+    this.chartDefinition = options.chartDefinition;
 
     /**
      * @private
@@ -599,7 +635,7 @@ export default class Configuration {
      * @private
      * @type {number|null}
      */
-    this.lastWindowTimestamp = null;
+    this.lastPointTimestamp = null;
 
     /**
      * @private
@@ -611,7 +647,7 @@ export default class Configuration {
      * @private
      * @type {number}
      */
-    this.windowsCount = null;
+    this.pointsCount = null;
 
     /**
      * @private
@@ -625,7 +661,7 @@ export default class Configuration {
      * @private
      * @type {number|null}
      */
-    this.newestWindowTimestamp = null;
+    this.newestPointTimestamp = null;
 
     /**
      * @private
@@ -672,23 +708,23 @@ export default class Configuration {
     if (parameters.live !== undefined) {
       this.live = parameters.live;
     }
-    if (parameters.timeResolution) {
+    if (parameters.timeResolution !== undefined) {
       this.changeTimeResolution(parameters.timeResolution);
     }
-    if (parameters.lastWindowTimestamp !== undefined) {
+    if (parameters.lastPointTimestamp !== undefined) {
       if (this.live) {
         const nowTimestamp = this.getNowTimestamp();
-        const givenTimestampIsNow = typeof parameters.lastWindowTimestamp !== 'number' ||
-          parameters.lastWindowTimestamp >= nowTimestamp - (nowTimestamp % this.timeResolution);
-        this.lastWindowTimestamp = givenTimestampIsNow ?
-          null : parameters.lastWindowTimestamp;
+        const givenTimestampIsNow = typeof parameters.lastPointTimestamp !== 'number' ||
+          parameters.lastPointTimestamp >= nowTimestamp - (nowTimestamp % this.timeResolution);
+        this.lastPointTimestamp = givenTimestampIsNow ?
+          null : parameters.lastPointTimestamp;
       } else {
-        if (typeof this.newestWindowTimestamp === 'number') {
-          this.lastWindowTimestamp = typeof parameters.lastWindowTimestamp === 'number' ?
-            Math.min(this.newestWindowTimestamp, parameters.lastWindowTimestamp) : this.newestWindowTimestamp;
+        if (typeof this.newestPointTimestamp === 'number') {
+          this.lastPointTimestamp = typeof parameters.lastPointTimestamp === 'number' ?
+            Math.min(this.newestPointTimestamp, parameters.lastPointTimestamp) : this.newestPointTimestamp;
         } else {
-          this.lastWindowTimestamp = typeof parameters.lastWindowTimestamp === 'number' ?
-            parameters.lastWindowTimestamp : null;
+          this.lastPointTimestamp = typeof parameters.lastPointTimestamp === 'number' ?
+            parameters.lastPointTimestamp : null;
         }
       }
     }
@@ -702,7 +738,7 @@ export default class Configuration {
   getViewParameters() {
     return {
       live: this.live,
-      lastWindowTimestamp: this.lastWindowTimestamp,
+      lastPointTimestamp: this.lastPointTimestamp,
       timeResolution: this.timeResolution,
     };
   }
@@ -714,29 +750,30 @@ export default class Configuration {
   async getState() {
     const nowTimestamp = this.getNowTimestamp();
     const series = await this.getAllSeriesState({ nowTimestamp });
-    if (!this.live && !this.newestWindowTimestamp && this.timeResolutionSpecs.length) {
+    if (!this.live && !this.newestPointTimestamp && this.timeResolutionSpecs.length) {
       let seriesWithNewestTimestamp = series;
+      // Finding resolution with points aggregating the smallest portion of time.
       const smallestTimeResolution =
         this.timeResolutionSpecs.sortBy('timeResolution')[0].timeResolution;
       if (
-        this.lastWindowTimestamp ||
+        this.lastPointTimestamp ||
         this.timeResolution !== smallestTimeResolution ||
-        !this.windowsCount
+        !this.pointsCount
       ) {
         seriesWithNewestTimestamp = await this.getAllSeriesState({
-          lastWindowTimestamp: null,
+          lastPointTimestamp: null,
           timeResolution: smallestTimeResolution,
-          windowsCount: 1,
+          pointsCount: 1,
           nowTimestamp,
         });
       }
-      this.acquireNewestWindowTimestamp(seriesWithNewestTimestamp);
+      this.acquireNewestPointTimestamp(seriesWithNewestTimestamp);
     }
 
-    if (this.newestWindowTimestamp && series.length && series[0].data.length) {
+    if (this.newestPointTimestamp && series.length && series[0].data.length) {
       for (const singleSeries of series) {
         for (let i = singleSeries.data.length - 1; i >= 0; i--) {
-          if (singleSeries.data[i].timestamp < this.newestWindowTimestamp) {
+          if (singleSeries.data[i].timestamp < this.newestPointTimestamp) {
             break;
           }
           singleSeries.data[i].newest = true;
@@ -745,13 +782,13 @@ export default class Configuration {
     }
 
     return new State({
-      title: this.rawConfiguration && this.rawConfiguration.title,
+      title: this.chartDefinition && this.chartDefinition.title,
       yAxes: this.getYAxesState(),
       xAxis: this.getXAxisState(series),
       series,
       timeResolution: this.timeResolution,
-      windowsCount: this.windowsCount,
-      newestWindowTimestamp: this.newestWindowTimestamp,
+      pointsCount: this.pointsCount,
+      newestPointTimestamp: this.newestPointTimestamp,
     });
   }
 
@@ -768,8 +805,8 @@ export default class Configuration {
    * @param {OTSCSeries} series
    * @returns {void}
    */
-  async acquireNewestWindowTimestamp(series) {
-    this.newestWindowTimestamp = series.length && series[0].data.length ?
+  async acquireNewestPointTimestamp(series) {
+    this.newestPointTimestamp = series.length && series[0].data.length ?
       series[0].data[series[0].data.length - 1].timestamp : this.getNowTimestamp();
   }
 
@@ -778,7 +815,7 @@ export default class Configuration {
    * @returns {OTSCYAxisConfiguration[]}
    */
   getYAxesState() {
-    const rawYAxes = this.rawConfiguration && this.rawConfiguration.yAxes || [];
+    const rawYAxes = this.chartDefinition && this.chartDefinition.yAxes || [];
     return rawYAxes.map((rawYAxis) => {
       const rawValueFormatter = this.isRawFunction(rawYAxis.valueFormatter) ?
         rawYAxis.valueFormatter : {
@@ -820,7 +857,7 @@ export default class Configuration {
     if (!normalizedContext.evaluateSeries) {
       normalizedContext.evaluateSeries = (...args) => this.getSeriesState(...args);
     }
-    const rawSeries = this.rawConfiguration && this.rawConfiguration.series || [];
+    const rawSeries = this.chartDefinition && this.chartDefinition.series || [];
     const seriesPerFactory = await allFulfilled(
       rawSeries.map((seriesFactory) => {
         const factoryFunction = seriesFactoriesIndex[seriesFactory.factoryName];
@@ -880,15 +917,18 @@ export default class Configuration {
 
   /**
    * @private
-   * @param {Partial<OTSCTransformFunctionContext>|null} context
-   * @param {OTSCRawFunction} transformFunction
+   * @param {Partial<OTSCTransformFunctionContext>|null} context context,
+   *   which should be used during the evaluation of passed function. Context is
+   *   a local setup (environment) of function execution - it may change between
+   *   different function evaluations depending on needs.
+   * @param {OTSCRawFunction|unknown} transformFunctionOrValue
    * @returns {unknown}
    */
-  evaluateTransformFunction(context, transformFunction) {
-    if (!this.isRawFunction(transformFunction)) {
+  evaluateTransformFunction(context, transformFunctionOrValue) {
+    if (!this.isRawFunction(transformFunctionOrValue)) {
       // When `transformFunction` isn't a function definition, then it is
       // probably a constant value
-      return transformFunction;
+      return transformFunctionOrValue;
     }
 
     const normalizedContext = context || {};
@@ -898,35 +938,38 @@ export default class Configuration {
     }
 
     const transformFunctionCallback =
-      transformFunctionsIndex[transformFunction.functionName];
+      transformFunctionsIndex[transformFunctionOrValue.functionName];
     if (!transformFunctionCallback) {
       throw {
         id: 'unknownOTSCFactory',
         details: {
-          functionName: transformFunction.functionName,
+          functionName: transformFunctionOrValue.functionName,
         },
       };
     }
 
     return transformFunctionCallback(
       normalizedContext,
-      transformFunction.functionArguments
+      transformFunctionOrValue.functionArguments
     );
   }
 
   /**
    * @private
-   * @param {Partial<OTSCSeriesFunctionContext>|null} context
-   * @param {OTSCRawFunction} seriesFunction
+   * @param {Partial<OTSCSeriesFunctionContext>|null} context context,
+   *   which should be used during the evaluation of passed function. Context is
+   *   a local setup (environment) of function execution - it may change between
+   *   different function evaluations depending on needs.
+   * @param {OTSCRawFunction|unknown} seriesFunctionOrValue
    * @returns {Promise<OTSCSeriesPoint[]>}
    */
-  async evaluateSeriesFunction(context, seriesFunction) {
-    if (!this.isRawFunction(seriesFunction)) {
+  async evaluateSeriesFunction(context, seriesFunctionOrValue) {
+    if (!this.isRawFunction(seriesFunctionOrValue)) {
       // When `seriesFunction` isn't a function definition, then it is
       // probably a constant value
       return {
         type: 'basic',
-        data: seriesFunction,
+        data: seriesFunctionOrValue,
       };
     }
 
@@ -941,19 +984,19 @@ export default class Configuration {
     }
 
     const seriesFunctionCallback =
-      seriesFunctionsIndex[seriesFunction.functionName];
+      seriesFunctionsIndex[seriesFunctionOrValue.functionName];
     if (!seriesFunctionCallback) {
       throw {
         id: 'unknownOTSCFactory',
         details: {
-          functionName: seriesFunction.functionName,
+          functionName: seriesFunctionOrValue.functionName,
         },
       };
     }
 
     return await seriesFunctionCallback(
       normalizedContext,
-      seriesFunction.functionArguments
+      seriesFunctionOrValue.functionArguments
     );
   }
 
@@ -1000,7 +1043,7 @@ export default class Configuration {
     }
 
     this.timeResolution = timeResolutionSpec.timeResolution;
-    this.windowsCount = timeResolutionSpec.windowsCount;
+    this.pointsCount = timeResolutionSpec.pointsCount;
     this.updateInterval = timeResolutionSpec.updateInterval;
     set(this.updater, 'interval', this.updateInterval * 1000);
   }
@@ -1026,18 +1069,18 @@ export default class Configuration {
     if (!normalizedContext.nowTimestamp) {
       normalizedContext.nowTimestamp = this.getNowTimestamp();
     }
-    if (!('lastWindowTimestamp' in normalizedContext)) {
-      if (this.live && !this.lastWindowTimestamp) {
-        normalizedContext.lastWindowTimestamp = normalizedContext.nowTimestamp;
+    if (!('lastPointTimestamp' in normalizedContext)) {
+      if (this.live && !this.lastPointTimestamp) {
+        normalizedContext.lastPointTimestamp = normalizedContext.nowTimestamp;
       } else {
-        normalizedContext.lastWindowTimestamp = this.lastWindowTimestamp;
+        normalizedContext.lastPointTimestamp = this.lastPointTimestamp;
       }
     }
     if (typeof normalizedContext.timeResolution !== 'number') {
       normalizedContext.timeResolution = this.timeResolution;
     }
-    if (typeof normalizedContext.windowsCount !== 'number') {
-      normalizedContext.windowsCount = this.windowsCount;
+    if (typeof normalizedContext.pointsCount !== 'number') {
+      normalizedContext.pointsCount = this.pointsCount;
     }
     return normalizedContext;
   }

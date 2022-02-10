@@ -20,6 +20,6 @@
  * @param {OTSCSupplyValueTransformFunctionArguments} args
  * @returns {unknown}
  */
-export default function abs(context /**, args */ ) {
+export default function supplyValue(context /**, args */ ) {
   return 'valueToSupply' in context ? context.valueToSupply : null;
 }

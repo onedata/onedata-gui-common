@@ -9,9 +9,9 @@ export function createContext() {
     evaluateTransformFunction: sinon.spy(evaluateTransformFunction),
     evaluateSeriesFunction: sinon.spy(evaluateSeriesFunction),
     nowTimestamp,
-    lastWindowTimestamp: nowTimestamp,
+    lastPointTimestamp: nowTimestamp,
     timeResolution: 60,
-    windowsCount: 60,
+    pointsCount: 60,
   };
 }
 

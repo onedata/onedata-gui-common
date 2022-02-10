@@ -2,7 +2,7 @@
  * A series function, which loads series from the source specified by arguments.
  *
  * Arguments:
- * - sourceType - one of `'empty'`, `'externalSource'`
+ * - sourceType - for now only `'external'` is available
  * - sourceParameters - additional parameters specific for each source type.
  *
  * For `externalSource` type `sourceParameters` are:
@@ -12,7 +12,7 @@
  *
  * External source must provide method `fetchSeries`, which will be called by this
  * series function to obtain data. That method will be invoked with arguments:
- * - `{ lastWindowTimestamp, timeResolution, windowsCount }`,
+ * - `{ lastPointTimestamp, timeResolution, pointsCount }`,
  * - `externalSourceParameters`.
  * Using these arguments external source should return a promise, which will eventually
  * resolve to an array of points.
@@ -36,7 +36,7 @@ import point from './utils/point';
  * @returns {Promise<OTSCSeriesFunctionPointsResult>}
  */
 export default async function loadSeries(context, args) {
-  if (!context.timeResolution || !context.windowsCount || !args) {
+  if (!context.timeResolution || !context.pointsCount || !args) {
     return {
       type: 'points',
       data: [],
@@ -60,11 +60,11 @@ export default async function loadSeries(context, args) {
         points = [];
       } else {
         const fetchParams = {
-          lastWindowTimestamp: context.lastWindowTimestamp,
+          lastPointTimestamp: context.lastPointTimestamp,
           timeResolution: context.timeResolution,
-          // fetching one additional window to check whether end of series
+          // fetching one additional point to check whether end of series
           // has been reached
-          windowsCount: context.windowsCount + 1,
+          pointsCount: context.pointsCount + 1,
         };
         const rawPoints = await externalDataSource.fetchSeries(
           fetchParams,
@@ -74,12 +74,6 @@ export default async function loadSeries(context, args) {
       }
       break;
     }
-    case 'empty':
-      points = generateFakePoints(context, generateLastWindowTimestamp(context), {
-        newest: true,
-        oldest: true,
-      });
-      break;
     default:
       points = [];
       break;
@@ -105,19 +99,19 @@ function fitPointsToContext(context, points) {
     .reverse()
     .map(({ timestamp, value }) => point(timestamp, value));
 
-  // Remove points newer than context.lastWindowTimestamp
-  if (context.lastWindowTimestamp) {
+  // Remove points newer than context.lastPointTimestamp
+  if (context.lastPointTimestamp) {
     normalizedPoints = normalizedPoints.filter(({ timestamp }) =>
-      timestamp <= context.lastWindowTimestamp
+      timestamp <= context.lastPointTimestamp
     );
   }
 
-  const isLastWindowNewest = !context.lastWindowTimestamp ||
-    (context.nowTimestamp - context.lastWindowTimestamp) < context.timeResolution;
+  const isLastPointNewest = !context.lastPointTimestamp ||
+    (context.nowTimestamp - context.lastPointTimestamp) < context.timeResolution;
 
   // Find out timestamp of globally oldest point
   let globallyOldestPointTimestamp = null;
-  if (normalizedPoints.length && normalizedPoints.length < context.windowsCount + 1) {
+  if (normalizedPoints.length && normalizedPoints.length < context.pointsCount + 1) {
     globallyOldestPointTimestamp = normalizedPoints[normalizedPoints.length - 1].timestamp;
   }
 
@@ -128,33 +122,33 @@ function fitPointsToContext(context, points) {
 
   // If there are no points, return fake ones
   if (!normalizedPoints.length) {
-    if (context.lastWindowTimestamp) {
-      return generateFakePoints(context, context.lastWindowTimestamp, {
+    if (context.lastPointTimestamp) {
+      return generateFakePoints(context, context.lastPointTimestamp, {
         oldest: true,
-        newest: isLastWindowNewest,
+        newest: isLastPointNewest,
       });
     } else {
       return [];
     }
   }
 
-  // Cut off extra window (added to check for existence of older points)
-  if (normalizedPoints.length > context.windowsCount) {
-    normalizedPoints = normalizedPoints.slice(0, context.windowsCount);
+  // Cut off extra point (added to check for existence of older points)
+  if (normalizedPoints.length > context.pointsCount) {
+    normalizedPoints = normalizedPoints.slice(0, context.pointsCount);
   }
 
   // Add missing points after (newer than) received points
   if (
-    context.lastWindowTimestamp &&
-    context.lastWindowTimestamp - context.timeResolution >= normalizedPoints[0].timestamp
+    context.lastPointTimestamp &&
+    context.lastPointTimestamp - context.timeResolution >= normalizedPoints[0].timestamp
   ) {
-    const missingSeconds = context.lastWindowTimestamp - normalizedPoints[0].timestamp;
+    const missingSeconds = context.lastPointTimestamp - normalizedPoints[0].timestamp;
     const normalizedMissingSeconds = missingSeconds - (missingSeconds % context.timeResolution);
     let nextFakePointTimestamp = normalizedPoints[0].timestamp + normalizedMissingSeconds;
     const pointsToUnshift = [];
     while (
       nextFakePointTimestamp > normalizedPoints[0].timestamp &&
-      pointsToUnshift.length < context.windowsCount
+      pointsToUnshift.length < context.pointsCount
     ) {
       pointsToUnshift.push(point(nextFakePointTimestamp, null, { fake: true }));
       nextFakePointTimestamp -= context.timeResolution;
@@ -167,7 +161,7 @@ function fitPointsToContext(context, points) {
   normalizedPoints = [];
   let nextPointTimestamp = normalizedPointsWithGaps[0].timestamp;
   let originArrayIdx = 0;
-  while (normalizedPoints.length < context.windowsCount) {
+  while (normalizedPoints.length < context.pointsCount) {
     if (
       originArrayIdx < normalizedPointsWithGaps.length &&
       normalizedPointsWithGaps[originArrayIdx].timestamp === nextPointTimestamp
@@ -181,7 +175,7 @@ function fitPointsToContext(context, points) {
   }
 
   // Flag newest points
-  if (isLastWindowNewest) {
+  if (isLastPointNewest) {
     let realPointFlaggedAsNewest = false;
     for (let i = 0; i < normalizedPoints.length && !realPointFlaggedAsNewest; i++) {
       if (!normalizedPoints[i].fake) {
@@ -213,16 +207,10 @@ function isRawPointsArray(pointsArray) {
   );
 }
 
-function generateFakePoints(context, lastWindowTimestamp, pointParams = {}) {
-  const normalizedLastWindowTimestamp = lastWindowTimestamp -
-    (lastWindowTimestamp % context.timeResolution);
-  const points = fitPointsToContext(context, [point(normalizedLastWindowTimestamp, null)]);
+function generateFakePoints(context, lastPointTimestamp, pointParams = {}) {
+  const normalizedLastPointTimestamp = lastPointTimestamp -
+    (lastPointTimestamp % context.timeResolution);
+  const points = fitPointsToContext(context, [point(normalizedLastPointTimestamp, null)]);
   points.forEach((point) => Object.assign(point, { fake: true }, pointParams));
   return points;
-}
-
-function generateLastWindowTimestamp(context) {
-  return context.lastWindowTimestamp ||
-    context.nowTimestamp ||
-    Math.floor(Date.now() / 1000);
 }

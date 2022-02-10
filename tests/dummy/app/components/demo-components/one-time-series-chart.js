@@ -13,7 +13,7 @@ import OTSCConfiguration from 'onedata-gui-common/utils/one-time-series-chart/co
 export default Component.extend({
   configuration: computed(() => {
     const config = new OTSCConfiguration({
-      rawConfiguration: {
+      chartDefinition: {
         title: 'Demo chart',
         yAxes: [{
           id: 'axis1',
@@ -120,28 +120,28 @@ export default Component.extend({
       },
       timeResolutionSpecs: [{
         timeResolution: 5,
-        windowsCount: 24,
+        pointsCount: 24,
         updateInterval: 5,
       }, {
         timeResolution: 60,
-        windowsCount: 60,
+        pointsCount: 60,
         updateInterval: 10,
       }, {
         timeResolution: 60 * 60,
-        windowsCount: 24,
+        pointsCount: 24,
         updateInterval: 30,
       }],
       externalDataSources: {
         myTimeSeriesSource: {
           fetchSeries: async (context) => {
-            let lastTimestamp = context.lastWindowTimestamp;
+            let lastTimestamp = context.lastPointTimestamp;
             if (!lastTimestamp) {
               lastTimestamp = Math.floor(Date.now() / 1000);
             }
             lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
-            return _.times(context.windowsCount, (idx) => ({
+            return _.times(context.pointsCount, (idx) => ({
               timestamp: lastTimestamp -
-                ((context.windowsCount) - idx - 1) * context.timeResolution,
+                ((context.pointsCount) - idx - 1) * context.timeResolution,
               value: (1024 + idx * 512) * 1024,
             }));
           },

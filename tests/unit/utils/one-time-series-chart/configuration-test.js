@@ -136,7 +136,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates state with title', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         title: 'abc',
       },
     });
@@ -150,11 +150,11 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
-        windowsCount: 10,
+        pointsCount: 10,
         updateInterval: 0.5,
       }, {
         timeResolution: 2,
-        windowsCount: 5,
+        pointsCount: 5,
         updateInterval: 1,
       }],
     });
@@ -162,18 +162,18 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const state = await config.getState();
 
     expect(state.timeResolution).to.equal(1);
-    expect(state.windowsCount).to.equal(10);
+    expect(state.pointsCount).to.equal(10);
   });
 
   it('calculates state with changed time resolution spec', async function () {
     const config = new Configuration({
       timeResolutionSpecs: [{
         timeResolution: 1,
-        windowsCount: 10,
+        pointsCount: 10,
         updateInterval: 0.5,
       }, {
         timeResolution: 2,
-        windowsCount: 5,
+        pointsCount: 5,
         updateInterval: 1,
       }],
     });
@@ -182,7 +182,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     const state = await config.getState();
 
     expect(state.timeResolution).to.equal(2);
-    expect(state.windowsCount).to.equal(5);
+    expect(state.pointsCount).to.equal(5);
   });
 
   it('calculates state with previous time resolution spec (first one) when changed spec was incorrect',
@@ -190,11 +190,11 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       const config = new Configuration({
         timeResolutionSpecs: [{
           timeResolution: 1,
-          windowsCount: 10,
+          pointsCount: 10,
           updateInterval: 0.5,
         }, {
           timeResolution: 2,
-          windowsCount: 5,
+          pointsCount: 5,
           updateInterval: 1,
         }],
       });
@@ -204,12 +204,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       const state = await config.getState();
 
       expect(state.timeResolution).to.equal(2);
-      expect(state.windowsCount).to.equal(5);
+      expect(state.pointsCount).to.equal(5);
     });
 
   it('calculates y axes state without custom value formatters', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         yAxes: [{
           id: 'a1',
           name: 'axis1',
@@ -235,7 +235,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates y axes state with custom value formatters', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         yAxes: [{
           id: 'a1',
           name: 'axis1',
@@ -282,12 +282,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates x axis state', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [dummyStaticSeriesFactory(1, 'dummy')],
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 5,
+        pointsCount: 5,
       }],
       externalDataSources: {
         dummy: dummyDataSource([
@@ -336,12 +336,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates empty series state when there are no series defined', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [],
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 5,
+        pointsCount: 5,
       }],
     });
 
@@ -352,12 +352,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state using static factory', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [dummyStaticSeriesFactory(1, 'dummy')],
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([
@@ -384,7 +384,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state using dynamic factory (multiple scenario)', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
@@ -419,7 +419,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([
@@ -449,7 +449,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state using dynamic factory (empty scenario)', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
@@ -484,7 +484,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([
@@ -503,7 +503,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state when all series fields are defined', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [{
           factoryName: 'static',
           factoryArguments: {
@@ -529,7 +529,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([
@@ -556,7 +556,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state when optional series fields are not defined', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [{
           factoryName: 'static',
           factoryArguments: {
@@ -580,7 +580,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([]),
@@ -602,7 +602,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state when all possible series fields are functions', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
@@ -664,7 +664,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([]),
@@ -698,7 +698,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates series state with nested series functions', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [{
           factoryName: 'static',
           factoryArguments: {
@@ -732,7 +732,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy: dummyDataSource([
@@ -757,7 +757,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
 
   it('calculates synchronized series state based on badly-timed series', async function () {
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [
           dummyStaticSeriesFactory(1, 'dummy1'),
           dummyStaticSeriesFactory(2, 'dummy2'),
@@ -765,7 +765,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
-        windowsCount: 2,
+        pointsCount: 2,
       }],
       externalDataSources: {
         dummy1: dummyDataSource([
@@ -798,31 +798,31 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       [20, 2],
     ]);
     const config = new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         series: [dummyStaticSeriesFactory(1, 'dummy')],
       },
       timeResolutionSpecs: [{
         timeResolution: 1,
-        windowsCount: 2,
+        pointsCount: 2,
       }, {
         timeResolution: 2,
-        windowsCount: 3,
+        pointsCount: 3,
       }],
       externalDataSources: {
         dummy: dummySrc,
       },
     });
     config.setViewParameters({
-      lastWindowTimestamp: 20,
+      lastPointTimestamp: 20,
       timeResolution: 2,
     });
 
     const state = await config.getState();
 
     expect(dummySrc.fetchSeries).to.be.calledWith({
-      lastWindowTimestamp: 20,
+      lastPointTimestamp: 20,
       timeResolution: 2,
-      windowsCount: 4,
+      pointsCount: 4,
     }, undefined);
 
     expect(state.series).to.deep.equal([
@@ -835,7 +835,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   });
 
   context('in live mode', function () {
-    it('calculates series and newestWindowTimestamp state for null lastWindowTimestamp',
+    it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
       async function (done) {
         const nowTimestamp = Math.floor(Date.now() / 1000);
         const dummySrc = dummyDataSource([
@@ -843,12 +843,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           [nowTimestamp - 1, 2],
         ]);
         const config = new Configuration({
-          rawConfiguration: {
+          chartDefinition: {
             series: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
-            windowsCount: 3,
+            pointsCount: 3,
           }],
           externalDataSources: {
             dummy: dummySrc,
@@ -856,15 +856,15 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         });
         config.setViewParameters({
           live: true,
-          lastWindowTimestamp: null,
+          lastPointTimestamp: null,
         });
 
         const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledWith({
-          lastWindowTimestamp: nowTimestamp,
+          lastPointTimestamp: nowTimestamp,
           timeResolution: 1,
-          windowsCount: 4,
+          pointsCount: 4,
         }, undefined);
 
         expect(state.series).to.deep.equal([
@@ -874,25 +874,25 @@ describe('Unit | Utility | one time series chart/configuration', function () {
             point(nowTimestamp, null, { newest: true, fake: true }),
           ]),
         ]);
-        expect(state.newestWindowTimestamp).to.be.null;
+        expect(state.newestPointTimestamp).to.be.null;
         done();
       });
   });
 
   context('in non-live mode', function () {
-    it('calculates series and newestWindowTimestamp state for null lastWindowTimestamp',
+    it('calculates series and newestPointTimestamp state for null lastPointTimestamp',
       async function (done) {
         const dummySrc = dummyDataSource([
           [19, 1],
           [20, 2],
         ]);
         const config = new Configuration({
-          rawConfiguration: {
+          chartDefinition: {
             series: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
-            windowsCount: 3,
+            pointsCount: 3,
           }],
           externalDataSources: {
             dummy: dummySrc,
@@ -900,15 +900,15 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         });
         config.setViewParameters({
           live: false,
-          lastWindowTimestamp: null,
+          lastPointTimestamp: null,
         });
 
         const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledOnce.and.to.be.calledWith({
-          lastWindowTimestamp: null,
+          lastPointTimestamp: null,
           timeResolution: 1,
-          windowsCount: 4,
+          pointsCount: 4,
         }, undefined);
 
         expect(state.series).to.deep.equal([
@@ -918,29 +918,29 @@ describe('Unit | Utility | one time series chart/configuration', function () {
             point(20, 2, { newest: true }),
           ]),
         ]);
-        expect(state.newestWindowTimestamp).to.equal(20);
+        expect(state.newestPointTimestamp).to.equal(20);
         done();
       });
 
-    it('calculates series and newestWindowTimestamp state for non-null lastWindowTimestamp',
+    it('calculates series and newestPointTimestamp state for non-null lastPointTimestamp',
       async function (done) {
         const dummySrc = {
-          fetchSeries: sinon.spy(({ lastWindowTimestamp }) => {
-            if (lastWindowTimestamp === 19) {
+          fetchSeries: sinon.spy(({ lastPointTimestamp }) => {
+            if (lastPointTimestamp === 19) {
               return [{ timestamp: 19, value: 1 }];
-            } else if (lastWindowTimestamp === null) {
+            } else if (lastPointTimestamp === null) {
               return [{ timestamp: 20, value: 2 }, { timestamp: 19, value: 1 }];
             }
             return [];
           }),
         };
         const config = new Configuration({
-          rawConfiguration: {
+          chartDefinition: {
             series: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
-            windowsCount: 3,
+            pointsCount: 3,
           }],
           externalDataSources: {
             dummy: dummySrc,
@@ -948,21 +948,21 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         });
         config.setViewParameters({
           live: false,
-          lastWindowTimestamp: 19,
+          lastPointTimestamp: 19,
         });
 
         const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({
-            lastWindowTimestamp: null,
+            lastPointTimestamp: null,
             timeResolution: 1,
-            windowsCount: 2,
+            pointsCount: 2,
           }, undefined)
           .and.to.be.calledWith({
-            lastWindowTimestamp: 19,
+            lastPointTimestamp: 19,
             timeResolution: 1,
-            windowsCount: 4,
+            pointsCount: 4,
           }, undefined);
 
         expect(state.series).to.deep.equal([
@@ -972,11 +972,11 @@ describe('Unit | Utility | one time series chart/configuration', function () {
             point(19, 1, { oldest: true }),
           ]),
         ]);
-        expect(state.newestWindowTimestamp).to.equal(20);
+        expect(state.newestPointTimestamp).to.equal(20);
         done();
       });
 
-    it('calculates series and newestWindowTimestamp state for null lastWindowTimestamp and larger time resolution',
+    it('calculates series and newestPointTimestamp state for null lastPointTimestamp and larger time resolution',
       async function (done) {
         const dummySrc = {
           fetchSeries: sinon.spy(({ timeResolution }) => {
@@ -989,15 +989,15 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           }),
         };
         const config = new Configuration({
-          rawConfiguration: {
+          chartDefinition: {
             series: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
-            windowsCount: 3,
+            pointsCount: 3,
           }, {
             timeResolution: 2,
-            windowsCount: 3,
+            pointsCount: 3,
           }],
           externalDataSources: {
             dummy: dummySrc,
@@ -1006,21 +1006,21 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         config.setViewParameters({
           live: false,
           timeResolution: 2,
-          lastWindowTimestamp: null,
+          lastPointTimestamp: null,
         });
 
         const state = await config.getState();
 
         expect(dummySrc.fetchSeries).to.be.calledTwice
           .and.to.be.calledWith({
-            lastWindowTimestamp: null,
+            lastPointTimestamp: null,
             timeResolution: 1,
-            windowsCount: 2,
+            pointsCount: 2,
           }, undefined)
           .and.to.be.calledWith({
-            lastWindowTimestamp: null,
+            lastPointTimestamp: null,
             timeResolution: 2,
-            windowsCount: 4,
+            pointsCount: 4,
           }, undefined);
 
         expect(state.series).to.deep.equal([
@@ -1030,7 +1030,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
             point(18, 1, { oldest: true, newest: true }),
           ]),
         ]);
-        expect(state.newestWindowTimestamp).to.equal(19);
+        expect(state.newestPointTimestamp).to.equal(19);
         done();
       });
   });

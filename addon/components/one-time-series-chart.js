@@ -162,7 +162,7 @@ export default Component.extend(I18n, createDataProxyMixin('state'), {
         state,
       } = this.getProperties('configuration', 'state');
       configuration.setViewParameters({
-        lastWindowTimestamp: state.firstWindowTimestamp - state.timeResolution,
+        lastPointTimestamp: state.firstPointTimestamp - state.timeResolution,
       });
     },
     showNewer() {
@@ -171,12 +171,12 @@ export default Component.extend(I18n, createDataProxyMixin('state'), {
         state,
       } = this.getProperties('configuration', 'state');
       configuration.setViewParameters({
-        lastWindowTimestamp: state.lastWindowTimestamp + state.timeResolution * state.windowsCount,
+        lastPointTimestamp: state.lastPointTimestamp + state.timeResolution * state.pointsCount,
       });
     },
     showNewest() {
       this.get('configuration').setViewParameters({
-        lastWindowTimestamp: null,
+        lastPointTimestamp: null,
       });
     },
   },

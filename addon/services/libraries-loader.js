@@ -10,18 +10,19 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/* eslint no-restricted-globals: ["error", "window"] */
+
 import Service from '@ember/service';
 import { get } from '@ember/object';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import config from 'ember-get-config';
 import { Promise, all as allFulfilled } from 'rsvp';
-
-const librariesSpec = config.dynamicLibraries || {};
+import _ from 'lodash';
 
 export default Service.extend({
   /**
    * @private
-   * @type {Map<string,PromiseObject<Object|Function|null>>}
+   * @type {Map<string, PromiseObject<Object|Function|null>>}
    */
   librariesProxiesMap: undefined,
 
@@ -29,12 +30,13 @@ export default Service.extend({
    * @private
    * @type {Object}
    */
-  librariesSpec,
+  librariesSpec: _.cloneDeep(config.dynamicLibraries || {}),
 
   /**
    * @private
    * @type {Window}
    */
+  /* eslint-disable-next-line no-restricted-globals */
   window,
 
   /**
@@ -108,7 +110,8 @@ export default Service.extend({
       filesPromises.push(this.fetchScript(libraryName, destinationPath))
     );
     await allFulfilled(filesPromises);
-    return window[libraryName];
+    const exportName = librarySpec.exportName || libraryName;
+    return window[exportName];
   },
 
   /**
