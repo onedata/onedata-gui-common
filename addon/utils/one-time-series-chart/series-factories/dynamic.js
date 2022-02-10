@@ -55,7 +55,7 @@
  * returned result like `[{id: 's1'}, {id: 's2'}]`, then two series would be generated -
  * one with id = `'s1'` and another with id = `'s2'`.
  *
- * @module utils/one-time-series-chart/series-factories/static
+ * @module utils/one-time-series-chart/series-factories/dynamic
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.

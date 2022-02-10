@@ -8,7 +8,7 @@ import Configuration from 'onedata-gui-common/utils/one-time-series-chart/config
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
 import {
-  createDummyRawConfiguration,
+  createDummyChartDefinition,
   createDummySource,
   expectEchartDummyPoints,
   createDummyConfiguration,
@@ -34,7 +34,7 @@ describe('Integration | Component | one time series chart', function () {
 
   it('shows "no data to show" info, when there are no series to show', async function () {
     this.set('configuration', new Configuration({
-      rawConfiguration: {
+      chartDefinition: {
         yAxes: [{
           id: 'a1',
         }],
@@ -52,7 +52,7 @@ describe('Integration | Component | one time series chart', function () {
 
   it('renders time resolutions according to the resolutions defined in configuration', async function () {
     this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
       }, {
@@ -79,16 +79,16 @@ describe('Integration | Component | one time series chart', function () {
 
   it('allows to change time resolution using button', async function () {
     const config = this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
-        windowsCount: 10,
+        pointsCount: 10,
       }, {
         timeResolution: 3600,
-        windowsCount: 11,
+        pointsCount: 11,
       }, {
         timeResolution: 48 * 3600,
-        windowsCount: 12,
+        pointsCount: 12,
       }],
       externalDataSources: {
         dummy: createDummySource(),
@@ -106,16 +106,16 @@ describe('Integration | Component | one time series chart', function () {
 
   it('allows to change time resolution using config', async function () {
     const config = this.set('configuration', new Configuration({
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
-        windowsCount: 10,
+        pointsCount: 10,
       }, {
         timeResolution: 3600,
-        windowsCount: 11,
+        pointsCount: 11,
       }, {
         timeResolution: 48 * 3600,
-        windowsCount: 12,
+        pointsCount: 12,
       }],
       externalDataSources: {
         dummy: createDummySource(),
@@ -137,7 +137,7 @@ describe('Integration | Component | one time series chart', function () {
   it('allows to show older data', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
@@ -146,14 +146,14 @@ describe('Integration | Component | one time series chart', function () {
     await click($showOlderBtn[0]);
 
     expect($showOlderBtn).to.be.not.disabled;
-    expect(config.getViewParameters().lastWindowTimestamp).to.equal(996360);
+    expect(config.getViewParameters().lastPointTimestamp).to.equal(996360);
     expectEchartDummyPoints(this, 996360, 60, 60);
   });
 
   it('allows to show newer data', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
@@ -162,14 +162,14 @@ describe('Integration | Component | one time series chart', function () {
     await click($showNewerBtn[0]);
 
     expect($showNewerBtn).to.be.not.disabled;
-    expect(config.getViewParameters().lastWindowTimestamp).to.equal(1003560);
+    expect(config.getViewParameters().lastPointTimestamp).to.equal(1003560);
     expectEchartDummyPoints(this, 1003560, 60, 60);
   });
 
   it('allows to show the newest data', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
@@ -179,22 +179,22 @@ describe('Integration | Component | one time series chart', function () {
 
     expect($showNewestBtn).to.be.disabled;
     expect(this.$('.show-newer-btn')).to.be.disabled;
-    expect(config.getViewParameters().lastWindowTimestamp)
+    expect(config.getViewParameters().lastPointTimestamp)
       .to.be.closeTo(Math.floor(Date.now() / 1000), 60);
     expectEchartDummyPoints(this, null, 60, 60);
   });
 
-  it('moving to the newest data in live mode changes lastWindowTimestamp to null', async function () {
+  it('moving to the newest data in live mode changes lastPointTimestamp to null', async function () {
     const config = this.set('configuration', createDummyConfiguration());
     config.setViewParameters({
       live: true,
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
     await click('.show-newest-btn');
     expectEchartDummyPoints(this, null, 60, 60);
-    expect(config.getViewParameters().lastWindowTimestamp).to.be.null;
+    expect(config.getViewParameters().lastPointTimestamp).to.be.null;
   });
 });
 

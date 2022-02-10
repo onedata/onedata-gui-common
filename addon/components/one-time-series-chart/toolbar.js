@@ -93,10 +93,10 @@ export default Component.extend({
       const moveableModels = this.getModels()
         .filter((model) =>
           !get(model, 'state.hasReachedOldest') &&
-          get(model, 'state.firstWindowTimestamp')
+          get(model, 'state.firstPointTimestamp')
         ).sort((m1, m2) =>
-          get(m1, 'state.firstWindowTimestamp') -
-          get(m2, 'state.firstWindowTimestamp')
+          get(m1, 'state.firstPointTimestamp') -
+          get(m2, 'state.firstPointTimestamp')
         ).reverse();
 
       if (moveableModels.length === 0) {
@@ -104,12 +104,12 @@ export default Component.extend({
       }
 
       const maxMoveableState = get(moveableModels[0], 'state');
-      const newLastWindowTimestamp = maxMoveableState.firstWindowTimestamp -
+      const newLastPointTimestamp = maxMoveableState.firstPointTimestamp -
         maxMoveableState.timeResolution;
       moveableModels.forEach((model) => {
-        if (get(model, 'state.lastWindowTimestamp') > newLastWindowTimestamp) {
+        if (get(model, 'state.lastPointTimestamp') > newLastPointTimestamp) {
           model.setViewParameters({
-            lastWindowTimestamp: newLastWindowTimestamp,
+            lastPointTimestamp: newLastPointTimestamp,
           });
         }
       });
@@ -118,10 +118,10 @@ export default Component.extend({
       const moveableModels = this.getModels()
         .filter((model) =>
           !get(model, 'state.hasReachedNewest') &&
-          get(model, 'state.lastWindowTimestamp')
+          get(model, 'state.lastPointTimestamp')
         ).sort((m1, m2) =>
-          get(m1, 'state.lastWindowTimestamp') -
-          get(m2, 'state.lastWindowTimestamp')
+          get(m1, 'state.lastPointTimestamp') -
+          get(m2, 'state.lastPointTimestamp')
         );
 
       if (moveableModels.length === 0) {
@@ -129,19 +129,19 @@ export default Component.extend({
       }
 
       const minMoveableState = get(moveableModels[0], 'state');
-      const newLastWindowTimestamp = minMoveableState.lastWindowTimestamp +
-        minMoveableState.timeResolution * minMoveableState.windowsCount;
+      const newLastPointTimestamp = minMoveableState.lastPointTimestamp +
+        minMoveableState.timeResolution * minMoveableState.pointsCount;
       moveableModels.forEach((model) => {
-        if (get(model, 'state.lastWindowTimestamp') < newLastWindowTimestamp) {
+        if (get(model, 'state.lastPointTimestamp') < newLastPointTimestamp) {
           model.setViewParameters({
-            lastWindowTimestamp: newLastWindowTimestamp,
+            lastPointTimestamp: newLastPointTimestamp,
           });
         }
       });
     },
     showNewest() {
       this.getModels().forEach((model) => model.setViewParameters({
-        lastWindowTimestamp: null,
+        lastPointTimestamp: null,
       }));
     },
   },

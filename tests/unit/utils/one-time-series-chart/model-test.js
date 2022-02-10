@@ -24,7 +24,7 @@ describe('Unit | Utility | one time series chart/model', function () {
     function () {
       const config = createDummyConfiguration();
       config.setViewParameters({
-        lastWindowTimestamp: 1234,
+        lastPointTimestamp: 1234,
       });
       const model = createModel(config);
 
@@ -36,7 +36,7 @@ describe('Unit | Utility | one time series chart/model', function () {
       const config = createDummyConfiguration();
       const model = createModel(config);
       config.setViewParameters({
-        lastWindowTimestamp: 1234,
+        lastPointTimestamp: 1234,
       });
 
       expect(get(model, 'lastViewParameters')).to.deep.equal(config.getViewParameters());
@@ -46,11 +46,11 @@ describe('Unit | Utility | one time series chart/model', function () {
     const config = createDummyConfiguration();
     const model = createModel(config);
     model.setViewParameters({
-      lastWindowTimestamp: 1234,
+      lastPointTimestamp: 1234,
     });
 
     expect(get(model, 'lastViewParameters')).to.deep.equal(config.getViewParameters())
-      .and.to.include({ lastWindowTimestamp: 1234 });
+      .and.to.include({ lastPointTimestamp: 1234 });
   });
 
   it('contains promisified state in stateProxy', async function () {
@@ -99,9 +99,9 @@ async function expectStateToHaveUpdatedPoints(model) {
   const statePointsValues = await getStatePointsValues(model);
   const updatedValues = createDummySource()
     .fetchSeries({
-      lastWindowTimestmap: get(model, 'configuration').getViewParameters().lastWindowTimestamp,
+      lastPointTimestmap: get(model, 'configuration').getViewParameters().lastPointTimestamp,
       timeResolution: 60,
-      windowsCount: 60,
+      pointsCount: 60,
     }).mapBy('value');
   expect(statePointsValues).to.deep.equal(updatedValues);
   return updatedValues;

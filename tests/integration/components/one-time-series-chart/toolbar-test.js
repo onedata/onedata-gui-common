@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import {
-  createDummyRawConfiguration,
+  createDummyChartDefinition,
   createDummyConfiguration,
   createModel,
 } from '../../../helpers/one-time-series-chart';
@@ -27,7 +27,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   it('renders time resolutions according to the resolutions defined in a single model',
     async function () {
       const [model] = setupModels(this, [{
-        rawConfiguration: createDummyRawConfiguration(),
+        chartDefinition: createDummyChartDefinition(),
         timeResolutionSpecs: [{
           timeResolution: 60,
         }, {
@@ -52,7 +52,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   it('renders time resolutions according to the resolutions defined in multiple models',
     async function () {
       const [model1, model2] = setupModels(this, [{
-        rawConfiguration: createDummyRawConfiguration(),
+        chartDefinition: createDummyChartDefinition(),
         timeResolutionSpecs: [{
           timeResolution: 5,
         }, {
@@ -68,7 +68,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
           },
         },
       }, {
-        rawConfiguration: createDummyRawConfiguration(),
+        chartDefinition: createDummyChartDefinition(),
         timeResolutionSpecs: [{
           timeResolution: 60,
         }, {
@@ -95,7 +95,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
 
   it('changes time resolution of all models', async function () {
     const [model1, model2] = setupModels(this, [{
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
       }, {
@@ -107,7 +107,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
         },
       },
     }, {
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
       }, {
@@ -132,7 +132,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
 
   it('relfects change of models time resolution', async function () {
     const [model] = setupModels(this, [{
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
       }, {
@@ -171,18 +171,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(0, 3000000),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
     model1.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('newest');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(3999960);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(3000000);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(3999960);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(3000000);
   });
 
   it('allows to move to the newest points (one chart)', async function () {
@@ -191,15 +191,15 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(0, 3000000),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('newest');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(3999960);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(3000000);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(3999960);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(3000000);
   });
 
   it('allows to move to newer points (all charts, not overlaping)', async function () {
@@ -208,18 +208,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
     model2.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('newer');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(1003560);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(1999980);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(1003560);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(1999980);
   });
 
   it('allows to move to newer points (all charts, partially overlaping)', async function () {
@@ -228,18 +228,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1999800,
+      lastPointTimestamp: 1999800,
     });
     model2.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('newer');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(2003400);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(2003400);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(2003400);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(2003400);
   });
 
   it('allows to move to newer points (one chart)', async function () {
@@ -248,18 +248,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
     model2.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('newer');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(999960);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(2003580);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(999960);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(2003580);
   });
 
   it('allows to move to older points (all charts, not overlaping)', async function () {
@@ -268,18 +268,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
     model2.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('older');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(999960);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(1996380);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(999960);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(1996380);
   });
 
   it('allows to move to older points (all charts, partially overlaping)', async function () {
@@ -288,18 +288,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1999800,
+      lastPointTimestamp: 1999800,
     });
     model2.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('older');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(1996380);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(1996380);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(1996380);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(1996380);
   });
 
   it('allows to move to older points (one chart)', async function () {
@@ -308,18 +308,18 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       createDummyConfiguration(),
     ]);
     model1.setViewParameters({
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
     model2.setViewParameters({
-      lastWindowTimestamp: 2000000,
+      lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
     await render(this);
 
     await clickNavBtn('older');
 
-    expect(get(model1, 'state').lastWindowTimestamp).to.equal(999960);
-    expect(get(model2, 'state').lastWindowTimestamp).to.equal(1996380);
+    expect(get(model1, 'state').lastPointTimestamp).to.equal(999960);
+    expect(get(model2, 'state').lastPointTimestamp).to.equal(1996380);
   });
 });
 

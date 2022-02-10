@@ -11,7 +11,7 @@
  * If `data` is a series function, it is evaluated before further processing.
  *
  * This function is an extension of `abs` transform function, so it works
- * exactly the same for numbers and arrays for numbers. In case when `data`
+ * exactly the same for numbers and arrays of numbers. In case when `data`
  * is an array of points, then the result will also be an array of points
  * with untouched timestamps and transformed values. For example for input:
  * `[{ timestamp: 1, value: -4 }, { timestamp: 2, value: 5 }]` result will be:

@@ -10,67 +10,16 @@ let fakeClock;
 describe('Unit | Utility | one time series chart/series functions/load series', function () {
   beforeEach(function () {
     this.context = createContext();
-    this.context.lastWindowTimestamp = 20;
+    this.context.lastPointTimestamp = 20;
     this.context.nowTimestamp = 22;
     this.context.timeResolution = 2;
-    this.context.windowsCount = 5;
+    this.context.pointsCount = 5;
   });
 
   afterEach(function () {
     if (fakeClock) {
       fakeClock.restore();
     }
-  });
-
-  context('when "sourceType" is "empty"', function () {
-    beforeEach(function () {
-      this.functionArguments = {
-        sourceType: 'empty',
-      };
-    });
-
-    it('produces fake points series', async function (done) {
-      const expectedPoints = [12, 14, 16, 18, 20].map(timestamp =>
-        point(timestamp, null, { fake: true, oldest: true, newest: true })
-      );
-
-      expect(await loadSeries(this.context, this.functionArguments))
-        .to.deep.equal({ type: 'points', data: expectedPoints });
-      done();
-    });
-
-    it('produces fake points even when lastWindowTimestamp is not provided', async function (done) {
-      this.context.lastWindowTimestamp = null;
-      const expectedPoints = [14, 16, 18, 20, 22].map(timestamp =>
-        point(timestamp, null, { fake: true, oldest: true, newest: true })
-      );
-
-      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'points',
-        data: expectedPoints,
-      });
-      done();
-    });
-
-    it('returns empty series when timeResolution is not provided', async function (done) {
-      this.context.timeResolution = null;
-
-      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'points',
-        data: [],
-      });
-      done();
-    });
-
-    it('returns empty series when windowsCount is not provided', async function (done) {
-      this.context.windowsCount = null;
-
-      expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
-        type: 'points',
-        data: [],
-      });
-      done();
-    });
   });
 
   context('when "sourceType" is "external"', function () {
@@ -309,7 +258,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
     });
 
     testFetchSeriesScenario({
-      title: 'produces series acquired from custom source (badly time-aligned middle points, newest timestamp different than target lastWindowTimestamp)',
+      title: 'produces series acquired from custom source (badly time-aligned middle points, newest timestamp different than target lastPointTimestamp)',
       sourceData: [
         rawPoint(10, -2),
         rawPoint(11, -1),
@@ -328,8 +277,8 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
     });
 
     testFetchSeriesScenario({
-      title: 'produces series acquired from custom source (null lastWindowTimestamp)',
-      lastWindowTimestamp: null,
+      title: 'produces series acquired from custom source (null lastPointTimestamp)',
+      lastPointTimestamp: null,
       sourceData: [
         rawPoint(10, -2),
         rawPoint(12, -1),
@@ -348,15 +297,15 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
     });
 
     testFetchSeriesScenario({
-      title: 'produces empty series from custom source (null lastWindowTimestamp, no points)',
-      lastWindowTimestamp: null,
+      title: 'produces empty series from custom source (null lastPointTimestamp, no points)',
+      lastPointTimestamp: null,
       sourceData: [],
       expectedPoints: [],
     });
 
     testFetchSeriesScenario({
-      title: 'produces series acquired from custom source (lastWindowTimestamp == nowTimestamp)',
-      lastWindowTimestamp: 22,
+      title: 'produces series acquired from custom source (lastPointTimestamp == nowTimestamp)',
+      lastPointTimestamp: 22,
       sourceData: [
         rawPoint(10, -2),
         rawPoint(12, -1),
@@ -394,8 +343,8 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
       done();
     });
 
-    it('returns empty series when windowsCount is not provided', async function (done) {
-      this.context.windowsCount = null;
+    it('returns empty series when pointsCount is not provided', async function (done) {
+      this.context.pointsCount = null;
 
       expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
         type: 'points',
@@ -406,11 +355,11 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
   });
 });
 
-function testFetchSeriesScenario({ title, lastWindowTimestamp, sourceData, expectedPoints }) {
+function testFetchSeriesScenario({ title, lastPointTimestamp, sourceData, expectedPoints }) {
   it(title, async function (done) {
     this.customSourceData = sourceData;
-    if (lastWindowTimestamp !== undefined) {
-      this.context.lastWindowTimestamp = lastWindowTimestamp;
+    if (lastPointTimestamp !== undefined) {
+      this.context.lastPointTimestamp = lastPointTimestamp;
     }
 
     expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
@@ -425,9 +374,9 @@ function testFetchSeriesScenario({ title, lastWindowTimestamp, sourceData, expec
 function expectFetchSeriesToBeCalled(testCase) {
   expect(testCase.context.externalDataSources.customSource.fetchSeries).to.be.calledOnce
     .and.to.be.calledWith(sinon.match({
-      lastWindowTimestamp: testCase.context.lastWindowTimestamp,
+      lastPointTimestamp: testCase.context.lastPointTimestamp,
       timeResolution: testCase.context.timeResolution,
-      windowsCount: testCase.context.windowsCount + 1,
+      pointsCount: testCase.context.pointsCount + 1,
     }, testCase.functionArguments.sourceParameters.externalSourceParameters));
 }
 

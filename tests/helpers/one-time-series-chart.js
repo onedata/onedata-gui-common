@@ -5,14 +5,14 @@ import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
 
 export function expectEchartDummyPoints(
   testCase,
-  lastWindowTimestamp,
+  lastPointTimestamp,
   timeResolution,
-  windowsCount
+  pointsCount
 ) {
   const echartPoints = createDummySource().fetchSeries({
-    lastWindowTimestamp,
+    lastPointTimestamp,
     timeResolution,
-    windowsCount,
+    pointsCount,
   }).map(({ timestamp, value }) => [String(timestamp), value]);
   expect(getEchartOption(testCase).series[0].data).to.deep.equal(echartPoints);
 }
@@ -23,10 +23,10 @@ function getEchartOption(testCase) {
 
 export function createDummyConfiguration(minTimestamp, maxTimestamp) {
   return new Configuration({
-    rawConfiguration: createDummyRawConfiguration(),
+    chartDefinition: createDummyChartDefinition(),
     timeResolutionSpecs: [{
       timeResolution: 60,
-      windowsCount: 60,
+      pointsCount: 60,
       updateInterval: 10,
     }],
     externalDataSources: {
@@ -35,7 +35,7 @@ export function createDummyConfiguration(minTimestamp, maxTimestamp) {
   });
 }
 
-export function createDummyRawConfiguration() {
+export function createDummyChartDefinition() {
   return {
     yAxes: [{
       id: 'a1',
@@ -67,16 +67,16 @@ export function createDummyRawConfiguration() {
 export function createDummySource(minTimestamp, maxTimestamp) {
   return {
     fetchSeries: (context) => {
-      let lastTimestamp = context.lastWindowTimestamp;
+      let lastTimestamp = context.lastPointTimestamp;
       if (!lastTimestamp) {
         lastTimestamp = Math.floor(Date.now() / 1000);
       }
       lastTimestamp = typeof maxTimestamp === 'number' ?
         Math.min(lastTimestamp, maxTimestamp) : lastTimestamp;
       lastTimestamp = lastTimestamp - lastTimestamp % context.timeResolution;
-      const points = _.times(context.windowsCount, (idx) => {
+      const points = _.times(context.pointsCount, (idx) => {
         const timestamp = lastTimestamp -
-          ((context.windowsCount) - idx - 1) * context.timeResolution;
+          ((context.pointsCount) - idx - 1) * context.timeResolution;
         return {
           timestamp,
           value: timestamp % 123,

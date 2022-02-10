@@ -16,6 +16,12 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
 import { next } from '@ember/runloop';
 
+/**
+ * @typedef {Object} ECOption An object, that is passed to `setOption` Echarts
+ * instance method. For more information, see:
+ * https://github.com/apache/echarts/blob/master/src/util/types.ts
+ */
+
 export default Component.extend(WindowResizeHandler, {
   layout,
   classNames: ['one-echart'],
@@ -49,7 +55,7 @@ export default Component.extend(WindowResizeHandler, {
     return this.get('librariesLoader').loadLibrary('echarts');
   }),
 
-  optionApplyer: observer('option', function optionsApplyer() {
+  optionApplyer: observer('option', function optionApplyer() {
     this.applyChartOption();
   }),
 
@@ -58,10 +64,7 @@ export default Component.extend(WindowResizeHandler, {
    */
   didInsertElement() {
     this._super(...arguments);
-    this.get('echartsLibraryProxy')
-      .then(() => next(() => window.requestAnimationFrame(() =>
-        safeExec(this, () => this.setupChart())
-      )));
+    this.setupChart();
   },
 
   /**
@@ -84,18 +87,20 @@ export default Component.extend(WindowResizeHandler, {
     });
   },
 
-  setupChart() {
-    const {
-      element,
-      chart: existingChart,
-    } = this.getProperties('element', 'chart');
-    const echarts = this.get('echartsLibraryProxy.content');
-    if (!element || !echarts || existingChart) {
-      return;
-    }
+  async setupChart() {
+    const echarts = await this.get('echartsLibraryProxy');
+    next(() => window.requestAnimationFrame(() => safeExec(this, () => {
+      const {
+        element,
+        chart: existingChart,
+      } = this.getProperties('element', 'chart');
+      if (!element || !echarts || existingChart) {
+        return;
+      }
 
-    this.set('chart', echarts.init(element.querySelector('.chart')));
-    this.applyChartOption();
+      this.set('chart', echarts.init(element.querySelector('.chart')));
+      this.applyChartOption();
+    })));
   },
 
   applyChartOption() {

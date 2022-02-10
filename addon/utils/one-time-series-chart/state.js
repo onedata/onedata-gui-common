@@ -18,8 +18,9 @@ import _ from 'lodash';
  * @property {OTSCXAxis} xAxis
  * @property {OTSCSeries[]} series
  * @property {number} timeResolution
- * @property {number} windowsCount
- * @property {number} newestWindowTimestamp
+ * @property {number} pointsCount
+ * @property {number|null} newestPointTimestamp globally newest point timestamp
+ * of a chart. I is null in `live` mode.
  */
 
 /**
@@ -49,9 +50,17 @@ import _ from 'lodash';
 
 /**
  * @typedef {RawOTSCSeriesPoint} OTSCSeriesPoint
- * @property {boolean} oldest
- * @property {boolean} newest
- * @property {boolean} fake
+ * @property {number|null} value null means, that value in this point is unknown
+ * @property {boolean} fake when set to true, it means that this point has been
+ *   generated on-the-fly because data source did not mention it. It may happen
+ *   when there are time gaps in incoming data or there is a need to provide
+ *   extra points to fill the whole chart near the data oldest/newest sides.
+ * @property {boolean} oldest when set to true, it means that before this point
+ *   there are no other (meaningful) points available. There can exist some e.g.
+ *   for chart points alignment purposes, but all of them will be fake.
+ * @property {boolean} newest when set to true, it means that after this point
+ *   there are no other (meaningful) points available. There can exist some e.g.
+ *   for chart points alignment purposes, but all of them will be fake.
  */
 
 export default class State {
@@ -103,14 +112,14 @@ export default class State {
      * @readonly
      * @type {number}
      */
-    this.windowsCount = options.windowsCount;
+    this.pointsCount = options.pointsCount;
 
     /**
      * @public
      * @readonly
      * @type {number|null}
      */
-    this.newestWindowTimestamp = options.newestWindowTimestamp;
+    this.newestPointTimestamp = options.newestPointTimestamp;
 
     /**
      * @public
@@ -135,19 +144,19 @@ export default class State {
      * @readonly
      * @type {number}
      */
-    this.firstWindowTimestamp = null;
+    this.firstPointTimestamp = null;
 
     /**
      * @public
      * @readonly
      * @type {number}
      */
-    this.lastWindowTimestamp = null;
+    this.lastPointTimestamp = null;
 
     const firstSeriesData = this.series[0] && this.series[0].data;
     if (firstSeriesData && firstSeriesData.length) {
-      this.firstWindowTimestamp = firstSeriesData[0].timestamp;
-      this.lastWindowTimestamp = firstSeriesData[firstSeriesData.length - 1].timestamp;
+      this.firstPointTimestamp = firstSeriesData[0].timestamp;
+      this.lastPointTimestamp = firstSeriesData[firstSeriesData.length - 1].timestamp;
     }
   }
 

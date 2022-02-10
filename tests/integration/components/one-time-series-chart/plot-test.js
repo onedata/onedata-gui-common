@@ -6,7 +6,7 @@ import wait from 'ember-test-helpers/wait';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
 import {
-  createDummyRawConfiguration,
+  createDummyChartDefinition,
   createDummySource,
   expectEchartDummyPoints,
   createDummyConfiguration,
@@ -41,7 +41,7 @@ describe('Integration | Component | one time series chart/plot', function () {
 
   it('shows "no data to show" info, when there are no series to show', async function () {
     setupModel(this, {
-      rawConfiguration: {
+      chartDefinition: {
         yAxes: [{
           id: 'a1',
         }],
@@ -59,7 +59,7 @@ describe('Integration | Component | one time series chart/plot', function () {
 
   it('shows "no data to show" info, when there are no time resolutions specified', async function () {
     setupModel(this, {
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [],
       externalDataSources: {
         dummy: {
@@ -74,10 +74,10 @@ describe('Integration | Component | one time series chart/plot', function () {
   });
 
   it('shows "no data to show" info, when there are no yAxes specified', async function () {
-    const rawConfiguration = createDummyRawConfiguration();
-    rawConfiguration.yAxes = [];
+    const chartDefinition = createDummyChartDefinition();
+    chartDefinition.yAxes = [];
     setupModel(this, {
-      rawConfiguration,
+      chartDefinition,
       timeResolutionSpecs: [{
         timeResolution: 60,
       }],
@@ -95,16 +95,16 @@ describe('Integration | Component | one time series chart/plot', function () {
 
   it('rerenders chart after model config change', async function () {
     const model = setupModel(this, {
-      rawConfiguration: createDummyRawConfiguration(),
+      chartDefinition: createDummyChartDefinition(),
       timeResolutionSpecs: [{
         timeResolution: 60,
-        windowsCount: 10,
+        pointsCount: 10,
       }, {
         timeResolution: 3600,
-        windowsCount: 11,
+        pointsCount: 11,
       }, {
         timeResolution: 48 * 3600,
-        windowsCount: 12,
+        pointsCount: 12,
       }],
       externalDataSources: {
         dummy: createDummySource(),
@@ -131,11 +131,11 @@ describe('Integration | Component | one time series chart/plot', function () {
     await render(this);
 
     expectEchartDummyPoints(this, null, 60, 60);
-    expect(model.get('lastViewParameters.lastWindowTimestamp')).to.be.null;
+    expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
     expectEchartDummyPoints(this, null, 60, 60);
-    expect(model.get('lastViewParameters.lastWindowTimestamp')).to.be.null;
+    expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
 
   it('shows continuously reloading newest data in live mode', async function () {
@@ -147,11 +147,11 @@ describe('Integration | Component | one time series chart/plot', function () {
 
     await render(this);
     expectEchartDummyPoints(this, null, 60, 60);
-    expect(model.get('lastViewParameters.lastWindowTimestamp')).to.be.null;
+    expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
     expectEchartDummyPoints(this, null, 60, 60);
-    expect(model.get('lastViewParameters.lastWindowTimestamp')).to.be.null;
+    expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
 
   it('shows continuously reloading older data in live mode', async function () {
@@ -159,16 +159,16 @@ describe('Integration | Component | one time series chart/plot', function () {
     const model = setupModel(this, createDummyConfiguration());
     model.setViewParameters({
       live: true,
-      lastWindowTimestamp: 1000000,
+      lastPointTimestamp: 1000000,
     });
 
     await render(this);
     expectEchartDummyPoints(this, 1000000, 60, 60);
-    expect(model.get('lastViewParameters.lastWindowTimestamp')).to.equal(1000000);
+    expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
 
     fakeClock.tick(60 * 1000 + 500);
     expectEchartDummyPoints(this, 1000000, 60, 60);
-    expect(model.get('lastViewParameters.lastWindowTimestamp')).to.equal(1000000);
+    expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
   });
 });
 

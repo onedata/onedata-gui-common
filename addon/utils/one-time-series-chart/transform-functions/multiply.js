@@ -11,7 +11,7 @@
  * NOTE: All array operands (also those obtained from transform functions evaluation)
  * must have the same length. Otherwise, null will be returned.
  *
- * In case of numbers operands multiplication result is striaghtforward. For operands
+ * In case of numbers operands multiplication result is straightforward. For operands
  * `[ 2, 3 ]` the result will be `6`.
  * In case of operands including arrays, all non-array operands are converted to
  * arrays of numbers by repeating a number as much as it is needed to reach the length
@@ -28,7 +28,7 @@
  * ```
  * result will be: `[12, 24]`.
  *
- * In case of any non-number value, it will be converted to null. Any multuplication by
+ * In case of any non-number value, it will be converted to null. Any multiplication by
  * null will result in null. Example: `[[2, 3], [4, null]]` will result in `[8, null]`.
  *
  * @module utils/one-time-series-chart/transform-functions/multiply

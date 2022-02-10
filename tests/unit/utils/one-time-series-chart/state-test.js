@@ -8,8 +8,8 @@ describe('Unit | Utility | one time series chart/state', function () {
   testStateContainsCopiedProperty({ propName: 'xAxis', value: {} });
   testStateContainsCopiedProperty({ propName: 'series', value: [] });
   testStateContainsCopiedProperty({ propName: 'timeResolution', value: 10 });
-  testStateContainsCopiedProperty({ propName: 'windowsCount', value: 10 });
-  testStateContainsCopiedProperty({ propName: 'newestWindowTimestamp', value: 10 });
+  testStateContainsCopiedProperty({ propName: 'pointsCount', value: 10 });
+  testStateContainsCopiedProperty({ propName: 'newestPointTimestamp', value: 10 });
 
   it('has true "hasReachedOldest" and "hasReachedNewest" when there are no series defined', function () {
     const state = new State({});
@@ -83,14 +83,14 @@ describe('Unit | Utility | one time series chart/state', function () {
       expect(state.hasReachedNewest).to.be.false;
     });
 
-  it('has null "firstWindowTimestamp" and "lastWindowTimestamp" when there are no series defined', function () {
+  it('has null "firstPointTimestamp" and "lastPointTimestamp" when there are no series defined', function () {
     const state = new State({});
 
-    expect(state.firstWindowTimestamp).to.be.null;
-    expect(state.lastWindowTimestamp).to.be.null;
+    expect(state.firstPointTimestamp).to.be.null;
+    expect(state.lastPointTimestamp).to.be.null;
   });
 
-  it('has null "firstWindowTimestamp" and "lastWindowTimestamp" when provided series are empty', function () {
+  it('has null "firstPointTimestamp" and "lastPointTimestamp" when provided series are empty', function () {
     const state = new State({
       series: [{
         data: [],
@@ -99,11 +99,11 @@ describe('Unit | Utility | one time series chart/state', function () {
       }],
     });
 
-    expect(state.firstWindowTimestamp).to.be.null;
-    expect(state.lastWindowTimestamp).to.be.null;
+    expect(state.firstPointTimestamp).to.be.null;
+    expect(state.lastPointTimestamp).to.be.null;
   });
 
-  it('has "firstWindowTimestamp" set to the first point timestamp and "lastWindowTimestamp" set to the last point timestamp',
+  it('has "firstPointTimestamp" set to the first point timestamp and "lastPointTimestamp" set to the last point timestamp',
     function () {
       const state = new State({
         series: [{
@@ -113,8 +113,8 @@ describe('Unit | Utility | one time series chart/state', function () {
         }],
       });
 
-      expect(state.firstWindowTimestamp).to.equal(10);
-      expect(state.lastWindowTimestamp).to.equal(20);
+      expect(state.firstPointTimestamp).to.equal(10);
+      expect(state.lastPointTimestamp).to.equal(20);
     });
 
   context('when converting to Echart state', function () {
