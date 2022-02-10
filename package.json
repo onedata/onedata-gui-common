@@ -32,6 +32,7 @@
     "basictable": "git+https://github.com/kliput/basictable.git#b00a7e52512e43a526e8f5b0ae8b3063efbe0bf5",
     "bootstrap-sass": "3.3.7",
     "broccoli-asset-rev": "2.6.0",
+    "caniuse-lite": "1.0.30001311",
     "chai-jquery": "2.1.0",
     "chartist-plugin-legend": "0.6.1",
     "color": "2.0.1",
