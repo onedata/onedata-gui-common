@@ -1,0 +1,7 @@
+{{#promise-proxy-container proxy=stateProxy}}
+  {{#if hasDataToShow}}
+    {{one-echart option=echartState}}
+  {{else}}
+    <p>{{tt this "noDataToShow"}}</p>
+  {{/if}}
+{{/promise-proxy-container}}
