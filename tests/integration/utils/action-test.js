@@ -298,13 +298,14 @@ describe('Integration | Utility | action', function () {
     it(
       'changes result and stops hooks execution when one of the hooks fails',
       function (done) {
+        const error = { id: 'err' };
         const actionResult = ActionResult.create({ status: 'done' });
         const onExecute = sinon.stub().resolves(actionResult);
         const action = Action.create({
           ownerSource: this,
           onExecute,
         });
-        const hook1 = sinon.stub().returns(reject('err'));
+        const hook1 = sinon.stub().returns(reject(error));
         const hook2 = sinon.spy();
         action.addExecuteHook(hook1);
         action.addExecuteHook(hook2);
@@ -316,7 +317,7 @@ describe('Integration | Utility | action', function () {
             expect(hook2).to.not.be.called;
             expect(result).to.not.equal(actionResult);
             expect(result).to.have.property('status', 'failed');
-            expect(result).to.have.property('error', 'err');
+            expect(result).to.have.property('error', error);
             done();
           });
       }
