@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import generateId from 'onedata-gui-common/utils/workflow-visualiser/generate-id';
+import generateId from 'onedata-gui-common/utils/generate-id';
 
-describe('Unit | Utility | workflow visualiser/generate id', function () {
+describe('Unit | Utility | generate id', function () {
   it('generates 38-characters long string', function () {
     const result = generateId();
     expect(result).to.be.a('string').and.to.have.length(38);

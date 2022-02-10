@@ -6,6 +6,8 @@ const colors = require('./addon/colors').default;
 const defineSassColors = require('./addon/utils/define-sass-colors');
 const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
 const breakpointValues = require('./addon/breakpoint-values').default;
+const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
+const dynamicLibraries = require('./config/dynamic-libraries');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
@@ -41,7 +43,7 @@ module.exports = function (defaults) {
     },
     // a "bootstrap" should be imported into app.scss
     'ember-cli-bootstrap-sassy': {
-      // import SASS styles and some JS that is used outside of ember-bootstrap components 
+      // import SASS styles and some JS that is used outside of ember-bootstrap components
       js: [
         'transition',
         // TODO: rewrite collapses to ember-bootstrap components
@@ -65,6 +67,7 @@ module.exports = function (defaults) {
 
   defineSassColors(app, colors);
   defineSassBreakpoints(app, breakpointValues);
+  copyDynamicLibraries(app, dynamicLibraries);
 
   /*
     This build file specifies the options for the dummy test app of this
