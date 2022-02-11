@@ -6,6 +6,8 @@ const defineSassColors = require('./addon/utils/define-sass-colors');
 const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
 const colors = require('./config/colors');
 const breakpoints = require('./config/breakpoints');
+const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
+const dynamicLibraries = require('./config/dynamic-libraries');
 
 module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
@@ -71,6 +73,7 @@ module.exports = function (defaults) {
 
   defineSassColors(app, colors);
   defineSassBreakpoints(app, breakpoints);
+  copyDynamicLibraries(app, dynamicLibraries);
 
   /*
     This build file specifies the options for the dummy test app of this

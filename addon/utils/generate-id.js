@@ -1,9 +1,9 @@
 /**
- * Generates ids, which can be used to reference workflow elements.
+ * Generates ids as similar as possible to the backend ones.
  *
- * @module utils/workflow-visualiser/generate-id
+ * @module utils/generate-id
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2021-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 

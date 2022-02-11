@@ -3,6 +3,7 @@
 
 const colors = require('./colors');
 const breakpoints = require('./breakpoints');
+const dynamicLibraries = require('./dynamic-libraries');
 
 module.exports = function ( /* environment, appConfig */ ) {
   return {
@@ -11,5 +12,6 @@ module.exports = function ( /* environment, appConfig */ ) {
     },
     colors,
     breakpoints,
+    dynamicLibraries,
   };
 };
