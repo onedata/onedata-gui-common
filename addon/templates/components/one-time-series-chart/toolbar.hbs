@@ -10,29 +10,26 @@
   {{option.label}}
 {{/one-dropdown}}
 <div class="btn-group navigation-buttons">
-  {{#bs-button
+  {{#one-button
     class="show-older-btn"
-    size="sm"
     disabled=isShowOlderDisabled
     onClick=(action "showOlder")
   }}
     {{one-icon icon="arrow-left"}}
-  {{/bs-button}}
-  {{#bs-button
+  {{/one-button}}
+  {{#one-button
     class="show-newer-btn"
-    size="sm"
     disabled=isShowNewerAndNewestDisabled
     onClick=(action "showNewer")
   }}
     {{one-icon icon="arrow-right"}}
-  {{/bs-button}}
-  {{#bs-button
+  {{/one-button}}
+  {{#one-button
     class="show-newest-btn"
-    size="sm"
     disabled=isShowNewerAndNewestDisabled
     onClick=(action "showNewest")
   }}
     {{one-icon icon="arrow-right"}}
     {{one-icon icon="arrow-right"}}
-  {{/bs-button}}
+  {{/one-button}}
 </div>

@@ -97,7 +97,7 @@ $bs-modal-width-full-with-margins: calc(100% - #{$padding-small-horizontal});
 .has-error input[disabled] {
   border: 1px solid $main-border-color;
 }
-.has-success label.control-label, 
+.has-success label.control-label,
 .has-error label.control-label,
 .has-success label.radio-inline,
 .has-error label.radio-inline {
@@ -144,26 +144,26 @@ label {
     @include btn-sm;
   }
   // special style for btn-primary, as it is "filled"
-  &.btn-primary { 
-    @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border); 
+  &.btn-primary {
+    @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
   }
   &.btn-info {
-    @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border); 
+    @include button-variant($btn-info-color, $btn-info-bg, $btn-info-border);
   }
   &.btn-danger {
-    @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border); 
+    @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
   }
-  &.btn-outline-default { 
-    @include button-outline-variant($text-color, $btn-default-border); 
+  &.btn-outline-default {
+    @include button-outline-variant($text-color, $btn-default-border);
   }
-  &.btn-outline-primary { 
-    @include button-outline-variant($text-color, $btn-primary-border); 
+  &.btn-outline-primary {
+    @include button-outline-variant($text-color, $btn-primary-border);
   }
   &.btn-outline-info {
-    @include button-outline-variant($text-color, $btn-info-border); 
+    @include button-outline-variant($text-color, $btn-info-border);
   }
   &.btn-outline-danger {
-    @include button-outline-variant($text-color, $btn-danger-border); 
+    @include button-outline-variant($text-color, $btn-danger-border);
   }
   .one-icon {
     font-size: 1.7em;
@@ -216,7 +216,7 @@ label {
 }
 @media (max-width: $screen-xs-max) {
   .dropdown-menu {
-    font-size: 80%;  
+    font-size: 80%;
   }
 }
 @import "bootstrap/button-groups";
@@ -346,7 +346,22 @@ label {
   overflow-y: hidden;
 }
 
-.modal {  
+.modal-lg {
+  @media (max-width: $screen-sm-max) {
+    width: 90%;
+  }
+}
+
+.modal-xl {
+  width: $bs-modal-width-full-with-margins;
+  max-width: $modal-xl;
+}
+
+.modal-full {
+  width: $bs-modal-width-full-with-margins;
+}
+
+.modal {
   &.in {
     .modal-dialog {
       @include absolute-align-middle-center();
@@ -359,14 +374,7 @@ label {
       transition: initial;
       border-radius: $border-radius-large;
 
-      &.modal-lg {
-        @media (max-width: $screen-sm-max) {
-          width: 90%;
-        }
-      }
-      
       &.modal-full {
-        width: $bs-modal-width-full-with-margins;
         height: $bs-modal-width-full-with-margins;
         .modal-content {
           height: 100%;
@@ -375,11 +383,8 @@ label {
           flex-grow: 1;
         }
       }
-      
+
       &.modal-xl {
-        @extend .modal-lg;
-        width: $bs-modal-width-full-with-margins;
-        max-width: $modal-xl;
         .modal-content {
           height: 100%;
         }
@@ -387,7 +392,7 @@ label {
           flex-grow: 1;
         }
       }
-      
+
       @media (max-width: $screen-xs-max) {
         width: 90%;
       }
@@ -445,7 +450,7 @@ label {
     margin-bottom: 1em;
     text-transform: uppercase;
   }
-  
+
   h2 {
     font-size: $font-size-base * 1.2;
     text-transform: uppercase;
