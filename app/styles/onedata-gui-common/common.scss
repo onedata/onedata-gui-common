@@ -423,6 +423,24 @@ a {
       color: darken($color-one-azure, 20%);
     }
   }
+  &.navy {
+    color: hsl(220deg 40% 50%);
+    &:hover {
+      color: hsl(220deg 40% 30%);
+    }
+  }
+  &.underlined {
+    position: relative;
+    &::after {
+      content: '';
+      bottom: 0.15em;
+      left: 0;
+      right: 0;
+      position: absolute;
+      border-bottom: 1px solid;
+      opacity: 0.8;
+    }
+  }
 }
 
 .col-vertical-middle-absolute-right {
@@ -841,4 +859,15 @@ p.text-separated {
   background: none;
   color: inherit;
   border: none;
+}
+
+@mixin horizontal-drag-dots-background() {
+  background-color: $color-one-semiwhite;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+
+  &:hover {
+    background-color: $color-one-gray-sand;
+  }
 }

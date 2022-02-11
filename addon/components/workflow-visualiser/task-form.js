@@ -179,7 +179,8 @@ export default Component.extend(I18n, {
    */
   resultStores: computed('definedStores.[]', function resultStores() {
     const definedStores = this.get('definedStores') || [];
-    return [taskAuditLogStore, workflowAuditLogStore].concat(definedStores.toArray());
+    return [taskAuditLogStore, workflowAuditLogStore]
+      .concat(definedStores.toArray().compact());
   }),
 
   /**
@@ -693,7 +694,8 @@ function taskToFormData(task, atmLambdaRevision) {
     } = dataSpecToType(dataSpec);
     let valueBuilderType = get(existingMapping || {}, 'valueBuilder.valueBuilderType');
     if (!valueBuilderType) {
-      valueBuilderType = (isOptional || defaultValue !== undefined || existingMapping) ?
+      const hasDefaultValue = defaultValue !== undefined && defaultValue !== null;
+      valueBuilderType = (isOptional || hasDefaultValue || existingMapping) ?
         leaveUnassignedDropdownOptionValue :
         getValueBuilderTypesForArgType(type, preferredBatchSize > 1)[0];
     }

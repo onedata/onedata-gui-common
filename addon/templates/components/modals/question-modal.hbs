@@ -44,13 +44,15 @@
     }}
       {{noButtonText}}
     {{/bs-button}}
-    {{#one-spin-button
-      class=(concat-classes "btn question-yes" yesButtonClassName)
-      action=(action "submit" modal.submit)
+    {{#one-button
+      type=yesButtonType
+      buttonType="submit"
+      class="question-yes"
+      onClick=(action "submit" modal.submit)
       disabled=isYesButtonDisabled
     }}
       {{yesButtonText}}
-    {{/one-spin-button}}
+    {{/one-button}}
   {{/modal.footer}}
 
 {{/global-modal}}

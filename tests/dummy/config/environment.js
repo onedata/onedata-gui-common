@@ -1,6 +1,8 @@
 /* eslint-env node */
 'use strict';
 
+const dynamicLibraries = require('../../../config/dynamic-libraries');
+
 module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'dummy',
@@ -19,6 +21,7 @@ module.exports = function (environment) {
         Date: false,
       },
     },
+    dynamicLibraries,
 
     APP: {
       // Here you can pass flags/options to your application instance

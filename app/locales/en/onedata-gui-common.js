@@ -44,6 +44,7 @@ import archiveDipSwitch from './onedata-gui-common/components/archive-dip-switch
 import publicFooter from './onedata-gui-common/components/public-footer';
 import revisionsTable from './onedata-gui-common/components/revisions-table';
 import wysiwygEditor from './onedata-gui-common/components/wysiwyg-editor';
+import oneTimeSeriesChart from './onedata-gui-common/components/one-time-series-chart';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -123,6 +124,7 @@ const translations = {
     publicFooter,
     revisionsTable,
     wysiwygEditor,
+    oneTimeSeriesChart,
     alerts: {
       endpointError,
     },
