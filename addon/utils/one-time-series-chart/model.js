@@ -65,6 +65,7 @@ export default EmberObject.extend(createDataProxyMixin('state'), {
         stateChangeHandler,
       } = this.getProperties('configuration', 'stateChangeHandler');
       configuration.deregisterStateChangeHandler(stateChangeHandler);
+      configuration.destroy();
     } finally {
       this._super(...arguments);
     }
