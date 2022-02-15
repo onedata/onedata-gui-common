@@ -22,8 +22,9 @@ describe('Integration | Component | one time series chart/plot', function () {
 
   beforeEach(function () {
     this.register('component:one-echart', TestComponent);
+    const now = Date.now();
     this.set('fakeClock', sinon.useFakeTimers({
-      now: Date.now(),
+      now: now - (now % 60000 * 60) - 35 * 60000 - 35000,
       shouldAdvanceTime: true,
     }));
   });
