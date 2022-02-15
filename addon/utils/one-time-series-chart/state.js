@@ -241,6 +241,7 @@ export default class State {
         yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
         color: series.color,
         stack: series.stackId,
+        areaStyle: series.stackId ? {} : null,
         smooth: 0.2,
         data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
       })),

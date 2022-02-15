@@ -130,12 +130,12 @@ export default class QueryBatcher {
 
 /**
  * @typedef {Map<string,Set<TimeSeriesQueryBatchEntry>>} QueriesPerMetric
- *   key of this map are metrics ids
+ *   keys of this map are metrics ids
  */
 
 /**
  * @typedef {Map<string,QueriesPerMetric>} QueriesPerSeries
- *   key of this map are series ids
+ *   keys of this map are series ids
  */
 
 /**
@@ -146,7 +146,7 @@ export default class QueryBatcher {
 
 /**
  * @typedef {Map<string,MetricParamsQueries>} QueriesPerMetricParams
- *   key of this map is a stringified concatenation of `startTimestamp` and `limit`
+ *   keys of this map are stringified concatenations of `startTimestamp` and `limit`
  */
 
 /**

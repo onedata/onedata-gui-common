@@ -93,7 +93,7 @@ export function createDummySource(minTimestamp, maxTimestamp) {
 
 export function expectNoChartDataToShow(testCase) {
   const $plot = testCase.$('.one-time-series-chart-plot');
-  expect($plot.children()).to.have.length(1);
+  expect($plot.find('.canvas-area').children()).to.have.length(1);
   expect($plot).to.have.class('no-data');
   expect($plot.text().trim()).to.equal('There is no data to show.');
 }

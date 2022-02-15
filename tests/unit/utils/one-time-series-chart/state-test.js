@@ -221,6 +221,8 @@ describe('Unit | Utility | one time series chart/state', function () {
         yAxisIndex: 1,
         color: '#ff0000',
         stack: 'abc',
+        areaStyle: {},
+        smooth: 0.2,
         data: [
           ['10', 1],
           ['20', 2],
@@ -232,6 +234,8 @@ describe('Unit | Utility | one time series chart/state', function () {
         yAxisIndex: 0,
         color: null,
         stack: null,
+        areaStyle: null,
+        smooth: 0.2,
         data: [
           ['10', null],
           ['20', 3],
@@ -245,6 +249,7 @@ describe('Unit | Utility | one time series chart/state', function () {
 
       expect(asPlainJson(echartState.tooltip)).to.deep.equal({
         trigger: 'axis',
+        confine: true,
         axisPointer: {
           type: 'cross',
           label: {

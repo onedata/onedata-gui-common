@@ -1,5 +1,4 @@
 /**
- *
  * Is responsible for plotting chart in one-time-series-chart. Can be used via
  * one-time-series-chart or as a standalone component. The second option requires
  * providing `model` object - see more about it in
