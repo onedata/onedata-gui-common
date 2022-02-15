@@ -51,10 +51,6 @@ $error-message-margin: 15px;
   .btn {
     padding: 10px 40px;
     margin-bottom: 5px;
-    .spin-button-spinner {
-      height: 0;
-      width: 0;
-    }
     &.back-button {
       background-color: $btn-default-bg;
       border-color: $btn-default-bg;

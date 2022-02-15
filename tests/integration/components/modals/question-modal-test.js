@@ -75,15 +75,14 @@ describe('Integration | Component | modals/question modal', function () {
       });
   });
 
-  it('allows to change "yes" button classes', function () {
-    this.set('modalOptions.yesButtonClassName', 'btn-warning');
+  it('allows to change "yes" button type', function () {
+    this.set('modalOptions.yesButtonType', 'warning');
 
     return showModal(this)
       .then(() => {
         const $yesBtn = getModalFooter().find('.question-yes');
         expect($yesBtn).to.not.have.class('btn-primary');
         expect($yesBtn).to.have.class('btn-warning');
-        expect($yesBtn).to.have.class('btn');
       });
   });
 
@@ -98,7 +97,7 @@ describe('Integration | Component | modals/question modal', function () {
         return click($yesBtn[0]);
       })
       .then(() => {
-        expect($yesBtn).to.have.class('in-flight');
+        expect($yesBtn).to.have.class('pending');
         expect(submitStub).to.be.calledOnce;
       });
   });

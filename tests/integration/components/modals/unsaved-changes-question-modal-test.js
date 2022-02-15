@@ -69,8 +69,8 @@ describe('Integration | Component | modals/unsaved changes question modal', func
 
       await click($saveBtn[0]);
 
-      expect($saveBtn).to.have.class('in-flight');
-      expect($dontSaveBtn).to.not.have.class('in-flight');
+      expect($saveBtn).to.have.class('pending');
+      expect($dontSaveBtn).to.not.have.class('pending');
       expect(areAllButtonsDisabled()).to.be.true;
       expect(submitStub).to.be.calledOnce.and.to.be.calledWith({
         shouldSaveChanges: true,
@@ -87,8 +87,8 @@ describe('Integration | Component | modals/unsaved changes question modal', func
 
       await click($dontSaveBtn[0]);
 
-      expect($saveBtn).to.not.have.class('in-flight');
-      expect($dontSaveBtn).to.have.class('in-flight');
+      expect($saveBtn).to.not.have.class('pending');
+      expect($dontSaveBtn).to.have.class('pending');
       expect(areAllButtonsDisabled()).to.be.true;
       expect(submitStub).to.be.calledOnce.and.to.be.calledWith({
         shouldSaveChanges: false,

@@ -17,13 +17,13 @@
   {{/modal.body}}
 
   {{#modal.footer class="btn-toolbar"}}
-    {{#one-spin-button
-      class="btn btn-default question-dont-save pull-left no-left-margin"
-      action=(action "submit" modal.submit false)
+    {{#one-button
+      class="question-dont-save pull-left no-left-margin"
+      onClick=(action "submit" modal.submit false)
       disabled=isSubmitting
     }}
       {{tt this "button.dontSave"}}
-    {{/one-spin-button}}
+    {{/one-button}}
     {{#bs-button
       type="default"
       class="question-cancel"
@@ -32,13 +32,15 @@
     }}
       {{tt this "button.cancel"}}
     {{/bs-button}}
-    {{#one-spin-button
-      class="btn btn-primary question-save"
-      action=(action "submit" modal.submit true)
+    {{#one-button
+      type="primary"
+      buttonType="submit"
+      class="question-save"
+      onClick=(action "submit" modal.submit true)
       disabled=isSubmitting
     }}
       {{tt this "button.save"}}
-    {{/one-spin-button}}
+    {{/one-button}}
   {{/modal.footer}}
 
 {{/global-modal}}

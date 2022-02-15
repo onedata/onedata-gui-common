@@ -37,7 +37,7 @@
           except-selector=(concat ".actions-trigger-" elementId)
         }}
           {{actions-popover-content
-            actionsArray=taskActions
+            actionsArray=editTaskActions
             actionClicked=(action (mut areActionsOpened) false)
           }}
         {{/click-outside}}
@@ -83,11 +83,17 @@
           <div class="detail-label">{{tt this "details.itemsFailed"}}:</div>
           <div class="detail-value">{{itemsFailed}}</div>
         </div>
-        {{#if task.systemAuditLogStore}}
-          <div class="detail-entry audit-log-detail">
-            <a class="clickable show-audit-log" {{action "showAuditLog"}}>
-              {{tt this "details.auditLog"}}
-            </a>
+        {{#if viewTaskActions.length}}
+          <div class="detail-entry actions-detail">
+            {{#each viewTaskActions as |taskAction idx|}}
+              <a
+                class="clickable {{taskAction.className}}"
+                {{action taskAction.executeCallback}}
+              >
+                {{taskAction.title}}
+              </a>
+              {{#if (lt idx (sub viewTaskActions.length 1))}}|{{/if}}
+            {{/each}}
           </div>
         {{/if}}
       </div>
