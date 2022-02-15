@@ -179,6 +179,7 @@ export default class State {
             show: false,
           },
         },
+        confine: true,
         formatter: (paramsArray) => {
           if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
             return null;
@@ -205,7 +206,7 @@ export default class State {
       grid: {
         containLabel: true,
         left: 10,
-        bottom: 0,
+        bottom: 10,
         top: 30,
         right: 30,
       },

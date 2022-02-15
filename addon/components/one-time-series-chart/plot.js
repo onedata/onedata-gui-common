@@ -57,6 +57,11 @@ export default Component.extend(I18n, {
   }),
 
   /**
+   * @type {ComputedProperty<string>}
+   */
+  title: reads('state.title'),
+
+  /**
    * @type {ComputedProperty<boolean>}
    */
   hasDataToShow: computed(
