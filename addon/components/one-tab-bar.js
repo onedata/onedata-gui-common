@@ -45,13 +45,13 @@ export default Component.extend({
    * @virtual
    * @type {string}
    */
-  passedTabBarLiComponentName: undefined,
+  tabBarLiComponentName: undefined,
 
   /**
    * @type {string}
    */
-  tabBarLiComponentName: or(
-    'passedTabBarLiComponentName',
+  effTabBarLiComponentName: or(
+    'tabBarLiComponentName',
     raw('one-tab-bar/tab-bar-li')
   ),
 

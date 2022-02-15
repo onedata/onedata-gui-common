@@ -10,14 +10,11 @@
       as |tabBar|
     }}
       {{#each sortedItems as |item|}}
-        {{component tabBarLiComponentName
+        {{component effTabBarLiComponentName
           isActive=(eq selectedItem.id item.id)
           tabClicked=(action "selectItem" "tabClick" item)
-          name=item.name
-          icon=item.icon
-          disabled=item.disabled
+          item=item
           class=(concat item.elementClass " item-" item.id " " (if tabsOverflow "apply-truncate"))
-          itemId=item.id
         }}
       {{/each}}
     {{/one-tab-bar/tab-bar-ul}}

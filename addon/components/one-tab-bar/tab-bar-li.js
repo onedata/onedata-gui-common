@@ -33,34 +33,14 @@ export default Component.extend({
   isActive: false,
 
   /**
-   * Text displayed on the tab.
    * @virtual
-   * @type {string}
+   * @type {Object}
    */
-  name: undefined,
-
-  /**
-   * Name of oneicon displayed on the tab.
-   * @virtual optional
-   * @type {string|undefined}
-   */
-  icon: undefined,
-
-  /**
-   * @virtual
-   * @type {string}
-   */
-  itemId: undefined,
-
-  /**
-   * If true, apply special style and not send anchorClicked action
-   * @type {boolean}
-   */
-  disabled: false,
+  item: undefined,
 
   actions: {
     anchorClicked(clickEvent) {
-      if (!this.get('disabled')) {
+      if (!this.get('item.disabled')) {
         return this.get('tabClicked')(clickEvent);
       }
     },
