@@ -17,7 +17,7 @@ export default Component.extend({
   classNames: ['workflow-visualiser-stores-list-store', 'tag-item', 'input-element'],
   classNameBindings: [
     'modeClass',
-    'store.requiresInitialValue:tag-item-warning',
+    'store.requiresInitialContent:tag-item-warning',
   ],
 
   /**

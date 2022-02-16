@@ -104,9 +104,9 @@ function areStoreListsEqual(storesList1, storesList2) {
 function areStoresEqual(store1, store2) {
   return checkEqualityPerEachKey(store1, store2, (key, val1, val2) => {
     switch (key) {
-      case 'dataSpec':
-        return areDataSpecsEqual(val1, val2);
-      case 'defaultInitialValue':
+      case 'config':
+        return areStoreConfigsEqual(val1, val2);
+      case 'defaultInitialContent':
         if ((!isNone(val1) || !isNone(val2)) && !_.isEqual(val1, val2)) {
           if (store1.type === 'range') {
             if (!areRangeStoreDefaultValuesEqual(val1, val2)) {
@@ -117,6 +117,25 @@ function areStoresEqual(store1, store2) {
           }
         }
         return true;
+      default:
+        return _.isEqual(val1, val2);
+    }
+  });
+}
+
+function areStoreConfigsEqual(config1, config2) {
+  const config1IsEmpty = config1 === undefined ||
+    (typeof config1 === 'object' && config1 && Object.keys(config1).length === 0);
+  const config2IsEmpty = config2 === undefined ||
+    (typeof config2 === 'object' && config2 && Object.keys(config2).length === 0);
+  if (config1IsEmpty && config2IsEmpty) {
+    return true;
+  }
+  return checkEqualityPerEachKey(config1, config2, (key, val1, val2) => {
+    switch (key) {
+      case 'logContentDataSpec':
+      case 'itemDataSpec':
+        return areDataSpecsEqual(val1, val2);
       default:
         return _.isEqual(val1, val2);
     }

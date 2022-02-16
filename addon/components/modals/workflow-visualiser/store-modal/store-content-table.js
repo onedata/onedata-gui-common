@@ -152,11 +152,11 @@ export default Component.extend(I18n, {
     } = this.getProperties('store', 'i18n');
     const {
       type,
-      dataSpec,
-    } = getProperties(store, 'type', 'dataSpec');
+      readDataSpec,
+    } = getProperties(store, 'type', 'readDataSpec');
     this.setProperties({
-      tableColumnsGenerator: new StoreContentTableColumns(type, dataSpec, i18n),
-      tableRowsConfig: new StoreContentTableRowConfig(type, dataSpec),
+      tableColumnsGenerator: new StoreContentTableColumns(type, readDataSpec, i18n),
+      tableRowsConfig: new StoreContentTableRowConfig(type, readDataSpec),
     });
     this.updateTableColumns();
     // TODO: VFS-7959 uncomment when infinite scroll reload will be fixed

@@ -58,12 +58,14 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
         name: 'store1',
         description: '',
         type: 'list',
-        dataSpec: {
-          type: 'integer',
-          valueConstraints: {},
+        config: {
+          itemDataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
         },
-        defaultInitialValue: null,
-        requiresInitialValue: false,
+        defaultInitialContent: null,
+        requiresInitialContent: false,
       });
       expect(get(actionResult, 'status')).to.equal('done');
     }

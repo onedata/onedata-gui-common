@@ -315,19 +315,19 @@ export default Component.extend({
         type: 'integer',
         valueConstraints: {},
       },
-      defaultInitialValue: undefined,
-      requiresInitialValue: false,
+      defaultInitialContent: undefined,
+      requiresInitialContent: false,
     }, {
       id: 's2',
       name: 'store2',
       description: 'storeDesc',
       type: 'range',
-      defaultInitialValue: {
+      defaultInitialContent: {
         start: 1,
         end: 10,
         step: 2,
       },
-      requiresInitialValue: false,
+      requiresInitialContent: false,
     }],
   })),
 });

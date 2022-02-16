@@ -21,12 +21,12 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
       name: 'store1',
       description: 'storeDesc',
       type: 'range',
-      defaultInitialValue: {
+      defaultInitialContent: {
         start: 1,
         end: 10,
         step: 2,
       },
-      requiresInitialValue: false,
+      requiresInitialContent: false,
     });
     const action = ModifyStoreAction.create({
       ownerSource: this,

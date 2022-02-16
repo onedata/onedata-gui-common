@@ -98,12 +98,14 @@ describe('Integration | Component | workflow visualiser', function () {
           name: 'new store',
           description: '',
           type: 'list',
-          dataSpec: {
-            type: 'integer',
-            valueConstraints: {},
+          config: {
+            itemDataSpec: {
+              type: 'integer',
+              valueConstraints: {},
+            },
           },
-          defaultInitialValue: null,
-          requiresInitialValue: false,
+          defaultInitialContent: null,
+          requiresInitialContent: false,
         });
         rawDump.lanes.push({
           id: sinon.match.string,
@@ -190,12 +192,14 @@ describe('Integration | Component | workflow visualiser', function () {
           name: 'new store',
           description: '',
           type: 'list',
-          dataSpec: {
-            type: 'integer',
-            valueConstraints: {},
+          config: {
+            itemDataSpec: {
+              type: 'integer',
+              valueConstraints: {},
+            },
           },
-          defaultInitialValue: null,
-          requiresInitialValue: false,
+          defaultInitialContent: null,
+          requiresInitialContent: false,
         });
         Object.assign(rawDump.lanes[0], {
           maxRetries: 0,
@@ -270,12 +274,14 @@ describe('Integration | Component | workflow visualiser', function () {
         name: 'newstore',
         description: '',
         type: 'list',
-        dataSpec: {
-          type: 'integer',
-          valueConstraints: {},
+        config: {
+          itemDataSpec: {
+            type: 'integer',
+            valueConstraints: {},
+          },
         },
-        defaultInitialValue: null,
-        requiresInitialValue: false,
+        defaultInitialContent: null,
+        requiresInitialContent: false,
       }),
       initialRawData: noLanesExample,
     });
@@ -1028,12 +1034,14 @@ function generateExample(
       name: `store${storeNo}`,
       description: '',
       type: 'list',
-      dataSpec: {
-        type: 'integer',
-        valueConstraints: {},
+      config: {
+        itemDataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
       },
-      defaultInitialValue: '',
-      requiresInitialValue: false,
+      defaultInitialContent: '',
+      requiresInitialContent: false,
     })),
   };
 }

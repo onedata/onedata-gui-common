@@ -13,17 +13,20 @@ import { setProperties } from '@ember/object';
 import { fillIn, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise, resolve } from 'rsvp';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const simpliestStore = {
   name: 'store1',
   description: '',
   type: 'list',
-  dataSpec: {
-    type: 'integer',
-    valueConstraints: {},
+  config: {
+    itemDataSpec: {
+      type: 'integer',
+      valueConstraints: {},
+    },
   },
-  defaultInitialValue: null,
-  requiresInitialValue: false,
+  defaultInitialContent: null,
+  requiresInitialContent: false,
 };
 
 describe('Integration | Component | modals/workflow visualiser/store modal', function () {
@@ -93,7 +96,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     beforeEach(function () {
       setProperties(this.get('modalOptions'), {
         mode: 'edit',
-        store: simpliestStore,
+        store: Store.create(simpliestStore),
       });
     });
 
@@ -143,7 +146,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     beforeEach(function () {
       setProperties(this.get('modalOptions'), {
         mode: 'view',
-        store: simpliestStore,
+        store: Store.create(simpliestStore),
         getStoreContentCallback: () => resolve({ array: [], isLast: true }),
       });
     });
