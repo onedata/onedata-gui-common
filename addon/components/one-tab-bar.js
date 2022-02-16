@@ -48,7 +48,7 @@ export default Component.extend({
   tabBarLiComponentName: undefined,
 
   /**
-   * @type {string}
+   * @type {ComputedProperty<string>}
    */
   effTabBarLiComponentName: or(
     'tabBarLiComponentName',

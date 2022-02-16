@@ -35,6 +35,9 @@ export default Component.extend({
   /**
    * @virtual
    * @type {Object}
+   * @property { string } name
+   * @property { string | undefined } icon Name of oneicon displayed on the tab 
+   * @property { boolean } disabled If true, apply special style and not send anchorClicked action
    */
   item: undefined,
 
