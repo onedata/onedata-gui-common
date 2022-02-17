@@ -1,3 +1,4 @@
+// TODO: VFS-9013 make tests work on Bamboo
 // import { expect } from 'chai';
 // import { describe, it, beforeEach, afterEach } from 'mocha';
 // import sinon from 'sinon';

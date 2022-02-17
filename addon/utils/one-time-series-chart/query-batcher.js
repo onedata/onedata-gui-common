@@ -24,8 +24,10 @@ import _ from 'lodash';
  *   so there is no need to provide an ID
  * @property {string} seriesId
  * @property {string} metricId
- * @property {number|null} startTimestamp
- * @property {number} limit
+ * @property {number|null} startTimestamp timestamp of the newest point
+ *   in the series to fetch. Query result will contain points with
+ *   timestamps <= startTimestamp
+ * @property {number} limit number of points to fetch
  */
 
 /**
@@ -37,7 +39,7 @@ import _ from 'lodash';
 /**
  * @typedef {Object} BatchedTimeSeriesQuery
  * @property {string|null} collectionId
- * @property {Object<string,Array<string>>} metrics object with series IDs as keys
+ * @property {Object<string, Array<string>>} metrics object with series IDs as keys
  *   and arrays of metrics IDs as values
  * @property {number|null} startTimestamp
  * @property {number} limit
@@ -52,12 +54,19 @@ import _ from 'lodash';
  * @typedef {(batchedQuery: BatchedTimeSeriesQuery) => Promise<BatchedTimeSeriesQueryResult>} QueryBatchFetchDataCallback
  */
 
+/**
+ * @typedef {Object} QueryBatcherInitOptions
+ * @property {QueryBatchFetchDataCallback} fetchData
+ * @property {(func: () => unknown, timeout: number) => unknown} [setTimeout]
+ * @property {(setTimeoutTimer: unknown) => void} [clearTimeout]
+ */
+
 export default class QueryBatcher {
   /**
    * @public
-   * @param {{ fetchData: QueryBatchFetchDataCallback }} params
+   * @param {QueryBatcherInitOptions} params
    */
-  constructor({ fetchData }) {
+  constructor({ fetchData, setTimeout = setTimeout, clearTimeout = clearTimeout }) {
     /**
      * @public
      * @type {QueryBatchFetchDataCallback}
@@ -65,6 +74,7 @@ export default class QueryBatcher {
     this.fetchData = fetchData;
 
     /**
+     * Queries batching time in milliseconds
      * @public
      * @type {number}
      */
@@ -72,15 +82,29 @@ export default class QueryBatcher {
 
     /**
      * @private
+     * @type {(func: () => unknown, timeout: number) => unknown}
+     */
+    this.setTimeout = setTimeout;
+
+    /**
+     * @private
+     * @type {(setTimeoutTimer: unknown) => void}
+     */
+    this.clearTimeout = clearTimeout;
+
+    /**
+     * @private
      * @type {QueryBatch}
      */
-    this.currentBatch = new QueryBatch();
+    this.currentBatch = null;
 
     /**
      * @private
      * @type {number|null}
      */
     this.flushBatchTimer = null;
+
+    this.createNewBatch();
   }
 
   /**
@@ -89,7 +113,7 @@ export default class QueryBatcher {
    */
   destroy() {
     if (this.flushBatchTimer !== null) {
-      clearTimeout(this.flushBatchTimer);
+      this.clearTimeout(this.flushBatchTimer);
     }
   }
 
@@ -106,7 +130,7 @@ export default class QueryBatcher {
     this.currentBatch.addEntry(newBatchEntry);
 
     if (this.flushBatchTimer === null) {
-      this.flushBatchTimer = setTimeout(
+      this.flushBatchTimer = this.setTimeout(
         () => this.flushBatch(),
         this.batchAccumulationTime
       );
@@ -121,20 +145,27 @@ export default class QueryBatcher {
    */
   flushBatch() {
     const batchToFlush = this.currentBatch;
-    this.currentBatch = new QueryBatch();
-    this.flushBatchTimer = null;
+    this.createNewBatch();
 
     batchToFlush.flush(this.fetchData);
+  }
+
+  /**
+   * @private
+   */
+  createNewBatch() {
+    this.currentBatch = new QueryBatch();
+    this.flushBatchTimer = null;
   }
 }
 
 /**
- * @typedef {Map<string,Set<TimeSeriesQueryBatchEntry>>} QueriesPerMetric
+ * @typedef {Map<string, Set<TimeSeriesQueryBatchEntry>>} QueriesPerMetric
  *   keys of this map are metrics ids
  */
 
 /**
- * @typedef {Map<string,QueriesPerMetric>} QueriesPerSeries
+ * @typedef {Map<string, QueriesPerMetric>} QueriesPerSeries
  *   keys of this map are series ids
  */
 
@@ -145,12 +176,12 @@ export default class QueryBatcher {
  */
 
 /**
- * @typedef {Map<string,MetricParamsQueries>} QueriesPerMetricParams
+ * @typedef {Map<string, MetricParamsQueries>} QueriesPerMetricParams
  *   keys of this map are stringified concatenations of `startTimestamp` and `limit`
  */
 
 /**
- * @typedef {Map<string,QueriesPerMetricParams>} QueriesPerCollection
+ * @typedef {Map<string, QueriesPerMetricParams>} QueriesPerCollection
  *   keys of this map are time series collections ids
  */
 
@@ -265,10 +296,10 @@ class QueryBatch {
         for (const queryBatchEntry of metricQueries) {
           if (resultIsError) {
             queryBatchEntry.resultDefer.reject(result);
-            continue;
+          } else {
+            const entryResult = _.get(result, `${seriesId}.${metricId}`, []);
+            queryBatchEntry.resultDefer.resolve(entryResult);
           }
-          const entryResult = _.get(result, `${seriesId}.${metricId}`, []);
-          queryBatchEntry.resultDefer.resolve(entryResult);
         }
       }
     }

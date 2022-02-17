@@ -49,8 +49,9 @@
  * Each Y axis definition consists of:
  * - id - string id which allows to reference to it later,
  * - name - short human-readable name, that will be rendered as an axis label
- * - minInterval - optional number value, which determines minimum gap between
- *   axis split lines.
+ * - minInterval - optional number value, which determines minimum values gap between
+ *   Y axis split lines. For example setting it to `1` will force only integer Y axis
+ *   split lines.
  * - valueFormatter - optional specification of a transform function, that should be used
  *   to stringify value from Y axis and make it human-readable. E.g. it may
  *   transform an integer to a size in bytes. This function will also be used

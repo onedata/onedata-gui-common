@@ -346,6 +346,12 @@ label {
   overflow-y: hidden;
 }
 
+.modal-dialog {
+  @media (max-width: $screen-xs-max) {
+    width: 90%;
+  }
+}
+
 .modal-lg {
   @media (max-width: $screen-sm-max) {
     width: 90%;
@@ -391,10 +397,6 @@ label {
         .modal-body {
           flex-grow: 1;
         }
-      }
-
-      @media (max-width: $screen-xs-max) {
-        width: 90%;
       }
 
       .modal-content {

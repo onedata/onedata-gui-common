@@ -95,9 +95,9 @@ export default Component.extend({
           !get(model, 'state.hasReachedOldest') &&
           get(model, 'state.firstPointTimestamp')
         ).sort((m1, m2) =>
-          get(m1, 'state.firstPointTimestamp') -
-          get(m2, 'state.firstPointTimestamp')
-        ).reverse();
+          get(m2, 'state.firstPointTimestamp') -
+          get(m1, 'state.firstPointTimestamp')
+        );
 
       if (moveableModels.length === 0) {
         return;

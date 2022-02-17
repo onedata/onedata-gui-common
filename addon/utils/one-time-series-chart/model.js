@@ -73,7 +73,7 @@ export default EmberObject.extend(createDataProxyMixin('state'), {
 
   /**
    * @public
-   * @param {Partial<OTSCViewParameters>} parameters
+   * @param {Partial<OTSCViewParameters>} viewParameters
    * @returns {void}
    */
   setViewParameters(viewParameters) {

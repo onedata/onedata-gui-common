@@ -1,7 +1,7 @@
 /**
  * Is responsible for plotting chart in one-time-series-chart. Can be used via
- * one-time-series-chart or as a standalone component. The second option requires
- * providing `model` object - see more about it in
+ * one-time-series-chart or as a standalone component. If you wish to use it
+ * as standalone component, provide a model object - see more about it in
  * `Utils.OneTimeSeriesChart.Model` class.
  *
  * @module components/one-time-series-chart/plot

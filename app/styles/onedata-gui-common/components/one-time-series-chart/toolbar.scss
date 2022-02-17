@@ -1,10 +1,12 @@
+$one-time-series-chart-toolbar-font-size: 85%;
+
 .one-time-series-chart-toolbar {
   .time-resolutions-trigger.small {
     display: inline-block;
     vertical-align: middle;
-    padding: 0.2em 1.9em 0.2em 0.4em;
+    padding: 0.2em 1.9em 0.2em 0.6em;
     min-height: initial;
-    font-size: 85%;
+    font-size: $one-time-series-chart-toolbar-font-size;
 
     .ember-power-select-status-icon {
       right: 1.4em;
@@ -31,8 +33,8 @@
   font-size: 100%;
 
   .ember-power-select-option {
-    padding: 0.2em 0.4em;
-    font-size: 85%;
+    padding: 0.2em 0.6em;
+    font-size: $one-time-series-chart-toolbar-font-size;
     min-height: initial;
   }
 }
