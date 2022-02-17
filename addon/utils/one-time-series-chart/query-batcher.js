@@ -66,7 +66,11 @@ export default class QueryBatcher {
    * @public
    * @param {QueryBatcherInitOptions} params
    */
-  constructor({ fetchData, setTimeout = setTimeout, clearTimeout = clearTimeout }) {
+  constructor({
+    fetchData,
+    setTimeout = window.setTimeout.bind(window),
+    clearTimeout = window.clearTimeout.bind(window),
+  }) {
     /**
      * @public
      * @type {QueryBatchFetchDataCallback}
