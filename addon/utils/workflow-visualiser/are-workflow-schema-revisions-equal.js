@@ -124,11 +124,7 @@ function areStoresEqual(store1, store2) {
 }
 
 function areStoreConfigsEqual(config1, config2) {
-  const config1IsEmpty = config1 === undefined ||
-    (typeof config1 === 'object' && config1 && Object.keys(config1).length === 0);
-  const config2IsEmpty = config2 === undefined ||
-    (typeof config2 === 'object' && config2 && Object.keys(config2).length === 0);
-  if (config1IsEmpty && config2IsEmpty) {
+  if (_.isEmpty(config1) && _.isEmpty(config2)) {
     return true;
   }
   return checkEqualityPerEachKey(config1, config2, (key, val1, val2) => {

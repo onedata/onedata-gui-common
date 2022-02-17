@@ -119,7 +119,7 @@ export function getTargetDataTypesForType(type) {
 }
 
 /**
- * @param {{ type, config }} store
+ * @param {{ type, config }} storeProperties
  * @returns {AtmDataSpec|null} null when writing to store is not constrained by
  * data specs mechanism
  */
@@ -138,7 +138,7 @@ export function getStoreWriteDataSpec({ type, config }) {
 }
 
 /**
- * @param {{ type, config }} store
+ * @param {{ type, config }} storeProperties
  * @returns {AtmDataSpec|null} null when reading from store is not constrained by
  * data specs mechanism
  */
