@@ -77,12 +77,19 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 
   &.small {
-    .ember-power-select-selected-item .option-container {
-      .one-icon {
-        left: 11px;
-      }
-      .one-icon + .text {
-        padding-left: 2.2em;
+    display: flex;
+    align-items: center;
+    .ember-power-select-selected-item {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      .option-container {
+        .one-icon {
+          left: 11px;
+        }
+        .one-icon + .text {
+          padding-left: 2.2em;
+        }
       }
     }
     

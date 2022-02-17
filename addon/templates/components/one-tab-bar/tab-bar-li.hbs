@@ -4,10 +4,10 @@
   click=(action "anchorClicked")
   ignoreTouchAction=true
 }}
-  {{#if icon}}
+  {{#if item.icon}}
     <div class="inline-icon-container">
-      {{one-icon icon=icon}}
+      {{one-icon icon=item.icon}}
     </div>
   {{/if}}
-  <span class="tab-name">{{name}}</span>
+  <span class="tab-name">{{item.name}}</span>
 {{/truncated-string}}
