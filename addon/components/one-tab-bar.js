@@ -13,6 +13,7 @@ import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { or, raw } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -23,7 +24,7 @@ export default Component.extend({
 
   /**
    * Array of items representing each tab. Properties of each:
-   * - id - will be used to create classes and indentify tabs
+   * - id - will be used to create classes and identify tabs
    * - name - displayed text in the tab
    * - icon - name of one-icon used in item (optional)
    * - class - CSS classes added to tab-bar-li component (optional)
@@ -39,6 +40,20 @@ export default Component.extend({
   selectedItem: undefined,
 
   tabsOverflow: undefined,
+
+  /**
+   * @virtual
+   * @type {string}
+   */
+  tabBarLiComponentName: undefined,
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  effTabBarLiComponentName: or(
+    'tabBarLiComponentName',
+    raw('one-tab-bar/tab-bar-li')
+  ),
 
   /**
    * If set to true, sets first tab as active if `selectedItem` is undefined
