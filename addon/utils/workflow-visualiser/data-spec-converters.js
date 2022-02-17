@@ -146,7 +146,7 @@ export function getStoreReadDataSpec({ type, config }) {
   switch (type) {
     case 'auditLog':
     case 'range':
-      return 'object';
+      return { type: 'object', valueConstraints: {} };
     case 'list':
     case 'singleValue':
     case 'treeForest':

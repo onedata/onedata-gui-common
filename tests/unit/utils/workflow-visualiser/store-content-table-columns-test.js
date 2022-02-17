@@ -43,7 +43,7 @@ const dataSpecTypesForStoreType = {
   list: dataSpecTypes,
   treeForest: ['file', 'dataset'],
   singleValue: dataSpecTypes,
-  range: ['integer'],
+  range: ['object'],
 };
 const dataSpecTypesWithObjects = [
   'object',
