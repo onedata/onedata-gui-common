@@ -27,6 +27,7 @@ import _ from 'lodash';
  * @typedef {Object} OTSCYAxis
  * @property {string} id
  * @property {string} name
+ * @property {number|null} minInterval
  * @property {(value: unknown) => string} valueFormatter
  */
 
@@ -48,8 +49,7 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {Object} OTSCSeriesPoint
- * @property {number} timestamp
+ * @typedef {RawOTSCSeriesPoint} OTSCSeriesPoint
  * @property {number|null} value null means, that value in this point is unknown
  * @property {boolean} fake when set to true, it means that this point has been
  *   generated on-the-fly because data source did not mention it. It may happen
@@ -179,6 +179,7 @@ export default class State {
             show: false,
           },
         },
+        confine: true,
         formatter: (paramsArray) => {
           if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
             return null;
@@ -202,9 +203,19 @@ export default class State {
           return `${headerHtml}${seriesHtml}`;
         },
       },
+      grid: {
+        containLabel: true,
+        left: 10,
+        bottom: 10,
+        top: 30,
+        right: 30,
+      },
       yAxis: this.yAxes.map((yAxis) => ({
         type: 'value',
         name: yAxis.name,
+        minInterval: yAxis.minInterval,
+        min: ({ min }) => Number.isNaN(min) ? 0 : null,
+        max: ({ max }) => Number.isNaN(max) ? 0 : null,
         axisLine: {
           show: true,
         },
@@ -230,6 +241,8 @@ export default class State {
         yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
         color: series.color,
         stack: series.stackId,
+        areaStyle: series.stackId ? {} : null,
+        smooth: 0.2,
         data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
       })),
     };

@@ -26,11 +26,22 @@
     }
   }
 
+  .tooltip-series-label {
+    max-width: 20em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .tooltip-series-value {
     @include font-semibold();
     flex-grow: 1;
     margin-left: 1.5em;
     text-align: right;
+  }
+
+  .tooltip-series-label,
+  .tooltip-series-value {
+    padding: 0.2em 0;
   }
 
   .tooltip-series-separator {

@@ -5,7 +5,6 @@ import oneFormFields from './onedata-gui-common/components/one-form-fields';
 import oneFormField from './onedata-gui-common/components/one-form-field';
 import applicationError from './onedata-gui-common/components/application-error';
 import providerPlace from './onedata-gui-common/components/provider-place';
-import providersList from './onedata-gui-common/components/providers-list';
 import supportSizeInfo from './onedata-gui-common/components/support-size-info';
 import resourceLoadError from './onedata-gui-common/components/resource-load-error';
 import oneInlineEditor from './onedata-gui-common/components/one-inline-editor';
@@ -87,7 +86,6 @@ const translations = {
     oneFormField,
     applicationError,
     providerPlace,
-    providersList,
     supportSizeInfo,
     resourceLoadError,
     oneInlineEditor,

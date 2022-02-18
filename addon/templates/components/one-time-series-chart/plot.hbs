@@ -1,0 +1,13 @@
+{{#promise-proxy-container proxy=stateProxy sizeClass="sm"}}
+  <div class="canvas-area">
+    {{#if hasDataToShow}}
+      {{one-echart option=echartState}}
+    {{else}}
+      <div class="no-data-message">
+        <div class="no-data-img"></div>
+        {{tt this "noDataToShow"}}
+      </div>
+    {{/if}}
+  </div>
+  <div class="title-area">{{title}}</div>
+{{/promise-proxy-container}}
