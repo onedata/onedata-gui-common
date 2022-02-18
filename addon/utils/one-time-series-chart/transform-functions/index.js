@@ -11,6 +11,7 @@ import abs from './abs';
 import asBytes from './as-bytes';
 import asBytesPerSecond from './as-bytes-per-second';
 import multiply from './multiply';
+import replaceEmpty from './replace-empty';
 import supplyValue from './supply-value';
 
 const transformsFunctionsIndex = {
@@ -18,6 +19,7 @@ const transformsFunctionsIndex = {
   asBytes,
   asBytesPerSecond,
   multiply,
+  replaceEmpty,
   supplyValue,
 };
 

@@ -144,9 +144,11 @@ describe('Unit | Utility | one time series chart/state', function () {
       const state = new State({
         yAxes: [{
           name: 'axis1',
+          minInterval: 1,
           valueFormatter: (value) => value + ' bytes',
         }, {
           name: 'axis2',
+          minInterval: null,
           valueFormatter: (value) => value + ' bits',
         }],
       });
@@ -155,6 +157,7 @@ describe('Unit | Utility | one time series chart/state', function () {
       expect(asPlainJson(echartState.yAxis)).to.deep.equal([{
         type: 'value',
         name: 'axis1',
+        minInterval: 1,
         axisLine: {
           show: true,
         },
@@ -162,6 +165,7 @@ describe('Unit | Utility | one time series chart/state', function () {
       }, {
         type: 'value',
         name: 'axis2',
+        minInterval: null,
         axisLine: {
           show: true,
         },
@@ -217,6 +221,8 @@ describe('Unit | Utility | one time series chart/state', function () {
         yAxisIndex: 1,
         color: '#ff0000',
         stack: 'abc',
+        areaStyle: {},
+        smooth: 0.2,
         data: [
           ['10', 1],
           ['20', 2],
@@ -228,6 +234,8 @@ describe('Unit | Utility | one time series chart/state', function () {
         yAxisIndex: 0,
         color: null,
         stack: null,
+        areaStyle: null,
+        smooth: 0.2,
         data: [
           ['10', null],
           ['20', 3],
@@ -241,6 +249,7 @@ describe('Unit | Utility | one time series chart/state', function () {
 
       expect(asPlainJson(echartState.tooltip)).to.deep.equal({
         trigger: 'axis',
+        confine: true,
         axisPointer: {
           type: 'cross',
           label: {

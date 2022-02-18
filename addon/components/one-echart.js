@@ -14,7 +14,7 @@ import { observer, computed } from '@ember/object';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { inject as service } from '@ember/service';
-import { schedule } from '@ember/runloop';
+import { next } from '@ember/runloop';
 
 /**
  * @typedef {Object} ECOption An object, that is passed to `setOption` Echarts
@@ -89,7 +89,7 @@ export default Component.extend(WindowResizeHandler, {
 
   async setupChart() {
     const echarts = await this.get('echartsLibraryProxy');
-    schedule('afterRender', this, () => safeExec(this, () => {
+    next(() => window.requestAnimationFrame(() => safeExec(this, () => {
       const {
         element,
         chart: existingChart,
@@ -100,7 +100,7 @@ export default Component.extend(WindowResizeHandler, {
 
       this.set('chart', echarts.init(element.querySelector('.chart')));
       this.applyChartOption();
-    }));
+    })));
   },
 
   applyChartOption() {

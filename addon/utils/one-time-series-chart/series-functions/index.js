@@ -11,12 +11,14 @@ import abs from './abs';
 import getDynamicSeriesConfigData from './get-dynamic-series-config-data';
 import loadSeries from './load-series';
 import multiply from './multiply';
+import replaceEmpty from './replace-empty';
 
 const seriesFunctionsIndex = {
   abs,
   getDynamicSeriesConfigData,
   loadSeries,
   multiply,
+  replaceEmpty,
 };
 
 export default seriesFunctionsIndex;
