@@ -8,7 +8,7 @@ const browsers = [
   'not android > 4',
 ];
 
-const isModernTarget = Boolean(process.env.MODERN_BROWSER_BUILD);
+const isModernTarget = process.env.MODERN_BROWSER_BUILD === 'true';
 
 if (!isModernTarget) {
   browsers.push('since 2017');
