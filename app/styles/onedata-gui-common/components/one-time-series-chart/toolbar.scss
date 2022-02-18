@@ -1,0 +1,40 @@
+$one-time-series-chart-toolbar-font-size: 85%;
+
+.one-time-series-chart-toolbar {
+  .time-resolutions-trigger.small {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0.2em 1.9em 0.2em 0.6em;
+    min-height: initial;
+    font-size: $one-time-series-chart-toolbar-font-size;
+
+    .ember-power-select-status-icon {
+      right: 1.4em;
+      top: 0.3em;
+    }
+  }
+
+  .navigation-buttons {
+    .btn {
+      padding: 0.2em 0.5em;
+      min-width: 2em;
+    }
+
+    .one-icon {
+      font-size: 120%;
+      margin: 0 -0.3em;
+      left: 0;
+      top: 0.2em;
+    }
+  }
+}
+
+.time-resolutions-dropdown.small {
+  font-size: 100%;
+
+  .ember-power-select-option {
+    padding: 0.2em 0.6em;
+    font-size: $one-time-series-chart-toolbar-font-size;
+    min-height: initial;
+  }
+}

@@ -1,3 +1,5 @@
+import plot from './one-time-series-chart/plot';
+
 export default {
-  noDataToShow: 'There is no data to show.',
+  plot,
 };

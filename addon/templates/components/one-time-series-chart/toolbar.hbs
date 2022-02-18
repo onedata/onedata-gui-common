@@ -1,0 +1,35 @@
+{{#one-dropdown
+  triggerClass="small time-resolutions-trigger"
+  dropdownClass="small time-resolutions-dropdown"
+  options=timeResolutionOptions
+  onchange=(action "changeTimeResolution")
+  selected=(find-by "value" selectedTimeResolution timeResolutionOptions)
+  searchEnabled=false
+  as |option|
+}}
+  {{option.label}}
+{{/one-dropdown}}
+<div class="btn-group navigation-buttons">
+  {{#one-button
+    class="show-older-btn"
+    disabled=isShowOlderDisabled
+    onClick=(action "showOlder")
+  }}
+    {{one-icon icon="arrow-left"}}
+  {{/one-button}}
+  {{#one-button
+    class="show-newer-btn"
+    disabled=isShowNewerAndNewestDisabled
+    onClick=(action "showNewer")
+  }}
+    {{one-icon icon="arrow-right"}}
+  {{/one-button}}
+  {{#one-button
+    class="show-newest-btn"
+    disabled=isShowNewerAndNewestDisabled
+    onClick=(action "showNewest")
+  }}
+    {{one-icon icon="arrow-right"}}
+    {{one-icon icon="arrow-right"}}
+  {{/one-button}}
+</div>

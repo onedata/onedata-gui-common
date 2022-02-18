@@ -29,7 +29,7 @@
  *   that define which part of the chart is visible. Are provided after
  *   configuration object creation and can be modified during the whole chart life.
  *
- * ## Raw configuration
+ * ## Chart definition
  *
  * The chart definition is that part of the configuration, which is constant regardless
  * backend data. It is a pure definition of series and axes - basically all visual
@@ -49,6 +49,9 @@
  * Each Y axis definition consists of:
  * - id - string id which allows to reference to it later,
  * - name - short human-readable name, that will be rendered as an axis label
+ * - minInterval - optional number value, which determines minimum values gap between
+ *   Y axis split lines. For example setting it to `1` will force only integer Y axis
+ *   split lines.
  * - valueFormatter - optional specification of a transform function, that should be used
  *   to stringify value from Y axis and make it human-readable. E.g. it may
  *   transform an integer to a size in bytes. This function will also be used
@@ -61,6 +64,7 @@
  * {
  *   id: 'bytesAxis',
  *   name: 'Bytes',
+ *   minInterval: 1,
  *   valueFormatter: {
  *     functionName: 'asBytes',
  *     functionArguments: {
@@ -248,8 +252,8 @@
  * ```
  * {
  *   mySource: {
- *     fetchSeries: async (context, externalSourceParams) => { ... },
- *     fetchDynamicSeriesConfigs: async (externalSourceParams) => { ... },
+ *     fetchSeries: async (context, externalSourceParameters) => { ... },
+ *     fetchDynamicSeriesConfigs: async (externalSourceParameters) => { ... },
  *   }
  * }
  * ```
@@ -360,7 +364,7 @@
  *   },
  *   externalDataSources: {
  *     throughputSource: {
- *       fetchSeries: async (context, externalSourceParams) => { ... },
+ *       fetchSeries: async (context, externalSourceParameters) => { ... },
  *     },
  *   },
  *   timeResolutionSpecs: [{
@@ -439,6 +443,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @typedef {Object} OTSCRawYAxis Y axis definition
  * @property {string} id
  * @property {string} name will be visible as an axis label
+ * @property {number} [minInterval] minimum gap between axis split lines.
  * @property {OTSCRawFunction} [valueFormatter] definition of a chart values
  * converter, that makes them more human-readable
  */
@@ -580,6 +585,12 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  *   the right edge of the chart (edge of "newer" points). If is null, it represents
  *   the newest possible point.
  * @property {number} timeResolution see `OTSCTimeResolutionSpec` documentation
+ */
+
+/**
+ * @typedef {Object} RawOTSCSeriesPoint
+ * @property {number} timestamp
+ * @property {number} value
  */
 
 /** 3, 4, 6 or 8 hex characters prefixed by `#` */
@@ -829,6 +840,7 @@ export default class Configuration {
       return {
         id: rawYAxis.id,
         name: rawYAxis.name,
+        minInterval: rawYAxis.minInterval || null,
         valueFormatter,
       };
     });
