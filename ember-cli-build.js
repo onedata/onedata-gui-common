@@ -30,14 +30,7 @@ module.exports = function (defaults) {
       replaceExtensions: ['html', 'css', 'js', 'webmanifest'],
     },
     // options as in `preset-env` in standard Babel config
-    'babel': {
-      include: [
-        // there are many runloop problems in tests when using async/await, because of
-        // poor support of native promises in Ember < 3.4; try to disable this plugin
-        // in Ember >= 3.4
-        'transform-async-to-generator',
-      ],
-    },
+    'babel': {},
     'sassOptions': {
       includePaths: [
         'app/styles',

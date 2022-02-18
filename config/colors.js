@@ -8,7 +8,6 @@
  */
 
 /* eslint-env node */
-/* global exports */
 
 module.exports = {
   azure: '#3EA5F9',
