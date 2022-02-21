@@ -66,6 +66,11 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
+  tooltipClass: reads('field.tooltipClass'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   mode: reads('field.mode'),
 
   /**
