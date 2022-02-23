@@ -115,7 +115,7 @@ export default class StoreContentTableColumns {
           columns.push({
             name: 'description',
             label: String(this.t('description')),
-            valuePath: ['value', 'entry', 'description'],
+            valuePath: ['value', 'content', 'description'],
             type: 'storeSpecific',
           });
         }
@@ -130,9 +130,7 @@ export default class StoreContentTableColumns {
    * @private
    */
   areColumnsBasedOnData() {
-    return ['object', 'file', 'dataset']
-      // range store has "number" dataSpec, but its value in store browser is an object
-      .includes(this.storeDataSpec.type) || this.storeType === 'range';
+    return ['object', 'file', 'dataset'].includes(this.storeDataSpec.type);
   }
 
   /**
@@ -168,16 +166,16 @@ export default class StoreContentTableColumns {
     switch (this.storeType) {
       case 'auditLog': {
         const newDataEntries = newDataValues.map(value => {
-          if (!value.entry || typeof value.entry !== 'object') {
+          if (!value.content || typeof value.content !== 'object') {
             return null;
           }
-          return value.entry;
+          return value.content;
         }).compact();
         const keysInEachEntry = newDataEntries.map(value => Object.keys(value));
         columns = _.uniq(_.flatten(keysInEachEntry)).map(key => ({
           name: camelize(`value.${key}`),
           label: key,
-          valuePath: ['value', 'entry', key],
+          valuePath: ['value', 'content', key],
         }));
         break;
       }
@@ -202,7 +200,7 @@ export default class StoreContentTableColumns {
   getWholeDataPath() {
     switch (this.storeType) {
       case 'auditLog':
-        return ['value', 'entry'];
+        return ['value', 'content'];
       default:
         return ['value'];
     }

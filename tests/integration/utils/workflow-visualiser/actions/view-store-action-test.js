@@ -24,12 +24,12 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
         type: 'integer',
         valueConstraints: {},
       },
-      defaultInitialValue: {
+      defaultInitialContent: {
         start: 1,
         end: 10,
         step: 2,
       },
-      requiresInitialValue: false,
+      requiresInitialContent: false,
     });
     const action = ViewStoreAction.create({
       ownerSource: this,

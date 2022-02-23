@@ -27,16 +27,12 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
         name: 'store1',
         description: 'storeDesc',
         type: 'range',
-        dataSpec: {
-          type: 'integer',
-          valueConstraints: {},
-        },
-        defaultInitialValue: {
+        defaultInitialContent: {
           start: 1,
           end: 10,
           step: 2,
         },
-        requiresInitialValue: false,
+        requiresInitialContent: false,
       }),
     });
   });
@@ -147,9 +143,9 @@ function itHasModeClass(mode) {
 }
 
 function itAddsInputStoreClassWhenNeeded() {
-  it('has class "tag-item-warning" when "requiresInitialValue" is true',
+  it('has class "tag-item-warning" when "requiresInitialContent" is true',
     async function () {
-      this.set('store.requiresInitialValue', true);
+      this.set('store.requiresInitialContent', true);
 
       await render(this);
 
@@ -157,9 +153,9 @@ function itAddsInputStoreClassWhenNeeded() {
         .to.have.class('tag-item-warning');
     });
 
-  it('does not have class "tag-item-warning" when "requiresInitialValue" is false',
+  it('does not have class "tag-item-warning" when "requiresInitialContent" is false',
     async function () {
-      this.set('store.requiresInitialValue', false);
+      this.set('store.requiresInitialContent', false);
 
       await render(this);
 

@@ -181,7 +181,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'store.{name,description,type,dataType,defaultInitialValue,requiresInitialValue}',
+    'store.{name,description,type,dataType,defaultInitialContent,requiresInitialContent}',
     function passedStoreFormValues() {
       return storeToFormData(this.get('store'));
     }
@@ -627,9 +627,9 @@ function storeToFormData(store) {
     name,
     description,
     type,
-    dataSpec,
-    defaultInitialValue,
-    requiresInitialValue,
+    writeDataSpec,
+    defaultInitialContent,
+    requiresInitialContent,
   } = getProperties(
     store,
     'schemaId',
@@ -637,9 +637,9 @@ function storeToFormData(store) {
     'name',
     'description',
     'type',
-    'dataSpec',
-    'defaultInitialValue',
-    'requiresInitialValue'
+    'writeDataSpec',
+    'defaultInitialContent',
+    'requiresInitialContent'
   );
 
   const formData = {
@@ -648,7 +648,7 @@ function storeToFormData(store) {
     name,
     description,
     type,
-    needsUserInput: Boolean(requiresInitialValue),
+    needsUserInput: Boolean(requiresInitialContent),
   };
 
   switch (type) {
@@ -658,7 +658,7 @@ function storeToFormData(store) {
         end,
         step,
       } = getProperties(
-        defaultInitialValue || {},
+        defaultInitialContent || {},
         'start',
         'end',
         'step'
@@ -673,9 +673,9 @@ function storeToFormData(store) {
     }
     default:
       formData.genericStoreConfig = {
-        dataType: dataSpec && dataSpecToType(dataSpec).type || undefined,
-        defaultValue: [undefined, null].includes(defaultInitialValue) ?
-          '' : JSON.stringify(defaultInitialValue, null, 2),
+        dataType: writeDataSpec && dataSpecToType(writeDataSpec).type || undefined,
+        defaultValue: [undefined, null].includes(defaultInitialContent) ?
+          '' : JSON.stringify(defaultInitialContent, null, 2),
       };
       break;
   }
@@ -705,7 +705,7 @@ function formDataToStore(formData) {
     name,
     description,
     type,
-    requiresInitialValue: Boolean(needsUserInput),
+    requiresInitialContent: Boolean(needsUserInput),
   };
 
   switch (type) {
@@ -721,8 +721,7 @@ function formDataToStore(formData) {
         'rangeStep'
       );
 
-      store.dataSpec = typeToDataSpec({ type: 'integer', isArray: false });
-      store.defaultInitialValue = {
+      store.defaultInitialContent = {
         start: Number(rangeStart),
         end: Number(rangeEnd),
         step: Number(rangeStep),
@@ -735,19 +734,25 @@ function formDataToStore(formData) {
         defaultValue,
       } = getProperties(genericStoreConfig || {}, 'dataType', 'defaultValue');
 
-      const dataSpec = dataType && typeToDataSpec({ type: dataType, isArray: false }) || undefined;
-      let defaultInitialValue = null;
+      const writeDataSpec = dataType && typeToDataSpec({ type: dataType, isArray: false }) || undefined;
+      let defaultInitialContent = null;
       if (defaultValue && defaultValue.trim()) {
         try {
-          defaultInitialValue = JSON.parse(defaultValue);
+          defaultInitialContent = JSON.parse(defaultValue);
         } catch (e) {
-          defaultInitialValue = null;
+          defaultInitialContent = null;
         }
       }
 
+      const config = type === 'auditLog' ? {
+        logContentDataSpec: writeDataSpec,
+      } : {
+        itemDataSpec: writeDataSpec,
+      };
+
       Object.assign(store, {
-        dataSpec,
-        defaultInitialValue,
+        config,
+        defaultInitialContent,
       });
       break;
     }

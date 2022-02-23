@@ -9,28 +9,36 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns true when dataSpec.valueConstraints changed from {} to empty', function () {
+  it('returns true when config.itemDataSpec.valueConstraints changed from {} to empty', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.stores[0].dataSpec.valueConstraints = {};
-    delete revision2.stores[0].dataSpec.valueConstraints;
+    revision1.stores[0].config.itemDataSpec.valueConstraints = {};
+    delete revision2.stores[0].config.itemDataSpec.valueConstraints;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns true when store.defaultInitialValue changed from null to empty', function () {
+  it('returns true when config changed from {} to empty', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
-    revision1.stores[0].defaultInitialValue = null;
-    delete revision2.stores[0].defaultInitialValue;
+    revision1.stores[0].config = {};
+    delete revision2.stores[0].config;
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns true when range store defaultInitialValue changed from defaults to empty values',
+  it('returns true when store.defaultInitialContent changed from null to empty', function () {
+    const revision1 = getExampleWorkflowSchemaRevision();
+    const revision2 = getExampleWorkflowSchemaRevision();
+    revision1.stores[0].defaultInitialContent = null;
+    delete revision2.stores[0].defaultInitialContent;
+    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
+  });
+
+  it('returns true when range store defaultInitialContent changed from defaults to empty values',
     function () {
       const revision1 = getExampleWorkflowSchemaRevision();
       const revision1Store1 = revision1.stores[0];
       revision1Store1.type = 'range';
-      revision1Store1.defaultInitialValue = {
+      revision1Store1.defaultInitialContent = {
         start: 0,
         stop: 10,
         step: 1,
@@ -38,7 +46,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
       const revision2 = getExampleWorkflowSchemaRevision();
       const revision2Store1 = revision2.stores[0];
       revision2Store1.type = 'range';
-      revision2Store1.defaultInitialValue = {
+      revision2Store1.defaultInitialContent = {
         stop: 10,
       };
       expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
@@ -130,11 +138,11 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
   });
 
-  it('returns false when range store defaultInitialValue changed', function () {
+  it('returns false when range store defaultInitialContent changed', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision1Store1 = revision1.stores[0];
     revision1Store1.type = 'range';
-    revision1Store1.defaultInitialValue = {
+    revision1Store1.defaultInitialContent = {
       start: 0,
       stop: 10,
       step: 1,
@@ -142,7 +150,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     const revision2 = getExampleWorkflowSchemaRevision();
     const revision2Store1 = revision2.stores[0];
     revision2Store1.type = 'range';
-    revision2Store1.defaultInitialValue = {
+    revision2Store1.defaultInitialContent = {
       start: 1,
       stop: 10,
       step: 1,
@@ -157,25 +165,29 @@ function getExampleWorkflowSchemaRevision() {
     description: 'desc',
     stores: [{
       type: 'list',
-      requiresInitialValue: false,
+      requiresInitialContent: false,
       name: 'list int',
       id: 'b4fd4a8b5eb4c28a7a7527ec84b478a7740a38',
       description: '',
-      defaultInitialValue: null,
-      dataSpec: {
-        valueConstraints: {},
-        type: 'integer',
+      defaultInitialContent: null,
+      config: {
+        itemDataSpec: {
+          valueConstraints: {},
+          type: 'integer',
+        },
       },
     }, {
       type: 'singleValue',
-      requiresInitialValue: false,
+      requiresInitialContent: false,
       name: 'int',
       id: '205cbbbc1aba54432776f44b8ea1ffd50381c5',
       description: '',
-      defaultInitialValue: null,
-      dataSpec: {
-        valueConstraints: {},
-        type: 'integer',
+      defaultInitialContent: null,
+      config: {
+        itemDataSpec: {
+          valueConstraints: {},
+          type: 'integer',
+        },
       },
     }],
     lanes: [{

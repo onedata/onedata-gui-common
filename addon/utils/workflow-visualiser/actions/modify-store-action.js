@@ -63,9 +63,9 @@ export default Action.extend({
       'name',
       'description',
       'type',
-      'dataSpec',
-      'defaultInitialValue',
-      'requiresInitialValue',
+      'config',
+      'defaultInitialContent',
+      'requiresInitialContent',
     ];
 
     const modifiedKeys = keysToCheck.filter(key =>

@@ -12,6 +12,7 @@ import { classify } from '@ember/string';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { setProperties } from '@ember/object';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const componentClass = 'task-form';
 
@@ -231,11 +232,13 @@ const allSimpleDataSpecNames = [
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
   allowedDataSpecNames: allSimpleDataSpecNames,
+  dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: false,
   dispatchFunctions: ['set'],
 }, {
   type: 'list',
   allowedDataSpecNames: allSimpleDataSpecNames,
+  dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
   // TODO: VFS-7816 uncomment or remove future code
@@ -256,6 +259,7 @@ const allPossibleStoreSpecs = [{
     // TODO: VFS-7816 uncomment or remove future code
     // 'archive',
   ],
+  dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
 }, {
@@ -272,6 +276,7 @@ const allPossibleStoreSpecs = [{
 }, {
   type: 'auditLog',
   allowedDataSpecNames: allSimpleDataSpecNames,
+  dataSpecConfigKey: 'logContentDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
 }];
@@ -279,6 +284,7 @@ const allPossibleStores = [];
 allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
     type,
     allowedDataSpecNames,
+    dataSpecConfigKey,
   }) =>
   allPossibleStores.push(...allowedDataSpecNames.map(dataSpecName => {
     const storeLabel = `${type}${classify(dataSpecName)}`;
@@ -286,8 +292,10 @@ allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
       id: `${storeLabel}Id`,
       name: `${storeLabel}Store`,
       type,
-      dataSpec: dataSpecs.findBy('name', dataSpecName).dataSpec,
-      requiresInitialValue: false,
+      config: {
+        [dataSpecConfigKey]: dataSpecs.findBy('name', dataSpecName).dataSpec,
+      },
+      requiresInitialContent: false,
     };
   }))
 );
@@ -295,32 +303,36 @@ allPossibleStores.push({
   id: 'rangeId',
   name: 'rangeStore',
   type: 'range',
-  defaultInitialValue: {
+  defaultInitialContent: {
     start: 1,
     end: 10,
     step: 2,
   },
-  requiresInitialValue: false,
+  requiresInitialContent: false,
 });
 const taskAuditLogStore = {
   id: 'CURRENT_TASK_SYSTEM_AUDIT_LOG',
   name: 'Current task system audit log',
   type: 'auditLog',
-  dataSpec: {
-    type: 'object',
-    valueConstraints: {},
+  config: {
+    logContentDataSpec: {
+      type: 'object',
+      valueConstraints: {},
+    },
   },
-  requiresInitialValue: false,
+  requiresInitialContent: false,
 };
 const workflowAuditLogStore = {
   id: 'WORKFLOW_SYSTEM_AUDIT_LOG',
   name: 'Workflow system audit log',
   type: 'auditLog',
-  dataSpec: {
-    type: 'object',
-    valueConstraints: {},
+  config: {
+    logContentDataSpec: {
+      type: 'object',
+      valueConstraints: {},
+    },
   },
-  requiresInitialValue: false,
+  requiresInitialContent: false,
 };
 
 const dispatchFunctionLabels = {
@@ -453,7 +465,9 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     this.setProperties({
       atmLambda: _.cloneDeep(exampleAtmLambda),
       atmLambdaRevisionNumber: 1,
-      definedStores: A(_.cloneDeep(allPossibleStores)),
+      definedStores: A(
+        _.cloneDeep(allPossibleStores).map((rawStore) => Store.create(rawStore))
+      ),
       createStoreSucceeds: true,
       newStoreFromCreation: undefined,
       actionsFactory,
@@ -727,12 +741,14 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               isOptional: false,
             }]);
 
-            this.set('newStoreFromCreation', {
+            this.set('newStoreFromCreation', Store.create({
               id: 'newstore',
               name: 'new store',
-              dataSpec: dataSpec,
+              config: {
+                itemDataSpec: dataSpec,
+              },
               type: 'singleValue',
-            });
+            }));
             const allowedStoreTypes = ['singleValue'];
             const allowedDataTypes = dataSpecs.mapBy('name').filter(specName =>
               name === specName || (canContain || []).includes(specName)
@@ -977,12 +993,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`allows to create new store for result of type "${dataSpecName}"`,
         async function () {
-          this.set('newStoreFromCreation', {
+          this.set('newStoreFromCreation', Store.create({
             id: 'newstore',
             name: 'new store',
-            dataSpec: sortedPossibleStores[0].dataSpec,
+            config: sortedPossibleStores[0].config,
             type: sortedPossibleStores[0].type,
-          });
+          }));
           this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
@@ -1007,12 +1023,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       it(`allows to create new store for result of batched type "${dataSpecName}"`,
         async function () {
-          this.set('newStoreFromCreation', {
+          this.set('newStoreFromCreation', Store.create({
             id: 'newstore',
             name: 'new store',
-            dataSpec: sortedPossibleStoresWithBatch[0].dataSpec,
+            config: sortedPossibleStoresWithBatch[0].config,
             type: sortedPossibleStoresWithBatch[0].type,
-          });
+          }));
           setProperties(this.get('atmLambda.revisionRegistry.1'), {
             preferredBatchSize: 100,
             resultSpecs: [{
@@ -1487,9 +1503,10 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
 ) {
   it(`provides possible dispatch functions for result with store "${storeDescription}" attached`,
     async function () {
+      const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
-        dataSpec: targetStore.dataSpec,
+        dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
       }]);
 
       await render(this);
@@ -1514,9 +1531,10 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
 ) {
   it(`allows to setup result to use "${storeDescription}" store with "${dispatchFunction}" dispatch function`,
     async function () {
+      const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
-        dataSpec: targetStore.dataSpec,
+        dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
       }]);
 
       await render(this);
@@ -1813,11 +1831,12 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
     .forEach(({ storeDesc, targetStore, dispatchFunctions }) => {
       it(`fills fields with data about results that uses "${storeDesc}" stores and all possible dispatch methods`,
         async function () {
+          const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
           this.set(
             'atmLambda.revisionRegistry.1.resultSpecs',
             dispatchFunctions.map((dispatchFunction, idx) => ({
               name: `res${idx}`,
-              dataSpec: targetStore.dataSpec,
+              dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
               isOptional: false,
             }))
           );
