@@ -117,3 +117,41 @@ export function getTargetDataTypesForType(type) {
   }
   return targetTypes;
 }
+
+/**
+ * @param {{ type, config }} storeProperties
+ * @returns {AtmDataSpec|null} null when writing to store is not constrained by
+ * data specs mechanism
+ */
+export function getStoreWriteDataSpec({ type, config }) {
+  switch (type) {
+    case 'auditLog':
+      return config && config.logContentDataSpec || null;
+    case 'list':
+    case 'singleValue':
+    case 'treeForest':
+      return config && config.itemDataSpec || null;
+    case 'range':
+    default:
+      return null;
+  }
+}
+
+/**
+ * @param {{ type, config }} storeProperties
+ * @returns {AtmDataSpec|null} null when reading from store is not constrained by
+ * data specs mechanism
+ */
+export function getStoreReadDataSpec({ type, config }) {
+  switch (type) {
+    case 'auditLog':
+    case 'range':
+      return { type: 'object', valueConstraints: {} };
+    case 'list':
+    case 'singleValue':
+    case 'treeForest':
+      return config && config.itemDataSpec || null;
+    default:
+      return null;
+  }
+}

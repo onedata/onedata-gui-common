@@ -310,24 +310,26 @@ export default Component.extend({
       id: 's1',
       name: 'store1',
       description: '',
-      type: 'serial',
-      dataSpec: {
-        type: 'integer',
-        valueConstraints: {},
+      type: 'list',
+      config: {
+        itemDataSpec: {
+          type: 'integer',
+          valueConstraints: {},
+        },
       },
-      defaultInitialValue: undefined,
-      requiresInitialValue: false,
+      defaultInitialContent: undefined,
+      requiresInitialContent: false,
     }, {
       id: 's2',
       name: 'store2',
       description: 'storeDesc',
       type: 'range',
-      defaultInitialValue: {
+      defaultInitialContent: {
         start: 1,
         end: 10,
         step: 2,
       },
-      requiresInitialValue: false,
+      requiresInitialContent: false,
     }],
   })),
 });
