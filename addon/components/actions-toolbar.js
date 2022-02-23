@@ -3,13 +3,17 @@
  *
  * @module components/actions-toolbar
  * @author Michal Borzecki
- * @copyright (C) 2018 ACK CYFRONET AGH
+ * @copyright (C) 2018-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 import Component from '@ember/component';
 import layout from '../templates/components/actions-toolbar';
-import breakpointValues from 'onedata-gui-common/breakpoint-values';
+import config from 'ember-get-config';
+
+const {
+  screenSm,
+} = config.breakpoints;
 
 export default Component.extend({
   layout,
@@ -49,7 +53,7 @@ export default Component.extend({
   /**
    * @type {number}
    */
-  minimumFullWindowSize: breakpointValues.screenSm,
+  minimumFullWindowSize: screenSm,
 
   /**
    * If true, then all actions toolbar elements will be rendered immediately
