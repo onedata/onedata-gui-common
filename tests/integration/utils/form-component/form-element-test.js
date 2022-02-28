@@ -351,4 +351,12 @@ describe('Integration | Utility | form component/form element', function () {
       expect(get(formField, 'addColonToLabel')).to.be.true;
     },
   );
+
+  it('has undefined "tooltipClass" by default',
+    function () {
+      const formField = FormElement.create();
+
+      expect(get(formField, 'tooltipClass')).to.be.undefined;
+    },
+  );
 });
