@@ -7,8 +7,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import EmberObject from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { resolve } from 'rsvp';
+import {
+  getStoreWriteDataSpec,
+  getStoreReadDataSpec,
+} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 
 export default EmberObject.extend({
   /**
@@ -56,19 +60,19 @@ export default EmberObject.extend({
    * @virtual optional
    * @type {Object}
    */
-  dataSpec: undefined,
+  config: undefined,
 
   /**
    * @virtual optional
    * @type {any}
    */
-  defaultInitialValue: undefined,
+  defaultInitialContent: undefined,
 
   /**
    * @virtual
    * @type {Boolean}
    */
-  requiresInitialValue: undefined,
+  requiresInitialContent: undefined,
 
   /**
    * If true, then the content of this store can change, hence any content preview
@@ -94,6 +98,20 @@ export default EmberObject.extend({
    * @returns {Promise}
    */
   onRemove: undefined,
+
+  /**
+   * @type {ComputedProperty<AtmDataSpec>}
+   */
+  writeDataSpec: computed('type', 'config', function writeDataSpec() {
+    return getStoreWriteDataSpec(this.getProperties('type', 'config'));
+  }),
+
+  /**
+   * @type {ComputedProperty<AtmDataSpec>}
+   */
+  readDataSpec: computed('type', 'config', function readDataSpec() {
+    return getStoreReadDataSpec(this.getProperties('type', 'config'));
+  }),
 
   modify(modifiedProps) {
     const onModify = this.get('onModify');

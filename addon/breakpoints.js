@@ -1,10 +1,10 @@
-import breakpointValues from 'onedata-gui-common/breakpoint-values';
+import config from 'ember-get-config';
 
 const {
   screenSm,
   screenMd,
   screenLg,
-} = breakpointValues;
+} = config.breakpoints;
 
 export default {
   mobile: `(max-width: ${screenSm - 1}px)`,

@@ -36,6 +36,7 @@ import {
   serializeTaskResourcesFieldsValues,
 } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -48,22 +49,26 @@ const backendStoreIdsMappings = {
 };
 const frontendStoreIdsMappings = _.invert(backendStoreIdsMappings);
 
-const taskAuditLogStore = {
+const taskAuditLogStore = Store.create({
   id: taskAuditLogDropdownOptionValue,
   type: 'auditLog',
-  dataSpec: {
-    type: 'object',
-    valueConstraints: {},
+  config: {
+    logContentDataSpec: {
+      type: 'object',
+      valueConstraints: {},
+    },
   },
-};
-const workflowAuditLogStore = {
+});
+const workflowAuditLogStore = Store.create({
   id: workflowAuditLogDropdownOptionValue,
   type: 'auditLog',
-  dataSpec: {
-    type: 'object',
-    valueConstraints: {},
+  config: {
+    logContentDataSpec: {
+      type: 'object',
+      valueConstraints: {},
+    },
   },
-};
+});
 
 export default Component.extend(I18n, {
   layout,
@@ -985,12 +990,12 @@ function getSourceStoreForType(availableStores, type) {
   return availableStores.filter(store => {
     const {
       type: storeType,
-      dataSpec,
-    } = getProperties(store || {}, 'type', 'dataSpec');
-    if (!dataSpec || storeType !== 'singleValue') {
+      readDataSpec,
+    } = getProperties(store || {}, 'type', 'readDataSpec');
+    if (!readDataSpec || storeType !== 'singleValue') {
       return false;
     }
-    const dataType = dataSpecToType(dataSpec).type;
+    const dataType = dataSpecToType(readDataSpec).type;
     return allowedDataTypes.includes(dataType);
   });
 }
@@ -1001,12 +1006,12 @@ function getTargetStoresForType(availableStores, type, hasBatchMode) {
   return availableStores.filter(store => {
     const {
       type: storeType,
-      dataSpec,
-    } = getProperties(store || {}, 'type', 'dataSpec');
-    if (!dataSpec) {
+      writeDataSpec,
+    } = getProperties(store || {}, 'type', 'writeDataSpec');
+    if (!writeDataSpec) {
       return false;
     }
-    const dataType = dataSpecToType(dataSpec).type;
+    const dataType = dataSpecToType(writeDataSpec).type;
     return allowedStoreTypes.includes(storeType) && allowedDataTypes.includes(dataType);
   });
 }

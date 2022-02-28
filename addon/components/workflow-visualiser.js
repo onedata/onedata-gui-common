@@ -1120,9 +1120,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
       name,
       description,
       type,
-      dataSpec,
-      defaultInitialValue,
-      requiresInitialValue,
+      config,
+      defaultInitialContent,
+      requiresInitialContent,
     } = getProperties(
       storeRawData,
       'id',
@@ -1130,9 +1130,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'name',
       'description',
       'type',
-      'dataSpec',
-      'defaultInitialValue',
-      'requiresInitialValue'
+      'config',
+      'defaultInitialContent',
+      'requiresInitialContent'
     );
     const instanceId = rawInstanceId || (schemaId &&
       this.get(`executionState.store.defined.${schemaId}.instanceId`)
@@ -1155,9 +1155,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         description,
         type,
-        dataSpec,
-        defaultInitialValue,
-        requiresInitialValue,
+        config,
+        defaultInitialContent,
+        requiresInitialContent,
       });
       return existingStore;
     } else {
@@ -1168,9 +1168,9 @@ export default Component.extend(I18n, WindowResizeHandler, {
         name,
         description,
         type,
-        dataSpec,
-        defaultInitialValue,
-        requiresInitialValue,
+        config,
+        defaultInitialContent,
+        requiresInitialContent,
         onModify: (store, modifiedProps) => this.modifyElement(store, modifiedProps),
         onRemove: store => this.removeElement(store),
       });

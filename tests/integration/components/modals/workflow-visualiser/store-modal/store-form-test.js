@@ -7,12 +7,14 @@ import wait from 'ember-test-helpers/wait';
 import { click, fillIn, focus, blur } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 const componentClass = 'store-form';
 
 const storeTypes = [{
   label: 'List',
   type: 'list',
+  dataSpecConfigKey: 'itemDataSpec',
   // TODO: VFS-7816 uncomment or remove future code
   // }, {
   //   label: 'Map',
@@ -20,6 +22,7 @@ const storeTypes = [{
 }, {
   label: 'Tree forest',
   type: 'treeForest',
+  dataSpecConfigKey: 'itemDataSpec',
   availableDataTypeLabels: [
     'Any file',
     'Regular file',
@@ -30,6 +33,7 @@ const storeTypes = [{
 }, {
   label: 'Single value',
   type: 'singleValue',
+  dataSpecConfigKey: 'itemDataSpec',
 }, {
   label: 'Range',
   type: 'range',
@@ -42,6 +46,7 @@ const storeTypes = [{
 }, {
   label: 'Audit log',
   type: 'auditLog',
+  dataSpecConfigKey: 'logContentDataSpec',
 }];
 
 const dataTypes = [{
@@ -233,9 +238,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           name: '',
           description: '',
           type: 'list',
-          dataSpec: dataTypes[0].dataSpec,
-          defaultInitialValue: null,
-          requiresInitialValue: false,
+          config: {
+            itemDataSpec: dataTypes[0].dataSpec,
+          },
+          defaultInitialContent: null,
+          requiresInitialContent: false,
         },
         isValid: false,
       });
@@ -248,9 +255,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           name: 'someName',
           description: '',
           type: 'list',
-          dataSpec: dataTypes[0].dataSpec,
-          defaultInitialValue: null,
-          requiresInitialValue: false,
+          config: {
+            itemDataSpec: dataTypes[0].dataSpec,
+          },
+          defaultInitialContent: null,
+          requiresInitialContent: false,
         },
         isValid: true,
       });
@@ -261,6 +270,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       type,
       availableDataTypeLabels = dataTypes.mapBy('label'),
       disabledDataTypeSelection = false,
+      dataSpecConfigKey,
       defaultDataTypeLabel,
     }) => {
       it(`shows generic configuration fields for store "${label}"`, async function () {
@@ -316,9 +326,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             name: 'someName',
             description: 'someDescription',
             type,
-            dataSpec: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
-            defaultInitialValue: 'someDefault',
-            requiresInitialValue: true,
+            config: {
+              [dataSpecConfigKey]: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
+            },
+            defaultInitialContent: 'someDefault',
+            requiresInitialContent: true,
           },
           isValid: true,
         });
@@ -365,16 +377,12 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           name: 'someName',
           description: 'someDescription',
           type: 'range',
-          dataSpec: {
-            type: 'integer',
-            valueConstraints: {},
-          },
-          defaultInitialValue: {
+          defaultInitialContent: {
             start: 1,
             end: 10,
             step: 2,
           },
-          requiresInitialValue: false,
+          requiresInitialContent: false,
         },
         isValid: true,
       });
@@ -482,9 +490,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             name: '',
             description: '',
             type: 'list',
-            dataSpec,
-            defaultInitialValue: null,
-            requiresInitialValue: false,
+            config: {
+              itemDataSpec: dataSpec,
+            },
+            defaultInitialContent: null,
+            requiresInitialContent: false,
           },
           isValid: false,
         });
@@ -519,20 +529,23 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       label,
       type,
       availableDataTypeLabels = dataTypes.mapBy('label'),
+      dataSpecConfigKey,
       disabledDataTypeSelection = false,
     }) => {
       it(`fills fields with data of passed "${label}" store on init`, async function () {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
-        this.set('store', {
+        this.set('store', Store.create({
           schemaId: 'store1id',
           instanceId: 'incorrect value that should not exist',
           name: 'store1',
           description: 'desc',
           type: type,
-          dataSpec: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
-          defaultInitialValue: 'someDefault',
-          requiresInitialValue: true,
-        });
+          config: {
+            [dataSpecConfigKey]: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
+          },
+          defaultInitialContent: 'someDefault',
+          requiresInitialContent: true,
+        }));
 
         await render(this);
 
@@ -557,22 +570,18 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('fills fields with data of passed "Range" store on init', async function () {
-      this.set('store', {
+      this.set('store', Store.create({
         schemaId: 'store1id',
         instanceId: 'incorrect value that should not exist',
         name: 'store1',
         description: 'desc',
         type: 'range',
-        dataSpec: {
-          type: 'integer',
-          valueConstraints: {},
-        },
-        defaultInitialValue: {
+        defaultInitialContent: {
           start: 2,
           end: 6,
           step: 3,
         },
-      });
+      }));
 
       await render(this);
 
@@ -592,10 +601,12 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     dataTypes.forEach(({ label, dataSpec }) => {
       it(`fills fields with data of passed store with "${label}" data type`,
         async function () {
-          this.set('store', {
+          this.set('store', Store.create({
             type: 'list',
-            dataSpec: dataSpec,
-          });
+            config: {
+              itemDataSpec: dataSpec,
+            },
+          }));
 
           await render(this);
 
@@ -605,11 +616,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('does not update form values on passed store change', async function () {
-      const store1 = this.set('store', {
+      const store1 = this.set('store', Store.create({
         name: 'store1',
         description: 'desc',
         type: 'singleValue',
-      });
+      }));
       await render(this);
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
@@ -637,20 +648,23 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       label,
       type,
       availableDataTypeLabels = dataTypes.mapBy('label'),
+      dataSpecConfigKey,
       disabledDataTypeSelection = false,
     }) => {
       it(`fills fields with data of passed "${label}" store`, async function () {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
-        this.set('store', {
+        this.set('store', Store.create({
           schemaId: 'store1id',
           instanceId: 'store1instanceId',
           name: 'store1',
           description: 'desc',
           type: type,
-          dataSpec: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
-          defaultInitialValue: 'someDefault',
-          requiresInitialValue: true,
-        });
+          config: {
+            [dataSpecConfigKey]: dataTypes.findBy('label', selectedDataTypeLabel).dataSpec,
+          },
+          defaultInitialContent: 'someDefault',
+          requiresInitialContent: true,
+        }));
 
         await render(this);
 
@@ -682,22 +696,18 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('fills fields with data of passed "Range" store on init', async function () {
-      this.set('store', {
+      this.set('store', Store.create({
         schemaId: 'store1id',
         instanceId: 'store1instanceId',
         name: 'store1',
         description: 'desc',
         type: 'range',
-        dataSpec: {
-          type: 'integer',
-          valueConstraints: {},
-        },
-        defaultInitialValue: {
+        defaultInitialContent: {
           start: 2,
           end: 6,
           step: 3,
         },
-      });
+      }));
 
       await render(this);
 
@@ -721,10 +731,12 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     dataTypes.forEach(({ label, dataSpec }) => {
       it(`fills fields with data of passed store with "${label}" data type`,
         async function () {
-          this.set('store', {
+          this.set('store', Store.create({
             type: 'list',
-            dataSpec: dataSpec,
-          });
+            config: {
+              itemDataSpec: dataSpec,
+            },
+          }));
 
           await render(this);
 
@@ -754,7 +766,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('hides default value field, when default value is empty', async function () {
-      this.set('store', { defaultInitialValue: null });
+      this.set('store', { defaultInitialContent: null });
 
       await render(this);
 

@@ -2,10 +2,10 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
-const colors = require('./addon/colors').default;
 const defineSassColors = require('./addon/utils/define-sass-colors');
 const defineSassBreakpoints = require('./addon/utils/define-sass-breakpoints');
-const breakpointValues = require('./addon/breakpoint-values').default;
+const colors = require('./config/colors');
+const breakpoints = require('./config/breakpoints');
 const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
 const dynamicLibraries = require('./config/dynamic-libraries');
 
@@ -29,9 +29,8 @@ module.exports = function (defaults) {
       ],
       replaceExtensions: ['html', 'css', 'js', 'webmanifest'],
     },
-    'ember-cli-babel': {
-      includePolyfill: true,
-    },
+    // options as in `preset-env` in standard Babel config
+    'babel': {},
     'sassOptions': {
       includePaths: [
         'app/styles',
@@ -66,7 +65,7 @@ module.exports = function (defaults) {
   });
 
   defineSassColors(app, colors);
-  defineSassBreakpoints(app, breakpointValues);
+  defineSassBreakpoints(app, breakpoints);
   copyDynamicLibraries(app, dynamicLibraries);
 
   /*

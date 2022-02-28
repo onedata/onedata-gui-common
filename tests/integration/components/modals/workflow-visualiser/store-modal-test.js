@@ -13,17 +13,20 @@ import { setProperties } from '@ember/object';
 import { fillIn, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise, resolve } from 'rsvp';
+import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
-const simpliestStore = {
+const simplestStore = {
   name: 'store1',
   description: '',
   type: 'list',
-  dataSpec: {
-    type: 'integer',
-    valueConstraints: {},
+  config: {
+    itemDataSpec: {
+      type: 'integer',
+      valueConstraints: {},
+    },
   },
-  defaultInitialValue: null,
-  requiresInitialValue: false,
+  defaultInitialContent: null,
+  requiresInitialContent: false,
 };
 
 describe('Integration | Component | modals/workflow visualiser/store modal', function () {
@@ -84,7 +87,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
 
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'store1');
-    itPassesStoreProvidedByFormOnSubmit(fillForm, simpliestStore);
+    itPassesStoreProvidedByFormOnSubmit(fillForm, simplestStore);
     itDisablesAllControlsWhileSubmitting(fillForm);
     itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm);
   });
@@ -93,7 +96,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     beforeEach(function () {
       setProperties(this.get('modalOptions'), {
         mode: 'edit',
-        store: simpliestStore,
+        store: Store.create(simplestStore),
       });
     });
 
@@ -103,7 +106,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       expect(getModalHeader().find('h1').text().trim()).to.equal('Modify store');
       const $form = getModalBody().find('.store-form');
       expect($form).to.have.class('mode-edit').and.to.have.class('form-enabled');
-      expect($form.find('.name-field .form-control')).to.have.value(simpliestStore.name);
+      expect($form.find('.name-field .form-control')).to.have.value(simplestStore.name);
       const $modalFooter = getModalFooter();
       const $cancelBtn = $modalFooter.find('.btn-cancel');
       const $submitBtn = $modalFooter.find('.btn-submit');
@@ -132,7 +135,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     itClosesModalOnBackdropClick();
     const fillForm = async () =>
       await fillIn('.name-field .form-control', 'store2');
-    itPassesStoreProvidedByFormOnSubmit(fillForm, Object.assign({}, simpliestStore, {
+    itPassesStoreProvidedByFormOnSubmit(fillForm, Object.assign({}, simplestStore, {
       name: 'store2',
     }));
     itDisablesAllControlsWhileSubmitting();
@@ -143,7 +146,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
     beforeEach(function () {
       setProperties(this.get('modalOptions'), {
         mode: 'view',
-        store: simpliestStore,
+        store: Store.create(simplestStore),
         getStoreContentCallback: () => resolve({ array: [], isLast: true }),
       });
     });
@@ -155,7 +158,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       const $form = getModalBody().find('.store-form');
       expect($form).to.have.class('mode-view');
       expect($form.find('.name-field .field-component').text().trim())
-        .to.equal(simpliestStore.name);
+        .to.equal(simplestStore.name);
       const $modalFooter = getModalFooter();
       const $cancelBtn = $modalFooter.find('.btn-cancel');
       const $submitBtn = $modalFooter.find('.btn-submit');

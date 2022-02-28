@@ -14,8 +14,8 @@ describe('Unit | Utility | workflow visualiser/store', function () {
       'description',
       'type',
       'dataSpec',
-      'defaultInitialValue',
-      'requiresInitialValue',
+      'defaultInitialContent',
+      'requiresInitialContent',
     ].forEach(propName => expect(get(store, propName)).to.be.undefined);
   });
 
