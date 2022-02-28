@@ -41,54 +41,46 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
       now: Date.now(),
       shouldAdvanceTime: true,
     });
+    this.batcher = new QueryBatcher({ fetchData: this.fetchData });
   });
 
   afterEach(function () {
+    this.batcher.destroy();
     this.fakeClock.restore();
   });
 
   it('does not call fetchData when no queries were requested', function () {
-    createBatcher(this);
-
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.not.called;
   });
 
   it('does not call fetchData after query but before accumulation timeout', function () {
-    const batcher = createBatcher(this);
-
-    batcher.query(queryParams());
+    this.batcher.query(queryParams());
     tickBatchTimeout(this, 0.5);
 
     expect(this.fetchData).to.be.not.called;
   });
 
   it('calls fetchData once after query and after accumulation timeout', function () {
-    const batcher = createBatcher(this);
-
-    batcher.query(queryParams());
+    this.batcher.query(queryParams());
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledOnce;
   });
 
   it('calls fetchData once after accumulation timeout for two similar queries', function () {
-    const batcher = createBatcher(this);
-
-    batcher.query(queryParams());
+    this.batcher.query(queryParams());
     tickBatchTimeout(this, 0.5);
-    batcher.query(queryParams());
+    this.batcher.query(queryParams());
     tickBatchTimeout(this, 0.6);
 
     expect(this.fetchData).to.be.calledOnce;
   });
 
   it('calls fetchData according to modified batchAccumulationTime', function () {
-    const batcher = createBatcher(this);
-
-    batcher.batchAccumulationTime = 2 * defaultBatchAccumulationTime;
-    batcher.query(queryParams());
+    this.batcher.batchAccumulationTime = 2 * defaultBatchAccumulationTime;
+    this.batcher.query(queryParams());
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.not.called;
@@ -99,26 +91,22 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('does not call fetchData after batcher destroy', function () {
-    const batcher = createBatcher(this);
-
-    batcher.query(queryParams());
-    batcher.destroy();
+    this.batcher.query(queryParams());
+    this.batcher.destroy();
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.not.called;
   });
 
   it('calls fetchData after timeout, which starts according to the first query in batch', function () {
-    const batcher = createBatcher(this);
-
-    batcher.query(queryParams());
+    this.batcher.query(queryParams());
     tickBatchTimeout(this);
     this.fetchData.reset();
     tickBatchTimeout(this, 2.5);
 
     expect(this.fetchData).to.be.not.called;
 
-    batcher.query(queryParams());
+    this.batcher.query(queryParams());
     tickBatchTimeout(this, 0.8);
 
     expect(this.fetchData).to.be.not.called;
@@ -129,10 +117,8 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two the same queries', async function () {
-    const batcher = createBatcher(this);
-
-    const promise1 = batcher.query(queryParams());
-    const promise2 = batcher.query(queryParams());
+    const promise1 = this.batcher.query(queryParams());
+    const promise2 = this.batcher.query(queryParams());
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledOnce
@@ -142,11 +128,9 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two queries, which have different startTimestamp', async function () {
-    const batcher = createBatcher(this);
-
     const diffQueryParams = queryParams({ startTimestamp: 123 });
-    const promise1 = batcher.query(queryParams());
-    const promise2 = batcher.query(diffQueryParams);
+    const promise1 = this.batcher.query(queryParams());
+    const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledTwice
@@ -157,11 +141,9 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two queries, which have different limit', async function () {
-    const batcher = createBatcher(this);
-
     const diffQueryParams = queryParams({ limit: 123 });
-    const promise1 = batcher.query(queryParams());
-    const promise2 = batcher.query(diffQueryParams);
+    const promise1 = this.batcher.query(queryParams());
+    const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledTwice
@@ -172,11 +154,9 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two queries, which have different metricId', async function () {
-    const batcher = createBatcher(this);
-
     const diffQueryParams = queryParams({ metricId: 'metric_2' });
-    const promise1 = batcher.query(queryParams());
-    const promise2 = batcher.query(diffQueryParams);
+    const promise1 = this.batcher.query(queryParams());
+    const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledOnce
@@ -188,11 +168,9 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two queries, which have different seriesId', async function () {
-    const batcher = createBatcher(this);
-
     const diffQueryParams = queryParams({ seriesId: 'series_2' });
-    const promise1 = batcher.query(queryParams());
-    const promise2 = batcher.query(diffQueryParams);
+    const promise1 = this.batcher.query(queryParams());
+    const promise2 = this.batcher.query(diffQueryParams);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledOnce
@@ -204,12 +182,10 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of two queries, which have different collectionId', async function () {
-    const batcher = createBatcher(this);
-
     const queryParams1 = queryParams({ collectionId: 'collection_1' });
     const queryParams2 = queryParams({ collectionId: 'collection_2' });
-    const promise1 = batcher.query(queryParams(queryParams1));
-    const promise2 = batcher.query(queryParams2);
+    const promise1 = this.batcher.query(queryParams(queryParams1));
+    const promise2 = this.batcher.query(queryParams2);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledTwice
@@ -220,8 +196,6 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes batch of many diffrent queries', async function () {
-    const batcher = createBatcher(this);
-
     const queryParamsArray = [
       queryParams({ collectionId: 'collection_1' }),
       queryParams({ collectionId: 'collection_2' }),
@@ -251,7 +225,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
       }),
       queryParams({ collectionId: 'collection_1' }),
     ];
-    const promises = queryParamsArray.map(queryParams => batcher.query(queryParams));
+    const promises = queryParamsArray.map(queryParams => this.batcher.query(queryParams));
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.have.callCount(4)
@@ -272,15 +246,13 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('handles mixed resolved and rejected results of fetchData', async function () {
-    const batcher = createBatcher(this);
-
     const queryParamsArray = [
       queryParams({ collectionId: 'collection_1' }),
       queryParams({ collectionId: 'collection_2' }),
       queryParams({ collectionId: 'collection_1', metricId: 'metric_-1' }),
       queryParams({ collectionId: 'collection_1', limit: 123 }),
     ];
-    const promises = queryParamsArray.map(queryParams => batcher.query(queryParams));
+    const promises = queryParamsArray.map(queryParams => this.batcher.query(queryParams));
     tickBatchTimeout(this);
 
     let promise1Err;
@@ -294,13 +266,11 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('correctly executes two batches', async function () {
-    const batcher = createBatcher(this);
-
-    const promise1 = batcher.query(queryParams());
+    const promise1 = this.batcher.query(queryParams());
     tickBatchTimeout(this);
 
     const queryParams2 = queryParams({ seriesId: 'series_2' });
-    const promise2 = batcher.query(queryParams2);
+    const promise2 = this.batcher.query(queryParams2);
     tickBatchTimeout(this);
 
     expect(this.fetchData).to.be.calledTwice
@@ -312,10 +282,6 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
     expect(await promise2).to.deep.equal(queryResult(queryParams2));
   });
 });
-
-function createBatcher(testCase) {
-  return new QueryBatcher({ fetchData: testCase.fetchData });
-}
 
 function queryParams({
   collectionId = null,

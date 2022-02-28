@@ -30,7 +30,14 @@ describe('Integration | Component | one time series chart/plot', function () {
   });
 
   afterEach(function () {
-    this.get('fakeClock').restore();
+    const {
+      model,
+      fakeClock,
+    } = this.getProperties('model', 'fakeClock');
+    if (model) {
+      model.destroy();
+    }
+    fakeClock.restore();
   });
 
   it('has class "one-time-series-chart-plot"', async function () {
