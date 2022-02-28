@@ -332,8 +332,16 @@ label {
       }
     }
   }
+  &.tooltip-text-left {
+    .tooltip-inner {
+      text-align: left;
+    }
+  }
   .tooltip-inner {
     word-wrap: break-word;
+    > p:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 
