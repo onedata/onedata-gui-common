@@ -22,6 +22,7 @@ $one-carousel-slides-gap: 100px;
     .one-carousel-slide {
       animation-fill-mode: forwards;
       animation-duration: 0.7s;
+      will-change: transform;
 
       &.active-from-left {
         animation-name: one-carousel-active-from-left;
