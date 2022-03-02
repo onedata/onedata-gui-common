@@ -87,6 +87,7 @@ describe('Unit | Utility | one time series chart/model', function () {
 
       const values1 = await getStatePointsValues(this);
       this.model.destroy();
+      await wait();
       this.fakeClock.tick(61 * 1000);
       await wait();
       const values2 = await getStatePointsValues(this);
