@@ -314,6 +314,13 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   addColonToLabel: true,
 
   /**
+   * Classname internally used by `one-label-tip` to style tooltip.
+   * @virtual optional
+   * @type {String}
+   */
+  tooltipClass: undefined,
+
+  /**
    * @virtual optional
    * @type {String}
    */
