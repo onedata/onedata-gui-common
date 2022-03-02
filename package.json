@@ -19,7 +19,6 @@
     "deps": "npm install",
     "test-ci": "npm run deps && xvfb-run ember test -r xunit",
     "test": "ember test",
-    "test:all": "ember try:each",
     "tdd": "ember test --server",
     "clean": "rm -rf tmp dist node_modules .sass-cache tests/test-results.xml"
   },

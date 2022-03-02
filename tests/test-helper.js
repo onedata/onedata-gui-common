@@ -2,9 +2,9 @@ import { start, setResolver } from 'ember-mocha';
 import { mocha } from 'mocha';
 import resolver from './helpers/resolver';
 import './helpers/responsive';
-import silenceDeprecation from 'onedata-gui-common/utils/silence-deprecations';
+import silenceDeprecations from 'onedata-gui-common/utils/silence-deprecations';
 
-silenceDeprecation();
+silenceDeprecations();
 
 mocha.setup({
   timeout: 5000,
