@@ -6,6 +6,7 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
+import $ from 'jquery';
 
 describe('Integration | Component | form component/field renderer', function () {
   setupComponentTest('form-component/field-renderer', {
@@ -198,6 +199,24 @@ describe('Integration | Component | form component/field renderer', function () 
       this.render(hbs `{{form-component/field-renderer field=textField}}`);
 
       expect(this.$('.form-field-tip')).to.not.exist;
+    }
+  );
+
+  it('adds classname to tooltip if field.tooltipClass is specified',
+    async function (done) {
+      this.set('textField.tip', 'someTip');
+      this.set('textField.tooltipClass', 'custom-tooltip-class');
+
+      this.render(hbs `{{form-component/field-renderer field=textField}}`);
+
+      const $formFieldTip = this.$('.form-field-tip');
+      expect($formFieldTip).to.exist;
+      const tooltipHelper = new OneTooltipHelper($formFieldTip.find('.one-icon')[0]);
+      await tooltipHelper.open();
+      const $tooltip = $(tooltipHelper.getTooltip());
+      expect($tooltip).to.have.class('custom-tooltip-class');
+
+      done();
     }
   );
 

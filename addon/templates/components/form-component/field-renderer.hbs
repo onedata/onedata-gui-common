@@ -1,6 +1,6 @@
 {{#if (or label tip)}}
   <label class="control-label" for={{fieldId}}>
-    {{label}}{{#if addColonToLabel}}<span class="label-colon">:</span>{{/if}}{{#if tip}}&nbsp;{{one-label-tip class="form-field-tip" title=tip}}{{/if}}
+    {{label}}{{#if addColonToLabel}}<span class="label-colon">:</span>{{/if}}{{#if tip}}&nbsp;{{one-label-tip class="form-field-tip" tooltipClass=tooltipClass title=tip}}{{/if}}
   </label>
 {{/if}}
 {{#component fieldComponentName field=field fieldId=fieldId}}
