@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
@@ -18,6 +18,13 @@ import { all as allFulfilled } from 'rsvp';
 describe('Integration | Component | one time series chart/toolbar', function () {
   setupComponentTest('one-time-series-chart/toolbar', {
     integration: true,
+  });
+
+  afterEach(function () {
+    const models = this.get('models');
+    if (models) {
+      models.forEach(model => model.destroy());
+    }
   });
 
   it('has class "one-time-series-chart-toolbar"', async function () {

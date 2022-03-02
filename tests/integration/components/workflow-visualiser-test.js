@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { click, fillIn } from 'ember-native-dom-helpers';
+import { click, fillIn, scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import _ from 'lodash';
@@ -464,7 +464,6 @@ describe('Integration | Component | workflow visualiser', function () {
 
       expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
     });
-
     itScrollsToLane(
       'scrolls via button to the end, when overflow is on the last lane',
       ['right', 4],
@@ -524,11 +523,7 @@ class WindowStub {
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function () {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
-    // Additional wait() call to make scroll tests more reliable. Without them
-    // there are random test fails.
-    await wait();
     await scrollToLane(this, overflowEdge, overflowLane, 10);
-    await wait();
     for (let operation of operations) {
       if (operation.startsWith('width:')) {
         const width = Number(operation.slice('width:'.length));
@@ -537,7 +532,6 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
         const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
         expect($scrollTrigger).to.have.class('visible');
         await click($scrollTrigger[0]);
-        // await wait();
       }
     }
 
@@ -912,8 +906,7 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
       }
     }
   }
-  $lanesContainer.scrollLeft(scrollXPosition);
-  await wait();
+  await scrollTo($lanesContainer[0], scrollXPosition, 0);
 }
 
 function checkRenderedLanesStructure(testCase, rawData) {

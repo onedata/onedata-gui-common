@@ -1,110 +1,116 @@
-// TODO: VFS-9013 make tests work on Bamboo
-// import { expect } from 'chai';
-// import { describe, it, beforeEach, afterEach } from 'mocha';
-// import sinon from 'sinon';
-// import {
-//   createDummySource,
-//   createDummyConfiguration,
-//   createModel,
-// } from '../../../helpers/one-time-series-chart';
-// import { get } from '@ember/object';
-// import wait from 'ember-test-helpers/wait';
+import { expect } from 'chai';
+import { describe, it, beforeEach, afterEach } from 'mocha';
+import sinon from 'sinon';
+import {
+  createDummySource,
+  createDummyConfiguration,
+  createModel,
+} from '../../../helpers/one-time-series-chart';
+import { get } from '@ember/object';
+import wait from 'ember-test-helpers/wait';
 
-// describe('Unit | Utility | one time series chart/model', function () {
-//   beforeEach(function () {
-//     const now = Date.now();
-//     this.fakeClock = sinon.useFakeTimers({
-//       now: now - (now % 60000) - 35000,
-//       shouldAdvanceTime: true,
-//     });
-//   });
+describe('Unit | Utility | one time series chart/model', function () {
+  beforeEach(function () {
+    const now = Date.now();
+    this.fakeClock = sinon.useFakeTimers({
+      now: now - (now % 60000) - 35000,
+      shouldAdvanceTime: true,
+    });
+  });
 
-//   afterEach(function () {
-//     this.fakeClock.restore();
-//   });
+  afterEach(function () {
+    if (this.model && !get(this.model, 'isDestroyed')) {
+      this.model.destroy();
+    }
+    this.fakeClock.restore();
+  });
 
-//   it('takes view parameters from configuration on init and saves as lastViewParameters',
-//     function () {
-//       const config = createDummyConfiguration();
-//       config.setViewParameters({
-//         lastPointTimestamp: 1234,
-//       });
-//       const model = createModel(config);
+  it('takes view parameters from configuration on init and saves as lastViewParameters',
+    function () {
+      const config = createDummyConfiguration();
+      config.setViewParameters({
+        lastPointTimestamp: 1234,
+      });
+      setupModel(this, config);
 
-//       expect(get(model, 'lastViewParameters')).to.deep.equal(config.getViewParameters());
-//     });
+      expect(get(this.model, 'lastViewParameters')).to.deep.equal(config.getViewParameters());
+    });
 
-//   it('takes new view parameters from configuration and saves as lastViewParameters',
-//     function () {
-//       const config = createDummyConfiguration();
-//       const model = createModel(config);
-//       config.setViewParameters({
-//         lastPointTimestamp: 1234,
-//       });
+  it('takes new view parameters from configuration and saves as lastViewParameters',
+    function () {
+      const config = createDummyConfiguration();
+      setupModel(this, config);
+      config.setViewParameters({
+        lastPointTimestamp: 1234,
+      });
 
-//       expect(get(model, 'lastViewParameters')).to.deep.equal(config.getViewParameters());
-//     });
+      expect(get(this.model, 'lastViewParameters')).to.deep.equal(config.getViewParameters());
+    });
 
-//   it('takes new view parameters and saves as lastViewParameters', function () {
-//     const config = createDummyConfiguration();
-//     const model = createModel(config);
-//     model.setViewParameters({
-//       lastPointTimestamp: 1234,
-//     });
+  it('takes new view parameters and saves as lastViewParameters', function () {
+    const config = createDummyConfiguration();
+    setupModel(this, config);
+    this.model.setViewParameters({
+      lastPointTimestamp: 1234,
+    });
 
-//     expect(get(model, 'lastViewParameters')).to.deep.equal(config.getViewParameters())
-//       .and.to.include({ lastPointTimestamp: 1234 });
-//   });
+    expect(get(this.model, 'lastViewParameters')).to.deep.equal(config.getViewParameters())
+      .and.to.include({ lastPointTimestamp: 1234 });
+  });
 
-//   it('contains promisified state in stateProxy', async function () {
-//     const model = createModel(createDummyConfiguration());
+  it('contains promisified state in stateProxy', async function () {
+    setupModel(this, createDummyConfiguration());
 
-//     await expectStateToHaveUpdatedPoints(model);
-//   });
+    await expectStateToHaveUpdatedPoints(this);
+  });
 
-//   it('updates state in stateProxy when configuration is in live mode', async function () {
-//     const model = createModel(createDummyConfiguration());
-//     model.setViewParameters({
-//       live: true,
-//     });
+  it('updates state in stateProxy when configuration is in live mode', async function () {
+    setupModel(this, createDummyConfiguration());
+    this.model.setViewParameters({
+      live: true,
+    });
 
-//     const values1 = await expectStateToHaveUpdatedPoints(model);
-//     this.fakeClock.tick(61 * 1000);
-//     const values2 = await expectStateToHaveUpdatedPoints(model);
+    const values1 = await expectStateToHaveUpdatedPoints(this);
+    this.fakeClock.tick(61 * 1000);
+    const values2 = await expectStateToHaveUpdatedPoints(this);
 
-//     expect(values1).to.not.deep.equal(values2);
-//   });
+    expect(values1).to.not.deep.equal(values2);
+  });
 
-//   it('stops updating state in stateProxy when configuration is in live mode but model was destroyed',
-//     async function () {
-//       const model = createModel(createDummyConfiguration());
-//       model.setViewParameters({
-//         live: true,
-//       });
+  it('stops updating state in stateProxy when configuration is in live mode but model was destroyed',
+    async function () {
+      setupModel(this, createDummyConfiguration());
+      this.model.setViewParameters({
+        live: true,
+      });
 
-//       const values1 = await getStatePointsValues(model);
-//       model.destroy();
-//       await wait();
-//       this.fakeClock.tick(61 * 1000);
-//       const values2 = await getStatePointsValues(model);
+      const values1 = await getStatePointsValues(this);
+      this.model.destroy();
+      await wait();
+      this.fakeClock.tick(61 * 1000);
+      const values2 = await getStatePointsValues(this);
 
-//       expect(values1).to.deep.equal(values2);
-//     });
-// });
+      expect(values1).to.deep.equal(values2);
+    });
+});
 
-// async function expectStateToHaveUpdatedPoints(model) {
-//   const statePointsValues = await getStatePointsValues(model);
-//   const updatedValues = createDummySource()
-//     .fetchSeries({
-//       lastPointTimestmap: get(model, 'configuration').getViewParameters().lastPointTimestamp,
-//       timeResolution: 60,
-//       pointsCount: 60,
-//     }).mapBy('value');
-//   expect(statePointsValues).to.deep.equal(updatedValues);
-//   return updatedValues;
-// }
+function setupModel(testCase, config) {
+  return testCase.model = createModel(config);
+}
 
-// async function getStatePointsValues(model) {
-//   await get(model, 'stateProxy');
-//   return get(model, 'state').series[0].data.mapBy('value');
-// }
+async function expectStateToHaveUpdatedPoints(testCase) {
+  const statePointsValues = await getStatePointsValues(testCase);
+  const updatedValues = createDummySource()
+    .fetchSeries({
+      lastPointTimestmap: get(testCase.model, 'configuration').getViewParameters().lastPointTimestamp,
+      timeResolution: 60,
+      pointsCount: 60,
+    }).mapBy('value');
+  expect(statePointsValues).to.deep.equal(updatedValues);
+  return updatedValues;
+}
+
+async function getStatePointsValues(testCase) {
+  await get(testCase.model, 'stateProxy');
+  return get(testCase.model, 'state').series[0].data.mapBy('value');
+}

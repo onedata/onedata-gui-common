@@ -24,13 +24,20 @@ describe('Integration | Component | one time series chart/plot', function () {
     this.register('component:one-echart', TestComponent);
     const now = Date.now();
     this.set('fakeClock', sinon.useFakeTimers({
-      now: now - (now % 60000 * 60) - 35 * 60000 - 35000,
+      now: now - (now % (60000 * 60)) - 35 * 60000 - 35000,
       shouldAdvanceTime: true,
     }));
   });
 
   afterEach(function () {
-    this.get('fakeClock').restore();
+    const {
+      model,
+      fakeClock,
+    } = this.getProperties('model', 'fakeClock');
+    if (model) {
+      model.destroy();
+    }
+    fakeClock.restore();
   });
 
   it('has class "one-time-series-chart-plot"', async function () {
@@ -120,23 +127,6 @@ describe('Integration | Component | one time series chart/plot', function () {
 
     expect(get(model, 'lastViewParameters.timeResolution')).to.equal(3600);
     expectEchartDummyPoints(this, null, 3600, 11);
-  });
-
-  it('rerenders chart in a loop in live mode', async function () {
-    const fakeClock = this.get('fakeClock');
-    const model = setupModel(this, createDummyConfiguration());
-    model.setViewParameters({
-      live: true,
-    });
-
-    await render(this);
-
-    expectEchartDummyPoints(this, null, 60, 60);
-    expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
-
-    fakeClock.tick(60 * 1000 + 500);
-    expectEchartDummyPoints(this, null, 60, 60);
-    expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
 
   it('shows continuously reloading newest data in live mode', async function () {
