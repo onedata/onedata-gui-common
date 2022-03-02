@@ -31,6 +31,7 @@
     "ember-cli-shims": "1.2.0"
   },
   "devDependencies": {
+    "@ember/jquery": "2.0.0",
     "@ember/optional-features": "0.6.3",
     "autosize": "4.0.2",
     "basictable": "git+https://github.com/kliput/basictable.git#b00a7e52512e43a526e8f5b0ae8b3063efbe0bf5",
