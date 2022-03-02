@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
@@ -10,13 +10,12 @@ import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-s
 import $ from 'jquery';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
+import { render } from '@ember/test-helpers';
 
 const componentClass = 'lane-form';
 
 describe('Integration | Component | modals/workflow visualiser/lane modal/lane form', function () {
-  setupComponentTest('modals/workflow-visualiser/lane-modal/lane-form', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const definedStores = A([
@@ -49,7 +48,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
   });
 
   it(`has class "${componentClass}"`, async function () {
-    this.render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form}}`);
+    await render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form}}`);
 
     expect(this.$().children()).to.have.class(componentClass)
       .and.to.have.length(1);
@@ -65,7 +64,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     itAllowsToDisableAllFields();
 
     it('renders empty "name" field', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.name-field .control-label');
       const $field = this.$('.name-field .form-control');
@@ -75,7 +74,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "name" field as invalid when it is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
@@ -84,7 +83,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "name" field as valid when it is not empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
@@ -92,7 +91,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('renders "max retries" field with "0" as default value', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.maxRetries-field .control-label');
       const $field = this.$('.maxRetries-field .form-control');
@@ -102,7 +101,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max retries" field as invalid when it is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '');
 
@@ -110,7 +109,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max retries" field as invalid when it contains negative number', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '-3');
 
@@ -118,7 +117,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max retries" field as invalid when it contains a float number', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '3.5');
 
@@ -126,7 +125,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max retries" field as valid when it contains a positive integer number', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxRetries-field .form-control', '3');
 
@@ -134,14 +133,14 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('has fields group "Iterator options"', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.iteratorOptions-field .control-label').eq(0).text().trim())
         .to.equal('Iterator options');
     });
 
     it('renders "source store" field with first store preselected', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.sourceStore-field .control-label');
       const $field = this.$('.sourceStore-field .dropdown-field-trigger');
@@ -150,7 +149,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('provides all stores to choose in "source store" field', async function () {
-      await render(this);
+      await renderComponent();
 
       await clickTrigger('.sourceStore-field');
 
@@ -164,7 +163,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('renders "max batch size" field with "100" as default value', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.maxBatchSize-field .control-label');
       const $field = this.$('.maxBatchSize-field .form-control');
@@ -174,7 +173,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max batch size" field as invalid when it is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '');
 
@@ -182,7 +181,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max batch size" field as invalid when it contains negative number', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '-3');
 
@@ -190,7 +189,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max batch size" field as invalid when it contains a float number', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '3.5');
 
@@ -198,7 +197,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
     });
 
     it('marks "max batch size" field as valid when it contains a positive integer number', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.maxBatchSize-field .form-control', '3');
 
@@ -207,7 +206,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
     it('notifies about changes of values and validation state', async function () {
       const changeSpy = this.get('changeSpy');
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
@@ -240,7 +239,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
     it('allows to configure new lane', async function () {
       const changeSpy = this.get('changeSpy');
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.maxRetries-field .form-control', '4');
@@ -263,7 +262,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
     it('allows to configure new lane with store created in place', async function () {
       const changeSpy = this.get('changeSpy');
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'someName');
       await selectChoose('.sourceStore-field', 'Create store...');
@@ -288,7 +287,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       async function () {
         this.set('createStoreAction', { execute: () => resolve({ status: 'failed' }) });
         const changeSpy = this.get('changeSpy');
-        await render(this);
+        await renderComponent();
 
         await fillIn('.name-field .form-control', 'someName');
         await selectChoose('.sourceStore-field', 'store2');
@@ -330,7 +329,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         },
       });
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.name-field .form-control')).to.have.value('lane1');
       expect(this.$('.maxRetries-field .form-control')).to.have.value('10');
@@ -343,7 +342,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       const lane1 = this.set('lane', {
         name: 'lane1',
       });
-      await render(this);
+      await renderComponent();
 
       this.set('lane', Object.assign({}, lane1, { name: 'lane2' }));
       await wait();
@@ -369,7 +368,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
         },
       });
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.name-field .field-component').text().trim()).to.equal('lane1');
       expect(this.$('.maxRetries-field .field-component').text().trim()).to.equal('10');
@@ -382,7 +381,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       const lane1 = this.set('lane', {
         name: 'lane1',
       });
-      await render(this);
+      await renderComponent();
 
       this.set('lane', Object.assign({}, lane1, { name: 'lane2' }));
       await wait();
@@ -392,8 +391,8 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form
+async function renderComponent() {
+  await render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form
     mode=mode
     lane=lane
     definedStores=definedStores
@@ -401,12 +400,11 @@ async function render(testCase) {
     isDisabled=isDisabled
     onChange=changeSpy
   }}`);
-  await wait();
 }
 
 function itHasModeClass(mode) {
   it(`has class "mode-${mode}`, async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$(`.${componentClass}`)).to.have.class(`mode-${mode}`);
   });
@@ -414,7 +412,7 @@ function itHasModeClass(mode) {
 
 function itHasAllFieldsEnabledByDefault() {
   it('has all fields enabled by default', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$(`.${componentClass}`)).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
@@ -426,7 +424,7 @@ function itAllowsToDisableAllFields() {
   it('allows to disable all fields', async function () {
     this.set('isDisabled', true);
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$(`.${componentClass}`)).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');

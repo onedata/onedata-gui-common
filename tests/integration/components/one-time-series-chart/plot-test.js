@@ -141,6 +141,7 @@ describe('Integration | Component | one time series chart/plot', function () {
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
+    await wait();
     expectEchartDummyPoints(this, null, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
@@ -158,6 +159,7 @@ describe('Integration | Component | one time series chart/plot', function () {
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
 
     fakeClock.tick(60 * 1000 + 500);
+    await wait();
     expectEchartDummyPoints(this, 1000000, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
   });

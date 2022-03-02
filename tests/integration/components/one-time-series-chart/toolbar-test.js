@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { describe, it, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { describe, it } from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import {
@@ -14,13 +14,12 @@ import {
 import { click } from 'ember-native-dom-helpers';
 import { get } from '@ember/object';
 import { all as allFulfilled } from 'rsvp';
+import { render } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart/toolbar', function () {
-  setupComponentTest('one-time-series-chart/toolbar', {
-    integration: true,
-  });
+  const hooks = setupRenderingTest();
 
-  afterEach(function () {
+  hooks.afterEach(function () {
     const models = this.get('models');
     if (models) {
       models.forEach(model => model.destroy());
@@ -28,7 +27,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   });
 
   it('has class "one-time-series-chart-toolbar"', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$().children()).to.have.class('one-time-series-chart-toolbar')
       .and.to.have.length(1);
@@ -53,7 +52,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       }]);
       model.setViewParameters({ timeResolution: 48 * 3600 });
 
-      await render(this);
+      await renderComponent();
 
       await expectResolutions(['1 min', '1 hr', '2 days']);
       expectActiveResolution(this, '2 days');
@@ -97,7 +96,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       model1.setViewParameters({ timeResolution: 3600 });
       model2.setViewParameters({ timeResolution: 3600 });
 
-      await render(this);
+      await renderComponent();
 
       await expectResolutions(['1 min', '1 hr', '2 days']);
       expectActiveResolution(this, '1 hr');
@@ -131,7 +130,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     }]);
     model1.setViewParameters({ timeResolution: 60 });
     model2.setViewParameters({ timeResolution: 60 });
-    await render(this);
+    await renderComponent();
 
     await changeResolution('1 hr');
 
@@ -155,7 +154,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       },
     }]);
     model.setViewParameters({ timeResolution: 60 });
-    await render(this);
+    await renderComponent();
 
     model.setViewParameters({ timeResolution: 3600 });
     await wait();
@@ -170,7 +169,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     ]);
     await waitForModelStates(this);
 
-    await render(this);
+    await renderComponent();
 
     expectDisabledNavigation(this, ['newer', 'newest']);
   });
@@ -187,7 +186,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newest');
 
@@ -204,7 +203,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newest');
 
@@ -224,7 +223,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newer');
 
@@ -244,7 +243,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newer');
 
@@ -264,7 +263,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newer');
 
@@ -284,7 +283,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('older');
 
@@ -304,7 +303,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('older');
 
@@ -324,7 +323,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('older');
 
@@ -333,9 +332,8 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{one-time-series-chart/toolbar models=models}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{one-time-series-chart/toolbar models=models}}`);
 }
 
 function setupModels(testCase, configInitOptionsArr) {

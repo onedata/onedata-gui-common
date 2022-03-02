@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { fillIn, click } from 'ember-native-dom-helpers';
@@ -13,6 +13,7 @@ import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { setProperties } from '@ember/object';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import { render } from '@ember/test-helpers';
 
 const componentClass = 'task-form';
 
@@ -443,9 +444,7 @@ const exampleTask = {
 };
 
 describe('Integration | Component | workflow visualiser/task form', function () {
-  setupComponentTest('workflow-visualiser/task-form', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const createCreateStoreActionStub = sinon.stub().returns({
@@ -476,7 +475,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   });
 
   it(`has class "${componentClass}"`, async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$().children()).to.have.class(componentClass)
       .and.to.have.length(1);
@@ -496,7 +495,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itShowsLambdaInfo();
 
     it('renders "name" field', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.name-field .control-label');
       const $field = this.$('.name-field .form-control');
@@ -505,13 +504,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     it('uses lambda name as default value for name field', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.name-field .form-control')).to.have.value(exampleAtmLambdaRevision.name);
     });
 
     it('marks "name" field as invalid when it is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', '');
 
@@ -519,7 +518,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     it('marks "name" field as valid when it is not empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
@@ -529,7 +528,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('notifies about changes of values and validation state', async function () {
       const changeSpy = this.get('changeSpy');
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
@@ -558,13 +557,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       async function () {
         this.set('atmLambda.revisionRegistry.1.argumentSpecs', []);
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$('.argumentMappings-field')).to.not.exist;
       });
 
     it('renders arguments section', async function () {
-      await render(this);
+      await renderComponent();
 
       const $argumentMappings = this.$('.argumentMappings-field');
       expect($argumentMappings).to.exist;
@@ -587,7 +586,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             isOptional: false,
           }]);
 
-          await render(this);
+          await renderComponent();
           await clickTrigger('.argumentMapping-field .valueBuilderType-field');
 
           expect(this.$('.valueBuilderType-field .dropdown-field-trigger').text().trim())
@@ -608,7 +607,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             isOptional: true,
           }]);
 
-          await render(this);
+          await renderComponent();
           await clickTrigger('.argumentMapping-field .valueBuilderType-field');
 
           expect(this.$('.valueBuilderType-field .dropdown-field-trigger').text().trim())
@@ -630,7 +629,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             isOptional: true,
           }]);
 
-          await render(this);
+          await renderComponent();
           await selectChoose(
             '.argumentMapping-field .valueBuilderType-field',
             'Leave unassigned'
@@ -655,7 +654,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               isOptional: false,
             }]);
 
-            await render(this);
+            await renderComponent();
             await selectChoose(
               '.argumentMapping-field .valueBuilderType-field',
               'Iterated item'
@@ -697,7 +696,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             ).compact();
             const sortedPossibleStores = possibleStores.sortBy('name');
 
-            await render(this);
+            await renderComponent();
             await selectChoose(
               '.argumentMapping-field .valueBuilderType-field',
               'Store content'
@@ -754,7 +753,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               name === specName || (canContain || []).includes(specName)
             );
 
-            await render(this);
+            await renderComponent();
             await selectChoose(
               '.argumentMapping-field .valueBuilderType-field',
               'Store content'
@@ -786,7 +785,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               isOptional: false,
             }]);
 
-            await render(this);
+            await renderComponent();
             await selectChoose(
               '.argumentMapping-field .valueBuilderType-field',
               'Constant value'
@@ -826,7 +825,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       //         allPossibleStores;
       //       const sortedPossibleStores = possibleStores.sortBy('name');
 
-      //       await render(this);
+      //       await renderComponent();
       //       await selectChoose(
       //         '.argumentMapping-field .valueBuilderType-field',
       //         'Store credentials'
@@ -871,7 +870,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               isOptional: false,
             }]);
 
-            await render(this);
+            await renderComponent();
             await selectChoose(
               '.argumentMapping-field .valueBuilderType-field',
               'OnedataFS credentials'
@@ -898,13 +897,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       async function () {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', []);
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$('.resultMappings-field')).to.not.exist;
       });
 
     it('renders results section', async function () {
-      await render(this);
+      await renderComponent();
 
       const $resultMappings = this.$('.resultMappings-field');
       expect($resultMappings).to.exist;
@@ -941,7 +940,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             dataSpec,
           }]);
 
-          await render(this);
+          await renderComponent();
           await clickTrigger('.resultMapping-field .targetStore-field');
 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
@@ -971,7 +970,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             }],
           });
 
-          await render(this);
+          await renderComponent();
           await clickTrigger('.resultMapping-field .targetStore-field');
 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
@@ -1006,7 +1005,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           const allowedStoreTypes = sortedPossibleStores.mapBy('type').uniq();
           const allowedDataTypes = [...compatibleDataSpecNames];
 
-          await render(this);
+          await renderComponent();
           await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
@@ -1039,7 +1038,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           const allowedStoreTypes = sortedPossibleStoresWithBatch.mapBy('type').uniq();
           const allowedDataTypes = [...compatibleDataSpecNames];
 
-          await render(this);
+          await renderComponent();
           await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
 
           expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
@@ -1062,7 +1061,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
         }]);
 
-        await render(this);
+        await renderComponent();
         await selectChoose(
           '.resultMapping-field .targetStore-field',
           'Leave unassigned'
@@ -1084,7 +1083,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
       }]);
 
-      await render(this);
+      await renderComponent();
       await selectChoose(
         '.resultMapping-field .targetStore-field',
         taskAuditLogStore.name
@@ -1110,7 +1109,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
       }]);
 
-      await render(this);
+      await renderComponent();
       await selectChoose(
         '.resultMapping-field .targetStore-field',
         workflowAuditLogStore.name
@@ -1137,7 +1136,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
         }]);
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$('.dispatchFunction-field')).to.not.exist;
       });
@@ -1191,7 +1190,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           dataSpec: dataSpecs.findBy('name', 'integer').dataSpec,
         }]);
 
-        await render(this);
+        await renderComponent();
         await selectChoose('.resultMapping-field .targetStore-field', 'listIntegerStore');
         await selectChoose('.resultMapping-field .targetStore-field', 'singleValueIntegerStore');
         await clickTrigger('.resultMapping-field .dispatchFunction-field');
@@ -1209,7 +1208,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
 
     it('renders "override resources" toggle, which is unchecked by default', async function () {
-      await render(this);
+      await renderComponent();
 
       const $overrideField = this.$('.overrideResources-field');
       expect($overrideField).to.have.class('toggle-field-renderer');
@@ -1220,7 +1219,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('renders "resources" section with cpu, memory and storage fields groups',
       async function () {
-        await render(this);
+        await renderComponent();
 
         const $resourcesSection = this.$('.resources-field');
         expect($resourcesSection.find('.control-label').eq(0).text().trim())
@@ -1261,7 +1260,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           ephemeralStorageLimit: 20 * 1024 * 1024,
         });
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$('.cpuRequested-field .form-control')).to.have.value('1');
         expect(this.$('.cpuLimit-field .form-control')).to.have.value('2');
@@ -1274,7 +1273,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       });
 
     it('disables "resources" section when "override resources" toggle is unchecked', async function () {
-      await render(this);
+      await renderComponent();
 
       await toggleOverrideResources(this, false);
 
@@ -1282,7 +1281,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     it('enables "resources" section when "override resources" toggle is checked', async function () {
-      await render(this);
+      await renderComponent();
 
       await toggleOverrideResources(this, true);
 
@@ -1291,7 +1290,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('allows to setup resources override (minimal values provided)', async function () {
       const changeSpy = this.get('changeSpy');
-      await render(this);
+      await renderComponent();
 
       await toggleOverrideResources(this, true);
 
@@ -1311,7 +1310,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('allows to setup resources override (all values provided)', async function () {
       const changeSpy = this.get('changeSpy');
-      await render(this);
+      await renderComponent();
 
       await toggleOverrideResources(this, true);
       await fillIn('.cpuRequested-field input', '2');
@@ -1337,7 +1336,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     it('resets changes in "resources" section when it becomes disabled', async function () {
       const changeSpy = this.get('changeSpy');
-      await render(this);
+      await renderComponent();
 
       await toggleOverrideResources(this, true);
       await fillIn('.cpuRequested-field input', '2');
@@ -1385,7 +1384,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutResourceOverride();
 
     it('does not update form values on passed task change', async function () {
-      await render(this);
+      await renderComponent();
 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await wait();
@@ -1416,7 +1415,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutResourceOverride();
 
     it('updates form values on passed task change', async function () {
-      await render(this);
+      await renderComponent();
 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await wait();
@@ -1427,8 +1426,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{workflow-visualiser/task-form
+async function renderComponent() {
+  await render(hbs `{{workflow-visualiser/task-form
     mode=mode
     task=task
     atmLambda=atmLambda
@@ -1438,7 +1437,6 @@ async function render(testCase) {
     actionsFactory=actionsFactory
     onChange=changeSpy
   }}`);
-  await wait();
 }
 
 async function toggleOverrideResources(testCase, value) {
@@ -1455,7 +1453,7 @@ function getComponent(testCase) {
 function itHasModeClass(mode) {
   const modeClass = `mode-${mode}`;
   it(`has class "${modeClass}"`, async function () {
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class(modeClass);
   });
@@ -1463,7 +1461,7 @@ function itHasModeClass(mode) {
 
 function itHasEnabledFieldsByDefault() {
   it('has all fields enabled by default', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
@@ -1475,7 +1473,7 @@ function itAllowsToDisableAllFields() {
   it('allows to disable all fields', async function () {
     this.set('isDisabled', true);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
@@ -1485,7 +1483,7 @@ function itAllowsToDisableAllFields() {
 
 function itShowsLambdaInfo() {
   it('shows brief information about used lambda', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.atm-lambda-name .value').text().trim())
       .to.equal(exampleAtmLambdaRevision.name);
@@ -1509,7 +1507,7 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
         dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
       }]);
 
-      await render(this);
+      await renderComponent();
       await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
       await clickTrigger('.resultMapping-field .dispatchFunction-field');
 
@@ -1537,7 +1535,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
         dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
       }]);
 
-      await render(this);
+      await renderComponent();
       await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
       await selectChoose(
         '.resultMapping-field .dispatchFunction-field',
@@ -1562,7 +1560,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
 function itFillsFieldsWithDataOfPassedTask() {
   it('fills fields with data of passed task', async function () {
     const inEditMode = this.get('mode') !== 'view';
-    await render(this);
+    await renderComponent();
 
     if (inEditMode) {
       expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
@@ -1606,7 +1604,7 @@ function itFillsFieldsWithDataAboutNoResourceOverride() {
       const inEditMode = this.get('mode') !== 'view';
       delete this.get('task').resourceSpecOverride;
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.overrideResources-field .one-way-toggle'))
         .to.not.have.class('checked');
@@ -1637,7 +1635,7 @@ function itFillsFieldsWithDataAboutResourceOverride() {
         ephemeralStorageLimit: 400 * 1024 * 1024,
       });
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.overrideResources-field .one-way-toggle'))
         .to.have.class('checked');
@@ -1678,7 +1676,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
         },
       })));
 
-      await render(this);
+      await renderComponent();
 
       const $arguments = this.$('.argumentMapping-field');
       expect($arguments).to.have.length(possibleDataSpecs.length);
@@ -1712,7 +1710,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
         },
       })));
 
-      await render(this);
+      await renderComponent();
 
       const $arguments = this.$('.argumentMapping-field');
       expect($arguments).to.have.length(possibleDataSpecs.length);
@@ -1758,7 +1756,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
 //         };
 //       }));
 
-//       await render(this);
+//       await renderComponent();
 
 //       const $arguments = this.$('.argumentMapping-field');
 //       expect($arguments).to.have.length(possibleDataSpecs.length);
@@ -1795,7 +1793,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBui
         },
       })));
 
-      await render(this);
+      await renderComponent();
 
       const $arguments = this.$('.argumentMapping-field');
       expect($arguments).to.have.length(possibleDataSpecs.length);
@@ -1849,7 +1847,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
             }))
           );
 
-          await render(this);
+          await renderComponent();
 
           const $results = this.$('.resultMapping-field');
           expect($results).to.have.length(dispatchFunctions.length);
@@ -1879,7 +1877,7 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
       }]);
       this.set('task.resultMappings', []);
 
-      await render(this);
+      await renderComponent();
 
       const $results = this.$('.resultMapping-field');
       expect($results).to.have.length(1);

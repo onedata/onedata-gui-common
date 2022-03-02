@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { describe, it } from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
@@ -17,21 +17,20 @@ import {
   expectActiveResolution,
   changeResolution,
 } from '../../helpers/one-time-series-chart';
+import { render } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart', function () {
-  setupComponentTest('one-time-series-chart', {
-    integration: true,
-  });
+  const hooks = setupRenderingTest();
 
-  beforeEach(function () {
-    this.register('component:one-echart', TestComponent);
+  hooks.beforeEach(function () {
+    this.owner.register('component:one-echart', TestComponent);
     this.set('fakeClock', sinon.useFakeTimers({
       now: Date.now(),
       shouldAdvanceTime: true,
     }));
   });
 
-  afterEach(function () {
+  hooks.afterEach(function () {
     this.get('fakeClock').restore();
   });
 
@@ -48,7 +47,7 @@ describe('Integration | Component | one time series chart', function () {
       }],
     }));
 
-    await render(this);
+    await renderComponent();
 
     expectNoChartDataToShow(this);
   });
@@ -70,7 +69,7 @@ describe('Integration | Component | one time series chart', function () {
       },
     }));
 
-    await render(this);
+    await renderComponent();
 
     await expectResolutions(['1 min', '1 hr', '2 days']);
     expectActiveResolution(this, '1 min');
@@ -94,7 +93,7 @@ describe('Integration | Component | one time series chart', function () {
       },
     }));
 
-    await render(this);
+    await renderComponent();
     await changeResolution('1 hr');
 
     expectActiveResolution(this, '1 hr');
@@ -120,7 +119,7 @@ describe('Integration | Component | one time series chart', function () {
       },
     }));
 
-    await render(this);
+    await renderComponent();
     config.setViewParameters({
       timeResolution: 3600,
     });
@@ -137,7 +136,7 @@ describe('Integration | Component | one time series chart', function () {
       lastPointTimestamp: 1000000,
     });
 
-    await render(this);
+    await renderComponent();
     const $showOlderBtn = this.$('.show-older-btn');
     expect($showOlderBtn).to.be.not.disabled;
     await click($showOlderBtn[0]);
@@ -153,7 +152,7 @@ describe('Integration | Component | one time series chart', function () {
       lastPointTimestamp: 1000000,
     });
 
-    await render(this);
+    await renderComponent();
     const $showNewerBtn = this.$('.show-newer-btn');
     expect($showNewerBtn).to.be.not.disabled;
     await click($showNewerBtn[0]);
@@ -169,7 +168,7 @@ describe('Integration | Component | one time series chart', function () {
       lastPointTimestamp: 1000000,
     });
 
-    await render(this);
+    await renderComponent();
     const $showNewestBtn = this.$('.show-newest-btn');
     expect($showNewestBtn).to.be.not.disabled;
     await click($showNewestBtn[0]);
@@ -188,14 +187,13 @@ describe('Integration | Component | one time series chart', function () {
       lastPointTimestamp: 1000000,
     });
 
-    await render(this);
+    await renderComponent();
     await click('.show-newest-btn');
     expectEchartDummyPoints(this, null, 60, 60);
     expect(config.getViewParameters().lastPointTimestamp).to.be.null;
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{one-time-series-chart configuration=configuration}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{one-time-series-chart configuration=configuration}}`);
 }

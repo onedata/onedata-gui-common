@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
@@ -8,6 +8,7 @@ import { click, fillIn, focus, blur } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import { render } from '@ember/test-helpers';
 
 const componentClass = 'store-form';
 
@@ -124,9 +125,7 @@ const dataTypes = [{
 const storeTypesWithGenericConfig = storeTypes.rejectBy('type', 'range');
 
 describe('Integration | Component | modals/workflow visualiser/store modal/store form', function () {
-  setupComponentTest('modals/workflow-visualiser/store-modal/store-form', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -136,7 +135,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
   });
 
   it(`has class "${componentClass}"`, async function () {
-    this.render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
+    await render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
 
     expect(this.$().children()).to.have.class(componentClass)
       .and.to.have.length(1);
@@ -148,20 +147,20 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('has class "mode-create', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$(`.${componentClass}`)).to.have.class('mode-create');
     });
 
     it('does not render "id" and "instance id" fields', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.id-field')).to.not.exist;
       expect(this.$('.instanceId-field')).to.not.exist;
     });
 
     it('renders empty "name" field', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.name-field .control-label');
       const $field = this.$('.name-field .form-control');
@@ -171,7 +170,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('marks "name" field as invalid when it is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
@@ -180,7 +179,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('marks "name" field as valid when it is not empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
@@ -188,7 +187,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('renders empty "description" field', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.description-field .control-label');
       const $field = this.$('.description-field .form-control');
@@ -198,7 +197,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('marks "description" field as valid when it is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await focus('.description-field .form-control');
       await blur('.description-field .form-control');
@@ -207,7 +206,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('renders "type" field with preselected "list" option', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.type-field .control-label');
       const $field = this.$('.type-field .dropdown-field-trigger');
@@ -216,7 +215,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('provides all needed options to choose in "type" field', async function () {
-      await render(this);
+      await renderComponent();
 
       await clickTrigger('.type-field');
 
@@ -230,7 +229,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('notifies about changes of values and validation state', async function () {
       const changeSpy = this.get('changeSpy');
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
@@ -274,7 +273,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       defaultDataTypeLabel,
     }) => {
       it(`shows generic configuration fields for store "${label}"`, async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', label);
 
@@ -308,7 +307,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`allows to configure new "${label}" store`, async function () {
         const changeSpy = this.get('changeSpy');
 
-        await render(this);
+        await renderComponent();
 
         await fillIn('.name-field .form-control', 'someName');
         await fillIn('.description-field .form-control', 'someDescription');
@@ -338,7 +337,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('shows range configuration fields for store "Range"', async function () {
-      await render(this);
+      await renderComponent();
 
       await selectChoose('.type-field', 'Range');
 
@@ -362,7 +361,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('allows to configure new "Range" store', async function () {
       const changeSpy = this.get('changeSpy');
 
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.description-field .form-control', 'someDescription');
@@ -390,7 +389,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('has invalid start, end and step fields in "Range" store, when are empty',
       async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '');
@@ -404,7 +403,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('has invalid start, end and step fields in "Range" store, when are floats',
       async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '0.5');
@@ -418,7 +417,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('has invalid start and end fields in "Range" store, when are equal',
       async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '2');
@@ -432,7 +431,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('has invalid start and end fields in "Range" store, when start > end and step > 0',
       async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '3');
@@ -450,7 +449,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('has invalid start and end fields in "Range" store, when start > end and step > 0',
       async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '2');
@@ -468,7 +467,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     it('has invalid step field in "Range" store, when step is 0',
       async function () {
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStep-field .form-control', '     0 ');
@@ -480,7 +479,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       it(`allows to configure store with "${label}" data type`, async function () {
         const changeSpy = this.get('changeSpy');
 
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'List');
         await selectChoose('.dataType-field', label);
@@ -502,7 +501,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('renders unchecked "needs user input" toggle', async function () {
-      await render(this);
+      await renderComponent();
 
       const $label = this.$('.needsUserInput-field .control-label');
       const $toggle = this.$('.needsUserInput-field .one-way-toggle');
@@ -520,7 +519,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('has class "mode-edit', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$(`.${componentClass}`)).to.have.class('mode-edit');
     });
@@ -547,7 +546,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           requiresInitialContent: true,
         }));
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
         expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
@@ -583,7 +582,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
       }));
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
       expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
@@ -608,7 +607,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
           }));
 
-          await render(this);
+          await renderComponent();
 
           expect(this.$('.dataType-field .dropdown-field-trigger').text().trim())
             .to.equal(label);
@@ -621,7 +620,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         description: 'desc',
         type: 'singleValue',
       }));
-      await render(this);
+      await renderComponent();
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
       await wait();
@@ -639,7 +638,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     it('has class "mode-view', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$(`.${componentClass}`)).to.have.class('mode-view');
     });
@@ -666,7 +665,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           requiresInitialContent: true,
         }));
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$('.field-edit-mode')).to.not.exist;
         expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
@@ -709,7 +708,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
       }));
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.field-edit-mode')).to.not.exist;
       expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
@@ -738,7 +737,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
           }));
 
-          await render(this);
+          await renderComponent();
 
           expect(this.$('.dataType-field .field-component').text().trim())
             .to.equal(label);
@@ -749,7 +748,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       const store1 = this.set('store', {
         name: 'store1',
       });
-      await render(this);
+      await renderComponent();
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
       await wait();
@@ -760,7 +759,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('hides description field, when description is empty', async function () {
       this.set('store', {});
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.description-field')).to.not.exist;
     });
@@ -768,26 +767,25 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('hides default value field, when default value is empty', async function () {
       this.set('store', { defaultInitialContent: null });
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.defaultValue-field')).to.not.exist;
     });
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{modals/workflow-visualiser/store-modal/store-form
+async function renderComponent() {
+  await render(hbs `{{modals/workflow-visualiser/store-modal/store-form
     mode=mode
     store=store
     isDisabled=isDisabled
     onChange=changeSpy
   }}`);
-  await wait();
 }
 
 function itHasAllFieldsEnabledByDefault() {
   it('has all fields enabled by default', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.store-form')).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
@@ -799,7 +797,7 @@ function itAllowsToDisableAllFields() {
   it('allows to disable all fields', async function () {
     this.set('isDisabled', true);
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.store-form')).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');

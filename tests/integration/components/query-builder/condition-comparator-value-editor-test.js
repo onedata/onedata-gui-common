@@ -1,20 +1,19 @@
 import { expect } from 'chai';
 import { describe, context, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import { clickTrigger } from '../../../helpers/ember-power-select';
 import $ from 'jquery';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
+import { render } from '@ember/test-helpers';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
 describe('Integration | Component | query builder/condition comparator value editor',
   function () {
-    setupComponentTest('query-builder/condition-comparator-value-editor', {
-      integration: true,
-    });
+    setupRenderingTest();
 
     setDefaultQueryValuesBuilder();
 
@@ -30,13 +29,13 @@ describe('Integration | Component | query builder/condition comparator value edi
       }].forEach(({ comparator, value, viewValue }) => {
         const [propertyType, comparatorName] = comparator.split('.');
         it(`shows comparator value for "${comparatorName}" comparator for ${propertyType} property`,
-          function () {
+          async function () {
             this.setProperties({
               comparator,
               value,
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="view"
               comparator=comparator
               value=value
@@ -51,7 +50,7 @@ describe('Integration | Component | query builder/condition comparator value edi
       it('calls "onStartEdit" on click', async function () {
         const onStartEditSpy = this.set('onStartEditSpy', sinon.spy());
 
-        this.render(hbs `{{query-builder/condition-comparator-value-editor
+        await render(hbs `{{query-builder/condition-comparator-value-editor
           mode="view"
           comparator="string.eq"
           value="hello"
@@ -97,7 +96,7 @@ describe('Integration | Component | query builder/condition comparator value edi
         it(`has focused editor on init for "${comparatorName}" comparator for ${propertyType} property`,
           async function () {
             beforeTest(this);
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -113,7 +112,7 @@ describe('Integration | Component | query builder/condition comparator value edi
           async function () {
             beforeTest(this);
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value="abc"
@@ -135,7 +134,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               finishEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value="abc"
@@ -163,7 +162,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               finishEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -191,7 +190,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               finishEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -218,7 +217,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               cancelEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -240,7 +239,7 @@ describe('Integration | Component | query builder/condition comparator value edi
           async function () {
             beforeTest(this);
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value="abc"
@@ -255,7 +254,7 @@ describe('Integration | Component | query builder/condition comparator value edi
           async function () {
             beforeTest(this);
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               isValueInvalid=true
@@ -294,7 +293,7 @@ function itShowsPowerSelectWithOptions(
         comparator,
       });
 
-      this.render(hbs `{{query-builder/condition-comparator-value-editor
+      await render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
         queryProperty=queryProperty
@@ -318,7 +317,7 @@ function itShowsTextInput(comparator) {
     async function () {
       this.set('comparator', comparator);
 
-      this.render(hbs `{{query-builder/condition-comparator-value-editor
+      await render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
         valuesBuilder=valuesBuilder
@@ -339,7 +338,7 @@ function itCallsOnValueChange(comparator, valueToInput) {
         changeSpy: sinon.spy(),
       });
 
-      this.render(hbs `{{query-builder/condition-comparator-value-editor
+      await render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
         onValueChange=changeSpy

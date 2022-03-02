@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, context, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn } from 'ember-native-dom-helpers';
@@ -12,6 +12,7 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
+import { render } from '@ember/test-helpers';
 
 const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not'];
@@ -24,9 +25,7 @@ const operatorBlockClasses = {
 };
 
 describe('Integration | Component | query builder/block selector', function () {
-  setupComponentTest('query-builder/block-selector', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -44,7 +43,7 @@ describe('Integration | Component | query builder/block selector', function () {
     });
 
     it(`renders operators: ${operatorsList.join(', ')}`, async function () {
-      this.render(hbs `{{query-builder/block-selector
+      await render(hbs `{{query-builder/block-selector
         mode="create"
         valuesBuilder=valuesBuilder
       }}`);
@@ -63,7 +62,7 @@ describe('Integration | Component | query builder/block selector', function () {
         async function () {
           const addSpy = this.set('addSpy', sinon.spy());
 
-          this.render(hbs `{{query-builder/block-selector
+          await render(hbs `{{query-builder/block-selector
             mode="create"
             onBlockAdd=addSpy
             valuesBuilder=valuesBuilder
@@ -79,7 +78,7 @@ describe('Integration | Component | query builder/block selector', function () {
     });
 
     it('lists query properties in dropdown', async function () {
-      this.render(hbs `{{query-builder/block-selector
+      await render(hbs `{{query-builder/block-selector
         mode="create"
         queryProperties=queryProperties
         valuesBuilder=valuesBuilder
@@ -100,7 +99,7 @@ describe('Integration | Component | query builder/block selector', function () {
       async function () {
         const addSpy = this.set('addSpy', sinon.spy((block) => this.set('block', block)));
 
-        this.render(hbs `{{query-builder/block-selector
+        await render(hbs `{{query-builder/block-selector
           mode="create"
           onBlockAdd=addSpy
           queryProperties=queryProperties
@@ -121,7 +120,7 @@ describe('Integration | Component | query builder/block selector', function () {
     );
 
     it('does not render edit-specific sections', async function () {
-      this.render(hbs `{{query-builder/block-selector
+      await render(hbs `{{query-builder/block-selector
         mode="create"
         valuesBuilder=valuesBuilder
       }}`);
@@ -139,7 +138,7 @@ describe('Integration | Component | query builder/block selector', function () {
     it(
       `renders operators: ${operatorsList.join(', ')} in "surround" section`,
       async function () {
-        this.render(hbs `{{query-builder/block-selector
+        await render(hbs `{{query-builder/block-selector
           mode="edit"
           valuesBuilder=valuesBuilder
         }}`);
@@ -159,7 +158,7 @@ describe('Integration | Component | query builder/block selector', function () {
           const editBlock = this.get('editBlock');
           const replaceSpy = this.set('replaceSpy', sinon.spy());
 
-          this.render(hbs `{{query-builder/block-selector
+          await render(hbs `{{query-builder/block-selector
             mode="edit"
             editBlock=editBlock
             onBlockReplace=replaceSpy
@@ -182,7 +181,7 @@ describe('Integration | Component | query builder/block selector', function () {
     it(
       `renders operators: ${operatorsList.join(', ')} in "change to" section`,
       async function () {
-        this.render(hbs `{{query-builder/block-selector
+        await render(hbs `{{query-builder/block-selector
           mode="edit"
           editBlock=editBlock
           valuesBuilder=valuesBuilder
@@ -202,7 +201,7 @@ describe('Integration | Component | query builder/block selector', function () {
       async function () {
         this.set('editBlock', ConditionQueryBlock.create());
 
-        this.render(hbs `{{query-builder/block-selector
+        await render(hbs `{{query-builder/block-selector
           mode="edit"
           editBlock=editBlock
           valuesBuilder=valuesBuilder
@@ -233,7 +232,7 @@ describe('Integration | Component | query builder/block selector', function () {
             }));
             beforeFunc(this);
 
-            this.render(hbs `{{query-builder/block-selector
+            await render(hbs `{{query-builder/block-selector
               mode="edit"
               editBlock=editBlock
               valuesBuilder=valuesBuilder
@@ -265,7 +264,7 @@ describe('Integration | Component | query builder/block selector', function () {
           editBlock.addOperand(conditionBlock);
           editBlock.addOperand(conditionBlock);
 
-          this.render(hbs `{{query-builder/block-selector
+          await render(hbs `{{query-builder/block-selector
             mode="edit"
             editBlock=editBlock
             valuesBuilder=valuesBuilder
@@ -305,7 +304,7 @@ describe('Integration | Component | query builder/block selector', function () {
               sinon.spy(([block]) => this.set('block', block))
             );
 
-            this.render(hbs `{{query-builder/block-selector
+            await render(hbs `{{query-builder/block-selector
               mode="edit"
               editBlock=editBlock
               onBlockReplace=replaceSpy
@@ -325,7 +324,7 @@ describe('Integration | Component | query builder/block selector', function () {
     });
 
     it('does not render create-specific sections', async function () {
-      this.render(hbs `{{query-builder/block-selector
+      await render(hbs `{{query-builder/block-selector
         mode="edit"
         editBlock=editBlock
         valuesBuilder=valuesBuilder
