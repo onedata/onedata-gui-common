@@ -34,7 +34,7 @@
  * The chart definition is that part of the configuration, which is constant regardless
  * backend data. It is a pure definition of series and axes - basically all visual
  * settings - and is completely detached from concrete data. It consists of:
- * - title - a string, which should be rendered as a title of the whole chart,
+ * - title - an object describing the chart title. Contains two field - `content` and `tip`,
  * - yAxes - an array of Y axes definitions. Usually only one Y axis will be necessary,
  *   but for more complicated usecases it is possible to render more of them and visualise
  *   data from different domains.
@@ -314,7 +314,7 @@
  * ```
  * const configuration = new Configuration({
  *   chartDefinition: {
- *     title: 'Upload chart',
+ *     title: { content: 'Upload chart' },
  *     yAxes: [{
  *       id: 'bytesAxis',
  *       name: 'Bytes',
@@ -434,9 +434,15 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 
 /**
  * @typedef {Object} OTSCChartDefinition
- * @property {string} title
+ * @property {OTSCRawTitle} [title]
  * @property {OTSCRawYAxis[]} yAxes
  * @property {OTSCRawSeriesFactory[]} series
+ */
+
+/**
+ * @typedef {Object} OTSCRawTitle
+ * @property {string} content
+ * @property {string} [tip]
  */
 
 /**
@@ -694,6 +700,15 @@ export default class Configuration {
 
   /**
    * @public
+   * @returns {void}
+   */
+  destroy() {
+    this.stateChangeHandlers.clear();
+    this.updater.destroy();
+  }
+
+  /**
+   * @public
    * @param {OTSCStateChangeHandler} handler
    * @returns {void}
    */
@@ -793,7 +808,7 @@ export default class Configuration {
     }
 
     return new State({
-      title: this.chartDefinition && this.chartDefinition.title,
+      title: this.getTitleState(),
       yAxes: this.getYAxesState(),
       xAxis: this.getXAxisState(series),
       series,
@@ -804,21 +819,32 @@ export default class Configuration {
   }
 
   /**
-   * @public
-   * @returns {void}
-   */
-  destroy() {
-    this.stateChangeHandlers.clear();
-    this.updater.destroy();
-  }
-
-  /**
    * @param {OTSCSeries} series
    * @returns {void}
    */
   async acquireNewestPointTimestamp(series) {
     this.newestPointTimestamp = series.length && series[0].data.length ?
       series[0].data[series[0].data.length - 1].timestamp : this.getNowTimestamp();
+  }
+
+  /**
+   * @returns {OTSCTitle}
+   */
+  getTitleState() {
+    const titleState = {
+      content: '',
+      tip: '',
+    };
+    const title = this.chartDefinition && this.chartDefinition.title;
+    if (title) {
+      if (title.content) {
+        titleState.content = title.content;
+        if (title.tip) {
+          titleState.tip = title.tip;
+        }
+      }
+    }
+    return titleState;
   }
 
   /**

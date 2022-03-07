@@ -9,5 +9,13 @@
       </div>
     {{/if}}
   </div>
-  <div class="title-area">{{title}}</div>
+  {{#if title}}
+    <div class="title-area">
+      <span class="title-content">{{title}}</span>
+      {{#if titleTip}}
+        <span class="space"></span>
+        {{one-label-tip title=titleTip}}
+      {{/if}}
+    </div>
+  {{/if}}
 {{/promise-proxy-container}}

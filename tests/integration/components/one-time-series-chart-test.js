@@ -50,7 +50,7 @@ describe('Integration | Component | one time series chart', function () {
 
     await render(this);
 
-    expectNoChartDataToShow(this);
+    expectNoChartDataToShow();
   });
 
   it('renders time resolutions according to the resolutions defined in configuration', async function () {

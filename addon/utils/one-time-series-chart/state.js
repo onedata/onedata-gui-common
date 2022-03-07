@@ -13,7 +13,7 @@ import _ from 'lodash';
 
 /**
  * @typedef {Object} OTSCStateInitOptions
- * @property {string} title
+ * @property {OTSCTitle} title
  * @property {OTSCYAxis[]} yAxes
  * @property {OTSCXAxis} xAxis
  * @property {OTSCSeries[]} series
@@ -21,6 +21,12 @@ import _ from 'lodash';
  * @property {number} pointsCount
  * @property {number|null} newestPointTimestamp globally newest point timestamp
  * of a chart. I is null in `live` mode.
+ */
+
+/**
+ * @typedef {Object} OTSCTitle
+ * @property {string} content
+ * @property {string} tip
  */
 
 /**
