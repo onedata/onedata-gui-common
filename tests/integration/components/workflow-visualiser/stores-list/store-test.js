@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -11,14 +11,12 @@ import { getModalBody, getModalFooter } from '../../../../helpers/modal';
 import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow visualiser/stores list/store', function () {
-  setupComponentTest('workflow-visualiser/stores-list/store', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
       actionsFactory: ActionsFactory.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         workflowDataProvider: {
           getStoreContent: () => resolve({ array: [], isLast: true }),
         },
@@ -38,7 +36,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
   });
 
   it('has class "workflow-visualiser-stores-list-store"', async function () {
-    this.render(hbs `{{workflow-visualiser/stores-list/store}}`);
+    await render(hbs `{{workflow-visualiser/stores-list/store}}`);
 
     expect(this.$().children()).to.have.class('workflow-visualiser-stores-list-store')
       .and.to.have.length(1);
@@ -56,7 +54,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     it('allows to remove store', async function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('store.onRemove', onRemoveSpy);
-      await render(this);
+      await renderComponent();
 
       expect(onRemoveSpy).to.not.be.called;
 
@@ -68,7 +66,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     it('allows to modify store on click', async function () {
       const onModifySpy = sinon.stub().resolves();
       this.set('store.onModify', onModifySpy);
-      await render(this);
+      await renderComponent();
 
       expect(onModifySpy).to.not.be.called;
 
@@ -95,13 +93,13 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     itAddsInputStoreClassWhenNeeded();
 
     it('does not show remove button', async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.remove-store-action-trigger')).to.not.exist;
     });
 
     it('allows to view store details on click', async function () {
-      await render(this);
+      await renderComponent();
 
       await click('.workflow-visualiser-stores-list-store');
       await click(getModalBody()
@@ -112,8 +110,8 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `
+async function renderComponent() {
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser/stores-list/store
       mode=mode
@@ -121,12 +119,11 @@ async function render(testCase) {
       actionsFactory=actionsFactory
     }}
   `);
-  await wait();
 }
 
 function itShowsStoreName() {
   it('shows store name', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.store-name').text().trim()).to.equal('store1');
   });
@@ -135,7 +132,7 @@ function itShowsStoreName() {
 function itHasModeClass(mode) {
   const className = `mode-${mode}`;
   it(`has "${className}" class`, async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.workflow-visualiser-stores-list-store'))
       .to.have.class(className);
@@ -147,7 +144,7 @@ function itAddsInputStoreClassWhenNeeded() {
     async function () {
       this.set('store.requiresInitialContent', true);
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.workflow-visualiser-stores-list-store'))
         .to.have.class('tag-item-warning');
@@ -157,7 +154,7 @@ function itAddsInputStoreClassWhenNeeded() {
     async function () {
       this.set('store.requiresInitialContent', false);
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.workflow-visualiser-stores-list-store'))
         .to.not.have.class('tag-item-warning');

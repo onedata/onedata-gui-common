@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
@@ -14,15 +15,13 @@ class UnitSelectHelper extends EmberPowerSelectHelper {
 }
 
 describe('Integration | Component | one way capacity', function () {
-  setupComponentTest('one-way-capacity', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('shows passed capacity', function () {
+  it('shows passed capacity', async function () {
     const capacity = 1024 * 1024;
     this.set('capacity', capacity);
 
-    this.render(hbs `{{one-way-capacity value=capacity}}`);
+    await render(hbs `{{one-way-capacity value=capacity}}`);
 
     return wait()
       .then(() => {
@@ -35,37 +34,37 @@ describe('Integration | Component | one way capacity', function () {
       });
   });
 
-  it('notifies about capacity number change', function () {
+  it('notifies about capacity number change', async function () {
     const capacity = 1024 * 1024;
     this.set('capacity', capacity);
     const changeSpy = sinon.spy();
 
-    this.on('changed', changeSpy);
-    this.render(hbs `{{one-way-capacity value=capacity onChange=(action "changed")}}`);
+    this.set('changed', changeSpy);
+    await render(hbs `{{one-way-capacity value=capacity onChange=(action changed)}}`);
 
     return wait()
       .then(() => fillIn('.size-number-input', '2'))
       .then(() => expect(changeSpy).to.be.calledWith(String(2 * 1024 * 1024)));
   });
 
-  it('notifies about capacity unit change', function () {
+  it('notifies about capacity unit change', async function () {
     const capacity = 1024 * 1024;
     this.set('capacity', capacity);
     const changeSpy = sinon.spy();
 
-    this.on('changed', changeSpy);
-    this.render(hbs `{{one-way-capacity value=capacity onChange=(action "changed")}}`);
+    this.set('changed', changeSpy);
+    await render(hbs `{{one-way-capacity value=capacity onChange=(action changed)}}`);
 
     return wait()
       .then(() => new UnitSelectHelper().selectOption(2))
       .then(() => expect(changeSpy).to.be.calledWith(String(1024 * 1024 * 1024)));
   });
 
-  it('notifies about focus lost', function () {
+  it('notifies about focus lost', async function () {
     const focusOutSpy = sinon.spy();
 
-    this.on('focusedOut', focusOutSpy);
-    this.render(hbs `{{one-way-capacity onFocusOut=(action "focusedOut")}}`);
+    this.set('focusedOut', focusOutSpy);
+    await render(hbs `{{one-way-capacity onFocusOut=(action focusedOut)}}`);
 
     return wait()
       .then(() => focus('.size-number-input'))
@@ -73,11 +72,11 @@ describe('Integration | Component | one way capacity', function () {
       .then(() => expect(focusOutSpy).to.be.calledOnce);
   });
 
-  it('notifies about key up', function () {
+  it('notifies about key up', async function () {
     const keyUpSpy = sinon.spy();
 
-    this.on('keyUp', keyUpSpy);
-    this.render(hbs `{{one-way-capacity value=capacity onKeyUp=(action "keyUp")}}`);
+    this.set('keyUp', keyUpSpy);
+    await render(hbs `{{one-way-capacity value=capacity onKeyUp=(action keyUp)}}`);
 
     return wait()
       .then(() => keyEvent('.size-number-input', 'keyup', 13))

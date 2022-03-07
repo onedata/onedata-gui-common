@@ -1,21 +1,19 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 
 const componentClass = 'revisions-table-revision-entries-expander';
 
 describe('Integration | Component | revisions table/revision entries expander',
   function () {
-    setupComponentTest('revisions-table/revision-entries-expander', {
-      integration: true,
-    });
+    setupRenderingTest();
 
     it(`has class "${componentClass}"`, async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$().children()).to.have.class(componentClass)
         .and.to.have.length(1);
@@ -24,14 +22,14 @@ describe('Integration | Component | revisions table/revision entries expander',
     it('shows hidden entries number', async function () {
       this.set('entriesCount', 3);
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.expand-button').text().trim()).to.equal('3 more');
     });
 
     it('calls onExpand callback after click on expand button', async function () {
       const onExpand = this.set('onExpand', sinon.spy());
-      await render(this);
+      await renderComponent();
       expect(onExpand).to.not.be.called;
 
       await click('.expand-button');
@@ -41,10 +39,9 @@ describe('Integration | Component | revisions table/revision entries expander',
   }
 );
 
-async function render(testCase) {
-  testCase.render(hbs `{{revisions-table/revision-entries-expander
+async function renderComponent() {
+  await render(hbs `{{revisions-table/revision-entries-expander
     entriesCount=entriesCount
     onExpand=onExpand
   }}`);
-  await wait();
 }

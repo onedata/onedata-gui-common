@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import OneTooltipHelper from '../../../../helpers/one-tooltip';
 
 const componentClassName = 'run-indicator';
@@ -54,18 +54,16 @@ const runTypes = [{
 }];
 
 describe('Integration | Component | workflow visualiser/lane/run indicator', function () {
-  setupComponentTest('workflow-visualiser/lane/run-indicator', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it(`has class "${componentClassName}"`, async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$().children().eq(0)).to.have.class(componentClassName);
   });
 
   it('has class "status-unknown" when status is not specified', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('status-unknown');
   });
@@ -76,7 +74,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   itHasStatusClass('incorrect status', 'unknown');
 
   it('shows "?" as a run number, when it is not specified', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this).find('.run-number').text().trim()).to.equal('?');
   });
@@ -84,7 +82,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('shows "?" as a run number, when passed number is not correct', async function () {
     this.set('runNumber', -1);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this).find('.run-number').text().trim()).to.equal('?');
   });
@@ -92,7 +90,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('shows "1" as a run number, when passed number is "1"', async function () {
     this.set('runNumber', 1);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this).find('.run-number').text().trim()).to.equal('1');
   });
@@ -100,7 +98,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('has class "one-digit-run" when run number is < 10', async function () {
     this.set('runNumber', 4);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('one-digit-run');
   });
@@ -108,7 +106,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('has class "two-digit-run" when run number is >= 10 && < 100', async function () {
     this.set('runNumber', 34);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('two-digit-run');
   });
@@ -116,7 +114,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('has class "many-digit-run" when run number is >= 10', async function () {
     this.set('runNumber', 456);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('many-digit-run');
   });
@@ -124,7 +122,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('does not have class "selected" when "isSelected" is set to false', async function () {
     this.set('isSelected', false);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.not.have.class('selected');
   });
@@ -132,13 +130,13 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('has class "selected" when "isSelected" is set to true', async function () {
     this.set('isSelected', true);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('selected');
   });
 
   it('does not show origin run number if not provided', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this).find('.origin-run-number')).to.not.exist;
   });
@@ -146,7 +144,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('does not show origin run number if passed number is not correct', async function () {
     this.set('originRunNumber', -1);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this).find('.origin-run-number')).to.not.exist;
   });
@@ -157,7 +155,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
       runNumber: 2,
     });
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this).find('.origin-run-number')).to.not.exist;
   });
@@ -169,13 +167,13 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
         runNumber: 3,
       });
 
-      await render(this);
+      await renderComponent();
 
       expect(getComponent(this).find('.origin-run-number').text().trim()).to.equal('1');
     });
 
   it('does not have class "clickable" by default', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.not.have.class('clickable');
   });
@@ -183,7 +181,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('has class "clickable" when click handler is specified', async function () {
     this.set('onClick', () => {});
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class('clickable');
   });
@@ -195,7 +193,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
       runType: 'regular',
     });
 
-    await render(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.match(/^Run: 1(\s)+Run type: regular(\s)+Status: active$/);
@@ -209,7 +207,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
       runType: 'rerun',
     });
 
-    await render(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.match(
@@ -222,7 +220,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
       runType: 'abcd',
     });
 
-    await render(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.not.contain('Run type');
@@ -231,7 +229,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('it does not show run type in tooltip, if its value is empty', async function () {
     this.set('runNumber', 1);
 
-    await render(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.not.contain('Run type');
@@ -247,8 +245,8 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   }
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{workflow-visualiser/lane/run-indicator
+async function renderComponent() {
+  await render(hbs `{{workflow-visualiser/lane/run-indicator
     status=status
     runNumber=runNumber
     originRunNumber=originRunNumber
@@ -256,7 +254,6 @@ async function render(testCase) {
     isSelected=isSelected
     onClick=onClick
   }}`);
-  await wait();
 }
 
 function getComponent(testCase) {
@@ -268,7 +265,7 @@ function itHasStatusClass(status, statusInClass) {
   it(`has class "${statusClass}" when status is "${status}"`, async function () {
     this.set('status', status);
 
-    await render(this);
+    await renderComponent();
 
     expect(getComponent(this)).to.have.class(statusClass);
   });
@@ -281,7 +278,7 @@ function itHasCorrectTooltipWithStatus(status, statusTranslation) {
       status,
     });
 
-    await render(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.match(
@@ -297,7 +294,7 @@ function itHasCorrectTooltipWithRunType(runType, runTypeTranslation) {
       runType,
     });
 
-    await render(this);
+    await renderComponent();
 
     const tooltipHelper = new OneTooltipHelper(`.${componentClassName}`);
     expect(await tooltipHelper.getText()).to.match(

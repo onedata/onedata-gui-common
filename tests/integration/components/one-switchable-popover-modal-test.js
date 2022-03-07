@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
@@ -11,9 +12,7 @@ const WINDOW_WIDTH_LG = 1000;
 const WINDOW_WIDTH_SM = 400;
 
 describe('Integration | Component | one switchable popover modal', function () {
-  setupComponentTest('one-switchable-popover-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('contentText', CONTENT_TEXT);
@@ -29,8 +28,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('renders content', function (done) {
-    this.render(hbs `
+  it('renders content', async function (done) {
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
@@ -47,8 +46,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('reacts to window resize', function (done) {
-    this.render(hbs `
+  it('reacts to window resize', async function (done) {
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
@@ -80,22 +79,22 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('emits events onShow, onShown', function (done) {
+  it('emits events onShow, onShown', async function (done) {
     let showOccurred = false;
     let shownOccurred = false;
-    this.on('onShow', () => {
+    this.set('onShow', () => {
       showOccurred = true;
     });
-    this.on('onShown', () => {
+    this.set('onShown', () => {
       shownOccurred = true;
     });
-    this.render(hbs `
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
         triggersConfiguration=".trigger"
-        onShow=(action "onShow")
-        onShown=(action "onShown")}}
+        onShow=(action onShow)
+        onShown=(action onShown)}}
         {{contentText}}
       {{/one-switchable-popover-modal}}
     `);
@@ -108,22 +107,22 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('emits events onHide, onHidden', function (done) {
+  it('emits events onHide, onHidden', async function (done) {
     let hideOccurred = false;
     let hiddenOccurred = false;
-    this.on('onHide', () => {
+    this.set('onHide', () => {
       hideOccurred = true;
     });
-    this.on('onHidden', () => {
+    this.set('onHidden', () => {
       hiddenOccurred = true;
     });
-    this.render(hbs `
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
         triggersConfiguration=".trigger"
-        onHide=(action "onHide")
-        onHidden=(action "onHidden")}}
+        onHide=(action onHide)
+        onHidden=(action onHidden)}}
         {{contentText}}
       {{/one-switchable-popover-modal}}
     `);
@@ -139,8 +138,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('shows and hides popover on trigger click', function (done) {
-    this.render(hbs `
+  it('shows and hides popover on trigger click', async function (done) {
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
@@ -161,8 +160,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('hides popover on outside click', function (done) {
-    this.render(hbs `
+  it('hides popover on outside click', async function (done) {
+    await render(hbs `
       <div class="container">
         <button class="trigger">Trigger</button>
         {{#one-switchable-popover-modal
@@ -184,8 +183,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('does not hide popover on content click', function (done) {
-    this.render(hbs `
+  it('does not hide popover on content click', async function (done) {
+    await render(hbs `
       <div class="container">
         <button class="trigger">Trigger</button>
         {{#one-switchable-popover-modal
@@ -207,8 +206,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('shows and hides modal', function (done) {
-    this.render(hbs `
+  it('shows and hides modal', async function (done) {
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
@@ -229,8 +228,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('does not hide modal on content click', function (done) {
-    this.render(hbs `
+  it('does not hide modal on content click', async function (done) {
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
@@ -250,8 +249,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('handles with different triggers', function (done) {
-    this.render(hbs `
+  it('handles with different triggers', async function (done) {
+    await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
       {{#one-switchable-popover-modal
@@ -275,8 +274,8 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('sets appropriate classes', function (done) {
-    this.render(hbs `
+  it('sets appropriate classes', async function (done) {
+    await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
       {{#one-switchable-popover-modal
@@ -300,9 +299,9 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('can be controlled by open property', function (done) {
+  it('can be controlled by open property', async function (done) {
     this.set('open', false);
-    this.render(hbs `
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
@@ -314,7 +313,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    expect($('.popover-element')).to.not.exist;
+    expect($('.in .popover-element')).to.not.exist;
     this.set('open', true);
     wait().then(() => {
       expect($('.in .popover-element')).to.exist;
@@ -326,17 +325,17 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('does not hide if onHide returns false', function (done) {
-    this.on('onHide', () => {
+  it('does not hide if onHide returns false', async function (done) {
+    this.set('onHide', () => {
       return false;
     });
-    this.render(hbs `
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
         popoverClass="popover-element"
         triggersConfiguration=".trigger:popover"
-        onHide=(action "onHide")}}
+        onHide=(action onHide)}}
         {{contentText}}
       {{/one-switchable-popover-modal}}
     `);
@@ -351,15 +350,15 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('does not show if onShow returns false', function (done) {
-    this.on('onShow', () => false);
-    this.render(hbs `
+  it('does not show if onShow returns false', async function (done) {
+    this.set('onShow', () => false);
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
         popoverClass="popover-element"
         triggersConfiguration=".trigger:popover"
-        onShow=(action "onShow")}}
+        onShow=(action onShow)}}
         {{contentText}}
       {{/one-switchable-popover-modal}}
     `);
@@ -372,12 +371,12 @@ describe('Integration | Component | one switchable popover modal', function () {
   });
 
   it('can reattach content to another trigger while using open property',
-    function (done) {
+    async function (done) {
       this.setProperties({
         activeTriggerSelector: '.trigger-modal',
         open: true,
       });
-      this.render(hbs `
+      await render(hbs `
         <button class="trigger-popover">Trigger1</button>
         <button class="trigger-modal">Trigger2</button>
         {{#one-switchable-popover-modal
@@ -403,9 +402,9 @@ describe('Integration | Component | one switchable popover modal', function () {
     }
   );
 
-  it('can react to triggersConfiguration change', function (done) {
+  it('can react to triggersConfiguration change', async function (done) {
     this.set('triggersConfiguration', '.trigger-modal:modal');
-    this.render(hbs `
+    await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
       {{#one-switchable-popover-modal
@@ -432,17 +431,17 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('passes trigger selector via onShow argument', function (done) {
+  it('passes trigger selector via onShow argument', async function (done) {
     let onShowTriggerSelector = false;
-    this.on('onShow', (selector) => {
+    this.set('onShow', (selector) => {
       onShowTriggerSelector = selector;
     });
-    this.render(hbs `
+    await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
         modalTransitionDuration=0
         triggersConfiguration=".trigger"
-        onShow=(action "onShow")}}
+        onShow=(action onShow)}}
         {{contentText}}
       {{/one-switchable-popover-modal}}
     `);

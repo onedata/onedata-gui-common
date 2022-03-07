@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
@@ -11,9 +11,7 @@ import { Promise, resolve, reject } from 'rsvp';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Utility | form component/loading field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('defines fieldComponentName as "form-component/loading-field"', function () {
     const field = LoadingField.create();
@@ -29,7 +27,7 @@ describe('Integration | Utility | form component/loading field', function () {
         .returns('someText');
 
       const field = LoadingField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         i18nPrefix: 'some',
         parent: {
           path: 'parent',
@@ -44,10 +42,10 @@ describe('Integration | Utility | form component/loading field', function () {
   it(
     'has empty loadingText property if "loadingText" default translation not exists',
     function () {
-      this.register('util:i18n/missing-message', MissingMessage);
+      this.owner.register('util:i18n/missing-message', MissingMessage);
 
       const field = LoadingField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         i18nPrefix: 'some',
         parent: {
           path: 'parent',

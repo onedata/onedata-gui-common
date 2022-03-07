@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
@@ -12,9 +13,7 @@ import wait from 'ember-test-helpers/wait';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {
-  setupComponentTest('form-component/dropdown-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const i18nStub = sinon.stub(lookupService(this, 'i18n'), 't')
@@ -25,7 +24,7 @@ describe('Integration | Component | form component/dropdown field', function () 
       .withArgs('somePrefix.field1.options.third.label')
       .returns('Third');
     const field = DropdownField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
       options: [{
@@ -49,8 +48,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'has class "dropdown-field"',
-    function () {
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       expect(this.$('.dropdown-field')).to.exist;
     }
@@ -58,8 +57,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'renders three dropdown options',
-    function () {
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       const dropdown = new DropdownHelper();
       return wait()
@@ -85,10 +84,10 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       return wait()
         .then(() => {
@@ -100,10 +99,10 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       return wait()
         .then(() => {
@@ -117,10 +116,10 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       return wait()
         .then(() => {
@@ -134,10 +133,10 @@ describe('Integration | Component | form component/dropdown field', function () 
     }
   );
 
-  it('sets dropdown value to value specified in field object', function () {
+  it('sets dropdown value to value specified in field object', async function () {
     this.set('field.value', 2);
 
-    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `{{form-component/dropdown-field field=field}}`);
 
     return wait()
       .then(() => {
@@ -146,8 +145,8 @@ describe('Integration | Component | form component/dropdown field', function () 
       });
   });
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/dropdown-field field=field fieldId="abc"}}
     `);
 
@@ -160,12 +159,12 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'shows placeholder specified in field',
-    function () {
+    async function () {
       this.get('i18nStub')
         .withArgs('somePrefix.field1.placeholder')
         .returns('Select option...');
 
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       return wait()
         .then(() => {
@@ -177,8 +176,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'shows search input by default',
-    function () {
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       const dropdown = new DropdownHelper();
       return wait()
@@ -188,7 +187,7 @@ describe('Integration | Component | form component/dropdown field', function () 
   );
 
   it('filters available options according to query in search input', async function () {
-    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `{{form-component/dropdown-field field=field}}`);
     const dropdown = new DropdownHelper();
     await wait();
 
@@ -202,9 +201,9 @@ describe('Integration | Component | form component/dropdown field', function () 
 
   it(
     'does not show search input if field "showSearch" is false',
-    function () {
+    async function () {
       this.set('field.showSearch', false);
-      this.render(hbs `{{form-component/dropdown-field field=field}}`);
+      await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       const dropdown = new DropdownHelper();
       return wait()
@@ -213,12 +212,12 @@ describe('Integration | Component | form component/dropdown field', function () 
     }
   );
 
-  it('renders raw icon and label of selected option when field is in "view" mode', function () {
+  it('renders raw icon and label of selected option when field is in "view" mode', async function () {
     const field = this.get('field');
     set(field, 'value', 1);
     field.changeMode('view');
 
-    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+    await render(hbs `{{form-component/dropdown-field field=field}}`);
 
     expect(this.$('.text').text().trim()).to.equal('First');
     expect(this.$('.one-icon')).to.have.class('oneicon-space');

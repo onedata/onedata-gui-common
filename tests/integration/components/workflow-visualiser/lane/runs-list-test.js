@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
@@ -9,12 +10,10 @@ import sinon from 'sinon';
 const componentClassName = 'runs-list';
 
 describe('Integration | Component | workflow visualiser/lane/runs list', function () {
-  setupComponentTest('workflow-visualiser/lane/runs-list', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it(`has class "${componentClassName}"`, async function () {
-    await render(this);
+    await renderComponent(this);
 
     expect(this.$().children().eq(0)).to.have.class(componentClassName);
   });
@@ -25,7 +24,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       runsRegistry: generateRunsRegistry(2),
     });
 
-    await render(this);
+    await renderComponent(this);
 
     expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2]);
   });
@@ -36,7 +35,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       runsRegistry: generateRunsRegistry(5),
     });
 
-    await render(this);
+    await renderComponent(this);
 
     expect(getVisibleRunNumbers(this)).to.deep.equal([3, 4, 5]);
   });
@@ -46,7 +45,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 3,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
 
     this.set('runs', generateRunsRegistry(8));
     await wait();
@@ -59,7 +58,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(3),
     });
-    await render(this);
+    await renderComponent(this);
 
     this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
@@ -72,7 +71,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(15),
     });
-    await render(this);
+    await renderComponent(this);
 
     await moveLeft();
 
@@ -84,7 +83,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(15),
     });
-    await render(this);
+    await renderComponent(this);
 
     await moveLeft();
     await moveRight();
@@ -97,7 +96,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(8));
     await wait();
 
@@ -111,7 +110,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(8),
     });
-    await render(this);
+    await renderComponent(this);
 
     await moveLeft();
 
@@ -123,7 +122,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(15),
     });
-    await render(this);
+    await renderComponent(this);
 
     await moveLeft(false);
     await moveLeft();
@@ -136,7 +135,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(15));
     await wait();
 
@@ -151,7 +150,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(10));
     await wait();
 
@@ -166,7 +165,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(10),
     });
-    await render(this);
+    await renderComponent(this);
 
     await moveLeft(false);
     await moveRight();
@@ -179,7 +178,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(12),
     });
-    await render(this);
+    await renderComponent(this);
 
     await moveLeft();
     await moveLeft();
@@ -192,7 +191,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(12));
     await wait();
 
@@ -207,7 +206,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(10),
     });
-    await render(this);
+    await renderComponent(this);
 
     expect(this.$('.show-next-runs')).to.be.disabled;
   });
@@ -217,7 +216,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
 
@@ -229,7 +228,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(6));
     await wait();
 
@@ -241,7 +240,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(6),
     });
-    await render(this);
+    await renderComponent(this);
 
     expect(this.$('.show-prev-runs')).to.not.be.disabled;
   });
@@ -251,7 +250,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       visibleRunsLimit: 5,
       runsRegistry: generateRunsRegistry(5),
     });
-    await render(this);
+    await renderComponent(this);
 
     expect(getComponent(this).find('.run-indicator.selected')).to.not.exist;
   });
@@ -262,7 +261,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       runsRegistry: generateRunsRegistry(5),
       selectedRunNumber: 3,
     });
-    await render(this);
+    await renderComponent(this);
 
     const $selectedIndicators = getComponent(this).find('.run-indicator.selected');
     expect($selectedIndicators).to.have.length(1);
@@ -275,7 +274,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
       runsRegistry: generateRunsRegistry(5),
       selectedRunNumber: 3,
     });
-    await render(this);
+    await renderComponent(this);
 
     await click(getComponent(this).find('.run-indicator')[1]);
 
@@ -284,12 +283,12 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   });
 });
 
-async function render(testCase) {
+async function renderComponent(testCase) {
   testCase.set(
     'selectionChangeSpy',
     sinon.spy((runNumber) => testCase.set('selectedRunNumber', runNumber))
   );
-  testCase.render(hbs `{{workflow-visualiser/lane/runs-list
+  await render(hbs `{{workflow-visualiser/lane/runs-list
     visibleRunsPosition=visibleRunsPosition
     visibleRunsLimit=visibleRunsLimit
     runsRegistry=runsRegistry
@@ -297,7 +296,6 @@ async function render(testCase) {
     onSelectionChange=selectionChangeSpy
     onVisibleRunsPositionChange=(action (mut visibleRunsPosition))
   }}`);
-  await wait();
 }
 
 function getComponent(testCase) {

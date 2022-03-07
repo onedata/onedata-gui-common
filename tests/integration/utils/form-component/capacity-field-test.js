@@ -2,16 +2,14 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 const defaultUnits = ['MiB', 'GiB', 'TiB', 'PiB'];
 
 describe('Integration | Utility | form component/capacity field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('defines fieldComponentName as "form-component/capacity-field"', function () {
     const field = CapacityField.create();
@@ -31,7 +29,7 @@ describe('Integration | Utility | form component/capacity field', function () {
       .returns('field placeholder');
 
     const field = CapacityField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
@@ -45,7 +43,7 @@ describe('Integration | Utility | form component/capacity field', function () {
       .returns('<missing-...');
 
     const field = CapacityField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
@@ -190,7 +188,7 @@ describe('Integration | Utility | form component/capacity field', function () {
         `has capacity validation error for value "${value}" and ${boundingDescription}`,
         function () {
           const field = CapacityField.create(Object.assign({
-            ownerSource: this,
+            ownerSource: this.owner,
             name: 'a',
             valuesSource: {
               a: value,
@@ -207,7 +205,7 @@ describe('Integration | Utility | form component/capacity field', function () {
         `does not have capacity validation error for value "${value}" and ${boundingDescription}`,
         function () {
           const field = CapacityField.create(Object.assign({
-            ownerSource: this,
+            ownerSource: this.owner,
             name: 'a',
             valuesSource: {
               a: value,

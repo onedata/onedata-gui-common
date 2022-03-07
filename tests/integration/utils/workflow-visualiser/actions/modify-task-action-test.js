@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import ModifyTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-task-action';
 import { getProperties, get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
@@ -10,14 +10,12 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 
 describe('Integration | Utility | workflow visualiser/actions/modify task action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const task = Task.create();
     const action = ModifyTaskAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       definedStores: [
         Store.create({
           id: 's1',

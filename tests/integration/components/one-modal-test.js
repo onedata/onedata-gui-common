@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
@@ -8,27 +9,25 @@ import { next } from '@ember/runloop';
 import overrideComponents from 'onedata-gui-common/utils/override-components';
 
 describe('Integration | Component | one modal', function () {
-  setupComponentTest('one-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    overrideComponents(this);
+    overrideComponents(this.owner);
   });
 
   it(
     'calls onShown and onHidden when modal is closed before it was fully shown',
-    function (done) {
+    async function (done) {
       const shownSpy = sinon.spy();
       const hiddenSpy = sinon.spy();
-      this.on('shown', shownSpy);
-      this.on('hidden', hiddenSpy);
+      this.set('shown', shownSpy);
+      this.set('hidden', hiddenSpy);
 
-      this.render(hbs `
+      await render(hbs `
         {{#one-modal
           open=isModalOpened
-          onShown=(action "shown")
-          onHidden=(action "hidden")
+          onShown=(action shown)
+          onHidden=(action hidden)
           as |modal|}}
           {{#modal.body}}
             <div class="content">modal!</div>
@@ -54,14 +53,14 @@ describe('Integration | Component | one modal', function () {
 
   it(
     'does not call "onHide", when closed using "open" property',
-    function () {
+    async function () {
       const hideSpy = sinon.spy();
-      this.on('hide', hideSpy);
+      this.set('hide', hideSpy);
 
-      this.render(hbs `
+      await render(hbs `
         {{#one-modal
           open=isModalOpened
-          onHide=(action "hide")
+          onHide=(action hide)
           as |modal|}}
           {{#modal.body}}
             <div class="content">modal!</div>
@@ -84,11 +83,11 @@ describe('Integration | Component | one modal', function () {
 
   it(
     'have auto-generated element id when id is not provided',
-    function () {
+    async function () {
       const hideSpy = sinon.spy();
-      this.on('hide', hideSpy);
+      this.set('hide', hideSpy);
 
-      this.render(hbs `{{one-modal class="my-modal"}}`);
+      await render(hbs `{{one-modal class="my-modal"}}`);
 
       return wait()
         .then(() => {
@@ -99,11 +98,11 @@ describe('Integration | Component | one modal', function () {
 
   it(
     'uses id property as modal id when provided',
-    function () {
+    async function () {
       const hideSpy = sinon.spy();
-      this.on('hide', hideSpy);
+      this.set('hide', hideSpy);
 
-      this.render(hbs `{{one-modal id="some-id" class="my-modal"}}`);
+      await render(hbs `{{one-modal id="some-id" class="my-modal"}}`);
 
       return wait()
         .then(() => {

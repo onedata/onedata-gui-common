@@ -2,12 +2,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/clipboard field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('defines fieldComponentName as "form-component/clipboard-field"', function () {
     const field = ClipboardField.create();

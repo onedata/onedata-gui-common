@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
@@ -11,19 +12,17 @@ import $ from 'jquery';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 
 describe('Integration | Component | one way toggle', function () {
-  setupComponentTest('one-way-toggle', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders checked toggle when passed checked value true', function () {
-    this.render(hbs `{{one-way-toggle checked=true}}`);
+  it('renders checked toggle when passed checked value true', async function () {
+    await render(hbs `{{one-way-toggle checked=true}}`);
 
     let $toggle = this.$('.one-way-toggle');
     expect($toggle).to.have.class('checked');
   });
 
-  it('renders unchecked toggle when passed checked value false', function () {
-    this.render(hbs `{{one-way-toggle checked=false}}`);
+  it('renders unchecked toggle when passed checked value false', async function () {
+    await render(hbs `{{one-way-toggle checked=false}}`);
 
     let $toggle = this.$('.one-way-toggle');
     expect($toggle).to.not.have.class('checked');
@@ -32,20 +31,20 @@ describe('Integration | Component | one way toggle', function () {
   });
 
   it('renders half-selected toggle when passed checked value 2 and threeState=true',
-    function () {
-      this.render(hbs `{{one-way-toggle threeState=true checked=2}}`);
+    async function () {
+      await render(hbs `{{one-way-toggle threeState=true checked=2}}`);
 
       let $toggle = this.$('.one-way-toggle');
       expect($toggle).to.have.class('maybe');
     }
   );
 
-  it('can be checked', function (done) {
+  it('can be checked', async function (done) {
     this.set('checked', false);
     let updateHandler = sinon.spy((value) => this.set('checked', value));
-    this.on('update', updateHandler);
+    this.set('update', updateHandler);
 
-    this.render(hbs `{{one-way-toggle checked=checked update=(action "update")}}`);
+    await render(hbs `{{one-way-toggle checked=checked update=(action update)}}`);
 
     click('.one-way-toggle').then(() => {
       expect(this.$('.one-way-toggle')).to.have.class('checked');
@@ -55,12 +54,12 @@ describe('Integration | Component | one way toggle', function () {
     });
   });
 
-  it('can be unchecked', function (done) {
+  it('can be unchecked', async function (done) {
     this.set('checked', true);
     let updateHandler = sinon.spy((value) => this.set('checked', value));
-    this.on('update', updateHandler);
+    this.set('update', updateHandler);
 
-    this.render(hbs `{{one-way-toggle checked=checked update=(action "update")}}`);
+    await render(hbs `{{one-way-toggle checked=checked update=(action update)}}`);
 
     click('.one-way-toggle').then(() => {
       expect(this.$('.one-way-toggle')).to.not.have.class('checked');
@@ -70,16 +69,16 @@ describe('Integration | Component | one way toggle', function () {
     });
   });
 
-  it('cannot be semi-checked when threeState=true', function (done) {
+  it('cannot be semi-checked when threeState=true', async function (done) {
     this.set('checked', false);
     let updateHandler = sinon.spy((value) => this.set('checked', value));
-    this.on('update', updateHandler);
+    this.set('update', updateHandler);
 
-    this.render(hbs `
+    await render(hbs `
       {{one-way-toggle
         checked=checked
         threeState=true
-        update=(action "update")}}
+        update=(action update)}}
     `);
 
     click('.one-way-toggle').then(() => {
@@ -92,17 +91,17 @@ describe('Integration | Component | one way toggle', function () {
   });
 
   it('can be semi-checked when threeState=true and allowThreeStateToggle=true',
-    function (done) {
+    async function (done) {
       this.set('checked', false);
       let updateHandler = sinon.spy((value) => this.set('checked', value));
-      this.on('update', updateHandler);
+      this.set('update', updateHandler);
 
-      this.render(hbs `
+      await render(hbs `
         {{one-way-toggle
           checked=checked
           threeState=true
           allowThreeStateToggle=true
-          update=(action "update")}}
+          update=(action update)}}
       `);
 
       click('.one-way-toggle').then(() => {
@@ -116,17 +115,17 @@ describe('Integration | Component | one way toggle', function () {
   );
 
   it('can be checked when threeState=true and allowThreeStateToggle=true',
-    function (done) {
+    async function (done) {
       this.set('checked', 2);
       let updateHandler = sinon.spy((value) => this.set('checked', value));
-      this.on('update', updateHandler);
+      this.set('update', updateHandler);
 
-      this.render(hbs `
+      await render(hbs `
         {{one-way-toggle
           checked=checked
           threeState=true
           allowThreeStateToggle=true
-          update=(action "update")}}
+          update=(action update)}}
       `);
 
       click('.one-way-toggle').then(() => {
@@ -140,17 +139,17 @@ describe('Integration | Component | one way toggle', function () {
   );
 
   it('can be unchecked when threeState=true and allowThreeStateToggle=true',
-    function (done) {
+    async function (done) {
       this.set('checked', true);
       let updateHandler = sinon.spy((value) => this.set('checked', value));
-      this.on('update', updateHandler);
+      this.set('update', updateHandler);
 
-      this.render(hbs `
+      await render(hbs `
         {{one-way-toggle
           checked=checked
           threeState=true
           allowThreeStateToggle=true
-          update=(action "update")}}
+          update=(action update)}}
       `);
 
       click('.one-way-toggle').then(() => {
@@ -163,7 +162,7 @@ describe('Integration | Component | one way toggle', function () {
     }
   );
 
-  it('disables toggle until update promise is resolved', function (done) {
+  it('disables toggle until update promise is resolved', async function (done) {
     this.set('checked', false);
     const updateHandler = (value) => {
       return new Promise(resolve => {
@@ -174,12 +173,12 @@ describe('Integration | Component | one way toggle', function () {
       });
     };
 
-    this.on('update', updateHandler);
+    this.set('update', updateHandler);
 
-    this.render(hbs `
+    await render(hbs `
       {{one-way-toggle
         checked=checked
-        update=(action "update")}}
+        update=(action update)}}
     `);
 
     const $oneWayToggle = this.$('.one-way-toggle');
@@ -203,54 +202,54 @@ describe('Integration | Component | one way toggle', function () {
   });
 
   it('has tooltip when "tip" is specified', async function () {
-    this.render(hbs `{{one-way-toggle tip="my tip"}}`);
+    await render(hbs `{{one-way-toggle tip="my tip"}}`);
 
     const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
     expect(await tooltipHelper.getText()).to.equal('my tip');
   });
 
   it('has tooltip when is readonly', async function () {
-    this.render(hbs `{{one-way-toggle isReadOnly=true}}`);
+    await render(hbs `{{one-way-toggle isReadOnly=true}}`);
 
     const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
     expect(await tooltipHelper.getText()).to.equal('Locked');
   });
 
   it('has tooltip from "tip" when "tip" is specified and is readonly', async function () {
-    this.render(hbs `{{one-way-toggle isReadOnly=true tip="my tip"}}`);
+    await render(hbs `{{one-way-toggle isReadOnly=true tip="my tip"}}`);
 
     const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
     expect(await tooltipHelper.getText()).to.equal('my tip');
   });
 
   it('has no tooltip by default', async function () {
-    this.render(hbs `{{one-way-toggle}}`);
+    await render(hbs `{{one-way-toggle}}`);
 
     const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
     expect(await tooltipHelper.hasTooltip()).to.be.false;
   });
 
   it('has tooltip when "tip" is specified', async function () {
-    this.render(hbs `{{one-way-toggle tip="my tip"}}`);
+    await render(hbs `{{one-way-toggle tip="my tip"}}`);
 
     const tooltipHelper = new OneTooltipHelper('.one-way-toggle-control');
     expect(await tooltipHelper.getText()).to.equal('my tip');
   });
 
   it('has "lock" icon when is readonly', async function () {
-    this.render(hbs `{{one-way-toggle isReadOnly=true}}`);
+    await render(hbs `{{one-way-toggle isReadOnly=true}}`);
 
     expect(getToggle(this).find('.one-icon')).to.have.class('oneicon-lock');
   });
 
   it('has no "lock" icon when is not readonly', async function () {
-    this.render(hbs `{{one-way-toggle isReadOnly=false}}`);
+    await render(hbs `{{one-way-toggle isReadOnly=false}}`);
 
     expect(getToggle(this).find('.one-icon')).to.not.exist;
   });
 
   it('has no "lock" icon when is readonly but "showLockForReadOnly" is false', async function () {
-    this.render(hbs `{{one-way-toggle isReadOnly=true showLockForReadOnly=false}}`);
+    await render(hbs `{{one-way-toggle isReadOnly=true showLockForReadOnly=false}}`);
 
     expect(getToggle(this).find('.one-icon')).to.not.exist;
   });

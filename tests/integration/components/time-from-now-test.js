@@ -1,19 +1,18 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
 
 describe('Integration | Component | time from now', function () {
-  setupComponentTest('time-from-now', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders string with time from now', function () {
+  it('renders string with time from now', async function () {
     const date = moment();
     this.set('date', date);
 
-    this.render(hbs `{{time-from-now date=date}}`);
+    await render(hbs `{{time-from-now date=date}}`);
 
     const $timeFromNow = this.$('.time-from-now');
 

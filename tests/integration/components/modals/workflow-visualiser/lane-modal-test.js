@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
@@ -26,9 +27,7 @@ const simpliestLane = {
 };
 
 describe('Integration | Component | modals/workflow visualiser/lane modal', function () {
-  setupComponentTest('modals/workflow-visualiser/lane-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -184,7 +183,7 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   await modalManager
     .show('workflow-visualiser/lane-modal', modalOptions)

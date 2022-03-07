@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
@@ -20,9 +20,9 @@ import {
 import { render } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart', function () {
-  const hooks = setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
-  hooks.beforeEach(function () {
+  beforeEach(function () {
     this.owner.register('component:one-echart', TestComponent);
     this.set('fakeClock', sinon.useFakeTimers({
       now: Date.now(),
@@ -30,7 +30,7 @@ describe('Integration | Component | one time series chart', function () {
     }));
   });
 
-  hooks.afterEach(function () {
+  afterEach(function () {
     this.get('fakeClock').restore();
   });
 

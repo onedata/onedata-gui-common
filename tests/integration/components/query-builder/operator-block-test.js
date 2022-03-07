@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, context, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click, blur, fillIn } from 'ember-native-dom-helpers';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
@@ -25,16 +26,14 @@ const operatorBlockClasses = {
 };
 
 describe('Integration | Component | query builder/operator block', function () {
-  setupComponentTest('query-builder/condition-block', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
   it(
     'has classes "query-builder-block" and "query-builder-operator-block"',
     async function () {
-      this.render(hbs `{{query-builder/operator-block valuesBuilder=valuesBuilder}}`);
+      await render(hbs `{{query-builder/operator-block valuesBuilder=valuesBuilder}}`);
 
       expect(this.$('.query-builder-block.query-builder-operator-block'))
         .to.have.length(1);
@@ -50,7 +49,7 @@ describe('Integration | Component | query builder/operator block', function () {
         async function () {
           this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-          this.render(hbs `
+          await render(hbs `
             {{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
@@ -68,7 +67,7 @@ describe('Integration | Component | query builder/operator block', function () {
           async function () {
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-            this.render(hbs `
+            await render(hbs `
               {{query-builder/operator-block
                 queryBlock=queryBlock
                 valuesBuilder=valuesBuilder
@@ -93,7 +92,7 @@ describe('Integration | Component | query builder/operator block', function () {
             queryBlock.addOperand(NotOperatorQueryBlock.create());
             queryBlock.addOperand(NotOperatorQueryBlock.create());
 
-            this.render(hbs `{{query-builder/operator-block
+            await render(hbs `{{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
@@ -117,7 +116,7 @@ describe('Integration | Component | query builder/operator block', function () {
           const queryBlock =
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-          this.render(hbs `
+          await render(hbs `
             {{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
@@ -144,7 +143,7 @@ describe('Integration | Component | query builder/operator block', function () {
           queryBlock.addOperand(NotOperatorQueryBlock.create());
           queryBlock.addOperand(NotOperatorQueryBlock.create());
 
-          this.render(hbs `{{query-builder/operator-block
+          await render(hbs `{{query-builder/operator-block
             queryBlock=queryBlock
             valuesBuilder=valuesBuilder
           }}`);
@@ -161,7 +160,7 @@ describe('Integration | Component | query builder/operator block', function () {
           async function () {
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-            this.render(hbs `{{query-builder/operator-block
+            await render(hbs `{{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
@@ -180,7 +179,7 @@ describe('Integration | Component | query builder/operator block', function () {
               this.set('queryBlock', operatorBlockClasses[operatorName].create());
             queryBlock.addOperand(NotOperatorQueryBlock.create());
 
-            this.render(hbs `{{query-builder/operator-block
+            await render(hbs `{{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
@@ -202,7 +201,7 @@ describe('Integration | Component | query builder/operator block', function () {
           const queryBlock =
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-          this.render(hbs `{{query-builder/operator-block
+          await render(hbs `{{query-builder/operator-block
             queryBlock=queryBlock
             valuesBuilder=valuesBuilder
           }}`);
@@ -227,7 +226,7 @@ describe('Integration | Component | query builder/operator block', function () {
           it('does not show operator name', async function () {
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-            this.render(hbs `{{query-builder/operator-block
+            await render(hbs `{{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
@@ -241,7 +240,7 @@ describe('Integration | Component | query builder/operator block', function () {
               const queryBlock =
                 this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-              this.render(hbs `{{query-builder/operator-block
+              await render(hbs `{{query-builder/operator-block
                 queryBlock=queryBlock
                 popoverPlacement="right"
                 valuesBuilder=valuesBuilder
@@ -271,7 +270,7 @@ describe('Integration | Component | query builder/operator block', function () {
           it('shows operator name', async function () {
             this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-            this.render(hbs `{{query-builder/operator-block
+            await render(hbs `{{query-builder/operator-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
@@ -291,7 +290,7 @@ describe('Integration | Component | query builder/operator block', function () {
           removedSpy: sinon.spy(),
         });
 
-        this.render(hbs `{{query-builder/operator-block
+        await render(hbs `{{query-builder/operator-block
           queryBlock=queryBlock
           onBlockRemoved=this.removedSpy
           valuesBuilder=valuesBuilder
@@ -315,7 +314,7 @@ describe('Integration | Component | query builder/operator block', function () {
         const queryBlock =
           this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-        this.render(hbs `{{query-builder/operator-block
+        await render(hbs `{{query-builder/operator-block
           queryBlock=queryBlock
           valuesBuilder=valuesBuilder
         }}`);
@@ -341,7 +340,7 @@ describe('Integration | Component | query builder/operator block', function () {
         const queryBlock =
           this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-        this.render(hbs `{{query-builder/operator-block
+        await render(hbs `{{query-builder/operator-block
           queryBlock=queryBlock
           valuesBuilder=valuesBuilder
         }}`);
@@ -388,7 +387,7 @@ describe('Integration | Component | query builder/operator block', function () {
           });
           nestedOperator.addOperand(condition);
 
-          this.render(hbs `
+          await render(hbs `
             {{query-builder/operator-block
               queryBlock=queryBlock
               onConditionEditionStart=editionStartSpy
@@ -424,7 +423,7 @@ describe('Integration | Component | query builder/operator block', function () {
       it('yields', async function () {
         this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-        this.render(hbs `
+        await render(hbs `
           {{#query-builder/operator-block
             queryBlock=queryBlock
             valuesBuilder=valuesBuilder

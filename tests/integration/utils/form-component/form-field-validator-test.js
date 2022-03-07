@@ -3,19 +3,17 @@ import { describe, it } from 'mocha';
 import { get } from '@ember/object';
 import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-field-validator';
 import { validator, buildValidations } from 'ember-cp-validations';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/form field validator', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it(
     'has empty errors array and truthy isValid when no validators are used',
     function () {
       const fieldValidator = FormFieldValidator
         .extend(buildValidations())
-        .create({ ownerSource: this });
+        .create({ ownerSource: this.owner });
 
       expect(get(fieldValidator, 'errors')).to.have.length(0);
       expect(get(fieldValidator, 'isValid')).to.be.true;
@@ -28,7 +26,7 @@ describe('Integration | Utility | form component/form field validator', function
       const fieldValidator = FormFieldValidator
         .extend(buildValidations())
         .create({
-          ownerSource: this,
+          ownerSource: this.owner,
           errors: [{ a: 1 }],
         });
 
@@ -45,7 +43,7 @@ describe('Integration | Utility | form component/form field validator', function
     const fieldValidator = FormFieldValidator
       .extend(buildValidations({ value: validators }))
       .create({
-        ownerSource: this,
+        ownerSource: this.owner,
         value: 1,
       });
 
@@ -66,7 +64,7 @@ describe('Integration | Utility | form component/form field validator', function
       const fieldValidator = FormFieldValidator
         .extend(buildValidations({ value: validators }))
         .create({
-          ownerSource: this,
+          ownerSource: this.owner,
           value: 3,
         });
 
@@ -81,7 +79,7 @@ describe('Integration | Utility | form component/form field validator', function
       const fieldValidator = FormFieldValidator
         .extend(buildValidations())
         .create({
-          ownerSource: this,
+          ownerSource: this.owner,
           field: {
             value: 'a',
             valuesSource: 'b',

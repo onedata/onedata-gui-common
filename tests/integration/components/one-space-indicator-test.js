@@ -1,23 +1,22 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one space indicator', function () {
-  setupComponentTest('one-space-indicator', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders space usage', function () {
-    this.render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=1024}}`);
+  it('renders space usage', async function () {
+    await render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=1024}}`);
 
     expect(this.$('.occupied-space-bar')).to.exist;
     expect(this.$('.current-total-space').text().trim()).to.equal('2 KiB');
     expect(this.$('.occupied-space').text().trim()).to.equal('1 KiB');
   });
 
-  it('recognizes occupied space greater than total space', function () {
-    this.render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=4096}}`);
+  it('recognizes occupied space greater than total space', async function () {
+    await render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=4096}}`);
 
     expect(this.$('.one-space-indicator')).to.have.class('critical-usage');
     expect(this.$('.occupied-space-bar')).to.exist;
@@ -25,24 +24,24 @@ describe('Integration | Component | one space indicator', function () {
     expect(this.$('.occupied-space').text().trim()).to.equal('4 KiB');
   });
 
-  it('ignores occupied space less than 0', function () {
-    this.render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=-10}}`);
+  it('ignores occupied space less than 0', async function () {
+    await render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=-10}}`);
 
     expect(this.$('.occupied-space-bar')).to.not.exist;
     expect(this.$('.current-total-space')).to.not.exist;
     expect(this.$('.occupied-space')).to.not.exist;
   });
 
-  it('ignores total space less than 0', function () {
-    this.render(hbs `{{one-space-indicator currentTotalSize=-10 occupiedSize=1024}}`);
+  it('ignores total space less than 0', async function () {
+    await render(hbs `{{one-space-indicator currentTotalSize=-10 occupiedSize=1024}}`);
 
     expect(this.$('.occupied-space-bar')).to.not.exist;
     expect(this.$('.current-total-space')).to.not.exist;
     expect(this.$('.occupied-space')).to.not.exist;
   });
 
-  it('renders right expand arrow if expanding the space', function () {
-    this.render(hbs `{{one-space-indicator
+  it('renders right expand arrow if expanding the space', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=50
       newTotalSize=150
@@ -54,8 +53,8 @@ describe('Integration | Component | one space indicator', function () {
     ).to.exist;
   });
 
-  it('renders right expand without arrow if expanding the space a little', function () {
-    this.render(hbs `{{one-space-indicator
+  it('renders right expand without arrow if expanding the space a little', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=50
       newTotalSize=101
@@ -69,8 +68,8 @@ describe('Integration | Component | one space indicator', function () {
     expect(this.$('.new-total-space-expand-arrow'), 'arrow').to.not.exist;
   });
 
-  it('renders left expand arrow if shrinking the space', function () {
-    this.render(hbs `{{one-space-indicator
+  it('renders left expand arrow if shrinking the space', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=10
       newTotalSize=50
@@ -82,8 +81,8 @@ describe('Integration | Component | one space indicator', function () {
     ).to.exist;
   });
 
-  it('renders left expand without arrow if shrinking the space a little', function () {
-    this.render(hbs `{{one-space-indicator
+  it('renders left expand without arrow if shrinking the space a little', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=50
       newTotalSize=99
@@ -97,8 +96,8 @@ describe('Integration | Component | one space indicator', function () {
     expect(this.$('.new-total-space-expand-arrow'), 'arrow').to.not.exist;
   });
 
-  it('renders critical color if shrinking the space below usage', function () {
-    this.render(hbs `{{one-space-indicator
+  it('renders critical color if shrinking the space below usage', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=70
       newTotalSize=50
@@ -110,8 +109,8 @@ describe('Integration | Component | one space indicator', function () {
     ).to.exist;
   });
 
-  it('renders warning color if shrinking the space to warning value', function () {
-    this.render(hbs `{{one-space-indicator
+  it('renders warning color if shrinking the space to warning value', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=70
       newTotalSize=71
@@ -123,8 +122,8 @@ describe('Integration | Component | one space indicator', function () {
     ).to.exist;
   });
 
-  it('clears critical usage if expanding the space above usage', function () {
-    this.render(hbs `{{one-space-indicator
+  it('clears critical usage if expanding the space above usage', async function () {
+    await render(hbs `{{one-space-indicator
       currentTotalSize=100
       occupiedSize=101
       newTotalSize=120

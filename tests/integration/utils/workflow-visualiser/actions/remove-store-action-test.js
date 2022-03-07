@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
@@ -12,14 +13,12 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 describe('Integration | Utility | workflow visualiser/actions/remove store action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({ name: 'store1' });
     const action = RemoveStoreAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { store },
     });
     this.setProperties({ store, action });
@@ -95,7 +94,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };

@@ -1,18 +1,16 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 
 const componentClass = 'revisions-table-state-tag';
 
 describe('Integration | Component | revisions table/state tag', function () {
-  setupComponentTest('revisions-table/state-tag', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it(`has class "${componentClass}"`, async function () {
-    await render(this);
+    await renderComponent();
     expect(this.$().children()).to.have.class(componentClass)
       .and.to.have.length(1);
   });
@@ -34,16 +32,15 @@ describe('Integration | Component | revisions table/state tag', function () {
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{revisions-table/state-tag state=state}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{revisions-table/state-tag state=state}}`);
 }
 
 function itShowsState({ state, label, style }) {
   it(`shows state ${state} as "${label}" and styled as "${style}"`, async function () {
     this.set('state', state);
 
-    await render(this);
+    await renderComponent();
 
     const $component = this.$(`.${componentClass}`);
     expect($component).to.have.class(`state-${state}`).and

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import { getProperties, get } from '@ember/object';
@@ -9,14 +9,12 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 describe('Integration | Utility | workflow visualiser/actions/move right lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({ isLast: false });
     const action = MoveRightLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { lane },
     });
     this.setProperties({ lane, action });

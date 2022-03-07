@@ -1,15 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | tags input/selector editor', function () {
-  setupComponentTest('tags-input/selector-editor', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('settings', {
@@ -22,20 +21,20 @@ describe('Integration | Component | tags input/selector editor', function () {
     });
   });
 
-  it('has class "tags-input-selector-editor"', function () {
-    this.render(hbs `{{tags-input/selector-editor}}`);
+  it('has class "tags-input-selector-editor"', async function () {
+    await render(hbs `{{tags-input/selector-editor}}`);
 
     expect(this.$('.tags-input-selector-editor')).to.exist;
   });
 
-  it('renders popover', function () {
-    this.render(hbs `{{tags-input/selector-editor}}`);
+  it('renders popover', async function () {
+    await render(hbs `{{tags-input/selector-editor}}`);
 
     expect(getSelector()).to.exist;
   });
 
-  it('renders passed available tags', function () {
-    this.render(hbs `{{tags-input
+  it('renders passed available tags', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -51,12 +50,12 @@ describe('Integration | Component | tags input/selector editor', function () {
       });
   });
 
-  it('does not render tags, which are already selected', function () {
+  it('does not render tags, which are already selected', async function () {
     // Intentionally it does not point to objects in settings.availableTags to check
     // if it will deal with the same tags, but under different object references.
     this.set('selectedTags', [{ label: 'b' }]);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=selectedTags
       tagEditorComponentName="tags-input/selector-editor"
       tagEditorSettings=settings
@@ -70,16 +69,16 @@ describe('Integration | Component | tags input/selector editor', function () {
       });
   });
 
-  it('allows to add tag by clicking on it', function () {
+  it('allows to add tag by clicking on it', async function () {
     this.set('tags', []);
     const changeSpy = sinon.spy(tags => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/selector-editor"
       tagEditorSettings=settings
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
@@ -93,16 +92,16 @@ describe('Integration | Component | tags input/selector editor', function () {
       });
   });
 
-  it('ends creation mode after adding last possible tag', function () {
+  it('ends creation mode after adding last possible tag', async function () {
     this.set('tags', [Object.assign({}, this.get('settings.allowedTags')[0])]);
     const changeSpy = sinon.spy(tags => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/selector-editor"
       tagEditorSettings=settings
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
@@ -114,8 +113,8 @@ describe('Integration | Component | tags input/selector editor', function () {
       });
   });
 
-  it('closes selector on click on non-parent tags-input', function () {
-    this.render(hbs `
+  it('closes selector on click on non-parent tags-input', async function () {
+    await render(hbs `
       {{tags-input
         tagEditorSettings=settings
         tagEditorComponentName="tags-input/selector-editor"
@@ -128,8 +127,8 @@ describe('Integration | Component | tags input/selector editor', function () {
       .then(() => expect(getSelector()).to.not.exist);
   });
 
-  it('does not close selector on click on parent tags-input', function () {
-    this.render(hbs `
+  it('does not close selector on click on parent tags-input', async function () {
+    await render(hbs `
       {{tags-input
         tagEditorSettings=settings
         tagEditorComponentName="tags-input/selector-editor"

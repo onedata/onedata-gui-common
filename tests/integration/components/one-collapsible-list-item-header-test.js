@@ -1,27 +1,26 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | one collapsible list item header', function () {
-  setupComponentTest('one-collapsible-list-item-header', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('propagates click events to btn-toolbar children', function () {
+  it('propagates click events to btn-toolbar children', async function () {
     let buttonClicked = false;
-    this.on('actionOne', function () {
+    this.set('actionOne', function () {
       buttonClicked = true;
     });
 
-    this.render(hbs `
+    await render(hbs `
     {{#one-collapsible-list as |list|}}
       {{#list.item as |listItem|}}
         {{#listItem.header}}
           <h1>Some header</h1>
           <div class="btn-toolbar">
-            <button class="btn btn-default btn-one" {{action "actionOne"}}>
+            <button class="btn btn-default btn-one" {{action actionOne}}>
               One
             </button>
           </div>
@@ -39,15 +38,15 @@ describe('Integration | Component | one collapsible list item header', function 
     });
   });
 
-  it('doesn\'t propagate click events outside btn-toolbar', function () {
+  it('doesn\'t propagate click events outside btn-toolbar', async function () {
     let actionOneInvoked = false;
-    this.on('actionOne', function () {
+    this.set('actionOne', function () {
       actionOneInvoked = true;
     });
 
-    this.render(hbs `
+    await render(hbs `
     {{#one-collapsible-list as |list|}}
-      {{#list.item toggle=(action "actionOne") as |listItem|}}
+      {{#list.item toggle=(action actionOne) as |listItem|}}
         {{#listItem.header}}
           <h1>Some header</h1>
           <button class="btn btn-default btn-one">

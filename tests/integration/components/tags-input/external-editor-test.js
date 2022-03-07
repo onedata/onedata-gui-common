@@ -1,15 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | tags input/external editor', function () {
-  setupComponentTest('tags-input/external-editor', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -19,15 +18,15 @@ describe('Integration | Component | tags input/external editor', function () {
     });
   });
 
-  it('has class "tags-input-external-editor"', function () {
-    this.render(hbs `{{tags-input/external-editor}}`);
+  it('has class "tags-input-external-editor"', async function () {
+    await render(hbs `{{tags-input/external-editor}}`);
 
     expect(this.$().children()).to.have.class('tags-input-external-editor')
       .and.to.have.length(1);
   });
 
   it('does not render any content', async function () {
-    await renderTagInput(this);
+    await renderTagInput();
     await startCreation();
 
     const $editor = this.$('.tags-input-external-editor');
@@ -46,7 +45,7 @@ describe('Integration | Component | tags input/external editor', function () {
         },
       });
 
-      await renderTagInput(this);
+      await renderTagInput();
 
       expect(startTagCreationCallbackSpy).to.not.be.called;
       await startCreation();
@@ -64,7 +63,7 @@ describe('Integration | Component | tags input/external editor', function () {
       startTagCreationCallback: ({ onTagsAddedCallback }) => addTags = onTagsAddedCallback,
     });
 
-    await renderTagInput(this);
+    await renderTagInput();
     await startCreation();
     addTags([{ label: 'abc' }]);
     await wait();
@@ -80,7 +79,7 @@ describe('Integration | Component | tags input/external editor', function () {
       startTagCreationCallback: ({ onEndTagCreationCallback }) => endCreation = onEndTagCreationCallback,
     });
 
-    await renderTagInput(this);
+    await renderTagInput();
     await startCreation();
     endCreation();
     await wait();
@@ -95,7 +94,7 @@ describe('Integration | Component | tags input/external editor', function () {
         endTagCreationCallback: endTagCreationCallbackSpy,
       });
 
-      await renderTagInput(this);
+      await renderTagInput();
       await startCreation();
 
       expect(endTagCreationCallbackSpy).to.not.be.called;
@@ -107,8 +106,8 @@ describe('Integration | Component | tags input/external editor', function () {
     });
 });
 
-async function renderTagInput(testCase) {
-  testCase.render(hbs `{{tags-input
+async function renderTagInput() {
+  await render(hbs `{{tags-input
     tags=tags
     tagsLimit=tagsLimit
     tagEditorComponentName="tags-input/external-editor"

@@ -1,18 +1,17 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visualiser-space';
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import _ from 'lodash';
 
 describe('Integration | Component | workflow visualiser/visualiser space', function () {
-  setupComponentTest('workflow-visualiser/visualiser-space', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('has classes "workflow-visualiser-space" and "workflow-visualiser-element"', function () {
-    this.render(hbs `{{workflow-visualiser/visualiser-space}}`);
+  it('has classes "workflow-visualiser-space" and "workflow-visualiser-element"', async function () {
+    await render(hbs `{{workflow-visualiser/visualiser-space}}`);
 
     expect(this.$().children()).to.have.length(1);
     expect(this.$().children().eq(0))
@@ -24,17 +23,18 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
     const siblingName = `element${_.upperFirst(elementSuffix)}`;
     const htmlAttrForSibling = `data-element-${elementSuffix}-id`;
 
-    it(`has not specified "${htmlAttrForSibling}" attribute when "${siblingName}" is undefined`, function () {
-      this.set('space', VisualiserSpace.create({
-        [siblingName]: undefined,
-      }));
+    it(`has not specified "${htmlAttrForSibling}" attribute when "${siblingName}" is undefined`,
+      async function () {
+        this.set('space', VisualiserSpace.create({
+          [siblingName]: undefined,
+        }));
 
-      this.render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
+        await render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
 
-      expect(this.$('.workflow-visualiser-space')).to.not.have.attr(htmlAttrForSibling);
-    });
+        expect(this.$('.workflow-visualiser-space')).to.not.have.attr(htmlAttrForSibling);
+      });
 
-    it(`has specified "${htmlAttrForSibling}" attribute when "${siblingName}" is specified`, function () {
+    it(`has specified "${htmlAttrForSibling}" attribute when "${siblingName}" is specified`, async function () {
       const elementId = '1234';
       this.set('space', VisualiserSpace.create({
         [siblingName]: VisualiserRecord.create({
@@ -42,7 +42,7 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
         }),
       }));
 
-      this.render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
+      await render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
 
       expect(this.$('.workflow-visualiser-space'))
         .to.have.attr(htmlAttrForSibling, elementId);

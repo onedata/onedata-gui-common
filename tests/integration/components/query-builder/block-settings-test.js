@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
@@ -10,14 +11,12 @@ import $ from 'jquery';
 import { get } from '@ember/object';
 
 describe('Integration | Component | query builder/block settings', function () {
-  setupComponentTest('query-builder/block-settings', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('does not show block selector when "open" is false', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
 
-    this.render(hbs `<div id="x">{{query-builder/block-settings
+    await render(hbs `<div id="x">{{query-builder/block-settings
       queryBlock=queryBlock
       open=false
       triggerSelector="#x"
@@ -29,7 +28,7 @@ describe('Integration | Component | query builder/block settings', function () {
   it('shows block selector when "open" is true', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
 
-    this.render(hbs `<div id="x">{{query-builder/block-settings
+    await render(hbs `<div id="x">{{query-builder/block-settings
       queryBlock=queryBlock
       open=true
       triggerSelector="#x"
@@ -45,7 +44,7 @@ describe('Integration | Component | query builder/block settings', function () {
   it('shows block selector (operator block variant)', async function () {
     this.set('queryBlock', NotOperatorQueryBlock.create());
 
-    this.render(hbs `<div id="x">{{query-builder/block-settings
+    await render(hbs `<div id="x">{{query-builder/block-settings
       queryBlock=queryBlock
       open=true
       triggerSelector="#x"
@@ -61,7 +60,7 @@ describe('Integration | Component | query builder/block settings', function () {
   it('shows block selector (condition block variant)', async function () {
     this.set('queryBlock', ConditionQueryBlock.create());
 
-    this.render(hbs `<div id="x">{{query-builder/block-settings
+    await render(hbs `<div id="x">{{query-builder/block-settings
       queryBlock=queryBlock
       open=true
       triggerSelector="#x"
@@ -88,7 +87,7 @@ describe('Integration | Component | query builder/block settings', function () {
         open: true,
       });
 
-      this.render(hbs `<div id="x">{{query-builder/block-settings
+      await render(hbs `<div id="x">{{query-builder/block-settings
         queryBlock=queryBlock
         open=true
         triggerSelector="#x"
@@ -125,7 +124,7 @@ describe('Integration | Component | query builder/block settings', function () {
       const condition = new ConditionQueryBlock();
       queryBlock.addOperand(condition);
 
-      this.render(hbs `<div id="x">{{query-builder/block-settings
+      await render(hbs `<div id="x">{{query-builder/block-settings
         queryBlock=queryBlock
         open=true
         triggerSelector="#x"

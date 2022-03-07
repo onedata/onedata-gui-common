@@ -2,15 +2,13 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Utility | form component/dropdown field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('defines fieldComponentName as "form-component/dropdown-field"', function () {
     const field = DropdownField.create();
@@ -34,7 +32,7 @@ describe('Integration | Utility | form component/dropdown field', function () {
       .returns('One');
 
     const field = DropdownField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
       options: [{

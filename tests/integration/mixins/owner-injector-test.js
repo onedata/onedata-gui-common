@@ -4,12 +4,10 @@ import EmberObject, { get, set } from '@ember/object';
 import { lookupService, registerService } from '../../helpers/stub-service';
 import OwnerInjectorMixin from 'onedata-gui-common/mixins/owner-injector';
 import Service, { inject as service } from '@ember/service';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 
 describe('Integration | Mixin | owner injector', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     registerService(this, 'test-service', Service);
@@ -30,7 +28,7 @@ describe('Integration | Mixin | owner injector', function () {
 
   it('injects service, when ownerSource is specified', function () {
     const subject = OwnerInjectorObject.create({
-      ownerSource: this,
+      ownerSource: this.owner,
     });
 
     expect(get(subject, 'testService')).to.equal(this.get('testService'));
@@ -38,7 +36,7 @@ describe('Integration | Mixin | owner injector', function () {
 
   it('injects service, when ownerSource is specified after init', function () {
     const subject = OwnerInjectorObject.create();
-    set(subject, 'ownerSource', this);
+    set(subject, 'ownerSource', this.owner);
 
     expect(get(subject, 'testService')).to.equal(this.get('testService'));
   });

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn, scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
@@ -30,12 +31,10 @@ const twoNonEmptyLanesExample = generateExample(2, 2, 2);
 const threeNonEmptyLanesExample = generateExample(3, 3, 2);
 
 describe('Integration | Component | workflow visualiser', function () {
-  setupComponentTest('workflow-visualiser', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
@@ -45,10 +44,10 @@ describe('Integration | Component | workflow visualiser', function () {
     this.set('actionsFactory', actionsFactory);
   });
 
-  it('has class "workflow-visualiser"', function () {
+  it('has class "workflow-visualiser"', async function () {
     const rawData = noLanesExample;
 
-    renderWithRawData(this, rawData);
+    await renderWithRawData(this, rawData);
 
     expect(this.$('.workflow-visualiser')).to.exist;
   });
@@ -317,7 +316,7 @@ describe('Integration | Component | workflow visualiser', function () {
     it('shows lane details', async function () {
       const rawData = twoEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
       await click((await getActionTrigger('lane', [0], 'view'))[0]);
 
       expect(getModalBody().find('.name-field .field-component').text().trim())
@@ -326,7 +325,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
     it('shows store information in modal', async function () {
       const rawData = noLanesExample;
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       await click('.workflow-visualiser-stores-list-store');
 
@@ -337,18 +336,18 @@ describe('Integration | Component | workflow visualiser', function () {
         .to.equal('store0');
     });
 
-    it('does not show edition-related elements in empty visualiser', function () {
+    it('does not show edition-related elements in empty visualiser', async function () {
       const rawData = noLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
-    it('does not allow to change lane name', function () {
+    it('does not allow to change lane name', async function () {
       const rawData = twoEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.lane-name .one-label')).to.not.exist;
@@ -357,36 +356,36 @@ describe('Integration | Component | workflow visualiser', function () {
     it('does not show edition-related elements in lanes and interlane spaces', async function () {
       const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
       const modifyTrigger = await getActionTrigger('lane', [0], 'modify');
 
       expect(modifyTrigger).to.not.exist;
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
     });
 
-    it('does not show edition-related elements in empty lane', function () {
+    it('does not show edition-related elements in empty lane', async function () {
       const rawData = twoEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       expect(this.$(
         '.workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
-    it('does not allow to change parallel box name', function () {
+    it('does not allow to change parallel box name', async function () {
       const rawData = twoEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.parallel-box-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements of parallel boxes and spaces between them', function () {
+    it('does not show edition-related elements of parallel boxes and spaces between them', async function () {
       const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
       expect(this.$(
@@ -394,29 +393,29 @@ describe('Integration | Component | workflow visualiser', function () {
       )).to.not.exist;
     });
 
-    it('does not show edition-related elements in empty parallel box', function () {
+    it('does not show edition-related elements in empty parallel box', async function () {
       const rawData = twoLanesWithEmptyBlocksExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       expect(this.$(
         '.workflow-visualiser-parallel-box .workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
     });
 
-    it('does not allow to change task name', function () {
+    it('does not allow to change task name', async function () {
       const rawData = twoEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.task-name .one-label')).to.not.exist;
     });
 
-    it('does not show edition-related elements of tasks and spaces between them', function () {
+    it('does not show edition-related elements of tasks and spaces between them', async function () {
       const rawData = twoNonEmptyLanesExample;
 
-      renderWithRawData(this, rawData);
+      await renderWithRawData(this, rawData);
 
       expect(this.$('.task-actions-trigger')).to.not.exist;
       expect(this.$(
@@ -557,20 +556,20 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
 }
 
 function itHasModeClass(mode) {
-  it(`has class "mode-${mode}"`, function () {
+  it(`has class "mode-${mode}"`, async function () {
     const rawData = noLanesExample;
 
-    renderWithRawData(this, rawData);
+    await renderWithRawData(this, rawData);
 
     expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
   });
 }
 
 function itShowsVisualiserElements() {
-  it('shows one interlane space when there are no lanes', function () {
+  it('shows one interlane space when there are no lanes', async function () {
     const rawData = noLanesExample;
 
-    renderWithRawData(this, rawData);
+    await renderWithRawData(this, rawData);
 
     checkRenderedLanesStructure(this, rawData);
   });
@@ -578,21 +577,21 @@ function itShowsVisualiserElements() {
   itRendersEmptyLanes('shows an empty lane', 1);
   itRendersEmptyLanes('shows two empty lanes', 2);
 
-  it('shows a non-empty lane', function () {
+  it('shows a non-empty lane', async function () {
     const rawData = twoNonEmptyLanesExample;
 
-    renderWithRawData(this, rawData);
+    await renderWithRawData(this, rawData);
 
     checkRenderedLanesStructure(this, rawData);
   });
 }
 
 function itShowsStoresList() {
-  it('shows stores list', function () {
+  it('shows stores list', async function () {
     const rawData = noLanesExample;
     const mode = this.get('mode');
 
-    renderWithRawData(this, rawData);
+    await renderWithRawData(this, rawData);
 
     const $storesList = this.$('.workflow-visualiser-stores-list');
     expect($storesList).to.exist;
@@ -602,10 +601,10 @@ function itShowsStoresList() {
 }
 
 function itRendersEmptyLanes(message, lanesNumber) {
-  it(message, function () {
+  it(message, async function () {
     const rawData = generateExample(lanesNumber, 0, 0);
 
-    renderWithRawData(this, rawData);
+    await renderWithRawData(this, rawData);
 
     checkRenderedLanesStructure(this, rawData);
   });
@@ -793,7 +792,7 @@ function itPerformsCustomAction({
   initialRawData,
 }) {
   it(description, async function () {
-    renderWithRawData(this, initialRawData);
+    await renderWithRawData(this, initialRawData);
 
     await actionExecutor(this);
 
@@ -814,7 +813,7 @@ function itDoesNotPerformAction({
   initialRawData = threeNonEmptyLanesExample,
 }) {
   it(description, async function () {
-    renderWithRawData(this, initialRawData);
+    await renderWithRawData(this, initialRawData);
 
     const $actionTrigger = await actionTriggerGetter();
 
@@ -823,12 +822,12 @@ function itDoesNotPerformAction({
   });
 }
 
-function renderWithRawData(testCase, rawData) {
+async function renderWithRawData(testCase, rawData) {
   testCase.setProperties({
     rawData,
     initialRawData: _.cloneDeep(rawData),
   });
-  testCase.render(hbs `
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser
       mode=mode
@@ -846,7 +845,7 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
   });
   await changeContainerWidthForScrollTest(testCase, containerWidth);
 
-  testCase.render(hbs `
+  await render(hbs `
     <div style={{containerStyle}}>
       {{workflow-visualiser
         mode="view"
@@ -855,7 +854,6 @@ async function renderForScrollTest(testCase, lanesNumber, containerWidth) {
       }}
     </div>
   `);
-  await wait();
 }
 
 async function changeContainerWidthForScrollTest(testCase, newWidth) {

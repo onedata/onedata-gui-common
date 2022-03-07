@@ -2,16 +2,15 @@ import EmberObject, { setProperties } from '@ember/object';
 import { reject } from 'rsvp';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 
 const errorMsg = 'error!';
 
 describe('Integration | Component | one form simple', function () {
-  setupComponentTest('one-form-simple', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const FIELDS = [{
@@ -37,8 +36,8 @@ describe('Integration | Component | one form simple', function () {
     this.set('fakeValidations', VALIDATIONS);
   });
 
-  it('renders injected fields', function () {
-    this.render(hbs `
+  it('renders injected fields', async function () {
+    await render(hbs `
       {{one-form-simple
         validations=fakeValidations
         fields=fields
@@ -50,8 +49,8 @@ describe('Integration | Component | one form simple', function () {
     expect(this.$('.field-main-second'), 'field second').to.exist;
   });
 
-  it('renders errors after field change', function () {
-    this.render(hbs `
+  it('renders errors after field change', async function () {
+    await render(hbs `
       {{one-form-simple
         validations=fakeValidations
         fields=fields
@@ -71,8 +70,8 @@ describe('Integration | Component | one form simple', function () {
     });
   });
 
-  it('renders errors after field loses its focus', function () {
-    this.render(hbs `
+  it('renders errors after field loses its focus', async function () {
+    await render(hbs `
       {{one-form-simple
         validations=fakeValidations
         fields=fields
@@ -90,8 +89,8 @@ describe('Integration | Component | one form simple', function () {
     });
   });
 
-  it('reacts when field error changes', function () {
-    this.render(hbs `
+  it('reacts when field error changes', async function () {
+    await render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields
@@ -110,18 +109,18 @@ describe('Integration | Component | one form simple', function () {
     });
   });
 
-  it('changes submit button "disable" attribute', function () {
+  it('changes submit button "disable" attribute', async function () {
     let submitOccurred = false;
-    this.on('submitAction', () => {
+    this.set('submitAction', () => {
       submitOccurred = true;
       return reject();
     });
 
-    this.render(hbs `
+    await render(hbs `
     {{one-form-simple
       validations=fakeValidations
       fields=fields
-      submit=(action "submitAction")
+      submit=(action submitAction)
     }}
       `);
 

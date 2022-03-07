@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
@@ -30,9 +31,7 @@ const simplestStore = {
 };
 
 describe('Integration | Component | modals/workflow visualiser/store modal', function () {
-  setupComponentTest('modals/workflow-visualiser/store-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -189,7 +188,7 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   await modalManager
     .show('workflow-visualiser/store-modal', modalOptions)

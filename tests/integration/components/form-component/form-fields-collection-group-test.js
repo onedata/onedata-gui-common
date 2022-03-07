@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
@@ -13,20 +14,18 @@ import EmberObject, { set } from '@ember/object';
 describe(
   'Integration | Component | form component/form fields collection group',
   function () {
-    setupComponentTest('form-component/form-fields-collection-group', {
-      integration: true,
-    });
+    setupRenderingTest();
 
-    it('renders "add field" button', function () {
+    it('renders "add field" button', async function () {
       sinon.stub(lookupService(this, 'i18n'), 't')
         .withArgs('abc.addButtonText')
         .returns('add');
       this.set('collectionGroup', FormFieldsCollectionGroup.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         name: 'abc',
       }));
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -36,7 +35,7 @@ describe(
       expect($button.text().trim()).to.equal('add');
     });
 
-    it('allows to add new field', function () {
+    it('allows to add new field', async function () {
       const valuesSource = EmberObject.create({
         collection: EmberObject.create(),
       });
@@ -49,7 +48,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -60,7 +59,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -74,7 +73,7 @@ describe(
         });
     });
 
-    it('allows to remove field', function () {
+    it('allows to remove field', async function () {
       const valuesSource = EmberObject.create({
         collection: EmberObject.create(),
       });
@@ -87,7 +86,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -98,7 +97,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -114,7 +113,7 @@ describe(
         });
     });
 
-    it('blocks creating and removing fields in "view" mode', function () {
+    it('blocks creating and removing fields in "view" mode', async function () {
       const valuesSource = EmberObject.create({
         collection: EmberObject.create(),
       });
@@ -127,7 +126,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -138,7 +137,7 @@ describe(
       });
       this.set('collectionGroup', collectionGroup);
 
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -166,7 +165,7 @@ describe(
         },
       }).create({
         name: 'collection',
-        ownerSource: this,
+        ownerSource: this.owner,
         parent: {
           isEffectivelyEnabled: true,
           onValueChange(value) {
@@ -176,7 +175,7 @@ describe(
         valuesSource,
       });
       this.set('collectionGroup', collectionGroup);
-      this.render(hbs `
+      await render(hbs `
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
@@ -202,7 +201,7 @@ describe(
           },
         }).create({
           name: 'collection',
-          ownerSource: this,
+          ownerSource: this.owner,
           parent: {
             isEffectivelyEnabled: true,
             onValueChange(value) {
@@ -213,7 +212,7 @@ describe(
         });
         this.set('collectionGroup', collectionGroup);
 
-        this.render(hbs `
+        await render(hbs `
           {{form-component/form-fields-collection-group field=collectionGroup}}
         `);
 

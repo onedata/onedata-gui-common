@@ -9,8 +9,9 @@ import {
   beforeEach,
 } from 'mocha';
 import {
-  setupComponentTest,
+  setupRenderingTest,
 } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import wait from 'ember-test-helpers/wait';
 import hbs from 'htmlbars-inline-precompile';
 import {
@@ -23,9 +24,7 @@ import $ from 'jquery';
 const ERROR_MSG = 'error!';
 
 describe('Integration | Component | one dynamic tree', function () {
-  setupComponentTest('one-dynamic-tree', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('definition', [{
@@ -110,37 +109,37 @@ describe('Integration | Component | one dynamic tree', function () {
     }));
   });
 
-  it('renders fields', function () {
-    this.render(hbs `{{one-dynamic-tree definition=definition}}`);
+  it('renders fields', async function () {
+    await render(hbs `{{one-dynamic-tree definition=definition}}`);
     expect(this.$('.field-node1-node11'), 'node 1.1').to.exist;
     expect(this.$('.field-node1-node12'), 'node 1.2').to.exist;
     expect(this.$('input[type="text"]')).to.exist;
     expect(this.$('.one-way-radio-group')).to.exist;
   });
 
-  it('disables field', function () {
+  it('disables field', async function () {
     this.set('disabledPaths', A(['node1.node11']));
-    this.render(hbs `
-      {{one-dynamic-tree 
-        definition=definition 
+    await render(hbs `
+      {{one-dynamic-tree
+        definition=definition
         disabledFieldsPaths=disabledPaths}}`);
     expect(this.$('.field-node1-node11')).to.be.disabled;
     expect(this.$('.field-node1-node12 input[type="radio"]')).to.not.be.disabled;
   });
 
-  it('disables nested field', function () {
+  it('disables nested field', async function () {
     this.set('disabledPaths', A(['node1']));
-    this.render(hbs `
-      {{one-dynamic-tree 
-        definition=definition 
+    await render(hbs `
+      {{one-dynamic-tree
+        definition=definition
         disabledFieldsPaths=disabledPaths}}`);
     expect(this.$('.field-node1-node11')).to.be.disabled;
     expect(this.$('.field-node1-node12 input[type="radio"]')).to.be.disabled;
   });
 
-  it('validates data', function (done) {
-    this.render(hbs `
-      {{one-dynamic-tree 
+  it('validates data', async function (done) {
+    await render(hbs `
+      {{one-dynamic-tree
         definition=definition
         validations=validations}}`);
 
@@ -153,10 +152,10 @@ describe('Integration | Component | one dynamic tree', function () {
     });
   });
 
-  it('does not validate data in disabled fields', function (done) {
+  it('does not validate data in disabled fields', async function (done) {
     this.set('disabledPaths', A());
-    this.render(hbs `
-      {{one-dynamic-tree 
+    await render(hbs `
+      {{one-dynamic-tree
         definition=definition
         validations=validations
         disabledFieldsPaths=disabledPaths}}`);
@@ -172,15 +171,15 @@ describe('Integration | Component | one dynamic tree', function () {
     });
   });
 
-  it('allows data change', function (done) {
+  it('allows data change', async function (done) {
     let newTextValue = 'text';
     let valuesChangedHandler = sinon.spy();
 
-    this.on('valuesChanged', valuesChangedHandler);
-    this.render(hbs `
-      {{one-dynamic-tree 
+    this.set('valuesChanged', valuesChangedHandler);
+    await render(hbs `
+      {{one-dynamic-tree
         definition=definition
-        valuesChanged=(action "valuesChanged")}}`);
+        valuesChanged=(action valuesChanged)}}`);
 
     fillIn('input[type="text"]', newTextValue).then(() => {
       let newValues = this.get('values');
@@ -193,18 +192,18 @@ describe('Integration | Component | one dynamic tree', function () {
 
   it(
     'marks "select all" toggle as semi-checked when not all nested toggles are checked',
-    function () {
-      this.render(hbs `
-        {{one-dynamic-tree 
+    async function () {
+      await render(hbs `
+        {{one-dynamic-tree
           definition=definition}}`);
 
       expect(this.$('.field-node2')).to.have.class('maybe');
     }
   );
 
-  it('allows to select all nested checkbox fields', function (done) {
-    this.render(hbs `
-      {{one-dynamic-tree 
+  it('allows to select all nested checkbox fields', async function (done) {
+    await render(hbs `
+      {{one-dynamic-tree
         definition=definition}}`);
 
     click('.field-node2').then(() => {
@@ -216,10 +215,10 @@ describe('Integration | Component | one dynamic tree', function () {
   });
 
   it('does not ignore disabled toggle state in "select all" toggle state',
-    function () {
+    async function () {
       this.set('disabledPaths', A(['node2.node21']));
-      this.render(hbs `
-        {{one-dynamic-tree 
+      await render(hbs `
+        {{one-dynamic-tree
           definition=definition
           disabledFieldsPaths=disabledPaths}}`);
       expect(this.$('.field-node2')).to.have.class('maybe');
@@ -227,10 +226,10 @@ describe('Integration | Component | one dynamic tree', function () {
   );
 
   it('ignores disabled toggle on "select all" toggle change',
-    function (done) {
+    async function (done) {
       this.set('disabledPaths', A(['node2.node22']));
-      this.render(hbs `
-        {{one-dynamic-tree 
+      await render(hbs `
+        {{one-dynamic-tree
           definition=definition
           disabledFieldsPaths=disabledPaths}}`);
 
@@ -248,19 +247,19 @@ describe('Integration | Component | one dynamic tree', function () {
     }
   );
 
-  it('allows to override tree values', function (done) {
+  it('allows to override tree values', async function (done) {
     let treeValues;
     this.set('overrideValues', undefined);
-    this.on('valuesChanged', (values) => {
+    this.set('valuesChanged', (values) => {
       if (!treeValues) {
         treeValues = values;
       }
     });
-    this.render(hbs `
-      {{one-dynamic-tree 
+    await render(hbs `
+      {{one-dynamic-tree
         definition=definition
         overrideValues=overrideValues
-        valuesChanged=(action "valuesChanged")}}
+        valuesChanged=(action valuesChanged)}}
     `);
     const overrideValue = 'override';
     fillIn('.field-node1-node11', 'test').then(() => {
@@ -274,19 +273,19 @@ describe('Integration | Component | one dynamic tree', function () {
     });
   });
 
-  it('shows modification state', function (done) {
+  it('shows modification state', async function (done) {
     let treeValues;
     this.set('compareValues', undefined);
-    this.on('valuesChanged', (values) => {
+    this.set('valuesChanged', (values) => {
       if (!treeValues) {
         treeValues = values;
       }
     });
-    this.render(hbs `
-      {{one-dynamic-tree 
+    await render(hbs `
+      {{one-dynamic-tree
         definition=definition
         compareValues=compareValues
-        valuesChanged=(action "valuesChanged")}}
+        valuesChanged=(action valuesChanged)}}
     `);
     const compareValue = 'compare';
     fillIn('.field-node1-node11', 'test').then(() => {

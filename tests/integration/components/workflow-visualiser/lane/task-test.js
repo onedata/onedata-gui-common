@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, before, beforeEach, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
@@ -23,18 +24,16 @@ const taskActionsSpec = [{
 }];
 
 describe('Integration | Component | workflow visualiser/lane/task', function () {
-  setupComponentTest('workflow-visualiser/lane/task', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('task', Task.create({
-      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+      actionsFactory: ActionsFactory.create({ ownerSource: this.owner }),
     }));
   });
 
-  it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', function () {
-    render(this);
+  it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', async function () {
+    await renderComponent();
 
     expect(this.$().children()).to.have.length(1);
     expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-task')
@@ -63,26 +62,26 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
     it('does not allow to modify task name', async function () {
       this.set('task.name', 'my-task');
-      render(this);
+      await renderComponent();
 
       // .one-label is a trigger for one-inline-editor
       expect(this.$('.task-name .one-label')).to.not.exist;
     });
 
-    it('does not render actions', function () {
-      render(this);
+    it('does not render actions', async function () {
+      await renderComponent();
 
       expect(this.$('.task-actions-trigger')).to.not.exist;
     });
 
-    it('has collapsed details section by default', function () {
-      render(this);
+    it('has collapsed details section by default', async function () {
+      await renderComponent();
 
       expect(this.$('.task-details-collapse')).to.not.have.class('in');
     });
 
     it('expands details section on task click', async function () {
-      render(this);
+      await renderComponent();
       await expandDetails();
 
       expect(this.$('.task-details-collapse')).to.have.class('in');
@@ -101,7 +100,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
           },
         },
       });
-      render(this);
+      await renderComponent();
       await expandDetails();
 
       const $entries = this.$('.detail-entry');
@@ -137,7 +136,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         return resolve({ status: 'done' });
       });
       this.set('task.instanceId', 'someId');
-      render(this);
+      await renderComponent();
       await expandDetails();
 
       await click('.copy-record-id-action-trigger');
@@ -163,7 +162,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
           });
         },
       });
-      render(this);
+      await renderComponent();
 
       await click('.task-name .one-label');
       await fillIn('.task-name input', 'new-name');
@@ -173,7 +172,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     });
 
     it('renders actions', async function () {
-      render(this);
+      await renderComponent();
 
       const $actionsTrigger = this.$('.task-actions-trigger');
       expect($actionsTrigger).to.exist;
@@ -197,7 +196,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         .setGetTaskModificationDataCallback(detailsProviderStub);
       const onModifySpy = sinon.stub().resolves();
       this.set('task.onModify', onModifySpy);
-      render(this);
+      await renderComponent();
 
       await click('.task-actions-trigger');
       await click($('body .webui-popover.in .modify-task-action-trigger')[0]);
@@ -213,7 +212,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     it('allows to remove task', async function () {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('task.onRemove', onRemoveSpy);
-      render(this);
+      await renderComponent();
 
       await click('.task-actions-trigger');
       await click($('body .webui-popover.in .remove-task-action-trigger')[0]);
@@ -222,12 +221,12 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('task'));
     });
 
-    it('it does not show status', function () {
+    it('it does not show status', async function () {
       setProperties(this.get('task'), {
         name: 'my-task',
         status: 'finished',
       });
-      render(this);
+      await renderComponent();
 
       expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-finished');
     });
@@ -235,11 +234,11 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 });
 
 function itShowsTaskName() {
-  it('shows task name', function () {
+  it('shows task name', async function () {
     const taskName = 'task1';
     this.set('task.name', taskName);
 
-    render(this);
+    await renderComponent();
 
     expect(this.$('.task-name').text().trim()).to.equal(taskName);
   });
@@ -249,7 +248,7 @@ function itShowsStatus(status, statusTranslation) {
   it(`shows "${status}" status`, async function () {
     this.set('task.status', status);
 
-    render(this);
+    await renderComponent();
     await expandDetails();
 
     expect(this.$('.workflow-visualiser-task')).to.have.class(`status-${status}`);
@@ -258,8 +257,8 @@ function itShowsStatus(status, statusTranslation) {
   });
 }
 
-function render(testCase) {
-  testCase.render(hbs `
+async function renderComponent() {
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser/lane/task elementModel=task}}
   `);

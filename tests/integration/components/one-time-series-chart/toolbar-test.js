@@ -17,9 +17,9 @@ import { all as allFulfilled } from 'rsvp';
 import { render } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart/toolbar', function () {
-  const hooks = setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
-  hooks.afterEach(function () {
+  afterEach(function () {
     const models = this.get('models');
     if (models) {
       models.forEach(model => model.destroy());

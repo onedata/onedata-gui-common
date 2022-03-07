@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import RemoveLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-lane-action';
@@ -14,14 +15,12 @@ import { Promise } from 'rsvp';
 const laneName = 'lane1';
 
 describe('Integration | Utility | workflow visualiser/actions/remove lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({ name: laneName });
     const action = RemoveLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { lane },
     });
     this.setProperties({ lane, action });
@@ -97,7 +96,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove lane action
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };

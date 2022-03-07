@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { click, fillIn } from 'ember-native-dom-helpers';
@@ -8,12 +9,10 @@ import sinon from 'sinon';
 import $ from 'jquery';
 
 describe('Integration | Component | one collapsible list', function () {
-  setupComponentTest('one-collapsible-list', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders items with headers', function () {
-    this.render(hbs `
+  it('renders items with headers', async function () {
+    await render(hbs `
     {{#one-collapsible-list class="some-list" as |list|}}
       {{#list.item class="some-item" as |listItem|}}
         {{#listItem.header class="some-header"}}
@@ -34,17 +33,17 @@ describe('Integration | Component | one collapsible list', function () {
     expect($('.some-content')).to.contain('some content');
   });
 
-  it('handles item select', function (done) {
+  it('handles item select', async function (done) {
     let itemValue = 1;
     this.set('itemValue', itemValue);
 
     let selectionChangedSpy = sinon.spy();
-    this.on('selectionChanged', selectionChangedSpy);
+    this.set('selectionChanged', selectionChangedSpy);
 
-    this.render(hbs `
+    await render(hbs `
     {{#one-collapsible-list
       hasCheckboxes=true
-      selectionChanged=(action "selectionChanged")
+      selectionChanged=(action selectionChanged)
       as |list|}}
       {{#list.item selectionValue=itemValue as |listItem|}}
         {{#listItem.header class="first-item-header"}}
@@ -70,17 +69,17 @@ describe('Integration | Component | one collapsible list', function () {
     });
   });
 
-  it('handles item deselect', function (done) {
+  it('handles item deselect', async function (done) {
     let itemValue = 1;
     this.set('itemValue', itemValue);
 
     let selectionChangedSpy = sinon.spy();
-    this.on('selectionChanged', selectionChangedSpy);
+    this.set('selectionChanged', selectionChangedSpy);
 
-    this.render(hbs `
+    await render(hbs `
     {{#one-collapsible-list
       hasCheckboxes=true
-      selectionChanged=(action "selectionChanged")
+      selectionChanged=(action selectionChanged)
       as |list|}}
       {{#list.item selectionValue=itemValue as |listItem|}}
         {{#listItem.header class="first-item-header"}}
@@ -105,14 +104,14 @@ describe('Integration | Component | one collapsible list', function () {
     });
   });
 
-  it('ignores item selection if selectionValue is not set', function (done) {
+  it('ignores item selection if selectionValue is not set', async function (done) {
     let selectionChangedSpy = sinon.spy();
-    this.on('selectionChanged', selectionChangedSpy);
+    this.set('selectionChanged', selectionChangedSpy);
 
-    this.render(hbs `
+    await render(hbs `
     {{#one-collapsible-list
       hasCheckboxes=true
-      selectionChanged=(action "selectionChanged")
+      selectionChanged=(action selectionChanged)
       as |list|}}
       {{#list.item as |listItem|}}
         {{#listItem.header class="first-item-header"}}
@@ -134,14 +133,14 @@ describe('Integration | Component | one collapsible list', function () {
     });
   });
 
-  it('can select all items', function (done) {
+  it('can select all items', async function (done) {
     let selectionChangedSpy = sinon.spy();
-    this.on('selectionChanged', selectionChangedSpy);
+    this.set('selectionChanged', selectionChangedSpy);
 
-    this.render(hbs `
+    await render(hbs `
     {{#one-collapsible-list
       hasCheckboxes=true
-      selectionChanged=(action "selectionChanged")
+      selectionChanged=(action selectionChanged)
       as |list|}}
       {{list.header}}
       {{#list.item selectionValue=1 as |listItem|}}
@@ -168,8 +167,8 @@ describe('Integration | Component | one collapsible list', function () {
     });
   });
 
-  it('can filter items', function (done) {
-    this.render(hbs `
+  it('can filter items', async function (done) {
+    await render(hbs `
      {{#one-collapsible-list as |list|}}
       {{list.header}}
       {{#list.item as |listItem|}}
@@ -191,8 +190,8 @@ describe('Integration | Component | one collapsible list', function () {
     });
   });
 
-  it('shows filtered out and checked items', function (done) {
-    this.render(hbs `
+  it('shows filtered out and checked items', async function (done) {
+    await render(hbs `
     {{#one-collapsible-list
       hasCheckboxes=true
       as |list|}}

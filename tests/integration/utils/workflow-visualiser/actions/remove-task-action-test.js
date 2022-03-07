@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
 import RemoveTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-task-action';
@@ -14,14 +15,12 @@ import { Promise } from 'rsvp';
 const taskName = 'task1';
 
 describe('Integration | Utility | workflow visualiser/actions/remove task action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const task = Task.create({ name: taskName });
     const action = RemoveTaskAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { task },
     });
     this.setProperties({ task, action });
@@ -97,7 +96,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove task action
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };

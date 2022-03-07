@@ -1,26 +1,24 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import $ from 'jquery';
+import { registerService } from '../../helpers/stub-service';
 
 import EventsBusStub from 'dummy/tests/helpers/events-bus-stub';
 
 describe('Integration | Component | one tree', function () {
-  setupComponentTest('one-tree', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    this.register('service:events-bus', EventsBusStub);
-    this.inject.service('events-bus', { as: 'eventsBus' });
-    let eventsBus = this.container.lookup('service:events-bus');
+    const eventsBus = this.set('eventsBus', registerService(this, 'events-bus', EventsBusStub));
     eventsBus.set('callbacks', []);
   });
 
-  it('renders content in a tree', function () {
-    this.render(hbs `
+  it('renders content in a tree', async function () {
+    await render(hbs `
       {{#one-tree as |tree|}}
         {{#tree.item class="item" as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -32,7 +30,7 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item2.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
@@ -45,8 +43,8 @@ describe('Integration | Component | one tree', function () {
     expect($(subtreeDirectItems[0]).text()).to.contain('item2.1');
   });
 
-  it('collapses/expands subtrees', function (done) {
-    this.render(hbs `
+  it('collapses/expands subtrees', async function (done) {
+    await render(hbs `
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content class="item-content"}}item1{{/item.content}}
@@ -55,7 +53,7 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item1.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
     let subtree = this.$('.subtree');
@@ -69,8 +67,8 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('collapses children recursively when collapseRecursively==true', function (done) {
-    this.render(hbs `
+  it('collapses children recursively when collapseRecursively==true', async function (done) {
+    await render(hbs `
       {{#one-tree collapseRecursively=true as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content class="first-level-item-content"}}item1{{/item.content}}
@@ -84,7 +82,7 @@ describe('Integration | Component | one tree', function () {
               {{/subitem.subtree}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
@@ -110,8 +108,8 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('does not collapse children recursively', function (done) {
-    this.render(hbs `
+  it('does not collapse children recursively', async function (done) {
+    await render(hbs `
       {{#one-tree as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content class="first-level-item-content"}}item1{{/item.content}}
@@ -125,7 +123,7 @@ describe('Integration | Component | one tree', function () {
               {{/subitem.subtree}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
@@ -150,10 +148,10 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('expands/collapses subtree after eventsBus trigger', function (done) {
-    let eventsBus = this.container.lookup('service:events-bus');
+  it('expands/collapses subtree after eventsBus trigger', async function (done) {
+    const eventsBus = this.get('eventsBus');
 
-    this.render(hbs `
+    await render(hbs `
       {{#one-tree key="root" as |tree|}}
         {{#tree.item key="item1" class="item1" as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -162,7 +160,7 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item1.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
@@ -175,10 +173,10 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('toggles subtree after eventsBus trigger', function (done) {
-    let eventsBus = this.container.lookup('service:events-bus');
+  it('toggles subtree after eventsBus trigger', async function (done) {
+    const eventsBus = this.get('eventsBus');
 
-    this.render(hbs `
+    await render(hbs `
       {{#one-tree key="root" as |tree|}}
         {{#tree.item key="item1" as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -187,7 +185,7 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item1.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
@@ -204,10 +202,10 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('expands deeply nested subtree after eventsBus trigger', function (done) {
-    let eventsBus = this.container.lookup('service:events-bus');
+  it('expands deeply nested subtree after eventsBus trigger', async function (done) {
+    const eventsBus = this.get('eventsBus');
 
-    this.render(hbs `
+    await render(hbs `
       {{#one-tree key="root" as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content}}item1{{/item.content}}
@@ -221,7 +219,7 @@ describe('Integration | Component | one tree', function () {
               {{/subitem.subtree}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
@@ -237,8 +235,8 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('filters items', function (done) {
-    this.render(hbs `
+  it('filters items', async function (done) {
+    await render(hbs `
       {{#one-tree searchQuery="item2" as |tree|}}
         {{#tree.item class="item1" as |item|}}
           {{#item.content}}item1aaa{{/item.content}}
@@ -260,8 +258,8 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('does not filter nested items in items, that match', function (done) {
-    this.render(hbs `
+  it('does not filter nested items in items, that match', async function (done) {
+    await render(hbs `
       {{#one-tree searchQuery="item1" as |tree|}}
         {{#tree.item class="item1" as |item|}}
           {{#item.content}}item1aaa{{/item.content}}
@@ -280,8 +278,8 @@ describe('Integration | Component | one tree', function () {
     });
   });
 
-  it('highlights parents of items matched by filter', function (done) {
-    this.render(hbs `
+  it('highlights parents of items matched by filter', async function (done) {
+    await render(hbs `
       {{#one-tree searchQuery="item1" as |tree|}}
         {{#tree.item as |item|}}
           {{#item.content class="item1-content"}}item1{{/item.content}}

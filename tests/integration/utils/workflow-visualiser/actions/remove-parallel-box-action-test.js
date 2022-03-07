@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import RemoveParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-box-action';
@@ -14,14 +15,12 @@ import { Promise } from 'rsvp';
 const parallelBoxName = 'box1';
 
 describe('Integration | Utility | workflow visualiser/actions/remove parallel box action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const parallelBox = ParallelBox.create({ name: parallelBoxName });
     const action = RemoveParallelBoxAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { parallelBox },
     });
     this.setProperties({ parallelBox, action });
@@ -97,7 +96,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove parallel bo
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };

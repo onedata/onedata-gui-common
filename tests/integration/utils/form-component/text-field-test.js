@@ -2,14 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form component/text field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('defines inputType as "text"', function () {
     const textField = TextField.create();
@@ -35,7 +33,7 @@ describe('Integration | Utility | form component/text field', function () {
     'has format validation error when regex is defined and value does not match',
     function () {
       const textField = TextField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         regex: /^abc$/,
         name: 'a',
         valuesSource: {
@@ -53,7 +51,7 @@ describe('Integration | Utility | form component/text field', function () {
     'does not have format validation error when regex is defined and value matches',
     function () {
       const textField = TextField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         regex: /^abc$/,
         name: 'a',
         valuesSource: {
@@ -69,7 +67,7 @@ describe('Integration | Utility | form component/text field', function () {
     'does not have validation error when regex is defined, isOptional is true and value is empty',
     function () {
       const textField = TextField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         isOptional: true,
         regex: /^abc$/,
       });
@@ -84,7 +82,7 @@ describe('Integration | Utility | form component/text field', function () {
       .returns('field tip');
 
     const field = TextField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });
@@ -98,7 +96,7 @@ describe('Integration | Utility | form component/text field', function () {
       .returns('<missing-...');
 
     const field = TextField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
     });

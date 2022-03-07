@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-store-action';
 import { get } from '@ember/object';
@@ -12,9 +13,7 @@ import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 
 describe('Integration | Utility | workflow visualiser/actions/modify store action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({
@@ -29,7 +28,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
       requiresInitialContent: false,
     });
     const action = ModifyStoreAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { store },
     });
     this.setProperties({ store, action });
@@ -92,7 +91,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };

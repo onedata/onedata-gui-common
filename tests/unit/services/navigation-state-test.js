@@ -54,7 +54,7 @@ const MediaStub = Service.extend({
 });
 
 describe('Unit | Service | navigation state', function () {
-  setupTest('service:navigation-state', {});
+  setupTest();
 
   beforeEach(function () {
     registerService(this, 'i18n', I18nStub);
@@ -64,21 +64,21 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('detects sidebar content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.index');
     expect(service.get('activeContentLevel')).to.equal('sidebar');
   });
 
   it('detects contentIndex content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.index');
     expect(service.get('activeContentLevel')).to.equal('contentIndex');
   });
 
   it('detects index content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.aspect');
     service.set('activeAspect', 'index');
@@ -86,7 +86,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('detects aspect content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.aspect');
     service.set('activeAspect', testAspect);
@@ -94,7 +94,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global bar title for sidebar content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.index');
     service.set('activeResourceType', 'spaces');
@@ -102,7 +102,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global bar title for contentIndex level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.index');
     service.set('activeResourceType', 'spaces');
@@ -111,7 +111,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global bar title for index level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.aspect');
     service.set('activeResourceType', 'spaces');
@@ -122,7 +122,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global bar title for aspect content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.aspect');
     service.set('activeResourceType', 'spaces');
@@ -133,7 +133,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global actions for sidebar content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.index');
     service.set('activeResourceType', 'spaces');
@@ -143,7 +143,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global actions for contentIndex content level', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.index');
     service.set('activeResourceType', 'spaces');
@@ -154,7 +154,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global actions for aspect content level (mobile mode)', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.aspect');
     service.set('activeResourceType', 'spaces');
@@ -170,7 +170,7 @@ describe('Unit | Service | navigation state', function () {
   });
 
   it('prepares global actions for aspect content level (tablet mode)', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     const router = lookupService(this, 'router');
     router.set('currentRouteName', 'onedata.sidebar.content.aspect');
     service.set('activeResourceType', 'spaces');
@@ -191,7 +191,7 @@ describe('Unit | Service | navigation state', function () {
   });
   
   it('parses aspect options with multiple dots', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:navigation-state');
     service.set('aspectOptionsString', 'hello.world......other.value');
   });
 });

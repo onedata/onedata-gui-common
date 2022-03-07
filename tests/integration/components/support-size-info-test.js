@@ -2,15 +2,14 @@ import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | support size info', function () {
-  setupComponentTest('support-size-info', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('data', A([
@@ -29,16 +28,16 @@ describe('Integration | Component | support size info', function () {
     ]));
   });
 
-  it('renders total support size', function () {
-    this.render(hbs `
+  it('renders total support size', async function () {
+    await render(hbs `
       {{support-size-info data=data}}
     `);
 
     expect(this.$('.support-size')).to.contain('2 MiB');
   });
 
-  it('renders support size chart', function (done) {
-    this.render(hbs `
+  it('renders support size chart', async function (done) {
+    await render(hbs `
       {{support-size-info data=data}}
     `);
     wait().then(() => {
@@ -50,8 +49,8 @@ describe('Integration | Component | support size info', function () {
     });
   });
 
-  it('renders support size table', function (done) {
-    this.render(hbs `
+  it('renders support size table', async function (done) {
+    await render(hbs `
       {{support-size-info
         data=data
         supporterNameHeader="Provider"

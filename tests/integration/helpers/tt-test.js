@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import EmberObject from '@ember/object';
@@ -13,15 +14,13 @@ const I18nStub = Service.extend({
 });
 
 describe('Integration | Helper | tt', function () {
-  setupComponentTest('tt', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     registerService(this, 'i18n', I18nStub);
   });
 
-  it('renders translated text', function () {
+  it('renders translated text', async function () {
     const FakeComponent = EmberObject.extend(I18n);
     this.set('comp', FakeComponent.create({
       i18nPrefix: 'hello.world',
@@ -31,7 +30,7 @@ describe('Integration | Helper | tt', function () {
       .withArgs('hello.world.foo.bar')
       .returns('Two worlds');
 
-    this.render(hbs `{{tt comp "foo.bar"}}`);
+    await render(hbs `{{tt comp "foo.bar"}}`);
 
     expect(this.$().text().trim()).to.equal('Two worlds');
   });

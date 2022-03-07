@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import _ from 'lodash';
@@ -29,12 +30,10 @@ function getMapObject(context) {
 }
 
 describe('Integration | Component | one map', function () {
-  setupComponentTest('one-map', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('shows whole world map by default', function () {
-    this.render(hbs `
+  it('shows whole world map by default', async function () {
+    await render(hbs `
       <div style="width: 1400px; height: 700px">
         {{one-map}}
       </div>
@@ -48,12 +47,12 @@ describe('Integration | Component | one map', function () {
     );
   });
 
-  it('notifies after map viewport change', function () {
+  it('notifies after map viewport change', async function () {
     const spy = sinon.spy();
-    this.on('spy', spy);
-    this.render(hbs `
+    this.set('spy', spy);
+    await render(hbs `
       <div style="width: 1400px; height: 700px">
-        {{one-map onViewportChange=(action "spy")}}
+        {{one-map onViewportChange=(action spy)}}
       </div>
     `);
     const mapObject = getMapObject(this);
@@ -72,13 +71,13 @@ describe('Integration | Component | one map', function () {
 
   it(
     'triggers window event on viewport change if event has been specified',
-    function () {
+    async function () {
       const eventSpy = sinon.spy();
       const _window = {
         dispatchEvent: eventSpy,
       };
       this.set('_window', _window);
-      this.render(hbs `
+      await render(hbs `
         <div style="width: 1400px; height: 700px">
           {{one-map _window=_window triggerWindowEventName="mapTestResize"}}
         </div>
@@ -87,13 +86,13 @@ describe('Integration | Component | one map', function () {
     }
   );
 
-  it('allows to setup initial viewport state (zoom on Poland)', function () {
+  it('allows to setup initial viewport state (zoom on Poland)', async function () {
     this.set('initialState', {
       lat: 50,
       lng: 20,
       scale: 7,
     });
-    this.render(hbs `
+    await render(hbs `
       <div style="width: 1400px; height: 700px">
         {{one-map initialState=initialState}}
       </div>
@@ -104,8 +103,8 @@ describe('Integration | Component | one map', function () {
     expect(isElementVisible(this, this.$('[data-code="KZ"]'))).to.be.false;
   });
 
-  it('positions content using position component', function () {
-    this.render(hbs `
+  it('positions content using position component', async function () {
+    await render(hbs `
       <div style="width: 1400px; height: 700px">
         {{#one-map as |map|}}
           {{#map.position latitude=50 longitude=20}}

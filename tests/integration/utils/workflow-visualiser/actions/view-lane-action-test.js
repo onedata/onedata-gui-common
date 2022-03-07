@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ViewLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-action';
 import { get, getProperties } from '@ember/object';
@@ -11,9 +12,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
 describe('Integration | Utility | workflow visualiser/actions/view lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -26,7 +25,7 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
       },
     });
     const action = ViewLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         definedStores: [
           Store.create({
@@ -79,7 +78,7 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, context, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
 import hbs from 'htmlbars-inline-precompile';
 import {
@@ -18,9 +19,7 @@ import { click } from 'ember-native-dom-helpers';
 import suppressRejections from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | modals/record selector modal', function () {
-  setupComponentTest('modals/record-selector-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     // space is before group to test sorting records by name
@@ -235,13 +234,13 @@ class RecordHelper extends EmberPowerSelectHelper {
   }
 }
 
-function showModal(testCase) {
+async function showModal(testCase) {
   const {
     modalManager,
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   return modalManager.show('record-selector-modal', modalOptions).shownPromise;
 }

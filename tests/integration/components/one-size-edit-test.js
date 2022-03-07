@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
@@ -14,20 +15,18 @@ class SizeUnitSelectHelper extends EmberPowerSelectHelper {
 }
 
 describe('Integration | Component | one size edit', function () {
-  setupComponentTest('one-size-edit', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('displays size number and unit in display mode', function () {
+  it('displays size number and unit in display mode', async function () {
     this.set('value', 3 * Math.pow(1024, 3));
-    this.render(hbs `{{one-size-edit value=value}}`);
+    await render(hbs `{{one-size-edit value=value}}`);
     expect(this.$('.size-number-input').val(), 'size number').to.equal('3 GiB');
   });
 
   it('sets the size number and selector to proper size unit when editing',
-    function () {
+    async function () {
       this.set('value', 3 * Math.pow(1024, 3));
-      this.render(hbs `{{one-size-edit value=value forceStartEdit=true}}`);
+      await render(hbs `{{one-size-edit value=value forceStartEdit=true}}`);
       return wait()
         .then(() => {
           expect(this.$('.size-number-input').val(), 'size number')
@@ -41,13 +40,11 @@ describe('Integration | Component | one size edit', function () {
     }
   );
 
-  it('submits the bytes value to provided onSave action', function () {
+  it('submits the bytes value to provided onSave action', async function () {
     this.set('value', 1 * Math.pow(1024, 2));
     const onSave = sinon.stub().resolves();
     this.set('onSave', onSave);
-    this.render(
-      hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`
-    );
+    await render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
 
     return wait()
       .then(() => {

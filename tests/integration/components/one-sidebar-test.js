@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { get, computed } from '@ember/object';
@@ -8,9 +9,7 @@ import sinon from 'sinon';
 import { lookupService } from '../../helpers/stub-service';
 
 describe('Integration | Component | one sidebar', function () {
-  setupComponentTest('one-sidebar', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     clearLocalStorage();
@@ -32,14 +31,14 @@ describe('Integration | Component | one sidebar', function () {
     clearLocalStorage();
   });
 
-  it('has class "one-sidebar"', function () {
-    this.render(hbs `{{one-sidebar}}`);
+  it('has class "one-sidebar"', async function () {
+    await render(hbs `{{one-sidebar}}`);
 
     expect(this.$('.one-sidebar')).to.exist;
   });
 
-  it('lists resources passed via model', function () {
-    this.render(hbs `{{one-sidebar model=model}}`);
+  it('lists resources passed via model', async function () {
+    await render(hbs `{{one-sidebar model=model}}`);
 
     const $items = this.$('.resource-item');
     expect($items).to.have.length(2);
@@ -47,8 +46,8 @@ describe('Integration | Component | one sidebar', function () {
     expect($items.eq(1).text().trim()).to.equal('res2');
   });
 
-  it('allows to filter using search-bar', function () {
-    this.render(hbs `{{one-sidebar model=model}}`);
+  it('allows to filter using search-bar', async function () {
+    await render(hbs `{{one-sidebar model=model}}`);
 
     return fillIn('.search-bar', '1')
       .then(() => {
@@ -60,8 +59,8 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'does not render "Hide advanced filters" link, when advancedFiltersComponent is not set',
-    function () {
-      this.render(hbs `{{one-sidebar model=model}}`);
+    async function () {
+      await render(hbs `{{one-sidebar model=model}}`);
 
       expect(this.$('.toggle-more-filters')).to.not.exist;
     }
@@ -69,8 +68,8 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'renders "Hide advanced filters" link, when advancedFiltersComponent is set',
-    function () {
-      this.render(hbs `{{one-sidebar
+    async function () {
+      await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -83,8 +82,8 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'changes "Hide advanced filters" link to "Show advanced filters" after click',
-    function () {
-      this.render(hbs `{{one-sidebar
+    async function () {
+      await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -98,8 +97,8 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'shows component specified by advancedFiltersComponent on initial render',
-    function () {
-      this.render(hbs `{{one-sidebar
+    async function () {
+      await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -110,8 +109,8 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'does not show component specified by advancedFiltersComponent after "Hide advanced filters" click',
-    function () {
-      this.render(hbs `{{one-sidebar
+    async function () {
+      await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
       }}`);
@@ -123,8 +122,8 @@ describe('Integration | Component | one sidebar', function () {
     }
   );
 
-  it('passes collection to advancedFiltersComponent component', function () {
-    this.render(hbs `{{one-sidebar
+  it('passes collection to advancedFiltersComponent component', async function () {
+    await render(hbs `{{one-sidebar
       model=model
       advancedFiltersComponent="test-component"
     }}`);
@@ -133,7 +132,7 @@ describe('Integration | Component | one sidebar', function () {
     expect(get(testComponent, 'collection')).to.have.length(2);
   });
 
-  it('saves changed advanced filters into advancedFilters property', function () {
+  it('saves changed advanced filters into advancedFilters property', async function () {
     const filterChangeSpy = sinon.spy();
     const advancedFilters = computed({
       get() {
@@ -143,7 +142,7 @@ describe('Integration | Component | one sidebar', function () {
     });
     this.set('advancedFilters', advancedFilters);
     const filters = { filter: 'a' };
-    this.render(hbs `{{one-sidebar
+    await render(hbs `{{one-sidebar
       model=model
       advancedFiltersComponent="test-component"
       advancedFilters=advancedFilters
@@ -154,14 +153,14 @@ describe('Integration | Component | one sidebar', function () {
     expect(filterChangeSpy).to.be.calledWith('advancedFilters', filters);
   });
 
-  it('passes sidebar context while creating sidebar actions', function () {
+  it('passes sidebar context while creating sidebar actions', async function () {
     const collection = this.get('model.collection');
     const getButtonsForSpy = sinon.spy(
       lookupService(this, 'sidebar-resources'),
       'getButtonsFor'
     );
 
-    this.render(hbs `{{one-sidebar
+    await render(hbs `{{one-sidebar
       model=model
       filter="1"
     }}`);
@@ -178,14 +177,14 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'does not render expanded advanced filters when localstorage has key oneSidebar.areAdvancedFiltersVisible == "false"',
-    function () {
+    async function () {
       const _localStorage = {
         getItem: sinon.stub()
           .withArgs('oneSidebar.areAdvancedFiltersVisible').returns('false'),
       };
       this.set('_localStorage', _localStorage);
 
-      this.render(hbs `{{one-sidebar
+      await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
         _localStorage=_localStorage
@@ -201,14 +200,14 @@ describe('Integration | Component | one sidebar', function () {
   ].forEach(value => {
     it(
       `renders expanded advanced filters when localstorage has key oneSidebar.areAdvancedFiltersVisible == ${JSON.stringify(value)}`,
-      function () {
+      async function () {
         const _localStorage = {
           getItem: sinon.stub()
             .withArgs('oneSidebar.areAdvancedFiltersVisible').returns(value),
         };
         this.set('_localStorage', _localStorage);
 
-        this.render(hbs `{{one-sidebar
+        await render(hbs `{{one-sidebar
           model=model
           advancedFiltersComponent="test-component"
           _localStorage=_localStorage
@@ -221,14 +220,14 @@ describe('Integration | Component | one sidebar', function () {
 
   it(
     'remembers advanced filters collapse state in localstorage oneSidebar.areAdvancedFiltersVisible key',
-    function () {
+    async function () {
       const _localStorage = {
         getItem: sinon.stub().returns('true'),
         setItem: sinon.spy(),
       };
       this.set('_localStorage', _localStorage);
 
-      this.render(hbs `{{one-sidebar
+      await render(hbs `{{one-sidebar
         model=model
         advancedFiltersComponent="test-component"
         _localStorage=_localStorage

@@ -2,7 +2,8 @@ import EmberObject from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 import ContentOverflowDetectorMixin from 'onedata-gui-common/mixins/content-overflow-detector';
@@ -12,9 +13,7 @@ const ELEMENT_WIDTH = 500;
 const SIBLING_WIDTH = 300;
 
 describe('Integration | Mixin | content overflow detector', function () {
-  setupComponentTest('content-overflow-detector', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('parentStyle', htmlSafe(`width: ${PARENT_WIDTH}px;`));
@@ -34,12 +33,12 @@ describe('Integration | Mixin | content overflow detector', function () {
     });
   });
 
-  it('detects overflow', function () {
+  it('detects overflow', async function() {
     let ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
-    this.render(hbs `
+    await render(hbs `
       <div class="parent" style={{parentStyle}}>
         <div class="sibling" style={{siblingStyle}}></div>
         <div class="testElement" style={{elementStyle}}></div>
@@ -61,12 +60,12 @@ describe('Integration | Mixin | content overflow detector', function () {
     }
   });
 
-  it('takes additionalOverflowMargin into account', function () {
+  it('takes additionalOverflowMargin into account', async function() {
     let ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
-    this.render(hbs `
+    await render(hbs `
       <div class="parent" style={{parentStyle}}>
         <div class="sibling" style={{siblingStyle}}></div>
         <div class="testElement" style={{elementStyle}}></div>
@@ -83,12 +82,12 @@ describe('Integration | Mixin | content overflow detector', function () {
     }
   });
 
-  it('reacts to window resize', function (done) {
+  it('reacts to window resize', async function(done) {
     let ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
-    this.render(hbs `
+    await render(hbs `
       <div class="parent" style={{parentStyle}}>
         <div class="sibling" style={{siblingStyle}}></div>
         <div class="testElement" style={{elementStyle}}></div>
@@ -115,12 +114,12 @@ describe('Integration | Mixin | content overflow detector', function () {
     });
   });
 
-  it('takes minimumFullWindowSize into account', function (done) {
+  it('takes minimumFullWindowSize into account', async function(done) {
     let ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
     let subject = ContentOverflowDetectorObject.create();
 
-    this.render(hbs `
+    await render(hbs `
       <div class="parent" style={{parentStyle}}>
         <div class="sibling" style={{siblingStyle}}></div>
         <div class="testElement" style={{elementStyle}}></div>

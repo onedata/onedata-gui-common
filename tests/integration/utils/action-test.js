@@ -5,14 +5,12 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import { lookupService } from '../../helpers/stub-service';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import { resolve, reject } from 'rsvp';
 import suppressRejections from '../../helpers/suppress-rejections';
 
 describe('Integration | Utility | action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('throws "not implemented" error on execute() call', function () {
     let error;
@@ -44,7 +42,7 @@ describe('Integration | Utility | action', function () {
     const actionResult = ActionResult.create({ status: 'done' });
     const onExecute = sinon.stub().resolves(actionResult);
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       onExecute,
     });
 
@@ -60,7 +58,7 @@ describe('Integration | Utility | action', function () {
     function () {
       const onExecute = sinon.stub().resolves(123);
       const action = Action.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         onExecute,
       });
 
@@ -79,7 +77,7 @@ describe('Integration | Utility | action', function () {
       const actionResult = ActionResult.create({ status: 'done' });
       const onExecute = sinon.stub().resolves(actionResult);
       const action = Action.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         onExecute,
       });
       let order = [];
@@ -106,7 +104,7 @@ describe('Integration | Utility | action', function () {
       const actionResult = ActionResult.create({ status: 'done' });
       const onExecute = sinon.stub().resolves(actionResult);
       const action = Action.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         onExecute,
       });
       const hook1 = sinon.spy();
@@ -133,7 +131,7 @@ describe('Integration | Utility | action', function () {
       .returns(targetTranslation);
 
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
 
@@ -147,7 +145,7 @@ describe('Integration | Utility | action', function () {
       .returns('<missing-...');
 
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
 
@@ -163,7 +161,7 @@ describe('Integration | Utility | action', function () {
       .returns(targetTranslation);
 
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
 
@@ -182,7 +180,7 @@ describe('Integration | Utility | action', function () {
         .returns(targetTranslation);
 
       const action = Action.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         i18nPrefix: 'prefix',
       });
 
@@ -202,7 +200,7 @@ describe('Integration | Utility | action', function () {
       .returns(targetTranslation);
 
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
     action.notifySuccess(actionResult);
@@ -221,7 +219,7 @@ describe('Integration | Utility | action', function () {
       .returns(targetTranslation);
 
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'prefix',
     });
     action.notifyFailure(actionResult);
@@ -233,7 +231,7 @@ describe('Integration | Utility | action', function () {
   it('notifies about success on notifyResult() with done action result', function () {
     const actionResult = ActionResult.create({ status: 'done' });
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       onExecute: () => resolve(actionResult),
     });
     const notifySuccessSpy = sinon.spy(action, 'notifySuccess');
@@ -245,7 +243,7 @@ describe('Integration | Utility | action', function () {
   it('notifies about failure on notifyResult() with failed action result', function () {
     const actionResult = ActionResult.create({ status: 'failed', error: { a: 1 } });
     const action = Action.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       onExecute: () => resolve(actionResult),
     });
     const notifyFailureSpy = sinon.spy(action, 'notifyFailure');
@@ -262,7 +260,7 @@ describe('Integration | Utility | action', function () {
       function (done) {
         const onExecute = sinon.stub().rejects(123);
         const action = Action.create({
-          ownerSource: this,
+          ownerSource: this.owner,
           onExecute,
         });
 
@@ -282,7 +280,7 @@ describe('Integration | Utility | action', function () {
         const actionResult = ActionResult.create({ status: 'failed', error: { a: 1 } });
         const onExecute = sinon.stub().rejects(actionResult);
         const action = Action.create({
-          ownerSource: this,
+          ownerSource: this.owner,
           onExecute,
         });
 
@@ -302,7 +300,7 @@ describe('Integration | Utility | action', function () {
         const actionResult = ActionResult.create({ status: 'done' });
         const onExecute = sinon.stub().resolves(actionResult);
         const action = Action.create({
-          ownerSource: this,
+          ownerSource: this.owner,
           onExecute,
         });
         const hook1 = sinon.stub().returns(reject(error));

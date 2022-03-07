@@ -1,15 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-record-id-action';
 import { get, getProperties, set } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | clipboard actions/copy record id action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const record = {
@@ -19,7 +17,7 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
       entityId: 'someId',
     };
     const action = CopyRecordIdAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         record,
       },

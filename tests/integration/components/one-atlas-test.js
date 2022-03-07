@@ -1,14 +1,13 @@
 import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | one atlas', function () {
-  setupComponentTest('one-atlas', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('_window', {
@@ -23,10 +22,10 @@ describe('Integration | Component | one atlas', function () {
     });
   });
 
-  it('scales up to parent size', function () {
+  it('scales up to parent size', async function () {
     let size = 400;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
-    this.render(hbs `
+    await render(hbs `
       <div style={{parentStyle}}>
         {{one-atlas _window=_window}}
       </div>
@@ -39,11 +38,11 @@ describe('Integration | Component | one atlas', function () {
     expect(atlas.height()).to.be.lt(size);
   });
 
-  it('fits to parent with horizontal layout', function () {
+  it('fits to parent with horizontal layout', async function () {
     let width = 400;
     let height = 40;
     this.set('parentStyle', htmlSafe(`width: ${width}px; height: ${height}px`));
-    this.render(hbs `
+    await render(hbs `
       <div style={{parentStyle}}>
         {{one-atlas _window=_window}}
       </div>
@@ -55,10 +54,10 @@ describe('Integration | Component | one atlas', function () {
     expect(atlas.width()).to.be.lt(width);
   });
 
-  it('reacts to window resize', function (done) {
+  it('reacts to window resize', async function (done) {
     let size = 400;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
-    this.render(hbs `
+    await render(hbs `
       <div style={{parentStyle}}>
         {{one-atlas _window=_window}}
       </div>
@@ -77,10 +76,10 @@ describe('Integration | Component | one atlas', function () {
   });
 
   it('displays Sydney point in the right down corner of the map',
-    function (done) {
+    async function (done) {
       let size = 400;
       this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
-      this.render(hbs `
+      await render(hbs `
         <div style={{parentStyle}}>
           {{#one-atlas _window=_window as |atlas|}}
             {{#atlas.position latitude=-33 longitude=151 as |position|}}

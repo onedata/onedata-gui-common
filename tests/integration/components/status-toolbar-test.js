@@ -1,16 +1,15 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | status toolbar', function () {
-  setupComponentTest('status-toolbar', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('hides icon if icon `enabled` property is set to false', function () {
-    this.render(hbs `
+  it('hides icon if icon `enabled` property is set to false', async function () {
+    await render(hbs `
       {{#status-toolbar as |toolbar|}}
         {{toolbar.icon icon="space" enabled=false}}
       {{/status-toolbar}}
@@ -18,8 +17,8 @@ describe('Integration | Component | status toolbar', function () {
     expect(this.$('.status-toolbar-icon')).to.be.hidden;
   });
 
-  it('adds a class to icon based on status property', function () {
-    this.render(hbs `
+  it('adds a class to icon based on status property', async function () {
+    await render(hbs `
       {{#status-toolbar as |toolbar|}}
         {{toolbar.icon icon="space" status="some"}}
       {{/status-toolbar}}
@@ -27,8 +26,8 @@ describe('Integration | Component | status toolbar', function () {
     expect(this.$('.status-toolbar-icon')).to.have.class('some');
   });
 
-  it('adds a subicon to status icon', function () {
-    this.render(hbs `
+  it('adds a subicon to status icon', async function () {
+    await render(hbs `
       {{#status-toolbar as |toolbar|}}
         {{toolbar.icon icon="space" subIcon="checkbox" subIconClass="subicon"}}
       {{/status-toolbar}}
@@ -37,12 +36,12 @@ describe('Integration | Component | status toolbar', function () {
     expect(this.$('.oneicon-checkbox')).to.have.class('subicon');
   });
 
-  it('triggers status icon click action', function () {
+  it('triggers status icon click action', async function () {
     let clickOccurred = false;
-    this.on('iconClick', () => clickOccurred = true);
-    this.render(hbs `
+    this.set('iconClick', () => clickOccurred = true);
+    await render(hbs `
       {{#status-toolbar as |toolbar|}}
-        {{toolbar.icon icon="space" clickAction=(action "iconClick")}}
+        {{toolbar.icon icon="space" clickAction=(action iconClick)}}
       {{/status-toolbar}}
     `);
     click('.status-toolbar-icon').then(() => {

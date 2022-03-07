@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -14,12 +15,10 @@ import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
-  setupComponentTest('workflow-visualiser/lane/interblock-space', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
@@ -28,8 +27,8 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 
   it(
     'has classes "workflow-visualiser-interblock-space", "workflow-visualiser-space" and "workflow-visualiser-element"',
-    function () {
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+    async function () {
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -41,10 +40,10 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }
   );
 
-  it('has class "between-parallel-box-space" when "parent" is of type Lane', function () {
+  it('has class "between-parallel-box-space" when "parent" is of type Lane', async function () {
     this.set('blockSpace.parent', Lane.create());
 
-    this.render(hbs `{{workflow-visualiser/lane/interblock-space
+    await render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
     }}`);
 
@@ -52,10 +51,10 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       .to.have.class('between-parallel-box-space');
   });
 
-  it('has class "between-task-space" when "parent" is of type ParallelBox', function () {
+  it('has class "between-task-space" when "parent" is of type ParallelBox', async function () {
     this.set('blockSpace.parent', ParallelBox.create());
 
-    this.render(hbs `{{workflow-visualiser/lane/interblock-space
+    await render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
     }}`);
 
@@ -127,14 +126,14 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 function itIsOfType(type, parent, [elementBefore, elementAfter]) {
   const className = `space-position-${type}`;
   it(`has class "${className}" when ${siblingsDescription(elementBefore, elementAfter)}`,
-    function () {
+    async function () {
       setProperties(this.get('blockSpace'), {
         parent,
         elementBefore,
         elementAfter,
       });
 
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -154,7 +153,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
         parent,
         onAddElement,
       });
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -180,7 +179,7 @@ function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newEl
         parent,
       });
 
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -200,7 +199,7 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
         parent,
       });
 
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 

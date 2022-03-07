@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import wait from 'ember-test-helpers/wait';
@@ -8,21 +9,19 @@ import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
 describe('Integration | Component | one inline editor', function () {
-  setupComponentTest('one-inline-editor', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders value', function () {
+  it('renders value', async function () {
     const value = 'asdf';
     this.set('value', value);
-    this.render(hbs `{{one-inline-editor value=value}}`);
+    await render(hbs `{{one-inline-editor value=value}}`);
     expect(this.$('.one-label').text().trim()).to.equal(value);
   });
 
-  it('shows input with value after text click', function (done) {
+  it('shows input with value after text click', async function (done) {
     const value = 'asdf';
     this.set('value', value);
-    this.render(hbs `{{one-inline-editor value=value}}`);
+    await render(hbs `{{one-inline-editor value=value}}`);
     click('.one-label').then(() => {
       const input = this.$('input');
       expect(input).to.exist;
@@ -31,10 +30,10 @@ describe('Integration | Component | one inline editor', function () {
     });
   });
 
-  it('allows to cancel edition', function (done) {
+  it('allows to cancel edition', async function (done) {
     const value = 'asdf';
     this.set('value', value);
-    this.render(hbs `{{one-inline-editor value=value}}`);
+    await render(hbs `{{one-inline-editor value=value}}`);
     click('.one-label').then(() => {
       fillIn('input', 'anotherValue').then(() => {
         click('.cancel-icon').then(() => {
@@ -45,14 +44,14 @@ describe('Integration | Component | one inline editor', function () {
     });
   });
 
-  it('saves edited value', function (done) {
+  it('saves edited value', async function (done) {
     const value = 'asdf';
     this.set('value', value);
     let promiseResolve;
     const saveSpy = sinon.spy(() =>
       new Promise((resolve) => promiseResolve = resolve));
-    this.on('save', saveSpy);
-    this.render(hbs `{{one-inline-editor value=value onSave=(action "save")}}`);
+    this.set('save', saveSpy);
+    await render(hbs `{{one-inline-editor value=value onSave=(action save)}}`);
     click('.one-label').then(() => {
       const newValue = 'anotherValue';
       fillIn('input', 'anotherValue').then(() => {
@@ -73,12 +72,12 @@ describe('Integration | Component | one inline editor', function () {
     });
   });
 
-  it('sends onInputValueChanged action with current value', function () {
+  it('sends onInputValueChanged action with current value', async function () {
     const value = 'asdf';
     this.set('value', value);
     const onInputChanged = sinon.spy();
-    this.on('onInputValueChanged', onInputChanged);
-    this.render(hbs `{{one-inline-editor value=value onInputValueChanged=(action "onInputValueChanged")}}`);
+    this.set('onInputValueChanged', onInputChanged);
+    await render(hbs `{{one-inline-editor value=value onInputValueChanged=(action onInputValueChanged)}}`);
     return click('.one-label').then(() => {
       return fillIn('input', 'anotherValue').then(() => {
         expect(onInputChanged).to.be.calledTwice;

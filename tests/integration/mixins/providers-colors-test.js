@@ -1,19 +1,16 @@
 import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import { A } from '@ember/array';
 import ComponentsProvidersColorsMixin from 'onedata-gui-common/mixins/components/providers-colors';
-import { getOwner } from '@ember/application';
 import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { Promise } from 'rsvp';
 
 describe('Integration | Mixin | components/providers colors', function () {
-  setupComponentTest('components/providers-colors', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it('detects overflow', function () {
     const ID_1 = 'dasdfsafe30rq3j8';
@@ -21,7 +18,7 @@ describe('Integration | Mixin | components/providers colors', function () {
       ComponentsProvidersColorsMixin
     );
     const subject = ComponentsProvidersColorsObject.create(
-      getOwner(this).ownerInjection(), {
+      this.owner.ownerInjection(), {
         providersProxy: PromiseArray.create({
           promise: Promise.resolve(A([
             PromiseObject.create({

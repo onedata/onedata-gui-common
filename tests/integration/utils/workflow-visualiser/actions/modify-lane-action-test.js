@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModifyLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-action';
 import { get, getProperties } from '@ember/object';
@@ -14,9 +15,7 @@ import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import { selectChoose } from '../../../../helpers/ember-power-select';
 
 describe('Integration | Utility | workflow visualiser/actions/modify lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -28,7 +27,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
       },
     });
     const action = ModifyLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         definedStores: [
           Store.create({
@@ -128,7 +127,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
   await wait();
   return { resultPromise };
