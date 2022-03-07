@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
@@ -11,7 +11,7 @@ import { Promise, resolve, reject } from 'rsvp';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Utility | form component/loading field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/loading-field"', function () {
     const field = LoadingField.create();

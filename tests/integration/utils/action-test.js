@@ -5,12 +5,12 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import { lookupService } from '../../helpers/stub-service';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { resolve, reject } from 'rsvp';
 import suppressRejections from '../../helpers/suppress-rejections';
 
 describe('Integration | Utility | action', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('throws "not implemented" error on execute() call', function () {
     let error;

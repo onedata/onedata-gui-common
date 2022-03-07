@@ -2,14 +2,14 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 const defaultUnits = ['MiB', 'GiB', 'TiB', 'PiB'];
 
 describe('Integration | Utility | form component/capacity field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/capacity-field"', function () {
     const field = CapacityField.create();

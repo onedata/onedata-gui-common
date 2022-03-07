@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import SiblingLoadingField from 'onedata-gui-common/utils/form-component/sibling-loading-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/sibling loading field', function () {
-  setupRenderingTest();
+  setupTest();
 
   [
     true,

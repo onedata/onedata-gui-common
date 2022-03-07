@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/datetime field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/datetime-field"', function () {
     const textField = DatetimeField.create();

@@ -4,7 +4,7 @@ import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import _ from 'lodash';
 
 const fieldModes = [
@@ -14,7 +14,7 @@ const fieldModes = [
 ];
 
 describe('Integration | Utility | form component/form element', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('has an empty fields array', function () {
     const formElement = FormElement.create();

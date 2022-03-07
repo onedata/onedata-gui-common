@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form component/textarea field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/textarea-field"', function () {
     const field = TextareaField.create();

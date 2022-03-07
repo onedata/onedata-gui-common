@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 
 describe('Integration | Utility | form component/static text field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/static-text-field"', function () {
     const field = StaticTextField.create();

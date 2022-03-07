@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import RecordOptionsArrayProxy from 'onedata-gui-common/utils/record-options-array-proxy';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { getProperties, get } from '@ember/object';
 
 describe('Integration | Utility | record options array proxy', function () {
-  setupRenderingTest();
+  setupTest();
 
   beforeEach(function () {
     this.set('records', [{

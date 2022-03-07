@@ -3,10 +3,10 @@ import { describe, it } from 'mocha';
 import { get } from '@ember/object';
 import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-field-validator';
 import { validator, buildValidations } from 'ember-cp-validations';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/form field validator', function () {
-  setupRenderingTest();
+  setupTest();
 
   it(
     'has empty errors array and truthy isValid when no validators are used',

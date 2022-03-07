@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | form component/text field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines inputType as "text"', function () {
     const textField = TextField.create();

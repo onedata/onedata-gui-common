@@ -5,13 +5,13 @@ import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
 import EmberObject, { get, set } from '@ember/object';
 import sinon from 'sinon';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe(
   'Integration | Utility | form component/form fields collection group',
   function () {
-    setupRenderingTest();
+    setupTest();
 
     it('has "isCollectionManipulationAllowed" set to true by default', function () {
       const collectionGroup = FormFieldsCollectionGroup.create();

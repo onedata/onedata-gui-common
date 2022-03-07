@@ -1,7 +1,7 @@
 import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import wait from 'ember-test-helpers/wait';
 import { A } from '@ember/array';
 import ComponentsProvidersColorsMixin from 'onedata-gui-common/mixins/components/providers-colors';
@@ -10,7 +10,7 @@ import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
 import { Promise } from 'rsvp';
 
 describe('Integration | Mixin | components/providers colors', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('detects overflow', function () {
     const ID_1 = 'dasdfsafe30rq3j8';

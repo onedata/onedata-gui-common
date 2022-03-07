@@ -4,10 +4,10 @@ import EmberObject, { get, set } from '@ember/object';
 import { lookupService, registerService } from '../../helpers/stub-service';
 import OwnerInjectorMixin from 'onedata-gui-common/mixins/owner-injector';
 import Service, { inject as service } from '@ember/service';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 
 describe('Integration | Mixin | owner injector', function () {
-  setupRenderingTest();
+  setupTest();
 
   beforeEach(function () {
     registerService(this, 'test-service', Service);

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import { getProperties, get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
@@ -13,7 +13,7 @@ const newTaskMatcher = sinon.match({
 });
 
 describe('Integration | Utility | workflow visualiser/actions/create task action', function () {
-  setupRenderingTest();
+  setupTest();
 
   beforeEach(function () {
     const createStub = sinon.stub();

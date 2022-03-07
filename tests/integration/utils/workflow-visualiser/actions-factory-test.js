@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
@@ -28,7 +28,7 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Integration | Utility | workflow visualiser/actions factory', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('creates action "CreateLaneAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this.owner });

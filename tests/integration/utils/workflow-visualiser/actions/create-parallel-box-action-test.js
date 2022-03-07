@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import CreateParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-box-action';
 import { getProperties, get } from '@ember/object';
 import wait from 'ember-test-helpers/wait';
@@ -13,7 +13,7 @@ const newParallelBoxMatcher = sinon.match({
 });
 
 describe('Integration | Utility | workflow visualiser/actions/create parallel box action', function () {
-  setupRenderingTest();
+  setupTest();
 
   beforeEach(function () {
     const createStub = sinon.stub();

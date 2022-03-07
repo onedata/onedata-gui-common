@@ -2,13 +2,13 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Utility | form component/dropdown field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/dropdown-field"', function () {
     const field = DropdownField.create();

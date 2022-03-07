@@ -2,10 +2,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/number field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines inputType as "number"', function () {
     const field = NumberField.create();

@@ -2,13 +2,13 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { get } from '@ember/object';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Utility | form component/radio field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it('defines fieldComponentName as "form-component/radio-field"', function () {
     const field = RadioField.create();

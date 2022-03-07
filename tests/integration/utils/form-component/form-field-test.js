@@ -2,12 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { get, set, getProperties } from '@ember/object';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
-import { setupRenderingTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { validator } from 'ember-cp-validations';
 import sinon from 'sinon';
 
 describe('Integration | Utility | form component/form field', function () {
-  setupRenderingTest();
+  setupTest();
 
   it(
     'has falsy "isValid", not empty "errors" and "invalidFields" with reference to itself, when specified validators does not match to the field value',
