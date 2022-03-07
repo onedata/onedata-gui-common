@@ -34,7 +34,7 @@
  * The chart definition is that part of the configuration, which is constant regardless
  * backend data. It is a pure definition of series and axes - basically all visual
  * settings - and is completely detached from concrete data. It consists of:
- * - title - an object describing the chart title. Contains two field - `content` and `tip`,
+ * - title - an object describing the chart title. Contains two fields - `content` and `tip`,
  * - yAxes - an array of Y axes definitions. Usually only one Y axis will be necessary,
  *   but for more complicated usecases it is possible to render more of them and visualise
  *   data from different domains.

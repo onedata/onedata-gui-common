@@ -1,5 +1,7 @@
 /**
  * Class responsible for generating colors in a deterministic and idempotent way.
+ * Idempotency of generating colors in guaranteed ONLY within calls to the
+ * same generator instance.
  *
  * @module utils/color-generator
  * @author Michał Borzęcki
