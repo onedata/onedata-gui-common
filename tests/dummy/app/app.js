@@ -4,6 +4,7 @@ import loadInitializers from 'ember-load-initializers';
 import config from './config/environment';
 import silenceDeprecations from './utils/silence-deprecations';
 
+// TODO: VFS-8903 Remove silenceDeprecations call
 silenceDeprecations();
 
 const App = Application.extend({
