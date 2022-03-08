@@ -56,8 +56,7 @@ describe('Unit | Utility | create data proxy mixin', function () {
       .then(() => {
         expect(fetch).to.be.calledOnce;
         expect(get(obj, 'world')).to.equal(1);
-        obj.getWorldProxy({ reload: true });
-        return wait();
+        return obj.getWorldProxy({ reload: true });
       })
       .then(() => {
         expect(fetch).to.be.calledTwice;
