@@ -5,7 +5,7 @@ import { get } from '@ember/object';
 import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | form component/dropdown field', function () {
   setupTest();
@@ -26,7 +26,7 @@ describe('Integration | Utility | form component/dropdown field', function () {
     expect(get(field, 'showSearch')).to.be.true;
   });
 
-  it('translates options', function () {
+  it('translates options', async function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
       .withArgs('somePrefix.field1.options.one.label')
       .returns('One');
@@ -42,9 +42,7 @@ describe('Integration | Utility | form component/dropdown field', function () {
     });
     get(field, 'preparedOptions');
 
-    return wait()
-      .then(() =>
-        expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One')
-      );
+    await settled();
+    expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One');
   });
 });

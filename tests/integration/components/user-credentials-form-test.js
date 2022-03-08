@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, fillIn, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import FormHelper from 'dummy/tests/helpers/form';
 
 class UserCredentialsFormHelper extends FormHelper {
@@ -18,7 +17,7 @@ describe('Integration | Component | user credentials form', function () {
   it('shows secret password field by default', async function () {
     await render(hbs `{{user-credentials-form}}`);
 
-    let form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper(this.$());
 
     expect(form.getInput('static-secretPassword'), 'secret password field exists')
       .to.exist;
@@ -29,7 +28,7 @@ describe('Integration | Component | user credentials form', function () {
     async function (done) {
       await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-      let form = new UserCredentialsFormHelper(this.$());
+      const form = new UserCredentialsFormHelper(this.$());
 
       expect(form.getInput('static-secretPassword'), 'secret pass field')
         .to.not.exist;
@@ -44,7 +43,7 @@ describe('Integration | Component | user credentials form', function () {
     }
   );
 
-  it('submits current and new password', async function (done) {
+  it('submits current and new password', async function () {
     const OLD_PASSWORD = 'one123456789';
     const NEW_PASSWORD = 'one987654321';
 
@@ -56,42 +55,34 @@ describe('Integration | Component | user credentials form', function () {
     });
 
     await render(hbs `
-    {{user-credentials-form
-      changingPassword=true
-      submit=(action submit)
-    }}
+      {{user-credentials-form
+        changingPassword=true
+        submit=(action submit)
+      }}
     `);
 
-    let form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper(this.$());
 
-    form.getInput('verify-currentPassword').val(OLD_PASSWORD).change();
-    form.getInput('change-newPassword').val(NEW_PASSWORD).change();
-    form.getInput('change-newPasswordRetype').val(NEW_PASSWORD).change();
+    await fillIn(form.getInput('verify-currentPassword')[0], OLD_PASSWORD);
+    await fillIn(form.getInput('change-newPassword')[0], NEW_PASSWORD);
+    await fillIn(form.getInput('change-newPasswordRetype')[0], NEW_PASSWORD);
 
-    wait().then(() => {
-      this.$('button[type=submit]').click();
-      wait({ waitForTimers: true }).then(() => {
-        expect(submitted).to.be.true;
-        done();
-      });
-    });
+    await click('button[type=submit]');
+    expect(submitted).to.be.true;
   });
 
-  it('disabled submit button when new passwords do not match', async function (done) {
+  it('disabled submit button when new passwords do not match', async function () {
     const OLD_PASSWORD = 'one123456789';
     const NEW_PASSWORD = 'one987654321';
 
     await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-    let form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper(this.$());
 
-    form.getInput('verify-currentPassword').val(OLD_PASSWORD).change();
-    form.getInput('change-newPassword').val(NEW_PASSWORD).change();
-    form.getInput('change-newPasswordRetype').val(NEW_PASSWORD + 'x').change();
+    await fillIn(form.getInput('verify-currentPassword')[0], OLD_PASSWORD);
+    await fillIn(form.getInput('change-newPassword')[0], NEW_PASSWORD);
+    await fillIn(form.getInput('change-newPasswordRetype')[0], NEW_PASSWORD + 'x');
 
-    wait().then(() => {
-      expect(this.$('button[type=submit]')).to.have.attr('disabled');
-      done();
-    });
+    expect(this.$('button[type=submit]')).to.have.attr('disabled');
   });
 });

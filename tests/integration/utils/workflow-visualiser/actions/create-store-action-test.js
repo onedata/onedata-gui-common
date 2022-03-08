@@ -1,15 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-store-action';
 import { getProperties, get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import { click, fillIn } from 'ember-native-dom-helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/create store action', function () {
   setupRenderingTest();
@@ -81,7 +79,7 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
       await click(getModalFooter().find('.btn-submit')[0]);
       rejectCreate();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce;
@@ -93,6 +91,6 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
 async function executeAction(testCase) {
   await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

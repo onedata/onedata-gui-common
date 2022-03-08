@@ -1,14 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
-import wait from 'ember-test-helpers/wait';
 import EmberObject, { set } from '@ember/object';
 
 describe(
@@ -63,14 +61,13 @@ describe(
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      return click('.add-field-button')
-        .then(() => click('.add-field-button'))
-        .then(() => {
-          const $textFields = this.$('.text-like-field-renderer');
-          expect($textFields).to.have.length(2);
-          expect($textFields.eq(0)).to.have.class('textField-field');
-          expect($textFields.eq(1)).to.have.class('textField-field');
-        });
+      await click('.add-field-button');
+      await click('.add-field-button');
+
+      const $textFields = this.$('.text-like-field-renderer');
+      expect($textFields).to.have.length(2);
+      expect($textFields.eq(0)).to.have.class('textField-field');
+      expect($textFields.eq(1)).to.have.class('textField-field');
     });
 
     it('allows to remove field', async function () {
@@ -102,15 +99,14 @@ describe(
       `);
 
       let $textFields;
-      return click('.add-field-button')
-        .then(() => click('.add-field-button'))
-        .then(() => $textFields = this.$('.text-like-field-renderer'))
-        .then(() => click('.collection-item:first-child .remove-field-button'))
-        .then(() => {
-          const $newTextFields = this.$('.text-like-field-renderer');
-          expect($newTextFields).to.have.length(1);
-          expect($newTextFields[0]).to.equal($textFields[1]);
-        });
+      await click('.add-field-button');
+      await click('.add-field-button');
+      $textFields = this.$('.text-like-field-renderer');
+      await click('.collection-item:first-child .remove-field-button');
+
+      const $newTextFields = this.$('.text-like-field-renderer');
+      expect($newTextFields).to.have.length(1);
+      expect($newTextFields[0]).to.equal($textFields[1]);
     });
 
     it('blocks creating and removing fields in "view" mode', async function () {
@@ -141,15 +137,12 @@ describe(
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      return click('.add-field-button')
-        .then(() => {
-          collectionGroup.changeMode('view');
-          return wait();
-        })
-        .then(() => {
-          expect(this.$('.remove-field-button')).to.not.exist;
-          expect(this.$('.add-field-button')).to.not.exist;
-        });
+      await click('.add-field-button');
+      collectionGroup.changeMode('view');
+      await settled();
+
+      expect(this.$('.remove-field-button')).to.not.exist;
+      expect(this.$('.add-field-button')).to.not.exist;
     });
 
     it('can be disabled', async function () {
@@ -181,7 +174,7 @@ describe(
 
       await click('.add-field-button');
       this.set('collectionGroup.isEnabled', false);
-      await wait();
+      await settled();
 
       expect(this.$('.add-field-button')).to.have.attr('disabled');
       expect(this.$('.remove-icon')).to.have.class('disabled');
@@ -218,7 +211,7 @@ describe(
 
         await click('.add-field-button');
         set(collectionGroup, 'isCollectionManipulationAllowed', false);
-        await wait();
+        await settled();
 
         expect(this.$('.remove-field-button')).to.not.exist;
         expect(this.$('.add-field-button')).to.not.exist;

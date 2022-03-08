@@ -2,8 +2,6 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
@@ -17,7 +15,7 @@ import {
   expectActiveResolution,
   changeResolution,
 } from '../../helpers/one-time-series-chart';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart', function () {
   const { afterEach } = setupRenderingTest();
@@ -123,7 +121,7 @@ describe('Integration | Component | one time series chart', function () {
     config.setViewParameters({
       timeResolution: 3600,
     });
-    await wait();
+    await settled();
 
     expectActiveResolution(this, '1 hr');
     expect(config.getViewParameters().timeResolution).to.equal(3600);

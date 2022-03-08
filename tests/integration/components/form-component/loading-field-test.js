@@ -7,7 +7,6 @@ import LoadingField from 'onedata-gui-common/utils/form-component/loading-field'
 import { setProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import wait from 'ember-test-helpers/wait';
 import suppressRejections from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | form component/loading field', function () {
@@ -40,12 +39,9 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.spin-spinner')).to.exist;
-          expect(this.$('.loading-text').text().trim()).to.equal('Loading...');
-          expect(this.$('.resource-load-error')).to.not.exist;
-        });
+      expect(this.$('.spin-spinner')).to.exist;
+      expect(this.$('.loading-text').text().trim()).to.equal('Loading...');
+      expect(this.$('.resource-load-error')).to.not.exist;
     }
   );
 
@@ -61,11 +57,8 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.spin-spinner')).to.exist;
-          expect(this.$('.loading-text')).to.not.exist;
-        });
+      expect(this.$('.spin-spinner')).to.exist;
+      expect(this.$('.loading-text')).to.not.exist;
     }
   );
 
@@ -78,12 +71,9 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.resource-load-error')).to.exist;
-          expect(this.$('.resource-load-error .error-details').text().trim())
-            .to.equal('"err"');
-        });
+      expect(this.$('.resource-load-error')).to.exist;
+      expect(this.$('.resource-load-error .error-details').text().trim())
+        .to.equal('"err"');
     }
   );
 
@@ -96,8 +86,7 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => expect(this.$('.loading-field *')).to.not.exist);
+      expect(this.$('.loading-field *')).to.not.exist;
     }
   );
 });

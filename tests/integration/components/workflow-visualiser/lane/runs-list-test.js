@@ -1,10 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 const componentClassName = 'runs-list';
@@ -48,7 +46,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await renderComponent(this);
 
     this.set('runs', generateRunsRegistry(8));
-    await wait();
+    await settled();
 
     expect(getVisibleRunNumbers(this)).to.deep.equal([3, 4, 5]);
   });
@@ -61,7 +59,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     await renderComponent(this);
 
     this.set('runsRegistry', generateRunsRegistry(6));
-    await wait();
+    await settled();
 
     expect(getVisibleRunNumbers(this)).to.deep.equal([1, 2, 3, 4, 5]);
   });
@@ -98,7 +96,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(8));
-    await wait();
+    await settled();
 
     await moveRight();
 
@@ -137,7 +135,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(15));
-    await wait();
+    await settled();
 
     await moveRight(false);
     await moveRight();
@@ -152,7 +150,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(10));
-    await wait();
+    await settled();
 
     await moveRight(false);
     await moveLeft();
@@ -193,7 +191,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(12));
-    await wait();
+    await settled();
 
     await moveRight();
     await moveRight();
@@ -218,7 +216,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(6));
-    await wait();
+    await settled();
 
     expect(this.$('.show-next-runs')).to.not.be.disabled;
   });
@@ -230,7 +228,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
     this.set('runsRegistry', generateRunsRegistry(6));
-    await wait();
+    await settled();
 
     expect(this.$('.show-prev-runs')).to.be.disabled;
   });
@@ -324,7 +322,7 @@ async function waitForMoveToSettle() {
   // Due to animations we need several wait-s. For 3-4 waits there is a ~1:10
   // chance to fail some tests in the whole suite. 10 waits are safe enough.
   for (let i = 0; i < 10; i++) {
-    await wait();
+    await settled();
   }
 }
 

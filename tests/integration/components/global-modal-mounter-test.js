@@ -1,12 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import { get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | global modal mounter', function () {
   setupRenderingTest();
@@ -26,7 +25,7 @@ describe('Integration | Component | global modal mounter', function () {
     await render(hbs `{{global-modal-mounter}}`);
 
     this.get('modalManager').show('some-modal');
-    await wait();
+    await settled();
 
     expect(this.$('.test-component')).to.exist;
   });
@@ -37,7 +36,7 @@ describe('Integration | Component | global modal mounter', function () {
     await render(hbs `{{global-modal-mounter}}`);
 
     this.get('modalManager').show('some-modal', modalOptions);
-    await wait();
+    await settled();
 
     const testComponent = this.$('.test-component')[0].componentInstance;
     expect(get(testComponent, 'modalOptions')).to.equal(modalOptions);

@@ -7,7 +7,7 @@ import {
   createModel,
 } from '../../../helpers/one-time-series-chart';
 import { get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | one time series chart/model', function () {
   beforeEach(function () {
@@ -72,7 +72,7 @@ describe('Unit | Utility | one time series chart/model', function () {
 
     const values1 = await expectStateToHaveUpdatedPoints(this);
     this.fakeClock.tick(61 * 1000);
-    await wait();
+    await settled();
     const values2 = await expectStateToHaveUpdatedPoints(this);
 
     expect(values1).to.not.deep.equal(values2);
@@ -87,9 +87,9 @@ describe('Unit | Utility | one time series chart/model', function () {
 
       const values1 = await getStatePointsValues(this);
       this.model.destroy();
-      await wait();
+      await settled();
       this.fakeClock.tick(61 * 1000);
-      await wait();
+      await settled();
       const values2 = await getStatePointsValues(this);
 
       expect(values1).to.deep.equal(values2);

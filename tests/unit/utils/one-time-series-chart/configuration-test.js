@@ -5,7 +5,7 @@ import Configuration from 'onedata-gui-common/utils/one-time-series-chart/config
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
 import { run } from '@ember/runloop';
 import moment from 'moment';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | one time series chart/configuration', function () {
   beforeEach(function () {
@@ -62,7 +62,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(handler).to.be.not.called;
     for (let i = 1; i <= 5; i++) {
       this.fakeClock.tick(520);
-      await wait();
+      await settled();
       expect(handler).to.have.callCount(i);
     }
   });
@@ -83,20 +83,20 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       config.registerStateChangeHandler(handler);
 
       this.fakeClock.tick(520);
-      await wait();
+      await settled();
       expect(handler).to.be.calledOnce;
       config.setViewParameters({ timeResolution: 2 });
       expect(handler).to.be.calledTwice;
       this.fakeClock.tick(520);
-      await wait();
+      await settled();
       expect(handler).to.be.calledTwice;
       this.fakeClock.tick(520);
-      await wait();
+      await settled();
       expect(handler).to.be.calledThrice;
 
       for (let i = 1; i <= 5; i++) {
         this.fakeClock.tick(1020);
-        await wait();
+        await settled();
         expect(handler).to.have.callCount(i + 3);
       }
     });
@@ -113,12 +113,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     config.registerStateChangeHandler(handler);
 
     this.fakeClock.tick(520);
-    await wait();
+    await settled();
     expect(handler).to.be.calledOnce;
     config.setViewParameters({ live: false });
     expect(handler).to.be.calledTwice;
     this.fakeClock.tick(2000);
-    await wait();
+    await settled();
     expect(handler).to.be.calledTwice;
   });
 
@@ -134,14 +134,14 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     config.registerStateChangeHandler(handler);
 
     this.fakeClock.tick(520);
-    await wait();
+    await settled();
     expect(handler).to.be.calledOnce;
     // We need to use `run`, because Looper uses Ember runloop functions - in
     // this case it is `cancel`, which throws an error.
     run(() => config.destroy());
     expect(handler).to.be.calledOnce;
     this.fakeClock.tick(2000);
-    await wait();
+    await settled();
     expect(handler).to.be.calledOnce;
   });
 

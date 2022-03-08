@@ -3,8 +3,7 @@ import { reject } from 'rsvp';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
-import wait from 'ember-test-helpers/wait';
+import { render, blur, fillIn, focus, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const errorMsg = 'error!';
@@ -59,15 +58,13 @@ describe('Integration | Component | one form simple', function () {
     `);
 
     const $firstField = this.$('.field-main-first');
-
     const firstFieldMsg = $firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change')
       .to.be.empty;
-    $firstField.trigger('change');
-    return wait().then(() => {
-      expect(firstFieldMsg.text(), 'field has error after change')
-        .to.equal(errorMsg);
-    });
+
+    await fillIn($firstField[0], '');
+    expect(firstFieldMsg.text(), 'field has error after change')
+      .to.equal(errorMsg);
   });
 
   it('renders errors after field loses its focus', async function () {
@@ -82,31 +79,31 @@ describe('Integration | Component | one form simple', function () {
     const firstField = this.$('.field-main-first');
     const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change').to.be.empty;
-    firstField.blur();
-    return wait().then(() => {
-      expect(firstFieldMsg.text(), 'field has error after change')
-        .to.equal(errorMsg);
-    });
+
+    await focus(firstField[0]);
+    await blur(firstField[0]);
+    expect(firstFieldMsg.text(), 'field has error after lost focus')
+      .to.equal(errorMsg);
   });
 
   it('reacts when field error changes', async function () {
     await render(hbs `
-    {{one-form-simple
-      validations=fakeValidations
-      fields=fields
-      submitButton=false
-    }}
-      `);
+      {{one-form-simple
+        validations=fakeValidations
+        fields=fields
+        submitButton=false
+      }}
+    `);
 
     const newErrorMsg = 'error2!';
     const firstField = this.$('.field-main-first');
     const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
-    firstField.blur();
+
     this.get('fakeValidations.errors')[0].set('message', newErrorMsg);
-    return wait().then(() => {
-      expect(firstFieldMsg.text(), 'field has its another error')
-        .to.equal(newErrorMsg);
-    });
+    await focus(firstField[0]);
+    await blur(firstField[0]);
+    expect(firstFieldMsg.text(), 'field has its another error')
+      .to.equal(newErrorMsg);
   });
 
   it('changes submit button "disable" attribute', async function () {
@@ -134,16 +131,13 @@ describe('Integration | Component | one form simple', function () {
       errors: [],
       isValid: true,
     });
+    await settled();
+    expect(
+      submitBtn.prop('disabled'),
+      'submit button is enabled if form is valid'
+    ).to.equal(false);
 
-    return wait().then(() => {
-      expect(
-        submitBtn.prop('disabled'),
-        'submit button is enabled if form is valid'
-      ).to.equal(false);
-      submitBtn.click();
-      return wait({ waitForTimers: false });
-    }).then(() => {
-      expect(submitOccurred, 'submitAction was invoked').to.be.true;
-    });
+    await click(submitBtn[0]);
+    expect(submitOccurred, 'submitAction was invoked').to.be.true;
   });
 });

@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
 import {
@@ -122,7 +121,7 @@ describe('Integration | Component | one time series chart/plot', function () {
     model.setViewParameters({
       timeResolution: 3600,
     });
-    await wait();
+    await settled();
 
     expect(get(model, 'lastViewParameters.timeResolution')).to.equal(3600);
     expectEchartDummyPoints(this, null, 3600, 11);
@@ -140,7 +139,7 @@ describe('Integration | Component | one time series chart/plot', function () {
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
-    await wait();
+    await settled();
     expectEchartDummyPoints(this, null, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
@@ -158,7 +157,7 @@ describe('Integration | Component | one time series chart/plot', function () {
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
 
     fakeClock.tick(60 * 1000 + 500);
-    await wait();
+    await settled();
     expectEchartDummyPoints(this, 1000000, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
   });

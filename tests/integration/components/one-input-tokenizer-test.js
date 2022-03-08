@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | one input tokenizer', function () {
   setupRenderingTest();
@@ -18,12 +16,10 @@ describe('Integration | Component | one input tokenizer', function () {
       inputValue=inputText
     }}`);
 
-    return wait().then(() => {
-      const $oneInputTokenizer = this.$('.one-input-tokenizer');
-      expect($oneInputTokenizer).to.exist;
-      expect($oneInputTokenizer.find('input').val())
-        .to.equal(inputText);
-    });
+    const $oneInputTokenizer = this.$('.one-input-tokenizer');
+    expect($oneInputTokenizer).to.exist;
+    expect($oneInputTokenizer.find('input').val())
+      .to.equal(inputText);
   });
 
   it('sends new tokens array after change', async function () {
@@ -36,18 +32,11 @@ describe('Integration | Component | one input tokenizer', function () {
       inputValueChanged=(action (mut inputValue))
     }}`);
 
-    return wait().then(() => {
-      const $oneInputTokenizer = this.$('.one-input-tokenizer .tknz-input');
+    const $oneInputTokenizer = this.$('.one-input-tokenizer .tknz-input');
+    await fillIn($oneInputTokenizer[0], 'hello');
+    await triggerKeyEvent($oneInputTokenizer[0], 'keypress', 'Enter');
 
-      const inputEvent = new $.Event('keypress');
-      inputEvent.which = inputEvent.keyCode = 13;
-      $oneInputTokenizer.val('hello');
-      $oneInputTokenizer.trigger(inputEvent);
-
-      return wait().then(() => {
-        expect(tokensChanged).to.be.calledOnce;
-        expect(tokensChanged).to.be.calledWith(['hello']);
-      });
-    });
+    expect(tokensChanged).to.be.calledOnce;
+    expect(tokensChanged).to.be.calledWith(['hello']);
   });
 });

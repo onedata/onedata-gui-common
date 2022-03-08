@@ -1,13 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModifyLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-action';
 import { get, getProperties } from '@ember/object';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -105,7 +103,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
       await fillIn('.name-field .form-control', 'lane2');
       await click(getModalFooter().find('.btn-submit')[0]);
       rejectRemove();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(modifyLaneStub).to.be.calledOnce;
@@ -129,6 +127,6 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
 async function executeAction(testCase) {
   await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

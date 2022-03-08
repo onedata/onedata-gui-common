@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
 import { next } from '@ember/runloop';
 import overrideComponents from 'onedata-gui-common/utils/override-components';
 
@@ -37,16 +36,15 @@ describe('Integration | Component | one modal', function () {
 
       this.set('isModalOpened', true);
 
-      next(this, () => {
+      next(this, async () => {
         expect(shownSpy).to.not.be.called;
         expect(hiddenSpy).to.not.be.called;
 
         this.set('isModalOpened', false);
-        wait().then(() => {
-          expect(shownSpy).to.be.calledOnce;
-          expect(hiddenSpy).to.be.calledOnce;
-          done();
-        });
+        await settled();
+        expect(shownSpy).to.be.calledOnce;
+        expect(hiddenSpy).to.be.calledOnce;
+        done();
       });
     }
   );
@@ -69,15 +67,11 @@ describe('Integration | Component | one modal', function () {
       `);
 
       this.set('isModalOpened', true);
+      await settled();
+      this.set('isModalOpened', false);
+      await settled();
 
-      return wait()
-        .then(() => {
-          this.set('isModalOpened', false);
-          return wait();
-        })
-        .then(() => {
-          expect(hideSpy).to.not.be.called;
-        });
+      expect(hideSpy).to.not.be.called;
     }
   );
 
@@ -89,10 +83,7 @@ describe('Integration | Component | one modal', function () {
 
       await render(hbs `{{one-modal class="my-modal"}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.my-modal').attr('id')).to.match(/.*-modal/);
-        });
+      expect(this.$('.my-modal').attr('id')).to.match(/.*-modal/);
     }
   );
 
@@ -104,10 +95,7 @@ describe('Integration | Component | one modal', function () {
 
       await render(hbs `{{one-modal id="some-id" class="my-modal"}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.my-modal')).to.have.id('some-id');
-        });
+      expect(this.$('.my-modal')).to.have.id('some-id');
     }
   );
 });

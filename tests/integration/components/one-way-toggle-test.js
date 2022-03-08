@@ -1,14 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import { run } from '@ember/runloop';
-import wait from 'ember-test-helpers/wait';
 import { Promise } from 'rsvp';
-import $ from 'jquery';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 
 describe('Integration | Component | one way toggle', function () {
@@ -17,14 +13,14 @@ describe('Integration | Component | one way toggle', function () {
   it('renders checked toggle when passed checked value true', async function () {
     await render(hbs `{{one-way-toggle checked=true}}`);
 
-    let $toggle = this.$('.one-way-toggle');
+    const $toggle = this.$('.one-way-toggle');
     expect($toggle).to.have.class('checked');
   });
 
   it('renders unchecked toggle when passed checked value false', async function () {
     await render(hbs `{{one-way-toggle checked=false}}`);
 
-    let $toggle = this.$('.one-way-toggle');
+    const $toggle = this.$('.one-way-toggle');
     expect($toggle).to.not.have.class('checked');
     // TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
     expect($toggle).to.have.class('unselected');
@@ -34,44 +30,42 @@ describe('Integration | Component | one way toggle', function () {
     async function () {
       await render(hbs `{{one-way-toggle threeState=true checked=2}}`);
 
-      let $toggle = this.$('.one-way-toggle');
+      const $toggle = this.$('.one-way-toggle');
       expect($toggle).to.have.class('maybe');
     }
   );
 
-  it('can be checked', async function (done) {
+  it('can be checked', async function () {
     this.set('checked', false);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = sinon.spy((value) => this.set('checked', value));
     this.set('update', updateHandler);
 
     await render(hbs `{{one-way-toggle checked=checked update=(action update)}}`);
 
-    click('.one-way-toggle').then(() => {
-      expect(this.$('.one-way-toggle')).to.have.class('checked');
-      expect(updateHandler).to.be.calledOnce;
-      expect(updateHandler).to.be.calledWith(true);
-      done();
-    });
+    await click('.one-way-toggle');
+
+    expect(this.$('.one-way-toggle')).to.have.class('checked');
+    expect(updateHandler).to.be.calledOnce;
+    expect(updateHandler).to.be.calledWith(true);
   });
 
-  it('can be unchecked', async function (done) {
+  it('can be unchecked', async function () {
     this.set('checked', true);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = sinon.spy((value) => this.set('checked', value));
     this.set('update', updateHandler);
 
     await render(hbs `{{one-way-toggle checked=checked update=(action update)}}`);
 
-    click('.one-way-toggle').then(() => {
-      expect(this.$('.one-way-toggle')).to.not.have.class('checked');
-      expect(updateHandler).to.be.calledOnce;
-      expect(updateHandler).to.be.calledWith(false);
-      done();
-    });
+    await click('.one-way-toggle');
+
+    expect(this.$('.one-way-toggle')).to.not.have.class('checked');
+    expect(updateHandler).to.be.calledOnce;
+    expect(updateHandler).to.be.calledWith(false);
   });
 
-  it('cannot be semi-checked when threeState=true', async function (done) {
+  it('cannot be semi-checked when threeState=true', async function () {
     this.set('checked', false);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = sinon.spy((value) => this.set('checked', value));
     this.set('update', updateHandler);
 
     await render(hbs `
@@ -81,19 +75,18 @@ describe('Integration | Component | one way toggle', function () {
         update=(action update)}}
     `);
 
-    click('.one-way-toggle').then(() => {
-      expect(this.$('.one-way-toggle')).to.have.class('checked');
-      expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
-      expect(updateHandler).to.be.calledOnce;
-      expect(updateHandler).to.be.calledWith(true);
-      done();
-    });
+    await click('.one-way-toggle');
+
+    expect(this.$('.one-way-toggle')).to.have.class('checked');
+    expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
+    expect(updateHandler).to.be.calledOnce;
+    expect(updateHandler).to.be.calledWith(true);
   });
 
   it('can be semi-checked when threeState=true and allowThreeStateToggle=true',
-    async function (done) {
+    async function () {
       this.set('checked', false);
-      let updateHandler = sinon.spy((value) => this.set('checked', value));
+      const updateHandler = sinon.spy((value) => this.set('checked', value));
       this.set('update', updateHandler);
 
       await render(hbs `
@@ -104,20 +97,19 @@ describe('Integration | Component | one way toggle', function () {
           update=(action update)}}
       `);
 
-      click('.one-way-toggle').then(() => {
-        expect(this.$('.one-way-toggle')).to.not.have.class('checked');
-        expect(this.$('.one-way-toggle')).to.have.class('maybe');
-        expect(updateHandler).to.be.calledOnce;
-        expect(updateHandler).to.be.calledWith(2);
-        done();
-      });
+      await click('.one-way-toggle');
+
+      expect(this.$('.one-way-toggle')).to.not.have.class('checked');
+      expect(this.$('.one-way-toggle')).to.have.class('maybe');
+      expect(updateHandler).to.be.calledOnce;
+      expect(updateHandler).to.be.calledWith(2);
     }
   );
 
   it('can be checked when threeState=true and allowThreeStateToggle=true',
-    async function (done) {
+    async function () {
       this.set('checked', 2);
-      let updateHandler = sinon.spy((value) => this.set('checked', value));
+      const updateHandler = sinon.spy((value) => this.set('checked', value));
       this.set('update', updateHandler);
 
       await render(hbs `
@@ -128,20 +120,19 @@ describe('Integration | Component | one way toggle', function () {
           update=(action update)}}
       `);
 
-      click('.one-way-toggle').then(() => {
-        expect(this.$('.one-way-toggle')).to.have.class('checked');
-        expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
-        expect(updateHandler).to.be.calledOnce;
-        expect(updateHandler).to.be.calledWith(true);
-        done();
-      });
+      await click('.one-way-toggle');
+
+      expect(this.$('.one-way-toggle')).to.have.class('checked');
+      expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
+      expect(updateHandler).to.be.calledOnce;
+      expect(updateHandler).to.be.calledWith(true);
     }
   );
 
   it('can be unchecked when threeState=true and allowThreeStateToggle=true',
-    async function (done) {
+    async function () {
       this.set('checked', true);
-      let updateHandler = sinon.spy((value) => this.set('checked', value));
+      const updateHandler = sinon.spy((value) => this.set('checked', value));
       this.set('update', updateHandler);
 
       await render(hbs `
@@ -152,24 +143,24 @@ describe('Integration | Component | one way toggle', function () {
           update=(action update)}}
       `);
 
-      click('.one-way-toggle').then(() => {
-        expect(this.$('.one-way-toggle')).to.not.have.class('checked');
-        expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
-        expect(updateHandler).to.be.calledOnce;
-        expect(updateHandler).to.be.calledWith(false);
-        done();
-      });
+      await click('.one-way-toggle');
+
+      expect(this.$('.one-way-toggle')).to.not.have.class('checked');
+      expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
+      expect(updateHandler).to.be.calledOnce;
+      expect(updateHandler).to.be.calledWith(false);
     }
   );
 
-  it('disables toggle until update promise is resolved', async function (done) {
+  it('disables toggle until update promise is resolved', async function () {
     this.set('checked', false);
+    let resolvePromise;
     const updateHandler = (value) => {
       return new Promise(resolve => {
-        run.later(() => {
+        resolvePromise = () => {
           this.set('checked', value);
           resolve();
-        }, 100);
+        };
       });
     };
 
@@ -183,22 +174,18 @@ describe('Integration | Component | one way toggle', function () {
 
     const $oneWayToggle = this.$('.one-way-toggle');
 
-    $('.one-way-toggle').click();
+    await click('.one-way-toggle');
+    expect($oneWayToggle, 'disable right after click')
+      .to.have.class('disabled');
+    expect($oneWayToggle, 'check right after click')
+      .to.have.class('checked');
 
-    wait({ waitForTimers: false }).then(() => {
-      expect($oneWayToggle, 'disable right after click')
-        .to.have.class('disabled');
-      expect($oneWayToggle, 'check right after click')
-        .to.have.class('checked');
-      // should fire after updateHandler resolve
-      wait().then(() => {
-        expect($oneWayToggle, 'enabled after action resolve')
-          .to.not.have.class('disabled');
-        expect($oneWayToggle, 'checked after action resolve')
-          .to.have.class('checked');
-        done();
-      });
-    });
+    resolvePromise();
+    await settled();
+    expect($oneWayToggle, 'enabled after action resolve')
+      .to.not.have.class('disabled');
+    expect($oneWayToggle, 'checked after action resolve')
+      .to.have.class('checked');
   });
 
   it('has tooltip when "tip" is specified', async function () {

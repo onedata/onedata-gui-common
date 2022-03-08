@@ -1,4 +1,4 @@
-import wait from 'ember-test-helpers/wait';
+import { click } from '@ember/test-helpers';
 
 import $ from 'jquery';
 
@@ -23,6 +23,5 @@ export function isModalOpened(modalClass) {
 }
 
 export async function closeModalUsingBackground() {
-  document.querySelector('.modal').click();
-  return wait();
+  await click(document.querySelector('.modal'));
 }

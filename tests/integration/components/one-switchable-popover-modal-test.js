@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
-import wait from 'ember-test-helpers/wait';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
-import { click } from 'ember-native-dom-helpers';
 
 const CONTENT_TEXT = 'contentText';
 const WINDOW_WIDTH_LG = 1000;
@@ -28,7 +26,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     });
   });
 
-  it('renders content', async function (done) {
+  it('renders content', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
@@ -39,14 +37,12 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     expect($('body')).to.not.contain(CONTENT_TEXT);
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect($('body')).to.contain(CONTENT_TEXT);
-      done();
-    });
+
+    await click('.trigger');
+    expect($('body')).to.contain(CONTENT_TEXT);
   });
 
-  it('reacts to window resize', async function (done) {
+  it('reacts to window resize', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
@@ -59,27 +55,24 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect($('.popover-element')).to.exist;
-      expect($('.modal-element')).to.not.exist;
-      this.set('_window.innerWidth', WINDOW_WIDTH_SM);
-      this.get('_window.resizeListener')();
-      wait().then(() => {
-        expect($('.popover-element')).to.not.exist;
-        expect($('.modal-element')).to.exist;
-        this.set('_window.innerWidth', WINDOW_WIDTH_LG);
-        this.get('_window.resizeListener')();
-        wait().then(() => {
-          expect($('.popover-element')).to.exist;
-          expect($('.modal-element')).to.not.exist;
-          done();
-        });
-      });
-    });
+    await click('.trigger');
+    expect($('.popover-element')).to.exist;
+    expect($('.modal-element')).to.not.exist;
+
+    this.set('_window.innerWidth', WINDOW_WIDTH_SM);
+    this.get('_window.resizeListener')();
+    await settled();
+    expect($('.popover-element')).to.not.exist;
+    expect($('.modal-element')).to.exist;
+
+    this.set('_window.innerWidth', WINDOW_WIDTH_LG);
+    this.get('_window.resizeListener')();
+    await settled();
+    expect($('.popover-element')).to.exist;
+    expect($('.modal-element')).to.not.exist;
   });
 
-  it('emits events onShow, onShown', async function (done) {
+  it('emits events onShow, onShown', async function () {
     let showOccurred = false;
     let shownOccurred = false;
     this.set('onShow', () => {
@@ -99,15 +92,13 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect(showOccurred).to.be.true;
-      expect(shownOccurred).to.be.true;
-      done();
-    });
+    await click('.trigger');
+
+    expect(showOccurred).to.be.true;
+    expect(shownOccurred).to.be.true;
   });
 
-  it('emits events onHide, onHidden', async function (done) {
+  it('emits events onHide, onHidden', async function () {
     let hideOccurred = false;
     let hiddenOccurred = false;
     this.set('onHide', () => {
@@ -127,18 +118,14 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      this.$('.trigger').click();
-      wait().then(() => {
-        expect(hideOccurred).to.be.true;
-        expect(hiddenOccurred).to.be.true;
-        done();
-      });
-    });
+    await click('.trigger');
+    await click('.trigger');
+
+    expect(hideOccurred).to.be.true;
+    expect(hiddenOccurred).to.be.true;
   });
 
-  it('shows and hides popover on trigger click', async function (done) {
+  it('shows and hides popover on trigger click', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
@@ -149,18 +136,15 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect($('.in .popover-element')).to.exist;
-      this.$('.trigger').click();
-      wait().then(() => {
-        expect($('.out .popover-element')).to.exist;
-        done();
-      });
-    });
+    await click('.trigger');
+    expect($('.in .popover-element')).to.exist;
+
+    await click('.trigger');
+    expect($('.out .popover-element')).to.exist;
+
   });
 
-  it('hides popover on outside click', async function (done) {
+  it('hides popover on outside click', async function () {
     await render(hbs `
       <div class="container">
         <button class="trigger">Trigger</button>
@@ -173,17 +157,13 @@ describe('Integration | Component | one switchable popover modal', function () {
       </div>
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      this.$('.container').click();
-      wait().then(() => {
-        expect($('.out .popover-element')).to.exist;
-        done();
-      });
-    });
+    await click('.trigger');
+    await click('.container');
+
+    expect($('.out .popover-element')).to.exist;
   });
 
-  it('does not hide popover on content click', async function (done) {
+  it('does not hide popover on content click', async function () {
     await render(hbs `
       <div class="container">
         <button class="trigger">Trigger</button>
@@ -196,17 +176,13 @@ describe('Integration | Component | one switchable popover modal', function () {
       </div>
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      $('.content-button').click();
-      wait().then(() => {
-        expect($('.in .popover-element')).to.exist;
-        done();
-      });
-    });
+    await click('.trigger');
+    await click('.content-button');
+
+    expect($('.in .popover-element')).to.exist;
   });
 
-  it('shows and hides modal', async function (done) {
+  it('shows and hides modal', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
@@ -217,18 +193,15 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect($('.modal-element.in')).to.exist;
-      // click on backdrop
-      click($('.modal')[0]).then(() => {
-        expect($('.modal-element.in')).to.not.exist;
-        done();
-      });
-    });
+    await click('.trigger');
+    expect($('.modal-element.in')).to.exist;
+
+    // click on backdrop
+    await click($('.modal')[0]);
+    expect($('.modal-element.in')).to.not.exist;
   });
 
-  it('does not hide modal on content click', async function (done) {
+  it('does not hide modal on content click', async function () {
     await render(hbs `
       <button class="trigger">Trigger</button>
       {{#one-switchable-popover-modal
@@ -239,17 +212,13 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      $('.content-button').click();
-      wait().then(() => {
-        expect($('.modal-element.in')).to.exist;
-        done();
-      });
-    });
+    await click('.trigger');
+    await click('.content-button');
+
+    expect($('.modal-element.in')).to.exist;
   });
 
-  it('handles with different triggers', async function (done) {
+  it('handles with different triggers', async function () {
     await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
@@ -262,19 +231,15 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger-popover').click();
-    wait().then(() => {
-      expect($('.in .popover-element')).to.exist;
-      $('.trigger-modal').click();
-      wait().then(() => {
-        expect($('.modal-element.in')).to.exist;
-        expect($('.popover-element')).to.not.exist;
-        done();
-      });
-    });
+    await click('.trigger-popover');
+    expect($('.in .popover-element')).to.exist;
+
+    await click('.trigger-modal');
+    expect($('.modal-element.in')).to.exist;
+    expect($('.popover-element')).to.not.exist;
   });
 
-  it('sets appropriate classes', async function (done) {
+  it('sets appropriate classes', async function () {
     await render(hbs `
       <button class="trigger-popover">Trigger1</button>
       <button class="trigger-modal">Trigger2</button>
@@ -288,18 +253,14 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger-popover').click();
-    wait().then(() => {
-      expect($('.popover-element.component-element')).to.exist;
-      $('.trigger-modal').click();
-      wait().then(() => {
-        expect($('.modal-element.component-element')).to.exist;
-        done();
-      });
-    });
+    await click('.trigger-popover');
+    expect($('.popover-element.component-element')).to.exist;
+
+    await click('.trigger-modal');
+    expect($('.modal-element.component-element')).to.exist;
   });
 
-  it('can be controlled by open property', async function (done) {
+  it('can be controlled by open property', async function () {
     this.set('open', false);
     await render(hbs `
       <button class="trigger">Trigger</button>
@@ -314,18 +275,17 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     expect($('.in .popover-element')).to.not.exist;
+
     this.set('open', true);
-    wait().then(() => {
-      expect($('.in .popover-element')).to.exist;
-      this.set('open', false);
-      wait().then(() => {
-        expect($('.in .popover-element')).to.not.exist;
-        done();
-      });
-    });
+    await settled();
+    expect($('.in .popover-element')).to.exist;
+
+    this.set('open', false);
+    await settled();
+    expect($('.in .popover-element')).to.not.exist;
   });
 
-  it('does not hide if onHide returns false', async function (done) {
+  it('does not hide if onHide returns false', async function () {
     this.set('onHide', () => {
       return false;
     });
@@ -340,17 +300,12 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      this.$('.trigger').click();
-      wait().then(() => {
-        expect($('.in .popover-element')).to.exist;
-        done();
-      });
-    });
+    await click('.trigger');
+    await click('.trigger');
+    expect($('.in .popover-element')).to.exist;
   });
 
-  it('does not show if onShow returns false', async function (done) {
+  it('does not show if onShow returns false', async function () {
     this.set('onShow', () => false);
     await render(hbs `
       <button class="trigger">Trigger</button>
@@ -363,15 +318,12 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect($('.in .popover-element')).to.not.exist;
-      done();
-    });
+    await click('.trigger');
+    expect($('.in .popover-element')).to.not.exist;
   });
 
   it('can reattach content to another trigger while using open property',
-    async function (done) {
+    async function () {
       this.setProperties({
         activeTriggerSelector: '.trigger-modal',
         open: true,
@@ -390,19 +342,16 @@ describe('Integration | Component | one switchable popover modal', function () {
         {{/one-switchable-popover-modal}}
       `);
 
-      wait().then(() => {
-        expect($('.modal-element.in')).to.exist;
-        this.set('activeTriggerSelector', '.trigger-popover');
-        wait().then(() => {
-          expect($('body')).to.not.have.class('modal-open');
-          expect($('.in .popover-element')).to.exist;
-          done();
-        });
-      });
+      expect($('.modal-element.in')).to.exist;
+
+      this.set('activeTriggerSelector', '.trigger-popover');
+      await settled();
+      expect($('body')).to.not.have.class('modal-open');
+      expect($('.in .popover-element')).to.exist;
     }
   );
 
-  it('can react to triggersConfiguration change', async function (done) {
+  it('can react to triggersConfiguration change', async function () {
     this.set('triggersConfiguration', '.trigger-modal:modal');
     await render(hbs `
       <button class="trigger-popover">Trigger1</button>
@@ -416,22 +365,18 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger-modal').click();
-    wait().then(() => {
-      expect($('.modal-element.in')).to.exist;
-      this.set('triggersConfiguration', '.trigger-popover:popover');
-      wait().then(() => {
-        expect($('.modal-element.in')).to.not.exist;
-        this.$('.trigger-popover').click();
-        wait().then(() => {
-          expect($('.in .popover-element')).to.exist;
-          done();
-        });
-      });
-    });
+    await click('.trigger-modal');
+    expect($('.modal-element.in')).to.exist;
+
+    this.set('triggersConfiguration', '.trigger-popover:popover');
+    await settled();
+    expect($('.modal-element.in')).to.not.exist;
+
+    await click('.trigger-popover');
+    expect($('.in .popover-element')).to.exist;
   });
 
-  it('passes trigger selector via onShow argument', async function (done) {
+  it('passes trigger selector via onShow argument', async function () {
     let onShowTriggerSelector = false;
     this.set('onShow', (selector) => {
       onShowTriggerSelector = selector;
@@ -446,10 +391,7 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    this.$('.trigger').click();
-    wait().then(() => {
-      expect(onShowTriggerSelector).to.be.equal('.trigger');
-      done();
-    });
+    await click('.trigger');
+    expect(onShowTriggerSelector).to.be.equal('.trigger');
   });
 });

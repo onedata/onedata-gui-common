@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 import { Promise } from 'rsvp';
 
 describe('Integration | Component | one button', function () {
@@ -44,7 +43,7 @@ describe('Integration | Component | one button', function () {
     expect(this.$('.one-button')).to.be.disabled;
 
     resolvePromise();
-    await wait();
+    await settled();
 
     expect(this.$('.spin-spinner')).to.not.exist;
     expect(this.$('.one-button')).to.be.enabled;

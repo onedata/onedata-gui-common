@@ -2,15 +2,13 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import { fillIn, focus, blur } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
-import { render } from '@ember/test-helpers';
+import { render, settled, fillIn, focus, blur } from '@ember/test-helpers';
 
 const componentClass = 'lane-form';
 
@@ -345,7 +343,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await renderComponent();
 
       this.set('lane', Object.assign({}, lane1, { name: 'lane2' }));
-      await wait();
+      await settled();
 
       expect(this.$('.name-field .form-control')).to.have.value('lane1');
     });
@@ -384,7 +382,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await renderComponent();
 
       this.set('lane', Object.assign({}, lane1, { name: 'lane2' }));
-      await wait();
+      await settled();
 
       expect(this.$('.name-field .field-component').text().trim()).to.equal('lane2');
     });

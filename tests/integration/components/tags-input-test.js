@@ -1,12 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click, focus, blur } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { click, focus, blur } from 'ember-native-dom-helpers';
 import { get, set } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import OneTooltipHelper from '../../helpers/one-tooltip';
 
 const disabledCreateTriggerTip = 'Maximum number of elements has been reached.';
@@ -54,15 +52,14 @@ describe('Integration | Component | tags input', function () {
 
     await render(hbs `{{tags-input tags=tags onChange=(action change)}}`);
 
-    return click('.tag-item:first-child .tag-remove')
-      .then(() => {
-        const $tagItem = this.$('.tag-item');
-        expect($tagItem).to.have.length(1);
-        expect($tagItem.text().trim()).to.equal(oldTags[1].label);
-        expect(changeSpy).to.be.calledOnce;
-        expect(changeSpy.lastCall.args[0].toArray())
-          .to.deep.equal(oldTags.slice(1).toArray());
-      });
+    await click('.tag-item:first-child .tag-remove');
+
+    const $tagItem = this.$('.tag-item');
+    expect($tagItem).to.have.length(1);
+    expect($tagItem.text().trim()).to.equal(oldTags[1].label);
+    expect(changeSpy).to.be.calledOnce;
+    expect(changeSpy.lastCall.args[0].toArray())
+      .to.deep.equal(oldTags.slice(1).toArray());
   });
 
   it(
@@ -70,8 +67,9 @@ describe('Integration | Component | tags input', function () {
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
-      return click('.tag-item:first-child .tag-remove')
-        .then(() => expect(this.$('.tag-item')).to.have.length(2));
+      await click('.tag-item:first-child .tag-remove');
+
+      expect(this.$('.tag-item')).to.have.length(2);
     }
   );
 
@@ -85,13 +83,11 @@ describe('Integration | Component | tags input', function () {
         {{tags-input tags=tags onFocusLost=(action focusLost)}}
       `);
 
-      return focus('.tags-input')
-        .then(() => {
-          expect(focusLostSpy).to.be.not.called;
+      await focus('.tags-input');
+      expect(focusLostSpy).to.be.not.called;
 
-          return blur('.tags-input');
-        })
-        .then(() => expect(focusLostSpy).to.be.calledOnce);
+      await blur('.tags-input');
+      expect(focusLostSpy).to.be.calledOnce;
     }
   );
 
@@ -101,11 +97,10 @@ describe('Integration | Component | tags input', function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
       expect(this.$('.tag-creator')).to.not.exist;
-      return click('.tag-creator-trigger')
-        .then(() => {
-          expect(this.$('.tags-input')).to.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.exist;
-        });
+
+      await click('.tag-creator-trigger');
+      expect(this.$('.tags-input')).to.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.exist;
     }
   );
 
@@ -114,11 +109,10 @@ describe('Integration | Component | tags input', function () {
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
-      return click('.tags-input')
-        .then(() => {
-          expect(this.$('.tags-input')).to.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.exist;
-        });
+      await click('.tags-input');
+
+      expect(this.$('.tags-input')).to.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.exist;
     }
   );
 
@@ -129,8 +123,9 @@ describe('Integration | Component | tags input', function () {
         {{tags-input tags=tags tagEditorComponentName="test-component"}}
       `);
 
-      return click('.tag-creator-trigger')
-        .then(() => expect(this.$('.tag-creator .test-component')).to.exist);
+      await click('.tag-creator-trigger');
+
+      expect(this.$('.tag-creator .test-component')).to.exist;
     }
   );
 
@@ -139,8 +134,8 @@ describe('Integration | Component | tags input', function () {
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
-      return click('.tag-creator-trigger')
-        .then(() => expect(this.$('.tag-creator .tags-input-text-editor')).to.exist);
+      await click('.tag-creator-trigger');
+      expect(this.$('.tag-creator .tags-input-text-editor')).to.exist;
     }
   );
 
@@ -151,17 +146,14 @@ describe('Integration | Component | tags input', function () {
         {{tags-input tags=tags tagEditorComponentName="test-component"}}
       `);
 
-      return click('.tag-creator-trigger')
-        .then(() => {
-          const testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-          get(testComponent, 'onEndTagCreation')();
-          return wait();
-        })
-        .then(() => {
-          expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.not.exist;
-        });
+      await click('.tag-creator-trigger');
+      const testComponent =
+        this.$('.tag-creator .test-component')[0].componentInstance;
+      get(testComponent, 'onEndTagCreation')();
+      await settled();
+
+      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
     }
   );
 
@@ -181,16 +173,13 @@ describe('Integration | Component | tags input', function () {
         onChange=(action change)
       }}`);
 
-      return click('.tag-creator-trigger')
-        .then(() => {
-          const testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-          get(testComponent, 'onTagsAdded')(newTags);
-          return wait();
-        })
-        .then(() => {
-          expect(changeSpy).to.be.calledWith(sinon.match.has('length', 4));
-        });
+      await click('.tag-creator-trigger');
+      const testComponent =
+        this.$('.tag-creator .test-component')[0].componentInstance;
+      get(testComponent, 'onTagsAdded')(newTags);
+      await settled();
+
+      expect(changeSpy).to.be.calledWith(sinon.match.has('length', 4));
     }
   );
 
@@ -202,13 +191,11 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      let testComponent;
-      return click('.tag-creator-trigger')
-        .then(() => {
-          testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-          expect(get(testComponent, 'selectedTags')).to.equal(this.get('tags'));
-        });
+      await click('.tag-creator-trigger');
+
+      const testComponent =
+        this.$('.tag-creator .test-component')[0].componentInstance;
+      expect(get(testComponent, 'selectedTags')).to.equal(this.get('tags'));
     }
   );
 
@@ -253,13 +240,11 @@ describe('Integration | Component | tags input', function () {
         tagEditorSettings=settings
       }}`);
 
-      return click('.tag-creator-trigger')
-        .then(() => {
-          const testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
+      await click('.tag-creator-trigger');
 
-          expect(get(testComponent, 'settings')).to.deep.equal(settings);
-        });
+      const testComponent =
+        this.$('.tag-creator .test-component')[0].componentInstance;
+      expect(get(testComponent, 'settings')).to.deep.equal(settings);
     }
   );
 
@@ -273,15 +258,13 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      return click('.tag-creator-trigger')
-        .then(() => {
-          const testComponent =
-            this.$('.tag-creator .test-component')[0].componentInstance;
-          set(testComponent, 'focusIn', focusSpy);
+      await click('.tag-creator-trigger');
+      const testComponent =
+        this.$('.tag-creator .test-component')[0].componentInstance;
+      set(testComponent, 'focusIn', focusSpy);
 
-          return click('.tag-creator-trigger');
-        })
-        .then(() => expect(focusSpy).to.be.calledOnce);
+      await click('.tag-creator-trigger');
+      expect(focusSpy).to.be.calledOnce;
     }
   );
 
@@ -298,11 +281,10 @@ describe('Integration | Component | tags input', function () {
       expect($tagsInput).to.have.attr('disabled');
       expect(this.$('.tag-creator-trigger')).to.not.exist;
       expect(this.$('.tag-remove')).to.not.exist;
-      return click('.tags-input')
-        .then(() => {
-          expect($tagsInput).to.not.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.not.exist;
-        });
+
+      await click('.tags-input');
+      expect($tagsInput).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
     }
   );
 
@@ -317,15 +299,12 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      return click('.tags-input')
-        .then(() => {
-          this.set('disabled', true);
-          return wait();
-        })
-        .then(() => {
-          expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.not.exist;
-        });
+      await click('.tags-input');
+      this.set('disabled', true);
+      await settled();
+
+      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
     }
   );
 
@@ -342,11 +321,10 @@ describe('Integration | Component | tags input', function () {
       expect($tagsInput).to.have.class('readonly');
       expect(this.$('.tag-creator-trigger')).to.not.exist;
       expect(this.$('.tag-remove')).to.not.exist;
-      return click('.tags-input')
-        .then(() => {
-          expect($tagsInput).to.not.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.not.exist;
-        });
+
+      await click('.tags-input');
+      expect($tagsInput).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
     }
   );
 
@@ -361,15 +339,12 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      return click('.tags-input')
-        .then(() => {
-          this.set('readonly', true);
-          return wait();
-        })
-        .then(() => {
-          expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-          expect(this.$('.tag-creator')).to.not.exist;
-        });
+      await click('.tags-input');
+      this.set('readonly', true);
+      await settled();
+
+      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
+      expect(this.$('.tag-creator')).to.not.exist;
     }
   );
 
@@ -434,7 +409,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
       this.set('tagsLimit', 1);
-      await wait();
+      await settled();
 
       expect(this.$('.tags-input')).to.not.have.class('creating-tag');
       expect(this.$('.tag-creator')).to.not.exist;
@@ -452,7 +427,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
       this.set('tagsLimit', 8);
-      await wait();
+      await settled();
 
       expect(this.$('.tags-input')).to.have.class('creating-tag');
       expect(this.$('.tag-creator')).to.exist;
@@ -470,7 +445,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
       this.set('tags', [...tags, ...tags]);
-      await wait();
+      await settled();
 
       expect(this.$('.tags-input')).to.not.have.class('creating-tag');
       expect(this.$('.tag-creator')).to.not.exist;

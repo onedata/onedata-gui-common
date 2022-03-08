@@ -3,10 +3,10 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupTest } from 'ember-mocha';
 import CreateTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-task-action';
 import { getProperties, get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise, resolve, reject } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import { settled } from '@ember/test-helpers';
 
 const newTaskMatcher = sinon.match({
   name: 'task1',
@@ -67,7 +67,7 @@ describe('Integration | Utility | workflow visualiser/actions/create task action
       this.set('action.taskDetailsProviderCallback', () => reject());
 
       const { resultPromise } = await executeAction(this);
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(createStub).to.not.be.called;
@@ -84,7 +84,7 @@ describe('Integration | Utility | workflow visualiser/actions/create task action
 
       const { resultPromise } = await executeAction(this);
       rejectCreate();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith(newTaskMatcher);
@@ -95,6 +95,6 @@ describe('Integration | Utility | workflow visualiser/actions/create task action
 
 async function executeAction(testCase) {
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

@@ -2,8 +2,6 @@ import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { fillIn, click } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -13,7 +11,7 @@ import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { setProperties } from '@ember/object';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { render } from '@ember/test-helpers';
+import { render, settled, fillIn, click } from '@ember/test-helpers';
 
 const componentClass = 'task-form';
 
@@ -1387,7 +1385,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       await renderComponent();
 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
-      await wait();
+      await settled();
 
       expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
     });
@@ -1418,7 +1416,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       await renderComponent();
 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
-      await wait();
+      await settled();
 
       expect(this.$('.name-field .field-component').text().trim())
         .to.equal('task2');

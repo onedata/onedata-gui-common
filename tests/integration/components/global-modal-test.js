@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { click, keyEvent } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
@@ -38,8 +37,7 @@ describe('Integration | Component | global modal', function () {
 
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
-    return wait()
-      .then(() => expect(isGlobalModalOpened()).to.be.true);
+    expect(isGlobalModalOpened()).to.be.true;
   });
 
   it('renders modal with custom class', async function () {
@@ -50,8 +48,7 @@ describe('Integration | Component | global modal', function () {
       classNames="custom-modal-class"
     }}`);
 
-    return wait()
-      .then(() => expect(getGlobalModal()).to.have.class('custom-modal-class'));
+    expect(getGlobalModal()).to.have.class('custom-modal-class');
   });
 
   it('hides modal if modal instance isOpened turns from true to false', async function () {
@@ -59,9 +56,9 @@ describe('Integration | Component | global modal', function () {
 
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
-    return wait()
-      .then(() => this.set('modalInstance.isOpened', false))
-      .then(() => expect(isGlobalModalOpened()).to.be.false);
+    this.set('modalInstance.isOpened', false);
+    await settled();
+    expect(isGlobalModalOpened()).to.be.false;
   });
 
   it('allows to render custom modal header, body and footer', async function () {
@@ -81,18 +78,15 @@ describe('Integration | Component | global modal', function () {
       {{/global-modal}}
     `);
 
-    return wait()
-      .then(() => {
-        const modal = getGlobalModal();
+    const modal = getGlobalModal();
 
-        [
-          '.header-content-test',
-          '.body-content-test',
-          '.footer-content-test',
-        ].forEach(contentSelector =>
-          expect(modal.find(contentSelector)).to.exist
-        );
-      });
+    [
+      '.header-content-test',
+      '.body-content-test',
+      '.footer-content-test',
+    ].forEach(contentSelector =>
+      expect(modal.find(contentSelector)).to.exist
+    );
   });
 
   it(
@@ -100,8 +94,8 @@ describe('Integration | Component | global modal', function () {
     async function () {
       await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
-      return this.get('modalManager').show().shownPromise
-        .then(() => expect(isGlobalModalOpened()).to.be.true);
+      await this.get('modalManager').show().shownPromise;
+      expect(isGlobalModalOpened()).to.be.true;
     }
   );
 
@@ -124,16 +118,13 @@ describe('Integration | Component | global modal', function () {
       } = this.get('modalManager').show();
 
       hiddenPromise.then(hiddenSpy);
-      return shownPromise
-        .then(() => {
-          expect(isGlobalModalOpened()).to.be.true;
-          expect(hiddenSpy).to.not.be.called;
-          return click(getGlobalModal().find('.close-button')[0]);
-        })
-        .then(() => {
-          expect(isGlobalModalOpened()).to.be.false;
-          expect(hiddenSpy).to.be.called;
-        });
+      await shownPromise;
+      expect(isGlobalModalOpened()).to.be.true;
+      expect(hiddenSpy).to.not.be.called;
+
+      await click(getGlobalModal().find('.close-button')[0]);
+      expect(isGlobalModalOpened()).to.be.false;
+      expect(hiddenSpy).to.be.called;
     }
   );
 
@@ -143,11 +134,10 @@ describe('Integration | Component | global modal', function () {
       await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
       const modalManager = this.get('modalManager');
-      return modalManager.show().shownPromise
-        .then(() =>
-          modalManager.hide(this.get('modalManager.modalInstances.lastObject.id'))
-        )
-        .then(() => expect(isGlobalModalOpened()).to.be.false);
+      await modalManager.show().shownPromise;
+      await modalManager.hide(this.get('modalManager.modalInstances.lastObject.id'));
+
+      expect(isGlobalModalOpened()).to.be.false;
     }
   );
 
@@ -157,13 +147,12 @@ describe('Integration | Component | global modal', function () {
       await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
       const modalManager = this.get('modalManager');
-      return modalManager.show().shownPromise
-        .then(() => {
-          const modalId = this.get('modalManager.modalInstances.lastObject.id');
-          const promise1 = modalManager.hide(modalId);
-          const promise2 = modalManager.hide(modalId);
-          expect(promise1).to.equal(promise2);
-        });
+      await modalManager.show().shownPromise;
+
+      const modalId = this.get('modalManager.modalInstances.lastObject.id');
+      const promise1 = modalManager.hide(modalId);
+      const promise2 = modalManager.hide(modalId);
+      expect(promise1).to.equal(promise2);
     }
   );
 
@@ -176,9 +165,10 @@ describe('Integration | Component | global modal', function () {
       {{/global-modal}}
     `);
 
-    return this.get('modalManager').show().shownPromise
-      .then(() => click(getGlobalModal().find('.close-button')[0]))
-      .then(() => expect(isGlobalModalOpened()).to.be.false);
+    await this.get('modalManager').show().shownPromise;
+    await click(getGlobalModal().find('.close-button')[0]);
+
+    expect(isGlobalModalOpened()).to.be.false;
   });
 
   it(
@@ -199,12 +189,11 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager').show().shownPromise
-        .then(() => click(getGlobalModal().find('.close-button')[0]))
-        .then(() => {
-          expect(hideSpy).to.be.calledOnce;
-          expect(isGlobalModalOpened()).to.be.false;
-        });
+      await this.get('modalManager').show().shownPromise;
+      await click(getGlobalModal().find('.close-button')[0]);
+
+      expect(hideSpy).to.be.calledOnce;
+      expect(isGlobalModalOpened()).to.be.false;
     }
   );
 
@@ -221,13 +210,12 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { onHide: hideSpy }).shownPromise
-        .then(() => click(getGlobalModal().find('.close-button')[0]))
-        .then(() => {
-          expect(hideSpy).to.be.calledOnce;
-          expect(isGlobalModalOpened()).to.be.false;
-        });
+      await this.get('modalManager')
+        .show('someComponent', { onHide: hideSpy }).shownPromise;
+      await click(getGlobalModal().find('.close-button')[0]);
+
+      expect(hideSpy).to.be.calledOnce;
+      expect(isGlobalModalOpened()).to.be.false;
     }
   );
 
@@ -250,14 +238,13 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { onHide: hideSpyViaShow }).shownPromise
-        .then(() => click(getGlobalModal().find('.close-button')[0]))
-        .then(() => {
-          expect(hideStubViaProp).to.be.calledOnce;
-          expect(hideSpyViaShow).to.not.be.called;
-          expect(isGlobalModalOpened()).to.be.true;
-        });
+      await this.get('modalManager')
+        .show('someComponent', { onHide: hideSpyViaShow }).shownPromise;
+      await click(getGlobalModal().find('.close-button')[0]);
+
+      expect(hideStubViaProp).to.be.calledOnce;
+      expect(hideSpyViaShow).to.not.be.called;
+      expect(isGlobalModalOpened()).to.be.true;
     }
   );
 
@@ -280,14 +267,12 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { onHide: hideStubViaShow }).shownPromise
-        .then(() => click(getGlobalModal().find('.close-button')[0]))
-        .then(() => {
-          expect(hideSpyViaProp).to.be.calledOnce;
-          expect(hideStubViaShow).to.be.calledOnce;
-          expect(isGlobalModalOpened()).to.be.true;
-        });
+      await this.get('modalManager')
+        .show('someComponent', { onHide: hideStubViaShow }).shownPromise;
+      await click(getGlobalModal().find('.close-button')[0]);
+      expect(hideSpyViaProp).to.be.calledOnce;
+      expect(hideStubViaShow).to.be.calledOnce;
+      expect(isGlobalModalOpened()).to.be.true;
     }
   );
 
@@ -309,12 +294,11 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager').show().shownPromise
-        .then(() => click(getGlobalModal().find('.submit-button')[0]))
-        .then(() => {
-          expect(submitSpy).to.be.calledOnce;
-          expect(submitSpy).to.be.calledWith('value');
-        });
+      await this.get('modalManager').show().shownPromise;
+      await click(getGlobalModal().find('.submit-button')[0]);
+
+      expect(submitSpy).to.be.calledOnce;
+      expect(submitSpy).to.be.calledWith('value');
     }
   );
 
@@ -331,13 +315,12 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { onSubmit: submitSpy }).shownPromise
-        .then(() => click(getGlobalModal().find('.submit-button')[0]))
-        .then(() => {
-          expect(submitSpy).to.be.calledOnce;
-          expect(submitSpy).to.be.calledWith('value');
-        });
+      await this.get('modalManager')
+        .show('someComponent', { onSubmit: submitSpy }).shownPromise;
+      await click(getGlobalModal().find('.submit-button')[0]);
+
+      expect(submitSpy).to.be.calledOnce;
+      expect(submitSpy).to.be.calledWith('value');
     }
   );
 
@@ -375,25 +358,24 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { onSubmit: submitSpyViaShow }).shownPromise
-        .then(() => click(getGlobalModal().find('.submit-button')[0]))
-        .then(() => {
-          expect(submitSpyViaProp).to.be.calledOnce;
-          expect(submitSpyViaProp).to.be.calledWith('value');
-          expect(submitSpyViaShow).to.not.be.called;
-          resolveSpyViaProp('value2');
-        })
-        .then(() => {
-          expect(submitSpyViaShow).to.be.calledOnce;
-          expect(submitSpyViaShow).to.be.calledWith('value2');
-          expect(allSubmitsResolvedSpy).to.not.be.called;
-          resolveSpyViaShow('value3');
-        })
-        .then(() => {
-          expect(allSubmitsResolvedSpy).to.be.calledOnce;
-          expect(allSubmitsResolvedSpy).to.be.calledWith('value3');
-        });
+      await this.get('modalManager')
+        .show('someComponent', { onSubmit: submitSpyViaShow }).shownPromise;
+      await click(getGlobalModal().find('.submit-button')[0]);
+
+      expect(submitSpyViaProp).to.be.calledOnce;
+      expect(submitSpyViaProp).to.be.calledWith('value');
+      expect(submitSpyViaShow).to.not.be.called;
+      resolveSpyViaProp('value2');
+      await settled();
+
+      expect(submitSpyViaShow).to.be.calledOnce;
+      expect(submitSpyViaShow).to.be.calledWith('value2');
+      expect(allSubmitsResolvedSpy).to.not.be.called;
+      resolveSpyViaShow('value3');
+      await settled();
+
+      expect(allSubmitsResolvedSpy).to.be.calledOnce;
+      expect(allSubmitsResolvedSpy).to.be.calledWith('value3');
     }
   );
 
@@ -417,13 +399,12 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { onSubmit: submitSpyViaShow }).shownPromise
-        .then(() => click(getGlobalModal().find('.submit-button')[0]))
-        .then(() => {
-          expect(submitStubViaProp).to.be.calledOnce;
-          expect(submitSpyViaShow).to.not.be.called;
-        });
+      await this.get('modalManager')
+        .show('someComponent', { onSubmit: submitSpyViaShow }).shownPromise;
+      await click(getGlobalModal().find('.submit-button')[0]);
+
+      expect(submitStubViaProp).to.be.calledOnce;
+      expect(submitSpyViaShow).to.not.be.called;
     }
   );
 
@@ -436,9 +417,10 @@ describe('Integration | Component | global modal', function () {
       {{/global-modal}}
     `);
 
-    return this.get('modalManager').show().shownPromise
-      .then(() => click(getGlobalModal().find('.submit-button')[0]))
-      .then(() => expect(isGlobalModalOpened()).to.be.false);
+    await this.get('modalManager').show().shownPromise;
+    await click(getGlobalModal().find('.submit-button')[0]);
+
+    expect(isGlobalModalOpened()).to.be.false;
   });
 
   it(
@@ -452,19 +434,21 @@ describe('Integration | Component | global modal', function () {
         {{/global-modal}}
       `);
 
-      return this.get('modalManager')
-        .show('someComponent', { hideAfterSubmit: false }).shownPromise
-        .then(() => click(getGlobalModal().find('.submit-button')[0]))
-        .then(() => expect(isGlobalModalOpened()).to.be.true);
+      await this.get('modalManager')
+        .show('someComponent', { hideAfterSubmit: false }).shownPromise;
+      await click(getGlobalModal().find('.submit-button')[0]);
+
+      expect(isGlobalModalOpened()).to.be.true;
     }
   );
 
   it('closes modal on Escape key press by default', async function () {
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
-    return this.get('modalManager').show().shownPromise
-      .then(() => keyEvent(getGlobalModal()[0], 'keydown', 27))
-      .then(() => expect(isGlobalModalOpened()).to.be.false);
+    await this.get('modalManager').show().shownPromise;
+    await keyEvent(getGlobalModal()[0], 'keydown', 27);
+
+    expect(isGlobalModalOpened()).to.be.false;
   });
 
   it('does not close modal on Escape key press when allowClose is false', async function () {
@@ -473,17 +457,19 @@ describe('Integration | Component | global modal', function () {
       allowClose=false}}
     `);
 
-    return this.get('modalManager').show().shownPromise
-      .then(() => keyEvent(getGlobalModal()[0], 'keydown', 27))
-      .then(() => expect(isGlobalModalOpened()).to.be.true);
+    await this.get('modalManager').show().shownPromise;
+    await keyEvent(getGlobalModal()[0], 'keydown', 27);
+
+    expect(isGlobalModalOpened()).to.be.true;
   });
 
   it('closes modal on backdrop click by default', async function () {
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
-    return this.get('modalManager').show().shownPromise
-      .then(() => click(getGlobalModal()[0]))
-      .then(() => expect(isGlobalModalOpened()).to.be.false);
+    await this.get('modalManager').show().shownPromise;
+    await click(getGlobalModal()[0]);
+
+    expect(isGlobalModalOpened()).to.be.false;
   });
 
   it('does not close modal on backdrop click when allowClose is false', async function () {
@@ -492,9 +478,10 @@ describe('Integration | Component | global modal', function () {
       allowClose=false
     }}`);
 
-    return this.get('modalManager').show().shownPromise
-      .then(() => click(getGlobalModal()[0]))
-      .then(() => expect(isGlobalModalOpened()).to.be.true);
+    await this.get('modalManager').show().shownPromise;
+    await click(getGlobalModal()[0]);
+
+    expect(isGlobalModalOpened()).to.be.true;
   });
 
   it('renders modal in specified size', async function () {

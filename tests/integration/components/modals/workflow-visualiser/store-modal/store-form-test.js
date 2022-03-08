@@ -3,12 +3,10 @@ import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
-import { click, fillIn, focus, blur } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { render } from '@ember/test-helpers';
+import { render, settled, click, fillIn, focus, blur } from '@ember/test-helpers';
 
 const componentClass = 'store-form';
 
@@ -623,7 +621,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await renderComponent();
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
-      await wait();
+      await settled();
 
       expect(this.$('.name-field .form-control')).to.have.value('store1');
     });
@@ -751,7 +749,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await renderComponent();
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
-      await wait();
+      await settled();
 
       expect(this.$('.name-field .field-component').text().trim()).to.equal('store2');
     });

@@ -2,9 +2,8 @@ import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | one atlas', function () {
   setupRenderingTest();
@@ -23,7 +22,7 @@ describe('Integration | Component | one atlas', function () {
   });
 
   it('scales up to parent size', async function () {
-    let size = 400;
+    const size = 400;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     await render(hbs `
       <div style={{parentStyle}}>
@@ -31,7 +30,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    let atlas = this.$('.one-atlas');
+    const atlas = this.$('.one-atlas');
     expect(atlas.width()).to.be.equal(size);
     expect(atlas.height()).to.be.gt(0);
     // map has horizontal layout
@@ -39,8 +38,8 @@ describe('Integration | Component | one atlas', function () {
   });
 
   it('fits to parent with horizontal layout', async function () {
-    let width = 400;
-    let height = 40;
+    const width = 400;
+    const height = 40;
     this.set('parentStyle', htmlSafe(`width: ${width}px; height: ${height}px`));
     await render(hbs `
       <div style={{parentStyle}}>
@@ -48,13 +47,13 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    let atlas = this.$('.one-atlas');
+    const atlas = this.$('.one-atlas');
     expect(atlas.height()).to.be.equal(height);
     expect(atlas.width()).to.be.gt(0);
     expect(atlas.width()).to.be.lt(width);
   });
 
-  it('reacts to window resize', async function (done) {
+  it('reacts to window resize', async function () {
     let size = 400;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     await render(hbs `
@@ -63,21 +62,20 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    let atlas = this.$('.one-atlas');
+    const atlas = this.$('.one-atlas');
     size = size / 2;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.get('_window.resizeListener').call(null);
-    wait().then(() => {
-      expect(atlas.width()).to.be.equal(size);
-      expect(atlas.height()).to.be.gt(0);
-      expect(atlas.height()).to.be.lt(size);
-      done();
-    });
+    await settled();
+
+    expect(atlas.width()).to.be.equal(size);
+    expect(atlas.height()).to.be.gt(0);
+    expect(atlas.height()).to.be.lt(size);
   });
 
   it('displays Sydney point in the right down corner of the map',
-    async function (done) {
-      let size = 400;
+    async function () {
+      const size = 400;
       this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
       await render(hbs `
         <div style={{parentStyle}}>
@@ -91,13 +89,12 @@ describe('Integration | Component | one atlas', function () {
         </div>
       `);
 
-      let atlas = this.$('.one-atlas');
-      let sydney = this.$('.sydney');
-      wait().then(() => {
-        expect(sydney.position().left).to.be.gt((atlas.width() / 4) * 3);
-        expect(sydney.position().top).to.be.gt(atlas.height() / 2);
-        done();
-      });
+      const atlas = this.$('.one-atlas');
+      const sydney = this.$('.sydney');
+      await settled();
+
+      expect(sydney.position().left).to.be.gt((atlas.width() / 4) * 3);
+      expect(sydney.position().top).to.be.gt(atlas.height() / 2);
     }
   );
 });

@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { click } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | tags input/external editor', function () {
   setupRenderingTest();
@@ -66,7 +64,7 @@ describe('Integration | Component | tags input/external editor', function () {
     await renderTagInput();
     await startCreation();
     addTags([{ label: 'abc' }]);
-    await wait();
+    await settled();
 
     const $tagItems = this.$('.tag-item');
     expect($tagItems).to.have.length(1);
@@ -82,7 +80,7 @@ describe('Integration | Component | tags input/external editor', function () {
     await renderTagInput();
     await startCreation();
     endCreation();
-    await wait();
+    await settled();
 
     expect(this.$('.tags-input-external-editor')).to.not.exist;
   });
@@ -99,7 +97,7 @@ describe('Integration | Component | tags input/external editor', function () {
 
       expect(endTagCreationCallbackSpy).to.not.be.called;
       this.set('tagsLimit', 0);
-      await wait();
+      await settled();
 
       expect(this.$('.tags-input-external-editor')).to.not.exist;
       expect(endTagCreationCallbackSpy).to.be.calledOnce;

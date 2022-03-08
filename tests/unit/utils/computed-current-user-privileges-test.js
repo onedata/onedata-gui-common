@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import EmberObject, { get, set } from '@ember/object';
 import computedCurrentUserPrivileges from 'onedata-gui-common/utils/computed-current-user-privileges';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | computed current user privileges', function () {
   beforeEach(function () {
@@ -89,7 +89,7 @@ describe('Unit | Utility | computed current user privileges', function () {
     expect(privileges).to.have.property('view', false);
   });
 
-  it('changes when effective privileges array is changed', function () {
+  it('changes when effective privileges array is changed', async function () {
     const obj = EmberObject.extend({
       currentUserEffPrivileges: Object.freeze(['space_view_qos']),
       currentUserIsOwner: false,
@@ -102,14 +102,13 @@ describe('Unit | Utility | computed current user privileges', function () {
     expect(privilegesBefore).to.have.property('viewTransfers', false);
 
     set(obj, 'currentUserEffPrivileges', ['space_view_transfers']);
-    return wait().then(() => {
-      const privilegesAfter = get(obj, 'privileges');
-      expect(privilegesAfter).to.have.property('viewQos', false);
-      expect(privilegesAfter).to.have.property('viewTransfers', true);
-    });
+    await settled();
+    const privilegesAfter = get(obj, 'privileges');
+    expect(privilegesAfter).to.have.property('viewQos', false);
+    expect(privilegesAfter).to.have.property('viewTransfers', true);
   });
 
-  it('changes when owner flag is changed', function () {
+  it('changes when owner flag is changed', async function () {
     const obj = EmberObject.extend({
       currentUserEffPrivileges: Object.freeze(['space_view_qos']),
       currentUserIsOwner: false,
@@ -121,9 +120,8 @@ describe('Unit | Utility | computed current user privileges', function () {
     expect(privilegesBefore).to.have.property('viewTransfers', false);
 
     set(obj, 'currentUserIsOwner', true);
-    return wait().then(() => {
-      const privilegesAfter = get(obj, 'privileges');
-      expect(privilegesAfter).to.have.property('viewTransfers', true);
-    });
+    await settled();
+    const privilegesAfter = get(obj, 'privileges');
+    expect(privilegesAfter).to.have.property('viewTransfers', true);
   });
 });

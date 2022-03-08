@@ -9,7 +9,6 @@ import sinon from 'sinon';
 import { blur, focus, fillIn } from 'ember-native-dom-helpers';
 import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {
@@ -61,24 +60,22 @@ describe('Integration | Component | form component/dropdown field', function () 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       const dropdown = new DropdownHelper();
-      return wait()
-        .then(() => dropdown.open())
-        .then(() => {
-          [{
-            label: 'First',
-            icon: 'space',
-          }, {
-            label: 'Second',
-          }, {
-            label: 'Third',
-          }].forEach(({ label, icon }, index) => {
-            const $option = $(dropdown.getNthOption(index + 1));
-            expect($option.find('.text').text().trim()).to.equal(label);
-            if (icon) {
-              expect($option.find('.one-icon')).to.have.class(`oneicon-${icon}`);
-            }
-          });
-        });
+      await dropdown.open();
+
+      [{
+        label: 'First',
+        icon: 'space',
+      }, {
+        label: 'Second',
+      }, {
+        label: 'Third',
+      }].forEach(({ label, icon }, index) => {
+        const $option = $(dropdown.getNthOption(index + 1));
+        expect($option.find('.text').text().trim()).to.equal(label);
+        if (icon) {
+          expect($option.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+        }
+      });
     }
   );
 
@@ -89,11 +86,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          const dropdownTrigger = new DropdownHelper().getTrigger();
-          expect($(dropdownTrigger)).to.have.attr('aria-disabled', 'true');
-        });
+      const dropdownTrigger = new DropdownHelper().getTrigger();
+      expect($(dropdownTrigger)).to.have.attr('aria-disabled', 'true');
     }
   );
 
@@ -104,13 +98,11 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          const dropdownTrigger = new DropdownHelper().getTrigger();
-          return focus(dropdownTrigger)
-            .then(() => blur(dropdownTrigger))
-            .then(() => expect(focusLostSpy).to.be.calledOnce);
-        });
+      const dropdownTrigger = new DropdownHelper().getTrigger();
+      await focus(dropdownTrigger);
+      await blur(dropdownTrigger);
+
+      expect(focusLostSpy).to.be.calledOnce;
     }
   );
 
@@ -121,15 +113,11 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          const dropdown = new DropdownHelper();
-          return dropdown.selectOption(2)
-            .then(() => {
-              expect(valueChangedSpy).to.be.calledOnce;
-              expect(valueChangedSpy).to.be.calledWith(2);
-            });
-        });
+      const dropdown = new DropdownHelper();
+      await dropdown.selectOption(2);
+
+      expect(valueChangedSpy).to.be.calledOnce;
+      expect(valueChangedSpy).to.be.calledWith(2);
     }
   );
 
@@ -138,11 +126,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-    return wait()
-      .then(() => {
-        const $dropdownTrigger = $(new DropdownHelper().getTrigger());
-        expect($dropdownTrigger.text().trim()).to.equal('Second');
-      });
+    const $dropdownTrigger = $(new DropdownHelper().getTrigger());
+    expect($dropdownTrigger.text().trim()).to.equal('Second');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -150,11 +135,8 @@ describe('Integration | Component | form component/dropdown field', function () 
       {{form-component/dropdown-field field=field fieldId="abc"}}
     `);
 
-    return wait()
-      .then(() => {
-        const $dropdownTrigger = $(new DropdownHelper().getTrigger());
-        expect($dropdownTrigger.attr('id')).to.equal('abc');
-      });
+    const $dropdownTrigger = $(new DropdownHelper().getTrigger());
+    expect($dropdownTrigger.attr('id')).to.equal('abc');
   });
 
   it(
@@ -166,11 +148,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          const $dropdownTrigger = $(new DropdownHelper().getTrigger());
-          expect($dropdownTrigger.text().trim()).to.equal('Select option...');
-        });
+      const $dropdownTrigger = $(new DropdownHelper().getTrigger());
+      expect($dropdownTrigger.text().trim()).to.equal('Select option...');
     }
   );
 
@@ -180,16 +159,15 @@ describe('Integration | Component | form component/dropdown field', function () 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       const dropdown = new DropdownHelper();
-      return wait()
-        .then(() => dropdown.open())
-        .then(() => expect(dropdown.getSearchInput()).to.exist);
+      await dropdown.open();
+
+      expect(dropdown.getSearchInput()).to.exist;
     }
   );
 
   it('filters available options according to query in search input', async function () {
     await render(hbs `{{form-component/dropdown-field field=field}}`);
     const dropdown = new DropdownHelper();
-    await wait();
 
     await dropdown.open();
     await fillIn(dropdown.getSearchInput(), ' Eco');
@@ -206,9 +184,9 @@ describe('Integration | Component | form component/dropdown field', function () 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
       const dropdown = new DropdownHelper();
-      return wait()
-        .then(() => dropdown.open())
-        .then(() => expect(dropdown.getSearchInput()).to.not.exist);
+      await dropdown.open();
+
+      expect(dropdown.getSearchInput()).to.not.exist;
     }
   );
 

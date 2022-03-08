@@ -7,7 +7,6 @@ import hbs from 'htmlbars-inline-precompile';
 import { registerService, lookupService } from '../../helpers/stub-service';
 import Service from '@ember/service';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
 import { setProperties } from '@ember/object';
 
@@ -24,7 +23,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    return wait().then(() => expect(getModal()).to.exist);
+    expect(getModal()).to.exist;
   });
 
   it('is closed when alert.opened is false', async function () {
@@ -32,17 +31,16 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    return wait().then(() => expect(getModal()).to.not.exist);
+    expect(getModal()).to.not.exist;
   });
 
   it('can be closed using "Close" button', async function () {
     this.set('alert.opened', true);
 
     await render(hbs `{{alert-global}}`);
+    await click(getModal().find('.close-alert-modal')[0]);
 
-    return wait()
-      .then(() => click(getModal().find('.close-alert-modal')[0]))
-      .then(() => expect(this.get('alert.opened')).to.be.false);
+    expect(this.get('alert.opened')).to.be.false;
   });
 
   [
@@ -59,11 +57,7 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() =>
-          expect(getModal().find('.header-icon'))
-          .to.have.class(`oneicon-${icon}`)
-        );
+      expect(getModal().find('.header-icon')).to.have.class(`oneicon-${icon}`);
     });
   });
 
@@ -81,10 +75,7 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() =>
-          expect(getModal().find('.close-alert-modal')).to.have.class(btnClass)
-        );
+      expect(getModal().find('.close-alert-modal')).to.have.class(btnClass);
     });
   });
 
@@ -102,10 +93,7 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() =>
-          expect(getModal().find('h1').text()).to.contain(header)
-        );
+      expect(getModal().find('h1').text()).to.contain(header);
     });
   });
 
@@ -118,8 +106,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => expect(getModal().find('.modal-body').text()).to.contain(text));
+    expect(getModal().find('.modal-body').text()).to.contain(text);
   });
 
   it('shows details expanding link, when details are available', async function () {
@@ -130,8 +117,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => expect(getModal().find('.toggle-details-link')).to.exist);
+    expect(getModal().find('.toggle-details-link')).to.exist;
   });
 
   it('does not show details expanding link, when details are not available', async function () {
@@ -139,8 +125,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => expect(getModal().find('.toggle-details-link')).to.not.exist);
+    expect(getModal().find('.toggle-details-link')).to.not.exist;
   });
 
   [
@@ -158,11 +143,7 @@ describe('Integration | Component | alert global', function () {
 
         await render(hbs `{{alert-global}}`);
 
-        return wait()
-          .then(() =>
-            expect(getModal().find('.toggle-details-link'))
-            .to.have.class(textClass)
-          );
+        expect(getModal().find('.toggle-details-link')).to.have.class(textClass);
       }
     );
   });
@@ -177,12 +158,9 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() => {
-          expect(getModal().find('.toggle-details-link').text())
-            .to.contain('Show details');
-          expect(getModal().find('.toggle-details-link .oneicon-arrow-down')).to.exist;
-        });
+      expect(getModal().find('.toggle-details-link').text())
+        .to.contain('Show details');
+      expect(getModal().find('.toggle-details-link .oneicon-arrow-down')).to.exist;
     }
   );
 
@@ -195,14 +173,11 @@ describe('Integration | Component | alert global', function () {
       });
 
       await render(hbs `{{alert-global}}`);
+      await click(getModal().find('.toggle-details-link')[0]);
 
-      return wait()
-        .then(() => click(getModal().find('.toggle-details-link')[0]))
-        .then(() => {
-          expect(getModal().find('.toggle-details-link').text())
-            .to.contain('Hide details');
-          expect(getModal().find('.toggle-details-link .oneicon-arrow-up')).to.exist;
-        });
+      expect(getModal().find('.toggle-details-link').text())
+        .to.contain('Hide details');
+      expect(getModal().find('.toggle-details-link .oneicon-arrow-up')).to.exist;
     }
   );
 
@@ -213,10 +188,9 @@ describe('Integration | Component | alert global', function () {
     });
 
     await render(hbs `{{alert-global}}`);
+    await click(getModal().find('.toggle-details-link')[0]);
 
-    return wait()
-      .then(() => click(getModal().find('.toggle-details-link')[0]))
-      .then(() => expect(getModal().find('.details-collapse')).to.have.class('in'));
+    expect(getModal().find('.details-collapse')).to.have.class('in');
   });
 
   it('hides details text after second click on details expanding link', async function () {
@@ -226,13 +200,10 @@ describe('Integration | Component | alert global', function () {
     });
 
     await render(hbs `{{alert-global}}`);
+    await click(getModal().find('.toggle-details-link')[0]);
+    await click(getModal().find('.toggle-details-link')[0]);
 
-    return wait()
-      .then(() => click(getModal().find('.toggle-details-link')[0]))
-      .then(() => click(getModal().find('.toggle-details-link')[0]))
-      .then(() =>
-        expect(getModal().find('.details-collapse')).to.not.have.class('in')
-      );
+    expect(getModal().find('.details-collapse')).to.not.have.class('in');
   });
 
   it('always shows details when alert.alwaysShowDetails is true', async function () {
@@ -244,11 +215,8 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => {
-        expect(getModal().find('.toggle-details-link')).to.not.exist;
-        expect(getModal().find('.details-collapse')).to.have.class('in');
-      });
+    expect(getModal().find('.toggle-details-link')).to.not.exist;
+    expect(getModal().find('.details-collapse')).to.have.class('in');
   });
 });
 

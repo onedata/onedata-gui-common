@@ -3,9 +3,9 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupTest } from 'ember-mocha';
 import CreateParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/create-parallel-box-action';
 import { getProperties, get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
+import { settled } from '@ember/test-helpers';
 
 const newParallelBoxMatcher = sinon.match({
   name: 'Parallel box',
@@ -56,7 +56,7 @@ describe('Integration | Utility | workflow visualiser/actions/create parallel bo
 
       const { resultPromise } = await executeAction(this);
       rejectCreate();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith(newParallelBoxMatcher);
@@ -67,6 +67,6 @@ describe('Integration | Utility | workflow visualiser/actions/create parallel bo
 
 async function executeAction(testCase) {
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

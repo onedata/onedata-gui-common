@@ -1,13 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ViewLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-action';
 import { get, getProperties } from '@ember/object';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
@@ -80,6 +78,6 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
 async function executeAction(testCase) {
   await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

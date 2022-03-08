@@ -1,13 +1,12 @@
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 
 /**
  * Special suite to force initialization of some long procedures that executed
  * first time causes timeouts in testing environment. Without it the first
- * tests (with `wait()`) sometimes timeout with default (shorter) timeout.
+ * tests (with `settled()`) sometimes timeout with default (shorter) timeout.
  */
 describe('Integration | Component | warm up', function () {
   setupRenderingTest();
@@ -19,6 +18,6 @@ describe('Integration | Component | warm up', function () {
     // Rendering modal here allows to avoid these timeouts.
     await render(hbs `{{one-modal}}`);
 
-    await wait();
+    await settled();
   });
 });

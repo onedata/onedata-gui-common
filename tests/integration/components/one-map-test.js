@@ -5,7 +5,6 @@ import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import _ from 'lodash';
-import wait from 'ember-test-helpers/wait';
 
 function getRelativePosition($parent, $child) {
   const pPosition = $parent.position();
@@ -113,14 +112,13 @@ describe('Integration | Component | one map', function () {
         {{/one-map}}
       </div>
     `);
-    return wait().then(() => {
-      const $position = this.$('.map-position-container');
-      const left = parseFloat($position.css('left'));
-      const top = parseFloat($position.css('top'));
-      const mapObject = getMapObject(this);
-      const coords = mapObject.pointToLatLng(left, top);
-      expect(_.inRange(coords.lat, 49, 51)).to.be.true;
-      expect(_.inRange(coords.lng, 19, 21)).to.be.true;
-    });
+
+    const $position = this.$('.map-position-container');
+    const left = parseFloat($position.css('left'));
+    const top = parseFloat($position.css('top'));
+    const mapObject = getMapObject(this);
+    const coords = mapObject.pointToLatLng(left, top);
+    expect(_.inRange(coords.lat, 49, 51)).to.be.true;
+    expect(_.inRange(coords.lng, 19, 21)).to.be.true;
   });
 });

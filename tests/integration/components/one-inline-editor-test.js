@@ -1,10 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click, fillIn } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
 
@@ -15,36 +13,35 @@ describe('Integration | Component | one inline editor', function () {
     const value = 'asdf';
     this.set('value', value);
     await render(hbs `{{one-inline-editor value=value}}`);
+
     expect(this.$('.one-label').text().trim()).to.equal(value);
   });
 
-  it('shows input with value after text click', async function (done) {
+  it('shows input with value after text click', async function () {
     const value = 'asdf';
     this.set('value', value);
     await render(hbs `{{one-inline-editor value=value}}`);
-    click('.one-label').then(() => {
-      const input = this.$('input');
-      expect(input).to.exist;
-      expect(input.val()).to.equal(value);
-      done();
-    });
+
+    await click('.one-label');
+
+    const input = this.$('input');
+    expect(input).to.exist;
+    expect(input.val()).to.equal(value);
   });
 
-  it('allows to cancel edition', async function (done) {
+  it('allows to cancel edition', async function () {
     const value = 'asdf';
     this.set('value', value);
     await render(hbs `{{one-inline-editor value=value}}`);
-    click('.one-label').then(() => {
-      fillIn('input', 'anotherValue').then(() => {
-        click('.cancel-icon').then(() => {
-          expect(this.$('.one-label').text().trim()).to.equal(value);
-          done();
-        });
-      });
-    });
+
+    await click('.one-label');
+    await fillIn('input', 'anotherValue');
+    await click('.cancel-icon');
+
+    expect(this.$('.one-label').text().trim()).to.equal(value);
   });
 
-  it('saves edited value', async function (done) {
+  it('saves edited value', async function () {
     const value = 'asdf';
     this.set('value', value);
     let promiseResolve;
@@ -52,24 +49,21 @@ describe('Integration | Component | one inline editor', function () {
       new Promise((resolve) => promiseResolve = resolve));
     this.set('save', saveSpy);
     await render(hbs `{{one-inline-editor value=value onSave=(action save)}}`);
-    click('.one-label').then(() => {
-      const newValue = 'anotherValue';
-      fillIn('input', 'anotherValue').then(() => {
-        click('.save-icon').then(() => {
-          expect(saveSpy).to.be.calledOnce;
-          expect(this.$('.spin-spinner-block')).to.exist;
-          expect(this.$('input')).to.be.disabled;
-          this.set('value', newValue);
-          promiseResolve();
-          wait().then(() => {
-            expect(this.$('.spin-spinner-block')).to.not.exist;
-            expect(this.$('.one-label').text().trim()).to.equal(
-              newValue);
-            done();
-          });
-        });
-      });
-    });
+
+    await click('.one-label');
+    const newValue = 'anotherValue';
+    await fillIn('input', 'anotherValue');
+    await click('.save-icon');
+    expect(saveSpy).to.be.calledOnce;
+    expect(this.$('.spin-spinner-block')).to.exist;
+    expect(this.$('input')).to.be.disabled;
+
+    this.set('value', newValue);
+    promiseResolve();
+    await settled();
+    expect(this.$('.spin-spinner-block')).to.not.exist;
+    expect(this.$('.one-label').text().trim()).to.equal(
+      newValue);
   });
 
   it('sends onInputValueChanged action with current value', async function () {
@@ -78,12 +72,12 @@ describe('Integration | Component | one inline editor', function () {
     const onInputChanged = sinon.spy();
     this.set('onInputValueChanged', onInputChanged);
     await render(hbs `{{one-inline-editor value=value onInputValueChanged=(action onInputValueChanged)}}`);
-    return click('.one-label').then(() => {
-      return fillIn('input', 'anotherValue').then(() => {
-        expect(onInputChanged).to.be.calledTwice;
-        expect(onInputChanged).to.be.calledWith('asdf');
-        expect(onInputChanged).to.be.calledWith('anotherValue');
-      });
-    });
+
+    await click('.one-label');
+    await fillIn('input', 'anotherValue');
+
+    expect(onInputChanged).to.be.calledTwice;
+    expect(onInputChanged).to.be.calledWith('asdf');
+    expect(onInputChanged).to.be.calledWith('anotherValue');
   });
 });

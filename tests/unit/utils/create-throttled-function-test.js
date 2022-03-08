@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import createThrottledFunction from 'onedata-gui-common/utils/create-throttled-function';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | create throttled function', function () {
   beforeEach(function () {
@@ -20,7 +20,7 @@ describe('Unit | Utility | create throttled function', function () {
     createThrottledFunction(this.spy, 100);
 
     this.clock.tick(200);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.not.called;
   });
@@ -41,7 +41,7 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.have.not.been.called;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.have.been.calledOnce;
   });
@@ -54,14 +54,14 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.have.not.been.called;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     throttled();
 
     expect(this.spy).to.have.been.calledOnce;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.have.been.calledTwice;
   });
@@ -75,12 +75,12 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
   });
@@ -95,12 +95,12 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
   });
@@ -110,16 +110,16 @@ describe('Unit | Utility | create throttled function', function () {
 
     throttled();
     this.clock.tick(100);
-    await wait();
+    await settled();
     throttled();
     this.clock.tick(100);
-    await wait();
+    await settled();
     throttled();
 
     expect(this.spy).to.be.calledThrice;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.calledThrice;
   });
@@ -129,16 +129,16 @@ describe('Unit | Utility | create throttled function', function () {
 
     throttled();
     this.clock.tick(99);
-    await wait();
+    await settled();
     throttled();
     this.clock.tick(99);
-    await wait();
+    await settled();
     throttled();
 
     expect(this.spy).to.be.calledTwice;
 
     this.clock.tick(100);
-    await wait();
+    await settled();
 
     expect(this.spy).to.be.calledThrice;
   });

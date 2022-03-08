@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn, scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
 import _ from 'lodash';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
@@ -57,9 +56,10 @@ describe('Integration | Component | workflow visualiser', function () {
       this.setProperties({
         mode: 'edit',
         changeStub: sinon.stub().callsFake(newData => new Promise(resolve => {
-          schedule('afterRender', this, () => {
+          schedule('afterRender', this, async () => {
             this.set('rawData', newData);
-            wait().then(resolve);
+            await settled();
+            resolve();
           });
         })),
       });
@@ -861,9 +861,9 @@ async function changeContainerWidthForScrollTest(testCase, newWidth) {
     'containerStyle',
     htmlSafe(`min-width: ${newWidth}px; max-width: ${newWidth}px`)
   );
-  await wait();
+  await settled();
   testCase.get('_window').resizeListeners.forEach(f => f());
-  await wait();
+  await settled();
 }
 
 async function getActionTrigger(elementType, elementPath, actionName) {

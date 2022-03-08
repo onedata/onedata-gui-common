@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | render later', function () {
@@ -34,10 +33,11 @@ describe('Integration | Component | render later', function () {
         <div class="test"></div>
       {{/render-later}}
     `);
+
     this.set('trigger', true);
-    return wait().then(() => {
-      expect(this.$('.test')).to.exist;
-    });
+    await settled();
+
+    expect(this.$('.test')).to.exist;
   });
 
   it('does not change render state after trigger set to falsy value', async function () {
@@ -47,10 +47,11 @@ describe('Integration | Component | render later', function () {
         <div class="test"></div>
       {{/render-later}}
     `);
+
     this.set('trigger', false);
-    return wait().then(() => {
-      expect(this.$('.test')).to.exist;
-    });
+    await settled();
+
+    expect(this.$('.test')).to.exist;
   });
 
   it('resets render state through property "resetRender"', async function () {
@@ -64,15 +65,14 @@ describe('Integration | Component | render later', function () {
       {{/render-later}}
     `);
 
-    return wait().then(() => {
-      this.setProperties({
-        trigger: false,
-        resetTrigger: 'whatever3',
-      });
-      return wait().then(() => {
-        expect(this.$('.test')).to.not.exist;
-      });
+    this.setProperties({
+      trigger: false,
+      resetTrigger: 'whatever3',
     });
+    await settled();
+
+    expect(this.$('.test')).to.not.exist;
+
   });
 
   it('resets render state through yielded action "resetRenderTrigger"', async function () {
@@ -84,8 +84,8 @@ describe('Integration | Component | render later', function () {
     `);
 
     this.set('trigger', false);
-    return click('.test').then(() => {
-      expect(this.$('.test')).to.not.exist;
-    });
+    await click('.test');
+
+    expect(this.$('.test')).to.not.exist;
   });
 });

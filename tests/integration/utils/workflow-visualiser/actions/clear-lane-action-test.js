@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
@@ -9,8 +9,6 @@ import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/i
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import { getProperties, get } from '@ember/object';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
@@ -103,7 +101,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
       const { resultPromise } = await executeAction(this);
       await click(getModalFooter().find('.question-yes')[0]);
       rejectClear();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(clearLaneStub).to.be.calledOnce;
@@ -115,6 +113,6 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
 async function executeAction(testCase) {
   await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | content clusters onepanel redirect', function () {
   setupRenderingTest();
@@ -24,10 +23,8 @@ describe('Integration | Component | content clusters onepanel redirect', functio
         checkOnepanelAvailability=checkOnepanelAvailability
       }}`);
 
-      return wait().then(() => {
-        expect(checkOnepanelAvailability).to.be.calledOnce;
-        expect(redirectToOnepanelApp).to.be.calledOnce;
-        expect(this.$('.spin-spinner')).to.exist;
-      });
+      expect(checkOnepanelAvailability).to.be.calledOnce;
+      expect(redirectToOnepanelApp).to.be.calledOnce;
+      expect(this.$('.spin-spinner')).to.exist;
     });
 });
