@@ -1,15 +1,14 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | provider place/super circle', function () {
-  setupComponentTest('provider-place/super-circle', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders with source and without desitnation animation class', function () {
-    this.render(hbs `{{provider-place/super-circle isSource=true}}`);
+  it('renders with source and without desitnation animation class', async function () {
+    await render(hbs `{{provider-place/super-circle isSource=true}}`);
 
     const $superCircle = this.$('.super-circle');
 
@@ -17,8 +16,8 @@ describe('Integration | Component | provider place/super circle', function () {
     expect($superCircle).to.not.have.class('destination');
   });
 
-  it('renders with destination and without source animation class', function () {
-    this.render(hbs `{{provider-place/super-circle isDestination=true}}`);
+  it('renders with destination and without source animation class', async function () {
+    await render(hbs `{{provider-place/super-circle isDestination=true}}`);
 
     const $superCircle = this.$('.super-circle');
 
@@ -26,8 +25,8 @@ describe('Integration | Component | provider place/super circle', function () {
     expect($superCircle).to.have.class('destination');
   });
 
-  it('renders with source and destination animation classes', function () {
-    this.render(hbs `
+  it('renders with source and destination animation classes', async function () {
+    await render(hbs `
       {{provider-place/super-circle isDestination=true isSource=true}}
     `);
 
@@ -36,9 +35,9 @@ describe('Integration | Component | provider place/super circle', function () {
     expect($superCircle).to.have.class('source');
     expect($superCircle).to.have.class('destination');
   });
-  
-  it('renders without source and destination animation classes', function () {
-    this.render(hbs `
+
+  it('renders without source and destination animation classes', async function () {
+    await render(hbs `
       {{provider-place/super-circle isDestination=false isSource=false}}
     `);
 

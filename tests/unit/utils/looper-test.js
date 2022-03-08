@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import Looper from 'onedata-gui-common/utils/looper';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | looper', function () {
   beforeEach(function () {
@@ -26,7 +26,7 @@ describe('Unit | Utility | looper', function () {
     this.looper.on('tick', tickSpy);
 
     this.fakeClock.tick(160);
-    await wait();
+    await settled();
 
     expect(tickSpy).to.be.calledThrice;
   });
@@ -37,7 +37,7 @@ describe('Unit | Utility | looper', function () {
     this.looper.stop();
 
     this.fakeClock.tick(160);
-    await wait();
+    await settled();
 
     expect(tickSpy).to.not.be.called;
   });

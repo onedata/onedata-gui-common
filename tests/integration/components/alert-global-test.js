@@ -1,49 +1,46 @@
 /* eslint-disable no-undef */
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { registerService, lookupService } from '../../helpers/stub-service';
 import Service from '@ember/service';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 import { click } from 'ember-native-dom-helpers';
 import { setProperties } from '@ember/object';
 
 describe('Integration | Component | alert global', function () {
-  setupComponentTest('alert-global', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     registerService(this, 'alert', Service);
     this.set('alert', lookupService(this, 'alert'));
   });
 
-  it('is opened when alert.opened is true', function () {
+  it('is opened when alert.opened is true', async function () {
     this.set('alert.opened', true);
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
 
-    return wait().then(() => expect(getModal()).to.exist);
+    expect(getModal()).to.exist;
   });
 
-  it('is closed when alert.opened is false', function () {
+  it('is closed when alert.opened is false', async function () {
     this.set('alert.opened', false);
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
 
-    return wait().then(() => expect(getModal()).to.not.exist);
+    expect(getModal()).to.not.exist;
   });
 
-  it('can be closed using "Close" button', function () {
+  it('can be closed using "Close" button', async function () {
     this.set('alert.opened', true);
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
+    await click(getModal().find('.close-alert-modal')[0]);
 
-    return wait()
-      .then(() => click(getModal().find('.close-alert-modal')[0]))
-      .then(() => expect(this.get('alert.opened')).to.be.false);
+    expect(this.get('alert.opened')).to.be.false;
   });
 
   [
@@ -52,19 +49,15 @@ describe('Integration | Component | alert global', function () {
     { type: 'info', icon: 'sign-info-rounded' },
     { type: undefined, icon: 'sign-info-rounded' },
   ].forEach(({ type, icon }) => {
-    it(`uses ${icon} icon for ${type} type`, function () {
+    it(`uses ${icon} icon for ${type} type`, async function () {
       setProperties(this.get('alert'), {
         opened: true,
         type,
       });
 
-      this.render(hbs `{{alert-global}}`);
+      await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() =>
-          expect(getModal().find('.header-icon'))
-          .to.have.class(`oneicon-${icon}`)
-        );
+      expect(getModal().find('.header-icon')).to.have.class(`oneicon-${icon}`);
     });
   });
 
@@ -74,18 +67,15 @@ describe('Integration | Component | alert global', function () {
     { type: 'info', btnClass: 'btn-default' },
     { type: undefined, btnClass: 'btn-default' },
   ].forEach(({ type, btnClass }) => {
-    it(`uses ${btnClass} close button for ${type} type`, function () {
+    it(`uses ${btnClass} close button for ${type} type`, async function () {
       setProperties(this.get('alert'), {
         opened: true,
         type,
       });
 
-      this.render(hbs `{{alert-global}}`);
+      await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() =>
-          expect(getModal().find('.close-alert-modal')).to.have.class(btnClass)
-        );
+      expect(getModal().find('.close-alert-modal')).to.have.class(btnClass);
     });
   });
 
@@ -95,53 +85,47 @@ describe('Integration | Component | alert global', function () {
     { type: 'info', header: 'Notice' },
     { type: undefined, header: 'Notice' },
   ].forEach(({ type, header }) => {
-    it(`shows "${header}" header for ${type} type`, function () {
+    it(`shows "${header}" header for ${type} type`, async function () {
       setProperties(this.get('alert'), {
         opened: true,
         type,
       });
 
-      this.render(hbs `{{alert-global}}`);
+      await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() =>
-          expect(getModal().find('h1').text()).to.contain(header)
-        );
+      expect(getModal().find('h1').text()).to.contain(header);
     });
   });
 
-  it('shows passed text in modal content', function () {
+  it('shows passed text in modal content', async function () {
     const text = 'abcdf';
     setProperties(this.get('alert'), {
       opened: true,
       text,
     });
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => expect(getModal().find('.modal-body').text()).to.contain(text));
+    expect(getModal().find('.modal-body').text()).to.contain(text);
   });
 
-  it('shows details expanding link, when details are available', function () {
+  it('shows details expanding link, when details are available', async function () {
     setProperties(this.get('alert'), {
       opened: true,
       detailsText: 'asdf',
     });
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => expect(getModal().find('.toggle-details-link')).to.exist);
+    expect(getModal().find('.toggle-details-link')).to.exist;
   });
 
-  it('does not show details expanding link, when details are not available', function () {
+  it('does not show details expanding link, when details are not available', async function () {
     this.set('alert.opened', true);
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => expect(getModal().find('.toggle-details-link')).to.not.exist);
+    expect(getModal().find('.toggle-details-link')).to.not.exist;
   });
 
   [
@@ -150,106 +134,89 @@ describe('Integration | Component | alert global', function () {
   ].forEach(({ type, textClass }) => {
     it(
       `adds ${textClass || 'no'} class to details expanding link for ${type} type`,
-      function () {
+      async function () {
         setProperties(this.get('alert'), {
           opened: true,
           type,
           detailsText: 'asdf',
         });
 
-        this.render(hbs `{{alert-global}}`);
+        await render(hbs `{{alert-global}}`);
 
-        return wait()
-          .then(() =>
-            expect(getModal().find('.toggle-details-link'))
-            .to.have.class(textClass)
-          );
+        expect(getModal().find('.toggle-details-link')).to.have.class(textClass);
       }
     );
   });
 
   it(
     'shows "Show details" and down arrow for details expanding link when details are collapsed',
-    function () {
+    async function () {
       setProperties(this.get('alert'), {
         opened: true,
         detailsText: 'asdf',
       });
 
-      this.render(hbs `{{alert-global}}`);
+      await render(hbs `{{alert-global}}`);
 
-      return wait()
-        .then(() => {
-          expect(getModal().find('.toggle-details-link').text())
-            .to.contain('Show details');
-          expect(getModal().find('.toggle-details-link .oneicon-arrow-down')).to.exist;
-        });
+      expect(getModal().find('.toggle-details-link').text())
+        .to.contain('Show details');
+      expect(getModal().find('.toggle-details-link .oneicon-arrow-down')).to.exist;
     }
   );
 
   it(
     'shows "Hide details" and up arrow for details expanding link when details are expanded',
-    function () {
+    async function () {
       setProperties(this.get('alert'), {
         opened: true,
         detailsText: 'asdf',
       });
 
-      this.render(hbs `{{alert-global}}`);
+      await render(hbs `{{alert-global}}`);
+      await click(getModal().find('.toggle-details-link')[0]);
 
-      return wait()
-        .then(() => click(getModal().find('.toggle-details-link')[0]))
-        .then(() => {
-          expect(getModal().find('.toggle-details-link').text())
-            .to.contain('Hide details');
-          expect(getModal().find('.toggle-details-link .oneicon-arrow-up')).to.exist;
-        });
+      expect(getModal().find('.toggle-details-link').text())
+        .to.contain('Hide details');
+      expect(getModal().find('.toggle-details-link .oneicon-arrow-up')).to.exist;
     }
   );
 
-  it('shows details text after click on details expanding link', function () {
+  it('shows details text after click on details expanding link', async function () {
     setProperties(this.get('alert'), {
       opened: true,
       detailsText: 'asdf',
     });
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
+    await click(getModal().find('.toggle-details-link')[0]);
 
-    return wait()
-      .then(() => click(getModal().find('.toggle-details-link')[0]))
-      .then(() => expect(getModal().find('.details-collapse')).to.have.class('in'));
+    expect(getModal().find('.details-collapse')).to.have.class('in');
   });
 
-  it('hides details text after second click on details expanding link', function () {
+  it('hides details text after second click on details expanding link', async function () {
     setProperties(this.get('alert'), {
       opened: true,
       detailsText: 'asdf',
     });
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
+    await click(getModal().find('.toggle-details-link')[0]);
+    await click(getModal().find('.toggle-details-link')[0]);
 
-    return wait()
-      .then(() => click(getModal().find('.toggle-details-link')[0]))
-      .then(() => click(getModal().find('.toggle-details-link')[0]))
-      .then(() =>
-        expect(getModal().find('.details-collapse')).to.not.have.class('in')
-      );
+    expect(getModal().find('.details-collapse')).to.not.have.class('in');
   });
 
-  it('always shows details when alert.alwaysShowDetails is true', function () {
+  it('always shows details when alert.alwaysShowDetails is true', async function () {
     setProperties(this.get('alert'), {
       opened: true,
       detailsText: 'asdf',
       alwaysShowDetails: true,
     });
 
-    this.render(hbs `{{alert-global}}`);
+    await render(hbs `{{alert-global}}`);
 
-    return wait()
-      .then(() => {
-        expect(getModal().find('.toggle-details-link')).to.not.exist;
-        expect(getModal().find('.details-collapse')).to.have.class('in');
-      });
+    expect(getModal().find('.toggle-details-link')).to.not.exist;
+    expect(getModal().find('.details-collapse')).to.have.class('in');
   });
 });
 

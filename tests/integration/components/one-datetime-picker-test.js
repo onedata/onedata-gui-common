@@ -1,14 +1,13 @@
 import { expect } from 'chai';
-import { describe, it, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { describe, it } from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../helpers/one-datetime-picker';
 
 describe('Integration | Component | one datetime picker', function () {
-  setupComponentTest('one-datetime-picker', {
-    integration: true,
-  });
+  const { afterEach } = setupRenderingTest();
 
   afterEach(function () {
     // Some tests use fake clocks. We need to restore system clock
@@ -18,20 +17,20 @@ describe('Integration | Component | one datetime picker', function () {
     }
   });
 
-  it('has class "one-datetime-picker"', function () {
-    this.render(hbs `{{one-datetime-picker}}`);
+  it('has class "one-datetime-picker"', async function () {
+    await render(hbs `{{one-datetime-picker}}`);
 
     expect(this.$('.one-datetime-picker')).to.exist;
   });
 
-  it('does not render datetime picker before input click', function () {
+  it('does not render datetime picker before input click', async function () {
     const clock = sinon.useFakeTimers({
       now: Date.now(),
       shouldAdvanceTime: true,
     });
     this.set('clock', clock);
 
-    this.render(hbs `{{one-datetime-picker}}`);
+    await render(hbs `{{one-datetime-picker}}`);
 
     const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
     return pickerHelper.waitForPickerInit(clock)
@@ -40,8 +39,8 @@ describe('Integration | Component | one datetime picker', function () {
       );
   });
 
-  it('does render datetime picker after input click', function () {
-    this.render(hbs `{{one-datetime-picker}}`);
+  it('does render datetime picker after input click', async function () {
+    await render(hbs `{{one-datetime-picker}}`);
 
     const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
     return pickerHelper.openPicker()
@@ -50,8 +49,8 @@ describe('Integration | Component | one datetime picker', function () {
       );
   });
 
-  it('adds "datetime-picker" class to datetime picker element', function () {
-    this.render(hbs `{{one-datetime-picker}}`);
+  it('adds "datetime-picker" class to datetime picker element', async function () {
+    await render(hbs `{{one-datetime-picker}}`);
 
     const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
     return pickerHelper.openPicker()
@@ -60,11 +59,11 @@ describe('Integration | Component | one datetime picker', function () {
       );
   });
 
-  it('notifies about changed value through "onChange" action', function () {
+  it('notifies about changed value through "onChange" action', async function () {
     const changeSpy = sinon.spy();
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{one-datetime-picker onChange=(action "change")}}`);
+    await render(hbs `{{one-datetime-picker onChange=(action change)}}`);
 
     const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
     return pickerHelper.selectToday()
@@ -74,8 +73,8 @@ describe('Integration | Component | one datetime picker', function () {
       });
   });
 
-  it('can be disabled', function () {
-    this.render(hbs `{{one-datetime-picker disabled=true}}`);
+  it('can be disabled', async function () {
+    await render(hbs `{{one-datetime-picker disabled=true}}`);
 
     expect(this.$('input[disabled]')).to.exist;
     const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
@@ -85,11 +84,11 @@ describe('Integration | Component | one datetime picker', function () {
       );
   });
 
-  it('can have a placeholder', function () {
+  it('can have a placeholder', async function () {
     const placeholderText = 'sth';
     this.set('placeholderText', placeholderText);
 
-    this.render(hbs `{{one-datetime-picker placeholder=placeholderText}}`);
+    await render(hbs `{{one-datetime-picker placeholder=placeholderText}}`);
 
     expect(this.$('input').attr('placeholder')).to.equal(placeholderText);
   });

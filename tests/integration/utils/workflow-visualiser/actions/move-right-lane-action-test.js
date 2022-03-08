@@ -1,22 +1,20 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import MoveRightLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/move-right-lane-action';
 import { getProperties, get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
+import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/move right lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   beforeEach(function () {
     const lane = Lane.create({ isLast: false });
     const action = MoveRightLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { lane },
     });
     this.setProperties({ lane, action });
@@ -67,7 +65,7 @@ describe('Integration | Utility | workflow visualiser/actions/move right lane ac
 
       const { resultPromise } = await executeAction(this);
       rejectMove();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(moveLaneStub).to.be.calledOnce.and.to.be.calledWith(1);
@@ -78,6 +76,6 @@ describe('Integration | Utility | workflow visualiser/actions/move right lane ac
 
 async function executeAction(testCase) {
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

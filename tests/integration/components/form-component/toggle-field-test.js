@@ -1,15 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { focus, blur, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | form component/toggle field', function () {
-  setupComponentTest('form-component/toggle-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', ToggleField.create());
@@ -17,8 +16,8 @@ describe('Integration | Component | form component/toggle field', function () {
 
   it(
     'has class "toggle-field"',
-    function () {
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       expect(this.$('.toggle-field')).to.exist;
     }
@@ -26,8 +25,8 @@ describe('Integration | Component | form component/toggle field', function () {
 
   it(
     'renders toggle',
-    function () {
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       expect(this.$('.one-way-toggle')).to.exist;
     }
@@ -35,10 +34,10 @@ describe('Integration | Component | form component/toggle field', function () {
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       expect(this.$('.one-way-toggle')).to.have.class('disabled');
     }
@@ -46,10 +45,10 @@ describe('Integration | Component | form component/toggle field', function () {
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       return focus('input')
         .then(() => blur('input'))
@@ -59,10 +58,10 @@ describe('Integration | Component | form component/toggle field', function () {
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       return click('.one-way-toggle')
         .then(() => {
@@ -72,26 +71,26 @@ describe('Integration | Component | form component/toggle field', function () {
     }
   );
 
-  it('sets input value to value specified in field object', function () {
+  it('sets input value to value specified in field object', async function () {
     this.set('field.value', true);
 
-    this.render(hbs `{{form-component/toggle-field field=field}}`);
+    await render(hbs `{{form-component/toggle-field field=field}}`);
 
     expect(this.$('.one-way-toggle')).to.have.class('checked');
   });
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/toggle-field field=field fieldId="abc"}}
     `);
 
     expect(this.$('input#abc')).to.exist;
   });
 
-  it('renders blocked toggle when field is in "view" mode', function () {
+  it('renders blocked toggle when field is in "view" mode', async function () {
     this.get('field').changeMode('view');
 
-    this.render(hbs `{{form-component/toggle-field field=field}}`);
+    await render(hbs `{{form-component/toggle-field field=field}}`);
 
     expect(this.$('.one-way-toggle')).to.have.class('disabled');
   });

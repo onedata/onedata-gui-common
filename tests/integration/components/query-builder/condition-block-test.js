@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
@@ -26,9 +27,7 @@ const mathOperators = [{
 }];
 
 describe('Integration | Component | query builder/condition block', function () {
-  setupComponentTest('query-builder/condition-block', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -41,7 +40,7 @@ describe('Integration | Component | query builder/condition block', function () 
         comparatorValue: 'hello',
       }));
 
-      this.render(hbs `{{query-builder/condition-block
+      await render(hbs `{{query-builder/condition-block
         queryBlock=queryBlock
         valuesBuilder=valuesBuilder
       }}`);
@@ -81,7 +80,7 @@ describe('Integration | Component | query builder/condition block', function () 
           })
         );
 
-        this.render(hbs `{{query-builder/condition-block
+        await render(hbs `{{query-builder/condition-block
           queryBlock=queryBlock
           valuesBuilder=valuesBuilder
         }}`);
@@ -100,7 +99,7 @@ describe('Integration | Component | query builder/condition block', function () 
       comparatorValue: 'hello',
     }));
 
-    this.render(hbs `{{#query-builder/condition-block
+    await render(hbs `{{#query-builder/condition-block
       queryBlock=queryBlock
       valuesBuilder=valuesBuilder
     }}
@@ -124,7 +123,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionStartSpy: sinon.spy(),
     });
 
-    this.render(hbs `{{query-builder/condition-block
+    await render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionStart=editionStartSpy
       valuesBuilder=valuesBuilder
@@ -153,7 +152,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionValidityChangeSpy: sinon.spy(),
     });
 
-    this.render(hbs `{{query-builder/condition-block
+    await render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionEnd=editionEndSpy
       onConditionEditionValidityChange=editionValidityChangeSpy
@@ -190,7 +189,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionValidityChangeSpy: sinon.spy(),
     });
 
-    this.render(hbs `{{query-builder/condition-block
+    await render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionEnd=editionEndSpy
       onConditionEditionValidityChange=editionValidityChangeSpy
@@ -240,7 +239,7 @@ describe('Integration | Component | query builder/condition block', function () 
               comparatorValue: initialValue,
             }));
 
-            this.render(hbs `{{query-builder/condition-block
+            await render(hbs `{{query-builder/condition-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
@@ -274,7 +273,7 @@ describe('Integration | Component | query builder/condition block', function () 
               editionValidityChangeSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-block
+            await render(hbs `{{query-builder/condition-block
               queryBlock=queryBlock
               onConditionEditionEnd=editionEndSpy
               onConditionEditionValidityChange=editionValidityChangeSpy

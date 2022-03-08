@@ -1,15 +1,14 @@
 import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form fields', function () {
-  setupComponentTest('one-form-fields', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('puts an "optional" label in optional inputs', function () {
+  it('puts an "optional" label in optional inputs', async function () {
     let fields = [
       { name: 'one', type: 'text', label: 'One field', optional: true },
     ];
@@ -17,7 +16,7 @@ describe('Integration | Component | one form fields', function () {
     this.set('fields', fields);
     this.set('formValues', EmberObject.create({}));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields}}
     {{/bs-form}}
@@ -29,7 +28,7 @@ describe('Integration | Component | one form fields', function () {
     expect(this.$(`label[for='${inputId}']`).text()).to.match(/optional/);
   });
 
-  it('renders label tip if field should have one', function () {
+  it('renders label tip if field should have one', async function () {
     let fields = [
       { name: 'one', type: 'text', label: 'One field', tip: 'Field tip' },
     ];
@@ -37,7 +36,7 @@ describe('Integration | Component | one form fields', function () {
     this.set('fields', fields);
     this.set('formValues', EmberObject.create({}));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields}}
     {{/bs-form}}
@@ -49,7 +48,7 @@ describe('Integration | Component | one form fields', function () {
     expect(this.$(`label[for='${inputId}'] .one-icon`).length).to.eq(1);
   });
 
-  it('can render a text type input with given value', function () {
+  it('can render a text type input with given value', async function () {
     const VALUE = 'some value';
 
     let fields = [
@@ -61,7 +60,7 @@ describe('Integration | Component | one form fields', function () {
       one: VALUE,
     }));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields formValues=formValues}}
     {{/bs-form}}
@@ -71,7 +70,7 @@ describe('Integration | Component | one form fields', function () {
     expect(this.$('input')).to.have.value(VALUE);
   });
 
-  it('can render form-control-static for type static', function () {
+  it('can render form-control-static for type static', async function () {
     const VALUE = 'some value';
 
     let fields = [
@@ -83,7 +82,7 @@ describe('Integration | Component | one form fields', function () {
       one: VALUE,
     }));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields formValues=formValues}}
     {{/bs-form}}

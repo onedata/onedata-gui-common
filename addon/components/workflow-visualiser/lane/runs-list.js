@@ -114,6 +114,7 @@ import { next, later, cancel, scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { array, raw } from 'ember-awesome-macros';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import config from 'ember-get-config';
 
 /**
  * @typedef {Object} RunsListVisibleRunsPosition
@@ -657,7 +658,10 @@ export default Component.extend({
       element.removeEventListener('transitioncancel', endTransitionHandler);
       this.scheduleActionOnAnimationFsm('removeIndicators', { moveStep });
     };
-    transitionTimeoutTimerId = later(endTransitionHandler, 400);
+    transitionTimeoutTimerId = later(
+      endTransitionHandler,
+      config.environment === 'test' ? 1 : 400
+    );
     element.addEventListener('transitionend', endTransitionHandler);
     element.addEventListener('transitioncancel', endTransitionHandler);
   },

@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import {
   createDummyChartDefinition,
   createDummyConfiguration,
@@ -11,15 +10,14 @@ import {
   expectActiveResolution,
   changeResolution,
 } from '../../../helpers/one-time-series-chart';
-import { click } from 'ember-native-dom-helpers';
 import { get } from '@ember/object';
 import { all as allFulfilled } from 'rsvp';
-import { render } from '@ember/test-helpers';
+import { render, settled, click } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart/toolbar', function () {
-  const hooks = setupRenderingTest();
+  const { afterEach } = setupRenderingTest();
 
-  hooks.afterEach(function () {
+  afterEach(function () {
     const models = this.get('models');
     if (models) {
       models.forEach(model => model.destroy());
@@ -157,7 +155,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     await renderComponent();
 
     model.setViewParameters({ timeResolution: 3600 });
-    await wait();
+    await settled();
 
     expectActiveResolution(this, '1 hr');
   });

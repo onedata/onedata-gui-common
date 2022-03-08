@@ -1,20 +1,19 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form field static', function () {
-  setupComponentTest('one-form-field-static', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders with value', function () {
+  it('renders with value', async function () {
     this.set('field', {
       name: 'one',
       type: 'static',
     });
     this.set('value', 'hello');
-    this.render(hbs `
+    await render(hbs `
       {{one-form-field-static field=field value=value}}
     `);
 
@@ -23,12 +22,12 @@ describe('Integration | Component | one form field static', function () {
     expect($field.text()).to.match(new RegExp('hello'));
   });
 
-  it('has a class with field name', function () {
+  it('has a class with field name', async function () {
     this.set('field', {
       name: 'one',
       type: 'static',
     });
-    this.render(hbs `
+    await render(hbs `
       {{one-form-field-static field=field}}
     `);
 

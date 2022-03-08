@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | actions popover content', function () {
-  setupComponentTest('actions-popover-content', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('acts', [{
@@ -22,11 +21,11 @@ describe('Integration | Component | actions popover content', function () {
     }]);
   });
 
-  it('renders actions', function (done) {
+  it('renders actions', async function (done) {
     const actions = this.get('acts');
     const action = actions[0];
     action.action = sinon.spy();
-    this.render(hbs `{{actions-popover-content actionsArray=acts}}`);
+    await render(hbs `{{actions-popover-content actionsArray=acts}}`);
 
     const actionItem = this.$('li:first-child');
     expect(actionItem).to.exist;
@@ -39,10 +38,10 @@ describe('Integration | Component | actions popover content', function () {
     });
   });
 
-  it('renders header', function () {
+  it('renders header', async function () {
     const actions = this.get('acts');
     const header = actions[1];
-    this.render(hbs `{{actions-popover-content actionsArray=acts}}`);
+    await render(hbs `{{actions-popover-content actionsArray=acts}}`);
 
     const actionItem = this.$('li:last-child');
     expect(actionItem).to.exist;
@@ -50,12 +49,12 @@ describe('Integration | Component | actions popover content', function () {
     expect(actionItem.find('.one-label').text().trim()).to.equal(header.title);
   });
 
-  it('calls actionClicked after action click', function (done) {
+  it('calls actionClicked after action click', async function (done) {
     const clickSpy = sinon.spy();
-    this.on('actionClicked', clickSpy);
-    this.render(hbs `{{actions-popover-content
+    this.set('actionClicked', clickSpy);
+    await render(hbs `{{actions-popover-content
       actionsArray=acts
-      actionClicked=(action "actionClicked")}}
+      actionClicked=(action actionClicked)}}
     `);
 
     click('.actions-popover-content li:first-child a').then(() => {

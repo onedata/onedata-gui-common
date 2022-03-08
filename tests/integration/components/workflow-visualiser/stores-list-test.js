@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import sinon from 'sinon';
@@ -10,13 +10,11 @@ import { click, fillIn } from 'ember-native-dom-helpers';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 
 describe('Integration | Component | workflow visualiser/stores list', function () {
-  setupComponentTest('workflow-visualiser/stores-list', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const createStoreStub = sinon.stub().resolves();
-    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setCreateStoreCallback(createStoreStub);
     this.setProperties({
       actionsFactory,
@@ -33,7 +31,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
   });
 
   it('has class "workflow-visualiser-stores-list"', async function () {
-    await render(this);
+    await renderComponent();
 
     expect(this.$().children()).to.have.class('workflow-visualiser-stores-list')
       .and.to.have.length(1);
@@ -46,16 +44,17 @@ describe('Integration | Component | workflow visualiser/stores list', function (
 
     itRendersListOfStores('edit');
 
-    it('shows "add store" button', async function () {
-      render(this);
+    it('shows "add store" button', async function (done) {
+      await renderComponent();
 
       const $addBtn = this.$('.create-store-action-trigger');
       expect($addBtn).to.exist;
       expect($addBtn.text().trim()).to.equal('Add store');
+      done();
     });
 
-    it('allows to add new store', async function () {
-      render(this);
+    it('allows to add new store', async function (done) {
+      await renderComponent();
 
       await click('.create-store-action-trigger');
       await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
@@ -74,6 +73,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
         defaultInitialContent: null,
         requiresInitialContent: false,
       });
+      done();
     });
   });
 
@@ -84,16 +84,17 @@ describe('Integration | Component | workflow visualiser/stores list', function (
 
     itRendersListOfStores('view');
 
-    it('does not show "add store" button', async function () {
-      render(this);
+    it('does not show "add store" button', async function (done) {
+      await renderComponent();
 
       expect(this.$('.create-store-action-trigger')).to.not.exist;
+      done();
     });
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `
+async function renderComponent() {
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser/stores-list
       actionsFactory=actionsFactory
@@ -101,12 +102,11 @@ async function render(testCase) {
       definedStores=definedStores
     }}
   `);
-  await wait();
 }
 
 function itRendersListOfStores(mode) {
-  it('renders passed list of stores', async function () {
-    render(this);
+  it('renders passed list of stores', async function (done) {
+    await renderComponent();
 
     expect(this.$('.workflow-visualiser-stores-list')).to.have.class(`mode-${mode}`);
     const $stores = this.$('.workflow-visualiser-stores-list-store');
@@ -114,5 +114,6 @@ function itRendersListOfStores(mode) {
     expect($stores).to.have.class(`mode-${mode}`);
     expect($stores.eq(0).text().trim()).to.equal('store1');
     expect($stores.eq(1).text().trim()).to.equal('store2');
+    done();
   });
 }

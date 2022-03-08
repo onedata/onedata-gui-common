@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
 import hbs from 'htmlbars-inline-precompile';
 import {
@@ -14,9 +15,7 @@ import { click } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 
 describe('Integration | Component | modals/question modal', function () {
-  setupComponentTest('modals/question-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -244,13 +243,13 @@ describe('Integration | Component | modals/question modal', function () {
   });
 });
 
-function showModal(testCase) {
+async function showModal(testCase) {
   const {
     modalManager,
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   return modalManager.show('question-modal', modalOptions).shownPromise;
 }

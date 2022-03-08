@@ -2,15 +2,13 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | form component/radio field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it('defines fieldComponentName as "form-component/radio-field"', function () {
     const field = RadioField.create();
@@ -23,13 +21,13 @@ describe('Integration | Utility | form component/radio field', function () {
     expect(get(field, 'withValidationIcon')).to.be.false;
   });
 
-  it('translates options', function () {
+  it('translates options', async function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
       .withArgs('somePrefix.field1.options.one.label')
       .returns('One');
 
     const field = RadioField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
       options: [{
@@ -39,9 +37,7 @@ describe('Integration | Utility | form component/radio field', function () {
     });
     get(field, 'preparedOptions');
 
-    return wait()
-      .then(() =>
-        expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One')
-      );
+    await settled();
+    expect(get(field, 'preparedOptions.firstObject.label')).to.equal('One');
   });
 });

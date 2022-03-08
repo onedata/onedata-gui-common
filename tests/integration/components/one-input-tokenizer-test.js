@@ -1,54 +1,42 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, fillIn, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | one input tokenizer', function () {
-  setupComponentTest('one-input-tokenizer', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('displays injected input text', function () {
+  it('displays injected input text', async function () {
     const inputText = 'hello world';
     this.set('inputText', inputText);
 
-    this.render(hbs `{{one-input-tokenizer
+    await render(hbs `{{one-input-tokenizer
       inputValue=inputText
     }}`);
 
-    return wait().then(() => {
-      const $oneInputTokenizer = this.$('.one-input-tokenizer');
-      expect($oneInputTokenizer).to.exist;
-      expect($oneInputTokenizer.find('input').val())
-        .to.equal(inputText);
-    });
+    const $oneInputTokenizer = this.$('.one-input-tokenizer');
+    expect($oneInputTokenizer).to.exist;
+    expect($oneInputTokenizer.find('input').val())
+      .to.equal(inputText);
   });
 
-  it('sends new tokens array after change', function () {
+  it('sends new tokens array after change', async function () {
     const tokensChanged = sinon.spy();
-    this.on('tokensChanged', tokensChanged);
+    this.set('tokensChanged', tokensChanged);
 
-    this.render(hbs `{{one-input-tokenizer
-      tokensChanged=(action "tokensChanged")
+    await render(hbs `{{one-input-tokenizer
+      tokensChanged=(action tokensChanged)
       inputValue=inputValue
       inputValueChanged=(action (mut inputValue))
     }}`);
 
-    return wait().then(() => {
-      const $oneInputTokenizer = this.$('.one-input-tokenizer .tknz-input');
+    const $oneInputTokenizer = this.$('.one-input-tokenizer .tknz-input');
+    await fillIn($oneInputTokenizer[0], 'hello');
+    await triggerKeyEvent($oneInputTokenizer[0], 'keypress', 'Enter');
 
-      const inputEvent = new $.Event('keypress');
-      inputEvent.which = inputEvent.keyCode = 13;
-      $oneInputTokenizer.val('hello');
-      $oneInputTokenizer.trigger(inputEvent);
-
-      return wait().then(() => {
-        expect(tokensChanged).to.be.calledOnce;
-        expect(tokensChanged).to.be.calledWith(['hello']);
-      });
-    });
+    expect(tokensChanged).to.be.calledOnce;
+    expect(tokensChanged).to.be.calledWith(['hello']);
   });
 });

@@ -1,33 +1,30 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
 import $ from 'jquery';
 
 describe('Integration | Helper | invoke on enter', function () {
-  setupComponentTest('invoke-on-enter', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('invokes action once on enter press', function () {
+  it('invokes action once on enter press', async function () {
     const spy = sinon.spy();
     this.set('myAction', spy);
-    this.render(hbs `
-    <input
-      id="invoke-on-enter-input"
-      onkeydown={{invoke-on-enter (action myAction 1 2 3)}}
-    >
+    await render(hbs `
+      <input
+        id="invoke-on-enter-input"
+        onkeydown={{invoke-on-enter (action myAction 1 2 3)}}
+      >
     `);
 
     const e = $.Event('keydown');
     e.keyCode = 13;
     this.$('#invoke-on-enter-input').trigger(e);
+    await settled();
 
-    return wait().then(() => {
-      expect(spy).to.be.calledOnce;
-      expect(spy).to.be.calledWith(1, 2, 3);
-    });
+    expect(spy).to.be.calledOnce;
+    expect(spy).to.be.calledWith(1, 2, 3);
   });
 });

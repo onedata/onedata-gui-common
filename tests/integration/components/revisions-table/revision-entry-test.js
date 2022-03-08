@@ -1,21 +1,19 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
 
 const componentClass = 'revisions-table-revision-entry';
 
 describe('Integration | Component | revisions table/revision entry', function () {
-  setupComponentTest('revisions-table/revision-entry', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   it(`has class "${componentClass}"`, async function () {
-    await render(this);
+    await renderComponent();
     expect(this.$().children()).to.have.class(componentClass)
       .and.to.have.length(1);
   });
@@ -23,7 +21,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
   it('shows revision number', async function () {
     const revisionNumber = this.set('revisionNumber', 0);
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.revision-number').text().trim())
       .to.equal(String(revisionNumber));
@@ -32,7 +30,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
   it('shows unknown revision number as "?"', async function () {
     this.set('revisionNumber', null);
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.revision-number').text().trim()).to.equal('?');
   });
@@ -40,7 +38,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
   it('shows state', async function () {
     const { state } = this.set('revision', { state: 'stable' });
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.revisions-table-state-tag'))
       .to.have.class(`state-${state}`);
@@ -49,7 +47,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
   it('shows unknown state as "draft"', async function () {
     this.set('revision', null);
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.revisions-table-state-tag')).to.have.class('state-draft');
   });
@@ -57,7 +55,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
   it('shows custom columns', async function () {
     this.set('revision', { description: 'abc' });
 
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.description').text().trim()).to.equal('abc');
   });
@@ -74,7 +72,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
       },
     });
 
-    await render(this);
+    await renderComponent();
 
     const $actionsTrigger = this.$('.revision-actions-trigger');
     expect($actionsTrigger).to.exist;
@@ -90,7 +88,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
       onClick: sinon.spy(),
       revisionNumber: 2,
     });
-    await render(this);
+    await renderComponent();
     expect(onClick).not.to.be.called;
 
     await click(`.${componentClass}`);
@@ -101,7 +99,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
   it('does not trigger "onClick" callback after actions trigger click',
     async function () {
       const onClick = this.set('onClick', sinon.spy());
-      await render(this);
+      await renderComponent();
 
       await click('.revision-actions-trigger');
 
@@ -112,7 +110,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
     async function () {
       this.set('isReadOnly', true);
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$(`.${componentClass}`)).to.have.class('readonly');
       expect(this.$('.revision-actions-trigger')).to.not.exist;
@@ -120,8 +118,8 @@ describe('Integration | Component | revisions table/revision entry', function ()
   );
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{#revisions-table/revision-entry
+async function renderComponent() {
+  await render(hbs `{{#revisions-table/revision-entry
     revisionNumber=revisionNumber
     revision=revision
     revisionActionsFactory=revisionActionsFactory
@@ -131,5 +129,4 @@ async function render(testCase) {
   }}
     <td class="description">{{revision.description}}</td>
   {{/revisions-table/revision-entry}}`);
-  await wait();
 }

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import { click } from 'ember-native-dom-helpers';
@@ -10,9 +11,7 @@ import Action from 'onedata-gui-common/utils/action';
 const componentClass = 'revisions-table';
 
 describe('Integration | Component | revisions table', function () {
-  setupComponentTest('revisions-table', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const createRevisionSpy = sinon.spy();
@@ -23,20 +22,20 @@ describe('Integration | Component | revisions table', function () {
           icon: 'plus',
           title: 'Create revision',
           onExecute: createRevisionSpy,
-          ownerSource: this,
+          ownerSource: this.owner,
         }),
       },
     });
   });
 
   it(`has class "${componentClass}"`, async function () {
-    await render(this);
+    await renderComponent();
     expect(this.$().children()).to.have.class(componentClass)
       .and.to.have.length(1);
   });
 
   it('shows header row', async function () {
-    await render(this);
+    await renderComponent();
 
     const $thCells = this.$('th');
 
@@ -66,7 +65,7 @@ describe('Integration | Component | revisions table', function () {
         }];
       }
     );
-    await render(this);
+    await renderComponent();
 
     const $revisionEntries = this.$('.revisions-table-revision-entry');
     expect($revisionEntries).to.have.length(2);
@@ -98,7 +97,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 4, state: 'draft' },
         { revisionNumber: 5, state: 'draft' },
       ]));
-      await render(this);
+      await renderComponent();
 
       expectRevisionEntriesLayout(this, [
         { type: 'revision', revisionNumber: 5 },
@@ -118,7 +117,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 4, state: 'draft' },
         { revisionNumber: 5, state: 'stable' },
       ]));
-      await render(this);
+      await renderComponent();
 
       expectRevisionEntriesLayout(this, [
         { type: 'revision', revisionNumber: 5 },
@@ -136,7 +135,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 4, state: 'draft' },
         { revisionNumber: 5, state: 'draft' },
       ]));
-      await render(this);
+      await renderComponent();
 
       expectRevisionEntriesLayout(this, [
         { type: 'revision', revisionNumber: 5 },
@@ -154,7 +153,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 4, state: 'draft' },
         { revisionNumber: 5, state: 'draft' },
       ]));
-      await render(this);
+      await renderComponent();
 
       await click('.between-revisions-expander .expand-button');
 
@@ -175,7 +174,7 @@ describe('Integration | Component | revisions table', function () {
       { revisionNumber: 4, state: 'draft' },
       { revisionNumber: 5, state: 'draft' },
     ]));
-    await render(this);
+    await renderComponent();
 
     await click('.older-revisions-expander .expand-button');
 
@@ -197,7 +196,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 4, state: 'stable' },
         { revisionNumber: 5, state: 'draft' },
       ]));
-      await render(this);
+      await renderComponent();
 
       expectRevisionEntriesLayout(this, [
         { type: 'revision', revisionNumber: 5 },
@@ -216,7 +215,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 4, state: 'draft' },
         { revisionNumber: 5, state: 'draft' },
       ]));
-      await render(this);
+      await renderComponent();
 
       expectRevisionEntriesLayout(this, [
         { type: 'revision', revisionNumber: 5 },
@@ -232,7 +231,7 @@ describe('Integration | Component | revisions table', function () {
         { revisionNumber: 1, state: 'stable' },
         { revisionNumber: 2, state: 'draft' },
       ]));
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.revisions-table-revision-entry'))
         .to.not.have.class('clickable');
@@ -247,7 +246,7 @@ describe('Integration | Component | revisions table', function () {
         ]),
         onRevisionClick: sinon.spy(),
       });
-      await render(this);
+      await renderComponent();
 
       await click('.revisions-table-revision-entry');
 
@@ -258,7 +257,7 @@ describe('Integration | Component | revisions table', function () {
 
   it('creates new revision', async function () {
     const createRevisionSpy = this.get('createRevisionSpy');
-    await render(this);
+    await renderComponent();
     expect(createRevisionSpy).to.be.not.called;
 
     await click('.revisions-table-create-revision-entry');
@@ -275,7 +274,7 @@ describe('Integration | Component | revisions table', function () {
           { revisionNumber: 2, state: 'draft' },
         ]),
       });
-      await render(this);
+      await renderComponent();
 
       expect(this.$(`.${componentClass}`)).to.have.class('readonly');
       expect(this.$('.revisions-table-create-revision-entry')).to.not.exist;
@@ -284,7 +283,7 @@ describe('Integration | Component | revisions table', function () {
 
   it('shows "no revisions" row when there are no revisions to show', async function () {
     this.set('revisionRegistry', {});
-    await render(this);
+    await renderComponent();
 
     expect(this.$('.revisions-table-revision-entry')).to.not.exist;
     const $emptyEntry = this.$('.revisions-table-empty-entry');
@@ -293,8 +292,8 @@ describe('Integration | Component | revisions table', function () {
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{#revisions-table
+async function renderComponent() {
+  await render(hbs `{{#revisions-table
     revisionRegistry=revisionRegistry
     revisionActionsFactory=revisionActionsFactory
     onRevisionClick=onRevisionClick

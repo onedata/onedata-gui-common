@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import { click, fillIn } from 'ember-native-dom-helpers';
@@ -40,28 +41,26 @@ availableModels['serviceOnepanel'][0].serviceType = 'onezone';
 availableModels['serviceOnepanel'][0].name += 'onezone';
 
 describe('Integration | Component | tags input/model selector editor', function () {
-  setupComponentTest('tags-input/model-selector-editor', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('settings', defaultSettings);
   });
 
-  it('has class "tags-input-model-selector-editor"', function () {
-    this.render(hbs `{{tags-input/model-selector-editor}}`);
+  it('has class "tags-input-model-selector-editor"', async function () {
+    await render(hbs `{{tags-input/model-selector-editor}}`);
 
     expect(this.$('.tags-input-model-selector-editor')).to.exist;
   });
 
-  it('renders popover', function () {
-    this.render(hbs `{{tags-input/model-selector-editor}}`);
+  it('renders popover', async function () {
+    await render(hbs `{{tags-input/model-selector-editor}}`);
 
     expect(getSelector()).to.exist;
   });
 
-  it('renders list of available model types', function () {
-    this.render(hbs `{{tags-input
+  it('renders list of available model types', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -88,8 +87,8 @@ describe('Integration | Component | tags input/model selector editor', function 
   });
 
   defaultSettings.models.forEach(({ name: typeName }, typeIndex) => {
-    it(`renders list of available models for type ${typeName}`, function () {
-      this.render(hbs `{{tags-input
+    it(`renders list of available models for type ${typeName}`, async function () {
+      await render(hbs `{{tags-input
         tagEditorComponentName="tags-input/model-selector-editor"
         tagEditorSettings=settings
       }}`);
@@ -106,11 +105,11 @@ describe('Integration | Component | tags input/model selector editor', function 
     });
   });
 
-  it('sorts list of records before rendering', function () {
+  it('sorts list of records before rendering', async function () {
     this.get('settings.models')[0].getRecords =
       () => resolve(availableModels['user'].slice().reverse());
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -126,8 +125,8 @@ describe('Integration | Component | tags input/model selector editor', function 
       });
   });
 
-  it('has empty filter input by default', function () {
-    this.render(hbs `{{tags-input
+  it('has empty filter input by default', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -140,8 +139,8 @@ describe('Integration | Component | tags input/model selector editor', function 
       });
   });
 
-  it('allows to filter records', function () {
-    this.render(hbs `{{tags-input
+  it('allows to filter records', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -173,8 +172,8 @@ describe('Integration | Component | tags input/model selector editor', function 
     name: 'serviceOnepanel',
     label: 'Any Oneprovider Onepanel',
   }].forEach(({ name, label, tip }, index) => {
-    it(`adds "${label}" item to list of records for ${name}`, function () {
-      this.render(hbs `{{tags-input
+    it(`adds "${label}" item to list of records for ${name}`, async function () {
+      await render(hbs `{{tags-input
         tagEditorComponentName="tags-input/model-selector-editor"
         tagEditorSettings=settings
       }}`);
@@ -201,7 +200,7 @@ describe('Integration | Component | tags input/model selector editor', function 
   defaultSettings.models.forEach(({ name: typeName }, index) => {
     it(
       `does not render ${typeName} records, which are already selected`,
-      function () {
+      async function () {
         this.set('selectedTags', defaultSettings.models.map(({ name }) => ({
           value: {
             record: availableModels[name][0],
@@ -209,7 +208,7 @@ describe('Integration | Component | tags input/model selector editor', function 
           },
         })));
 
-        this.render(hbs `{{tags-input
+        await render(hbs `{{tags-input
           tags=selectedTags
           tagEditorComponentName="tags-input/model-selector-editor"
           tagEditorSettings=settings
@@ -227,16 +226,16 @@ describe('Integration | Component | tags input/model selector editor', function 
       }
     );
 
-    it('allows to add record tag by clicking on it', function () {
+    it('allows to add record tag by clicking on it', async function () {
       this.set('tags', []);
       const changeSpy = sinon.spy(tags => this.set('tags', tags));
-      this.on('change', changeSpy);
+      this.set('change', changeSpy);
 
-      this.render(hbs `{{tags-input
+      await render(hbs `{{tags-input
         tags=tags
         tagEditorComponentName="tags-input/model-selector-editor"
         tagEditorSettings=settings
-        onChange=(action "change")
+        onChange=(action change)
       }}`);
 
       return click('.tag-creator-trigger')
@@ -284,16 +283,16 @@ describe('Integration | Component | tags input/model selector editor', function 
     typeIndex: 4,
   }].forEach(({ name, icon, typeIcon, recordIndex, typeIndex }) => {
     recordIndex = recordIndex || 0;
-    it(`uses icon ${icon} for ${recordIndex + 1}. ${name} test record`, function () {
+    it(`uses icon ${icon} for ${recordIndex + 1}. ${name} test record`, async function () {
       this.set('tags', []);
       const changeSpy = sinon.spy(tags => this.set('tags', tags));
-      this.on('change', changeSpy);
+      this.set('change', changeSpy);
 
-      this.render(hbs `{{tags-input
+      await render(hbs `{{tags-input
         tags=tags
         tagEditorComponentName="tags-input/model-selector-editor"
         tagEditorSettings=settings
-        onChange=(action "change")
+        onChange=(action change)
       }}`);
 
       let modelTypeHelper;
@@ -328,16 +327,16 @@ describe('Integration | Component | tags input/model selector editor', function 
     addedDescription: 'All Oneproviders are already added.',
   }].forEach(({ name, addedDescription }, index) => {
     it(`hides all records when "all records" item has been clicked for ${name}`,
-      function () {
+      async function () {
         this.set('tags', []);
         const changeSpy = sinon.spy(tags => this.set('tags', tags));
-        this.on('change', changeSpy);
+        this.set('change', changeSpy);
 
-        this.render(hbs `{{tags-input
+        await render(hbs `{{tags-input
           tags=tags
           tagEditorComponentName="tags-input/model-selector-editor"
           tagEditorSettings=settings
-          onChange=(action "change")
+          onChange=(action change)
         }}`);
 
         return click('.tag-creator-trigger')
@@ -364,16 +363,16 @@ describe('Integration | Component | tags input/model selector editor', function 
   ].forEach((name, index) => {
     it(
       `hides all Oneprovider related records when "all records" item has been clicked for ${name}`,
-      function () {
+      async function () {
         this.set('tags', []);
         const changeSpy = sinon.spy(tags => this.set('tags', tags));
-        this.on('change', changeSpy);
+        this.set('change', changeSpy);
 
-        this.render(hbs `{{tags-input
+        await render(hbs `{{tags-input
           tags=tags
           tagEditorComponentName="tags-input/model-selector-editor"
           tagEditorSettings=settings
-          onChange=(action "change")
+          onChange=(action change)
         }}`);
 
         return click('.tag-creator-trigger')
@@ -396,8 +395,8 @@ describe('Integration | Component | tags input/model selector editor', function 
     );
   });
 
-  it('shows list|by-id selector with preselected list', function () {
-    this.render(hbs `{{tags-input
+  it('shows list|by-id selector with preselected list', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -413,8 +412,8 @@ describe('Integration | Component | tags input/model selector editor', function 
       });
   });
 
-  it('hides list and shows ID wizard after by-id selector click', function () {
-    this.render(hbs `{{tags-input
+  it('hides list and shows ID wizard after by-id selector click', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/model-selector-editor"
       tagEditorSettings=settings
     }}`);
@@ -447,8 +446,8 @@ describe('Integration | Component | tags input/model selector editor', function 
     name: 'serviceOnepanel',
     label: 'Oneprovider ID:',
   }].forEach(({ name, label }, index) => {
-    it(`shows correct label for ${name} id field`, function () {
-      this.render(hbs `{{tags-input
+    it(`shows correct label for ${name} id field`, async function () {
+      await render(hbs `{{tags-input
         tagEditorComponentName="tags-input/model-selector-editor"
         tagEditorSettings=settings
       }}`);
@@ -465,8 +464,8 @@ describe('Integration | Component | tags input/model selector editor', function 
 
   it(
     'has disabled "Add ID" button when id input is empty or has only whitespaces',
-    function () {
-      this.render(hbs `{{tags-input
+    async function () {
+      await render(hbs `{{tags-input
         tagEditorComponentName="tags-input/model-selector-editor"
         tagEditorSettings=settings
       }}`);
@@ -482,16 +481,16 @@ describe('Integration | Component | tags input/model selector editor', function 
   defaultSettings.models.forEach(({ name: modelName }, index) => {
     it(
       `adds tag with ${modelName} ID`,
-      function () {
+      async function () {
         this.set('tags', []);
         const changeSpy = sinon.spy(tags => this.set('tags', tags));
-        this.on('change', changeSpy);
+        this.set('change', changeSpy);
 
-        this.render(hbs `{{tags-input
+        await render(hbs `{{tags-input
           tags=tags
           tagEditorComponentName="tags-input/model-selector-editor"
           tagEditorSettings=settings
-          onChange=(action "change")
+          onChange=(action change)
         }}`);
 
         return click('.tag-creator-trigger')

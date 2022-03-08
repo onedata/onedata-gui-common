@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
@@ -26,9 +27,7 @@ const simpliestLane = {
 };
 
 describe('Integration | Component | modals/workflow visualiser/lane modal', function () {
-  setupComponentTest('modals/workflow-visualiser/lane-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -59,7 +58,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       this.set('modalOptions.mode', 'create');
     });
 
-    it('shows correct header, form in "create" mode and footer', async function () {
+    it('shows correct header, form in "create" mode and footer', async function (done) {
       await showModal(this);
 
       expect(getModalHeader().find('h1').text().trim()).to.equal('Create new lane');
@@ -72,10 +71,11 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       expect($cancelBtn.text().trim()).to.equal('Cancel');
       expect($submitBtn).to.have.class('btn-primary');
       expect($submitBtn.text().trim()).to.equal('Create');
+      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function () {
+      async function (done) {
         await showModal(this);
 
         const $submitBtn = getModalFooter().find('.btn-submit');
@@ -86,6 +86,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
 
         await fillIn('.name-field .form-control', '');
         expect($submitBtn).to.be.disabled;
+        done();
       });
 
     itClosesModalOnCancelClick();
@@ -107,7 +108,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       });
     });
 
-    it('shows correct header, form in "edit" mode and footer', async function () {
+    it('shows correct header, form in "edit" mode and footer', async function (done) {
       await showModal(this);
 
       expect(getModalHeader().find('h1').text().trim()).to.equal('Modify lane');
@@ -121,10 +122,11 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       expect($cancelBtn.text().trim()).to.equal('Cancel');
       expect($submitBtn).to.have.class('btn-primary');
       expect($submitBtn.text().trim()).to.equal('OK');
+      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function () {
+      async function (done) {
         await showModal(this);
 
         const $submitBtn = getModalFooter().find('.btn-submit');
@@ -135,6 +137,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
 
         await fillIn('.name-field .form-control', '');
         expect($submitBtn).to.be.disabled;
+        done();
       });
 
     itClosesModalOnCancelClick();
@@ -157,7 +160,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       });
     });
 
-    it('shows correct header, form in "view" mode and footer', async function () {
+    it('shows correct header, form in "view" mode and footer', async function (done) {
       await showModal(this);
 
       expect(getModalHeader().find('h1').text().trim()).to.equal('Lane details');
@@ -171,6 +174,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       expect($cancelBtn).to.have.class('btn-default');
       expect($cancelBtn.text().trim()).to.equal('Close');
       expect($submitBtn).to.not.exist;
+      done();
     });
 
     itClosesModalOnCancelClick();
@@ -184,7 +188,7 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   await modalManager
     .show('workflow-visualiser/lane-modal', modalOptions)
@@ -192,7 +196,7 @@ async function showModal(testCase) {
 }
 
 function itClosesModalOnCancelClick() {
-  it('closes modal on cancel click', async function () {
+  it('closes modal on cancel click', async function (done) {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
@@ -200,11 +204,12 @@ function itClosesModalOnCancelClick() {
 
     await click(getModalFooter().find('.btn-cancel')[0]);
     expect(onHideSpy).to.be.calledOnce;
+    done();
   });
 }
 
 function itClosesModalOnBackdropClick() {
-  it('closes modal on backdrop click', async function () {
+  it('closes modal on backdrop click', async function (done) {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
@@ -212,11 +217,12 @@ function itClosesModalOnBackdropClick() {
 
     await click(getModal()[0]);
     expect(onHideSpy).to.be.calledOnce;
+    done();
   });
 }
 
 function itInjectsCreateStoreAction() {
-  it('injects createStoreAction to form', async function () {
+  it('injects createStoreAction to form', async function (done) {
     const executeStub = sinon.stub().resolves({ status: 'failed' });
     this.set('modalOptions.createStoreAction', { execute: executeStub });
 
@@ -226,11 +232,12 @@ function itInjectsCreateStoreAction() {
     await selectChoose('.sourceStore-field', 'Create store...');
 
     expect(executeStub).to.be.calledOnce;
+    done();
   });
 }
 
 function itPassesLaneProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
-  it('passes lane from form on submit', async function () {
+  it('passes lane from form on submit', async function (done) {
     const submitStub = sinon.stub().resolves();
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
@@ -239,11 +246,12 @@ function itPassesLaneProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
     await click(getModalFooter().find('.btn-submit')[0]);
 
     expect(submitStub).to.be.calledWith(expectedData);
+    done();
   });
 }
 
 function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
-  it('disables all controls while submitting', async function () {
+  it('disables all controls while submitting', async function (done) {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
@@ -255,11 +263,12 @@ function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
     const $modalFooter = getModalFooter();
     expect($modalFooter.find('.btn-cancel')).to.have.attr('disabled');
     expect($modalFooter.find('.btn-submit')).to.have.attr('disabled');
+    done();
   });
 }
 
 function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
-  it('does not close modal on backdrop click when submitting', async function () {
+  it('does not close modal on backdrop click when submitting', async function (done) {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
@@ -270,5 +279,6 @@ function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
     await click(getModal()[0]);
 
     expect(onHideSpy).to.not.be.called;
+    done();
   });
 }
