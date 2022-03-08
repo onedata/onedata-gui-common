@@ -200,7 +200,7 @@ describe('Integration | Component | modals/record selector modal', async functio
   context('handles errors', async function () {
     suppressRejections();
 
-    it('renders loading error when records cannot be loaded', async function () {
+    it('renders loading error when records cannot be loaded', async function (done) {
       this.set('modalOptions.recordsPromise', reject('loadError'));
       const recordHelper = new RecordHelper();
 
@@ -210,6 +210,7 @@ describe('Integration | Component | modals/record selector modal', async functio
       const $loadError = getModalBody().find('.resource-load-error');
       expect($loadError).to.exist;
       expect($loadError.text()).to.contain('loadError');
+      done();
     });
   });
 });

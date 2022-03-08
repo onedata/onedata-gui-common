@@ -492,38 +492,42 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itAllowsToDisableAllFields();
     itShowsLambdaInfo();
 
-    it('renders "name" field', async function () {
+    it('renders "name" field', async function (done) {
       await renderComponent();
 
       const $label = this.$('.name-field .control-label');
       const $field = this.$('.name-field .form-control');
       expect($label.text().trim()).to.equal('Name:');
       expect($field).to.have.attr('type', 'text');
+      done();
     });
 
-    it('uses lambda name as default value for name field', async function () {
+    it('uses lambda name as default value for name field', async function (done) {
       await renderComponent();
 
       expect(this.$('.name-field .form-control')).to.have.value(exampleAtmLambdaRevision.name);
+      done();
     });
 
-    it('marks "name" field as invalid when it is empty', async function () {
+    it('marks "name" field as invalid when it is empty', async function (done) {
       await renderComponent();
 
       await fillIn('.name-field .form-control', '');
 
       expect(this.$('.name-field')).to.have.class('has-error');
+      done();
     });
 
-    it('marks "name" field as valid when it is not empty', async function () {
+    it('marks "name" field as valid when it is not empty', async function (done) {
       await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
       expect(this.$('.name-field')).to.have.class('has-success');
+      done();
     });
 
-    it('notifies about changes of values and validation state', async function () {
+    it('notifies about changes of values and validation state', async function (done) {
       const changeSpy = this.get('changeSpy');
 
       await renderComponent();
@@ -549,18 +553,20 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         },
         isValid: true,
       });
+      done();
     });
 
     it('does not render arguments section, if lambda does not specify any',
-      async function () {
+      async function (done) {
         this.set('atmLambda.revisionRegistry.1.argumentSpecs', []);
 
         await renderComponent();
 
         expect(this.$('.argumentMappings-field')).to.not.exist;
+        done();
       });
 
-    it('renders arguments section', async function () {
+    it('renders arguments section', async function (done) {
       await renderComponent();
 
       const $argumentMappings = this.$('.argumentMappings-field');
@@ -573,11 +579,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
           .to.equal(`${name}:`);
       });
+      done();
     });
 
     dataSpecs.forEach(({ name, label, dataSpec, valueBuilderTypes, canContain }) => {
       it(`provides available value builder types for argument of type "${label}"`,
-        async function () {
+        async function (done) {
           this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
             name: 'arg1',
             dataSpec,
@@ -595,10 +602,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             expect($options.eq(idx).text().trim())
             .to.equal(valueBuilderTypeLabels[type])
           );
+          done();
         });
 
       it(`provides available value builder types for optional argument of type "${label}"`,
-        async function () {
+        async function (done) {
           this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
             name: 'arg1',
             dataSpec,
@@ -617,10 +625,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             expect($options.eq(idx + 1).text().trim())
             .to.equal(valueBuilderTypeLabels[type])
           );
+          done();
         });
 
       it(`allows to setup optional argument of type "${label}" using "Leave unassigned" value builder`,
-        async function () {
+        async function (done) {
           this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
             name: 'arg1',
             dataSpec,
@@ -641,11 +650,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             },
             isValid: true,
           });
+          done();
         });
 
       if (valueBuilderTypes.includes('iteratedItem')) {
         it(`allows to setup argument of type "${label}" using "Iterated item" value builder`,
-          async function () {
+          async function (done) {
             this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
@@ -671,12 +681,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               },
               isValid: true,
             });
+            done();
           });
       }
 
       if (valueBuilderTypes.includes('singleValueStoreContent')) {
         it(`allows to setup argument of type "${label}" using "Store content" value builder`,
-          async function () {
+          async function (done) {
             this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
@@ -728,10 +739,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               },
               isValid: true,
             });
+            done();
           });
 
         it(`allows to create new store for argument of type "${label}" using "Store content" value builder`,
-          async function () {
+          async function (done) {
             this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
@@ -771,12 +783,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               .to.deep.equal(allowedStoreTypes.sort());
             expect(lastCreateStoreCallArg.allowedDataTypes.sort())
               .to.deep.equal(allowedDataTypes.sort());
+            done();
           });
       }
 
       if (valueBuilderTypes.includes('const')) {
         it(`allows to setup argument of type "${label}" using "Constant value" value builder`,
-          async function () {
+          async function (done) {
             this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
@@ -804,13 +817,14 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               },
               isValid: true,
             });
+            done();
           });
       }
 
       // TODO: VFS-7816 uncomment or remove future code
       // if (valueBuilderTypes.includes('storeCredentials')) {
       //   it(`allows to setup argument of type "${label}" using "Store credentials" value builder`,
-      //     async function () {
+      //     async function (done) {
       //       this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
       //         name: 'arg1',
       //         dataSpec,
@@ -856,12 +870,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       //         },
       //         isValid: true,
       //       });
+      //       done();
       //     });
       // }
 
       if (valueBuilderTypes.includes('onedatafsCredentials')) {
         it(`allows to setup argment of type "${label}" using "OnedataFS credentials" value builder`,
-          async function () {
+          async function (done) {
             this.set('atmLambda.revisionRegistry.1.argumentSpecs', [{
               name: 'arg1',
               dataSpec,
@@ -887,20 +902,22 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               },
               isValid: true,
             });
+            done();
           });
       }
     });
 
     it('does not render results section, if lambda does not specify any',
-      async function () {
+      async function (done) {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', []);
 
         await renderComponent();
 
         expect(this.$('.resultMappings-field')).to.not.exist;
+        done();
       });
 
-    it('renders results section', async function () {
+    it('renders results section', async function (done) {
       await renderComponent();
 
       const $resultMappings = this.$('.resultMappings-field');
@@ -913,6 +930,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         expect($results.eq(idx).find('.control-label').eq(0).text().trim())
           .to.equal(`${name}:`);
       });
+      done();
     });
 
     allSimpleDataSpecNames.forEach(dataSpecName => {
@@ -932,7 +950,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       const allowSystemAuditLogStores = compatibleDataSpecNames.includes('object');
 
       it(`provides available stores for result of type "${dataSpecName}"`,
-        async function () {
+        async function (done) {
           this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
             name: 'res1',
             dataSpec,
@@ -956,10 +974,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           sortedPossibleStores.forEach((store, idx) =>
             expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
           );
+          done();
         });
 
       it(`provides available stores for result of batched type "${dataSpecName}"`,
-        async function () {
+        async function (done) {
           setProperties(this.get('atmLambda.revisionRegistry.1'), {
             preferredBatchSize: 100,
             resultSpecs: [{
@@ -986,10 +1005,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           sortedPossibleStoresWithBatch.forEach((store, idx) =>
             expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
           );
+          done();
         });
 
       it(`allows to create new store for result of type "${dataSpecName}"`,
-        async function () {
+        async function (done) {
           this.set('newStoreFromCreation', Store.create({
             id: 'newstore',
             name: 'new store',
@@ -1016,10 +1036,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             .to.deep.equal(allowedStoreTypes.sort());
           expect(lastCreateStoreCallArg.allowedDataTypes.sort())
             .to.deep.equal(allowedDataTypes.sort());
+          done();
         });
 
       it(`allows to create new store for result of batched type "${dataSpecName}"`,
-        async function () {
+        async function (done) {
           this.set('newStoreFromCreation', Store.create({
             id: 'newstore',
             name: 'new store',
@@ -1049,11 +1070,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             .to.deep.equal(allowedStoreTypes.sort());
           expect(lastCreateStoreCallArg.allowedDataTypes.sort())
             .to.deep.equal(allowedDataTypes.sort());
+          done();
         });
     });
 
     it('allows to setup result to be unassigned',
-      async function () {
+      async function (done) {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
@@ -1073,9 +1095,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           },
           isValid: true,
         });
+        done();
       });
 
-    it('allows to setup result to use task audit log', async function () {
+    it('allows to setup result to use task audit log', async function (done) {
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
@@ -1099,9 +1122,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         },
         isValid: true,
       });
+      done();
     });
 
-    it('allows to setup result to use workflow audit log', async function () {
+    it('allows to setup result to use workflow audit log', async function (done) {
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Object').dataSpec,
@@ -1125,10 +1149,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         },
         isValid: true,
       });
+      done();
     });
 
     it('does not allow to choose dispatch function when result store is left unassigned',
-      async function () {
+      async function (done) {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
@@ -1137,6 +1162,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         await renderComponent();
 
         expect(this.$('.dispatchFunction-field')).to.not.exist;
+        done();
       });
 
     allPossibleStoreSpecs
@@ -1182,7 +1208,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     });
 
     it('changes available dispatch functions when result store type changes',
-      async function () {
+      async function (done) {
         this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
           name: 'res1',
           dataSpec: dataSpecs.findBy('name', 'integer').dataSpec,
@@ -1203,9 +1229,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           expect($options.eq(idx).text().trim())
           .to.equal(dispatchFunctionLabels[dispatchFunction])
         );
+        done();
       });
 
-    it('renders "override resources" toggle, which is unchecked by default', async function () {
+    it('renders "override resources" toggle, which is unchecked by default', async function (done) {
       await renderComponent();
 
       const $overrideField = this.$('.overrideResources-field');
@@ -1213,10 +1240,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect($overrideField.find('.control-label').text().trim())
         .to.equal('Override default resources:');
       expect($overrideField.find('.one-way-toggle')).to.not.have.class('checked');
+      done();
     });
 
     it('renders "resources" section with cpu, memory and storage fields groups',
-      async function () {
+      async function (done) {
         await renderComponent();
 
         const $resourcesSection = this.$('.resources-field');
@@ -1245,10 +1273,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           expect($limit.find('.ember-power-select-trigger').text())
             .to.contain(limit[1]);
         });
+        done();
       });
 
     it('renders "resources" section with full configuration',
-      async function () {
+      async function (done) {
         this.set('atmLambda.revisionRegistry.1.resourceSpec', {
           cpuRequested: 1,
           cpuLimit: 2,
@@ -1268,25 +1297,28 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           .to.have.value('10');
         expect(this.$('.ephemeralStorageLimit-field .form-control'))
           .to.have.value('20');
+        done();
       });
 
-    it('disables "resources" section when "override resources" toggle is unchecked', async function () {
+    it('disables "resources" section when "override resources" toggle is unchecked', async function (done) {
       await renderComponent();
 
       await toggleOverrideResources(this, false);
 
       expect(this.$('.resourcesSections-field .field-enabled')).to.not.exist;
+      done();
     });
 
-    it('enables "resources" section when "override resources" toggle is checked', async function () {
+    it('enables "resources" section when "override resources" toggle is checked', async function (done) {
       await renderComponent();
 
       await toggleOverrideResources(this, true);
 
       expect(this.$('.resourcesSections-field .field-disabled')).to.not.exist;
+      done();
     });
 
-    it('allows to setup resources override (minimal values provided)', async function () {
+    it('allows to setup resources override (minimal values provided)', async function (done) {
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
@@ -1304,9 +1336,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           },
         }),
       }));
+      done();
     });
 
-    it('allows to setup resources override (all values provided)', async function () {
+    it('allows to setup resources override (all values provided)', async function (done) {
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
@@ -1330,9 +1363,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           },
         }),
       }));
+      done();
     });
 
-    it('resets changes in "resources" section when it becomes disabled', async function () {
+    it('resets changes in "resources" section when it becomes disabled', async function (done) {
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
@@ -1355,6 +1389,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       expect(changeSpy).to.be.calledWith(
         sinon.match((val) => !('resourceSpecOverride' in val))
       );
+      done();
     });
   });
 
@@ -1381,13 +1416,14 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutNoResourceOverride();
     itFillsFieldsWithDataAboutResourceOverride();
 
-    it('does not update form values on passed task change', async function () {
+    it('does not update form values on passed task change', async function (done) {
       await renderComponent();
 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await settled();
 
       expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
+      done();
     });
   });
 
@@ -1412,7 +1448,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     itFillsFieldsWithDataAboutNoResourceOverride();
     itFillsFieldsWithDataAboutResourceOverride();
 
-    it('updates form values on passed task change', async function () {
+    it('updates form values on passed task change', async function (done) {
       await renderComponent();
 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
@@ -1420,6 +1456,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       expect(this.$('.name-field .field-component').text().trim())
         .to.equal('task2');
+      done();
     });
   });
 });
@@ -1450,25 +1487,27 @@ function getComponent(testCase) {
 
 function itHasModeClass(mode) {
   const modeClass = `mode-${mode}`;
-  it(`has class "${modeClass}"`, async function () {
+  it(`has class "${modeClass}"`, async function (done) {
     await renderComponent();
 
     expect(getComponent(this)).to.have.class(modeClass);
+    done();
   });
 }
 
 function itHasEnabledFieldsByDefault() {
-  it('has all fields enabled by default', async function () {
+  it('has all fields enabled by default', async function (done) {
     await renderComponent();
 
     expect(getComponent(this)).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
     expect(this.$('.field-enabled')).to.exist;
+    done();
   });
 }
 
 function itAllowsToDisableAllFields() {
-  it('allows to disable all fields', async function () {
+  it('allows to disable all fields', async function (done) {
     this.set('isDisabled', true);
 
     await renderComponent();
@@ -1476,11 +1515,12 @@ function itAllowsToDisableAllFields() {
     expect(getComponent(this)).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
     expect(this.$('.field-enabled')).to.not.exist;
+    done();
   });
 }
 
 function itShowsLambdaInfo() {
-  it('shows brief information about used lambda', async function () {
+  it('shows brief information about used lambda', async function (done) {
     await renderComponent();
 
     expect(this.$('.atm-lambda-name .value').text().trim())
@@ -1489,6 +1529,7 @@ function itShowsLambdaInfo() {
       .to.equal('1');
     expect(this.$('.atm-lambda-summary .value').text().trim())
       .to.equal(exampleAtmLambdaRevision.summary);
+    done();
   });
 }
 
@@ -1498,7 +1539,7 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
   dispatchFunctions
 ) {
   it(`provides possible dispatch functions for result with store "${storeDescription}" attached`,
-    async function () {
+    async function (done) {
       const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
@@ -1517,6 +1558,7 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
         expect($options.eq(idx).text().trim())
         .to.equal(dispatchFunctionLabels[dispatchFunction])
       );
+      done();
     });
 }
 
@@ -1526,7 +1568,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
   dispatchFunction,
 ) {
   it(`allows to setup result to use "${storeDescription}" store with "${dispatchFunction}" dispatch function`,
-    async function () {
+    async function (done) {
       const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
@@ -1552,11 +1594,12 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
         },
         isValid: true,
       });
+      done();
     });
 }
 
 function itFillsFieldsWithDataOfPassedTask() {
-  it('fills fields with data of passed task', async function () {
+  it('fills fields with data of passed task', async function (done) {
     const inEditMode = this.get('mode') !== 'view';
     await renderComponent();
 
@@ -1593,12 +1636,13 @@ function itFillsFieldsWithDataOfPassedTask() {
         .to.equal(`${name}:`);
     });
     expect(this.$(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
+    done();
   });
 }
 
 function itFillsFieldsWithDataAboutNoResourceOverride() {
   it('fills fields with data about no resources override',
-    async function () {
+    async function (done) {
       const inEditMode = this.get('mode') !== 'view';
       delete this.get('task').resourceSpecOverride;
 
@@ -1617,12 +1661,13 @@ function itFillsFieldsWithDataAboutNoResourceOverride() {
       } else {
         expect(this.$('.resourcesSections-field')).to.not.exist;
       }
+      done();
     });
 }
 
 function itFillsFieldsWithDataAboutResourceOverride() {
   it('fills fields with data about resources override',
-    async function () {
+    async function (done) {
       const inEditMode = this.get('mode') !== 'view';
       this.set('task.resourceSpecOverride', {
         cpuRequested: 2,
@@ -1653,12 +1698,13 @@ function itFillsFieldsWithDataAboutResourceOverride() {
         expect(this.$('.ephemeralStorageRequested-field .field-component').text().trim()).to.equal('300 MiB');
         expect(this.$('.ephemeralStorageLimit-field .field-component').text().trim()).to.equal('400 MiB');
       }
+      done();
     });
 }
 
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuilder() {
   it('fills fields with data about arguments of all possible types, that uses "Iterated item" value builder',
-    async function () {
+    async function (done) {
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('iteratedItem'))
         .mapBy('dataSpec');
@@ -1686,12 +1732,13 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
           .text().trim()
         ).to.equal('Iterated item');
       });
+      done();
     });
 }
 
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuilder() {
   it('fills fields with data about arguments of all possible types, that uses "Constant value" value builder',
-    async function () {
+    async function (done) {
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('const'))
         .mapBy('dataSpec');
@@ -1723,13 +1770,14 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
           $arguments.eq(idx).find('.valueBuilderConstValue-field .form-control')
         ).to.have.value(`"${idx}"`);
       });
+      done();
     });
 }
 
 // TODO: VFS-7816 uncomment or remove future code
 // function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithStoreCredsValueBuilder() {
 //   it('fills fields with data about arguments of all possible types, that uses "Store credentials" value builder',
-//     async function () {
+//     async function (done) {
 //       const possibleDataSpecs = dataSpecs
 //         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('storeCredentials'))
 //         .mapBy('dataSpec');
@@ -1770,12 +1818,13 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
 //           .text().trim()
 //         ).to.equal(usedStores[idx].name);
 //       });
+//       done();
 //     });
 // }
 
 function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBuilder() {
   it('fills fields with data about arguments of all possible types, that uses "OnedataFS credentials" value builder',
-    async function () {
+    async function (done) {
       const possibleDataSpecs = dataSpecs
         .filter(({ valueBuilderTypes }) => valueBuilderTypes.includes('onedatafsCredentials'))
         .mapBy('dataSpec');
@@ -1803,6 +1852,7 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBui
           .text().trim()
         ).to.equal('OnedataFS credentials');
       });
+      done();
     });
 }
 
@@ -1826,7 +1876,7 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
     }])
     .forEach(({ storeDesc, targetStore, dispatchFunctions }) => {
       it(`fills fields with data about results that uses "${storeDesc}" stores and all possible dispatch methods`,
-        async function () {
+        async function (done) {
           const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
           this.set(
             'atmLambda.revisionRegistry.1.resultSpecs',
@@ -1861,13 +1911,14 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
               .text().trim()
             ).to.equal(dispatchFunctionLabels[dispatchFunction]);
           });
+          done();
         });
     });
 }
 
 function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
   it('fills fields with data about results that are left unassigned',
-    async function () {
+    async function (done) {
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: dataSpecs.findBy('label', 'Integer').dataSpec,
@@ -1885,5 +1936,6 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
         .text().trim()
       ).to.equal('Leave unassigned');
       expect($results.find('.dispatchFunction-field')).to.not.exist;
+      done();
     });
 }
