@@ -445,7 +445,7 @@ describe('Integration | Component | global modal', function () {
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
     await this.get('modalManager').show().shownPromise;
-    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 27);
+    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 'Escape');
 
     expect(isGlobalModalOpened()).to.be.false;
   });
@@ -457,7 +457,7 @@ describe('Integration | Component | global modal', function () {
     `);
 
     await this.get('modalManager').show().shownPromise;
-    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 27);
+    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 'Escape');
 
     expect(isGlobalModalOpened()).to.be.true;
   });

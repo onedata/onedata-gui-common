@@ -70,8 +70,8 @@ describe('Integration | Component | one way capacity', function () {
     this.set('keyUp', keyUpSpy);
     await render(hbs `{{one-way-capacity value=capacity onKeyUp=(action keyUp)}}`);
 
-    await triggerKeyEvent('.size-number-input', 'keyup', 13);
+    await triggerKeyEvent('.size-number-input', 'keyup', 'Enter');
     expect(keyUpSpy)
-      .to.be.calledWith(sinon.match(event => event.keyCode === 13));
+      .to.be.calledWith(sinon.match(event => event.key === 'Enter'));
   });
 });
