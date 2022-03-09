@@ -1,12 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Component from '@ember/component';
 import isNewTabRequestEvent from 'onedata-gui-common/utils/is-new-tab-request-event';
-import { click, keyEvent } from 'ember-native-dom-helpers';
 
 const DummyComponent = Component.extend({
   layout: hbs `<button
@@ -60,7 +59,7 @@ describe('Integration | Mixin | is new tab request event', function () {
 
     await render(hbs `{{dummy-component myAction=myActionSpy}}`);
 
-    await keyEvent(this.$('#btn')[0], 'keydown', 13, { key: 'Enter' });
+    await triggerKeyEvent(this.$('#btn')[0], 'keydown', 13, { key: 'Enter' });
 
     expect(myActionSpy).to.have.been.calledOnce;
   });

@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, context, before, beforeEach, afterEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
-import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise, resolve } from 'rsvp';
 import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';

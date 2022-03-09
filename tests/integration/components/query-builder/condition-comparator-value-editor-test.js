@@ -3,11 +3,10 @@ import { describe, context, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import { clickTrigger } from '../../../helpers/ember-power-select';
 import $ from 'jquery';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn, blur, triggerKeyEvent } from '@ember/test-helpers';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
@@ -148,7 +147,7 @@ describe('Integration | Component | query builder/condition comparator value edi
             }}`);
 
             await fillIn('.comparator-value', newValue);
-            await keyEvent('.comparator-value', 'keydown', 'Enter');
+            await triggerKeyEvent('.comparator-value', 'keydown', 'Enter');
 
             expect(changeSpy).to.be.calledWith(newValue);
             expect(finishEditSpy).to.be.calledOnce;
@@ -235,7 +234,7 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             await click('.comparator-value');
             await fillIn('.comparator-value', newValue);
-            await keyEvent('.comparator-value', 'keydown', 'Escape');
+            await triggerKeyEvent('.comparator-value', 'keydown', 'Escape');
 
             expect(finishEditSpy).to.not.be.called;
             expect(cancelEditSpy).to.be.calledOnce;

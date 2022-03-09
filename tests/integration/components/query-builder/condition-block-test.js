@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn, blur, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
-import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
@@ -201,7 +200,7 @@ describe('Integration | Component | query builder/condition block', function () 
     await fillIn('.comparator-value', 'def');
     expect(editionEndSpy).to.not.be.called;
 
-    await keyEvent('.comparator-value', 'keydown', 'Escape');
+    await triggerKeyEvent('.comparator-value', 'keydown', 'Escape');
 
     expect(editionEndSpy).to.be.calledOnce.and.to.be.calledWith(queryBlock);
 

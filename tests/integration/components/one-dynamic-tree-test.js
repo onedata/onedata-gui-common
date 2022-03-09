@@ -13,10 +13,6 @@ import {
 } from 'ember-mocha';
 import { render, settled, focus, blur, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-// import {
-//   click,
-//   fillIn,
-// } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 const ERROR_MSG = 'error!';

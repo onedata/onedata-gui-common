@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, focus, blur, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
-import { focus, blur, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | form component/toggle field', function () {

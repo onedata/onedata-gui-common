@@ -1,4 +1,4 @@
-import { click } from 'ember-native-dom-helpers';
+import { click } from '@ember/test-helpers';
 
 export default class FormHelper {
   constructor($template, componentSelector = '') {

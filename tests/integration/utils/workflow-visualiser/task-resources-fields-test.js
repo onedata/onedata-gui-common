@@ -2,14 +2,13 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { fillIn } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { createTaskResourcesFields } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 import _ from 'lodash';
 import $ from 'jquery';
-import { render } from '@ember/test-helpers';
+import { render, fillIn } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow visualiser/task resources fields', function () {
   setupRenderingTest();

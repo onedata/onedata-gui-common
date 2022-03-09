@@ -17,7 +17,7 @@ import sinon from 'sinon';
 import suppressRejections from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | modals/record selector modal', async function () {
-  setupRenderingTest();
+  const hooks = setupRenderingTest();
 
   beforeEach(function () {
     // space is before group to test sorting records by name
@@ -198,7 +198,7 @@ describe('Integration | Component | modals/record selector modal', async functio
   });
 
   context('handles errors', async function () {
-    suppressRejections();
+    suppressRejections(hooks);
 
     it('renders loading error when records cannot be loaded', async function (done) {
       this.set('modalOptions.recordsPromise', reject('loadError'));

@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, fillIn, focus, blur, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { fillIn, focus, blur, keyEvent } from 'ember-native-dom-helpers';
 import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
 
 class UnitSelectHelper extends EmberPowerSelectHelper {
@@ -71,7 +70,7 @@ describe('Integration | Component | one way capacity', function () {
     this.set('keyUp', keyUpSpy);
     await render(hbs `{{one-way-capacity value=capacity onKeyUp=(action keyUp)}}`);
 
-    await keyEvent('.size-number-input', 'keyup', 13);
+    await triggerKeyEvent('.size-number-input', 'keyup', 13);
     expect(keyUpSpy)
       .to.be.calledWith(sinon.match(event => event.keyCode === 13));
   });

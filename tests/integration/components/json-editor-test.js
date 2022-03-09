@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | json editor', function () {

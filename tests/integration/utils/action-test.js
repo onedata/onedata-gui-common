@@ -10,7 +10,7 @@ import { resolve, reject } from 'rsvp';
 import suppressRejections from '../../helpers/suppress-rejections';
 
 describe('Integration | Utility | action', function () {
-  setupTest();
+  const hooks = setupTest();
 
   it('throws "not implemented" error on execute() call', function () {
     let error;
@@ -253,7 +253,7 @@ describe('Integration | Utility | action', function () {
   });
 
   context('handles errors', function () {
-    suppressRejections();
+    suppressRejections(hooks);
 
     it(
       'calls onExecute and passes its result when execute is called (onExecute rejects with non-ActionResult object)',
