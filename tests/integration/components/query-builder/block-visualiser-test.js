@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
@@ -15,9 +16,7 @@ const operatorBlockClasses = {
 };
 
 describe('Integration | Component | query builder/block visualiser', function () {
-  setupComponentTest('query-builder/block-visualiser', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -28,7 +27,7 @@ describe('Integration | Component | query builder/block visualiser', function ()
       async function () {
         this.set('queryBlock', operatorBlockClasses[operatorName].create());
 
-        this.render(hbs `{{query-builder/block-visualiser
+        await render(hbs `{{query-builder/block-visualiser
           queryBlock=queryBlock
           valuesBuilder=valuesBuilder
         }}`);
@@ -54,7 +53,7 @@ describe('Integration | Component | query builder/block visualiser', function ()
         comparatorValues: 'world',
       }));
 
-      this.render(hbs `{{query-builder/block-visualiser
+      await render(hbs `{{query-builder/block-visualiser
         queryBlock=queryBlock
         valuesBuilder=valuesBuilder
       }}`);

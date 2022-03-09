@@ -1,23 +1,21 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import ModifyTaskAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-task-action';
 import { getProperties, get } from '@ember/object';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { Promise, resolve, reject } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
+import { settled } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/modify task action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   beforeEach(function () {
     const task = Task.create();
     const action = ModifyTaskAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       definedStores: [
         Store.create({
           id: 's1',
@@ -67,7 +65,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify task action
       this.set('action.taskDetailsProviderCallback', () => reject());
 
       const { resultPromise } = await executeAction(this);
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(modifyStub).to.not.be.called;
@@ -84,7 +82,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify task action
 
       const { resultPromise } = await executeAction(this);
       rejectCreate();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(modifyStub).to.be.calledOnce.and.to.be.calledWith({ name: 'task2' });
@@ -95,6 +93,6 @@ describe('Integration | Utility | workflow visualiser/actions/modify task action
 
 async function executeAction(testCase) {
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

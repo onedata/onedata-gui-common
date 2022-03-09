@@ -1,7 +1,7 @@
 /**
  * A container for multiple fields. Allows to manage state of many fields at
  * once.
- * 
+ *
  * @module utils/form-component/form-fields-group
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -9,7 +9,7 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import EmberObject, { computed, observer, set, get } from '@ember/object';
+import EmberObject, { computed, observer, set, get, getProperties } from '@ember/object';
 import { array, raw, isEmpty, conditional, notEmpty, gt } from 'ember-awesome-macros';
 import _ from 'lodash';
 
@@ -163,7 +163,14 @@ export default FormElement.extend({
    */
   dumpDefaultValue() {
     return this.get('fields').reduce((valuesAggregator, field) => {
-      set(valuesAggregator, get(field, 'valueName'), field.dumpDefaultValue());
+      const {
+        valueName,
+        isValueless,
+      } = getProperties(field, 'valueName', 'isValueless');
+      const fieldDefaultValue = field.dumpDefaultValue();
+      if (!isValueless && fieldDefaultValue !== undefined) {
+        set(valuesAggregator, valueName, fieldDefaultValue);
+      }
       return valuesAggregator;
     }, EmberObject.create());
   },
@@ -173,13 +180,15 @@ export default FormElement.extend({
    */
   dumpValue() {
     return this.get('fields').reduce((valuesAggregator, field) => {
-      set(valuesAggregator, get(field, 'valueName'), field.dumpValue());
+      if (!get(field, 'isValueless')) {
+        set(valuesAggregator, get(field, 'valueName'), field.dumpValue());
+      }
       return valuesAggregator;
     }, EmberObject.create());
   },
 
   /**
-   * @override 
+   * @override
    */
   getFieldByPath(relativePath) {
     if (!relativePath) {

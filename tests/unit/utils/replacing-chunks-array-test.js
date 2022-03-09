@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import ReplacingChunksArray, { emptyItem } from 'onedata-gui-common/utils/replacing-chunks-array';
 import _ from 'lodash';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 import { Promise, resolve } from 'rsvp';
 import { get } from '@ember/object';
 
@@ -114,13 +114,13 @@ describe('Unit | Utility | replacing chunks array', function () {
       expect(get(array, 'length'), 'length after init').to.equal(initialEndIndex);
       expect(array.toArray(), 'content after init: ' + array.mapBy('index'))
         .to.deep.equal(recordRange(0, initialEndIndex));
-      return wait();
+      return settled();
     }).then(() => {
       array.setProperties({
         startIndex: 15,
         endIndex: 25,
       });
-      return wait();
+      return settled();
     }).then(() => {
       expect(fetchSpy, 'fetch after range change').to.be.calledOnce;
       expect(get(array, 'length'), 'length after range change').to.equal(10);
@@ -140,7 +140,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       endIndex,
       chunkSize,
     });
-    return wait()
+    return settled()
       .then(() => {
         fetchSpy.reset();
         return array.scheduleReload();
@@ -164,7 +164,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       indexMargin: 0,
       chunkSize,
     });
-    return wait()
+    return settled()
       .then(() => {
         expect(array.toArray(), 'content before load more')
           .to.deep.equal(recordRange(0, 20));
@@ -173,7 +173,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           startIndex: 15,
           endIndex: 45,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         expect(fetchSpy, 'fetch records needed to fill start to end')
@@ -194,7 +194,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         endIndex: 100,
         chunkSize: 10,
       });
-      return wait()
+      return settled()
         .then(() => {
           fetchSpy.reset();
           array.setProperties({
@@ -236,7 +236,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 7,
             endIndex: 17,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(array.toArray(), 'content after index change')
@@ -265,7 +265,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           startIndex: 7,
           endIndex: 17,
         });
-        return wait();
+        return settled();
       }).then(() => {
         expect(array.get('lastObject.index'), 'last object after')
           .to.equal(array.toArray().get('lastObject.index'));
@@ -284,14 +284,14 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 10,
         chunkSize,
       });
-      return wait()
+      return settled()
         .then(() => {
           expect(fetchSpy).to.have.been.calledWith(null, 60, 0);
           array.setProperties({
             startIndex: 20,
             endIndex: 60,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(fetchSpy).to.have.been.calledWith(
@@ -309,7 +309,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 0,
             endIndex: 50,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(
@@ -331,20 +331,20 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 10,
         chunkSize: 10,
       });
-      return wait()
+      return settled()
         .then(() => {
           array.setProperties({
             startIndex: 10,
             endIndex: 60,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           array.setProperties({
             startIndex: 20,
             endIndex: 70,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           return array.scheduleReload();
@@ -362,7 +362,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 0,
             endIndex: 50,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(get(array, 'emptyIndex'), 'emptyIndex back').to.equal(-1);
@@ -379,20 +379,20 @@ describe('Unit | Utility | replacing chunks array', function () {
       endIndex: 50,
       indexMargin: 10,
     });
-    return wait()
+    return settled()
       .then(() => {
         array.setProperties({
           startIndex: 10,
           endIndex: 60,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         array.setProperties({
           startIndex: 20,
           endIndex: 70,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         this.mockArray.array = removeFromArray(this.mockArray.array, 70);
@@ -400,14 +400,14 @@ describe('Unit | Utility | replacing chunks array', function () {
         expect(array.toArray()).to.deep.equal(
           removeFromArray(recordRange(10, 80), 70)
         );
-        return wait();
+        return settled();
       })
       .then(() => {
         array.setProperties({
           startIndex: 0,
           endIndex: 50,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         expect(array.toArray()).to.deep.equal(recordRange(0, 60));
@@ -424,20 +424,20 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
     const frontRecord1 = new Record(-2);
     const frontRecord2 = new Record(-1);
-    return wait()
+    return settled()
       .then(() => {
         array.setProperties({
           startIndex: 10,
           endIndex: 60,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         array.setProperties({
           startIndex: 20,
           endIndex: 70,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         this.mockArray.array = addToArray(
@@ -453,7 +453,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           startIndex: 0,
           endIndex: 50,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         const actualArray = array.toArray();
@@ -480,20 +480,20 @@ describe('Unit | Utility | replacing chunks array', function () {
     array.on('fetchPrevStarted', fetchPrevStartedHandler);
     array.on('fetchPrevResolved', fetchPrevResolvedHandler);
 
-    return wait()
+    return settled()
       .then(() => {
         array.setProperties({
           startIndex: 10,
           endIndex: 60,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         array.setProperties({
           startIndex: 20,
           endIndex: 70,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         return array.scheduleReload();
@@ -504,7 +504,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           endIndex: 50,
         });
         expect(fetchPrevStartedHandler).to.be.calledOnce;
-        return wait();
+        return settled();
       })
       .then(() => {
         expect(fetchPrevResolvedHandler).to.be.calledOnce;
@@ -523,7 +523,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         endIndex: 20,
         indexMargin: 0,
       });
-      return wait()
+      return settled()
         .then(() => {
           expect(fetchSpy).to.be.calledOnce;
           expect(array.toArray(), 'first load contents')
@@ -533,7 +533,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 20,
             endIndex: 60,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(fetchSpy).to.be.calledOnce;
@@ -590,14 +590,14 @@ describe('Unit | Utility | replacing chunks array', function () {
       chunkSize,
     });
 
-    return wait()
+    return settled()
       .then(() => {
         expect(fetchSpy, 'initial fetch').to.be.calledWith(null, duplicatedIndex + 3, 0);
         array.setProperties({
           startIndex: duplicatedIndex - 5,
           endIndex: duplicatedIndex + 15,
         });
-        return wait();
+        return settled();
       })
       .then(() => {
         expect(fetchSpy, 'fetch after index change')
@@ -626,7 +626,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       endIndex: 20,
       indexMargin,
     });
-    return wait()
+    return settled()
       .then(() => {
         fetchSpy.reset();
         return array.scheduleJump(60, 30);
@@ -650,7 +650,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       endIndex: 20,
       chunkSize,
     });
-    return wait()
+    return settled()
       .then(() => {
         fetchSpy.reset();
         return array.scheduleJump(defaultMockArraySize - expectedSize, 50);
@@ -674,7 +674,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 0,
         chunkSize,
       });
-      return wait()
+      return settled()
         .then(() => {
           fetchSpy.reset();
           return array.scheduleJump(jumpStart, jumpAreaSize);
@@ -709,7 +709,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         indexMargin: 0,
         chunkSize: 30,
       });
-      return wait()
+      return settled()
         .then(() => {
           expect(fetchSpy).to.have.been.calledWith(null, 50, 0);
           fetchSpy.reset();
@@ -720,7 +720,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 20,
             endIndex: 70,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(fetchSpy).to.have.been.called;
@@ -735,7 +735,7 @@ describe('Unit | Utility | replacing chunks array', function () {
             startIndex: 45,
             endIndex: 95,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           // last call that should return "isLast: true" flag
@@ -747,7 +747,7 @@ describe('Unit | Utility | replacing chunks array', function () {
           array.setProperties({
             endIndex: 150,
           });
-          return wait();
+          return settled();
         })
         .then(() => {
           expect(fetchSpy).to.have.not.been.called;

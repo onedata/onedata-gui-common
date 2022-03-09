@@ -1,7 +1,6 @@
-import { click, focus } from 'ember-native-dom-helpers';
+import { settled, click, focus } from '@ember/test-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';
-import wait from 'ember-test-helpers/wait';
 
 export default class OneDatetimePickerHelper {
   constructor($trigger) {
@@ -24,7 +23,7 @@ export default class OneDatetimePickerHelper {
       clock = this.createFakeClock();
     }
     clock.tick(this.pickerInitDelay);
-    return wait().then(() => {
+    return settled().then(() => {
       if (useInternalClock) {
         clock.restore();
       }

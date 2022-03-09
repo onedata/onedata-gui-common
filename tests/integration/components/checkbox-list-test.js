@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | checkbox list', function () {
-  setupComponentTest('checkbox-list', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('items', [{
@@ -18,14 +17,14 @@ describe('Integration | Component | checkbox list', function () {
     }]);
   });
 
-  it('has class "checkbox-list"', function () {
-    this.render(hbs `{{checkbox-list}}`);
+  it('has class "checkbox-list"', async function () {
+    await render(hbs `{{checkbox-list}}`);
 
     expect(this.$('.checkbox-list')).to.exist;
   });
 
-  it('lists passed items by yielding each one', function () {
-    this.render(hbs `
+  it('lists passed items by yielding each one', async function () {
+    await render(hbs `
       {{#checkbox-list items=items as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -37,10 +36,10 @@ describe('Integration | Component | checkbox list', function () {
     expect($renderedItems.eq(1).text().trim()).to.equal('b');
   });
 
-  it('shows initial selection state', function () {
+  it('shows initial selection state', async function () {
     this.set('selectedItems', [this.get('items')[0]]);
 
-    this.render(hbs `
+    await render(hbs `
       {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -51,18 +50,18 @@ describe('Integration | Component | checkbox list', function () {
     expect($renderedItems.eq(1).find('.one-checkbox')).to.not.have.class('checked');
   });
 
-  it('notifies about selection change', function () {
+  it('notifies about selection change', async function () {
     this.set('selectedItems', []);
     const changeSpy = sinon.spy(nextSelectedItems => {
       this.set('selectedItems', nextSelectedItems);
     });
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `
+    await render(hbs `
       {{#checkbox-list
         items=items
         selectedItems=selectedItems
-        onChange=(action "change")
+        onChange=(action change)
         as |listItem|
       }}
         {{listItem.model.name}}
@@ -81,19 +80,19 @@ describe('Integration | Component | checkbox list', function () {
 
   it(
     'notifies about selection change when items array changed and some selected items disappeared',
-    function () {
+    async function () {
       const items = this.get('items');
       this.set('selectedItems', []);
       const changeSpy = sinon.spy(nextSelectedItems => {
         this.set('selectedItems', nextSelectedItems);
       });
-      this.on('change', changeSpy);
+      this.set('change', changeSpy);
 
-      this.render(hbs `
+      await render(hbs `
         {{#checkbox-list
           items=items
           selectedItems=selectedItems
-          onChange=(action "change")
+          onChange=(action change)
           as |listItem|
         }}
           {{listItem.model.name}}
@@ -115,10 +114,10 @@ describe('Integration | Component | checkbox list', function () {
     }
   );
 
-  it('shows selection state counter via header', function () {
+  it('shows selection state counter via header', async function () {
     this.set('selectedItems', [this.get('items')[0]]);
 
-    this.render(hbs `
+    await render(hbs `
       {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -127,10 +126,10 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.selected-counter').text().trim()).to.equal('(1/2)');
   });
 
-  it('shows total selection state via header', function () {
+  it('shows total selection state via header', async function () {
     this.set('selectedItems', this.get('items'));
 
-    this.render(hbs `
+    await render(hbs `
       {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -139,10 +138,10 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.checkbox-list-header .one-checkbox')).to.have.class('checked');
   });
 
-  it('shows mixed selection state via header', function () {
+  it('shows mixed selection state via header', async function () {
     this.set('selectedItems', [this.get('items')[0]]);
 
-    this.render(hbs `
+    await render(hbs `
       {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -151,8 +150,8 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.checkbox-list-header .one-checkbox')).to.have.class('maybe');
   });
 
-  it('shows empty selection state via header', function () {
-    this.render(hbs `
+  it('shows empty selection state via header', async function () {
+    await render(hbs `
       {{#checkbox-list items=items selectedItems=selectedItems as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -163,19 +162,19 @@ describe('Integration | Component | checkbox list', function () {
     expect($headerCheckbox).to.not.have.class('maybe');
   });
 
-  it('allows to change selection via header checkbox', function () {
+  it('allows to change selection via header checkbox', async function () {
     const items = this.get('items');
     this.set('selectedItems', []);
     const changeSpy = sinon.spy(nextSelectedItems => {
       this.set('selectedItems', nextSelectedItems);
     });
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `
+    await render(hbs `
       {{#checkbox-list
         items=items
         selectedItems=selectedItems
-        onChange=(action "change")
+        onChange=(action change)
         as |listItem|
       }}
         {{listItem.model.name}}
@@ -205,8 +204,8 @@ describe('Integration | Component | checkbox list', function () {
       });
   });
 
-  it('shows passed headerText', function () {
-    this.render(hbs `
+  it('shows passed headerText', async function () {
+    await render(hbs `
       {{#checkbox-list items=items headerText="listHeader" as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -215,8 +214,8 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.header-text').text().trim()).to.equal('listHeader');
   });
 
-  it('shows expanded list by default', function () {
-    this.render(hbs `
+  it('shows expanded list by default', async function () {
+    await render(hbs `
       {{#checkbox-list items=items as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -225,8 +224,8 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.checkbox-list-collapse')).to.have.class('in');
   });
 
-  it('shows collapsed list when isInitiallyExpanded is false', function () {
-    this.render(hbs `
+  it('shows collapsed list when isInitiallyExpanded is false', async function () {
+    await render(hbs `
       {{#checkbox-list items=items isInitiallyExpanded=false as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -235,8 +234,8 @@ describe('Integration | Component | checkbox list', function () {
     expect(this.$('.checkbox-list-collapse')).to.not.have.class('in');
   });
 
-  it('collapses and expands list via header click', function () {
-    this.render(hbs `
+  it('collapses and expands list via header click', async function () {
+    await render(hbs `
       {{#checkbox-list items=items as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -248,8 +247,8 @@ describe('Integration | Component | checkbox list', function () {
       .then(() => expect(this.$('.checkbox-list-collapse')).to.have.class('in'));
   });
 
-  it('shows arrow-down icon when list is collapsed', function () {
-    this.render(hbs `
+  it('shows arrow-down icon when list is collapsed', async function () {
+    await render(hbs `
       {{#checkbox-list items=items isInitiallyExpanded=false as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -259,8 +258,8 @@ describe('Integration | Component | checkbox list', function () {
       .to.have.class('oneicon-arrow-down');
   });
 
-  it('shows arrow-up icon when list is expanded', function () {
-    this.render(hbs `
+  it('shows arrow-up icon when list is expanded', async function () {
+    await render(hbs `
       {{#checkbox-list items=items isInitiallyExpanded=true as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -270,8 +269,8 @@ describe('Integration | Component | checkbox list', function () {
       .to.have.class('oneicon-arrow-up');
   });
 
-  it('does not collapse list on header checkbox click', function () {
-    this.render(hbs `
+  it('does not collapse list on header checkbox click', async function () {
+    await render(hbs `
       {{#checkbox-list items=items isInitiallyExpanded=true as |listItem|}}
         {{listItem.model.name}}
       {{/checkbox-list}}
@@ -283,18 +282,18 @@ describe('Integration | Component | checkbox list', function () {
 
   it(
     'allows to change item checkbox value using label and yielded checkboxId',
-    function () {
+    async function () {
       this.set('selectedItems', []);
       const changeSpy = sinon.spy(nextSelectedItems => {
         this.set('selectedItems', nextSelectedItems);
       });
-      this.on('change', changeSpy);
+      this.set('change', changeSpy);
 
-      this.render(hbs `
+      await render(hbs `
         {{#checkbox-list
           items=items
           selectedItems=selectedItems
-          onChange=(action "change")
+          onChange=(action change)
           as |listItem|
         }}
           {{listItem.checkbox}}
@@ -309,8 +308,8 @@ describe('Integration | Component | checkbox list', function () {
 
   it(
     'renders <label> tag with model.name as a content for each item when component is not block',
-    function () {
-      this.render(hbs `{{checkbox-list items=items}}`);
+    async function () {
+      await render(hbs `{{checkbox-list items=items}}`);
 
       const $itemLabels = this.$('.checkbox-list-item label');
       expect($itemLabels).to.have.length(2);
@@ -322,8 +321,8 @@ describe('Integration | Component | checkbox list', function () {
 
   it(
     'disables and unchecks total selection state checkbox when there are no items',
-    function () {
-      this.render(hbs `{{checkbox-list}}`);
+    async function () {
+      await render(hbs `{{checkbox-list}}`);
 
       const $headerCheckbox = this.$('.checkbox-list-header .one-checkbox');
       expect($headerCheckbox).to.not.have.class('checked');
@@ -332,8 +331,8 @@ describe('Integration | Component | checkbox list', function () {
     }
   );
 
-  it('does not allow to expand a list when there are no items', function () {
-    this.render(hbs `{{checkbox-list isInitiallyExpanded=true}}`);
+  it('does not allow to expand a list when there are no items', async function () {
+    await render(hbs `{{checkbox-list isInitiallyExpanded=true}}`);
 
     const $collapse = this.$('.checkbox-list-collapse');
     expect($collapse).to.not.have.class('in');
@@ -341,8 +340,8 @@ describe('Integration | Component | checkbox list', function () {
       .then(() => expect($collapse).to.not.have.class('in'));
   });
 
-  it('does not change selection when onChange is not defined', function () {
-    this.render(hbs `{{checkbox-list items=items}}`);
+  it('does not change selection when onChange is not defined', async function () {
+    await render(hbs `{{checkbox-list items=items}}`);
 
     return click('.checkbox-list-header .one-checkbox')
       .then(() =>
@@ -354,13 +353,13 @@ describe('Integration | Component | checkbox list', function () {
       );
   });
 
-  it('does not collapse on selection change', function () {
-    this.on('change', nextSelectedItems => {
+  it('does not collapse on selection change', async function () {
+    this.set('change', nextSelectedItems => {
       this.set('selectedItems', nextSelectedItems);
     });
 
-    this.render(hbs `
-      {{checkbox-list items=items onChange=(action "change") isInitiallyExpanded=false}}
+    await render(hbs `
+      {{checkbox-list items=items onChange=(action change) isInitiallyExpanded=false}}
     `);
 
     return click('.checkbox-list-header')

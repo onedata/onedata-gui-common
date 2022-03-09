@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import createThrottledFunction from 'onedata-gui-common/utils/create-throttled-function';
 import sinon from 'sinon';
+import { settled } from '@ember/test-helpers';
 
 describe('Unit | Utility | create throttled function', function () {
   beforeEach(function () {
@@ -15,15 +16,16 @@ describe('Unit | Utility | create throttled function', function () {
     this.clock.restore();
   });
 
-  it('does not call passed function if no call occurred on throttler', function () {
+  it('does not call passed function if no call occurred on throttler', async function () {
     createThrottledFunction(this.spy, 100);
 
     this.clock.tick(200);
+    await settled();
 
     expect(this.spy).to.be.not.called;
   });
 
-  it('does not throttle on first call', function () {
+  it('does not throttle on first call', async function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
     throttled();
@@ -31,7 +33,7 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
   });
 
-  it('postpones execution on first call in non-immediate mode', function () {
+  it('postpones execution on first call in non-immediate mode', async function () {
     const throttled = createThrottledFunction(this.spy, 100, false);
 
     throttled();
@@ -39,11 +41,12 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.have.not.been.called;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.have.been.calledOnce;
   });
 
-  it('postpones execution on first and next call in non-immediate mode', function () {
+  it('postpones execution on first and next call in non-immediate mode', async function () {
     const throttled = createThrottledFunction(this.spy, 100, false);
 
     throttled();
@@ -51,17 +54,19 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.have.not.been.called;
 
     this.clock.tick(100);
+    await settled();
 
     throttled();
 
     expect(this.spy).to.have.been.calledOnce;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.have.been.calledTwice;
   });
 
-  it('throttles two immediate calls', function () {
+  it('throttles two immediate calls', async function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
     throttled();
@@ -70,15 +75,17 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
   });
 
-  it('throttles a hundred immediate calls', function () {
+  it('throttles a hundred immediate calls', async function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
     for (let i = 0; i < 100; i++) {
@@ -88,42 +95,50 @@ describe('Unit | Utility | create throttled function', function () {
     expect(this.spy).to.be.calledOnce;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.be.calledTwice;
   });
 
-  it('does not throttle calls with proper interval', function () {
+  it('does not throttle calls with proper interval', async function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
     throttled();
     this.clock.tick(100);
+    await settled();
     throttled();
     this.clock.tick(100);
+    await settled();
     throttled();
 
     expect(this.spy).to.be.calledThrice;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.be.calledThrice;
   });
 
-  it('throttles calls with interval very close to the proper', function () {
+  it('throttles calls with interval very close to the proper', async function () {
     const throttled = createThrottledFunction(this.spy, 100);
 
     throttled();
     this.clock.tick(99);
+    await settled();
     throttled();
     this.clock.tick(99);
+    await settled();
     throttled();
 
     expect(this.spy).to.be.calledTwice;
 
     this.clock.tick(100);
+    await settled();
 
     expect(this.spy).to.be.calledThrice;
   });

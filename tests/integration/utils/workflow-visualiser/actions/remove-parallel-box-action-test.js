@@ -1,27 +1,24 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import RemoveParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-box-action';
 import { getProperties, get } from '@ember/object';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 const parallelBoxName = 'box1';
 
 describe('Integration | Utility | workflow visualiser/actions/remove parallel box action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const parallelBox = ParallelBox.create({ name: parallelBoxName });
     const action = RemoveParallelBoxAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { parallelBox },
     });
     this.setProperties({ parallelBox, action });
@@ -87,7 +84,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove parallel bo
       const { resultPromise } = await executeAction(this);
       await click(getModalFooter().find('.question-yes')[0]);
       rejectRemove();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(removeLaneStub).to.be.calledOnce;
@@ -97,8 +94,8 @@ describe('Integration | Utility | workflow visualiser/actions/remove parallel bo
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

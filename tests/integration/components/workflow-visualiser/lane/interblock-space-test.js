@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -14,12 +15,10 @@ import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
-  setupComponentTest('workflow-visualiser/lane/interblock-space', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setGetTaskCreationDataCallback(
       () => resolve({ name: 'Untitled task' })
     );
@@ -28,8 +27,8 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 
   it(
     'has classes "workflow-visualiser-interblock-space", "workflow-visualiser-space" and "workflow-visualiser-element"',
-    function () {
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+    async function () {
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -41,10 +40,10 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
     }
   );
 
-  it('has class "between-parallel-box-space" when "parent" is of type Lane', function () {
+  it('has class "between-parallel-box-space" when "parent" is of type Lane', async function () {
     this.set('blockSpace.parent', Lane.create());
 
-    this.render(hbs `{{workflow-visualiser/lane/interblock-space
+    await render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
     }}`);
 
@@ -52,10 +51,10 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       .to.have.class('between-parallel-box-space');
   });
 
-  it('has class "between-task-space" when "parent" is of type ParallelBox', function () {
+  it('has class "between-task-space" when "parent" is of type ParallelBox', async function () {
     this.set('blockSpace.parent', ParallelBox.create());
 
-    this.render(hbs `{{workflow-visualiser/lane/interblock-space
+    await render(hbs `{{workflow-visualiser/lane/interblock-space
       elementModel=blockSpace
     }}`);
 
@@ -127,25 +126,26 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
 function itIsOfType(type, parent, [elementBefore, elementAfter]) {
   const className = `space-position-${type}`;
   it(`has class "${className}" when ${siblingsDescription(elementBefore, elementAfter)}`,
-    function () {
+    async function (done) {
       setProperties(this.get('blockSpace'), {
         parent,
         elementBefore,
         elementAfter,
       });
 
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
       expect(this.$('.workflow-visualiser-interblock-space')).to.have.class(className);
+      done();
     });
 }
 
 function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
   it(
     `allows to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function () {
+    async function (done) {
       const onAddElement = sinon.stub().resolves();
       setProperties(this.get('blockSpace'), {
         mode,
@@ -154,7 +154,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
         parent,
         onAddElement,
       });
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -165,6 +165,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
       };
       expect(onAddElement).to.be.calledOnce
         .and.to.be.calledWith(parent, elementBefore, sinon.match(newElementMatcher));
+      done();
     }
   );
 }
@@ -172,7 +173,7 @@ function itAllowsToAddElement(parent, [elementBefore, elementAfter], newElementT
 function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newElementType, mode) {
   it(
     `does not allow to add element when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function () {
+    async function (done) {
       setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
@@ -180,11 +181,12 @@ function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newEl
         parent,
       });
 
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
       expect(this.$(`.create-${dasherize(newElementType)}-action-trigger`)).to.not.exist;
+      done();
     }
   );
 }
@@ -192,7 +194,7 @@ function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newEl
 function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
   it(
     `${hasArrow ? 'renders' : 'does not render any'} arrow when is in "${mode}" mode and ${siblingsDescription(elementBefore, elementAfter)}`,
-    async function () {
+    async function (done) {
       setProperties(this.get('blockSpace'), {
         mode,
         elementBefore,
@@ -200,7 +202,7 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
         parent,
       });
 
-      this.render(hbs `{{workflow-visualiser/lane/interblock-space
+      await render(hbs `{{workflow-visualiser/lane/interblock-space
         elementModel=blockSpace
       }}`);
 
@@ -210,6 +212,7 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
       } else {
         expect($arrow).to.not.exist;
       }
+      done();
     }
   );
 }

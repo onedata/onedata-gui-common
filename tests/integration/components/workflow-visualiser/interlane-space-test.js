@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
@@ -10,15 +11,12 @@ import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import wait from 'ember-test-helpers/wait';
 
 describe('Integration | Component | workflow visualiser/interlane space', function () {
-  setupComponentTest('workflow-visualiser/interlane-space', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    const actionsFactory = ActionsFactory.create({ ownerSource: this });
+    const actionsFactory = ActionsFactory.create({ ownerSource: this.owner });
     actionsFactory.setWorkflowDataProvider({
       definedStores: [
         Store.create({
@@ -37,7 +35,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
   it(
     'has classes "workflow-visualiser-interlane-space", "workflow-visualiser-space" and "workflow-visualiser-element"',
     async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$().children()).to.have.length(1);
       expect(this.$().children().eq(0))
@@ -49,7 +47,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
   it('has class "full-view-space", when it does not have any sibling elements',
     async function () {
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.workflow-visualiser-interlane-space'))
         .to.have.class('full-view-space');
@@ -57,7 +55,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
   it('does not have class "full-view-space", when it has an after element',
     async function () {
-      await render(this);
+      await renderComponent();
       this.set('interlaneSpace.elementAfter', Lane.create());
 
       expect(this.$('.workflow-visualiser-interlane-space'))
@@ -69,7 +67,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       this.set('interlaneSpace.mode', 'edit');
     });
 
-    it('notifies about triggered "add lane" action', async function () {
+    it('notifies about triggered "add lane" action', async function (done) {
       const onAddElement = sinon.stub().resolves();
       const elementBefore = Lane.create();
       setProperties(this.get('interlaneSpace'), {
@@ -77,7 +75,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
         elementAfter: Lane.create(),
         onAddElement,
       });
-      await render(this);
+      await renderComponent();
 
       await click('.create-lane-action-trigger');
       await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
@@ -88,6 +86,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
         elementBefore,
         sinon.match({ name: 'lane1' })
       );
+      done();
     });
   });
 
@@ -96,23 +95,23 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       this.set('interlaneSpace.mode', 'view');
     });
 
-    it('does not allow to trigger "add lane" action', async function () {
+    it('does not allow to trigger "add lane" action', async function (done) {
       setProperties(this.get('interlaneSpace'), {
         elementBefore: Lane.create(),
         elementAfter: Lane.create(),
       });
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.create-lane-action-trigger')).to.not.exist;
+      done();
     });
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `
+async function renderComponent() {
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser/interlane-space elementModel=interlaneSpace}}
   `);
-  await wait();
 }

@@ -1,15 +1,13 @@
 import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import _object from 'lodash/object';
 
 const ERROR_MSG = 'error!';
 
 describe('Unit | Component | one form', function () {
-  setupComponentTest('one-form', {
-    unit: true,
-  });
+  setupTest();
 
   beforeEach(function () {
     const FIELDS = {
@@ -36,7 +34,8 @@ describe('Unit | Component | one form', function () {
       ],
     });
 
-    let subject = this.subject();
+    const subject =
+      this.set('subject', this.owner.factoryFor('component:one-form').create());
     subject.setProperties({
       allFields: ALL_FIELDS,
       allFieldsValues: ALL_FIELDS_VALUES,
@@ -47,7 +46,7 @@ describe('Unit | Component | one form', function () {
   });
 
   it('detects errors while validation', function () {
-    let subject = this.subject();
+    const subject = this.get('subject');
     expect(subject.get('isValid'), 'form is invalid').to.be.false;
 
     // simulates text input to show an error message
@@ -59,7 +58,7 @@ describe('Unit | Component | one form', function () {
   });
 
   it('ignores errors in another fields group', function () {
-    let subject = this.subject();
+    const subject = this.get('subject');
     subject.set('currentFieldsPrefix', ['another']);
     expect(subject.get('isValid'), 'form is valid').to.be.true;
     expect(subject.get('currentFields')[0].get('message'), 'field has no error')
@@ -67,14 +66,14 @@ describe('Unit | Component | one form', function () {
   });
 
   it('ignores errors if field was not edited', function () {
-    let subject = this.subject();
+    const subject = this.get('subject');
     expect(subject.get('isValid'), 'form is invalid').to.be.false;
     expect(subject.get('currentFields')[0].get('message'), 'field has no error')
       .to.be.empty;
   });
 
   it('detects that new errors have occurred', function () {
-    let subject = this.subject();
+    const subject = this.get('subject');
     const error = subject.get('validations.errors')[0];
     subject.set('validations.errors', []);
     expect(subject.get('isValid'), 'form is valid when errors disappear')
@@ -85,7 +84,7 @@ describe('Unit | Component | one form', function () {
   });
 
   it('can reset fields state and value', function () {
-    let subject = this.subject();
+    const subject = this.get('subject');
     subject.changeFormValue('main.first', 'sth');
     subject.resetFormValues();
     expect(subject.get('isValid'), 'form is still invalid after reset')
@@ -99,7 +98,7 @@ describe('Unit | Component | one form', function () {
   });
 
   it('allows to change field value', function () {
-    let subject = this.subject();
+    const subject = this.get('subject');
     expect(subject.get('formValues.main.first'), 'initial field value == null')
       .to.be.null;
     const NEW_VALUE = 'sth';

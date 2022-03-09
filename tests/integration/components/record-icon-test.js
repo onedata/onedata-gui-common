@@ -1,16 +1,15 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { camelize } from '@ember/string';
 
 describe('Integration | Component | record icon', function () {
-  setupComponentTest('record-icon', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('has class "record-icon"', function () {
-    this.render(hbs `{{record-icon}}`);
+  it('has class "record-icon"', async function () {
+    await render(hbs `{{record-icon}}`);
 
     expect(this.$('.record-icon')).to.have.length(1);
   });
@@ -45,14 +44,14 @@ describe('Integration | Component | record icon', function () {
   }].forEach(({ modelName, icon }) => {
     it(
       `shows "${icon}" when passed record is an instance of "${modelName}" model`,
-      function () {
+      async function () {
         this.set('record', {
           constructor: {
             modelName,
           },
         });
 
-        this.render(hbs `{{record-icon record=record}}`);
+        await render(hbs `{{record-icon record=record}}`);
 
         expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
@@ -60,10 +59,10 @@ describe('Integration | Component | record icon', function () {
 
     it(
       `shows "${icon}" when passed modelName is "${modelName}"`,
-      function () {
+      async function () {
         this.set('modelName', modelName);
 
-        this.render(hbs `{{record-icon modelName=modelName}}`);
+        await render(hbs `{{record-icon modelName=modelName}}`);
 
         expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
@@ -73,10 +72,10 @@ describe('Integration | Component | record icon', function () {
     if (camelizedModelName !== modelName) {
       it(
         `shows "${icon}" when passed modelName is "${camelizedModelName}"`,
-        function () {
+        async function () {
           this.set('modelName', modelName);
 
-          this.render(hbs `{{record-icon modelName=modelName}}`);
+          await render(hbs `{{record-icon modelName=modelName}}`);
 
           expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
         }
@@ -196,14 +195,14 @@ describe('Integration | Component | record icon', function () {
     subtypes.forEach(({ properties, icon }) => {
       it(
         `shows "${icon}" when passed record is an instance of "${modelName}" model with ${JSON.stringify(properties)} additional properties and useSubtypeIcon is true`,
-        function () {
+        async function () {
           this.set('record', Object.assign({
             constructor: {
               modelName,
             },
           }, properties));
 
-          this.render(hbs `{{record-icon useSubtypeIcon=true record=record}}`);
+          await render(hbs `{{record-icon useSubtypeIcon=true record=record}}`);
 
           expect(this.$('.record-icon')).to.have.class(`oneicon-${icon}`);
         }

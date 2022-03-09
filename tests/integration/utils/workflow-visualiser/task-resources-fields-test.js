@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import { fillIn } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -10,16 +9,15 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import { createTaskResourcesFields } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 import _ from 'lodash';
 import $ from 'jquery';
+import { render } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow visualiser/task resources fields', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   describe('createTaskResourcesFields', function () {
     beforeEach(function () {
       this.set('rootGroup', FormFieldsRootGroup.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         i18nPrefix: 'utils.workflowVisualiser',
         fields: [
           FormFieldsGroup.create({
@@ -46,7 +44,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has cpu, memory and storage fields groups', async function () {
-      await render(this);
+      await renderComponent();
 
       const $cpuSection = this.$('.cpu-field');
       expect($cpuSection.find('.control-label').eq(0).text().trim())
@@ -78,7 +76,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has validation error when requested cpu value is negative', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '-3');
       await inputResourceTextValue(this, 'cpu', 'limit', '');
@@ -87,7 +85,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has validation error when requested cpu value is zero', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '0');
       await inputResourceTextValue(this, 'cpu', 'limit', '');
@@ -96,7 +94,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has validation error when requested cpu value is empty', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '');
       await inputResourceTextValue(this, 'cpu', 'limit', '');
@@ -105,7 +103,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has no validation error when requested cpu value is positive', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '0.5');
       await inputResourceTextValue(this, 'cpu', 'limit', '');
@@ -114,7 +112,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has validation error when requested cpu value is larger than limit cpu value', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '3');
       await inputResourceTextValue(this, 'cpu', 'limit', '1');
@@ -124,7 +122,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has no validation error when requested cpu value is equal to limit cpu value', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '1');
       await inputResourceTextValue(this, 'cpu', 'limit', '1');
@@ -134,7 +132,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has no validation error when requested cpu value is smaller to limit cpu value', async function () {
-      await render(this);
+      await renderComponent();
 
       await inputResourceTextValue(this, 'cpu', 'requested', '1');
       await inputResourceTextValue(this, 'cpu', 'limit', '2');
@@ -170,7 +168,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
         if (invalidFor.includes(resourceName)) {
           it(`has validation error when requested ${resourceDescription} value is ${valueDescription}`,
             async function () {
-              await render(this);
+              await renderComponent();
 
               await inputResourceCapacityValue(this, resourceName, 'requested', value);
               await inputResourceCapacityValue(this, resourceName, 'limit', ['', 'MiB']);
@@ -181,7 +179,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
         } else {
           it(`has no validation error when requested ${resourceDescription} value is ${valueDescription}`,
             async function () {
-              await render(this);
+              await renderComponent();
 
               await inputResourceCapacityValue(this, resourceName, 'requested', value);
               await inputResourceCapacityValue(this, resourceName, 'limit', ['', 'MiB']);
@@ -216,7 +214,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
       }].forEach(({ comparisonDescription, hasError, values }) => {
         it(`has${hasError ? '' : ' no'} validation error when requested ${resourceDescription} value ${comparisonDescription} limit ${resourceDescription} value`,
           async function () {
-            await render(this);
+            await renderComponent();
 
             await inputResourceCapacityValue(this, resourceName, 'requested', values[0]);
             await inputResourceCapacityValue(this, resourceName, 'limit', values[1]);
@@ -243,7 +241,7 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
         );
         this.get('rootGroup').changeMode('view');
 
-        await render(this);
+        await renderComponent();
 
         expect(this.$(`.${resourceName}Limit-field .field-component`)).to.not.exist;
         expect(this.$(`.${resourceName}LimitUnlimitedDesc-field .field-component`).text().trim())
@@ -253,9 +251,8 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
 }
 
 function getResourceFieldSelector(resourceName, resourceBoundary) {

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import { focus, blur, fillIn } from 'ember-native-dom-helpers';
@@ -8,20 +9,18 @@ import sinon from 'sinon';
 import { set, setProperties } from '@ember/object';
 
 describe('Integration | Component | form component/textarea field', function () {
-  setupComponentTest('form-component/textarea-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', TextareaField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
     }));
   });
 
   it(
     'has class "textarea-field"',
-    function () {
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('.textarea-field')).to.exist;
     }
@@ -29,8 +28,8 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'renders textarea',
-    function () {
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea')).to.exist;
     }
@@ -38,10 +37,10 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea')).to.have.attr('disabled');
     }
@@ -49,10 +48,10 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       return focus('textarea')
         .then(() => blur('textarea'))
@@ -62,10 +61,10 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       return fillIn('textarea', 'test')
         .then(() => {
@@ -77,17 +76,17 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'sets input value to string specified in field object',
-    function () {
+    async function () {
       this.set('field.value', 'test');
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea').val()).to.equal('test');
     }
   );
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/textarea-field field=field fieldId="abc"}}
     `);
 
@@ -96,10 +95,10 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'sets placeholder according to "placeholder"',
-    function () {
+    async function () {
       this.set('field.placeholder', 'test');
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea').attr('placeholder')).to.equal('test');
     }
@@ -107,12 +106,12 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'renders readonly textarea when field is in "view" mode',
-    function () {
+    async function () {
       const field = this.get('field');
       set(field, 'value', 'test value');
       field.changeMode('view');
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea')).to.have.attr('readonly');
     }
@@ -120,7 +119,7 @@ describe('Integration | Component | form component/textarea field', function () 
 
   it(
     'renders static text when field is in "view" mode and "showsStaticTextInViewMode" is true',
-    function () {
+    async function () {
       const field = this.get('field');
       setProperties(field, {
         value: 'test value',
@@ -128,7 +127,7 @@ describe('Integration | Component | form component/textarea field', function () 
       });
       field.changeMode('view');
 
-      this.render(hbs `{{form-component/textarea-field field=field}}`);
+      await render(hbs `{{form-component/textarea-field field=field}}`);
 
       expect(this.$('textarea')).to.not.exist;
       expect(this.$().text().trim()).to.equal('test value');

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import PrivilegesField from 'onedata-gui-common/utils/form-component/privileges-field';
 import { click } from 'ember-native-dom-helpers';
@@ -31,9 +32,7 @@ const translations = {
 };
 
 describe('Integration | Component | form component/privileges field', function () {
-  setupComponentTest('form-component/privileges-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const i18nStub = sinon.stub(lookupService(this, 'i18n'), 't');
@@ -51,8 +50,8 @@ describe('Integration | Component | form component/privileges field', function (
 
   it(
     'has class "privileges-field"',
-    function () {
-      this.render(hbs `{{form-component/privileges-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/privileges-field field=field}}`);
 
       expect(this.$('.privileges-field')).to.exist;
     }
@@ -60,8 +59,8 @@ describe('Integration | Component | form component/privileges field', function (
 
   it(
     'renders privileges tree',
-    function () {
-      this.render(hbs `{{form-component/privileges-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/privileges-field field=field}}`);
 
       Object.values(translations).forEach(translation =>
         expect(this.$(`.node-text:contains(${translation})`)).to.exist
@@ -71,10 +70,10 @@ describe('Integration | Component | form component/privileges field', function (
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/privileges-field field=field}}`);
+      await render(hbs `{{form-component/privileges-field field=field}}`);
 
       expect(this.$('.one-way-toggle:not(.disabled)')).to.not.exist;
     }
@@ -82,10 +81,10 @@ describe('Integration | Component | form component/privileges field', function (
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/privileges-field field=field}}`);
+      await render(hbs `{{form-component/privileges-field field=field}}`);
 
       return click(
         this.$('.node-text:contains(group0) + .form-group .one-way-toggle')[0]
@@ -96,10 +95,10 @@ describe('Integration | Component | form component/privileges field', function (
     }
   );
 
-  it('sets tree value to privileges specified in field object', function () {
+  it('sets tree value to privileges specified in field object', async function () {
     this.set('field.value', ['g1a']);
 
-    this.render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `{{form-component/privileges-field field=field}}`);
 
     expect(
       this.$('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
@@ -108,13 +107,13 @@ describe('Integration | Component | form component/privileges field', function (
     expect(this.$('.one-way-toggle.checked')).to.have.length(2);
   });
 
-  it('shows diff using actual value and default value', function () {
+  it('shows diff using actual value and default value', async function () {
     setProperties(this.get('field'), {
       value: ['g0a', 'g0b', 'g1a'],
       defaultValue: ['g0a', 'g1a'],
     });
 
-    this.render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `{{form-component/privileges-field field=field}}`);
 
     const $modifiedLabels = this.$('.modified-node-label');
     expect($modifiedLabels).to.have.length(2);
@@ -122,12 +121,12 @@ describe('Integration | Component | form component/privileges field', function (
     expect($modifiedLabels.eq(1).text().trim()).to.equal('privilege0b');
   });
 
-  it('renders readonly active privileges when field is in "view" mode', function () {
+  it('renders readonly active privileges when field is in "view" mode', async function () {
     const field = this.get('field');
     set(field, 'value', ['g1a']);
     field.changeMode('view');
 
-    this.render(hbs `{{form-component/privileges-field field=field}}`);
+    await render(hbs `{{form-component/privileges-field field=field}}`);
 
     expect(
       this.$('.node-text:contains(privilege1a) + .form-group .one-way-toggle')

@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import wait from 'ember-test-helpers/wait';
+import { settled } from '@ember/test-helpers';
 import ConflictIdsArray from 'onedata-gui-common/utils/conflict-ids-array';
 
 function createMockArray() {
@@ -30,7 +30,7 @@ describe('Unit | Utility | conflict ids array', function () {
     expect(arrayProxy.objectAt(1).get('conflictLabel')).to.equal('abcdef2');
   });
 
-  it('computes conflict labels on array change', function (done) {
+  it('computes conflict labels on array change', async function () {
     const array = createMockArray();
 
     let arrayProxy = ConflictIdsArray.create({
@@ -41,9 +41,7 @@ describe('Unit | Utility | conflict ids array', function () {
       name: 'Some',
     }));
 
-    wait().then(() => {
-      expect(arrayProxy.objectAt(2).get('conflictLabel')).to.equal('abcdef3');
-      done();
-    });
+    await settled();
+    expect(arrayProxy.objectAt(2).get('conflictLabel')).to.equal('abcdef3');
   });
 });

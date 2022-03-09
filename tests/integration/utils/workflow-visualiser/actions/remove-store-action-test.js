@@ -1,25 +1,22 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import { getProperties, get } from '@ember/object';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 describe('Integration | Utility | workflow visualiser/actions/remove store action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({ name: 'store1' });
     const action = RemoveStoreAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { store },
     });
     this.setProperties({ store, action });
@@ -85,7 +82,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
       const { resultPromise } = await executeAction(this);
       await click(getModalFooter().find('.question-yes')[0]);
       rejectRemove();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(removeStoreStub).to.be.calledOnce;
@@ -95,8 +92,8 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

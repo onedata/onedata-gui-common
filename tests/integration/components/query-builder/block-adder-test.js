@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click, fillIn, waitUntil } from 'ember-native-dom-helpers';
 import $ from 'jquery';
@@ -10,20 +11,18 @@ import { selectChoose } from '../../../helpers/ember-power-select';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 describe('Integration | Component | query builder/block adder', function () {
-  setupComponentTest('query-builder/block-adder', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
-  it('has class "query-builder-block-adder"', function () {
-    this.render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
+  it('has class "query-builder-block-adder"', async function () {
+    await render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
 
     expect(this.$('.query-builder-block-adder')).to.have.length(1);
   });
 
   it('shows block selector on click', async function () {
-    this.render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
+    await render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
     await click('.query-builder-block-adder');
 
     expect($('.webui-popover.in')).to.have.length(1);
@@ -33,7 +32,7 @@ describe('Integration | Component | query builder/block adder', function () {
   it('passess through information about selected operator', async function () {
     const addSpy = this.set('addSpy', sinon.spy());
 
-    this.render(hbs `{{query-builder/block-adder
+    await render(hbs `{{query-builder/block-adder
       onBlockAdd=this.addSpy
       valuesBuilder=valuesBuilder
     }}`);
@@ -53,7 +52,7 @@ describe('Integration | Component | query builder/block adder', function () {
     }]);
     const addSpy = this.set('addSpy', sinon.spy());
 
-    this.render(hbs `{{query-builder/block-adder
+    await render(hbs `{{query-builder/block-adder
       queryProperties=queryProperties
       onBlockAdd=this.addSpy
       valuesBuilder=valuesBuilder
@@ -70,7 +69,7 @@ describe('Integration | Component | query builder/block adder', function () {
   });
 
   it('closes block selector when operator has been chosen', async function () {
-    this.render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
+    await render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
     await click('.query-builder-block-adder');
     await click('.operator-and');
 
@@ -84,7 +83,7 @@ describe('Integration | Component | query builder/block adder', function () {
       type: 'string',
     }]);
 
-    this.render(hbs `{{query-builder/block-adder
+    await render(hbs `{{query-builder/block-adder
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
     }}`);
@@ -97,7 +96,7 @@ describe('Integration | Component | query builder/block adder', function () {
   });
 
   it('can be disabled', async function () {
-    this.render(hbs `{{query-builder/block-adder
+    await render(hbs `{{query-builder/block-adder
       disabled=true
       valuesBuilder=valuesBuilder
     }}`);

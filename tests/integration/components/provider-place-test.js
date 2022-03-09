@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { click } from 'ember-native-dom-helpers';
 import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard';
@@ -18,16 +19,17 @@ const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
 
 function triggerCopyClick(context, success = true) {
-  // we need to attach this.$ to the whole app $ context, because a popover 
+  // we need to attach this.$ to the whole app $ context, because a popover
   // renders in the body, not inside the component
-  let old$ = context.$;
-  context.$ = (selector) => $('body').find(selector);
+  const newContext = {
+    $: (selector) => $('body').find(selector),
+    container: context.owner,
+  };
   if (success) {
-    triggerSuccess(context, '.provider-host-copy-btn');
+    triggerSuccess(newContext, '.provider-host-copy-btn');
   } else {
-    triggerError(context, '.provider-host-copy-btn');
+    triggerError(newContext, '.provider-host-copy-btn');
   }
-  context.$ = old$;
 }
 
 const GuiUtils = Service.extend({
@@ -43,19 +45,19 @@ const Router = Service.extend({
 });
 
 describe('Integration | Component | provider place', function () {
-  setupComponentTest('provider-place', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    registerService(this, 'globalNotify', GlobalNotifyStub);
+    const globalNotify = this.set(
+      'globalNotify',
+      registerService(this, 'globalNotify', GlobalNotifyStub)
+    );
     registerService(this, 'guiUtils', GuiUtils);
     registerService(this, 'router', Router);
+    this.set('i18n', registerService(this, 'i18n', I18nStub));
 
-    this.get('globalNotify')._clearMessages();
+    globalNotify._clearMessages();
 
-    this.register('service:i18n', I18nStub);
-    this.inject.service('i18n', { as: 'i18n' });
     this.set('i18n.translations', {
       components: {
         providerPlace: {
@@ -108,18 +110,18 @@ describe('Integration | Component | provider place', function () {
     ]);
   });
 
-  it('shows provider status', function () {
-    this.render(hbs `{{provider-place provider=provider}}`);
+  it('shows provider status', async function () {
+    await render(hbs `{{provider-place provider=provider}}`);
     const $providerPlace = this.$('.provider-place');
     expect($providerPlace).to.exist;
     expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
   });
 
-  it('resizes with parent one-atlas component', function () {
+  it('resizes with parent one-atlas component', async function () {
     this.set('atlasWidth', 800);
-    this.render(hbs `
-      {{provider-place 
-        provider=provider 
+    await render(hbs `
+      {{provider-place
+        provider=provider
         atlasWidth=atlasWidth}}`);
     let prevWidth = parseFloat(this.$('.circle').css('width'));
     this.set('atlasWidth', 400);
@@ -127,9 +129,9 @@ describe('Integration | Component | provider place', function () {
       .to.be.equal(prevWidth / 2);
   });
 
-  it('notifies about hostname copy to clipboard success', function (done) {
-    this.render(hbs `
-      {{provider-place 
+  it('notifies about hostname copy to clipboard success', async function (done) {
+    await render(hbs `
+      {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
       triggerCopyClick(this);
@@ -140,9 +142,9 @@ describe('Integration | Component | provider place', function () {
     });
   });
 
-  it('notifies about hostname copy to clipboard error', function (done) {
-    this.render(hbs `
-      {{provider-place 
+  it('notifies about hostname copy to clipboard error', async function (done) {
+    await render(hbs `
+      {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
       triggerCopyClick(this, false);
@@ -152,9 +154,9 @@ describe('Integration | Component | provider place', function () {
     });
   });
 
-  it('shows list of supported spaces', function (done) {
-    this.render(hbs `
-      {{provider-place 
+  it('shows list of supported spaces', async function (done) {
+    await render(hbs `
+      {{provider-place
         provider=provider}}`);
 
     let spaces = this.get('spaces');
@@ -170,9 +172,9 @@ describe('Integration | Component | provider place', function () {
     });
   });
 
-  it('shows multiple providers if necessary', function (done) {
-    this.render(hbs `
-      {{provider-place 
+  it('shows multiple providers if necessary', async function (done) {
+    await render(hbs `
+      {{provider-place
         provider=providers}}`);
 
     click('.circle').then(() => {

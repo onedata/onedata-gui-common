@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import sinon from 'sinon';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -11,14 +11,12 @@ import { getModalBody, getModalFooter } from '../../../../helpers/modal';
 import { resolve } from 'rsvp';
 
 describe('Integration | Component | workflow visualiser/stores list/store', function () {
-  setupComponentTest('workflow-visualiser/stores-list/store', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
       actionsFactory: ActionsFactory.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         workflowDataProvider: {
           getStoreContent: () => resolve({ array: [], isLast: true }),
         },
@@ -38,7 +36,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
   });
 
   it('has class "workflow-visualiser-stores-list-store"', async function () {
-    this.render(hbs `{{workflow-visualiser/stores-list/store}}`);
+    await render(hbs `{{workflow-visualiser/stores-list/store}}`);
 
     expect(this.$().children()).to.have.class('workflow-visualiser-stores-list-store')
       .and.to.have.length(1);
@@ -53,22 +51,23 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     itHasModeClass('edit');
     itAddsInputStoreClassWhenNeeded();
 
-    it('allows to remove store', async function () {
+    it('allows to remove store', async function (done) {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('store.onRemove', onRemoveSpy);
-      await render(this);
+      await renderComponent();
 
       expect(onRemoveSpy).to.not.be.called;
 
       await click('.remove-store-action-trigger');
       await click(getModalFooter().find('.question-yes')[0]);
       expect(onRemoveSpy).to.be.calledOnce;
+      done();
     });
 
-    it('allows to modify store on click', async function () {
+    it('allows to modify store on click', async function (done) {
       const onModifySpy = sinon.stub().resolves();
       this.set('store.onModify', onModifySpy);
-      await render(this);
+      await renderComponent();
 
       expect(onModifySpy).to.not.be.called;
 
@@ -82,6 +81,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
         .and.to.be.calledWith(this.get('store'), sinon.match({
           name: 'store2',
         }));
+      done();
     });
   });
 
@@ -94,26 +94,28 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     itHasModeClass('view');
     itAddsInputStoreClassWhenNeeded();
 
-    it('does not show remove button', async function () {
-      await render(this);
+    it('does not show remove button', async function (done) {
+      await renderComponent();
 
       expect(this.$('.remove-store-action-trigger')).to.not.exist;
+      done();
     });
 
-    it('allows to view store details on click', async function () {
-      await render(this);
+    it('allows to view store details on click', async function (done) {
+      await renderComponent();
 
       await click('.workflow-visualiser-stores-list-store');
       await click(getModalBody()
         .find('.bs-tab-onedata .nav-link:contains("Details")')[0]);
       expect(getModalBody().find('.name-field .field-component').text().trim())
         .to.equal('store1');
+      done();
     });
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `
+async function renderComponent() {
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser/stores-list/store
       mode=mode
@@ -121,45 +123,48 @@ async function render(testCase) {
       actionsFactory=actionsFactory
     }}
   `);
-  await wait();
 }
 
 function itShowsStoreName() {
-  it('shows store name', async function () {
-    await render(this);
+  it('shows store name', async function (done) {
+    await renderComponent();
 
     expect(this.$('.store-name').text().trim()).to.equal('store1');
+    done();
   });
 }
 
 function itHasModeClass(mode) {
   const className = `mode-${mode}`;
-  it(`has "${className}" class`, async function () {
-    await render(this);
+  it(`has "${className}" class`, async function (done) {
+    await renderComponent();
 
     expect(this.$('.workflow-visualiser-stores-list-store'))
       .to.have.class(className);
+    done();
   });
 }
 
 function itAddsInputStoreClassWhenNeeded() {
   it('has class "tag-item-warning" when "requiresInitialContent" is true',
-    async function () {
+    async function (done) {
       this.set('store.requiresInitialContent', true);
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.workflow-visualiser-stores-list-store'))
         .to.have.class('tag-item-warning');
+      done();
     });
 
   it('does not have class "tag-item-warning" when "requiresInitialContent" is false',
-    async function () {
+    async function (done) {
       this.set('store.requiresInitialContent', false);
 
-      await render(this);
+      await renderComponent();
 
       expect(this.$('.workflow-visualiser-stores-list-store'))
         .to.not.have.class('tag-item-warning');
+      done();
     });
 }

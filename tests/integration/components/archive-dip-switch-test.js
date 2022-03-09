@@ -1,31 +1,30 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
 describe('Integration | Component | archive dip switch', function () {
-  setupComponentTest('archive-dip-switch', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('displays DIP as active if archiveDipMode is "dip"', function () {
+  it('displays DIP as active if archiveDipMode is "dip"', async function () {
     this.set('archiveDipMode', 'dip');
 
-    this.render(hbs `{{archive-dip-switch
+    await render(hbs `{{archive-dip-switch
       archiveDipMode=archiveDipMode
     }}`);
 
     expect(this.$('.select-archive-dip-btn'), 'dip btn').to.have.class('active');
   });
 
-  it('renders both options as disabled when disabled option is true', function () {
+  it('renders both options as disabled when disabled option is true', async function () {
     this.setProperties({
       archiveDipMode: 'aip',
       disabled: true,
     });
 
-    this.render(hbs `{{archive-dip-switch
+    await render(hbs `{{archive-dip-switch
       archiveDipMode=archiveDipMode
       disabled=disabled
     }}`);
@@ -34,14 +33,14 @@ describe('Integration | Component | archive dip switch', function () {
     expect(this.$('.select-archive-dip-btn')).to.be.disabled;
   });
 
-  it('calls passed archiveDipModeChanged action with selected mode', function () {
+  it('calls passed archiveDipModeChanged action with selected mode', async function () {
     const onArchiveDipModeChange = sinon.spy();
     this.setProperties({
       archiveDipMode: 'aip',
       onArchiveDipModeChange,
     });
 
-    this.render(hbs `{{archive-dip-switch
+    await render(hbs `{{archive-dip-switch
       archiveDipMode=archiveDipMode
       onArchiveDipModeChange=onArchiveDipModeChange
     }}`);

@@ -1,3 +1,5 @@
+'use strict';
+
 /* eslint-env node */
 const browsers = [
   'last 1 chrome versions',

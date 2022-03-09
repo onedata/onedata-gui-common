@@ -2,14 +2,12 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 
 describe('Integration | Utility | form component/static text field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it('defines fieldComponentName as "form-component/static-text-field"', function () {
     const field = StaticTextField.create();
@@ -28,7 +26,7 @@ describe('Integration | Utility | form component/static text field', function ()
       .returns('someText');
 
     const field = StaticTextField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'some',
       parent: {
         path: 'parent',

@@ -1,20 +1,19 @@
 import { expect } from 'chai';
 import { describe, context, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import { clickTrigger } from '../../../helpers/ember-power-select';
 import $ from 'jquery';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
+import { render } from '@ember/test-helpers';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
 describe('Integration | Component | query builder/condition comparator value editor',
   function () {
-    setupComponentTest('query-builder/condition-comparator-value-editor', {
-      integration: true,
-    });
+    setupRenderingTest();
 
     setDefaultQueryValuesBuilder();
 
@@ -30,13 +29,13 @@ describe('Integration | Component | query builder/condition comparator value edi
       }].forEach(({ comparator, value, viewValue }) => {
         const [propertyType, comparatorName] = comparator.split('.');
         it(`shows comparator value for "${comparatorName}" comparator for ${propertyType} property`,
-          function () {
+          async function (done) {
             this.setProperties({
               comparator,
               value,
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="view"
               comparator=comparator
               value=value
@@ -44,14 +43,15 @@ describe('Integration | Component | query builder/condition comparator value edi
             }}`);
 
             expect(this.$('.comparator-value').text().trim()).to.equal(viewValue);
+            done();
           }
         );
       });
 
-      it('calls "onStartEdit" on click', async function () {
+      it('calls "onStartEdit" on click', async function (done) {
         const onStartEditSpy = this.set('onStartEditSpy', sinon.spy());
 
-        this.render(hbs `{{query-builder/condition-comparator-value-editor
+        await render(hbs `{{query-builder/condition-comparator-value-editor
           mode="view"
           comparator="string.eq"
           value="hello"
@@ -62,6 +62,7 @@ describe('Integration | Component | query builder/condition comparator value edi
         await click('.comparator-value');
 
         expect(onStartEditSpy).to.be.calledOnce;
+        done();
       });
     });
 
@@ -95,9 +96,9 @@ describe('Integration | Component | query builder/condition comparator value edi
         };
 
         it(`has focused editor on init for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
+          async function (done) {
             beforeTest(this);
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -106,14 +107,15 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             expect(this.$('.comparator-value')[0], '.comparator-value is active')
               .to.equal(document.activeElement);
+            done();
           }
         );
 
         it(`shows current comparator value for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
+          async function (done) {
             beforeTest(this);
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value="abc"
@@ -121,11 +123,12 @@ describe('Integration | Component | query builder/condition comparator value edi
             }}`);
 
             expect(this.$('.comparator-value')).to.have.value('abc');
+            done();
           }
         );
 
         it(`closes editor and notifies about new value for "${comparatorName}" comparator for ${propertyType} property (close using Enter)`,
-          async function () {
+          async function (done) {
             beforeTest(this);
             const {
               changeSpy,
@@ -135,7 +138,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               finishEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value="abc"
@@ -149,11 +152,12 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             expect(changeSpy).to.be.calledWith(newValue);
             expect(finishEditSpy).to.be.calledOnce;
+            done();
           }
         );
 
         it(`closes editor and notifies about new value for "${comparatorName}" comparator for ${propertyType} property (close using blur)`,
-          async function () {
+          async function (done) {
             beforeTest(this);
             const {
               changeSpy,
@@ -163,7 +167,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               finishEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -177,11 +181,12 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             expect(changeSpy, 'change').to.be.calledWith(newValue);
             expect(finishEditSpy, 'finishEdit').to.be.called;
+            done();
           }
         );
 
         it(`notifies about partial new value before close for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
+          async function (done) {
             beforeTest(this);
             const {
               changeSpy,
@@ -191,7 +196,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               finishEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -204,11 +209,12 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             expect(changeSpy).to.be.calledWith('de');
             expect(finishEditSpy).to.not.be.called;
+            done();
           }
         );
 
         it(`cancels editor on Escape key down for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
+          async function (done) {
             beforeTest(this);
             const {
               finishEditSpy,
@@ -218,7 +224,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               cancelEditSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value=value
@@ -233,14 +239,15 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             expect(finishEditSpy).to.not.be.called;
             expect(cancelEditSpy).to.be.calledOnce;
+            done();
           }
         );
 
         it(`does not add class "is-invalid" to the input by default for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
+          async function (done) {
             beforeTest(this);
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               value="abc"
@@ -248,14 +255,15 @@ describe('Integration | Component | query builder/condition comparator value edi
             }}`);
 
             expect(this.$('.comparator-value')).to.not.have.class('is-invalid');
+            done();
           }
         );
 
         it(`adds class "is-invalid" to the input if isValueInvalid is true for "${comparatorName}" comparator for ${propertyType} property`,
-          async function () {
+          async function (done) {
             beforeTest(this);
 
-            this.render(hbs `{{query-builder/condition-comparator-value-editor
+            await render(hbs `{{query-builder/condition-comparator-value-editor
               mode="edit"
               comparator=comparator
               isValueInvalid=true
@@ -265,6 +273,7 @@ describe('Integration | Component | query builder/condition comparator value edi
 
             expect(this.$('.comparator-value'))
               .to.have.class('is-invalid');
+            done();
           }
         );
       });
@@ -279,7 +288,7 @@ function itShowsPowerSelectWithOptions(
 ) {
   const [propertyType, comparatorName] = comparator.split('.');
   it(`shows power-select with options for "${comparatorName}" comparator for ${propertyType} property`,
-    async function () {
+    async function (done) {
       const queryProperty = {
         key: 'dummy',
         displayedKey: 'Dummy',
@@ -294,7 +303,7 @@ function itShowsPowerSelectWithOptions(
         comparator,
       });
 
-      this.render(hbs `{{query-builder/condition-comparator-value-editor
+      await render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
         queryProperty=queryProperty
@@ -308,6 +317,7 @@ function itShowsPowerSelectWithOptions(
       expect(options).to.have.length(expectedOptionValues.length);
       expect(Array.from(options).map(opt => opt.textContent.trim()).sort())
         .to.deep.equal(expectedOptionValues.sort());
+      done();
     }
   );
 }
@@ -315,10 +325,10 @@ function itShowsPowerSelectWithOptions(
 function itShowsTextInput(comparator) {
   const [propertyType, comparatorName] = comparator.split('.');
   it(`shows text input for "${comparatorName}" comparator for ${propertyType} property`,
-    async function () {
+    async function (done) {
       this.set('comparator', comparator);
 
-      this.render(hbs `{{query-builder/condition-comparator-value-editor
+      await render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
         valuesBuilder=valuesBuilder
@@ -326,6 +336,7 @@ function itShowsTextInput(comparator) {
 
       expect(this.$('input[type="text"].comparator-value'), 'input.comparator-value')
         .to.exist;
+      done();
     }
   );
 }
@@ -333,13 +344,13 @@ function itShowsTextInput(comparator) {
 function itCallsOnValueChange(comparator, valueToInput) {
   const [propertyType, comparatorName] = comparator.split('.');
   it(`calls "onValueChange" callback, when ${propertyType} property "${comparatorName}" condition value has changed`,
-    async function () {
+    async function (done) {
       const { changeSpy } = this.setProperties({
         comparator,
         changeSpy: sinon.spy(),
       });
 
-      this.render(hbs `{{query-builder/condition-comparator-value-editor
+      await render(hbs `{{query-builder/condition-comparator-value-editor
         mode="create"
         comparator=comparator
         onValueChange=changeSpy
@@ -349,6 +360,7 @@ function itCallsOnValueChange(comparator, valueToInput) {
       await fillIn('.comparator-value', valueToInput);
 
       expect(changeSpy).to.be.calledOnce.and.to.be.calledWith(valueToInput);
+      done();
     }
   );
 }

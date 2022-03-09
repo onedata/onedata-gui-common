@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Component from '@ember/component';
@@ -18,12 +19,10 @@ const DummyComponent = Component.extend({
 });
 
 describe('Integration | Mixin | is new tab request event', function () {
-  setupComponentTest('is-new-tab-request-event', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    this.register('component:dummy-component', DummyComponent);
+    this.owner.register('component:dummy-component', DummyComponent);
   });
 
   it('returns false for plain click', async function () {
@@ -33,7 +32,7 @@ describe('Integration | Mixin | is new tab request event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    this.render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
     await click(this.$('#btn')[0]);
 
     expect(myActionSpy).to.have.been.calledOnce;
@@ -46,7 +45,7 @@ describe('Integration | Mixin | is new tab request event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    this.render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
     await click(this.$('#btn')[0], { ctrlKey: true });
 
     expect(myActionSpy).to.have.been.calledOnce;
@@ -59,7 +58,7 @@ describe('Integration | Mixin | is new tab request event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    this.render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
 
     await keyEvent(this.$('#btn')[0], 'keydown', 13, { key: 'Enter' });
 
@@ -73,7 +72,7 @@ describe('Integration | Mixin | is new tab request event', function () {
     const myActionSpy = sinon.spy(myAction);
     this.set('myActionSpy', myActionSpy);
 
-    this.render(hbs `{{dummy-component myAction=myActionSpy}}`);
+    await render(hbs `{{dummy-component myAction=myActionSpy}}`);
 
     await click(this.$('#btn')[0], { button: 1, which: 2 });
 

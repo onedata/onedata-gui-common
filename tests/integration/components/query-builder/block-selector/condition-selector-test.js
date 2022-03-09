@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { click, fillIn } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose, typeInSearch } from '../../../../helpers/ember-power-select';
 import setDefaultQueryValuesBuilder from '../../../../helpers/set-default-query-values-builder';
+import { render } from '@ember/test-helpers';
 
 const numberComparators = [{
   operator: 'eq',
@@ -32,9 +33,7 @@ numberComparators.forEach(({ operator, symbol }) => {
 });
 
 describe('Integration | Component | query builder/block selector/condition selector', function () {
-  setupComponentTest('query-builder/block-selector/condition-selector', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -62,7 +61,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   });
 
   it('lists query properties in dropdown', async function () {
-    this.render(hbs `{{query-builder/block-selector/condition-selector
+    await render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
     }}`);
@@ -78,7 +77,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   });
 
   it('filters query properties in dropdown', async function () {
-    this.render(hbs `{{query-builder/block-selector/condition-selector
+    await render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
     }}`);
@@ -92,7 +91,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   });
 
   it('blocks "Add" button when no property is selected', async function () {
-    this.render(hbs `{{query-builder/block-selector/condition-selector
+    await render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
     }}`);
@@ -101,7 +100,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   });
 
   it('does not block "Add" button when property and number values are selected from dropdown', async function () {
-    this.render(hbs `{{query-builder/block-selector/condition-selector
+    await render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       selectedConditionProperty=numberOptionsProp
       selectedConditionComparator="numberOptions.lt"
@@ -114,7 +113,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   });
 
   it('does not show comparator selector on init', async function () {
-    this.render(hbs `{{query-builder/block-selector/condition-selector
+    await render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
     }}`);
@@ -123,7 +122,7 @@ describe('Integration | Component | query builder/block selector/condition selec
   });
 
   it('shows comparator selector when multi-comparator property is selected', async function () {
-    this.render(hbs `{{query-builder/block-selector/condition-selector
+    await render(hbs `{{query-builder/block-selector/condition-selector
       queryProperties=queryProperties
       valuesBuilder=valuesBuilder
     }}`);
@@ -162,7 +161,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     defaultComparator,
   }) => {
     it(`shows comparators for ${propertyType} property`, async function () {
-      this.render(hbs `{{query-builder/block-selector/condition-selector
+      await render(hbs `{{query-builder/block-selector/condition-selector
         queryProperties=queryProperties
         valuesBuilder=valuesBuilder
       }}`);
@@ -199,7 +198,7 @@ describe('Integration | Component | query builder/block selector/condition selec
         `calls "onConditionSelected" callback, when ${propertyType} property "${comparatorName}" condition has been accepted`,
         async function () {
           const selectedSpy = this.set('selectedSpy', sinon.spy());
-          this.render(hbs `{{query-builder/block-selector/condition-selector
+          await render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
             onConditionSelected=selectedSpy
             valuesBuilder=valuesBuilder
@@ -225,7 +224,7 @@ describe('Integration | Component | query builder/block selector/condition selec
       it(
         `sets default comparator value for "${comparatorName}" comparator for ${propertyType} property`,
         async function () {
-          this.render(hbs `{{query-builder/block-selector/condition-selector
+          await render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
             valuesBuilder=valuesBuilder
           }}`);
@@ -241,7 +240,7 @@ describe('Integration | Component | query builder/block selector/condition selec
       it(
         `blocks "Add" button when ${propertyType} property "${comparatorName}" condition has default comparator value`,
         async function () {
-          this.render(hbs `{{query-builder/block-selector/condition-selector
+          await render(hbs `{{query-builder/block-selector/condition-selector
             queryProperties=queryProperties
             valuesBuilder=valuesBuilder
           }}`);
@@ -258,7 +257,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     it(
       `blocks "Add" button when number property "${operator}" condition has a non-number condition value`,
       async function () {
-        this.render(hbs `{{query-builder/block-selector/condition-selector
+        await render(hbs `{{query-builder/block-selector/condition-selector
           queryProperties=queryProperties
           valuesBuilder=valuesBuilder
         }}`);
