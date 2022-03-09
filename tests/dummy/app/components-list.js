@@ -38,7 +38,6 @@ export default [
   'promise-proxy-container',
   'provider-place',
   'provider-spaces-support-chart',
-  'providers-list',
   'providers-map-tile',
   'query-builder',
   'remove-icon',

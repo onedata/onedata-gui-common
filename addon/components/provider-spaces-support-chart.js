@@ -1,6 +1,6 @@
 /**
  * A component that renders spaces supported by specified provider.
- * 
+ *
  * @module components/provider-spaces-support-chart
  * @author Michal Borzecki
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -10,7 +10,7 @@
 import OnePieChart from 'onedata-gui-common/components/one-pie-chart';
 import { inject as service } from '@ember/service';
 import EmberObject, { computed, observer, get } from '@ember/object';
-import generateColors from 'onedata-gui-common/utils/generate-colors';
+import ColorGenerator from 'onedata-gui-common/utils/color-generator';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import { A } from '@ember/array';
 
@@ -45,15 +45,23 @@ export default OnePieChart.extend({
   data: Object.freeze([]),
 
   /**
+   * @type {ComputedProperty<Utils.ColorGenerator>}
+   */
+  colorGenerator: computed(() => new ColorGenerator()),
+
+  /**
    * Mapping spaceId -> color
    * @type {Ember.ComputedProperty<Object>}
    */
-  spacesColors: computed('spaces.[]', function spacesColors() {
-    const spaces = this.get('spaces');
+  spacesColors: computed('spaces.[]', 'colorGenerator', function spacesColors() {
+    const {
+      spaces,
+      colorGenerator,
+    } = this.getProperties('spaces', 'colorGenerator');
     if (get(spaces, 'isFulfilled')) {
-      const colors = generateColors(get(spaces, 'length'));
-      return spaces.reduce((colorsMap, space, index) => {
-        colorsMap[get(space, 'id')] = colors[index];
+      return spaces.reduce((colorsMap, space) => {
+        const spaceId = get(space, 'id');
+        colorsMap[spaceId] = colorGenerator.generateColorForKey(spaceId);
         return colorsMap;
       }, {});
     } else {

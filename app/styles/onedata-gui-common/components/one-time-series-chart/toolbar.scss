@@ -1,6 +1,10 @@
 $one-time-series-chart-toolbar-font-size: 85%;
 
 .one-time-series-chart-toolbar {
+  .control-label {
+    font-size: $one-time-series-chart-toolbar-font-size;
+  }
+
   .time-resolutions-trigger.small {
     display: inline-block;
     vertical-align: middle;
@@ -15,6 +19,8 @@ $one-time-series-chart-toolbar-font-size: 85%;
   }
 
   .navigation-buttons {
+    margin-left: 0.5em;
+
     .btn {
       padding: 0.2em 0.5em;
       min-width: 2em;
