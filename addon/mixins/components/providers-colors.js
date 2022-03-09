@@ -1,3 +1,12 @@
+/**
+ * Adds `providersColors` computed property that maps provider ID to CSS color code.
+ *
+ * @module mixins/components/providers-colors
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2018-2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Mixin from '@ember/object/mixin';
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';

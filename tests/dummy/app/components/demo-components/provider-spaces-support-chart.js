@@ -7,27 +7,29 @@
 
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import PromiseArray from 'onedata-gui-common/utils/ember/promise-array';
+import { promiseArray } from 'onedata-gui-common/utils/ember/promise-array';
 import { resolve } from 'rsvp';
 
 export default Component.extend({
   providerId: 'p1',
 
+  spacesCount: 16,
+
   spaces: computed(function spaces() {
-    return PromiseArray.create({
-      promise: resolve([{
-        id: 'space1',
-        name: 'Space 1',
+    const {
+      providerId,
+      spacesCount,
+    } = this.getProperties('providerId', 'spacesCount');
+    const supports = [];
+    for (let i = 0; i < spacesCount; ++i) {
+      supports.push({
+        id: `space${i}`,
+        name: `Space ${i}`,
         supportSizes: {
-          p1: 1000000,
+          [providerId]: 1000000,
         },
-      }, {
-        id: 'space2',
-        name: 'Space 2',
-        supportSizes: {
-          p1: 2000000,
-        },
-      }]),
-    });
+      });
+    }
+    return promiseArray(resolve(supports));
   }),
 });
