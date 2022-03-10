@@ -9,6 +9,7 @@ mocha.setup({
   timeout: 5000,
 });
 
+// Remove all passed test reports from DOM if `hidepassed` query param is present
 const urlParams = new URLSearchParams(location.search);
 if (urlParams.get('hidepassed') !== null) {
   afterEach(function () {
