@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, fillIn, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
@@ -10,7 +10,6 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../../helpers/modal';
-import { fillIn, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { setProperties } from '@ember/object';

@@ -1,4 +1,4 @@
-import { click } from 'ember-native-dom-helpers';
+import { click } from '@ember/test-helpers';
 
 /**
  * @deprecated Use `ember-power-select/test-support` instead
@@ -43,8 +43,8 @@ export default class EmberPowerSelectHelper {
   }
 
   /**
-   * @param {number} index 
-   * @param {function} callback 
+   * @param {number} index
+   * @param {function} callback
    */
   selectOption(index, callback) {
     return this.open()

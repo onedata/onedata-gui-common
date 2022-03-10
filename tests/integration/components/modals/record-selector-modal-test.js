@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, context, it, beforeEach } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
@@ -14,7 +14,7 @@ import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
 import { Promise, resolve, reject } from 'rsvp';
 import { A } from '@ember/array';
 import sinon from 'sinon';
-import suppressRejections from '../../../helpers/suppress-rejections';
+import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | modals/record selector modal', async function () {
   setupRenderingTest();
@@ -197,21 +197,17 @@ describe('Integration | Component | modals/record selector modal', async functio
     expect(onHideSpy).to.not.be.called;
   });
 
-  context('handles errors', async function () {
+  it('renders loading error when records cannot be loaded', async function () {
     suppressRejections();
+    this.set('modalOptions.recordsPromise', reject('loadError'));
+    const recordHelper = new RecordHelper();
 
-    it('renders loading error when records cannot be loaded', async function (done) {
-      this.set('modalOptions.recordsPromise', reject('loadError'));
-      const recordHelper = new RecordHelper();
+    await showModal(this);
 
-      await showModal(this);
-
-      expect(recordHelper.getTrigger()).to.not.exist;
-      const $loadError = getModalBody().find('.resource-load-error');
-      expect($loadError).to.exist;
-      expect($loadError.text()).to.contain('loadError');
-      done();
-    });
+    expect(recordHelper.getTrigger()).to.not.exist;
+    const $loadError = getModalBody().find('.resource-load-error');
+    expect($loadError).to.exist;
+    expect($loadError.text()).to.contain('loadError');
   });
 });
 

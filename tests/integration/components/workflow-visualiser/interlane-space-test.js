@@ -1,12 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
-import { click, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';

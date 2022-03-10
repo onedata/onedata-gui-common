@@ -3,10 +3,9 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { click, fillIn } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose, typeInSearch } from '../../../../helpers/ember-power-select';
 import setDefaultQueryValuesBuilder from '../../../../helpers/set-default-query-values-builder';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 
 const numberComparators = [{
   operator: 'eq',

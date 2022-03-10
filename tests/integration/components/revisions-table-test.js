@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
-import { click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import Action from 'onedata-gui-common/utils/action';
 

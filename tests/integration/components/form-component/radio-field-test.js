@@ -1,12 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, blur, click, focus } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import { blur, click, focus } from 'ember-native-dom-helpers';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/radio field', function () {

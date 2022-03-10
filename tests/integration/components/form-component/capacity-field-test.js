@@ -3,12 +3,11 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
-import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { set } from '@ember/object';
-import { render } from '@ember/test-helpers';
+import { render, focus, blur, fillIn } from '@ember/test-helpers';
 
 describe('Integration | Component | form component/capacity field', function () {
   setupRenderingTest();

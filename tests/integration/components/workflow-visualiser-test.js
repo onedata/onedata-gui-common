@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click, fillIn, scrollTo } from 'ember-native-dom-helpers';
+// TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
+import { scrollTo } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -58,7 +59,6 @@ describe('Integration | Component | workflow visualiser', function () {
         changeStub: sinon.stub().callsFake(newData => new Promise(resolve => {
           schedule('afterRender', this, async () => {
             this.set('rawData', newData);
-            await settled();
             resolve();
           });
         })),
@@ -389,18 +389,18 @@ describe('Integration | Component | workflow visualiser', function () {
       done();
     });
 
-    it('does not show edition-related elements of parallel boxes and spaces between them', async function (
-    done) {
-      const rawData = twoNonEmptyLanesExample;
+    it('does not show edition-related elements of parallel boxes and spaces between them',
+      async function (done) {
+        const rawData = twoNonEmptyLanesExample;
 
-      await renderWithRawData(this, rawData);
+        await renderWithRawData(this, rawData);
 
-      expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
-      expect(this.$(
-        '.workflow-visualiser-interblock-space.between-parallel-box-space .add-block-action-trigger'
-      )).to.not.exist;
-      done();
-    });
+        expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
+        expect(this.$(
+          '.workflow-visualiser-interblock-space.between-parallel-box-space .add-block-action-trigger'
+        )).to.not.exist;
+        done();
+      });
 
     it('does not show edition-related elements in empty parallel box', async function (done) {
       const rawData = twoLanesWithEmptyBlocksExample;

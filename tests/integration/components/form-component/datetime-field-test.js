@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, blur } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
-import { blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../../helpers/one-datetime-picker';
 import moment from 'moment';

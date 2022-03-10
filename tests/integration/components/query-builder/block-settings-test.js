@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, waitUntil } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
-import { click, waitUntil } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';
 import { get } from '@ember/object';

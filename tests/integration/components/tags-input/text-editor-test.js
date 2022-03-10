@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn, triggerKeyEvent, blur } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click, fillIn, keyEvent, blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | tags input/text editor', function () {
@@ -33,7 +32,7 @@ describe('Integration | Component | tags input/text editor', function () {
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag'))
-      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.be.empty;
         const $tagItems = this.$('.tag-item');
@@ -181,7 +180,7 @@ describe('Integration | Component | tags input/text editor', function () {
     }}`);
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', '1a'))
-      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
         expect(this.$('.text-editor-input').val()).to.equal('1a');
         expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
@@ -231,7 +230,7 @@ describe('Integration | Component | tags input/text editor', function () {
     }}`);
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', '1a'))
-      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => fillIn('.text-editor-input', '1ab'))
       .then(() =>
         expect(this.$('.tags-input-text-editor')).to.not.have.class('has-error')

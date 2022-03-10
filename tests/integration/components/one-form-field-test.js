@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { fillIn } from 'ember-native-dom-helpers';
 
 describe('Integration | Component | one form field', function () {
   setupRenderingTest();

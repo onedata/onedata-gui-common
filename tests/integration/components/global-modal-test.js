@@ -1,12 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, click, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
 import $ from 'jquery';
 import sinon from 'sinon';
-import { click, keyEvent } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance';
 import { set } from '@ember/object';
@@ -446,7 +445,7 @@ describe('Integration | Component | global modal', function () {
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
     await this.get('modalManager').show().shownPromise;
-    await keyEvent(getGlobalModal()[0], 'keydown', 27);
+    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 'Escape');
 
     expect(isGlobalModalOpened()).to.be.false;
   });
@@ -458,7 +457,7 @@ describe('Integration | Component | global modal', function () {
     `);
 
     await this.get('modalManager').show().shownPromise;
-    await keyEvent(getGlobalModal()[0], 'keydown', 27);
+    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 'Escape');
 
     expect(isGlobalModalOpened()).to.be.true;
   });

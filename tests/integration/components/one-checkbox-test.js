@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import sinon from 'sinon';
-import { click } from 'ember-native-dom-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one checkbox', function () {

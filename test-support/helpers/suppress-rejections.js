@@ -1,17 +1,20 @@
-import { beforeEach, afterEach } from 'mocha';
-import TestAdapter from '@ember/test/adapter';
 import Ember from 'ember';
 
-export default function suppressRejections(hooks = { beforeEach, afterEach }) {
-  hooks.beforeEach(function () {
-    this.originalLoggerError = Ember.Logger.error;
-    this.originalTestAdapterException = TestAdapter.exception;
-    Ember.Logger.error = function () {};
-    Ember.Test.adapter.exception = function () {};
-  });
+const originalLoggerError = Ember.Logger.error;
+const originalTestAdapterException = Ember.Test.adapter.exception;
+const fakeLoggerError = function () {};
+const fakeTestAdapterException = function () {};
 
-  hooks.afterEach(function () {
-    Ember.Logger.error = this.originalLoggerError;
-    Ember.Test.adapter.exception = this.originalTestAdapterException;
-  });
+export function suppressRejections() {
+  Ember.Logger.error = fakeLoggerError;
+  Ember.Test.adapter.exception = fakeTestAdapterException;
+}
+
+export function unsuppressRejections() {
+  if (Ember.Logger.error === fakeLoggerError) {
+    Ember.Logger.error = originalLoggerError;
+  }
+  if (Ember.Test.adapter.exception === fakeTestAdapterException) {
+    Ember.Test.adapter.exception = originalTestAdapterException;
+  }
 }

@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
-import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 import { get, set, setProperties } from '@ember/object';
 import $ from 'jquery';

@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
-import { click, fillIn } from 'ember-native-dom-helpers';
 
 class SizeUnitSelectHelper extends EmberPowerSelectHelper {
   constructor() {

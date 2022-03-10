@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Helper | invoke on enter', function () {
   setupRenderingTest();
@@ -19,10 +18,7 @@ describe('Integration | Helper | invoke on enter', function () {
       >
     `);
 
-    const e = $.Event('keydown');
-    e.keyCode = 13;
-    this.$('#invoke-on-enter-input').trigger(e);
-    await settled();
+    await triggerKeyEvent('#invoke-on-enter-input', 'keydown', 'Enter');
 
     expect(spy).to.be.calledOnce;
     expect(spy).to.be.calledWith(1, 2, 3);

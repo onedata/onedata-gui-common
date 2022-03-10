@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
@@ -7,14 +7,12 @@ import LoadingField from 'onedata-gui-common/utils/form-component/loading-field'
 import { setProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import suppressRejections from '../../../helpers/suppress-rejections';
+import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | form component/loading field', function () {
-  const hooks = setupRenderingTest();
+  setupRenderingTest();
 
-  suppressRejections(hooks);
-
-  hooks.beforeEach(function () {
+  beforeEach(function () {
     this.set('field', LoadingField.create({
       ownerSource: this.owner,
       loadingText: 'Loading...',
@@ -65,6 +63,7 @@ describe('Integration | Component | form component/loading field', function () {
   it(
     'shows reasource load error when loadingProxy is rejected',
     async function () {
+      suppressRejections();
       this.set('field.loadingProxy', PromiseObject.create({
         promise: reject('err'),
       }));

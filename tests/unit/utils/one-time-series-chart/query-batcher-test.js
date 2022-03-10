@@ -4,13 +4,11 @@ import sinon from 'sinon';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import { run } from '@ember/runloop';
 import { all as allFulfilled, resolve, reject } from 'rsvp';
-import suppressRejections from '../../../helpers/suppress-rejections';
+import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 const defaultBatchAccumulationTime = 5;
 
 describe('Unit | Utility | one time series chart/query batcher', function () {
-  suppressRejections();
-
   beforeEach(function () {
     this.fetchData = sinon.stub().callsFake(({ collectionId, metrics, startTimestamp, limit }) => {
       let negativeValueOccurred = false;
@@ -246,6 +244,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   });
 
   it('handles mixed resolved and rejected results of fetchData', async function () {
+    suppressRejections();
     const queryParamsArray = [
       queryParams({ collectionId: 'collection_1' }),
       queryParams({ collectionId: 'collection_2' }),
