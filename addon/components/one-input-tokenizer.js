@@ -1,6 +1,6 @@
 /**
  * Ember wrapper component for `input-tokenizer` jQuery plugin
- * 
+ *
  * @module components/one-input-tokenizer
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
@@ -66,6 +66,9 @@ export default Component.extend({
 
   tokensObserver: observer('tokens.[]', function tokensObserver() {
     const $tokenizer = this.getTokenInput();
+    if (!$tokenizer) {
+      return;
+    }
     $tokenizer.tokenizer('empty');
     this.get('tokens').forEach(token => {
       $tokenizer.tokenizer('push', token);
@@ -74,7 +77,10 @@ export default Component.extend({
   }),
 
   inputObserver: observer('inputValue', function inputObserver() {
-    this.getTokenInput().val(this.get('inputValue'));
+    const $input = this.getTokenInput();
+    if ($input) {
+      $input.val(this.get('inputValue'));
+    }
   }),
 
   didInsertElement() {
@@ -95,6 +101,9 @@ export default Component.extend({
     const inputWrapper = this.$('.tknz-input-wrapper')[0];
     /** @type {HTMLElement} */
     const wrapper = this.$('.tknz-wrapper')[0];
+    if (!inputWrapper || !wrapper) {
+      return;
+    }
     if (inputWrapper.offsetTop + inputWrapper.offsetHeight > wrapper.offsetHeight) {
       const currentHeight = parseInt(window.getComputedStyle(wrapper).height);
       $(wrapper).css('height', currentHeight + 24 + 'px');
