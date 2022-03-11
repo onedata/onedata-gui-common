@@ -81,6 +81,49 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
+  it('returns true when empty storeContentUpdateOptions is omitted in resultMappings ', function () {
+    const revision1 = getExampleWorkflowSchemaRevision();
+    const revision2 = getExampleWorkflowSchemaRevision();
+    delete revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[0].storeContentUpdateOptions;
+    revision2.lanes[0].parallelBoxes[0].tasks[0].resultMappings[0].storeContentUpdateOptions = {
+      type: 'singleValueStoreContentUpdateOptions',
+    };
+    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
+  });
+
+  it('returns false when non-empty storeContentUpdateOptions is omitted in resultMappings ', function () {
+    const revision1 = getExampleWorkflowSchemaRevision();
+    const revision2 = getExampleWorkflowSchemaRevision();
+    delete revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions;
+    revision2.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {
+      type: 'treeForestStoreContentUpdateOptions',
+      function: 'append',
+    };
+    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
+  });
+
+  it('returns false when non-empty storeContentUpdateOptions changes in resultMappings ', function () {
+    const revision1 = getExampleWorkflowSchemaRevision();
+    const revision2 = getExampleWorkflowSchemaRevision();
+    revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {
+      type: 'treeForestStoreContentUpdateOptions',
+      function: 'append',
+    };
+    revision2.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {
+      type: 'treeForestStoreContentUpdateOptions',
+      function: 'extend',
+    };
+    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
+  });
+
+  it('returns true when undefined resourceSpecOverride changes to null', function () {
+    const revision1 = getExampleWorkflowSchemaRevision();
+    const revision2 = getExampleWorkflowSchemaRevision();
+    delete revision1.lanes[0].parallelBoxes[0].tasks[0].resourceSpecOverride;
+    revision2.lanes[0].parallelBoxes[0].tasks[0].resourceSpecOverride = null;
+    expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
+  });
+
   it('returns false when order of parallel boxes changed', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
@@ -220,11 +263,17 @@ function getExampleWorkflowSchemaRevision() {
           resultMappings: [{
             resultName: 'resstring',
             storeSchemaId: 'singleValueStringId',
-            dispatchFunction: 'set',
+            storeContentUpdateOptions: {
+              type: 'singleValueStoreContentUpdateOptions',
+            },
           }, {
             resultName: 'resanyfile',
             storeSchemaId: 'treeForestAnyFileId',
             dispatchFunction: 'append',
+            storeContentUpdateOptions: {
+              type: 'treeForestStoreContentUpdateOptions',
+              function: 'append',
+            },
           }],
         }, {
           name: 'l2',

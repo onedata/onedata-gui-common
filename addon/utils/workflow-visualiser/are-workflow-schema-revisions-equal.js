@@ -68,7 +68,9 @@ function areTasksEqual(task1, task2) {
       case 'argumentMappings':
         return checkEqualityOfArrays(val1, val2, 'argumentName', areArgumentMappingsEqual);
       case 'resultMappings':
-        return checkEqualityOfArrays(val1, val2, 'resultName', _.isEqual);
+        return checkEqualityOfArrays(val1, val2, 'resultName', areResultMappingsEqual);
+      case 'resourceSpecOverride':
+        return (isNone(val1) && isNone(val2)) || _.isEqual(val1, val2);
       default:
         return _.isEqual(val1, val2);
     }
@@ -95,6 +97,31 @@ function areValueBuildersEqual(builder1, builder2) {
         return _.isEqual(val1, val2);
     }
   });
+}
+
+function areResultMappingsEqual(mapping1, mapping2) {
+  return checkEqualityPerEachKey(mapping1, mapping2, (key, val1, val2) => {
+    switch (key) {
+      case 'storeContentUpdateOptions': {
+        const isVal1Empty = isStoreContentUpdateOptionsEmpty(val1);
+        const isVal2Empty = isStoreContentUpdateOptionsEmpty(val2);
+        return (isVal1Empty && isVal2Empty) || _.isEqual(val1, val2);
+      }
+      default:
+        return _.isEqual(val1, val2);
+    }
+  });
+}
+
+function isStoreContentUpdateOptionsEmpty(storeContentUpdateOptions) {
+  if (isNone(storeContentUpdateOptions)) {
+    return true;
+  } else if (typeof storeContentUpdateOptions !== 'object') {
+    return false;
+  } else {
+    const keys = Object.keys(storeContentUpdateOptions);
+    return keys.length === 0 || keys.length === 1 && keys[0] === 'type';
+  }
 }
 
 function areStoreListsEqual(storesList1, storesList2) {
