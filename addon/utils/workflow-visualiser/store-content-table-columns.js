@@ -23,7 +23,10 @@ export default class StoreContentTableColumns {
     this.storeType = storeType;
     this.storeDataSpec = storeDataSpec;
     this.i18n = i18n;
-    this.storeTypeSpecificColumns = this.getStoreTypeSpecificColumns();
+    this.storeSpecificColumns = [
+      ...this.getStoreTypeSpecificColumns(),
+      ...this.getStoreDataSpecSpecificColumns(),
+    ];
     this.dataBasedColumns = [];
     this.dataErrorOccurred = false;
     this.dataBasedColumnsLimit = 30;
@@ -40,7 +43,10 @@ export default class StoreContentTableColumns {
    * @returns {Array<StoreContentTableColumn>}
    */
   getColumns() {
-    const columns = [...this.storeTypeSpecificColumns];
+    const columns = [...this.storeSpecificColumns];
+    const isValueUsedInColumns = columns.some(({ valuePath }) =>
+      valuePath[0] === 'value'
+    );
 
     if (this.areColumnsBasedOnData()) {
       if (this.dataBasedColumns.length === 0 && this.dataErrorOccurred) {
@@ -54,7 +60,7 @@ export default class StoreContentTableColumns {
       } else {
         columns.push(...this.dataBasedColumns);
       }
-    } else {
+    } else if (!isValueUsedInColumns) {
       columns.push({
         name: 'value',
         label: String(this.t('value')),
@@ -81,7 +87,7 @@ export default class StoreContentTableColumns {
     }
 
     const existingStringifiedDataPaths = new Set([
-      ...this.storeTypeSpecificColumns,
+      ...this.storeSpecificColumns,
       ...this.dataBasedColumns,
     ].map(col => JSON.stringify(col.valuePath)));
     const columnsFromNewData = this.getDataBasedColumnsFromData(newData);
@@ -121,6 +127,23 @@ export default class StoreContentTableColumns {
         }
         return columns;
       }
+      default:
+        return [];
+    }
+  }
+
+  /**
+   * @private
+   */
+  getStoreDataSpecSpecificColumns() {
+    switch (this.storeDataSpec.type) {
+      case 'range':
+        return ['start', 'end', 'step'].map((field) => ({
+          name: field,
+          label: String(this.t(camelize(`range-${field}`))),
+          valuePath: ['value', field],
+          type: 'storeSpecific',
+        }));
       default:
         return [];
     }
