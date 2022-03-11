@@ -139,7 +139,7 @@ export default {
   atmDataTypeUnverified: 'Value provided in automation is not of expected type. More details below.',
   atmDataValueConstraintUnverified: 'Value provided in automation doesn\'t meet the constraints. More details below.',
   atmStoreCreationFailed: 'Failed to create automation store (ID: "{{atmStoreSchemaId}}") – {{specificError}}',
-  atmStoreMissingRequiredInitialValue: 'Missing initial value required to create automation store.',
+  atmStoreMissingRequiredInitialContent: 'Missing initial content required to create automation store.',
   atmStoreFrozen: 'Failed to perform operation on automation store (ID: "{{atmStoreSchemaId}}") as any modification is forbidden.',
   atmStoreTypeDisallowed: 'Bad automation store: the type of store (ID: "{{atmStoreSchemaId}}") must be one of: {{allowed}}.',
   atmStoreEmpty: 'Bad automation store: store (ID: "{{atmStoreSchemaId}}") must not be empty.',
