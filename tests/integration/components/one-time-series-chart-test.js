@@ -47,7 +47,7 @@ describe('Integration | Component | one time series chart', function () {
 
     await renderComponent();
 
-    expectNoChartDataToShow(this);
+    expectNoChartDataToShow();
   });
 
   it('renders time resolutions according to the resolutions defined in configuration', async function () {

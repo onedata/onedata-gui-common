@@ -145,16 +145,43 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(handler).to.be.calledOnce;
   });
 
+  it('calculates state with no title', async function () {
+    const config = new Configuration({
+      chartDefinition: {},
+    });
+
+    const state = await config.getState();
+
+    expect(state.title).to.deep.equal({ content: '', tip: '' });
+  });
+
   it('calculates state with title', async function () {
     const config = new Configuration({
       chartDefinition: {
-        title: 'abc',
+        title: {
+          content: 'abc',
+        },
       },
     });
 
     const state = await config.getState();
 
-    expect(state.title).to.equal('abc');
+    expect(state.title).to.deep.equal({ content: 'abc', tip: '' });
+  });
+
+  it('calculates state with title and title tip', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        title: {
+          content: 'abc',
+          tip: 'someTip',
+        },
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.title).to.deep.equal({ content: 'abc', tip: 'someTip' });
   });
 
   it('calculates state with a default time resolution spec (first one)', async function () {

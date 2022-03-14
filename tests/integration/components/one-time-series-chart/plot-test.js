@@ -14,6 +14,8 @@ import {
   createModel,
 } from '../../../helpers/one-time-series-chart';
 import { get } from '@ember/object';
+import { find } from 'ember-native-dom-helpers';
+import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | one time series chart/plot', function () {
   const { afterEach } = setupRenderingTest();
@@ -60,7 +62,7 @@ describe('Integration | Component | one time series chart/plot', function () {
 
     await renderComponent();
 
-    expectNoChartDataToShow(this);
+    expectNoChartDataToShow();
   });
 
   it('shows "no data to show" info, when there are no time resolutions specified', async function () {
@@ -76,7 +78,7 @@ describe('Integration | Component | one time series chart/plot', function () {
 
     await renderComponent();
 
-    expectNoChartDataToShow(this);
+    expectNoChartDataToShow();
   });
 
   it('shows "no data to show" info, when there are no yAxes specified', async function () {
@@ -96,7 +98,33 @@ describe('Integration | Component | one time series chart/plot', function () {
 
     await renderComponent();
 
-    expectNoChartDataToShow(this);
+    expectNoChartDataToShow();
+  });
+
+  it('shows chart title and title tip', async function () {
+    setupModel(this, createDummyConfiguration());
+
+    await renderComponent();
+
+    expect(find('.title-content').textContent)
+      .to.equal(this.get('model.state.title.content'));
+    expect(await new OneTooltipHelper('.title-area .one-label-tip .one-icon').getText())
+      .to.equal(this.get('model.state.title.tip'));
+  });
+
+  it('does not show chart title area when title is not set', async function () {
+    setupModel(this, {
+      chartDefinition: {
+        title: {
+          // no `content` property. In that situation `tip` should be ignored
+          tip: 'abcd',
+        },
+      },
+    });
+
+    await renderComponent();
+
+    expect(find('.title-area')).to.not.exist;
   });
 
   it('rerenders chart after model config change', async function () {

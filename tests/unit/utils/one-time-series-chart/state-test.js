@@ -3,7 +3,13 @@ import { describe, it, context } from 'mocha';
 import State from 'onedata-gui-common/utils/one-time-series-chart/state';
 
 describe('Unit | Utility | one time series chart/state', function () {
-  testStateContainsCopiedProperty({ propName: 'title', value: 'some title' });
+  testStateContainsCopiedProperty({
+    propName: 'title',
+    value: {
+      content: 'some title',
+      tip: 'some tip',
+    },
+  });
   testStateContainsCopiedProperty({ propName: 'yAxes', value: [] });
   testStateContainsCopiedProperty({ propName: 'xAxis', value: {} });
   testStateContainsCopiedProperty({ propName: 'series', value: [] });

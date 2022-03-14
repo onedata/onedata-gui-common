@@ -4,6 +4,7 @@ import { selectChoose, clickTrigger } from './ember-power-select';
 import $ from 'jquery';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
+import { find } from 'ember-native-dom-helpers';
 
 export function expectEchartDummyPoints(
   testCase,
@@ -39,6 +40,10 @@ export function createDummyConfiguration(minTimestamp, maxTimestamp) {
 
 export function createDummyChartDefinition() {
   return {
+    title: {
+      content: 'example title',
+      tip: 'example tip',
+    },
     yAxes: [{
       id: 'a1',
       name: 'Axis 1',
@@ -91,11 +96,12 @@ export function createDummySource(minTimestamp, maxTimestamp) {
   };
 }
 
-export function expectNoChartDataToShow(testCase) {
-  const $plot = testCase.$('.one-time-series-chart-plot');
-  expect($plot.find('.canvas-area').children()).to.have.length(1);
-  expect($plot).to.have.class('no-data');
-  expect($plot.text().trim()).to.equal('There is no data to show.');
+export function expectNoChartDataToShow() {
+  const plot = find('.one-time-series-chart-plot');
+  const canvasArea = plot.querySelector('.canvas-area');
+  expect(canvasArea.children).to.have.length(1);
+  expect([...plot.classList]).to.include('no-data');
+  expect(canvasArea.textContent.trim()).to.equal('There is no data to show.');
 }
 
 export function createModel(config) {

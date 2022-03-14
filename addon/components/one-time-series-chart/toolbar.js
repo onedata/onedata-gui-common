@@ -16,10 +16,19 @@ import { reads } from '@ember/object/computed';
 import layout from '../../templates/components/one-time-series-chart/toolbar';
 import stringifyDuration from 'onedata-gui-common/utils/i18n/stringify-duration';
 import _ from 'lodash';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { inject as service } from '@ember/service';
 
-export default Component.extend({
+export default Component.extend(I18n, {
   layout,
   classNames: ['one-time-series-chart-toolbar'],
+
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.oneTimeSeriesChart.toolbar',
 
   /**
    * @virtual
