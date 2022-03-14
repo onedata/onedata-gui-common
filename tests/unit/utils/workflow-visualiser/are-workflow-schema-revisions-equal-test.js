@@ -81,7 +81,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns true when empty storeContentUpdateOptions is omitted in resultMappings ', function () {
+  it('returns true when empty storeContentUpdateOptions is omitted in resultMappings', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
     delete revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[0].storeContentUpdateOptions;
@@ -91,7 +91,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.true;
   });
 
-  it('returns false when non-empty storeContentUpdateOptions is omitted in resultMappings ', function () {
+  it('returns false when non-empty storeContentUpdateOptions is omitted in resultMappings', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
     delete revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions;
@@ -102,7 +102,7 @@ describe('Unit | Utility | workflow visualiser/are workflow schema revisions equ
     expect(areWorkflowSchemaRevisionsEqual(revision1, revision2)).to.be.false;
   });
 
-  it('returns false when non-empty storeContentUpdateOptions changes in resultMappings ', function () {
+  it('returns false when non-empty storeContentUpdateOptions changes in resultMappings', function () {
     const revision1 = getExampleWorkflowSchemaRevision();
     const revision2 = getExampleWorkflowSchemaRevision();
     revision1.lanes[0].parallelBoxes[0].tasks[0].resultMappings[1].storeContentUpdateOptions = {

@@ -1582,7 +1582,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
   targetStore,
 ) {
   it(`allows to setup result to use "${storeDescription}" store`,
-    async function () {
+    async function (done) {
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
         dataSpec: getStoreDataSpec(targetStore),
@@ -1605,6 +1605,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
         },
         isValid: true,
       });
+      done();
     });
 }
 
