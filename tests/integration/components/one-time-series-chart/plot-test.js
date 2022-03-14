@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import sinon from 'sinon';
@@ -14,7 +14,6 @@ import {
   createModel,
 } from '../../../helpers/one-time-series-chart';
 import { get } from '@ember/object';
-import { find } from 'ember-native-dom-helpers';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | one time series chart/plot', function () {

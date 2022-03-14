@@ -4,7 +4,7 @@ import { selectChoose, clickTrigger } from './ember-power-select';
 import $ from 'jquery';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
-import { find } from 'ember-native-dom-helpers';
+import { find } from '@ember/test-helpers';
 
 export function expectEchartDummyPoints(
   testCase,
