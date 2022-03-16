@@ -1,7 +1,7 @@
 /**
  * A container for multiple fields. Allows to manage state of many fields at
  * once.
- * 
+ *
  * @module utils/form-component/form-fields-group
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -9,9 +9,11 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import EmberObject, { computed, observer, set, get } from '@ember/object';
+import { computed, observer, set, get } from '@ember/object';
 import { array, raw, isEmpty, conditional, notEmpty, gt } from 'ember-awesome-macros';
 import _ from 'lodash';
+import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
+import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
 
 export default FormElement.extend({
   /**
@@ -42,6 +44,16 @@ export default FormElement.extend({
    * @type {boolean}
    */
   isExpanded: true,
+
+  /**
+   * Controls source of data used in `dumpDefaultValue` method.
+   * When true: it will use default values from nested fields.
+   * When false: it will use `defaultValue` property. If it is undefined, then
+   * default values of nested fields will be used.
+   * @virtual optional
+   * @type {boolean}
+   */
+  isDefaultValueIgnored: true,
 
   /**
    * Set by `fieldsModeObserver`
@@ -162,24 +174,50 @@ export default FormElement.extend({
    * @override
    */
   dumpDefaultValue() {
-    return this.get('fields').reduce((valuesAggregator, field) => {
-      set(valuesAggregator, get(field, 'valueName'), field.dumpDefaultValue());
-      return valuesAggregator;
-    }, EmberObject.create());
+    const {
+      defaultValue,
+      isDefaultValueIgnored,
+      fields,
+    } = this.getProperties('defaultValue', 'isDefaultValueIgnored', 'fields');
+
+    if (!isDefaultValueIgnored && defaultValue !== undefined) {
+      return cloneValue(defaultValue);
+    } else {
+      return fields.reduce((valuesContainer, field) => {
+        set(valuesContainer, get(field, 'valueName'), field.dumpDefaultValue());
+        return valuesContainer;
+      }, ValuesContainer.create());
+    }
   },
 
   /**
    * @override
    */
   dumpValue() {
-    return this.get('fields').reduce((valuesAggregator, field) => {
-      set(valuesAggregator, get(field, 'valueName'), field.dumpValue());
-      return valuesAggregator;
-    }, EmberObject.create());
+    return this.get('fields').reduce((valuesContainer, field) => {
+      set(valuesContainer, get(field, 'valueName'), field.dumpValue());
+      return valuesContainer;
+    }, ValuesContainer.create());
   },
 
   /**
-   * @override 
+   * @override
+   */
+  useCurrentValueAsDefault() {
+    const {
+      isDefaultValueIgnored,
+      fields,
+    } = this.getProperties('isDefaultValueIgnored', 'fields');
+
+    if (!isDefaultValueIgnored) {
+      this.set('defaultValue', this.dumpValue());
+    } else {
+      fields.invoke('useCurrentValueAsDefault');
+    }
+  },
+
+  /**
+   * @override
    */
   getFieldByPath(relativePath) {
     if (!relativePath) {

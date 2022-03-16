@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import { setupComponentTest } from 'ember-mocha';
 import _ from 'lodash';
+import EmberObject from '@ember/object';
 
 const fieldModes = [
   'edit',
@@ -359,4 +360,24 @@ describe('Integration | Utility | form component/form element', function () {
       expect(get(formField, 'tooltipClass')).to.be.undefined;
     },
   );
+
+  it('copies deeply current value to default value after useCurrentValueAsDefault" method call', function () {
+    const value = {
+      a: 1,
+      b: EmberObject.create(),
+    };
+    const formElement = FormElement.create({
+      name: 'field',
+      valuesSource: {
+        field: value,
+      },
+    });
+
+    formElement.useCurrentValueAsDefault();
+
+    const defaultValue = formElement.dumpDefaultValue();
+    expect(defaultValue).to.not.equal(value);
+    expect(defaultValue.a).to.equal(1);
+    expect(defaultValue.b).to.equal(value.b);
+  });
 });

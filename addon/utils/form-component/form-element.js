@@ -148,9 +148,10 @@
  *
  * # Values tree
  *
- * All form values are persisted in so-called values tree. Values tree is a simple
- * EmberObject with keys equal to field/group name and value equal to field value /
- * group subtree value. In earlier example with depending fields we have a tree:
+ * All form values are persisted in so-called values tree. Values tree is a
+ * ValuesContainer object with keys equal to field/group name and value equal to
+ * field value / group subtree value. In earlier example with depending fields
+ * we have a tree:
  * ```
  * {
  *   showMore: Boolean,
@@ -168,7 +169,7 @@
  * which will be passed right to the root group and treated as an user input.
  * After changing a value, form field updates its value stored in `value` property
  * which is basically `reads('valuesSource.' + fieldPath)`. Notice that `value`
- * property of the group will be an EmberObject with values of nested fields.
+ * property of the group will be a ValuesContainer with values of nested fields.
  *
  * # Translations
  *
@@ -238,6 +239,7 @@ import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { conditional, and, equal, raw, getBy, notEmpty, writable } from 'ember-awesome-macros';
 import { A } from '@ember/array';
+import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 
 export default EmberObject.extend(OwnerInjector, I18n, {
   i18n: service(),
@@ -405,7 +407,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<EmberObject>}
+   * @type {ComputedProperty<Utils.FormComponent.ValuesContainer>}
    */
   valuesSource: reads('parent.valuesSource'),
 
@@ -473,6 +475,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   valuesSourceObserver: observer('valuesSource', function valuesSourceObserver() {
     this.notifyPropertyChange('valuePath');
     this.notifyPropertyChange('value');
+    this.get('fields').invoke('valuesSourceObserver');
   }),
 
   init() {
@@ -530,7 +533,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @public
    */
   dumpDefaultValue() {
-    return this.get('defaultValue');
+    return cloneValue(this.get('defaultValue'));
   },
 
   /**
@@ -538,7 +541,14 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @public
    */
   dumpValue() {
-    return this.get('value');
+    return cloneValue(this.get('value'));
+  },
+
+  /**
+   * @public
+   */
+  useCurrentValueAsDefault() {
+    this.set('defaultValue', this.dumpValue());
   },
 
   /**

@@ -3,7 +3,8 @@ import { describe, it } from 'mocha';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
-import EmberObject, { get, getProperties } from '@ember/object';
+import { get, getProperties } from '@ember/object';
+import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
 
 describe('Unit | Utility | form component/form fields group', function () {
   it('sets child fields parent when passing fields on creation', function () {
@@ -391,7 +392,7 @@ describe('Unit | Utility | form component/form fields group', function () {
     'returns aggregated fields values as a dumpValues() result',
     function () {
       const formGroup = FormFieldsGroup.create({
-        valuesSource: EmberObject.create({
+        valuesSource: ValuesContainer.create({
           a: 1,
           b: 2,
         }),
@@ -417,7 +418,7 @@ describe('Unit | Utility | form component/form fields group', function () {
     'returns aggregated fields values as a dumpValues() result ignoring valueless fields',
     function () {
       const formGroup = FormFieldsGroup.create({
-        valuesSource: EmberObject.create({
+        valuesSource: ValuesContainer.create({
           a: 1,
           b: 2,
         }),
@@ -477,4 +478,101 @@ describe('Unit | Utility | form component/form fields group', function () {
       expect(formGroup.getFieldByPath('g1.g')).to.be.null;
     },
   );
+
+  it('dumps groups own default value when "isDefaultValueIgnored" is false and it has specified default value',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        defaultValue: ValuesContainer.create({
+          a: 1,
+          b: 2,
+        }),
+        isDefaultValueIgnored: false,
+        fields: A([
+          FormField.create({
+            name: 'a',
+          }),
+          FormField.create({
+            name: 'b',
+            defaultValue: 1,
+          }),
+        ]),
+      });
+
+      const defaultValue = formGroup.dumpDefaultValue();
+      expect(get(defaultValue, 'a')).to.equal(1);
+      expect(get(defaultValue, 'b')).to.equal(2);
+    });
+
+  it('dumps nested fields default values when "isDefaultValueIgnored" is false and it has not specified default value',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        isDefaultValueIgnored: false,
+        fields: A([
+          FormField.create({
+            name: 'a',
+          }),
+          FormField.create({
+            name: 'b',
+            defaultValue: 1,
+          }),
+        ]),
+      });
+
+      const defaultValue = formGroup.dumpDefaultValue();
+      expect(get(defaultValue, 'a')).to.equal(undefined);
+      expect(get(defaultValue, 'b')).to.equal(1);
+    });
+
+  it('calls "useCurrentValueAsDefault" on all nested fields after "useCurrentValueAsDefault" call and group has truthy "isDefaultValueIgnored"',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        valuesSource: ValuesContainer.create({
+          a: 1,
+          b: 2,
+        }),
+        isDefaultValueIgnored: true,
+        fields: A([
+          FormField.create({
+            name: 'a',
+          }),
+          FormField.create({
+            name: 'b',
+            defaultValue: 1,
+          }),
+        ]),
+      });
+
+      formGroup.useCurrentValueAsDefault();
+
+      expect(get(formGroup, 'fields.0').dumpDefaultValue()).to.equal(1);
+      expect(get(formGroup, 'fields.1').dumpDefaultValue()).to.equal(2);
+    });
+
+  it('sets default value of group as a whole on "useCurrentValueAsDefault" call when group has falsey "isDefaultValueIgnored"',
+    function () {
+      const formGroup = FormFieldsGroup.create({
+        valuesSource: ValuesContainer.create({
+          a: 1,
+          b: 2,
+        }),
+        isDefaultValueIgnored: false,
+        fields: A([
+          FormField.create({
+            name: 'a',
+          }),
+          FormField.create({
+            name: 'b',
+            defaultValue: 1,
+          }),
+        ]),
+      });
+
+      formGroup.useCurrentValueAsDefault();
+
+      expect(get(formGroup, 'fields.0').dumpDefaultValue()).to.equal(undefined);
+      expect(get(formGroup, 'fields.1').dumpDefaultValue()).to.equal(1);
+      const defaultValue = formGroup.dumpDefaultValue();
+      expect(get(defaultValue, 'a')).to.equal(1);
+      expect(get(defaultValue, 'b')).to.equal(2);
+    });
 });

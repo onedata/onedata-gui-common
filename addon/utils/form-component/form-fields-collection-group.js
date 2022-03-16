@@ -132,11 +132,13 @@ export default FormFieldsGroup.extend({
    */
   dumpDefaultValue() {
     const defaultValue = this._super(...arguments);
-    set(
-      defaultValue,
-      '__fieldsValueNames',
-      this.getFieldsValueNames(),
-    );
+    if (!get(defaultValue, '__fieldsValueNames')) {
+      set(
+        defaultValue,
+        '__fieldsValueNames',
+        this.getFieldsValueNames(),
+      );
+    }
     return defaultValue;
   },
 
