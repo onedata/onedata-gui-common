@@ -38,8 +38,8 @@ export default FormFieldsGroup.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  addButtonText: computed('path', 'i18nPrefix', function addButtonText() {
-    return this.t(`${this.get('path')}.addButtonText`, {}, {
+  addButtonText: computed('translationPath', 'i18nPrefix', function addButtonText() {
+    return this.getTranslation('addButtonText', {}, {
       defaultValue: this.t(
         'components.formComponent.formFieldsCollectionGroup.addButtonText', {}, {
           defaultValue: '',

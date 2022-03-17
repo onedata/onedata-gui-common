@@ -1,6 +1,6 @@
 /**
  * A loading form field.
- * 
+ *
  * @module utils/form-component/loading-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -30,8 +30,8 @@ export default FormField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  loadingText: computed('i18nPrefix', 'path', function loadingText() {
-    return this.t(`${this.get('path')}.loadingText`, {}, { defaultValue: '' });
+  loadingText: computed('i18nPrefix', 'translationPath', function loadingText() {
+    return this.getTranslation('loadingText', {}, { defaultValue: '' });
   }),
 
   /**

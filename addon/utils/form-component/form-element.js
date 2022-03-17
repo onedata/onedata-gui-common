@@ -372,6 +372,27 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @virtual optional
    * @type {ComputedProperty<String>}
    */
+  translationName: reads('name'),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  translationPath: computed(
+    'parent.translationPath',
+    'translationName',
+    function translationPath() {
+      return this.buildPath(
+        this.get('parent.translationPath'),
+        this.get('translationName')
+      );
+    }
+  ),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
   valueName: reads('name'),
 
   /**
@@ -434,15 +455,15 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
-  label: computed('i18nPrefix', 'path', function label() {
-    return this.t(`${this.get('path')}.label`, {}, { defaultValue: '' });
+  label: computed('i18nPrefix', 'translationPath', function label() {
+    return this.getTranslation('label', {}, { defaultValue: '' });
   }),
 
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
-  tip: computed('i18nPrefix', 'path', function tip() {
-    return this.t(`${this.get('path')}.tip`, {}, { defaultValue: '' });
+  tip: computed('i18nPrefix', 'translationPath', function tip() {
+    return this.getTranslation('tip', {}, { defaultValue: '' });
   }),
 
   /**
@@ -599,5 +620,14 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     if (name) {
       return parentPath ? `${parentPath}.${name}` : name;
     }
+  },
+
+  getTranslation(translationName, placeholders = {}, options = {}) {
+    let completeTranslationPath = this.get('translationPath');
+    if (completeTranslationPath) {
+      completeTranslationPath += '.';
+    }
+    completeTranslationPath += translationName;
+    return this.t(completeTranslationPath, placeholders, options);
   },
 });

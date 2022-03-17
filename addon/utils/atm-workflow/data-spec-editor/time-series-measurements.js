@@ -12,7 +12,11 @@ import {
 import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
 
 const FieldsGroup = FormFieldsCollectionGroup.extend({
+  classes: 'time-series-measurements-dataspec-editor',
   isDefaultValueIgnored: false,
+  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurements.fields',
+  // Does not take parent fields group translation path into account
+  translationPath: '',
   fieldFactoryMethod(uniqueFieldValueName) {
     return FormFieldsGroup.create({
       name: 'measurementSpec',

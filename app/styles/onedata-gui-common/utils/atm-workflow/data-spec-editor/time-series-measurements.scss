@@ -1,0 +1,56 @@
+.time-series-measurements-dataspec-editor {
+  .collection-item {
+    position: relative;
+    max-width: 20em;
+    margin-right: $padding-base-vertical * 1.5;
+    margin-bottom: $padding-base-vertical * 1.5;
+    padding: $padding-base-vertical * 1.5;
+    border: 1px solid $main-border-color;
+    border-radius: $border-radius-base;
+    background-color: rgba($color-one-semiwhite, 0.2);
+
+    .control-label {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+
+    .measurementSpec-field + .remove-field-button-container {
+      position: absolute;
+      right: 0.1em;
+      top: 0.4em;
+      display: initial;
+    }
+  }
+
+  .form-fields-collection-group > .fields-group-collapse.in {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .measurementSpec-field {
+    min-width: 0;
+  }
+
+  .collection-item + .add-field-button {
+    align-self: center;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .measurementSpec-children > .field-renderer {
+      margin-bottom: 0;
+
+      &:first-child .control-label {
+        padding-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .measurementSpec-children > .field-renderer {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
