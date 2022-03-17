@@ -5,6 +5,7 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import {
+  nameMatcherTypes,
   customUnit,
   customUnitsPrefix,
   units,
@@ -25,13 +26,14 @@ const FieldsGroup = FormFieldsCollectionGroup.extend({
         DropdownField.extend({
           options: computed(function options() {
             const i18n = this.get('i18n');
-            return ['exact', 'hasPrefix'].map((nameMatcherType) => ({
+            return nameMatcherTypes.map((nameMatcherType) => ({
               value: nameMatcherType,
               label: translateNameMatcherType(i18n, nameMatcherType),
             }));
           }),
         }).create({
           name: 'nameMatcherType',
+          defaultValue: nameMatcherTypes[0],
         }),
         TextField.create({
           name: 'nameMatcher',
@@ -46,6 +48,7 @@ const FieldsGroup = FormFieldsCollectionGroup.extend({
           }),
         }).create({
           name: 'unit',
+          defaultValue: units[0],
         }),
         TextField.extend({
           isVisible: eq('parent.value.unit', raw(customUnit)),

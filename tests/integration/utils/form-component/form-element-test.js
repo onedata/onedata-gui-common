@@ -320,7 +320,7 @@ describe('Integration | Utility | form component/form element', function () {
       ownerSource: this,
       i18nPrefix: 'some',
       parent: {
-        path: 'parent',
+        translationPath: 'parent',
       },
       name: 'name',
     });
@@ -336,7 +336,7 @@ describe('Integration | Utility | form component/form element', function () {
       ownerSource: this,
       i18nPrefix: 'some',
       parent: {
-        path: 'parent',
+        translationPath: 'parent',
       },
       name: 'name',
     });
