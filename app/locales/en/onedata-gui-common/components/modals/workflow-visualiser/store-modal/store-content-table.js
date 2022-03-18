@@ -8,6 +8,9 @@ export default {
     logTime: 'Log time',
     severity: 'Severity',
     description: 'Description',
+    rangeStart: 'Start',
+    rangeEnd: 'End',
+    rangeStep: 'Step',
   },
   tableRow: {
     storeAccessError: 'Cannot fetch entry due to error',

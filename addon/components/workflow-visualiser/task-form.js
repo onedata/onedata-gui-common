@@ -11,7 +11,7 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/workflow-visualiser/task-form';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { tag, not, eq, neq, raw, getBy, notEmpty, or, gt } from 'ember-awesome-macros';
+import { tag, not, eq, raw, getBy, notEmpty, or, gt } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import { computed, observer, getProperties, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -186,6 +186,18 @@ export default Component.extend(I18n, {
     const definedStores = this.get('definedStores') || [];
     return [taskAuditLogStore, workflowAuditLogStore]
       .concat(definedStores.toArray().compact());
+  }),
+
+  /**
+   * Union of `argumentStores` and `resultStores`
+   * @type {ComputedProperty<Array<Object>>}
+   */
+  allStores: computed('argumentStores.[]', 'resultStores.[]', function allStores() {
+    const {
+      argumentStores = [],
+        resultStores = [],
+    } = this.getProperties('argumentStores', 'resultStores');
+    return [...argumentStores.toArray(), ...resultStores.toArray()].uniq();
   }),
 
   /**
@@ -406,9 +418,7 @@ export default Component.extend(I18n, {
                 name: 'targetStore',
               }),
               DropdownField.extend({
-                isVisible: neq(
-                  'parent.value.targetStore',
-                  raw(leaveUnassignedDropdownOptionValue)),
+                isVisible: notEmpty('options'),
                 options: computed(
                   'component.resultStores.@each.id',
                   'parent.value.targetStore',
@@ -555,14 +565,15 @@ export default Component.extend(I18n, {
       fields,
       mode,
       atmLambdaRevision,
-    } = this.getProperties('onChange', 'fields', 'mode', 'atmLambdaRevision');
+      allStores,
+    } = this.getProperties('onChange', 'fields', 'mode', 'atmLambdaRevision', 'allStores');
 
     if (mode === 'view') {
       return;
     }
 
     onChange && onChange({
-      data: formDataToTask(fields.dumpValue(), atmLambdaRevision),
+      data: formDataToTask(fields.dumpValue(), atmLambdaRevision, allStores),
       isValid: get(fields, 'isValid'),
     });
   },
@@ -738,8 +749,13 @@ function taskToFormData(task, atmLambdaRevision) {
     const existingMapping = (resultMappings || []).findBy('resultName', name);
     const {
       storeSchemaId,
-      dispatchFunction,
-    } = getProperties(existingMapping || {}, 'storeSchemaId', 'dispatchFunction');
+      storeContentUpdateOptions,
+    } = getProperties(
+      existingMapping || {},
+      'storeSchemaId',
+      'storeContentUpdateOptions'
+    );
+    const dispatchFunction = get(storeContentUpdateOptions || {}, 'function');
 
     const valueName = `result${idx}`;
     formResultMappings.__fieldsValueNames.push(valueName);
@@ -752,7 +768,7 @@ function taskToFormData(task, atmLambdaRevision) {
       targetStore: frontendStoreIdsMappings[storeSchemaId] ||
         storeSchemaId ||
         leaveUnassignedDropdownOptionValue,
-      dispatchFunction: dispatchFunction,
+      dispatchFunction,
     };
   });
 
@@ -808,7 +824,7 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
   };
 }
 
-function formDataToTask(formData, atmLambdaRevision) {
+function formDataToTask(formData, atmLambdaRevision, stores) {
   const {
     name,
     argumentMappings,
@@ -881,7 +897,7 @@ function formDataToTask(formData, atmLambdaRevision) {
     const lambdaResultSpec = resultSpecs && resultSpecs[idx] || {};
     const resultName = get(lambdaResultSpec, 'name');
     const {
-      targetStore,
+      targetStore: targetStoreId,
       dispatchFunction,
     } = getProperties(
       get(resultMappings, valueName) || {},
@@ -889,18 +905,32 @@ function formDataToTask(formData, atmLambdaRevision) {
       'dispatchFunction',
     );
 
-    if (
-      !targetStore ||
-      !dispatchFunction ||
-      targetStore === leaveUnassignedDropdownOptionValue
-    ) {
+    if (!targetStoreId || targetStoreId === leaveUnassignedDropdownOptionValue) {
       return;
+    }
+
+    const targetStore = stores.findBy('id', targetStoreId);
+    const targetStoreType = targetStore && get(targetStore, 'type');
+    const possibleDispatchFunctions = getDispatchFunctionsForStoreType(targetStoreType);
+
+    if (!targetStoreType || (
+        possibleDispatchFunctions.length &&
+        !possibleDispatchFunctions.includes(dispatchFunction)
+      )) {
+      return;
+    }
+
+    const storeContentUpdateOptions = {
+      type: getStoreContentUpdateOptionsType(targetStoreType),
+    };
+    if (dispatchFunction) {
+      storeContentUpdateOptions.function = dispatchFunction;
     }
 
     task.resultMappings.push({
       resultName,
-      storeSchemaId: backendStoreIdsMappings[targetStore] || targetStore,
-      dispatchFunction,
+      storeSchemaId: backendStoreIdsMappings[targetStoreId] || targetStoreId,
+      storeContentUpdateOptions,
     });
   });
 
@@ -976,7 +1006,14 @@ function getSourceDataTypesForType(type) {
   const sourceTypes = [type];
   switch (type) {
     case 'object':
-      sourceTypes.push('anyFile', 'regularFile', 'directory', 'symlink', 'dataset');
+      sourceTypes.push(
+        'anyFile',
+        'regularFile',
+        'directory',
+        'symlink',
+        'dataset',
+        'range'
+      );
       break;
     case 'anyFile':
       sourceTypes.push('regularFile', 'directory', 'symlink');
@@ -1018,18 +1055,15 @@ function getTargetStoresForType(availableStores, type, hasBatchMode) {
 
 function getDispatchFunctionsForStoreType(storeType) {
   switch (storeType) {
-    case 'singleValue':
-      return ['set'];
     case 'list':
     case 'auditLog':
     case 'treeForest':
-      // TODO: VFS-7816 uncomment or remove future code
-      // case 'histogram':
       return ['append', 'extend'];
-      // TODO: VFS-7816 uncomment or remove future code
-      // case 'map':
-      //   return ['add'];
     default:
       return [];
   }
+}
+
+function getStoreContentUpdateOptionsType(storeType) {
+  return `${storeType}StoreContentUpdateOptions`;
 }
