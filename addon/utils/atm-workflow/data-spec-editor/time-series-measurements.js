@@ -1,3 +1,14 @@
+/**
+ * Provides a form group capable of showing, creating and modifying time
+ * series measurements data type settings. It also provides two methods
+ * for conversion between form values and value constraints in both directions.
+ *
+ * @module utils/atm-workflow/data-spec-editor/time-series-measurements
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import { set, get, getProperties, computed } from '@ember/object';
 import { eq, raw } from 'ember-awesome-macros';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -10,7 +21,7 @@ import {
   customUnitsPrefix,
   units,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurements';
-import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const FieldsGroup = FormFieldsCollectionGroup.extend({
   classes: 'time-series-measurements-dataspec-editor',
@@ -104,7 +115,7 @@ function formValuesToValueConstraints(values) {
  */
 function valueConstraintsToFormValues(valueConstraints) {
   const __fieldsValueNames = [];
-  const values = ValuesContainer.create({
+  const values = createValuesContainer({
     __fieldsValueNames,
   });
 
@@ -137,7 +148,7 @@ function valueConstraintsToFormValues(valueConstraints) {
       measurementSpecValue.unit = unit;
     }
 
-    set(values, formGroupName, ValuesContainer.create(measurementSpecValue));
+    set(values, formGroupName, createValuesContainer(measurementSpecValue));
     __fieldsValueNames.push(formGroupName);
   });
 

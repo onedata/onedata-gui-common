@@ -7,6 +7,7 @@ import { lookupService } from '../../../helpers/stub-service';
 import { setupComponentTest } from 'ember-mocha';
 import _ from 'lodash';
 import EmberObject from '@ember/object';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const fieldModes = [
   'edit',
@@ -362,15 +363,15 @@ describe('Integration | Utility | form component/form element', function () {
   );
 
   it('copies deeply current value to default value after useCurrentValueAsDefault" method call', function () {
-    const value = {
+    const value = createValuesContainer({
       a: 1,
       b: EmberObject.create(),
-    };
+    });
     const formElement = FormElement.create({
       name: 'field',
-      valuesSource: {
+      valuesSource: createValuesContainer({
         field: value,
-      },
+      }),
     });
 
     formElement.useCurrentValueAsDefault();

@@ -4,7 +4,7 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
 import { get, getProperties } from '@ember/object';
-import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 describe('Unit | Utility | form component/form fields group', function () {
   it('sets child fields parent when passing fields on creation', function () {
@@ -392,7 +392,7 @@ describe('Unit | Utility | form component/form fields group', function () {
     'returns aggregated fields values as a dumpValues() result',
     function () {
       const formGroup = FormFieldsGroup.create({
-        valuesSource: ValuesContainer.create({
+        valuesSource: createValuesContainer({
           a: 1,
           b: 2,
         }),
@@ -418,7 +418,7 @@ describe('Unit | Utility | form component/form fields group', function () {
     'returns aggregated fields values as a dumpValues() result ignoring valueless fields',
     function () {
       const formGroup = FormFieldsGroup.create({
-        valuesSource: ValuesContainer.create({
+        valuesSource: createValuesContainer({
           a: 1,
           b: 2,
         }),
@@ -482,7 +482,7 @@ describe('Unit | Utility | form component/form fields group', function () {
   it('dumps groups own default value when "isDefaultValueIgnored" is false and it has specified default value',
     function () {
       const formGroup = FormFieldsGroup.create({
-        defaultValue: ValuesContainer.create({
+        defaultValue: createValuesContainer({
           a: 1,
           b: 2,
         }),
@@ -526,7 +526,7 @@ describe('Unit | Utility | form component/form fields group', function () {
   it('calls "useCurrentValueAsDefault" on all nested fields after "useCurrentValueAsDefault" call and group has truthy "isDefaultValueIgnored"',
     function () {
       const formGroup = FormFieldsGroup.create({
-        valuesSource: ValuesContainer.create({
+        valuesSource: createValuesContainer({
           a: 1,
           b: 2,
         }),
@@ -551,7 +551,7 @@ describe('Unit | Utility | form component/form fields group', function () {
   it('sets default value of group as a whole on "useCurrentValueAsDefault" call when group has falsey "isDefaultValueIgnored"',
     function () {
       const formGroup = FormFieldsGroup.create({
-        valuesSource: ValuesContainer.create({
+        valuesSource: createValuesContainer({
           a: 1,
           b: 2,
         }),

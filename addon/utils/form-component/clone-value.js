@@ -14,26 +14,21 @@
  */
 
 import { get, set } from '@ember/object';
-import { typeOf } from '@ember/utils';
-import { isArray } from '@ember/array';
-import ValuesContainer, { isValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import {
+  createValuesContainer,
+  isValuesContainer,
+} from 'onedata-gui-common/utils/form-component/values-container';
 
 export default function cloneValue(value) {
   if (isValuesContainer(value)) {
     return cloneValuesContainer(value);
-  } else if (typeOf(value) === 'instance') {
-    return value;
-  } else if (isArray(value)) {
-    return cloneArray(value);
-  } else if (value && typeof value === 'object') {
-    return cloneObject(value);
   } else {
     return value;
   }
 }
 
 function cloneValuesContainer(obj) {
-  const container = ValuesContainer.create();
+  const container = createValuesContainer();
 
   for (const key of Object.keys(obj)) {
     const value = get(obj, key);
@@ -43,21 +38,4 @@ function cloneValuesContainer(obj) {
   }
 
   return container;
-}
-
-function cloneObject(obj) {
-  const newObj = {};
-
-  for (const key of Object.keys(obj)) {
-    const value = get(obj, key);
-    if (typeof value !== 'function') {
-      newObj[key] = cloneValue(value);
-    }
-  }
-
-  return newObj;
-}
-
-function cloneArray(arr) {
-  return [...arr];
 }

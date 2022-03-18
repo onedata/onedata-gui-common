@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import ValuesContainer, { isValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import { createValuesContainer, isValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { typeOf } from '@ember/utils';
 import EmberObject from '@ember/object';
 
 describe('Unit | Utility | form component/values container', function () {
-  describe('ValuesContainer', function () {
-    it('is an empty Ember object', function () {
-      const container = ValuesContainer.create();
+  describe('createValuesContainer', function () {
+    it('creates an empty Ember object', function () {
+      const container = createValuesContainer();
 
       expect(typeOf(container)).to.equal('instance');
       const propertyKeys = Object.keys(container)
@@ -18,7 +18,7 @@ describe('Unit | Utility | form component/values container', function () {
 
   describe('isValuesContainer', function () {
     it('returns true for values container', function () {
-      const container = ValuesContainer.create();
+      const container = createValuesContainer();
 
       expect(isValuesContainer(container)).to.be.true;
     });

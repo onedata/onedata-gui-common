@@ -10,7 +10,7 @@
 
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { set, get } from '@ember/object';
-import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 export default FormFieldsGroup.extend({
   /**
@@ -67,7 +67,7 @@ export default FormFieldsGroup.extend({
       valuePath.split('.').slice(0, -1).forEach(pathElement => {
         let nextTargetValuesObject = get(targetValuesObject, pathElement);
         if (!nextTargetValuesObject) {
-          nextTargetValuesObject = ValuesContainer.create();
+          nextTargetValuesObject = createValuesContainer();
           set(targetValuesObject, pathElement, nextTargetValuesObject);
         }
         targetValuesObject = nextTargetValuesObject;

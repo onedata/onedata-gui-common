@@ -1,5 +1,5 @@
 /**
- * This class should be used to contain grouped form values. All nodes
+ * ValuesContainer should be used to contain grouped form values. All nodes
  * in form values tree should be value containers except fields values.
  *
  * In normal usage ValueContainer should be used when we want to define value
@@ -14,19 +14,29 @@
 import EmberObject, { defineProperty } from '@ember/object';
 import { typeOf } from '@ember/utils';
 
+/**
+ * @typedef {EmberObject} ValuesContainer
+ */
+
 const isValuesContainerFlag = '__isFormValuesContainer';
 
-export default EmberObject.extend({
-  init() {
-    this._super(...arguments);
-    defineProperty(this, isValuesContainerFlag, {
-      writable: false,
-      configurable: false,
-      enumerable: false,
-      value: true,
-    });
-  },
-});
+/**
+ * @param {Object} [content]
+ * @returns {ValuesContainer}
+ */
+export function createValuesContainer(content) {
+  // It would be easier to create dedicated extended version of EmberObject, but
+  // implementing `init()` in EmberObject adds `_super` key to EmberObject instances
+  // and disrupts `Object.keys()`.
+  const container = EmberObject.create(content);
+  defineProperty(container, isValuesContainerFlag, {
+    writable: false,
+    configurable: false,
+    enumerable: false,
+    value: true,
+  });
+  return container;
+}
 
 /**
  * @param {unknown} obj

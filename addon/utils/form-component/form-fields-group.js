@@ -13,7 +13,7 @@ import { computed, observer, set, get } from '@ember/object';
 import { array, raw, isEmpty, conditional, notEmpty, gt } from 'ember-awesome-macros';
 import _ from 'lodash';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
-import ValuesContainer from 'onedata-gui-common/utils/form-component/values-container';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 export default FormElement.extend({
   /**
@@ -186,7 +186,7 @@ export default FormElement.extend({
       return fields.reduce((valuesContainer, field) => {
         set(valuesContainer, get(field, 'valueName'), field.dumpDefaultValue());
         return valuesContainer;
-      }, ValuesContainer.create());
+      }, createValuesContainer());
     }
   },
 
@@ -197,7 +197,7 @@ export default FormElement.extend({
     return this.get('fields').reduce((valuesContainer, field) => {
       set(valuesContainer, get(field, 'valueName'), field.dumpValue());
       return valuesContainer;
-    }, ValuesContainer.create());
+    }, createValuesContainer());
   },
 
   /**
