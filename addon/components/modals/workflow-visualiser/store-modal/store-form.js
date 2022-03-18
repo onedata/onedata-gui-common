@@ -109,6 +109,11 @@ const dataTypes = [{
   // }, {
   //   value: 'archive',
   //   forbiddenIn: ['histogram', 'range'],
+}, {
+  value: 'range',
+  forbiddenIn: ['treeForest'],
+  // TODO: VFS-7816 uncomment or remove future code
+  // forbiddenIn: ['treeForest', 'histogram'],
 }];
 
 const defaultRangeStart = 0;
