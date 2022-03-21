@@ -4,6 +4,10 @@
  * Arguments:
  * - sourceType - for now only `'external'` is available
  * - sourceParameters - additional parameters specific for each source type.
+ * - replaceEmptyOptions - specifies how empty points should be filled with values.
+ *   Contains two fields: `strategy`, and `fallbackValue`. Read more about them in
+ *   `replaceEmpty` transform function documentation. When not provided it equals to:
+ *   `{ strategy: 'useFallback', fallbackValue: 0 }`.
  *
  * For `externalSource` type `sourceParameters` are:
  * - externalSourceName - name of an external source, which is able to provide series data.
@@ -25,10 +29,26 @@
 
 import { all as allFulfilled } from 'rsvp';
 import point from './utils/point';
+import mergePointsArrays from './utils/merge-points-arrays';
 
 /**
  * @typedef {OTSCExternalDataSourceRef} OTSCLoadSeriesSeriesFunctionArguments
+ * @typedef {OTSCLoadSeriesSeriesFunctionReplaceEmptyOptions} [replaceEmptyOptions]
  */
+
+/**
+ * @typedef {Object} OTSCLoadSeriesSeriesFunctionReplaceEmptyOptions
+ * @property {OTSCReplaceEmptySeriesFunctionStrategy} [strategy]
+ * @property {Array<unknown|null>|unknown|null} fallbackValue
+ */
+
+const defaultReplaceEmptyOptionsArg = {
+  type: 'basic',
+  data: {
+    strategy: 'useFallback',
+    fallbackValue: null,
+  },
+};
 
 /**
  * @param {OTSCSeriesFunctionContext} context
@@ -46,9 +66,12 @@ export default async function loadSeries(context, args) {
   const [
     { data: sourceType },
     { data: sourceParameters },
+    { data: replaceEmptyOptions },
   ] = await allFulfilled([
     context.evaluateSeriesFunction(context, args.sourceType),
     context.evaluateSeriesFunction(context, args.sourceParameters),
+    context.evaluateSeriesFunction(context, args.replaceEmptyOptions)
+    .then((replaceEmptyOptionsArg) => normalizeReplaceEmptyOptionsArg(replaceEmptyOptionsArg)),
   ]);
 
   let points;
@@ -70,7 +93,7 @@ export default async function loadSeries(context, args) {
           fetchParams,
           sourceParameters.externalSourceParameters
         );
-        points = fitPointsToContext(context, rawPoints);
+        points = await fitPointsToContext(context, replaceEmptyOptions, rawPoints);
       }
       break;
     }
@@ -85,11 +108,11 @@ export default async function loadSeries(context, args) {
 }
 
 /**
- *
  * @param {OTSCSeriesFunctionContext} context
+ * @param {OTSCLoadSeriesSeriesFunctionReplaceEmpty} replaceEmptyOptions
  * @param {OTSCSeriesPoint[]} points
  */
-function fitPointsToContext(context, points) {
+async function fitPointsToContext(context, replaceEmptyOptions, points) {
   if (!isRawPointsArray(points)) {
     return [];
   }
@@ -123,18 +146,16 @@ function fitPointsToContext(context, points) {
   // If there are no points, return fake ones
   if (!normalizedPoints.length) {
     if (context.lastPointTimestamp) {
-      return generateFakePoints(context, context.lastPointTimestamp, {
-        oldest: true,
-        newest: isLastPointNewest,
-      });
+      return await generateFakePoints(
+        context,
+        context.lastPointTimestamp,
+        replaceEmptyOptions, {
+          oldest: true,
+          newest: isLastPointNewest,
+        });
     } else {
       return [];
     }
-  }
-
-  // Cut off extra point (added to check for existence of older points)
-  if (normalizedPoints.length > context.pointsCount) {
-    normalizedPoints = normalizedPoints.slice(0, context.pointsCount);
   }
 
   // Add missing points after (newer than) received points
@@ -174,6 +195,28 @@ function fitPointsToContext(context, points) {
     nextPointTimestamp -= context.timeResolution;
   }
 
+  // Calculate replacements for points with `null` value.
+  //
+  // In case of `usePrevious` replacement strategy we need to provide one more
+  // point to `replaceEmpty` function to be able to calculate value for the oldest
+  // point visible on the chart.
+  const oldestNormalizedPoint = normalizedPoints[normalizedPoints.length - 1];
+  let nonEmptyPointBeforeOldestNormalized = { timestamp: 0, value: null };
+  for (const point of normalizedPointsWithGaps) {
+    if (
+      point.timestamp < oldestNormalizedPoint.timestamp &&
+      point.value !== null
+    ) {
+      nonEmptyPointBeforeOldestNormalized = point;
+      break;
+    }
+  }
+  normalizedPoints = (await replaceEmpty(
+    context,
+    replaceEmptyOptions,
+    [...normalizedPoints, nonEmptyPointBeforeOldestNormalized].reverse()
+  )).reverse().slice(0, -1);
+
   // Flag newest points
   if (isLastPointNewest) {
     let realPointFlaggedAsNewest = false;
@@ -207,10 +250,35 @@ function isRawPointsArray(pointsArray) {
   );
 }
 
-function generateFakePoints(context, lastPointTimestamp, pointParams = {}) {
+async function generateFakePoints(context, lastPointTimestamp, replaceEmptyOptions, pointParams = {}) {
   const normalizedLastPointTimestamp = lastPointTimestamp -
     (lastPointTimestamp % context.timeResolution);
-  const points = fitPointsToContext(context, [point(normalizedLastPointTimestamp, null)]);
+  const points = await fitPointsToContext(
+    context,
+    replaceEmptyOptions,
+    [point(normalizedLastPointTimestamp, null)]
+  );
   points.forEach((point) => Object.assign(point, { fake: true }, pointParams));
   return points;
+}
+
+async function replaceEmpty(context, replaceEmptyOptions, points) {
+  const valuesAfterReplacement = await context.evaluateTransformFunction(context, {
+    functionName: 'replaceEmpty',
+    functionArguments: Object.assign({}, replaceEmptyOptions, {
+      data: points.map(({ value }) => value),
+    }),
+  });
+  return mergePointsArrays([points], valuesAfterReplacement);
+}
+
+function normalizeReplaceEmptyOptionsArg(replaceEmptyOptionsArg) {
+  if (
+    !replaceEmptyOptionsArg ||
+    replaceEmptyOptionsArg.type !== 'basic' ||
+    !replaceEmptyOptionsArg.data
+  ) {
+    return defaultReplaceEmptyOptionsArg;
+  }
+  return replaceEmptyOptionsArg;
 }
