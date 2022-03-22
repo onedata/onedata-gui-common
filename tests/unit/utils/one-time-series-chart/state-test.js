@@ -12,6 +12,7 @@ describe('Unit | Utility | one time series chart/state', function () {
   });
   testStateContainsCopiedProperty({ propName: 'yAxes', value: [] });
   testStateContainsCopiedProperty({ propName: 'xAxis', value: {} });
+  testStateContainsCopiedProperty({ propName: 'seriesGroups', value: [] });
   testStateContainsCopiedProperty({ propName: 'series', value: [] });
   testStateContainsCopiedProperty({ propName: 'timeResolution', value: 10 });
   testStateContainsCopiedProperty({ propName: 'pointsCount', value: 10 });
@@ -188,13 +189,20 @@ describe('Unit | Utility | one time series chart/state', function () {
         }, {
           id: 'a2',
         }],
+        seriesGroups: [{
+          id: 'group1',
+          stack: true,
+        }, {
+          id: 'group2',
+          stack: false,
+        }],
         series: [{
           id: 's1',
           name: 'series 1',
           type: 'bar',
           yAxisId: 'a2',
           color: '#ff0000',
-          stackId: 'abc',
+          groupId: 'group1',
           data: [{
             timestamp: 10,
             value: 1,
@@ -208,7 +216,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           type: 'line',
           yAxisId: 'a1',
           color: null,
-          stackId: null,
+          groupId: 'group2',
           data: [{
             timestamp: 10,
             value: null,
@@ -226,7 +234,7 @@ describe('Unit | Utility | one time series chart/state', function () {
         type: 'bar',
         yAxisIndex: 1,
         color: '#ff0000',
-        stack: 'abc',
+        stack: 'group1',
         areaStyle: {},
         smooth: 0.2,
         data: [
@@ -375,6 +383,139 @@ describe('Unit | Utility | one time series chart/state', function () {
         expect(tooltipDom.querySelectorAll('.timestamp-injection')).to.have.length(0);
         expect(tooltipDom.querySelectorAll('.value-injection')).to.have.length(0);
         expect(tooltipDom.querySelectorAll('.name-injection')).to.have.length(0);
+      });
+
+    it('creates tooltip formatter which allows series groups',
+      function () {
+        const state = new State({
+          xAxis: {
+            timestamps: [],
+            timestampFormatter: (value) => value + 's',
+          },
+          yAxes: [{
+            id: 'a1',
+            valueFormatter: (value) => value + ' bytes',
+          }],
+          seriesGroups: [{
+            id: 'g1',
+            name: 'group1',
+            showSeriesSum: false,
+          }, {
+            id: 'g2',
+            name: 'group2',
+            showSeriesSum: true,
+          }, {
+            id: 'g3',
+          }],
+          series: [{
+            id: 's1',
+            yAxisId: 'a1',
+            groupId: 'g1',
+            data: [],
+          }, {
+            id: 's2',
+            yAxisId: 'a1',
+            groupId: 'g2',
+            data: [],
+          }, {
+            id: 's3',
+            yAxisId: 'a1',
+            data: [],
+          }, {
+            id: 's4',
+            yAxisId: 'a1',
+            groupId: 'g1',
+            data: [],
+          }, {
+            id: 's5',
+            yAxisId: 'a1',
+            groupId: 'g2',
+            data: [],
+          }, {
+            id: 's6',
+            yAxisId: 'a1',
+            groupId: 'g3',
+            data: [],
+          }],
+        });
+        const echartState = state.asEchartState();
+
+        const parser = new DOMParser();
+        const tooltipDom = parser.parseFromString(echartState.tooltip.formatter([{
+          seriesId: 's1',
+          seriesName: 'series1',
+          value: ['10', 5],
+          marker: '<span class="marker-s1"></span>',
+        }, {
+          seriesId: 's2',
+          seriesName: 'series2',
+          value: ['10', 6],
+          marker: '<span class="marker-s2"></span>',
+        }, {
+          seriesId: 's3',
+          seriesName: 'series3',
+          value: ['10', 7],
+          marker: '<span class="marker-s3"></span>',
+        }, {
+          seriesId: 's4',
+          seriesName: 'series4',
+          value: ['10', 8],
+          marker: '<span class="marker-s4"></span>',
+        }, {
+          seriesId: 's5',
+          seriesName: 'series5',
+          value: ['10', 9],
+          marker: '<span class="marker-s5"></span>',
+        }, {
+          seriesId: 's6',
+          seriesName: 'series6',
+          value: ['10', 10],
+          marker: '<span class="marker-s6"></span>',
+        }]), 'text/html');
+
+        const tooltipEntries = tooltipDom.querySelectorAll('.tooltip-header ~ *');
+        expect(tooltipEntries).to.have.length(12);
+
+        // separator before ungrouped series
+        expect([...tooltipEntries[0].classList]).to.include('tooltip-series-separator');
+
+        // ungrouped series
+        expect([...tooltipEntries[1].classList]).to.not.include('tooltip-group-header');
+        expect(tooltipEntries[1].textContent).to.include('series3');
+
+        // separator before first group
+        expect([...tooltipEntries[2].classList]).to.include('tooltip-series-separator');
+
+        // first group header, without sum
+        expect([...tooltipEntries[3].classList]).to.include('tooltip-group-header');
+        expect(tooltipEntries[3].textContent.trim()).to.equal('group1');
+
+        // first group series
+        expect([...tooltipEntries[4].classList]).to.not.include('tooltip-group-header');
+        expect(tooltipEntries[4].textContent).to.contain('series1');
+        expect([...tooltipEntries[5].classList]).to.not.include('tooltip-group-header');
+        expect(tooltipEntries[5].textContent).to.contain('series4');
+
+        // separator before seconds group
+        expect([...tooltipEntries[6].classList]).to.include('tooltip-series-separator');
+
+        // second group header, with sum
+        expect([...tooltipEntries[7].classList]).to.include('tooltip-group-header');
+        expect(tooltipEntries[7].textContent).to.contain('group2');
+        expect(tooltipEntries[7].textContent).to.contain('15 bytes');
+
+        // seconds group series
+        expect([...tooltipEntries[8].classList]).to.not.include('tooltip-group-header');
+        expect(tooltipEntries[8].textContent).to.contain('series2');
+        expect([...tooltipEntries[9].classList]).to.not.include('tooltip-group-header');
+        expect(tooltipEntries[9].textContent).to.contain('series5');
+
+        // separator before third group
+        expect([...tooltipEntries[10].classList]).to.include('tooltip-series-separator');
+
+        // third group series (there is no header)
+        expect([...tooltipEntries[11].classList]).to.not.include('tooltip-group-header');
+        expect(tooltipEntries[11].textContent).to.contain('series6');
       });
   });
 });

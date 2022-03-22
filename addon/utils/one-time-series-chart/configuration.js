@@ -13,9 +13,9 @@
  * # Main configuration elements
  *
  * Configuration consists of 4 main configuration parts:
- * - chart definition (`chartDefinition`) - contains definitions of axes, series
- *   and all settings, which don't depend on data itself. Is provided during
- *   configuration object creation and cannot be modified.
+ * - chart definition (`chartDefinition`) - contains definitions of axes, series,
+ *   series groups and all settings, which don't depend on data itself.
+ *   Is provided during configuration object creation and cannot be modified.
  * - data sources configuration (`externalDataSources`) - contains data sources
  *   definitions, which are mentioned by various elements from chart definition.
  *   Each data source definition includes callbacks, which provide data like
@@ -40,6 +40,8 @@
  *   data from different domains.
  * - series - an array of series definitions which describe from which data and how
  *   points should be rendered.
+ * - seriesGroups - an array of series group definitions which describe how series
+ *   in a specific group should behave.
  *
  * As you can see there is no X axis configuration. Time series charts are always
  * based on time X axis, so there is nothing to configure.
@@ -112,8 +114,8 @@
  * - type - one of: `'bar'`, `'line'`
  * - yAxisId - id of the Y axis, which is used to draw points of this series,
  * - color - (optional) string describing color of points (in hex format e.g. `'#ff0000'`),
- * - stackId - (optional) string id, which allows to stack many series. Series with
- *   the same stackId will be stacked on the same stack.
+ * - groupId - (optional) string id, which allows to include series into
+ *   a specific series group,
  * - data - spefication of a series function, that calculates points to render.
  *   NOTE: only series functions are allowed to be used in data function specification.
  *   See more in section "Functions types".
@@ -237,6 +239,68 @@
  * As it is shown by the example, there is a special function `getDynamicSeriesConfigData`,
  * which allows to access series config object. It is especially handful for
  * id, name and color fields.
+ *
+ * ### Series group definitions
+ *
+ * Series groups is an optional feature which allows to aggregate series into groups
+ * which provides possibility to:
+ * - introduce stacking,
+ * - group series in tooltip with optional group name and values sum.
+ *
+ * Like series, series groups are also created using factories - static and dynamic -
+ * inside array `chartConfiguration.seriesGroups`. Series group template consists of:
+ * - id - string id of a group,
+ * - name - (optional) group name, that will be visible in tooltip,
+ * - stack - (optional) boolean flag which turns on series stacking,
+ * - showSeriesSum - (optional) boolean flag which enabled showing total value of
+ *   all series related to a group. It will be visible next to the group name in tooltip
+ *
+ * Examples:
+ * ```
+ * // Static series group factory
+ * {
+ *   factoryName: 'static',
+ *   factoryArguments: {
+ *     seriesGroupTemplate: {
+ *       id: 'g1,
+ *       name: 'group1',
+ *       stack: true,
+ *       showSeriesSum: true,
+ *     },
+ *   },
+ * }
+ *
+ * // Dynamic series group factory
+ * {
+ *   factoryName: 'dynamic',
+ *   factoryArguments: {
+ *     dynamicSeriesGroupConfigs: {
+ *       sourceType: 'external',
+ *       sourceParameters: {
+ *         externalSourceName: 'mySource',
+ *         externalSourceParameters: { ... },
+ *       },
+ *     },
+ *     seriesGroupTemplate: {
+ *       id: {
+ *         functionName: 'getDynamicSeriesGroupConfigData',
+ *         functionArguments: {
+ *           propertyName: 'id',
+ *         },
+ *       },
+ *       name: 'group2',
+ *       stack: true,
+ *       showSeriesSum: false,
+ *     },
+ *   },
+ * }
+ * ```
+ *
+ * To connect series to series group you need to assign group id to `groupId` field of
+ * specific series definition.
+ *
+ * Using groups changes order of series inside tooltip. At the beginning ungrouped series
+ * are shown, then groups ordered as were defined in chart definition.
  *
  * ## Data sources configuration
  *
@@ -417,6 +481,7 @@ import State from './state';
 import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
 import seriesFactoriesIndex from './series-factories';
+import seriesGroupFactoriesIndex from './series-group-factories';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
@@ -455,6 +520,20 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  */
 
 /**
+ * @typedef {Object} OTSCRawSeriesGroupFactory
+ * @property {string} factoryName
+ * @property {Object} factoryArguments
+ */
+
+/**
+ * @typedef {Object} OTSCRawSeriesGroup
+ * @property {string} id
+ * @property {string} [name]
+ * @property {boolean} [stack]
+ * @property {boolean} [showSeriesSum]
+ */
+
+/**
  * @typedef {Object} OTSCRawSeriesFactory
  * @property {string} factoryName
  * @property {Object} factoryArguments
@@ -467,8 +546,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {OTSCChartType} type
  * @property {string} yAxisId id of Y axis, which should be used to draw points
  * @property {string} [color] color in hex format, e.g. `'#ff0000'`
- * @property {string} [stackId] series with the same `stackId` will be drawed
- *   stacked on each other (order of stack elements depends on order of series).
+ * @property {string} [groupId] adds series to a specific series group
  * @property {OTSCRawFunction} data definition of function responsible for
  *   generating series points
  */
@@ -533,6 +611,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @typedef {Object} OTSCExternalDataSource
  * @property {(seriesParameters: OTSCDataSourceFetchParams, sourceParameters: Object) => Promise<unknown>} [fetchSeries]
  * @property {(sourceParameters: Object) => Promise<unknown[]>} [fetchDynamicSeriesConfigs]
+ * @property {(sourceParameters: Object) => Promise<unknown[]>} [fetchDynamicSeriesGroupConfigs]
  */
 
 /**
@@ -576,6 +655,12 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 /**
  * @typedef {Object} OTSCTransformFunctionContext
  * @property {(context: Partial<OTSCTransformFunctionContext>, transformFunction: OTSCRawFunction) => unknown} evaluateTransformFunction
+ */
+
+/**
+ * @typedef {Object} OTSCSeriesGroupFactoryContext
+ * @property {OTSCExternalDataSources} externalDataSources
+ * @property {(context: Partial<OTSCTransformFunctionContext>, seriesGroupTemplate: OTSCRawSeriesGroup) => OTSCSeriesGroup} evaluateSeriesGroup
  */
 
 /**
@@ -775,7 +860,10 @@ export default class Configuration {
    */
   async getState() {
     const nowTimestamp = this.getNowTimestamp();
-    const series = await this.getAllSeriesState({ nowTimestamp });
+    const [series, seriesGroups] = await allFulfilled([
+      this.getAllSeriesState({ nowTimestamp }),
+      this.getSeriesGroupsState(),
+    ]);
     if (!this.live && !this.newestPointTimestamp && this.timeResolutionSpecs.length) {
       let seriesWithNewestTimestamp = series;
       // Finding resolution with points aggregating the smallest portion of time.
@@ -811,6 +899,7 @@ export default class Configuration {
       title: this.getTitleState(),
       yAxes: this.getYAxesState(),
       xAxis: this.getXAxisState(series),
+      seriesGroups,
       series,
       timeResolution: this.timeResolution,
       pointsCount: this.pointsCount,
@@ -887,6 +976,61 @@ export default class Configuration {
 
   /**
    * @private
+   * @returns {Promise<OTSCSeriesGroup[]>}
+   */
+  async getSeriesGroupsState() {
+    const rawFactories = this.chartDefinition && this.chartDefinition.seriesGroups || [];
+    const context = {
+      externalDataSources: this.externalDataSources,
+      evaluateSeriesGroup: (...args) => this.getSeriesGroupState(...args),
+      evaluateTransformFunction: (...args) => this.evaluateTransformFunction(...args),
+    };
+    const groupsPerFactory = await allFulfilled(
+      rawFactories.map((seriesGroupFactory) => {
+        const factoryFunction = seriesGroupFactoriesIndex[seriesGroupFactory.factoryName];
+        if (!factoryFunction) {
+          throw {
+            id: 'unknownOTSCFactory',
+            details: {
+              factoryName: seriesGroupFactory.factoryName,
+            },
+          };
+        }
+        return factoryFunction(context, seriesGroupFactory.factoryArguments);
+      })
+    );
+    return _.flatten(groupsPerFactory);
+  }
+
+  /**
+   * @private
+   * @param {Partial<OTSCTransformFunctionContext|null>} context
+   * @param {OTSCRawSeriesGroup} seriesGroup
+   */
+  getSeriesGroupState(context, seriesGroup) {
+    const [
+      id,
+      name,
+      stack,
+      showSeriesSum,
+    ] = [
+      'id',
+      'name',
+      'stack',
+      'showSeriesSum',
+    ].map(propName =>
+      this.evaluateTransformFunction(context, seriesGroup[propName])
+    );
+    return {
+      id,
+      name: name || '',
+      stack: Boolean(stack),
+      showSeriesSum: Boolean(showSeriesSum),
+    };
+  }
+
+  /**
+   * @private
    * @param {Partial<OTSCSeriesContext>} [context]
    * @returns {Promise<OTSCSeries[]>}
    */
@@ -928,7 +1072,7 @@ export default class Configuration {
       { data: type },
       { data: yAxisId },
       { data: color },
-      { data: stackId },
+      { data: groupId },
       data,
     ] = await allFulfilled([
       'id',
@@ -936,7 +1080,7 @@ export default class Configuration {
       'type',
       'yAxisId',
       'color',
-      'stackId',
+      'groupId',
       'data',
     ].map(propName =>
       this.evaluateSeriesFunction(context, series[propName])
@@ -948,7 +1092,7 @@ export default class Configuration {
       type,
       yAxisId,
       color: this.normalizeColor(color),
-      stackId: stackId || null,
+      groupId: groupId || null,
       data: normalizedData,
     };
   }
