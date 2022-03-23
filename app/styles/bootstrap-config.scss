@@ -380,6 +380,11 @@ label {
   width: $bs-modal-width-full-with-margins;
 }
 
+.modal-content {
+  padding-left: $modal-content-horizontal-padding;
+  padding-right: $modal-content-horizontal-padding;
+}
+
 .modal {
   &.in {
     .modal-dialog {
@@ -418,9 +423,7 @@ label {
         min-height: 0;
         box-shadow: none;
         padding-top: 0;
-        padding-right: $modal-content-horizontal-padding;
         padding-bottom: $modal-content-bottom-padding;
-        padding-left: $modal-content-horizontal-padding;
 
         .modal-header {
           .one-icon {

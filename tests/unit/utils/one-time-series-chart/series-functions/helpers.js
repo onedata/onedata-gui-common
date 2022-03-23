@@ -15,7 +15,7 @@ export function createContext() {
   };
 }
 
-export function evaluateSeriesFunction(context, func) {
+export async function evaluateSeriesFunction(context, func) {
   if (func) {
     if (func.functionName === 'constValue') {
       return func.functionArguments.data;
@@ -30,10 +30,14 @@ export function evaluateSeriesFunction(context, func) {
 }
 
 export function createConstArgument(data) {
+  const typedData = data && data.type ? data : {
+    type: 'basic',
+    data,
+  };
   return {
     functionName: 'constValue',
     functionArguments: {
-      data,
+      data: typedData,
     },
   };
 }
