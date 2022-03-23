@@ -70,7 +70,7 @@ const unitOptions = [{
   label: 'Custom',
 }];
 
-describe('Integration | Utility | atm workflow/data spec editors/time series measurements', function () {
+describe('Integration | Utility | atm workflow/data spec editor/time series measurements', function () {
   setupComponentTest('test-component', {
     integration: true,
   });
@@ -87,13 +87,13 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   });
 
   it('shows no specs at the beginning', async function () {
-    await render(this);
+    await renderForm(this);
 
     expect(find('.measurementSpec-field')).to.not.exist;
   });
 
   it('allows to add new measurement spec', async function () {
-    await render(this);
+    await renderForm(this);
 
     await click('.add-field-button');
 
@@ -110,7 +110,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   });
 
   it('has correct list of available name matcher types', async function () {
-    await render(this);
+    await renderForm(this);
 
     await click('.add-field-button');
     await clickTrigger('.nameMatcherType-field');
@@ -124,7 +124,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
 
   for (const { label, value } of nameMatcherTypeOptions) {
     it(`allows to choose "${label}" name matcher type`, async function () {
-      await render(this);
+      await renderForm(this);
 
       await click('.add-field-button');
       await selectChoose('.nameMatcherType-field', label);
@@ -134,7 +134,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   }
 
   it('has correct list of available units', async function () {
-    await render(this);
+    await renderForm(this);
 
     await click('.add-field-button');
     await clickTrigger('.unit-field');
@@ -147,8 +147,8 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   });
 
   for (const { label, value } of unitOptions) {
-    it(`allows to choose "${label}" name matcher type`, async function () {
-      await render(this);
+    it(`allows to choose "${label}" unit`, async function () {
+      await renderForm(this);
 
       await click('.add-field-button');
       await selectChoose('.unit-field', label);
@@ -158,7 +158,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   }
 
   it('shows custom unit input only when custom unit has been selected', async function () {
-    await render(this);
+    await renderForm(this);
 
     await click('.add-field-button');
     expect(find('.customUnit-field')).to.not.exist;
@@ -170,7 +170,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   });
 
   it('marks name matcher and custom unit fields as invalid, when empty', async function () {
-    await render(this);
+    await renderForm(this);
 
     await click('.add-field-button');
     await selectChoose('.unit-field', 'Custom');
@@ -183,7 +183,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
 
   it('allows to provide complete measurement specs and convert it to value constraints',
     async function () {
-      await render(this);
+      await renderForm(this);
 
       await click('.add-field-button');
       await selectChoose('.nameMatcherType-field', 'Has prefix');
@@ -226,7 +226,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
       }],
     });
 
-    await render(this);
+    await renderForm(this);
     this.set('rootGroup.valuesSource.dataSpecEditor', formValues);
     await wait();
 
@@ -246,7 +246,7 @@ describe('Integration | Utility | atm workflow/data spec editors/time series mea
   });
 });
 
-async function render(testCase) {
+async function renderForm(testCase) {
   testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
   await wait();
 }

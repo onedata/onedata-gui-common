@@ -109,7 +109,6 @@ function formValuesToValueConstraints(values) {
 }
 
 /**
- *
  * @param {Object} valueConstraints value constraints taken from the raw data spec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */

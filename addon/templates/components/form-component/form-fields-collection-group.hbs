@@ -17,7 +17,7 @@
   {{/each}}
   {{#if (and isInEditMode isCollectionManipulationAllowed)}}
     {{#bs-button
-      class="add-field-button"
+      class=(concat-classes "add-field-button" (concat name "-add-field-button"))
       size="sm"
       disabled=(not isEffectivelyEnabled)
       onClick=(action "addField")
