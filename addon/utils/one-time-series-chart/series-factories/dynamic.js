@@ -5,15 +5,15 @@
  * `dynamic` factory returns (possibly) many series generated from
  * `factoryArguments.seriesTemplate`. The number of series depends on the size of
  * dynamic configs array which is generated according to the spec in
- * `factoryArguments.dynamicSeriesConfigs` field.
+ * `factoryArguments.dynamicSeriesConfigsSource` field.
  *
  * For now there is only one possibility to specify dynamic configs in
- * `factoryArguments.dynamicSeriesConfigs` - through external data source. Example:
+ * `factoryArguments.dynamicSeriesConfigsSource` - through external data source. Example:
  * ```
  * {
  *   factoryName: 'dynamic',
  *   factoryArguments: {
- *     dynamicSeriesConfigs: {
+ *     dynamicSeriesConfigsSource: {
  *       sourceType: 'external',
  *       sourceParameters: {
  *         externalSourceName: 'mySource',
@@ -65,12 +65,12 @@ import { all as allFulfilled } from 'rsvp';
 
 /**
  * @typedef {Object} OTSCDynamicSeriesFactoryArguments
- * @property {OTSCRawDynamicSeriesConfigs} dynamicSeriesConfigs
+ * @property {OTSCRawDynamicSeriesConfigsSource} dynamicSeriesConfigsSource
  * @property {OTSCRawSeries} seriesTemplate
  */
 
 /**
- * @typedef {OTSCExternalDataSourceRef} OTSCRawDynamicSeriesConfigs
+ * @typedef {OTSCExternalDataSourceRef} OTSCRawDynamicSeriesConfigsSource
  */
 
 /**
@@ -79,14 +79,14 @@ import { all as allFulfilled } from 'rsvp';
  * @returns {Promise<OTSCSeries[]>}
  */
 export default async function dynamic(context, args) {
-  if (!args || !args.dynamicSeriesConfigs || !args.seriesTemplate) {
+  if (!args || !args.dynamicSeriesConfigsSource || !args.seriesTemplate) {
     return [];
   }
 
   const {
     sourceType,
     sourceParameters,
-  } = args.dynamicSeriesConfigs;
+  } = args.dynamicSeriesConfigsSource;
 
   let dynamicSeriesConfigs;
   switch (sourceType) {

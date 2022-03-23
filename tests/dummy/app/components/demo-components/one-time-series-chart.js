@@ -45,7 +45,7 @@ export default Component.extend({
         }, {
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesGroupConfigs: {
+            dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'myTimeSeriesSource',
@@ -109,7 +109,7 @@ export default Component.extend({
         }, {
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'myTimeSeriesSource',

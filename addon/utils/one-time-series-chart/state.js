@@ -44,11 +44,12 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {Object} OTSCSeriesGroup
+ * @typedef {Object} OTSCSeriesGroup Represents a group of series. Allows stacking
+ * and special formatting of series entries in tooltip.
  * @property {string} id
- * @property {string} name
- * @property {boolean} stack
- * @property {boolean} showSeriesSum
+ * @property {string} name series group name (visible in tooltip)
+ * @property {boolean} stack if true, all series in group will be stacked
+ * @property {boolean} showSeriesSum if true, tooltip will show sum of all series in group
  */
 
 /**
@@ -190,30 +191,21 @@ export default class State {
       acc[yAxis.id] = idx;
       return acc;
     }, {});
-    const yAxesMap = this.yAxes.reduce((acc, yAxis) => {
-      acc[yAxis.id] = yAxis;
-      return acc;
-    }, {});
-    const seriesMap = this.series.reduce((acc, series) => {
-      acc[series.id] = series;
-      return acc;
-    }, {});
-    const seriesGroupsMap = this.seriesGroups.reduce((acc, group) => {
-      acc[group.id] = group;
-      return acc;
-    }, {});
+    const yAxesMap = _.keyBy(this.yAxes, 'id');
+    const seriesMap = _.keyBy(this.series, 'id');
+    const seriesGroupsMap = _.keyBy(this.seriesGroups, 'id');
 
     const seriesIdsWithoutGroup = [];
     const seriesGroupIdToSeriesIdsMap = new Map();
-    for (const series of this.series) {
-      if (series.groupId) {
-        if (seriesGroupIdToSeriesIdsMap.has(series.groupId)) {
-          seriesGroupIdToSeriesIdsMap.get(series.groupId).push(series.id);
+    for (const singleSeries of this.series) {
+      if (singleSeries.groupId) {
+        if (seriesGroupIdToSeriesIdsMap.has(singleSeries.groupId)) {
+          seriesGroupIdToSeriesIdsMap.get(singleSeries.groupId).push(singleSeries.id);
         } else {
-          seriesGroupIdToSeriesIdsMap.set(series.groupId, [series.id]);
+          seriesGroupIdToSeriesIdsMap.set(singleSeries.groupId, [singleSeries.id]);
         }
       } else {
-        seriesIdsWithoutGroup.push(series.id);
+        seriesIdsWithoutGroup.push(singleSeries.id);
       }
     }
     const seriesGroupsForTooltip = [{
@@ -239,10 +231,7 @@ export default class State {
           if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
             return null;
           }
-          const seriesIdToParamMap = paramsArray.reduce((acc, param) => {
-            acc[param.seriesId] = param;
-            return acc;
-          }, {});
+          const seriesIdToParamMap = _.keyBy(paramsArray, 'seriesId');
 
           const timestamp = Number.parseInt(paramsArray[0].value[0]);
           const formattedTimestamp = this.xAxis.timestampFormatter(timestamp);

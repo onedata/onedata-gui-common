@@ -397,7 +397,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         seriesGroups: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesGroupConfigs: {
+            dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -525,7 +525,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         seriesGroups: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesGroupConfigs: {
+            dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -638,7 +638,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -703,7 +703,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -856,7 +856,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',

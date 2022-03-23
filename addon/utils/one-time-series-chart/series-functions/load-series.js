@@ -7,7 +7,7 @@
  * - replaceEmptyOptions - specifies how empty points should be filled with values.
  *   Contains two fields: `strategy`, and `fallbackValue`. Read more about them in
  *   `replaceEmpty` transform function documentation. When not provided it equals to:
- *   `{ strategy: 'useFallback', fallbackValue: 0 }`.
+ *   `{ strategy: 'useFallback', fallbackValue: null }`.
  *
  * For `externalSource` type `sourceParameters` are:
  * - externalSourceName - name of an external source, which is able to provide series data.

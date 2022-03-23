@@ -18,7 +18,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
         })),
       };
       const args = {
-        dynamicSeriesGroupConfigs: {
+        dynamicSeriesGroupConfigsSource: {
           sourceType: 'external',
           sourceParameters: {
             externalSourceName: 'mysource',
@@ -43,7 +43,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
       }]);
       expect(context.externalDataSources.mysource.fetchDynamicSeriesGroupConfigs)
         .to.be.calledOnce.and.to.be.calledWith(
-          args.dynamicSeriesGroupConfigs.sourceParameters.externalSourceParameters
+          args.dynamicSeriesGroupConfigsSource.sourceParameters.externalSourceParameters
         );
       expect(context.evaluateSeriesGroup).to.be.calledTwice
         .and.to.be.calledWith(
@@ -66,7 +66,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
       evaluateSeriesGroup: sinon.spy(() => {}),
     };
     const args = {
-      dynamicSeriesGroupConfigs: {
+      dynamicSeriesGroupConfigsSource: {
         sourceType: 'external',
         sourceParameters: {
           externalSourceName: 'mysource',
@@ -87,7 +87,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
       evaluateSeriesGroup: sinon.spy(() => {}),
     };
     const args = {
-      dynamicSeriesGroupConfigs: {
+      dynamicSeriesGroupConfigsSource: {
         sourceType: 'external',
         sourceParameters: {
           externalSourceName: 'mysource',
@@ -102,7 +102,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
     expect(context.evaluateSeriesGroup).to.be.not.called;
   });
 
-  it('generates no series groups when dynamicSeriesGroupConfigs object is not provided', async function () {
+  it('generates no series groups when dynamicSeriesGroupConfigsSource object is not provided', async function () {
     const context = {
       externalDataSources: {},
       evaluateSeriesGroup: sinon.spy(() => {}),
@@ -126,7 +126,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
         evaluateSeriesGroup: sinon.spy(() => {}),
       };
       const args = {
-        dynamicSeriesGroupConfigs: {
+        dynamicSeriesGroupConfigsSource: {
           sourceType: 'external',
           sourceParameters: {
             externalSourceName: 'mysource',

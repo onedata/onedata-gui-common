@@ -23,7 +23,7 @@
  * @param {OTSCGetDSGCDataTransformFunctionArguments} args
  * @returns {unknown}
  */
-export default function getDynamicSeriesConfigData(context, args) {
+export default function getDynamicSeriesGroupConfigData(context, args) {
   let data = null;
   if ('dynamicSeriesGroupConfig' in context) {
     const config = context.dynamicSeriesGroupConfig;
