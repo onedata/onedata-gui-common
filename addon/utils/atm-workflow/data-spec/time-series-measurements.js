@@ -7,6 +7,18 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/**
+ * @typedef {Object} TimeSeriesMeasurementsValueConstraints
+ * @property {Array<TimeSeriesMeasurementsSpec>} specs
+ */
+
+/**
+ * @typedef {Object} TimeSeriesMeasurementsSpec
+ * @property {string} nameMatcherType for possible values see at `nameMatcherTypes` below
+ * @property {string} nameMatcher
+ * @property {string} unit for possible values see at `units` below
+ */
+
 export const nameMatcherTypes = [
   'exact',
   'hasPrefix',
@@ -38,3 +50,21 @@ export const units = [
   'boolean',
   customUnit,
 ];
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} prefixCombiner
+ * @returns {SafeString}
+ */
+export function translateNameMatcherType(i18n, nameMatcherType) {
+  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.nameMatcherTypes.${nameMatcherType}`);
+}
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} prefixCombiner
+ * @returns {SafeString}
+ */
+export function translateUnit(i18n, unit) {
+  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.units.${unit}`);
+}

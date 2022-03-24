@@ -113,7 +113,7 @@ const metricResolutionOptions = [{
   label: 'Infinity',
 }];
 
-describe('Integration | Utility | atm workflow/store editor/time series', function () {
+describe('Integration | Utility | atm workflow/store config editor/time series', function () {
   setupComponentTest('test-component', {
     integration: true,
   });

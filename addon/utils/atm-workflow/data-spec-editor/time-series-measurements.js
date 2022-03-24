@@ -20,6 +20,8 @@ import {
   customUnit,
   customUnitsPrefix,
   units,
+  translateNameMatcherType,
+  translateUnit,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurements';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
@@ -159,11 +161,3 @@ export default {
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
 };
-
-function translateNameMatcherType(i18n, nameMatcherType) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.nameMatcherTypes.${nameMatcherType}`);
-}
-
-function translateUnit(i18n, unit) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.units.${unit}`);
-}

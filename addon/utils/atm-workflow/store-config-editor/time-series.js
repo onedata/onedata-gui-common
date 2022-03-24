@@ -20,12 +20,16 @@ import {
   customUnit,
   customUnitsPrefix,
   units,
+  translateUnit,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurements';
 import {
   nameGeneratorTypes,
   metricAggregators,
   metricResolutions,
-} from 'onedata-gui-common/utils/atm-workflow/store/time-series';
+  translateNameGeneratorType,
+  translateMetricResolution,
+  translateMetricAggregator,
+} from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const formElement = FormFieldsCollectionGroup.extend({
@@ -132,7 +136,7 @@ function formValuesToStoreConfig(values) {
   const schemas = get(values, '__fieldsValueNames')
     .map((valueName) => get(values, valueName))
     .filter(Boolean)
-    .map(timeSeriesSchemaValue => {
+    .map((timeSeriesSchemaValue) => {
       const {
         nameGeneratorType: formNameGeneratorType,
         nameGenerator: formNameGenerator,
@@ -256,22 +260,6 @@ export default {
   formValuesToStoreConfig,
   storeConfigToFormValues,
 };
-
-function translateNameGeneratorType(i18n, nameGeneratorType) {
-  return i18n.t(`utils.atmWorkflow.store.timeSeries.nameGeneratorTypes.${nameGeneratorType}`);
-}
-
-function translateMetricResolution(i18n, metricResolution) {
-  return i18n.t(`utils.atmWorkflow.store.timeSeries.metricResolutions.${metricResolution}`);
-}
-
-function translateMetricAggregator(i18n, metricAggregator) {
-  return i18n.t(`utils.atmWorkflow.store.timeSeries.metricAggregators.${metricAggregator}`);
-}
-
-function translateUnit(i18n, unit) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.units.${unit}`);
-}
 
 function sortMetricValuesArray(metricValuesArray) {
   return metricValuesArray.sort((a, b) => {
