@@ -122,7 +122,7 @@ describe('Integration | Utility | atm workflow/store editor/time series', functi
     this.set('rootGroup', FormFieldsRootGroup.create({
       ownerSource: this,
       fields: [
-        timeSeriesEditor.fieldsGroup.create({
+        timeSeriesEditor.formElement.create({
           name: 'storeEditor',
         }),
       ],

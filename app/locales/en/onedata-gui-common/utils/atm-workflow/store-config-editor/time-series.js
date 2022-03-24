@@ -1,5 +1,6 @@
 export default {
   fields: {
+    label: 'Time series schemas',
     addButtonText: 'Add time series',
     timeSeriesSchema: {
       nameGeneratorType: {

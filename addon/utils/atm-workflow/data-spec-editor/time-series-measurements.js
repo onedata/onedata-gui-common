@@ -1,5 +1,5 @@
 /**
- * Provides a form group capable of showing, creating and modifying time
+ * Provides a form element capable of showing, creating and modifying time
  * series measurements data type settings. It also provides two methods
  * for conversion between form values and value constraints in both directions.
  *
@@ -23,7 +23,7 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurements';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const FieldsGroup = FormFieldsCollectionGroup.extend({
+const formElement = FormFieldsCollectionGroup.extend({
   classes: 'time-series-measurements-dataspec-editor',
   isDefaultValueIgnored: false,
   i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurements.fields',
@@ -155,7 +155,7 @@ function valueConstraintsToFormValues(valueConstraints) {
 }
 
 export default {
-  fieldsGroup: FieldsGroup,
+  formElement,
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
 };

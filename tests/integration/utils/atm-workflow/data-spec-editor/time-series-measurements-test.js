@@ -79,7 +79,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
     this.set('rootGroup', FormFieldsRootGroup.create({
       ownerSource: this,
       fields: [
-        timeSeriesMeasurementEditor.fieldsGroup.create({
+        timeSeriesMeasurementEditor.formElement.create({
           name: 'dataSpecEditor',
         }),
       ],

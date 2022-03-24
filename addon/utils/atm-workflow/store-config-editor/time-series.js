@@ -1,5 +1,5 @@
 /**
- * Provides a form group capable of showing and modifying time
+ * Provides a form element capable of showing and modifying time
  * series store config. It also provides two methods
  * for conversion between form values and store config in both directions.
  *
@@ -28,13 +28,13 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/store/time-series';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const FieldsGroup = FormFieldsCollectionGroup.extend({
+const formElement = FormFieldsCollectionGroup.extend({
   classes: 'time-series-store-config-editor',
   i18nPrefix: 'utils.atmWorkflow.storeConfigEditor.timeSeries.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
   fieldFactoryMethod(uniqueFieldValueName) {
-    return FormFieldsGroup.create({
+    const newField = FormFieldsGroup.create({
       name: 'timeSeriesSchema',
       valueName: uniqueFieldValueName,
       fields: [
@@ -72,7 +72,7 @@ const FieldsGroup = FormFieldsCollectionGroup.extend({
         }),
         FormFieldsCollectionGroup.extend({
           fieldFactoryMethod(uniqueFieldValueName2) {
-            return FormFieldsGroup.create({
+            const newField = FormFieldsGroup.create({
               name: 'metric',
               valueName: uniqueFieldValueName2,
               fields: [
@@ -111,12 +111,16 @@ const FieldsGroup = FormFieldsCollectionGroup.extend({
                 }),
               ],
             });
+            newField.changeMode(this.get('mode'));
+            return newField;
           },
         }).create({
           name: 'metrics',
         }),
       ],
     });
+    newField.changeMode(this.get('mode'));
+    return newField;
   },
 });
 
@@ -248,7 +252,7 @@ function storeConfigToFormValues(storeConfig) {
 }
 
 export default {
-  fieldsGroup: FieldsGroup,
+  formElement,
   formValuesToStoreConfig,
   storeConfigToFormValues,
 };

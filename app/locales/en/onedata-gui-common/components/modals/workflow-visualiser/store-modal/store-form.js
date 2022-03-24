@@ -18,10 +18,6 @@ export default {
         list: {
           label: 'List',
         },
-        // TODO: VFS-7816 uncomment or remove future code
-        // map: {
-        //   label: 'Map',
-        // },
         treeForest: {
           label: 'Tree forest',
         },
@@ -31,12 +27,11 @@ export default {
         range: {
           label: 'Range',
         },
-        // TODO: VFS-7816 uncomment or remove future code
-        // histogram: {
-        //   label: 'Histogram',
-        // },
         auditLog: {
           label: 'Audit log',
+        },
+        timeSeries: {
+          label: 'Time series',
         },
       },
     },
@@ -53,10 +48,6 @@ export default {
           object: {
             label: 'Object',
           },
-          // TODO: VFS-7816 uncomment or remove future code
-          // histogram: {
-          //   label: 'Histogram',
-          // },
           anyFile: {
             label: 'Any file',
           },
