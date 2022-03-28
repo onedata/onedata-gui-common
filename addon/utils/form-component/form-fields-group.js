@@ -10,7 +10,7 @@
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import { computed, observer, set, get } from '@ember/object';
-import { array, raw, isEmpty, conditional, notEmpty } from 'ember-awesome-macros';
+import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -69,11 +69,14 @@ export default FormElement.extend({
   /**
    * @override
    */
-  mode: conditional(
-    notEmpty('fields'),
-    'fieldsMode',
-    'modeWhenNoFields'
-  ),
+  mode: computed('fields.length', 'fieldMode', 'modeWhenNoFields', function mode() {
+    const {
+      fields,
+      fieldsMode,
+      modeWhenNoFields,
+    } = this.getProperties('fields', 'fieldsMode', 'modeWhenNoFields');
+    return (fields || []).length ? fieldsMode : modeWhenNoFields;
+  }),
 
   /**
    * @type {ComputedProperty<Boolean>}
