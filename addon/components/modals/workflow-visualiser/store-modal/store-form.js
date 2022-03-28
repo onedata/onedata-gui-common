@@ -555,8 +555,8 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
 
-    this.formModeUpdater();
     this.resetFormValues();
+    this.formModeUpdater();
   },
 
   resetFormValues() {

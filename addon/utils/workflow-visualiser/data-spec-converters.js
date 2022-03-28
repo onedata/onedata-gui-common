@@ -88,6 +88,9 @@ export function typeToDataSpec({ type, isArray }) {
 }
 
 export function getTargetStoreTypesForType(type, isBatch) {
+  if (type === 'timeSeriesMeasurements') {
+    return ['timeSeries'];
+  }
   const targetTypes = ['list', 'auditLog'];
   if (!isBatch) {
     targetTypes.push('singleValue');
@@ -137,6 +140,8 @@ export function getStoreWriteDataSpec({ type, config }) {
       return config && config.itemDataSpec || null;
     case 'range':
       return { type: 'range', valueConstraints: {} };
+    case 'timeSeries':
+      return { type: 'timeSeriesMeasurements', valueConstraints: {} };
     default:
       return null;
   }

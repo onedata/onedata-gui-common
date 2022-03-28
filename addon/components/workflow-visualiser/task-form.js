@@ -11,13 +11,14 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/workflow-visualiser/task-form';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { tag, not, eq, raw, getBy, notEmpty, or, gt } from 'ember-awesome-macros';
+import { tag, not, eq, raw, notEmpty, or, gt } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
-import { computed, observer, getProperties, get } from '@ember/object';
+import { computed, observer, getProperties, get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import HiddenField from 'onedata-gui-common/utils/form-component/hidden-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { scheduleOnce } from '@ember/runloop';
@@ -37,6 +38,8 @@ import {
 } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -254,12 +257,10 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
    */
   nameField: computed(function nameField() {
-    return TextField
-      .extend(defaultValueGenerator(this))
-      .create({
-        component: this,
-        name: 'name',
-      });
+    return TextField.create({
+      component: this,
+      name: 'name',
+    });
   }),
 
   /**
@@ -268,24 +269,25 @@ export default Component.extend(I18n, {
   argumentMappingsFieldsCollectionGroup: computed(
     function argumentMappingsFieldsCollectionGroup() {
       const component = this;
-      return FormFieldsCollectionGroup.extend(defaultValueGenerator(this), {
+      return FormFieldsCollectionGroup.extend({
         isVisible: notEmpty('value.__fieldsValueNames'),
         fieldFactoryMethod(uniqueFieldValueName) {
           return FormFieldsGroup.extend({
-            label: reads('value.argumentName'),
+            label: reads('value.context.name'),
             addColonToLabel: not('component.media.isMobile'),
           }).create({
             name: 'argumentMapping',
             valueName: uniqueFieldValueName,
             component,
             fields: [
+              HiddenField.create({ name: 'context' }),
               DropdownField.extend({
                 options: computed(
-                  'parent.value.{argumentType,argumentIsOptional}',
+                  'parent.value.context.{type,isOptional}',
                   function options() {
-                    const argumentType = this.get('parent.value.argumentType');
-                    const argumentIsArray = this.get('parent.value.argumentIsArray');
-                    const argumentIsOptional = this.get('parent.value.argumentIsOptional');
+                    const argumentType = this.get('parent.value.context.type');
+                    const argumentIsArray = this.get('parent.value.context.isArray');
+                    const argumentIsOptional = this.get('parent.value.context.isOptional');
                     const opts =
                       getValueBuilderTypesForArgType(argumentType, argumentIsArray)
                       .map(vbType => ({ value: vbType }));
@@ -310,9 +312,9 @@ export default Component.extend(I18n, {
                 ),
                 options: computed(
                   'component.argumentStores.@each.{type,name}',
-                  'parent.value.{argumentType}',
+                  'parent.value.context.type',
                   function options() {
-                    const argumentType = this.get('parent.value.argumentType');
+                    const argumentType = this.get('parent.value.context.type');
                     const argumentStores = this.get('component.argumentStores') || [];
                     const possibleStores =
                       getSourceStoreForType(argumentStores, argumentType);
@@ -330,7 +332,7 @@ export default Component.extend(I18n, {
                 ),
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
-                    const argumentType = this.get('parent.value.argumentType');
+                    const argumentType = this.get('parent.value.context.type');
                     component.createSourceStore(this, argumentType);
                   } else {
                     return this._super(...arguments);
@@ -362,25 +364,34 @@ export default Component.extend(I18n, {
   resultMappingsFieldsCollectionGroup: computed(
     function resultMappingsFieldsCollectionGroup() {
       const component = this;
-      return FormFieldsCollectionGroup.extend(defaultValueGenerator(this), {
+      return FormFieldsCollectionGroup.extend({
         isVisible: notEmpty('value.__fieldsValueNames'),
         fieldFactoryMethod(uniqueFieldValueName) {
           return FormFieldsGroup.extend({
-            label: reads('value.resultName'),
+            label: reads('value.context.name'),
             addColonToLabel: not('component.media.isMobile'),
+            selectedTargetStore: computed(
+              'value.targetStore',
+              'component.resultStores.@each.id',
+              function selectedTargetStore() {
+                const targetStoreId = this.get('value.targetStore');
+                return (this.get('component.resultStores') || []).findBy('id', targetStoreId);
+              }
+            ),
           }).create({
             name: 'resultMapping',
             valueName: uniqueFieldValueName,
             component,
             fields: [
+              HiddenField.create({ name: 'context' }),
               DropdownField.extend({
                 options: computed(
-                  'parent.value.{resultType,resultIsBatch}',
+                  'parent.value.context.{type,isBatch}',
                   'component.resultStores.@each.{type,name}',
                   function options() {
                     const resultStores = this.get('component.resultStores') || [];
-                    const resultType = this.get('parent.value.resultType');
-                    const resultIsBatch = this.get('parent.value.resultIsBatch');
+                    const resultType = this.get('parent.value.context.type');
+                    const resultIsBatch = this.get('parent.value.context.isBatch');
                     const opts = getTargetStoresForType(resultStores, resultType, resultIsBatch)
                       .map(store => ({
                         value: get(store, 'id'),
@@ -407,7 +418,7 @@ export default Component.extend(I18n, {
                 }),
                 valueChanged(value) {
                   if (value === createStoreDropdownOptionValue) {
-                    const resultType = this.get('parent.value.resultType');
+                    const resultType = this.get('parent.value.context.type');
                     component.createTargetStore(this, resultType);
                   } else {
                     return this._super(...arguments);
@@ -420,13 +431,10 @@ export default Component.extend(I18n, {
               DropdownField.extend({
                 isVisible: notEmpty('options'),
                 options: computed(
-                  'component.resultStores.@each.id',
-                  'parent.value.targetStore',
+                  'parent.selectedTargetStore',
                   function options() {
-                    const targetStoreId = this.get('parent.value.targetStore');
-                    const targetStore =
-                      (this.get('component.resultStores') || []).findBy('id', targetStoreId);
-                    return getDispatchFunctionsForStoreType((targetStore || {}).type)
+                    const selectedTargetStore = this.get('parent.selectedTargetStore');
+                    return getDispatchFunctionsForStoreType((selectedTargetStore || {}).type)
                       .map(func => ({ value: func }));
                   }
                 ),
@@ -452,6 +460,16 @@ export default Component.extend(I18n, {
                 component,
                 name: 'dispatchFunction',
               }),
+              storeContentUpdateOptionsEditors.timeSeries.formElement.extend({
+                contentUpdateDataSpec: reads('parent.value.context.dataSpec'),
+                storeConfig: reads('parent.selectedTargetStore.config'),
+                isVisible: computed('parent.selectedTargetStore', function isVisible() {
+                  const selectedTargetStore = this.get('parent.selectedTargetStore');
+                  return selectedTargetStore && get(selectedTargetStore, 'type') === 'timeSeries';
+                }),
+              }).create({
+                name: 'timeSeriesEditor',
+              }),
             ],
           });
         },
@@ -476,7 +494,7 @@ export default Component.extend(I18n, {
       name: 'resources',
       addColonToLabel: false,
       fields: [
-        ToggleField.extend(defaultValueGenerator(this)).create({
+        ToggleField.create({
           name: 'overrideResources',
         }),
         FormFieldsGroup.extend({
@@ -501,12 +519,6 @@ export default Component.extend(I18n, {
           classes: 'task-resources-fields',
           fields: createTaskResourcesFields({
             pathToGroup: 'resources.resourcesSections',
-            cpuRequestedDefaultValueMixin: defaultValueGenerator(this),
-            cpuLimitDefaultValueMixin: defaultValueGenerator(this),
-            memoryRequestedDefaultValueMixin: defaultValueGenerator(this),
-            memoryLimitDefaultValueMixin: defaultValueGenerator(this),
-            ephemeralStorageRequestedDefaultValueMixin: defaultValueGenerator(this),
-            ephemeralStorageLimitDefaultValueMixin: defaultValueGenerator(this),
           }),
         }),
       ],
@@ -516,7 +528,8 @@ export default Component.extend(I18n, {
   atmLambdaRevisionObserver: observer(
     'atmLambdaRevision',
     function atmLambdaRevisionObserver() {
-      this.get('fields').reset();
+      this.resetFormValues();
+      // this.get('fields').reset();
     }
   ),
 
@@ -524,12 +537,8 @@ export default Component.extend(I18n, {
     'mode',
     'passedFormValues',
     function formValuesUpdater() {
-      const {
-        mode,
-        fields,
-      } = this.getProperties('mode', 'fields');
-      if (mode === 'view') {
-        fields.reset();
+      if (this.get('mode') === 'view') {
+        this.resetFormValues();
       }
     }
   ),
@@ -541,22 +550,31 @@ export default Component.extend(I18n, {
     } = this.getProperties('mode', 'fields');
 
     fields.changeMode(mode === 'view' ? 'view' : 'edit');
-    fields.reset();
   }),
 
   isShownObserver: observer('isShown', function isShownObserver() {
     const isShown = this.get('isShown');
     if (isShown) {
-      this.get('fields').reset();
+      this.resetFormValues();
     }
   }),
 
   init() {
     this._super(...arguments);
 
-    // Getting props to launch observers
-    this.getProperties('passedFormValues', 'atmLambdaRevision');
+    this.resetFormValues();
     this.formModeUpdater();
+  },
+
+  resetFormValues() {
+    const {
+      fields,
+      passedFormValues,
+    } = this.getProperties('fields', 'passedFormValues');
+
+    set(fields, 'valuesSource', passedFormValues);
+    fields.useCurrentValueAsDefault();
+    fields.reset();
   },
 
   notifyAboutChange() {
@@ -640,18 +658,6 @@ export default Component.extend(I18n, {
   },
 });
 
-/**
- * @param {Components.WorkflowVisualiser.TaskForm} component
- * @param {any} createDefaultValue
- * @returns {Object}
- */
-function defaultValueGenerator(component) {
-  return {
-    defaultValueSource: component,
-    defaultValue: getBy('defaultValueSource', tag `passedFormValues.${'path'}`),
-  };
-}
-
 function taskToFormData(task, atmLambdaRevision) {
   const {
     name,
@@ -720,15 +726,17 @@ function taskToFormData(task, atmLambdaRevision) {
       JSON.stringify(valueBuilderRecipe, null, 2) : undefined;
     const valueBuilderStore = valueBuilderType === 'singleValueStoreContent' ?
       valueBuilderRecipe : undefined;
-    formArgumentMappings[valueName] = {
-      argumentName: name,
-      argumentType: type,
-      argumentIsArray: isArray,
-      argumentIsOptional: isOptional,
+    formArgumentMappings[valueName] = createValuesContainer({
+      context: {
+        name,
+        type,
+        isArray,
+        isOptional,
+      },
       valueBuilderType,
       valueBuilderConstValue,
       valueBuilderStore,
-    };
+    });
   });
 
   const formResultMappings = {
@@ -760,31 +768,38 @@ function taskToFormData(task, atmLambdaRevision) {
     const valueName = `result${idx}`;
     formResultMappings.__fieldsValueNames.push(valueName);
     const resultType = dataSpecToType(dataSpec).type;
+    const timeSeriesEditor = resultType === 'timeSeriesMeasurements' ?
+      storeContentUpdateOptionsEditors.timeSeries.storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) :
+      {};
 
-    formResultMappings[valueName] = {
-      resultName: name,
-      resultType,
-      resultIsBatch: Boolean(preferredBatchSize > 1),
+    formResultMappings[valueName] = createValuesContainer({
+      context: {
+        name,
+        dataSpec,
+        type: resultType,
+        isBatch: Boolean(preferredBatchSize > 1),
+      },
       targetStore: frontendStoreIdsMappings[storeSchemaId] ||
         storeSchemaId ||
         leaveUnassignedDropdownOptionValue,
       dispatchFunction,
-    };
+      timeSeriesEditor,
+    });
   });
 
   return {
     name: name || lambdaName,
-    argumentMappings: formArgumentMappings,
-    resultMappings: formResultMappings,
+    argumentMappings: createValuesContainer(formArgumentMappings),
+    resultMappings: createValuesContainer(formResultMappings),
     resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
   };
 }
 
 function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
-  return {
+  return createValuesContainer({
     overrideResources: Boolean(resourceSpecOverride),
-    resourcesSections: {
-      cpu: {
+    resourcesSections: createValuesContainer({
+      cpu: createValuesContainer({
         cpuRequested: getAtmLambdaResourceValue(
           resourceSpecOverride,
           resourceSpec,
@@ -795,8 +810,8 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
           resourceSpec,
           'cpuLimit'
         ),
-      },
-      memory: {
+      }),
+      memory: createValuesContainer({
         memoryRequested: getAtmLambdaResourceValue(
           resourceSpecOverride,
           resourceSpec,
@@ -807,8 +822,8 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
           resourceSpec,
           'memoryLimit'
         ),
-      },
-      ephemeralStorage: {
+      }),
+      ephemeralStorage: createValuesContainer({
         ephemeralStorageRequested: getAtmLambdaResourceValue(
           resourceSpecOverride,
           resourceSpec,
@@ -819,9 +834,9 @@ function generateResourcesFormData(resourceSpec, resourceSpecOverride) {
           resourceSpec,
           'ephemeralStorageLimit'
         ),
-      },
-    },
-  };
+      }),
+    }),
+  });
 }
 
 function formDataToTask(formData, atmLambdaRevision, stores) {
@@ -899,10 +914,12 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
     const {
       targetStore: targetStoreId,
       dispatchFunction,
+      timeSeriesEditor,
     } = getProperties(
       get(resultMappings, valueName) || {},
       'targetStore',
       'dispatchFunction',
+      'timeSeriesEditor'
     );
 
     if (!targetStoreId || targetStoreId === leaveUnassignedDropdownOptionValue) {
@@ -913,17 +930,20 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
     const targetStoreType = targetStore && get(targetStore, 'type');
     const possibleDispatchFunctions = getDispatchFunctionsForStoreType(targetStoreType);
 
-    if (!targetStoreType || (
-        possibleDispatchFunctions.length &&
-        !possibleDispatchFunctions.includes(dispatchFunction)
-      )) {
+    if (!targetStoreType) {
       return;
     }
 
     const storeContentUpdateOptions = {
       type: getStoreContentUpdateOptionsType(targetStoreType),
     };
-    if (dispatchFunction) {
+    if (targetStoreType === 'timeSeries') {
+      Object.assign(
+        storeContentUpdateOptions,
+        storeContentUpdateOptionsEditors.timeSeries.formValuesToStoreContentUpdateOptions(
+        timeSeriesEditor, { storeConfig: get(targetStore, 'config') })
+      );
+    } else if (possibleDispatchFunctions.includes(dispatchFunction)) {
       storeContentUpdateOptions.function = dispatchFunction;
     }
 
@@ -957,6 +977,8 @@ function getValueBuilderTypesForArgType(argType, isArray) {
   //   return ['storeCredentials'];
   if (argType === 'onedatafsCredentials') {
     builders = ['onedatafsCredentials'];
+  } else if (argType === 'timeSeriesMeasurements') {
+    builders = ['const'];
   } else if (argType === 'object') {
     builders = [
       'iteratedItem',

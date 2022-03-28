@@ -236,7 +236,7 @@ function storeConfigToFormValues(storeConfig) {
       __fieldsValueNames: metricFieldsValueNames,
     });
     sortMetricValuesArray(
-      Object.keys(metrics).map((id) => createValuesContainer({
+      Object.keys(metrics || []).map((id) => createValuesContainer({
         id,
         aggregator: metrics[id].aggregator,
         resolution: metrics[id].resolution,
