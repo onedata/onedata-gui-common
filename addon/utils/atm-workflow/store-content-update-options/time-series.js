@@ -7,6 +7,20 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+/**
+ * @typedef {Object} AtmTimeSeriesStoreContentUpdateOptions
+ * @property {'timeSeriesStoreContentUpdateOptions'} type
+ * @property {Array<AtmTimeSeriesStoreDispatchRule>} dispatchRules
+ */
+
+/**
+ * @typedef {Object} AtmTimeSeriesStoreDispatchRule
+ * @property {string} measurementTimeSeriesNameMatcherType
+ * @property {string} measurementTimeSeriesNameMatcher
+ * @property {string} targetTimeSeriesNameGenerator
+ * @property {string} [prefixCombiner] for possible values see at `prefixCombiners` below
+ */
+
 export const prefixCombiners = [
   'concatenate',
   'converge',
