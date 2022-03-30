@@ -74,7 +74,7 @@ export default class StoreContentTableColumns {
 
   /**
    * @public
-   * @param {Array<StoreContentEntry>} newData
+   * @param {Array<StoreContentTableEntry>} newData
    */
   updateColumnsWithNewData(newData) {
     const freeColumnSlotsNumber = this.getFreeSlotsNumberForDataColumns();
@@ -165,7 +165,7 @@ export default class StoreContentTableColumns {
 
   /**
    * @private
-   * @param {Array<StoreContentEntry>} newData
+   * @param {Array<StoreContentTableEntry>} newData
    * @returns {Array<StoreContentTableColumn>}
    */
   getDataBasedColumnsFromData(newData) {

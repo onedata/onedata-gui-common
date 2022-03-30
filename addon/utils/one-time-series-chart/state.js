@@ -55,7 +55,7 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {RawOTSCSeriesPoint} OTSCSeriesPoint
+ * @typedef {OTSCRawSeriesPoint} OTSCSeriesPoint
  * @property {number|null} value null means, that value in this point is unknown
  * @property {boolean} fake when set to true, it means that this point has been
  *   generated on-the-fly because data source did not mention it. It may happen

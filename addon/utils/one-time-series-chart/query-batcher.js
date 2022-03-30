@@ -33,7 +33,7 @@ import _ from 'lodash';
 /**
  * @typedef {Object} TimeSeriesQueryBatchEntry
  * @property {TimeSeriesQuery} queryParams
- * @property {rsvp.defer<Array<RawOTSCSeriesPoint>>} resultDefer
+ * @property {rsvp.defer<Array<OTSCRawSeriesPoint>>} resultDefer
  */
 
 /**
@@ -46,7 +46,7 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {Object<string, Object<string, Array<RawOTSCSeriesPoint>>} BatchedTimeSeriesQueryResult
+ * @typedef {Object<string, Object<string, Array<OTSCRawSeriesPoint>>} BatchedTimeSeriesQueryResult
  *   is a nested map (seriesId -> (metricId -> array of points))
  */
 
@@ -124,7 +124,7 @@ export default class QueryBatcher {
   /**
    * @public
    * @param {TimeSeriesQuery} queryParams
-   * @returns {Promise<Array<RawOTSCSeriesPoint>>}
+   * @returns {Promise<Array<OTSCRawSeriesPoint>>}
    */
   query(queryParams) {
     const newBatchEntry = {
