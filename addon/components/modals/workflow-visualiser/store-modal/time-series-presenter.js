@@ -4,6 +4,9 @@ import layout from '../../../../templates/components/modals/workflow-visualiser/
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import { browseModes } from 'onedata-gui-common/utils/atm-workflow/store-content-browse-options/time-series';
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
+import Looper from 'onedata-gui-common/utils/looper';
+
+const timeSeriesGeneratorStateReloadInterval = 5000;
 
 export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'), {
   layout,
@@ -19,6 +22,16 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
    * @type {(browseOptions: AtmStoreContentBrowseOptions) => Promise<AtmStoreContentBrowseResult|null>}
    */
   getStoreContentCallback: undefined,
+
+  /**
+   * @type {number}
+   */
+  timeSeriesGeneratorStateReloadInterval,
+
+  /**
+   * @type {Utils.Looper}
+   */
+  timeSeriesGeneratorStateUpdater: undefined,
 
   /**
    * @type {ComputedProperty<Array<Object>>}
@@ -38,7 +51,7 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
         seriesTemplate: {
           id: 'series1',
           name: 'Series 1',
-          type: 'bar',
+          type: 'line',
           yAxisId: 'axis',
           data: {
             functionName: 'replaceEmpty',
@@ -52,7 +65,7 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
                     externalSourceParameters: {
                       timeSeriesNameGenerator: 'gen_size',
                       timeSeriesName: 'gen_size',
-                      metricIds: ['m1', 'm2', 'm3'],
+                      metricIds: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7'],
                     },
                   },
                 },
@@ -71,7 +84,7 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
             externalSourceName: 'store',
             externalSourceParameters: {
               timeSeriesNameGenerator: 'gen_file_',
-              metricIds: ['n1', 'n2', 'n3'],
+              metricIds: ['n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7'],
             },
           },
         },
@@ -89,6 +102,7 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
             },
           },
           type: 'bar',
+          stackId: 'stack1',
           yAxisId: 'axis',
           data: {
             functionName: 'replaceEmpty',
@@ -128,6 +142,26 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
         }).then(result => result && result.slice),
     });
   }),
+
+  init() {
+    this._super(...arguments);
+    const timeSeriesGeneratorStateUpdater =
+      this.set('timeSeriesGeneratorStateUpdater', Looper.create({
+        immediate: true,
+        interval: this.get('timeSeriesGeneratorStateReloadInterval'),
+      }));
+    timeSeriesGeneratorStateUpdater.on('tick', () =>
+      this.updateTimeSeriesGeneratorsStateProxy({ replace: true })
+    );
+  },
+
+  willDestroyElement() {
+    try {
+      this.get('timeSeriesGeneratorStateUpdater').destroy();
+    } finally {
+      this._super(...arguments);
+    }
+  },
 
   async fetchTimeSeriesGeneratorsState() {
     const schemas = this.get('store.config.schemas');
