@@ -225,24 +225,11 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   width: 250px;
   height: 250px;
 
-  .selector-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
   .ember-basic-dropdown,
   .btn-group,
-  .content-separator,
   .records-filter,
   .id-form-group {
     margin-bottom: $padding-small-vertical;
-  }
-
-  .content-separator {
-    width: 100%;
-    margin-top: 0;
-    border-top: 1px solid $main-border-color;
   }
 
   .all-item {
@@ -264,6 +251,21 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   }
 }
 
+.one-webui-popover.time-series-metric {
+  width: 250px;
+  height: 250px;
+
+  .ember-basic-dropdown,
+  .btn-group {
+    margin-bottom: $padding-small-vertical;
+  }
+
+  .control-label {
+    text-align: left;
+    flex-basis: 100%;
+  }
+}
+
 .webui-popover-tags-selector {
   border: $tags-input-tag-border;
   border-radius: $border-radius-base;
@@ -275,5 +277,18 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
   &.bottom-right, &.bottom-left, &.bottom {
     transform: translateY(-10px - $tags-input-tag-vertical-padding);
+  }
+
+  .selector-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .content-separator {
+    width: 100%;
+    margin-top: 0;
+    border-top: 1px solid $main-border-color;
+    margin-bottom: $padding-small-vertical;
   }
 }

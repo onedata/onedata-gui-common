@@ -74,8 +74,10 @@ export function translateNameGeneratorType(i18n, nameGeneratorType) {
   return i18n.t(`utils.atmWorkflow.storeConfig.timeSeries.nameGeneratorTypes.${nameGeneratorType}`);
 }
 
-export function translateMetricResolution(i18n, metricResolution) {
-  return i18n.t(`utils.atmWorkflow.storeConfig.timeSeries.metricResolutions.${metricResolution}`);
+export function translateMetricResolution(i18n, metricResolution, { short = false } = {}) {
+  return i18n.t(
+    `utils.atmWorkflow.storeConfig.timeSeries.metricResolutions.${short ? 'short' : 'standard'}.${metricResolution}`
+  );
 }
 
 export function translateMetricAggregator(i18n, metricAggregator) {

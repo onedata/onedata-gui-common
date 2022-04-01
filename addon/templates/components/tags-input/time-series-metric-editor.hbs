@@ -1,0 +1,77 @@
+{{#one-webui-popover
+  class="tags-selector time-series-metric"
+  open=true
+  triggerSelector=(concat "#" elementId)
+  arrow=false
+  registerApi=(action (mut popoverApi))
+  padding=false
+  placement="vertical"
+  popoverStyle="tags-selector"
+  as |popover|
+}}
+  {{#click-outside
+    class="selector-container"
+    action=onEndTagCreation
+    except-selector=parentTagsInputSelector
+  }}
+
+    {{#one-dropdown
+      triggerClass="small"
+      dropdownClass="small"
+      options=aggregatorOptions
+      onchange=(action (mut selectedAggregatorOption))
+      selected=selectedAggregatorOption
+      searchEnabled=false
+      renderInPlace=true
+      verticalPosition="bottom"
+      as |option|}}
+      <div class="option-container">
+        {{#truncated-string class="text"}}
+          {{option.label}}
+        {{/truncated-string}}
+      </div>
+    {{/one-dropdown}}
+
+    {{#bs-button-group
+      value=selectedView
+      class="view-selector btn-group-justified"
+      type="radio"
+      onChange=(action (mut selectedView))
+      as |bg|
+    }}
+      {{#each (array "presets" "custom") as |viewName|}}
+        <div class="btn-group" role="group">
+          {{#bg.button
+            type="default"
+            class=(concat "btn-sm btn-" viewName)
+            value=viewName
+          }}
+            {{tt this (concat "view." viewName)}}
+          {{/bg.button}}
+        </div>
+      {{/each}}
+    {{/bs-button-group}}
+
+    <hr class="content-separator">
+
+    {{#if (eq selectedView "presets")}}
+      {{#if tagsToRender.length}}
+        {{#perfect-scrollbar-element}}
+          <ul class="selector-list">
+            {{#each tagsToRender key="id" as |tag|}}
+              <li class="selector-item" {{action "tagSelected" tag}}>
+                {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/perfect-scrollbar-element}}
+      {{else}}
+        <p class="text-center">{{tt this "allPresetsUsed"}}</p>
+      {{/if}}
+    {{else}}
+      <form class="form form-horizontal form-component">
+        {{form-component/field-renderer field=fields}}
+      </form>
+    {{/if}}
+  {{/click-outside}}
+{{/one-webui-popover}}

@@ -43,4 +43,26 @@ export default {
     },
     addId: 'Add ID',
   },
+  timeSeriesMetricEditor: {
+    tag: {
+      unknownId: 'Unknown ID',
+      retention: '{{retention}} samp.',
+    },
+    view: {
+      presets: 'Presets',
+      custom: 'Custom',
+    },
+    allPresetsUsed: 'All presets are already used.',
+    fields: {
+      id: {
+        label: 'ID',
+      },
+      resolution: {
+        label: 'Resolution',
+      },
+      retention: {
+        label: 'Retention',
+      },
+    },
+  },
 };
