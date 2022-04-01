@@ -80,6 +80,8 @@ export function translateMetricResolution(i18n, metricResolution, { short = fals
   );
 }
 
-export function translateMetricAggregator(i18n, metricAggregator) {
-  return i18n.t(`utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${metricAggregator}`);
+export function translateMetricAggregator(i18n, metricAggregator, { short = false } = {}) {
+  return i18n.t(
+    `utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${short ? 'short' : 'standard'}.${metricAggregator}`
+  );
 }

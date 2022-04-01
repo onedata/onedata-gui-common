@@ -1,5 +1,5 @@
 {{#one-webui-popover
-  class="tags-selector time-series-metric"
+  class="tags-selector time-series-metric-selector"
   open=true
   triggerSelector=(concat "#" elementId)
   arrow=false
@@ -54,24 +54,33 @@
 
     <hr class="content-separator">
 
-    {{#if (eq selectedView "presets")}}
-      {{#if tagsToRender.length}}
-        {{#perfect-scrollbar-element}}
-          <ul class="selector-list">
-            {{#each tagsToRender key="id" as |tag|}}
-              <li class="selector-item" {{action "tagSelected" tag}}>
-                {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
-              </li>
-            {{/each}}
-          </ul>
-        {{/perfect-scrollbar-element}}
+    {{#perfect-scrollbar-element}}
+      {{#if (eq selectedView "presets")}}
+        {{#if tagsToRender.length}}
+            <ul class="selector-list">
+              {{#each tagsToRender key="id" as |tag|}}
+                <li class="selector-item" {{action "tagSelected" tag}}>
+                  {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                </li>
+              {{/each}}
+            </ul>
+        {{else}}
+          <p class="text-center">{{tt this "allPresetsUsed"}}</p>
+        {{/if}}
       {{else}}
-        <p class="text-center">{{tt this "allPresetsUsed"}}</p>
+        <form class="form form-horizontal form-component">
+          {{form-component/field-renderer field=fields}}
+          {{#one-button
+            size="sm"
+            type="primary"
+            class="submit-custom-metric pull-right"
+            disabled=(not fields.isValid)
+            onClick=(action "submitCustomMetric")
+          }}
+            {{tt this "submitCustomMetric"}}
+          {{/one-button}}
+        </form>
       {{/if}}
-    {{else}}
-      <form class="form form-horizontal form-component">
-        {{form-component/field-renderer field=fields}}
-      </form>
-    {{/if}}
+    {{/perfect-scrollbar-element}}
   {{/click-outside}}
 {{/one-webui-popover}}

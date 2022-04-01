@@ -4,7 +4,7 @@ import { inject as service } from '@ember/service';
 import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
-import layout from '../../templates/components/tags-input/time-series-metric-editor';
+import layout from '../../templates/components/tags-input/time-series-metric-selector-editor';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import {
   metricAggregators,
@@ -31,7 +31,7 @@ const presetDataPerResolution = {
   minute: {
     // 1 day
     retention: 24 * 60,
-    metricIdResolutionPart: '1min',
+    metricIdResolutionPart: '1m',
   },
   hour: {
     // ~2 months
@@ -105,7 +105,8 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 
     const readableId = id ? `"${id}"` : this.t('unknownId');
     const readableAggregator = metricAggregators.includes(aggregator) ?
-      String(translateMetricAggregator(i18n, aggregator)).toLocaleLowerCase() : '?';
+      String(translateMetricAggregator(i18n, aggregator, { short: true })).toLocaleLowerCase() :
+      '?';
     const readableResolution = resolutionName ?
       String(translateMetricResolution(i18n, resolutionName, { short: true })).toLocaleLowerCase() :
       '?';
@@ -118,6 +119,7 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 
 export default Component.extend(I18n, {
   layout,
+  classNames: ['tags-input-time-series-metric-selector-editor'],
 
   /**
    * @override
@@ -245,6 +247,7 @@ export default Component.extend(I18n, {
       ownerSource: reads('component'),
     }).create({
       component: this,
+      size: 'sm',
       fields: [
         TextField.create({
           name: 'id',
@@ -297,6 +300,35 @@ export default Component.extend(I18n, {
   actions: {
     tagSelected(tag) {
       this.get('onTagsAdded')([tag]);
+    },
+    submitCustomMetric() {
+      const aggregator = this.get('selectedAggregatorOption.value');
+      const {
+        fields,
+        onTagsAdded,
+      } = this.getProperties('fields', 'onTagsAdded');
+
+      if (!get(fields, 'isValid')) {
+        return;
+      }
+
+      const fieldsValues = fields.dumpValue();
+      const {
+        id,
+        resolution,
+        retention,
+      } = getProperties(fieldsValues, 'id', 'resolution', 'retention');
+
+      const newTag = Tag.create({
+        ownerSource: this,
+        value: {
+          id,
+          aggregator,
+          resolution,
+          retention: Number.parseInt(retention),
+        },
+      });
+      onTagsAdded([newTag]);
     },
   },
 });

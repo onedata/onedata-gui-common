@@ -64,5 +64,6 @@ export default {
         label: 'Retention',
       },
     },
+    submitCustomMetric: 'Add',
   },
 };
