@@ -354,6 +354,22 @@ describe('Integration | Utility | form component/form element', function () {
     },
   );
 
+  it('has "size" equal "md" by default when has no parent', function () {
+    const formElement = FormElement.create();
+
+    expect(get(formElement, 'size')).to.equal('md');
+  });
+
+  it('has the same "size" as its parent', function () {
+    const formElement = FormElement.create({
+      parent: FormElement.create({
+        size: 'sm',
+      }),
+    });
+
+    expect(get(formElement, 'size')).to.equal('sm');
+  });
+
   it('has undefined "tooltipClass" by default',
     function () {
       const formField = FormElement.create();

@@ -224,6 +224,30 @@ describe('Integration | Component | form component/dropdown field', function () 
     expect(this.$('.one-icon')).to.have.class('oneicon-space');
     expect(this.$('.ember-basic-dropdown')).to.not.exist;
   });
+
+  it('does not apply "small" class to trigger and dropdown when "size" is "md"', async function () {
+    this.set('field.size', 'md');
+
+    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+    const dropdown = new DropdownHelper();
+    await wait();
+    await dropdown.open();
+    expect($(new DropdownHelper().getTrigger())).to.not.have.class('small');
+    expect($('.ember-basic-dropdown-content')).to.not.have.class('small');
+  });
+
+  it('applies "small" class to trigger and dropdown when "size" is "sm"', async function () {
+    this.set('field.size', 'sm');
+
+    this.render(hbs `{{form-component/dropdown-field field=field}}`);
+
+    const dropdown = new DropdownHelper();
+    await wait();
+    await dropdown.open();
+    expect($(new DropdownHelper().getTrigger())).to.have.class('small');
+    expect($('.ember-basic-dropdown-content')).to.have.class('small');
+  });
 });
 
 class DropdownHelper extends EmberPowerSelectHelper {

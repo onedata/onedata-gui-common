@@ -49,8 +49,14 @@ $form-component-view-margin: $padding-base-vertical;
     }
   }
 
-  .textarea-field textarea {
-    resize: none;
+  .textarea-field-renderer {
+    textarea {
+      resize: none;
+    }
+
+    .form-control-feedback {
+      display: none;
+    }
   }
 
   .toggle-field-renderer {
@@ -183,6 +189,12 @@ $form-component-view-margin: $padding-base-vertical;
       .form-fields-group-renderer > .control-label {
         margin-bottom: $form-component-view-margin;
       }
+
+      &.textarea-field-renderer {
+        .control-label {
+          padding-top: $padding-base-vertical + 1;
+        }
+      }
     }
 
     .privileges-field {
@@ -225,6 +237,35 @@ $form-component-view-margin: $padding-base-vertical;
   .has-validation-icon {
     &.text-like-field-renderer input {
       padding-right: 3em;
+    }
+  }
+
+  .form-group-sm {
+    .field-component {
+      font-size: $font-size-small;
+    }
+
+    .loading-field {
+      .spinner-container {
+        position: relative;
+        // Pull up spinner to make it better aligned with text
+        top: -0.15em;
+      }
+    }
+
+    .one-way-toggle.form-control {
+      padding-left: 0;
+      height: auto;
+    }
+
+    .form-fields-collection-group {
+      .remove-field-button-container {
+        height: $input-height-small;
+      }
+
+      .remove-field-button {
+        margin-left: $padding-xs-horizontal;
+      }
     }
   }
 }

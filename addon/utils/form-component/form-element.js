@@ -237,7 +237,7 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { conditional, and, equal, raw, getBy, notEmpty, writable } from 'ember-awesome-macros';
+import { conditional, and, equal, raw, getBy, notEmpty, writable, or } from 'ember-awesome-macros';
 import { A } from '@ember/array';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 
@@ -360,6 +360,21 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @type {boolean}
    */
   isGroup: false,
+
+  /**
+   * Currently supported values: 'md', 'sm'.
+   * NOTE: Due to the styling strategy, all nested fields of the element, which has size
+   * 'sm', will be mostly rendered as small regardless their own size value.
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  size: writable(or('parent.sizeForChildren', raw('md'))),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  sizeForChildren: reads('size'),
 
   /**
    * CSS classes for field component, which are calculated internally by field
