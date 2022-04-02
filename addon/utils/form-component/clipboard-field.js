@@ -1,6 +1,6 @@
 /**
  * A static text form field.
- * 
+ *
  * @module utils/form-component/clipboard-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -27,4 +27,11 @@ export default StaticTextField.extend({
    * @type {number}
    */
   textareaRows: 5,
+
+  /**
+   * @virtual optional
+   * @type {String}
+   * Class for `clipboard-line` components.
+   */
+  clipboardLineClass: '',
 });
