@@ -53,12 +53,19 @@ export default {
       custom: 'Custom',
     },
     allPresetsUsed: 'All presets are already used.',
+    equivalentAlreadyExists: 'Metric with the same resolution already exists',
     fields: {
       id: {
         label: 'ID',
+        errors: {
+          notUnique: 'This ID is already used',
+        },
       },
       resolution: {
         label: 'Resolution',
+        errors: {
+          notUnique: 'This resolution is already used for selected aggregator',
+        },
       },
       retention: {
         label: 'Retention',

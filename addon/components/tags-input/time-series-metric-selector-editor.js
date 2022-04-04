@@ -1,9 +1,24 @@
+/**
+ * A tags (tokenizer) input editor, which allows to add tags using selector. There
+ * are two possibilites to add new tags: time series metric presets and custom metric
+ * form.
+ *
+ * It is forbidden to use the same resolution twice for the same aggregator. Also
+ * metric IDs must be unique.
+ *
+ * @module components/tags-input/time-series-metric-selector-editor
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
+import { validator } from 'ember-cp-validations';
 import layout from '../../templates/components/tags-input/time-series-metric-selector-editor';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import {
@@ -120,6 +135,8 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 export default Component.extend(I18n, {
   layout,
   classNames: ['tags-input-time-series-metric-selector-editor'],
+
+  i18n: service(),
 
   /**
    * @override
@@ -239,6 +256,25 @@ export default Component.extend(I18n, {
   ),
 
   /**
+   * @type {ComputedProperty<Set<string>>}
+   */
+  usedIds: computed('selectedTags.[]', function usedIds() {
+    return new Set(
+      (this.get('selectedTags') || []).map((tag) => get(tag, 'value.id'))
+    );
+  }),
+
+  /**
+   * Set with strings "aggregator-resolution" (e.g. "sum-3600")
+   * @type {ComputedProperty<Set<string>>}
+   */
+  usedResolutions: computed('selectedTags.[]', function usedResolutions() {
+    return new Set((this.get('selectedTags') || []).map((tag) =>
+      `${get(tag, 'value.aggregator')}-${get(tag, 'value.resolution')}`
+    ));
+  }),
+
+  /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
   fields: computed(function fields() {
@@ -250,7 +286,22 @@ export default Component.extend(I18n, {
       size: 'sm',
       fields: [
         TextField.create({
+          component: this,
           name: 'id',
+          customValidators: [
+            validator(function (value, options, model) {
+              if (!value) {
+                return true;
+              }
+              const field = get(model, 'field');
+              const usedIds = get(field, 'component.usedIds');
+              const errorMsg =
+                String(field.t(`${get(field, 'path')}.errors.notUnique`));
+              return usedIds.has(value) ? errorMsg : true;
+            }, {
+              dependentKeys: ['model.field.component.usedIds'],
+            }),
+          ],
         }),
         DropdownField.extend({
           options: computed(function options() {
@@ -261,8 +312,27 @@ export default Component.extend(I18n, {
             }));
           }),
         }).create({
+          component: this,
           name: 'resolution',
           defaultValue: metricResolutions[0].resolution,
+          customValidators: [
+            validator(function (value, options, model) {
+              if (!value) {
+                return true;
+              }
+              const field = get(model, 'field');
+              const usedResolutions = get(field, 'component.usedResolutions');
+              const aggregator = get(field, 'component.selectedAggregatorOption.value');
+              const errorMsg =
+                String(field.t(`${get(field, 'path')}.errors.notUnique`));
+              return usedResolutions.has(`${aggregator}-${value}`) ? errorMsg : true;
+            }, {
+              dependentKeys: [
+                'model.field.component.usedResolutions',
+                'model.field.component.selectedAggregatorOption.value',
+              ],
+            }),
+          ],
         }),
         NumberField.create({
           name: 'retention',
@@ -274,6 +344,16 @@ export default Component.extend(I18n, {
     });
   }),
 
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  popoverClickOutsideIgnoreSelector: computed(
+    'parentTagsInputSelector',
+    function popoverClickOutsideIgnoreSelector() {
+      return `${this.get('parentTagsInputSelector')}, .resolution-field-dropdown`;
+    }
+  ),
+
   selectedTagsObserver: observer(
     'selectedTags.[]',
     function selectedTagsObserver() {
@@ -284,13 +364,17 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
     this.set('selectedAggregatorOption', this.get('aggregatorOptions')[0]);
+    // Mark as modified to show selected resolution conflict from the beginning
+    this.get('fields').getFieldByPath('resolution').markAsModified();
   },
 
   didInsertElement() {
     this._super(...arguments);
 
     const parentTagsInput = this.get('element').closest('.tags-input');
-    this.set('parentTagsInputSelector', `#${parentTagsInput.id}`);
+    if (parentTagsInput) {
+      this.set('parentTagsInputSelector', `#${parentTagsInput.id}`);
+    }
   },
 
   repositionPopover() {
@@ -299,6 +383,9 @@ export default Component.extend(I18n, {
 
   actions: {
     tagSelected(tag) {
+      if (get(tag, 'isEquivalentAlreadySelected')) {
+        return;
+      }
       this.get('onTagsAdded')([tag]);
     },
     submitCustomMetric() {
@@ -329,6 +416,7 @@ export default Component.extend(I18n, {
         },
       });
       onTagsAdded([newTag]);
+      fields.getFieldByPath('id').reset();
     },
   },
 });

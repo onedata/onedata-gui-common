@@ -201,8 +201,13 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     border-radius: $border-radius-base;
     cursor: pointer;
 
-    &:hover {
+    &:not(.disabled):hover {
       background-color: darken($color-one-light-blue, 5%);
+    }
+
+    &.disabled {
+      color: $main-text-color-disabled;
+      cursor: not-allowed;
     }
 
     & ~ .selector-item {
@@ -258,7 +263,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
 .one-webui-popover.time-series-metric-selector {
   width: 250px;
-  height: 250px;
+  height: 275px;
 
   .ember-basic-dropdown,
   .btn-group {
