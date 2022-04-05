@@ -8,6 +8,9 @@ export default {
       },
       nameGenerator: {
         label: 'Name generator',
+        errors: {
+          notUnique: 'This field must be uniquely prefixed across all generators',
+        },
       },
       unit: {
         label: 'Unit',

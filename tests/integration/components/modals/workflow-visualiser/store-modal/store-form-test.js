@@ -483,11 +483,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await selectChoose('.nameGeneratorType-field', 'Exact');
       await fillIn('.nameGenerator-field .form-control', 'some_name');
       await selectChoose('.unit-field', 'Bytes');
-      await click('.metrics-add-field-button');
-      await fillIn('.metric-field .id-field .form-control', 'someId');
-      await selectChoose('.metric-field .aggregator-field', 'Sum');
-      await selectChoose('.metric-field .resolution-field', '1 hour');
-      await fillIn('.metric-field .retention-field .form-control', '200');
+      await click('.metrics-field .tag-creator-trigger');
+      await click('.tags-selector .selector-item');
 
       expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
@@ -501,10 +498,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               nameGenerator: 'some_name',
               unit: 'bytes',
               metrics: {
-                someId: {
+                sum5s: {
                   aggregator: 'sum',
-                  resolution: 60 * 60,
-                  retention: 200,
+                  resolution: 5,
+                  retention: 1440,
                 },
               },
             }],
@@ -649,10 +646,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             nameGenerator: 'some_name',
             unit: 'bytes',
             metrics: {
-              someId: {
+              sum5s: {
                 aggregator: 'sum',
-                resolution: 60 * 60,
-                retention: 200,
+                resolution: 5,
+                retention: 1440,
               },
             },
           }],
@@ -674,13 +671,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(find('.nameGenerator-field .form-control').value).to.equal('some_name');
       expect(find('.unit-field .dropdown-field-trigger').textContent)
         .to.contain('Bytes');
-      expect(findAll('.metric-field')).to.have.length(1);
-      expect(find('.metric-field .id-field .form-control').value).to.equal('someId');
-      expect(find('.metric-field .aggregator-field .dropdown-field-trigger').textContent)
-        .to.contain('Sum');
-      expect(find('.metric-field .resolution-field .dropdown-field-trigger').textContent)
-        .to.contain('1 hour');
-      expect(find('.metric-field .retention-field .form-control').value).to.equal('200');
+      expect(findAll('.metrics-field .tag-item')).to.have.length(1);
+      expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
       done();
     });
 
@@ -825,10 +817,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             nameGenerator: 'some_name',
             unit: 'bytes',
             metrics: {
-              someId: {
+              sum5s: {
                 aggregator: 'sum',
-                resolution: 60 * 60,
-                retention: 200,
+                resolution: 5,
+                retention: 1440,
               },
             },
           }],
@@ -851,13 +843,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(find('.nameGenerator-field .field-component').textContent).to.contain('some_name');
       expect(find('.unit-field .field-component').textContent)
         .to.contain('Bytes');
-      expect(findAll('.metric-field')).to.have.length(1);
-      expect(find('.metric-field .id-field .field-component').textContent).to.contain('someId');
-      expect(find('.metric-field .aggregator-field .field-component').textContent)
-        .to.contain('Sum');
-      expect(find('.metric-field .resolution-field .field-component').textContent)
-        .to.contain('1 hour');
-      expect(find('.metric-field .retention-field .field-component').textContent).to.contain('200');
+      expect(findAll('.metrics-field .tag-item')).to.have.length(1);
+      expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
       done();
     });
 

@@ -183,6 +183,30 @@ describe('Integration | Utility | atm workflow/store config editor/time series',
     expect(find('.customUnit-field.has-error')).to.exist;
   });
 
+  it('marks two name generators as conflicted in case of common prefix', async function () {
+    await renderForm(this);
+
+    await click('.add-field-button');
+    await fillIn('.nameGenerator-field .form-control', 'abc');
+    await click('.add-field-button');
+    await fillIn('.collection-item:nth-child(2) .nameGenerator-field .form-control', 'ab');
+
+    expect(findAll('.nameGenerator-field.has-error')).to.have.length(2);
+    expect(find('.nameGenerator-field .field-message').textContent.trim())
+      .to.equal('This field must be uniquely prefixed across all generators');
+  });
+
+  it('marks two name generators as conflicted in case of the same trimmed value', async function () {
+    await renderForm(this);
+
+    await click('.add-field-button');
+    await fillIn('.nameGenerator-field .form-control', 'abc  ');
+    await click('.add-field-button');
+    await fillIn('.collection-item:nth-child(2) .nameGenerator-field .form-control', '  abc');
+
+    expect(findAll('.nameGenerator-field.has-error')).to.have.length(2);
+  });
+
   it('marks empty metrics field as invalid', async function () {
     await renderForm(this);
 

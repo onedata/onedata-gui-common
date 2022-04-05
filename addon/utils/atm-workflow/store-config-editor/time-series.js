@@ -9,8 +9,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { set, get, getProperties, computed } from '@ember/object';
+import { set, get, getProperties, computed, observer, defineProperty } from '@ember/object';
 import { eq, raw } from 'ember-awesome-macros';
+import { validator } from 'ember-cp-validations';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
@@ -35,6 +36,33 @@ const formElement = FormFieldsCollectionGroup.extend({
   i18nPrefix: 'utils.atmWorkflow.storeConfigEditor.timeSeries.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
+  usedNameGeneratorsSetter: observer(
+    'value.__fieldsValueNames',
+    function usedNameGeneratorsSetter() {
+      const namePropsPaths = (this.get('value.__fieldsValueNames') || [])
+        .map(entryValueName => `value.${entryValueName}.nameGenerator`);
+      defineProperty(
+        this,
+        'usedNameGenerators',
+        computed(...namePropsPaths, function usedNameGenerators() {
+          return namePropsPaths.map((propPath) => this.get(propPath))
+            .map((name) => (name || '').trim()).filter(Boolean);
+        })
+      );
+
+      // Fixes scenario:
+      // 1. Form is rendered with single time series generator.
+      // 2. User focuses name generator.
+      // 3. User creates new time series and enters only one letter into name generator
+      // that introduces conflict.
+      // Without `notifyPropertyChange` first name generator is still valid.
+      this.notifyPropertyChange('usedNameGenerators');
+    }
+  ),
+  init() {
+    this._super(...arguments);
+    this.usedNameGeneratorsSetter();
+  },
   fieldFactoryMethod(uniqueFieldValueName) {
     const newField = FormFieldsGroup.create({
       name: 'timeSeriesSchema',
@@ -54,6 +82,25 @@ const formElement = FormFieldsCollectionGroup.extend({
         }),
         TextField.create({
           name: 'nameGenerator',
+          customValidators: [
+            validator(function (value, options, model) {
+              const trimmedValue = (value || '').trim();
+              if (!trimmedValue) {
+                return true;
+              }
+              const field = get(model, 'field');
+              const errorMsg = String(field.getTranslation('errors.notUnique'));
+              const usedNameGenerators = get(model, 'field.parent.parent.usedNameGenerators');
+              return usedNameGenerators
+                .map((usedNameGenerator) => usedNameGenerator.trim())
+                .filter((usedNameGenerator) =>
+                  usedNameGenerator.startsWith(trimmedValue) ||
+                  trimmedValue.startsWith(usedNameGenerator)
+                ).length <= 1 ? true : errorMsg;
+            }, {
+              dependentKeys: ['model.field.parent.parent.usedNameGenerators'],
+            }),
+          ],
         }),
         DropdownField.extend({
           options: computed(function options() {
@@ -75,6 +122,7 @@ const formElement = FormFieldsCollectionGroup.extend({
         TagsField.create({
           name: 'metrics',
           tagEditorComponentName: 'tags-input/time-series-metric-selector-editor',
+          defaultValue: [],
           sort: true,
           valueToTags(value) {
             return (value || []).map((singleValue) => MetricTag.create({
@@ -144,7 +192,7 @@ function formValuesToStoreConfig(values) {
         rawTimeSeriesSchema.unit = formUnit;
       }
 
-      rawTimeSeriesSchema.metrics = formMetrics.reduce((acc, metric) => {
+      rawTimeSeriesSchema.metrics = (formMetrics || []).reduce((acc, metric) => {
         acc[metric.id] = {
           aggregator: metric.aggregator,
           resolution: metric.resolution,
