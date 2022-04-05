@@ -14,8 +14,8 @@ import { eq, raw } from 'ember-awesome-macros';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
-import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
+import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import {
   customUnit,
   customUnitsPrefix,
@@ -25,12 +25,10 @@ import {
 import {
   nameGeneratorTypes,
   metricAggregators,
-  metricResolutions,
   translateNameGeneratorType,
-  translateMetricResolution,
-  translateMetricAggregator,
 } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
 const formElement = FormFieldsCollectionGroup.extend({
   classes: 'time-series-store-config-editor',
@@ -74,52 +72,36 @@ const formElement = FormFieldsCollectionGroup.extend({
         }).create({
           name: 'customUnit',
         }),
-        FormFieldsCollectionGroup.extend({
-          fieldFactoryMethod(uniqueFieldValueName2) {
-            const newField = FormFieldsGroup.create({
-              name: 'metric',
-              valueName: uniqueFieldValueName2,
-              fields: [
-                TextField.create({
-                  name: 'id',
-                }),
-                DropdownField.extend({
-                  options: computed(function options() {
-                    const i18n = this.get('i18n');
-                    return metricAggregators.map((aggregator) => ({
-                      value: aggregator,
-                      label: translateMetricAggregator(i18n, aggregator),
-                    }));
-                  }),
-                }).create({
-                  name: 'aggregator',
-                  defaultValue: metricAggregators[0],
-                }),
-                DropdownField.extend({
-                  options: computed(function options() {
-                    const i18n = this.get('i18n');
-                    return metricResolutions.map(({ name, resolution }) => ({
-                      value: resolution,
-                      label: translateMetricResolution(i18n, name),
-                    }));
-                  }),
-                }).create({
-                  name: 'resolution',
-                  defaultValue: metricResolutions[0].resolution,
-                }),
-                NumberField.create({
-                  name: 'retention',
-                  gte: 1,
-                  integer: true,
-                  defaultValue: '1000',
-                }),
-              ],
-            });
-            newField.changeMode(this.get('mode'));
-            return newField;
-          },
-        }).create({
+        TagsField.create({
           name: 'metrics',
+          tagEditorComponentName: 'tags-input/time-series-metric-selector-editor',
+          sort: true,
+          valueToTags(value) {
+            return (value || []).map((singleValue) => MetricTag.create({
+              ownerSource: this,
+              value: singleValue,
+            }));
+          },
+          tagsToValue(tags) {
+            return tags.mapBy('value');
+          },
+          sortTags(tags) {
+            return tags.sort((tagA, tagB) => {
+              const {
+                aggregator: aAgg,
+                resolution: aRes,
+              } = get(tagA, 'value');
+              const {
+                aggregator: bAgg,
+                resolution: bRes,
+              } = get(tagB, 'value');
+              if (aAgg !== bAgg) {
+                return metricAggregators.indexOf(aAgg) - metricAggregators.indexOf(bAgg);
+              } else {
+                return aRes - bRes;
+              }
+            });
+          },
         }),
       ],
     });
@@ -162,29 +144,14 @@ function formValuesToStoreConfig(values) {
         rawTimeSeriesSchema.unit = formUnit;
       }
 
-      rawTimeSeriesSchema.metrics = {};
-      get(formMetrics, '__fieldsValueNames')
-        .map((valueName) => get(formMetrics, valueName))
-        .filter(Boolean)
-        .map((metricValue) => {
-          const {
-            id,
-            aggregator,
-            resolution,
-            retention,
-          } = getProperties(
-            metricValue,
-            'id',
-            'aggregator',
-            'resolution',
-            'retention'
-          );
-          rawTimeSeriesSchema.metrics[id] = {
-            aggregator,
-            resolution,
-            retention: Number.parseInt(retention),
-          };
-        });
+      rawTimeSeriesSchema.metrics = formMetrics.reduce((acc, metric) => {
+        acc[metric.id] = {
+          aggregator: metric.aggregator,
+          resolution: metric.resolution,
+          retention: metric.retention,
+        };
+        return acc;
+      }, {});
 
       return rawTimeSeriesSchema;
     });
@@ -231,23 +198,12 @@ function storeConfigToFormValues(storeConfig) {
       timeSeriesSchemaValue.unit = unit;
     }
 
-    const metricFieldsValueNames = [];
-    const metricValues = createValuesContainer({
-      __fieldsValueNames: metricFieldsValueNames,
-    });
-    sortMetricValuesArray(
-      Object.keys(metrics || []).map((id) => createValuesContainer({
-        id,
-        aggregator: metrics[id].aggregator,
-        resolution: metrics[id].resolution,
-        retention: String(metrics[id].retention),
-      }))
-    ).forEach((metricValue, idx) => {
-      const metricFormGroupName = `metric${idx}`;
-      set(metricValues, metricFormGroupName, metricValue);
-      metricFieldsValueNames.push(metricFormGroupName);
-    });
-    timeSeriesSchemaValue.metrics = metricValues;
+    timeSeriesSchemaValue.metrics = Object.keys(metrics || {}).map((metricId) => ({
+      id: metricId,
+      aggregator: metrics[metricId].aggregator,
+      resolution: metrics[metricId].resolution,
+      retention: metrics[metricId].retention,
+    }));
 
     set(values, seriesFormGroupName, createValuesContainer(timeSeriesSchemaValue));
     seriesFieldsValueNames.push(seriesFormGroupName);
@@ -260,22 +216,3 @@ export default {
   formValuesToStoreConfig,
   storeConfigToFormValues,
 };
-
-function sortMetricValuesArray(metricValuesArray) {
-  return metricValuesArray.sort((a, b) => {
-    const {
-      aggregator: aAgg,
-      resolution: aRes,
-    } = getProperties(a, 'aggregator', 'resolution');
-    const {
-      aggregator: bAgg,
-      resolution: bRes,
-    } = getProperties(b, 'aggregator', 'resolution');
-
-    if (aAgg !== bAgg) {
-      return metricAggregators.indexOf(aAgg) - metricAggregators.indexOf(bAgg);
-    } else {
-      return aRes - bRes;
-    }
-  });
-}

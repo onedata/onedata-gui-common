@@ -289,7 +289,39 @@ describe('Integration | Component | tags input/time series metric selector edito
       expect(find('.resolution-field .field-message')).to.not.exist;
     });
 
-  it('disabled presets when custom conflicting tags exists', async function () {
+  it('marks metric ID and metric retention as invalid, when empty', async function () {
+    this.render(hbs `{{tags-input
+      tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+    }}`);
+
+    await click('.tag-creator-trigger');
+    await click('.btn-custom');
+    await fillIn('.id-field .form-control', '');
+    await fillIn('.retention-field .form-control', '');
+
+    expect(find('.id-field.has-error')).to.exist;
+    expect(find('.retention-field.has-error')).to.exist;
+  });
+
+  it('marks metric retention as invalid, when float or negative or 0', async function () {
+    this.render(hbs `{{tags-input
+      tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+    }}`);
+
+    await click('.tag-creator-trigger');
+    await click('.btn-custom');
+
+    await fillIn('.retention-field .form-control', '0.5');
+    expect(find('.retention-field.has-error')).to.exist;
+
+    await fillIn('.retention-field .form-control', '-1');
+    expect(find('.retention-field.has-error')).to.exist;
+
+    await fillIn('.retention-field .form-control', '0');
+    expect(find('.retention-field.has-error')).to.exist;
+  });
+
+  it('disables presets when custom conflicting tags exists', async function () {
     this.render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/time-series-metric-selector-editor"

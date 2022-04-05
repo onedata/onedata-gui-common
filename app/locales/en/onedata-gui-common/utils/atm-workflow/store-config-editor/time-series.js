@@ -16,21 +16,7 @@ export default {
         label: 'Custom unit name',
       },
       metrics: {
-        addButtonText: 'Add metric',
-        metric: {
-          id: {
-            label: 'Id',
-          },
-          aggregator: {
-            label: 'Aggregator',
-          },
-          resolution: {
-            label: 'Resolution',
-          },
-          retention: {
-            label: 'Retention',
-          },
-        },
+        label: 'Metrics',
       },
     },
   },
