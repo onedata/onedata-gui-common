@@ -1,6 +1,5 @@
 # dependencies
-/node_modules
-/bower_components
+node_modules
 
 # ember-try
 .node_modules.ember-try/
@@ -11,13 +10,14 @@ package.json.ember-try
 **/test-results.xml
 
 # compilation and build output
-/dist
-/src/dist
-/tmp
-/src/tmp
-rel
+/dist/
+/src/dist/
+/tmp/
+/src/tmp/
+/rel/
+/src/rel/
 gui_static.tar.gz
-gui_static
+gui_static/
 
 # docker image artefact
 docker-build-list.json
@@ -35,10 +35,10 @@ jsconfig.json
 typings/
 
 # misc
-**/.sass-cache
-**/connect.lock
-**/coverage/*
-**/libpeerconnection.log
-**/npm-debug.log*
-**/yarn-error.log
-**/testem.log
+.sass-cache
+connect.lock
+coverage/*
+libpeerconnection.log
+npm-debug.log*
+yarn-error.log
+testem.log
