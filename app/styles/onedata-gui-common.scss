@@ -20,6 +20,7 @@ $letter-spacing-base: 0.07em;
 $control-box-shadow: inset 1px 1px 2px $color-one-semiwhite;
 $control-box-shadow-focus: inset 0 1px 1px $color-one-semiwhite, 0 0 8px rgba($color-one-blue-gray, 0.2);
 $control-focus-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+$control-padding-small-horizontal: 0.8em;
 
 $color-main-menu-bg: $color-one-semiblack;
 $color-sidebar-background: $color-one-semiwhite;
@@ -95,6 +96,7 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/utils/embedded-iframe';
 @import 'onedata-gui-common/utils/task-resources-fields';
 @import 'onedata-gui-common/utils/atm-workflow/data-spec-editor/time-series-measurements';
+@import 'onedata-gui-common/utils/atm-workflow/store-config-editor/time-series';
 
 // Components
 

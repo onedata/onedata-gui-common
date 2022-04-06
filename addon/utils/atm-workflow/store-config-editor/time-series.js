@@ -32,7 +32,8 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
 const formElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-store-config-editor',
+  classes: 'time-series-store-config-editor nowrap-on-desktop',
+  sizeForChildren: 'sm',
   i18nPrefix: 'utils.atmWorkflow.storeConfigEditor.timeSeries.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',

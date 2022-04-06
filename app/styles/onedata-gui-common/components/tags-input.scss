@@ -57,6 +57,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     border: $tags-input-tag-border;
     border-radius: $border-radius-base;
     background-color: $color-one-light-blue;
+    min-width: 0;
 
     &.tag-item-plaintext {
       // @include font-semibold();
@@ -172,6 +173,21 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
   .tags-input-external-editor {
     margin: 0;
+  }
+}
+
+.form-group-sm .tags-input {
+  height: initial;
+  min-height: $input-height-small;
+  padding-bottom: 0;
+  line-height: 1.2;
+
+  .input-element {
+    margin-bottom: $padding-small-vertical;
+  }
+
+  .tag-item {
+    padding: 3px;
   }
 }
 

@@ -53,6 +53,8 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 
   &.small {
+    font-size: $font-size-small;
+
     // see .ember-power-select-trigger.small.text-like
     &.text-like {
       font-size: inherit;
@@ -77,6 +79,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
   }
 
   &.small {
+    font-size: $font-size-small;
     display: flex;
     align-items: center;
     .ember-power-select-selected-item {
@@ -92,7 +95,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
         }
       }
     }
-    
+
     // a special style to render selector like text with selector decorations
     // on hover and active
     // implemented only for small, because large (normal) makes no graphical sense
@@ -117,7 +120,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
       }
       &.ember-power-select-trigger {
         .ember-power-select-selected-item {
-          margin-left: -$ember-power-select-border-width; 
+          margin-left: -$ember-power-select-border-width;
         }
       }
       .ember-power-select-status-icon {
@@ -166,7 +169,7 @@ $ember-power-select-option-small-padding: $ember-power-select-option-small-paddi
       }
     }
   }
-  
+
   .form-group-sm & {
     @extend .small;
   }
