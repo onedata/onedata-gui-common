@@ -100,6 +100,13 @@ export default ArrayProxy.extend({
   },
 
   /**
+   * @override
+   */
+  pushObject(obj) {
+    return this.get('sourceArray').pushObject(obj);
+  },
+
+  /**
    * @override 
    */
   replace(idx, amt, objects) {

@@ -18,6 +18,44 @@ const ArraySum = EmberObject.extend({
 });
 
 describe('Unit | Utility | array slice', function () {
+  it('adds an item using pushObject', function () {
+    const sourceArrayTemplate = _.range(0, 10);
+
+    const startIndex = 0;
+    const endIndex = 20;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    as.pushObject('x');
+
+    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x']);
+  });
+
+  it('adds an item using pushObject', function () {
+    const sourceArrayTemplate = _.range(0, 10);
+
+    const startIndex = 0;
+    const endIndex = 20;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    as.pushObject('x');
+
+    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x']);
+  });
+
   it('exposes array containing slice of original array', function () {
     const sourceArray = A(_.range(0, 100));
 
