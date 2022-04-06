@@ -1,6 +1,6 @@
 /**
  * An array proxy that exposes only selected slice of real EmberArray.
- * 
+ *
  * See tests for usage examples.
  *
  * @module utils/array-slice
@@ -93,6 +93,15 @@ export default ArrayProxy.extend({
 
   init() {
     this._super(...arguments);
+    [
+      'insertAt',
+      'removeAt',
+      'setObjects',
+      'unshiftObject',
+      'unshiftObjects',
+    ].forEach(methodName => {
+      this.overrideAsNotImplemented(methodName);
+    });
     // activate observers
     this.getProperties('_start', '_end');
     this._startChanged();
@@ -100,6 +109,8 @@ export default ArrayProxy.extend({
   },
 
   /**
+   * Will push object to the end of sourceArray, no matter if current slice spans across
+   * the end of sourceArray.
    * @override
    */
   pushObject(obj) {
@@ -107,7 +118,29 @@ export default ArrayProxy.extend({
   },
 
   /**
-   * @override 
+   * Will push objects to the end of sourceArray, no matter if current slice spans across
+   * the end of sourceArray.
+   * @override
+   */
+  pushObjects(objects) {
+    return this.get('sourceArray').pushObjects(objects);
+  },
+
+  /**
+   * @override
+   */
+  slice(begin, end) {
+    const sourceArray = this.get('sourceArray');
+    const effBegin = typeof begin === 'number' ? this._translateIndex(begin) : undefined;
+    let effEnd = typeof end === 'number' ? this._translateIndex(end) : undefined;
+    if (effEnd === -1 || !effEnd) {
+      effEnd = this.get('length');
+    }
+    return sourceArray.slice(effBegin, effEnd);
+  },
+
+  /**
+   * @override
    */
   replace(idx, amt, objects) {
     const sourceArray = this.get('sourceArray');
@@ -125,7 +158,7 @@ export default ArrayProxy.extend({
   },
 
   /**
-   * @override 
+   * @override
    */
   length: computed('_start', '_end', function () {
     const {
@@ -180,5 +213,13 @@ export default ArrayProxy.extend({
     );
     const translatedIndex = _start + index;
     return translatedIndex > _end ? -1 : translatedIndex;
+  },
+
+  overrideAsNotImplemented(methodName) {
+    this[methodName] = () => {
+      throw new Error(
+        `"${methodName}" method is not implemented in array-slice - you can use this method directly on arraySource if needed, considering index translations`
+      );
+    };
   },
 });
