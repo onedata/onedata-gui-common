@@ -54,6 +54,11 @@ const formElement = FormFieldsCollectionGroup.extend({
   translationPath: '',
 
   /**
+   * @override
+   */
+  sizeForChildren: 'sm',
+
+  /**
    * @type {ComputedProperty<Array<TimeSeriesMeasurementsSpec>>}
    */
   measurementSpecs: reads('contentUpdateDataSpec.valueConstraints.specs'),
@@ -105,7 +110,6 @@ const formElement = FormFieldsCollectionGroup.extend({
               label: translatePrefixCombiner(i18n, prefixCombiner),
             }));
           }),
-          defaultValue: reads('options.firstObject.value'),
           isVisible: computed(
             'parent.parent.generatorSchemas.[]',
             'parent.value.{measurementNameMatcher,timeSeriesNameGenerator}',
@@ -122,6 +126,7 @@ const formElement = FormFieldsCollectionGroup.extend({
           ),
         }).create({
           name: 'prefixCombiner',
+          defaultValue: 'overwrite',
         }),
       ],
     });

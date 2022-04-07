@@ -1,6 +1,6 @@
 .task-resources-fields {
   .resource-section .form-fields-group .control-label {
-    font-size: 85%;
+    font-size: $font-size-small;
   }
 
   @media (min-width: $screen-sm-min) {

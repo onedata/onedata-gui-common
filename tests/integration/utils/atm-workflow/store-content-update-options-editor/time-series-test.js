@@ -138,7 +138,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
     expect(find('.prefixCombiner-field .control-label').textContent)
       .to.contain('Prefix combiner:');
     expect(find('.prefixCombiner-field .dropdown-field-trigger').textContent)
-      .to.contain('Concatenate');
+      .to.contain('Overwrite');
   });
 
   it('has correct list of available measurement time series', async function () {

@@ -1,5 +1,7 @@
 export default {
   fields: {
+    label: 'Dispatch rules',
+    addButtonText: 'Add dispatch rule',
     dispatchRule: {
       measurementNameMatcher: {
         label: 'Measurement time series',
