@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * A component that generates forms in the form of a tree using tree structure
  * definition in json format. For more information about definition format see

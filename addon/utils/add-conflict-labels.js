@@ -1,3 +1,7 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+/* eslint-disable max-len */
+
 /**
  * A function that adds a ``conflictLabel`` property for each conflicting record
  * in some array.

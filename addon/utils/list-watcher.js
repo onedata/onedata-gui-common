@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Instance of this class is bound to some `$container`.
  * When scrolling the container, we check which of elements (filtered by selector)
@@ -13,8 +16,8 @@ import ViewTester from 'onedata-gui-common/utils/view-tester';
 
 export default class ListWatcher {
   /**
-   * @param {jQuery} $container 
-   * @param {String} itemsSelector 
+   * @param {jQuery} $container
+   * @param {String} itemsSelector
    * @param {(visibleElements: Element[], headerVisible: boolean, event: Event) => undefined} callback
    */
   constructor($container, itemsSelector, callback, topSelector) {

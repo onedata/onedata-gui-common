@@ -1,7 +1,10 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * A service that provides method to extract error messages from passed backend
  * errors.
- * 
+ *
  * @module services/error-extractor
  * @author Michał Borzęcki
  * @copyright (C) 2018-2019 ACK CYFRONET AGH
@@ -21,7 +24,7 @@ export default Service.extend({
    */
   extractorFunction: getErrorDescription,
 
-  /** 
+  /**
    * @returns {object} `{ message: SafeString,  errorJsonString: SafeString }`
    */
   getMessage(error) {
@@ -34,7 +37,7 @@ export default Service.extend({
 
   /**
    * @param {*} error
-   * @returns {string} 
+   * @returns {string}
    */
   getType(error) {
     const errorId = (error || {}).id;

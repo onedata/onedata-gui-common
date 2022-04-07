@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Sorts the (Ember) objects of array in place by given property and place
  * default object in first place of array using entityId (if present).
@@ -11,8 +14,8 @@
 import { get } from '@ember/object';
 
 /**
- * 
- * @param {Array<any>} array 
+ *
+ * @param {Array<any>} array
  * @param {string} defaultEntityId
  * @param {string} [property]
  */

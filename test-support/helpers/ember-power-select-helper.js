@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 import { click } from 'ember-native-dom-helpers';
 
 /**
@@ -43,8 +46,8 @@ export default class EmberPowerSelectHelper {
   }
 
   /**
-   * @param {number} index 
-   * @param {function} callback 
+   * @param {number} index
+   * @param {function} callback
    */
   selectOption(index, callback) {
     return this.open()

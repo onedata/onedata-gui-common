@@ -1,3 +1,7 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+/* eslint-disable valid-jsdoc */
+
 /**
  * Common application route procedures in every Onedata web GUI
  *

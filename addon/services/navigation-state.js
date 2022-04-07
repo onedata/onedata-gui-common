@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * A global state of page navigation. Accumulates data about active content and
  * aspect, generates proper global bar titles, active content level and manages

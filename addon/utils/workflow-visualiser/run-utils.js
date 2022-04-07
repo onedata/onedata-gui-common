@@ -27,9 +27,8 @@ export const inAdvanceRunNumber = 'inAdvance';
 export function runsRegistryToSortedArray(runsRegistry) {
   const runsArr = Object.values(runsRegistry || {}).uniqBy('runNumber');
 
-  let runsArrWithoutRunInAdvance;
   const runInAdvance = runsArr.findBy('runNumber', inAdvanceRunNumber);
-  runsArrWithoutRunInAdvance = runInAdvance ?
+  const runsArrWithoutRunInAdvance = runInAdvance ?
     runsArr.without(runInAdvance) : runsArr;
 
   const sortedRuns = runsArrWithoutRunInAdvance.sortBy('runNumber');

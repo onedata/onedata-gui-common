@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * A mixin that provides fields tree operations for the one-dynamic-tree
  * component. To store data about fields, a tree data structure is used.

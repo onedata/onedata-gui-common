@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 import { click, focus } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import $ from 'jquery';

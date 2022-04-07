@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 /**
  * A form responsible for showing and editing/creating stores. It does not persists
  * data. Any changes are yielded using `onChange` callback.

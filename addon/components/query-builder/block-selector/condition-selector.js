@@ -1,7 +1,10 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Provides controls to select condition parameters - property, comparator and
  * comparator value.
- * 
+ *
  * @module components/query-builder/block-selector/condition-selector
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -171,7 +174,7 @@ export default Component.extend(...mixins, {
   },
 
   /**
-   * @param {String} comparator 
+   * @param {String} comparator
    */
   conditionComparatorChanged(comparator) {
     this.set('selectedConditionComparator', comparator);
@@ -192,21 +195,21 @@ export default Component.extend(...mixins, {
 
   actions: {
     /**
-     * @param {QueryProperty} queryProperty 
+     * @param {QueryProperty} queryProperty
      */
     conditionPropertyChanged(queryProperty) {
       return this.conditionPropertyChanged(queryProperty);
     },
 
     /**
-     * @param {String} comparator 
+     * @param {String} comparator
      */
     conditionComparatorChanged(comparator) {
       return this.conditionComparatorChanged(comparator);
     },
 
     /**
-     * @param {any} value 
+     * @param {any} value
      */
     conditionComparatorValueChanged(value) {
       return this.conditionComparatorValueChanged(value);

@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * Plugin for Chartist which shorten horizontal grid to the specified height and place it in the middle of the x axis.
  *

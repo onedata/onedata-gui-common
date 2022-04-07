@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * A component used by one-tree. It represents item of a tree. Yields content and
  * subtree components. Example of usage can be found in one-tree component comments.

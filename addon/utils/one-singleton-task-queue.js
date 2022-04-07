@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Ordered queue of tasks, which can hold only one task of specified type until the task
  * of a speficied type is completed. Supports asynchronous tasks.

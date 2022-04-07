@@ -1,35 +1,38 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Creates mixin that will add methods and properties that provide data
  * got from some promise.
- * 
+ *
  * You should provide `fetch` method or implement `fetchName` method in object
  * that will return Promise that resolves data.
- * 
+ *
  * Properties and methods added to object - data will be replaced with provided
  * `name` (eg. `updateDataProxy` -> `updateSomeNameProxy`):
- * 
+ *
  * ```
  * // creates proxy using `fetchData` or replaces content of proxy
  * updatePropertyNameProxy({ replace: boolean, fetchArgs: Array }): Promise<T>
- * 
+ *
  * // implement or provide `fetch`, do actual data fetching
  * fetchPropertyName(fetchArgs): Promise<T>
- * 
+ *
  * // PromiseObject with data, can be undefined if `updateDataProxy` or
  * // `getDataProxy` was not invoked yet; PLEASE DO NOT USE IT DIRECTLY,
  * // use `propertyNameProxy` (without underscore) instead
  * _propertyNameProxy: PromiseObject<T>
- * 
+ *
  * // get PromiseObject with data, and initialize it if getting first time
  * propertyNameProxy: ComputedProperty<PromiseObject<T>>
- * 
+ *
  * // object with data, can be undefined if data not yet fetched or rejected
  * propertyName: T
- * 
+ *
  * // returns dataProxy or creates it when not created yet
  * getPropertyNameProxy({ reload: boolean, fetchArgs: Array }): PromiseObject<T>
  * ```
- * 
+ *
  * @module utils/create-data-proxy-mixin
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH

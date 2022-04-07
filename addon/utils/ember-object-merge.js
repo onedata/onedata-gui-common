@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Copy properites from source to destination EmberObject, overwriting
  * properties that are both in source and desitination.
@@ -16,7 +19,7 @@ import { setProperties } from '@ember/object';
  * @export
  * WARNING: it will make plain objects from nested Ember Objects!
  * @param {Ember.Object} dest
- * @param {Ember.Object} source 
+ * @param {Ember.Object} source
  * @returns {Ember.Object} returns source with modified properties
  */
 export default function emberObjectMerge(dest, source, deep = true) {

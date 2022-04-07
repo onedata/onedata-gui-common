@@ -1,3 +1,7 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+/* eslint-disable valid-jsdoc */
+
 /**
  * Array that fetches additional chunks of data if requesting indices
  * that are not currently loaded

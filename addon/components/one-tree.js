@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * A component that displays content using nested lists - tree view.
  * Yields item components, which yields content and subtree components.

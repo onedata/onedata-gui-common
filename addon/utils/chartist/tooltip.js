@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * Plugin for Chartist which adds tooltip. For bar and line charts tooltip
  * creates description based on chartist legend and values. For pie chart data for tooltip is

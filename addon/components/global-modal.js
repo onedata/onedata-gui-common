@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Renders special instance of one-modal, which uses state of modalManager service
  * to control itself.

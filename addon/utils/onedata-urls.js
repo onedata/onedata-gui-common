@@ -1,6 +1,9 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable valid-jsdoc */
+
 /**
  * Common utils for manipulating URLs used by Onedata unified and non-unified GUI.
- * 
+ *
  * @module utils/onedata-urls
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
@@ -25,7 +28,7 @@ function normalizeEmberPath(emberPath) {
 }
 
 /**
- * @param {string} origin 
+ * @param {string} origin
  * @param {string} emberPath must be path **without** leading slash, it will be
  *  automatically trimmed
  */
