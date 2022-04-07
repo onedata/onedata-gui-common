@@ -31,6 +31,7 @@ const formElement = FormFieldsCollectionGroup.extend({
   i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurements.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
+  sizeForChildren: 'sm',
   fieldFactoryMethod(uniqueFieldValueName) {
     return FormFieldsGroup.create({
       name: 'measurementSpec',
