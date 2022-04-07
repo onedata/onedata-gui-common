@@ -1,5 +1,5 @@
 // TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/require-returns */
 
 /**
  * Is responsible for creating actions used by workflow visualiser. This abstraction

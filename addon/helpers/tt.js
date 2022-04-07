@@ -1,5 +1,5 @@
 // TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/require-returns */
 
 /**
  * Extends `ember-i18n` `t` helper by using translation prefix provided by

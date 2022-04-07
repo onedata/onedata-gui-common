@@ -1,5 +1,5 @@
 // TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/require-returns */
 
 /**
  * A component that generates forms in the form of a tree using tree structure

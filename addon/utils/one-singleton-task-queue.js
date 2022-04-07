@@ -1,5 +1,5 @@
 // TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/require-returns */
 
 /**
  * Ordered queue of tasks, which can hold only one task of specified type until the task

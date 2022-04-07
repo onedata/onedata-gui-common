@@ -1,6 +1,6 @@
 // TODO: VFS-9257 fix eslint issues in this file
 /* eslint-disable no-param-reassign */
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/require-returns */
 
 /**
  * A mixin that provides 'select all' functionality to the one-dynamic-tree component.

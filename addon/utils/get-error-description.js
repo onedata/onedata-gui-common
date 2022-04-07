@@ -91,7 +91,7 @@ const detailsTranslateFunctions = {
  * @export
  * @param {object} error
  * @param {object} i18n
- * @return {object}
+ * @returns {object}
  */
 export default function getErrorDescription(error, i18n) {
   let message;

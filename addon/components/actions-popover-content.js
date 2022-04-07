@@ -44,7 +44,7 @@ export default Component.extend(I18n, {
 
   /**
    * @type {function}
-   * @return {undefined}
+   * @returns {undefined}
    */
   actionClicked: () => {},
 

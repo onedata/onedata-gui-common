@@ -135,7 +135,7 @@ export default OnePieChart.extend({
   /**
    * Returns size as a string.
    * @param {number} value A size.
-   * @return {string} A size string representation.
+   * @returns {string} A size string representation.
    */
   formatValue(value) {
     return bytesToString(value, { iecFormat: true });

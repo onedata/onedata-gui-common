@@ -1,5 +1,5 @@
 // TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable valid-jsdoc */
+/* eslint-disable jsdoc/require-returns */
 
 import { validator } from 'ember-cp-validations';
 import { computed, get, getProperties } from '@ember/object';

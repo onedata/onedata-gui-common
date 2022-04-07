@@ -266,7 +266,7 @@ export default Component.extend({
   /**
    * Returns value as a string.
    * @param {number} value A value.
-   * @return {string} A value string.
+   * @returns {string} A value string.
    */
   formatValue(value) {
     return String(value);

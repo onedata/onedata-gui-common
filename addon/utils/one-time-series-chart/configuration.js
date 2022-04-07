@@ -1129,7 +1129,7 @@ export default class Configuration {
   /**
    * @private
    * @param {unknown} color
-   * @return {string|null}
+   * @returns {string|null}
    */
   normalizeColor(color) {
     return (typeof color === 'string' && colorRegexp.test(color)) ? color : null;

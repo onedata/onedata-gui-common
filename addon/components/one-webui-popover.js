@@ -98,7 +98,7 @@ export default Component.extend({
   /**
    * @type {functions}
    * @param {boolean} opened is popover opened
-   * @return {undefined}
+   * @returns {undefined}
    */
   onToggle: () => {},
 
