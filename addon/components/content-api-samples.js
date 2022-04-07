@@ -16,7 +16,7 @@ import layout from '../templates/components/content-api-samples';
 
 export default Component.extend(I18n, {
   layout,
-  classNames: ['api-entry'],
+  classNames: ['content-api-samples'],
   fileManager: service(),
   apiStringGenerator: service(),
 
