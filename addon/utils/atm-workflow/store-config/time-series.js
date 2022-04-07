@@ -10,6 +10,7 @@
 /**
  * @typedef {Object} TimeSeriesStoreConfig
  * @property {Array<TimeSeriesSchema>} schemas
+ * @property {Array<OTSCChartDefinition>} chartSpecs
  */
 
 /**

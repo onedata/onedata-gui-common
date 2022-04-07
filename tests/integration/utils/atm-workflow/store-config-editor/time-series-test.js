@@ -221,7 +221,7 @@ describe('Integration | Utility | atm workflow/store config editor/time series',
     async function () {
       await renderForm(this);
 
-      await click('.storeEditor-add-field-button');
+      await click('.add-field-button');
       const firstSeries = find('.timeSeriesSchema-field');
       await selectChoose(firstSeries.querySelector('.nameGeneratorType-field'), 'Add prefix');
       await fillIn(firstSeries.querySelector('.nameGenerator-field .form-control'), 'name_');
@@ -236,7 +236,7 @@ describe('Integration | Utility | atm workflow/store config editor/time series',
       await fillIn('.tags-selector .retention-field input', '1');
       await click('.tags-selector .submit-custom-metric');
 
-      await click('.storeEditor-add-field-button');
+      await click('.add-field-button');
       const secondSeries = find('.collection-item:nth-child(2) .timeSeriesSchema-field');
       await selectChoose(secondSeries.querySelector('.nameGeneratorType-field'), 'Exact');
       await fillIn(secondSeries.querySelector('.nameGenerator-field .form-control'), 'my_name');
@@ -278,6 +278,7 @@ describe('Integration | Utility | atm workflow/store config editor/time series',
             },
           },
         }],
+        chartSpecs: [],
       });
       expect(this.get('rootGroup.isValid')).to.be.true;
     });
@@ -312,6 +313,7 @@ describe('Integration | Utility | atm workflow/store config editor/time series',
           },
         },
       }],
+      chartSpecs: undefined,
     });
 
     await renderForm(this);
@@ -320,7 +322,6 @@ describe('Integration | Utility | atm workflow/store config editor/time series',
 
     const series = findAll('.timeSeriesSchema-field');
     expect(series).to.have.length(2);
-
     expect(series[0].querySelector('.nameGeneratorType-field').textContent).to.contain('Add prefix');
     expect(series[0].querySelector('.nameGenerator-field .form-control').value).to.equal('name_');
     expect(series[0].querySelector('.unit-field').textContent).to.contain('Bytes');
@@ -344,7 +345,7 @@ async function renderForm(testCase) {
 }
 
 function getSeriesFormValues(testCase) {
-  const editorValues = testCase.get('rootGroup.valuesSource.storeEditor');
+  const editorValues = testCase.get('rootGroup.valuesSource.storeEditor.timeSeriesSchemas');
   return get(editorValues, '__fieldsValueNames')
     .map((fieldName) => get(editorValues, fieldName));
 }

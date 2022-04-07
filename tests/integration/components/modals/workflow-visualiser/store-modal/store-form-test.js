@@ -505,6 +505,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
                 },
               },
             }],
+            chartSpecs: [],
           },
           requiresInitialContent: false,
         },
@@ -653,6 +654,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
+          chartSpecs: undefined,
         },
       }));
 
@@ -824,6 +826,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
               },
             },
           }],
+          chartSpecs: [],
         },
       }));
 

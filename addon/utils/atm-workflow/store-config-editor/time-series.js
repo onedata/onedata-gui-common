@@ -17,6 +17,7 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
+import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import {
   customUnit,
   customUnitsPrefix,
@@ -31,12 +32,21 @@ import {
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
-const formElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-store-config-editor nowrap-on-desktop',
-  sizeForChildren: 'sm',
+const formElement = FormFieldsGroup.extend({
+  classes: 'time-series-store-config-editor',
   i18nPrefix: 'utils.atmWorkflow.storeConfigEditor.timeSeries.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
+  fields: computed(() => [
+    timeSeriesSchemasField.create(),
+    chartSpecsField.create(),
+  ]),
+});
+
+const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
+  name: 'timeSeriesSchemas',
+  classes: 'nowrap-on-desktop',
+  sizeForChildren: 'sm',
   usedNameGeneratorsSetter: observer(
     'value.__fieldsValueNames',
     function usedNameGeneratorsSetter() {
@@ -159,13 +169,22 @@ const formElement = FormFieldsCollectionGroup.extend({
   },
 });
 
+const chartSpecsField = JsonField.extend({
+  name: 'chartSpecs',
+  defaultValue: '[]',
+});
+
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from time series store config editor
  * @returns {Object} store config
  */
 function formValuesToStoreConfig(values) {
-  const schemas = get(values, '__fieldsValueNames')
-    .map((valueName) => get(values, valueName))
+  const {
+    timeSeriesSchemas: formTimeSeriesSchemas,
+    chartSpecs,
+  } = getProperties(values, 'timeSeriesSchemas', 'chartSpecs');
+  const schemas = get(formTimeSeriesSchemas, '__fieldsValueNames')
+    .map((valueName) => get(formTimeSeriesSchemas, valueName))
     .filter(Boolean)
     .map((timeSeriesSchemaValue) => {
       const {
@@ -204,7 +223,18 @@ function formValuesToStoreConfig(values) {
 
       return rawTimeSeriesSchema;
     });
-  return { schemas };
+
+  let parsedChartSpecs;
+  try {
+    parsedChartSpecs = typeof chartSpecs === 'string' ? JSON.parse(chartSpecs) : [];
+  } catch (err) {
+    parsedChartSpecs = [];
+  }
+
+  return {
+    schemas,
+    chartSpecs: parsedChartSpecs,
+  };
 }
 
 /**
@@ -212,9 +242,13 @@ function formValuesToStoreConfig(values) {
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
 function storeConfigToFormValues(storeConfig) {
-  const seriesFieldsValueNames = [];
+  const timeSeriesSchemasFieldsValueNames = [];
+  const timeSeriesSchemas = createValuesContainer({
+    __fieldsValueNames: timeSeriesSchemasFieldsValueNames,
+  });
   const values = createValuesContainer({
-    __fieldsValueNames: seriesFieldsValueNames,
+    timeSeriesSchemas,
+    chartSpecs: JSON.stringify(storeConfig && storeConfig.chartSpecs || [], null, 2),
   });
 
   if (!storeConfig || !Array.isArray(storeConfig.schemas)) {
@@ -226,7 +260,7 @@ function storeConfigToFormValues(storeConfig) {
       return;
     }
 
-    const seriesFormGroupName = `schema${idx}`;
+    const schemaFormGroupName = `schema${idx}`;
 
     const {
       nameGeneratorType,
@@ -254,9 +288,14 @@ function storeConfigToFormValues(storeConfig) {
       retention: metrics[metricId].retention,
     }));
 
-    set(values, seriesFormGroupName, createValuesContainer(timeSeriesSchemaValue));
-    seriesFieldsValueNames.push(seriesFormGroupName);
+    set(
+      timeSeriesSchemas,
+      schemaFormGroupName,
+      createValuesContainer(timeSeriesSchemaValue)
+    );
+    timeSeriesSchemasFieldsValueNames.push(schemaFormGroupName);
   });
+
   return values;
 }
 

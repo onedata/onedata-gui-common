@@ -631,6 +631,9 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
         rangeEnd: '',
         rangeStep: String(defaultRangeStep),
       }),
+      timeSeriesStoreConfig: createValuesContainer({
+        configEditor: storeConfigEditors.timeSeries.storeConfigToFormValues(null),
+      }),
       needsUserInput: false,
     });
   }
@@ -687,11 +690,6 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
       });
       break;
     }
-    case 'timeSeries':
-      formData.timeSeriesStoreConfig = createValuesContainer({
-        configEditor: storeConfigEditors.timeSeries.storeConfigToFormValues(config),
-      });
-      break;
     default:
       formData.genericStoreConfig = createValuesContainer({
         dataType: writeDataSpec && dataSpecToType(writeDataSpec).type || undefined,
@@ -700,6 +698,12 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
       });
       break;
   }
+
+  formData.timeSeriesStoreConfig = createValuesContainer({
+    configEditor: storeConfigEditors.timeSeries.storeConfigToFormValues(
+      type === 'timeSeries' ? config : null
+    ),
+  });
 
   return createValuesContainer(formData);
 }
