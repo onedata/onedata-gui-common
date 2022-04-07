@@ -1,18 +1,18 @@
 /**
  * A base form component with dynamic field generation and validation.
- * 
+ *
  * Fields used in that component should be in format:
  * `{ name: 'someName', type: 'text', ...moreFieldOptions }`
- * and be a regular Ember object. See also FieldType type in 
+ * and be a regular Ember object. See also FieldType type in
  * components/one-form-fields.
- * 
+ *
  * Proper validations mixin should be included to handle validation.
  * Validations object should use fields defined in allFieldsValues, e.g.
  * 'allFieldsValues.somePrefix.someFieldValue': validators...
- * 
- * After all fields setup - usually at the end of init() - prepareFields() 
+ *
+ * After all fields setup - usually at the end of init() - prepareFields()
  * should be called.
- * 
+ *
  * The component uses prefixes (sth like namespaces) for grouping fields.
  * It can be used to handle multiple different scenarios of displaying form fields.
  * More inormation about prefixes in comments for commponent fields.
@@ -50,7 +50,7 @@ export default Component.extend({
    * Array of all fields used in the form (both active and inactive)
    * @abstract
    * @type {Array.FieldType}
-   * 
+   *
    * Field name should start with appropiate prefix. Example:
    * ```
    * [
@@ -66,10 +66,10 @@ export default Component.extend({
    * Object with all fields values in the form (both active and inactive).
    * @abstract
    * @type {Ember.Object}
-   * 
-   * Uses prefixes to distinct different field groups. Almost one group 
+   *
+   * Uses prefixes to distinct different field groups. Almost one group
    * (prefix) must be defined. Example with two prefixes - group1 and group2:
-   * 
+   *
    * ```
    * Ember.Object.create({
    *   group1: Ember.Object.create({
@@ -95,13 +95,13 @@ export default Component.extend({
    * @type {Array.Ember.Object}
    */
   currentFields: computed('currentFieldsPrefix.[]', 'allFields', function () {
-    let {
+    const {
       allFields,
       currentFieldsPrefix,
     } = this.getProperties('allFields', 'currentFieldsPrefix');
     let fields = [];
     currentFieldsPrefix.forEach(prefix => {
-      let prefixFields = allFields.filter(field =>
+      const prefixFields = allFields.filter(field =>
         field.get('name').startsWith(`${prefix}.`));
       fields = fields.concat(prefixFields);
     });
@@ -112,7 +112,7 @@ export default Component.extend({
    * Prefixes for the active groups of fields.
    * @abstract
    * @type {Array.string}
-   * 
+   *
    * While validation all values from these prefixes are being checked.
    * Example: ``['group1', 'group2']``
    */
@@ -121,15 +121,15 @@ export default Component.extend({
   /**
    * Values of fields in current prefixes. Used in html form.
    * @type {Object}
-   * 
+   *
    * Object has the same format as allFieldsValues.
    */
   formValues: computed('allFieldsValues', 'currentFieldsPrefix.[]', function () {
-    let {
+    const {
       allFieldsValues,
       currentFieldsPrefix,
     } = this.getProperties('allFieldsValues', 'currentFieldsPrefix');
-    let values = EmberObject.create({});
+    const values = EmberObject.create({});
     currentFieldsPrefix
       .forEach(prefix => values.set(prefix, allFieldsValues.get(prefix)));
     return values;
@@ -144,7 +144,7 @@ export default Component.extend({
     'collapsedPrefixes.[]',
     'validations.errors.[]',
     function () {
-      let {
+      const {
         currentFieldsPrefix,
         collapsedPrefixes,
         validations,
@@ -155,7 +155,7 @@ export default Component.extend({
       );
       let errors = [];
       _.difference(currentFieldsPrefix, collapsedPrefixes).forEach(prefix => {
-        let attrPrefix = `allFieldsValues.${prefix}.`;
+        const attrPrefix = `allFieldsValues.${prefix}.`;
         errors = errors.concat(validations.get('errors')
           .filter(error => error.get('attribute').startsWith(attrPrefix)));
       });
@@ -176,7 +176,7 @@ export default Component.extend({
    * Sets all fields to its initial state
    */
   prepareFields() {
-    let {
+    const {
       allFields,
     } = this.getProperties('allFields');
     allFields.forEach(field => {
@@ -198,7 +198,7 @@ export default Component.extend({
    * @param {any} value
    */
   changeFormValue(fieldName, value) {
-    let {
+    const {
       allFieldsValues,
       unknownFieldErrorMsg,
     } = this.getProperties(
@@ -218,11 +218,11 @@ export default Component.extend({
 
   /**
    * Resets current fields to initial state
-   * @param {Array.string} prefixes array of current prefixes, whose values 
+   * @param {Array.string} prefixes array of current prefixes, whose values
    * should be cleared. If not provided, it means all current prefixes.
    */
   resetFormValues(prefixes) {
-    let {
+    const {
       currentFields,
       allFields,
       allFieldsValues,
@@ -246,19 +246,19 @@ export default Component.extend({
    * Sets validation information for current fields
    */
   recalculateErrors() {
-    let {
+    const {
       currentFields,
       allFieldsValues,
       errors,
     } = this.getProperties('currentFields', 'allFieldsValues', 'errors');
 
-    let prefix = 'allFieldsValues.';
+    const prefix = 'allFieldsValues.';
     currentFields.forEach(field => {
       let error = errors
         .filter(error => error.get('attribute') === prefix + field.get('name'));
       error = error.length > 0 ? error[0] : null;
       // show if is not optional or is optional, but not empty
-      let showValidation = field.get('optional') !== true || [undefined, null, ''].indexOf(
+      const showValidation = field.get('optional') !== true || [undefined, null, ''].indexOf(
         allFieldsValues.get(field.get('name'))) === -1;
       if (field.get('changed') && showValidation) {
         field.setProperties({
@@ -291,7 +291,7 @@ export default Component.extend({
 
   /**
    * Cuts off field name prefix.
-   * @param {string} fieldName 
+   * @param {string} fieldName
    * @returns {string}
    */
   cutOffPrefix(fieldName) {

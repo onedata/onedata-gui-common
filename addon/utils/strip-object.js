@@ -10,16 +10,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 export default function stripObject(orig, falsyValues = [undefined, null]) {
-  let stripped = {};
+  const stripped = {};
   let testForNan = false;
   // TODO IMPORTANT ensure polyfill (work in IE)
-  let nanIndex = falsyValues.findIndex(fv => Number.isNaN(fv));
+  const nanIndex = falsyValues.findIndex(fv => Number.isNaN(fv));
   if (nanIndex !== -1) {
     testForNan = true;
     delete falsyValues[nanIndex];
   }
-  for (let key in orig) {
-    let value = orig[key];
+  for (const key in orig) {
+    const value = orig[key];
     if (
       (testForNan ? !Number.isNaN(value) : true) &&
       falsyValues.indexOf(value) === -1

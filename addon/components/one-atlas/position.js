@@ -1,8 +1,8 @@
 /**
- * A one-atlas point component. Represents a place in a map, which 
+ * A one-atlas point component. Represents a place in a map, which
  * should be specified with latitude and longitude properties.
  * Example of use can be found in one-atlas component.
- * 
+ *
  * @module components/one-atlas/position
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017 ACK CYFRONET AGH
@@ -65,8 +65,8 @@ export default Component.extend({
     }
     // Calculations based on https://en.wikipedia.org/wiki/Mercator_projection
     // article
-    let ltr = latitude * (Math.PI / 180);
-    let y = 1.25 * Math.log(Math.tan(Math.PI / 4 + 0.4 * ltr));
+    const ltr = latitude * (Math.PI / 180);
+    const y = 1.25 * Math.log(Math.tan(Math.PI / 4 + 0.4 * ltr));
     return (atlasHeight / 2) * (1 - y * (1 / 2.303412543));
   }),
 

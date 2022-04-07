@@ -158,7 +158,7 @@ export default Mixin.create({
 
 function promiseAlias(name) {
   return function () {
-    let promise = get(this, 'promise');
+    const promise = get(this, 'promise');
     return promise[name](...arguments);
   };
 }

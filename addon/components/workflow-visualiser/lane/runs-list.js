@@ -573,8 +573,8 @@ export default Component.extend({
 
     const firstVisibleRunIdx = runsArray.indexOf(visibleRunsArray[0]);
     let newVisibleRunsArray;
-    let newVisibleRunsStyles = {};
-    let newVisibleRunsClasses = {};
+    const newVisibleRunsStyles = {};
+    const newVisibleRunsClasses = {};
     let addedRuns = [];
     if (moveStep < 0) {
       addedRuns = runsArray.slice(

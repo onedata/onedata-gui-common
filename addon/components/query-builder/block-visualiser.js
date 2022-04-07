@@ -152,7 +152,7 @@ export default Component.extend({
 
   /**
    * @override
-   * @param {MouseEvent} clickEvent 
+   * @param {MouseEvent} clickEvent
    */
   click(clickEvent) {
     if (this.get('readonly')) {
@@ -167,7 +167,7 @@ export default Component.extend({
 
     // Query blocks are nested. We need to find the origin (deepest) visualiser element,
     // that is on the path of the event bubbling.
-    let closestVisualiserElement = target.closest('.query-builder-block-visualiser');
+    const closestVisualiserElement = target.closest('.query-builder-block-visualiser');
 
     this.set(
       'areSettingsVisible',
@@ -177,7 +177,7 @@ export default Component.extend({
 
   /**
    * Changes hovered state and adds classes to the element.
-   * @param {boolean} newState 
+   * @param {boolean} newState
    */
   changeHoverState(newState) {
     if (newState !== this.get('isHovered')) {

@@ -1,11 +1,11 @@
 /**
  * Plugin for Chartist which adds additional text in the center of the chart.
- * 
+ *
  * Options:
  * * text - text to display
- * * fontSize - [optional] text font size (percents will be relative 
+ * * fontSize - [optional] text font size (percents will be relative
  *   to `min(chart.width, chart.height)`)
- * * maxWidth - [optional] max text width (in the same format as fontSize). 
+ * * maxWidth - [optional] max text width (in the same format as fontSize).
  *   If text width is greater than maxWidth, then font size is scaled down
  * * class - class for text svg element
  *
@@ -21,7 +21,7 @@ const DEFAULT_FONT_SIZE = '10%';
 const DEFAULT_MAX_WIDTH = '40%';
 
 export default function (options) {
-  let defaultOptions = {
+  const defaultOptions = {
     text: '',
     fontSize: DEFAULT_FONT_SIZE,
     maxWidth: DEFAULT_MAX_WIDTH,
@@ -30,26 +30,26 @@ export default function (options) {
   return (chart) => {
     chart.on('created', () => {
       const funOptions = Chartist.extend({}, defaultOptions, options);
-      let svg = chart.svg;
-      let relativeSize = Math.min(svg.width(), svg.height());
+      const svg = chart.svg;
+      const relativeSize = Math.min(svg.width(), svg.height());
 
-      let fontSize =
+      const fontSize =
         normalizeSize(funOptions.fontSize, relativeSize, DEFAULT_FONT_SIZE);
 
-      let textAttributes = {
+      const textAttributes = {
         'dx': svg.width() / 2,
         'dy': svg.height() / 2,
         'text-anchor': 'middle',
         'style': `dominant-baseline: middle; font-size: ${fontSize}px`,
       };
 
-      let textElement = svg.elem('text', textAttributes, 'ct-centered-text')
+      const textElement = svg.elem('text', textAttributes, 'ct-centered-text')
         .text(funOptions.text);
-      let textWidth = textElement.width();
-      let maxTextWidth =
+      const textWidth = textElement.width();
+      const maxTextWidth =
         normalizeSize(funOptions.maxWidth, relativeSize, DEFAULT_MAX_WIDTH) - 10;
       if (textWidth > maxTextWidth) {
-        let scaleRatio = maxTextWidth / textWidth;
+        const scaleRatio = maxTextWidth / textWidth;
         textElement.getNode().style.fontSize = fontSize * scaleRatio + 'px';
       }
       svg.append(textElement);

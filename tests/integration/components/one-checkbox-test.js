@@ -30,10 +30,10 @@ describe('Integration | Component | one checkbox', function () {
   });
 
   it('invokes update action on click', function (done) {
-    let toggleSelectionHandler = sinon.spy();
+    const toggleSelectionHandler = sinon.spy();
     this.on('toggleSelection', toggleSelectionHandler);
 
-    this.render(hbs `{{one-checkbox 
+    this.render(hbs `{{one-checkbox
       class="this-checkbox"
       isReadOnly=false
       checked=false

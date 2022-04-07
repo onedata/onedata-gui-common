@@ -1,6 +1,6 @@
 /**
  * Base for creating forms that submits data automatically with delay.
- * 
+ *
  * @module mixins/components/auto-save-form
  * @author Jakub Liput
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
@@ -18,7 +18,7 @@ export default Mixin.create({
   _window: window,
 
   /**
-   * Action called on data send. The only arguments is an object with 
+   * Action called on data send. The only arguments is an object with
    * modified data.
    * @virtual
    * @type {Function}
@@ -115,7 +115,7 @@ export default Mixin.create({
 
   init() {
     this._super(...arguments);
-    let {
+    const {
       _window,
       unloadHandler,
     } = this.getProperties('_window', 'unloadHandler');
@@ -124,7 +124,7 @@ export default Mixin.create({
 
   willDestroyElement() {
     try {
-      let {
+      const {
         _window,
         unloadHandler,
       } = this.getProperties('_window', 'unloadHandler');
@@ -140,7 +140,7 @@ export default Mixin.create({
    * @returns {boolean} true if values are valid, false otherwise
    */
   isValid() {
-    let {
+    const {
       formFieldsErrors,
       formFieldsModified: modified,
       sourceFieldNames,
@@ -261,7 +261,7 @@ export default Mixin.create({
    * Marks all fields as not modified.
    */
   cleanModificationState() {
-    let formFieldsModified = this.get('formFieldsModified');
+    const formFieldsModified = this.get('formFieldsModified');
     Object.keys(formFieldsModified)
       .forEach((key) => formFieldsModified.set(key, false));
   },

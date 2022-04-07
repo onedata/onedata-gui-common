@@ -45,8 +45,8 @@ export function parseAspectOptions(optionsString) {
 }
 
 export function serializeAspectOptions(options) {
-  let optionsArray = [];
-  for (let key in options) {
+  const optionsArray = [];
+  for (const key in options) {
     if (options.hasOwnProperty(key)) {
       optionsArray.push(`${key}${aspectOptionsValueDelimiter}${options[key]}`);
     }
@@ -423,7 +423,7 @@ export default Service.extend(I18n, {
 
   mergedAspectOptions(options) {
     const newAspectOptions = Object.assign({}, this.get('aspectOptions'), options);
-    for (let key in options) {
+    for (const key in options) {
       if (options.hasOwnProperty(key)) {
         const value = options[key];
         if (value === null) {
@@ -436,7 +436,7 @@ export default Service.extend(I18n, {
 
   /**
    * Sets __only__ provided options overriding all currently set route aspect options.
-   * @param {Object} options 
+   * @param {Object} options
    * @param {Boolean} [replaceHistory=false] if true, there will be no entry in history
    *   for options state before options set (only entry with new options)
    */

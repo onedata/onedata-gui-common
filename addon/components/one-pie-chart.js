@@ -1,6 +1,6 @@
 /**
- * A component that renders a pie chart using series definition from `data` 
- * property. Hovered series can be set from the outside by specifying 
+ * A component that renders a pie chart using series definition from `data`
+ * property. Hovered series can be set from the outside by specifying
  * activeSeriesId property.
  *
  * @module components/one-pie-chart
@@ -11,7 +11,7 @@
 
 /**
  * @typedef {Ember.Object} PieChartSeries A series displayed in a chart
- * @property {string} id An id for the series (must be unique across all 
+ * @property {string} id An id for the series (must be unique across all
  * chart series).
  * @property {string} label A label for the series.
  * @property {number} value A value to display.
@@ -134,7 +134,7 @@ export default Component.extend({
    */
   _sortedData: computed('data.[]', 'sort', 'sortDescending', 'isDataValid',
     function () {
-      let {
+      const {
         data,
         sort,
         isDataValid,
@@ -185,7 +185,7 @@ export default Component.extend({
   _chartCss: computed('_sortedData.[]', 'activeSeriesId', 'inactiveOpacity',
     'hoverTransitionTime', {
       get() {
-        let {
+        const {
           hoverTransitionTime,
           _stylesRecomputeTimeoutId,
         } = this.getProperties(
@@ -228,11 +228,11 @@ export default Component.extend({
       let parentGroup = $(event.target).parents('.ct-series');
       if (parentGroup.length) {
         // extract series id from group class name `slice-id-[series.id]`
-        let sliceClass = _.find(
+        const sliceClass = _.find(
           parentGroup.attr('class').split(' '),
           (c) => c.startsWith('slice-id-')
         );
-        let seriesId = sliceClass.substr('slice-id-'.length);
+        const seriesId = sliceClass.substr('slice-id-'.length);
         this.set('activeSeriesId', seriesId);
       } else {
         // if label is hovered, ignore series hover change
@@ -258,8 +258,8 @@ export default Component.extend({
    * @returns {Ember.Array.PieChartSeries} A sorted data.
    */
   sortData(data) {
-    let sortDescending = this.get('sortDescending');
-    let sortedData = A(data.sortBy('value'));
+    const sortDescending = this.get('sortDescending');
+    const sortedData = A(data.sortBy('value'));
     return sortDescending ? sortedData.reverseObjects() : sortedData;
   },
 
@@ -310,7 +310,7 @@ export default Component.extend({
     }
     centeredTextOptions.text = this.formatValue(_valuesSum);
     legendColorsOptions.colors = _.map(_sortedData, 'color');
-    let optionsBase = {
+    const optionsBase = {
       donut: true,
       donutWidth: '45%',
       showLabel: false,
@@ -345,7 +345,7 @@ export default Component.extend({
    * @returns {Object} Chartist data.
    */
   generateChartData() {
-    let {
+    const {
       _chartPieLabels,
       _chartDataSeries,
       _chartCss,
@@ -373,7 +373,7 @@ export default Component.extend({
       _sortedData,
       _valuesSum,
     } = this.getProperties('_sortedData', '_valuesSum');
-    // If each series == 0 (so _valuesSum == 0), then each series should be drawed 
+    // If each series == 0 (so _valuesSum == 0), then each series should be drawed
     // using the same value > 0 (here is 1) to give them the same space in chart
     const valuesToDraw = _valuesSum ? _sortedData.mapBy('value') : _sortedData.map(() =>
       1);
@@ -394,7 +394,7 @@ export default Component.extend({
    * @returns {Array.Object} Chartist labels.
    */
   generateChartPieLabels() {
-    let _sortedData = this.get('_sortedData');
+    const _sortedData = this.get('_sortedData');
     return _sortedData.map((series) => {
       let className = 'label-id-' + series.get('id');
       if (this.getSeriesPercentSize(series) <= 0.15) {
@@ -415,7 +415,7 @@ export default Component.extend({
    * @returns {Array.Object} Styles specification.
    */
   generateChartStyles() {
-    let {
+    const {
       _sortedData,
       activeSeriesId,
       inactiveOpacity,
@@ -428,8 +428,8 @@ export default Component.extend({
     );
     return _sortedData.map((series) => {
       // isActive = is nothing or this series hovered
-      let isActive = activeSeriesId === series.get('id');
-      let isLabelVisible = isActive || (!activeSeriesId &&
+      const isActive = activeSeriesId === series.get('id');
+      const isLabelVisible = isActive || (!activeSeriesId &&
         this.getSeriesPercentSize(series) > 0.15);
       // actual values of label opacity and slice stroke-opacity are
       // remembered to save animation state through chart rerender

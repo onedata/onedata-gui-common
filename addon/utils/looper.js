@@ -35,7 +35,7 @@ export default EmberObject.extend(Evented, {
   nextNotifyTimer: undefined,
 
   resetInterval: on('init', observer('interval', function () {
-    let {
+    const {
       immediate,
       interval,
       _intervalId,

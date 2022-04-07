@@ -18,7 +18,8 @@ import { get } from '@ember/object';
 import { camelize, dasherize } from '@ember/string';
 
 export default function recordIcon(recordOrModelName, useSubtypeIcon = false) {
-  let modelName, record;
+  let modelName;
+  let record;
   if (!recordOrModelName) {
     return;
   } else if (typeof recordOrModelName === 'string') {

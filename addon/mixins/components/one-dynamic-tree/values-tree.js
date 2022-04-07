@@ -1,12 +1,12 @@
 /**
- * A mixin that provides values tree operations for the one-dynamic-tree 
- * component. To store value, a tree data structure is used. That tree has 
+ * A mixin that provides values tree operations for the one-dynamic-tree
+ * component. To store value, a tree data structure is used. That tree has
  * properties:
  * * each leaf is a value,
  * * values are placed in tree using tree definition. E.g. if field 'name'
- *   is in branch 'basic' of 'user', then its value can be found by 
+ *   is in branch 'basic' of 'user', then its value can be found by
  *   `this.get('values.user.basic.name')`.
- * 
+ *
  * @module mixins/components/one-dynamic-tree/values-tree
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -27,11 +27,11 @@ export default Mixin.create({
 
   /**
    * Creates new values tree from definition.
-   * @param {Array.Object} definition 
-   * @param {boolean} useDefaults 
+   * @param {Array.Object} definition
+   * @param {boolean} useDefaults
    */
   _buildEmptyValuesTree(definition, useDefaults = false) {
-    let tmpRoot = {
+    const tmpRoot = {
       name: '',
       subtree: definition,
     };
@@ -64,9 +64,9 @@ export default Mixin.create({
         return undefined;
       }
     } else {
-      let values = EmberObject.create();
+      const values = EmberObject.create();
       node.subtree.forEach((subnode) => {
-        let subnodeValues = this._buildValuesNode(
+        const subnodeValues = this._buildValuesNode(
           subnode,
           useDefaults,
           get(overrideValues || {}, subnode.name)
@@ -83,7 +83,7 @@ export default Mixin.create({
    * Copies values from actual values to treeTo. Nodes values are copied only if
    * node structure is the same in both trees. treeTo must be an Ember.Object.
    * @param {Object|Ember.Object} treeFrom
-   * @param {Ember.Object} treeTo 
+   * @param {Ember.Object} treeTo
    */
   _mergeValuesTrees(treeFrom, treeTo) {
     this._mergeValuesNodeCopy(treeTo, treeFrom);
@@ -92,14 +92,14 @@ export default Mixin.create({
 
   /**
    * Copies (merges) values from passed node to another.
-   * @param {Ember.Object} nodeTo 
+   * @param {Ember.Object} nodeTo
    * @param {Object|Ember.Object} treeFrom
    */
   _mergeValuesNodeCopy(nodeTo, nodeFrom) {
     const objectTypes = ['instance', 'object'];
     Object.keys(nodeFrom).forEach((subnodeName) => {
-      let subnodeToValue = get(nodeTo, subnodeName);
-      let subnodeFromValue = get(nodeFrom, subnodeName);
+      const subnodeToValue = get(nodeTo, subnodeName);
+      const subnodeFromValue = get(nodeFrom, subnodeName);
       if (subnodeToValue !== undefined) {
         if (objectTypes.indexOf(typeOf(subnodeToValue)) !== -1 &&
           objectTypes.indexOf(typeOf(subnodeFromValue)) !== -1) {
@@ -128,7 +128,7 @@ export default Mixin.create({
     if (typeOf(node) !== 'instance') {
       return node;
     } else {
-      let objectDump = {};
+      const objectDump = {};
       Object.keys(node).forEach((nodeKey) => {
         objectDump[nodeKey] = this._dumpNodeValues(node.get(nodeKey));
       });

@@ -24,7 +24,7 @@ describe('Integration | Component | one atlas', function () {
   });
 
   it('scales up to parent size', function () {
-    let size = 400;
+    const size = 400;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.render(hbs `
       <div style={{parentStyle}}>
@@ -32,7 +32,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    let atlas = this.$('.one-atlas');
+    const atlas = this.$('.one-atlas');
     expect(atlas.width()).to.be.equal(size);
     expect(atlas.height()).to.be.gt(0);
     // map has horizontal layout
@@ -40,8 +40,8 @@ describe('Integration | Component | one atlas', function () {
   });
 
   it('fits to parent with horizontal layout', function () {
-    let width = 400;
-    let height = 40;
+    const width = 400;
+    const height = 40;
     this.set('parentStyle', htmlSafe(`width: ${width}px; height: ${height}px`));
     this.render(hbs `
       <div style={{parentStyle}}>
@@ -49,7 +49,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    let atlas = this.$('.one-atlas');
+    const atlas = this.$('.one-atlas');
     expect(atlas.height()).to.be.equal(height);
     expect(atlas.width()).to.be.gt(0);
     expect(atlas.width()).to.be.lt(width);
@@ -64,7 +64,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    let atlas = this.$('.one-atlas');
+    const atlas = this.$('.one-atlas');
     size = size / 2;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.get('_window.resizeListener').call(null);
@@ -78,7 +78,7 @@ describe('Integration | Component | one atlas', function () {
 
   it('displays Sydney point in the right down corner of the map',
     function (done) {
-      let size = 400;
+      const size = 400;
       this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
       this.render(hbs `
         <div style={{parentStyle}}>
@@ -92,8 +92,8 @@ describe('Integration | Component | one atlas', function () {
         </div>
       `);
 
-      let atlas = this.$('.one-atlas');
-      let sydney = this.$('.sydney');
+      const atlas = this.$('.one-atlas');
+      const sydney = this.$('.sydney');
       wait().then(() => {
         expect(sydney.position().left).to.be.gt((atlas.width() / 4) * 3);
         expect(sydney.position().top).to.be.gt(atlas.height() / 2);

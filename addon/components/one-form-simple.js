@@ -55,7 +55,7 @@ export default OneForm.extend({
    * @type {Array.EmberObject}
    */
   allFields: computed('fields', function () {
-    let fields = this.get('fields').map(f => EmberObject.create(f));
+    const fields = this.get('fields').map(f => EmberObject.create(f));
     fields.filter(field => !field.get('name').startsWith('main.'))
       .forEach(field => field.set('name', 'main.' + field.get('name')));
     return fields;
@@ -64,7 +64,7 @@ export default OneForm.extend({
   currentFields: readOnly('allFields'),
 
   allFieldsValues: computed('_values', function () {
-    let values = this.get('_values');
+    const values = this.get('_values');
     return EmberObject.create({
       main: values,
     });
@@ -115,7 +115,7 @@ export default OneForm.extend({
    * @type {computed.string}
    */
   _formClasses: computed('_hasOnlyStatic', function () {
-    let _hasOnlyStatic = this.get('_hasOnlyStatic');
+    const _hasOnlyStatic = this.get('_hasOnlyStatic');
     let classes =
       'col-xs-12 col-sm-10 col-md-8 col-lg-6 col-centered form-horizontal';
     if (_hasOnlyStatic) {
@@ -132,7 +132,7 @@ export default OneForm.extend({
   },
 
   _validateAttributes() {
-    let {
+    const {
       submitButton,
       fields,
       submit,
@@ -146,7 +146,7 @@ export default OneForm.extend({
   },
 
   _getValuesClone() {
-    let valuesProperty = ObjectProxy.detectInstance(this.get('values')) ?
+    const valuesProperty = ObjectProxy.detectInstance(this.get('values')) ?
       'values.content' : 'values';
     return merge(EmberObject.create(), this.get(valuesProperty));
   },
@@ -169,7 +169,7 @@ export default OneForm.extend({
         submit,
         _submitEnabled,
       } = this.getProperties('submit', '_submitEnabled');
-      let submitting = _submitEnabled ?
+      const submitting = _submitEnabled ?
         resolve(submit && submit(this.get('allFieldsValues.main'))) :
         new Promise((resolve, reject) => reject());
       this.set('_disabled', true);

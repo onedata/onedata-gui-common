@@ -1,9 +1,9 @@
 /**
- * A form for displaying basic auth user credentials and modify them 
+ * A form for displaying basic auth user credentials and modify them
  *
- * See ``changingPassword`` property to set 
+ * See ``changingPassword`` property to set
  *
- * @module 
+ * @module
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -50,7 +50,7 @@ function createValidations() {
     createFieldValidator(VERIFY_PASSWORD_FIELD);
 
   CHANGE_PASSWORD_FIELDS.forEach(field => {
-    let thisValidations = validations['allFieldsValues.change.' + field.name] =
+    const thisValidations = validations['allFieldsValues.change.' + field.name] =
       createFieldValidator(field);
     switch (field.name) {
       case 'newPasswordRetype':
@@ -119,7 +119,7 @@ export default OneForm.extend(Validations, I18n, {
    * @type {FieldType}
    */
   secretPasswordField: computed(function secretPasswordField() {
-    let field = EmberObject.create(this.prepareField(SECRET_PASSWORD_FIELD));
+    const field = EmberObject.create(this.prepareField(SECRET_PASSWORD_FIELD));
     field.set('name', 'static.' + field.get('name'));
     return field;
   }),
@@ -138,7 +138,7 @@ export default OneForm.extend(Validations, I18n, {
    */
   changePasswordFields: computed(function changePasswordFields() {
     return CHANGE_PASSWORD_FIELDS.map(f => {
-      let field = EmberObject.create(this.prepareField(f));
+      const field = EmberObject.create(this.prepareField(f));
       field.set('name', 'change.' + field.get('name'));
       return field;
     });

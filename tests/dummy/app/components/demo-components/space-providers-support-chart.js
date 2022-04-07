@@ -37,9 +37,9 @@ export default Component.extend({
     this._super(...arguments);
 
     // generate support size
-    let v1 = Math.random() * 100000000;
-    let v2 = Math.random() * 100000000;
-    let v3 = Math.random() * 100000000;
+    const v1 = Math.random() * 100000000;
+    const v2 = Math.random() * 100000000;
+    const v3 = Math.random() * 100000000;
     const space = {
       name: 'space1',
       providerList: promiseObject(resolve({

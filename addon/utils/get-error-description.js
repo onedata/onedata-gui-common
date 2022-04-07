@@ -121,7 +121,7 @@ function findTranslationForError(i18n, error) {
   } = getProperties(error, 'id', 'details');
 
   const detailsToTranslateFun = detailsTranslateFunctions[errorId];
-  let errorDetailsToTranslate = detailsToTranslateFun ?
+  const errorDetailsToTranslate = detailsToTranslateFun ?
     detailsToTranslateFun(i18n, errorDetails) : errorDetails;
 
   return findTranslation(

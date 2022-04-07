@@ -117,7 +117,7 @@ export default OnePieChart.extend({
       _sortedData,
       i18n,
     } = this.getProperties('_sortedData', 'i18n');
-    let chartDataSeries = this._super(...arguments);
+    const chartDataSeries = this._super(...arguments);
     chartDataSeries.forEach((series, index) => {
       series.tooltipElements = [{
         name: i18n.t('components.supportSizeInfo.chart.supportSize'),

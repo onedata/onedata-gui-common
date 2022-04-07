@@ -113,7 +113,7 @@ export default Component.extend({
    * @type {computed.boolean}
    */
   _wasRecentlyExpanded: computed('key', 'lastExpandedKey', function () {
-    let {
+    const {
       key,
       lastExpandedKey,
     } = this.getProperties('key', 'lastExpandedKey');
@@ -127,7 +127,7 @@ export default Component.extend({
   _isFilteredOut: computed('_contentFilteredOut', '_subtreeFilteredOut',
     '_hasSubtree',
     function () {
-      let {
+      const {
         _contentFilteredOut,
         _subtreeFilteredOut,
         _hasSubtree,
@@ -145,7 +145,7 @@ export default Component.extend({
    * @type {computed.boolean}
    */
   _hiddenByFilter: computed('_isFilteredOut', 'disableFilter', function () {
-    let {
+    const {
       _isFilteredOut,
       disableFilter,
     } = this.getProperties('_isFilteredOut', 'disableFilter');
@@ -157,7 +157,7 @@ export default Component.extend({
    * @type {computed.boolean}
    */
   _isSubtreeExpanded: computed('_activeSubtreeKeys.[]', 'key', function () {
-    let {
+    const {
       _activeSubtreeKeys,
       key,
     } = this.getProperties('_activeSubtreeKeys', 'key');
@@ -169,7 +169,7 @@ export default Component.extend({
    * @type {computed.string}
    */
   _bulletIcon: computed('_isSubtreeExpanded', '_hasSubtree', function () {
-    let {
+    const {
       _isSubtreeExpanded,
       _hasSubtree,
     } = this.getProperties('_isSubtreeExpanded', '_hasSubtree');
@@ -191,7 +191,7 @@ export default Component.extend({
    */
   _eventsBusShowHandler: computed(function () {
     return (selectedRootKey, subtreeKey, subtreeIsExpanded) => {
-      let {
+      const {
         key,
         _rootKey,
         _areParentsExpanded,
@@ -211,7 +211,7 @@ export default Component.extend({
   }),
 
   _activeSubtreeKeysObserver: observer('_activeSubtreeKeys.[]', function () {
-    let {
+    const {
       _activeSubtreeKeys,
       _parentKey,
       key,
@@ -225,8 +225,8 @@ export default Component.extend({
       '_activeSubtreeKeysOld'
     );
 
-    let isParentActive = _activeSubtreeKeys.indexOf(_parentKey) > -1;
-    let wasParentActive = _activeSubtreeKeysOld.indexOf(_parentKey) > -1;
+    const isParentActive = _activeSubtreeKeys.indexOf(_parentKey) > -1;
+    const wasParentActive = _activeSubtreeKeysOld.indexOf(_parentKey) > -1;
     if (collapseRecursively && wasParentActive && !isParentActive) {
       // collapse if parent tree has collapsed
       next(() => this.send('show', key, false));
@@ -235,7 +235,7 @@ export default Component.extend({
   }),
 
   _filteredOutObserver: observer('_isFilteredOut', 'key', function () {
-    let {
+    const {
       _isFilteredOut,
       key,
       itemFilteredOut,
@@ -250,7 +250,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    let {
+    const {
       eventsBus,
       _eventsBusShowHandler,
       itemRegister,
@@ -268,7 +268,7 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      let {
+      const {
         eventsBus,
         _eventsBusShowHandler,
         itemRegister,
@@ -289,7 +289,7 @@ export default Component.extend({
 
   actions: {
     show(subtreeKeys, subtreeIsExpanded) {
-      let {
+      const {
         _isSubtreeExpanded,
         key,
         _hasSubtree,

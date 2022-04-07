@@ -524,7 +524,7 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
   it(message, async function () {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
     await scrollToLane(this, overflowEdge, overflowLane, 10);
-    for (let operation of operations) {
+    for (const operation of operations) {
       if (operation.startsWith('width:')) {
         const width = Number(operation.slice('width:'.length));
         await changeContainerWidthForScrollTest(this, width);

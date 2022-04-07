@@ -77,15 +77,15 @@ export default Component.extend({
       // There is a priority of elements, where searchQuery should be searched:
       // .tree-label or .one-label or the whole content
       let textElement = this.$();
-      let treeLabel = textElement.find('.tree-label');
-      let oneLabel = textElement.find('.one-label');
+      const treeLabel = textElement.find('.tree-label');
+      const oneLabel = textElement.find('.one-label');
       if (treeLabel.length) {
         textElement = treeLabel;
       } else if (oneLabel.length) {
         textElement = oneLabel;
       }
 
-      let isNotFilteredOut = textElement.text().toLowerCase()
+      const isNotFilteredOut = textElement.text().toLowerCase()
         .indexOf(searchQuery.toLowerCase()) > -1;
       if (searchQuery.length > 0 && !isSubtreeFilteredOut) {
         textElement.addClass('semibold');

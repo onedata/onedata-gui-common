@@ -42,7 +42,7 @@ export default Service.extend(I18n, {
   // TODO i18n
   backendError(operation, error) {
     const reason = error && this.get('errorExtractor').getMessage(error);
-    let capitalizedOperation = capitalize(String(operation));
+    const capitalizedOperation = capitalize(String(operation));
 
     let finalMessage =
       `<p class="operation-message"><strong>${capitalizedOperation} failed!</strong></p>`;

@@ -125,7 +125,7 @@ describe('Integration | Component | one form simple', function () {
     }}
       `);
 
-    let submitBtn = this.$('button[type=submit]');
+    const submitBtn = this.$('button[type=submit]');
     expect(
       submitBtn.prop('disabled'),
       'submit button is disabled if form is not valid'
