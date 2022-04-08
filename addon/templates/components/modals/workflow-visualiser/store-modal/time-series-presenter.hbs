@@ -5,6 +5,8 @@
       timeSeriesQueryBatcher=timeSeriesQueryBatcher
       timeSeriesGeneratorsState=timeSeriesGeneratorsState
     }}
+  {{else}}
+    <p class="text-center">{{tt this "noChartsDefined"}}</p>
   {{/each}}
 {{/promise-proxy-container}}
 

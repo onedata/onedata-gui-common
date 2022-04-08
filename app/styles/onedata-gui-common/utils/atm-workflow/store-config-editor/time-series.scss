@@ -36,6 +36,10 @@
     min-width: 0;
   }
 
+  .timeSeriesSchema-children > * {
+    flex-wrap: wrap;
+  }
+
   .collection-item + .add-field-button {
     align-self: center;
   }

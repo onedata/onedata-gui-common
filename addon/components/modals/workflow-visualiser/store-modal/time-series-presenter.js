@@ -1,15 +1,27 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { reads, notEmpty } from '@ember/object/computed';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/time-series-presenter';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import { browseModes } from 'onedata-gui-common/utils/atm-workflow/store-content-browse-options/time-series';
 import createDataProxyMixin from 'onedata-gui-common/utils/create-data-proxy-mixin';
 import Looper from 'onedata-gui-common/utils/looper';
+import I18n from 'onedata-gui-common/mixins/components/i18n';
+import { inject as service } from '@ember/service';
 
 const timeSeriesGeneratorStateReloadInterval = 5000;
 
-export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'), {
+export default Component.extend(I18n, createDataProxyMixin('timeSeriesGeneratorsState'), {
   layout,
+  classNames: ['time-series-presenter'],
+  classNameBindings: ['hasCharts:has-charts:no-charts'],
+
+  i18n: service(),
+
+  /**
+   * @override
+   */
+  i18nPrefix: 'components.modals.workflowVisualiser.storeModal.timeSeriesPresenter',
 
   /**
    * @virtual
@@ -36,96 +48,189 @@ export default Component.extend(createDataProxyMixin('timeSeriesGeneratorsState'
   /**
    * @type {ComputedProperty<Array<Object>>}
    */
-  // chartSpecs: reads('store.config.chartSpecs'),
-  chartSpecs: computed(() => [{
-    title: {
-      content: 'some title',
-    },
-    yAxes: [{
-      id: 'axis',
-      minInterval: 1,
-    }],
-    series: [{
-      factoryName: 'static',
-      factoryArguments: {
-        seriesTemplate: {
-          id: 'series1',
-          name: 'Series 1',
-          type: 'line',
-          yAxisId: 'axis',
-          data: {
-            functionName: 'replaceEmpty',
-            functionArguments: {
-              data: {
-                functionName: 'loadSeries',
-                functionArguments: {
-                  sourceType: 'external',
-                  sourceParameters: {
-                    externalSourceName: 'store',
-                    externalSourceParameters: {
-                      timeSeriesNameGenerator: 'gen_size',
-                      timeSeriesName: 'gen_size',
-                      metricIds: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7'],
-                    },
-                  },
-                },
-              },
-              fallbackValue: 0,
-            },
-          },
-        },
-      },
-    }, {
-      factoryName: 'dynamic',
-      factoryArguments: {
-        dynamicSeriesConfigs: {
-          sourceType: 'external',
-          sourceParameters: {
-            externalSourceName: 'store',
-            externalSourceParameters: {
-              timeSeriesNameGenerator: 'gen_file_',
-              metricIds: ['n1', 'n2', 'n3', 'n4', 'n5', 'n6', 'n7'],
-            },
-          },
-        },
-        seriesTemplate: {
-          id: {
-            functionName: 'getDynamicSeriesConfigData',
-            functionArguments: {
-              propertyName: 'id',
-            },
-          },
-          name: {
-            functionName: 'getDynamicSeriesConfigData',
-            functionArguments: {
-              propertyName: 'name',
-            },
-          },
-          type: 'bar',
-          stackId: 'stack1',
-          yAxisId: 'axis',
-          data: {
-            functionName: 'replaceEmpty',
-            functionArguments: {
-              data: {
-                functionName: 'loadSeries',
-                functionArguments: {
-                  sourceType: 'external',
-                  sourceParameters: {
-                    functionName: 'getDynamicSeriesConfigData',
-                    functionArguments: {
-                      propertyName: 'loadSeriesSourceParameters',
-                    },
-                  },
-                },
-              },
-              fallbackValue: 0,
-            },
-          },
-        },
-      },
-    }],
-  }]),
+  chartSpecs: reads('store.config.chartSpecs'),
+  // chartSpecs: computed(() => [{
+  //   title: {
+  //     content: 'some title',
+  //   },
+  //   yAxes: [{
+  //     id: 'axis',
+  //     minInterval: 1,
+  //   }],
+  //   series: [{
+  //     factoryName: 'static',
+  //     factoryArguments: {
+  //       seriesTemplate: {
+  //         id: 'series1',
+  //         name: 'Series 1',
+  //         type: 'line',
+  //         yAxisId: 'axis',
+  //         data: {
+  //           functionName: 'replaceEmpty',
+  //           functionArguments: {
+  //             data: {
+  //               functionName: 'loadSeries',
+  //               functionArguments: {
+  //                 sourceType: 'external',
+  //                 sourceParameters: {
+  //                   externalSourceName: 'store',
+  //                   externalSourceParameters: {
+  //                     timeSeriesNameGenerator: 'gen_size',
+  //                     timeSeriesName: 'gen_size',
+  //                     metricIds: ['sum5s', 'sum1m', 'sum1h'],
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //             fallbackValue: 0,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   }, {
+  //     factoryName: 'dynamic',
+  //     factoryArguments: {
+  //       dynamicSeriesConfigs: {
+  //         sourceType: 'external',
+  //         sourceParameters: {
+  //           externalSourceName: 'store',
+  //           externalSourceParameters: {
+  //             timeSeriesNameGenerator: 'gen_file_',
+  //             metricIds: ['sum5s', 'sum1m', 'sum1h'],
+  //           },
+  //         },
+  //       },
+  //       seriesTemplate: {
+  //         id: {
+  //           functionName: 'getDynamicSeriesConfigData',
+  //           functionArguments: {
+  //             propertyName: 'id',
+  //           },
+  //         },
+  //         name: {
+  //           functionName: 'getDynamicSeriesConfigData',
+  //           functionArguments: {
+  //             propertyName: 'name',
+  //           },
+  //         },
+  //         type: 'bar',
+  //         stackId: 'stack1',
+  //         yAxisId: 'axis',
+  //         data: {
+  //           functionName: 'replaceEmpty',
+  //           functionArguments: {
+  //             data: {
+  //               functionName: 'loadSeries',
+  //               functionArguments: {
+  //                 sourceType: 'external',
+  //                 sourceParameters: {
+  //                   functionName: 'getDynamicSeriesConfigData',
+  //                   functionArguments: {
+  //                     propertyName: 'loadSeriesSourceParameters',
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //             fallbackValue: 0,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   }],
+  // }, {
+  //   title: {
+  //     content: 'some title',
+  //   },
+  //   yAxes: [{
+  //     id: 'axis',
+  //     minInterval: 1,
+  //   }],
+  //   series: [{
+  //     factoryName: 'static',
+  //     factoryArguments: {
+  //       seriesTemplate: {
+  //         id: 'series1',
+  //         name: 'Series 1',
+  //         type: 'line',
+  //         yAxisId: 'axis',
+  //         data: {
+  //           functionName: 'replaceEmpty',
+  //           functionArguments: {
+  //             data: {
+  //               functionName: 'loadSeries',
+  //               functionArguments: {
+  //                 sourceType: 'external',
+  //                 sourceParameters: {
+  //                   externalSourceName: 'store',
+  //                   externalSourceParameters: {
+  //                     timeSeriesNameGenerator: 'gen_size',
+  //                     timeSeriesName: 'gen_size',
+  //                     metricIds: ['sum5s', 'sum1m', 'sum1h'],
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //             fallbackValue: 0,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   }, {
+  //     factoryName: 'dynamic',
+  //     factoryArguments: {
+  //       dynamicSeriesConfigs: {
+  //         sourceType: 'external',
+  //         sourceParameters: {
+  //           externalSourceName: 'store',
+  //           externalSourceParameters: {
+  //             timeSeriesNameGenerator: 'gen_file_',
+  //             metricIds: ['sum5s', 'sum1m', 'sum1h'],
+  //           },
+  //         },
+  //       },
+  //       seriesTemplate: {
+  //         id: {
+  //           functionName: 'getDynamicSeriesConfigData',
+  //           functionArguments: {
+  //             propertyName: 'id',
+  //           },
+  //         },
+  //         name: {
+  //           functionName: 'getDynamicSeriesConfigData',
+  //           functionArguments: {
+  //             propertyName: 'name',
+  //           },
+  //         },
+  //         type: 'bar',
+  //         stackId: 'stack1',
+  //         yAxisId: 'axis',
+  //         data: {
+  //           functionName: 'replaceEmpty',
+  //           functionArguments: {
+  //             data: {
+  //               functionName: 'loadSeries',
+  //               functionArguments: {
+  //                 sourceType: 'external',
+  //                 sourceParameters: {
+  //                   functionName: 'getDynamicSeriesConfigData',
+  //                   functionArguments: {
+  //                     propertyName: 'loadSeriesSourceParameters',
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //             fallbackValue: 0,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   }],
+  // }]),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  hasCharts: notEmpty('chartSpecs'),
 
   /**
    * @type {ComputedProperty<Utils.OneTimeSeriesChart.QueryBatcher>}
