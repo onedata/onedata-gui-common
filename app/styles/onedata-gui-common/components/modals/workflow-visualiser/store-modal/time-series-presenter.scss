@@ -16,4 +16,10 @@
       border-radius: $border-radius-base;
     }
   }
+
+  @media (max-width: $screen-xs-max) {
+    &.has-charts {
+      grid-template-columns: 1fr;
+    }
+  }
 }
