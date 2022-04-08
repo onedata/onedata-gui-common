@@ -2,6 +2,7 @@
   {{#each chartSpecs as |chartSpec|}}
     {{modals/workflow-visualiser/store-modal/time-series-presenter/chart
       chartSpec=chartSpec
+      live=store.contentMayChange
       timeSeriesQueryBatcher=timeSeriesQueryBatcher
       timeSeriesGeneratorsState=timeSeriesGeneratorsState
     }}

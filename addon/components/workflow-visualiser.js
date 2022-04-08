@@ -1137,6 +1137,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const instanceId = rawInstanceId || (schemaId &&
       this.get(`executionState.store.defined.${schemaId}.instanceId`)
     );
+    const contentMayChange = instanceId && !this.executionHasEnded();
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
@@ -1158,6 +1159,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         config,
         defaultInitialContent,
         requiresInitialContent,
+        contentMayChange,
       });
       return existingStore;
     } else {
@@ -1171,6 +1173,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         config,
         defaultInitialContent,
         requiresInitialContent,
+        contentMayChange,
         onModify: (store, modifiedProps) => this.modifyElement(store, modifiedProps),
         onRemove: store => this.removeElement(store),
       });
@@ -1544,7 +1547,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   executionHasEnded() {
-    return workflowEndedStatuses.includes(this.get('workflow.status'));
+    return workflowEndedStatuses.includes(this.get('executionState.workflow.status'));
   },
 
   async updateExecutionState() {

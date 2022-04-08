@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, get } from '@ember/object';
+import { computed, get, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import _ from 'lodash';
@@ -34,6 +34,12 @@ export default Component.extend({
    * @virtual
    */
   chartSpec: undefined,
+
+  /**
+   * @virtual
+   * @type {boolean}
+   */
+  live: true,
 
   /**
    * @virtual
@@ -125,9 +131,9 @@ export default Component.extend({
       } = this.getProperties(
         'timeResolutionSpecs',
         'globalTimeSecondsOffset',
-        'chartSpec'
+        'chartSpec',
       );
-      const config = new OTSCConfiguration({
+      return new OTSCConfiguration({
         nowTimestampOffset: globalTimeSecondsOffset || 0,
         chartDefinition: chartSpec,
         timeResolutionSpecs,
@@ -139,10 +145,24 @@ export default Component.extend({
           },
         },
       });
-      config.setViewParameters({ live: true });
-      return config;
     }
   ),
+
+  liveObserver: observer('live', function liveObserver() {
+    const {
+      chartConfiguration,
+      live,
+    } = this.getProperties('chartConfiguration', 'live');
+    chartConfiguration.setViewParameters({ live });
+  }),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+    this.liveObserver();
+  },
 
   /**
    * @param {OTSCDataSourceFetchParams} seriesParameters
