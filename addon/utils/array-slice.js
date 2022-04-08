@@ -1,6 +1,6 @@
 /**
  * An array proxy that exposes only selected slice of real EmberArray.
- * 
+ *
  * See tests for usage examples.
  *
  * @module utils/array-slice
@@ -93,6 +93,16 @@ export default ArrayProxy.extend({
 
   init() {
     this._super(...arguments);
+    // TODO: VFS-9267 Implement missing array method in ArraySlice
+    [
+      'insertAt',
+      'removeAt',
+      'setObjects',
+      'unshiftObject',
+      'unshiftObjects',
+    ].forEach(methodName => {
+      this.overrideAsNotImplemented(methodName);
+    });
     // activate observers
     this.getProperties('_start', '_end');
     this._startChanged();
@@ -100,7 +110,53 @@ export default ArrayProxy.extend({
   },
 
   /**
-   * @override 
+   * Will push object to the end of sourceArray, no matter if current slice spans across
+   * the end of sourceArray.
+   * @override
+   */
+  pushObject(obj) {
+    return this.get('sourceArray').pushObject(obj);
+  },
+
+  /**
+   * Will push objects to the end of sourceArray, no matter if current slice spans across
+   * the end of sourceArray.
+   * @override
+   */
+  pushObjects(objects) {
+    return this.get('sourceArray').pushObjects(objects);
+  },
+
+  /**
+   * @override
+   */
+  slice(begin, end) {
+    const {
+      _start,
+      _end,
+      sourceArray,
+    } = this.getProperties('_start', '_end', 'sourceArray');
+    let effBegin = begin;
+    let effEnd = end;
+    if (typeof effBegin === 'number') {
+      effBegin = effBegin >= 0 ?
+        this._translateIndex(effBegin) :
+        this._translateNegativeIndex(effBegin);
+    } else {
+      effBegin = _start;
+    }
+    if (typeof effEnd === 'number') {
+      effEnd = effEnd >= 0 ?
+        this._translateIndex(effEnd) :
+        this._translateNegativeIndex(effEnd);
+    } else {
+      effEnd = _end;
+    }
+    return sourceArray.slice(effBegin, effEnd);
+  },
+
+  /**
+   * @override
    */
   replace(idx, amt, objects) {
     const sourceArray = this.get('sourceArray');
@@ -118,7 +174,7 @@ export default ArrayProxy.extend({
   },
 
   /**
-   * @override 
+   * @override
    */
   length: computed('_start', '_end', function () {
     const {
@@ -173,5 +229,18 @@ export default ArrayProxy.extend({
     );
     const translatedIndex = _start + index;
     return translatedIndex > _end ? -1 : translatedIndex;
+  },
+
+  _translateNegativeIndex(negativeIndex) {
+    const _end = this.get('_end');
+    return Math.max(_end + negativeIndex, 0);
+  },
+
+  overrideAsNotImplemented(methodName) {
+    this[methodName] = () => {
+      throw new Error(
+        `"${methodName}" method is not implemented in array-slice - you can use this method directly on arraySource if needed, considering index translations`
+      );
+    };
   },
 });

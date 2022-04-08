@@ -4,7 +4,6 @@ import ArraySlice from 'onedata-gui-common/utils/array-slice';
 import _ from 'lodash';
 import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
-
 import { A } from '@ember/array';
 import EmberObject, { computed } from '@ember/object';
 
@@ -18,6 +17,140 @@ const ArraySum = EmberObject.extend({
 });
 
 describe('Unit | Utility | array slice', function () {
+  it('adds an item using pushObject method', function () {
+    const sourceArrayTemplate = _.range(0, 10);
+
+    const startIndex = 0;
+    const endIndex = 20;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    as.pushObject('x');
+
+    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x']);
+  });
+
+  it('adds multiple items using pushObjects method', function () {
+    const sourceArrayTemplate = _.range(0, 10);
+
+    const startIndex = 0;
+    const endIndex = 20;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    as.pushObjects(['x', 'y', 'z']);
+
+    expect(as.toArray()).to.deep.equal([...sourceArrayTemplate, 'x', 'y', 'z']);
+  });
+
+  it('returns a slice of current range using slice method', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(5, 10)).to.deep.equal(_.range(10, 15));
+  });
+
+  it('returns a slice to the end of current range using slice method with only begin argument', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 0;
+    const endIndex = 10;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(5)).to.deep.equal(_.range(5, endIndex));
+  });
+
+  it('returns a copy of sliced array using slice method without arguments', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice()).to.deep.equal(_.range(5, 15));
+  });
+
+  it('returns a slice of current range using slice method with negative arguments', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(-3, -1)).to.deep.equal(_.range(12, 14));
+  });
+
+  [
+    'insertAt',
+    'removeAt',
+    'setObjects',
+    'unshiftObject',
+    'unshiftObjects',
+  ].forEach(methodName => {
+    it(`throws not implemented error for "${methodName}" method`, function () {
+      const startIndex = 0;
+      const endIndex = 20;
+      const indexMargin = 0;
+
+      const as = ArraySlice.create({
+        sourceArray: A([]),
+        startIndex,
+        endIndex,
+        indexMargin,
+      });
+
+      try {
+        as[methodName]();
+        throw new Error('method should throw');
+      } catch (error) {
+        expect(error.toString()).to.contain('not implemented in array-slice');
+      }
+    });
+  });
+
   it('exposes array containing slice of original array', function () {
     const sourceArray = A(_.range(0, 100));
 
@@ -107,6 +240,7 @@ describe('Unit | Utility | array slice', function () {
 
     await settled();
     const native = as.toArray();
+
     expect(
       native,
       `${JSON.stringify(native)} should contain pushed object`
