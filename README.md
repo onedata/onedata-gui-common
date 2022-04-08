@@ -40,7 +40,7 @@ Then dependencies of the in-repo addon should be installed to the parent project
 It is required as in this issue on Github: https://github.com/ember-cli/ember-cli/issues/4164
 To copy dependencies launch a script (requires Python ^2.7) from root of parent project repo:
 ```
-./src/lib/onedata-gui-common/scripts/copy-deps-to-project.py
+./src/lib/onedata-gui-common/onedata-gui-utils/scripts/copy-deps-to-project.py
 ```
 
 #### Setting up Sass

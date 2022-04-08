@@ -1,6 +1,9 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
- * Plugin for Chartist which adds tooltip. For bar and line charts tooltip 
- * creates description based on chartist legend and values. For pie chart data for tooltip is 
+ * Plugin for Chartist which adds tooltip. For bar and line charts tooltip
+ * creates description based on chartist legend and values. For pie chart data for tooltip is
  * taken from data.series.tooltipElements. For example:
  * ```
  * tooltipElements: [{
@@ -16,12 +19,12 @@
  * Options:
  * - chartType - type of the chart (bar, line, pie)
  * - rangeInTitle - takes two x axis labels instead of one to tooltip title
- * - renderAboveBarDescription - [bar chart only] if true, places tooltip 
+ * - renderAboveBarDescription - [bar chart only] if true, places tooltip
  * above a text instead of bar
  * - topOffset - top offset of a tooltip
  * - valueSuffix - [bar/line chart only] suffix for tooltip entries (e.g. for units)
  * - roundValues - if true, values in tooltip will be rounded
- * 
+ *
  * @module utils/chartist/tooltip
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -46,7 +49,7 @@ const TOOLTIP_HTML =
 let chartsIndex = [];
 
 export default function (options) {
-  let defaultOptions = {
+  const defaultOptions = {
     chartType: 'bar',
     rangeInTitle: false,
     renderAboveBarDescription: false,
@@ -57,14 +60,14 @@ export default function (options) {
   options = Chartist.extend({}, defaultOptions, options);
 
   return (chart) => {
-    let tooltipNode,
-      container = $(chart.container);
+    let tooltipNode;
+    const container = $(chart.container);
 
-    let chartEntry = getChartRenderEntry(chart);
+    const chartEntry = getChartRenderEntry(chart);
 
-    let prepareTooltip = function (tooltipData, data) {
+    const prepareTooltip = function (tooltipData, data) {
       // title
-      let title = tooltipNode.find('.chart-tooltip-title');
+      const title = tooltipNode.find('.chart-tooltip-title');
       title.empty();
       title.append(chart.data.labels[data.index]);
       if (options.rangeInTitle) {
@@ -76,9 +79,9 @@ export default function (options) {
       }
 
       // data series and values
-      let ul = tooltipNode.find('.ct-legend');
+      const ul = tooltipNode.find('.ct-legend');
       ul.empty();
-      let suffix = options.valueSuffix ? ' ' + options.valueSuffix : '';
+      const suffix = options.valueSuffix ? ' ' + options.valueSuffix : '';
       tooltipData.forEach(d => {
         let value = d.value;
         if (options.roundValues && typeof value === 'number') {
@@ -103,8 +106,8 @@ export default function (options) {
         });
       } else {
         if (chartEntry.x !== null) {
-          let element = document.elementFromPoint(chartEntry.x, chartEntry.y);
-          let elementIndex = chartEntry.showCallbacksTargets.indexOf(element);
+          const element = document.elementFromPoint(chartEntry.x, chartEntry.y);
+          const elementIndex = chartEntry.showCallbacksTargets.indexOf(element);
           if (elementIndex > -1) {
             chartEntry.showCallbacks[elementIndex](chartEntry.x, chartEntry.y);
           } else {
@@ -127,23 +130,23 @@ export default function (options) {
       if (!isPluginEnabled(chart)) {
         return;
       }
-      let tooltipData = chart.data.series.map(s => ({
+      const tooltipData = chart.data.series.map(s => ({
         className: s.className,
         name: s.name,
         value: s.data[data.index],
       }));
 
       if (data.type === 'bar' && options.chartType === 'bar') {
-        let groupNode = $(data.group._node),
-          barNode = $(data.element._node);
+        const groupNode = $(data.group._node);
+        const barNode = $(data.element._node);
 
         barNode.mouseover(() => {
-          let lastGroupNode = groupNode.parent().children().last();
-          let lastGroupBar = $(lastGroupNode.children('line')[data.index]);
+          const lastGroupNode = groupNode.parent().children().last();
+          const lastGroupBar = $(lastGroupNode.children('line')[data.index]);
 
           // top position
           if (options.renderAboveBarDescription) {
-            let sumLabel = $(lastGroupNode.children('text')[data.index]);
+            const sumLabel = $(lastGroupNode.children('text')[data.index]);
             tooltipNode.css('top', (sumLabel.offset().top - container.offset().top) +
               'px');
           } else {
@@ -151,7 +154,7 @@ export default function (options) {
               .top) + 'px');
           }
           // left position
-          let rect = lastGroupBar[0].getBoundingClientRect();
+          const rect = lastGroupBar[0].getBoundingClientRect();
           tooltipNode.css('left', (rect.left + rect.width / 2 - container.offset()
             .left) + 'px');
 
@@ -163,14 +166,14 @@ export default function (options) {
         });
       }
       if (data.type === 'point' && options.chartType === 'line') {
-        let groupNode = $(data.group._node),
-          pointNode = $(data.element._node);
+        const groupNode = $(data.group._node);
+        const pointNode = $(data.element._node);
 
         pointNode.mouseover(() => {
           // top position
-          let rect = pointNode[0].getBoundingClientRect();
+          const rect = pointNode[0].getBoundingClientRect();
           if (options.renderAboveBarDescription) {
-            let sumLabel = $(groupNode.children('text')[data.index]);
+            const sumLabel = $(groupNode.children('text')[data.index]);
             tooltipNode.css('top', (sumLabel.offset().top - container.offset().top) +
               'px');
           } else {
@@ -191,9 +194,9 @@ export default function (options) {
       if (data.type === 'slice' && options.chartType === 'pie') {
         data.series.tooltipElements.forEach(element => element.className =
           'no-padding');
-        let tooltipData = data.series.tooltipElements;
-        let sliceNode = $(data.element._node);
-        let showTooltip = (x, y) => {
+        const tooltipData = data.series.tooltipElements;
+        const sliceNode = $(data.element._node);
+        const showTooltip = (x, y) => {
           tooltipNode.css('top', (y - container.offset().top - 10) +
             'px');
           tooltipNode.css('left', (x - container.offset()
@@ -223,7 +226,7 @@ function isPluginEnabled(chart) {
 }
 
 function getChartRenderEntry(chart) {
-  let node = chart.container;
+  const node = chart.container;
   let chartRender = _.find(chartsIndex, { node });
   if (!chartRender) {
     chartRender = {

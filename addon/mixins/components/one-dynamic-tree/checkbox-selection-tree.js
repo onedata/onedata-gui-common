@@ -1,17 +1,21 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * A mixin that provides 'select all' functionality to the one-dynamic-tree component.
  * It works using tree data structure (_checkboxSelectionTree property) to store
  * data about selection state. That tree has these properties:
- * * each node object has properties `nodes` and `value`. 
+ * * each node object has properties `nodes` and `value`.
  *   `nodes` is a object with pairs `subnodeName: subnode`,
  * * leaf represents a checkbox. Its `value` equals checkbox selection state,
  *   `nodes` property is empty.
- * * each parent `value` is calculated using `AND` operation on `value` 
- *   properties of its `nodes` objects. So if all children have `value==true`, 
+ * * each parent `value` is calculated using `AND` operation on `value`
+ *   properties of its `nodes` objects. So if all children have `value==true`,
  *   then parent has `value==true`, otherwise `value==false`.
  * * only nodes which represent checkbox fields or their parents are in the tree.
  * * node name is taken from tree definition.
- * 
+ *
  * @module mixins/components/one-dynamic-tree/checkbox-selection-tree
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -33,21 +37,22 @@ export default Mixin.create({
    * Creates tree with tree checkboxes selection states
    */
   _buildCheckboxSelectionTree() {
-    let _fieldsTree = this.get('_fieldsTree');
-    let checkboxSelectionTree = this._buildNodeCheckboxesTree(_fieldsTree);
+    const _fieldsTree = this.get('_fieldsTree');
+    const checkboxSelectionTree = this._buildNodeCheckboxesTree(_fieldsTree);
     this._fillCheckboxSelectionTree(checkboxSelectionTree);
     this.set('_checkboxSelectionTree', checkboxSelectionTree);
   },
 
   /**
    * Creates tree with node checkboxes selection states
+   * @returns {EmberObject}
    */
   _buildNodeCheckboxesTree(node) {
     if (node.get('_isField') && (node.get('type') !== 'checkbox')) {
       // field, but not checkbox or disabled
       return undefined;
     }
-    let checkboxNode = EmberObject.create({
+    const checkboxNode = EmberObject.create({
       value: undefined,
       nodes: null,
     });
@@ -56,8 +61,8 @@ export default Mixin.create({
       return checkboxNode;
     } else {
       // possible parent of checkbox fields
-      let checkboxSubnodes = Object.keys(node).reduce((subnodes, subnodeName) => {
-        let _checkboxSubnodes =
+      const checkboxSubnodes = Object.keys(node).reduce((subnodes, subnodeName) => {
+        const _checkboxSubnodes =
           this._buildNodeCheckboxesTree(node.get(subnodeName));
         if (_checkboxSubnodes) {
           subnodes.set(subnodeName, _checkboxSubnodes);
@@ -92,17 +97,17 @@ export default Mixin.create({
   },
 
   _fillCheckboxSelectionTreeNode(node, path) {
-    let values = this.get('values');
+    const values = this.get('values');
     let value;
     if (!node.get('nodes')) {
       // is checkbox
       value = values.get(path);
     } else {
       // is checkbox parent
-      let subnodes = node.get('nodes');
+      const subnodes = node.get('nodes');
       value = Object.keys(subnodes).reduce((value, subnodeName) => {
-        let subnodePath = path ? `${path}.${subnodeName}` : subnodeName;
-        let subnodeValue = this._fillCheckboxSelectionTreeNode(
+        const subnodePath = path ? `${path}.${subnodeName}` : subnodeName;
+        const subnodeValue = this._fillCheckboxSelectionTreeNode(
           subnodes.get(subnodeName), subnodePath
         );
         if (value === null) {
@@ -122,11 +127,11 @@ export default Mixin.create({
    * @param {boolean} value A value for checkboxes.
    */
   _changeCheckboxesState(node, value) {
-    let values = this.get('values');
+    const values = this.get('values');
     if (node.get('_isField')) {
       if (node.get('type') === 'checkbox' &&
         !this.isPathDisabled(node.get('name'))) {
-        let name = node.get('name');
+        const name = node.get('name');
         values.set(name, value);
         this._markFieldAsModified(name);
       }
@@ -144,7 +149,7 @@ export default Mixin.create({
      * @param {boolean} value A value for checkboxes.
      */
     selectNestedCheckboxes(path, value) {
-      let _fieldsTree = this.get('_fieldsTree');
+      const _fieldsTree = this.get('_fieldsTree');
       this._changeCheckboxesState(_fieldsTree.get(path), value);
       this.valuesHaveChanged(true);
     },

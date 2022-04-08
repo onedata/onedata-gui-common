@@ -1,8 +1,8 @@
 /**
  * Plugin for Chartist which adds additional label on the right side of the x-axis.
- * 
+ *
  * Options:
- * - xOffsetMultiply - label will be moved right by xOffsetMultiply 
+ * - xOffsetMultiply - label will be moved right by xOffsetMultiply
  * (default width of a label)
  * - insertBefore - label will be inserted before last label node
  *
@@ -16,28 +16,28 @@
 import $ from 'jquery';
 
 export default function (options) {
-  let defaultOptions = {
+  const defaultOptions = {
     xOffsetMultiply: 1,
     insertBefore: false,
   };
-  options = Chartist.extend({}, defaultOptions, options);
+  const chartistOptions = Chartist.extend({}, defaultOptions, options);
   return (chart) => {
     chart.on('created', () => {
-      let labelsNode = $(chart.svg._node).find('.ct-labels');
-      let labels = labelsNode.find('.ct-label.ct-horizontal.ct-end');
-      let lastLabelNode = labelsNode.find('.ct-label.ct-horizontal.ct-end').last().parent();
+      const labelsNode = $(chart.svg._node).find('.ct-labels');
+      const labels = labelsNode.find('.ct-label.ct-horizontal.ct-end');
+      const lastLabelNode = labelsNode.find('.ct-label.ct-horizontal.ct-end').last().parent();
       let sourceLabelNode = lastLabelNode;
       if (labels.length > 1) {
         sourceLabelNode = $(labels[labels.length - 2]).parent();
       }
 
-      let newLabelNode = sourceLabelNode.clone();
+      const newLabelNode = sourceLabelNode.clone();
       newLabelNode.attr('x',
-        parseFloat(lastLabelNode.attr('x')) + options.xOffsetMultiply * parseFloat(
+        parseFloat(lastLabelNode.attr('x')) + chartistOptions.xOffsetMultiply * parseFloat(
           sourceLabelNode.attr('width'))
       );
       newLabelNode.find('span').text(chart.data.lastLabel);
-      if (!options.insertBefore) {
+      if (!chartistOptions.insertBefore) {
         newLabelNode.insertAfter(lastLabelNode);
       } else {
         newLabelNode.insertBefore(lastLabelNode);

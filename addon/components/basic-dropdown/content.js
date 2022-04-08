@@ -29,7 +29,7 @@ export default Content.extend({
     // Fixes incorrect positioning of dropdown content due to some interference
     // with a page scrollbar.
     next(() => safeExec(this, () => {
-      let reposition = this.get('dropdown.actions.reposition');
+      const reposition = this.get('dropdown.actions.reposition');
       if (this.get('dropdown.isOpen') && reposition) {
         reposition();
       }

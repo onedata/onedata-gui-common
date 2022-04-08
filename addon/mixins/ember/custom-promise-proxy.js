@@ -101,7 +101,7 @@ export default Mixin.create({
     See RSVP.Promise.then.
     @method then
     @param {Function} callback
-    @return {RSVP.Promise}
+    @returns {RSVP.Promise}
     @public
   */
   then: promiseAlias('then'),
@@ -111,7 +111,7 @@ export default Mixin.create({
     See RSVP.Promise.catch.
     @method catch
     @param {Function} callback
-    @return {RSVP.Promise}
+    @returns {RSVP.Promise}
     @since 1.3.0
     @public
   */
@@ -122,7 +122,7 @@ export default Mixin.create({
     See RSVP.Promise.finally.
     @method finally
     @param {Function} callback
-    @return {RSVP.Promise}
+    @returns {RSVP.Promise}
     @since 1.3.0
     @public
   */
@@ -158,7 +158,7 @@ export default Mixin.create({
 
 function promiseAlias(name) {
   return function () {
-    let promise = get(this, 'promise');
+    const promise = get(this, 'promise');
     return promise[name](...arguments);
   };
 }

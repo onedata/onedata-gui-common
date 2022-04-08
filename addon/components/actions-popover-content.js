@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * A component that renders list of actions in dropdown-friendly form. Usually it
  * will be used inside dropdown popovers.
@@ -41,7 +44,7 @@ export default Component.extend(I18n, {
 
   /**
    * @type {function}
-   * @return {undefined}
+   * @returns {undefined}
    */
   actionClicked: () => {},
 

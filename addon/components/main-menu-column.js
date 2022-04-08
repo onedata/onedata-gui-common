@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 /**
  * Container for application main menu used as a one of the layout columns.
  *

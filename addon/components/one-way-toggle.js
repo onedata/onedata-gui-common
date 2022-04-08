@@ -80,7 +80,7 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
    * @type {computed.string}
    */
   _toggleClassFromId: computed('inputId', function () {
-    let inputId = this.get('inputId');
+    const inputId = this.get('inputId');
     return inputId ? inputId + '-toggle' : '';
   }),
 
@@ -111,7 +111,7 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
       return;
     }
 
-    let {
+    const {
       threeState,
       threeStatesValues,
       allowThreeStateToggle,
@@ -125,9 +125,9 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
 
     document.getSelection().removeAllRanges();
 
-    let toggleElement = this.$('.one-way-toggle-control');
-    let mouseX = event.originalEvent.gesture.center.x;
-    let moveRatio = (mouseX - toggleElement.offset().left) /
+    const toggleElement = this.$('.one-way-toggle-control');
+    const mouseX = event.originalEvent.gesture.center.x;
+    const moveRatio = (mouseX - toggleElement.offset().left) /
       toggleElement.outerWidth();
     let newValue;
     if (threeState && allowThreeStateToggle) {

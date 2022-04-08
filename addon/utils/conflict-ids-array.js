@@ -66,10 +66,10 @@ export default ArrayProxy.extend({
      * It distinguish a record within other records if there are multiple
      * records with the same name.
      */
-    let computeConflictIds = observer('content.[]',
+    const computeConflictIds = observer('content.[]',
       `content.@each.{${diffProperty},${conflictProperty}}`, 'defaultId',
       function () {
-        let {
+        const {
           content: records,
           diffProperty,
           conflictProperty,

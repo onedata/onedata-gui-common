@@ -79,7 +79,7 @@ export default function multiply(context, args) {
     arrayLength = 1;
   }
 
-  let resultArray = operandAsNumbersArray(operands[0], arrayLength);
+  const resultArray = operandAsNumbersArray(operands[0], arrayLength);
   for (const operand of operands.slice(1)) {
     const operandAsArray = operandAsNumbersArray(operand, arrayLength);
     for (let i = 0; i < arrayLength; i++) {

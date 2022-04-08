@@ -18,7 +18,7 @@ describe('Integration | Component | one form field static', function () {
       {{one-form-field-static field=field value=value}}
     `);
 
-    let $field = this.$('.form-control-static');
+    const $field = this.$('.form-control-static');
     expect($field).to.have.length(1);
     expect($field.text()).to.match(new RegExp('hello'));
   });
@@ -32,7 +32,7 @@ describe('Integration | Component | one form field static', function () {
       {{one-form-field-static field=field}}
     `);
 
-    let $field = this.$('.form-control-static');
+    const $field = this.$('.form-control-static');
     expect($field).to.have.class('field-one');
   });
 });
