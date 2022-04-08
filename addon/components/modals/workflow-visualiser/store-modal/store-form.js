@@ -528,7 +528,15 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.ToggleField>}
    */
   needsUserInputField: computed(function needsUserInputField() {
-    return ToggleField.create({
+    return ToggleField.extend({
+      isEnabled: neq('valuesSource.type', raw('timeSeries')),
+      storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
+        // For time series store change value to `false`
+        if (this.get('valuesSource.type') === 'timeSeries' && this.get('value')) {
+          this.valueChanged(false);
+        }
+      }),
+    }).create({
       name: 'needsUserInput',
     });
   }),
