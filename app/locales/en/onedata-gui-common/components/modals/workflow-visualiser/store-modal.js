@@ -1,9 +1,11 @@
 import storeForm from './store-modal/store-form';
 import storeContentTable from './store-modal/store-content-table';
+import timeSeriesPresenter from './store-modal/time-series-presenter';
 
 export default {
   storeForm,
   storeContentTable,
+  timeSeriesPresenter,
   header: {
     create: 'Create new store',
     edit: 'Modify store',
