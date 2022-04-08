@@ -93,6 +93,7 @@ export default ArrayProxy.extend({
 
   init() {
     this._super(...arguments);
+    // TODO: VFS-9267 Implement missing array method in ArraySlice
     [
       'insertAt',
       'removeAt',
@@ -130,11 +131,26 @@ export default ArrayProxy.extend({
    * @override
    */
   slice(begin, end) {
-    const sourceArray = this.get('sourceArray');
-    const effBegin = typeof begin === 'number' ? this._translateIndex(begin) : undefined;
-    let effEnd = typeof end === 'number' ? this._translateIndex(end) : undefined;
-    if (effEnd === -1 || !effEnd) {
-      effEnd = this.get('length');
+    const {
+      _start,
+      _end,
+      sourceArray,
+    } = this.getProperties('_start', '_end', 'sourceArray');
+    let effBegin = begin;
+    let effEnd = end;
+    if (typeof effBegin === 'number') {
+      effBegin = effBegin >= 0 ?
+        this._translateIndex(effBegin) :
+        this._translateNegativeIndex(effBegin);
+    } else {
+      effBegin = _start;
+    }
+    if (typeof effEnd === 'number') {
+      effEnd = effEnd >= 0 ?
+        this._translateIndex(effEnd) :
+        this._translateNegativeIndex(effEnd);
+    } else {
+      effEnd = _end;
     }
     return sourceArray.slice(effBegin, effEnd);
   },
@@ -213,6 +229,11 @@ export default ArrayProxy.extend({
     );
     const translatedIndex = _start + index;
     return translatedIndex > _end ? -1 : translatedIndex;
+  },
+
+  _translateNegativeIndex(negativeIndex) {
+    const _end = this.get('_end');
+    return Math.max(_end + negativeIndex, 0);
   },
 
   overrideAsNotImplemented(methodName) {

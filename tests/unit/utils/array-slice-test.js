@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { settled } from '@ember/test-helpers';
 import sinon from 'sinon';
 import { A } from '@ember/array';
-import EmberObject, { computed, get } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 
 const ArraySum = EmberObject.extend({
   spy: undefined,
@@ -92,8 +92,8 @@ describe('Unit | Utility | array slice', function () {
   it('returns a copy of sliced array using slice method without arguments', function () {
     const sourceArrayTemplate = _.range(0, 20);
 
-    const startIndex = 0;
-    const endIndex = 10;
+    const startIndex = 5;
+    const endIndex = 15;
     const indexMargin = 0;
 
     const as = ArraySlice.create({
@@ -103,10 +103,24 @@ describe('Unit | Utility | array slice', function () {
       indexMargin,
     });
 
-    const sliced = as.slice();
-    expect(sliced).to.be.not.equal(as);
-    expect(sliced).to.be.not.equal(get(as, 'sourceArray'));
-    expect(sliced).to.deep.equal(_.range(0, 10));
+    expect(as.slice()).to.deep.equal(_.range(5, 15));
+  });
+
+  it('returns a slice of current range using slice method with negative arguments', function () {
+    const sourceArrayTemplate = _.range(0, 20);
+
+    const startIndex = 5;
+    const endIndex = 15;
+    const indexMargin = 0;
+
+    const as = ArraySlice.create({
+      sourceArray: A([...sourceArrayTemplate]),
+      startIndex,
+      endIndex,
+      indexMargin,
+    });
+
+    expect(as.slice(-3, -1)).to.deep.equal(_.range(12, 14));
   });
 
   [
