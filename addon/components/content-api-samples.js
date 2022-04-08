@@ -1,5 +1,5 @@
 /**
- * Renders api samples entry.
+ * Renders api samples content.
  *
  * @author Agnieszka Warchoł
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -10,41 +10,30 @@ import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { reads } from '@ember/object/computed';
-import { conditional, promise, array, tag } from 'ember-awesome-macros';
+import { conditional, array, tag } from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
 import layout from '../templates/components/content-api-samples';
 
 export default Component.extend(I18n, {
   layout,
   classNames: ['content-api-samples'],
-  fileManager: service(),
   apiStringGenerator: service(),
+  restApiGenerator: service(),
 
   /**
    * @override
    */
-  i18nPrefix: 'components.fileBrowser.fbInfoModal.apiEntry',
+  i18nPrefix: 'components.contentApiSamples',
 
   /**
-   * @virtual
-   * @type {Models.File}
+   * @type {Object}
    */
-  file: undefined,
-
   selectedApiCommand: null,
 
   /**
-   * For available values see: `commonRestUrlTypes` and `availableRestUrlCommands`
-   * @type {String}
+   * @type {Object}
    */
-  selectedRestUrlType: null,
-
-  apiSamplesProxy: promise.object(computed(function apiSamples() {
-    const fileId = this.get('file.entityId');
-    return this.get('fileManager').getFileApiSamples(fileId, 'public');
-  })),
-
-  apiSamples: reads('apiSamplesProxy.content'),
+  apiSamples: undefined,
 
   /**
    * ID for API command info trigger (hint about API commands)
@@ -64,18 +53,24 @@ export default Component.extend(I18n, {
         if ('samples' in value) {
           availableApiSamples = availableApiSamples.concat(value.samples
             .map(sample => {
-              sample.type = key;
+              if (!('type' in sample)) {
+                sample.type = key;
+              }
               if ('apiRoot' in value) {
                 sample.apiRoot = value.apiRoot;
               }
               return sample;
-            }));
+            })
+          );
         } else {
           availableApiSamples = availableApiSamples.concat(value
             .map(sample => {
-              sample.type = key;
+              if (!('type' in sample)) {
+                sample.type = key;
+              }
               return sample;
-            }));
+            })
+          );
         }
       }
       return availableApiSamples;
@@ -84,7 +79,7 @@ export default Component.extend(I18n, {
 
   /**
    * Readonly property with valid API command specification to display.
-   * Set `selectedApiComman` property to change its value.
+   * Set `selectedApiCommand` property to change its value.
    * @type {ComputedProperty<Object>}
    */
   effSelectedApiCommand: conditional(
@@ -94,16 +89,8 @@ export default Component.extend(I18n, {
   ),
 
   /**
-   * Readonly property with valid name of REST URL type to display.
-   * Set `selectedRestUrlType` property to change its value.
    * @type {ComputedProperty<String>}
    */
-  effSelectedRestUrlType: conditional(
-    array.includes('availableRestUrlCommands', 'selectedRestUrlType'),
-    'selectedRestUrlType',
-    'availableRestUrlCommands.firstObject',
-  ),
-  // TODO czy to potrzebne?
   description: reads('effSelectedApiCommand.description'),
 
   /**
@@ -111,27 +98,15 @@ export default Component.extend(I18n, {
    */
   selectedApiCommandString: computed(
     'effSelectedApiCommand',
-    'spaceId',
-    'share',
-    'filePath',
     function selectedApiCommandString() {
-      const {
-        effSelectedApiCommand,
-      } = this.getProperties(
-        'effSelectedApiCommand',
-      );
+      const effSelectedApiCommand = this.get('effSelectedApiCommand');
       const type = get(effSelectedApiCommand, 'type');
-      const apiStringGenerator = this.get('apiStringGenerator');
+
       if (type === 'rest') {
-        const method = get(effSelectedApiCommand, 'method');
-        const path = get(effSelectedApiCommand, 'apiRoot') + get(effSelectedApiCommand, 'path');
-        const redirect = get(effSelectedApiCommand, 'followRedirects') ? '-L' : '';
-        return apiStringGenerator.fillTemplate(['curl', '{redirect}', '-X', '{method}', '{path}'], {
-          method,
-          path,
-          redirect,
-        });
+        const restApiGenerator = this.get('restApiGenerator');
+        return restApiGenerator.generateSample(effSelectedApiCommand);
       } else {
+        const apiStringGenerator = this.get('apiStringGenerator');
         const command = get(effSelectedApiCommand, 'command');
         return apiStringGenerator.fillTemplate(command, {});
       }
