@@ -1,4 +1,6 @@
-export default function handleHidepassed(afterEach) {
+import { afterEach } from 'mocha';
+
+export default function handleHidepassed() {
   // Remove all passed test reports from DOM if `hidepassed` query param is present
   const urlParams = new URLSearchParams(location.search);
   if (urlParams.get('hidepassed') !== null) {
