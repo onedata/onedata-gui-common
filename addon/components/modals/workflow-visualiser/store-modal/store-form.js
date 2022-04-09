@@ -63,54 +63,30 @@ const storeTypes = [{
 const dataTypes = [{
   value: 'integer',
   forbiddenIn: ['treeForest', 'range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram', 'range'],
 }, {
   value: 'string',
   forbiddenIn: ['treeForest', 'range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram', 'range'],
 }, {
   value: 'object',
   forbiddenIn: ['treeForest', 'range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram', 'range'],
-  // }, {
-  //   value: 'histogram',
-  //   forbiddenIn: ['treeForest', 'range'],
 }, {
   value: 'anyFile',
   forbiddenIn: ['range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'regularFile',
   forbiddenIn: ['range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'directory',
   forbiddenIn: ['range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'symlink',
   forbiddenIn: ['range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'dataset',
   forbiddenIn: ['range', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
-  // }, {
-  //   value: 'archive',
-  //   forbiddenIn: ['histogram', 'range'],
 }, {
   value: 'range',
   forbiddenIn: ['treeForest', 'timeSeries'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram'],
 }];
 
 const defaultRangeStart = 0;

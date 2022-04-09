@@ -62,12 +62,12 @@
             <ul class="selector-list">
               {{#each tagsToRender key="id" as |tag|}}
                 <li
-                  class="selector-item {{if tag.isEquivalentAlreadySelected "disabled"}}"
+                  class="selector-item {{if tag.disabledReason "disabled"}}"
                   {{action "tagSelected" tag}}
                 >
                   {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
-                  {{#if tag.isEquivalentAlreadySelected}}
-                    {{one-tooltip title=(tt this "equivalentAlreadyExists")}}
+                  {{#if tag.disabledReason}}
+                    {{one-tooltip title=(tt this (concat "disabled." tag.disabledReason))}}
                   {{/if}}
                 </li>
               {{/each}}

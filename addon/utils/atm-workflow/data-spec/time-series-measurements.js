@@ -27,7 +27,7 @@ export const nameMatcherTypes = [
 // `custom` unit is a fake unit, which represents a custom unit provided by a user.
 // When the custom unit is received/saved, it is prefixed with `custom:`
 // (e.g. `custom:my_own_unit123`). That prefix allows to recognize which unit
-// is a builtin one and which is custom.
+// is a built-in one and which is custom.
 export const customUnit = 'custom';
 export const customUnitsPrefix = `${customUnit}:`;
 

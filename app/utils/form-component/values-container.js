@@ -1,1 +1,4 @@
-export { default } from 'onedata-gui-common/utils/form-component/values-container';
+export {
+  createValuesContainer,
+  isValuesContainer,
+} from 'onedata-gui-common/utils/form-component/values-container';

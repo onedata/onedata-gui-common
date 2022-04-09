@@ -1,11 +1,11 @@
 /**
  * Clones form values (especially whole values trees). Cloning strategy:
  * - value containers are clone into new value containers,
- * - arrays and raw JS objects/values are cloned deeply as well,
- * - Ember objects, which are not value containers, are preserved without cloning.
+ * - all other values are copied by reference.
  *
- * Ember objects are preserved to avoid problems with copying objects like Ember
- * Data models etc.
+ * Above approach allows to preserve the same references to objects across
+ * multiple value clones which is especially handy in terms of Ember Data models
+ * and diff analysis.
  *
  * @module utils/form-component/clone-value
  * @author Michał Borzęcki
@@ -19,6 +19,10 @@ import {
   isValuesContainer,
 } from 'onedata-gui-common/utils/form-component/values-container';
 
+/**
+ * @param {unknown} value
+ * @returns {unknown}
+ */
 export default function cloneValue(value) {
   if (isValuesContainer(value)) {
     return cloneValuesContainer(value);
@@ -27,6 +31,10 @@ export default function cloneValue(value) {
   }
 }
 
+/**
+ * @param {Utils.FormComponent.ValuesContainer} obj
+ * @returns {Utils.FormComponent.ValuesContainer}
+ */
 function cloneValuesContainer(obj) {
   const container = createValuesContainer();
 

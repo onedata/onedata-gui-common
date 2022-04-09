@@ -63,10 +63,6 @@ export default {
           dataset: {
             label: 'Dataset',
           },
-          // TODO: VFS-7816 uncomment or remove future code
-          // archive: {
-          //   label: 'Archive',
-          // },
           range: {
             label: 'Range',
           },

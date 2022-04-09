@@ -1,7 +1,7 @@
 /**
- * A tags (tokenizer) input editor, which allows to add tags using selector. There
- * are two possibilites to add new tags: time series metric presets and custom metric
- * form.
+ * A tags (tokenizer) input editor, which allows to add tags (metrics) using selector.
+ * There are two possibilites to add new tags: time series metric presets and
+ * custom metric form.
  *
  * It is forbidden to use the same resolution twice for the same aggregator. Also
  * metric IDs must be unique.
@@ -92,9 +92,9 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 
   /**
    * @virtual optional
-   * @type {boolean}
+   * @type {'equivalentExists'|'idExists'|null}
    */
-  isEquivalentAlreadySelected: false,
+  disabledReason: null,
 
   /**
    * @type {ComputedProperty<string>}
@@ -228,11 +228,13 @@ export default Component.extend(I18n, {
   tagsToRender: computed(
     'allAvailableTagValues',
     'selectedTags.[]',
+    'usedIds',
     function tagsToRender() {
       const {
         allAvailableTagValues,
         selectedTags,
-      } = this.getProperties('allAvailableTagValues', 'selectedTags');
+        usedIds,
+      } = this.getProperties('allAvailableTagValues', 'selectedTags', 'usedIds');
 
       const selectedTagHashes = new Set();
       const selectedTagCompatHashes = new Set();
@@ -250,7 +252,8 @@ export default Component.extend(I18n, {
         .map((tagValue) => Tag.create({
           ownerSource: this,
           value: tagValue,
-          isEquivalentAlreadySelected: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)),
+          disabledReason: selectedTagCompatHashes.has(getTagValueHash(tagValue, true)) ?
+            'equivalentExists' : (usedIds.has(get(tagValue, 'id')) ? 'idExists' : null),
         }));
     }
   ),
@@ -383,7 +386,7 @@ export default Component.extend(I18n, {
 
   actions: {
     tagSelected(tag) {
-      if (get(tag, 'isEquivalentAlreadySelected')) {
+      if (get(tag, 'disabledReason')) {
         return;
       }
       this.get('onTagsAdded')([tag]);
@@ -425,6 +428,14 @@ function generateMetricId(aggregator, resolutionName) {
   return `${aggregator}${presetDataPerResolution[resolutionName].metricIdResolutionPart}`;
 }
 
+/**
+ * Calculates hash representation of tag value, which is handy for comparison purposes.
+ * When `includeOnlyCompatProps` is set to true, only most important and functional fields
+ * are hashed to represent "compatibility"-related features instead of all details.
+ * @param {TimeSeriesMetricTagsInputValue} tagValue
+ * @param {boolean} includeOnlyCompatProps
+ * @returns {string}
+ */
 function getTagValueHash(tagValue, includeOnlyCompatProps = false) {
   const propsToHash = includeOnlyCompatProps ? [
     'aggregator',

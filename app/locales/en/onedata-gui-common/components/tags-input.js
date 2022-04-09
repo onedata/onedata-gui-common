@@ -53,7 +53,10 @@ export default {
       custom: 'Custom',
     },
     allPresetsUsed: 'All presets are already used.',
-    equivalentAlreadyExists: 'Metric with the same resolution already exists',
+    disabled: {
+      equivalentExists: 'Metric with the same resolution already exists',
+      idExists: 'Metric with the same ID already exists',
+    },
     fields: {
       id: {
         label: 'ID',

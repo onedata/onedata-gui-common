@@ -1,3 +1,12 @@
+/**
+ * Shows time series store content using charts. To be fully functional presented
+ * store must have non-empty `chartSpecs` property.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { reads, notEmpty } from '@ember/object/computed';
@@ -9,7 +18,19 @@ import Looper from 'onedata-gui-common/utils/looper';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 
-const timeSeriesGeneratorStateReloadInterval = 5000;
+/**
+ * @typedef {Object<string, TimeSeriesStoreGeneratorState>} TimeSeriesStoreGeneratorsState
+ * Keys are generator names
+ */
+
+/**
+ * @typedef {Object} TimeSeriesStoreGeneratorState
+ * @property {Array<string>} timeSeriesNames
+ * @property {Object<string, number>} metricIdToResolutionMap
+ * @property {Object<number, string>} resolutionToMetricIdMap
+ */
+
+const timeSeriesGeneratorsStateReloadInterval = 5000;
 
 export default Component.extend(I18n, createDataProxyMixin('timeSeriesGeneratorsState'), {
   layout,
@@ -38,15 +59,15 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
   /**
    * @type {number}
    */
-  timeSeriesGeneratorStateReloadInterval,
+  timeSeriesGeneratorsStateReloadInterval,
 
   /**
    * @type {Utils.Looper}
    */
-  timeSeriesGeneratorStateUpdater: undefined,
+  timeSeriesGeneratorsStateUpdater: undefined,
 
   /**
-   * @type {ComputedProperty<Array<Object>>}
+   * @type {ComputedProperty<Array<OTSCChartDefinition>>}
    */
   chartSpecs: reads('store.config.chartSpecs'),
 
@@ -71,26 +92,35 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
     });
   }),
 
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
-    const timeSeriesGeneratorStateUpdater =
-      this.set('timeSeriesGeneratorStateUpdater', Looper.create({
+    const timeSeriesGeneratorsStateUpdater =
+      this.set('timeSeriesGeneratorsStateUpdater', Looper.create({
         immediate: true,
-        interval: this.get('timeSeriesGeneratorStateReloadInterval'),
+        interval: this.get('timeSeriesGeneratorsStateReloadInterval'),
       }));
-    timeSeriesGeneratorStateUpdater.on('tick', () =>
-      this.updateTimeSeriesGeneratorsStateProxy({ replace: true })
+    timeSeriesGeneratorsStateUpdater.on('tick', () =>
+      this.updatetimeSeriesGeneratorssStateProxy({ replace: true })
     );
   },
 
+  /**
+   * @override
+   */
   willDestroyElement() {
     try {
-      this.get('timeSeriesGeneratorStateUpdater').destroy();
+      this.get('timeSeriesGeneratorsStateUpdater').destroy();
     } finally {
       this._super(...arguments);
     }
   },
 
+  /**
+   * @override
+   */
   async fetchTimeSeriesGeneratorsState() {
     const schemas = this.get('store.config.schemas');
     const state = {};
@@ -123,6 +153,9 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
     return state;
   },
 
+  /**
+   * @returns {Promise<AtmTimeSeriesStoreLayoutContentBrowseResult['layout']>}
+   */
   async fetchTimeSeriesLayout() {
     const result = await this.get('getStoreContentCallback')({
       type: 'timeSeriesStoreContentBrowseOptions',

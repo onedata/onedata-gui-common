@@ -1,3 +1,11 @@
+/**
+ * Shows single time series store chart.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, get, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -32,6 +40,7 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {OTSCChartDefinition}
    */
   chartSpec: undefined,
 
@@ -43,7 +52,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {?}
+   * @type {TimeSeriesStoreGeneratorsState}
    */
   timeSeriesGeneratorsState: undefined,
 
@@ -58,12 +67,16 @@ export default Component.extend({
    */
   globalTimeSecondsOffset: reads('onedataConnection.globalTimeSecondsOffset'),
 
+  /**
+   * @type {ComputedProperty<Array<OTSCTimeResolutionSpec>>}
+   */
   timeResolutionSpecs: computed(
     'chartSpec',
     function timeResolutionSpecs() {
       const chartSpec = this.get('chartSpec');
       const foundSeriesSources = [];
 
+      // Extract series loaded via `loadSeries` function
       const objectsToCheck = chartSpec.series
         .map((factory) => get(factory, 'factoryArguments.seriesTemplate.data'))
         .filter(Boolean);
@@ -91,6 +104,7 @@ export default Component.extend({
         }
       }
 
+      // Extract series loaded via dynamic series
       chartSpec.series
         .filter((series) => series && series.factoryName === 'dynamic')
         .map(({ factoryArguments }) => factoryArguments && factoryArguments.dynamicSeriesConfigs)
@@ -99,6 +113,7 @@ export default Component.extend({
           foundSeriesSources.push(dynamicSeriesConfigs.sourceParameters.externalSourceParameters)
         );
 
+      // Map found series sources to resolutions
       const resolutionsPerSource = foundSeriesSources
         .map(({ timeSeriesNameGenerator, metricIds }) =>
           metricIds
@@ -215,6 +230,11 @@ export default Component.extend({
     }));
   },
 
+  /**
+   * @param {string} timeSeriesNameGenerator
+   * @param {string} metricId
+   * @returns {number|undefined}
+   */
   getResolutionForMetric(timeSeriesNameGenerator, metricId) {
     if (!timeSeriesNameGenerator || !metricId) {
       return;
@@ -225,6 +245,11 @@ export default Component.extend({
     );
   },
 
+  /**
+   * @param {string} timeSeriesNameGenerator
+   * @param {number} resolution
+   * @returns {string}
+   */
   getMetricForResolution(timeSeriesNameGenerator, resolution) {
     if (!timeSeriesNameGenerator || typeof resolution !== 'number') {
       return;

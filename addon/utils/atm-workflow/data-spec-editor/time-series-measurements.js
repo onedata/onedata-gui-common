@@ -76,7 +76,7 @@ const formElement = FormFieldsCollectionGroup.extend({
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from time series measurements editor
- * @returns {Object} value constraints
+ * @returns {TimeSeriesMeasurementsValueConstraints} value constraints
  */
 function formValuesToValueConstraints(values) {
   const specs = get(values, '__fieldsValueNames')
@@ -112,7 +112,8 @@ function formValuesToValueConstraints(values) {
 }
 
 /**
- * @param {Object} valueConstraints value constraints taken from the raw data spec
+ * @param {TimeSeriesMeasurementsValueConstraints} valueConstraints value
+ * constraints taken from the raw data spec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
 function valueConstraintsToFormValues(valueConstraints) {

@@ -529,7 +529,6 @@ export default Component.extend(I18n, {
     'atmLambdaRevision',
     function atmLambdaRevisionObserver() {
       this.resetFormValues();
-      // this.get('fields').reset();
     }
   ),
 
@@ -941,7 +940,8 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
       Object.assign(
         storeContentUpdateOptions,
         storeContentUpdateOptionsEditors.timeSeries.formValuesToStoreContentUpdateOptions(
-        timeSeriesEditor, { storeConfig: get(targetStore, 'config') })
+          timeSeriesEditor, { storeConfig: get(targetStore, 'config') }
+        )
       );
     } else if (possibleDispatchFunctions.includes(dispatchFunction)) {
       storeContentUpdateOptions.function = dispatchFunction;

@@ -931,8 +931,7 @@ function itAllowsToDisableAllFields() {
 }
 
 function expectExpandedConfig(configName) {
-  ['generic', 'range', 'timeSeries']
-  .filter((name) => name !== configName)
+  ['generic', 'range', 'timeSeries'].filter((name) => name !== configName)
     .forEach((name) => {
       const collapse = find(`.${name}StoreConfig-collapse`);
       if (collapse) {
