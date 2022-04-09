@@ -342,6 +342,11 @@ label {
       text-align: left;
     }
   }
+  &.tooltip-text-monospace {
+    .tooltip-inner {
+      @include font-monospace;
+    }
+  }
   .tooltip-inner {
     word-wrap: break-word;
     > p:last-child {

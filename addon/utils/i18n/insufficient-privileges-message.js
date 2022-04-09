@@ -35,7 +35,7 @@ export default function insufficientPrivilegesMessage({
   });
 }
 
-function createPrivilegeExpression(i18n, modelName, privileges) {
+export function createPrivilegeExpression(i18n, modelName, privileges) {
   if (Array.isArray(privileges)) {
     if (privileges.length === 1) {
       return `${singleExpr(i18n, modelName, privileges[0])} ${i18n.t(i18nPrefix + '.privilege')}`;
