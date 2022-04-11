@@ -8,6 +8,7 @@
  */
 
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
+import { and, or, raw, equal } from 'ember-awesome-macros';
 
 export default StaticTextField.extend({
   /**
@@ -30,8 +31,18 @@ export default StaticTextField.extend({
 
   /**
    * @virtual optional
+   * @type {null|'monospace'}
+   * Type of styling - it will apply proper classes to internal components.
+   */
+  fieldStyle: null,
+
+  /**
+   * @virtual optional
    * @type {String}
    * Class for `clipboard-line` components.
    */
-  clipboardLineClass: '',
+  clipboardLineClass: or(
+    and(equal('fieldStyle', raw('monospace')), raw('monospace-font')),
+    raw(''),
+  ),
 });
