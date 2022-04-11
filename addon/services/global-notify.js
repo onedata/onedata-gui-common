@@ -1,3 +1,7 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsdoc/require-returns */
+
 import { get } from '@ember/object';
 import Service, { inject as service } from '@ember/service';
 import { htmlSafe, isHTMLSafe } from '@ember/string';
@@ -42,7 +46,7 @@ export default Service.extend(I18n, {
   // TODO i18n
   backendError(operation, error) {
     const reason = error && this.get('errorExtractor').getMessage(error);
-    let capitalizedOperation = capitalize(String(operation));
+    const capitalizedOperation = capitalize(String(operation));
 
     let finalMessage =
       `<p class="operation-message"><strong>${capitalizedOperation} failed!</strong></p>`;

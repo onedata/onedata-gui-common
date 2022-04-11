@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Extends `ember-i18n` `t` helper by using translation prefix provided by
  * passed component object (which should implement `mixin:components/i18n`).
@@ -10,7 +13,7 @@
  * ```
  * it will render translation for `components.contentProviderRedirect.error`
  * with `{provierName: "some provider"}` interpolation.
- * 
+ *
  * @module helpers/tt
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
@@ -26,7 +29,7 @@ export default t.extend({
   /**
    * Extends `ember-i18n` `t` helper.
    * Uses translation prefix provided by passed component object.
-   * 
+   *
    * @param {Ember.Object} component typically an Ember.Component
    *    that uses `mixin:components/i18n`
    * @param {string} key specific key of translation - will be appended

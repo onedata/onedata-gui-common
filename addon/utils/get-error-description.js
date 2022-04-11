@@ -91,7 +91,7 @@ const detailsTranslateFunctions = {
  * @export
  * @param {object} error
  * @param {object} i18n
- * @return {object}
+ * @returns {object}
  */
 export default function getErrorDescription(error, i18n) {
   let message;
@@ -121,7 +121,7 @@ function findTranslationForError(i18n, error) {
   } = getProperties(error, 'id', 'details');
 
   const detailsToTranslateFun = detailsTranslateFunctions[errorId];
-  let errorDetailsToTranslate = detailsToTranslateFun ?
+  const errorDetailsToTranslate = detailsToTranslateFun ?
     detailsToTranslateFun(i18n, errorDetails) : errorDetails;
 
   return findTranslation(

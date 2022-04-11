@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 /**
  * Class responsible for generating colors in a deterministic and idempotent way.
  * Idempotency of generating colors in guaranteed ONLY within calls to the

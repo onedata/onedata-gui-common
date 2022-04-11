@@ -35,10 +35,10 @@ describe('Integration | Component | one collapsible list', function () {
   });
 
   it('handles item select', function (done) {
-    let itemValue = 1;
+    const itemValue = 1;
     this.set('itemValue', itemValue);
 
-    let selectionChangedSpy = sinon.spy();
+    const selectionChangedSpy = sinon.spy();
     this.on('selectionChanged', selectionChangedSpy);
 
     this.render(hbs `
@@ -71,10 +71,10 @@ describe('Integration | Component | one collapsible list', function () {
   });
 
   it('handles item deselect', function (done) {
-    let itemValue = 1;
+    const itemValue = 1;
     this.set('itemValue', itemValue);
 
-    let selectionChangedSpy = sinon.spy();
+    const selectionChangedSpy = sinon.spy();
     this.on('selectionChanged', selectionChangedSpy);
 
     this.render(hbs `
@@ -97,7 +97,7 @@ describe('Integration | Component | one collapsible list', function () {
       click('.first-item-header .one-checkbox').then(() => {
         click('.first-item-header .one-checkbox').then(() => {
           expect(selectionChangedSpy).to.be.calledTwice;
-          let selection = selectionChangedSpy.args[1][0];
+          const selection = selectionChangedSpy.args[1][0];
           expect(selection).to.be.an('array').that.is.empty;
           done();
         });
@@ -106,7 +106,7 @@ describe('Integration | Component | one collapsible list', function () {
   });
 
   it('ignores item selection if selectionValue is not set', function (done) {
-    let selectionChangedSpy = sinon.spy();
+    const selectionChangedSpy = sinon.spy();
     this.on('selectionChanged', selectionChangedSpy);
 
     this.render(hbs `
@@ -135,7 +135,7 @@ describe('Integration | Component | one collapsible list', function () {
   });
 
   it('can select all items', function (done) {
-    let selectionChangedSpy = sinon.spy();
+    const selectionChangedSpy = sinon.spy();
     this.on('selectionChanged', selectionChangedSpy);
 
     this.render(hbs `
@@ -160,7 +160,7 @@ describe('Integration | Component | one collapsible list', function () {
     wait().then(() => {
       click('.one-collapsible-list-header .one-checkbox').then(() => {
         expect(selectionChangedSpy).to.be.calledOnce;
-        let selection = selectionChangedSpy.args[0][0];
+        const selection = selectionChangedSpy.args[0][0];
         expect(selection).to.be.an('array').with.length(2);
         expect(selection).to.include.members([1, 2]);
         done();
@@ -213,7 +213,7 @@ describe('Integration | Component | one collapsible list', function () {
     wait().then(() => {
       click('.item1 .one-checkbox').then(() => {
         fillIn('.one-collapsible-list-header .search-bar', 'item2').then(() => {
-          let item1 = this.$('.item1');
+          const item1 = this.$('.item1');
           expect(item1).to.have.class('selected');
           expect(item1).not.to.have.class('collapse-hidden');
           expect(item1.find('.header-fixed')).to.exist;

@@ -72,7 +72,7 @@ export default Component.extend({
   _clickDisabledElementsSelector: '.btn-toolbar *, .webui-popover *, .item-checkbox, .item-checkbox *, .one-inline-editor *',
 
   _clickHandlerObserver: observer('_isItemFixed', 'isCollapsible', function () {
-    let {
+    const {
       _isItemFixed,
       isCollapsible,
       click,
@@ -98,7 +98,7 @@ export default Component.extend({
    * @param {Event} event
    */
   _clickHandler(event) {
-    let selector = this.get('_clickDisabledElementsSelector');
+    const selector = this.get('_clickDisabledElementsSelector');
     if ((event.target.matches && event.target.matches(selector)) ||
       (event.target.msMatchesSelector && event.target.msMatchesSelector(selector)) ||
       !event.target.parentElement) {

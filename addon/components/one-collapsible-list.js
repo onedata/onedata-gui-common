@@ -111,7 +111,7 @@ export default Component.extend({
   _areAllItemsSelected: computed('_selectedItemValues.length',
     '_availableItemValues.length',
     function () {
-      let {
+      const {
         _selectedItemValues,
         _availableItemValues,
       } = this.getProperties('_selectedItemValues', '_availableItemValues');
@@ -139,7 +139,7 @@ export default Component.extend({
    * Runs passed ``filtrationChanged`` action
    */
   _filtrationChanged() {
-    let {
+    const {
       filtrationChanged,
       _availableItemValues,
     } = this.getProperties('filtrationChanged', '_availableItemValues');
@@ -157,7 +157,7 @@ export default Component.extend({
       }
     },
     toggleItemSelection(itemValue, selectionState) {
-      let {
+      const {
         _selectedItemValues,
         _availableItemValues,
         selectionChanged,
@@ -166,7 +166,7 @@ export default Component.extend({
         '_availableItemValues',
         'selectionChanged'
       );
-      let isOnList = _selectedItemValues.includes(itemValue);
+      const isOnList = _selectedItemValues.includes(itemValue);
       if (!selectionState && isOnList) {
         _selectedItemValues.removeObject(itemValue);
       } else if ((selectionState === undefined || selectionState === true) &&
@@ -182,8 +182,8 @@ export default Component.extend({
       // because all list items will probably notify its values in the same time
       next(() => {
         if (!this.isDestroying && !this.isDestroyed) {
-          let _availableItemValues = this.get('_availableItemValues');
-          let isOnList = _availableItemValues.indexOf(itemValue) > -1;
+          const _availableItemValues = this.get('_availableItemValues');
+          const isOnList = _availableItemValues.indexOf(itemValue) > -1;
           if (exists && !isOnList) {
             _availableItemValues.pushObject(itemValue);
           } else if (!exists && isOnList) {
@@ -195,7 +195,7 @@ export default Component.extend({
       });
     },
     toggleAllItemsSelection() {
-      let {
+      const {
         _areAllItemsSelected,
         _availableItemValues,
         _selectedItemValues,

@@ -61,7 +61,7 @@ export default Route.extend({
   redirectToDefault({ resourceType, collection }) {
     const guiUtils = this.get('guiUtils');
     const list = get(collection, 'list');
-    let resourceIdToRedirect = get(list, 'length') > 0 ?
+    const resourceIdToRedirect = get(list, 'length') > 0 ?
       guiUtils.getRoutableIdFor(this.getDefaultResource(list, resourceType)) : 'empty';
     if (resourceIdToRedirect != null) {
       this.transitionTo('onedata.sidebar.content', resourceType, resourceIdToRedirect);

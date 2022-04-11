@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Is responsible for creating actions used by workflow visualiser. This abstraction
  * is introduced to allow extending default actions via passing custom (extended)

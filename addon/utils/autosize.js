@@ -1,12 +1,16 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+/* eslint-disable max-len */
+
 /**
  * Ported from https://github.com/jackmoore/autosize as don't want to use globals
  * and npm import doesn't work in Ember for this package.
- * 
+ *
  * Version: 4.0.2
- * 
+ *
  * The MIT License(MIT)
  * Copyright(c) 2015 Jack Moore
- * 
+ *
  * @module utils/autosize
  * @author Jack Moore, Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -127,7 +131,7 @@ function assign(ta) {
     let actualHeight = computed.boxSizing === 'content-box' ? Math.round(parseFloat(computed.height)) : ta
       .offsetHeight;
 
-    // The actual height not matching the style height (set via the resize method) indicates that 
+    // The actual height not matching the style height (set via the resize method) indicates that
     // the max-height has been exceeded, in which case the overflow should be allowed.
     if (actualHeight < styleHeight) {
       if (computed.overflowY === 'hidden') {

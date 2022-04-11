@@ -19,7 +19,7 @@ describe('Integration | Component | user credentials form', function () {
   it('shows secret password field by default', function () {
     this.render(hbs `{{user-credentials-form}}`);
 
-    let form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper(this.$());
 
     expect(form.getInput('static-secretPassword'), 'secret password field exists')
       .to.exist;
@@ -30,7 +30,7 @@ describe('Integration | Component | user credentials form', function () {
     function (done) {
       this.render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-      let form = new UserCredentialsFormHelper(this.$());
+      const form = new UserCredentialsFormHelper(this.$());
 
       expect(form.getInput('static-secretPassword'), 'secret pass field')
         .to.not.exist;
@@ -63,7 +63,7 @@ describe('Integration | Component | user credentials form', function () {
     }}
     `);
 
-    let form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper(this.$());
 
     form.getInput('verify-currentPassword').val(OLD_PASSWORD).change();
     form.getInput('change-newPassword').val(NEW_PASSWORD).change();
@@ -84,7 +84,7 @@ describe('Integration | Component | user credentials form', function () {
 
     this.render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-    let form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper(this.$());
 
     form.getInput('verify-currentPassword').val(OLD_PASSWORD).change();
     form.getInput('change-newPassword').val(NEW_PASSWORD).change();

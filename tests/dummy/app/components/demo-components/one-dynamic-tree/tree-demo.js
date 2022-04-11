@@ -13,7 +13,7 @@ import treeDefinition from 'dummy/utils/one-dynamic-tree/sample-tree-definition'
 const VALIDATIONS_PROTO = {};
 
 function prepareValidators(node, parentPath) {
-  let path = parentPath + (parentPath ? '.' : '') + node.name;
+  const path = parentPath + (parentPath ? '.' : '') + node.name;
   if (!node.subtree && node.field) {
     VALIDATIONS_PROTO[path] = createFieldValidator(node.field);
   } else if (node.subtree) {

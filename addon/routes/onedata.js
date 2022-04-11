@@ -25,7 +25,9 @@ export default Route.extend(AuthenticatedRouteMixin, {
   urlActionRunner: service(),
 
   model() {
-    let mainMenuItems = A(onedataTabs).map(item => _object.assign({}, item, { disabled: false }));
+    const mainMenuItems = A(onedataTabs).map(item =>
+      _object.assign({}, item, { disabled: false })
+    );
 
     return Promise.resolve(AppModel.create({ mainMenuItems }));
   },
@@ -41,7 +43,7 @@ export default Route.extend(AuthenticatedRouteMixin, {
   },
 
   /**
-   * @param {Transition} transition 
+   * @param {Transition} transition
    */
   clearActionQueryParams(transition) {
     const queryParamsNames = Object.keys(transition.queryParams);

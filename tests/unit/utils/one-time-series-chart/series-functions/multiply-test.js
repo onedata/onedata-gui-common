@@ -5,14 +5,15 @@ import point from 'onedata-gui-common/utils/one-time-series-chart/series-functio
 import { createContext, expectFunctionsEvaluation, createConstArgument, stringifyArgumentData } from './helpers';
 import { casesToCheck as transformCasesToCheck } from '../transform-functions/multiply-test';
 
-const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, output }) => ({
-  input: Array.isArray(input) ?
-    input.map(operand => ({ type: 'basic', data: operand })) : { type: 'basic', data: input },
-  output: {
-    type: 'basic',
-    data: output,
-  },
-}));
+const normalizedTransformCasesToCheck =
+  transformCasesToCheck.map(({ input, output }) => ({
+    input: Array.isArray(input) ?
+      input.map(operand => ({ type: 'basic', data: operand })) : { type: 'basic', data: input },
+    output: {
+      type: 'basic',
+      data: output,
+    },
+  }));
 
 const casesToCheck = [...normalizedTransformCasesToCheck, {
   input: [
@@ -71,6 +72,9 @@ function testMultiply(rawOperands, output) {
       rawOperands.map(operand => createConstArgument(operand)) :
       createConstArgument(rawOperands);
     expect(await multiply(context, { operands: preparedOperands })).to.deep.equal(output);
-    expectFunctionsEvaluation(context, Array.isArray(rawOperands) ? preparedOperands : []);
+    expectFunctionsEvaluation(
+      context,
+      Array.isArray(rawOperands) ? preparedOperands : []
+    );
   });
 }

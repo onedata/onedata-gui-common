@@ -1,6 +1,6 @@
 /**
  * A component that renders providers support for specified space.
- * 
+ *
  * @module components/space-providers-support-chart
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -32,7 +32,7 @@ export default OnePieChart.extend({
   space: null,
 
   /**
-   * Object with mapping providerId -> color. To refresh computed properties, 
+   * Object with mapping providerId -> color. To refresh computed properties,
    * reference must change.
    * To inject.
    * @type {Object}
@@ -40,7 +40,7 @@ export default OnePieChart.extend({
   providersColors: Object.freeze({}),
 
   /**
-   * @virtual 
+   * @virtual
    * @type {PromiseArray<models/Provider>}
    */
   providers: reads('space.providerList.list.content'),
@@ -61,11 +61,11 @@ export default OnePieChart.extend({
     'providersProxyLoaded',
     function getData() {
       if (this.get('providersProxyLoaded')) {
-        let {
+        const {
           space,
           providersColors,
         } = this.getProperties('space', 'providersColors');
-        let supportSizes = get(space, 'supportSizes');
+        const supportSizes = get(space, 'supportSizes');
         const providers = this.get('providers').toArray();
         return A(providers
           .filter(p => get(supportSizes, get(p, 'entityId')))
@@ -94,11 +94,11 @@ export default OnePieChart.extend({
     'providersProxyLoaded',
     function () {
       if (this.get('providersProxyLoaded')) {
-        let space = this.get('space');
+        const space = this.get('space');
         if (!space) {
           return false;
         }
-        let {
+        const {
           totalSize,
           supportSizes,
         } = getProperties(space, 'totalSize', 'supportSizes');
@@ -112,8 +112,8 @@ export default OnePieChart.extend({
         let realTotalSize = 0;
         let errorOccurred = false;
         _.each(Object.keys(supportSizes), (providerId) => {
-          let size = get(supportSizes, providerId);
-          let provider = _.find(
+          const size = get(supportSizes, providerId);
+          const provider = _.find(
             providers.toArray(),
             p => get(p, 'entityId') === providerId
           );
@@ -134,11 +134,11 @@ export default OnePieChart.extend({
    * @override
    */
   generateChartDataSeries() {
-    let {
+    const {
       _sortedData,
       i18n,
     } = this.getProperties('_sortedData', 'i18n');
-    let chartDataSeries = this._super(...arguments);
+    const chartDataSeries = this._super(...arguments);
     chartDataSeries.forEach((series, index) => {
       series.tooltipElements = [{
         name: i18n.t('components.supportSizeInfo.chart.supportSize'),
@@ -156,7 +156,7 @@ export default OnePieChart.extend({
   /**
    * Returns size as a string.
    * @param {number} value A size.
-   * @return {string} A size string representation.
+   * @returns {string} A size string representation.
    */
   formatValue(value) {
     return bytesToString(value, { iecFormat: true });

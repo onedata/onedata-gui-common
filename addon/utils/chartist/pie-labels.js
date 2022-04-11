@@ -1,15 +1,18 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * A plugin for Chartist which adds pie chart labels.
- * 
+ *
  * Options:
  * * lineTextMargin - margin between text and line,
  * * lineLength - horizontal (next to text) line length,
  * * linePointerLength - diagonal (pointer to slice) line length,
  * * hideLabelThresholdPercent - percent below which label is hidden.
- * 
+ *
  * Both lineLength and linePointerLength can be a number (means px),
  * or a percent string (relative to radius size).
- * 
+ *
  * Used css classes:
  * * ct-pie-label-line - for lines,
  * * ct-pie-label-text - for text (both top and bottom),
@@ -33,7 +36,7 @@ const DEFAULT_LINE_POINTER_LENGTH = '50%';
 let chartsIndex = [];
 
 export default function (options) {
-  let defaultOptions = {
+  const defaultOptions = {
     lineTextMargin: 3,
     lineLength: DEFAULT_LINE_LENGTH,
     linePointerLength: DEFAULT_LINE_POINTER_LENGTH,
@@ -49,42 +52,42 @@ export default function (options) {
         if (!chart.data.pieLabels[data.index]) {
           return;
         }
-        let svg = chart.svg;
-        let labelsGroup = getLabelsGroup(svg);
-        let additionalClasses = chart.data.pieLabels[data.index].className;
-        let labelGroup = svg.elem('g', {},
+        const svg = chart.svg;
+        const labelsGroup = getLabelsGroup(svg);
+        const additionalClasses = chart.data.pieLabels[data.index].className;
+        const labelGroup = svg.elem('g', {},
           'ct-pie-label ' + (additionalClasses ? additionalClasses : ''));
         labelsGroup.append(labelGroup);
 
-        let radiansAverage = ((data.startAngle + data.endAngle) * Math.PI) / 360;
-        let distance = data.radius;
-        let x = data.center.x + distance * Math.sin(radiansAverage);
-        let y = data.center.y - distance * Math.cos(radiansAverage);
+        const radiansAverage = ((data.startAngle + data.endAngle) * Math.PI) / 360;
+        const distance = data.radius;
+        const x = data.center.x + distance * Math.sin(radiansAverage);
+        const y = data.center.y - distance * Math.cos(radiansAverage);
 
-        let lineLength = normalizeLength(
+        const lineLength = normalizeLength(
           options.lineLength,
           data.radius,
           DEFAULT_LINE_LENGTH
         );
-        let horizDirection = x > data.center.x ? 1 : -1;
-        let vertDirection = y > data.center.y ? 1 : -1;
-        let pointerLineLength = normalizeLength(
+        const horizDirection = x > data.center.x ? 1 : -1;
+        const vertDirection = y > data.center.y ? 1 : -1;
+        const pointerLineLength = normalizeLength(
           options.linePointerLength,
           data.radius,
           DEFAULT_LINE_POINTER_LENGTH
         );
 
-        let pointerLineLengthX = pointerLineLength / Math.SQRT2;
-        let lineX2a = x + horizDirection * pointerLineLengthX;
-        let lineY2a = y + vertDirection * pointerLineLengthX;
-        let lineX3a = lineX2a + horizDirection * lineLength;
-        let lineY3a = lineY2a;
-        let lineAttributes = {
+        const pointerLineLengthX = pointerLineLength / Math.SQRT2;
+        const lineX2a = x + horizDirection * pointerLineLengthX;
+        const lineY2a = y + vertDirection * pointerLineLengthX;
+        const lineX3a = lineX2a + horizDirection * lineLength;
+        const lineY3a = lineY2a;
+        const lineAttributes = {
           d: `M ${x} ${y} L ${lineX2a} ${lineY2a} L ${lineX3a} ${lineY3a}`,
           fill: 'none',
         };
 
-        let line = labelGroup.elem('path', lineAttributes, 'ct-pie-label-line');
+        const line = labelGroup.elem('path', lineAttributes, 'ct-pie-label-line');
         labelGroup.append(line);
 
         addText(chart, data, options, labelGroup,
@@ -99,20 +102,20 @@ export default function (options) {
       }
     });
     chart.on('created', () => {
-      let chartRender = getChartRenderEntry(chart);
+      const chartRender = getChartRenderEntry(chart);
       let lastActiveTooltipTarget = _.find(
         chartRender.oldTooltipTargets,
         (target) => !!$(target).attr('aria-describedby')
       );
       if (lastActiveTooltipTarget) {
         lastActiveTooltipTarget = $(lastActiveTooltipTarget);
-        let lastTooltipId = lastActiveTooltipTarget.attr('aria-describedby');
+        const lastTooltipId = lastActiveTooltipTarget.attr('aria-describedby');
         if ($('#' + lastTooltipId).hasClass('in')) {
-          // tooltip was active while rerender. Try to activate tooltip, which is 
+          // tooltip was active while rerender. Try to activate tooltip, which is
           // rendered exactly in the same place
-          let dx = lastActiveTooltipTarget.attr('dx');
-          let dy = lastActiveTooltipTarget.attr('dy');
-          let newTarget = $(chart.container).find(`text[dx="${dx}"][dy="${dy}"]`);
+          const dx = lastActiveTooltipTarget.attr('dx');
+          const dy = lastActiveTooltipTarget.attr('dy');
+          const newTarget = $(chart.container).find(`text[dx="${dx}"][dy="${dy}"]`);
           newTarget.tooltip('show');
         }
       }
@@ -158,7 +161,7 @@ function normalizeLength(length, relativeLength, defaultValue) {
 function addText(
   chart, data, options, labelGroup, x, y, horizDirection, width
 ) {
-  let textAttributes = {
+  const textAttributes = {
     'dx': x,
     'dy': y - options.lineTextMargin,
     'text-anchor': horizDirection > 0 ? 'end' : 'start',
@@ -197,7 +200,7 @@ function clipText(textElement, text, width, chart) {
     let lowerIndex = 1;
     let clippedText;
     while (lowerIndex !== upperIndex) {
-      let newIndex = Math.ceil((upperIndex + lowerIndex) / 2);
+      const newIndex = Math.ceil((upperIndex + lowerIndex) / 2);
       clippedText = text.substring(0, newIndex) + '...';
       textElement.empty().text(clippedText);
       if (textElement.width() > width) {
@@ -207,7 +210,7 @@ function clipText(textElement, text, width, chart) {
       }
     }
 
-    let chartRender = getChartRenderEntry(chart);
+    const chartRender = getChartRenderEntry(chart);
     chartRender.actualTooltipTargets.push(textElement.getNode());
     $(textElement.getNode()).tooltip({
       container: 'body',
@@ -219,12 +222,12 @@ function clipText(textElement, text, width, chart) {
 }
 
 function autohideLabel(data, options, labelGroup) {
-  let degreesDelta = data.endAngle - data.startAngle;
+  const degreesDelta = data.endAngle - data.startAngle;
   if (degreesDelta < options.hideLabelThresholdPercent * 3.6) {
-    let $labelGroup = $(labelGroup.getNode());
-    let $slice = $(data.element.getNode());
-    let showLabel = () => $labelGroup.css('display', 'initial');
-    let hideLabel = () => $labelGroup.css('display', 'none');
+    const $labelGroup = $(labelGroup.getNode());
+    const $slice = $(data.element.getNode());
+    const showLabel = () => $labelGroup.css('display', 'initial');
+    const hideLabel = () => $labelGroup.css('display', 'none');
     hideLabel();
     $slice.mouseover(showLabel).mouseout(hideLabel);
     $labelGroup.mouseover(showLabel).mouseout(hideLabel);
@@ -232,7 +235,7 @@ function autohideLabel(data, options, labelGroup) {
 }
 
 function getChartRenderEntry(chart) {
-  let node = chart.container;
+  const node = chart.container;
   let chartRender = _.find(chartsIndex, { node });
   if (!chartRender) {
     chartRender = {

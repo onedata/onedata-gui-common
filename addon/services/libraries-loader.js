@@ -105,7 +105,7 @@ export default Service.extend({
     if (!librarySpec || !librarySpec.files || !librarySpec.files.length) {
       throw new Error(`Cannot load library "${libraryName}": there are no files to load.`);
     }
-    let filesPromises = [];
+    const filesPromises = [];
     librarySpec.files.forEach(({ destinationPath }) =>
       filesPromises.push(this.fetchScript(libraryName, destinationPath))
     );

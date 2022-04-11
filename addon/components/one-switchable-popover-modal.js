@@ -244,7 +244,7 @@ export default Component.extend(ClickOutside, {
       if (!mode) {
         mode = 'dynamic';
       }
-      let element = $(selector);
+      const element = $(selector);
       return {
         element,
         selector,
@@ -268,7 +268,7 @@ export default Component.extend(ClickOutside, {
    */
   _popoverClass: computed('componentClass', 'popoverClass', '_popoverIdClass',
     function () {
-      let {
+      const {
         componentClass,
         popoverClass,
         _popoverIdClass,
@@ -296,7 +296,7 @@ export default Component.extend(ClickOutside, {
    */
   _modalClass: computed('componentClass', 'modalClass', '_modalIdClass',
     function () {
-      let {
+      const {
         componentClass,
         modalClass,
         _modalIdClass,
@@ -363,7 +363,7 @@ export default Component.extend(ClickOutside, {
   didInsertElement() {
     this._super(...arguments);
 
-    let _windowResizeHandler = this.get('_windowResizeHandler');
+    const _windowResizeHandler = this.get('_windowResizeHandler');
 
     // bind neccessary event listeners
     this.bindTriggerListeners();
@@ -376,7 +376,7 @@ export default Component.extend(ClickOutside, {
   willDestroyElement() {
     this._super(...arguments);
 
-    let _windowResizeHandler = this.get('_windowResizeHandler');
+    const _windowResizeHandler = this.get('_windowResizeHandler');
 
     // unbind event listeners
     this.unbindTriggerListeners();
@@ -385,7 +385,7 @@ export default Component.extend(ClickOutside, {
   },
 
   clickOutside(event) {
-    let {
+    const {
       _activeTriggerConfiguration,
       _popoverIdClass,
       _modalIdClass,
@@ -396,9 +396,9 @@ export default Component.extend(ClickOutside, {
     );
 
     if (_activeTriggerConfiguration) {
-      let clickTarget = $(event.target);
-      let triggerSelector = _activeTriggerConfiguration.selector;
-      let excludeSelector =
+      const clickTarget = $(event.target);
+      const triggerSelector = _activeTriggerConfiguration.selector;
+      const excludeSelector =
         `${triggerSelector}, .${_popoverIdClass}, .${_modalIdClass}`;
       // close only if click is outside the trigger element and the popover
       if (!clickTarget.is(excludeSelector) &&
@@ -409,7 +409,7 @@ export default Component.extend(ClickOutside, {
   },
 
   bindTriggerListeners() {
-    let {
+    const {
       _triggersConfiguration,
       _clickHandler,
     } = this.getProperties('_triggersConfiguration', '_clickHandler');
@@ -420,7 +420,7 @@ export default Component.extend(ClickOutside, {
   },
 
   unbindTriggerListeners() {
-    let {
+    const {
       _triggersConfigurationOld,
       _clickHandler,
     } = this.getProperties('_triggersConfigurationOld', '_clickHandler');
@@ -438,7 +438,7 @@ export default Component.extend(ClickOutside, {
     if (this.isDestroyed) {
       return;
     }
-    let {
+    const {
       _triggersConfiguration,
       _activeTriggerConfiguration,
       _handleOpenClose,
@@ -457,7 +457,7 @@ export default Component.extend(ClickOutside, {
     // avoid popover immediate close issues
     event.stopPropagation();
 
-    let targetTrigger = $(event.currentTarget);
+    const targetTrigger = $(event.currentTarget);
     if (_activeTriggerConfiguration &&
       _activeTriggerConfiguration.element.is(targetTrigger)) {
       // this trigger is the same as the last used one so only toggle
@@ -497,7 +497,7 @@ export default Component.extend(ClickOutside, {
       return;
     }
 
-    let {
+    const {
       switchBreakpoint,
       _activeTriggerConfiguration,
       _window,
@@ -512,8 +512,8 @@ export default Component.extend(ClickOutside, {
       return;
     }
 
-    let inModalSize = _window.innerWidth < switchBreakpoint;
-    let confMode = _activeTriggerConfiguration.mode;
+    const inModalSize = _window.innerWidth < switchBreakpoint;
+    const confMode = _activeTriggerConfiguration.mode;
     if (confMode === 'modal' || (confMode === 'dynamic' && inModalSize)) {
       this.set('_renderMode', 'modal');
     } else {
@@ -526,7 +526,7 @@ export default Component.extend(ClickOutside, {
    * to set _activeTriggerConfiguration and open
    */
   handleManualTriggering() {
-    let {
+    const {
       open,
       activeTriggerSelector,
       _triggersConfiguration,

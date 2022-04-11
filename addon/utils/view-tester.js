@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Instance of this class is bound to some `$container`.
  * We can now test if some child element is visible in viewport.
@@ -12,7 +15,7 @@ import $ from 'jquery';
 
 export default class ViewTester {
   /**
-   * @param {HTMLElement} container 
+   * @param {HTMLElement} container
    */
   constructor($container) {
     this.$container = $container;

@@ -10,7 +10,7 @@ const copyDynamicLibraries = require('./addon/utils/copy-dynamic-libraries');
 const dynamicLibraries = require('./config/dynamic-libraries');
 
 module.exports = function (defaults) {
-  let app = new EmberAddon(defaults, {
+  const app = new EmberAddon(defaults, {
     'fingerprint': {
       extensions: [
         'js',

@@ -6,13 +6,13 @@ import EmberObject from '@ember/object';
 describe('Unit | Utility | is record', function () {
   it('returns true if given object has "store" property', function () {
     const testObject = EmberObject.create({ store: {} });
-    let result = isRecord(testObject);
+    const result = isRecord(testObject);
     expect(result).to.be.true;
   });
 
   it('returns false if given object does not have "store" property', function () {
     const testObject = EmberObject.create({ abc: {} });
-    let result = isRecord(testObject);
+    const result = isRecord(testObject);
     expect(result).to.be.false;
   });
 });
