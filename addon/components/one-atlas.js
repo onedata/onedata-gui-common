@@ -1,5 +1,5 @@
 /**
- * A world map component, on which other components can be placed according 
+ * A world map component, on which other components can be placed according
  * to specified latitude and longitude. Yields hash with "position" component
  * that allows to use x and y computed from given lat./long.
  * Example:
@@ -22,7 +22,7 @@
  *   {{/atlas.position}}
  * {{/one-atlas}}
  * ```
- * 
+ *
  * @module components/one-atlas
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -30,10 +30,9 @@
  */
 
 import Component from '@ember/component';
-
 import { computed } from '@ember/object';
-
 import layout from 'onedata-gui-common/templates/components/one-atlas';
+import $ from 'jquery';
 
 // Atlas image aspect ratio - needed when recomputing new atlas size
 const ATLAS_AR = 1.361111111112;
@@ -99,7 +98,7 @@ export default Component.extend({
 
   resizeToFit() {
     let _sizeRatio = this.get('_sizeRatio');
-    let element = this.$();
+    let element = $(this.get('element'));
     let parent = element.parent();
     let parentWidth = parent.width();
     let parentHeight = parent.height();

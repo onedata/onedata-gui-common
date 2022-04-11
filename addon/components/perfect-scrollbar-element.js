@@ -14,6 +14,7 @@ import { debounce } from '@ember/runloop';
 import PerfectScrollbarMixin from 'onedata-gui-common/mixins/perfect-scrollbar';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
+import $ from 'jquery';
 
 const initialEdgeScrollState = Object.freeze({
   top: true,
@@ -265,7 +266,7 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
 
   actions: {
     scrollTop() {
-      return this.$().scrollTop(...arguments);
+      return $(this.get('element')).scrollTop(...arguments);
     },
   },
 });

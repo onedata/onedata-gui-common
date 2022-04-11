@@ -19,6 +19,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
+import $ from 'jquery';
 
 /**
  * @typedef {Object} Tag
@@ -249,7 +250,9 @@ export default Component.extend(I18n, {
     this._super(...arguments);
 
     later(this, () => {
-      if (!this.$().is(':focus') && !this.$(':focus').length) {
+      const element = this.get('element');
+      const $element = element ? $(element) : null;
+      if ($element && !$element.is(':focus') && !$element.find(':focus').length) {
         this.get('onFocusLost')();
       }
     }, 0);
@@ -293,12 +296,17 @@ export default Component.extend(I18n, {
       onChange(tags.without(tag));
     },
     startTagCreation() {
-      if (this.get('isCreatingTag')) {
+      const {
+        element,
+        isCreatingTag,
+      } = this.getProperties('element', 'isCreatingTag');
+
+      if (isCreatingTag) {
         // Focus editor - send focus to the root element of the editor and
         // let the editor to handle that focus on its own
         const event = document.createEvent('Event');
         event.initEvent('focus', true, true);
-        this.$('.tag-creator > *')[0].dispatchEvent(event);
+        element.querySelector('.tag-creator > *').dispatchEvent(event);
       } else {
         this.startTagCreation();
       }

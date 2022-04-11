@@ -5,7 +5,7 @@
  * ```
  * < | tab1 | tab2 | tab3 | >
  * ```
- * 
+ *
  * @module components/one-tab-bar/tab-bar-ul-container
  * @author Jakub Liput
  * @copyright (C) 2019-2020 ACK CYFRONET AGH
@@ -53,7 +53,7 @@ export default Component.extend(ContentOverFlowdetector, {
    * @override implements ContentOverFlowdetector
    */
   overflowElement: computed('element', function overflowElement() {
-    return this.$('.tab-bar-ul');
+    return $(this.get('element').querySelector('.tab-bar-ul'));
   }),
 
   /**
@@ -64,7 +64,7 @@ export default Component.extend(ContentOverFlowdetector, {
    * @type {jQuery}
    */
   $innerScrollContent: computed('element', function $innerScrollContent() {
-    return this.$('.container-inner-scroll-content');
+    return $(this.get('element').querySelector('.container-inner-scroll-content'));
   }),
 
   hasOverflowObserver: observer('hasOverflow', function hasOverflowObserver() {
@@ -112,7 +112,7 @@ export default Component.extend(ContentOverFlowdetector, {
   /**
    * Method to handle scroll event.
    * Check if scroll reached left or right boundaries.
-   * @param {jQuery} jqElement 
+   * @param {jQuery} jqElement
    */
   innerScrollContentScrolled(jqElement) {
     const scrollLeftReached = (jqElement.scrollLeft() === 0);

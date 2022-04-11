@@ -1,6 +1,6 @@
 /**
- * A component that renders a pie chart using series definition from `data` 
- * property. Hovered series can be set from the outside by specifying 
+ * A component that renders a pie chart using series definition from `data`
+ * property. Hovered series can be set from the outside by specifying
  * activeSeriesId property.
  *
  * @module components/one-pie-chart
@@ -11,7 +11,7 @@
 
 /**
  * @typedef {Ember.Object} PieChartSeries A series displayed in a chart
- * @property {string} id An id for the series (must be unique across all 
+ * @property {string} id An id for the series (must be unique across all
  * chart series).
  * @property {string} label A label for the series.
  * @property {number} value A value to display.
@@ -222,9 +222,14 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    $(window).on('resize', this.get('_windowResizeHandler'));
+    const {
+      element,
+      _windowResizeHandler,
+    } = this.getProperties('element', '_windowResizeHandler');
+
+    $(window).on('resize', _windowResizeHandler);
     this._windowResized();
-    this.$('.ct-chart').mousemove((event) => {
+    $(element).mousemove((event) => {
       let parentGroup = $(event.target).parents('.ct-series');
       if (parentGroup.length) {
         // extract series id from group class name `slice-id-[series.id]`
@@ -373,7 +378,7 @@ export default Component.extend({
       _sortedData,
       _valuesSum,
     } = this.getProperties('_sortedData', '_valuesSum');
-    // If each series == 0 (so _valuesSum == 0), then each series should be drawed 
+    // If each series == 0 (so _valuesSum == 0), then each series should be drawed
     // using the same value > 0 (here is 1) to give them the same space in chart
     const valuesToDraw = _valuesSum ? _sortedData.mapBy('value') : _sortedData.map(() =>
       1);
@@ -475,7 +480,9 @@ export default Component.extend({
    * @returns {string} stroke-opacity value
    */
   _getSliceOpacity(series) {
-    return this.$(`.slice-id-${series.get('id')} path`).css('stroke-opacity');
+    return $(
+      this.get('element').querySelector(`.slice-id-${series.get('id')} path`)
+    ).css('stroke-opacity');
   },
 
   /**
@@ -484,7 +491,9 @@ export default Component.extend({
    * @returns {string} opacity value
    */
   _getLabelOpacity(series) {
-    return this.$('.label-id-' + series.get('id')).css('opacity');
+    return $(
+      this.get('element').querySelector('.label-id-' + series.get('id'))
+    ).css('opacity');
   },
 
   /**

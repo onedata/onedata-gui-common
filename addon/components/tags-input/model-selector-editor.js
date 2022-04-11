@@ -2,7 +2,7 @@
  * A tags (tokenizer) input editor, which allows to add tags using selector with
  * model records. Available models are: user, group, oneprovider, service (op and oz),
  * serviceOnepanel (opp and ozp).
- * 
+ *
  * @module components/tags-input/model-selector-editor
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -20,6 +20,7 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import $ from 'jquery';
 
 const supportedModels = [
   'user',
@@ -33,7 +34,7 @@ const supportedModels = [
  * Removes tags, which are redundant due to existence of "all records" tags.
  * E.g. if "all groups" tag is present in passed array, then all specific-group
  * tags will be removed.
- * @param {Array<Tag>} tags 
+ * @param {Array<Tag>} tags
  * @returns {Array<Tag>}
  */
 export function removeExcessiveTags(tags) {
@@ -142,7 +143,7 @@ export default Component.extend(I18n, {
   /**
    * @virtual
    * @type {Object}
-   * 
+   *
    * Supported settings: {
    *   models: Array<Object> - array of models specifications, which should be used
    *     to construct list of record. Order of models in dropdown model selector
@@ -382,7 +383,7 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = this.$().parents('.tags-input');
+    const $parentTagsInput = $(this.get('element')).parents('.tags-input');
     this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
   },
 

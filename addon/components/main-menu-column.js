@@ -62,11 +62,12 @@ export default Component.extend({
     const {
       lastIsExpandedValue,
       isExpanded,
-    } = this.getProperties('lastIsExpandedValue', 'isExpanded');
+      element,
+    } = this.getProperties('lastIsExpandedValue', 'isExpanded', 'element');
     if (lastIsExpandedValue !== isExpanded) {
       this.set('lastIsExpandedValue', isExpanded);
       if (!this.get('isExpanded')) {
-        const $mainMenuContainer = this.$('.main-menu-content');
+        const $mainMenuContainer = $(element.querySelector('.main-menu-content'));
         if ($mainMenuContainer.scrollTop()) {
           $mainMenuContainer.animate({ scrollTop: 0 }, 200);
         }

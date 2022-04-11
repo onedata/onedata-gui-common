@@ -97,6 +97,7 @@ import Looper from 'onedata-gui-common/utils/looper';
 import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
+import $ from 'jquery';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -509,21 +510,23 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   detectHorizontalOverflow() {
-    if (!this.$()) {
+    const element = this.get('element');
+    if (!element) {
       return;
     }
+    const $element = $(element);
 
     // Scrolling is not pixel-perfect. Without that epsilon test cases break down.
     const checksPxEpsilon = 1;
 
-    const $lanesContainer = this.$('.visualiser-elements');
+    const $lanesContainer = $element.find('.visualiser-elements');
     if (!$lanesContainer.length) {
       return;
     }
     const viewOffset = $lanesContainer.offset().left;
     const viewWidth = $lanesContainer.width();
 
-    const $lanes = this.$('.workflow-visualiser-lane');
+    const $lanes = $element.find('.workflow-visualiser-lane');
     const lanesOffset = $lanes.map(idx => $lanes.eq(idx).offset().left);
     const lanesWidth = $lanes.map(idx => $lanes.eq(idx).width());
 
@@ -557,13 +560,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (laneIdx === null) {
       return;
     }
+    const $element = $(this.get('element'));
 
-    const $lanesContainer = this.$('.visualiser-elements');
+    const $lanesContainer = $element.find('.visualiser-elements');
     const viewOffset = $lanesContainer.offset().left;
     const viewWidth = $lanesContainer.width();
     const viewScroll = $lanesContainer.scrollLeft();
 
-    const $lanes = this.$('.workflow-visualiser-lane');
+    const $lanes = $element.find('.workflow-visualiser-lane');
 
     let scrollPosition;
     if (laneIdx <= 0) {

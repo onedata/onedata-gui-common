@@ -129,8 +129,14 @@ export default Component.extend({
   sidebarClassObserver: observer(
     'colSidebarClassArray',
     function moveSidebar() {
-      const colSidebarClassArray = this.get('colSidebarClassArray');
-      const $colSidebar = this.$('#col-sidebar');
+      const {
+        colSidebarClassArray,
+        element,
+      } = this.getProperties('colSidebarClassArray', 'element');
+      const colSidebar = element.querySelector('#col-sidebar');
+      if (!colSidebar) {
+        return;
+      }
       const knownColSidebarClasses = [
         'col-sidebar',
         'full-height',
@@ -141,10 +147,10 @@ export default Component.extend({
         'with-place-for-menu',
       ];
       knownColSidebarClasses.forEach(cls => {
-        $colSidebar.removeClass(cls);
+        colSidebar.classList.remove(cls);
       });
       colSidebarClassArray.forEach(cls => {
-        $colSidebar.addClass(cls);
+        colSidebar.classList.add(cls);
       });
     }
   ),
