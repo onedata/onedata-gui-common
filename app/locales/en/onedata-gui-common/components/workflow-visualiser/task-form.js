@@ -88,9 +88,6 @@ export default {
             extend: {
               label: 'Extend',
             },
-            set: {
-              label: 'Set',
-            },
           },
         },
       },

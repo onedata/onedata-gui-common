@@ -18,6 +18,7 @@ const dataSpecTypes = [
   'object',
   'file',
   'dataset',
+  'range',
 ];
 const dataSpecTypeDataExamples = {
   integer: 1,
@@ -25,6 +26,7 @@ const dataSpecTypeDataExamples = {
   object: {},
   file: {},
   dataset: {},
+  range: {},
 };
 const specificColumnsForStoreType = {
   list: [],
@@ -38,14 +40,15 @@ const initialColumnsForDataSpecType = {
   object: [],
   file: [],
   dataset: [],
+  range: ['start', 'end', 'step'],
 };
 const dataSpecTypesForStoreType = {
   list: dataSpecTypes,
   treeForest: ['file', 'dataset'],
   singleValue: dataSpecTypes,
-  range: ['object'],
+  range: ['range'],
 };
-const dataSpecTypesWithObjects = [
+const dataSpecTypesWithVariableColumns = [
   'object',
   'file',
   'dataset',
@@ -74,7 +77,7 @@ describe('Unit | Utility | workflow visualiser/store content table columns', fun
         function () {
           const emptyTableColumns = [
             ...specificColumnsForStoreType[storeType],
-            ...(storeType !== 'range' ? initialColumnsForDataSpecType[dataSpecType] : []),
+            ...initialColumnsForDataSpecType[dataSpecType],
           ];
           it(`returns ${JSON.stringify(emptyTableColumns)} from "getColumns()"`,
             function () {
@@ -85,7 +88,7 @@ describe('Unit | Utility | workflow visualiser/store content table columns', fun
                 .to.deep.equal(emptyTableColumns);
             });
 
-          if (dataSpecTypesWithObjects.includes(dataSpecType) || storeType === 'range') {
+          if (dataSpecTypesWithVariableColumns.includes(dataSpecType)) {
             it('changes columns list after update with new data', function () {
               const storeContentTableColumns =
                 new StoreContentTableColumns(storeType, { type: dataSpecType }, this.i18n);

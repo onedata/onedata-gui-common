@@ -76,6 +76,9 @@ export default {
           // archive: {
           //   label: 'Archive',
           // },
+          range: {
+            label: 'Range',
+          },
         },
       },
       defaultValue: {

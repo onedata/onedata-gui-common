@@ -118,6 +118,12 @@ const dataTypes = [{
   //     type: 'archive',
   //     valueConstraints: {},
   //   },
+}, {
+  label: 'Range',
+  dataSpec: {
+    type: 'range',
+    valueConstraints: {},
+  },
 }];
 
 const storeTypesWithGenericConfig = storeTypes.rejectBy('type', 'range');

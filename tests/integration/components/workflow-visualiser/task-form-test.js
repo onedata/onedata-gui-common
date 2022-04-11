@@ -11,7 +11,7 @@ import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { setProperties } from '@ember/object';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { render, settled, fillIn, click } from '@ember/test-helpers';
+import { render, settled, fillIn, click, find } from '@ember/test-helpers';
 
 const componentClass = 'task-form';
 
@@ -50,6 +50,7 @@ const dataSpecs = [{
     'directory',
     'symlink',
     'dataset',
+    'range',
   ],
   // TODO: VFS-7816 uncomment or remove future code
   // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
@@ -204,6 +205,14 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['onedatafsCredentials'],
+}, {
+  label: 'Range',
+  name: 'range',
+  dataSpec: {
+    type: 'range',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }];
 
 const valueBuilderTypeLabels = {
@@ -227,13 +236,13 @@ const allSimpleDataSpecNames = [
   'dataset',
   // TODO: VFS-7816 uncomment or remove future code
   // 'archive',
+  'range',
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
   allowedDataSpecNames: allSimpleDataSpecNames,
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: false,
-  dispatchFunctions: ['set'],
 }, {
   type: 'list',
   allowedDataSpecNames: allSimpleDataSpecNames,
@@ -263,7 +272,7 @@ const allPossibleStoreSpecs = [{
   dispatchFunctions: ['append', 'extend'],
 }, {
   type: 'range',
-  allowedDataSpecNames: [],
+  allowedDataSpecNames: ['range'],
   acceptsBatch: false,
   dispatchFunctions: [],
   // TODO: VFS-7816 uncomment or remove future code
@@ -299,8 +308,8 @@ allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
   }))
 );
 allPossibleStores.push({
-  id: 'rangeId',
-  name: 'rangeStore',
+  id: 'rangeRangeId',
+  name: 'rangeRangeStore',
   type: 'range',
   defaultInitialContent: {
     start: 1,
@@ -433,11 +442,16 @@ const exampleTask = {
   resultMappings: [{
     resultName: 'resstring',
     storeSchemaId: 'singleValueStringId',
-    dispatchFunction: 'set',
+    storeContentUpdateOptions: {
+      type: 'singleValueStoreContentUpdateOptions',
+    },
   }, {
     resultName: 'resanyfile',
     storeSchemaId: 'treeForestAnyFileId',
-    dispatchFunction: 'append',
+    storeContentUpdateOptions: {
+      type: 'treeForestStoreContentUpdateOptions',
+      function: 'append',
+    },
   }],
 };
 
@@ -1117,7 +1131,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           resultMappings: [{
             resultName: 'res1',
             storeSchemaId: taskAuditLogStore.id,
-            dispatchFunction: 'append',
+            storeContentUpdateOptions: {
+              type: 'auditLogStoreContentUpdateOptions',
+              function: 'append',
+            },
           }],
         },
         isValid: true,
@@ -1144,7 +1161,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           resultMappings: [{
             resultName: 'res1',
             storeSchemaId: workflowAuditLogStore.id,
-            dispatchFunction: 'append',
+            storeContentUpdateOptions: {
+              type: 'auditLogStoreContentUpdateOptions',
+              function: 'append',
+            },
           }],
         },
         isValid: true,
@@ -1167,23 +1187,30 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
     allPossibleStoreSpecs
       .filterBy('allowedDataSpecNames.length')
-      .forEach(({ type, allowedDataSpecNames, dispatchFunctions }) => {
+      .forEach(({ type, allowedDataSpecNames, dispatchFunctions = [] }) => {
         const targetStore = allPossibleStores
           .findBy('name', `${type}${classify(allowedDataSpecNames[0])}Store`);
 
-        itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
-          type,
-          targetStore,
-          dispatchFunctions
-        );
-
-        dispatchFunctions.forEach(dispatchFunction => {
-          itAllowsToSetupResultToUseStoreWithDispatchFunction(
+        if (dispatchFunctions.length) {
+          itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
             type,
             targetStore,
-            dispatchFunction
+            dispatchFunctions
           );
-        });
+
+          dispatchFunctions.forEach(dispatchFunction => {
+            itAllowsToSetupResultToUseStoreWithDispatchFunction(
+              type,
+              targetStore,
+              dispatchFunction
+            );
+          });
+        } else {
+          itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
+            type,
+            targetStore
+          );
+        }
       });
 
     [
@@ -1217,18 +1244,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         await renderComponent();
         await selectChoose('.resultMapping-field .targetStore-field', 'listIntegerStore');
         await selectChoose('.resultMapping-field .targetStore-field', 'singleValueIntegerStore');
-        await clickTrigger('.resultMapping-field .dispatchFunction-field');
 
-        const dispatchFunctions =
-          allPossibleStoreSpecs.findBy('type', 'singleValue').dispatchFunctions;
-        expect(this.$('.dispatchFunction-field .dropdown-field-trigger').text().trim())
-          .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
-        const $options = $('.ember-power-select-option');
-        expect($options).to.have.length(dispatchFunctions.length);
-        dispatchFunctions.forEach((dispatchFunction, idx) =>
-          expect($options.eq(idx).text().trim())
-          .to.equal(dispatchFunctionLabels[dispatchFunction])
-        );
+        expect(find('.dispatchFunction-field')).to.not.exist;
         done();
       });
 
@@ -1540,10 +1557,9 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
 ) {
   it(`provides possible dispatch functions for result with store "${storeDescription}" attached`,
     async function (done) {
-      const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
-        dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
+        dataSpec: getStoreDataSpec(targetStore),
       }]);
 
       await renderComponent();
@@ -1569,10 +1585,9 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
 ) {
   it(`allows to setup result to use "${storeDescription}" store with "${dispatchFunction}" dispatch function`,
     async function (done) {
-      const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
       this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
         name: 'res1',
-        dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
+        dataSpec: getStoreDataSpec(targetStore),
       }]);
 
       await renderComponent();
@@ -1589,7 +1604,42 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
           resultMappings: [{
             resultName: 'res1',
             storeSchemaId: targetStore.id,
-            dispatchFunction,
+            storeContentUpdateOptions: {
+              type: `${targetStore.type}StoreContentUpdateOptions`,
+              function: dispatchFunction,
+            },
+          }],
+        },
+        isValid: true,
+      });
+      done();
+    });
+}
+
+function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
+  storeDescription,
+  targetStore,
+) {
+  it(`allows to setup result to use "${storeDescription}" store`,
+    async function (done) {
+      this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
+        name: 'res1',
+        dataSpec: getStoreDataSpec(targetStore),
+      }]);
+
+      await renderComponent();
+      await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
+
+      expect(this.get('changeSpy')).to.be.calledWith({
+        data: {
+          name: 'function1',
+          argumentMappings: [],
+          resultMappings: [{
+            resultName: 'res1',
+            storeSchemaId: targetStore.id,
+            storeContentUpdateOptions: {
+              type: `${targetStore.type}StoreContentUpdateOptions`,
+            },
           }],
         },
         isValid: true,
@@ -1874,15 +1924,14 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
       targetStore: workflowAuditLogStore,
       dispatchFunctions: ['append'],
     }])
-    .forEach(({ storeDesc, targetStore, dispatchFunctions }) => {
+    .forEach(({ storeDesc, targetStore, dispatchFunctions = [undefined] }) => {
       it(`fills fields with data about results that uses "${storeDesc}" stores and all possible dispatch methods`,
         async function (done) {
-          const targetStoreSpec = allPossibleStoreSpecs.findBy('type', targetStore.type);
           this.set(
             'atmLambda.revisionRegistry.1.resultSpecs',
             dispatchFunctions.map((dispatchFunction, idx) => ({
               name: `res${idx}`,
-              dataSpec: targetStore.config[targetStoreSpec.dataSpecConfigKey],
+              dataSpec: getStoreDataSpec(targetStore),
               isOptional: false,
             }))
           );
@@ -1891,7 +1940,10 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
             dispatchFunctions.map((dispatchFunction, idx) => ({
               resultName: `res${idx}`,
               storeSchemaId: targetStore.id,
-              dispatchFunction,
+              storeContentUpdateOptions: {
+                type: `${targetStore.type}StoreContentUpdateOptions`,
+                function: dispatchFunction,
+              },
             }))
           );
 
@@ -1906,10 +1958,15 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
               $results.eq(idx).find('.targetStore-field .field-component')
               .text().trim()
             ).to.equal(targetStore.name);
-            expect(
-              $results.eq(idx).find('.dispatchFunction-field .field-component')
-              .text().trim()
-            ).to.equal(dispatchFunctionLabels[dispatchFunction]);
+            if (dispatchFunction) {
+              expect(
+                $results.eq(idx).find('.dispatchFunction-field .field-component')
+                .text().trim()
+              ).to.equal(dispatchFunctionLabels[dispatchFunction]);
+            } else {
+              expect($results[idx].querySelector('.dispatchFunction-field'))
+                .to.not.exist;
+            }
           });
           done();
         });
@@ -1938,4 +1995,14 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
       expect($results.find('.dispatchFunction-field')).to.not.exist;
       done();
     });
+}
+
+function getStoreDataSpec(store) {
+  const targetStoreSpec = allPossibleStoreSpecs.findBy('type', store.type);
+  if (targetStoreSpec.dataSpecConfigKey) {
+    return store.config[targetStoreSpec.dataSpecConfigKey];
+  } else {
+    const dataSpecName = targetStoreSpec.allowedDataSpecNames[0];
+    return dataSpecs.findBy('name', dataSpecName).dataSpec;
+  }
 }

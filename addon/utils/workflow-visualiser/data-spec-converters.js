@@ -91,6 +91,9 @@ export function getTargetStoreTypesForType(type, isBatch) {
   const targetTypes = ['list', 'auditLog'];
   if (!isBatch) {
     targetTypes.push('singleValue');
+    if (type === 'range') {
+      targetTypes.push('range');
+    }
   }
   if (
     ['anyFile', 'regularFile', 'directory', 'symlink', 'dataset'].includes(type)
@@ -107,6 +110,7 @@ export function getTargetDataTypesForType(type) {
     // case 'archive':
     case 'anyFile':
     case 'dataset':
+    case 'range':
       targetTypes.push('object');
       break;
     case 'regularFile':
@@ -132,6 +136,7 @@ export function getStoreWriteDataSpec({ type, config }) {
     case 'treeForest':
       return config && config.itemDataSpec || null;
     case 'range':
+      return { type: 'range', valueConstraints: {} };
     default:
       return null;
   }
@@ -145,12 +150,13 @@ export function getStoreWriteDataSpec({ type, config }) {
 export function getStoreReadDataSpec({ type, config }) {
   switch (type) {
     case 'auditLog':
-    case 'range':
       return { type: 'object', valueConstraints: {} };
     case 'list':
     case 'singleValue':
     case 'treeForest':
       return config && config.itemDataSpec || null;
+    case 'range':
+      return { type: 'range', valueConstraints: {} };
     default:
       return null;
   }
