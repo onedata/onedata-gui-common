@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import $ from 'jquery';
@@ -118,7 +118,7 @@ describe('Integration | Component | one collapsible list', function () {
 
     await click('.first-item-header input');
 
-    expect(this.$('.first-item-header input')).to.be.disabled;
+    expect(find('.first-item-header input').disabled).to.be.true;
     expect(selectionChangedSpy).to.be.not.called;
   });
 
@@ -172,7 +172,7 @@ describe('Integration | Component | one collapsible list', function () {
 
     await fillIn('.one-collapsible-list-header .search-bar', 'item1');
 
-    expect(this.$('.one-collapsible-list-item.collapse-hidden')).to.exist;
+    expect(find('.one-collapsible-list-item.collapse-hidden')).to.exist;
   });
 
   it('shows filtered out and checked items', async function () {
@@ -197,7 +197,7 @@ describe('Integration | Component | one collapsible list', function () {
     await click('.item1 .one-checkbox');
     await fillIn('.one-collapsible-list-header .search-bar', 'item2');
 
-    const item1 = this.$('.item1');
+    const item1 = $(find('.item1'));
     expect(item1).to.have.class('selected');
     expect(item1).not.to.have.class('collapse-hidden');
     expect(item1.find('.header-fixed')).to.exist;

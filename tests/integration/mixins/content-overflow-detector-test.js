@@ -3,9 +3,10 @@ import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ContentOverflowDetectorMixin from 'onedata-gui-common/mixins/content-overflow-detector';
+import $ from 'jquery';
 
 const PARENT_WIDTH = 1000;
 const ELEMENT_WIDTH = 500;
@@ -43,7 +44,7 @@ describe('Integration | Mixin | content overflow detector', function () {
         <div class="testElement" style={{elementStyle}}></div>
       </div>`);
 
-    subject.set('overflowElement', this.$('.testElement'));
+    subject.set('overflowElement', $(find('.testElement')));
     subject.set('overflowDetectionDelay', 0);
     subject.addOverflowDetectionListener();
     try {
@@ -70,7 +71,7 @@ describe('Integration | Mixin | content overflow detector', function () {
         <div class="testElement" style={{elementStyle}}></div>
       </div>`);
 
-    subject.set('overflowElement', this.$('.testElement'));
+    subject.set('overflowElement', $(find('.testElement')));
     subject.set('additionalOverflowMargin', 300);
     subject.addOverflowDetectionListener();
     try {
@@ -95,7 +96,7 @@ describe('Integration | Mixin | content overflow detector', function () {
     let _window = this.get('_window');
     subject.set('_window', _window);
     subject.set('overflowDetectionDelay', 0);
-    subject.set('overflowElement', this.$('.testElement'));
+    subject.set('overflowElement', $(find('.testElement')));
     subject.addOverflowDetectionListener();
     this.set('elementStyle', htmlSafe(this.get('elementStyle').toString() +
       ` width: ${PARENT_WIDTH - SIBLING_WIDTH + 50}px;`));
@@ -125,7 +126,7 @@ describe('Integration | Mixin | content overflow detector', function () {
     let _window = this.get('_window');
     subject.set('_window', _window);
     subject.set('overflowDetectionDelay', 0);
-    subject.set('overflowElement', this.$('.testElement'));
+    subject.set('overflowElement', $(find('.testElement')));
     subject.set('minimumFullWindowSize', PARENT_WIDTH * 2);
     _window.innerWidth = PARENT_WIDTH * 1.5;
     subject.addOverflowDetectionListener();

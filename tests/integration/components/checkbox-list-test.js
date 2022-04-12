@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
+import $ from 'jquery';
 
 describe('Integration | Component | checkbox list', function () {
   setupRenderingTest();
@@ -19,7 +20,7 @@ describe('Integration | Component | checkbox list', function () {
   it('has class "checkbox-list"', async function () {
     await render(hbs `{{checkbox-list}}`);
 
-    expect(this.$('.checkbox-list')).to.exist;
+    expect($(findAll('.checkbox-list'))).to.exist;
   });
 
   it('lists passed items by yielding each one', async function () {
@@ -29,7 +30,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    const $renderedItems = this.$('.checkbox-list-item');
+    const $renderedItems = $(findAll('.checkbox-list-item'));
     expect($renderedItems).to.have.length(2);
     expect($renderedItems.eq(0).text().trim()).to.equal('a');
     expect($renderedItems.eq(1).text().trim()).to.equal('b');
@@ -44,7 +45,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    const $renderedItems = this.$('.checkbox-list-item');
+    const $renderedItems = $(findAll('.checkbox-list-item'));
     expect($renderedItems.eq(0).find('.one-checkbox')).to.have.class('checked');
     expect($renderedItems.eq(1).find('.one-checkbox')).to.not.have.class('checked');
   });
@@ -73,7 +74,7 @@ describe('Integration | Component | checkbox list', function () {
       .then(() => {
         expect(changeSpy).to.be.calledOnce;
         expect(changeSpy).to.be.calledWith([this.get('items')[0]]);
-        expect(this.$(firstItemCheckboxSelector)).to.have.class('checked');
+        expect($(findAll(firstItemCheckboxSelector))).to.have.class('checked');
       });
   });
 
@@ -108,7 +109,7 @@ describe('Integration | Component | checkbox list', function () {
         .then(() => {
           expect(changeSpy).to.be.calledThrice;
           expect(changeSpy.lastCall).to.be.calledWith([items[1]]);
-          expect(this.$(firstItemCheckboxSelector)).to.have.class('checked');
+          expect($(findAll(firstItemCheckboxSelector))).to.have.class('checked');
         });
     }
   );
@@ -122,7 +123,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.selected-counter').text().trim()).to.equal('(1/2)');
+    expect($(findAll('.selected-counter')).text().trim()).to.equal('(1/2)');
   });
 
   it('shows total selection state via header', async function () {
@@ -134,7 +135,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-header .one-checkbox')).to.have.class('checked');
+    expect($(findAll('.checkbox-list-header .one-checkbox'))).to.have.class('checked');
   });
 
   it('shows mixed selection state via header', async function () {
@@ -146,7 +147,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-header .one-checkbox')).to.have.class('maybe');
+    expect($(findAll('.checkbox-list-header .one-checkbox'))).to.have.class('maybe');
   });
 
   it('shows empty selection state via header', async function () {
@@ -156,7 +157,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    const $headerCheckbox = this.$('.checkbox-list-header .one-checkbox');
+    const $headerCheckbox = $(findAll('.checkbox-list-header .one-checkbox'));
     expect($headerCheckbox).to.not.have.class('checked');
     expect($headerCheckbox).to.not.have.class('maybe');
   });
@@ -183,7 +184,7 @@ describe('Integration | Component | checkbox list', function () {
     const headerCheckboxSelector = '.checkbox-list-header .one-checkbox';
     const firstItemCheckboxSelector =
       '.checkbox-list-item:first-child .one-checkbox';
-    const $selectedCounter = this.$('.selected-counter');
+    const $selectedCounter = $(findAll('.selected-counter'));
     // At first select the first item to start from 'maybe' header checkbox state
     return click(firstItemCheckboxSelector)
       .then(() => click(headerCheckboxSelector))
@@ -210,7 +211,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.header-text').text().trim()).to.equal('listHeader');
+    expect($(findAll('.header-text')).text().trim()).to.equal('listHeader');
   });
 
   it('shows expanded list by default', async function () {
@@ -220,7 +221,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-collapse')).to.have.class('in');
+    expect($(findAll('.checkbox-list-collapse'))).to.have.class('in');
   });
 
   it('shows collapsed list when isInitiallyExpanded is false', async function () {
@@ -230,7 +231,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-collapse')).to.not.have.class('in');
+    expect($(findAll('.checkbox-list-collapse'))).to.not.have.class('in');
   });
 
   it('collapses and expands list via header click', async function () {
@@ -241,9 +242,9 @@ describe('Integration | Component | checkbox list', function () {
     `);
 
     return click('.checkbox-list-header')
-      .then(() => expect(this.$('.checkbox-list-collapse')).to.not.have.class('in'))
+      .then(() => expect($(findAll('.checkbox-list-collapse'))).to.not.have.class('in'))
       .then(() => click('.checkbox-list-header'))
-      .then(() => expect(this.$('.checkbox-list-collapse')).to.have.class('in'));
+      .then(() => expect($(findAll('.checkbox-list-collapse'))).to.have.class('in'));
   });
 
   it('shows arrow-down icon when list is collapsed', async function () {
@@ -253,7 +254,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-header .arrow-icon'))
+    expect($(findAll('.checkbox-list-header .arrow-icon')))
       .to.have.class('oneicon-arrow-down');
   });
 
@@ -264,7 +265,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect(this.$('.checkbox-list-header .arrow-icon'))
+    expect($(findAll('.checkbox-list-header .arrow-icon')))
       .to.have.class('oneicon-arrow-up');
   });
 
@@ -276,7 +277,7 @@ describe('Integration | Component | checkbox list', function () {
     `);
 
     return click('.checkbox-list-header .one-checkbox')
-      .then(() => expect(this.$('.checkbox-list-collapse')).to.have.class('in'));
+      .then(() => expect($(findAll('.checkbox-list-collapse'))).to.have.class('in'));
   });
 
   it(
@@ -310,11 +311,11 @@ describe('Integration | Component | checkbox list', function () {
     async function () {
       await render(hbs `{{checkbox-list items=items}}`);
 
-      const $itemLabels = this.$('.checkbox-list-item label');
+      const $itemLabels = $(findAll('.checkbox-list-item label'));
       expect($itemLabels).to.have.length(2);
       expect($itemLabels.eq(0).text().trim()).to.equal('a');
       expect($itemLabels.eq(1).text().trim()).to.equal('b');
-      expect(this.$(`#${$itemLabels.attr('for')}`).attr('type')).to.equal('checkbox');
+      expect($(findAll(`#${$itemLabels.attr('for')}`)).attr('type')).to.equal('checkbox');
     }
   );
 
@@ -323,7 +324,7 @@ describe('Integration | Component | checkbox list', function () {
     async function () {
       await render(hbs `{{checkbox-list}}`);
 
-      const $headerCheckbox = this.$('.checkbox-list-header .one-checkbox');
+      const $headerCheckbox = $(findAll('.checkbox-list-header .one-checkbox'));
       expect($headerCheckbox).to.not.have.class('checked');
       expect($headerCheckbox).to.not.have.class('maybe');
       expect($headerCheckbox).to.have.class('disabled');
@@ -333,7 +334,7 @@ describe('Integration | Component | checkbox list', function () {
   it('does not allow to expand a list when there are no items', async function () {
     await render(hbs `{{checkbox-list isInitiallyExpanded=true}}`);
 
-    const $collapse = this.$('.checkbox-list-collapse');
+    const $collapse = $(findAll('.checkbox-list-collapse'));
     expect($collapse).to.not.have.class('in');
     return click('.checkbox-list-header')
       .then(() => expect($collapse).to.not.have.class('in'));
@@ -344,11 +345,11 @@ describe('Integration | Component | checkbox list', function () {
 
     return click('.checkbox-list-header .one-checkbox')
       .then(() =>
-        expect(this.$('.one-checkbox.checked, .one-checkbox.maybe')).to.not.exist
+        expect($(findAll('.one-checkbox.checked, .one-checkbox.maybe'))).to.not.exist
       )
       .then(() => click('.checkbox-list-item:first-child .one-checkbox'))
       .then(() =>
-        expect(this.$('.one-checkbox.checked, .one-checkbox.maybe')).to.not.exist
+        expect($(findAll('.one-checkbox.checked, .one-checkbox.maybe'))).to.not.exist
       );
   });
 
@@ -363,6 +364,6 @@ describe('Integration | Component | checkbox list', function () {
 
     return click('.checkbox-list-header')
       .then(() => click('.checkbox-list-header .one-checkbox'))
-      .then(() => expect(this.$('.checkbox-list-collapse')).to.have.class('in'));
+      .then(() => expect($(findAll('.checkbox-list-collapse'))).to.have.class('in'));
   });
 });

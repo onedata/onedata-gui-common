@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, settled } from '@ember/test-helpers';
+import { render, click, fillIn, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { Promise } from 'rsvp';
 import sinon from 'sinon';
@@ -14,7 +14,7 @@ describe('Integration | Component | one inline editor', function () {
     this.set('value', value);
     await render(hbs `{{one-inline-editor value=value}}`);
 
-    expect(this.$('.one-label').text().trim()).to.equal(value);
+    expect(find('.one-label').textContent.trim()).to.equal(value);
   });
 
   it('shows input with value after text click', async function () {
@@ -24,9 +24,9 @@ describe('Integration | Component | one inline editor', function () {
 
     await click('.one-label');
 
-    const input = this.$('input');
+    const input = find('input');
     expect(input).to.exist;
-    expect(input.val()).to.equal(value);
+    expect(input.value).to.equal(value);
   });
 
   it('allows to cancel edition', async function () {
@@ -38,7 +38,7 @@ describe('Integration | Component | one inline editor', function () {
     await fillIn('input', 'anotherValue');
     await click('.cancel-icon');
 
-    expect(this.$('.one-label').text().trim()).to.equal(value);
+    expect(find('.one-label').textContent.trim()).to.equal(value);
   });
 
   it('saves edited value', async function () {
@@ -55,15 +55,14 @@ describe('Integration | Component | one inline editor', function () {
     await fillIn('input', 'anotherValue');
     await click('.save-icon');
     expect(saveSpy).to.be.calledOnce;
-    expect(this.$('.spin-spinner-block')).to.exist;
-    expect(this.$('input')).to.be.disabled;
+    expect(find('.spin-spinner-block')).to.exist;
+    expect(find('input').disabled).to.be.true;
 
     this.set('value', newValue);
     promiseResolve();
     await settled();
-    expect(this.$('.spin-spinner-block')).to.not.exist;
-    expect(this.$('.one-label').text().trim()).to.equal(
-      newValue);
+    expect(find('.spin-spinner-block')).to.not.exist;
+    expect(find('.one-label').textContent.trim()).to.equal(newValue);
   });
 
   it('sends onInputValueChanged action with current value', async function () {

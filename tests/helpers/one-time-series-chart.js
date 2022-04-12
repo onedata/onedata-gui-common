@@ -7,7 +7,6 @@ import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
 import { find } from '@ember/test-helpers';
 
 export function expectEchartDummyPoints(
-  testCase,
   lastPointTimestamp,
   timeResolution,
   pointsCount
@@ -17,11 +16,11 @@ export function expectEchartDummyPoints(
     timeResolution,
     pointsCount,
   }).map(({ timestamp, value }) => [String(timestamp), value]);
-  expect(getEchartOption(testCase).series[0].data).to.deep.equal(echartPoints);
+  expect(getEchartOption().series[0].data).to.deep.equal(echartPoints);
 }
 
-function getEchartOption(testCase) {
-  return testCase.$('.test-component')[0].componentInstance.get('option');
+function getEchartOption() {
+  return find('.test-component').componentInstance.get('option');
 }
 
 export function createDummyConfiguration(minTimestamp, maxTimestamp) {
@@ -120,9 +119,9 @@ export async function expectResolutions(resolutionLabels) {
   );
 }
 
-export function expectActiveResolution(testCase, activeResolutionLabel) {
-  const $dropdownTrigger = testCase.$('.time-resolutions-trigger');
-  expect($dropdownTrigger.text().trim()).to.equal(activeResolutionLabel);
+export function expectActiveResolution(activeResolutionLabel) {
+  const dropdownTrigger = find('.time-resolutions-trigger');
+  expect(dropdownTrigger.textContent.trim()).to.equal(activeResolutionLabel);
 }
 
 export async function changeResolution(resolutionLabel) {

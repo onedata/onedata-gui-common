@@ -1,12 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
+import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/stores list', function () {
   setupRenderingTest();
@@ -32,7 +33,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
   it('has class "workflow-visualiser-stores-list"', async function () {
     await renderComponent();
 
-    expect(this.$().children()).to.have.class('workflow-visualiser-stores-list')
+    expect($(this.element).children()).to.have.class('workflow-visualiser-stores-list')
       .and.to.have.length(1);
   });
 
@@ -46,9 +47,9 @@ describe('Integration | Component | workflow visualiser/stores list', function (
     it('shows "add store" button', async function (done) {
       await renderComponent();
 
-      const $addBtn = this.$('.create-store-action-trigger');
-      expect($addBtn).to.exist;
-      expect($addBtn.text().trim()).to.equal('Add store');
+      const addBtn = find('.create-store-action-trigger');
+      expect(addBtn).to.exist;
+      expect(addBtn.textContent.trim()).to.equal('Add store');
       done();
     });
 
@@ -86,7 +87,7 @@ describe('Integration | Component | workflow visualiser/stores list', function (
     it('does not show "add store" button', async function (done) {
       await renderComponent();
 
-      expect(this.$('.create-store-action-trigger')).to.not.exist;
+      expect(find('.create-store-action-trigger')).to.not.exist;
       done();
     });
   });
@@ -107,12 +108,12 @@ function itRendersListOfStores(mode) {
   it('renders passed list of stores', async function (done) {
     await renderComponent();
 
-    expect(this.$('.workflow-visualiser-stores-list')).to.have.class(`mode-${mode}`);
-    const $stores = this.$('.workflow-visualiser-stores-list-store');
-    expect($stores).to.have.length(2);
-    expect($stores).to.have.class(`mode-${mode}`);
-    expect($stores.eq(0).text().trim()).to.equal('store1');
-    expect($stores.eq(1).text().trim()).to.equal('store2');
+    expect($(find('.workflow-visualiser-stores-list'))).to.have.class(`mode-${mode}`);
+    const stores = findAll('.workflow-visualiser-stores-list-store');
+    expect(stores).to.have.length(2);
+    expect($(stores)).to.have.class(`mode-${mode}`);
+    expect(stores[0].textContent.trim()).to.equal('store1');
+    expect(stores[1].textContent.trim()).to.equal('store2');
     done();
   });
 }

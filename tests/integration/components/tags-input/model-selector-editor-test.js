@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import sinon from 'sinon';
@@ -49,7 +49,7 @@ describe('Integration | Component | tags input/model selector editor', function 
   it('has class "tags-input-model-selector-editor"', async function () {
     await render(hbs `{{tags-input/model-selector-editor}}`);
 
-    expect(this.$('.tags-input-model-selector-editor')).to.exist;
+    expect(find('.tags-input-model-selector-editor')).to.exist;
   });
 
   it('renders popover', async function () {

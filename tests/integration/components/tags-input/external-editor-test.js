@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
+import $ from 'jquery';
 
 describe('Integration | Component | tags input/external editor', function () {
   setupRenderingTest();
@@ -19,7 +20,7 @@ describe('Integration | Component | tags input/external editor', function () {
   it('has class "tags-input-external-editor"', async function () {
     await render(hbs `{{tags-input/external-editor}}`);
 
-    expect(this.$().children()).to.have.class('tags-input-external-editor')
+    expect($(this.element).children()).to.have.class('tags-input-external-editor')
       .and.to.have.length(1);
   });
 
@@ -27,9 +28,9 @@ describe('Integration | Component | tags input/external editor', function () {
     await renderTagInput();
     await startCreation();
 
-    const $editor = this.$('.tags-input-external-editor');
-    expect($editor).to.exist;
-    expect($editor.children()).to.have.length(0);
+    const editor = find('.tags-input-external-editor');
+    expect(editor).to.exist;
+    expect(editor.children).to.have.length(0);
   });
 
   it('calls "settings.startTagCreationCallback" on component render',
@@ -66,9 +67,9 @@ describe('Integration | Component | tags input/external editor', function () {
     addTags([{ label: 'abc' }]);
     await settled();
 
-    const $tagItems = this.$('.tag-item');
-    expect($tagItems).to.have.length(1);
-    expect($tagItems.text().trim()).to.equal('abc');
+    const tagItems = findAll('.tag-item');
+    expect(tagItems).to.have.length(1);
+    expect(tagItems[0].textContent.trim()).to.equal('abc');
   });
 
   it('proxies creation end via "onEndTagCreationCallback"', async function () {
@@ -82,7 +83,7 @@ describe('Integration | Component | tags input/external editor', function () {
     endCreation();
     await settled();
 
-    expect(this.$('.tags-input-external-editor')).to.not.exist;
+    expect(find('.tags-input-external-editor')).to.not.exist;
   });
 
   it('calls "settings.endTagCreationCallback" when editor is destroyed',
@@ -99,7 +100,7 @@ describe('Integration | Component | tags input/external editor', function () {
       this.set('tagsLimit', 0);
       await settled();
 
-      expect(this.$('.tags-input-external-editor')).to.not.exist;
+      expect(find('.tags-input-external-editor')).to.not.exist;
       expect(endTagCreationCallbackSpy).to.be.calledOnce;
     });
 });

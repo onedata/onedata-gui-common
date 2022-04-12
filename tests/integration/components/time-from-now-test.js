@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
 
@@ -14,10 +14,9 @@ describe('Integration | Component | time from now', function () {
 
     await render(hbs `{{time-from-now date=date}}`);
 
-    const $timeFromNow = this.$('.time-from-now');
+    const timeFromNowElem = find('.time-from-now');
 
-    expect($timeFromNow).to.exist;
-    expect($timeFromNow, $timeFromNow.text())
-      .to.contain('few seconds ago');
+    expect(timeFromNowElem).to.exist;
+    expect(timeFromNowElem.textContent).to.contain('few seconds ago');
   });
 });

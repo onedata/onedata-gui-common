@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, context, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, blur, fillIn } from '@ember/test-helpers';
+import { render, click, blur, fillIn, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
@@ -12,6 +12,7 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
+import $ from 'jquery';
 
 const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not', 'root'];
@@ -34,7 +35,7 @@ describe('Integration | Component | query builder/operator block', function () {
     async function () {
       await render(hbs `{{query-builder/operator-block valuesBuilder=valuesBuilder}}`);
 
-      expect(this.$('.query-builder-block.query-builder-operator-block'))
+      expect(findAll('.query-builder-block.query-builder-operator-block'))
         .to.have.length(1);
     }
   );
@@ -54,7 +55,7 @@ describe('Integration | Component | query builder/operator block', function () {
               valuesBuilder=valuesBuilder
           }}`);
 
-          expect(this.$(
+          expect(findAll(
             `.query-builder-block.${operatorName}-operator-block`
           )).to.have.length(1);
           done();
@@ -74,11 +75,11 @@ describe('Integration | Component | query builder/operator block', function () {
             }}`);
 
             const blockAdderTriggers =
-              this.$('.query-builder-block-adder');
+              findAll('.query-builder-block-adder');
             expect(blockAdderTriggers).to.have.length(2);
-            expect(blockAdderTriggers.eq(0)).to.not.have.attr('disabled');
-            expect(blockAdderTriggers.eq(1)).to.have.attr('disabled');
-            expect(this.$(
+            expect(blockAdderTriggers[0].disabled).to.be.false;
+            expect(blockAdderTriggers[1].disabled).to.be.true;
+            expect(find(
               '.query-builder-block .query-builder-block'
             )).to.not.exist;
             done();
@@ -99,15 +100,15 @@ describe('Integration | Component | query builder/operator block', function () {
             }}`);
 
             // 2 operands
-            expect(this.$(
+            expect(findAll(
               '.query-builder-block .query-builder-block'
             )).to.have.length(2);
             // 2 from operands + 1 from the parent block
-            expect(this.$(
+            expect(findAll(
               '.query-builder-block-adder:not([disabled])'
             )).to.have.length(3);
             // exactly 2 are from operands (NOT operators)
-            expect(this.$(
+            expect(findAll(
               '.query-builder-block .query-builder-block .query-builder-block-adder'
             )).to.have.length(2);
             done();
@@ -128,11 +129,11 @@ describe('Integration | Component | query builder/operator block', function () {
           await click('.operator-not');
 
           // 1 operand
-          expect(this.$('.query-builder-block .query-builder-block')).to.have.length(1);
+          expect(findAll('.query-builder-block .query-builder-block')).to.have.length(1);
           // 1 from operands + 1 from the parent block
-          expect(this.$('.query-builder-block-adder')).to.have.length(2);
+          expect(findAll('.query-builder-block-adder')).to.have.length(2);
           // exactly 1 is from operands (NOT operators)
-          expect(this.$(
+          expect(findAll(
             '.query-builder-block .query-builder-block .query-builder-block-adder'
           )).to.have.length(1);
           expect(get(queryBlock, 'operands.length')).to.equal(1);
@@ -151,10 +152,10 @@ describe('Integration | Component | query builder/operator block', function () {
             valuesBuilder=valuesBuilder
           }}`);
 
-          const labels = this.$('.block-infix-label');
+          const labels = findAll('.block-infix-label');
           expect(labels).to.have.length(2);
-          labels.each((index, labelElement) =>
-            expect(labelElement.textContent.trim()).to.equal(operatorName)
+          labels.forEach((label) =>
+            expect(label.textContent.trim()).to.equal(operatorName)
           );
           done();
         });
@@ -169,9 +170,9 @@ describe('Integration | Component | query builder/operator block', function () {
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.query-builder-block-adder')).to.have.length(1);
+            expect(findAll('.query-builder-block-adder')).to.have.length(1);
             expect(
-              this.$('.query-builder-block .query-builder-block')
+              find('.query-builder-block .query-builder-block')
             ).to.not.exist;
             done();
           }
@@ -190,13 +191,13 @@ describe('Integration | Component | query builder/operator block', function () {
             }}`);
 
             // 1 operand
-            expect(this.$('.query-builder-block .query-builder-block'))
+            expect(findAll('.query-builder-block .query-builder-block'))
               .to.have.length(1);
             // 1 adder... (or 2 if operator is "root")
-            expect(this.$('.query-builder-block-adder'))
+            expect(findAll('.query-builder-block-adder'))
               .to.have.length(operatorName === 'root' ? 2 : 1);
             // ... where 1 is from operand
-            expect(this.$(
+            expect(find(
               '.query-builder-block .query-builder-block .query-builder-block-adder'
             )).to.exist;
             done();
@@ -215,13 +216,13 @@ describe('Integration | Component | query builder/operator block', function () {
           await click('.operator-not');
 
           // 1 operand
-          expect(this.$('.query-builder-block .query-builder-block'))
+          expect(findAll('.query-builder-block .query-builder-block'))
             .to.have.length(1);
           // 1 adder... (or 2 if operator is "root")
-          expect(this.$('.query-builder-block-adder'))
+          expect(findAll('.query-builder-block-adder'))
             .to.have.length(operatorName === 'root' ? 2 : 1);
           // ... but from operand, not parent block
-          expect(this.$(
+          expect(find(
             '.query-builder-block .query-builder-block .query-builder-block-adder'
           )).to.exist;
           expect(get(queryBlock, 'operands.length')).to.equal(1);
@@ -238,7 +239,7 @@ describe('Integration | Component | query builder/operator block', function () {
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.block-prefix-label')).to.not.exist;
+            expect(find('.block-prefix-label')).to.not.exist;
             done();
           });
 
@@ -257,20 +258,20 @@ describe('Integration | Component | query builder/operator block', function () {
               await click('.operator-or');
               await click('.query-builder-block-adder.surround-root');
               // popover should lack condition selector, as it can only surround
-              expect(this.$('.condition-selector'), 'condition selector').to.not.exist;
+              expect(find('.condition-selector'), 'condition selector').to.not.exist;
               await click('.operator-and');
-              expect(this.$('.query-builder-block')).to.have.length(3);
+              expect(findAll('.query-builder-block')).to.have.length(3);
               const surroundingBlock =
-                this.$('.query-builder-block .query-builder-block');
+                $(find('.query-builder-block .query-builder-block'));
               expect(surroundingBlock).to.have.class('and-operator-block');
-              const innerBlock = this.$(
+              const innerBlock = $(find(
                 '.query-builder-block .query-builder-block .query-builder-block'
-              );
+              ));
               expect(innerBlock).to.have.class('or-operator-block');
               expect(get(queryBlock, 'operands.0.operator')).to.equal('and');
               expect(get(queryBlock, 'operands.0.operands.0.operator')).to.equal('or');
               expect(
-                this.$('.query-builder-block-adder.surround-root')
+                find('.query-builder-block-adder.surround-root')
               ).to.exist;
               done();
             }
@@ -284,7 +285,7 @@ describe('Integration | Component | query builder/operator block', function () {
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.block-prefix-label').text().trim())
+            expect(find('.block-prefix-label').textContent.trim())
               .to.equal(operatorName);
             done();
           });
@@ -311,10 +312,10 @@ describe('Integration | Component | query builder/operator block', function () {
         const nestedBlock = get(queryBlock, 'operands.firstObject');
         await click('.remove-block');
 
-        expect(this.$(
+        expect(find(
           '.query-builder-block .query-builder-block'
         )).to.not.exist;
-        expect(this.$('.query-builder-block-adder'))
+        expect(findAll('.query-builder-block-adder'))
           .to.have.length(isMultiOperandOperator ? 2 : 1);
         expect(get(queryBlock, 'operands.length')).to.equal(0);
         expect(removedSpy).to.be.calledOnce.and.to.be.calledWith(nestedBlock);
@@ -334,12 +335,12 @@ describe('Integration | Component | query builder/operator block', function () {
         await click('.query-builder-block-visualiser');
         await click('.surround-section .operator-and');
 
-        expect(this.$('.query-builder-block')).to.have.length(3);
-        const surroundingBlock = this.$('.query-builder-block .query-builder-block');
+        expect(findAll('.query-builder-block')).to.have.length(3);
+        const surroundingBlock = $(find('.query-builder-block .query-builder-block'));
         expect(surroundingBlock).to.have.class('and-operator-block');
-        const innerBlock = this.$(
+        const innerBlock = $(find(
           '.query-builder-block .query-builder-block .query-builder-block'
-        );
+        ));
         expect(innerBlock).to.have.class('not-operator-block');
         expect(get(queryBlock, 'operands.firstObject.operator'))
           .to.equal('and');
@@ -363,12 +364,12 @@ describe('Integration | Component | query builder/operator block', function () {
         await click('.query-builder-block-visualiser');
         await click('.webui-popover.in .change-to-section .operator-and');
 
-        expect(this.$('.query-builder-block')).to.have.length(3);
-        const changedBlock = this.$('.query-builder-block .query-builder-block');
+        expect(findAll('.query-builder-block')).to.have.length(3);
+        const changedBlock = $(find('.query-builder-block .query-builder-block'));
         expect(changedBlock).to.have.class('and-operator-block');
-        const innerBlock = this.$(
+        const innerBlock = $(find(
           '.query-builder-block .query-builder-block .query-builder-block'
-        );
+        ));
         expect(innerBlock).to.have.class('or-operator-block');
         expect(get(queryBlock, 'operands.firstObject.operator')).to.equal('and');
 
@@ -446,7 +447,7 @@ describe('Integration | Component | query builder/operator block', function () {
           {{/query-builder/operator-block}}
         `);
 
-        expect(this.$('.test-element')).to.exist;
+        expect(find('.test-element')).to.exist;
         done();
       });
     });

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 
@@ -20,9 +20,9 @@ describe('Integration | Component | one collapsible toolbar', function () {
   //     </div>
   //   `);
   //
-  //   expect(this.$('.collapsible-toolbar-buttons'), 'buttons are visible')
+  //   expect($(find('.collapsible-toolbar-buttons')), 'buttons are visible')
   //     .to.be.visible;
-  //   expect(this.$('.collapsible-toolbar-toggle'), 'toggle is hidden')
+  //   expect($(find('.collapsible-toolbar-toggle')), 'toggle is hidden')
   //     .to.be.hidden;
   // });
 
@@ -37,9 +37,9 @@ describe('Integration | Component | one collapsible toolbar', function () {
       </div>
     `);
 
-    expect(this.$('.collapsible-toolbar-buttons'), 'buttons are hidden')
+    expect($(find('.collapsible-toolbar-buttons')), 'buttons are hidden')
       .to.be.hidden;
-    expect(this.$('.collapsible-toolbar-toggle'), 'toggle is visible')
+    expect($(find('.collapsible-toolbar-toggle')), 'toggle is visible')
       .to.be.visible;
   });
 
@@ -57,7 +57,7 @@ describe('Integration | Component | one collapsible toolbar', function () {
       {{/one-collapsible-toolbar}}
     `);
 
-    const button = this.$('button');
+    const button = $(find('button'));
     expect(button, 'button has proper style class').to.have.class(
       'btn-danger');
     expect(button, 'button has trigger class').to.have.class('trigger-class');

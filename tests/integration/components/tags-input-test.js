@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, focus, blur } from '@ember/test-helpers';
+import { render, settled, click, focus, blur, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { get, set } from '@ember/object';
 import OneTooltipHelper from '../../helpers/one-tooltip';
+import $ from 'jquery';
 
 const disabledCreateTriggerTip = 'Maximum number of elements has been reached.';
 
@@ -23,16 +24,16 @@ describe('Integration | Component | tags input', function () {
   it('has class "tags-input"', async function () {
     await render(hbs `{{tags-input}}`);
 
-    expect(this.$('.tags-input')).to.exist;
+    expect(find('.tags-input')).to.exist;
   });
 
   it('shows passed tags', async function () {
     await render(hbs `{{tags-input tags=tags}}`);
 
-    const $tags = this.$('.tag-item');
-    expect($tags).to.have.length(2);
-    expect($tags.eq(0).text().trim()).to.equal('a');
-    expect($tags.eq(1).text().trim()).to.equal('b');
+    const tags = findAll('.tag-item');
+    expect(tags).to.have.length(2);
+    expect(tags[0].textContent.trim()).to.equal('a');
+    expect(tags[1].textContent.trim()).to.equal('b');
   });
 
   it('shows tags icons', async function () {
@@ -40,9 +41,9 @@ describe('Integration | Component | tags input', function () {
 
     await render(hbs `{{tags-input tags=tags}}`);
 
-    expect(this.$('.tag-item:nth-child(1) .tag-icon'))
+    expect($(find('.tag-item:nth-child(1) .tag-icon')))
       .to.have.class('oneicon-space');
-    expect(this.$('.tag-item:nth-child(2) .tag-icon')).to.not.exist;
+    expect(find('.tag-item:nth-child(2) .tag-icon')).to.not.exist;
   });
 
   it('removes tags via remove icon on each tag', async function () {
@@ -54,9 +55,9 @@ describe('Integration | Component | tags input', function () {
 
     await click('.tag-item:first-child .tag-remove');
 
-    const $tagItem = this.$('.tag-item');
-    expect($tagItem).to.have.length(1);
-    expect($tagItem.text().trim()).to.equal(oldTags[1].label);
+    const tagItems = findAll('.tag-item');
+    expect(tagItems).to.have.length(1);
+    expect(tagItems[0].textContent.trim()).to.equal(oldTags[1].label);
     expect(changeSpy).to.be.calledOnce;
     expect(changeSpy.lastCall.args[0].toArray())
       .to.deep.equal(oldTags.slice(1).toArray());
@@ -69,7 +70,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-item:first-child .tag-remove');
 
-      expect(this.$('.tag-item')).to.have.length(2);
+      expect(findAll('.tag-item')).to.have.length(2);
     }
   );
 
@@ -96,11 +97,11 @@ describe('Integration | Component | tags input', function () {
     async function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect(find('.tag-creator')).to.not.exist;
 
       await click('.tag-creator-trigger');
-      expect(this.$('.tags-input')).to.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.exist;
+      expect($(find('.tags-input'))).to.have.class('creating-tag');
+      expect(find('.tag-creator')).to.exist;
     }
   );
 
@@ -111,8 +112,8 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tags-input');
 
-      expect(this.$('.tags-input')).to.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.exist;
+      expect($(find('.tags-input'))).to.have.class('creating-tag');
+      expect(find('.tag-creator')).to.exist;
     }
   );
 
@@ -125,7 +126,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
 
-      expect(this.$('.tag-creator .test-component')).to.exist;
+      expect(find('.tag-creator .test-component')).to.exist;
     }
   );
 
@@ -135,7 +136,7 @@ describe('Integration | Component | tags input', function () {
       await render(hbs `{{tags-input tags=tags}}`);
 
       await click('.tag-creator-trigger');
-      expect(this.$('.tag-creator .tags-input-text-editor')).to.exist;
+      expect(find('.tag-creator .tags-input-text-editor')).to.exist;
     }
   );
 
@@ -147,13 +148,12 @@ describe('Integration | Component | tags input', function () {
       `);
 
       await click('.tag-creator-trigger');
-      const testComponent =
-        this.$('.tag-creator .test-component')[0].componentInstance;
+      const testComponent = find('.tag-creator .test-component').componentInstance;
       get(testComponent, 'onEndTagCreation')();
       await settled();
 
-      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tag-creator')).to.not.exist;
     }
   );
 
@@ -174,8 +174,7 @@ describe('Integration | Component | tags input', function () {
       }}`);
 
       await click('.tag-creator-trigger');
-      const testComponent =
-        this.$('.tag-creator .test-component')[0].componentInstance;
+      const testComponent = find('.tag-creator .test-component').componentInstance;
       get(testComponent, 'onTagsAdded')(newTags);
       await settled();
 
@@ -193,8 +192,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
 
-      const testComponent =
-        this.$('.tag-creator .test-component')[0].componentInstance;
+      const testComponent = find('.tag-creator .test-component').componentInstance;
       expect(get(testComponent, 'selectedTags')).to.equal(this.get('tags'));
     }
   );
@@ -208,8 +206,7 @@ describe('Integration | Component | tags input', function () {
 
     await click('.tag-creator-trigger');
 
-    const testComponent =
-      this.$('.tag-creator .test-component')[0].componentInstance;
+    const testComponent = find('.tag-creator .test-component').componentInstance;
     expect(get(testComponent, 'tagsLimit')).to.equal(10 - this.get('tags.length'));
   });
 
@@ -222,8 +219,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
 
-      const testComponent =
-        this.$('.tag-creator .test-component')[0].componentInstance;
+      const testComponent = find('.tag-creator .test-component').componentInstance;
       expect(get(testComponent, 'tagsLimit')).to.be.undefined;
     });
 
@@ -242,8 +238,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tag-creator-trigger');
 
-      const testComponent =
-        this.$('.tag-creator .test-component')[0].componentInstance;
+      const testComponent = find('.tag-creator .test-component').componentInstance;
       expect(get(testComponent, 'settings')).to.deep.equal(settings);
     }
   );
@@ -259,8 +254,7 @@ describe('Integration | Component | tags input', function () {
       }}`);
 
       await click('.tag-creator-trigger');
-      const testComponent =
-        this.$('.tag-creator .test-component')[0].componentInstance;
+      const testComponent = find('.tag-creator .test-component').componentInstance;
       set(testComponent, 'focusIn', focusSpy);
 
       await click('.tag-creator-trigger');
@@ -277,14 +271,14 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $tagsInput = this.$('.tags-input');
+      const $tagsInput = $(find('.tags-input'));
       expect($tagsInput).to.have.attr('disabled');
-      expect(this.$('.tag-creator-trigger')).to.not.exist;
-      expect(this.$('.tag-remove')).to.not.exist;
+      expect(find('.tag-creator-trigger')).to.not.exist;
+      expect(find('.tag-remove')).to.not.exist;
 
       await click('.tags-input');
       expect($tagsInput).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect(find('.tag-creator')).to.not.exist;
     }
   );
 
@@ -303,8 +297,8 @@ describe('Integration | Component | tags input', function () {
       this.set('disabled', true);
       await settled();
 
-      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tag-creator')).to.not.exist;
     }
   );
 
@@ -317,14 +311,14 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $tagsInput = this.$('.tags-input');
+      const $tagsInput = $(find('.tags-input'));
       expect($tagsInput).to.have.class('readonly');
-      expect(this.$('.tag-creator-trigger')).to.not.exist;
-      expect(this.$('.tag-remove')).to.not.exist;
+      expect(find('.tag-creator-trigger')).to.not.exist;
+      expect(find('.tag-remove')).to.not.exist;
 
       await click('.tags-input');
       expect($tagsInput).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect(find('.tag-creator')).to.not.exist;
     }
   );
 
@@ -343,8 +337,8 @@ describe('Integration | Component | tags input', function () {
       this.set('readonly', true);
       await settled();
 
-      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tag-creator')).to.not.exist;
     }
   );
 
@@ -356,11 +350,11 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $createTrigger = this.$('.tag-creator-trigger');
+      const $createTrigger = $(find('.tag-creator-trigger'));
       expect($createTrigger).to.have.class('disabled');
       await click($createTrigger[0]);
 
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect(find('.tag-creator')).to.not.exist;
       expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
     });
 
@@ -372,11 +366,11 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $createTrigger = this.$('.tag-creator-trigger');
+      const $createTrigger = $(find('.tag-creator-trigger'));
       expect($createTrigger).to.have.class('disabled');
       await click($createTrigger[0]);
 
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect(find('.tag-creator')).to.not.exist;
       expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
     });
 
@@ -389,11 +383,11 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $createTrigger = this.$('.tag-creator-trigger');
+      const $createTrigger = $(find('.tag-creator-trigger'));
       expect($createTrigger).to.not.have.class('disabled');
       await click($createTrigger[0]);
 
-      expect(this.$('.tag-creator')).to.exist;
+      expect(find('.tag-creator')).to.exist;
       expect(await getCreateTriggerTip()).to.be.undefined;
     });
 
@@ -411,8 +405,8 @@ describe('Integration | Component | tags input', function () {
       this.set('tagsLimit', 1);
       await settled();
 
-      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tag-creator')).to.not.exist;
     });
 
   it('does not stop tag creation when tags limit changes and tags number is within it',
@@ -429,8 +423,8 @@ describe('Integration | Component | tags input', function () {
       this.set('tagsLimit', 8);
       await settled();
 
-      expect(this.$('.tags-input')).to.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.exist;
+      expect($(find('.tags-input'))).to.have.class('creating-tag');
+      expect(find('.tag-creator')).to.exist;
     });
 
   it('stops tag creation when tags number changes and it exceeds tags limit',
@@ -447,15 +441,15 @@ describe('Integration | Component | tags input', function () {
       this.set('tags', [...tags, ...tags]);
       await settled();
 
-      expect(this.$('.tags-input')).to.not.have.class('creating-tag');
-      expect(this.$('.tag-creator')).to.not.exist;
+      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tag-creator')).to.not.exist;
     });
 
   it('does not show clear-input button when input is not empty and isClearButtonVisible is false',
     async function () {
       await render(hbs `{{tags-input tags=tags isClearButtonVisible=false}}`);
 
-      expect(this.$('.input-clear-trigger')).to.not.exist;
+      expect(find('.input-clear-trigger')).to.not.exist;
     });
 
   it('does not show clear-input button when input is empty and isClearButtonVisible is true',
@@ -464,7 +458,7 @@ describe('Integration | Component | tags input', function () {
 
       await render(hbs `{{tags-input tags=tags isClearButtonVisible=true}}`);
 
-      expect(this.$('.input-clear-trigger')).to.not.exist;
+      expect(find('.input-clear-trigger')).to.not.exist;
     });
 
   it('has working clear-input button when input is not empty and isClearButtonVisible is true',
@@ -476,9 +470,9 @@ describe('Integration | Component | tags input', function () {
         onChange=change
       }}`);
 
-      const $clearBtn = this.$('.input-clear-trigger');
-      expect($clearBtn).to.exist;
-      await click($clearBtn[0]);
+      const clearBtn = find('.input-clear-trigger');
+      expect(clearBtn).to.exist;
+      await click(clearBtn);
       expect(this.get('tags')).to.have.length(0);
     });
 });

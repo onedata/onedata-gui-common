@@ -14,7 +14,7 @@ describe('Integration | Helper | one form field formatter', function () {
     this.set('date', date);
     await render(hbs `{{one-form-field-formatter date "date"}}`);
 
-    expect(this.$().text().trim()).to.equal(moment(date).format(certFormatter));
+    expect(this.element.textContent.trim()).to.equal(moment(date).format(certFormatter));
   });
 
   it('accepts lack of format', async function () {
@@ -22,6 +22,6 @@ describe('Integration | Helper | one form field formatter', function () {
     this.set('date', date);
     await render(hbs `{{one-form-field-formatter date}}`);
 
-    expect(this.$().text().trim()).to.equal(date);
+    expect(this.element.textContent.trim()).to.equal(date);
   });
 });

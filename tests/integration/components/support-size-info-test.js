@@ -3,8 +3,9 @@ import { A } from '@ember/array';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 
 describe('Integration | Component | support size info', function () {
   setupRenderingTest();
@@ -31,7 +32,7 @@ describe('Integration | Component | support size info', function () {
       {{support-size-info data=data}}
     `);
 
-    expect(this.$('.support-size')).to.contain('2 MiB');
+    expect(find('.support-size').textContent).to.contain('2 MiB');
   });
 
   it('renders support size chart', async function () {
@@ -41,7 +42,7 @@ describe('Integration | Component | support size info', function () {
 
     await settled();
     ['Provider1', 'Provider2'].forEach((name) =>
-      expect(this.$(`text:contains("${name}"), li:contains("${name}")`))
+      expect($(this.element).find(`text:contains("${name}"), li:contains("${name}")`))
       .to.exist
     );
   });
@@ -56,11 +57,11 @@ describe('Integration | Component | support size info', function () {
     `);
     await click('.btn.table-mode');
 
-    const dataRows = this.$('tbody tr');
+    const dataRows = findAll('tbody tr');
     expect(dataRows).to.have.length(2);
-    const dataRow = dataRows.eq(0);
-    expect(dataRow.children()).to.have.length(2);
-    expect(dataRow.children().eq(0)).to.contain('Provider1');
-    expect(dataRow.children().eq(1)).to.contain('1 MiB');
+    const dataRow = dataRows[0];
+    expect(dataRow.children).to.have.length(2);
+    expect(dataRow.children[0].textContent).to.contain('Provider1');
+    expect(dataRow.children[1].textContent).to.contain('1 MiB');
   });
 });

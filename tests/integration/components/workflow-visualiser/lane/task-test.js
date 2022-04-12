@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, before, beforeEach, afterEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
@@ -34,8 +34,8 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
   it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', async function () {
     await renderComponent();
 
-    expect(this.$().children()).to.have.length(1);
-    expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-task')
+    expect(this.element.children).to.have.length(1);
+    expect($(this.element.children[0])).to.have.class('workflow-visualiser-task')
       .and.to.have.class('workflow-visualiser-element');
   });
 
@@ -64,21 +64,21 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await renderComponent();
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.task-name .one-label')).to.not.exist;
+      expect(find('.task-name .one-label')).to.not.exist;
       done();
     });
 
     it('does not render actions', async function (done) {
       await renderComponent();
 
-      expect(this.$('.task-actions-trigger')).to.not.exist;
+      expect(find('.task-actions-trigger')).to.not.exist;
       done();
     });
 
     it('has collapsed details section by default', async function (done) {
       await renderComponent();
 
-      expect(this.$('.task-details-collapse')).to.not.have.class('in');
+      expect($(find('.task-details-collapse'))).to.not.have.class('in');
       done();
     });
 
@@ -86,7 +86,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await renderComponent();
       await expandDetails();
 
-      expect(this.$('.task-details-collapse')).to.have.class('in');
+      expect($(find('.task-details-collapse'))).to.have.class('in');
       done();
     });
 
@@ -106,7 +106,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await renderComponent();
       await expandDetails();
 
-      const $entries = this.$('.detail-entry');
+      const entries = findAll('.detail-entry');
       [
         ['instance-id', 'Instance ID', 'someId'],
         ['status', 'Status', 'Pending'],
@@ -114,10 +114,12 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         ['items-processed', 'Processed', '2'],
         ['items-failed', 'Failed', '3'],
       ].forEach(([classNameElement, label, value], idx) => {
-        const $entry = $entries.eq(idx);
-        expect($entry).to.have.class(`${classNameElement}-detail`);
-        expect($entry.find('.detail-label').text().trim()).to.equal(`${label}:`);
-        expect($entry.find('.detail-value').text().trim()).to.equal(value);
+        const entry = entries[idx];
+        expect($(entry)).to.have.class(`${classNameElement}-detail`);
+        expect(entry.querySelector('.detail-label').textContent.trim())
+          .to.equal(`${label}:`);
+        expect(entry.querySelector('.detail-value').textContent.trim())
+          .to.equal(value);
       });
       done();
     });
@@ -173,17 +175,17 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       await fillIn('.task-name input', 'new-name');
       await click('.task-name .save-icon');
 
-      expect(this.$('.task-name').text().trim()).to.equal('new-name');
+      expect(find('.task-name').textContent.trim()).to.equal('new-name');
       done();
     });
 
     it('renders actions', async function (done) {
       await renderComponent();
 
-      const $actionsTrigger = this.$('.task-actions-trigger');
-      expect($actionsTrigger).to.exist;
+      const actionsTrigger = find('.task-actions-trigger');
+      expect(actionsTrigger).to.exist;
 
-      await click($actionsTrigger[0]);
+      await click(actionsTrigger);
 
       const $actions = $('body .webui-popover.in .actions-popover-content a');
       expect($actions).to.have.length(taskActionsSpec.length);
@@ -237,7 +239,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       });
       await renderComponent();
 
-      expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-finished');
+      expect($(find('.workflow-visualiser-task'))).to.not.have.class('status-finished');
       done();
     });
   });
@@ -250,7 +252,7 @@ function itShowsTaskName() {
 
     await renderComponent();
 
-    expect(this.$('.task-name').text().trim()).to.equal(taskName);
+    expect(find('.task-name').textContent.trim()).to.equal(taskName);
     done();
   });
 }
@@ -262,8 +264,8 @@ function itShowsStatus(status, statusTranslation) {
     await renderComponent();
     await expandDetails();
 
-    expect(this.$('.workflow-visualiser-task')).to.have.class(`status-${status}`);
-    expect(this.$('.status-detail .detail-value').text().trim())
+    expect($(find('.workflow-visualiser-task'))).to.have.class(`status-${status}`);
+    expect(find('.status-detail .detail-value').textContent.trim())
       .to.equal(statusTranslation);
     done();
   });

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -72,7 +72,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
   it('has class "workflow-visualiser-lane"', async function () {
     await render(hbs `{{workflow-visualiser/lane}}`);
-    expect(this.$('.workflow-visualiser-lane')).to.exist;
+    expect(find('.workflow-visualiser-lane')).to.exist;
   });
 
   context('in "view" mode', function () {
@@ -88,7 +88,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.lane-name .one-label')).to.not.exist;
+      expect(find('.lane-name .one-label')).to.not.exist;
       done();
     });
 
@@ -132,7 +132,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await fillIn('.lane-name input', 'new-name');
       await click('.lane-name .save-icon');
 
-      expect(this.$('.lane-name').text().trim()).to.equal('new-name');
+      expect(find('.lane-name').textContent.trim()).to.equal('new-name');
       done();
     });
 
@@ -249,7 +249,7 @@ function itShowsName() {
 
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    expect(this.$('.lane-name').text().trim()).to.equal(laneName);
+    expect(find('.lane-name').textContent.trim()).to.equal(laneName);
     done();
   });
 }
@@ -273,26 +273,26 @@ function itRendersLaneElements() {
 
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    const $elements = this.$('.workflow-visualiser-lane .workflow-visualiser-element');
-    const $space1Element = $elements.eq(0);
-    const $block1Element = $elements.eq(1);
-    const $space2Element = $elements.eq(2);
-    const $block2Element = $elements.eq(3);
-    const $space3Element = $elements.eq(4);
-    expect($elements).to.have.length(5);
-    expect($space1Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space1Element).to.not.have.attr('data-element-before-id');
-    expect($space1Element).to.have.attr('data-element-after-id', 'b1');
-    expect($block1Element.text().trim()).to.contain('block1');
-    expect($block1Element.is('.workflow-visualiser-parallel-box')).to.be.true;
-    expect($space2Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space2Element).to.have.attr('data-element-before-id', 'b1');
-    expect($space2Element).to.have.attr('data-element-after-id', 'b2');
-    expect($block2Element.text().trim()).to.contain('block2');
-    expect($block2Element.is('.workflow-visualiser-parallel-box')).to.be.true;
-    expect($space3Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space3Element).to.have.attr('data-element-before-id', 'b2');
-    expect($space3Element).to.not.have.attr('data-element-after-id');
+    const elements = findAll('.workflow-visualiser-lane .workflow-visualiser-element');
+    const space1Element = elements[0];
+    const block1Element = elements[1];
+    const space2Element = elements[2];
+    const block2Element = elements[3];
+    const space3Element = elements[4];
+    expect(elements).to.have.length(5);
+    expect(space1Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
+    expect(space1Element.getAttribute('data-element-before-id')).to.be.null;
+    expect(space1Element.getAttribute('data-element-after-id')).to.equal('b1');
+    expect(block1Element.textContent.trim()).to.contain('block1');
+    expect(block1Element.matches('.workflow-visualiser-parallel-box')).to.be.true;
+    expect(space2Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
+    expect(space2Element.getAttribute('data-element-before-id')).to.equal('b1');
+    expect(space2Element.getAttribute('data-element-after-id')).to.equal('b2');
+    expect(block2Element.textContent.trim()).to.contain('block2');
+    expect(block2Element.matches('.workflow-visualiser-parallel-box')).to.be.true;
+    expect(space3Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
+    expect(space3Element.getAttribute('data-element-before-id')).to.equal('b2');
+    expect(space3Element.getAttribute('data-element-after-id')).to.be.null;
     done();
   });
 }
@@ -301,7 +301,7 @@ function itRendersActions(actionsSpec) {
   it('renders actions', async function (done) {
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    await click(this.$('.lane-actions-trigger')[0]);
+    await click('.lane-actions-trigger');
 
     const $actions = $('body .webui-popover.in .actions-popover-content a');
     expect($actions).to.have.length(actionsSpec.length);

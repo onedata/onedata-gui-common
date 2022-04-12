@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, fillIn } from '@ember/test-helpers';
+import { render, settled, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 // TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
 import { scrollTo } from 'ember-native-dom-helpers';
@@ -49,7 +49,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
     await renderWithRawData(this, rawData);
 
-    expect(this.$('.workflow-visualiser')).to.exist;
+    expect(find('.workflow-visualiser')).to.exist;
   });
 
   context('in "edit" mode', function () {
@@ -153,7 +153,7 @@ describe('Integration | Component | workflow visualiser', function () {
     itPerformsCustomAction({
       description: 'modifies lane details',
       actionExecutor: async () => {
-        await click((await getActionTrigger('lane', [0], 'modify'))[0]);
+        await click(await getActionTrigger('lane', [0], 'modify'));
         await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
         await selectChoose(getModalBody().find('.sourceStore-field')[0], 'store1');
         await click(getModalFooter().find('.btn-submit')[0]);
@@ -172,7 +172,7 @@ describe('Integration | Component | workflow visualiser', function () {
     itPerformsCustomAction({
       description: 'modifies lane details by creating new store in place and using it as source store',
       actionExecutor: async () => {
-        await click((await getActionTrigger('lane', [0], 'modify'))[0]);
+        await click(await getActionTrigger('lane', [0], 'modify'));
         await selectChoose(
           getModalBody().find('.sourceStore-field')[0],
           'Create store...'
@@ -298,7 +298,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
     itPerformsActionWithConfirmation({
       description: 'allows to remove store',
-      actionTriggerGetter: testCase => testCase.$('.remove-store-action-trigger'),
+      actionTriggerGetter: () => find('.remove-store-action-trigger'),
       applyUpdate: rawDump => rawDump.stores = rawDump.stores.rejectBy('name', 'store0'),
       initialRawData: noLanesExample,
     });
@@ -317,7 +317,7 @@ describe('Integration | Component | workflow visualiser', function () {
       const rawData = twoEmptyLanesExample;
 
       await renderWithRawData(this, rawData);
-      await click((await getActionTrigger('lane', [0], 'view'))[0]);
+      await click(await getActionTrigger('lane', [0], 'view'));
 
       expect(getModalBody().find('.name-field .field-component').text().trim())
         .to.equal('lane0');
@@ -343,7 +343,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
       await renderWithRawData(this, rawData);
 
-      expect(this.$('.create-lane-action-trigger')).to.not.exist;
+      expect(find('.create-lane-action-trigger')).to.not.exist;
       done();
     });
 
@@ -353,7 +353,7 @@ describe('Integration | Component | workflow visualiser', function () {
       await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.lane-name .one-label')).to.not.exist;
+      expect(find('.lane-name .one-label')).to.not.exist;
       done();
     });
 
@@ -364,7 +364,7 @@ describe('Integration | Component | workflow visualiser', function () {
       const modifyTrigger = await getActionTrigger('lane', [0], 'modify');
 
       expect(modifyTrigger).to.not.exist;
-      expect(this.$('.create-lane-action-trigger')).to.not.exist;
+      expect(find('.create-lane-action-trigger')).to.not.exist;
       done();
     });
 
@@ -373,7 +373,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
       await renderWithRawData(this, rawData);
 
-      expect(this.$(
+      expect(find(
         '.workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
       done();
@@ -385,7 +385,7 @@ describe('Integration | Component | workflow visualiser', function () {
       await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.parallel-box-name .one-label')).to.not.exist;
+      expect(find('.parallel-box-name .one-label')).to.not.exist;
       done();
     });
 
@@ -395,8 +395,8 @@ describe('Integration | Component | workflow visualiser', function () {
 
         await renderWithRawData(this, rawData);
 
-        expect(this.$('.parallel-box-actions-trigger')).to.not.exist;
-        expect(this.$(
+        expect(find('.parallel-box-actions-trigger')).to.not.exist;
+        expect(find(
           '.workflow-visualiser-interblock-space.between-parallel-box-space .add-block-action-trigger'
         )).to.not.exist;
         done();
@@ -407,7 +407,7 @@ describe('Integration | Component | workflow visualiser', function () {
 
       await renderWithRawData(this, rawData);
 
-      expect(this.$(
+      expect(find(
         '.workflow-visualiser-parallel-box .workflow-visualiser-interblock-space .add-block-action-trigger'
       )).to.not.exist;
       done();
@@ -419,7 +419,7 @@ describe('Integration | Component | workflow visualiser', function () {
       await renderWithRawData(this, rawData);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.task-name .one-label')).to.not.exist;
+      expect(find('.task-name .one-label')).to.not.exist;
       done();
     });
 
@@ -428,8 +428,8 @@ describe('Integration | Component | workflow visualiser', function () {
 
       await renderWithRawData(this, rawData);
 
-      expect(this.$('.task-actions-trigger')).to.not.exist;
-      expect(this.$(
+      expect(find('.task-actions-trigger')).to.not.exist;
+      expect(find(
         '.workflow-visualiser-interblock-space.between-task-space .add-block-action-trigger'
       )).to.not.exist;
       done();
@@ -440,7 +440,7 @@ describe('Integration | Component | workflow visualiser', function () {
     it('does not show scroll button, when there is no overflow', async function (done) {
       await renderForScrollTest(this, 5, laneWidth * 10);
 
-      expect(this.$('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
+      expect($(find('.left-edge-scroll-step-trigger'))).to.not.have.class('visible');
       done();
     });
 
@@ -474,7 +474,7 @@ describe('Integration | Component | workflow visualiser', function () {
     it('does not show scroll button, when there is no overflow', async function (done) {
       await renderForScrollTest(this, 5, laneWidth * 10);
 
-      expect(this.$('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
+      expect($(find('.right-edge-scroll-step-trigger'))).to.not.have.class('visible');
       done();
     });
     itScrollsToLane(
@@ -536,20 +536,20 @@ class WindowStub {
 function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edgeToCheck, laneToCheck]) {
   it(message, async function (done) {
     await renderForScrollTest(this, 5, laneWidth * 0.6);
-    await scrollToLane(this, overflowEdge, overflowLane, 10);
+    await scrollToLane(overflowEdge, overflowLane, 10);
     for (let operation of operations) {
       if (operation.startsWith('width:')) {
         const width = Number(operation.slice('width:'.length));
         await changeContainerWidthForScrollTest(this, width);
       } else {
-        const $scrollTrigger = this.$(`.${operation}-edge-scroll-step-trigger`);
+        const $scrollTrigger = $(find(`.${operation}-edge-scroll-step-trigger`));
         expect($scrollTrigger).to.have.class('visible');
         await click($scrollTrigger[0]);
       }
     }
 
-    const $lanesContainer = this.$('.visualiser-elements');
-    const $lanes = this.$('.workflow-visualiser-lane');
+    const $lanesContainer = $(find('.visualiser-elements'));
+    const $lanes = $(findAll('.workflow-visualiser-lane'));
     const $targetLane = $lanes.eq(laneToCheck);
     if (edgeToCheck === 'left') {
       if (laneToCheck === 0) {
@@ -576,7 +576,7 @@ function itHasModeClass(mode) {
 
     await renderWithRawData(this, rawData);
 
-    expect(this.$('.workflow-visualiser')).to.have.class(`mode-${mode}`);
+    expect($(find('.workflow-visualiser'))).to.have.class(`mode-${mode}`);
     done();
   });
 }
@@ -587,7 +587,7 @@ function itShowsVisualiserElements() {
 
     await renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawData);
+    checkRenderedLanesStructure(rawData);
     done();
   });
 
@@ -599,7 +599,7 @@ function itShowsVisualiserElements() {
 
     await renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawData);
+    checkRenderedLanesStructure(rawData);
     done();
   });
 }
@@ -611,10 +611,10 @@ function itShowsStoresList() {
 
     await renderWithRawData(this, rawData);
 
-    const $storesList = this.$('.workflow-visualiser-stores-list');
+    const $storesList = $(find('.workflow-visualiser-stores-list'));
     expect($storesList).to.exist;
     expect($storesList).to.have.class(`mode-${mode}`);
-    checkRenderedStoresList(this, rawData);
+    checkRenderedStoresList(rawData);
     done();
   });
 }
@@ -625,7 +625,7 @@ function itRendersEmptyLanes(message, lanesNumber) {
 
     await renderWithRawData(this, rawData);
 
-    checkRenderedLanesStructure(this, rawData);
+    checkRenderedLanesStructure(rawData);
     done();
   });
 }
@@ -645,7 +645,7 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
 
   itPerformsCustomAction({
     description: message,
-    actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    actionTriggerGetter: () => find(addTriggerSelector),
     actionExecutor: async () => {
       await click(addTriggerSelector);
       await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane999');
@@ -680,7 +680,7 @@ function itAddsNewParallelBox(message, initialRawData, insertIndex) {
 
   itPerformsAction({
     description: message,
-    actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    actionTriggerGetter: () => find(addTriggerSelector),
     applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes.splice(insertIndex, 0, {
       id: sinon.match.string,
       name: 'Parallel box',
@@ -705,7 +705,7 @@ function itAddsNewTask(message, initialRawData, insertIndex) {
 
   itPerformsAction({
     description: message,
-    actionTriggerGetter: testCase => testCase.$(addTriggerSelector),
+    actionTriggerGetter: () => find(addTriggerSelector),
     applyUpdate: rawDump => rawDump.lanes[0].parallelBoxes[0].tasks.splice(insertIndex, 0, {
       id: sinon.match.string,
       name: 'Untitled task',
@@ -778,9 +778,9 @@ function itPerformsActionWithConfirmation({
 }) {
   itPerformsCustomAction({
     description,
-    actionExecutor: async testCase => {
-      const $actionTrigger = await actionTriggerGetter(testCase);
-      await click($actionTrigger[0]);
+    actionExecutor: async () => {
+      const actionTrigger = await actionTriggerGetter();
+      await click(actionTrigger);
       await click(getModalFooter().find('.question-yes')[0]);
     },
     applyUpdate,
@@ -796,9 +796,9 @@ function itPerformsAction({
 }) {
   itPerformsCustomAction({
     description,
-    actionExecutor: async testCase => {
-      const $actionTrigger = await actionTriggerGetter(testCase);
-      await click($actionTrigger[0]);
+    actionExecutor: async () => {
+      const actionTrigger = await actionTriggerGetter();
+      await click(actionTrigger);
     },
     applyUpdate,
     initialRawData,
@@ -814,7 +814,7 @@ function itPerformsCustomAction({
   it(description, async function (done) {
     await renderWithRawData(this, initialRawData);
 
-    await actionExecutor(this);
+    await actionExecutor();
 
     const changeStub = this.get('changeStub');
     const newRawData = _.cloneDeep(initialRawData);
@@ -822,8 +822,8 @@ function itPerformsCustomAction({
     expect(changeStub).and.to.be.calledWith(newRawData);
 
     const yieldedRawData = changeStub.lastCall.args[0];
-    checkRenderedLanesStructure(this, yieldedRawData);
-    checkRenderedStoresList(this, yieldedRawData);
+    checkRenderedLanesStructure(yieldedRawData);
+    checkRenderedStoresList(yieldedRawData);
     done();
   });
 }
@@ -836,10 +836,10 @@ function itDoesNotPerformAction({
   it(description, async function (done) {
     await renderWithRawData(this, initialRawData);
 
-    const $actionTrigger = await actionTriggerGetter();
+    const actionTrigger = await actionTriggerGetter();
 
-    const $actionParent = $actionTrigger.parent();
-    expect($actionParent).to.have.class('disabled');
+    const actionParent = actionTrigger.parentElement;
+    expect($(actionParent)).to.have.class('disabled');
     done();
   });
 }
@@ -892,12 +892,14 @@ async function getActionTrigger(elementType, elementPath, actionName) {
   const elementTypeForClasses = dasherize(elementType);
   const elementId = idGenerators[elementType](...elementPath);
   await click(`[data-visualiser-element-id="${elementId}"] .${elementTypeForClasses}-actions-trigger`);
-  return $(`body .webui-popover.in .${actionName}-${elementTypeForClasses}-action-trigger`);
+  return document.querySelector(
+    `.webui-popover.in .${actionName}-${elementTypeForClasses}-action-trigger`
+  );
 }
 
-async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 0) {
-  const $lanesContainer = testCase.$('.visualiser-elements');
-  const $lanes = testCase.$('.workflow-visualiser-lane');
+async function scrollToLane(overflowSide, targetLane, offsetPercent = 0) {
+  const $lanesContainer = $(find('.visualiser-elements'));
+  const $lanes = $(findAll('.workflow-visualiser-lane'));
   const $targetLane = targetLane >= 0 ? $lanes.eq(targetLane) : null;
   const laneWidth = $lanes.width();
   let scrollXPosition;
@@ -929,8 +931,8 @@ async function scrollToLane(testCase, overflowSide, targetLane, offsetPercent = 
   await scrollTo($lanesContainer[0], scrollXPosition, 0);
 }
 
-function checkRenderedLanesStructure(testCase, rawData) {
-  const $lanes = testCase.$('.workflow-visualiser-lane');
+function checkRenderedLanesStructure(rawData) {
+  const $lanes = $(findAll('.workflow-visualiser-lane'));
   expect($lanes).to.have.length(rawData.lanes.length);
   rawData.lanes.forEach(({ name: laneName, parallelBoxes }, laneIndex) => {
     const $lane = $lanes.eq(laneIndex);
@@ -949,12 +951,12 @@ function checkRenderedLanesStructure(testCase, rawData) {
     });
   });
 
-  checkInterlaneSpaces(testCase, rawData);
-  checkInterblockSpaces(testCase, rawData);
+  checkInterlaneSpaces(rawData);
+  checkInterblockSpaces(rawData);
 }
 
-function checkInterblockSpaces(testCase, rawDump) {
-  const $lanes = testCase.$('.workflow-visualiser-lane');
+function checkInterblockSpaces(rawDump) {
+  const $lanes = $(findAll('.workflow-visualiser-lane'));
   expect($lanes).to.have.length(rawDump.lanes.length);
 
   rawDump.lanes.forEach(({ parallelBoxes }, laneIdx) => {
@@ -976,9 +978,9 @@ function checkInterblockSpaces(testCase, rawDump) {
   });
 }
 
-function checkInterlaneSpaces(testCase, rawDump) {
+function checkInterlaneSpaces(rawDump) {
   checkInterXSpaces(
-    testCase.$('.workflow-visualiser-interlane-space'),
+    $(findAll('.workflow-visualiser-interlane-space')),
     rawDump.lanes.mapBy('id')
   );
 }
@@ -1009,10 +1011,10 @@ function checkInterXSpace($space, beforeId, afterId) {
   });
 }
 
-function checkRenderedStoresList(testCase, rawData) {
-  const $stores = testCase.$(
+function checkRenderedStoresList(rawData) {
+  const $stores = $(findAll(
     '.workflow-visualiser-stores-list .workflow-visualiser-stores-list-store'
-  );
+  ));
   expect($stores).to.have.length(rawData.stores.length);
   rawData.stores.sortBy('name').forEach(({ name }, idx) =>
     expect($stores.eq(idx).text()).to.contain(name)

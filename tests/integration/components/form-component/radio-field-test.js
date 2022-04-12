@@ -1,12 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, click, focus } from '@ember/test-helpers';
+import { render, blur, click, focus, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import { set } from '@ember/object';
+import $ from 'jquery';
 
 describe('Integration | Component | form component/radio field', function () {
   setupRenderingTest();
@@ -42,7 +43,7 @@ describe('Integration | Component | form component/radio field', function () {
     async function () {
       await render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect(this.$('.radio-field')).to.exist;
+      expect(find('.radio-field')).to.exist;
     }
   );
 
@@ -51,12 +52,12 @@ describe('Integration | Component | form component/radio field', function () {
     async function () {
       await render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect(this.$('input')).to.have.length(3);
-      expect(this.$('.option-first .one-label').text().trim())
+      expect(findAll('input')).to.have.length(3);
+      expect(find('.option-first .one-label').textContent.trim())
         .to.equal('First');
-      expect(this.$('.option-second .one-label').text().trim())
+      expect(find('.option-second .one-label').textContent.trim())
         .to.equal('Second');
-      expect(this.$('.option-third .one-label').text().trim())
+      expect(find('.option-third .one-label').textContent.trim())
         .to.equal('Third');
     }
   );
@@ -68,7 +69,7 @@ describe('Integration | Component | form component/radio field', function () {
 
       await render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect(this.$('.one-way-radio-group')).to.have.class('disabled');
+      expect($(find('.one-way-radio-group'))).to.have.class('disabled');
     }
   );
 
@@ -105,7 +106,7 @@ describe('Integration | Component | form component/radio field', function () {
 
     await render(hbs `{{form-component/radio-field field=field}}`);
 
-    expect(this.$('.option-second input').prop('checked')).to.equal(true);
+    expect(find('.option-second input').checked).to.equal(true);
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -113,7 +114,7 @@ describe('Integration | Component | form component/radio field', function () {
       {{form-component/radio-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('input#abc')).to.exist;
+    expect(find('input#abc')).to.exist;
   });
 
   it('renders selected option label when field is in "view" mode', async function () {
@@ -123,7 +124,7 @@ describe('Integration | Component | form component/radio field', function () {
 
     await render(hbs `{{form-component/radio-field field=field}}`);
 
-    expect(this.$().text().trim()).to.equal('Second');
-    expect(this.$('input')).to.not.exist;
+    expect(this.element.textContent.trim()).to.equal('Second');
+    expect(find('input')).to.not.exist;
   });
 });

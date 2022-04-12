@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, fillIn, click } from '@ember/test-helpers';
+import { render, fillIn, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import FormHelper from 'dummy/tests/helpers/form';
+import $ from 'jquery';
 
 class UserCredentialsFormHelper extends FormHelper {
   constructor($template) {
@@ -17,7 +18,7 @@ describe('Integration | Component | user credentials form', function () {
   it('shows secret password field by default', async function () {
     await render(hbs `{{user-credentials-form}}`);
 
-    const form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper($(this.element));
 
     expect(form.getInput('static-secretPassword'), 'secret password field exists')
       .to.exist;
@@ -28,7 +29,7 @@ describe('Integration | Component | user credentials form', function () {
     async function (done) {
       await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-      const form = new UserCredentialsFormHelper(this.$());
+      const form = new UserCredentialsFormHelper($(this.element));
 
       expect(form.getInput('static-secretPassword'), 'secret pass field')
         .to.not.exist;
@@ -61,7 +62,7 @@ describe('Integration | Component | user credentials form', function () {
       }}
     `);
 
-    const form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper($(this.element));
 
     await fillIn(form.getInput('verify-currentPassword')[0], OLD_PASSWORD);
     await fillIn(form.getInput('change-newPassword')[0], NEW_PASSWORD);
@@ -77,12 +78,12 @@ describe('Integration | Component | user credentials form', function () {
 
     await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-    const form = new UserCredentialsFormHelper(this.$());
+    const form = new UserCredentialsFormHelper($(this.element));
 
     await fillIn(form.getInput('verify-currentPassword')[0], OLD_PASSWORD);
     await fillIn(form.getInput('change-newPassword')[0], NEW_PASSWORD);
     await fillIn(form.getInput('change-newPasswordRetype')[0], NEW_PASSWORD + 'x');
 
-    expect(this.$('button[type=submit]')).to.have.attr('disabled');
+    expect(find('button[type=submit]').disabled).to.be.true;
   });
 });

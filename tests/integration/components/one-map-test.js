@@ -1,10 +1,11 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import _ from 'lodash';
+import $ from 'jquery';
 
 function getRelativePosition($parent, $child) {
   const pPosition = $parent.position();
@@ -15,8 +16,8 @@ function getRelativePosition($parent, $child) {
   };
 }
 
-function isElementVisible(context, $child) {
-  const $parent = context.$('svg');
+function isElementVisible($child) {
+  const $parent = $(find('svg'));
   const relativePosition = getRelativePosition($parent, $child);
   // -1 because of some subpixel malfunctions
   return relativePosition.top > -1 && relativePosition.left > -1 &&
@@ -24,8 +25,8 @@ function isElementVisible(context, $child) {
     relativePosition.top + $child.height() < $parent.height();
 }
 
-function getMapObject(context) {
-  return context.$('.one-map-container').vectorMap('get', 'mapObject');
+function getMapObject() {
+  return $(find('.one-map-container')).vectorMap('get', 'mapObject');
 }
 
 describe('Integration | Component | one map', function () {
@@ -42,7 +43,7 @@ describe('Integration | Component | one map', function () {
       '[data-code="NZ"]',
       '[data-code="GL"]',
     ].forEach((selector) =>
-      expect(isElementVisible(this, this.$(selector))).to.be.true
+      expect(isElementVisible($(find(selector)))).to.be.true
     );
   });
 
@@ -54,7 +55,7 @@ describe('Integration | Component | one map', function () {
         {{one-map onViewportChange=(action spy)}}
       </div>
     `);
-    const mapObject = getMapObject(this);
+    const mapObject = getMapObject();
 
     mapObject.setFocus({
       lat: 50,
@@ -96,10 +97,10 @@ describe('Integration | Component | one map', function () {
         {{one-map initialState=initialState}}
       </div>
     `);
-    expect(isElementVisible(this, this.$('[data-code="PL"]'))).to.be.true;
-    expect(isElementVisible(this, this.$('[data-code="TN"]'))).to.be.false;
-    expect(isElementVisible(this, this.$('[data-code="PT"]'))).to.be.false;
-    expect(isElementVisible(this, this.$('[data-code="KZ"]'))).to.be.false;
+    expect(isElementVisible($(find('[data-code="PL"]')))).to.be.true;
+    expect(isElementVisible($(find('[data-code="TN"]')))).to.be.false;
+    expect(isElementVisible($(find('[data-code="PT"]')))).to.be.false;
+    expect(isElementVisible($(find('[data-code="KZ"]')))).to.be.false;
   });
 
   it('positions content using position component', async function () {
@@ -113,10 +114,10 @@ describe('Integration | Component | one map', function () {
       </div>
     `);
 
-    const $position = this.$('.map-position-container');
+    const $position = $(find('.map-position-container'));
     const left = parseFloat($position.css('left'));
     const top = parseFloat($position.css('top'));
-    const mapObject = getMapObject(this);
+    const mapObject = getMapObject();
     const coords = mapObject.pointToLatLng(left, top);
     expect(_.inRange(coords.lat, 49, 51)).to.be.true;
     expect(_.inRange(coords.lng, 19, 21)).to.be.true;

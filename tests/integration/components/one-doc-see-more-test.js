@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one doc see more', function () {
@@ -9,18 +9,17 @@ describe('Integration | Component | one doc see more', function () {
 
   it('renders text and link with default name if linkName is not provided', async function () {
     await render(hbs `{{one-doc-see-more docPath="world.html"}}`);
-    expect(this.$().text()).to.match(/See the\s+documentation\s+for more\./);
+    expect(this.element.textContent).to.match(/See the\s+documentation\s+for more\./);
   });
 
   it('renders text and link with custom name if linkName is provided', async function () {
     await render(hbs `{{one-doc-see-more linkName="foo bar" docPath="world.html"}}`);
-    expect(this.$().text()).to.match(/See the\s+foo bar\s+documentation\s+for more\./);
+    expect(this.element.textContent).to.match(/See the\s+foo bar\s+documentation\s+for more\./);
   });
 
   it('renders anchor with documentation href', async function () {
     await render(hbs `{{one-doc-see-more docPath="hello/world.html"}}`);
-    expect(this.$('.documentation-link')).to.have.attr(
-      'href',
+    expect(find('.documentation-link').href).to.equal(
       'https://onedata.org/#/home/documentation/doc/hello/world.html'
     );
   });
@@ -31,16 +30,17 @@ describe('Integration | Component | one doc see more', function () {
         <span id="x">foo</span>
       {{/one-doc-see-more}}
     `);
-    expect(this.$().text()).to.match(/See the\s+foo\s+for more\./);
-    expect(this.$('.documentation-link')).to.exist;
-    expect(this.$('#x')).exist;
+    expect(this.element.textContent).to.match(/See the\s+foo\s+for more\./);
+    expect(find('.documentation-link')).to.exist;
+    expect(find('#x')).exist;
   });
 
   it('renders link with custom href if provided', async function () {
     await render(hbs `
       {{one-doc-see-more linkName="hello" href="http://example.com"}}
     `);
-    expect(this.$('.documentation-link')).to.have.attr('href', 'http://example.com');
+    expect(find('.documentation-link').getAttribute('href'))
+      .to.equal('http://example.com');
   });
 
   it('renders text with parenthesis in internal mode without spaces around', async function () {
@@ -49,7 +49,7 @@ describe('Integration | Component | one doc see more', function () {
       linkName="foo bar"
       docPath="world.html"
     }}- text`);
-    expect(this.$().text()).to.match(
+    expect(this.element.textContent).to.match(
       /Some -\(see the\s+foo bar\s+documentation\s+for more\)- text/
     );
   });

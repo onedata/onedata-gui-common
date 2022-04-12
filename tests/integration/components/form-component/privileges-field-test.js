@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import PrivilegesField from 'onedata-gui-common/utils/form-component/privileges-field';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import { setProperties } from '@ember/object';
 import { set } from '@ember/object';
+import $ from 'jquery';
 
 const privilegesGroups = [{
   groupName: 'g0',
@@ -52,7 +53,7 @@ describe('Integration | Component | form component/privileges field', function (
     async function () {
       await render(hbs `{{form-component/privileges-field field=field}}`);
 
-      expect(this.$('.privileges-field')).to.exist;
+      expect(find('.privileges-field')).to.exist;
     }
   );
 
@@ -62,7 +63,7 @@ describe('Integration | Component | form component/privileges field', function (
       await render(hbs `{{form-component/privileges-field field=field}}`);
 
       Object.values(translations).forEach(translation =>
-        expect(this.$(`.node-text:contains(${translation})`)).to.exist
+        expect($(`.node-text:contains(${translation})`)).to.exist
       );
     }
   );
@@ -74,7 +75,7 @@ describe('Integration | Component | form component/privileges field', function (
 
       await render(hbs `{{form-component/privileges-field field=field}}`);
 
-      expect(this.$('.one-way-toggle:not(.disabled)')).to.not.exist;
+      expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
     }
   );
 
@@ -86,7 +87,7 @@ describe('Integration | Component | form component/privileges field', function (
       await render(hbs `{{form-component/privileges-field field=field}}`);
 
       return click(
-        this.$('.node-text:contains(group0) + .form-group .one-way-toggle')[0]
+        $(this.element).find('.node-text:contains(group0) + .form-group .one-way-toggle')[0]
       ).then(() => {
         expect(valueChangedSpy).to.be.calledOnce;
         expect(valueChangedSpy).to.be.calledWith(['g0a', 'g0b']);
@@ -100,10 +101,10 @@ describe('Integration | Component | form component/privileges field', function (
     await render(hbs `{{form-component/privileges-field field=field}}`);
 
     expect(
-      this.$('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
+      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
     ).to.have.class('checked');
     // g1a privilege toggle and g1 group toggle
-    expect(this.$('.one-way-toggle.checked')).to.have.length(2);
+    expect(findAll('.one-way-toggle.checked')).to.have.length(2);
   });
 
   it('shows diff using actual value and default value', async function () {
@@ -114,10 +115,10 @@ describe('Integration | Component | form component/privileges field', function (
 
     await render(hbs `{{form-component/privileges-field field=field}}`);
 
-    const $modifiedLabels = this.$('.modified-node-label');
-    expect($modifiedLabels).to.have.length(2);
-    expect($modifiedLabels.eq(0).text().trim()).to.equal('group0');
-    expect($modifiedLabels.eq(1).text().trim()).to.equal('privilege0b');
+    const modifiedLabels = findAll('.modified-node-label');
+    expect(modifiedLabels).to.have.length(2);
+    expect(modifiedLabels[0].textContent.trim()).to.equal('group0');
+    expect(modifiedLabels[1].textContent.trim()).to.equal('privilege0b');
   });
 
   it('renders readonly active privileges when field is in "view" mode', async function () {
@@ -128,8 +129,8 @@ describe('Integration | Component | form component/privileges field', function (
     await render(hbs `{{form-component/privileges-field field=field}}`);
 
     expect(
-      this.$('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
+      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
     ).to.have.class('checked');
-    expect(this.$('.one-way-toggle:not(.disabled)')).to.not.exist;
+    expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
   });
 });

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
@@ -18,7 +18,7 @@ describe('Integration | Component | one size edit', function () {
   it('displays size number and unit in display mode', async function () {
     this.set('value', 3 * Math.pow(1024, 3));
     await render(hbs `{{one-size-edit value=value}}`);
-    expect(this.$('.size-number-input').val(), 'size number').to.equal('3 GiB');
+    expect(find('.size-number-input').value, 'size number').to.equal('3 GiB');
   });
 
   it('sets the size number and selector to proper size unit when editing',
@@ -26,11 +26,10 @@ describe('Integration | Component | one size edit', function () {
       this.set('value', 3 * Math.pow(1024, 3));
       await render(hbs `{{one-size-edit value=value forceStartEdit=true}}`);
 
-      expect(this.$('.size-number-input').val(), 'size number')
+      expect(find('.size-number-input').value, 'size number')
         .to.equal('3');
       expect(
-        this.$('.size-unit-select-group .ember-power-select-selected-item')
-        .text(),
+        find('.size-unit-select-group .ember-power-select-selected-item').textContent,
         'size unit select'
       ).to.match(/GiB/);
     }
@@ -47,9 +46,9 @@ describe('Integration | Component | one size edit', function () {
     // option 1: MiB, option 2: GiB
     await select.selectOption(2);
     expect(
-      this.$(
+      find(
         '.size-unit-select-group .ember-power-select-selected-item'
-      ).text(),
+      ).textContent,
       'size unit select'
     ).to.match(/GiB/);
 

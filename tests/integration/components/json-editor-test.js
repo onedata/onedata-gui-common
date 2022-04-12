@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, fillIn } from '@ember/test-helpers';
+import { render, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -13,7 +13,7 @@ describe('Integration | Component | json editor', function () {
     this.set('value', JSON.stringify(value));
     await render(hbs `{{json-editor value=value}}`);
 
-    expect(JSON.parse(this.$('textarea').val())).to.deep.equal(value);
+    expect(JSON.parse(find('textarea').value)).to.deep.equal(value);
   });
 
   it('notifies about correct data', async function () {
@@ -57,8 +57,8 @@ describe('Integration | Component | json editor', function () {
     await render(hbs `{{json-editor value=value onChange=(action onChange)}}`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
-      expect(this.$('.form-message')).to.exist;
-      expect(this.$('.json-editor.has-error')).to.exist;
+      expect(find('.form-message')).to.exist;
+      expect(find('.json-editor.has-error')).to.exist;
     });
   });
 });

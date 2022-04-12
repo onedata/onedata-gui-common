@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
+import $ from 'jquery';
 
 const componentClass = 'revisions-table-revision-entries-expander';
 
@@ -14,7 +15,7 @@ describe('Integration | Component | revisions table/revision entries expander',
     it(`has class "${componentClass}"`, async function () {
       await renderComponent();
 
-      expect(this.$().children()).to.have.class(componentClass)
+      expect($(this.element).children()).to.have.class(componentClass)
         .and.to.have.length(1);
     });
 
@@ -23,7 +24,7 @@ describe('Integration | Component | revisions table/revision entries expander',
 
       await renderComponent();
 
-      expect(this.$('.expand-button').text().trim()).to.equal('3 more');
+      expect(find('.expand-button').textContent.trim()).to.equal('3 more');
     });
 
     it('calls onExpand callback after click on expand button', async function () {

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { getSlide } from '../../helpers/one-carousel';
 
@@ -10,12 +10,12 @@ describe('Integration | Component | one carousel', function () {
 
   it('has class "one-carousel"', async function () {
     await render(hbs `{{one-carousel}}`);
-    expect(this.$('.one-carousel')).to.have.length(1);
+    expect(findAll('.one-carousel')).to.have.length(1);
   });
 
   it('does not render any slide, when empty', async function () {
     await render(hbs `{{#one-carousel}}{{/one-carousel}}`);
-    expect(this.$('.one-carousel-slide')).to.not.exist;
+    expect(find('.one-carousel-slide')).to.not.exist;
   });
 
   it('renders slides', async function () {
@@ -30,7 +30,7 @@ describe('Integration | Component | one carousel', function () {
       {{/one-carousel}}
     `);
 
-    expect(this.$('.one-carousel-slide')).to.have.length(2);
+    expect(findAll('.one-carousel-slide')).to.have.length(2);
     expect(getSlide('first').textContent).to.contain('slide 1');
     expect(getSlide('second').textContent).to.contain('slide 2');
   });
@@ -88,7 +88,7 @@ describe('Integration | Component | one carousel', function () {
       'active-from-left',
       'active-from-right',
     ].forEach(state =>
-      expect(this.$(`.one-carousel-slide.${state}`)).to.not.exist
+      expect(find(`.one-carousel-slide.${state}`)).to.not.exist
     );
   });
 });

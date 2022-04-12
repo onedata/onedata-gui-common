@@ -28,7 +28,7 @@ describe('Integration | Component | global modal', function () {
   it('does not render anything in place', async function () {
     await render(hbs `{{global-modal}}`);
 
-    expect(this.$().children()).to.have.length(0);
+    expect($(this.element).children()).to.have.length(0);
   });
 
   it('renders modal only when modalInstance.isOpened is true', async function () {

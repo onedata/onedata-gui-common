@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import sinon from 'sinon';
@@ -29,19 +29,19 @@ describe('Integration | Component | revisions table', function () {
 
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
-    expect(this.$().children()).to.have.class(componentClass)
+    expect($(this.element).children()).to.have.class(componentClass)
       .and.to.have.length(1);
   });
 
   it('shows header row', async function () {
     await renderComponent();
 
-    const $thCells = this.$('th');
+    const thCells = findAll('th');
 
     const headerTexts = ['Rev.', 'State', 'Description', ''];
-    expect($thCells).to.have.length(headerTexts.length);
+    expect(thCells).to.have.length(headerTexts.length);
     headerTexts.forEach((text, idx) =>
-      expect($thCells.eq(idx).text().trim()).to.equal(text)
+      expect(thCells[idx].textContent.trim()).to.equal(text)
     );
   });
 
@@ -66,7 +66,7 @@ describe('Integration | Component | revisions table', function () {
     );
     await renderComponent();
 
-    const $revisionEntries = this.$('.revisions-table-revision-entry');
+    const $revisionEntries = $(findAll('.revisions-table-revision-entry'));
     expect($revisionEntries).to.have.length(2);
     const sortedRevisionsSpec = [...revisionsSpec].reverse();
     for (let i = 0; i < sortedRevisionsSpec.length; i++) {
@@ -98,7 +98,7 @@ describe('Integration | Component | revisions table', function () {
       ]));
       await renderComponent();
 
-      expectRevisionEntriesLayout(this, [
+      expectRevisionEntriesLayout([
         { type: 'revision', revisionNumber: 5 },
         { type: 'expander', revisionsCount: 1 },
         { type: 'revision', revisionNumber: 3 },
@@ -118,7 +118,7 @@ describe('Integration | Component | revisions table', function () {
       ]));
       await renderComponent();
 
-      expectRevisionEntriesLayout(this, [
+      expectRevisionEntriesLayout([
         { type: 'revision', revisionNumber: 5 },
         { type: 'expander', revisionsCount: 4 },
       ]);
@@ -136,7 +136,7 @@ describe('Integration | Component | revisions table', function () {
       ]));
       await renderComponent();
 
-      expectRevisionEntriesLayout(this, [
+      expectRevisionEntriesLayout([
         { type: 'revision', revisionNumber: 5 },
         { type: 'expander', revisionsCount: 4 },
       ]);
@@ -156,7 +156,7 @@ describe('Integration | Component | revisions table', function () {
 
       await click('.between-revisions-expander .expand-button');
 
-      expectRevisionEntriesLayout(this, [
+      expectRevisionEntriesLayout([
         { type: 'revision', revisionNumber: 5 },
         { type: 'revision', revisionNumber: 4 },
         { type: 'revision', revisionNumber: 3 },
@@ -177,7 +177,7 @@ describe('Integration | Component | revisions table', function () {
 
     await click('.older-revisions-expander .expand-button');
 
-    expectRevisionEntriesLayout(this, [
+    expectRevisionEntriesLayout([
       { type: 'revision', revisionNumber: 5 },
       { type: 'expander', revisionsCount: 1 },
       { type: 'revision', revisionNumber: 3 },
@@ -197,7 +197,7 @@ describe('Integration | Component | revisions table', function () {
       ]));
       await renderComponent();
 
-      expectRevisionEntriesLayout(this, [
+      expectRevisionEntriesLayout([
         { type: 'revision', revisionNumber: 5 },
         { type: 'revision', revisionNumber: 4 },
         { type: 'expander', revisionsCount: 3 },
@@ -216,7 +216,7 @@ describe('Integration | Component | revisions table', function () {
       ]));
       await renderComponent();
 
-      expectRevisionEntriesLayout(this, [
+      expectRevisionEntriesLayout([
         { type: 'revision', revisionNumber: 5 },
         { type: 'expander', revisionsCount: 3 },
         { type: 'revision', revisionNumber: 1 },
@@ -232,7 +232,7 @@ describe('Integration | Component | revisions table', function () {
       ]));
       await renderComponent();
 
-      expect(this.$('.revisions-table-revision-entry'))
+      expect($(find('.revisions-table-revision-entry')))
         .to.not.have.class('clickable');
     });
 
@@ -250,7 +250,7 @@ describe('Integration | Component | revisions table', function () {
       await click('.revisions-table-revision-entry');
 
       expect(onRevisionClick).to.be.calledOnce.and.to.be.calledWith(2);
-      expect(this.$('.revisions-table-revision-entry'))
+      expect($(find('.revisions-table-revision-entry')))
         .to.have.class('clickable');
     });
 
@@ -275,19 +275,19 @@ describe('Integration | Component | revisions table', function () {
       });
       await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('readonly');
-      expect(this.$('.revisions-table-create-revision-entry')).to.not.exist;
-      expect(this.$('.revision-actions-trigger')).to.not.exist;
+      expect($(find(`.${componentClass}`))).to.have.class('readonly');
+      expect(find('.revisions-table-create-revision-entry')).to.not.exist;
+      expect(find('.revision-actions-trigger')).to.not.exist;
     });
 
   it('shows "no revisions" row when there are no revisions to show', async function () {
     this.set('revisionRegistry', {});
     await renderComponent();
 
-    expect(this.$('.revisions-table-revision-entry')).to.not.exist;
-    const $emptyEntry = this.$('.revisions-table-empty-entry');
-    expect($emptyEntry).to.exist;
-    expect($emptyEntry.text().trim()).to.equal('No revisions');
+    expect(find('.revisions-table-revision-entry')).to.not.exist;
+    const emptyEntry = find('.revisions-table-empty-entry');
+    expect(emptyEntry).to.exist;
+    expect(emptyEntry.textContent.trim()).to.equal('No revisions');
   });
 });
 
@@ -318,8 +318,8 @@ function generateRevisionRegistry(revisionsSpec) {
   return revisionRegistry;
 }
 
-function expectRevisionEntriesLayout(testCase, layoutSpec) {
-  const $rows = testCase.$(`.${componentClass} tbody tr`);
+function expectRevisionEntriesLayout(layoutSpec) {
+  const $rows = $(findAll(`.${componentClass} tbody tr`));
   expect($rows).to.have.length(layoutSpec.length + 1);
   expect($rows.eq(0)).to.have.class('revisions-table-create-revision-entry');
   layoutSpec.forEach(({ type, revisionsCount, revisionNumber }, idx) => {

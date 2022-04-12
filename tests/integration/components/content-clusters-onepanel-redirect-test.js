@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -25,6 +25,6 @@ describe('Integration | Component | content clusters onepanel redirect', functio
 
       expect(checkOnepanelAvailability).to.be.calledOnce;
       expect(redirectToOnepanelApp).to.be.calledOnce;
-      expect(this.$('.spin-spinner')).to.exist;
+      expect(find('.spin-spinner')).to.exist;
     });
 });

@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, focus, blur, fillIn } from '@ember/test-helpers';
+import { render, click, focus, blur, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import sinon from 'sinon';
 import { setProperties, get } from '@ember/object';
+import $ from 'jquery';
 
 describe('Integration | Component | form component/tags field', function () {
   setupRenderingTest();
@@ -19,7 +20,7 @@ describe('Integration | Component | form component/tags field', function () {
     async function () {
       await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(this.$('.tags-field')).to.exist;
+      expect(find('.tags-field')).to.exist;
     }
   );
 
@@ -28,7 +29,7 @@ describe('Integration | Component | form component/tags field', function () {
     async function () {
       await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(this.$('.tags-input')).to.exist;
+      expect(find('.tags-input')).to.exist;
     }
   );
 
@@ -39,7 +40,7 @@ describe('Integration | Component | form component/tags field', function () {
 
       await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(this.$('.tags-input')).to.have.attr('disabled');
+      expect(find('.tags-input').getAttribute('disabled')).to.be.not.null;
     }
   );
 
@@ -77,10 +78,10 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    const $tags = this.$('.tag-item');
-    expect($tags).to.have.length(2);
-    expect($tags.eq(0).text().trim()).to.equal('test');
-    expect($tags.eq(1).text().trim()).to.equal('test2');
+    const tags = findAll('.tag-item');
+    expect(tags).to.have.length(2);
+    expect(tags[0].textContent.trim()).to.equal('test');
+    expect(tags[1].textContent.trim()).to.equal('test2');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -88,7 +89,7 @@ describe('Integration | Component | form component/tags field', function () {
       {{form-component/tags-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('.tags-input#abc')).to.exist;
+    expect(find('.tags-input#abc')).to.exist;
   });
 
   it('allows to specify custom tags editor with custom settings', async function () {
@@ -102,9 +103,9 @@ describe('Integration | Component | form component/tags field', function () {
 
     return click('.tag-creator-trigger')
       .then(() => {
-        const testEditor = this.$('.tag-creator .test-component');
+        const testEditor = find('.tag-creator .test-component');
         expect(testEditor).to.exist;
-        expect(get(testEditor[0].componentInstance, 'settings'))
+        expect(get(testEditor.componentInstance, 'settings'))
           .to.equal(settings);
       });
   });
@@ -128,7 +129,7 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.tags-input')).to.have.class('readonly');
+    expect($(find('.tags-input'))).to.have.class('readonly');
   });
 
   it('limits tags number via "tagsLimit"', async function () {
@@ -137,7 +138,7 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.tag-creator-trigger')).to.have.class('disabled');
+    expect($(find('.tag-creator-trigger'))).to.have.class('disabled');
   });
 
   it('does not show clear button, when "isClearButtonVisible" is false', async function () {
@@ -146,7 +147,7 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.input-clear-trigger')).to.not.exist;
+    expect(find('.input-clear-trigger')).to.not.exist;
   });
 
   it('shows clear button, when "isClearButtonVisible" is true', async function () {
@@ -155,6 +156,6 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect(this.$('.input-clear-trigger')).to.exist;
+    expect(find('.input-clear-trigger')).to.exist;
   });
 });

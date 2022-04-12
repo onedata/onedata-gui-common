@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur } from '@ember/test-helpers';
+import { render, blur, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../../helpers/one-datetime-picker';
 import moment from 'moment';
 import { set } from '@ember/object';
+import $ from 'jquery';
 
 const datetimeFormat = 'YYYY/MM/DD H:mm';
 
@@ -23,7 +24,7 @@ describe('Integration | Component | form component/datetime field', function () 
     async function () {
       await render(hbs `{{form-component/datetime-field field=textField}}`);
 
-      expect(this.$('.datetime-field')).to.exist;
+      expect(find('.datetime-field')).to.exist;
     }
   );
 
@@ -32,8 +33,8 @@ describe('Integration | Component | form component/datetime field', function () 
     async function () {
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      expect(this.$('input')).to.exist;
-      const picker = new OneDatetimePickerHelper(this.$('input'));
+      expect(find('input')).to.exist;
+      const picker = new OneDatetimePickerHelper($(find('input')));
       return picker.openPicker()
         .then(() => expect(picker.getPickerElement()).to.exist);
     }
@@ -46,7 +47,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      expect(this.$('input')).to.have.attr('disabled');
+      expect(find('input').disabled).to.be.true;
     }
   );
 
@@ -57,7 +58,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      const picker = new OneDatetimePickerHelper(this.$('input'));
+      const picker = new OneDatetimePickerHelper($(find('input')));
       return picker.openPicker(true)
         .then(() => blur('input'))
         .then(() => expect(focusLostSpy).to.be.calledOnce);
@@ -71,7 +72,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      const picker = new OneDatetimePickerHelper(this.$('input'));
+      const picker = new OneDatetimePickerHelper($(find('input')));
       return picker.selectToday()
         .then(() => {
           expect(valueChangedSpy).to.be.calledOnce;
@@ -87,13 +88,13 @@ describe('Integration | Component | form component/datetime field', function () 
     await render(hbs `{{form-component/datetime-field field=field}}`);
 
     const expectedValue = moment(date).format(datetimeFormat);
-    expect(this.$('input').val()).to.equal(expectedValue);
+    expect(find('input').value).to.equal(expectedValue);
   });
 
   it('sets input id according to "fieldId"', async function () {
     await render(hbs `{{form-component/datetime-field field=field fieldId="abc"}}`);
 
-    expect(this.$('input#abc')).to.exist;
+    expect(find('input#abc')).to.exist;
   });
 
   it('renders raw datetime value when field is in "view" mode', async function () {
@@ -104,7 +105,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
     await render(hbs `{{form-component/datetime-field field=field}}`);
 
-    expect(this.$().text().trim()).to.equal(moment(date).format(datetimeFormat));
-    expect(this.$('input')).to.not.exist;
+    expect(this.element.textContent.trim()).to.equal(moment(date).format(datetimeFormat));
+    expect(find('input')).to.not.exist;
   });
 });

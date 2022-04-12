@@ -1,10 +1,11 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Action from 'onedata-gui-common/utils/action';
+import $ from 'jquery';
 
 const componentClass = 'revisions-table-create-revision-entry';
 
@@ -29,15 +30,15 @@ describe('Integration | Component | revisions table/create revision entry', func
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
 
-    expect(this.$().children()).to.have.class(componentClass)
+    expect($(this.element).children()).to.have.class(componentClass)
       .and.to.have.length(1);
   });
 
   it('shows correct icon and text', async function () {
     await renderComponent();
 
-    expect(this.$('.one-icon')).to.have.class('oneicon-plus');
-    expect(this.$().text().trim()).to.equal('Create revision');
+    expect($(find('.one-icon'))).to.have.class('oneicon-plus');
+    expect(this.element.textContent.trim()).to.equal('Create revision');
   });
 
   it('creates new revision on click',

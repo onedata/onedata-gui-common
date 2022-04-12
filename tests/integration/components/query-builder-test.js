@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, blur } from '@ember/test-helpers';
+import { render, click, fillIn, blur, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import RootOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/root-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
@@ -31,7 +31,7 @@ describe('Integration | Component | query builder main component', function () {
   it('has class "query-builder', async function () {
     await render(hbs `{{query-builder valuesBuilder=valuesBuilder}}`);
 
-    expect(this.$('.query-builder'));
+    expect(find('.query-builder')).to.exist;
   });
 
   it('calls refreshQueryProperties when add condition popover is opened', async function () {
@@ -94,7 +94,7 @@ describe('Integration | Component | query builder main component', function () {
     });
 
     it('value nested in operators is changed', async function () {
-      const firstValue = this.$('.comparator-value:contains("1")');
+      const firstValue = $(this.element).find('.comparator-value:contains("1")');
       await click(firstValue[0]);
 
       await fillIn('input.comparator-value', 'test');

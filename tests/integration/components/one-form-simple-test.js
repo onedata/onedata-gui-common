@@ -3,8 +3,9 @@ import { reject } from 'rsvp';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, fillIn, focus, settled, click } from '@ember/test-helpers';
+import { render, blur, fillIn, focus, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 
 const errorMsg = 'error!';
 
@@ -44,8 +45,8 @@ describe('Integration | Component | one form simple', function () {
       }}
     `);
 
-    expect(this.$('.field-main-first'), 'field first').to.exist;
-    expect(this.$('.field-main-second'), 'field second').to.exist;
+    expect(find('.field-main-first'), 'field first').to.exist;
+    expect(find('.field-main-second'), 'field second').to.exist;
   });
 
   it('renders errors after field change', async function () {
@@ -57,7 +58,7 @@ describe('Integration | Component | one form simple', function () {
       }}
     `);
 
-    const $firstField = this.$('.field-main-first');
+    const $firstField = $(find('.field-main-first'));
     const firstFieldMsg = $firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change')
       .to.be.empty;
@@ -76,7 +77,7 @@ describe('Integration | Component | one form simple', function () {
       }}
     `);
 
-    const firstField = this.$('.field-main-first');
+    const firstField = $(find('.field-main-first'));
     const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
     expect(firstFieldMsg.text(), 'field has no error before value change').to.be.empty;
 
@@ -96,7 +97,7 @@ describe('Integration | Component | one form simple', function () {
     `);
 
     const newErrorMsg = 'error2!';
-    const firstField = this.$('.field-main-first');
+    const firstField = $(find('.field-main-first'));
     const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
 
     this.get('fakeValidations.errors')[0].set('message', newErrorMsg);
@@ -121,9 +122,9 @@ describe('Integration | Component | one form simple', function () {
     }}
       `);
 
-    let submitBtn = this.$('button[type=submit]');
+    let submitBtn = find('button[type=submit]');
     expect(
-      submitBtn.prop('disabled'),
+      submitBtn.disabled,
       'submit button is disabled if form is not valid'
     ).to.be.true;
 
@@ -133,11 +134,11 @@ describe('Integration | Component | one form simple', function () {
     });
     await settled();
     expect(
-      submitBtn.prop('disabled'),
+      submitBtn.disabled,
       'submit button is enabled if form is valid'
     ).to.equal(false);
 
-    await click(submitBtn[0]);
+    await click(submitBtn);
     expect(submitOccurred, 'submitAction was invoked').to.be.true;
   });
 });

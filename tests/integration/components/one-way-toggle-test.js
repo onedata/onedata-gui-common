@@ -1,11 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import OneTooltipHelper from '../../helpers/one-tooltip';
+import $ from 'jquery';
 
 describe('Integration | Component | one way toggle', function () {
   setupRenderingTest();
@@ -13,14 +14,14 @@ describe('Integration | Component | one way toggle', function () {
   it('renders checked toggle when passed checked value true', async function () {
     await render(hbs `{{one-way-toggle checked=true}}`);
 
-    const $toggle = this.$('.one-way-toggle');
+    const $toggle = $(find('.one-way-toggle'));
     expect($toggle).to.have.class('checked');
   });
 
   it('renders unchecked toggle when passed checked value false', async function () {
     await render(hbs `{{one-way-toggle checked=false}}`);
 
-    const $toggle = this.$('.one-way-toggle');
+    const $toggle = $(find('.one-way-toggle'));
     expect($toggle).to.not.have.class('checked');
     // TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
     expect($toggle).to.have.class('unselected');
@@ -30,7 +31,7 @@ describe('Integration | Component | one way toggle', function () {
     async function () {
       await render(hbs `{{one-way-toggle threeState=true checked=2}}`);
 
-      const $toggle = this.$('.one-way-toggle');
+      const $toggle = $(find('.one-way-toggle'));
       expect($toggle).to.have.class('maybe');
     }
   );
@@ -44,7 +45,7 @@ describe('Integration | Component | one way toggle', function () {
 
     await click('.one-way-toggle');
 
-    expect(this.$('.one-way-toggle')).to.have.class('checked');
+    expect($(find('.one-way-toggle'))).to.have.class('checked');
     expect(updateHandler).to.be.calledOnce;
     expect(updateHandler).to.be.calledWith(true);
   });
@@ -58,7 +59,7 @@ describe('Integration | Component | one way toggle', function () {
 
     await click('.one-way-toggle');
 
-    expect(this.$('.one-way-toggle')).to.not.have.class('checked');
+    expect($(find('.one-way-toggle'))).to.not.have.class('checked');
     expect(updateHandler).to.be.calledOnce;
     expect(updateHandler).to.be.calledWith(false);
   });
@@ -77,8 +78,8 @@ describe('Integration | Component | one way toggle', function () {
 
     await click('.one-way-toggle');
 
-    expect(this.$('.one-way-toggle')).to.have.class('checked');
-    expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
+    expect($(find('.one-way-toggle'))).to.have.class('checked');
+    expect($(find('.one-way-toggle'))).to.not.have.class('maybe');
     expect(updateHandler).to.be.calledOnce;
     expect(updateHandler).to.be.calledWith(true);
   });
@@ -99,8 +100,8 @@ describe('Integration | Component | one way toggle', function () {
 
       await click('.one-way-toggle');
 
-      expect(this.$('.one-way-toggle')).to.not.have.class('checked');
-      expect(this.$('.one-way-toggle')).to.have.class('maybe');
+      expect($(find('.one-way-toggle'))).to.not.have.class('checked');
+      expect($(find('.one-way-toggle'))).to.have.class('maybe');
       expect(updateHandler).to.be.calledOnce;
       expect(updateHandler).to.be.calledWith(2);
     }
@@ -122,8 +123,8 @@ describe('Integration | Component | one way toggle', function () {
 
       await click('.one-way-toggle');
 
-      expect(this.$('.one-way-toggle')).to.have.class('checked');
-      expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
+      expect($(find('.one-way-toggle'))).to.have.class('checked');
+      expect($(find('.one-way-toggle'))).to.not.have.class('maybe');
       expect(updateHandler).to.be.calledOnce;
       expect(updateHandler).to.be.calledWith(true);
     }
@@ -145,8 +146,8 @@ describe('Integration | Component | one way toggle', function () {
 
       await click('.one-way-toggle');
 
-      expect(this.$('.one-way-toggle')).to.not.have.class('checked');
-      expect(this.$('.one-way-toggle')).to.not.have.class('maybe');
+      expect($(find('.one-way-toggle'))).to.not.have.class('checked');
+      expect($(find('.one-way-toggle'))).to.not.have.class('maybe');
       expect(updateHandler).to.be.calledOnce;
       expect(updateHandler).to.be.calledWith(false);
     }
@@ -172,7 +173,7 @@ describe('Integration | Component | one way toggle', function () {
         update=(action update)}}
     `);
 
-    const $oneWayToggle = this.$('.one-way-toggle');
+    const $oneWayToggle = $(find('.one-way-toggle'));
 
     await click('.one-way-toggle');
     expect($oneWayToggle, 'disable right after click')
@@ -226,22 +227,22 @@ describe('Integration | Component | one way toggle', function () {
   it('has "lock" icon when is readonly', async function () {
     await render(hbs `{{one-way-toggle isReadOnly=true}}`);
 
-    expect(getToggle(this).find('.one-icon')).to.have.class('oneicon-lock');
+    expect($(getToggle().querySelector('.one-icon'))).to.have.class('oneicon-lock');
   });
 
   it('has no "lock" icon when is not readonly', async function () {
     await render(hbs `{{one-way-toggle isReadOnly=false}}`);
 
-    expect(getToggle(this).find('.one-icon')).to.not.exist;
+    expect(getToggle().querySelector('.one-icon')).to.not.exist;
   });
 
   it('has no "lock" icon when is readonly but "showLockForReadOnly" is false', async function () {
     await render(hbs `{{one-way-toggle isReadOnly=true showLockForReadOnly=false}}`);
 
-    expect(getToggle(this).find('.one-icon')).to.not.exist;
+    expect(getToggle().querySelector('.one-icon')).to.not.exist;
   });
 
-  function getToggle(testCase) {
-    return testCase.$('.one-way-toggle');
+  function getToggle() {
+    return find('.one-way-toggle');
   }
 });

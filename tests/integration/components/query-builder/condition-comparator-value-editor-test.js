@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { clickTrigger } from '../../../helpers/ember-power-select';
 import $ from 'jquery';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import { render, click, fillIn, blur, triggerKeyEvent } from '@ember/test-helpers';
+import { render, click, fillIn, blur, triggerKeyEvent, find } from '@ember/test-helpers';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 
@@ -41,7 +41,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.comparator-value').text().trim()).to.equal(viewValue);
+            expect(find('.comparator-value').textContent.trim()).to.equal(viewValue);
             done();
           }
         );
@@ -104,7 +104,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.comparator-value')[0], '.comparator-value is active')
+            expect(find('.comparator-value'), '.comparator-value is active')
               .to.equal(document.activeElement);
             done();
           }
@@ -121,7 +121,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.comparator-value')).to.have.value('abc');
+            expect(find('.comparator-value').value).to.equal('abc');
             done();
           }
         );
@@ -253,7 +253,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.comparator-value')).to.not.have.class('is-invalid');
+            expect($(find('.comparator-value'))).to.not.have.class('is-invalid');
             done();
           }
         );
@@ -270,8 +270,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect(this.$('.comparator-value'))
-              .to.have.class('is-invalid');
+            expect($(find('.comparator-value'))).to.have.class('is-invalid');
             done();
           }
         );
@@ -309,7 +308,7 @@ function itShowsPowerSelectWithOptions(
         valuesBuilder=valuesBuilder
       }}`);
 
-      expect(this.$('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
+      expect(find('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
         .to.exist;
       await clickTrigger('.dropdown-editor');
       const options = $('.ember-power-select-option');
@@ -333,7 +332,7 @@ function itShowsTextInput(comparator) {
         valuesBuilder=valuesBuilder
       }}`);
 
-      expect(this.$('input[type="text"].comparator-value'), 'input.comparator-value')
+      expect(find('input[type="text"].comparator-value'), 'input.comparator-value')
         .to.exist;
       done();
     }

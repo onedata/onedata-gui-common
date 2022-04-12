@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import AndOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/and-operator-query-block';
 import OrOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/or-operator-query-block';
@@ -33,7 +33,7 @@ describe('Integration | Component | query builder/block visualiser', function ()
         }}`);
 
         expect(
-          this.$(`.query-builder-operator-block.${operatorName}-operator-block`),
+          find(`.query-builder-operator-block.${operatorName}-operator-block`),
           'operator block'
         ).to.exist;
       }
@@ -58,7 +58,7 @@ describe('Integration | Component | query builder/block visualiser', function ()
         valuesBuilder=valuesBuilder
       }}`);
 
-      expect(this.$('.query-builder-condition-block')).to.exist;
+      expect(find('.query-builder-condition-block')).to.exist;
     }
   );
 });

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard';
 import GlobalNotifyStub from '../../helpers/global-notify-stub';
@@ -111,7 +111,7 @@ describe('Integration | Component | provider place', function () {
 
   it('shows provider status', async function () {
     await render(hbs `{{provider-place provider=provider}}`);
-    const $providerPlace = this.$('.provider-place');
+    const $providerPlace = $(find('.provider-place'));
     expect($providerPlace).to.exist;
     expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
   });
@@ -122,9 +122,9 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider
         atlasWidth=atlasWidth}}`);
-    let prevWidth = parseFloat(this.$('.circle').css('width'));
+    let prevWidth = parseFloat($(find('.circle')).css('width'));
     this.set('atlasWidth', 400);
-    expect(parseFloat(this.$('.circle').css('width')))
+    expect(parseFloat($(find('.circle')).css('width')))
       .to.be.equal(prevWidth / 2);
   });
 

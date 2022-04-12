@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -12,6 +12,7 @@ import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
+import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupRenderingTest();
@@ -31,8 +32,8 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
         elementModel=blockSpace
       }}`);
 
-      expect(this.$().children()).to.have.length(1);
-      expect(this.$().children().eq(0))
+      expect(this.element.children).to.have.length(1);
+      expect($(this.element.children[0]))
         .to.have.class('workflow-visualiser-interblock-space')
         .and.to.have.class('workflow-visualiser-space')
         .and.to.have.class('workflow-visualiser-element');
@@ -46,7 +47,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       elementModel=blockSpace
     }}`);
 
-    expect(this.$('.workflow-visualiser-interblock-space'))
+    expect($(find('.workflow-visualiser-interblock-space')))
       .to.have.class('between-parallel-box-space');
   });
 
@@ -57,7 +58,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       elementModel=blockSpace
     }}`);
 
-    expect(this.$('.workflow-visualiser-interblock-space'))
+    expect($(find('.workflow-visualiser-interblock-space')))
       .to.have.class('between-task-space');
   });
 
@@ -136,7 +137,7 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
         elementModel=blockSpace
       }}`);
 
-      expect(this.$('.workflow-visualiser-interblock-space')).to.have.class(className);
+      expect($(find('.workflow-visualiser-interblock-space'))).to.have.class(className);
       done();
     });
 }
@@ -184,7 +185,7 @@ function itDoesNotAllowToAddElement(parent, [elementBefore, elementAfter], newEl
         elementModel=blockSpace
       }}`);
 
-      expect(this.$(`.create-${dasherize(newElementType)}-action-trigger`)).to.not.exist;
+      expect(find(`.create-${dasherize(newElementType)}-action-trigger`)).to.not.exist;
       done();
     }
   );
@@ -205,11 +206,11 @@ function itHasArrow(hasArrow, parent, [elementBefore, elementAfter], mode) {
         elementModel=blockSpace
       }}`);
 
-      const $arrow = this.$('.arrow');
+      const arrow = find('.arrow');
       if (hasArrow) {
-        expect($arrow).to.exist;
+        expect(arrow).to.exist;
       } else {
-        expect($arrow).to.not.exist;
+        expect(arrow).to.not.exist;
       }
       done();
     }

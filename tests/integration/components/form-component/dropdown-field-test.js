@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, focus, fillIn } from '@ember/test-helpers';
+import { render, blur, focus, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
@@ -49,7 +49,7 @@ describe('Integration | Component | form component/dropdown field', function () 
     async function () {
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      expect(this.$('.dropdown-field')).to.exist;
+      expect(find('.dropdown-field')).to.exist;
     }
   );
 
@@ -196,9 +196,9 @@ describe('Integration | Component | form component/dropdown field', function () 
 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-    expect(this.$('.text').text().trim()).to.equal('First');
-    expect(this.$('.one-icon')).to.have.class('oneicon-space');
-    expect(this.$('.ember-basic-dropdown')).to.not.exist;
+    expect(find('.text').textContent.trim()).to.equal('First');
+    expect($(find('.one-icon'))).to.have.class('oneicon-space');
+    expect(find('.ember-basic-dropdown')).to.not.exist;
   });
 });
 

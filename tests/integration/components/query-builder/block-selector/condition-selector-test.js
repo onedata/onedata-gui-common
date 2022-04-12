@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { clickTrigger, selectChoose, typeInSearch } from '../../../../helpers/ember-power-select';
 import setDefaultQueryValuesBuilder from '../../../../helpers/set-default-query-values-builder';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, findAll, find } from '@ember/test-helpers';
 
 const numberComparators = [{
   operator: 'eq',
@@ -68,7 +68,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     await clickTrigger('.property-selector-container');
 
     const queryProperties = this.get('queryProperties');
-    const options = this.$('.ember-power-select-option');
+    const options = findAll('.ember-power-select-option');
     expect(options).to.have.length(queryProperties.length);
     queryProperties.mapBy('key').sort().forEach((key, index) =>
       expect(options[index].textContent.trim()).to.equal(key)
@@ -84,7 +84,7 @@ describe('Integration | Component | query builder/block selector/condition selec
     await clickTrigger('.property-selector-container');
     await typeInSearch('string');
 
-    const options = this.$('.ember-power-select-option');
+    const options = findAll('.ember-power-select-option');
     expect(options).to.have.length(1);
     expect(options[0].textContent.trim()).to.equal('stringProp');
   });
@@ -95,7 +95,7 @@ describe('Integration | Component | query builder/block selector/condition selec
       valuesBuilder=valuesBuilder
     }}`);
 
-    expect(this.$('.accept-condition')).to.have.attr('disabled');
+    expect(find('.accept-condition').disabled).to.be.true;
   });
 
   it('does not block "Add" button when property and number values are selected from dropdown', async function () {
@@ -108,7 +108,7 @@ describe('Integration | Component | query builder/block selector/condition selec
 
     await selectChoose('.comparator-value-editor', '1');
 
-    expect(this.$('.accept-condition')).to.not.have.attr('disabled');
+    expect(find('.accept-condition').disabled).to.be.false;
   });
 
   it('does not show comparator selector on init', async function () {
@@ -117,7 +117,7 @@ describe('Integration | Component | query builder/block selector/condition selec
       valuesBuilder=valuesBuilder
     }}`);
 
-    expect(this.$('.comparator-selector')).to.not.exist;
+    expect(find('.comparator-selector')).to.not.exist;
   });
 
   it('shows comparator selector when multi-comparator property is selected', async function () {
@@ -128,7 +128,7 @@ describe('Integration | Component | query builder/block selector/condition selec
 
     await selectChoose('.property-selector-container', 'numberProp');
 
-    expect(this.$('.comparator-selector-container .ember-basic-dropdown')).to.exist;
+    expect(find('.comparator-selector-container .ember-basic-dropdown')).to.exist;
   });
 
   [{
@@ -169,7 +169,7 @@ describe('Integration | Component | query builder/block selector/condition selec
 
       if (comparators.length > 1) {
         await clickTrigger('.comparator-selector-container');
-        const options = this.$('.ember-power-select-option');
+        const options = findAll('.ember-power-select-option');
 
         expect(options).to.have.length(comparators.length);
         comparators.forEach(({ comparator }, index) =>
@@ -177,11 +177,11 @@ describe('Integration | Component | query builder/block selector/condition selec
           .to.equal(comparatorTranslations[comparator])
         );
         expect(
-          this.$('.comparator-selector-container .ember-power-select-selected-item')
-          .text().trim()
+          find('.comparator-selector-container .ember-power-select-selected-item')
+          .textContent.trim()
         ).to.equal(comparatorTranslations[defaultComparator]);
       } else {
-        expect(this.$('.comparator-selector').text().trim())
+        expect(find('.comparator-selector').textContent.trim())
           .to.equal(comparatorTranslations[comparators[0].comparator]);
       }
     });
@@ -229,7 +229,7 @@ describe('Integration | Component | query builder/block selector/condition selec
           }}`);
           await selectChoose('.property-selector-container', propertyName);
 
-          const comparatorValueNode = this.$('.comparator-value')[0];
+          const comparatorValueNode = find('.comparator-value');
           const comparatorValue = comparatorValueNode.value !== undefined ?
             comparatorValueNode.value : comparatorValueNode.textContent.trim();
           expect(comparatorValue).to.equal('');
@@ -245,8 +245,8 @@ describe('Integration | Component | query builder/block selector/condition selec
           }}`);
           await selectChoose('.property-selector-container', propertyName);
 
-          const addBtn = this.$('.accept-condition');
-          expect(addBtn).to.have.attr('disabled');
+          const addBtn = find('.accept-condition');
+          expect(addBtn.disabled).to.be.true;
         }
       );
     });
@@ -264,7 +264,7 @@ describe('Integration | Component | query builder/block selector/condition selec
         await selectChoose('.comparator-selector-container', symbol);
         await fillIn('.comparator-value', 'xyz');
 
-        expect(this.$('.accept-condition')).to.have.attr('disabled');
+        expect(find('.accept-condition').disabled).to.be.true;
       }
     );
   });

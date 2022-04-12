@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, focus, blur, fillIn } from '@ember/test-helpers';
+import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextareaField from 'onedata-gui-common/utils/form-component/textarea-field';
 import sinon from 'sinon';
@@ -21,7 +21,7 @@ describe('Integration | Component | form component/textarea field', function () 
     async function () {
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('.textarea-field')).to.exist;
+      expect(find('.textarea-field')).to.exist;
     }
   );
 
@@ -30,7 +30,7 @@ describe('Integration | Component | form component/textarea field', function () 
     async function () {
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('textarea')).to.exist;
+      expect(find('textarea')).to.exist;
     }
   );
 
@@ -41,7 +41,7 @@ describe('Integration | Component | form component/textarea field', function () 
 
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('textarea')).to.have.attr('disabled');
+      expect(find('textarea').disabled).to.be.true;
     }
   );
 
@@ -80,7 +80,7 @@ describe('Integration | Component | form component/textarea field', function () 
 
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('textarea').val()).to.equal('test');
+      expect(find('textarea').value).to.equal('test');
     }
   );
 
@@ -89,7 +89,7 @@ describe('Integration | Component | form component/textarea field', function () 
       {{form-component/textarea-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('textarea#abc')).to.exist;
+    expect(find('textarea#abc')).to.exist;
   });
 
   it(
@@ -99,7 +99,7 @@ describe('Integration | Component | form component/textarea field', function () 
 
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('textarea').attr('placeholder')).to.equal('test');
+      expect(find('textarea').placeholder).to.equal('test');
     }
   );
 
@@ -112,7 +112,7 @@ describe('Integration | Component | form component/textarea field', function () 
 
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('textarea')).to.have.attr('readonly');
+      expect(find('textarea').readOnly).to.be.true;
     }
   );
 
@@ -128,8 +128,8 @@ describe('Integration | Component | form component/textarea field', function () 
 
       await render(hbs `{{form-component/textarea-field field=field}}`);
 
-      expect(this.$('textarea')).to.not.exist;
-      expect(this.$().text().trim()).to.equal('test value');
+      expect(find('textarea')).to.not.exist;
+      expect(this.element.textContent.trim()).to.equal('test value');
     }
   );
 });

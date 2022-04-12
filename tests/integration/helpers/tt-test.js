@@ -32,6 +32,6 @@ describe('Integration | Helper | tt', function () {
 
     await render(hbs `{{tt comp "foo.bar"}}`);
 
-    expect(this.$().text().trim()).to.equal('Two worlds');
+    expect(this.element.textContent.trim()).to.equal('Two worlds');
   });
 });

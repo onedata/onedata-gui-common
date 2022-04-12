@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, waitUntil } from '@ember/test-helpers';
+import { render, click, fillIn, waitUntil, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 import sinon from 'sinon';
@@ -17,7 +17,7 @@ describe('Integration | Component | query builder/block adder', function () {
   it('has class "query-builder-block-adder"', async function () {
     await render(hbs `{{query-builder/block-adder valuesBuilder=valuesBuilder}}`);
 
-    expect(this.$('.query-builder-block-adder')).to.have.length(1);
+    expect(findAll('.query-builder-block-adder')).to.have.length(1);
   });
 
   it('shows block selector on click', async function () {
@@ -100,6 +100,6 @@ describe('Integration | Component | query builder/block adder', function () {
       valuesBuilder=valuesBuilder
     }}`);
 
-    expect(this.$('.query-builder-block-adder')).to.have.attr('disabled');
+    expect(find('.query-builder-block-adder').disabled).to.be.true;
   });
 });

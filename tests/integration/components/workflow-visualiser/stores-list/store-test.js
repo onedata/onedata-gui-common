@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import { getModalBody, getModalFooter } from '../../../../helpers/modal';
 import { resolve } from 'rsvp';
+import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/stores list/store', function () {
   setupRenderingTest();
@@ -37,7 +38,8 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
   it('has class "workflow-visualiser-stores-list-store"', async function () {
     await render(hbs `{{workflow-visualiser/stores-list/store}}`);
 
-    expect(this.$().children()).to.have.class('workflow-visualiser-stores-list-store')
+    expect($(this.element.children))
+      .to.have.class('workflow-visualiser-stores-list-store')
       .and.to.have.length(1);
   });
 
@@ -96,7 +98,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
     it('does not show remove button', async function (done) {
       await renderComponent();
 
-      expect(this.$('.remove-store-action-trigger')).to.not.exist;
+      expect(find('.remove-store-action-trigger')).to.not.exist;
       done();
     });
 
@@ -128,7 +130,7 @@ function itShowsStoreName() {
   it('shows store name', async function (done) {
     await renderComponent();
 
-    expect(this.$('.store-name').text().trim()).to.equal('store1');
+    expect(find('.store-name').textContent.trim()).to.equal('store1');
     done();
   });
 }
@@ -138,7 +140,7 @@ function itHasModeClass(mode) {
   it(`has "${className}" class`, async function (done) {
     await renderComponent();
 
-    expect(this.$('.workflow-visualiser-stores-list-store'))
+    expect($(find('.workflow-visualiser-stores-list-store')))
       .to.have.class(className);
     done();
   });
@@ -151,7 +153,7 @@ function itAddsInputStoreClassWhenNeeded() {
 
       await renderComponent();
 
-      expect(this.$('.workflow-visualiser-stores-list-store'))
+      expect($(find('.workflow-visualiser-stores-list-store')))
         .to.have.class('tag-item-warning');
       done();
     });
@@ -162,7 +164,7 @@ function itAddsInputStoreClassWhenNeeded() {
 
       await renderComponent();
 
-      expect(this.$('.workflow-visualiser-stores-list-store'))
+      expect($(find('.workflow-visualiser-stores-list-store')))
         .to.not.have.class('tag-item-warning');
       done();
     });

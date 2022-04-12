@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import InterlaneSpace from 'onedata-gui-common/utils/workflow-visualiser/interlane-space';
@@ -10,6 +10,7 @@ import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/interlane space', function () {
   setupRenderingTest();
@@ -36,8 +37,8 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
     async function () {
       await renderComponent();
 
-      expect(this.$().children()).to.have.length(1);
-      expect(this.$().children().eq(0))
+      expect($(this.element).children()).to.have.length(1);
+      expect($(this.element).children().eq(0))
         .to.have.class('workflow-visualiser-interlane-space')
         .and.to.have.class('workflow-visualiser-space')
         .and.to.have.class('workflow-visualiser-element');
@@ -48,7 +49,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
     async function () {
       await renderComponent();
 
-      expect(this.$('.workflow-visualiser-interlane-space'))
+      expect($(find('.workflow-visualiser-interlane-space')))
         .to.have.class('full-view-space');
     });
 
@@ -57,7 +58,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       await renderComponent();
       this.set('interlaneSpace.elementAfter', Lane.create());
 
-      expect(this.$('.workflow-visualiser-interlane-space'))
+      expect($(find('.workflow-visualiser-interlane-space')))
         .to.not.have.class('full-view-space');
     });
 
@@ -102,7 +103,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
 
       await renderComponent();
 
-      expect(this.$('.create-lane-action-trigger')).to.not.exist;
+      expect(find('.create-lane-action-trigger')).to.not.exist;
       done();
     });
   });

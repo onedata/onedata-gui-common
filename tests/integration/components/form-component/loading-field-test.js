@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import { setProperties } from '@ember/object';
@@ -24,7 +24,7 @@ describe('Integration | Component | form component/loading field', function () {
     async function () {
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.loading-field')).to.exist;
+      expect(find('.loading-field')).to.exist;
     }
   );
 
@@ -37,9 +37,9 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.spin-spinner')).to.exist;
-      expect(this.$('.loading-text').text().trim()).to.equal('Loading...');
-      expect(this.$('.resource-load-error')).to.not.exist;
+      expect(find('.spin-spinner')).to.exist;
+      expect(find('.loading-text').textContent.trim()).to.equal('Loading...');
+      expect(find('.resource-load-error')).to.not.exist;
     }
   );
 
@@ -55,8 +55,8 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.spin-spinner')).to.exist;
-      expect(this.$('.loading-text')).to.not.exist;
+      expect(find('.spin-spinner')).to.exist;
+      expect(find('.loading-text')).to.not.exist;
     }
   );
 
@@ -70,8 +70,8 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.resource-load-error')).to.exist;
-      expect(this.$('.resource-load-error .error-details').text().trim())
+      expect(find('.resource-load-error')).to.exist;
+      expect(find('.resource-load-error .error-details').textContent.trim())
         .to.equal('"err"');
     }
   );
@@ -85,7 +85,7 @@ describe('Integration | Component | form component/loading field', function () {
 
       await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.loading-field *')).to.not.exist;
+      expect(find('.loading-field *')).to.not.exist;
     }
   );
 });

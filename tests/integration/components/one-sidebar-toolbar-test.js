@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -14,7 +14,7 @@ describe('Integration | Component | one sidebar toolbar', function () {
     }]);
     await render(hbs `{{one-sidebar-toolbar buttons=buttons}}
     <div class="collapsible-toolbar-global-toggle"></div>`);
-    expect(this.$('.oneicon-space')).to.have.length(1);
+    expect(findAll('.oneicon-space')).to.have.length(1);
   });
 
   it('renders button that calls given action', async function (done) {
