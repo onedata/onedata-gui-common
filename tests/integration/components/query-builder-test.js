@@ -94,8 +94,8 @@ describe('Integration | Component | query builder main component', function () {
     });
 
     it('value nested in operators is changed', async function () {
-      const firstValue = $(this.element).find('.comparator-value:contains("1")');
-      await click(firstValue[0]);
+      const firstValue = $(this.element).find('.comparator-value:contains("1")')[0];
+      await click(firstValue);
 
       await fillIn('input.comparator-value', 'test');
       await blur('input.comparator-value');

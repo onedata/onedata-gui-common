@@ -16,7 +16,8 @@ function getRelativePosition($parent, $child) {
   };
 }
 
-function isElementVisible($child) {
+function isElementVisible(child) {
+  const $child = $(child);
   const $parent = $(find('svg'));
   const relativePosition = getRelativePosition($parent, $child);
   // -1 because of some subpixel malfunctions
@@ -43,7 +44,7 @@ describe('Integration | Component | one map', function () {
       '[data-code="NZ"]',
       '[data-code="GL"]',
     ].forEach((selector) =>
-      expect(isElementVisible($(find(selector)))).to.be.true
+      expect(isElementVisible(find(selector))).to.be.true
     );
   });
 
@@ -97,10 +98,10 @@ describe('Integration | Component | one map', function () {
         {{one-map initialState=initialState}}
       </div>
     `);
-    expect(isElementVisible($(find('[data-code="PL"]')))).to.be.true;
-    expect(isElementVisible($(find('[data-code="TN"]')))).to.be.false;
-    expect(isElementVisible($(find('[data-code="PT"]')))).to.be.false;
-    expect(isElementVisible($(find('[data-code="KZ"]')))).to.be.false;
+    expect(isElementVisible(find('[data-code="PL"]'))).to.be.true;
+    expect(isElementVisible(find('[data-code="TN"]'))).to.be.false;
+    expect(isElementVisible(find('[data-code="PT"]'))).to.be.false;
+    expect(isElementVisible(find('[data-code="KZ"]'))).to.be.false;
   });
 
   it('positions content using position component', async function () {

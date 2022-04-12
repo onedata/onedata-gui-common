@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | checkbox list', function () {
   setupRenderingTest();
@@ -20,7 +19,7 @@ describe('Integration | Component | checkbox list', function () {
   it('has class "checkbox-list"', async function () {
     await render(hbs `{{checkbox-list}}`);
 
-    expect($(findAll('.checkbox-list'))).to.exist;
+    expect(find('.checkbox-list')).to.exist;
   });
 
   it('lists passed items by yielding each one', async function () {
@@ -30,10 +29,10 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    const $renderedItems = $(findAll('.checkbox-list-item'));
-    expect($renderedItems).to.have.length(2);
-    expect($renderedItems.eq(0).text().trim()).to.equal('a');
-    expect($renderedItems.eq(1).text().trim()).to.equal('b');
+    const renderedItems = findAll('.checkbox-list-item');
+    expect(renderedItems).to.have.length(2);
+    expect(renderedItems[0].textContent.trim()).to.equal('a');
+    expect(renderedItems[1].textContent.trim()).to.equal('b');
   });
 
   it('shows initial selection state', async function () {
@@ -123,7 +122,7 @@ describe('Integration | Component | checkbox list', function () {
       {{/checkbox-list}}
     `);
 
-    expect($(findAll('.selected-counter')).text().trim()).to.equal('(1/2)');
+    expect(find('.selected-counter').textContent.trim()).to.equal('(1/2)');
   });
 
   it('shows total selection state via header', async function () {

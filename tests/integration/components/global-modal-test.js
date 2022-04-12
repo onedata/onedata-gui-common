@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click, triggerKeyEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
-import $ from 'jquery';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import ModalInstance from 'onedata-gui-common/utils/modal-manager/modal-instance';
@@ -28,7 +27,7 @@ describe('Integration | Component | global modal', function () {
   it('does not render anything in place', async function () {
     await render(hbs `{{global-modal}}`);
 
-    expect($(this.element).children()).to.have.length(0);
+    expect(this.element.children).to.have.length(0);
   });
 
   it('renders modal only when modalInstance.isOpened is true', async function () {
@@ -47,7 +46,7 @@ describe('Integration | Component | global modal', function () {
       classNames="custom-modal-class"
     }}`);
 
-    expect(getGlobalModal()[0]).to.have.class('custom-modal-class');
+    expect(getGlobalModal()).to.have.class('custom-modal-class');
   });
 
   it('hides modal if modal instance isOpened turns from true to false', async function () {
@@ -84,7 +83,7 @@ describe('Integration | Component | global modal', function () {
       '.body-content-test',
       '.footer-content-test',
     ].forEach(contentSelector =>
-      expect(modal.find(contentSelector)).to.exist
+      expect(modal.querySelector(contentSelector)).to.exist
     );
   });
 
@@ -121,7 +120,7 @@ describe('Integration | Component | global modal', function () {
       expect(isGlobalModalOpened()).to.be.true;
       expect(hiddenSpy).to.not.be.called;
 
-      await click(getGlobalModal().find('.close-button')[0]);
+      await click(getGlobalModal().querySelector('.close-button'));
       expect(isGlobalModalOpened()).to.be.false;
       expect(hiddenSpy).to.be.called;
     }
@@ -165,7 +164,7 @@ describe('Integration | Component | global modal', function () {
     `);
 
     await this.get('modalManager').show().shownPromise;
-    await click(getGlobalModal().find('.close-button')[0]);
+    await click(getGlobalModal().querySelector('.close-button'));
 
     expect(isGlobalModalOpened()).to.be.false;
   });
@@ -189,7 +188,7 @@ describe('Integration | Component | global modal', function () {
       `);
 
       await this.get('modalManager').show().shownPromise;
-      await click(getGlobalModal().find('.close-button')[0]);
+      await click(getGlobalModal().querySelector('.close-button'));
 
       expect(hideSpy).to.be.calledOnce;
       expect(isGlobalModalOpened()).to.be.false;
@@ -211,7 +210,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { onHide: hideSpy }).shownPromise;
-      await click(getGlobalModal().find('.close-button')[0]);
+      await click(getGlobalModal().querySelector('.close-button'));
 
       expect(hideSpy).to.be.calledOnce;
       expect(isGlobalModalOpened()).to.be.false;
@@ -239,7 +238,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { onHide: hideSpyViaShow }).shownPromise;
-      await click(getGlobalModal().find('.close-button')[0]);
+      await click(getGlobalModal().querySelector('.close-button'));
 
       expect(hideStubViaProp).to.be.calledOnce;
       expect(hideSpyViaShow).to.not.be.called;
@@ -268,7 +267,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { onHide: hideStubViaShow }).shownPromise;
-      await click(getGlobalModal().find('.close-button')[0]);
+      await click(getGlobalModal().querySelector('.close-button'));
       expect(hideSpyViaProp).to.be.calledOnce;
       expect(hideStubViaShow).to.be.calledOnce;
       expect(isGlobalModalOpened()).to.be.true;
@@ -294,7 +293,7 @@ describe('Integration | Component | global modal', function () {
       `);
 
       await this.get('modalManager').show().shownPromise;
-      await click(getGlobalModal().find('.submit-button')[0]);
+      await click(getGlobalModal().querySelector('.submit-button'));
 
       expect(submitSpy).to.be.calledOnce;
       expect(submitSpy).to.be.calledWith('value');
@@ -316,7 +315,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { onSubmit: submitSpy }).shownPromise;
-      await click(getGlobalModal().find('.submit-button')[0]);
+      await click(getGlobalModal().querySelector('.submit-button'));
 
       expect(submitSpy).to.be.calledOnce;
       expect(submitSpy).to.be.calledWith('value');
@@ -359,7 +358,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { onSubmit: submitSpyViaShow }).shownPromise;
-      await click(getGlobalModal().find('.submit-button')[0]);
+      await click(getGlobalModal().querySelector('.submit-button'));
 
       expect(submitSpyViaProp).to.be.calledOnce;
       expect(submitSpyViaProp).to.be.calledWith('value');
@@ -400,7 +399,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { onSubmit: submitSpyViaShow }).shownPromise;
-      await click(getGlobalModal().find('.submit-button')[0]);
+      await click(getGlobalModal().querySelector('.submit-button'));
 
       expect(submitStubViaProp).to.be.calledOnce;
       expect(submitSpyViaShow).to.not.be.called;
@@ -417,7 +416,7 @@ describe('Integration | Component | global modal', function () {
     `);
 
     await this.get('modalManager').show().shownPromise;
-    await click(getGlobalModal().find('.submit-button')[0]);
+    await click(getGlobalModal().querySelector('.submit-button'));
 
     expect(isGlobalModalOpened()).to.be.false;
   });
@@ -435,7 +434,7 @@ describe('Integration | Component | global modal', function () {
 
       await this.get('modalManager')
         .show('someComponent', { hideAfterSubmit: false }).shownPromise;
-      await click(getGlobalModal().find('.submit-button')[0]);
+      await click(getGlobalModal().querySelector('.submit-button'));
 
       expect(isGlobalModalOpened()).to.be.true;
     }
@@ -445,7 +444,7 @@ describe('Integration | Component | global modal', function () {
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
     await this.get('modalManager').show().shownPromise;
-    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 'Escape');
+    await triggerKeyEvent(getGlobalModal(), 'keydown', 'Escape');
 
     expect(isGlobalModalOpened()).to.be.false;
   });
@@ -457,7 +456,7 @@ describe('Integration | Component | global modal', function () {
     `);
 
     await this.get('modalManager').show().shownPromise;
-    await triggerKeyEvent(getGlobalModal()[0], 'keydown', 'Escape');
+    await triggerKeyEvent(getGlobalModal(), 'keydown', 'Escape');
 
     expect(isGlobalModalOpened()).to.be.true;
   });
@@ -466,7 +465,7 @@ describe('Integration | Component | global modal', function () {
     await render(hbs `{{global-modal modalId=modalManager.modalInstances.lastObject.id}}`);
 
     await this.get('modalManager').show().shownPromise;
-    await click(getGlobalModal()[0]);
+    await click(getGlobalModal());
 
     expect(isGlobalModalOpened()).to.be.false;
   });
@@ -478,7 +477,7 @@ describe('Integration | Component | global modal', function () {
     }}`);
 
     await this.get('modalManager').show().shownPromise;
-    await click(getGlobalModal()[0]);
+    await click(getGlobalModal());
 
     expect(isGlobalModalOpened()).to.be.true;
   });
@@ -491,15 +490,15 @@ describe('Integration | Component | global modal', function () {
       size="lg"
     }}`);
 
-    expect(getGlobalModal().find('.modal-dialog')[0]).to.have.class('modal-lg');
+    expect(getGlobalModal().querySelector('.modal-dialog')).to.have.class('modal-lg');
   });
 });
 
 function getGlobalModal() {
-  return $('.modal.global-modal');
+  return document.querySelector('.modal.global-modal');
 }
 
 function isGlobalModalOpened() {
-  const $modal = getGlobalModal();
-  return $modal && $modal.hasClass('in');
+  const modal = getGlobalModal();
+  return Boolean(modal) && [...modal.classList].includes('in');
 }

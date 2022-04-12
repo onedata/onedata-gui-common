@@ -5,7 +5,6 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
-import $ from 'jquery';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { render, settled, fillIn, focus, blur, find } from '@ember/test-helpers';
@@ -161,12 +160,12 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await clickTrigger('.sourceStore-field');
 
-      const $options = $('.ember-power-select-option');
+      const options = document.querySelectorAll('.ember-power-select-option');
       const definedStores = this.get('definedStores');
-      expect($options).to.have.length(definedStores.length + 1);
-      expect($options.eq(0).text().trim()).to.equal('Create store...');
+      expect(options).to.have.length(definedStores.length + 1);
+      expect(options[0].textContent.trim()).to.equal('Create store...');
       definedStores.sortBy('name').forEach(({ name }, idx) =>
-        expect($options.eq(idx + 1).text().trim()).to.equal(name)
+        expect(options[idx + 1].textContent.trim()).to.equal(name)
       );
       done();
     });

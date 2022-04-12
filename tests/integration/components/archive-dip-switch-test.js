@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, find } from '@ember/test-helpers';
+import { render, find, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | archive dip switch', function () {
   setupRenderingTest();
@@ -45,7 +44,7 @@ describe('Integration | Component | archive dip switch', function () {
       archiveDipMode=archiveDipMode
       onArchiveDipModeChange=onArchiveDipModeChange
     }}`);
-    $(find('.select-archive-dip-btn')).click();
+    await click('.select-archive-dip-btn');
 
     expect(onArchiveDipModeChange).to.be.calledOnce;
     expect(onArchiveDipModeChange).to.be.calledWith('dip');

@@ -58,13 +58,14 @@ describe('Integration | Component | one form simple', function () {
       }}
     `);
 
-    const $firstField = $(find('.field-main-first'));
-    const firstFieldMsg = $firstField.parents('.form-group').find('.form-message');
-    expect(firstFieldMsg.text(), 'field has no error before value change')
+    const firstField = find('.field-main-first');
+    const firstFieldMsg =
+      $(firstField).parents('.form-group')[0].querySelector('.form-message');
+    expect(firstFieldMsg.textContent.trim(), 'field has no error before value change')
       .to.be.empty;
 
-    await fillIn($firstField[0], '');
-    expect(firstFieldMsg.text(), 'field has error after change')
+    await fillIn(firstField, '');
+    expect(firstFieldMsg.textContent.trim(), 'field has error after change')
       .to.equal(errorMsg);
   });
 
@@ -77,13 +78,15 @@ describe('Integration | Component | one form simple', function () {
       }}
     `);
 
-    const firstField = $(find('.field-main-first'));
-    const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
-    expect(firstFieldMsg.text(), 'field has no error before value change').to.be.empty;
+    const firstField = find('.field-main-first');
+    const firstFieldMsg =
+      $(firstField).parents('.form-group')[0].querySelector('.form-message');
+    expect(firstFieldMsg.textContent, 'field has no error before value change')
+      .to.be.empty;
 
-    await focus(firstField[0]);
-    await blur(firstField[0]);
-    expect(firstFieldMsg.text(), 'field has error after lost focus')
+    await focus(firstField);
+    await blur(firstField);
+    expect(firstFieldMsg.textContent, 'field has error after lost focus')
       .to.equal(errorMsg);
   });
 
@@ -97,13 +100,14 @@ describe('Integration | Component | one form simple', function () {
     `);
 
     const newErrorMsg = 'error2!';
-    const firstField = $(find('.field-main-first'));
-    const firstFieldMsg = firstField.parents('.form-group').find('.form-message');
+    const firstField = find('.field-main-first');
+    const firstFieldMsg =
+      $(firstField).parents('.form-group')[0].querySelector('.form-message');
 
     this.get('fakeValidations.errors')[0].set('message', newErrorMsg);
-    await focus(firstField[0]);
-    await blur(firstField[0]);
-    expect(firstFieldMsg.text(), 'field has its another error')
+    await focus(firstField);
+    await blur(firstField);
+    expect(firstFieldMsg.textContent, 'field has its another error')
       .to.equal(newErrorMsg);
   });
 

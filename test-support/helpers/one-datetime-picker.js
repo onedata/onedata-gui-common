@@ -3,8 +3,8 @@ import sinon from 'sinon';
 import $ from 'jquery';
 
 export default class OneDatetimePickerHelper {
-  constructor($trigger) {
-    this.$trigger = $trigger;
+  constructor(trigger) {
+    this.trigger = trigger;
     // 100 is a value used internally in picker plugin in setTimeout.
     // Cannot be changed (yet). Using 150 to be avoid race
     this.pickerInitDelay = 150;
@@ -12,7 +12,7 @@ export default class OneDatetimePickerHelper {
 
   openPicker(viaFocus = false) {
     const clock = this.createFakeClock();
-    return (viaFocus ? focus(this.$trigger[0]) : click(this.$trigger[0]))
+    return (viaFocus ? focus(this.trigger) : click(this.trigger))
       .then(() => this.waitForPickerInit(clock))
       .then(() => clock.restore());
   }

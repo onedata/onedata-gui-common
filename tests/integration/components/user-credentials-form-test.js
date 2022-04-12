@@ -7,8 +7,8 @@ import FormHelper from 'dummy/tests/helpers/form';
 import $ from 'jquery';
 
 class UserCredentialsFormHelper extends FormHelper {
-  constructor($template) {
-    super($template, '.user-credentials-form');
+  constructor(template) {
+    super($(template), '.user-credentials-form');
   }
 }
 
@@ -18,7 +18,7 @@ describe('Integration | Component | user credentials form', function () {
   it('shows secret password field by default', async function () {
     await render(hbs `{{user-credentials-form}}`);
 
-    const form = new UserCredentialsFormHelper($(this.element));
+    const form = new UserCredentialsFormHelper(this.element);
 
     expect(form.getInput('static-secretPassword')[0], 'secret password field exists')
       .to.exist;
@@ -29,7 +29,7 @@ describe('Integration | Component | user credentials form', function () {
     async function (done) {
       await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-      const form = new UserCredentialsFormHelper($(this.element));
+      const form = new UserCredentialsFormHelper(this.element);
 
       expect(form.getInput('static-secretPassword')[0], 'secret pass field')
         .to.not.exist;
@@ -62,7 +62,7 @@ describe('Integration | Component | user credentials form', function () {
       }}
     `);
 
-    const form = new UserCredentialsFormHelper($(this.element));
+    const form = new UserCredentialsFormHelper(this.element);
 
     await fillIn(form.getInput('verify-currentPassword')[0], OLD_PASSWORD);
     await fillIn(form.getInput('change-newPassword')[0], NEW_PASSWORD);
@@ -78,7 +78,7 @@ describe('Integration | Component | user credentials form', function () {
 
     await render(hbs `{{user-credentials-form changingPassword=true}}`);
 
-    const form = new UserCredentialsFormHelper($(this.element));
+    const form = new UserCredentialsFormHelper(this.element);
 
     await fillIn(form.getInput('verify-currentPassword')[0], OLD_PASSWORD);
     await fillIn(form.getInput('change-newPassword')[0], NEW_PASSWORD);

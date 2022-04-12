@@ -6,7 +6,6 @@ import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
 import TestComponent from 'onedata-gui-common/components/test-component';
 import { get } from '@ember/object';
-import $ from 'jquery';
 
 describe('Integration | Component | global modal mounter', function () {
   setupRenderingTest();
@@ -18,7 +17,7 @@ describe('Integration | Component | global modal mounter', function () {
   it('does not render anything in place', async function () {
     await render(hbs `{{global-modal-mounter}}`);
 
-    expect($(this.element).children()).to.have.length(0);
+    expect(this.element.children).to.have.length(0);
   });
 
   it('renders component specified by modalManager.show call', async function () {

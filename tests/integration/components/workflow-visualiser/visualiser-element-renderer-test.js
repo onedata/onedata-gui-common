@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get } from '@ember/object';
-import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/visualiser element renderer', function () {
   setupRenderingTest();
@@ -12,7 +11,7 @@ describe('Integration | Component | workflow visualiser/visualiser element rende
   it('renders nothing when lane element is not defined', async function () {
     await render(hbs `{{workflow-visualiser/visualiser-element-renderer}}`);
 
-    expect($(this.element).children()).to.have.length(0);
+    expect(this.element.children).to.have.length(0);
   });
 
   it('renders lane element using component specified by element\'s "renderer" field', async function () {

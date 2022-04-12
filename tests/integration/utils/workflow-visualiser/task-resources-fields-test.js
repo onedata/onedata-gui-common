@@ -7,7 +7,6 @@ import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fi
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { createTaskResourcesFields } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 import _ from 'lodash';
-import $ from 'jquery';
 import { render, fillIn, find } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow visualiser/task resources fields', function () {
@@ -304,10 +303,10 @@ async function expectResourceCapacityUnits(
   expectedUnits
 ) {
   await clickTrigger(getResourceFieldSelector(resourceName, resourceBoundary));
-  const $options = $('.ember-power-select-option');
-  expect($options).to.have.length(expectedUnits.length);
+  const options = document.querySelectorAll('.ember-power-select-option');
+  expect(options).to.have.length(expectedUnits.length);
   expectedUnits.forEach((unit, idx) => {
-    expect($options.eq(idx).text().trim()).to.equal(unit);
+    expect(options[idx].textContent.trim()).to.equal(unit);
   });
 }
 

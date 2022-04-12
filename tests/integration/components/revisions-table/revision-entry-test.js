@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 import sinon from 'sinon';
 
 const componentClass = 'revisions-table-revision-entry';
@@ -78,9 +77,10 @@ describe('Integration | Component | revisions table/revision entry', function ()
     expect(actionsTrigger).to.exist;
 
     await click(actionsTrigger);
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(1);
-    expect($actions.text()).to.contain('testAction 3');
+    const actions =
+      document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+    expect(actions).to.have.length(1);
+    expect(actions[0].textContent).to.contain('testAction 3');
   });
 
   it('triggers "onClick" callback after click', async function () {

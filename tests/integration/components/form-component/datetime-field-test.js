@@ -8,7 +8,6 @@ import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../../helpers/one-datetime-picker';
 import moment from 'moment';
 import { set } from '@ember/object';
-import $ from 'jquery';
 
 const datetimeFormat = 'YYYY/MM/DD H:mm';
 
@@ -34,7 +33,7 @@ describe('Integration | Component | form component/datetime field', function () 
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
       expect(find('input')).to.exist;
-      const picker = new OneDatetimePickerHelper($(find('input')));
+      const picker = new OneDatetimePickerHelper(find('input'));
       return picker.openPicker()
         .then(() => expect(picker.getPickerElement()).to.exist);
     }
@@ -58,7 +57,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      const picker = new OneDatetimePickerHelper($(find('input')));
+      const picker = new OneDatetimePickerHelper(find('input'));
       return picker.openPicker(true)
         .then(() => blur('input'))
         .then(() => expect(focusLostSpy).to.be.calledOnce);
@@ -72,7 +71,7 @@ describe('Integration | Component | form component/datetime field', function () 
 
       await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      const picker = new OneDatetimePickerHelper($(find('input')));
+      const picker = new OneDatetimePickerHelper(find('input'));
       return picker.selectToday()
         .then(() => {
           expect(valueChangedSpy).to.be.calledOnce;

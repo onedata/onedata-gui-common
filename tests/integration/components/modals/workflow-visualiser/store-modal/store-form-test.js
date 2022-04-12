@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
-import $ from 'jquery';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { render, settled, click, fillIn, focus, blur, find } from '@ember/test-helpers';
 
@@ -231,10 +230,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await clickTrigger('.type-field');
 
-      const $options = $('.ember-power-select-option');
-      expect($options).to.have.length(storeTypes.length);
+      const options = document.querySelectorAll('.ember-power-select-option');
+      expect(options).to.have.length(storeTypes.length);
       storeTypes.forEach(({ label }, idx) =>
-        expect($options.eq(idx).text().trim()).to.equal(label)
+        expect(options[idx].textContent.trim()).to.equal(label)
       );
       done();
     });
@@ -306,10 +305,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await clickTrigger('.dataType-field');
 
-          const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(availableDataTypeLabels.length);
+          const options = document.querySelectorAll('.ember-power-select-option');
+          expect(options).to.have.length(availableDataTypeLabels.length);
           availableDataTypeLabels.forEach((label, idx) =>
-            expect($options.eq(idx).text().trim()).to.equal(label)
+            expect(options[idx].textContent.trim()).to.equal(label)
           );
         }
 

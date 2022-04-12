@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, triggerEvent, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | remove icon', function () {
   setupRenderingTest();
@@ -60,13 +59,16 @@ describe('Integration | Component | remove icon', function () {
     await render(hbs `{{remove-icon tooltipText=tooltipText}}`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
-      .then(() => expect($('.tooltip.in').text()).to.contain(tooltipText));
+      .then(() =>
+        expect(document.querySelector('.tooltip.in').textContent)
+        .to.contain(tooltipText)
+      );
   });
 
   it('does not show tooltip if tooltipText property is empty', async function () {
     await render(hbs `{{remove-icon}}`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
-      .then(() => expect(find('.tooltip.in')).to.not.exist);
+      .then(() => expect(document.querySelector('.tooltip.in')).to.not.exist);
   });
 });

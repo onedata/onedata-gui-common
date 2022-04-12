@@ -940,21 +940,23 @@ async function scrollToLane(overflowSide, targetLane, offsetPercent = 0) {
 }
 
 function checkRenderedLanesStructure(rawData) {
-  const $lanes = $(findAll('.workflow-visualiser-lane'));
-  expect($lanes).to.have.length(rawData.lanes.length);
+  const lanes = findAll('.workflow-visualiser-lane');
+  expect(lanes).to.have.length(rawData.lanes.length);
   rawData.lanes.forEach(({ name: laneName, parallelBoxes }, laneIndex) => {
-    const $lane = $lanes.eq(laneIndex);
-    expect($lane.find('.lane-name').text().trim()).to.equal(laneName);
-    const $blocks = $lane.find('.workflow-visualiser-parallel-box');
-    expect($blocks).to.have.length(parallelBoxes.length);
+    const lane = lanes[laneIndex];
+    expect(lane.querySelector('.lane-name').textContent.trim()).to.equal(laneName);
+    const blocks = lane.querySelectorAll('.workflow-visualiser-parallel-box');
+    expect(blocks).to.have.length(parallelBoxes.length);
     parallelBoxes.forEach(({ name: blockName, tasks }, blockIndex) => {
-      const $block = $blocks.eq(blockIndex);
-      expect($block.find('.parallel-box-name').text().trim()).to.equal(blockName);
-      const $tasks = $block.find('.workflow-visualiser-task');
-      expect($tasks).to.have.length(tasks.length);
+      const block = blocks[blockIndex];
+      expect(block.querySelector('.parallel-box-name').textContent.trim())
+        .to.equal(blockName);
+      const tasksElems = block.querySelectorAll('.workflow-visualiser-task');
+      expect(tasksElems).to.have.length(tasks.length);
       tasks.forEach(({ name: taskName }, taskIndex) => {
-        const $task = $tasks.eq(taskIndex);
-        expect($task.find('.task-name').text().trim()).to.equal(taskName);
+        const taskElem = tasksElems[taskIndex];
+        expect(taskElem.querySelector('.task-name').textContent.trim())
+          .to.equal(taskName);
       });
     });
   });
@@ -964,44 +966,44 @@ function checkRenderedLanesStructure(rawData) {
 }
 
 function checkInterblockSpaces(rawDump) {
-  const $lanes = $(findAll('.workflow-visualiser-lane'));
-  expect($lanes).to.have.length(rawDump.lanes.length);
+  const lanes = findAll('.workflow-visualiser-lane');
+  expect(lanes).to.have.length(rawDump.lanes.length);
 
   rawDump.lanes.forEach(({ parallelBoxes }, laneIdx) => {
     const parallelBoxIds = parallelBoxes.mapBy('id');
     const taskIdsPerParallelBox = parallelBoxes
       .map(rawParallelBox => rawParallelBox.tasks.mapBy('id'));
-    const $blocks = $lanes.eq(laneIdx).find('.workflow-visualiser-parallel-box');
-    expect($blocks).to.have.length(parallelBoxIds.length);
-    const $betweenBlockSpaces = $lanes.eq(laneIdx).find(
+    const blocks = lanes[laneIdx].querySelectorAll('.workflow-visualiser-parallel-box');
+    expect(blocks).to.have.length(parallelBoxIds.length);
+    const betweenBlockSpaces = lanes[laneIdx].querySelectorAll(
       '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-box *)'
     );
-    checkInterXSpaces($betweenBlockSpaces, parallelBoxIds);
+    checkInterXSpaces(betweenBlockSpaces, parallelBoxIds);
 
     taskIdsPerParallelBox.forEach((taskIds, blockIdx) => {
-      const $innerBlockSpaces =
-        $blocks.eq(blockIdx).find('.workflow-visualiser-interblock-space');
-      checkInterXSpaces($innerBlockSpaces, taskIds);
+      const innerBlockSpaces =
+        blocks[blockIdx].querySelectorAll('.workflow-visualiser-interblock-space');
+      checkInterXSpaces(innerBlockSpaces, taskIds);
     });
   });
 }
 
 function checkInterlaneSpaces(rawDump) {
   checkInterXSpaces(
-    $(findAll('.workflow-visualiser-interlane-space')),
+    findAll('.workflow-visualiser-interlane-space'),
     rawDump.lanes.mapBy('id')
   );
 }
 
-function checkInterXSpaces($spaces, ids) {
-  expect($spaces).to.have.length(ids.length + 1);
+function checkInterXSpaces(spaces, ids) {
+  expect(spaces).to.have.length(ids.length + 1);
   let prevElementId;
   let elementId = ids[0];
-  checkInterXSpace($spaces[0], prevElementId, elementId);
+  checkInterXSpace(spaces[0], prevElementId, elementId);
   for (let i = 1; i <= ids.length; i++) {
     prevElementId = elementId;
     elementId = ids[i];
-    checkInterXSpace($spaces[i], prevElementId, elementId);
+    checkInterXSpace(spaces[i], prevElementId, elementId);
   }
 }
 
@@ -1020,12 +1022,12 @@ function checkInterXSpace(space, beforeId, afterId) {
 }
 
 function checkRenderedStoresList(rawData) {
-  const $stores = $(findAll(
+  const stores = findAll(
     '.workflow-visualiser-stores-list .workflow-visualiser-stores-list-store'
-  ));
-  expect($stores).to.have.length(rawData.stores.length);
+  );
+  expect(stores).to.have.length(rawData.stores.length);
   rawData.stores.sortBy('name').forEach(({ name }, idx) =>
-    expect($stores.eq(idx).text()).to.contain(name)
+    expect(stores[idx].textContent).to.contain(name)
   );
 }
 

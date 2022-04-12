@@ -158,15 +158,15 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider}}`);
 
-    let spaces = this.get('spaces');
+    const spaces = this.get('spaces');
     click('.circle').then(() => {
-      let drop = $('.provider-place-drop');
-      expect(drop.find('.provider-place-drop-space'))
+      const drop = document.querySelector('.provider-place-drop');
+      expect(drop.querySelectorAll('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
-          expect(drop.text()).to.contain(space.name);
+          expect(drop.textContent).to.contain(space.name);
         }),
-        expect(drop.text()).to.contain('1 MiB');
+        expect(drop.textContent).to.contain('1 MiB');
       done();
     });
   });
@@ -177,10 +177,10 @@ describe('Integration | Component | provider place', function () {
         provider=providers}}`);
 
     click('.circle').then(() => {
-      const dropContainer = $('.provider-place-drop-container');
-      expect(dropContainer.find('.oneproviders-list-item'))
+      const dropContainer = document.querySelector('.provider-place-drop-container');
+      expect(dropContainer.querySelectorAll('.oneproviders-list-item'))
         .to.have.length(2);
-      expect(dropContainer.find('.oneproviders-list-item.active')).to.exist;
+      expect(dropContainer.querySelector('.oneproviders-list-item.active')).to.exist;
       done();
     });
   });

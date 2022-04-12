@@ -6,7 +6,6 @@ import hbs from 'htmlbars-inline-precompile';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
-import $ from 'jquery';
 import { get } from '@ember/object';
 
 describe('Integration | Component | query builder/block settings', function () {
@@ -95,7 +94,9 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.surround-section .operator-and');
-      await waitUntil(() => !$('.webui-popover').hasClass('in'));
+      await waitUntil(() =>
+        ![...document.querySelector('.webui-popover').classList].includes('in')
+      );
 
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];
@@ -132,7 +133,9 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.change-to-section .operator-and');
-      await waitUntil(() => !$('.webui-popover').hasClass('in'));
+      await waitUntil(() =>
+        ![...document.querySelector('.webui-popover').classList].includes('in')
+      );
 
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];

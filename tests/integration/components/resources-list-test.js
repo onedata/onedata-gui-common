@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Action from 'onedata-gui-common/utils/action';
-import $ from 'jquery';
 import sinon from 'sinon';
 import { ResourceListItem } from 'onedata-gui-common/components/resources-list';
 
@@ -91,7 +90,10 @@ describe('Integration | Component | resources list', function () {
 
       expect(find('.resource-item .btn-menu-toggle')).to.exist;
       return click('.btn-menu-toggle')
-        .then(() => expect($('.dropdown-menu').text()).to.contain('sth'));
+        .then(() =>
+          expect(document.querySelector('.dropdown-menu').textContent)
+          .to.contain('sth')
+        );
     }
   );
 
@@ -112,7 +114,8 @@ describe('Integration | Component | resources list', function () {
       await render(hbs `{{resources-list items=items}}`);
 
       return click('.btn-menu-toggle')
-        .then(() => click($('.dropdown-menu .one-collapsible-toolbar-item a')[0]))
+        .then(() => click(
+          document.querySelector('.dropdown-menu .one-collapsible-toolbar-item a')))
         .then(() => expect(executeSpy).to.be.calledOnce);
     }
   );

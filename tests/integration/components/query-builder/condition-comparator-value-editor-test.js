@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { clickTrigger } from '../../../helpers/ember-power-select';
-import $ from 'jquery';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 import { render, click, fillIn, blur, triggerKeyEvent, find } from '@ember/test-helpers';
 
@@ -311,7 +310,7 @@ function itShowsPowerSelectWithOptions(
       expect(find('.dropdown-editor-trigger.comparator-value'), 'dropdown trigger')
         .to.exist;
       await clickTrigger('.dropdown-editor');
-      const options = $('.ember-power-select-option');
+      const options = document.querySelectorAll('.ember-power-select-option');
       expect(options).to.have.length(expectedOptionValues.length);
       expect(Array.from(options).map(opt => opt.textContent.trim()).sort())
         .to.deep.equal(expectedOptionValues.sort());

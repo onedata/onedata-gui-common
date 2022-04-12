@@ -10,7 +10,6 @@ import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/paral
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import { Promise } from 'rsvp';
 import { get, set, setProperties } from '@ember/object';
-import $ from 'jquery';
 import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 
@@ -99,7 +98,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .view-lane-action-trigger')[0]);
+      await click(document.querySelector('.webui-popover.in .view-lane-action-trigger'));
 
       expect(
         getModalBody().querySelector('.name-field .field-component').textContent.trim()
@@ -146,7 +145,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .modify-lane-action-trigger')[0]);
+      await click(
+        document.querySelector('.webui-popover.in .modify-lane-action-trigger')
+      );
       await fillIn(
         getModalBody().querySelector('.name-field .form-control'),
         'othername'
@@ -169,7 +170,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
         await click('.lane-actions-trigger');
-        await click($(`body .webui-popover.in .move-${direction}-lane-action-trigger`)[0]);
+        await click(document.querySelector(
+          `.webui-popover.in .move-${direction}-lane-action-trigger`
+        ));
 
         expect(onMoveSpy).to.be.calledOnce
           .and.to.be.calledWith(this.get('lane'), moveStep);
@@ -209,7 +212,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
+      await click(document.querySelector('.webui-popover.in .clear-lane-action-trigger'));
       await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
@@ -239,7 +242,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
+      await click(
+        document.querySelector('.webui-popover.in .remove-lane-action-trigger')
+      );
       await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('lane'));

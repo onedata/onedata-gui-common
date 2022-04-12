@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import sinon from 'sinon';
-import $ from 'jquery';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { set } from '@ember/object';
 import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
@@ -122,9 +121,9 @@ describe('Integration | Component | form component/capacity field', function () 
 async function expectUnits(expectedUnits) {
   await clickTrigger('.capacity-field');
 
-  const $options = $('.ember-power-select-option');
-  expect($options).to.have.length(expectedUnits.length);
+  const options = document.querySelectorAll('.ember-power-select-option');
+  expect(options).to.have.length(expectedUnits.length);
   expectedUnits.forEach((unit, idx) => {
-    expect($options.eq(idx).text().trim()).to.equal(unit);
+    expect(options[idx].textContent.trim()).to.equal(unit);
   });
 }

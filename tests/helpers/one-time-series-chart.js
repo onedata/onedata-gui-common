@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import _ from 'lodash';
 import { selectChoose, clickTrigger } from './ember-power-select';
-import $ from 'jquery';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
 import { find } from '@ember/test-helpers';
@@ -112,10 +111,10 @@ export function createModel(config) {
 
 export async function expectResolutions(resolutionLabels) {
   await clickTrigger('.one-time-series-chart-toolbar');
-  const $options = $('.ember-power-select-option');
-  expect($options).to.have.length(resolutionLabels.length);
+  const options = document.querySelectorAll('.ember-power-select-option');
+  expect(options).to.have.length(resolutionLabels.length);
   resolutionLabels.forEach((label, idx) =>
-    expect($options.eq(idx).text().trim()).to.equal(label)
+    expect(options[idx].textContent.trim()).to.equal(label)
   );
 }
 
