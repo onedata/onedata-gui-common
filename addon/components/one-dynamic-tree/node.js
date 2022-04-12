@@ -1,7 +1,7 @@
 /**
- * A component represents tree node, used internally by the one-dynamic-tree 
+ * A component represents tree node, used internally by the one-dynamic-tree
  * component. For example of tree usage, see one-dynamic-tree documentation.
- * 
+ *
  * @module components/one-dynamic-tree/node
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -95,7 +95,7 @@ export default Component.extend(DisabledPaths, {
    * @type {computed.string}
    */
   inputId: computed('_path', function () {
-    let _path = this.get('_path');
+    const _path = this.get('_path');
     return 'field-' + dotToDash([_path]);
   }),
 
@@ -123,7 +123,7 @@ export default Component.extend(DisabledPaths, {
    * If true, a field is rendered
    */
   _renderField: computed('definition', function () {
-    let definition = this.get('definition');
+    const definition = this.get('definition');
     return !!(!definition.subtree && definition.field);
   }),
 
@@ -135,7 +135,7 @@ export default Component.extend(DisabledPaths, {
     '_renderField',
     'definition.allowSubtreeCheckboxSelect',
     function () {
-      let {
+      const {
         _renderField,
         definition,
       } = this.getProperties('_renderField', 'definition');
@@ -148,7 +148,7 @@ export default Component.extend(DisabledPaths, {
    * @type {computed.string}
    */
   _path: computed('definition', 'parentPath', function () {
-    let {
+    const {
       definition,
       parentPath,
     } = this.getProperties('definition', 'parentPath');
@@ -171,8 +171,8 @@ export default Component.extend(DisabledPaths, {
    * Creates new _areNestedCheckboxesSelected property at each path change
    */
   _pathSelectionObserver: observer('_path', function () {
-    let _path = this.get('_path');
-    let selectionPath = _path.replace(
+    const _path = this.get('_path');
+    const selectionPath = _path.replace(
       CHECKBOX_SELECTION_PATH_REPLACE_REGEX,
       '.nodes.'
     );

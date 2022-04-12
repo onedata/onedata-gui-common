@@ -3,7 +3,7 @@
  * functions (by function) or methods (by name).
  *
  * See tests for use examples.
- * 
+ *
  * @module utils/ember/computed-pipe
  * @author Jakub Liput
  * @copyright (C) 2018 ACK CYFRONET AGH
@@ -22,6 +22,8 @@ export default function emberComputedPipe() {
         return fun(currentValue);
       } else if (typeof fun === 'string') {
         return this[fun](currentValue);
+      } else {
+        return currentValue;
       }
     }, value);
   });

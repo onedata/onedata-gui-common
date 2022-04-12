@@ -98,7 +98,7 @@ export default Component.extend({
   /**
    * @type {functions}
    * @param {boolean} opened is popover opened
-   * @return {undefined}
+   * @returns {undefined}
    */
   onToggle: () => {},
 
@@ -131,7 +131,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    let open = this.get('open');
+    const open = this.get('open');
     if (open != null) {
       this.set('popoverTrigger', 'manual');
       scheduleOnce('afterRender', () => this.triggerOpen());
@@ -146,7 +146,7 @@ export default Component.extend({
   },
 
   triggerOpen: observer('open', function () {
-    let open = this.get('open');
+    const open = this.get('open');
     if (open === true) {
       this._popover('show');
     } else if (open === false) {
@@ -179,7 +179,7 @@ export default Component.extend({
   windowEvent: 'resize',
 
   didInsertElement() {
-    let {
+    const {
       triggerSelector,
       animation,
       popoverTrigger,
@@ -202,7 +202,7 @@ export default Component.extend({
       '_resizeHandler',
       'windowEvent'
     );
-    let $triggerElement = $(triggerSelector);
+    const $triggerElement = $(triggerSelector);
 
     assert(
       'triggerElement should match at least one element',
@@ -326,7 +326,7 @@ export default Component.extend({
   },
 
   _debounceResizeRefresh() {
-    let {
+    const {
       $triggerElement,
       open,
     } = this.getProperties('$triggerElement', 'open');
@@ -360,7 +360,7 @@ export default Component.extend({
       });
     },
     refresh() {
-      let {
+      const {
         _isPopoverVisible,
         _debounceTimerEnabled,
       } = this.getProperties('_isPopoverVisible', '_debounceTimerEnabled');

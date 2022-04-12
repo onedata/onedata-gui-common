@@ -117,7 +117,7 @@ export default OnePieChart.extend({
       _sortedData,
       i18n,
     } = this.getProperties('_sortedData', 'i18n');
-    let chartDataSeries = this._super(...arguments);
+    const chartDataSeries = this._super(...arguments);
     chartDataSeries.forEach((series, index) => {
       series.tooltipElements = [{
         name: i18n.t('components.supportSizeInfo.chart.supportSize'),
@@ -135,7 +135,7 @@ export default OnePieChart.extend({
   /**
    * Returns size as a string.
    * @param {number} value A size.
-   * @return {string} A size string representation.
+   * @returns {string} A size string representation.
    */
   formatValue(value) {
     return bytesToString(value, { iecFormat: true });

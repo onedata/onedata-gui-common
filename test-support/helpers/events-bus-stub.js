@@ -18,7 +18,7 @@ export default Service.extend({
   },
 
   trigger() {
-    let args = [].slice.call(arguments, 1);
+    const args = [].slice.call(arguments, 1);
     this.get('callbacks')
       .forEach(callback => callback.call(null, ...args));
   },
