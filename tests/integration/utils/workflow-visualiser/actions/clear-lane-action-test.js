@@ -56,21 +56,22 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
     await executeAction(this);
 
     expect(getModal()).to.have.class('question-modal');
-    expect(getModalHeader().find('.oneicon-sign-warning-rounded')).to.exist;
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Clear lane');
-    expect(getModalBody().text().trim()).to.contain(
+    expect(getModalHeader().querySelector('.oneicon-sign-warning-rounded')).to.exist;
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Clear lane');
+    expect(getModalBody().textContent.trim()).to.contain(
       `You are about to clear the lane "${laneName}".`
     );
-    const $yesButton = getModalFooter().find('.question-yes');
-    expect($yesButton.text().trim()).to.equal('Clear');
-    expect($yesButton).to.have.class('btn-danger');
+    const yesButton = getModalFooter().querySelector('.question-yes');
+    expect(yesButton.textContent.trim()).to.equal('Clear');
+    expect(yesButton).to.have.class('btn-danger');
   });
 
   it(
     'returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-no')[0]);
+      await click(getModalFooter().querySelector('.question-no'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('cancelled');
@@ -83,7 +84,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
       const clearLaneStub = sinon.stub(this.get('lane'), 'clear').resolves();
 
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       const actionResult = await resultPromise;
 
       expect(clearLaneStub).to.be.calledOnce;
@@ -99,7 +100,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
         .returns(new Promise((resolve, reject) => rejectClear = reject));
 
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       rejectClear();
       await settled();
       const actionResult = await resultPromise;

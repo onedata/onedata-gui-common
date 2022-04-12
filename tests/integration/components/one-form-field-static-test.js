@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 describe('Integration | Component | one form field static', function () {
   setupRenderingTest();
@@ -32,6 +31,6 @@ describe('Integration | Component | one form field static', function () {
       {{one-form-field-static field=field}}
     `);
 
-    expect($(find('.form-control-static'))).to.have.class('field-one');
+    expect(find('.form-control-static')).to.have.class('field-one');
   });
 });

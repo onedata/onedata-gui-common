@@ -48,8 +48,8 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
   it(`has class "${componentClass}"`, async function () {
     await render(hbs `{{modals/workflow-visualiser/lane-modal/lane-form}}`);
 
-    expect($(this.element).children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   context('in "create" mode', function () {
@@ -78,7 +78,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
 
-      expect($(find('.name-field'))).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
       done();
     });
 
@@ -87,7 +87,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.name-field .form-control', 'somename');
 
-      expect($(find('.name-field'))).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
       done();
     });
 
@@ -107,7 +107,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxRetries-field .form-control', '');
 
-      expect($(find('.maxRetries-field'))).to.have.class('has-error');
+      expect(find('.maxRetries-field')).to.have.class('has-error');
       done();
     });
 
@@ -116,7 +116,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxRetries-field .form-control', '-3');
 
-      expect($(find('.maxRetries-field'))).to.have.class('has-error');
+      expect(find('.maxRetries-field')).to.have.class('has-error');
       done();
     });
 
@@ -125,7 +125,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxRetries-field .form-control', '3.5');
 
-      expect($(find('.maxRetries-field'))).to.have.class('has-error');
+      expect(find('.maxRetries-field')).to.have.class('has-error');
       done();
     });
 
@@ -134,7 +134,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxRetries-field .form-control', '3');
 
-      expect($(find('.maxRetries-field'))).to.have.class('has-success');
+      expect(find('.maxRetries-field')).to.have.class('has-success');
       done();
     });
 
@@ -187,7 +187,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxBatchSize-field .form-control', '');
 
-      expect($(find('.maxBatchSize-field'))).to.have.class('has-error');
+      expect(find('.maxBatchSize-field')).to.have.class('has-error');
       done();
     });
 
@@ -196,7 +196,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxBatchSize-field .form-control', '-3');
 
-      expect($(find('.maxBatchSize-field'))).to.have.class('has-error');
+      expect(find('.maxBatchSize-field')).to.have.class('has-error');
       done();
     });
 
@@ -205,7 +205,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxBatchSize-field .form-control', '3.5');
 
-      expect($(find('.maxBatchSize-field'))).to.have.class('has-error');
+      expect(find('.maxBatchSize-field')).to.have.class('has-error');
       done();
     });
 
@@ -215,7 +215,7 @@ describe('Integration | Component | modals/workflow visualiser/lane modal/lane f
 
       await fillIn('.maxBatchSize-field .form-control', '3');
 
-      expect($(find('.maxBatchSize-field'))).to.have.class('has-success');
+      expect(find('.maxBatchSize-field')).to.have.class('has-success');
       done();
     });
 
@@ -429,7 +429,7 @@ function itHasModeClass(mode) {
   it(`has class "mode-${mode}`, async function (done) {
     await renderComponent();
 
-    expect($(find(`.${componentClass}`))).to.have.class(`mode-${mode}`);
+    expect(find(`.${componentClass}`)).to.have.class(`mode-${mode}`);
     done();
   });
 }
@@ -438,7 +438,7 @@ function itHasAllFieldsEnabledByDefault() {
   it('has all fields enabled by default', async function (done) {
     await renderComponent();
 
-    expect($(find(`.${componentClass}`))).to.have.class('form-enabled')
+    expect(find(`.${componentClass}`)).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
     expect(find('.field-disabled')).to.not.exist;
     done();
@@ -451,7 +451,7 @@ function itAllowsToDisableAllFields() {
 
     await renderComponent();
 
-    expect($(find(`.${componentClass}`))).to.have.class('form-disabled')
+    expect(find(`.${componentClass}`)).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
     expect(find('.field-enabled')).to.not.exist;
     done();

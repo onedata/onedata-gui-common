@@ -6,7 +6,6 @@ import hbs from 'htmlbars-inline-precompile';
 import VisualiserSpace from 'onedata-gui-common/utils/workflow-visualiser/visualiser-space';
 import VisualiserRecord from 'onedata-gui-common/utils/workflow-visualiser/visualiser-record';
 import _ from 'lodash';
-import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/visualiser space', function () {
   setupRenderingTest();
@@ -15,7 +14,7 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
     await render(hbs `{{workflow-visualiser/visualiser-space}}`);
 
     expect(this.element.children).to.have.length(1);
-    expect($(this.element.children[0]))
+    expect(this.element.children[0])
       .to.have.class('workflow-visualiser-space')
       .and.to.have.class('workflow-visualiser-element');
   });

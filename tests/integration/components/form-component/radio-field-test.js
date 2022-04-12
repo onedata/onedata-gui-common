@@ -7,7 +7,6 @@ import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
 import { set } from '@ember/object';
-import $ from 'jquery';
 
 describe('Integration | Component | form component/radio field', function () {
   setupRenderingTest();
@@ -69,7 +68,7 @@ describe('Integration | Component | form component/radio field', function () {
 
       await render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect($(find('.one-way-radio-group'))).to.have.class('disabled');
+      expect(find('.one-way-radio-group')).to.have.class('disabled');
     }
   );
 

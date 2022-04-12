@@ -38,9 +38,9 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
   it('has class "workflow-visualiser-stores-list-store"', async function () {
     await render(hbs `{{workflow-visualiser/stores-list/store}}`);
 
-    expect($(this.element.children))
-      .to.have.class('workflow-visualiser-stores-list-store')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0])
+      .to.have.class('workflow-visualiser-stores-list-store');
   });
 
   context('in "edit" mode', function () {
@@ -60,7 +60,7 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       expect(onRemoveSpy).to.not.be.called;
 
       await click('.remove-store-action-trigger');
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       expect(onRemoveSpy).to.be.calledOnce;
       done();
     });
@@ -73,11 +73,11 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       expect(onModifySpy).to.not.be.called;
 
       await click('.workflow-visualiser-stores-list-store');
-      const $nameField = getModalBody().find('.name-field .form-control');
-      expect($nameField).to.have.value('store1');
+      const nameField = getModalBody().querySelector('.name-field .form-control');
+      expect(nameField).to.have.value('store1');
 
-      await fillIn($nameField[0], 'store2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(nameField, 'store2');
+      await click(getModalFooter().querySelector('.btn-submit'));
       expect(onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.get('store'), sinon.match({
           name: 'store2',
@@ -106,10 +106,11 @@ describe('Integration | Component | workflow visualiser/stores list/store', func
       await renderComponent();
 
       await click('.workflow-visualiser-stores-list-store');
-      await click(getModalBody()
+      await click($(getModalBody())
         .find('.bs-tab-onedata .nav-link:contains("Details")')[0]);
-      expect(getModalBody().find('.name-field .field-component').text().trim())
-        .to.equal('store1');
+      expect(
+        getModalBody().querySelector('.name-field .field-component').textContent.trim()
+      ).to.equal('store1');
       done();
     });
   });
@@ -140,7 +141,7 @@ function itHasModeClass(mode) {
   it(`has "${className}" class`, async function (done) {
     await renderComponent();
 
-    expect($(find('.workflow-visualiser-stores-list-store')))
+    expect(find('.workflow-visualiser-stores-list-store'))
       .to.have.class(className);
     done();
   });
@@ -153,7 +154,7 @@ function itAddsInputStoreClassWhenNeeded() {
 
       await renderComponent();
 
-      expect($(find('.workflow-visualiser-stores-list-store')))
+      expect(find('.workflow-visualiser-stores-list-store'))
         .to.have.class('tag-item-warning');
       done();
     });
@@ -164,7 +165,7 @@ function itAddsInputStoreClassWhenNeeded() {
 
       await renderComponent();
 
-      expect($(find('.workflow-visualiser-stores-list-store')))
+      expect(find('.workflow-visualiser-stores-list-store'))
         .to.not.have.class('tag-item-warning');
       done();
     });

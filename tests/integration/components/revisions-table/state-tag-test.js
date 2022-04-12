@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 const componentClass = 'revisions-table-state-tag';
 
@@ -12,8 +11,9 @@ describe('Integration | Component | revisions table/state tag', function () {
 
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
-    expect($(this.element).children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   itShowsState({
@@ -44,7 +44,7 @@ function itShowsState({ state, label, style }) {
     await renderComponent();
 
     const component = find(`.${componentClass}`);
-    expect($(component)).to.have.class(`state-${state}`).and
+    expect(component).to.have.class(`state-${state}`).and
       .to.have.class(`label-${style}`);
     expect(component.textContent.trim()).to.equal(label);
   });

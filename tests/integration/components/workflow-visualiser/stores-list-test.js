@@ -7,7 +7,6 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
-import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/stores list', function () {
   setupRenderingTest();
@@ -33,8 +32,8 @@ describe('Integration | Component | workflow visualiser/stores list', function (
   it('has class "workflow-visualiser-stores-list"', async function () {
     await renderComponent();
 
-    expect($(this.element).children()).to.have.class('workflow-visualiser-stores-list')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('workflow-visualiser-stores-list');
   });
 
   context('in "edit" mode', function () {
@@ -57,8 +56,8 @@ describe('Integration | Component | workflow visualiser/stores list', function (
       await renderComponent();
 
       await click('.create-store-action-trigger');
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'store1');
+      await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(this.get('createStoreStub')).to.be.calledOnce.and.to.be.calledWith({
         name: 'store1',
@@ -108,10 +107,11 @@ function itRendersListOfStores(mode) {
   it('renders passed list of stores', async function (done) {
     await renderComponent();
 
-    expect($(find('.workflow-visualiser-stores-list'))).to.have.class(`mode-${mode}`);
+    expect(find('.workflow-visualiser-stores-list')).to.have.class(`mode-${mode}`);
     const stores = findAll('.workflow-visualiser-stores-list-store');
     expect(stores).to.have.length(2);
-    expect($(stores)).to.have.class(`mode-${mode}`);
+    expect(stores[0]).to.have.class(`mode-${mode}`);
+    expect(stores[1]).to.have.class(`mode-${mode}`);
     expect(stores[0].textContent.trim()).to.equal('store1');
     expect(stores[1].textContent.trim()).to.equal('store2');
     done();

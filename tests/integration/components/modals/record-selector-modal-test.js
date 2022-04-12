@@ -51,15 +51,15 @@ describe('Integration | Component | modals/record selector modal', async functio
     async function () {
       await showModal(this);
 
-      const $modalFooter = getModalFooter();
-      const $cancel = $modalFooter.find('.record-selector-cancel');
+      const modalFooter = getModalFooter();
+      const cancel = modalFooter.querySelector('.record-selector-cancel');
       expect(getModal()).to.have.class('record-selector-modal');
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Select group');
-      expect(getModalBody().find('.description').text().trim())
+      expect(getModalHeader().querySelector('h1').textContent.trim()).to.equal('Select group');
+      expect(getModalBody().querySelector('.description').textContent.trim())
         .to.equal('Some description:');
-      expect($cancel.text().trim()).to.equal('Cancel');
-      expect($cancel).to.not.have.attr('disabled');
-      expect($modalFooter.find('.record-selector-submit').text().trim())
+      expect(cancel.textContent.trim()).to.equal('Cancel');
+      expect(cancel).to.not.have.attr('disabled');
+      expect(modalFooter.querySelector('.record-selector-submit').textContent.trim())
         .to.equal('Apply');
     }
   );
@@ -74,7 +74,7 @@ describe('Integration | Component | modals/record selector modal', async functio
 
     await showModal(this);
 
-    expect(getModalBody().find('.spinner')).to.exist;
+    expect(getModalBody().querySelector('.spinner')).to.exist;
     expect(recordHelper.getTrigger()).to.not.exist;
 
     recordsResolve([]);
@@ -123,7 +123,8 @@ describe('Integration | Component | modals/record selector modal', async functio
     this.set('modalOptions.records', []);
 
     await showModal(this);
-    expect(getModalFooter().find('.record-selector-submit')).to.have.attr('disabled');
+    expect(getModalFooter().querySelector('.record-selector-submit'))
+      .to.have.attr('disabled');
   });
 
   it('enables submit button when record is selected', async function () {
@@ -132,7 +133,7 @@ describe('Integration | Component | modals/record selector modal', async functio
     await showModal(this);
     await recordHelper.selectOption(1);
 
-    expect(getModalFooter().find('.record-selector-submit'))
+    expect(getModalFooter().querySelector('.record-selector-submit'))
       .to.not.have.attr('disabled');
   });
 
@@ -144,9 +145,10 @@ describe('Integration | Component | modals/record selector modal', async functio
     await showModal(this);
     await recordHelper.selectOption(1);
 
-    const $submitButton = getModalFooter().find('.record-selector-submit');
-    await click($submitButton[0]);
-    expect($submitButton).to.have.class('pending');
+    const submitButton =
+      getModalFooter().querySelector('.record-selector-submit');
+    await click(submitButton);
+    expect(submitButton).to.have.class('pending');
     expect(submitStub).to.be.calledOnce;
     expect(submitStub).to.be.calledWith(this.get('records')[1]);
   });
@@ -157,7 +159,7 @@ describe('Integration | Component | modals/record selector modal', async functio
     await showModal(this);
     expect(onHideSpy).to.not.been.called;
 
-    await click(getModalFooter().find('.record-selector-cancel')[0]);
+    await click(getModalFooter().querySelector('.record-selector-cancel'));
     expect(onHideSpy).to.be.calledOnce;
   });
 
@@ -165,7 +167,7 @@ describe('Integration | Component | modals/record selector modal', async functio
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
-    await click(getModal()[0]);
+    await click(getModal());
 
     expect(onHideSpy).to.be.calledOnce;
   });
@@ -177,9 +179,9 @@ describe('Integration | Component | modals/record selector modal', async functio
 
     await showModal(this);
     await recordHelper.selectOption(1);
-    await click(getModalFooter().find('.record-selector-submit')[0]);
+    await click(getModalFooter().querySelector('.record-selector-submit'));
 
-    expect(getModalFooter().find('.record-selector-cancel'))
+    expect(getModalFooter().querySelector('.record-selector-cancel'))
       .to.have.attr('disabled');
   });
 
@@ -191,8 +193,8 @@ describe('Integration | Component | modals/record selector modal', async functio
 
     await showModal(this);
     await recordHelper.selectOption(1);
-    await click(getModalFooter().find('.record-selector-submit')[0]);
-    await click(getModal()[0]);
+    await click(getModalFooter().querySelector('.record-selector-submit'));
+    await click(getModal());
 
     expect(onHideSpy).to.not.be.called;
   });
@@ -205,9 +207,9 @@ describe('Integration | Component | modals/record selector modal', async functio
     await showModal(this);
 
     expect(recordHelper.getTrigger()).to.not.exist;
-    const $loadError = getModalBody().find('.resource-load-error');
-    expect($loadError).to.exist;
-    expect($loadError.text()).to.contain('loadError');
+    const loadError = getModalBody().querySelector('.resource-load-error');
+    expect(loadError).to.exist;
+    expect(loadError.textContent).to.contain('loadError');
   });
 });
 

@@ -36,8 +36,10 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
     await executeAction(this);
 
     expect(getModal()).to.have.class('store-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Create new store');
-    expect(getModalBody().find('.name-field .form-control')).to.have.value('');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Create new store');
+    expect(getModalBody().querySelector('.name-field .form-control'))
+      .to.have.value('');
   });
 
   it(
@@ -47,8 +49,11 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       createStub.resolves();
 
       const { resultPromise } = await executeAction(this);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(
+        getModalBody().querySelector('.name-field .form-control'),
+        'store1'
+      );
+      await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
@@ -76,8 +81,11 @@ describe('Integration | Utility | workflow visualiser/actions/create store actio
       createStub.returns(new Promise((resolve, reject) => rejectCreate = reject));
 
       const { resultPromise } = await executeAction(this);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'store1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(
+        getModalBody().querySelector('.name-field .form-control'),
+        'store1'
+      );
+      await click(getModalFooter().querySelector('.btn-submit'));
       rejectCreate();
       await settled();
       const actionResult = await resultPromise;

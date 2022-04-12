@@ -16,7 +16,7 @@ describe('Integration | Component | archive dip switch', function () {
       archiveDipMode=archiveDipMode
     }}`);
 
-    expect($(find('.select-archive-dip-btn')), 'dip btn').to.have.class('active');
+    expect(find('.select-archive-dip-btn'), 'dip btn').to.have.class('active');
   });
 
   it('renders both options as disabled when disabled option is true', async function () {
@@ -30,8 +30,8 @@ describe('Integration | Component | archive dip switch', function () {
       disabled=disabled
     }}`);
 
-    expect($(find('.select-archive-aip-btn'))).to.be.disabled;
-    expect($(find('.select-archive-dip-btn'))).to.be.disabled;
+    expect(find('.select-archive-aip-btn').disabled).to.be.true;
+    expect(find('.select-archive-dip-btn').disabled).to.be.true;
   });
 
   it('calls passed archiveDipModeChanged action with selected mode', async function () {

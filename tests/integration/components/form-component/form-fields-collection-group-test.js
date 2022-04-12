@@ -8,7 +8,6 @@ import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/f
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import EmberObject, { set } from '@ember/object';
-import $ from 'jquery';
 
 describe(
   'Integration | Component | form component/form fields collection group',
@@ -28,10 +27,10 @@ describe(
         {{form-component/form-fields-collection-group field=collectionGroup}}
       `);
 
-      const $button = $(find('.add-field-button'));
-      expect($button).to.exist;
-      expect($button.find('.one-icon')).to.have.class('oneicon-add-filled');
-      expect($button.text().trim()).to.equal('add');
+      const button = find('.add-field-button');
+      expect(button).to.exist;
+      expect(button.querySelector('.one-icon')).to.have.class('oneicon-add-filled');
+      expect(button.textContent.trim()).to.equal('add');
     });
 
     it('allows to add new field', async function () {
@@ -67,8 +66,8 @@ describe(
 
       const textFields = findAll('.text-like-field-renderer');
       expect(textFields).to.have.length(2);
-      expect($(textFields[0])).to.have.class('textField-field');
-      expect($(textFields[1])).to.have.class('textField-field');
+      expect(textFields[0]).to.have.class('textField-field');
+      expect(textFields[1]).to.have.class('textField-field');
     });
 
     it('allows to remove field', async function () {
@@ -177,7 +176,7 @@ describe(
       await settled();
 
       expect(find('.add-field-button').disabled).to.be.true;
-      expect($(find('.remove-icon'))).to.have.class('disabled');
+      expect(find('.remove-icon')).to.have.class('disabled');
     });
 
     it('hides add and remove buttons when "isCollectionManipulationAllowed" is false',

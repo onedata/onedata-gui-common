@@ -12,7 +12,6 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import $ from 'jquery';
 
 const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not', 'root'];
@@ -262,11 +261,11 @@ describe('Integration | Component | query builder/operator block', function () {
               await click('.operator-and');
               expect(findAll('.query-builder-block')).to.have.length(3);
               const surroundingBlock =
-                $(find('.query-builder-block .query-builder-block'));
+                find('.query-builder-block .query-builder-block');
               expect(surroundingBlock).to.have.class('and-operator-block');
-              const innerBlock = $(find(
+              const innerBlock = find(
                 '.query-builder-block .query-builder-block .query-builder-block'
-              ));
+              );
               expect(innerBlock).to.have.class('or-operator-block');
               expect(get(queryBlock, 'operands.0.operator')).to.equal('and');
               expect(get(queryBlock, 'operands.0.operands.0.operator')).to.equal('or');
@@ -336,11 +335,11 @@ describe('Integration | Component | query builder/operator block', function () {
         await click('.surround-section .operator-and');
 
         expect(findAll('.query-builder-block')).to.have.length(3);
-        const surroundingBlock = $(find('.query-builder-block .query-builder-block'));
+        const surroundingBlock = find('.query-builder-block .query-builder-block');
         expect(surroundingBlock).to.have.class('and-operator-block');
-        const innerBlock = $(find(
+        const innerBlock = find(
           '.query-builder-block .query-builder-block .query-builder-block'
-        ));
+        );
         expect(innerBlock).to.have.class('not-operator-block');
         expect(get(queryBlock, 'operands.firstObject.operator'))
           .to.equal('and');
@@ -365,11 +364,11 @@ describe('Integration | Component | query builder/operator block', function () {
         await click('.webui-popover.in .change-to-section .operator-and');
 
         expect(findAll('.query-builder-block')).to.have.length(3);
-        const changedBlock = $(find('.query-builder-block .query-builder-block'));
+        const changedBlock = find('.query-builder-block .query-builder-block');
         expect(changedBlock).to.have.class('and-operator-block');
-        const innerBlock = $(find(
+        const innerBlock = find(
           '.query-builder-block .query-builder-block .query-builder-block'
-        ));
+        );
         expect(innerBlock).to.have.class('or-operator-block');
         expect(get(queryBlock, 'operands.firstObject.operator')).to.equal('and');
 

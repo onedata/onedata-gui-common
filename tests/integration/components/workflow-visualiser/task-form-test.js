@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import sinon from 'sinon';
-import $ from 'jquery';
 import _ from 'lodash';
 import { classify } from '@ember/string';
 import { A } from '@ember/array';
@@ -489,8 +488,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
 
-    expect($(this.element).children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   context('in "create" mode', function () {
@@ -529,7 +528,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await fillIn('.name-field .form-control', '');
 
-      expect($(find('.name-field'))).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
       done();
     });
 
@@ -538,7 +537,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await fillIn('.name-field .form-control', 'somename');
 
-      expect($(find('.name-field'))).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
       done();
     });
 
@@ -1259,10 +1258,10 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       await renderComponent();
 
       const overrideField = find('.overrideResources-field');
-      expect($(overrideField)).to.have.class('toggle-field-renderer');
+      expect(overrideField).to.have.class('toggle-field-renderer');
       expect(overrideField.querySelector('.control-label').textContent.trim())
         .to.equal('Override default resources:');
-      expect($(overrideField.querySelector('.one-way-toggle')))
+      expect(overrideField.querySelector('.one-way-toggle'))
         .to.not.have.class('checked');
       done();
     });
@@ -1498,14 +1497,14 @@ async function renderComponent() {
 }
 
 async function toggleOverrideResources(value) {
-  const $overrideToggle = $(find('.overrideResources-field .one-way-toggle'));
-  if (value !== $overrideToggle.hasClass('checked')) {
-    await click($overrideToggle[0]);
+  const overrideToggle = find('.overrideResources-field .one-way-toggle');
+  if (value !== [...overrideToggle.classList].includes('checked')) {
+    await click(overrideToggle);
   }
 }
 
 function getComponent() {
-  return $(find(`.${componentClass}`));
+  return find(`.${componentClass}`);
 }
 
 function itHasModeClass(mode) {
@@ -1709,7 +1708,7 @@ function itFillsFieldsWithDataAboutNoResourceOverride() {
 
       await renderComponent();
 
-      expect($(find('.overrideResources-field .one-way-toggle')))
+      expect(find('.overrideResources-field .one-way-toggle'))
         .to.not.have.class('checked');
       if (inEditMode) {
         expect(find('.resourcesSections-field')).to.exist;
@@ -1741,7 +1740,7 @@ function itFillsFieldsWithDataAboutResourceOverride() {
 
       await renderComponent();
 
-      expect($(find('.overrideResources-field .one-way-toggle')))
+      expect(find('.overrideResources-field .one-way-toggle'))
         .to.have.class('checked');
       expect(find('.resourcesSections-field')).to.exist;
       if (inEditMode) {

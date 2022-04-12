@@ -253,7 +253,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect($(find('.comparator-value'))).to.not.have.class('is-invalid');
+            expect(find('.comparator-value')).to.not.have.class('is-invalid');
             done();
           }
         );
@@ -270,7 +270,7 @@ describe('Integration | Component | query builder/condition comparator value edi
               valuesBuilder=valuesBuilder
             }}`);
 
-            expect($(find('.comparator-value'))).to.have.class('is-invalid');
+            expect(find('.comparator-value')).to.have.class('is-invalid');
             done();
           }
         );

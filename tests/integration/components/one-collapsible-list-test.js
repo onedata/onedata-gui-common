@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | one collapsible list', function () {
   setupRenderingTest();
@@ -23,12 +22,12 @@ describe('Integration | Component | one collapsible list', function () {
       {{/one-collapsible-list}}
     `);
 
-    expect($('.some-list')).to.exist;
-    expect($('.some-item')).to.exist;
-    expect($('.some-header')).to.exist;
-    expect($('.some-header')).to.contain('some header');
-    expect($('.some-content')).to.exist;
-    expect($('.some-content')).to.contain('some content');
+    expect(find('.some-list')).to.exist;
+    expect(find('.some-item')).to.exist;
+    expect(find('.some-header')).to.exist;
+    expect(find('.some-header').textContent).to.contain('some header');
+    expect(find('.some-content')).to.exist;
+    expect(find('.some-content').textContent).to.contain('some content');
   });
 
   it('handles item select', async function () {
@@ -197,9 +196,9 @@ describe('Integration | Component | one collapsible list', function () {
     await click('.item1 .one-checkbox');
     await fillIn('.one-collapsible-list-header .search-bar', 'item2');
 
-    const item1 = $(find('.item1'));
+    const item1 = find('.item1');
     expect(item1).to.have.class('selected');
     expect(item1).not.to.have.class('collapse-hidden');
-    expect(item1.find('.header-fixed')).to.exist;
+    expect(item1.querySelector('.header-fixed')).to.exist;
   });
 });

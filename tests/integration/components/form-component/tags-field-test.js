@@ -6,7 +6,6 @@ import hbs from 'htmlbars-inline-precompile';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import sinon from 'sinon';
 import { setProperties, get } from '@ember/object';
-import $ from 'jquery';
 
 describe('Integration | Component | form component/tags field', function () {
   setupRenderingTest();
@@ -129,7 +128,7 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect($(find('.tags-input'))).to.have.class('readonly');
+    expect(find('.tags-input')).to.have.class('readonly');
   });
 
   it('limits tags number via "tagsLimit"', async function () {
@@ -138,7 +137,7 @@ describe('Integration | Component | form component/tags field', function () {
 
     await render(hbs `{{form-component/tags-field field=field}}`);
 
-    expect($(find('.tag-creator-trigger'))).to.have.class('disabled');
+    expect(find('.tag-creator-trigger')).to.have.class('disabled');
   });
 
   it('does not show clear button, when "isClearButtonVisible" is false', async function () {

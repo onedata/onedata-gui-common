@@ -111,9 +111,9 @@ describe('Integration | Component | provider place', function () {
 
   it('shows provider status', async function () {
     await render(hbs `{{provider-place provider=provider}}`);
-    const $providerPlace = $(find('.provider-place'));
-    expect($providerPlace).to.exist;
-    expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
+    const providerPlace = find('.provider-place');
+    expect(providerPlace).to.exist;
+    expect(providerPlace, providerPlace.classList).to.have.class('online');
   });
 
   it('resizes with parent one-atlas component', async function () {

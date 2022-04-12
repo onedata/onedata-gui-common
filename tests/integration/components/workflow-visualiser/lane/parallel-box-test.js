@@ -10,7 +10,6 @@ import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/i
 import { Promise } from 'rsvp';
 import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
-import $ from 'jquery';
 import { getModalFooter } from '../../../../helpers/modal';
 
 const blockActionsSpec = [{
@@ -40,7 +39,7 @@ describe('Integration | Component | workflow visualiser/lane/parallel box', func
     await render(hbs `{{workflow-visualiser/lane/parallel-box}}`);
 
     expect(this.element.children).to.have.length(1);
-    expect($(this.element.children[0])).to.have.class('workflow-visualiser-parallel-box')
+    expect(this.element.children[0]).to.have.class('workflow-visualiser-parallel-box')
       .and.to.have.class('workflow-visualiser-element');
   });
 
@@ -106,13 +105,14 @@ describe('Integration | Component | workflow visualiser/lane/parallel box', func
 
       await click(actionsTrigger);
 
-      const $actions = $('body .webui-popover.in .actions-popover-content a');
-      expect($actions).to.have.length(blockActionsSpec.length);
+      const actions =
+        document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+      expect(actions).to.have.length(blockActionsSpec.length);
       blockActionsSpec.forEach(({ className, label, icon }, index) => {
-        const $action = $actions.eq(index);
-        expect($action).to.have.class(className);
-        expect($action.text().trim()).to.equal(label);
-        expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+        const action = actions[index];
+        expect(action).to.have.class(className);
+        expect(action.textContent.trim()).to.equal(label);
+        expect(action.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
       });
       done();
     });
@@ -127,7 +127,9 @@ describe('Integration | Component | workflow visualiser/lane/parallel box', func
         await render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
         await click('.parallel-box-actions-trigger');
-        await click($(`body .webui-popover.in .move-${direction}-parallel-box-action-trigger`)[0]);
+        await click(document.querySelector(
+          `body .webui-popover.in .move-${direction}-parallel-box-action-trigger`
+        ));
 
         expect(onMoveSpy).to.be.calledOnce
           .and.to.be.calledWith(this.get('block'), moveStep);
@@ -139,10 +141,11 @@ describe('Integration | Component | workflow visualiser/lane/parallel box', func
         await render(hbs `{{workflow-visualiser/lane/parallel-box elementModel=block}}`);
 
         await click('.parallel-box-actions-trigger');
-        const $actionParent =
-          $(`body .webui-popover.in .move-${direction}-parallel-box-action-trigger`).parent();
+        const actionParent = document.querySelector(
+          `.webui-popover.in .move-${direction}-parallel-box-action-trigger`
+        ).parentElement;
 
-        expect($actionParent).to.have.class('disabled');
+        expect(actionParent).to.have.class('disabled');
         done();
       });
     });
@@ -156,8 +159,10 @@ describe('Integration | Component | workflow visualiser/lane/parallel box', func
       `);
 
       await click('.parallel-box-actions-trigger');
-      await click($('body .webui-popover.in .remove-parallel-box-action-trigger')[0]);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(document.querySelector(
+        '.webui-popover.in .remove-parallel-box-action-trigger'
+      ));
+      await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('block'));
       done();

@@ -20,7 +20,7 @@ describe('Integration | Component | user credentials form', function () {
 
     const form = new UserCredentialsFormHelper($(this.element));
 
-    expect(form.getInput('static-secretPassword'), 'secret password field exists')
+    expect(form.getInput('static-secretPassword')[0], 'secret password field exists')
       .to.exist;
   });
 
@@ -31,13 +31,13 @@ describe('Integration | Component | user credentials form', function () {
 
       const form = new UserCredentialsFormHelper($(this.element));
 
-      expect(form.getInput('static-secretPassword'), 'secret pass field')
+      expect(form.getInput('static-secretPassword')[0], 'secret pass field')
         .to.not.exist;
-      expect(form.getInput('verify-currentPassword'), 'current password field')
+      expect(form.getInput('verify-currentPassword')[0], 'current password field')
         .to.exist;
-      expect(form.getInput('change-newPassword'), 'new password field')
+      expect(form.getInput('change-newPassword')[0], 'new password field')
         .to.exist;
-      expect(form.getInput('change-newPasswordRetype'), 'new pass retype field')
+      expect(form.getInput('change-newPasswordRetype')[0], 'new pass retype field')
         .to.exist;
 
       done();

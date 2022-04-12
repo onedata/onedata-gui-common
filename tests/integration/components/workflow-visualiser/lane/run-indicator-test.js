@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import OneTooltipHelper from '../../../../helpers/one-tooltip';
-import $ from 'jquery';
 
 const componentClassName = 'run-indicator';
 
@@ -60,7 +59,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it(`has class "${componentClassName}"`, async function () {
     await renderComponent();
 
-    expect($(this.element.children[0])).to.have.class(componentClassName);
+    expect(this.element.children[0]).to.have.class(componentClassName);
   });
 
   it('has class "status-unknown" when status is not specified', async function () {
@@ -77,7 +76,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('shows "?" as a run number, when it is not specified', async function () {
     await renderComponent();
 
-    expect(getComponent().find('.run-number').text().trim()).to.equal('?');
+    expect(getComponent().querySelector('.run-number').textContent.trim()).to.equal('?');
   });
 
   it('shows "?" as a run number, when passed number is not correct', async function () {
@@ -85,7 +84,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent().find('.run-number').text().trim()).to.equal('?');
+    expect(getComponent().querySelector('.run-number').textContent.trim()).to.equal('?');
   });
 
   it('shows "1" as a run number, when passed number is "1"', async function () {
@@ -93,7 +92,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent().find('.run-number').text().trim()).to.equal('1');
+    expect(getComponent().querySelector('.run-number').textContent.trim()).to.equal('1');
   });
 
   it('has class "one-digit-run" when run number is < 10', async function () {
@@ -139,7 +138,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('does not show origin run number if not provided', async function () {
     await renderComponent();
 
-    expect(getComponent().find('.origin-run-number')).to.not.exist;
+    expect(getComponent().querySelector('.origin-run-number')).to.not.exist;
   });
 
   it('does not show origin run number if passed number is not correct', async function () {
@@ -147,7 +146,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent().find('.origin-run-number')).to.not.exist;
+    expect(getComponent().querySelector('.origin-run-number')).to.not.exist;
   });
 
   it('does not show origin run number if passed number differs by 1 from run number', async function () {
@@ -158,7 +157,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent().find('.origin-run-number')).to.not.exist;
+    expect(getComponent().querySelector('.origin-run-number')).to.not.exist;
   });
 
   it('shows origin run number "1" if passed number is "1" and run number differs by more than 1 from run number',
@@ -170,7 +169,8 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
       await renderComponent();
 
-      expect(getComponent().find('.origin-run-number').text().trim()).to.equal('1');
+      expect(getComponent().querySelector('.origin-run-number').textContent.trim())
+        .to.equal('1');
     });
 
   it('does not have class "clickable" by default', async function () {
@@ -258,7 +258,7 @@ async function renderComponent() {
 }
 
 function getComponent() {
-  return $(find(`.${componentClassName}`));
+  return find(`.${componentClassName}`);
 }
 
 function itHasStatusClass(status, statusInClass) {

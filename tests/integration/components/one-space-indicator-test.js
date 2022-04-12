@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 describe('Integration | Component | one space indicator', function () {
   setupRenderingTest();
@@ -19,7 +18,7 @@ describe('Integration | Component | one space indicator', function () {
   it('recognizes occupied space greater than total space', async function () {
     await render(hbs `{{one-space-indicator currentTotalSize=2048 occupiedSize=4096}}`);
 
-    expect($(find('.one-space-indicator'))).to.have.class('critical-usage');
+    expect(find('.one-space-indicator')).to.have.class('critical-usage');
     expect(find('.occupied-space-bar')).to.exist;
     expect(find('.current-total-space').textContent.trim()).to.equal('2 KiB');
     expect(find('.occupied-space').textContent.trim()).to.equal('4 KiB');

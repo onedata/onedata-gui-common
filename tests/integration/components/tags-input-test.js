@@ -6,7 +6,6 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { get, set } from '@ember/object';
 import OneTooltipHelper from '../../helpers/one-tooltip';
-import $ from 'jquery';
 
 const disabledCreateTriggerTip = 'Maximum number of elements has been reached.';
 
@@ -41,7 +40,7 @@ describe('Integration | Component | tags input', function () {
 
     await render(hbs `{{tags-input tags=tags}}`);
 
-    expect($(find('.tag-item:nth-child(1) .tag-icon')))
+    expect(find('.tag-item:nth-child(1) .tag-icon'))
       .to.have.class('oneicon-space');
     expect(find('.tag-item:nth-child(2) .tag-icon')).to.not.exist;
   });
@@ -100,7 +99,7 @@ describe('Integration | Component | tags input', function () {
       expect(find('.tag-creator')).to.not.exist;
 
       await click('.tag-creator-trigger');
-      expect($(find('.tags-input'))).to.have.class('creating-tag');
+      expect(find('.tags-input')).to.have.class('creating-tag');
       expect(find('.tag-creator')).to.exist;
     }
   );
@@ -112,7 +111,7 @@ describe('Integration | Component | tags input', function () {
 
       await click('.tags-input');
 
-      expect($(find('.tags-input'))).to.have.class('creating-tag');
+      expect(find('.tags-input')).to.have.class('creating-tag');
       expect(find('.tag-creator')).to.exist;
     }
   );
@@ -152,7 +151,7 @@ describe('Integration | Component | tags input', function () {
       get(testComponent, 'onEndTagCreation')();
       await settled();
 
-      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     }
   );
@@ -271,13 +270,13 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $tagsInput = $(find('.tags-input'));
-      expect($tagsInput).to.have.attr('disabled');
+      const tagsInput = find('.tags-input');
+      expect(tagsInput.getAttribute('disabled')).to.be.not.null;
       expect(find('.tag-creator-trigger')).to.not.exist;
       expect(find('.tag-remove')).to.not.exist;
 
       await click('.tags-input');
-      expect($tagsInput).to.not.have.class('creating-tag');
+      expect(tagsInput).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     }
   );
@@ -297,7 +296,7 @@ describe('Integration | Component | tags input', function () {
       this.set('disabled', true);
       await settled();
 
-      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     }
   );
@@ -311,13 +310,13 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $tagsInput = $(find('.tags-input'));
-      expect($tagsInput).to.have.class('readonly');
+      const tagsInput = find('.tags-input');
+      expect(tagsInput).to.have.class('readonly');
       expect(find('.tag-creator-trigger')).to.not.exist;
       expect(find('.tag-remove')).to.not.exist;
 
       await click('.tags-input');
-      expect($tagsInput).to.not.have.class('creating-tag');
+      expect(tagsInput).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     }
   );
@@ -337,7 +336,7 @@ describe('Integration | Component | tags input', function () {
       this.set('readonly', true);
       await settled();
 
-      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     }
   );
@@ -350,9 +349,9 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $createTrigger = $(find('.tag-creator-trigger'));
-      expect($createTrigger).to.have.class('disabled');
-      await click($createTrigger[0]);
+      const createTrigger = find('.tag-creator-trigger');
+      expect(createTrigger).to.have.class('disabled');
+      await click(createTrigger);
 
       expect(find('.tag-creator')).to.not.exist;
       expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
@@ -366,9 +365,9 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $createTrigger = $(find('.tag-creator-trigger'));
-      expect($createTrigger).to.have.class('disabled');
-      await click($createTrigger[0]);
+      const createTrigger = find('.tag-creator-trigger');
+      expect(createTrigger).to.have.class('disabled');
+      await click(createTrigger);
 
       expect(find('.tag-creator')).to.not.exist;
       expect(await getCreateTriggerTip()).to.equal(disabledCreateTriggerTip);
@@ -383,9 +382,9 @@ describe('Integration | Component | tags input', function () {
         tagEditorComponentName="test-component"
       }}`);
 
-      const $createTrigger = $(find('.tag-creator-trigger'));
-      expect($createTrigger).to.not.have.class('disabled');
-      await click($createTrigger[0]);
+      const createTrigger = find('.tag-creator-trigger');
+      expect(createTrigger).to.not.have.class('disabled');
+      await click(createTrigger);
 
       expect(find('.tag-creator')).to.exist;
       expect(await getCreateTriggerTip()).to.be.undefined;
@@ -405,7 +404,7 @@ describe('Integration | Component | tags input', function () {
       this.set('tagsLimit', 1);
       await settled();
 
-      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     });
 
@@ -423,7 +422,7 @@ describe('Integration | Component | tags input', function () {
       this.set('tagsLimit', 8);
       await settled();
 
-      expect($(find('.tags-input'))).to.have.class('creating-tag');
+      expect(find('.tags-input')).to.have.class('creating-tag');
       expect(find('.tag-creator')).to.exist;
     });
 
@@ -441,7 +440,7 @@ describe('Integration | Component | tags input', function () {
       this.set('tags', [...tags, ...tags]);
       await settled();
 
-      expect($(find('.tags-input'))).to.not.have.class('creating-tag');
+      expect(find('.tags-input')).to.not.have.class('creating-tag');
       expect(find('.tag-creator')).to.not.exist;
     });
 

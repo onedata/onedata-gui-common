@@ -13,8 +13,9 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
-    expect($(this.element).children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   it('shows revision number', async function () {
@@ -39,7 +40,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect($(find('.revisions-table-state-tag')))
+    expect(find('.revisions-table-state-tag'))
       .to.have.class(`state-${state}`);
   });
 
@@ -48,7 +49,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect($(find('.revisions-table-state-tag'))).to.have.class('state-draft');
+    expect(find('.revisions-table-state-tag')).to.have.class('state-draft');
   });
 
   it('shows custom columns', async function () {
@@ -111,7 +112,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
       await renderComponent();
 
-      expect($(find(`.${componentClass}`))).to.have.class('readonly');
+      expect(find(`.${componentClass}`)).to.have.class('readonly');
       expect(find('.revision-actions-trigger')).to.not.exist;
     }
   );

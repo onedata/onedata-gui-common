@@ -37,10 +37,10 @@ describe('Integration | Component | one collapsible toolbar', function () {
       </div>
     `);
 
-    expect($(find('.collapsible-toolbar-buttons')), 'buttons are hidden')
-      .to.be.hidden;
-    expect($(find('.collapsible-toolbar-toggle')), 'toggle is visible')
-      .to.be.visible;
+    expect($(find('.collapsible-toolbar-buttons')).is(':hidden'), 'buttons are hidden')
+      .to.be.true;
+    expect($(find('.collapsible-toolbar-toggle')).is(':visible'), 'toggle is visible')
+      .to.be.true;
   });
 
   it('renders buttons properly', async function () {
@@ -57,13 +57,13 @@ describe('Integration | Component | one collapsible toolbar', function () {
       {{/one-collapsible-toolbar}}
     `);
 
-    const button = $(find('button'));
+    const button = find('button');
     expect(button, 'button has proper style class').to.have.class(
       'btn-danger');
     expect(button, 'button has trigger class').to.have.class('trigger-class');
     expect(button, 'button has proper size class').to.have.class('btn-xs');
 
-    await click(button[0]);
+    await click(button);
     expect(actionOccurred, 'click action occurred').to.be.true;
   });
 
@@ -83,15 +83,15 @@ describe('Integration | Component | one collapsible toolbar', function () {
     `);
 
     await click('.collapsible-toolbar-toggle');
-    const popover = $('body .webui-popover.in');
-    expect(popover.length, 'shows popover after click').to.equal(1);
-    const item = popover.find('a');
+    const popovers = document.querySelectorAll('.webui-popover.in');
+    expect(popovers.length, 'shows popover after click').to.equal(1);
+    const item = popovers[0].querySelector('a');
     expect(item, 'dropdown item has trigger class')
       .to.have.class('trigger-class');
 
-    await click(item[0]);
+    await click(item);
     expect(actionOccurred, 'click action occurred').to.be.true;
-    expect(popover, 'hides popover after item click').to.not.have
+    expect(popovers[0], 'hides popover after item click').to.not.have
       .class('in');
   });
 });

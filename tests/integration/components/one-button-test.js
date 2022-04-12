@@ -5,7 +5,6 @@ import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
-import $ from 'jquery';
 
 describe('Integration | Component | one button', function () {
   setupRenderingTest();
@@ -15,8 +14,8 @@ describe('Integration | Component | one button', function () {
     await render(hbs `{{#one-button onClick=onClick}}my button{{/one-button}}`);
 
     expect(onClick).to.be.not.called;
-    expect($(this.element).children()).to.have.class('one-button')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-button');
 
     await click('.one-button');
 

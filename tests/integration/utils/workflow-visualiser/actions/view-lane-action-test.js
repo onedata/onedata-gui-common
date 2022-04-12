@@ -56,18 +56,22 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
     await executeAction(this);
 
     expect(getModal()).to.have.class('lane-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Lane details');
-    expect(getModalBody().find('.name-field .field-component').text().trim())
-      .to.equal('lane1');
-    expect(getModalBody().find('.sourceStore-field .field-component').text().trim())
-      .to.equal('store1');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Lane details');
+    expect(
+      getModalBody().querySelector('.name-field .field-component').textContent.trim()
+    ).to.equal('lane1');
+    expect(
+      getModalBody().querySelector('.sourceStore-field .field-component')
+      .textContent.trim()
+    ).to.equal('store1');
   });
 
   it(
     'returns promise with successful ActionResult after execute() and modal close using "Close"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('done');

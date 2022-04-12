@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 const componentClass = 'revisions-table-revision-entries-expander';
 
@@ -15,8 +14,8 @@ describe('Integration | Component | revisions table/revision entries expander',
     it(`has class "${componentClass}"`, async function () {
       await renderComponent();
 
-      expect($(this.element).children()).to.have.class(componentClass)
-        .and.to.have.length(1);
+      expect(this.element.children).to.have.length(1);
+      expect(this.element.children[0]).to.have.class(componentClass);
     });
 
     it('shows hidden entries number', async function () {

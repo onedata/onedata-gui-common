@@ -95,10 +95,10 @@ describe('Integration | Component | tags input/model selector editor', function 
       return click('.tag-creator-trigger')
         .then(() => new ModelTypeHelper().selectOption(typeIndex + 1))
         .then(() => {
-          const $options = getSelector().find('.selector-item.record-item');
-          expect($options).to.have.length(availableModels[typeName].length);
+          const options = getSelector().querySelectorAll('.selector-item.record-item');
+          expect(options).to.have.length(availableModels[typeName].length);
           availableModels[typeName].forEach(({ name }, index) => {
-            expect($options.eq(index).text().trim()).to.equal(name);
+            expect(options[index].textContent.trim()).to.equal(name);
           });
         });
     });
@@ -115,11 +115,11 @@ describe('Integration | Component | tags input/model selector editor', function 
 
     return click('.tag-creator-trigger')
       .then(() => {
-        expect(getSelector().find('.all-item').prevAll().filter('.record-item'))
+        expect($(getSelector().querySelector('.all-item')).prevAll().filter('.record-item'))
           .to.have.length(0);
-        const $options = getSelector().find('.record-item');
+        const options = getSelector().querySelectorAll('.record-item');
         availableModels['user'].forEach(({ name }, index) => {
-          expect($options.eq(index).text().trim()).to.equal(name);
+          expect(options[index].textContent.trim()).to.equal(name);
         });
       });
   });
@@ -132,9 +132,9 @@ describe('Integration | Component | tags input/model selector editor', function 
 
     return click('.tag-creator-trigger')
       .then(() => {
-        const $filterInput = getSelector().find('.records-filter');
-        expect($filterInput.val()).to.be.empty;
-        expect($filterInput.attr('placeholder')).to.equal('Filter...');
+        const filterInput = getSelector().querySelector('.records-filter');
+        expect(filterInput.value).to.be.empty;
+        expect(filterInput.placeholder).to.equal('Filter...');
       });
   });
 
@@ -145,11 +145,11 @@ describe('Integration | Component | tags input/model selector editor', function 
     }}`);
 
     return click('.tag-creator-trigger')
-      .then(() => fillIn(getSelector().find('.records-filter')[0], '0'))
+      .then(() => fillIn(getSelector().querySelector('.records-filter'), '0'))
       .then(() => {
-        const $options = getSelector().find('.selector-item');
-        expect($options).to.have.length(1);
-        expect($options.text().trim()).to.equal('user0');
+        const options = getSelector().querySelectorAll('.selector-item');
+        expect(options).to.have.length(1);
+        expect(options[0].textContent.trim()).to.equal('user0');
       });
   });
 
@@ -180,11 +180,11 @@ describe('Integration | Component | tags input/model selector editor', function 
       return click('.tag-creator-trigger')
         .then(() => new ModelTypeHelper().selectOption(index + 1))
         .then(() => {
-          const $allOption = getSelector().find('.selector-item:not(.record-item)');
-          expect($allOption).to.exist;
-          expect($allOption).to.have.class('all-item');
-          expect($allOption.text().trim()).to.equal(label);
-          const tooltipHelper = new OneTooltipHelper($allOption[0]);
+          const allOption = getSelector().querySelector('.selector-item:not(.record-item)');
+          expect(allOption).to.exist;
+          expect(allOption).to.have.class('all-item');
+          expect(allOption.textContent.trim()).to.equal(label);
+          const tooltipHelper = new OneTooltipHelper(allOption);
           if (tip) {
             return tooltipHelper.getText()
               .then(text => expect(text).to.equal(tip));
@@ -216,11 +216,11 @@ describe('Integration | Component | tags input/model selector editor', function 
         return click('.tag-creator-trigger')
           .then(() => new ModelTypeHelper().selectOption(index + 1))
           .then(() => {
-            const $options = getSelector().find('.selector-item.record-item');
-            expect($options).to.have.length(2);
-            expect($options.find(
+            const options = getSelector().querySelectorAll('.selector-item.record-item');
+            expect(options).to.have.length(2);
+            expect($(options).find(
               `.tag-label:contains(${availableModels[typeName][0].name})`
-            )).to.not.exist;
+            )[0]).to.not.exist;
           });
       }
     );
@@ -239,13 +239,13 @@ describe('Integration | Component | tags input/model selector editor', function 
 
       return click('.tag-creator-trigger')
         .then(() => new ModelTypeHelper().selectOption(index + 1))
-        .then(() => click(getSelector().find('.selector-item.record-item')[0]))
+        .then(() => click(getSelector().querySelector('.selector-item.record-item')))
         .then(() => {
-          const $options = getSelector().find('.selector-item.record-item');
-          expect($options).to.have.length(2);
-          expect($options.find(
+          const options = getSelector().querySelectorAll('.selector-item.record-item');
+          expect(options).to.have.length(2);
+          expect($(options).find(
             `.tag-label:contains(${availableModels[typeName][0].name})`
-          )).to.not.exist;
+          )[0]).to.not.exist;
           expect(changeSpy.lastCall.args[0].mapBy('value.record'))
             .to.deep.equal([availableModels[typeName][0]]);
         });
@@ -301,13 +301,13 @@ describe('Integration | Component | tags input/model selector editor', function 
           return modelTypeHelper.selectOption(typeIndex + 1);
         })
         .then(() => {
-          expect($(modelTypeHelper.getTrigger()).find('.oneicon'))
+          expect(modelTypeHelper.getTrigger().querySelector('.oneicon'))
             .to.have.class(`oneicon-${typeIcon || icon}`);
 
-          const $record =
-            getSelector().find('.record-item').eq(recordIndex);
-          expect($record.find('.tag-icon')).to.have.class(`oneicon-${icon}`);
-          return click($record[0]);
+          const record =
+            getSelector().querySelectorAll('.record-item')[recordIndex];
+          expect(record.querySelector('.tag-icon')).to.have.class(`oneicon-${icon}`);
+          return click(record);
         })
         .then(() => {
           expect(changeSpy.lastCall.args[0].mapBy('icon')[0]).to.equal(icon);
@@ -341,17 +341,19 @@ describe('Integration | Component | tags input/model selector editor', function 
         return click('.tag-creator-trigger')
           .then(() => new ModelTypeHelper().selectOption(index + 1))
           .then(() => {
-            expect(getSelector().find('.all-records-added-description'))
+            expect(getSelector().querySelector('.all-records-added-description'))
               .to.not.exist;
-            return click(getSelector().find('.selector-item.all-item')[0]);
+            return click(getSelector().querySelector('.selector-item.all-item'));
           })
           .then(() => {
             expect(changeSpy.lastCall.args[0].mapBy('value.record.representsAll')[0])
               .to.equal(name);
-            expect(getSelector().find('.selector-item.record-item'))
+            expect(getSelector().querySelector('.selector-item.record-item'))
               .to.not.exist;
-            expect(getSelector().find('.all-records-added-description').text().trim())
-              .to.equal(addedDescription);
+            expect(
+              getSelector().querySelector('.all-records-added-description')
+              .textContent.trim()
+            ).to.equal(addedDescription);
           });
       });
   });
@@ -377,17 +379,17 @@ describe('Integration | Component | tags input/model selector editor', function 
         return click('.tag-creator-trigger')
           .then(() => new ModelTypeHelper().selectOption(index + 4))
           .then(() => {
-            expect(getSelector().find('.all-records-added-description'))
+            expect(getSelector().querySelector('.all-records-added-description'))
               .to.not.exist;
-            return click(getSelector().find('.selector-item.all-item')[0]);
+            return click(getSelector().querySelector('.selector-item.all-item'));
           })
           .then(() => {
             expect(changeSpy.lastCall.args[0].mapBy('value.record.representsAll')[0])
               .to.equal(name);
-            const $records = getSelector().find('.selector-item.record-item');
-            expect($records).to.have.length(1);
-            expect($records.text()).to.contain('onezone');
-            expect(getSelector().find('.all-records-added-description'))
+            const records = getSelector().querySelectorAll('.selector-item.record-item');
+            expect(records).to.have.length(1);
+            expect(records[0].textContent).to.contain('onezone');
+            expect(getSelector().querySelector('.all-records-added-description'))
               .to.not.exist;
           });
       }
@@ -402,12 +404,12 @@ describe('Integration | Component | tags input/model selector editor', function 
 
     return click('.tag-creator-trigger')
       .then(() => {
-        const listBtn = getSelector().find('.btn-list');
-        const byIdBtn = getSelector().find('.btn-by-id');
+        const listBtn = getSelector().querySelector('.btn-list');
+        const byIdBtn = getSelector().querySelector('.btn-by-id');
         expect(listBtn).to.exist.and.have.class('active');
-        expect(listBtn.text().trim()).to.equal('List');
+        expect(listBtn.textContent.trim()).to.equal('List');
         expect(byIdBtn).to.exist;
-        expect(byIdBtn.text().trim()).to.equal('By ID');
+        expect(byIdBtn.textContent.trim()).to.equal('By ID');
       });
   });
 
@@ -418,13 +420,13 @@ describe('Integration | Component | tags input/model selector editor', function 
     }}`);
 
     return click('.tag-creator-trigger')
-      .then(() => click(getSelector().find('.btn-by-id')[0]))
+      .then(() => click(getSelector().querySelector('.btn-by-id')))
       .then(() => {
-        expect(getSelector().find('.btn-by-id')).to.have.class('active');
-        expect(getSelector().find('.selector-list')).to.not.exist;
-        expect(getSelector().find('.id-description')).to.exist;
-        expect(getSelector().find('input[type="text"].record-id')).to.exist;
-        expect(getSelector().find('.btn.add-id').text().trim())
+        expect(getSelector().querySelector('.btn-by-id')).to.have.class('active');
+        expect(getSelector().querySelector('.selector-list')).to.not.exist;
+        expect(getSelector().querySelector('.id-description')).to.exist;
+        expect(getSelector().querySelector('input[type="text"].record-id')).to.exist;
+        expect(getSelector().querySelector('.btn.add-id').textContent.trim())
           .to.equal('Add ID');
       });
   });
@@ -453,9 +455,9 @@ describe('Integration | Component | tags input/model selector editor', function 
 
       return click('.tag-creator-trigger')
         .then(() => new ModelTypeHelper().selectOption(index + 1))
-        .then(() => click(getSelector().find('.btn-by-id')[0]))
+        .then(() => click(getSelector().querySelector('.btn-by-id')))
         .then(() =>
-          expect(getSelector().find('.id-description').text().trim())
+          expect(getSelector().querySelector('.id-description').textContent.trim())
           .to.equal(label)
         );
     });
@@ -470,10 +472,10 @@ describe('Integration | Component | tags input/model selector editor', function 
       }}`);
 
       return click('.tag-creator-trigger')
-        .then(() => click(getSelector().find('.btn-by-id')[0]))
-        .then(() => expect(getSelector().find('.add-id')).to.have.attr('disabled'))
-        .then(() => fillIn(getSelector().find('.record-id')[0], '  '))
-        .then(() => expect(getSelector().find('.add-id')).to.have.attr('disabled'));
+        .then(() => click(getSelector().querySelector('.btn-by-id')))
+        .then(() => expect(getSelector().querySelector('.add-id')).to.have.attr('disabled'))
+        .then(() => fillIn(getSelector().querySelector('.record-id'), '  '))
+        .then(() => expect(getSelector().querySelector('.add-id')).to.have.attr('disabled'));
     }
   );
 
@@ -494,9 +496,9 @@ describe('Integration | Component | tags input/model selector editor', function 
 
         return click('.tag-creator-trigger')
           .then(() => new ModelTypeHelper().selectOption(index + 1))
-          .then(() => click(getSelector().find('.btn-by-id')[0]))
-          .then(() => fillIn(getSelector().find('.record-id')[0], '123'))
-          .then(() => click(getSelector().find('.add-id')[0]))
+          .then(() => click(getSelector().querySelector('.btn-by-id')))
+          .then(() => fillIn(getSelector().querySelector('.record-id'), '123'))
+          .then(() => click(getSelector().querySelector('.add-id')))
           .then(() =>
             expect(changeSpy.lastCall.args[0].mapBy('value')[0]).to.deep.equal({
               model: modelName,
@@ -509,7 +511,7 @@ describe('Integration | Component | tags input/model selector editor', function 
 });
 
 function getSelector() {
-  return $('.webui-popover.in .tags-selector');
+  return document.querySelector('.webui-popover.in .tags-selector');
 }
 
 class ModelTypeHelper extends EmberPowerSelectHelper {

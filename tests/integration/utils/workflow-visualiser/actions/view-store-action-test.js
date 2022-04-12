@@ -8,6 +8,7 @@ import { get } from '@ember/object';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { resolve } from 'rsvp';
+import $ from 'jquery';
 
 describe('Integration | Utility | workflow visualiser/actions/view store action', function () {
   setupRenderingTest();
@@ -42,21 +43,23 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
     await executeAction(this);
 
     expect(getModal()).to.have.class('store-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Store details');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Store details');
 
     await click(
-      getModalBody().find('.bs-tab-onedata .nav-link:contains("Details")')[0]
+      $(getModalBody()).find('.bs-tab-onedata .nav-link:contains("Details")')[0]
     );
 
-    expect(getModalBody().find('.name-field .field-component').text().trim())
-      .to.equal('store1');
+    expect(
+      getModalBody().querySelector('.name-field .field-component').textContent.trim()
+    ).to.equal('store1');
   });
 
   it(
     'returns promise with successful ActionResult after execute() and modal close using "Close"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('done');

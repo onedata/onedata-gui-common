@@ -5,7 +5,6 @@ import { render, focus, blur, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | form component/toggle field', function () {
   setupRenderingTest();
@@ -39,7 +38,7 @@ describe('Integration | Component | form component/toggle field', function () {
 
       await render(hbs `{{form-component/toggle-field field=field}}`);
 
-      expect($(find('.one-way-toggle'))).to.have.class('disabled');
+      expect(find('.one-way-toggle')).to.have.class('disabled');
     }
   );
 
@@ -76,7 +75,7 @@ describe('Integration | Component | form component/toggle field', function () {
 
     await render(hbs `{{form-component/toggle-field field=field}}`);
 
-    expect($(find('.one-way-toggle'))).to.have.class('checked');
+    expect(find('.one-way-toggle')).to.have.class('checked');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -92,6 +91,6 @@ describe('Integration | Component | form component/toggle field', function () {
 
     await render(hbs `{{form-component/toggle-field field=field}}`);
 
-    expect($(find('.one-way-toggle'))).to.have.class('disabled');
+    expect(find('.one-way-toggle')).to.have.class('disabled');
   });
 });

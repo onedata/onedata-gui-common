@@ -10,11 +10,11 @@ describe('Integration | Component | status toolbar/icon', function () {
 
   it('is hidden if enabled is set to false', async function () {
     await render(hbs `{{status-icon type="space" enabled=false}}`);
-    expect($(find('.status-icon'))).to.be.hidden;
+    expect($(find('.status-icon')).is(':hidden')).to.be.true;
   });
 
   it('adds a class based on status property', async function () {
     await render(hbs `{{status-icon icon="space" status="some"}}`);
-    expect($(find('.status-icon'))).to.have.class('some');
+    expect(find('.status-icon')).to.have.class('some');
   });
 });

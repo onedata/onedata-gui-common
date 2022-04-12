@@ -47,7 +47,7 @@ describe('Integration | Component | global modal', function () {
       classNames="custom-modal-class"
     }}`);
 
-    expect(getGlobalModal()).to.have.class('custom-modal-class');
+    expect(getGlobalModal()[0]).to.have.class('custom-modal-class');
   });
 
   it('hides modal if modal instance isOpened turns from true to false', async function () {
@@ -491,7 +491,7 @@ describe('Integration | Component | global modal', function () {
       size="lg"
     }}`);
 
-    expect(getGlobalModal().find('.modal-dialog')).to.have.class('modal-lg');
+    expect(getGlobalModal().find('.modal-dialog')[0]).to.have.class('modal-lg');
   });
 });
 

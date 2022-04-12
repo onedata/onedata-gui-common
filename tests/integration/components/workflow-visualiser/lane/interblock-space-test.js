@@ -12,7 +12,6 @@ import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { dasherize } from '@ember/string';
 import { resolve } from 'rsvp';
-import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/lane/interblock space', function () {
   setupRenderingTest();
@@ -33,7 +32,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       }}`);
 
       expect(this.element.children).to.have.length(1);
-      expect($(this.element.children[0]))
+      expect(this.element.children[0])
         .to.have.class('workflow-visualiser-interblock-space')
         .and.to.have.class('workflow-visualiser-space')
         .and.to.have.class('workflow-visualiser-element');
@@ -47,7 +46,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       elementModel=blockSpace
     }}`);
 
-    expect($(find('.workflow-visualiser-interblock-space')))
+    expect(find('.workflow-visualiser-interblock-space'))
       .to.have.class('between-parallel-box-space');
   });
 
@@ -58,7 +57,7 @@ describe('Integration | Component | workflow visualiser/lane/interblock space', 
       elementModel=blockSpace
     }}`);
 
-    expect($(find('.workflow-visualiser-interblock-space')))
+    expect(find('.workflow-visualiser-interblock-space'))
       .to.have.class('between-task-space');
   });
 
@@ -137,7 +136,7 @@ function itIsOfType(type, parent, [elementBefore, elementAfter]) {
         elementModel=blockSpace
       }}`);
 
-      expect($(find('.workflow-visualiser-interblock-space'))).to.have.class(className);
+      expect(find('.workflow-visualiser-interblock-space')).to.have.class(className);
       done();
     });
 }

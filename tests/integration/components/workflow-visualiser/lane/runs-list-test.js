@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 const componentClassName = 'runs-list';
 
@@ -14,7 +13,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
   it(`has class "${componentClassName}"`, async function () {
     await renderComponent(this);
 
-    expect($(this.element.children[0])).to.have.class(componentClassName);
+    expect(this.element.children[0]).to.have.class(componentClassName);
   });
 
   it('shows all runs, when number of runs is smaller than visible runs limit', async function () {
@@ -251,7 +250,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
 
-    expect(getComponent().find('.run-indicator.selected')).to.not.exist;
+    expect(getComponent().querySelector('.run-indicator.selected')).to.not.exist;
   });
 
   it('marks run as selected', async function () {
@@ -262,9 +261,10 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
 
-    const $selectedIndicators = getComponent().find('.run-indicator.selected');
-    expect($selectedIndicators).to.have.length(1);
-    expect($selectedIndicators.find('.run-number').text().trim()).to.equal('3');
+    const selectedIndicators = getComponent().querySelectorAll('.run-indicator.selected');
+    expect(selectedIndicators).to.have.length(1);
+    expect(selectedIndicators[0].querySelector('.run-number').textContent.trim())
+      .to.equal('3');
   });
 
   it('notifies about run selection change via "onSelectionChange" callback', async function () {
@@ -275,7 +275,7 @@ describe('Integration | Component | workflow visualiser/lane/runs list', functio
     });
     await renderComponent(this);
 
-    await click(getComponent().find('.run-indicator')[1]);
+    await click(getComponent().querySelectorAll('.run-indicator')[1]);
 
     expect(this.get('selectionChangeSpy'))
       .to.be.calledOnce.and.to.be.calledWith(2);
@@ -298,7 +298,7 @@ async function renderComponent(testCase) {
 }
 
 function getComponent() {
-  return $(find(`.${componentClassName}`));
+  return find(`.${componentClassName}`);
 }
 
 async function moveLeft(waitForSettle = true) {
@@ -343,13 +343,13 @@ function generateRunsRegistry(runsCount) {
 }
 
 function getVisibleRunNumbers() {
-  const $runIndicators = getComponent().find('.run-indicator');
-  return $runIndicators.map(function () {
-    const runNumber = Number(this.querySelector('.run-number').textContent.trim());
-    const originRunNumberElement = this.querySelector('.origin-run-number');
+  const runIndicators = getComponent().querySelectorAll('.run-indicator');
+  return [...runIndicators].map((indicator) => {
+    const runNumber = Number(indicator.querySelector('.run-number').textContent.trim());
+    const originRunNumberElement = indicator.querySelector('.origin-run-number');
     const originRunNumber = originRunNumberElement ?
       Number(originRunNumberElement.textContent.trim()) : null;
-    const hasFinishedStatus = this.classList.contains('status-finished');
+    const hasFinishedStatus = indicator.classList.contains('status-finished');
     if (
       ((runNumber === 1 || runNumber === 2) && originRunNumber !== null) ||
       (runNumber > 2 && originRunNumber !== runNumber - 2) ||

@@ -7,7 +7,6 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import $ from 'jquery';
 
 const mathOperators = [{
   operator: 'eq',
@@ -247,12 +246,12 @@ describe('Integration | Component | query builder/condition block', function () 
 
             await click('.comparator-value');
 
-            expect($(find('input[type="text"].comparator-value')))
+            expect(find('input[type="text"].comparator-value'))
               .to.exist.to.not.have.class('is-invalid');
 
             await fillIn('.comparator-value', incorrectValue);
 
-            expect($(find('input[type="text"].comparator-value')))
+            expect(find('input[type="text"].comparator-value'))
               .to.exist.and.to.have.class('is-invalid');
           }
         );

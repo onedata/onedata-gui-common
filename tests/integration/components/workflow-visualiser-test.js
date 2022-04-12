@@ -78,17 +78,17 @@ describe('Integration | Component | workflow visualiser', function () {
       description: 'adds a lane with store created in place',
       actionExecutor: async () => {
         await click('.workflow-visualiser-interlane-space .create-lane-action-trigger');
-        await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
+        await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane1');
         await selectChoose(
-          getModalBody().find('.sourceStore-field')[0],
+          getModalBody().querySelector('.sourceStore-field'),
           'Create store...'
         );
         await fillIn(
-          getModalBody('store-modal').find('.name-field .form-control')[0],
+          getModalBody('store-modal').querySelector('.name-field .form-control'),
           'new store'
         );
-        await click(getModalFooter('store-modal').find('.btn-submit')[0]);
-        await click(getModalFooter().find('.btn-submit')[0]);
+        await click(getModalFooter('store-modal').querySelector('.btn-submit'));
+        await click(getModalFooter().querySelector('.btn-submit'));
       },
       applyUpdate: (rawDump, newDump) => {
         const lastStoreId = newDump.stores[newDump.stores.length - 1].id;
@@ -154,9 +154,12 @@ describe('Integration | Component | workflow visualiser', function () {
       description: 'modifies lane details',
       actionExecutor: async () => {
         await click(await getActionTrigger('lane', [0], 'modify'));
-        await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
-        await selectChoose(getModalBody().find('.sourceStore-field')[0], 'store1');
-        await click(getModalFooter().find('.btn-submit')[0]);
+        await fillIn(
+          getModalBody().querySelector('.name-field .form-control'),
+          'othername'
+        );
+        await selectChoose(getModalBody().querySelector('.sourceStore-field'), 'store1');
+        await click(getModalFooter().querySelector('.btn-submit'));
       },
       applyUpdate: rawDump => Object.assign(rawDump.lanes[0], {
         name: 'othername',
@@ -174,15 +177,15 @@ describe('Integration | Component | workflow visualiser', function () {
       actionExecutor: async () => {
         await click(await getActionTrigger('lane', [0], 'modify'));
         await selectChoose(
-          getModalBody().find('.sourceStore-field')[0],
+          getModalBody().querySelector('.sourceStore-field'),
           'Create store...'
         );
         await fillIn(
-          getModalBody('store-modal').find('.name-field .form-control')[0],
+          getModalBody('store-modal').querySelector('.name-field .form-control'),
           'new store'
         );
-        await click(getModalFooter('store-modal').find('.btn-submit')[0]);
-        await click(getModalFooter().find('.btn-submit')[0]);
+        await click(getModalFooter('store-modal').querySelector('.btn-submit'));
+        await click(getModalFooter().querySelector('.btn-submit'));
       },
       applyUpdate: (rawDump, newDump) => {
         const lastStoreId = newDump.stores[newDump.stores.length - 1].id;
@@ -265,8 +268,11 @@ describe('Integration | Component | workflow visualiser', function () {
       description: 'allows to add new store',
       actionExecutor: async () => {
         await click('.create-store-action-trigger');
-        await fillIn(getModalBody().find('.name-field .form-control')[0], 'newstore');
-        await click(getModalFooter().find('.btn-submit')[0]);
+        await fillIn(
+          getModalBody().querySelector('.name-field .form-control'),
+          'newstore'
+        );
+        await click(getModalFooter().querySelector('.btn-submit'));
       },
       applyUpdate: rawDump => rawDump.stores.push({
         id: sinon.match.string,
@@ -289,8 +295,8 @@ describe('Integration | Component | workflow visualiser', function () {
       description: 'allows to modify store',
       actionExecutor: async () => {
         await click('.workflow-visualiser-stores-list-store');
-        await fillIn(getModalBody().find('.name-field .form-control')[0], 'xyz');
-        await click(getModalFooter().find('.btn-submit')[0]);
+        await fillIn(getModalBody().querySelector('.name-field .form-control'), 'xyz');
+        await click(getModalFooter().querySelector('.btn-submit'));
       },
       applyUpdate: rawDump => rawDump.stores.findBy('name', 'store0').name = 'xyz',
       initialRawData: noLanesExample,
@@ -319,8 +325,9 @@ describe('Integration | Component | workflow visualiser', function () {
       await renderWithRawData(this, rawData);
       await click(await getActionTrigger('lane', [0], 'view'));
 
-      expect(getModalBody().find('.name-field .field-component').text().trim())
-        .to.equal('lane0');
+      expect(
+        getModalBody().querySelector('.name-field .field-component').textContent.trim()
+      ).to.equal('lane0');
       done();
     });
 
@@ -331,10 +338,11 @@ describe('Integration | Component | workflow visualiser', function () {
       await click('.workflow-visualiser-stores-list-store');
 
       await click(
-        getModalBody().find('.bs-tab-onedata .nav-link:contains("Details")')[0]
+        $(getModalBody()).find('.bs-tab-onedata .nav-link:contains("Details")')[0]
       );
-      expect(getModalBody().find('.name-field .field-component').text().trim())
-        .to.equal('store0');
+      expect(
+        getModalBody().querySelector('.name-field .field-component').textContent.trim()
+      ).to.equal('store0');
       done();
     });
 
@@ -440,7 +448,7 @@ describe('Integration | Component | workflow visualiser', function () {
     it('does not show scroll button, when there is no overflow', async function (done) {
       await renderForScrollTest(this, 5, laneWidth * 10);
 
-      expect($(find('.left-edge-scroll-step-trigger'))).to.not.have.class('visible');
+      expect(find('.left-edge-scroll-step-trigger')).to.not.have.class('visible');
       done();
     });
 
@@ -474,7 +482,7 @@ describe('Integration | Component | workflow visualiser', function () {
     it('does not show scroll button, when there is no overflow', async function (done) {
       await renderForScrollTest(this, 5, laneWidth * 10);
 
-      expect($(find('.right-edge-scroll-step-trigger'))).to.not.have.class('visible');
+      expect(find('.right-edge-scroll-step-trigger')).to.not.have.class('visible');
       done();
     });
     itScrollsToLane(
@@ -542,9 +550,9 @@ function itScrollsToLane(message, [overflowEdge, overflowLane], operations, [edg
         const width = Number(operation.slice('width:'.length));
         await changeContainerWidthForScrollTest(this, width);
       } else {
-        const $scrollTrigger = $(find(`.${operation}-edge-scroll-step-trigger`));
-        expect($scrollTrigger).to.have.class('visible');
-        await click($scrollTrigger[0]);
+        const scrollTrigger = find(`.${operation}-edge-scroll-step-trigger`);
+        expect(scrollTrigger).to.have.class('visible');
+        await click(scrollTrigger);
       }
     }
 
@@ -576,7 +584,7 @@ function itHasModeClass(mode) {
 
     await renderWithRawData(this, rawData);
 
-    expect($(find('.workflow-visualiser'))).to.have.class(`mode-${mode}`);
+    expect(find('.workflow-visualiser')).to.have.class(`mode-${mode}`);
     done();
   });
 }
@@ -611,9 +619,9 @@ function itShowsStoresList() {
 
     await renderWithRawData(this, rawData);
 
-    const $storesList = $(find('.workflow-visualiser-stores-list'));
-    expect($storesList).to.exist;
-    expect($storesList).to.have.class(`mode-${mode}`);
+    const storesList = find('.workflow-visualiser-stores-list');
+    expect(storesList).to.exist;
+    expect(storesList).to.have.class(`mode-${mode}`);
     checkRenderedStoresList(rawData);
     done();
   });
@@ -648,8 +656,8 @@ function itAddsNewLane(message, initialRawData, insertIndex) {
     actionTriggerGetter: () => find(addTriggerSelector),
     actionExecutor: async () => {
       await click(addTriggerSelector);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane999');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane999');
+      await click(getModalFooter().querySelector('.btn-submit'));
     },
     applyUpdate: rawDump => rawDump.lanes.splice(insertIndex, 0, {
       id: sinon.match.string,
@@ -781,7 +789,7 @@ function itPerformsActionWithConfirmation({
     actionExecutor: async () => {
       const actionTrigger = await actionTriggerGetter();
       await click(actionTrigger);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
     },
     applyUpdate,
     initialRawData,
@@ -839,7 +847,7 @@ function itDoesNotPerformAction({
     const actionTrigger = await actionTriggerGetter();
 
     const actionParent = actionTrigger.parentElement;
-    expect($(actionParent)).to.have.class('disabled');
+    expect(actionParent).to.have.class('disabled');
     done();
   });
 }
@@ -989,24 +997,24 @@ function checkInterXSpaces($spaces, ids) {
   expect($spaces).to.have.length(ids.length + 1);
   let prevElementId;
   let elementId = ids[0];
-  checkInterXSpace($spaces.eq(0), prevElementId, elementId);
+  checkInterXSpace($spaces[0], prevElementId, elementId);
   for (let i = 1; i <= ids.length; i++) {
     prevElementId = elementId;
     elementId = ids[i];
-    checkInterXSpace($spaces.eq(i), prevElementId, elementId);
+    checkInterXSpace($spaces[i], prevElementId, elementId);
   }
 }
 
-function checkInterXSpace($space, beforeId, afterId) {
+function checkInterXSpace(space, beforeId, afterId) {
   [
     ['before', beforeId],
     ['after', afterId],
   ].forEach(([idName, idValue]) => {
     const attrName = `data-element-${idName}-id`;
     if (idValue) {
-      expect($space).to.have.attr(attrName, idValue);
+      expect(space).to.have.attr(attrName, idValue);
     } else {
-      expect($space).to.not.have.attr(attrName);
+      expect(space).to.not.have.attr(attrName);
     }
   });
 }

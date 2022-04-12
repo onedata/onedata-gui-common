@@ -215,15 +215,15 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
             await inputResourceCapacityValue(resourceName, 'requested', values[0]);
             await inputResourceCapacityValue(resourceName, 'limit', values[1]);
 
-            const $requestedField = getResourceField(resourceName, 'requested');
-            const $limitField = getResourceField(resourceName, 'limit');
+            const requestedField = getResourceField(resourceName, 'requested');
+            const limitField = getResourceField(resourceName, 'limit');
 
             if (hasError) {
-              expect($requestedField).to.have.class('has-error');
-              expect($limitField).to.have.class('has-error');
+              expect(requestedField).to.have.class('has-error');
+              expect(limitField).to.have.class('has-error');
             } else {
-              expect($requestedField).to.not.have.class('has-error');
-              expect($limitField).to.not.have.class('has-error');
+              expect(requestedField).to.not.have.class('has-error');
+              expect(limitField).to.not.have.class('has-error');
             }
           });
       });
@@ -258,24 +258,24 @@ function getResourceFieldSelector(resourceName, resourceBoundary) {
 }
 
 function getResourceField(resourceName, resourceBoundary) {
-  return $(find(getResourceFieldSelector(resourceName, resourceBoundary)));
+  return find(getResourceFieldSelector(resourceName, resourceBoundary));
 }
 
 function expectResourceFieldsLabels(resourceName) {
-  const $requestedField = getResourceField(resourceName, 'requested');
-  const $limitField = getResourceField(resourceName, 'limit');
-  expect($requestedField.find('.control-label').text().trim())
+  const requestedField = getResourceField(resourceName, 'requested');
+  const limitField = getResourceField(resourceName, 'limit');
+  expect(requestedField.querySelector('.control-label').textContent.trim())
     .to.equal('Requested:');
-  expect($limitField.find('.control-label').text().trim())
+  expect(limitField.querySelector('.control-label').textContent.trim())
     .to.equal('Limit:');
 }
 
 function expectResourceFieldsType(resourceName, type) {
-  const $requestedField = getResourceField(resourceName, 'requested');
-  const $limitField = getResourceField(resourceName, 'limit');
+  const requestedField = getResourceField(resourceName, 'requested');
+  const limitField = getResourceField(resourceName, 'limit');
   const className = `${type}-field-renderer`;
-  expect($requestedField).to.have.class(className);
-  expect($limitField).to.have.class(className);
+  expect(requestedField).to.have.class(className);
+  expect(limitField).to.have.class(className);
 }
 
 function expectResourceTextValue(
@@ -283,8 +283,8 @@ function expectResourceTextValue(
   resourceBoundary,
   expectedValue
 ) {
-  const $field = getResourceField(resourceName, resourceBoundary);
-  expect($field.find('.form-control')).to.have.value(expectedValue);
+  const field = getResourceField(resourceName, resourceBoundary);
+  expect(field.querySelector('.form-control')).to.have.value(expectedValue);
 }
 
 function expectResourceCapacityValue(
@@ -292,9 +292,9 @@ function expectResourceCapacityValue(
   resourceBoundary,
   [expectedNumber, expectedUnit]
 ) {
-  const $field = getResourceField(resourceName, resourceBoundary);
-  expect($field.find('input')).to.have.value(expectedNumber);
-  expect($field.find('.ember-power-select-trigger').text())
+  const field = getResourceField(resourceName, resourceBoundary);
+  expect(field.querySelector('input')).to.have.value(expectedNumber);
+  expect(field.querySelector('.ember-power-select-trigger').textContent)
     .to.contain(expectedUnit);
 }
 
@@ -312,8 +312,8 @@ async function expectResourceCapacityUnits(
 }
 
 async function inputResourceTextValue(resourceName, resourceBoundary, value) {
-  const $field = getResourceField(resourceName, resourceBoundary);
-  await fillIn($field.find('.form-control')[0], value);
+  const field = getResourceField(resourceName, resourceBoundary);
+  await fillIn(field.querySelector('.form-control'), value);
 }
 
 async function inputResourceCapacityValue(
@@ -321,7 +321,7 @@ async function inputResourceCapacityValue(
   resourceBoundary,
   [valueNumber, valueUnit]
 ) {
-  const $field = getResourceField(resourceName, resourceBoundary);
-  await fillIn($field.find('input')[0], valueNumber);
-  await selectChoose($field[0], valueUnit);
+  const field = getResourceField(resourceName, resourceBoundary);
+  await fillIn(field.querySelector('input'), valueNumber);
+  await selectChoose(field, valueUnit);
 }

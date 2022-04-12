@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, fillIn, triggerKeyEvent, blur, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | tags input/text editor', function () {
   setupRenderingTest();
@@ -184,7 +183,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
         expect(find('.text-editor-input').value).to.equal('1a');
-        expect($(find('.tags-input-text-editor'))).to.have.class('has-error');
+        expect(find('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy).to.not.been.called;
       });
   });
@@ -209,7 +208,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', '234,1a,cvs,sd,2'))
       .then(() => {
         expect(find('.text-editor-input').value).to.equal('1a,cvs,sd,2');
-        expect($(find('.tags-input-text-editor'))).to.have.class('has-error');
+        expect(find('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: '234',
         }]);
@@ -234,7 +233,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => fillIn('.text-editor-input', '1ab'))
       .then(() =>
-        expect($(find('.tags-input-text-editor'))).to.not.have.class('has-error')
+        expect(find('.tags-input-text-editor')).to.not.have.class('has-error')
       );
   });
 

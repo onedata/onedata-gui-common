@@ -101,8 +101,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await click('.lane-actions-trigger');
       await click($('body .webui-popover.in .view-lane-action-trigger')[0]);
 
-      expect(getModalBody().find('.name-field .field-component').text().trim())
-        .to.equal('lane1');
+      expect(
+        getModalBody().querySelector('.name-field .field-component').textContent.trim()
+      ).to.equal('lane1');
       done();
     });
   });
@@ -146,8 +147,11 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
       await click('.lane-actions-trigger');
       await click($('body .webui-popover.in .modify-lane-action-trigger')[0]);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(
+        getModalBody().querySelector('.name-field .form-control'),
+        'othername'
+      );
+      await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.get('lane'), { name: 'othername' });
@@ -178,9 +182,10 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
         await click('.lane-actions-trigger');
 
-        const $actionParent =
-          $(`body .webui-popover.in .move-${direction}-lane-action-trigger`).parent();
-        expect($actionParent).to.have.class('disabled');
+        const actionParent = document.querySelector(
+          `.webui-popover.in .move-${direction}-lane-action-trigger`
+        ).parentElement;
+        expect(actionParent).to.have.class('disabled');
         done();
       });
     });
@@ -205,7 +210,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
       await click('.lane-actions-trigger');
       await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
       done();
@@ -218,9 +223,10 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
       await click('.lane-actions-trigger');
 
-      const $actionParent =
-        $('body .webui-popover.in .clear-lane-action-trigger').parent();
-      expect($actionParent).to.have.class('disabled');
+      const actionParent = document.querySelector(
+        '.webui-popover.in .clear-lane-action-trigger'
+      ).parentElement;
+      expect(actionParent).to.have.class('disabled');
       done();
     });
 
@@ -234,7 +240,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
       await click('.lane-actions-trigger');
       await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('lane'));
       done();
@@ -303,13 +309,13 @@ function itRendersActions(actionsSpec) {
 
     await click('.lane-actions-trigger');
 
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(actionsSpec.length);
+    const actions = document.querySelectorAll('body .webui-popover.in .actions-popover-content a');
+    expect(actions).to.have.length(actionsSpec.length);
     actionsSpec.forEach(({ className, label, icon }, index) => {
-      const $action = $actions.eq(index);
-      expect($action).to.have.class(className);
-      expect($action.text().trim()).to.equal(label);
-      expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      const action = actions[index];
+      expect(action).to.have.class(className);
+      expect(action.textContent.trim()).to.equal(label);
+      expect(action.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
     });
     done();
   });

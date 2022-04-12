@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import sinon from 'sinon';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 describe('Integration | Component | one checkbox', function () {
   setupRenderingTest();
@@ -24,8 +23,8 @@ describe('Integration | Component | one checkbox', function () {
       isReadOnly=false
       checked=false}}`);
     expect(find('.this-checkbox')).to.exist;
-    expect($(find('.this-checkbox'))).to.have.class('one-checkbox');
-    expect($(find('.this-checkbox'))).to.have.class('one-checkbox-base');
+    expect(find('.this-checkbox')).to.have.class('one-checkbox');
+    expect(find('.this-checkbox')).to.have.class('one-checkbox-base');
   });
 
   it('invokes update action on click', async function (done) {

@@ -14,7 +14,7 @@ describe('Integration | Component | status toolbar', function () {
         {{toolbar.icon icon="space" enabled=false}}
       {{/status-toolbar}}
     `);
-    expect($(find('.status-toolbar-icon'))).to.be.hidden;
+    expect($(find('.status-toolbar-icon')).is(':hidden')).to.be.true;
   });
 
   it('adds a class to icon based on status property', async function () {
@@ -23,7 +23,7 @@ describe('Integration | Component | status toolbar', function () {
         {{toolbar.icon icon="space" status="some"}}
       {{/status-toolbar}}
     `);
-    expect($(find('.status-toolbar-icon'))).to.have.class('some');
+    expect(find('.status-toolbar-icon')).to.have.class('some');
   });
 
   it('adds a subicon to status icon', async function () {
@@ -33,7 +33,7 @@ describe('Integration | Component | status toolbar', function () {
       {{/status-toolbar}}
     `);
     expect(find('.oneicon-checkbox')).to.exist;
-    expect($(find('.oneicon-checkbox'))).to.have.class('subicon');
+    expect(find('.oneicon-checkbox')).to.have.class('subicon');
   });
 
   it('triggers status icon click action', async function () {

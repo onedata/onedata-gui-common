@@ -15,7 +15,6 @@ import {
 } from '../../../helpers/one-time-series-chart';
 import { get } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
-import $ from 'jquery';
 
 describe('Integration | Component | one time series chart/plot', function () {
   const { afterEach } = setupRenderingTest();
@@ -43,8 +42,8 @@ describe('Integration | Component | one time series chart/plot', function () {
   it('has class "one-time-series-chart-plot"', async function () {
     await renderComponent();
 
-    expect($(this.element).children()).to.have.class('one-time-series-chart-plot')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-time-series-chart-plot');
   });
 
   it('shows "no data to show" info, when there are no series to show', async function () {

@@ -27,34 +27,34 @@ describe('Integration | Component | modals/unsaved changes question modal', func
     async function () {
       await showModal(this);
 
-      const $modal = getModal();
-      const $modalHeader = getModalHeader();
-      const $modalBody = getModalBody();
+      const modal = getModal();
+      const modalHeader = getModalHeader();
+      const modalBody = getModalBody();
 
-      expect($modal).to.have.class('unsaved-changes-question-modal');
+      expect(modal).to.have.class('unsaved-changes-question-modal');
 
-      expect($modalHeader.find('.oneicon'))
+      expect(modalHeader.querySelector('.oneicon'))
         .to.have.class('oneicon-sign-warning-rounded');
-      expect($modalHeader.find('h1').text().trim())
+      expect(modalHeader.querySelector('h1').textContent.trim())
         .to.equal('There are unsaved changes');
 
-      expect($modalBody.find('.disclaimer').text().trim()).to.equal(
+      expect(modalBody.querySelector('.disclaimer').textContent.trim()).to.equal(
         'Your changes will be lost if you don\'t save them.'
       );
 
-      const $dontSaveBtn = getButton('dont-save');
-      const $cancelBtn = getButton('cancel');
-      const $saveBtn = getButton('save');
+      const dontSaveBtn = getButton('dont-save');
+      const cancelBtn = getButton('cancel');
+      const saveBtn = getButton('save');
 
-      expect($dontSaveBtn.text().trim()).to.equal('Don\'t save');
-      expect($dontSaveBtn).to.not.have.attr('disabled');
-      expect($dontSaveBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Cancel');
-      expect($cancelBtn).to.not.have.attr('disabled');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($saveBtn.text().trim()).to.equal('Save');
-      expect($saveBtn).to.not.have.attr('disabled');
-      expect($saveBtn).to.have.class('btn-primary');
+      expect(dontSaveBtn.textContent.trim()).to.equal('Don\'t save');
+      expect(dontSaveBtn).to.not.have.attr('disabled');
+      expect(dontSaveBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Cancel');
+      expect(cancelBtn).to.not.have.attr('disabled');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(saveBtn.textContent.trim()).to.equal('Save');
+      expect(saveBtn).to.not.have.attr('disabled');
+      expect(saveBtn).to.have.class('btn-primary');
     });
 
   it('submits "{ shouldSaveChanges: true }" after "save" click, disables all buttons and shows spinner in "save" button while submitting',
@@ -62,13 +62,13 @@ describe('Integration | Component | modals/unsaved changes question modal', func
       const submitStub = sinon.stub().returns(new Promise(() => {}));
       this.set('modalOptions.onSubmit', submitStub);
       await showModal(this);
-      const $saveBtn = getButton('save');
-      const $dontSaveBtn = getButton('dont-save');
+      const saveBtn = getButton('save');
+      const dontSaveBtn = getButton('dont-save');
 
-      await click($saveBtn[0]);
+      await click(saveBtn);
 
-      expect($saveBtn).to.have.class('pending');
-      expect($dontSaveBtn).to.not.have.class('pending');
+      expect(saveBtn).to.have.class('pending');
+      expect(dontSaveBtn).to.not.have.class('pending');
       expect(areAllButtonsDisabled()).to.be.true;
       expect(submitStub).to.be.calledOnce.and.to.be.calledWith({
         shouldSaveChanges: true,
@@ -80,13 +80,13 @@ describe('Integration | Component | modals/unsaved changes question modal', func
       const submitStub = sinon.stub().returns(new Promise(() => {}));
       this.set('modalOptions.onSubmit', submitStub);
       await showModal(this);
-      const $saveBtn = getButton('save');
-      const $dontSaveBtn = getButton('dont-save');
+      const saveBtn = getButton('save');
+      const dontSaveBtn = getButton('dont-save');
 
-      await click($dontSaveBtn[0]);
+      await click(dontSaveBtn);
 
-      expect($saveBtn).to.not.have.class('pending');
-      expect($dontSaveBtn).to.have.class('pending');
+      expect(saveBtn).to.not.have.class('pending');
+      expect(dontSaveBtn).to.have.class('pending');
       expect(areAllButtonsDisabled()).to.be.true;
       expect(submitStub).to.be.calledOnce.and.to.be.calledWith({
         shouldSaveChanges: false,
@@ -98,7 +98,7 @@ describe('Integration | Component | modals/unsaved changes question modal', func
     await showModal(this);
     expect(onHideSpy).to.not.been.called;
 
-    await click(getButton('cancel')[0]);
+    await click(getButton('cancel'));
     expect(onHideSpy).to.be.calledOnce;
   });
 
@@ -106,7 +106,7 @@ describe('Integration | Component | modals/unsaved changes question modal', func
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
     await showModal(this);
 
-    await click(getModal()[0]);
+    await click(getModal());
     expect(onHideSpy).to.be.calledOnce;
   });
 
@@ -117,8 +117,8 @@ describe('Integration | Component | modals/unsaved changes question modal', func
       const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
       await showModal(this);
 
-      await click(getButton('save')[0]);
-      await click(getModal()[0]);
+      await click(getButton('save'));
+      await click(getModal());
 
       expect(onHideSpy).to.not.be.called;
     });
@@ -130,8 +130,8 @@ describe('Integration | Component | modals/unsaved changes question modal', func
       const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
       await showModal(this);
 
-      await click(getButton('dont-save')[0]);
-      await click(getModal()[0]);
+      await click(getButton('dont-save'));
+      await click(getModal());
 
       expect(onHideSpy).to.not.be.called;
     });
@@ -151,14 +151,14 @@ async function showModal(testCase) {
 }
 
 function getButton(btnName) {
-  return getModalFooter().find(`.question-${btnName}`);
+  return getModalFooter().querySelector(`.question-${btnName}`);
 }
 
 function areAllButtonsDisabled() {
-  const $dontSaveBtn = getButton('dont-save');
-  const $cancelBtn = getButton('cancel');
-  const $saveBtn = getButton('save');
+  const dontSaveBtn = getButton('dont-save');
+  const cancelBtn = getButton('cancel');
+  const saveBtn = getButton('save');
 
-  return [$dontSaveBtn, $cancelBtn, $saveBtn]
-    .every(($btn) => Boolean($btn.attr('disabled')));
+  return [dontSaveBtn, cancelBtn, saveBtn]
+    .every((btn) => Boolean(btn.disabled));
 }

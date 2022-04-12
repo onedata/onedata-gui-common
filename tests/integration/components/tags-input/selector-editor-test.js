@@ -3,7 +3,6 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 import sinon from 'sinon';
 
 describe('Integration | Component | tags input/selector editor', function () {
@@ -40,12 +39,12 @@ describe('Integration | Component | tags input/selector editor', function () {
 
     return click('.tag-creator-trigger')
       .then(() => {
-        const $options = getSelector().find('.selector-item');
-        expect($options).to.have.length(2);
-        expect($options.eq(0).text().trim()).to.equal('a');
-        expect($options.eq(1).text().trim()).to.equal('b');
-        expect($options.eq(0).find('.tag-icon')).to.have.class('oneicon-space');
-        expect($options.eq(1).find('.tag-icon')).to.not.exist;
+        const options = getSelector().querySelectorAll('.selector-item');
+        expect(options).to.have.length(2);
+        expect(options[0].textContent.trim()).to.equal('a');
+        expect(options[1].textContent.trim()).to.equal('b');
+        expect(options[0].querySelector('.tag-icon')).to.have.class('oneicon-space');
+        expect(options[1].querySelector('.tag-icon')).to.not.exist;
       });
   });
 
@@ -62,9 +61,9 @@ describe('Integration | Component | tags input/selector editor', function () {
 
     return click('.tag-creator-trigger')
       .then(() => {
-        const $options = getSelector().find('.selector-item');
-        expect($options).to.have.length(1);
-        expect($options.text().trim()).to.equal('a');
+        const options = getSelector().querySelectorAll('.selector-item');
+        expect(options).to.have.length(1);
+        expect(options[0].textContent.trim()).to.equal('a');
       });
   });
 
@@ -81,11 +80,11 @@ describe('Integration | Component | tags input/selector editor', function () {
     }}`);
 
     return click('.tag-creator-trigger')
-      .then(() => click(getSelector().find('.selector-item')[0]))
+      .then(() => click(getSelector().querySelector('.selector-item')))
       .then(() => {
-        const $options = getSelector().find('.selector-item');
-        expect($options).to.have.length(1);
-        expect($options.text().trim()).to.equal('b');
+        const options = getSelector().querySelectorAll('.selector-item');
+        expect(options).to.have.length(1);
+        expect(options[0].textContent.trim()).to.equal('b');
         expect(changeSpy.lastCall.args[0].toArray())
           .to.deep.equal([this.get('settings.allowedTags')[0]]);
       });
@@ -104,7 +103,7 @@ describe('Integration | Component | tags input/selector editor', function () {
     }}`);
 
     return click('.tag-creator-trigger')
-      .then(() => click(getSelector().find('.selector-item')[0]))
+      .then(() => click(getSelector().querySelector('.selector-item')))
       .then(() => {
         expect(getSelector()).to.not.exist;
         expect(changeSpy.lastCall.args[0].toArray())
@@ -142,5 +141,5 @@ describe('Integration | Component | tags input/selector editor', function () {
 });
 
 function getSelector() {
-  return $('.webui-popover.in .tags-selector');
+  return document.querySelector('.webui-popover.in .tags-selector');
 }

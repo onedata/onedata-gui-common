@@ -141,8 +141,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
   it(`has class "${componentClass}"`, async function () {
     await render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
 
-    expect($(this.element).children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   context('in "create" mode', function () {
@@ -153,7 +153,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('has class "mode-create', async function (done) {
       await renderComponent();
 
-      expect($(`.${componentClass}`)).to.have.class('mode-create');
+      expect(find(`.${componentClass}`)).to.have.class('mode-create');
       done();
     });
 
@@ -182,7 +182,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
 
-      expect($(find('.name-field'))).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
       done();
     });
 
@@ -191,7 +191,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await fillIn('.name-field .form-control', 'somename');
 
-      expect($(find('.name-field'))).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
       done();
     });
 
@@ -212,7 +212,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await focus('.description-field .form-control');
       await blur('.description-field .form-control');
 
-      expect($(find('.description-field'))).to.have.class('has-success');
+      expect(find('.description-field')).to.have.class('has-success');
       done();
     });
 
@@ -291,17 +291,18 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await selectChoose('.type-field', label);
 
-        expect($(find('.genericStoreConfig-collapse'))).to.have.class('in');
-        expect($(find('.rangeStoreConfig-collapse'))).to.not.have.class('in');
+        expect(find('.genericStoreConfig-collapse')).to.have.class('in');
+        expect(find('.rangeStoreConfig-collapse')).to.not.have.class('in');
 
-        const $dataTypeField = $(find('.dataType-field'));
-        expect($dataTypeField.find('.control-label').text().trim()).to.equal('Data type:');
-        expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
+        const dataTypeField = find('.dataType-field');
+        expect(dataTypeField.querySelector('.control-label').textContent.trim())
+          .to.equal('Data type:');
+        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(defaultDataTypeLabel || availableDataTypeLabels[0]);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
 
           await clickTrigger('.dataType-field');
 
@@ -357,8 +358,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await selectChoose('.type-field', 'Range');
 
-      expect($(find('.genericStoreConfig-collapse'))).to.not.have.class('in');
-      expect($(find('.rangeStoreConfig-collapse'))).to.have.class('in');
+      expect(find('.genericStoreConfig-collapse')).to.not.have.class('in');
+      expect(find('.rangeStoreConfig-collapse')).to.have.class('in');
 
       const rangeStartField = find('.rangeStart-field');
       const rangeEndField = find('.rangeEnd-field');
@@ -415,7 +416,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '');
 
         ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect($(find(`.${fieldName}-field`))).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
         done();
       });
@@ -430,7 +431,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '1.5');
 
         ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect($(find(`.${fieldName}-field`))).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
         done();
       });
@@ -444,9 +445,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeEnd-field .form-control', '2');
 
         ['rangeStart', 'rangeEnd'].forEach(fieldName =>
-          expect($(find(`.${fieldName}-field`))).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
-        expect($(find('.rangeStep-field'))).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
@@ -465,11 +466,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
           'This field must be greater than the range start when the range step is positive'
         );
-        expect($(find('.rangeStep-field'))).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
-    it('has invalid start and end fields in "Range" store, when start > end and step > 0',
+    it('has invalid start and end fields in "Range" store, when start < end and step < 0',
       async function (done) {
         await renderComponent();
 
@@ -484,7 +485,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
           'This field must be less than the range start when the range step is negative'
         );
-        expect($(find('.rangeStep-field'))).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
@@ -495,7 +496,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStep-field .form-control', '     0 ');
 
-        expect($(find('.rangeStep-field'))).to.have.class('has-error');
+        expect(find('.rangeStep-field')).to.have.class('has-error');
         done();
       });
 
@@ -529,9 +530,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await renderComponent();
 
       const label = find('.needsUserInput-field .control-label');
-      const $toggle = $(find('.needsUserInput-field .one-way-toggle'));
+      const toggle = find('.needsUserInput-field .one-way-toggle');
       expect(label.textContent.trim()).to.equal('Needs user input:');
-      expect($toggle).to.not.have.class('checked');
+      expect(toggle).to.not.have.class('checked');
       done();
     });
 
@@ -547,7 +548,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('has class "mode-edit', async function (done) {
       await renderComponent();
 
-      expect($(find(`.${componentClass}`))).to.have.class('mode-edit');
+      expect(find(`.${componentClass}`)).to.have.class('mode-edit');
       done();
     });
 
@@ -575,24 +576,24 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await renderComponent();
 
-        expect($(find('.genericStoreConfig-collapse'))).to.have.class('in');
-        expect($(find('.rangeStoreConfig-collapse'))).to.not.have.class('in');
+        expect(find('.genericStoreConfig-collapse')).to.have.class('in');
+        expect(find('.rangeStoreConfig-collapse')).to.not.have.class('in');
         expect(find('.id-field .form-control').value).to.equal('store1id');
         expect(find('.instanceId-field')).to.not.exist;
         expect(find('.name-field .form-control').value).to.equal('store1');
         expect(find('.description-field .form-control').value).to.equal('desc');
         expect(find('.type-field .dropdown-field-trigger').textContent.trim())
           .to.equal(label);
-        const $dataTypeField = $(find('.dataType-field'));
-        expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
+        const dataTypeField = find('.dataType-field');
+        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
         }
         expect(find('.defaultValue-field .form-control').value).to.equal('"someDefault"');
-        expect($(find('.needsUserInput-field .one-way-toggle'))).to.have.class('checked');
+        expect(find('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
         done();
       });
     });
@@ -613,8 +614,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expect($(find('.genericStoreConfig-collapse'))).to.not.have.class('in');
-      expect($(find('.rangeStoreConfig-collapse'))).to.have.class('in');
+      expect(find('.genericStoreConfig-collapse')).to.not.have.class('in');
+      expect(find('.rangeStoreConfig-collapse')).to.have.class('in');
       expect(find('.id-field .form-control').value).to.equal('store1id');
       expect(find('.instanceId-field')).to.not.exist;
       expect(find('.name-field .form-control').value).to.equal('store1');
@@ -672,7 +673,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('has class "mode-view', async function (done) {
       await renderComponent();
 
-      expect($(find(`.${componentClass}`))).to.have.class('mode-view');
+      expect(find(`.${componentClass}`)).to.have.class('mode-view');
       done();
     });
 
@@ -701,8 +702,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await renderComponent();
 
         expect(find('.field-edit-mode')).to.not.exist;
-        expect($(find('.genericStoreConfig-collapse'))).to.have.class('in');
-        expect($(find('.rangeStoreConfig-collapse'))).to.not.have.class('in');
+        expect(find('.genericStoreConfig-collapse')).to.have.class('in');
+        expect(find('.rangeStoreConfig-collapse')).to.not.exist;
         expect(find('.id-field .form-control').value).to.equal('store1id');
         expect(find('.instanceId-field .form-control').value)
           .to.equal('store1instanceId');
@@ -712,17 +713,17 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           .to.equal('desc');
         expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        const $dataTypeField = $(find('.dataType-field'));
-        expect($dataTypeField.find('.field-component').text().trim())
+        const dataTypeField = find('.dataType-field');
+        expect(dataTypeField.querySelector('.field-component').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
         }
         expect(find('.defaultValue-field .form-control').value)
           .to.equal('"someDefault"');
-        expect($(find('.needsUserInput-field .one-way-toggle')))
+        expect(find('.needsUserInput-field .one-way-toggle'))
           .to.have.class('checked');
         done();
       });
@@ -745,8 +746,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await renderComponent();
 
       expect(find('.field-edit-mode')).to.not.exist;
-      expect($(find('.genericStoreConfig-collapse'))).to.not.have.class('in');
-      expect($(find('.rangeStoreConfig-collapse'))).to.have.class('in');
+      expect(find('.genericStoreConfig-collapse')).to.not.exist;
+      expect(find('.rangeStoreConfig-collapse')).to.have.class('in');
       expect(find('.id-field .form-control').value).to.equal('store1id');
       expect(find('.instanceId-field .form-control').value)
         .to.equal('store1instanceId');
@@ -826,7 +827,7 @@ function itHasAllFieldsEnabledByDefault() {
   it('has all fields enabled by default', async function (done) {
     await renderComponent();
 
-    expect($(find('.store-form'))).to.have.class('form-enabled')
+    expect(find('.store-form')).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
     expect(find('.field-disabled')).to.not.exist;
     done();
@@ -839,7 +840,7 @@ function itAllowsToDisableAllFields() {
 
     await renderComponent();
 
-    expect($(find('.store-form'))).to.have.class('form-disabled')
+    expect(find('.store-form')).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
     expect(find('.field-enabled')).to.not.exist;
     done();

@@ -141,7 +141,7 @@ describe('Integration | Component | query builder main component', function () {
     await click('.change-to-section .operator-and');
     await click('.and-operator-block');
 
-    expect($('.change-to-section .operator-or'), '"or" operator button')
+    expect(find('.change-to-section .operator-or'), '"or" operator button')
       .to.exist.and.to.not.have.attr('disabled');
   });
 });

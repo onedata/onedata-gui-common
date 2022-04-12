@@ -10,7 +10,6 @@ import sinon from 'sinon';
 import { setProperties } from '@ember/object';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/interlane space', function () {
   setupRenderingTest();
@@ -37,8 +36,8 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
     async function () {
       await renderComponent();
 
-      expect($(this.element).children()).to.have.length(1);
-      expect($(this.element).children().eq(0))
+      expect(this.element.children).to.have.length(1);
+      expect(this.element.children[0])
         .to.have.class('workflow-visualiser-interlane-space')
         .and.to.have.class('workflow-visualiser-space')
         .and.to.have.class('workflow-visualiser-element');
@@ -49,7 +48,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
     async function () {
       await renderComponent();
 
-      expect($(find('.workflow-visualiser-interlane-space')))
+      expect(find('.workflow-visualiser-interlane-space'))
         .to.have.class('full-view-space');
     });
 
@@ -58,7 +57,7 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       await renderComponent();
       this.set('interlaneSpace.elementAfter', Lane.create());
 
-      expect($(find('.workflow-visualiser-interlane-space')))
+      expect(find('.workflow-visualiser-interlane-space'))
         .to.not.have.class('full-view-space');
     });
 
@@ -78,8 +77,8 @@ describe('Integration | Component | workflow visualiser/interlane space', functi
       await renderComponent();
 
       await click('.create-lane-action-trigger');
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane1');
+      await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(onAddElement).to.be.calledOnce.and.to.be.calledWith(
         null,

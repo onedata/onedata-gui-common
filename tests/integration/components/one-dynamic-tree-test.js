@@ -14,7 +14,6 @@ import {
 import { render, settled, focus, blur, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 const ERROR_MSG = 'error!';
 
@@ -199,7 +198,7 @@ describe('Integration | Component | one dynamic tree', function () {
     async function () {
       await render(hbs `{{one-dynamic-tree definition=definition}}`);
 
-      expect($(find('.field-node2'))).to.have.class('maybe');
+      expect(find('.field-node2')).to.have.class('maybe');
     }
   );
 
@@ -208,9 +207,9 @@ describe('Integration | Component | one dynamic tree', function () {
 
     await click('.field-node2');
 
-    expect($(find('.field-node2-node21'))).to.have.class('checked');
-    expect($(find('.field-node2-node22'))).to.have.class('checked');
-    expect($(find('.field-node2'))).to.have.class('checked');
+    expect(find('.field-node2-node21')).to.have.class('checked');
+    expect(find('.field-node2-node22')).to.have.class('checked');
+    expect(find('.field-node2')).to.have.class('checked');
   });
 
   it('does not ignore disabled toggle state in "select all" toggle state',
@@ -223,7 +222,7 @@ describe('Integration | Component | one dynamic tree', function () {
         }}
       `);
 
-      expect($(find('.field-node2'))).to.have.class('maybe');
+      expect(find('.field-node2')).to.have.class('maybe');
     }
   );
 
@@ -237,8 +236,8 @@ describe('Integration | Component | one dynamic tree', function () {
         }}
       `);
 
-      const node21Field = $(find('.field-node2-node21'));
-      const node22Field = $(find('.field-node2-node22'));
+      const node21Field = find('.field-node2-node21');
+      const node22Field = find('.field-node2-node22');
       await click('.field-node2');
       expect(node21Field).to.have.class('checked');
       expect(node22Field).to.have.class('checked');

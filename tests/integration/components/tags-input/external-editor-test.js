@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | tags input/external editor', function () {
   setupRenderingTest();
@@ -20,8 +19,8 @@ describe('Integration | Component | tags input/external editor', function () {
   it('has class "tags-input-external-editor"', async function () {
     await render(hbs `{{tags-input/external-editor}}`);
 
-    expect($(this.element).children()).to.have.class('tags-input-external-editor')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('tags-input-external-editor');
   });
 
   it('does not render any content', async function () {

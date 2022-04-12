@@ -6,7 +6,6 @@ import { render, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { registerService, lookupService } from '../../helpers/stub-service';
 import Service from '@ember/service';
-import $ from 'jquery';
 import { setProperties } from '@ember/object';
 
 describe('Integration | Component | alert global', function () {
@@ -37,7 +36,7 @@ describe('Integration | Component | alert global', function () {
     this.set('alert.opened', true);
 
     await render(hbs `{{alert-global}}`);
-    await click(getModal().find('.close-alert-modal')[0]);
+    await click(getModal().querySelector('.close-alert-modal'));
 
     expect(this.get('alert.opened')).to.be.false;
   });
@@ -56,7 +55,7 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      expect(getModal().find('.header-icon')).to.have.class(`oneicon-${icon}`);
+      expect(getModal().querySelector('.header-icon')).to.have.class(`oneicon-${icon}`);
     });
   });
 
@@ -74,7 +73,7 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      expect(getModal().find('.close-alert-modal')).to.have.class(btnClass);
+      expect(getModal().querySelector('.close-alert-modal')).to.have.class(btnClass);
     });
   });
 
@@ -92,7 +91,7 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      expect(getModal().find('h1').text()).to.contain(header);
+      expect(getModal().querySelector('h1').textContent).to.contain(header);
     });
   });
 
@@ -105,7 +104,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    expect(getModal().find('.modal-body').text()).to.contain(text);
+    expect(getModal().querySelector('.modal-body').textContent).to.contain(text);
   });
 
   it('shows details expanding link, when details are available', async function () {
@@ -116,7 +115,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    expect(getModal().find('.toggle-details-link')).to.exist;
+    expect(getModal().querySelector('.toggle-details-link')).to.exist;
   });
 
   it('does not show details expanding link, when details are not available', async function () {
@@ -124,7 +123,7 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    expect(getModal().find('.toggle-details-link')).to.not.exist;
+    expect(getModal().querySelector('.toggle-details-link')).to.not.exist;
   });
 
   [
@@ -142,7 +141,7 @@ describe('Integration | Component | alert global', function () {
 
         await render(hbs `{{alert-global}}`);
 
-        expect(getModal().find('.toggle-details-link')).to.have.class(textClass);
+        expect(getModal().querySelector('.toggle-details-link')).to.have.class(textClass);
       }
     );
   });
@@ -157,9 +156,9 @@ describe('Integration | Component | alert global', function () {
 
       await render(hbs `{{alert-global}}`);
 
-      expect(getModal().find('.toggle-details-link').text())
+      expect(getModal().querySelector('.toggle-details-link').textContent)
         .to.contain('Show details');
-      expect(getModal().find('.toggle-details-link .oneicon-arrow-down')).to.exist;
+      expect(getModal().querySelector('.toggle-details-link .oneicon-arrow-down')).to.exist;
     }
   );
 
@@ -172,11 +171,11 @@ describe('Integration | Component | alert global', function () {
       });
 
       await render(hbs `{{alert-global}}`);
-      await click(getModal().find('.toggle-details-link')[0]);
+      await click(getModal().querySelector('.toggle-details-link'));
 
-      expect(getModal().find('.toggle-details-link').text())
+      expect(getModal().querySelector('.toggle-details-link').textContent)
         .to.contain('Hide details');
-      expect(getModal().find('.toggle-details-link .oneicon-arrow-up')).to.exist;
+      expect(getModal().querySelector('.toggle-details-link .oneicon-arrow-up')).to.exist;
     }
   );
 
@@ -187,9 +186,9 @@ describe('Integration | Component | alert global', function () {
     });
 
     await render(hbs `{{alert-global}}`);
-    await click(getModal().find('.toggle-details-link')[0]);
+    await click(getModal().querySelector('.toggle-details-link'));
 
-    expect(getModal().find('.details-collapse')).to.have.class('in');
+    expect(getModal().querySelector('.details-collapse')).to.have.class('in');
   });
 
   it('hides details text after second click on details expanding link', async function () {
@@ -199,10 +198,10 @@ describe('Integration | Component | alert global', function () {
     });
 
     await render(hbs `{{alert-global}}`);
-    await click(getModal().find('.toggle-details-link')[0]);
-    await click(getModal().find('.toggle-details-link')[0]);
+    await click(getModal().querySelector('.toggle-details-link'));
+    await click(getModal().querySelector('.toggle-details-link'));
 
-    expect(getModal().find('.details-collapse')).to.not.have.class('in');
+    expect(getModal().querySelector('.details-collapse')).to.not.have.class('in');
   });
 
   it('always shows details when alert.alwaysShowDetails is true', async function () {
@@ -214,11 +213,11 @@ describe('Integration | Component | alert global', function () {
 
     await render(hbs `{{alert-global}}`);
 
-    expect(getModal().find('.toggle-details-link')).to.not.exist;
-    expect(getModal().find('.details-collapse')).to.have.class('in');
+    expect(getModal().querySelector('.toggle-details-link')).to.not.exist;
+    expect(getModal().querySelector('.details-collapse')).to.have.class('in');
   });
 });
 
 function getModal() {
-  return $('.modal.in');
+  return document.querySelector('.modal.in');
 }

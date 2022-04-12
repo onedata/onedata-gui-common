@@ -7,7 +7,6 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
-import $ from 'jquery';
 
 describe('Integration | Component | form component/field renderer', function () {
   setupRenderingTest();
@@ -50,7 +49,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect($(find('.form-group'))).to.have.class('has-error');
+    expect(find('.form-group')).to.have.class('has-error');
   });
 
   it(
@@ -58,7 +57,7 @@ describe('Integration | Component | form component/field renderer', function () 
     async function () {
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect($(find('.form-group'))).to.not.have.class('has-error');
+      expect(find('.form-group')).to.not.have.class('has-error');
     }
   );
 
@@ -68,7 +67,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect($(find('.form-group'))).to.have.class('has-success');
+    expect(find('.form-group')).to.have.class('has-success');
   });
 
   it(
@@ -78,7 +77,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect($(find('.form-group'))).to.not.have.class('has-success');
+      expect(find('.form-group')).to.not.have.class('has-success');
     }
   );
 
@@ -145,9 +144,9 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      const $renderer = $(find('.field-renderer'));
-      expect($renderer).to.have.class('field1-field');
-      expect($renderer).to.have.class('text-like-field-renderer');
+      const renderer = find('.field-renderer');
+      expect(renderer).to.have.class('field1-field');
+      expect(renderer).to.have.class('text-like-field-renderer');
     }
   );
 
@@ -158,7 +157,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect($(find('.field-renderer'))).to.have.class('abc');
+      expect(find('.field-renderer')).to.have.class('abc');
     }
   );
 
@@ -212,8 +211,8 @@ describe('Integration | Component | form component/field renderer', function () 
       expect(formFieldTip).to.exist;
       const tooltipHelper = new OneTooltipHelper(formFieldTip.querySelector('.one-icon'));
       await tooltipHelper.open();
-      const $tooltip = $(tooltipHelper.getTooltip());
-      expect($tooltip).to.have.class('custom-tooltip-class');
+      const tooltip = tooltipHelper.getTooltip();
+      expect(tooltip).to.have.class('custom-tooltip-class');
 
       done();
     }
@@ -229,7 +228,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect($(find('.field-renderer'))).to.have.class(`field-${mode}-mode`);
+      expect(find('.field-renderer')).to.have.class(`field-${mode}-mode`);
     });
   });
 
@@ -238,7 +237,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect($(find('.field-renderer'))).to.have.class('field-enabled')
+    expect(find('.field-renderer')).to.have.class('field-enabled')
       .and.to.not.have.class('field-disabled');
   });
 
@@ -247,7 +246,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect($(find('.field-renderer'))).to.have.class('field-disabled')
+    expect(find('.field-renderer')).to.have.class('field-disabled')
       .and.to.not.have.class('field-enabled');
   });
 });

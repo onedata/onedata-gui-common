@@ -3,7 +3,6 @@ import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 describe('Integration | Component | truncated string', function () {
   setupRenderingTest();
@@ -16,7 +15,7 @@ describe('Integration | Component | truncated string', function () {
     `);
 
     return triggerEvent('.truncated-string', 'mouseover')
-      .then(() => expect($('.tooltip.in')).to.not.exist);
+      .then(() => expect(document.querySelector('.tooltip.in')).to.not.exist);
   });
 
   it('shows tooltip with full text, when text is not fully visible', async function () {
@@ -31,6 +30,9 @@ describe('Integration | Component | truncated string', function () {
     `);
 
     return triggerEvent('.truncated-string', 'mouseover')
-      .then(() => expect($('.tooltip.in').text().trim()).to.equal(longText));
+      .then(() =>
+        expect(document.querySelector('.tooltip.in').textContent.trim())
+        .to.equal(longText)
+      );
   });
 });

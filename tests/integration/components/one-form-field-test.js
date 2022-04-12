@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | one form field', function () {
   setupRenderingTest();
@@ -30,8 +29,8 @@ describe('Integration | Component | one form field', function () {
     await render(hbs `
       {{one-form-field field=field}}
     `);
-    let $field = $(find('input'));
-    expect($field).to.have.class('field-one');
+    const field = find('input');
+    expect(field).to.have.class('field-one');
   });
 
   it('invokes inputChanged when value is changed', async function () {

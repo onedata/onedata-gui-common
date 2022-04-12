@@ -5,7 +5,6 @@ import { render, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import $ from 'jquery';
 
 describe('Integration | Component | form component/form fields group', function () {
   setupRenderingTest();
@@ -27,7 +26,7 @@ describe('Integration | Component | form component/form fields group', function 
     this.set('fields', FormFieldsGroup.create());
     await render(hbs `{{form-component/form-fields-group field=fields}}`);
 
-    expect($(find('.fields-group-collapse'))).to.have.class('in');
+    expect(find('.fields-group-collapse')).to.have.class('in');
   });
 
   it('renders collapsed fields group, when field.isExpanded is false', async function () {
@@ -36,6 +35,6 @@ describe('Integration | Component | form component/form fields group', function 
     }));
     await render(hbs `{{form-component/form-fields-group field=fields}}`);
 
-    expect($(find('.fields-group-collapse'))).to.not.have.class('in');
+    expect(find('.fields-group-collapse')).to.not.have.class('in');
   });
 });

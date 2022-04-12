@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
-import $ from 'jquery';
 
 describe('Integration | Component | workflow visualiser/visualiser element', function () {
   setupRenderingTest();
@@ -13,7 +12,7 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
     await render(hbs `{{workflow-visualiser/visualiser-element}}`);
 
     expect(this.element.children).to.have.length(1);
-    expect($(this.element.children[0])).to.have.class('workflow-visualiser-element');
+    expect(this.element.children[0]).to.have.class('workflow-visualiser-element');
   });
 
   it('has not specified "data-visualiser-element-id" attribute when "visualiserElement" is undefined',
@@ -50,7 +49,7 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
 
       await render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
 
-      expect($(find('.workflow-visualiser-element'))).to.have.class(modeClass);
+      expect(find('.workflow-visualiser-element')).to.have.class(modeClass);
     });
   });
 });

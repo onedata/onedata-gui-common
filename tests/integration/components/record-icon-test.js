@@ -4,7 +4,6 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { camelize } from '@ember/string';
-import $ from 'jquery';
 
 describe('Integration | Component | record icon', function () {
   setupRenderingTest();
@@ -54,7 +53,7 @@ describe('Integration | Component | record icon', function () {
 
         await render(hbs `{{record-icon record=record}}`);
 
-        expect($(find('.record-icon'))).to.have.class(`oneicon-${icon}`);
+        expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
     );
 
@@ -65,7 +64,7 @@ describe('Integration | Component | record icon', function () {
 
         await render(hbs `{{record-icon modelName=modelName}}`);
 
-        expect($(find('.record-icon'))).to.have.class(`oneicon-${icon}`);
+        expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
       }
     );
 
@@ -78,7 +77,7 @@ describe('Integration | Component | record icon', function () {
 
           await render(hbs `{{record-icon modelName=modelName}}`);
 
-          expect($(find('.record-icon'))).to.have.class(`oneicon-${icon}`);
+          expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
         }
       );
     }
@@ -205,7 +204,7 @@ describe('Integration | Component | record icon', function () {
 
           await render(hbs `{{record-icon useSubtypeIcon=true record=record}}`);
 
-          expect($(find('.record-icon'))).to.have.class(`oneicon-${icon}`);
+          expect(find('.record-icon')).to.have.class(`oneicon-${icon}`);
         }
       );
     });

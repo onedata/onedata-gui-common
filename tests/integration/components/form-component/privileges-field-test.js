@@ -101,7 +101,7 @@ describe('Integration | Component | form component/privileges field', function (
     await render(hbs `{{form-component/privileges-field field=field}}`);
 
     expect(
-      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
+      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')[0]
     ).to.have.class('checked');
     // g1a privilege toggle and g1 group toggle
     expect(findAll('.one-way-toggle.checked')).to.have.length(2);
@@ -129,7 +129,7 @@ describe('Integration | Component | form component/privileges field', function (
     await render(hbs `{{form-component/privileges-field field=field}}`);
 
     expect(
-      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')
+      $(this.element).find('.node-text:contains(privilege1a) + .form-group .one-way-toggle')[0]
     ).to.have.class('checked');
     expect(find('.one-way-toggle:not(.disabled)')).to.not.exist;
   });

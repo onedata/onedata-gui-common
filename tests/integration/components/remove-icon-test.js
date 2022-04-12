@@ -18,19 +18,19 @@ describe('Integration | Component | remove icon', function () {
   it('renders proper icon', async function () {
     await render(hbs `{{remove-icon}}`);
 
-    expect($(find('.one-icon'))).to.have.class('oneicon-checkbox-filled-x');
+    expect(find('.one-icon')).to.have.class('oneicon-checkbox-filled-x');
   });
 
   it('has "enabled" class if not disabled', async function () {
     await render(hbs `{{remove-icon}}`);
 
-    expect($(find('.remove-icon'))).to.have.class('enabled');
+    expect(find('.remove-icon')).to.have.class('enabled');
   });
 
   it('has "disabled" class if disabled', async function () {
     await render(hbs `{{remove-icon isDisabled=true}}`);
 
-    expect($(find('.remove-icon'))).to.have.class('disabled');
+    expect(find('.remove-icon')).to.have.class('disabled');
   });
 
   it('handles click event', async function () {
@@ -67,6 +67,6 @@ describe('Integration | Component | remove icon', function () {
     await render(hbs `{{remove-icon}}`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
-      .then(() => expect($('.tooltip.in')).to.not.exist);
+      .then(() => expect(find('.tooltip.in')).to.not.exist);
   });
 });

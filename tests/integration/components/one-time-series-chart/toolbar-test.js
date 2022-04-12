@@ -13,7 +13,6 @@ import {
 import { get } from '@ember/object';
 import { all as allFulfilled } from 'rsvp';
 import { render, settled, click, find } from '@ember/test-helpers';
-import $ from 'jquery';
 
 describe('Integration | Component | one time series chart/toolbar', function () {
   const { afterEach } = setupRenderingTest();
@@ -28,8 +27,8 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   it('has class "one-time-series-chart-toolbar"', async function () {
     await renderComponent();
 
-    expect($(this.element).children()).to.have.class('one-time-series-chart-toolbar')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-time-series-chart-toolbar');
   });
 
   it('renders time resolutions according to the resolutions defined in a single model',
