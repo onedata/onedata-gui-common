@@ -24,6 +24,7 @@ import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import {
   metricAggregators,
   metricResolutions,
+  metricResolutionsMap,
   translateMetricResolution,
   translateMetricAggregator,
 } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
@@ -38,37 +39,37 @@ import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-fiel
  */
 
 const presetDataPerResolution = {
-  fiveSeconds: {
+  [metricResolutionsMap.fiveSeconds]: {
     // 2 hours
     retention: 2 * 60 * 12,
     metricIdResolutionPart: '5s',
   },
-  minute: {
+  [metricResolutionsMap.minute]: {
     // 1 day
     retention: 24 * 60,
     metricIdResolutionPart: '1m',
   },
-  hour: {
+  [metricResolutionsMap.hour]: {
     // ~2 months
     retention: 2 * 30 * 24,
     metricIdResolutionPart: '1h',
   },
-  day: {
+  [metricResolutionsMap.day]: {
     // ~2 years
     retention: 2 * 12 * 30,
     metricIdResolutionPart: '1d',
   },
-  week: {
+  [metricResolutionsMap.week]: {
     // ~5 years
     retention: 10 * 52,
     metricIdResolutionPart: '1w',
   },
-  month: {
+  [metricResolutionsMap.month]: {
     // ~10 years
     retention: 10 * 12,
     metricIdResolutionPart: '1mo',
   },
-  year: {
+  [metricResolutionsMap.year]: {
     // 10 years
     retention: 10,
     metricIdResolutionPart: '1y',
@@ -116,14 +117,13 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
       'resolution',
       'retention'
     );
-    const resolutionName = (metricResolutions.findBy('resolution', resolution) || {}).name;
 
     const readableId = id ? `"${id}"` : this.t('unknownId');
     const readableAggregator = metricAggregators.includes(aggregator) ?
       String(translateMetricAggregator(i18n, aggregator, { short: true })).toLocaleLowerCase() :
       '?';
-    const readableResolution = resolutionName ?
-      String(translateMetricResolution(i18n, resolutionName, { short: true })).toLocaleLowerCase() :
+    const readableResolution = metricResolutions.includes(resolution) ?
+      String(translateMetricResolution(i18n, resolution, { short: true })).toLocaleLowerCase() :
       '?';
     const readableRetention = Number.isInteger(retention) ?
       this.t('retention', { retention }) : '?';
@@ -212,13 +212,15 @@ export default Component.extend(I18n, {
       const aggregator = this.get('selectedAggregatorOption.value');
 
       return metricResolutions
-        .filter(({ name }) => name in presetDataPerResolution)
-        .map(({ name: resolutionName, resolution }) => ({
-          id: generateMetricId(aggregator, resolutionName),
-          aggregator,
-          resolution,
-          retention: presetDataPerResolution[resolutionName].retention,
-        }));
+        .filter((resolution) => resolution in presetDataPerResolution)
+        .map((resolution) => {
+          return {
+            id: generateMetricId(aggregator, resolution),
+            aggregator,
+            resolution,
+            retention: presetDataPerResolution[resolution].retention,
+          };
+        });
     }
   ),
 
@@ -309,15 +311,15 @@ export default Component.extend(I18n, {
         DropdownField.extend({
           options: computed(function options() {
             const i18n = this.get('i18n');
-            return metricResolutions.map(({ name, resolution }) => ({
+            return metricResolutions.map((resolution) => ({
               value: resolution,
-              label: translateMetricResolution(i18n, name),
+              label: translateMetricResolution(i18n, resolution),
             }));
           }),
         }).create({
           component: this,
           name: 'resolution',
-          defaultValue: metricResolutions[0].resolution,
+          defaultValue: metricResolutions[0],
           customValidators: [
             validator(function (value, options, model) {
               if (!value) {
@@ -424,8 +426,8 @@ export default Component.extend(I18n, {
   },
 });
 
-function generateMetricId(aggregator, resolutionName) {
-  return `${aggregator}${presetDataPerResolution[resolutionName].metricIdResolutionPart}`;
+function generateMetricId(aggregator, resolution) {
+  return `${aggregator}${presetDataPerResolution[resolution].metricIdResolutionPart}`;
 }
 
 /**

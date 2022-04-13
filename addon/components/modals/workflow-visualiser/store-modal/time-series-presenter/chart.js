@@ -13,24 +13,23 @@ import { inject as service } from '@ember/service';
 import _ from 'lodash';
 import layout from '../../../../../templates/components/modals/workflow-visualiser/store-modal/time-series-presenter/chart';
 import OTSCConfiguration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
+import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
 
 const pointsCountPerResolution = {
   // 24 * 5 seconds -> 2 minutes
-  5: 24,
+  [metricResolutionsMap.fiveSeconds]: 24,
   // 30 * 1 minute -> 0.5 hour
-  60: 30,
+  [metricResolutionsMap.minute]: 30,
   // 24 * 1 hour -> 1 day
-  [60 * 60]: 24,
+  [metricResolutionsMap.hour]: 24,
   // 30 * 1 day -> 1 month
-  [24 * 60 * 60]: 30,
+  [metricResolutionsMap.day]: 30,
   // 13 * 1 week -> ~3 months (91 days)
-  [7 * 24 * 60 * 60]: 13,
+  [metricResolutionsMap.week]: 13,
   // 12 * 1 month -> ~1 year (360 days)
-  [30 * 24 * 60 * 60]: 12,
+  [metricResolutionsMap.month]: 12,
   // 10 * 1 year -> 10 years
-  [365 * 24 * 60 * 60]: 10,
-  // Fallback for unknown resolution
-  0: 30,
+  [metricResolutionsMap.year]: 10,
 };
 
 export default Component.extend({

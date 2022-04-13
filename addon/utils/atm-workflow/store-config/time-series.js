@@ -7,6 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import _ from 'lodash';
+
 /**
  * @typedef {Object} TimeSeriesStoreConfig
  * @property {Array<TimeSeriesSchema>} schemas
@@ -27,7 +29,7 @@
  * @typedef {Object} TimeSeriesMetric
  * @property {string} aggregator for possible values see at
  * `metricAggregators` below
- * @property {number} resolution for possible values see at numeric values in
+ * @property {number} resolution for possible values see at
  * `metricResolutions` below
  * @property {number} retention
  */
@@ -37,31 +39,27 @@ export const nameGeneratorTypes = [
   'addPrefix',
 ];
 
-export const metricResolutions = [{
-  name: 'fiveSeconds',
-  resolution: 5,
-}, {
-  name: 'minute',
-  resolution: 60,
-}, {
-  name: 'hour',
-  resolution: 60 * 60,
-}, {
-  name: 'day',
-  resolution: 24 * 60 * 60,
-}, {
-  name: 'week',
-  resolution: 7 * 24 * 60 * 60,
-}, {
-  name: 'month',
-  resolution: 30 * 24 * 60 * 60,
-}, {
-  name: 'year',
-  resolution: 365 * 24 * 60 * 60,
-}, {
-  name: 'infinity',
-  resolution: 0,
-}];
+export const metricResolutionsMap = {
+  fiveSeconds: 5,
+  minute: 60,
+  hour: 60 * 60,
+  day: 24 * 60 * 60,
+  week: 7 * 24 * 60 * 60,
+  month: 30 * 24 * 60 * 60,
+  year: 365 * 24 * 60 * 60,
+  infinity: 0,
+};
+
+export const metricResolutions = [
+  metricResolutionsMap.fiveSeconds,
+  metricResolutionsMap.minute,
+  metricResolutionsMap.hour,
+  metricResolutionsMap.day,
+  metricResolutionsMap.week,
+  metricResolutionsMap.month,
+  metricResolutionsMap.year,
+  metricResolutionsMap.infinity,
+];
 
 export const metricAggregators = [
   'sum',
@@ -72,17 +70,21 @@ export const metricAggregators = [
 ];
 
 export function translateNameGeneratorType(i18n, nameGeneratorType) {
-  return i18n.t(`utils.atmWorkflow.storeConfig.timeSeries.nameGeneratorTypes.${nameGeneratorType}`);
+  const i18nPath = `utils.atmWorkflow.storeConfig.timeSeries.nameGeneratorTypes.${nameGeneratorType}`;
+  return i18n.t(i18nPath, {}, { defaultValue: '' });
 }
 
+const invertedMetricResolutionsMap = _.invert(metricResolutionsMap);
+
 export function translateMetricResolution(i18n, metricResolution, { short = false } = {}) {
-  return i18n.t(
-    `utils.atmWorkflow.storeConfig.timeSeries.metricResolutions.${short ? 'short' : 'standard'}.${metricResolution}`
-  );
+  const metricResolutionName = invertedMetricResolutionsMap[metricResolution];
+  const i18nPath = metricResolutionName &&
+    `utils.atmWorkflow.storeConfig.timeSeries.metricResolutions.${short ? 'short' : 'standard'}.${metricResolutionName}`;
+  return i18nPath ? i18n.t(i18nPath, {}, { defaultValue: '' }) : '';
 }
 
 export function translateMetricAggregator(i18n, metricAggregator, { short = false } = {}) {
-  return i18n.t(
-    `utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${short ? 'short' : 'standard'}.${metricAggregator}`
-  );
+  const i18nPath =
+    `utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${short ? 'short' : 'standard'}.${metricAggregator}`;
+  return i18n.t(i18nPath, {}, { defaultValue: '' });
 }

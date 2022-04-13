@@ -6,69 +6,70 @@ import { find, findAll, click, fillIn } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import sinon from 'sinon';
 import { get } from '@ember/object';
+import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
 
 const resolutionOptions = [{
   label: '5 seconds',
-  resolution: 5,
+  resolution: metricResolutionsMap.fiveSeconds,
   shortName: '5s',
 }, {
   label: '1 minute',
-  resolution: 60,
+  resolution: metricResolutionsMap.minute,
   shortName: '1m',
 }, {
   label: '1 hour',
-  resolution: 60 * 60,
+  resolution: metricResolutionsMap.hour,
   shortName: '1h',
 }, {
   label: '1 day',
-  resolution: 24 * 60 * 60,
+  resolution: metricResolutionsMap.day,
   shortName: '1d',
 }, {
   label: '1 week',
-  resolution: 7 * 24 * 60 * 60,
+  resolution: metricResolutionsMap.week,
   shortName: '1w',
 }, {
   label: '1 month',
-  resolution: 30 * 24 * 60 * 60,
+  resolution: metricResolutionsMap.month,
   shortName: '1mo',
 }, {
   label: '1 year',
-  resolution: 365 * 24 * 60 * 60,
+  resolution: metricResolutionsMap.year,
   shortName: '1y',
 }];
 
 const perAggregatorPresets = [{
-  resolution: 5,
+  resolution: metricResolutionsMap.fiveSeconds,
   retention: 2 * 60 * 12,
   idSuffix: '5s',
   tagLabelSuffix: '5s; 1440 samp.',
 }, {
-  resolution: 60,
+  resolution: metricResolutionsMap.minute,
   retention: 24 * 60,
   idSuffix: '1m',
   tagLabelSuffix: '1m; 1440 samp.',
 }, {
-  resolution: 60 * 60,
+  resolution: metricResolutionsMap.hour,
   retention: 2 * 30 * 24,
   idSuffix: '1h',
   tagLabelSuffix: '1h; 1440 samp.',
 }, {
-  resolution: 24 * 60 * 60,
+  resolution: metricResolutionsMap.day,
   retention: 2 * 12 * 30,
   idSuffix: '1d',
   tagLabelSuffix: '1d; 720 samp.',
 }, {
-  resolution: 7 * 24 * 60 * 60,
+  resolution: metricResolutionsMap.week,
   retention: 10 * 52,
   idSuffix: '1w',
   tagLabelSuffix: '1w; 520 samp.',
 }, {
-  resolution: 30 * 24 * 60 * 60,
+  resolution: metricResolutionsMap.month,
   retention: 10 * 12,
   idSuffix: '1mo',
   tagLabelSuffix: '1mo; 120 samp.',
 }, {
-  resolution: 365 * 24 * 60 * 60,
+  resolution: metricResolutionsMap.year,
   retention: 10,
   idSuffix: '1y',
   tagLabelSuffix: '1y; 10 samp.',
