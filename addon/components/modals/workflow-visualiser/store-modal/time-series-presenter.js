@@ -8,7 +8,7 @@
  */
 
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, observer, get, set } from '@ember/object';
 import { reads, notEmpty } from '@ember/object/computed';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/time-series-presenter';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
@@ -92,6 +92,31 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
     });
   }),
 
+  timeSeriesGeneratorsStateUpdaterController: observer(
+    'store.contentMayChange',
+    function timeSeriesGeneratorsStateUpdaterController() {
+      const contentMayChange = this.get('store.contentMayChange');
+      const {
+        timeSeriesGeneratorsStateUpdater,
+        timeSeriesGeneratorsStateReloadInterval,
+      } = this.getProperties(
+        'timeSeriesGeneratorsStateUpdater',
+        'timeSeriesGeneratorsStateReloadInterval'
+      );
+      const updaterIsActive = Boolean(get(timeSeriesGeneratorsStateUpdater, 'interval'));
+      if (contentMayChange && !updaterIsActive) {
+        set(
+          timeSeriesGeneratorsStateUpdater,
+          'interval',
+          timeSeriesGeneratorsStateReloadInterval
+        );
+      } else if (!contentMayChange && updaterIsActive) {
+        timeSeriesGeneratorsStateUpdater.notify();
+        timeSeriesGeneratorsStateUpdater.stop();
+      }
+    }
+  ),
+
   /**
    * @override
    */
@@ -100,11 +125,11 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
     const timeSeriesGeneratorsStateUpdater =
       this.set('timeSeriesGeneratorsStateUpdater', Looper.create({
         immediate: true,
-        interval: this.get('timeSeriesGeneratorsStateReloadInterval'),
       }));
     timeSeriesGeneratorsStateUpdater.on('tick', () =>
-      this.updatetimeSeriesGeneratorssStateProxy({ replace: true })
+      this.updateTimeSeriesGeneratorsStateProxy({ replace: true })
     );
+    this.timeSeriesGeneratorsStateUpdaterController();
   },
 
   /**

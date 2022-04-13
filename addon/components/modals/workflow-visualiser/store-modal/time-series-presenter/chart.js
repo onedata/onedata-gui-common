@@ -170,6 +170,23 @@ export default Component.extend({
     chartConfiguration.setViewParameters({ live });
   }),
 
+  timeSeriesGeneratorsStateObserver: observer(
+    'timeSeriesGeneratorsState',
+    function timeSeriesGeneratorsStateObserver() {
+      const {
+        chartConfiguration,
+        live,
+      } = this.getProperties('chartConfiguration', 'live');
+
+      if (live) {
+        // live chart will update itself on its own
+        return;
+      }
+      // Simulate view parameters change to reload chart
+      chartConfiguration.setViewParameters({});
+    }
+  ),
+
   /**
    * @override
    */
@@ -214,7 +231,8 @@ export default Component.extend({
     if (!timeSeriesNameGenerator || !Array.isArray(metricIds)) {
       return [];
     }
-    const timeSeriesNames = this.get(`timeSeriesGeneratorsState.${timeSeriesNameGenerator}.timeSeriesNames`);
+    const generatorState = this.getGeneratorState(timeSeriesNameGenerator);
+    const timeSeriesNames = generatorState && generatorState.timeSeriesNames || [];
     return timeSeriesNames.map((timeSeriesName) => ({
       id: timeSeriesName,
       name: timeSeriesName,
@@ -229,19 +247,27 @@ export default Component.extend({
     }));
   },
 
+  getGeneratorState(timeSeriesNameGenerator) {
+    if (!timeSeriesNameGenerator) {
+      return;
+    }
+
+    const timeSeriesGeneratorsState = this.get('timeSeriesGeneratorsState');
+    return timeSeriesGeneratorsState && timeSeriesGeneratorsState[timeSeriesNameGenerator];
+  },
+
   /**
    * @param {string} timeSeriesNameGenerator
    * @param {string} metricId
    * @returns {number|undefined}
    */
   getResolutionForMetric(timeSeriesNameGenerator, metricId) {
-    if (!timeSeriesNameGenerator || !metricId) {
+    if (!metricId) {
       return;
     }
 
-    return this.get(
-      `timeSeriesGeneratorsState.${timeSeriesNameGenerator}.metricIdToResolutionMap.${metricId}`
-    );
+    const generatorState = this.getGeneratorState(timeSeriesNameGenerator);
+    return generatorState && get(generatorState, `metricIdToResolutionMap.${metricId}`);
   },
 
   /**
@@ -250,13 +276,12 @@ export default Component.extend({
    * @returns {string}
    */
   getMetricForResolution(timeSeriesNameGenerator, resolution) {
-    if (!timeSeriesNameGenerator || typeof resolution !== 'number') {
+    if (typeof resolution !== 'number') {
       return;
     }
 
-    return this.get(
-      `timeSeriesGeneratorsState.${timeSeriesNameGenerator}.resolutionToMetricIdMap.${resolution}`
-    );
+    const generatorState = this.getGeneratorState(timeSeriesNameGenerator);
+    return generatorState && get(generatorState, `resolutionToMetricIdMap.${resolution}`);
   },
 });
 
