@@ -70,6 +70,9 @@ $form-component-view-margin: $padding-base-vertical;
     .spinner {
       z-index: initial !important;
     }
+    .resource-load-error {
+      margin: 0;
+    }
   }
 
   .form-fields-group-renderer {
