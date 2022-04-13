@@ -976,7 +976,7 @@ function checkInterblockSpaces(rawDump) {
     const blocks = lanes[laneIdx].querySelectorAll('.workflow-visualiser-parallel-box');
     expect(blocks).to.have.length(parallelBoxIds.length);
     const betweenBlockSpaces = lanes[laneIdx].querySelectorAll(
-      '.workflow-visualiser-interblock-space:not(.workflow-visualiser-parallel-box *)'
+      '.lane-elements > .workflow-visualiser-interblock-space'
     );
     checkInterXSpaces(betweenBlockSpaces, parallelBoxIds);
 
