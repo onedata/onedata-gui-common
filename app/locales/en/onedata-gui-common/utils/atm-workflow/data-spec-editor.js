@@ -1,5 +1,5 @@
-import timeSeriesMeasurements from './data-spec-editor/time-series-measurements';
+import timeSeriesMeasurement from './data-spec-editor/time-series-measurement';
 
 export default {
-  timeSeriesMeasurements,
+  timeSeriesMeasurement,
 };

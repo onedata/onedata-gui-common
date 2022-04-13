@@ -7,8 +7,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import timeSeriesMeasurements from './time-series-measurements';
+import timeSeriesMeasurement from './time-series-measurement';
 
 export default {
-  timeSeriesMeasurements,
+  timeSeriesMeasurement,
 };

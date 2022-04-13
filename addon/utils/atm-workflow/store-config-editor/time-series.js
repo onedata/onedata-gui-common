@@ -23,7 +23,7 @@ import {
   customUnitsPrefix,
   units,
   translateUnit,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurements';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurement';
 import {
   nameGeneratorTypes,
   metricAggregators,

@@ -6,7 +6,7 @@ import wait from 'ember-test-helpers/wait';
 import { fillIn, find, findAll, click } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/time-series-measurements';
+import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/time-series-measurement';
 import { get } from '@ember/object';
 
 const nameMatcherTypeOptions = [{
@@ -70,7 +70,7 @@ const unitOptions = [{
   label: 'Custom',
 }];
 
-describe('Integration | Utility | atm workflow/data spec editor/time series measurements', function () {
+describe('Integration | Utility | atm workflow/data spec editor/time series measurement', function () {
   setupComponentTest('test-component', {
     integration: true,
   });

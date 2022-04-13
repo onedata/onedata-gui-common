@@ -1,9 +1,9 @@
 /**
  * Provides a form element capable of showing, creating and modifying time
- * series measurements data type settings. It also provides two methods
+ * series measurement data type settings. It also provides two methods
  * for conversion between form values and value constraints in both directions.
  *
- * @module utils/atm-workflow/data-spec-editor/time-series-measurements
+ * @module utils/atm-workflow/data-spec-editor/time-series-measurement
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -22,13 +22,13 @@ import {
   units,
   translateNameMatcherType,
   translateUnit,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurements';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurement';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const formElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-measurements-dataspec-editor',
+  classes: 'time-series-measurement-dataspec-editor',
   isDefaultValueIgnored: false,
-  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurements.fields',
+  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurement.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
   sizeForChildren: 'sm',
@@ -75,8 +75,8 @@ const formElement = FormFieldsCollectionGroup.extend({
 });
 
 /**
- * @param {Utils.FormComponent.ValuesContainer} values Values from time series measurements editor
- * @returns {TimeSeriesMeasurementsValueConstraints} value constraints
+ * @param {Utils.FormComponent.ValuesContainer} values Values from time series measurement editor
+ * @returns {TimeSeriesMeasurementValueConstraints} value constraints
  */
 function formValuesToValueConstraints(values) {
   const specs = get(values, '__fieldsValueNames')
@@ -112,7 +112,7 @@ function formValuesToValueConstraints(values) {
 }
 
 /**
- * @param {TimeSeriesMeasurementsValueConstraints} valueConstraints value
+ * @param {TimeSeriesMeasurementValueConstraints} valueConstraints value
  * constraints taken from the raw data spec
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */

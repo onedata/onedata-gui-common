@@ -16,7 +16,7 @@ import { reads } from '@ember/object/computed';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
-import { translateNameMatcherType } from '../data-spec/time-series-measurements';
+import { translateNameMatcherType } from '../data-spec/time-series-measurement';
 import { translateNameGeneratorType } from '../store-config/time-series';
 import {
   prefixCombiners,
@@ -59,9 +59,15 @@ const formElement = FormFieldsCollectionGroup.extend({
   sizeForChildren: 'sm',
 
   /**
-   * @type {ComputedProperty<Array<TimeSeriesMeasurementsSpec>>}
+   * @type {ComputedProperty<Array<TimeSeriesMeasurementSpec>>}
    */
-  measurementSpecs: reads('contentUpdateDataSpec.valueConstraints.specs'),
+  measurementSpecs: computed('contentUpdateDataSpec', function measurementSpecs() {
+    const isArray = this.get('contentUpdateDataSpec.type') === 'array';
+    return this.get(isArray ?
+      'contentUpdateDataSpec.valueConstraints.itemDataSpec.valueConstraints.specs' :
+      'contentUpdateDataSpec.valueConstraints.specs'
+    );
+  }),
 
   /**
    * @type {Array<TimeSeriesSchema>}

@@ -206,10 +206,10 @@ const dataSpecs = [{
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }, {
-  label: 'Time series measurements',
-  name: 'timeSeriesMeasurements',
+  label: 'Time series measurement',
+  name: 'timeSeriesMeasurement',
   dataSpec: {
-    type: 'timeSeriesMeasurements',
+    type: 'timeSeriesMeasurement',
     valueConstraints: {},
   },
   valueBuilderTypes: ['const'],
@@ -237,16 +237,16 @@ const allSimpleDataSpecNames = [
   // TODO: VFS-7816 uncomment or remove future code
   // 'archive',
   'range',
-  'timeSeriesMeasurements',
+  'timeSeriesMeasurement',
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
-  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurements'),
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: false,
 }, {
   type: 'list',
-  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurements'),
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
@@ -278,13 +278,13 @@ const allPossibleStoreSpecs = [{
   dispatchFunctions: [],
 }, {
   type: 'auditLog',
-  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurements'),
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'logContentDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
 }, {
   type: 'timeSeries',
-  allowedDataSpecNames: ['timeSeriesMeasurements'],
+  allowedDataSpecNames: ['timeSeriesMeasurement'],
   acceptsBatch: true,
   dispatchFunctions: [],
 }];
@@ -322,8 +322,8 @@ allPossibleStores.push({
   requiresInitialContent: false,
 });
 allPossibleStores.push({
-  id: 'timeSeriesTimeSeriesMeasurementsId',
-  name: 'timeSeriesTimeSeriesMeasurementsStore',
+  id: 'timeSeriesTimeSeriesMeasurementId',
+  name: 'timeSeriesTimeSeriesMeasurementStore',
   type: 'timeSeries',
   config: {
     schemas: [],

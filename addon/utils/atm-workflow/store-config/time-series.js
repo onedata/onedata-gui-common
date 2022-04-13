@@ -21,7 +21,7 @@ import _ from 'lodash';
  * `nameGeneratorTypes` below
  * @property {string} nameGenerator
  * @property {string} unit for possible values see at `units` in
- * `timeSeriesMeasurements` data spec
+ * `timeSeriesMeasurement` data spec
  * @property {Object<string,TimeSeriesMetric>} metrics keys are metric IDs
  */
 

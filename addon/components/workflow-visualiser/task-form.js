@@ -767,7 +767,7 @@ function taskToFormData(task, atmLambdaRevision) {
     const valueName = `result${idx}`;
     formResultMappings.__fieldsValueNames.push(valueName);
     const resultType = dataSpecToType(dataSpec).type;
-    const timeSeriesEditor = resultType === 'timeSeriesMeasurements' ?
+    const timeSeriesEditor = resultType === 'timeSeriesMeasurement' ?
       storeContentUpdateOptionsEditors.timeSeries.storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) :
       {};
 
@@ -977,7 +977,7 @@ function getValueBuilderTypesForArgType(argType, isArray) {
   //   return ['storeCredentials'];
   if (argType === 'onedatafsCredentials') {
     builders = ['onedatafsCredentials'];
-  } else if (argType === 'timeSeriesMeasurements') {
+  } else if (argType === 'timeSeriesMeasurement') {
     builders = ['const'];
   } else if (argType === 'object') {
     builders = [

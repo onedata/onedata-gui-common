@@ -1,6 +1,6 @@
 export default {
   fields: {
-    label: 'Measurements specification',
+    label: 'Measurement specifications',
     addButtonText: 'Add measurement spec.',
     measurementSpec: {
       nameMatcherType: {

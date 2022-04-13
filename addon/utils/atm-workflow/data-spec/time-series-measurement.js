@@ -1,19 +1,19 @@
 /**
- * Contains data related to "time series measurements" automation data spec.
+ * Contains data related to "time series measurement" automation data spec.
  *
- * @module utils/atm-workflow/data-spec/time-series-measurements
+ * @module utils/atm-workflow/data-spec/time-series-measurement
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 /**
- * @typedef {Object} TimeSeriesMeasurementsValueConstraints
- * @property {Array<TimeSeriesMeasurementsSpec>} specs
+ * @typedef {Object} TimeSeriesMeasurementValueConstraints
+ * @property {Array<TimeSeriesMeasurementSpec>} specs
  */
 
 /**
- * @typedef {Object} TimeSeriesMeasurementsSpec
+ * @typedef {Object} TimeSeriesMeasurementSpec
  * @property {string} nameMatcherType for possible values see at `nameMatcherTypes` below
  * @property {string} nameMatcher
  * @property {string} unit for possible values see at `units` below
@@ -57,7 +57,7 @@ export const units = [
  * @returns {SafeString}
  */
 export function translateNameMatcherType(i18n, nameMatcherType) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.nameMatcherTypes.${nameMatcherType}`);
+  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurement.nameMatcherTypes.${nameMatcherType}`);
 }
 
 /**
@@ -66,5 +66,5 @@ export function translateNameMatcherType(i18n, nameMatcherType) {
  * @returns {SafeString}
  */
 export function translateUnit(i18n, unit) {
-  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurements.units.${unit}`);
+  return i18n.t(`utils.atmWorkflow.dataSpec.timeSeriesMeasurement.units.${unit}`);
 }
