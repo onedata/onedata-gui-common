@@ -24,7 +24,7 @@ import {
 } from '../store-content-update-options/time-series';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const formElement = FormFieldsCollectionGroup.extend({
+const FormElement = FormFieldsCollectionGroup.extend({
   /**
    * @virtual
    * @type {AtmDataSpec}
@@ -40,7 +40,7 @@ const formElement = FormFieldsCollectionGroup.extend({
   /**
    * @override
    */
-  classes: 'time-series-store-content-update-options-editor',
+  classes: 'time-series-store-content-update-options-editor boxes-collection-layout',
 
   /**
    * @override
@@ -87,7 +87,10 @@ const formElement = FormFieldsCollectionGroup.extend({
             const i18n = this.get('i18n');
             const measurementSpecs = this.get('parent.parent.measurementSpecs') || [];
             return measurementSpecs.map((measurementSpec) => ({
-              value: `${measurementSpec.nameMatcherType}:${measurementSpec.nameMatcher}`,
+              value: serializeNameMatcherValue(
+                measurementSpec.nameMatcherType,
+                measurementSpec.nameMatcher
+              ),
               label: `${translateNameMatcherType(i18n, measurementSpec.nameMatcherType)} "${measurementSpec.nameMatcher}"`,
             }));
           }),
@@ -120,8 +123,9 @@ const formElement = FormFieldsCollectionGroup.extend({
             'parent.parent.generatorSchemas.[]',
             'parent.value.{measurementNameMatcher,timeSeriesNameGenerator}',
             function isVisible() {
-              const nameMatcherType =
-                (this.get('parent.value.measurementNameMatcher') || '').split(':')[0];
+              const nameMatcherType = deserializeNameMatcherValue(
+                this.get('parent.value.measurementNameMatcher') || ''
+              ).nameMatcherType;
               const nameGenerator = this.get('parent.value.timeSeriesNameGenerator');
               const timeSeriesGenerator = (this.get('parent.parent.generatorSchemas') || [])
                 .findBy('nameGenerator', nameGenerator);
@@ -165,18 +169,15 @@ function formValuesToStoreContentUpdateOptions(values, { storeConfig }) {
         'prefixCombiner',
       );
 
-      const typeSeparatorPosition = formMeasurementNameMatcher.indexOf(':');
-      const measurementTimeSeriesNameMatcherType =
-        formMeasurementNameMatcher.slice(0, typeSeparatorPosition);
-      const measurementTimeSeriesNameMatcher =
-        formMeasurementNameMatcher.slice(typeSeparatorPosition + 1);
+      const deserializedNameMatcher =
+        deserializeNameMatcherValue(formMeasurementNameMatcher);
       const dispatchRule = {
-        measurementTimeSeriesNameMatcherType,
-        measurementTimeSeriesNameMatcher,
+        measurementTimeSeriesNameMatcherType: deserializedNameMatcher.nameMatcherType,
+        measurementTimeSeriesNameMatcher: deserializedNameMatcher.nameMatcher,
         targetTimeSeriesNameGenerator: formTimeSeriesNameGenerator,
       };
       if (
-        measurementTimeSeriesNameMatcherType === 'hasPrefix' &&
+        deserializedNameMatcher.nameMatcherType === 'hasPrefix' &&
         nameGeneratorToTypeMap[formTimeSeriesNameGenerator] === 'addPrefix'
       ) {
         dispatchRule.prefixCombiner = formPrefixCombiner;
@@ -209,7 +210,10 @@ function storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) {
     .forEach((dispatchRule, idx) => {
       const dispatchRuleFormGroupName = `dispatchRule${idx}`;
       const dispatchRuleValue = {
-        measurementNameMatcher: `${dispatchRule.measurementTimeSeriesNameMatcherType}:${dispatchRule.measurementTimeSeriesNameMatcher}`,
+        measurementNameMatcher: serializeNameMatcherValue(
+          dispatchRule.measurementTimeSeriesNameMatcherType,
+          dispatchRule.measurementTimeSeriesNameMatcher
+        ),
         timeSeriesNameGenerator: dispatchRule.targetTimeSeriesNameGenerator,
         prefixCombiner: dispatchRule.prefixCombiner,
       };
@@ -222,7 +226,21 @@ function storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) {
 }
 
 export default {
-  formElement,
+  FormElement,
   formValuesToStoreContentUpdateOptions,
   storeContentUpdateOptionsToFormValues,
 };
+
+function serializeNameMatcherValue(nameMatcherType, nameMatcher) {
+  return `${nameMatcherType}|${nameMatcher}`;
+}
+
+function deserializeNameMatcherValue(nameMatcherValue) {
+  // Not using `split()` because second part of value (nameMatcher) can contain characters
+  // the same as used separator.
+  const typeSeparatorPosition = nameMatcherValue.indexOf('|');
+  return {
+    nameMatcherType: nameMatcherValue.slice(0, typeSeparatorPosition),
+    nameMatcher: nameMatcherValue.slice(typeSeparatorPosition + 1),
+  };
+}

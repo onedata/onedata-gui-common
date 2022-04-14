@@ -287,7 +287,8 @@ export default Component.extend(I18n, {
                   function options() {
                     const argumentType = this.get('parent.value.context.type');
                     const argumentIsArray = this.get('parent.value.context.isArray');
-                    const argumentIsOptional = this.get('parent.value.context.isOptional');
+                    const argumentIsOptional =
+                      this.get('parent.value.context.isOptional');
                     const opts =
                       getValueBuilderTypesForArgType(argumentType, argumentIsArray)
                       .map(vbType => ({ value: vbType }));
@@ -375,7 +376,8 @@ export default Component.extend(I18n, {
               'component.resultStores.@each.id',
               function selectedTargetStore() {
                 const targetStoreId = this.get('value.targetStore');
-                return (this.get('component.resultStores') || []).findBy('id', targetStoreId);
+                return (this.get('component.resultStores') || [])
+                  .findBy('id', targetStoreId);
               }
             ),
           }).create({
@@ -392,7 +394,8 @@ export default Component.extend(I18n, {
                     const resultStores = this.get('component.resultStores') || [];
                     const resultType = this.get('parent.value.context.type');
                     const resultIsBatch = this.get('parent.value.context.isBatch');
-                    const opts = getTargetStoresForType(resultStores, resultType, resultIsBatch)
+                    const opts =
+                      getTargetStoresForType(resultStores, resultType, resultIsBatch)
                       .map(store => ({
                         value: get(store, 'id'),
                         label: get(store, 'name'),
@@ -434,8 +437,9 @@ export default Component.extend(I18n, {
                   'parent.selectedTargetStore',
                   function options() {
                     const selectedTargetStore = this.get('parent.selectedTargetStore');
-                    return getDispatchFunctionsForStoreType((selectedTargetStore || {}).type)
-                      .map(func => ({ value: func }));
+                    return getDispatchFunctionsForStoreType(
+                      (selectedTargetStore || {}).type
+                    ).map(func => ({ value: func }));
                   }
                 ),
                 optionsObserver: observer('options.[]', function optionsObserver() {
@@ -460,12 +464,13 @@ export default Component.extend(I18n, {
                 component,
                 name: 'dispatchFunction',
               }),
-              storeContentUpdateOptionsEditors.timeSeries.formElement.extend({
+              storeContentUpdateOptionsEditors.timeSeries.FormElement.extend({
                 contentUpdateDataSpec: reads('parent.value.context.dataSpec'),
                 storeConfig: reads('parent.selectedTargetStore.config'),
                 isVisible: computed('parent.selectedTargetStore', function isVisible() {
                   const selectedTargetStore = this.get('parent.selectedTargetStore');
-                  return selectedTargetStore && get(selectedTargetStore, 'type') === 'timeSeries';
+                  return selectedTargetStore &&
+                    get(selectedTargetStore, 'type') === 'timeSeries';
                 }),
               }).create({
                 name: 'timeSeriesEditor',
@@ -503,7 +508,8 @@ export default Component.extend(I18n, {
           overrideResourcesObserver: observer(
             'valuesSource.resources.overrideResources',
             function overrideResourcesObserver() {
-              const overrideResources = this.get('valuesSource.resources.overrideResources');
+              const overrideResources =
+                this.get('valuesSource.resources.overrideResources');
               const isModified = this.get('isModified');
               if (!overrideResources && isModified) {
                 scheduleOnce('afterRender', this, 'reset');
@@ -583,7 +589,13 @@ export default Component.extend(I18n, {
       mode,
       atmLambdaRevision,
       allStores,
-    } = this.getProperties('onChange', 'fields', 'mode', 'atmLambdaRevision', 'allStores');
+    } = this.getProperties(
+      'onChange',
+      'fields',
+      'mode',
+      'atmLambdaRevision',
+      'allStores'
+    );
 
     if (mode === 'view') {
       return;
@@ -720,7 +732,8 @@ function taskToFormData(task, atmLambdaRevision) {
         leaveUnassignedDropdownOptionValue :
         getValueBuilderTypesForArgType(type, preferredBatchSize > 1)[0];
     }
-    const valueBuilderRecipe = get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
+    const valueBuilderRecipe =
+      get(existingMapping || {}, 'valueBuilder.valueBuilderRecipe');
     const valueBuilderConstValue = valueBuilderType === 'const' ?
       JSON.stringify(valueBuilderRecipe, null, 2) : undefined;
     const valueBuilderStore = valueBuilderType === 'singleValueStoreContent' ?
@@ -768,8 +781,9 @@ function taskToFormData(task, atmLambdaRevision) {
     formResultMappings.__fieldsValueNames.push(valueName);
     const resultType = dataSpecToType(dataSpec).type;
     const timeSeriesEditor = resultType === 'timeSeriesMeasurement' ?
-      storeContentUpdateOptionsEditors.timeSeries.storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) :
-      {};
+      storeContentUpdateOptionsEditors
+      .timeSeries
+      .storeContentUpdateOptionsToFormValues(storeContentUpdateOptions) : {};
 
     formResultMappings[valueName] = createValuesContainer({
       context: {

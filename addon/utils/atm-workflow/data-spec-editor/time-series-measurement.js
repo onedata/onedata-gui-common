@@ -25,8 +25,8 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurement';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const formElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-measurement-dataspec-editor',
+const FormElement = FormFieldsCollectionGroup.extend({
+  classes: 'time-series-measurement-dataspec-editor boxes-collection-layout',
   isDefaultValueIgnored: false,
   i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurement.fields',
   // Does not take parent fields group translation path into account
@@ -159,7 +159,7 @@ function valueConstraintsToFormValues(valueConstraints) {
 }
 
 export default {
-  formElement,
+  FormElement,
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
 };

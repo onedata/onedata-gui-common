@@ -52,7 +52,7 @@ describe('Integration | Utility | atm workflow/store content update options edit
       rootGroup: FormFieldsRootGroup.create({
         ownerSource: this,
         fields: [
-          timeSeriesEditor.formElement.create({
+          timeSeriesEditor.FormElement.create({
             name: 'updateOptionsEditor',
             contentUpdateDataSpec: {
               valueConstraints: {

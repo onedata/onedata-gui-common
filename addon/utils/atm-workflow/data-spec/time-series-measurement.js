@@ -1,5 +1,5 @@
 /**
- * Contains data related to "time series measurement" automation data spec.
+ * Contains data and utils related to "time series measurement" automation data spec.
  *
  * @module utils/atm-workflow/data-spec/time-series-measurement
  * @author Michał Borzęcki
@@ -53,7 +53,7 @@ export const units = [
 
 /**
  * @param {Ember.Service} i18n
- * @param {string} prefixCombiner
+ * @param {string} nameMatcherType
  * @returns {SafeString}
  */
 export function translateNameMatcherType(i18n, nameMatcherType) {
@@ -62,7 +62,7 @@ export function translateNameMatcherType(i18n, nameMatcherType) {
 
 /**
  * @param {Ember.Service} i18n
- * @param {string} prefixCombiner
+ * @param {string} unit
  * @returns {SafeString}
  */
 export function translateUnit(i18n, unit) {

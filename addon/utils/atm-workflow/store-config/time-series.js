@@ -69,6 +69,11 @@ export const metricAggregators = [
   'last',
 ];
 
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} nameGeneratorType
+ * @returns {SafeString}
+ */
 export function translateNameGeneratorType(i18n, nameGeneratorType) {
   const i18nPath = `utils.atmWorkflow.storeConfig.timeSeries.nameGeneratorTypes.${nameGeneratorType}`;
   return i18n.t(i18nPath, {}, { defaultValue: '' });
@@ -76,6 +81,12 @@ export function translateNameGeneratorType(i18n, nameGeneratorType) {
 
 const invertedMetricResolutionsMap = _.invert(metricResolutionsMap);
 
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} metricResolution
+ * @param {{ short: boolean }} options
+ * @returns {SafeString}
+ */
 export function translateMetricResolution(i18n, metricResolution, { short = false } = {}) {
   const metricResolutionName = invertedMetricResolutionsMap[metricResolution];
   const i18nPath = metricResolutionName &&
@@ -83,6 +94,12 @@ export function translateMetricResolution(i18n, metricResolution, { short = fals
   return i18nPath ? i18n.t(i18nPath, {}, { defaultValue: '' }) : '';
 }
 
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} metricAggregator
+ * @param {{ short: boolean }} options
+ * @returns {SafeString}
+ */
 export function translateMetricAggregator(i18n, metricAggregator, { short = false } = {}) {
   const i18nPath =
     `utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${short ? 'short' : 'standard'}.${metricAggregator}`;

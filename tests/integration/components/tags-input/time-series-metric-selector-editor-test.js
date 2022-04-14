@@ -143,8 +143,8 @@ describe('Integration | Component | tags input/time series metric selector edito
   }, aggregatorIdx) => {
     it(`shows presets for "${aggregator}" aggregator`, async function () {
       this.render(hbs `{{tags-input
-          tagEditorComponentName="tags-input/time-series-metric-selector-editor"
-        }}`);
+        tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+      }}`);
 
       await click('.tag-creator-trigger');
       await selectChoose('.aggregator-dropdown', aggregatorName);
@@ -160,10 +160,10 @@ describe('Integration | Component | tags input/time series metric selector edito
 
     it('allows to select presets for "${aggregator}" aggregator', async function () {
       this.render(hbs `{{tags-input
-          tags=tags
-          tagEditorComponentName="tags-input/time-series-metric-selector-editor"
-          onChange=changeSpy
-        }}`);
+        tags=tags
+        tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+        onChange=changeSpy
+      }}`);
 
       await click('.tag-creator-trigger');
       await selectChoose('.aggregator-dropdown', aggregatorName);

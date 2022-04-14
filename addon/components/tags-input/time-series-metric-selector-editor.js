@@ -275,16 +275,16 @@ export default Component.extend(I18n, {
    */
   usedResolutions: computed('selectedTags.[]', function usedResolutions() {
     return new Set((this.get('selectedTags') || []).map((tag) =>
-      `${get(tag, 'value.aggregator')}-${get(tag, 'value.resolution')}`
+      stringifyUsedResolution(get(tag, 'value.aggregator'), get(tag, 'value.resolution'))
     ));
   }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsRootGroup>}
    */
-  fields: computed(function fields() {
+  customMetricFields: computed(function customMetricFields() {
     return FormFieldsRootGroup.extend({
-      i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
+      i18nPrefix: tag `${'component.i18nPrefix'}.customMetricFields`,
       ownerSource: reads('component'),
     }).create({
       component: this,
@@ -330,7 +330,8 @@ export default Component.extend(I18n, {
               const aggregator = get(field, 'component.selectedAggregatorOption.value');
               const errorMsg =
                 String(field.t(`${get(field, 'path')}.errors.notUnique`));
-              return usedResolutions.has(`${aggregator}-${value}`) ? errorMsg : true;
+              return usedResolutions.has(stringifyUsedResolution(aggregator, value)) ?
+                errorMsg : true;
             }, {
               dependentKeys: [
                 'model.field.component.usedResolutions',
@@ -370,7 +371,7 @@ export default Component.extend(I18n, {
     this._super(...arguments);
     this.set('selectedAggregatorOption', this.get('aggregatorOptions')[0]);
     // Mark as modified to show selected resolution conflict from the beginning
-    this.get('fields').getFieldByPath('resolution').markAsModified();
+    this.get('customMetricFields').getFieldByPath('resolution').markAsModified();
   },
 
   didInsertElement() {
@@ -396,20 +397,20 @@ export default Component.extend(I18n, {
     submitCustomMetric() {
       const aggregator = this.get('selectedAggregatorOption.value');
       const {
-        fields,
+        customMetricFields,
         onTagsAdded,
-      } = this.getProperties('fields', 'onTagsAdded');
+      } = this.getProperties('customMetricFields', 'onTagsAdded');
 
-      if (!get(fields, 'isValid')) {
+      if (!get(customMetricFields, 'isValid')) {
         return;
       }
 
-      const fieldsValues = fields.dumpValue();
+      const customMetricFieldsValues = customMetricFields.dumpValue();
       const {
         id,
         resolution,
         retention,
-      } = getProperties(fieldsValues, 'id', 'resolution', 'retention');
+      } = getProperties(customMetricFieldsValues, 'id', 'resolution', 'retention');
 
       const newTag = Tag.create({
         ownerSource: this,
@@ -421,13 +422,17 @@ export default Component.extend(I18n, {
         },
       });
       onTagsAdded([newTag]);
-      fields.getFieldByPath('id').reset();
+      customMetricFields.getFieldByPath('id').reset();
     },
   },
 });
 
 function generateMetricId(aggregator, resolution) {
   return `${aggregator}${presetDataPerResolution[resolution].metricIdResolutionPart}`;
+}
+
+function stringifyUsedResolution(aggregator, resolution) {
+  return `${aggregator}-${resolution}`;
 }
 
 /**

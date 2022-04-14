@@ -30,8 +30,6 @@ import { inject as service } from '@ember/service';
  * @property {Object<number, string>} resolutionToMetricIdMap
  */
 
-const timeSeriesGeneratorsStateReloadInterval = 5000;
-
 export default Component.extend(I18n, createDataProxyMixin('timeSeriesGeneratorsState'), {
   layout,
   classNames: ['time-series-presenter'],
@@ -59,7 +57,7 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
   /**
    * @type {number}
    */
-  timeSeriesGeneratorsStateReloadInterval,
+  timeSeriesGeneratorsStateReloadInterval: 5000,
 
   /**
    * @type {Utils.Looper}
@@ -82,7 +80,7 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
   timeSeriesQueryBatcher: computed(function timeSeriesQueryBatcher() {
     return new QueryBatcher({
       fetchData: (batchedQuery) =>
-        this.get('getStoreContentCallback')({
+        this.getStoreContent({
           type: 'timeSeriesStoreContentBrowseOptions',
           mode: browseModes.slice,
           layout: batchedQuery.metrics,
@@ -103,7 +101,9 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
         'timeSeriesGeneratorsStateUpdater',
         'timeSeriesGeneratorsStateReloadInterval'
       );
-      const updaterIsActive = Boolean(get(timeSeriesGeneratorsStateUpdater, 'interval'));
+      const updaterIsActive = Boolean(
+        get(timeSeriesGeneratorsStateUpdater, 'interval')
+      );
       if (contentMayChange && !updaterIsActive) {
         set(
           timeSeriesGeneratorsStateUpdater,
@@ -173,7 +173,9 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
         }
       }
     });
-    nameGenerators.forEach((nameGenerator) => state[nameGenerator].timeSeriesNames.sort());
+    nameGenerators.forEach((nameGenerator) =>
+      state[nameGenerator].timeSeriesNames.sort()
+    );
 
     return state;
   },
@@ -182,10 +184,20 @@ export default Component.extend(I18n, createDataProxyMixin('timeSeriesGenerators
    * @returns {Promise<AtmTimeSeriesStoreLayoutContentBrowseResult['layout']>}
    */
   async fetchTimeSeriesLayout() {
-    const result = await this.get('getStoreContentCallback')({
+    const result = await this.getStoreContent({
       type: 'timeSeriesStoreContentBrowseOptions',
       mode: browseModes.layout,
     });
     return result && result.layout;
+  },
+
+  /**
+   * @param {AtmStoreContentBrowseOptions} browseOptions
+   * @returns {Promise<AtmStoreContentBrowseResult|null>}
+   */
+  async getStoreContent(browseOptions) {
+    const getStoreContentCallback = this.get('getStoreContentCallback');
+    return getStoreContentCallback ?
+      getStoreContentCallback(browseOptions) : null;
   },
 });

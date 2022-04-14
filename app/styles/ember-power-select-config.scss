@@ -14,8 +14,8 @@ $ember-power-select-opened-border-radius: 0;
 $ember-power-select-dropdown-default-border-radius: $input-border-radius;
 $ember-power-select-selected-background: $ember-power-select-background-color;
 $ember-power-select-option-large-padding-horizontal: $padding-large-horizontal;
-$ember-power-select-option-small-padding-horizontal: 0.8em;
-$ember-power-select-option-small-padding-vertical: $padding-small-vertical + $ember-power-select-border-width;
+$ember-power-select-option-small-padding-horizontal: $control-padding-small-horizontal;
+$ember-power-select-option-small-padding-vertical: $control-padding-small-vertical;
 $ember-power-select-option-small-padding: $ember-power-select-option-small-padding-vertical $ember-power-select-option-small-padding-horizontal;
 
 @import 'ember-power-select';

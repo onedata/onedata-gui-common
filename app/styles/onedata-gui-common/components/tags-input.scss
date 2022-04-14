@@ -217,13 +217,17 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     border-radius: $border-radius-base;
     cursor: pointer;
 
-    &:not(.disabled):hover {
+    &:hover {
       background-color: darken($color-one-light-blue, 5%);
     }
 
     &.disabled {
       color: $main-text-color-disabled;
       cursor: not-allowed;
+
+      &:hover {
+        background-color: initial;
+      }
     }
 
     & ~ .selector-item {

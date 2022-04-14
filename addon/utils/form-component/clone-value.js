@@ -1,7 +1,7 @@
 /**
  * Clones form values (especially whole values trees). Cloning strategy:
- * - value containers are clone into new value containers,
- * - all other values are copied by reference.
+ * - value containers are cloned into new value containers,
+ * - all other values are copied "as is", without cloning.
  *
  * Above approach allows to preserve the same references to objects across
  * multiple value clones which is especially handy in terms of Ember Data models

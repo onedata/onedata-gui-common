@@ -2,57 +2,14 @@
   margin-bottom: 0;
 
   .collection-item {
-    position: relative;
     max-width: 20em;
-    margin-right: $padding-base-vertical * 1.5;
-    margin-bottom: $padding-base-vertical * 1.5;
-    padding: $padding-base-vertical * 1.5;
-    border: 1px solid $main-border-color;
-    border-radius: $border-radius-base;
-    background-color: rgba($color-one-semiwhite, 0.2);
-
-    .control-label {
-      width: 100%;
-      margin-bottom: 5px;
-      text-align: left;
-    }
-
-    .timeSeriesSchema-field + .remove-field-button-container {
-      position: absolute;
-      right: 0.1em;
-      top: 0.4em;
-      display: initial;
-      height: initial;
-    }
-  }
-
-  .form-fields-collection-group > .fields-group-collapse.in {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-  }
-
-  .timeSeriesSchema-field {
-    min-width: 0;
   }
 
   .timeSeriesSchema-children > * {
     flex-wrap: wrap;
   }
 
-  .collection-item + .add-field-button {
-    align-self: center;
-  }
-
-  .add-field-button {
-    margin-bottom: $form-group-margin-bottom;
-  }
-
   @media (min-width: $screen-sm-min) {
-    > .control-label {
-      margin-bottom: $form-group-margin-bottom;
-    }
-
     .timeSeriesSchema-children > .field-renderer {
       margin-bottom: 0;
 

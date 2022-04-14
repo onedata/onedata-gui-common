@@ -25,7 +25,8 @@
         searchEnabled=false
         renderInPlace=true
         verticalPosition="bottom"
-        as |option|}}
+        as |option|
+      }}
         <div class="option-container">
           {{#truncated-string class="text"}}
             {{option.label}}
@@ -77,12 +78,12 @@
         {{/if}}
       {{else}}
         <form class="form form-horizontal form-component">
-          {{form-component/field-renderer field=fields}}
+          {{form-component/field-renderer field=customMetricFields}}
           {{#one-button
             size="sm"
             type="primary"
             class="submit-custom-metric pull-right"
-            disabled=(not fields.isValid)
+            disabled=(not customMetricFields.isValid)
             onClick=(action "submitCustomMetric")
           }}
             {{tt this "submitCustomMetric"}}

@@ -86,7 +86,10 @@ export default Component.extend({
           isExternalTsStoreSourceRef(objectToCheck.functionArguments)
         ) {
           foundSeriesSources.push(
-            objectToCheck.functionArguments.sourceParameters.externalSourceParameters
+            objectToCheck
+            .functionArguments
+            .sourceParameters
+            .externalSourceParameters
           );
         } else if (Array.isArray(objectToCheck)) {
           for (const item of objectToCheck) {
@@ -106,17 +109,25 @@ export default Component.extend({
       // Extract series loaded via dynamic series
       chartSpec.series
         .filter((series) => series && series.factoryName === 'dynamic')
-        .map(({ factoryArguments }) => factoryArguments && factoryArguments.dynamicSeriesConfigs)
-        .filter((dynamicSeriesConfigs) => isExternalTsStoreSourceRef(dynamicSeriesConfigs))
+        .map(({ factoryArguments }) =>
+          factoryArguments && factoryArguments.dynamicSeriesConfigs
+        )
+        .filter((dynamicSeriesConfigs) =>
+          isExternalTsStoreSourceRef(dynamicSeriesConfigs)
+        )
         .forEach((dynamicSeriesConfigs) =>
-          foundSeriesSources.push(dynamicSeriesConfigs.sourceParameters.externalSourceParameters)
+          foundSeriesSources.push(
+            dynamicSeriesConfigs.sourceParameters.externalSourceParameters
+          )
         );
 
       // Map found series sources to resolutions
       const resolutionsPerSource = foundSeriesSources
         .map(({ timeSeriesNameGenerator, metricIds }) =>
           metricIds
-          .map((metricId) => this.getResolutionForMetric(timeSeriesNameGenerator, metricId))
+          .map((metricId) =>
+            this.getResolutionForMetric(timeSeriesNameGenerator, metricId)
+          )
           .filter((res) => typeof res === 'number')
         );
       const sortedCommonResolutions = _.intersection(...resolutionsPerSource)
@@ -253,7 +264,8 @@ export default Component.extend({
     }
 
     const timeSeriesGeneratorsState = this.get('timeSeriesGeneratorsState');
-    return timeSeriesGeneratorsState && timeSeriesGeneratorsState[timeSeriesNameGenerator];
+    return timeSeriesGeneratorsState &&
+      timeSeriesGeneratorsState[timeSeriesNameGenerator];
   },
 
   /**

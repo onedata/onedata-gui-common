@@ -10,8 +10,7 @@ describe('Unit | Utility | form component/values container', function () {
       const container = createValuesContainer();
 
       expect(typeOf(container)).to.equal('instance');
-      const propertyKeys = Object.keys(container)
-        .filter(key => typeof container[key] !== 'function');
+      const propertyKeys = Object.keys(container);
       expect(propertyKeys).to.have.length(0);
     });
   });

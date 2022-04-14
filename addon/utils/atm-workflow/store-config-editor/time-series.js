@@ -32,7 +32,7 @@ import {
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-series-metric-selector-editor';
 
-const formElement = FormFieldsGroup.extend({
+const FormElement = FormFieldsGroup.extend({
   classes: 'time-series-store-config-editor',
   i18nPrefix: 'utils.atmWorkflow.storeConfigEditor.timeSeries.fields',
   // Does not take parent fields group translation path into account
@@ -45,7 +45,7 @@ const formElement = FormFieldsGroup.extend({
 
 const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
   name: 'timeSeriesSchemas',
-  classes: 'nowrap-on-desktop',
+  classes: 'nowrap-on-desktop boxes-collection-layout',
   sizeForChildren: 'sm',
   usedNameGeneratorsSetter: observer(
     'value.__fieldsValueNames',
@@ -56,8 +56,9 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
         this,
         'usedNameGenerators',
         computed(...namePropsPaths, function usedNameGenerators() {
-          return namePropsPaths.map((propPath) => this.get(propPath))
-            .map((name) => (name || '').trim()).filter(Boolean);
+          return namePropsPaths
+            .map((propPath) => (this.get(propPath) || '').trim())
+            .filter(Boolean);
         })
       );
 
@@ -103,11 +104,11 @@ const timeSeriesSchemasField = FormFieldsCollectionGroup.extend({
               const errorMsg = String(field.getTranslation('errors.notUnique'));
               const usedNameGenerators = get(model, 'field.parent.parent.usedNameGenerators');
               return usedNameGenerators
-                .map((usedNameGenerator) => usedNameGenerator.trim())
-                .filter((usedNameGenerator) =>
-                  usedNameGenerator.startsWith(trimmedValue) ||
-                  trimmedValue.startsWith(usedNameGenerator)
-                ).length <= 1 ? true : errorMsg;
+                .filter((usedNameGenerator) => {
+                  const trimmedUsedNameGenerator = usedNameGenerator.trim();
+                  return trimmedUsedNameGenerator.startsWith(trimmedValue) ||
+                    trimmedValue.startsWith(trimmedUsedNameGenerator);
+                }).length <= 1 ? true : errorMsg;
             }, {
               dependentKeys: ['model.field.parent.parent.usedNameGenerators'],
             }),
@@ -300,7 +301,7 @@ function storeConfigToFormValues(storeConfig) {
 }
 
 export default {
-  formElement,
+  FormElement,
   formValuesToStoreConfig,
   storeConfigToFormValues,
 };

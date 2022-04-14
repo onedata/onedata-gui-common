@@ -241,6 +241,14 @@ import { conditional, and, equal, raw, getBy, notEmpty, writable, or } from 'emb
 import { A } from '@ember/array';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 
+/**
+ * @typedef {'md'|'sm'} FormElementSize
+ */
+
+/**
+ * @typedef {'view'|'edit'} FormElementMode
+ */
+
 export default EmberObject.extend(OwnerInjector, I18n, {
   i18n: service(),
 
@@ -330,7 +338,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   /**
    * Can be modified only via `changeMode()`
-   * @type {string}
+   * @type {FormElementMode}
    */
   mode: 'edit',
 
@@ -366,13 +374,13 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * NOTE: Due to the styling strategy, all nested fields of the element, which has size
    * 'sm', will be mostly rendered as small regardless their own size value.
    * @virtual optional
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<FormElementSize>}
    */
   size: writable(or('parent.sizeForChildren', raw('md'))),
 
   /**
    * @virtual optional
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<FormElementSize>}
    */
   sizeForChildren: reads('size'),
 
@@ -527,7 +535,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   /**
    * @public
-   * @param {string} mode one of: 'edit', 'show'
+   * @param {FormElementMode} mode
    * @returns {undefined}
    */
   changeMode(mode) {

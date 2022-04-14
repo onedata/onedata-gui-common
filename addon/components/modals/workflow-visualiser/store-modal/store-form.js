@@ -163,8 +163,8 @@ export default Component.extend(I18n, {
     function passedStoreFormValues() {
       const defaultStoreType = this.getTypeFieldOptions()[0].value;
       return storeToFormData(this.get('store'), {
-        defaultType: this.getTypeFieldOptions()[0].value,
-        defaultDataType: this.getDataTypeFieldOptions(defaultStoreType).mapBy('value')[0],
+        defaultType: defaultStoreType,
+        defaultDataType: (this.getDataTypeFieldOptions(defaultStoreType)[0] || {}).value,
       });
     }
   ),
@@ -493,7 +493,7 @@ export default Component.extend(I18n, {
     }).create({
       name: 'timeSeriesStoreConfig',
       fields: [
-        storeConfigEditors.timeSeries.formElement.create({
+        storeConfigEditors.timeSeries.FormElement.create({
           name: 'configEditor',
         }),
       ],

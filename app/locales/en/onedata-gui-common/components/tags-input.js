@@ -57,7 +57,7 @@ export default {
       equivalentExists: 'Metric with the same resolution already exists',
       idExists: 'Metric with the same ID already exists',
     },
-    fields: {
+    customMetricFields: {
       id: {
         label: 'ID',
         errors: {
