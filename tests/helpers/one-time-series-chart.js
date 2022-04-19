@@ -98,7 +98,7 @@ export function expectNoChartDataToShow() {
   const plot = find('.one-time-series-chart-plot');
   const canvasArea = plot.querySelector('.canvas-area');
   expect(canvasArea.children).to.have.length(1);
-  expect([...plot.classList]).to.include('no-data');
+  expect(plot).to.have.class('no-data');
   expect(canvasArea.textContent.trim()).to.equal('There is no data to show.');
 }
 

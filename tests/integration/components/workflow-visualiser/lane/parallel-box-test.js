@@ -210,18 +210,18 @@ function itRendersNestedElements() {
     const space3Element = elements[4];
     expect(elements).to.have.length(5);
     expect(space1Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
-    expect(space1Element.getAttribute('data-element-before-id')).to.be.null;
-    expect(space1Element.getAttribute('data-element-after-id')).to.equal('t1');
+    expect(space1Element).to.not.have.attr('data-element-before-id');
+    expect(space1Element).to.have.attr('data-element-after-id', 't1');
     expect(task1Element.textContent).to.contain('task1');
     expect(task1Element.matches('.workflow-visualiser-task')).to.be.true;
     expect(space2Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
-    expect(space2Element.getAttribute('data-element-before-id')).to.equal('t1');
-    expect(space2Element.getAttribute('data-element-after-id')).to.equal('t2');
+    expect(space2Element).to.have.attr('data-element-before-id', 't1');
+    expect(space2Element).to.have.attr('data-element-after-id', 't2');
     expect(task2Element.textContent).to.contain('task2');
     expect(task2Element.matches('.workflow-visualiser-task')).to.be.true;
     expect(space3Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
-    expect(space3Element.getAttribute('data-element-before-id')).to.equal('t2');
-    expect(space3Element.getAttribute('data-element-after-id')).to.be.null;
+    expect(space3Element).to.have.attr('data-element-before-id', 't2');
+    expect(space3Element).to.not.have.attr('data-element-after-id');
     done();
   });
 }

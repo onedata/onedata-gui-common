@@ -500,5 +500,5 @@ function getGlobalModal() {
 
 function isGlobalModalOpened() {
   const modal = getGlobalModal();
-  return Boolean(modal) && [...modal.classList].includes('in');
+  return Boolean(modal) && modal.matches('.in');
 }

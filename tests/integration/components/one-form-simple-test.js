@@ -5,7 +5,6 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, blur, fillIn, focus, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 const errorMsg = 'error!';
 
@@ -60,7 +59,7 @@ describe('Integration | Component | one form simple', function () {
 
     const firstField = find('.field-main-first');
     const firstFieldMsg =
-      $(firstField).parents('.form-group')[0].querySelector('.form-message');
+      firstField.closest('.form-group').querySelector('.form-message');
     expect(firstFieldMsg.textContent.trim(), 'field has no error before value change')
       .to.be.empty;
 
@@ -80,7 +79,7 @@ describe('Integration | Component | one form simple', function () {
 
     const firstField = find('.field-main-first');
     const firstFieldMsg =
-      $(firstField).parents('.form-group')[0].querySelector('.form-message');
+      firstField.closest('.form-group').querySelector('.form-message');
     expect(firstFieldMsg.textContent, 'field has no error before value change')
       .to.be.empty;
 
@@ -102,7 +101,7 @@ describe('Integration | Component | one form simple', function () {
     const newErrorMsg = 'error2!';
     const firstField = find('.field-main-first');
     const firstFieldMsg =
-      $(firstField).parents('.form-group')[0].querySelector('.form-message');
+      firstField.closest('.form-group').querySelector('.form-message');
 
     this.get('fakeValidations.errors')[0].set('message', newErrorMsg);
     await focus(firstField);

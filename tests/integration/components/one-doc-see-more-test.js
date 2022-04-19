@@ -39,8 +39,8 @@ describe('Integration | Component | one doc see more', function () {
     await render(hbs `
       {{one-doc-see-more linkName="hello" href="http://example.com"}}
     `);
-    expect(find('.documentation-link').getAttribute('href'))
-      .to.equal('http://example.com');
+    expect(find('.documentation-link'))
+      .to.have.attr('href', 'http://example.com');
   });
 
   it('renders text with parenthesis in internal mode without spaces around', async function () {

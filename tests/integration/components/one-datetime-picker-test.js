@@ -35,7 +35,7 @@ describe('Integration | Component | one datetime picker', function () {
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.waitForPickerInit(clock)
       .then(() =>
-        expect(pickerHelper.getPickerElement()[0]).to.not.exist
+        expect(pickerHelper.getPickerElement()).to.not.exist
       );
   });
 
@@ -55,7 +55,7 @@ describe('Integration | Component | one datetime picker', function () {
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
       .then(() =>
-        expect(pickerHelper.getPickerElement()[0]).to.have.class('datetime-picker')
+        expect(pickerHelper.getPickerElement()).to.have.class('datetime-picker')
       );
   });
 
@@ -80,7 +80,7 @@ describe('Integration | Component | one datetime picker', function () {
     const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
       .then(() =>
-        expect(pickerHelper.getPickerElement()[0]).to.not.exist
+        expect(pickerHelper.getPickerElement()).to.not.exist
       );
   });
 

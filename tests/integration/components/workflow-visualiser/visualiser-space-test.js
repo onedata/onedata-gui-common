@@ -31,8 +31,7 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
 
         await render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
 
-        expect(find('.workflow-visualiser-space').getAttribute(htmlAttrForSibling))
-          .to.be.null;
+        expect(find('.workflow-visualiser-space')).to.not.have.attr(htmlAttrForSibling);
       });
 
     it(`has specified "${htmlAttrForSibling}" attribute when "${siblingName}" is specified`, async function () {
@@ -45,8 +44,8 @@ describe('Integration | Component | workflow visualiser/visualiser space', funct
 
       await render(hbs `{{workflow-visualiser/visualiser-space elementModel=space}}`);
 
-      expect(find('.workflow-visualiser-space').getAttribute(htmlAttrForSibling))
-        .to.equal(elementId);
+      expect(find('.workflow-visualiser-space'))
+        .to.have.attr(htmlAttrForSibling, elementId);
     });
   });
 });

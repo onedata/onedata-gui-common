@@ -95,7 +95,7 @@ describe('Integration | Component | query builder/block settings', function () {
 
       await click('.surround-section .operator-and');
       await waitUntil(() =>
-        ![...document.querySelector('.webui-popover').classList].includes('in')
+        !document.querySelector('.webui-popover').matches('.in')
       );
 
       expect(replaceSpy).to.be.calledOnce;
@@ -134,7 +134,7 @@ describe('Integration | Component | query builder/block settings', function () {
 
       await click('.change-to-section .operator-and');
       await waitUntil(() =>
-        ![...document.querySelector('.webui-popover').classList].includes('in')
+        !document.querySelector('.webui-popover').matches('.in')
       );
 
       expect(replaceSpy).to.be.calledOnce;

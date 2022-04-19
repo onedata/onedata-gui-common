@@ -33,8 +33,8 @@ describe('Integration | Component | form component/capacity field', function () 
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
     expect(find('.size-number-input').disabled).to.be.true;
-    expect(find('.ember-power-select-trigger').getAttribute('aria-disabled'))
-      .to.equal('true');
+    expect(find('.ember-power-select-trigger'))
+      .to.have.attr('aria-disabled', 'true');
   });
 
   it('notifies field object about lost focus', async function () {

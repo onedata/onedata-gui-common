@@ -19,10 +19,8 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
     async function () {
       await render(hbs `{{workflow-visualiser/visualiser-element}}`);
 
-      expect(
-        find('.workflow-visualiser-element')
-        .getAttribute('data-visualiser-element-id')
-      ).to.be.null;
+      expect(find('.workflow-visualiser-element'))
+        .to.not.have.attr('data-visualiser-element-id');
     });
 
   it('has specified "data-visualiser-element-id" attribute when "visualiserElement" is specified',
@@ -34,9 +32,8 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
 
       await render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
 
-      expect(
-        find('.workflow-visualiser-element').getAttribute('data-visualiser-element-id')
-      ).to.equal(elementId);
+      expect(find('.workflow-visualiser-element'))
+        .to.have.attr('data-visualiser-element-id', elementId);
     });
 
   ['view', 'edit'].forEach(mode => {

@@ -39,7 +39,7 @@ describe('Integration | Component | form component/tags field', function () {
 
       await render(hbs `{{form-component/tags-field field=field}}`);
 
-      expect(find('.tags-input').getAttribute('disabled')).to.be.not.null;
+      expect(find('.tags-input')).to.have.attr('disabled');
     }
   );
 

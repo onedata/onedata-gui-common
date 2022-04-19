@@ -113,7 +113,7 @@ describe('Integration | Component | provider place', function () {
     await render(hbs `{{provider-place provider=provider}}`);
     const providerPlace = find('.provider-place');
     expect(providerPlace).to.exist;
-    expect(providerPlace, providerPlace.classList).to.have.class('online');
+    expect(providerPlace).to.have.class('online');
   });
 
   it('resizes with parent one-atlas component', async function () {

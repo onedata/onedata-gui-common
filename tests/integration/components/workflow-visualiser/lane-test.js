@@ -292,18 +292,18 @@ function itRendersLaneElements() {
     const space3Element = elements[4];
     expect(elements).to.have.length(5);
     expect(space1Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
-    expect(space1Element.getAttribute('data-element-before-id')).to.be.null;
-    expect(space1Element.getAttribute('data-element-after-id')).to.equal('b1');
+    expect(space1Element).to.not.have.attr('data-element-before-id');
+    expect(space1Element).to.have.attr('data-element-after-id', 'b1');
     expect(block1Element.textContent.trim()).to.contain('block1');
     expect(block1Element.matches('.workflow-visualiser-parallel-box')).to.be.true;
     expect(space2Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
-    expect(space2Element.getAttribute('data-element-before-id')).to.equal('b1');
-    expect(space2Element.getAttribute('data-element-after-id')).to.equal('b2');
+    expect(space2Element).to.have.attr('data-element-before-id', 'b1');
+    expect(space2Element).to.have.attr('data-element-after-id', 'b2');
     expect(block2Element.textContent.trim()).to.contain('block2');
     expect(block2Element.matches('.workflow-visualiser-parallel-box')).to.be.true;
     expect(space3Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
-    expect(space3Element.getAttribute('data-element-before-id')).to.equal('b2');
-    expect(space3Element.getAttribute('data-element-after-id')).to.be.null;
+    expect(space3Element).to.have.attr('data-element-before-id', 'b2');
+    expect(space3Element).to.not.have.attr('data-element-after-id');
     done();
   });
 }

@@ -1498,7 +1498,7 @@ async function renderComponent() {
 
 async function toggleOverrideResources(value) {
   const overrideToggle = find('.overrideResources-field .one-way-toggle');
-  if (value !== [...overrideToggle.classList].includes('checked')) {
+  if (value !== overrideToggle.matches('.checked')) {
     await click(overrideToggle);
   }
 }

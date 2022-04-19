@@ -8,23 +8,22 @@ import $ from 'jquery';
 describe('Integration | Component | one collapsible toolbar', function () {
   setupRenderingTest();
 
-  // TODO: does not run under xvfb. To check.
-  // it('renders in full version in large container', async function () {
-  //   await render(hbs`
-  //     <div class="bla" style="width: 1000px">
-  //       {{#one-collapsible-toolbar as |toolbar|}}
-  //         {{#toolbar.item}}
-  //           Button
-  //         {{/toolbar.item}}
-  //       {{/one-collapsible-toolbar}}
-  //     </div>
-  //   `);
-  //
-  //   expect($(find('.collapsible-toolbar-buttons')), 'buttons are visible')
-  //     .to.be.visible;
-  //   expect($(find('.collapsible-toolbar-toggle')), 'toggle is hidden')
-  //     .to.be.hidden;
-  // });
+  it('renders in full version in large container', async function () {
+    await render(hbs `
+      <div class="bla" style="width: 1000px">
+        {{#one-collapsible-toolbar as |toolbar|}}
+          {{#toolbar.item}}
+            Button
+          {{/toolbar.item}}
+        {{/one-collapsible-toolbar}}
+      </div>
+    `);
+
+    expect($(find('.collapsible-toolbar-buttons')).is(':visible'), 'buttons are visible')
+      .to.be.true;
+    expect($(find('.collapsible-toolbar-toggle')).is(':hidden'), 'toggle is hidden')
+      .to.be.true;
+  });
 
   it('renders in minimized version in small container', async function () {
     await render(hbs `

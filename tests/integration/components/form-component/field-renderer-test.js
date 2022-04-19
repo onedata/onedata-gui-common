@@ -35,7 +35,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     const label = find('label');
     expect(label.textContent.trim()).to.equal('someLabel:');
-    expect(label.getAttribute('for')).to.equal(find('input').id);
+    expect(label).to.have.attr('for', find('input').id);
   });
 
   it('does not render label if "label" is not specified in field', async function () {

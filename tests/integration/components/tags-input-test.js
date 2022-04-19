@@ -271,7 +271,7 @@ describe('Integration | Component | tags input', function () {
       }}`);
 
       const tagsInput = find('.tags-input');
-      expect(tagsInput.getAttribute('disabled')).to.be.not.null;
+      expect(tagsInput).to.have.attr('disabled');
       expect(find('.tag-creator-trigger')).to.not.exist;
       expect(find('.tag-remove')).to.not.exist;
 

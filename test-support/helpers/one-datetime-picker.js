@@ -1,6 +1,5 @@
 import { settled, click, focus } from '@ember/test-helpers';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 export default class OneDatetimePickerHelper {
   constructor(trigger) {
@@ -32,11 +31,11 @@ export default class OneDatetimePickerHelper {
 
   selectToday() {
     return this.openPicker()
-      .then(() => click($('.datetime-picker .xdsoft_today')[0]));
+      .then(() => click(document.querySelector('.datetime-picker .xdsoft_today')));
   }
 
   getPickerElement() {
-    return $('.xdsoft_datetimepicker');
+    return document.querySelector('.xdsoft_datetimepicker');
   }
 
   createFakeClock() {
