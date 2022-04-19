@@ -1,9 +1,9 @@
 /**
  * Fetch and set `Application.guiContext` object with gui context data.
- * 
+ *
  * Also creates `Application.getOnedataConfig(): Promise<Object>` method for accessing
  * the config in other modules.
- * 
+ *
  * @module initializers/fetch-gui-context
  * @author Jakub Liput
  * @copyright (C) 2016-2020 ACK CYFRONET AGH
@@ -18,13 +18,13 @@ import config from 'ember-get-config';
 /**
  * Checks if we are in environment that needs to create development model.
  * Ported from onedata-gui-websocket-client
- * 
+ *
  * @export
  * @param {object} config Ember application config, get it with: `ember-get-config`
  * @returns {boolean}
  */
 export function isDevelopment(config) {
-  let {
+  const {
     APP: {
       MOCK_BACKEND,
     },

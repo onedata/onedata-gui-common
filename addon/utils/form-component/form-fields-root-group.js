@@ -1,7 +1,7 @@
 /**
  * A container for all form elements - root group. To work properly it should have
  * specified 'ownerSource' and 'i18nPrefix'.
- * 
+ *
  * @module utils/form-component/form-fields-root-group
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -9,7 +9,8 @@
  */
 
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import EmberObject, { set, get } from '@ember/object';
+import { set, get } from '@ember/object';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 export default FormFieldsGroup.extend({
   /**
@@ -28,6 +29,11 @@ export default FormFieldsGroup.extend({
    * @override
    */
   path: '',
+
+  /**
+   * @override
+   */
+  translationPath: '',
 
   /**
    * @override
@@ -61,7 +67,7 @@ export default FormFieldsGroup.extend({
       valuePath.split('.').slice(0, -1).forEach(pathElement => {
         let nextTargetValuesObject = get(targetValuesObject, pathElement);
         if (!nextTargetValuesObject) {
-          nextTargetValuesObject = EmberObject.create();
+          nextTargetValuesObject = createValuesContainer();
           set(targetValuesObject, pathElement, nextTargetValuesObject);
         }
         targetValuesObject = nextTargetValuesObject;

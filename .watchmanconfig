@@ -1,3 +1,1 @@
-{
-  "ignore_dirs": ["tmp", "dist"]
-}
+./onedata-gui-utils/project-common/.watchmanconfig

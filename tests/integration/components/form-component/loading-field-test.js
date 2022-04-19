@@ -88,4 +88,22 @@ describe('Integration | Component | form component/loading field', function () {
       expect(find('.loading-field *')).to.not.exist;
     }
   );
+
+  [
+    ['md', 'xs'],
+    ['sm', 'xxs'],
+  ].forEach(([size, spinnerClass]) => {
+    it(`uses "${spinnerClass}" spinner size for "${size}" field size`, async function () {
+      setProperties(this.get('field'), {
+        loadingProxy: PromiseObject.create({
+          promise: new Promise(() => {}),
+        }),
+        size: size,
+      });
+
+      await render(hbs `{{form-component/loading-field field=field}}`);
+
+      expect(find('.spinner-container')).to.have.class(spinnerClass);
+    });
+  });
 });

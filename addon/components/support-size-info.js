@@ -72,7 +72,7 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   _tipVisible: computed('mode', 'chartHeaderTip', 'tableHeaderTip', function () {
-    let {
+    const {
       mode,
       chartHeaderTip,
       tableHeaderTip,
@@ -85,7 +85,7 @@ export default Component.extend(I18n, {
    * @type {computed.Ember.Array.SupportSizeEntry}
    */
   supportTableData: computed('data', function () {
-    let data = this.get('data');
+    const data = this.get('data');
     return A(data.map((series) => EmberObject.create({
       supporterName: series.get('label'),
       supportSize: series.get('value'),
@@ -97,7 +97,7 @@ export default Component.extend(I18n, {
    * @type {computed.Number}
    */
   totalSize: computed('data.@each.value', function () {
-    let data = this.get('data');
+    const data = this.get('data');
     if (data.length === 0) {
       return 0;
     }

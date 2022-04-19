@@ -56,7 +56,7 @@ export function dataSpecToType(dataSpec) {
   return { type, isArray };
 }
 
-export function typeToDataSpec({ type, isArray }) {
+export function typeToDataSpec({ type, isArray, customValueConstraints }) {
   let dataSpec;
   if (type in typeToDataSpecConstraintsMapping.file) {
     dataSpec = {
@@ -76,7 +76,7 @@ export function typeToDataSpec({ type, isArray }) {
   } else {
     dataSpec = {
       type,
-      valueConstraints: {},
+      valueConstraints: customValueConstraints || {},
     };
   }
   return isArray ? {
@@ -88,6 +88,9 @@ export function typeToDataSpec({ type, isArray }) {
 }
 
 export function getTargetStoreTypesForType(type, isBatch) {
+  if (type === 'timeSeriesMeasurement') {
+    return ['timeSeries'];
+  }
   const targetTypes = ['list', 'auditLog'];
   if (!isBatch) {
     targetTypes.push('singleValue');
@@ -137,6 +140,8 @@ export function getStoreWriteDataSpec({ type, config }) {
       return config && config.itemDataSpec || null;
     case 'range':
       return { type: 'range', valueConstraints: {} };
+    case 'timeSeries':
+      return { type: 'timeSeriesMeasurement', valueConstraints: {} };
     default:
       return null;
   }

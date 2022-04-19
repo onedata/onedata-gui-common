@@ -3,7 +3,8 @@ import { describe, it } from 'mocha';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import { A } from '@ember/array';
-import EmberObject, { get, set } from '@ember/object';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import { get, set } from '@ember/object';
 import sinon from 'sinon';
 import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
@@ -22,8 +23,8 @@ describe(
     it(
       'adds field through addNewField() (with usage of fieldFactoryMethod())',
       function () {
-        const valuesSource = EmberObject.create({
-          collection: EmberObject.create(),
+        const valuesSource = createValuesContainer({
+          collection: createValuesContainer(),
         });
         const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
         const collectionGroup = FormFieldsCollectionGroup.extend({
@@ -63,8 +64,8 @@ describe(
       'removes specified field through removeField()',
       function () {
         const changeSpy = sinon.spy(value => set(valuesSource, 'collection', value));
-        const valuesSource = EmberObject.create({
-          collection: EmberObject.create({
+        const valuesSource = createValuesContainer({
+          collection: createValuesContainer({
             collectionEntry0: 'val0',
             __fieldsValueNames: ['collectionEntry0'],
           }),
@@ -97,8 +98,8 @@ describe(
     it(
       'automatically adds fields when value is mentioning them',
       function () {
-        const valuesSource = EmberObject.create({
-          collection: EmberObject.create({
+        const valuesSource = createValuesContainer({
+          collection: createValuesContainer({
             collectionEntry0: 'val0',
             collectionEntry1: 'val1',
             __fieldsValueNames: ['collectionEntry0', 'collectionEntry1'],
@@ -135,8 +136,8 @@ describe(
     it(
       'automatically removes fields when value is not mentioning them',
       function () {
-        const valuesSource = EmberObject.create({
-          collection: EmberObject.create({
+        const valuesSource = createValuesContainer({
+          collection: createValuesContainer({
             collectionEntry0: 'val0',
             __fieldsValueNames: ['collectionEntry0'],
           }),

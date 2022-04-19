@@ -1,0 +1,18 @@
+.time-series-store-content-update-options-editor {
+  margin-bottom: 0;
+
+  .collection-item {
+    min-width: 0;
+    max-width: 15em;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .dispatchRule-children > .field-renderer {
+      margin-bottom: 0;
+
+      &:first-child .control-label {
+        padding-top: 0;
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 /**
  * A circle representing a provider on world map.
- * 
+ *
  * @module components/provider-place
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2019 ACK CYFRONET AGH
@@ -45,7 +45,7 @@ export default Component.extend(I18n, {
 
   /**
    * Scale factor for circle size
-   * @type {number} 
+   * @type {number}
    */
   circleSizeScale: 1,
 
@@ -74,7 +74,7 @@ export default Component.extend(I18n, {
   /**
    * @type {function}
    * @param {Onezone.ProviderDetails} provider
-   * @return {undefined}
+   * @returns {undefined}
    */
   providerSelectedAction: () => {},
 

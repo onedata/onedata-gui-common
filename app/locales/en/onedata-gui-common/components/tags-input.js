@@ -43,4 +43,37 @@ export default {
     },
     addId: 'Add ID',
   },
+  timeSeriesMetricEditor: {
+    tag: {
+      unknownId: 'Unknown ID',
+      retention: '{{retention}} samp.',
+    },
+    view: {
+      presets: 'Presets',
+      custom: 'Custom',
+    },
+    allPresetsUsed: 'All presets are already used.',
+    disabled: {
+      equivalentExists: 'Metric with the same resolution already exists',
+      idExists: 'Metric with the same ID already exists',
+    },
+    customMetricFields: {
+      id: {
+        label: 'ID',
+        errors: {
+          notUnique: 'This ID is already used',
+        },
+      },
+      resolution: {
+        label: 'Resolution',
+        errors: {
+          notUnique: 'This resolution is already used for selected aggregator',
+        },
+      },
+      retention: {
+        label: 'Retention',
+      },
+    },
+    submitCustomMetric: 'Add',
+  },
 };

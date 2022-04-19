@@ -40,12 +40,12 @@ function getTreeSumedValue(tree, useAnd) {
 
 describe('Unit | Utility | privileges array to object', function () {
   it('marks privileges as true if available', function () {
-    let result = privilegesArrayToObject(flatFlags, groupedFlags);
+    const result = privilegesArrayToObject(flatFlags, groupedFlags);
     expect(getTreeSumedValue(result, true)).to.be.true;
   });
 
   it('marks privileges as false if not available', function () {
-    let result = privilegesArrayToObject([], groupedFlags);
+    const result = privilegesArrayToObject([], groupedFlags);
     expect(getTreeSumedValue(result, false)).to.be.false;
   });
 });

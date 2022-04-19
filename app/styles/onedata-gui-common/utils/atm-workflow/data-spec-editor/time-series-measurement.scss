@@ -1,0 +1,23 @@
+.time-series-measurement-dataspec-editor {
+  .collection-item {
+    max-width: 20em;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .measurementSpec-children > .field-renderer {
+      margin-bottom: 0;
+
+      &:first-child .control-label {
+        padding-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .measurementSpec-children > .field-renderer {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

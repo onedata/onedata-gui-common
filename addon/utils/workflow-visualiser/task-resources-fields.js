@@ -89,8 +89,8 @@ function createTaskResourcesFieldsSubgroup({
   pathToGroup,
   resourceName,
   fieldClass,
-  requestedDefaultValueMixin,
-  limitDefaultValueMixin,
+  requestedDefaultValueMixin = {},
+  limitDefaultValueMixin = {},
   requestedValueComparatorToZero = 'gt',
   additionalFieldProps = {},
 }) {

@@ -11,7 +11,7 @@
  * Makes `innerElement` fixed to be fully stretched below `topElement`
  * and fully streched to the right from `leftElement`.
  * Can be used without top or left element.
- * 
+ *
  * @export
  * @param {JQuery} $topElement
  * @param {JQuery} $leftElement
@@ -35,7 +35,7 @@ export default function bindElementTop({
     staticCss.top = 0;
   }
   $innerElement.css(staticCss);
-  let __resizeFun = () => {
+  const __resizeFun = () => {
     if ($topElement && $topElement.length) {
       $innerElement.css(
         'top',

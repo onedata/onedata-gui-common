@@ -1,13 +1,16 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
- * A mixin that provides fields tree operations for the one-dynamic-tree 
+ * A mixin that provides fields tree operations for the one-dynamic-tree
  * component. To store data about fields, a tree data structure is used.
  * That tree has properties:
  * * each leaf is a field (field state representation),
  * * fields are placed in tree using tree definition. E.g. if field 'name'
- *   is in branch 'basic' of 'user', then it can be found by 
+ *   is in branch 'basic' of 'user', then it can be found by
  *   `this.get('_fieldsTree.user.basic.name')`.
  * * fields have `_isField: true`, parents do not.
- * 
+ *
  * @module mixins/components/one-dynamic-tree/fields-tree
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -42,7 +45,7 @@ export default Mixin.create({
 
   /**
    * Marks a field (identified by path) as modified.
-   * @param {string} path A path to the modified field in fields tree. 
+   * @param {string} path A path to the modified field in fields tree.
    */
   _markFieldAsModified(path) {
     this.set(`_fieldsTree.${path}.changed`, true);
@@ -52,12 +55,12 @@ export default Mixin.create({
    * Creates new fields tree from definition.
    */
   _buildFieldsTree() {
-    let definition = this.get('definition');
-    let prepareNodeFields = (node, parentName) => {
-      let name = parentName + (parentName ? '.' : '') + node.name;
+    const definition = this.get('definition');
+    const prepareNodeFields = (node, parentName) => {
+      const name = parentName + (parentName ? '.' : '') + node.name;
       if (!node.subtree) {
         if (node.field) {
-          let field = EmberObject.create(node.field);
+          const field = EmberObject.create(node.field);
           field.setProperties({
             _isField: true,
             name: name,
@@ -69,9 +72,9 @@ export default Mixin.create({
           return undefined;
         }
       } else {
-        let fields = EmberObject.create();
+        const fields = EmberObject.create();
         node.subtree.forEach((subnode) => {
-          let subnodeFields = prepareNodeFields(subnode, name);
+          const subnodeFields = prepareNodeFields(subnode, name);
           if (subnodeFields !== undefined) {
             fields.set(subnode.name, subnodeFields);
           }
@@ -79,11 +82,11 @@ export default Mixin.create({
         return Object.keys(fields).length > 0 ? fields : undefined;
       }
     };
-    let tmpRoot = {
+    const tmpRoot = {
       name: '',
       subtree: definition,
     };
-    let fields = prepareNodeFields(tmpRoot, '');
+    const fields = prepareNodeFields(tmpRoot, '');
     return fields;
   },
 
@@ -93,7 +96,7 @@ export default Mixin.create({
    * (and all subnodes) will be reset.
    */
   _resetFieldsTree(path) {
-    let resetNode = (node) => {
+    const resetNode = (node) => {
       if (node.get('_isField')) {
         this._resetField(node);
       } else {

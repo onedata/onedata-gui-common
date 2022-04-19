@@ -9,9 +9,11 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import EmberObject, { computed, observer, set, get, getProperties } from '@ember/object';
-import { array, raw, isEmpty, conditional, notEmpty, gt } from 'ember-awesome-macros';
+import { computed, observer, set, get, getProperties } from '@ember/object';
+import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
+import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 export default FormElement.extend({
   /**
@@ -44,6 +46,16 @@ export default FormElement.extend({
   isExpanded: true,
 
   /**
+   * Controls source of data used in `dumpDefaultValue` method.
+   * When true: it will use default values from nested fields.
+   * When false: it will use `defaultValue` property. If it is undefined, then
+   * default values of nested fields will be used.
+   * @virtual optional
+   * @type {boolean}
+   */
+  isDefaultValueIgnored: true,
+
+  /**
    * Set by `fieldsModeObserver`
    * @type {String}
    */
@@ -57,26 +69,26 @@ export default FormElement.extend({
   /**
    * @override
    */
-  mode: conditional(
-    notEmpty('fields'),
-    'fieldsMode',
-    'modeWhenNoFields'
-  ),
+  mode: computed('fields.length', 'fieldMode', 'modeWhenNoFields', function mode() {
+    const {
+      fields,
+      fieldsMode,
+      modeWhenNoFields,
+    } = this.getProperties('fields', 'fieldsMode', 'modeWhenNoFields');
+    return (fields || []).length ? fieldsMode : modeWhenNoFields;
+  }),
 
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  fieldsMode: conditional(
-    notEmpty('fields'),
-    conditional(
-      gt(array.length(
-        array.uniq(array.mapBy('fields', raw('mode')))
-      ), 1),
-      raw('mixed'),
-      'fields.firstObject.mode'
-    ),
-    raw(undefined)
-  ),
+  fieldsMode: computed('fields.@each.mode', function fieldsMode() {
+    const fields = this.get('fields') || [];
+    if (fields.length) {
+      return fields.uniqBy('mode').length > 1 ? 'mixed' : get(fields[0], 'mode');
+    } else {
+      return undefined;
+    }
+  }),
 
   /**
    * @override
@@ -162,29 +174,55 @@ export default FormElement.extend({
    * @override
    */
   dumpDefaultValue() {
-    return this.get('fields').reduce((valuesAggregator, field) => {
-      const {
-        valueName,
-        isValueless,
-      } = getProperties(field, 'valueName', 'isValueless');
-      const fieldDefaultValue = field.dumpDefaultValue();
-      if (!isValueless && fieldDefaultValue !== undefined) {
-        set(valuesAggregator, valueName, fieldDefaultValue);
-      }
-      return valuesAggregator;
-    }, EmberObject.create());
+    const {
+      defaultValue,
+      isDefaultValueIgnored,
+      fields,
+    } = this.getProperties('defaultValue', 'isDefaultValueIgnored', 'fields');
+
+    if (!isDefaultValueIgnored && defaultValue !== undefined) {
+      return cloneValue(defaultValue);
+    } else {
+      return fields.reduce((valuesContainer, field) => {
+        const {
+          valueName,
+          isValueless,
+        } = getProperties(field, 'valueName', 'isValueless');
+        const fieldDefaultValue = field.dumpDefaultValue();
+        if (!isValueless && fieldDefaultValue !== undefined) {
+          set(valuesContainer, valueName, fieldDefaultValue);
+        }
+        return valuesContainer;
+      }, createValuesContainer());
+    }
   },
 
   /**
    * @override
    */
   dumpValue() {
-    return this.get('fields').reduce((valuesAggregator, field) => {
+    return this.get('fields').reduce((valuesContainer, field) => {
       if (!get(field, 'isValueless')) {
-        set(valuesAggregator, get(field, 'valueName'), field.dumpValue());
+        set(valuesContainer, get(field, 'valueName'), field.dumpValue());
       }
-      return valuesAggregator;
-    }, EmberObject.create());
+      return valuesContainer;
+    }, createValuesContainer());
+  },
+
+  /**
+   * @override
+   */
+  useCurrentValueAsDefault() {
+    const {
+      isDefaultValueIgnored,
+      fields,
+    } = this.getProperties('isDefaultValueIgnored', 'fields');
+
+    if (!isDefaultValueIgnored) {
+      this.set('defaultValue', this.dumpValue());
+    } else {
+      fields.invoke('useCurrentValueAsDefault');
+    }
   },
 
   /**

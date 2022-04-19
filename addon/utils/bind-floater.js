@@ -4,8 +4,8 @@ import $ from 'jquery';
  * Makes an element fixed positioned, with coordinates (left, top) of its parent.
  *
  * NOTE: ported from ember-cli-onedata-gui-common
- * 
- * @param element A jQuery element which position will be computed in relation to "parent"
+ *
+ * @param {jQuery} element A jQuery element which position will be computed in relation to "parent"
  * @param {object} [parent=element.parent()] A jQuery element which will act as element position parent.
  *         If null or undefined - will use a element.parent().
  * @param {object} options Additional options to manipulate floater behaviour, properties:
@@ -28,10 +28,8 @@ import $ from 'jquery';
  * @returns {function} Function which re-computes new fixed position of an element.
  *             It should be bind to eg. parent mouseover.
  */
-export default function bindFloater(element, parent, options) {
-  parent = parent || element.parent();
+export default function bindFloater(element, parent = element.parent(), options = {}) {
   // default options
-  options = options || {};
   options.posX = options.posX || 'right';
   options.posY = options.posY || 'top';
   options.offsetX = options.offsetX || 0;
@@ -39,8 +37,8 @@ export default function bindFloater(element, parent, options) {
   options.stackingContext = options.stackingContext || 0;
 
   element.addClass('floater');
-  let changePos = function () {
-    let offset = parent.offset();
+  const changePos = function () {
+    const offset = parent.offset();
     let left;
     if (options.posX === 'right') {
       left = parseInt(offset.left) + parent.width();

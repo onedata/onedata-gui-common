@@ -125,7 +125,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
     'fullModeClasses',
     'minimizedModeClasses',
     function () {
-      let {
+      const {
         isInternallyMinimized,
         fullModeClasses,
         minimizedModeClasses,
@@ -184,11 +184,11 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
   },
 
   clickOutside(event) {
-    let {
+    const {
       toggleSelector,
       elementId,
     } = this.getProperties('toggleSelector', 'elementId');
-    let clickTarget = $(event.target);
+    const clickTarget = $(event.target);
     if (!clickTarget.is(toggleSelector) &&
       clickTarget.parents(toggleSelector + ', .popover-' + elementId).length === 0) {
       this.set('dropdownOpened', false);

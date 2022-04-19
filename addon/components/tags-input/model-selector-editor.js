@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * A tags (tokenizer) input editor, which allows to add tags using selector with
  * model records. Available models are: user, group, oneprovider, service (op and oz),

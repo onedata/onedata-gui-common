@@ -51,8 +51,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
   it('creates action "ModifyLaneAction"', function () {
     const factory = ActionsFactory.create({ ownerSource: this.owner });
-    let store;
-    store = Store.create({
+    const store = Store.create({
       id: 's1',
       name: 'store1',
     });

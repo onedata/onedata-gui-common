@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable array-callback-return */
+
 /**
  * Single store table content row
  *

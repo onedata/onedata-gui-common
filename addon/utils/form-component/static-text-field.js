@@ -1,6 +1,6 @@
 /**
  * A static text form field.
- * 
+ *
  * @module utils/form-component/static-text-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -26,7 +26,7 @@ export default FormField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  text: computed('i18nPrefix', 'path', function text() {
-    return this.t(`${this.get('path')}.text`, {}, { defaultValue: '' });
+  text: computed('i18nPrefix', 'translationPath', function text() {
+    return this.getTranslation('text', {}, { defaultValue: '' });
   }),
 });

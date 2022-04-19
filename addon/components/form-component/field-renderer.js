@@ -11,7 +11,7 @@ import Component from '@ember/component';
 import layout from '../../templates/components/form-component/field-renderer';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
-import { and, tag, writable, equal, raw } from 'ember-awesome-macros';
+import { and, tag, writable, equal, raw, conditional } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -23,6 +23,7 @@ export default Component.extend({
     'fieldModeClass',
     'isEffectivelyEnabled:field-enabled:field-disabled',
     'fieldRendererClass',
+    'fieldSizeClass',
     'field.classes',
     'field.internalClasses',
   ],
@@ -166,7 +167,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
-  fieldRendererClass: computed('field.name', function fieldRendererClass() {
+  fieldRendererClass: computed('field.fieldComponentName', function fieldRendererClass() {
     // It takes only the last part of component name. So it transforms
     // 'form-component/radio-field' to 'radio-field-renderer'.
     const fieldComponentName = this.get('field.fieldComponentName');
@@ -175,4 +176,13 @@ export default Component.extend({
       return `${componentNameParts[componentNameParts.length - 1]}-renderer`;
     }
   }),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  fieldSizeClass: conditional(
+    equal('field.size', raw('sm')),
+    raw('form-group-sm'),
+    raw('')
+  ),
 });

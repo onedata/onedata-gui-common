@@ -209,7 +209,7 @@ export default Component.extend({
       'allowThreeStateToggle',
     );
     if (!_lockToggle) {
-      let statesLoop = threeState && allowThreeStateToggle ?
+      const statesLoop = threeState && allowThreeStateToggle ?
         threeStatesLoop : twoStatesLoop;
       if (!statesLoop.includes(checked)) {
         checked = statesLoop[0];

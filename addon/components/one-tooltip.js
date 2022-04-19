@@ -1,12 +1,12 @@
 /**
- * Extended version of ember-bootstrap tooltip. Adds positioning of tooltip 
+ * Extended version of ember-bootstrap tooltip. Adds positioning of tooltip
  * arrow by setting `arrowPlacement` and `arrowOffset` property.
- * 
- * Typical usage: 
+ *
+ * Typical usage:
  * ```
  * {{one-tooltip title="tooltip text" placement="top" arrowPlacement="right"}}
  * ```
- * 
+ *
  * @module components/one-tooltip
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -26,7 +26,7 @@ export default BsTooltip.extend({
   /**
    * Arrow position.
    * @type {string}
-   * 
+   *
    * For top and bottom tooltip placement valid values are: left, right, center
    * For left and right tooltip placement valid values are: top, bottom, center
    */
@@ -70,12 +70,12 @@ export default BsTooltip.extend({
   },
 
   /**
-   * Adds to bs-tooltip arrow implementation translateX/Y property to place it 
+   * Adds to bs-tooltip arrow implementation translateX/Y property to place it
    * again over the target after tooltip offset manipulation.
-   * 
-   * @param {number} delta 
-   * @param {string} dimension 
-   * @param {boolean} isVertical 
+   *
+   * @param {number} delta
+   * @param {string} dimension
+   * @param {boolean} isVertical
    */
   replaceArrow(delta, dimension, isVertical) {
     this._super(delta, dimension, isVertical);
@@ -105,15 +105,15 @@ export default BsTooltip.extend({
   },
 
   /**
-   * Adds to bs-tooltip implementation a fake placement offset to change 
+   * Adds to bs-tooltip implementation a fake placement offset to change
    * tooltip position.
-   * 
-   * @param {Object} offset 
-   * @param {string} placement 
+   *
+   * @param {Object} offset
+   * @param {string} placement
    */
   applyPlacement(offset, placement) {
-    let arrowPlacement = this.get('arrowPlacement');
-    let arrowOffset = -this._getArrowRelativeOffset();
+    const arrowPlacement = this.get('arrowPlacement');
+    const arrowOffset = -this._getArrowRelativeOffset();
     switch (arrowPlacement) {
       case 'left':
       case 'right':

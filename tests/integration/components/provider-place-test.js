@@ -122,7 +122,7 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider
         atlasWidth=atlasWidth}}`);
-    let prevWidth = parseFloat($(find('.circle')).css('width'));
+    const prevWidth = parseFloat($(find('.circle')).css('width'));
     this.set('atlasWidth', 400);
     expect(parseFloat($(find('.circle')).css('width')))
       .to.be.equal(prevWidth / 2);

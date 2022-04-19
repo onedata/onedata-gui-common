@@ -41,4 +41,18 @@ describe('Integration | Utility | form component/sibling loading field', functio
 
     expect(get(field, 'label')).to.equal('test1');
   });
+
+  it('has tip equal to sibling\'s label', function () {
+    const field = SiblingLoadingField.create({
+      siblingName: 'sibling1',
+      parent: {
+        fields: [{
+          name: 'sibling1',
+          tip: 'test1',
+        }],
+      },
+    });
+
+    expect(get(field, 'tip')).to.equal('test1');
+  });
 });
