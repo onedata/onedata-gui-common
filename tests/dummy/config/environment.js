@@ -4,7 +4,7 @@
 const dynamicLibraries = require('../../../config/dynamic-libraries');
 
 module.exports = function (environment) {
-  let ENV = {
+  const ENV = {
     modulePrefix: 'dummy',
     environment,
     rootURL: '/',

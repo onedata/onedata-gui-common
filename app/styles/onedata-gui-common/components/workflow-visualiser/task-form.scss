@@ -39,6 +39,11 @@
     }
   }
 
+  .argumentMapping-field,
+  .resultMapping-field {
+    min-width: 0;
+  }
+
   .valueBuilderConstValue-field .form-control {
     height: 6em;
   }
@@ -47,10 +52,15 @@
   .valueBuilderConstValue-field,
   .valueBuilderStore-field,
   .targetStore-field,
-  .dispatchFunction-field {
-    .control-label {
-      font-size: 85%;
+  .dispatchFunction-field,
+  .timeSeriesEditor-field {
+    > .control-label {
+      font-size: $font-size-small;
     }
+  }
+
+  .timeSeriesEditor-field {
+    min-width: 0;
   }
 
   @media (min-width: $screen-sm-min) {
@@ -58,8 +68,11 @@
       max-width: 11em;
     }
 
-    .collection-item + .collection-item {
-      margin-top: 0.5em;
+    .argumentMappings-collapse,
+    .resultMappings-collapse {
+      > .collection-item + .collection-item {
+        margin-top: 0.5em;
+      }
     }
 
     .argumentMapping-field,
@@ -83,8 +96,9 @@
     .valueBuilderConstValue-field,
     .valueBuilderStore-field,
     .targetStore-field,
-    .dispatchFunction-field {
-      .control-label {
+    .dispatchFunction-field,
+    .timeSeriesEditor-field {
+      > .control-label {
         position: absolute;
         bottom: calc(100% + 0.3em);
         padding: 0;

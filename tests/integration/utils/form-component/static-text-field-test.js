@@ -29,7 +29,7 @@ describe('Integration | Utility | form component/static text field', function ()
       ownerSource: this.owner,
       i18nPrefix: 'some',
       parent: {
-        path: 'parent',
+        translationPath: 'parent',
       },
       name: 'name',
     });

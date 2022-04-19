@@ -7,7 +7,13 @@ describe('Unit | Utility | one time series chart/series functions/utils/reconcil
   testReconcilePointsTiming({
     description: 'aligns timings of passed series to the newest one',
     input: [
-      [point(10, 10), point(11, 11), point(12, 12), point(13, 13), point(14, 14, { newest: true })],
+      [
+        point(10, 10),
+        point(11, 11),
+        point(12, 12),
+        point(13, 13),
+        point(14, 14, { newest: true }),
+      ],
       [point(12, 12), point(13, 13), point(14, 14), point(15, 15), point(16, 16)],
       [point(1, 1, { oldest: true }), point(2, 2), point(3, 3), point(4, 4), point(5, 5)],
       [],

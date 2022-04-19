@@ -83,4 +83,16 @@ describe('Integration | Component | form component/clipboard field', function ()
       expect(find('textarea').rows).to.equal(7);
     }
   );
+
+  it(
+    'adds "monospace-font" class to clipboard-line in "monospace" fieldStyle',
+    async function () {
+      this.set('field.fieldStyle', 'monospace');
+
+      await render(hbs `{{form-component/clipboard-field field=field}}`);
+
+      expect(find('.clipboard-field .clipboard-line'))
+        .to.have.class('monospace-font');
+    }
+  );
 });

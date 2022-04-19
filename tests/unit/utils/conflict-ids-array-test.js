@@ -22,7 +22,7 @@ describe('Unit | Utility | conflict ids array', function () {
   it('computes conflict labels on init', function () {
     const array = createMockArray();
 
-    let arrayProxy = ConflictIdsArray.create({
+    const arrayProxy = ConflictIdsArray.create({
       content: array,
     });
 
@@ -33,7 +33,7 @@ describe('Unit | Utility | conflict ids array', function () {
   it('computes conflict labels on array change', async function () {
     const array = createMockArray();
 
-    let arrayProxy = ConflictIdsArray.create({
+    const arrayProxy = ConflictIdsArray.create({
       content: array,
     });
     array.pushObject(EmberObject.create({

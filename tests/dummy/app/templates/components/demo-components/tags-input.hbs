@@ -11,5 +11,12 @@
   onChange=(action (mut tagsSelector))
 }}
 
+<h2>With time-series-metric-editor</h2>
+{{tags-input
+  tags=tagsTimeSeriesMetrics
+  tagEditorComponentName="tags-input/time-series-metric-selector-editor"
+  onChange=(action (mut tagsTimeSeriesMetrics))
+}}
+
 <h2>Readonly</h2>
 {{tags-input tags=tags readonly=true}}

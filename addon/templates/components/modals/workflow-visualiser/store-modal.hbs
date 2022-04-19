@@ -2,7 +2,7 @@
   classNames="store-modal"
   allowClose=(not isSubmitting)
   modalId=modalId
-  size=(if (eq activeTab "content") "xl" null)
+  size=(if (eq activeTab "content") "xl" "lg")
   as |modal|
 }}
 
@@ -32,11 +32,18 @@
         isDisabled=isSubmitting
       }}
     {{else if isContentTabRendered}}
-      {{modals/workflow-visualiser/store-modal/store-content-table
-        store=store
-        getStoreContentCallback=getStoreContentCallback
-        emptyStoreText=emptyStoreText
-      }}
+      {{#if (eq contentTabRenderer "generic")}}
+        {{modals/workflow-visualiser/store-modal/store-content-table
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+          emptyStoreText=emptyStoreText
+        }}
+      {{else if (eq contentTabRenderer "timeSeries")}}
+        {{modals/workflow-visualiser/store-modal/time-series-presenter
+          store=store
+          getStoreContentCallback=getStoreContentCallback
+        }}
+      {{/if}}
     {{/if}}
   {{/modal.body}}
 

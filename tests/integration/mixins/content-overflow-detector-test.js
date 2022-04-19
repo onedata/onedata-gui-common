@@ -34,9 +34,9 @@ describe('Integration | Mixin | content overflow detector', function () {
   });
 
   it('detects overflow', async function () {
-    let ContentOverflowDetectorObject =
+    const ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
-    let subject = ContentOverflowDetectorObject.create();
+    const subject = ContentOverflowDetectorObject.create();
 
     await render(hbs `
       <div class="parent" style={{parentStyle}}>
@@ -61,9 +61,9 @@ describe('Integration | Mixin | content overflow detector', function () {
   });
 
   it('takes additionalOverflowMargin into account', async function () {
-    let ContentOverflowDetectorObject =
+    const ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
-    let subject = ContentOverflowDetectorObject.create();
+    const subject = ContentOverflowDetectorObject.create();
 
     await render(hbs `
       <div class="parent" style={{parentStyle}}>
@@ -83,9 +83,9 @@ describe('Integration | Mixin | content overflow detector', function () {
   });
 
   it('reacts to window resize', async function () {
-    let ContentOverflowDetectorObject =
+    const ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
-    let subject = ContentOverflowDetectorObject.create();
+    const subject = ContentOverflowDetectorObject.create();
 
     await render(hbs `
       <div class="parent" style={{parentStyle}}>
@@ -93,7 +93,7 @@ describe('Integration | Mixin | content overflow detector', function () {
         <div class="testElement" style={{elementStyle}}></div>
       </div>`);
 
-    let _window = this.get('_window');
+    const _window = this.get('_window');
     subject.set('_window', _window);
     subject.set('overflowDetectionDelay', 0);
     subject.set('overflowElement', $(find('.testElement')));
@@ -113,9 +113,9 @@ describe('Integration | Mixin | content overflow detector', function () {
   });
 
   it('takes minimumFullWindowSize into account', async function () {
-    let ContentOverflowDetectorObject =
+    const ContentOverflowDetectorObject =
       EmberObject.extend(ContentOverflowDetectorMixin);
-    let subject = ContentOverflowDetectorObject.create();
+    const subject = ContentOverflowDetectorObject.create();
 
     await render(hbs `
       <div class="parent" style={{parentStyle}}>
@@ -123,7 +123,7 @@ describe('Integration | Mixin | content overflow detector', function () {
         <div class="testElement" style={{elementStyle}}></div>
       </div>`);
 
-    let _window = this.get('_window');
+    const _window = this.get('_window');
     subject.set('_window', _window);
     subject.set('overflowDetectionDelay', 0);
     subject.set('overflowElement', $(find('.testElement')));

@@ -7,7 +7,8 @@ import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
-import EmberObject, { set } from '@ember/object';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import { set } from '@ember/object';
 
 describe(
   'Integration | Component | form component/form fields collection group',
@@ -34,8 +35,8 @@ describe(
     });
 
     it('allows to add new field', async function () {
-      const valuesSource = EmberObject.create({
-        collection: EmberObject.create(),
+      const valuesSource = createValuesContainer({
+        collection: createValuesContainer(),
       });
       const collectionGroup = FormFieldsCollectionGroup.extend({
         fieldFactoryMethod(createdFieldsCounter) {
@@ -71,8 +72,8 @@ describe(
     });
 
     it('allows to remove field', async function () {
-      const valuesSource = EmberObject.create({
-        collection: EmberObject.create(),
+      const valuesSource = createValuesContainer({
+        collection: createValuesContainer(),
       });
       const collectionGroup = FormFieldsCollectionGroup.extend({
         fieldFactoryMethod() {
@@ -109,8 +110,8 @@ describe(
     });
 
     it('blocks creating and removing fields in "view" mode', async function () {
-      const valuesSource = EmberObject.create({
-        collection: EmberObject.create(),
+      const valuesSource = createValuesContainer({
+        collection: createValuesContainer(),
       });
       const collectionGroup = FormFieldsCollectionGroup.extend({
         fieldFactoryMethod() {
@@ -145,8 +146,8 @@ describe(
     });
 
     it('can be disabled', async function () {
-      const valuesSource = EmberObject.create({
-        collection: EmberObject.create(),
+      const valuesSource = createValuesContainer({
+        collection: createValuesContainer(),
       });
       const collectionGroup = FormFieldsCollectionGroup.extend({
         fieldFactoryMethod() {
@@ -181,8 +182,8 @@ describe(
 
     it('hides add and remove buttons when "isCollectionManipulationAllowed" is false',
       async function () {
-        const valuesSource = EmberObject.create({
-          collection: EmberObject.create(),
+        const valuesSource = createValuesContainer({
+          collection: createValuesContainer(),
         });
         const collectionGroup = FormFieldsCollectionGroup.extend({
           fieldFactoryMethod() {

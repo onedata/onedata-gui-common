@@ -81,7 +81,7 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
    * @type {computed.string}
    */
   _toggleClassFromId: computed('inputId', function () {
-    let inputId = this.get('inputId');
+    const inputId = this.get('inputId');
     return inputId ? inputId + '-toggle' : '';
   }),
 

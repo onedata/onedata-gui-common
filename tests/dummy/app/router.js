@@ -6,6 +6,7 @@ const Router = EmberRouter.extend({
   rootURL: config.rootURL,
 });
 
+/* eslint-disable-next-line array-callback-return */
 Router.map(function () {
   this.route('index-dummy', { path: '/' }, function () {
     this.route('component', { path: '/component/:component_name' });

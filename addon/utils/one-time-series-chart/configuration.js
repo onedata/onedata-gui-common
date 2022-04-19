@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 /**
  * A class, that contains configuration of time series chart - axes look,
  * time resolutions, actual axes position, visible points - basically everything,
@@ -594,7 +597,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  */
 
 /**
- * @typedef {Object} RawOTSCSeriesPoint
+ * @typedef {Object} OTSCRawSeriesPoint
  * @property {number} timestamp
  * @property {number} value
  */
@@ -1126,7 +1129,7 @@ export default class Configuration {
   /**
    * @private
    * @param {unknown} color
-   * @return {string|null}
+   * @returns {string|null}
    */
   normalizeColor(color) {
     return (typeof color === 'string' && colorRegexp.test(color)) ? color : null;

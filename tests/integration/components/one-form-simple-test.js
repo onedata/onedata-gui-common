@@ -125,7 +125,7 @@ describe('Integration | Component | one form simple', function () {
     }}
       `);
 
-    let submitBtn = find('button[type=submit]');
+    const submitBtn = find('button[type=submit]');
     expect(
       submitBtn.disabled,
       'submit button is disabled if form is not valid'

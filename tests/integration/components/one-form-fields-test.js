@@ -9,7 +9,7 @@ describe('Integration | Component | one form fields', function () {
   setupRenderingTest();
 
   it('puts an "optional" label in optional inputs', async function () {
-    let fields = [
+    const fields = [
       { name: 'one', type: 'text', label: 'One field', optional: true },
     ];
 
@@ -22,14 +22,14 @@ describe('Integration | Component | one form fields', function () {
     {{/bs-form}}
     `);
 
-    let formId = find('form').id;
-    let inputId = formId + '-one';
+    const formId = find('form').id;
+    const inputId = formId + '-one';
 
     expect(find(`label[for='${inputId}']`).textContent).to.match(/optional/);
   });
 
   it('renders label tip if field should have one', async function () {
-    let fields = [
+    const fields = [
       { name: 'one', type: 'text', label: 'One field', tip: 'Field tip' },
     ];
 
@@ -42,8 +42,8 @@ describe('Integration | Component | one form fields', function () {
     {{/bs-form}}
     `);
 
-    let formId = find('form').id;
-    let inputId = formId + '-one';
+    const formId = find('form').id;
+    const inputId = formId + '-one';
 
     expect(findAll(`label[for='${inputId}'] .one-icon`).length).to.eq(1);
   });
@@ -51,7 +51,7 @@ describe('Integration | Component | one form fields', function () {
   it('can render a text type input with given value', async function () {
     const VALUE = 'some value';
 
-    let fields = [
+    const fields = [
       { name: 'one', type: 'text' },
     ];
 
@@ -73,7 +73,7 @@ describe('Integration | Component | one form fields', function () {
   it('can render form-control-static for type static', async function () {
     const VALUE = 'some value';
 
-    let fields = [
+    const fields = [
       { name: 'one', type: 'static', optional: true },
     ];
 

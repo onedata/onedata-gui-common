@@ -28,7 +28,7 @@ describe('Integration | Component | one checkbox', function () {
   });
 
   it('invokes update action on click', async function (done) {
-    let toggleSelectionHandler = sinon.spy();
+    const toggleSelectionHandler = sinon.spy();
     this.set('toggleSelection', toggleSelectionHandler);
 
     await render(hbs `{{one-checkbox

@@ -1,0 +1,95 @@
+{{#one-webui-popover
+  class="tags-selector time-series-metric-selector"
+  open=true
+  triggerSelector=(concat "#" elementId)
+  arrow=false
+  registerApi=(action (mut popoverApi))
+  padding=false
+  placement="vertical"
+  popoverStyle="tags-selector"
+  as |popover|
+}}
+  {{#click-outside
+    class="selector-container"
+    action=onEndTagCreation
+    except-selector=popoverClickOutsideIgnoreSelector
+  }}
+
+    <div class="aggregator-dropdown">
+      {{#one-dropdown
+        triggerClass="small"
+        dropdownClass="small"
+        options=aggregatorOptions
+        onchange=(action (mut selectedAggregatorOption))
+        selected=selectedAggregatorOption
+        searchEnabled=false
+        renderInPlace=true
+        verticalPosition="bottom"
+        as |option|
+      }}
+        <div class="option-container">
+          {{#truncated-string class="text"}}
+            {{option.label}}
+          {{/truncated-string}}
+        </div>
+      {{/one-dropdown}}
+    </div>
+
+    {{#bs-button-group
+      value=selectedView
+      class="view-selector btn-group-justified"
+      type="radio"
+      onChange=(action (mut selectedView))
+      as |bg|
+    }}
+      {{#each (array "presets" "custom") as |viewName|}}
+        <div class="btn-group" role="group">
+          {{#bg.button
+            type="default"
+            class=(concat "btn-sm btn-" viewName)
+            value=viewName
+          }}
+            {{tt this (concat "view." viewName)}}
+          {{/bg.button}}
+        </div>
+      {{/each}}
+    {{/bs-button-group}}
+
+    <hr class="content-separator">
+
+    {{#perfect-scrollbar-element}}
+      {{#if (eq selectedView "presets")}}
+        {{#if tagsToRender.length}}
+            <ul class="selector-list">
+              {{#each tagsToRender key="id" as |tag|}}
+                <li
+                  class="selector-item {{if tag.disabledReason "disabled"}}"
+                  {{action "tagSelected" tag}}
+                >
+                  {{#truncated-string class="tag-label"}}{{tag.label}}{{/truncated-string}}
+                  {{#if tag.disabledReason}}
+                    {{one-tooltip title=(tt this (concat "disabled." tag.disabledReason))}}
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+        {{else}}
+          <p class="text-center">{{tt this "allPresetsUsed"}}</p>
+        {{/if}}
+      {{else}}
+        <form class="form form-horizontal form-component">
+          {{form-component/field-renderer field=customMetricFields}}
+          {{#one-button
+            size="sm"
+            type="primary"
+            class="submit-custom-metric pull-right"
+            disabled=(not customMetricFields.isValid)
+            onClick=(action "submitCustomMetric")
+          }}
+            {{tt this "submitCustomMetric"}}
+          {{/one-button}}
+        </form>
+      {{/if}}
+    {{/perfect-scrollbar-element}}
+  {{/click-outside}}
+{{/one-webui-popover}}

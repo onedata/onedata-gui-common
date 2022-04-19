@@ -8,7 +8,7 @@ export default class FormHelper {
 
   /**
    * @param {string} fieldName
-   * @return {HTMLElement}
+   * @returns {HTMLElement}
    */
   getInput(fieldName) {
     return this.form.querySelector('.field-' + fieldName);
@@ -16,7 +16,7 @@ export default class FormHelper {
 
   /**
    * @param {string} fieldName
-   * @return {HTMLElement}
+   * @returns {HTMLElement}
    */
   getToggleInput(fieldName) {
     return this.form.querySelector('.toggle-field-' + fieldName);

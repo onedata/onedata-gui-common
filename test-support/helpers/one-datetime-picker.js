@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 import { settled, click, focus } from '@ember/test-helpers';
 import sinon from 'sinon';
 

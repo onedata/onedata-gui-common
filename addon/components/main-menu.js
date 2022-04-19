@@ -40,7 +40,7 @@ export default Component.extend({
   /**
    * @type {function}
    * @param {string} id
-   * @return {undefined}
+   * @returns {undefined}
    */
   itemClicked: () => {},
 

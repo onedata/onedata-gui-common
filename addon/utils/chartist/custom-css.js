@@ -1,5 +1,5 @@
 /**
- * Plugin for Chartist which changes chart elements styles to custom values 
+ * Plugin for Chartist which changes chart elements styles to custom values
  * using data.customCss. It has to be a list with objects in format e.g.:
  * {
  *   slice: {
@@ -9,10 +9,10 @@
  * Name of an element is the same as the one we can obtain from data.type,
  * where `data` if from `chart.on('draw', (data) => {...})`. Styles are applied to
  * `data.element`.
- * 
- * If transition is necessary, special object transitionProperties 
- * can be used. It is a object with css properties and values, 
- * that will be applied just after (in the next run-loop) standard 
+ *
+ * If transition is necessary, special object transitionProperties
+ * can be used. It is a object with css properties and values,
+ * that will be applied just after (in the next run-loop) standard
  * (not in transitionProperties) properties application. Example:
  * {
  *   slice: {
@@ -38,11 +38,11 @@ import $ from 'jquery';
 export default function () {
   return (chart) => {
     chart.on('draw', (data) => {
-      let css = chart.data.customCss;
-      let elementCss = css && css[data.index] && css[data.index][data.type];
+      const css = chart.data.customCss;
+      const elementCss = css && css[data.index] && css[data.index][data.type];
       if (elementCss) {
-        let element = $(data.element.getNode());
-        let transitionProperties = elementCss.transitionProperties;
+        const element = $(data.element.getNode());
+        const transitionProperties = elementCss.transitionProperties;
         delete elementCss.transitionProperties;
         element.css(elementCss);
         if (transitionProperties) {

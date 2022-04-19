@@ -1,6 +1,6 @@
 /**
  * A loading form field for indicating loading state of a sibling field.
- * 
+ *
  * @module utils/form-component/sibling-loading-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -30,6 +30,15 @@ export default LoadingField.extend({
     array.findBy('parent.fields', raw('name'), 'siblingName'),
     raw('label')
   ),
+
+  /**
+   * @override
+   */
+  tip: getBy(
+    array.findBy('parent.fields', raw('name'), 'siblingName'),
+    raw('tip')
+  ),
+
   /**
    * @override
    */

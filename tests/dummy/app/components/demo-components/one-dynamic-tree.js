@@ -30,7 +30,7 @@ export default Component.extend({
       next(() => this.set('_isValid', isValid));
     },
     toggleDisabledState() {
-      let disabledFieldsPaths = this.get('disabledFieldsPaths');
+      const disabledFieldsPaths = this.get('disabledFieldsPaths');
       if (disabledFieldsPaths.get('length') > 0) {
         disabledFieldsPaths.clear();
       } else {

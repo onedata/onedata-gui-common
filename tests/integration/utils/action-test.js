@@ -78,7 +78,7 @@ describe('Integration | Utility | action', function () {
         ownerSource: this.owner,
         onExecute,
       });
-      let order = [];
+      const order = [];
       const hook1 = sinon.spy(() => order.push(1));
       const hook2 = sinon.spy(() => order.push(2));
       action.addExecuteHook(hook1);

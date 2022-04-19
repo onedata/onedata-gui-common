@@ -18,22 +18,22 @@ describe('Integration | Component | resource load error', function () {
   });
 
   it('renders custom message if provided', async function () {
-    let message = 'some message';
+    const message = 'some message';
     this.set('message', message);
     await render(hbs `{{resource-load-error message=message}}`);
     expect(this.element.textContent).to.match(new RegExp(message));
   });
 
   it('displays error string if an error is plain string', async function () {
-    let reason = 'some reason';
+    const reason = 'some reason';
     this.set('reason', reason);
     await render(hbs `{{resource-load-error reason=reason}}`);
     expect(this.element.textContent).to.match(new RegExp(reason));
   });
 
   it('gets description of error when it\'s a response error type ', async function () {
-    let description = 'some description';
-    let reason = {
+    const description = 'some description';
+    const reason = {
       response: {
         body: {
           description,

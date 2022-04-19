@@ -75,7 +75,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let {
+    const {
       _resizeEventHandler,
       _window,
     } = this.getProperties('_resizeEventHandler', '_window');
@@ -86,7 +86,7 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      let {
+      const {
         _resizeEventHandler,
         _window,
       } = this.getProperties('_resizeEventHandler', '_window');
@@ -97,11 +97,11 @@ export default Component.extend({
   },
 
   resizeToFit() {
-    let _sizeRatio = this.get('_sizeRatio');
-    let element = $(this.get('element'));
-    let parent = element.parent();
-    let parentWidth = parent.width();
-    let parentHeight = parent.height();
+    const _sizeRatio = this.get('_sizeRatio');
+    const element = $(this.get('element'));
+    const parent = element.parent();
+    const parentWidth = parent.width();
+    const parentHeight = parent.height();
     let newWidth = parentWidth;
     let newHeight = newWidth * (1 / _sizeRatio);
 

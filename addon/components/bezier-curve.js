@@ -1,7 +1,7 @@
 /**
- * A component that creates symmetric Bezier curve using to 
+ * A component that creates symmetric Bezier curve using to
  * two points and curveFactor.
- * 
+ *
  * @module components/bezier-curve
  * @author Michal Borzecki, Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
@@ -55,11 +55,11 @@ export default Component.extend({
    * Curve factor. Large values (positive or negative) will flatten curve.
    * If curveFactor < 0, then curve is 'upside down'.
    * Warning: Must be different from 0!
-   * 
+   *
    * Default value `sqrt(3)` means, that edge point, middle point
-   * of the bezier curve and the middle point of the specified section 
+   * of the bezier curve and the middle point of the specified section
    * will create triangle 30, 60, 90 degrees.
-   * 
+   *
    * @type {number}
    */
   curveFactor: sqrt(3),
@@ -82,7 +82,8 @@ export default Component.extend({
     const deltaX = x2 - x1;
     const deltaY = y1 - y2;
     const xyLength = sectionLength(deltaX, deltaY);
-    let vector, resultVector;
+    let vector;
+    let resultVector;
 
     if (xyLength < calculationsDelta) {
       resultVector = [0, 0];

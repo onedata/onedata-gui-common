@@ -26,9 +26,15 @@ import { inject as service } from '@ember/service';
 import $ from 'jquery';
 
 /**
- * @typedef {StoreContentEntry} StoreContentTableEntry
+ * @typedef {Object} StoreContentTableEntry
  * @property {String} id the same as `index`
+ * @property {String} index
+ * @property {Boolean} success
+ * @property {any} [value] present when `success` is true
+ * @property {any} [error] present when `success` is false
  */
+
+const emptyAtmStoreContent = { array: [], isLast: true };
 
 // TODO: VFS-7874 create common initite scroll view logic
 export default Component.extend(I18n, {
@@ -218,14 +224,18 @@ export default Component.extend(I18n, {
     this.set('tableColumns', this.get('tableColumnsGenerator').getColumns());
   },
 
-  async fetchStoreEntries() {
-    const result = await this.get('getStoreContentCallback')(...arguments);
-    const entries = result && result.array;
-    // Store entries does not have id, which is required by replacing chunks array.
-    // Solution: using entry index as id.
-    entries && entries.forEach(entry => entry.id = entry.index);
+  async fetchStoreEntries(index, limit, offset) {
+    const {
+      getStoreContentCallback,
+      tableColumnsGenerator,
+    } = this.getProperties('getStoreContentCallback', 'tableColumnsGenerator');
+
+    const browseOptions = this.createAtmStoreContentBrowseOptions(index, limit, offset);
+    const result = this.normalizeAtmStoreContent(
+      await getStoreContentCallback(browseOptions)
+    );
     safeExec(this, () => {
-      this.get('tableColumnsGenerator').updateColumnsWithNewData(entries);
+      tableColumnsGenerator.updateColumnsWithNewData(result && result.array);
       this.updateTableColumns();
     });
 
@@ -304,6 +314,85 @@ export default Component.extend(I18n, {
         listWatcher.scrollHandler();
       }
     });
+  },
+
+  /**
+   * @param {string|null} index
+   * @param {number} limit
+   * @param {number} offset
+   * @returns {AtmStoreContentBrowseOptions|null} returns null if browse
+   * operation should not be performed due to incorrect parameters
+   */
+  createAtmStoreContentBrowseOptions(index, limit, offset) {
+    if (!limit || limit <= 0) {
+      return null;
+    }
+
+    const atmStoreType = this.get('store.type');
+    const browseOptions = {
+      type: `${atmStoreType}StoreContentBrowseOptions`,
+    };
+
+    if (['list', 'treeForest', 'auditLog'].includes(atmStoreType)) {
+      browseOptions.index = index;
+      browseOptions.offset = offset;
+      browseOptions.limit = limit;
+    } else if (index !== null || offset !== 0) {
+      return null;
+    }
+
+    return browseOptions;
+  },
+
+  /**
+   * @param {unknown} content
+   * @returns {{array: Array<StoreContentTableEntry>, isLast: boolean}}
+   */
+  normalizeAtmStoreContent(content) {
+    if (!content) {
+      return emptyAtmStoreContent;
+    }
+
+    let normalizedResult = emptyAtmStoreContent;
+    switch (this.get('store.type')) {
+      case 'auditLog': {
+        const { logs = [], isLast = true } = content;
+        normalizedResult = { array: logs, isLast };
+        break;
+      }
+      case 'list': {
+        const { items = [], isLast = true } = content;
+        normalizedResult = { array: items, isLast };
+        break;
+      }
+      case 'range': {
+        normalizedResult = {
+          array: [{
+            index: '0',
+            success: true,
+            value: content,
+          }],
+          isLast: true,
+        };
+        break;
+      }
+      case 'singleValue': {
+        normalizedResult = {
+          array: [Object.assign({ index: '0' }, content)],
+          isLast: true,
+        };
+        break;
+      }
+      case 'treeForest': {
+        const { treeRoots = [], isLast = true } = content;
+        normalizedResult = { array: treeRoots, isLast };
+        break;
+      }
+    }
+    // Store entries does not have id, which is required by replacing chunks array.
+    // Solution: using entry index as id.
+    normalizedResult.array.forEach(entry => entry.id = entry.index);
+    return normalizedResult;
   },
 
   actions: {

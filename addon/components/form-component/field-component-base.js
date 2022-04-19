@@ -48,6 +48,11 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<String>}
    */
+  size: reads('field.size'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
   mode: reads('field.mode'),
 
   /**

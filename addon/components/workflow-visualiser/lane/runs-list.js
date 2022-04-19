@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 /**
  * Shows a list of lane runs.
  *
@@ -574,8 +577,8 @@ export default Component.extend({
 
     const firstVisibleRunIdx = runsArray.indexOf(visibleRunsArray[0]);
     let newVisibleRunsArray;
-    let newVisibleRunsStyles = {};
-    let newVisibleRunsClasses = {};
+    const newVisibleRunsStyles = {};
+    const newVisibleRunsClasses = {};
     let addedRuns = [];
     if (moveStep < 0) {
       addedRuns = runsArray.slice(
