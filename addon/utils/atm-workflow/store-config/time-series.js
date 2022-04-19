@@ -87,7 +87,10 @@ const invertedMetricResolutionsMap = _.invert(metricResolutionsMap);
  * @param {{ short: boolean }} options
  * @returns {SafeString}
  */
-export function translateMetricResolution(i18n, metricResolution, { short = false } = {}) {
+export function translateMetricResolution(
+  i18n,
+  metricResolution, { short = false } = {}
+) {
   const metricResolutionName = invertedMetricResolutionsMap[metricResolution];
   const i18nPath = metricResolutionName &&
     `utils.atmWorkflow.storeConfig.timeSeries.metricResolutions.${short ? 'short' : 'standard'}.${metricResolutionName}`;
@@ -100,7 +103,10 @@ export function translateMetricResolution(i18n, metricResolution, { short = fals
  * @param {{ short: boolean }} options
  * @returns {SafeString}
  */
-export function translateMetricAggregator(i18n, metricAggregator, { short = false } = {}) {
+export function translateMetricAggregator(
+  i18n,
+  metricAggregator, { short = false } = {}
+) {
   const i18nPath =
     `utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${short ? 'short' : 'standard'}.${metricAggregator}`;
   return i18n.t(i18nPath, {}, { defaultValue: '' });

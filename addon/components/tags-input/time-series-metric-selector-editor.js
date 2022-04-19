@@ -120,11 +120,11 @@ export const Tag = EmberObject.extend(I18n, OwnerInjector, {
 
     const readableId = id ? `"${id}"` : this.t('unknownId');
     const readableAggregator = metricAggregators.includes(aggregator) ?
-      String(translateMetricAggregator(i18n, aggregator, { short: true })).toLocaleLowerCase() :
-      '?';
+      String(translateMetricAggregator(i18n, aggregator, { short: true }))
+      .toLocaleLowerCase() : '?';
     const readableResolution = metricResolutions.includes(resolution) ?
-      String(translateMetricResolution(i18n, resolution, { short: true })).toLocaleLowerCase() :
-      '?';
+      String(translateMetricResolution(i18n, resolution, { short: true }))
+      .toLocaleLowerCase() : '?';
     const readableRetention = Number.isInteger(retention) ?
       this.t('retention', { retention }) : '?';
 
