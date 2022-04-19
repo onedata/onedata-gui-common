@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, find } from '@ember/test-helpers';
+import { render, settled, click, find, waitUntil } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -320,11 +320,8 @@ async function moveRight(waitForSettle = true) {
 }
 
 async function waitForMoveToSettle() {
-  // Due to animations we need several wait-s. For 3-4 waits there is a ~1:10
-  // chance to fail some tests in the whole suite. 10 waits are safe enough.
-  for (let i = 0; i < 10; i++) {
-    await settled();
-  }
+  await settled();
+  await waitUntil(() => !find('.runs-list').matches('.is-animating'));
 }
 
 function generateRunsRegistry(runsCount) {
