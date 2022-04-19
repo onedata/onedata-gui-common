@@ -1,10 +1,9 @@
 import { settled, click, focus } from '@ember/test-helpers';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 export default class OneDatetimePickerHelper {
-  constructor($trigger) {
-    this.$trigger = $trigger;
+  constructor(trigger) {
+    this.trigger = trigger;
     // 100 is a value used internally in picker plugin in setTimeout.
     // Cannot be changed (yet). Using 150 to be avoid race
     this.pickerInitDelay = 150;
@@ -12,7 +11,7 @@ export default class OneDatetimePickerHelper {
 
   openPicker(viaFocus = false) {
     const clock = this.createFakeClock();
-    return (viaFocus ? focus(this.$trigger[0]) : click(this.$trigger[0]))
+    return (viaFocus ? focus(this.trigger) : click(this.trigger))
       .then(() => this.waitForPickerInit(clock))
       .then(() => clock.restore());
   }
@@ -32,11 +31,11 @@ export default class OneDatetimePickerHelper {
 
   selectToday() {
     return this.openPicker()
-      .then(() => click($('.datetime-picker .xdsoft_today')[0]));
+      .then(() => click(document.querySelector('.datetime-picker .xdsoft_today')));
   }
 
   getPickerElement() {
-    return $('.xdsoft_datetimepicker');
+    return document.querySelector('.xdsoft_datetimepicker');
   }
 
   createFakeClock() {

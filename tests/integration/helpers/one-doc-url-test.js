@@ -10,6 +10,6 @@ describe('Integration | Helper | one doc url', function () {
   it('generates valid URL', async function () {
     await render(hbs `{{one-doc-url "hello_world.html"}}`);
 
-    expect(this.$().text().trim()).to.match(/https?:\/\/.*\/hello_world\.html/);
+    expect(this.element.textContent.trim()).to.match(/https?:\/\/.*\/hello_world\.html/);
   });
 });

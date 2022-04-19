@@ -36,15 +36,17 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
     await executeAction(this);
 
     expect(getModal()).to.have.class('store-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Modify store');
-    expect(getModalBody().find('.name-field .form-control')).to.have.value('store1');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Modify store');
+    expect(getModalBody().querySelector('.name-field .form-control'))
+      .to.have.value('store1');
   });
 
   it(
     'returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('cancelled');
@@ -58,7 +60,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
 
       const { resultPromise } = await executeAction(this);
       await fillIn('.name-field .form-control', 'store2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(modifyStoreStub).to.be.calledOnce.and.to.be.calledWith(sinon.match({
@@ -77,7 +79,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify store actio
 
       const { resultPromise } = await executeAction(this);
       await fillIn('.name-field .form-control', 'store2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(getModalFooter().querySelector('.btn-submit'));
       rejectRemove();
       await settled();
       const actionResult = await resultPromise;

@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 import sinon from 'sinon';
 
 const componentClass = 'revisions-table-revision-entry';
@@ -13,8 +12,9 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
-    expect(this.$().children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   it('shows revision number', async function () {
@@ -22,7 +22,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect(this.$('.revision-number').text().trim())
+    expect(find('.revision-number').textContent.trim())
       .to.equal(String(revisionNumber));
   });
 
@@ -31,7 +31,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect(this.$('.revision-number').text().trim()).to.equal('?');
+    expect(find('.revision-number').textContent.trim()).to.equal('?');
   });
 
   it('shows state', async function () {
@@ -39,7 +39,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect(this.$('.revisions-table-state-tag'))
+    expect(find('.revisions-table-state-tag'))
       .to.have.class(`state-${state}`);
   });
 
@@ -48,7 +48,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect(this.$('.revisions-table-state-tag')).to.have.class('state-draft');
+    expect(find('.revisions-table-state-tag')).to.have.class('state-draft');
   });
 
   it('shows custom columns', async function () {
@@ -56,7 +56,7 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    expect(this.$('.description').text().trim()).to.equal('abc');
+    expect(find('.description').textContent.trim()).to.equal('abc');
   });
 
   it('allows to choose from revision actions', async function () {
@@ -73,13 +73,14 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
     await renderComponent();
 
-    const $actionsTrigger = this.$('.revision-actions-trigger');
-    expect($actionsTrigger).to.exist;
+    const actionsTrigger = find('.revision-actions-trigger');
+    expect(actionsTrigger).to.exist;
 
-    await click($actionsTrigger[0]);
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(1);
-    expect($actions.text()).to.contain('testAction 3');
+    await click(actionsTrigger);
+    const actions =
+      document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+    expect(actions).to.have.length(1);
+    expect(actions[0].textContent).to.contain('testAction 3');
   });
 
   it('triggers "onClick" callback after click', async function () {
@@ -111,8 +112,8 @@ describe('Integration | Component | revisions table/revision entry', function ()
 
       await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('readonly');
-      expect(this.$('.revision-actions-trigger')).to.not.exist;
+      expect(find(`.${componentClass}`)).to.have.class('readonly');
+      expect(find('.revision-actions-trigger')).to.not.exist;
     }
   );
 });

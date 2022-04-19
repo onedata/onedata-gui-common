@@ -1,5 +1,5 @@
 /**
- * A form that is used to login with username and password 
+ * A form that is used to login with username and password
  *
  * @module components/basicauth-login-form
  * @author Jakub Liput, Michal Borzecki
@@ -72,12 +72,15 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    const passphraseMode = this.get('passphraseMode');
+    const {
+      passphraseMode,
+      element,
+    } = this.getProperties('passphraseMode', 'element');
 
     if (passphraseMode) {
-      this.$('.login-lock').focus();
+      element.querySelector('.login-lock').focus();
     } else {
-      this.$('.login-username').focus();
+      element.querySelector('.login-username').focus();
     }
   },
 

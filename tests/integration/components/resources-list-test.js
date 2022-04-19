@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Action from 'onedata-gui-common/utils/action';
-import $ from 'jquery';
 import sinon from 'sinon';
 import { ResourceListItem } from 'onedata-gui-common/components/resources-list';
 
@@ -14,7 +13,7 @@ describe('Integration | Component | resources list', function () {
   it('has class "resources-list', async function () {
     await render(hbs `{{resources-list}}`);
 
-    expect(this.$('.resources-list')).to.exist;
+    expect(find('.resources-list')).to.exist;
   });
 
   it(
@@ -30,12 +29,12 @@ describe('Integration | Component | resources list', function () {
 
       await render(hbs `{{resources-list items=items}}`);
 
-      const $items = this.$('.resource-item');
-      expect($items).to.have.length(2);
-      expect($items.eq(0).text().trim()).to.equal('abc');
-      expect($items.eq(0).find('.oneicon-group')).to.exist;
-      expect($items.eq(1).text().trim()).to.equal('def');
-      expect($items.eq(1).find('.oneicon-space')).to.exist;
+      const itemElems = findAll('.resource-item');
+      expect(itemElems).to.have.length(2);
+      expect(itemElems[0].textContent.trim()).to.equal('abc');
+      expect(itemElems[0].querySelector('.oneicon-group')).to.exist;
+      expect(itemElems[1].textContent.trim()).to.equal('def');
+      expect(itemElems[1].querySelector('.oneicon-space')).to.exist;
     }
   );
 
@@ -53,12 +52,12 @@ describe('Integration | Component | resources list', function () {
 
       await render(hbs `{{resources-list items=items}}`);
 
-      const $items = this.$('.resource-item');
-      expect($items).to.have.length(1);
-      const $itemText = $items.text();
-      expect($itemText).to.contain('abc');
-      expect($itemText).to.contain('def');
-      expect($itemText).to.not.contain('label');
+      const itemElems = findAll('.resource-item');
+      expect(itemElems).to.have.length(1);
+      const itemText = itemElems[0].textContent;
+      expect(itemText).to.contain('abc');
+      expect(itemText).to.contain('def');
+      expect(itemText).to.not.contain('label');
     }
   );
 
@@ -72,7 +71,7 @@ describe('Integration | Component | resources list', function () {
 
       await render(hbs `{{resources-list items=items}}`);
 
-      expect(this.$('.resource-item .btn-menu-toggle')).to.not.exist;
+      expect(find('.resource-item .btn-menu-toggle')).to.not.exist;
     }
   );
 
@@ -89,9 +88,12 @@ describe('Integration | Component | resources list', function () {
 
       await render(hbs `{{resources-list items=items}}`);
 
-      expect(this.$('.resource-item .btn-menu-toggle')).to.exist;
+      expect(find('.resource-item .btn-menu-toggle')).to.exist;
       return click('.btn-menu-toggle')
-        .then(() => expect($('.dropdown-menu').text()).to.contain('sth'));
+        .then(() =>
+          expect(document.querySelector('.dropdown-menu').textContent)
+          .to.contain('sth')
+        );
     }
   );
 
@@ -112,7 +114,8 @@ describe('Integration | Component | resources list', function () {
       await render(hbs `{{resources-list items=items}}`);
 
       return click('.btn-menu-toggle')
-        .then(() => click($('.dropdown-menu .one-collapsible-toolbar-item a')[0]))
+        .then(() => click(
+          document.querySelector('.dropdown-menu .one-collapsible-toolbar-item a')))
         .then(() => expect(executeSpy).to.be.calledOnce);
     }
   );

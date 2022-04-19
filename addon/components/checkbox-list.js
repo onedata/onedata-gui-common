@@ -2,7 +2,7 @@
  * Renders list of items with checkboxes. Each change of selection is notified
  * using `onChange()` callback. This component does not change selection by itself
  * - needs a new injected selectedItems array instance on each change.
- * 
+ *
  * Yields for each item just after its' checkbox. Yielded properties:
  *  * model - a single item from items array
  *  * checkboxId - id of current item checkbox. Can be used for dedicated <label>
@@ -21,7 +21,6 @@ import layout from '../templates/components/checkbox-list';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { observer, computed } from '@ember/object';
 import { scheduleOnce } from '@ember/runloop';
-import $ from 'jquery';
 import { notEmpty, and } from 'ember-awesome-macros';
 
 export default Component.extend({
@@ -124,7 +123,7 @@ export default Component.extend({
 
   actions: {
     toggleExpand(event) {
-      if (!$(event.target).is('.one-checkbox')) {
+      if (!event.target.matches('.one-checkbox')) {
         this.toggleProperty('isExpanded');
       }
     },

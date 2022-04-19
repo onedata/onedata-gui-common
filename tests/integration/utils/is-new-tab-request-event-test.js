@@ -32,7 +32,7 @@ describe('Integration | Mixin | is new tab request event', function () {
     this.set('myActionSpy', myActionSpy);
 
     await render(hbs `{{dummy-component myAction=myActionSpy}}`);
-    await click(this.$('#btn')[0]);
+    await click('#btn');
 
     expect(myActionSpy).to.have.been.calledOnce;
   });
@@ -45,7 +45,7 @@ describe('Integration | Mixin | is new tab request event', function () {
     this.set('myActionSpy', myActionSpy);
 
     await render(hbs `{{dummy-component myAction=myActionSpy}}`);
-    await click(this.$('#btn')[0], { ctrlKey: true });
+    await click('#btn', { ctrlKey: true });
 
     expect(myActionSpy).to.have.been.calledOnce;
   });
@@ -59,7 +59,7 @@ describe('Integration | Mixin | is new tab request event', function () {
 
     await render(hbs `{{dummy-component myAction=myActionSpy}}`);
 
-    await triggerKeyEvent(this.$('#btn')[0], 'keydown', 13, { key: 'Enter' });
+    await triggerKeyEvent('#btn', 'keydown', 13, { key: 'Enter' });
 
     expect(myActionSpy).to.have.been.calledOnce;
   });
@@ -73,7 +73,7 @@ describe('Integration | Mixin | is new tab request event', function () {
 
     await render(hbs `{{dummy-component myAction=myActionSpy}}`);
 
-    await click(this.$('#btn')[0], { button: 1, which: 2 });
+    await click('#btn', { button: 1, which: 2 });
 
     expect(myActionSpy).to.have.been.calledOnce;
   });

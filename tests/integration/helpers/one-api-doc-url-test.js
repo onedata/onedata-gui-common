@@ -10,7 +10,7 @@ describe('Integration | Helper | one api doc url', function () {
   it('generates valid URL without anchor with stable version as default', async function () {
     await render(hbs `{{one-api-doc-url product="oneprovider"}}`);
 
-    expect(this.$().text().trim()).to.equal(
+    expect(this.element.textContent.trim()).to.equal(
       'https://onedata.org/#/home/api/stable/oneprovider'
     );
   });
@@ -18,7 +18,7 @@ describe('Integration | Helper | one api doc url', function () {
   it('generates valid URL without anchor with specified version', async function () {
     await render(hbs `{{one-api-doc-url product="oneprovider" version="latest"}}`);
 
-    expect(this.$().text().trim()).to.equal(
+    expect(this.element.textContent.trim()).to.equal(
       'https://onedata.org/#/home/api/latest/oneprovider'
     );
   });
@@ -28,7 +28,7 @@ describe('Integration | Helper | one api doc url', function () {
       {{one-api-doc-url product="oneprovider" anchor="tag/File-registration"}}
     `);
 
-    expect(this.$().text().trim())
+    expect(this.element.textContent.trim())
       .to.equal(
         'https://onedata.org/#/home/api/stable/oneprovider?anchor=tag/File-registration'
       );

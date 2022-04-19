@@ -232,22 +232,31 @@ export default Component.extend(I18n, {
   },
 
   resizeToFitToolbar() {
-    if (this.get('isInToolbar')) {
-      const parentWidth = this.$().parent().width();
-      const $toolbar = this.$().parent().find(
+    const {
+      element,
+      isInToolbar,
+    } = this.getProperties('element', 'isInToolbar');
+    if (isInToolbar) {
+      const parentWidth = $(element.parentElement).width();
+      const toolbar = element.parentElement.querySelector(
         '.one-collapsible-toolbar:not(.minimized)'
       );
-      const toolbarWidth = $toolbar.width() || 0;
+      const toolbarWidth = toolbar && $(toolbar).width() || 0;
       const paddingRight = parseFloat(
-        window.getComputedStyle(this.element)['padding-right']
+        window.getComputedStyle(element)['padding-right']
       );
-      this.$().width(parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0));
+      $(element).width(parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0));
     }
   },
 
   resetSize() {
-    if (this.get('isInToolbar')) {
-      this.$().width('auto');
+    const {
+      element,
+      isInToolbar,
+    } = this.getProperties('element', 'isInToolbar');
+
+    if (isInToolbar) {
+      $(element).width('auto');
     }
   },
 
@@ -265,8 +274,13 @@ export default Component.extend(I18n, {
           });
           next(() => {
             try {
-              if (!(ignoreInitialFocus && !isAfterInitialRender)) {
-                safeExec(this, () => this.$('input').focus().select());
+              const element = this.get('element');
+              const input = element && element.querySelector('input');
+              if (!(ignoreInitialFocus && !isAfterInitialRender) && input) {
+                safeExec(this, () => {
+                  input.focus();
+                  input.select();
+                });
               }
             } catch (error) {
               reject(error);

@@ -42,8 +42,8 @@ describe('Integration | Component | one time series chart/plot', function () {
   it('has class "one-time-series-chart-plot"', async function () {
     await renderComponent();
 
-    expect(this.$().children()).to.have.class('one-time-series-chart-plot')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-time-series-chart-plot');
   });
 
   it('shows "no data to show" info, when there are no series to show', async function () {
@@ -151,7 +151,7 @@ describe('Integration | Component | one time series chart/plot', function () {
     await settled();
 
     expect(get(model, 'lastViewParameters.timeResolution')).to.equal(3600);
-    expectEchartDummyPoints(this, null, 3600, 11);
+    expectEchartDummyPoints(null, 3600, 11);
   });
 
   it('shows continuously reloading newest data in live mode', async function () {
@@ -162,12 +162,12 @@ describe('Integration | Component | one time series chart/plot', function () {
     });
 
     await renderComponent();
-    expectEchartDummyPoints(this, null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
 
     fakeClock.tick(60 * 1000 + 500);
     await settled();
-    expectEchartDummyPoints(this, null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.be.null;
   });
 
@@ -180,12 +180,12 @@ describe('Integration | Component | one time series chart/plot', function () {
     });
 
     await renderComponent();
-    expectEchartDummyPoints(this, 1000000, 60, 60);
+    expectEchartDummyPoints(1000000, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
 
     fakeClock.tick(60 * 1000 + 500);
     await settled();
-    expectEchartDummyPoints(this, 1000000, 60, 60);
+    expectEchartDummyPoints(1000000, 60, 60);
     expect(model.get('lastViewParameters.lastPointTimestamp')).to.equal(1000000);
   });
 });

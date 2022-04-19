@@ -1,13 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import MissingMessage from 'onedata-gui-common/utils/i18n/missing-message';
 import { setProperties } from '@ember/object';
 import OneTooltipHelper from '../../../helpers/one-tooltip';
-import $ from 'jquery';
 
 describe('Integration | Component | form component/field renderer', function () {
   setupRenderingTest();
@@ -20,13 +19,13 @@ describe('Integration | Component | form component/field renderer', function () 
   it('has classes "form-group field-renderer" by default', async function () {
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.form-group.field-renderer')).to.exist;
+    expect(find('.form-group.field-renderer')).to.exist;
   });
 
   it('renders passed field', async function () {
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.text-like-field')).to.exist;
+    expect(find('.text-like-field')).to.exist;
   });
 
   it('renders label if "label" is specified in field', async function () {
@@ -34,15 +33,15 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    const $label = this.$('label');
-    expect($label.text().trim()).to.equal('someLabel:');
-    expect($label.attr('for')).to.equal(this.$('input').attr('id'));
+    const label = find('label');
+    expect(label.textContent.trim()).to.equal('someLabel:');
+    expect(label).to.have.attr('for', find('input').id);
   });
 
   it('does not render label if "label" is not specified in field', async function () {
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('label')).to.not.exist;
+    expect(find('label')).to.not.exist;
   });
 
   it('has class "has-error" when field is not valid and is modified', async function () {
@@ -50,7 +49,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.form-group')).to.have.class('has-error');
+    expect(find('.form-group')).to.have.class('has-error');
   });
 
   it(
@@ -58,7 +57,7 @@ describe('Integration | Component | form component/field renderer', function () 
     async function () {
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.form-group')).to.not.have.class('has-error');
+      expect(find('.form-group')).to.not.have.class('has-error');
     }
   );
 
@@ -68,7 +67,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.form-group')).to.have.class('has-success');
+    expect(find('.form-group')).to.have.class('has-success');
   });
 
   it(
@@ -78,7 +77,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.form-group')).to.not.have.class('has-success');
+      expect(find('.form-group')).to.not.have.class('has-success');
     }
   );
 
@@ -87,7 +86,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.field-message').text().trim()).to.equal(
+    expect(find('.field-message').textContent.trim()).to.equal(
       'This field can\'t be blank');
   });
 
@@ -96,7 +95,7 @@ describe('Integration | Component | form component/field renderer', function () 
     async function () {
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.field-message')).to.not.exist;
+      expect(find('.field-message')).to.not.exist;
     }
   );
 
@@ -105,7 +104,7 @@ describe('Integration | Component | form component/field renderer', function () 
     async function () {
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.form-control-feedback')).to.not.exist;
+      expect(find('.form-control-feedback')).to.not.exist;
     }
   );
 
@@ -114,7 +113,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.form-control-feedback.glyphicon-remove')).to.exist;
+    expect(find('.form-control-feedback.glyphicon-remove')).to.exist;
   });
 
   it('renders success icon when field is valid and is modified', async function () {
@@ -123,7 +122,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.form-control-feedback.glyphicon-ok')).to.exist;
+    expect(find('.form-control-feedback.glyphicon-ok')).to.exist;
   });
 
   it(
@@ -134,7 +133,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.form-control-feedback')).to.not.exist;
+      expect(find('.form-control-feedback')).to.not.exist;
     }
   );
 
@@ -145,9 +144,9 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      const $renderer = this.$('.field-renderer');
-      expect($renderer).to.have.class('field1-field');
-      expect($renderer).to.have.class('text-like-field-renderer');
+      const renderer = find('.field-renderer');
+      expect(renderer).to.have.class('field1-field');
+      expect(renderer).to.have.class('text-like-field-renderer');
     }
   );
 
@@ -158,7 +157,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.field-renderer')).to.have.class('abc');
+      expect(find('.field-renderer')).to.have.class('abc');
     }
   );
 
@@ -172,7 +171,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('label').text().trim()).to.equal('abc');
+      expect(find('label').textContent.trim()).to.equal('abc');
     }
   );
 
@@ -183,9 +182,9 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      const $formFieldTip = this.$('.form-field-tip');
-      expect($formFieldTip).to.exist;
-      return new OneTooltipHelper($formFieldTip.find('.one-icon')[0]).getText()
+      const formFieldTip = find('.form-field-tip');
+      expect(formFieldTip).to.exist;
+      return new OneTooltipHelper(formFieldTip.querySelector('.one-icon')).getText()
         .then(text => expect(text).to.equal('someTip'));
     }
   );
@@ -197,7 +196,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.form-field-tip')).to.not.exist;
+      expect(find('.form-field-tip')).to.not.exist;
     }
   );
 
@@ -208,12 +207,12 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      const $formFieldTip = this.$('.form-field-tip');
-      expect($formFieldTip).to.exist;
-      const tooltipHelper = new OneTooltipHelper($formFieldTip.find('.one-icon')[0]);
+      const formFieldTip = find('.form-field-tip');
+      expect(formFieldTip).to.exist;
+      const tooltipHelper = new OneTooltipHelper(formFieldTip.querySelector('.one-icon'));
       await tooltipHelper.open();
-      const $tooltip = $(tooltipHelper.getTooltip());
-      expect($tooltip).to.have.class('custom-tooltip-class');
+      const tooltip = tooltipHelper.getTooltip();
+      expect(tooltip).to.have.class('custom-tooltip-class');
 
       done();
     }
@@ -229,7 +228,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
       await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-      expect(this.$('.field-renderer')).to.have.class(`field-${mode}-mode`);
+      expect(find('.field-renderer')).to.have.class(`field-${mode}-mode`);
     });
   });
 
@@ -238,7 +237,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.field-renderer')).to.have.class('field-enabled')
+    expect(find('.field-renderer')).to.have.class('field-enabled')
       .and.to.not.have.class('field-disabled');
   });
 
@@ -247,7 +246,7 @@ describe('Integration | Component | form component/field renderer', function () 
 
     await render(hbs `{{form-component/field-renderer field=textField}}`);
 
-    expect(this.$('.field-renderer')).to.have.class('field-disabled')
+    expect(find('.field-renderer')).to.have.class('field-disabled')
       .and.to.not.have.class('field-enabled');
   });
 });

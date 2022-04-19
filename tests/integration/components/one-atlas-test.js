@@ -2,8 +2,9 @@ import { htmlSafe } from '@ember/string';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 
 describe('Integration | Component | one atlas', function () {
   setupRenderingTest();
@@ -30,7 +31,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    const atlas = this.$('.one-atlas');
+    const atlas = $(find('.one-atlas'));
     expect(atlas.width()).to.be.equal(size);
     expect(atlas.height()).to.be.gt(0);
     // map has horizontal layout
@@ -47,7 +48,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    const atlas = this.$('.one-atlas');
+    const atlas = $(find('.one-atlas'));
     expect(atlas.height()).to.be.equal(height);
     expect(atlas.width()).to.be.gt(0);
     expect(atlas.width()).to.be.lt(width);
@@ -62,7 +63,7 @@ describe('Integration | Component | one atlas', function () {
       </div>
     `);
 
-    const atlas = this.$('.one-atlas');
+    const atlas = $(find('.one-atlas'));
     size = size / 2;
     this.set('parentStyle', htmlSafe(`width: ${size}px; height: ${size}px`));
     this.get('_window.resizeListener').call(null);
@@ -89,8 +90,8 @@ describe('Integration | Component | one atlas', function () {
         </div>
       `);
 
-      const atlas = this.$('.one-atlas');
-      const sydney = this.$('.sydney');
+      const atlas = $(find('.one-atlas'));
+      const sydney = $(find('.sydney'));
       await settled();
 
       expect(sydney.position().left).to.be.gt((atlas.width() / 4) * 3);

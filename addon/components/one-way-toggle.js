@@ -16,6 +16,7 @@ import OneCheckboxBase from 'onedata-gui-common/components/one-checkbox-base';
 import { inject as service } from '@ember/service';
 import computedT from 'onedata-gui-common/utils/computed-t';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
+import $ from 'jquery';
 
 export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
   layout,
@@ -111,24 +112,26 @@ export default OneCheckboxBase.extend(I18n, RecognizerMixin, {
       return;
     }
 
-    let {
+    const {
       threeState,
       threeStatesValues,
       allowThreeStateToggle,
       checked,
+      element,
     } = this.getProperties(
       'threeState',
       'threeStatesValues',
       'allowThreeStateToggle',
-      'checked'
+      'checked',
+      'element'
     );
 
     document.getSelection().removeAllRanges();
 
-    let toggleElement = this.$('.one-way-toggle-control');
-    let mouseX = event.originalEvent.gesture.center.x;
-    let moveRatio = (mouseX - toggleElement.offset().left) /
-      toggleElement.outerWidth();
+    const $toggleElement = $(element.querySelector('.one-way-toggle-control'));
+    const mouseX = event.originalEvent.gesture.center.x;
+    const moveRatio = (mouseX - $toggleElement.offset().left) /
+      $toggleElement.outerWidth();
     let newValue;
     if (threeState && allowThreeStateToggle) {
       if (moveRatio < 0.33) {

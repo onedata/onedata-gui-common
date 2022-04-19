@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get } from '@ember/object';
 
@@ -11,7 +11,7 @@ describe('Integration | Component | workflow visualiser/visualiser element rende
   it('renders nothing when lane element is not defined', async function () {
     await render(hbs `{{workflow-visualiser/visualiser-element-renderer}}`);
 
-    expect(this.$().children()).to.have.length(0);
+    expect(this.element.children).to.have.length(0);
   });
 
   it('renders lane element using component specified by element\'s "renderer" field', async function () {
@@ -21,7 +21,7 @@ describe('Integration | Component | workflow visualiser/visualiser element rende
       elementModel=elementModel
     }}`);
 
-    expect(this.$('.test-component')).to.have.length(1);
+    expect(findAll('.test-component')).to.have.length(1);
   });
 
   it('passes lane element instance to the renderer lane element component', async function () {
@@ -31,7 +31,7 @@ describe('Integration | Component | workflow visualiser/visualiser element rende
       elementModel=elementModel
     }}`);
 
-    const renderedComponent = this.$('.test-component')[0].componentInstance;
+    const renderedComponent = find('.test-component').componentInstance;
     expect(get(renderedComponent, 'elementModel')).to.equal(elementModel);
   });
 });

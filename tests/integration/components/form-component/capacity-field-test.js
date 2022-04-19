@@ -4,10 +4,9 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import sinon from 'sinon';
-import $ from 'jquery';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { set } from '@ember/object';
-import { render, focus, blur, fillIn } from '@ember/test-helpers';
+import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 
 describe('Integration | Component | form component/capacity field', function () {
   setupRenderingTest();
@@ -19,13 +18,13 @@ describe('Integration | Component | form component/capacity field', function () 
   it('has class "capacity-field"', async function () {
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
-    expect(this.$('.capacity-field')).to.exist;
+    expect(find('.capacity-field')).to.exist;
   });
 
   it('renders one-way-capacity component', async function () {
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
-    expect(this.$('.one-way-capacity')).to.exist;
+    expect(find('.one-way-capacity')).to.exist;
   });
 
   it('can be disabled', async function () {
@@ -33,8 +32,8 @@ describe('Integration | Component | form component/capacity field', function () 
 
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
-    expect(this.$('.size-number-input')).to.have.attr('disabled');
-    expect(this.$('.ember-power-select-trigger'))
+    expect(find('.size-number-input').disabled).to.be.true;
+    expect(find('.ember-power-select-trigger'))
       .to.have.attr('aria-disabled', 'true');
   });
 
@@ -74,8 +73,8 @@ describe('Integration | Component | form component/capacity field', function () 
 
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
-    expect(this.$('.size-number-input')).to.have.value('20');
-    expect(this.$('.ember-power-select-trigger').text()).to.contain('MiB');
+    expect(find('.size-number-input').value).to.equal('20');
+    expect(find('.ember-power-select-trigger').textContent).to.contain('MiB');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -83,7 +82,7 @@ describe('Integration | Component | form component/capacity field', function () 
       {{form-component/capacity-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('.size-number-input#abc')).to.exist;
+    expect(find('.size-number-input#abc')).to.exist;
   });
 
   it('shows units starting from "MiB"s by default', async function () {
@@ -105,7 +104,7 @@ describe('Integration | Component | form component/capacity field', function () 
 
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
-    expect(this.$('input').attr('placeholder')).to.equal('test');
+    expect(find('input').placeholder).to.equal('test');
   });
 
   it('renders capacity value as text when field is in "view" mode', async function () {
@@ -115,16 +114,16 @@ describe('Integration | Component | form component/capacity field', function () 
 
     await render(hbs `{{form-component/capacity-field field=field}}`);
 
-    expect(this.$().text().trim()).to.equal('20 MiB');
+    expect(this.element.textContent.trim()).to.equal('20 MiB');
   });
 });
 
 async function expectUnits(expectedUnits) {
   await clickTrigger('.capacity-field');
 
-  const $options = $('.ember-power-select-option');
-  expect($options).to.have.length(expectedUnits.length);
+  const options = document.querySelectorAll('.ember-power-select-option');
+  expect(options).to.have.length(expectedUnits.length);
   expectedUnits.forEach((unit, idx) => {
-    expect($options.eq(idx).text().trim()).to.equal(unit);
+    expect(options[idx].textContent.trim()).to.equal(unit);
   });
 }

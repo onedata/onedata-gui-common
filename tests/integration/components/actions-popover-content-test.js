@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -26,12 +26,13 @@ describe('Integration | Component | actions popover content', function () {
     action.action = sinon.spy();
     await render(hbs `{{actions-popover-content actionsArray=acts}}`);
 
-    const actionItem = this.$('li:first-child');
+    const actionItem = find('li:first-child');
     expect(actionItem).to.exist;
-    expect(actionItem.find('a')).to.have.class(action.class);
-    expect(actionItem.find(`.oneicon-${action.icon}`)).to.exist;
-    expect(actionItem.find('.one-label').text().trim()).to.equal(action.title);
-    click(actionItem.find('a')[0]).then(() => {
+    expect(actionItem.querySelector('a')).to.have.class(action.class);
+    expect(actionItem.querySelector(`.oneicon-${action.icon}`)).to.exist;
+    expect(actionItem.querySelector('.one-label').textContent.trim())
+      .to.equal(action.title);
+    click(actionItem.querySelector('a')).then(() => {
       expect(action.action).to.be.calledOnce;
       done();
     });
@@ -42,10 +43,11 @@ describe('Integration | Component | actions popover content', function () {
     const header = actions[1];
     await render(hbs `{{actions-popover-content actionsArray=acts}}`);
 
-    const actionItem = this.$('li:last-child');
+    const actionItem = find('li:last-child');
     expect(actionItem).to.exist;
     expect(actionItem).to.have.class('separator');
-    expect(actionItem.find('.one-label').text().trim()).to.equal(header.title);
+    expect(actionItem.querySelector('.one-label').textContent.trim())
+      .to.equal(header.title);
   });
 
   it('calls actionClicked after action click', async function (done) {

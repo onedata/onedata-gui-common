@@ -11,7 +11,7 @@ import {
 import {
   setupRenderingTest,
 } from 'ember-mocha';
-import { render, settled, focus, blur, click, fillIn } from '@ember/test-helpers';
+import { render, settled, focus, blur, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -106,10 +106,10 @@ describe('Integration | Component | one dynamic tree', function () {
   it('renders fields', async function () {
     await render(hbs `{{one-dynamic-tree definition=definition}}`);
 
-    expect(this.$('.field-node1-node11'), 'node 1.1').to.exist;
-    expect(this.$('.field-node1-node12'), 'node 1.2').to.exist;
-    expect(this.$('input[type="text"]')).to.exist;
-    expect(this.$('.one-way-radio-group')).to.exist;
+    expect(find('.field-node1-node11'), 'node 1.1').to.exist;
+    expect(find('.field-node1-node12'), 'node 1.2').to.exist;
+    expect(find('input[type="text"]')).to.exist;
+    expect(find('.one-way-radio-group')).to.exist;
   });
 
   it('disables field', async function () {
@@ -121,8 +121,8 @@ describe('Integration | Component | one dynamic tree', function () {
       }}
     `);
 
-    expect(this.$('.field-node1-node11')).to.be.disabled;
-    expect(this.$('.field-node1-node12 input[type="radio"]')).to.not.be.disabled;
+    expect(find('.field-node1-node11').disabled).to.be.true;
+    expect(find('.field-node1-node12 input[type="radio"]').disabled).to.be.false;
   });
 
   it('disables nested field', async function () {
@@ -134,8 +134,8 @@ describe('Integration | Component | one dynamic tree', function () {
       }}
     `);
 
-    expect(this.$('.field-node1-node11')).to.be.disabled;
-    expect(this.$('.field-node1-node12 input[type="radio"]')).to.be.disabled;
+    expect(find('.field-node1-node11').disabled).to.be.true;
+    expect(find('.field-node1-node12 input[type="radio"]').disabled).to.be.true;
   });
 
   it('validates data', async function () {
@@ -146,12 +146,12 @@ describe('Integration | Component | one dynamic tree', function () {
       }}
     `);
 
-    expect(this.$('.has-error')).to.not.exist;
+    expect(find('.has-error')).to.not.exist;
 
     await focus('input[type="text"]');
     await blur('input[type="text"]');
-    expect(this.$('.has-error')).to.exist;
-    expect(this.$('.has-error .form-message')).to.contain(ERROR_MSG);
+    expect(find('.has-error')).to.exist;
+    expect(find('.has-error .form-message').textContent).to.contain(ERROR_MSG);
   });
 
   it('does not validate data in disabled fields', async function () {
@@ -166,11 +166,11 @@ describe('Integration | Component | one dynamic tree', function () {
 
     await focus('input[type="text"]');
     await blur('input[type="text"]');
-    expect(this.$('.has-error')).to.exist;
+    expect(find('.has-error')).to.exist;
 
     this.get('disabledPaths').pushObject('node1.node11');
     await settled();
-    expect(this.$('.has-error')).to.not.exist;
+    expect(find('.has-error')).to.not.exist;
 
   });
 
@@ -198,7 +198,7 @@ describe('Integration | Component | one dynamic tree', function () {
     async function () {
       await render(hbs `{{one-dynamic-tree definition=definition}}`);
 
-      expect(this.$('.field-node2')).to.have.class('maybe');
+      expect(find('.field-node2')).to.have.class('maybe');
     }
   );
 
@@ -207,9 +207,9 @@ describe('Integration | Component | one dynamic tree', function () {
 
     await click('.field-node2');
 
-    expect(this.$('.field-node2-node21')).to.have.class('checked');
-    expect(this.$('.field-node2-node22')).to.have.class('checked');
-    expect(this.$('.field-node2')).to.have.class('checked');
+    expect(find('.field-node2-node21')).to.have.class('checked');
+    expect(find('.field-node2-node22')).to.have.class('checked');
+    expect(find('.field-node2')).to.have.class('checked');
   });
 
   it('does not ignore disabled toggle state in "select all" toggle state',
@@ -222,7 +222,7 @@ describe('Integration | Component | one dynamic tree', function () {
         }}
       `);
 
-      expect(this.$('.field-node2')).to.have.class('maybe');
+      expect(find('.field-node2')).to.have.class('maybe');
     }
   );
 
@@ -236,8 +236,8 @@ describe('Integration | Component | one dynamic tree', function () {
         }}
       `);
 
-      const node21Field = this.$('.field-node2-node21');
-      const node22Field = this.$('.field-node2-node22');
+      const node21Field = find('.field-node2-node21');
+      const node22Field = find('.field-node2-node22');
       await click('.field-node2');
       expect(node21Field).to.have.class('checked');
       expect(node22Field).to.have.class('checked');
@@ -269,7 +269,7 @@ describe('Integration | Component | one dynamic tree', function () {
     treeValues.node1.node11 = overrideValue;
     this.set('overrideValues', treeValues);
     await settled();
-    expect(this.$('.field-node1-node11').val())
+    expect(find('.field-node1-node11').value)
       .to.be.equal(overrideValue);
   });
 
@@ -290,11 +290,11 @@ describe('Integration | Component | one dynamic tree', function () {
     `);
     const compareValue = 'compare';
     await fillIn('.field-node1-node11', 'test');
-    expect(this.$('.modified-node-label')).to.not.exist;
+    expect(find('.modified-node-label')).to.not.exist;
 
     treeValues.node1.node11 = compareValue;
     this.set('compareValues', treeValues);
     await settled();
-    expect(this.$('.modified-node-label')).to.exist;
+    expect(find('.modified-node-label')).to.exist;
   });
 });

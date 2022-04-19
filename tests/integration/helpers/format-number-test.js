@@ -45,7 +45,7 @@ function checkNumberFormat({
 
       await render(hbs `{{format-number number format=format}}`);
 
-      expect(this.$().html().trim()).to.equal(expectedString);
+      expect(this.element.innerHTML.trim()).to.equal(expectedString);
     }
   );
 }

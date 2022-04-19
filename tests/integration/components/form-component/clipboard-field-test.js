@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import { setProperties } from '@ember/object';
@@ -18,7 +18,7 @@ describe('Integration | Component | form component/clipboard field', function ()
     async function () {
       await render(hbs `{{form-component/clipboard-field field=field}}`);
 
-      expect(this.$('.clipboard-field')).to.exist;
+      expect(find('.clipboard-field')).to.exist;
     }
   );
 
@@ -27,7 +27,7 @@ describe('Integration | Component | form component/clipboard field', function ()
     async function () {
       await render(hbs `{{form-component/clipboard-field field=field}}`);
 
-      expect(this.$('input').val()).to.be.empty;
+      expect(find('input').value).to.be.empty;
     }
   );
 
@@ -38,7 +38,7 @@ describe('Integration | Component | form component/clipboard field', function ()
 
       await render(hbs `{{form-component/clipboard-field field=field}}`);
 
-      expect(this.$('input').val()).to.equal('abc');
+      expect(find('input').value).to.equal('abc');
     }
   );
 
@@ -52,7 +52,7 @@ describe('Integration | Component | form component/clipboard field', function ()
 
       await render(hbs `{{form-component/clipboard-field field=field}}`);
 
-      expect(this.$('input').val()).to.equal('def');
+      expect(find('input').value).to.equal('def');
     }
   );
 
@@ -66,7 +66,7 @@ describe('Integration | Component | form component/clipboard field', function ()
 
       await render(hbs `{{form-component/clipboard-field field=field}}`);
 
-      expect(this.$('textarea').val()).to.equal('abc');
+      expect(find('textarea').value).to.equal('abc');
     }
   );
 
@@ -80,7 +80,7 @@ describe('Integration | Component | form component/clipboard field', function ()
 
       await render(hbs `{{form-component/clipboard-field field=field}}`);
 
-      expect(this.$('textarea').prop('rows')).to.equal(7);
+      expect(find('textarea').rows).to.equal(7);
     }
   );
 });

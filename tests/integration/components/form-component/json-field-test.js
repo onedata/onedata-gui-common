@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, focus, blur, fillIn } from '@ember/test-helpers';
+import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import sinon from 'sinon';
@@ -21,7 +21,7 @@ describe('Integration | Component | form component/json field', function () {
     async function () {
       await render(hbs `{{form-component/json-field field=field}}`);
 
-      expect(this.$('.json-field')).to.exist;
+      expect(find('.json-field')).to.exist;
     }
   );
 
@@ -30,7 +30,7 @@ describe('Integration | Component | form component/json field', function () {
     async function () {
       await render(hbs `{{form-component/json-field field=field}}`);
 
-      expect(this.$('textarea')).to.exist;
+      expect(find('textarea')).to.exist;
     }
   );
 
@@ -41,7 +41,7 @@ describe('Integration | Component | form component/json field', function () {
 
       await render(hbs `{{form-component/json-field field=field}}`);
 
-      expect(this.$('textarea')).to.have.attr('disabled');
+      expect(find('textarea').disabled).to.be.true;
     }
   );
 
@@ -78,7 +78,7 @@ describe('Integration | Component | form component/json field', function () {
 
     await render(hbs `{{form-component/json-field field=field}}`);
 
-    expect(this.$('textarea').val()).to.equal('"test"');
+    expect(find('textarea').value).to.equal('"test"');
   });
 
   it('sets textarea id according to "fieldId"', async function () {
@@ -86,7 +86,7 @@ describe('Integration | Component | form component/json field', function () {
       {{form-component/json-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('textarea#abc')).to.exist;
+    expect(find('textarea#abc')).to.exist;
   });
 
   it('renders readonly value when field is in "view" mode', async function () {
@@ -96,8 +96,8 @@ describe('Integration | Component | form component/json field', function () {
 
     await render(hbs `{{form-component/json-field field=field}}`);
 
-    expect(this.$('textarea').val()).to.equal('"test"');
-    expect(this.$('textarea')).to.have.attr('readonly');
+    expect(find('textarea').value).to.equal('"test"');
+    expect(find('textarea').readOnly).to.be.true;
   });
 
   it('sets placeholder according to "placeholder"', async function () {
@@ -105,6 +105,6 @@ describe('Integration | Component | form component/json field', function () {
 
     await render(hbs `{{form-component/json-field field=field}}`);
 
-    expect(this.$('textarea').attr('placeholder')).to.equal('test');
+    expect(find('textarea').placeholder).to.equal('test');
   });
 });

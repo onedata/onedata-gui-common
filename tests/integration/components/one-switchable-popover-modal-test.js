@@ -3,7 +3,6 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 
 const CONTENT_TEXT = 'contentText';
 const WINDOW_WIDTH_LG = 1000;
@@ -36,10 +35,10 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    expect($('body')).to.not.contain(CONTENT_TEXT);
+    expect(document.querySelector('body').textContent).to.not.contain(CONTENT_TEXT);
 
     await click('.trigger');
-    expect($('body')).to.contain(CONTENT_TEXT);
+    expect(document.querySelector('body').textContent).to.contain(CONTENT_TEXT);
   });
 
   it('reacts to window resize', async function () {
@@ -56,20 +55,20 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger');
-    expect($('.popover-element')).to.exist;
-    expect($('.modal-element')).to.not.exist;
+    expect(document.querySelector('.popover-element')).to.exist;
+    expect(document.querySelector('.modal-element')).to.not.exist;
 
     this.set('_window.innerWidth', WINDOW_WIDTH_SM);
     this.get('_window.resizeListener')();
     await settled();
-    expect($('.popover-element')).to.not.exist;
-    expect($('.modal-element')).to.exist;
+    expect(document.querySelector('.popover-element')).to.not.exist;
+    expect(document.querySelector('.modal-element')).to.exist;
 
     this.set('_window.innerWidth', WINDOW_WIDTH_LG);
     this.get('_window.resizeListener')();
     await settled();
-    expect($('.popover-element')).to.exist;
-    expect($('.modal-element')).to.not.exist;
+    expect(document.querySelector('.popover-element')).to.exist;
+    expect(document.querySelector('.modal-element')).to.not.exist;
   });
 
   it('emits events onShow, onShown', async function () {
@@ -137,10 +136,10 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger');
-    expect($('.in .popover-element')).to.exist;
+    expect(document.querySelector('.in .popover-element')).to.exist;
 
     await click('.trigger');
-    expect($('.out .popover-element')).to.exist;
+    expect(document.querySelector('.out .popover-element')).to.exist;
 
   });
 
@@ -160,7 +159,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     await click('.trigger');
     await click('.container');
 
-    expect($('.out .popover-element')).to.exist;
+    expect(document.querySelector('.out .popover-element')).to.exist;
   });
 
   it('does not hide popover on content click', async function () {
@@ -179,7 +178,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     await click('.trigger');
     await click('.content-button');
 
-    expect($('.in .popover-element')).to.exist;
+    expect(document.querySelector('.in .popover-element')).to.exist;
   });
 
   it('shows and hides modal', async function () {
@@ -194,11 +193,11 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger');
-    expect($('.modal-element.in')).to.exist;
+    expect(document.querySelector('.modal-element.in')).to.exist;
 
     // click on backdrop
-    await click($('.modal')[0]);
-    expect($('.modal-element.in')).to.not.exist;
+    await click(document.querySelector('.modal'));
+    expect(document.querySelector('.modal-element.in')).to.not.exist;
   });
 
   it('does not hide modal on content click', async function () {
@@ -215,7 +214,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     await click('.trigger');
     await click('.content-button');
 
-    expect($('.modal-element.in')).to.exist;
+    expect(document.querySelector('.modal-element.in')).to.exist;
   });
 
   it('handles with different triggers', async function () {
@@ -232,11 +231,11 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger-popover');
-    expect($('.in .popover-element')).to.exist;
+    expect(document.querySelector('.in .popover-element')).to.exist;
 
     await click('.trigger-modal');
-    expect($('.modal-element.in')).to.exist;
-    expect($('.popover-element')).to.not.exist;
+    expect(document.querySelector('.modal-element.in')).to.exist;
+    expect(document.querySelector('.popover-element')).to.not.exist;
   });
 
   it('sets appropriate classes', async function () {
@@ -254,10 +253,10 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger-popover');
-    expect($('.popover-element.component-element')).to.exist;
+    expect(document.querySelector('.popover-element.component-element')).to.exist;
 
     await click('.trigger-modal');
-    expect($('.modal-element.component-element')).to.exist;
+    expect(document.querySelector('.modal-element.component-element')).to.exist;
   });
 
   it('can be controlled by open property', async function () {
@@ -274,15 +273,15 @@ describe('Integration | Component | one switchable popover modal', function () {
       {{/one-switchable-popover-modal}}
     `);
 
-    expect($('.in .popover-element')).to.not.exist;
+    expect(document.querySelector('.in .popover-element')).to.not.exist;
 
     this.set('open', true);
     await settled();
-    expect($('.in .popover-element')).to.exist;
+    expect(document.querySelector('.in .popover-element')).to.exist;
 
     this.set('open', false);
     await settled();
-    expect($('.in .popover-element')).to.not.exist;
+    expect(document.querySelector('.in .popover-element')).to.not.exist;
   });
 
   it('does not hide if onHide returns false', async function () {
@@ -302,7 +301,7 @@ describe('Integration | Component | one switchable popover modal', function () {
 
     await click('.trigger');
     await click('.trigger');
-    expect($('.in .popover-element')).to.exist;
+    expect(document.querySelector('.in .popover-element')).to.exist;
   });
 
   it('does not show if onShow returns false', async function () {
@@ -319,7 +318,7 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger');
-    expect($('.in .popover-element')).to.not.exist;
+    expect(document.querySelector('.in .popover-element')).to.not.exist;
   });
 
   it('can reattach content to another trigger while using open property',
@@ -342,12 +341,12 @@ describe('Integration | Component | one switchable popover modal', function () {
         {{/one-switchable-popover-modal}}
       `);
 
-      expect($('.modal-element.in')).to.exist;
+      expect(document.querySelector('.modal-element.in')).to.exist;
 
       this.set('activeTriggerSelector', '.trigger-popover');
       await settled();
-      expect($('body')).to.not.have.class('modal-open');
-      expect($('.in .popover-element')).to.exist;
+      expect(document.querySelector('body')).to.not.have.class('modal-open');
+      expect(document.querySelector('.in .popover-element')).to.exist;
     }
   );
 
@@ -366,14 +365,14 @@ describe('Integration | Component | one switchable popover modal', function () {
     `);
 
     await click('.trigger-modal');
-    expect($('.modal-element.in')).to.exist;
+    expect(document.querySelector('.modal-element.in')).to.exist;
 
     this.set('triggersConfiguration', '.trigger-popover:popover');
     await settled();
-    expect($('.modal-element.in')).to.not.exist;
+    expect(document.querySelector('.modal-element.in')).to.not.exist;
 
     await click('.trigger-popover');
-    expect($('.in .popover-element')).to.exist;
+    expect(document.querySelector('.in .popover-element')).to.exist;
   });
 
   it('passes trigger selector via onShow argument', async function () {

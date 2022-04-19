@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -17,7 +17,7 @@ describe(
       async function () {
         await render(hbs `{{query-builder/block-selector/operator-selector}}`);
 
-        const operators = this.$('.operator-selector .operator');
+        const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(4);
         allowedOperatorsList.forEach((operatorName, index) =>
           checkOperatorButton(operators[index], operatorName)
@@ -50,7 +50,7 @@ describe(
           operators=(array "and" "or")
         }}`);
 
-        const operators = this.$('.operator-selector .operator');
+        const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(2);
         ['and', 'or'].forEach((operatorName, index) =>
           checkOperatorButton(operators[index], operatorName)
@@ -66,7 +66,7 @@ describe(
           operators=(array "and" "xor")
         }}`);
 
-        const operators = this.$('.operator-selector .operator');
+        const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(1);
         checkOperatorButton(operators[0], 'and');
       }
@@ -77,7 +77,7 @@ describe(
       async function () {
         await render(hbs `{{query-builder/block-selector/operator-selector}}`);
 
-        expect(this.$('.operator-selector .operator[disabled]')).to.not.exist;
+        expect(find('.operator-selector .operator[disabled]')).to.not.exist;
       }
     );
 
@@ -88,10 +88,10 @@ describe(
           disabledOperators=(array "and" "or")
         }}`);
 
-        expect(this.$('.operator-selector .operator[disabled]'))
+        expect(findAll('.operator-selector .operator[disabled]'))
           .to.have.length(2);
-        expect(this.$('.operator-selector .operator-not'))
-          .to.not.have.attr('disabled');
+        expect(find('.operator-selector .operator-not').disabled)
+          .to.be.false;
       }
     );
   }

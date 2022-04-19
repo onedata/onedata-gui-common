@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard';
 import GlobalNotifyStub from '../../helpers/global-notify-stub';
@@ -111,9 +111,9 @@ describe('Integration | Component | provider place', function () {
 
   it('shows provider status', async function () {
     await render(hbs `{{provider-place provider=provider}}`);
-    const $providerPlace = this.$('.provider-place');
-    expect($providerPlace).to.exist;
-    expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
+    const providerPlace = find('.provider-place');
+    expect(providerPlace).to.exist;
+    expect(providerPlace).to.have.class('online');
   });
 
   it('resizes with parent one-atlas component', async function () {
@@ -122,9 +122,9 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider
         atlasWidth=atlasWidth}}`);
-    let prevWidth = parseFloat(this.$('.circle').css('width'));
+    let prevWidth = parseFloat($(find('.circle')).css('width'));
     this.set('atlasWidth', 400);
-    expect(parseFloat(this.$('.circle').css('width')))
+    expect(parseFloat($(find('.circle')).css('width')))
       .to.be.equal(prevWidth / 2);
   });
 
@@ -158,15 +158,15 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider}}`);
 
-    let spaces = this.get('spaces');
+    const spaces = this.get('spaces');
     click('.circle').then(() => {
-      let drop = $('.provider-place-drop');
-      expect(drop.find('.provider-place-drop-space'))
+      const drop = document.querySelector('.provider-place-drop');
+      expect(drop.querySelectorAll('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
-          expect(drop.text()).to.contain(space.name);
+          expect(drop.textContent).to.contain(space.name);
         }),
-        expect(drop.text()).to.contain('1 MiB');
+        expect(drop.textContent).to.contain('1 MiB');
       done();
     });
   });
@@ -177,10 +177,10 @@ describe('Integration | Component | provider place', function () {
         provider=providers}}`);
 
     click('.circle').then(() => {
-      const dropContainer = $('.provider-place-drop-container');
-      expect(dropContainer.find('.oneproviders-list-item'))
+      const dropContainer = document.querySelector('.provider-place-drop-container');
+      expect(dropContainer.querySelectorAll('.oneproviders-list-item'))
         .to.have.length(2);
-      expect(dropContainer.find('.oneproviders-list-item.active')).to.exist;
+      expect(dropContainer.querySelector('.oneproviders-list-item.active')).to.exist;
       done();
     });
   });

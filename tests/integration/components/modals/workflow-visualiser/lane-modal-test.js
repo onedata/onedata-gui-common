@@ -60,16 +60,17 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     it('shows correct header, form in "create" mode and footer', async function (done) {
       await showModal(this);
 
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Create new lane');
-      expect(getModalBody().find('.lane-form')).to.have.class('mode-create')
+      expect(getModalHeader().querySelector('h1').textContent.trim())
+        .to.equal('Create new lane');
+      expect(getModalBody().querySelector('.lane-form')).to.have.class('mode-create')
         .and.to.have.class('form-enabled');
-      const $modalFooter = getModalFooter();
-      const $cancelBtn = $modalFooter.find('.btn-cancel');
-      const $submitBtn = $modalFooter.find('.btn-submit');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Cancel');
-      expect($submitBtn).to.have.class('btn-primary');
-      expect($submitBtn.text().trim()).to.equal('Create');
+      const modalFooter = getModalFooter();
+      const cancelBtn = modalFooter.querySelector('.btn-cancel');
+      const submitBtn = modalFooter.querySelector('.btn-submit');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Cancel');
+      expect(submitBtn).to.have.class('btn-primary');
+      expect(submitBtn.textContent.trim()).to.equal('Create');
       done();
     });
 
@@ -77,14 +78,14 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       async function (done) {
         await showModal(this);
 
-        const $submitBtn = getModalFooter().find('.btn-submit');
-        expect($submitBtn).to.be.disabled;
+        const submitBtn = getModalFooter().querySelector('.btn-submit');
+        expect(submitBtn.disabled).to.be.true;
 
         await fillIn('.name-field .form-control', 'lane1');
-        expect($submitBtn).to.be.not.disabled;
+        expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', '');
-        expect($submitBtn).to.be.disabled;
+        expect(submitBtn.disabled).to.be.true;
         done();
       });
 
@@ -110,17 +111,19 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     it('shows correct header, form in "edit" mode and footer', async function (done) {
       await showModal(this);
 
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Modify lane');
-      const $form = getModalBody().find('.lane-form');
-      expect($form).to.have.class('mode-edit').and.to.have.class('form-enabled');
-      expect($form.find('.name-field .form-control')).to.have.value(simpliestLane.name);
-      const $modalFooter = getModalFooter();
-      const $cancelBtn = $modalFooter.find('.btn-cancel');
-      const $submitBtn = $modalFooter.find('.btn-submit');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Cancel');
-      expect($submitBtn).to.have.class('btn-primary');
-      expect($submitBtn.text().trim()).to.equal('OK');
+      expect(getModalHeader().querySelector('h1').textContent.trim())
+        .to.equal('Modify lane');
+      const form = getModalBody().querySelector('.lane-form');
+      expect(form).to.have.class('mode-edit').and.to.have.class('form-enabled');
+      expect(form.querySelector('.name-field .form-control'))
+        .to.have.value(simpliestLane.name);
+      const modalFooter = getModalFooter();
+      const cancelBtn = modalFooter.querySelector('.btn-cancel');
+      const submitBtn = modalFooter.querySelector('.btn-submit');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Cancel');
+      expect(submitBtn).to.have.class('btn-primary');
+      expect(submitBtn.textContent.trim()).to.equal('OK');
       done();
     });
 
@@ -128,14 +131,14 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
       async function (done) {
         await showModal(this);
 
-        const $submitBtn = getModalFooter().find('.btn-submit');
-        expect($submitBtn).to.be.not.disabled;
+        const submitBtn = getModalFooter().querySelector('.btn-submit');
+        expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', 'anothername');
-        expect($submitBtn).to.be.not.disabled;
+        expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', '');
-        expect($submitBtn).to.be.disabled;
+        expect(submitBtn.disabled).to.be.true;
         done();
       });
 
@@ -162,17 +165,18 @@ describe('Integration | Component | modals/workflow visualiser/lane modal', func
     it('shows correct header, form in "view" mode and footer', async function (done) {
       await showModal(this);
 
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Lane details');
-      const $form = getModalBody().find('.lane-form');
-      expect($form).to.have.class('mode-view');
-      expect($form.find('.name-field .field-component').text().trim())
+      expect(getModalHeader().querySelector('h1').textContent.trim())
+        .to.equal('Lane details');
+      const form = getModalBody().querySelector('.lane-form');
+      expect(form).to.have.class('mode-view');
+      expect(form.querySelector('.name-field .field-component').textContent.trim())
         .to.equal(simpliestLane.name);
-      const $modalFooter = getModalFooter();
-      const $cancelBtn = $modalFooter.find('.btn-cancel');
-      const $submitBtn = $modalFooter.find('.btn-submit');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Close');
-      expect($submitBtn).to.not.exist;
+      const modalFooter = getModalFooter();
+      const cancelBtn = modalFooter.querySelector('.btn-cancel');
+      const submitBtn = modalFooter.querySelector('.btn-submit');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Close');
+      expect(submitBtn).to.not.exist;
       done();
     });
 
@@ -201,7 +205,7 @@ function itClosesModalOnCancelClick() {
     await showModal(this);
     expect(onHideSpy).to.not.been.called;
 
-    await click(getModalFooter().find('.btn-cancel')[0]);
+    await click(getModalFooter().querySelector('.btn-cancel'));
     expect(onHideSpy).to.be.calledOnce;
     done();
   });
@@ -214,7 +218,7 @@ function itClosesModalOnBackdropClick() {
     await showModal(this);
     expect(onHideSpy).to.not.been.called;
 
-    await click(getModal()[0]);
+    await click(getModal());
     expect(onHideSpy).to.be.calledOnce;
     done();
   });
@@ -242,7 +246,7 @@ function itPassesLaneProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
     await showModal(this);
 
     await fillForm(this);
-    await click(getModalFooter().find('.btn-submit')[0]);
+    await click(getModalFooter().querySelector('.btn-submit'));
 
     expect(submitStub).to.be.calledWith(expectedData);
     done();
@@ -256,12 +260,12 @@ function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
     await showModal(this);
 
     await fillForm(this);
-    await click(getModalFooter().find('.btn-submit')[0]);
+    await click(getModalFooter().querySelector('.btn-submit'));
 
-    expect(getModalBody().find('.lane-form')).to.have.class('form-disabled');
-    const $modalFooter = getModalFooter();
-    expect($modalFooter.find('.btn-cancel')).to.have.attr('disabled');
-    expect($modalFooter.find('.btn-submit')).to.have.attr('disabled');
+    expect(getModalBody().querySelector('.lane-form')).to.have.class('form-disabled');
+    const modalFooter = getModalFooter();
+    expect(modalFooter.querySelector('.btn-cancel')).to.have.attr('disabled');
+    expect(modalFooter.querySelector('.btn-submit')).to.have.attr('disabled');
     done();
   });
 }
@@ -274,8 +278,8 @@ function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
     await showModal(this);
 
     await fillForm(this);
-    await click(getModalFooter().find('.btn-submit')[0]);
-    await click(getModal()[0]);
+    await click(getModalFooter().querySelector('.btn-submit'));
+    await click(getModal());
 
     expect(onHideSpy).to.not.be.called;
     done();

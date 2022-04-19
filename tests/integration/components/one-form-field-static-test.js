@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form field static', function () {
@@ -17,9 +17,9 @@ describe('Integration | Component | one form field static', function () {
       {{one-form-field-static field=field value=value}}
     `);
 
-    let $field = this.$('.form-control-static');
-    expect($field).to.have.length(1);
-    expect($field.text()).to.match(new RegExp('hello'));
+    const fieldElem = find('.form-control-static');
+    expect(fieldElem).to.exist;
+    expect(fieldElem.textContent).to.match(new RegExp('hello'));
   });
 
   it('has a class with field name', async function () {
@@ -31,7 +31,6 @@ describe('Integration | Component | one form field static', function () {
       {{one-form-field-static field=field}}
     `);
 
-    let $field = this.$('.form-control-static');
-    expect($field).to.have.class('field-one');
+    expect(find('.form-control-static')).to.have.class('field-one');
   });
 });

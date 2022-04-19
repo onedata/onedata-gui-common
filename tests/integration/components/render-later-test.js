@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | render later', function () {
@@ -13,7 +13,7 @@ describe('Integration | Component | render later', function () {
         <div class="test"></div>
       {{/render-later}}
     `);
-    expect(this.$('.test')).to.not.exist;
+    expect(find('.test')).to.not.exist;
   });
 
   it('renders content for truthy trigger value', async function () {
@@ -22,7 +22,7 @@ describe('Integration | Component | render later', function () {
         <div class="test"></div>
       {{/render-later}}
     `);
-    expect(this.$('.test')).to.exist;
+    expect(find('.test')).to.exist;
   });
 
   it('renders content after trigger set to truthy value', async function () {
@@ -36,7 +36,7 @@ describe('Integration | Component | render later', function () {
     this.set('trigger', true);
     await settled();
 
-    expect(this.$('.test')).to.exist;
+    expect(find('.test')).to.exist;
   });
 
   it('does not change render state after trigger set to falsy value', async function () {
@@ -50,7 +50,7 @@ describe('Integration | Component | render later', function () {
     this.set('trigger', false);
     await settled();
 
-    expect(this.$('.test')).to.exist;
+    expect(find('.test')).to.exist;
   });
 
   it('resets render state through property "resetRender"', async function () {
@@ -70,7 +70,7 @@ describe('Integration | Component | render later', function () {
     });
     await settled();
 
-    expect(this.$('.test')).to.not.exist;
+    expect(find('.test')).to.not.exist;
 
   });
 
@@ -85,6 +85,6 @@ describe('Integration | Component | render later', function () {
     this.set('trigger', false);
     await click('.test');
 
-    expect(this.$('.test')).to.not.exist;
+    expect(find('.test')).to.not.exist;
   });
 });

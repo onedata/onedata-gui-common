@@ -38,16 +38,23 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+
+    const {
+      element,
+      elementId,
+    } = this.getProperties('element', 'elementId');
     this._initBasictable();
     // prevent from collapse animation on first render
-    if (this.$().is('.dropdown-table-rows')) {
-      const tdList = this.$('td:not(.row-header)');
-      tdList.addClass('no-transition');
-      run.next(() => tdList.removeClass('no-transition'));
+    if (element.matches('.dropdown-table-rows')) {
+      const tdList = element.querySelectorAll('td:not(.row-header)');
+      tdList.forEach((node) => node.classList.add('no-transition'));
+      run.next(() =>
+        tdList.forEach((node) => node.classList.remove('no-transition'))
+      );
     }
 
     $(window).on(
-      `resize.${this.get('elementId')}`,
+      `resize.${elementId}`,
       () => debounce(this, '_updateState', 1)
     );
     this._updateState();
@@ -55,19 +62,31 @@ export default Component.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-    this.$().basictable('destroy');
-    $(window).off(`resize.${this.get('elementId')}`);
+
+    const {
+      element,
+      elementId,
+    } = this.getProperties('element', 'elementId');
+
+    $(element).basictable('destroy');
+    $(window).off(`resize.${elementId}`);
   },
 
   _initBasictable() {
-    this.$().basictable({
-      breakpoint: this.get('breakpoint'),
+    const {
+      element,
+      breakpoint,
+    } = this.getProperties('element', 'breakpoint');
+
+    $(element).basictable({
+      breakpoint,
     });
   },
 
   _reinitializeBasictable() {
-    if (this.get('element')) {
-      this.$().basictable('setup');
+    const element = this.get('element');
+    if (element) {
+      $(element).basictable('setup');
     }
   },
 

@@ -1,8 +1,8 @@
 /**
- * Component for dynamic resizable button toolbars. 
- * When there is not enough space for a standard toolbar, 
+ * Component for dynamic resizable button toolbars.
+ * When there is not enough space for a standard toolbar,
  * it collapses to one button with popover menu.
- * 
+ *
  * Example:
  * ```
  * {{#one-collapsible-toolbar as |dropdown|}}
@@ -54,7 +54,7 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
    * @type {String}
    */
   popoverClass: '',
-  
+
   /**
    * CSS classes used in full mode (for a whole toolbar)
    * @type {boolean}
@@ -153,10 +153,11 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       }
       this.addClickOutsideListener();
     });
+    const $element = $(this.get('element'));
     this.setProperties({
-      overflowElement: this.$('.collapsible-toolbar-buttons'),
-      overflowParentElement: this.$().parent(),
-      overflowSiblingsElements: this.$().siblings(),
+      overflowElement: $element.find('.collapsible-toolbar-buttons'),
+      overflowParentElement: $element.parent(),
+      overflowSiblingsElements: $element.siblings(),
     });
     this.overflowDetectorMounter();
     this.get('eventsBus').on(

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | loading container', function () {
@@ -12,7 +12,7 @@ describe('Integration | Component | loading container', function () {
       <div class="some-content">Some content</div>
     {{/loading-container}}
     `);
-    expect(this.$('.some-content')).to.exist;
+    expect(find('.some-content')).to.exist;
   });
 
   it('does not render yielded content if isLoading is true', async function () {
@@ -20,7 +20,7 @@ describe('Integration | Component | loading container', function () {
       <div class="some-content">Some content</div>
     {{/loading-container}}
     `);
-    expect(this.$('.some-content')).to.not.exist;
+    expect(find('.some-content')).to.not.exist;
   });
 
   it('render erroReason if available', async function () {
@@ -28,7 +28,7 @@ describe('Integration | Component | loading container', function () {
       <div class="some-content">Some content</div>
     {{/loading-container}}
     `);
-    expect(this.$('.some-content')).to.not.exist;
-    expect(this.$('.resource-load-error')).to.contain('some reason');
+    expect(find('.some-content')).to.not.exist;
+    expect(find('.resource-load-error').textContent).to.contain('some reason');
   });
 });

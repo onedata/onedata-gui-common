@@ -12,7 +12,7 @@ import {
 } from '../../../helpers/one-time-series-chart';
 import { get } from '@ember/object';
 import { all as allFulfilled } from 'rsvp';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart/toolbar', function () {
   const { afterEach } = setupRenderingTest();
@@ -27,8 +27,8 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   it('has class "one-time-series-chart-toolbar"', async function () {
     await renderComponent();
 
-    expect(this.$().children()).to.have.class('one-time-series-chart-toolbar')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-time-series-chart-toolbar');
   });
 
   it('renders time resolutions according to the resolutions defined in a single model',
@@ -53,7 +53,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       await renderComponent();
 
       await expectResolutions(['1 min', '1 hr', '2 days']);
-      expectActiveResolution(this, '2 days');
+      expectActiveResolution('2 days');
     });
 
   it('renders time resolutions according to the resolutions defined in multiple models',
@@ -97,7 +97,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       await renderComponent();
 
       await expectResolutions(['1 min', '1 hr', '2 days']);
-      expectActiveResolution(this, '1 hr');
+      expectActiveResolution('1 hr');
     });
 
   it('changes time resolution of all models', async function () {
@@ -132,7 +132,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
 
     await changeResolution('1 hr');
 
-    expectActiveResolution(this, '1 hr');
+    expectActiveResolution('1 hr');
     expect(get(model1, 'lastViewParameters.timeResolution')).to.equal(3600);
     expect(get(model2, 'lastViewParameters.timeResolution')).to.equal(3600);
   });
@@ -157,7 +157,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     model.setViewParameters({ timeResolution: 3600 });
     await settled();
 
-    expectActiveResolution(this, '1 hr');
+    expectActiveResolution('1 hr');
   });
 
   it('blocks "newer" and "newest" buttons when charts show the newest points', async function () {
@@ -169,7 +169,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
 
     await renderComponent();
 
-    expectDisabledNavigation(this, ['newer', 'newest']);
+    expectDisabledNavigation(['newer', 'newest']);
   });
 
   it('allows to move to the newest points (all charts)', async function () {
@@ -341,18 +341,18 @@ function setupModels(testCase, configInitOptionsArr) {
   );
 }
 
-function expectDisabledNavigation(testCase, disabledButtons) {
+function expectDisabledNavigation(disabledButtons) {
   const buttons = {
-    older: testCase.$('.show-older-btn'),
-    newer: testCase.$('.show-newer-btn'),
-    newest: testCase.$('.show-newest-btn'),
+    older: find('.show-older-btn'),
+    newer: find('.show-newer-btn'),
+    newest: find('.show-newest-btn'),
   };
 
   Object.keys(buttons).forEach((button) => {
     if (disabledButtons.includes(button)) {
-      expect(buttons[button]).to.be.disabled;
+      expect(buttons[button].disabled).to.be.true;
     } else {
-      expect(buttons[button]).to.be.enabled;
+      expect(buttons[button].disabled).to.be.false;
     }
   });
 }

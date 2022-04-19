@@ -46,8 +46,10 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
     await executeAction(this);
 
     expect(getModal()).to.have.class('lane-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Create new lane');
-    expect(getModalBody().find('.name-field .form-control')).to.have.value('');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Create new lane');
+    expect(getModalBody().querySelector('.name-field .form-control'))
+      .to.have.value('');
   });
 
   it(
@@ -57,8 +59,8 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       createStub.resolves();
 
       const { resultPromise } = await executeAction(this);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane1');
+      await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(createStub).to.be.calledOnce.and.to.be.calledWith({
@@ -82,8 +84,8 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
       createStub.returns(new Promise((resolve, reject) => rejectCreate = reject));
 
       const { resultPromise } = await executeAction(this);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'lane1');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await fillIn(getModalBody().querySelector('.name-field .form-control'), 'lane1');
+      await click(getModalFooter().querySelector('.btn-submit'));
       rejectCreate();
       await settled();
       const actionResult = await resultPromise;
@@ -100,7 +102,10 @@ describe('Integration | Utility | workflow visualiser/actions/create lane action
     await executeAction(this);
 
     expect(executeStub).to.not.be.called;
-    await selectChoose(getModalBody().find('.sourceStore-field')[0], 'Create store...');
+    await selectChoose(
+      getModalBody().querySelector('.sourceStore-field'),
+      'Create store...'
+    );
 
     expect(executeStub).to.be.calledOnce;
   });

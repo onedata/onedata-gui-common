@@ -87,10 +87,15 @@ export default Component.extend(I18n, {
 
   actions: {
     notify() {
-      if (this.get('type') === 'html') {
-        animateCss(this.$('.html-content-container')[0], 'pulse-mint');
+      const {
+        element,
+        type,
+        notify,
+      } = this.getProperties('element', 'type', 'notify');
+      if (type === 'html') {
+        animateCss(element.querySelector('.html-content-container'), 'pulse-mint');
       }
-      return this.get('notify')(...arguments);
+      return notify(...arguments);
     },
   },
 });

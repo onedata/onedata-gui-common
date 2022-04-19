@@ -37,21 +37,22 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
     await executeAction(this);
 
     expect(getModal()).to.have.class('question-modal');
-    expect(getModalHeader().find('.oneicon-sign-warning-rounded')).to.exist;
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Remove store');
-    expect(getModalBody().text().trim()).to.contain(
+    expect(getModalHeader().querySelector('.oneicon-sign-warning-rounded')).to.exist;
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Remove store');
+    expect(getModalBody().textContent.trim()).to.contain(
       'You are about to delete the store "store1".'
     );
-    const $yesButton = getModalFooter().find('.question-yes');
-    expect($yesButton.text().trim()).to.equal('Remove');
-    expect($yesButton).to.have.class('btn-danger');
+    const yesButton = getModalFooter().querySelector('.question-yes');
+    expect(yesButton.textContent.trim()).to.equal('Remove');
+    expect(yesButton).to.have.class('btn-danger');
   });
 
   it(
     'returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-no')[0]);
+      await click(getModalFooter().querySelector('.question-no'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('cancelled');
@@ -64,7 +65,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
       const removeStoreStub = sinon.stub(this.get('store'), 'remove').resolves();
 
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       const actionResult = await resultPromise;
 
       expect(removeStoreStub).to.be.calledOnce;
@@ -80,7 +81,7 @@ describe('Integration | Utility | workflow visualiser/actions/remove store actio
         .returns(new Promise((resolve, reject) => rejectRemove = reject));
 
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       rejectRemove();
       await settled();
       const actionResult = await resultPromise;

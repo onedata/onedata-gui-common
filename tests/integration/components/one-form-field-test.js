@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, fillIn } from '@ember/test-helpers';
+import { render, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -17,8 +17,8 @@ describe('Integration | Component | one form field', function () {
     await render(hbs `
       {{one-form-field field=field value=value}}
     `);
-    expect(this.$('input[type=text]')).to.have.length(1);
-    expect(this.$('input').val()).to.be.equal('hello');
+    expect(findAll('input[type=text]')).to.have.length(1);
+    expect(find('input').value).to.be.equal('hello');
   });
 
   it('renders an input with a class with field name', async function () {
@@ -29,8 +29,8 @@ describe('Integration | Component | one form field', function () {
     await render(hbs `
       {{one-form-field field=field}}
     `);
-    let $field = this.$('input');
-    expect($field).to.have.class('field-one');
+    const field = find('input');
+    expect(field).to.have.class('field-one');
   });
 
   it('invokes inputChanged when value is changed', async function () {

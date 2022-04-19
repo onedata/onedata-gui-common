@@ -4,9 +4,8 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
-import $ from 'jquery';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { render, settled, click, fillIn, focus, blur } from '@ember/test-helpers';
+import { render, settled, click, fillIn, focus, blur, find } from '@ember/test-helpers';
 
 const componentClass = 'store-form';
 
@@ -141,8 +140,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
   it(`has class "${componentClass}"`, async function () {
     await render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
 
-    expect(this.$().children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   context('in "create" mode', function () {
@@ -153,26 +152,26 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('has class "mode-create', async function (done) {
       await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('mode-create');
+      expect(find(`.${componentClass}`)).to.have.class('mode-create');
       done();
     });
 
     it('does not render "id" and "instance id" fields', async function (done) {
       await renderComponent();
 
-      expect(this.$('.id-field')).to.not.exist;
-      expect(this.$('.instanceId-field')).to.not.exist;
+      expect(find('.id-field')).to.not.exist;
+      expect(find('.instanceId-field')).to.not.exist;
       done();
     });
 
     it('renders empty "name" field', async function (done) {
       await renderComponent();
 
-      const $label = this.$('.name-field .control-label');
-      const $field = this.$('.name-field .form-control');
-      expect($label.text().trim()).to.equal('Name:');
-      expect($field).to.have.attr('type', 'text');
-      expect($field).to.have.value('');
+      const label = find('.name-field .control-label');
+      const field = find('.name-field .form-control');
+      expect(label.textContent.trim()).to.equal('Name:');
+      expect(field.type).to.equal('text');
+      expect(field.value).to.equal('');
       done();
     });
 
@@ -182,7 +181,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
 
-      expect(this.$('.name-field')).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
       done();
     });
 
@@ -191,18 +190,18 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await fillIn('.name-field .form-control', 'somename');
 
-      expect(this.$('.name-field')).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
       done();
     });
 
     it('renders empty "description" field', async function (done) {
       await renderComponent();
 
-      const $label = this.$('.description-field .control-label');
-      const $field = this.$('.description-field .form-control');
-      expect($label.text().trim()).to.equal('Description (optional):');
-      expect($field).to.match('textarea');
-      expect($field).to.have.value('');
+      const label = find('.description-field .control-label');
+      const field = find('.description-field .form-control');
+      expect(label.textContent.trim()).to.equal('Description (optional):');
+      expect(field.matches('textarea')).to.be.true;
+      expect(field.value).to.equal('');
       done();
     });
 
@@ -212,17 +211,17 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await focus('.description-field .form-control');
       await blur('.description-field .form-control');
 
-      expect(this.$('.description-field')).to.have.class('has-success');
+      expect(find('.description-field')).to.have.class('has-success');
       done();
     });
 
     it('renders "type" field with preselected "list" option', async function (done) {
       await renderComponent();
 
-      const $label = this.$('.type-field .control-label');
-      const $field = this.$('.type-field .dropdown-field-trigger');
-      expect($label.text().trim()).to.equal('Type:');
-      expect($field.text().trim()).to.equal('List');
+      const label = find('.type-field .control-label');
+      const field = find('.type-field .dropdown-field-trigger');
+      expect(label.textContent.trim()).to.equal('Type:');
+      expect(field.textContent.trim()).to.equal('List');
       done();
     });
 
@@ -231,10 +230,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await clickTrigger('.type-field');
 
-      const $options = $('.ember-power-select-option');
-      expect($options).to.have.length(storeTypes.length);
+      const options = document.querySelectorAll('.ember-power-select-option');
+      expect(options).to.have.length(storeTypes.length);
       storeTypes.forEach(({ label }, idx) =>
-        expect($options.eq(idx).text().trim()).to.equal(label)
+        expect(options[idx].textContent.trim()).to.equal(label)
       );
       done();
     });
@@ -244,7 +243,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: '',
@@ -261,7 +260,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       changeSpy.reset();
 
       await fillIn('.name-field .form-control', 'someName');
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
@@ -291,31 +290,32 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await selectChoose('.type-field', label);
 
-        expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
-        expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expect(find('.genericStoreConfig-collapse')).to.have.class('in');
+        expect(find('.rangeStoreConfig-collapse')).to.not.have.class('in');
 
-        const $dataTypeField = this.$('.dataType-field');
-        expect($dataTypeField.find('.control-label').text().trim()).to.equal('Data type:');
-        expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
+        const dataTypeField = find('.dataType-field');
+        expect(dataTypeField.querySelector('.control-label').textContent.trim())
+          .to.equal('Data type:');
+        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(defaultDataTypeLabel || availableDataTypeLabels[0]);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
 
           await clickTrigger('.dataType-field');
 
-          const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(availableDataTypeLabels.length);
+          const options = document.querySelectorAll('.ember-power-select-option');
+          expect(options).to.have.length(availableDataTypeLabels.length);
           availableDataTypeLabels.forEach((label, idx) =>
-            expect($options.eq(idx).text().trim()).to.equal(label)
+            expect(options[idx].textContent.trim()).to.equal(label)
           );
         }
 
-        const $defaultValueField = this.$('.defaultValue-field');
-        expect($defaultValueField.find('.control-label').text().trim())
+        const defaultValueField = find('.defaultValue-field');
+        expect(defaultValueField.querySelector('.control-label').textContent.trim())
           .to.equal('Default value:');
-        expect($defaultValueField.find('.form-control')).to.have.value('');
+        expect(defaultValueField.querySelector('.form-control').value).to.equal('');
         done();
       });
 
@@ -334,7 +334,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
 
-        expect(this.$('.has-error')).to.not.exist;
+        expect(find('.has-error')).to.not.exist;
         expect(changeSpy).to.be.calledWith({
           data: {
             name: 'someName',
@@ -357,21 +357,21 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await selectChoose('.type-field', 'Range');
 
-      expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
-      expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
+      expect(find('.genericStoreConfig-collapse')).to.not.have.class('in');
+      expect(find('.rangeStoreConfig-collapse')).to.have.class('in');
 
-      const $rangeStartField = this.$('.rangeStart-field');
-      const $rangeEndField = this.$('.rangeEnd-field');
-      const $rangeStepField = this.$('.rangeStep-field');
-      expect($rangeStartField.find('.control-label').text().trim())
+      const rangeStartField = find('.rangeStart-field');
+      const rangeEndField = find('.rangeEnd-field');
+      const rangeStepField = find('.rangeStep-field');
+      expect(rangeStartField.querySelector('.control-label').textContent.trim())
         .to.equal('Range start:');
-      expect($rangeStartField.find('.form-control')).to.have.value('0');
-      expect($rangeEndField.find('.control-label').text().trim())
+      expect(rangeStartField.querySelector('.form-control').value).to.equal('0');
+      expect(rangeEndField.querySelector('.control-label').textContent.trim())
         .to.equal('Range end:');
-      expect($rangeEndField.find('.form-control')).to.have.value('');
-      expect($rangeStepField.find('.control-label').text().trim())
+      expect(rangeEndField.querySelector('.form-control').value).to.equal('');
+      expect(rangeStepField.querySelector('.control-label').textContent.trim())
         .to.equal('Range step:');
-      expect($rangeStepField.find('.form-control')).to.have.value('1');
+      expect(rangeStepField.querySelector('.form-control').value).to.equal('1');
       done();
     });
 
@@ -387,7 +387,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await fillIn('.rangeEnd-field .form-control', '10');
       await fillIn('.rangeStep-field .form-control', '2');
 
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
@@ -415,7 +415,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '');
 
         ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(this.$(`.${fieldName}-field`)).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
         done();
       });
@@ -430,7 +430,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '1.5');
 
         ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(this.$(`.${fieldName}-field`)).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
         done();
       });
@@ -444,9 +444,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeEnd-field .form-control', '2');
 
         ['rangeStart', 'rangeEnd'].forEach(fieldName =>
-          expect(this.$(`.${fieldName}-field`)).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
-        expect(this.$('.rangeStep-field')).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
@@ -459,17 +459,17 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeEnd-field .form-control', '2');
         await fillIn('.rangeStep-field .form-control', '1');
 
-        expect(this.$('.rangeStart-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
           'This field must be less than the range end when the range step is positive'
         );
-        expect(this.$('.rangeEnd-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
           'This field must be greater than the range start when the range step is positive'
         );
-        expect(this.$('.rangeStep-field')).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
-    it('has invalid start and end fields in "Range" store, when start > end and step > 0',
+    it('has invalid start and end fields in "Range" store, when start < end and step < 0',
       async function (done) {
         await renderComponent();
 
@@ -478,13 +478,13 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeEnd-field .form-control', '3');
         await fillIn('.rangeStep-field .form-control', '-1');
 
-        expect(this.$('.rangeStart-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
           'This field must be greater than the range end when the range step is negative'
         );
-        expect(this.$('.rangeEnd-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
           'This field must be less than the range start when the range step is negative'
         );
-        expect(this.$('.rangeStep-field')).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
         done();
       });
 
@@ -495,7 +495,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStep-field .form-control', '     0 ');
 
-        expect(this.$('.rangeStep-field')).to.have.class('has-error');
+        expect(find('.rangeStep-field')).to.have.class('has-error');
         done();
       });
 
@@ -528,10 +528,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('renders unchecked "needs user input" toggle', async function (done) {
       await renderComponent();
 
-      const $label = this.$('.needsUserInput-field .control-label');
-      const $toggle = this.$('.needsUserInput-field .one-way-toggle');
-      expect($label.text().trim()).to.equal('Needs user input:');
-      expect($toggle).to.not.have.class('checked');
+      const label = find('.needsUserInput-field .control-label');
+      const toggle = find('.needsUserInput-field .one-way-toggle');
+      expect(label.textContent.trim()).to.equal('Needs user input:');
+      expect(toggle).to.not.have.class('checked');
       done();
     });
 
@@ -547,7 +547,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('has class "mode-edit', async function (done) {
       await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('mode-edit');
+      expect(find(`.${componentClass}`)).to.have.class('mode-edit');
       done();
     });
 
@@ -575,23 +575,24 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await renderComponent();
 
-        expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
-        expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
-        expect(this.$('.id-field .form-control')).to.have.value('store1id');
-        expect(this.$('.instanceId-field')).to.not.exist;
-        expect(this.$('.name-field .form-control')).to.have.value('store1');
-        expect(this.$('.description-field .form-control')).to.have.value('desc');
-        expect(this.$('.type-field .dropdown-field-trigger').text().trim()).to.equal(label);
-        const $dataTypeField = this.$('.dataType-field');
-        expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
+        expect(find('.genericStoreConfig-collapse')).to.have.class('in');
+        expect(find('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expect(find('.id-field .form-control').value).to.equal('store1id');
+        expect(find('.instanceId-field')).to.not.exist;
+        expect(find('.name-field .form-control').value).to.equal('store1');
+        expect(find('.description-field .form-control').value).to.equal('desc');
+        expect(find('.type-field .dropdown-field-trigger').textContent.trim())
+          .to.equal(label);
+        const dataTypeField = find('.dataType-field');
+        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
         }
-        expect(this.$('.defaultValue-field .form-control')).to.have.value('"someDefault"');
-        expect(this.$('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
+        expect(find('.defaultValue-field .form-control').value).to.equal('"someDefault"');
+        expect(find('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
         done();
       });
     });
@@ -612,17 +613,17 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
-      expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
-      expect(this.$('.id-field .form-control')).to.have.value('store1id');
-      expect(this.$('.instanceId-field')).to.not.exist;
-      expect(this.$('.name-field .form-control')).to.have.value('store1');
-      expect(this.$('.description-field .form-control')).to.have.value('desc');
-      expect(this.$('.type-field .dropdown-field-trigger').text().trim())
+      expect(find('.genericStoreConfig-collapse')).to.not.have.class('in');
+      expect(find('.rangeStoreConfig-collapse')).to.have.class('in');
+      expect(find('.id-field .form-control').value).to.equal('store1id');
+      expect(find('.instanceId-field')).to.not.exist;
+      expect(find('.name-field .form-control').value).to.equal('store1');
+      expect(find('.description-field .form-control').value).to.equal('desc');
+      expect(find('.type-field .dropdown-field-trigger').textContent.trim())
         .to.equal('Range');
-      expect(this.$('.rangeStart-field .form-control')).to.have.value('2');
-      expect(this.$('.rangeEnd-field .form-control')).to.have.value('6');
-      expect(this.$('.rangeStep-field .form-control')).to.have.value('3');
+      expect(find('.rangeStart-field .form-control').value).to.equal('2');
+      expect(find('.rangeEnd-field .form-control').value).to.equal('6');
+      expect(find('.rangeStep-field .form-control').value).to.equal('3');
       done();
     });
 
@@ -638,7 +639,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await renderComponent();
 
-          expect(this.$('.dataType-field .dropdown-field-trigger').text().trim())
+          expect(find('.dataType-field .dropdown-field-trigger').textContent.trim())
             .to.equal(label);
           done();
         });
@@ -655,7 +656,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
       await settled();
 
-      expect(this.$('.name-field .form-control')).to.have.value('store1');
+      expect(find('.name-field .form-control').value).to.equal('store1');
       done();
     });
 
@@ -671,7 +672,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('has class "mode-view', async function (done) {
       await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('mode-view');
+      expect(find(`.${componentClass}`)).to.have.class('mode-view');
       done();
     });
 
@@ -699,29 +700,29 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await renderComponent();
 
-        expect(this.$('.field-edit-mode')).to.not.exist;
-        expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
-        expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
-        expect(this.$('.id-field .form-control')).to.have.value('store1id');
-        expect(this.$('.instanceId-field .form-control'))
-          .to.have.value('store1instanceId');
-        expect(this.$('.name-field .field-component').text().trim())
+        expect(find('.field-edit-mode')).to.not.exist;
+        expect(find('.genericStoreConfig-collapse')).to.have.class('in');
+        expect(find('.rangeStoreConfig-collapse')).to.not.exist;
+        expect(find('.id-field .form-control').value).to.equal('store1id');
+        expect(find('.instanceId-field .form-control').value)
+          .to.equal('store1instanceId');
+        expect(find('.name-field .field-component').textContent.trim())
           .to.equal('store1');
-        expect(this.$('.description-field .field-component').text().trim())
+        expect(find('.description-field .field-component').textContent.trim())
           .to.equal('desc');
-        expect(this.$('.type-field .field-component').text().trim())
+        expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        const $dataTypeField = this.$('.dataType-field');
-        expect(this.$('.dataType-field .field-component').text().trim())
+        const dataTypeField = find('.dataType-field');
+        expect(dataTypeField.querySelector('.field-component').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
         }
-        expect(this.$('.defaultValue-field .form-control'))
-          .to.have.value('"someDefault"');
-        expect(this.$('.needsUserInput-field .one-way-toggle'))
+        expect(find('.defaultValue-field .form-control').value)
+          .to.equal('"someDefault"');
+        expect(find('.needsUserInput-field .one-way-toggle'))
           .to.have.class('checked');
         done();
       });
@@ -743,21 +744,21 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expect(this.$('.field-edit-mode')).to.not.exist;
-      expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
-      expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
-      expect(this.$('.id-field .form-control')).to.have.value('store1id');
-      expect(this.$('.instanceId-field .form-control'))
-        .to.have.value('store1instanceId');
-      expect(this.$('.name-field .field-component').text().trim())
+      expect(find('.field-edit-mode')).to.not.exist;
+      expect(find('.genericStoreConfig-collapse')).to.not.exist;
+      expect(find('.rangeStoreConfig-collapse')).to.have.class('in');
+      expect(find('.id-field .form-control').value).to.equal('store1id');
+      expect(find('.instanceId-field .form-control').value)
+        .to.equal('store1instanceId');
+      expect(find('.name-field .field-component').textContent.trim())
         .to.equal('store1');
-      expect(this.$('.description-field .field-component').text().trim())
+      expect(find('.description-field .field-component').textContent.trim())
         .to.equal('desc');
-      expect(this.$('.type-field .field-component').text().trim())
+      expect(find('.type-field .field-component').textContent.trim())
         .to.equal('Range');
-      expect(this.$('.rangeStart-field .field-component').text().trim()).to.equal('2');
-      expect(this.$('.rangeEnd-field .field-component').text().trim()).to.equal('6');
-      expect(this.$('.rangeStep-field .field-component').text().trim()).to.equal('3');
+      expect(find('.rangeStart-field .field-component').textContent.trim()).to.equal('2');
+      expect(find('.rangeEnd-field .field-component').textContent.trim()).to.equal('6');
+      expect(find('.rangeStep-field .field-component').textContent.trim()).to.equal('3');
       done();
     });
 
@@ -773,7 +774,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await renderComponent();
 
-          expect(this.$('.dataType-field .field-component').text().trim())
+          expect(find('.dataType-field .field-component').textContent.trim())
             .to.equal(label);
           done();
         });
@@ -788,7 +789,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
       await settled();
 
-      expect(this.$('.name-field .field-component').text().trim()).to.equal('store2');
+      expect(find('.name-field .field-component').textContent.trim()).to.equal('store2');
       done();
     });
 
@@ -797,7 +798,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expect(this.$('.description-field')).to.not.exist;
+      expect(find('.description-field')).to.not.exist;
       done();
     });
 
@@ -806,7 +807,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await renderComponent();
 
-      expect(this.$('.defaultValue-field')).to.not.exist;
+      expect(find('.defaultValue-field')).to.not.exist;
       done();
     });
   });
@@ -825,9 +826,9 @@ function itHasAllFieldsEnabledByDefault() {
   it('has all fields enabled by default', async function (done) {
     await renderComponent();
 
-    expect(this.$('.store-form')).to.have.class('form-enabled')
+    expect(find('.store-form')).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
-    expect(this.$('.field-disabled')).to.not.exist;
+    expect(find('.field-disabled')).to.not.exist;
     done();
   });
 }
@@ -838,9 +839,9 @@ function itAllowsToDisableAllFields() {
 
     await renderComponent();
 
-    expect(this.$('.store-form')).to.have.class('form-disabled')
+    expect(find('.store-form')).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
-    expect(this.$('.field-enabled')).to.not.exist;
+    expect(find('.field-enabled')).to.not.exist;
     done();
   });
 }

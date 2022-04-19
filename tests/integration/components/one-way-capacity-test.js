@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, fillIn, focus, blur, triggerKeyEvent } from '@ember/test-helpers';
+import { render, fillIn, focus, blur, triggerKeyEvent, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
@@ -21,10 +21,10 @@ describe('Integration | Component | one way capacity', function () {
 
     await render(hbs `{{one-way-capacity value=capacity}}`);
 
-    expect(this.$('.size-number-input').val(), 'capacity number')
+    expect(find('.size-number-input').value, 'capacity number')
       .to.equal('1');
     expect(
-      this.$('.ember-power-select-selected-item').text().trim(),
+      find('.ember-power-select-selected-item').textContent.trim(),
       'capacity unit'
     ).to.equal('MiB');
   });

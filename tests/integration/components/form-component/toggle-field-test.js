@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, focus, blur, click } from '@ember/test-helpers';
+import { render, focus, blur, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import sinon from 'sinon';
@@ -18,7 +18,7 @@ describe('Integration | Component | form component/toggle field', function () {
     async function () {
       await render(hbs `{{form-component/toggle-field field=field}}`);
 
-      expect(this.$('.toggle-field')).to.exist;
+      expect(find('.toggle-field')).to.exist;
     }
   );
 
@@ -27,7 +27,7 @@ describe('Integration | Component | form component/toggle field', function () {
     async function () {
       await render(hbs `{{form-component/toggle-field field=field}}`);
 
-      expect(this.$('.one-way-toggle')).to.exist;
+      expect(find('.one-way-toggle')).to.exist;
     }
   );
 
@@ -38,7 +38,7 @@ describe('Integration | Component | form component/toggle field', function () {
 
       await render(hbs `{{form-component/toggle-field field=field}}`);
 
-      expect(this.$('.one-way-toggle')).to.have.class('disabled');
+      expect(find('.one-way-toggle')).to.have.class('disabled');
     }
   );
 
@@ -75,7 +75,7 @@ describe('Integration | Component | form component/toggle field', function () {
 
     await render(hbs `{{form-component/toggle-field field=field}}`);
 
-    expect(this.$('.one-way-toggle')).to.have.class('checked');
+    expect(find('.one-way-toggle')).to.have.class('checked');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -83,7 +83,7 @@ describe('Integration | Component | form component/toggle field', function () {
       {{form-component/toggle-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('input#abc')).to.exist;
+    expect(find('input#abc')).to.exist;
   });
 
   it('renders blocked toggle when field is in "view" mode', async function () {
@@ -91,6 +91,6 @@ describe('Integration | Component | form component/toggle field', function () {
 
     await render(hbs `{{form-component/toggle-field field=field}}`);
 
-    expect(this.$('.one-way-toggle')).to.have.class('disabled');
+    expect(find('.one-way-toggle')).to.have.class('disabled');
   });
 });

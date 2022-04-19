@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
@@ -14,8 +14,8 @@ describe('Integration | Component | one button', function () {
     await render(hbs `{{#one-button onClick=onClick}}my button{{/one-button}}`);
 
     expect(onClick).to.be.not.called;
-    expect(this.$().children()).to.have.class('one-button')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-button');
 
     await click('.one-button');
 
@@ -28,7 +28,7 @@ describe('Integration | Component | one button', function () {
 
     await click('.one-button');
 
-    expect(this.$('.spin-spinner')).to.not.exist;
+    expect(find('.spin-spinner')).to.not.exist;
   });
 
   it('renders spinner and disables button after click when handler returns promise', async function () {
@@ -38,14 +38,14 @@ describe('Integration | Component | one button', function () {
 
     await click('.one-button');
 
-    expect(this.$('.spin-spinner')).to.exist;
-    expect(this.$('.one-button')).to.be.disabled;
+    expect(find('.spin-spinner')).to.exist;
+    expect(find('.one-button').disabled).to.be.true;
 
     resolvePromise();
     await settled();
 
-    expect(this.$('.spin-spinner')).to.not.exist;
-    expect(this.$('.one-button')).to.be.enabled;
+    expect(find('.spin-spinner')).to.not.exist;
+    expect(find('.one-button').disabled).to.be.false;
   });
 
   it('renders spinner and disables button when "isPending" is true', async function () {
@@ -53,8 +53,8 @@ describe('Integration | Component | one button', function () {
 
     await click('.one-button');
 
-    expect(this.$('.spin-spinner')).to.exist;
-    expect(this.$('.one-button')).to.be.disabled;
+    expect(find('.spin-spinner')).to.exist;
+    expect(find('.one-button').disabled).to.be.true;
   });
 
   it('does not disable button after click when handler returns promise and disableWhenPending is false',
@@ -68,8 +68,8 @@ describe('Integration | Component | one button', function () {
 
       await click('.one-button');
 
-      expect(this.$('.spin-spinner')).to.exist;
-      expect(this.$('.one-button')).to.be.enabled;
+      expect(find('.spin-spinner')).to.exist;
+      expect(find('.one-button').disabled).to.be.false;
     });
 
   it('does not disable button when "isPending" is true and disableWhenPending is false', async function () {
@@ -81,7 +81,7 @@ describe('Integration | Component | one button', function () {
 
     await click('.one-button');
 
-    expect(this.$('.spin-spinner')).to.exist;
-    expect(this.$('.one-button')).to.be.enabled;
+    expect(find('.spin-spinner')).to.exist;
+    expect(find('.one-button').disabled).to.be.false;
   });
 });

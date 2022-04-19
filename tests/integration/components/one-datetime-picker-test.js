@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../helpers/one-datetime-picker';
@@ -20,7 +20,7 @@ describe('Integration | Component | one datetime picker', function () {
   it('has class "one-datetime-picker"', async function () {
     await render(hbs `{{one-datetime-picker}}`);
 
-    expect(this.$('.one-datetime-picker')).to.exist;
+    expect(find('.one-datetime-picker')).to.exist;
   });
 
   it('does not render datetime picker before input click', async function () {
@@ -32,7 +32,7 @@ describe('Integration | Component | one datetime picker', function () {
 
     await render(hbs `{{one-datetime-picker}}`);
 
-    const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
+    const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.waitForPickerInit(clock)
       .then(() =>
         expect(pickerHelper.getPickerElement()).to.not.exist
@@ -42,7 +42,7 @@ describe('Integration | Component | one datetime picker', function () {
   it('does render datetime picker after input click', async function () {
     await render(hbs `{{one-datetime-picker}}`);
 
-    const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
+    const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
       .then(() =>
         expect(pickerHelper.getPickerElement()).to.exist
@@ -52,7 +52,7 @@ describe('Integration | Component | one datetime picker', function () {
   it('adds "datetime-picker" class to datetime picker element', async function () {
     await render(hbs `{{one-datetime-picker}}`);
 
-    const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
+    const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
       .then(() =>
         expect(pickerHelper.getPickerElement()).to.have.class('datetime-picker')
@@ -65,7 +65,7 @@ describe('Integration | Component | one datetime picker', function () {
 
     await render(hbs `{{one-datetime-picker onChange=(action change)}}`);
 
-    const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
+    const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.selectToday()
       .then(() => {
         expect(changeSpy).to.be.calledOnce;
@@ -76,8 +76,8 @@ describe('Integration | Component | one datetime picker', function () {
   it('can be disabled', async function () {
     await render(hbs `{{one-datetime-picker disabled=true}}`);
 
-    expect(this.$('input[disabled]')).to.exist;
-    const pickerHelper = new OneDatetimePickerHelper(this.$('input'));
+    expect(find('input[disabled]')).to.exist;
+    const pickerHelper = new OneDatetimePickerHelper(find('input'));
     return pickerHelper.openPicker()
       .then(() =>
         expect(pickerHelper.getPickerElement()).to.not.exist
@@ -90,6 +90,6 @@ describe('Integration | Component | one datetime picker', function () {
 
     await render(hbs `{{one-datetime-picker placeholder=placeholderText}}`);
 
-    expect(this.$('input').attr('placeholder')).to.equal(placeholderText);
+    expect(find('input').placeholder).to.equal(placeholderText);
   });
 });

@@ -15,7 +15,7 @@ import {
   expectActiveResolution,
   changeResolution,
 } from '../../helpers/one-time-series-chart';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart', function () {
   const { afterEach } = setupRenderingTest();
@@ -70,7 +70,7 @@ describe('Integration | Component | one time series chart', function () {
     await renderComponent();
 
     await expectResolutions(['1 min', '1 hr', '2 days']);
-    expectActiveResolution(this, '1 min');
+    expectActiveResolution('1 min');
   });
 
   it('allows to change time resolution using dropdown', async function () {
@@ -94,9 +94,9 @@ describe('Integration | Component | one time series chart', function () {
     await renderComponent();
     await changeResolution('1 hr');
 
-    expectActiveResolution(this, '1 hr');
+    expectActiveResolution('1 hr');
     expect(config.getViewParameters().timeResolution).to.equal(3600);
-    expectEchartDummyPoints(this, null, 3600, 11);
+    expectEchartDummyPoints(null, 3600, 11);
   });
 
   it('allows to change time resolution using config', async function () {
@@ -123,9 +123,9 @@ describe('Integration | Component | one time series chart', function () {
     });
     await settled();
 
-    expectActiveResolution(this, '1 hr');
+    expectActiveResolution('1 hr');
     expect(config.getViewParameters().timeResolution).to.equal(3600);
-    expectEchartDummyPoints(this, null, 3600, 11);
+    expectEchartDummyPoints(null, 3600, 11);
   });
 
   it('allows to show older data', async function () {
@@ -135,13 +135,13 @@ describe('Integration | Component | one time series chart', function () {
     });
 
     await renderComponent();
-    const $showOlderBtn = this.$('.show-older-btn');
-    expect($showOlderBtn).to.be.not.disabled;
-    await click($showOlderBtn[0]);
+    const showOlderBtn = find('.show-older-btn');
+    expect(showOlderBtn.disabled).to.be.false;
+    await click(showOlderBtn);
 
-    expect($showOlderBtn).to.be.not.disabled;
+    expect(showOlderBtn.disabled).to.be.false;
     expect(config.getViewParameters().lastPointTimestamp).to.equal(996360);
-    expectEchartDummyPoints(this, 996360, 60, 60);
+    expectEchartDummyPoints(996360, 60, 60);
   });
 
   it('allows to show newer data', async function () {
@@ -151,13 +151,13 @@ describe('Integration | Component | one time series chart', function () {
     });
 
     await renderComponent();
-    const $showNewerBtn = this.$('.show-newer-btn');
-    expect($showNewerBtn).to.be.not.disabled;
-    await click($showNewerBtn[0]);
+    const showNewerBtn = find('.show-newer-btn');
+    expect(showNewerBtn.disabled).to.be.false;
+    await click(showNewerBtn);
 
-    expect($showNewerBtn).to.be.not.disabled;
+    expect(showNewerBtn.disabled).to.be.false;
     expect(config.getViewParameters().lastPointTimestamp).to.equal(1003560);
-    expectEchartDummyPoints(this, 1003560, 60, 60);
+    expectEchartDummyPoints(1003560, 60, 60);
   });
 
   it('allows to show the newest data', async function () {
@@ -167,15 +167,15 @@ describe('Integration | Component | one time series chart', function () {
     });
 
     await renderComponent();
-    const $showNewestBtn = this.$('.show-newest-btn');
-    expect($showNewestBtn).to.be.not.disabled;
-    await click($showNewestBtn[0]);
+    const showNewestBtn = find('.show-newest-btn');
+    expect(showNewestBtn.disabled).to.be.false;
+    await click(showNewestBtn);
 
-    expect($showNewestBtn).to.be.disabled;
-    expect(this.$('.show-newer-btn')).to.be.disabled;
+    expect(showNewestBtn.disabled).to.be.true;
+    expect(find('.show-newer-btn').disabled).to.be.true;
     expect(config.getViewParameters().lastPointTimestamp)
       .to.be.closeTo(Math.floor(Date.now() / 1000), 60);
-    expectEchartDummyPoints(this, null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60);
   });
 
   it('moving to the newest data in live mode changes lastPointTimestamp to null', async function () {
@@ -187,7 +187,7 @@ describe('Integration | Component | one time series chart', function () {
 
     await renderComponent();
     await click('.show-newest-btn');
-    expectEchartDummyPoints(this, null, 60, 60);
+    expectEchartDummyPoints(null, 60, 60);
     expect(config.getViewParameters().lastPointTimestamp).to.be.null;
   });
 });

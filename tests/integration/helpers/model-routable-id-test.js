@@ -11,6 +11,6 @@ describe('Integration | Helper | model routable id', function () {
   it('extracts id', async function () {
     this.set('inputValue', EmberObject.create({ id: '1' }));
     await render(hbs `{{model-routable-id inputValue}}`);
-    expect(this.$().text().trim()).to.equal('1');
+    expect(this.element.textContent.trim()).to.equal('1');
   });
 });

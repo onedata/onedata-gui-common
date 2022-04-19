@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, focus, blur, fillIn } from '@ember/test-helpers';
+import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import sinon from 'sinon';
@@ -21,7 +21,7 @@ describe('Integration | Component | form component/text like field', function ()
     async function () {
       await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('.text-like-field')).to.exist;
+      expect(find('.text-like-field')).to.exist;
     }
   );
 
@@ -30,7 +30,7 @@ describe('Integration | Component | form component/text like field', function ()
     async function () {
       await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('input[type="text"]')).to.exist;
+      expect(find('input[type="text"]')).to.exist;
     }
   );
 
@@ -41,7 +41,7 @@ describe('Integration | Component | form component/text like field', function ()
 
       await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('input[type="number"]')).to.exist;
+      expect(find('input[type="number"]')).to.exist;
     }
   );
 
@@ -52,7 +52,7 @@ describe('Integration | Component | form component/text like field', function ()
 
       await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-      expect(this.$('input[type="text"]')).to.have.attr('disabled');
+      expect(find('input[type="text"]').disabled).to.be.true;
     }
   );
 
@@ -89,7 +89,7 @@ describe('Integration | Component | form component/text like field', function ()
 
     await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-    expect(this.$('input').val()).to.equal('test');
+    expect(find('input').value).to.equal('test');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -97,7 +97,7 @@ describe('Integration | Component | form component/text like field', function ()
       {{form-component/text-like-field field=textField fieldId="abc"}}
     `);
 
-    expect(this.$('input#abc')).to.exist;
+    expect(find('input#abc')).to.exist;
   });
 
   it('sets placeholder according to "placeholder"', async function () {
@@ -105,7 +105,7 @@ describe('Integration | Component | form component/text like field', function ()
 
     await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-    expect(this.$('input').attr('placeholder')).to.equal('test');
+    expect(find('input').placeholder).to.equal('test');
   });
 
   it('renders raw text when field is in "view" mode', async function () {
@@ -115,7 +115,7 @@ describe('Integration | Component | form component/text like field', function ()
 
     await render(hbs `{{form-component/text-like-field field=textField}}`);
 
-    expect(this.$().text().trim()).to.equal('test value');
-    expect(this.$('input')).to.not.exist;
+    expect(this.element.textContent.trim()).to.equal('test value');
+    expect(find('input')).to.not.exist;
   });
 });

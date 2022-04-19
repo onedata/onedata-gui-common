@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, triggerKeyEvent, blur } from '@ember/test-helpers';
+import { render, click, fillIn, triggerKeyEvent, blur, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
@@ -11,13 +11,13 @@ describe('Integration | Component | tags input/text editor', function () {
   it('has class "tags-input-text-editor"', async function () {
     await render(hbs `{{tags-input/text-editor}}`);
 
-    expect(this.$('.tags-input-text-editor')).to.exist;
+    expect(find('.tags-input-text-editor')).to.exist;
   });
 
   it('renders empty text input with class "text-editor-input"', async function () {
     await render(hbs `{{tags-input/text-editor}}`);
 
-    expect(this.$('input[type="text"]')).to.exist;
+    expect(find('input[type="text"]')).to.exist;
   });
 
   it('adds tag on enter', async function () {
@@ -34,10 +34,10 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', 'someTag'))
       .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.be.empty;
-        const $tagItems = this.$('.tag-item');
-        expect($tagItems).to.have.length(1);
-        expect($tagItems.text().trim()).to.equal('someTag');
+        expect(find('.text-editor-input').value).to.be.empty;
+        const tagItems = findAll('.tag-item');
+        expect(tagItems).to.have.length(1);
+        expect(tagItems[0].textContent.trim()).to.equal('someTag');
       });
   });
 
@@ -55,7 +55,7 @@ describe('Integration | Component | tags input/text editor', function () {
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag,'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.be.empty;
+        expect(find('.text-editor-input').value).to.be.empty;
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }]);
@@ -76,7 +76,7 @@ describe('Integration | Component | tags input/text editor', function () {
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag,someTag2,someTag3'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('someTag3');
+        expect(find('.text-editor-input').value).to.equal('someTag3');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
@@ -103,7 +103,7 @@ describe('Integration | Component | tags input/text editor', function () {
         'someTag;someTag2/someTag3,someTag4'
       ))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('someTag3,someTag4');
+        expect(find('.text-editor-input').value).to.equal('someTag3,someTag4');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
@@ -119,7 +119,7 @@ describe('Integration | Component | tags input/text editor', function () {
 
     return click('.tag-creator-trigger')
       .then(() => blur('.text-editor-input'))
-      .then(() => expect(this.$('.text-editor-input')).to.not.exist);
+      .then(() => expect(find('.text-editor-input')).to.not.exist);
   });
 
   it(
@@ -132,7 +132,7 @@ describe('Integration | Component | tags input/text editor', function () {
       return click('.tag-creator-trigger')
         .then(() => fillIn('.text-editor-input', 'abc'))
         .then(() => blur('.text-editor-input'))
-        .then(() => expect(this.$('.text-editor-input')).to.exist);
+        .then(() => expect(find('.text-editor-input')).to.exist);
     }
   );
 
@@ -153,7 +153,7 @@ describe('Integration | Component | tags input/text editor', function () {
         '    someTag ,  someTag2, , someTag3   '
       ))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal(' someTag3   ');
+        expect(find('.text-editor-input').value).to.equal(' someTag3   ');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
@@ -182,8 +182,8 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => fillIn('.text-editor-input', '1a'))
       .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('1a');
-        expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
+        expect(find('.text-editor-input').value).to.equal('1a');
+        expect(find('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy).to.not.been.called;
       });
   });
@@ -207,8 +207,8 @@ describe('Integration | Component | tags input/text editor', function () {
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', '234,1a,cvs,sd,2'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('1a,cvs,sd,2');
-        expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
+        expect(find('.text-editor-input').value).to.equal('1a,cvs,sd,2');
+        expect(find('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: '234',
         }]);
@@ -233,7 +233,7 @@ describe('Integration | Component | tags input/text editor', function () {
       .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => fillIn('.text-editor-input', '1ab'))
       .then(() =>
-        expect(this.$('.tags-input-text-editor')).to.not.have.class('has-error')
+        expect(find('.tags-input-text-editor')).to.not.have.class('has-error')
       );
   });
 
@@ -275,7 +275,7 @@ describe('Integration | Component | tags input/text editor', function () {
 
       return click('.tag-creator-trigger')
         .then(() =>
-          expect(this.$('.text-editor-input').attr('placeholder')).to.equal('sometext')
+          expect(find('.text-editor-input').placeholder).to.equal('sometext')
         );
     }
   );

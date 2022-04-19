@@ -6,7 +6,6 @@ import hbs from 'htmlbars-inline-precompile';
 import NotOperatorQueryBlock from 'onedata-gui-common/utils/query-builder/not-operator-query-block';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';
-import $ from 'jquery';
 import { get } from '@ember/object';
 
 describe('Integration | Component | query builder/block settings', function () {
@@ -21,7 +20,7 @@ describe('Integration | Component | query builder/block settings', function () {
       triggerSelector="#x"
     }}</div>`);
 
-    expect($('.webui-popover')).to.not.exist;
+    expect(document.querySelector('.webui-popover')).to.not.exist;
   });
 
   it('shows block selector when "open" is true', async function () {
@@ -33,9 +32,9 @@ describe('Integration | Component | query builder/block settings', function () {
       triggerSelector="#x"
     }}</div>`);
 
-    expect($('.webui-popover')).to.exist.and.have.class('in');
+    expect(document.querySelector('.webui-popover')).to.exist.and.have.class('in');
 
-    const blockSelector = $('.query-builder-block-selector');
+    const blockSelector = document.querySelector('.query-builder-block-selector');
     expect(blockSelector).to.exist;
     expect(blockSelector).to.have.class('edit-block-selector');
   });
@@ -49,11 +48,11 @@ describe('Integration | Component | query builder/block settings', function () {
       triggerSelector="#x"
     }}</div>`);
 
-    const blockSelector = $('.query-builder-block-selector');
-    expect($('.webui-popover')).to.exist.and.have.class('in');
+    const blockSelector = document.querySelector('.query-builder-block-selector');
+    expect(document.querySelector('.webui-popover')).to.exist.and.have.class('in');
     expect(blockSelector).to.exist;
     // only operator blocks have "change to" section
-    expect(blockSelector.find('.change-to-section')).to.exist;
+    expect(blockSelector.querySelector('.change-to-section')).to.exist;
   });
 
   it('shows block selector (condition block variant)', async function () {
@@ -65,11 +64,11 @@ describe('Integration | Component | query builder/block settings', function () {
       triggerSelector="#x"
     }}</div>`);
 
-    const blockSelector = $('.query-builder-block-selector');
-    expect($('.webui-popover')).to.exist.and.have.class('in');
+    const blockSelector = document.querySelector('.query-builder-block-selector');
+    expect(document.querySelector('.webui-popover')).to.exist.and.have.class('in');
     expect(blockSelector).to.exist;
     // condition blocks don't have "change to" section
-    expect($('.change-to-section')).to.not.exist;
+    expect(document.querySelector('.change-to-section')).to.not.exist;
   });
 
   it(
@@ -95,7 +94,9 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.surround-section .operator-and');
-      await waitUntil(() => !$('.webui-popover').hasClass('in'));
+      await waitUntil(() =>
+        !document.querySelector('.webui-popover').matches('.in')
+      );
 
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];
@@ -132,7 +133,9 @@ describe('Integration | Component | query builder/block settings', function () {
       }}</div>`);
 
       await click('.change-to-section .operator-and');
-      await waitUntil(() => !$('.webui-popover').hasClass('in'));
+      await waitUntil(() =>
+        !document.querySelector('.webui-popover').matches('.in')
+      );
 
       expect(replaceSpy).to.be.calledOnce;
       const blocks = replaceSpy.firstCall.args[0];

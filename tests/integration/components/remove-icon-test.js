@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, triggerEvent } from '@ember/test-helpers';
+import { render, click, triggerEvent, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 describe('Integration | Component | remove icon', function () {
   setupRenderingTest();
@@ -12,25 +11,25 @@ describe('Integration | Component | remove icon', function () {
   it('has class "remove-icon"', async function () {
     await render(hbs `{{remove-icon}}`);
 
-    expect(this.$('.remove-icon')).to.exist;
+    expect(find('.remove-icon')).to.exist;
   });
 
   it('renders proper icon', async function () {
     await render(hbs `{{remove-icon}}`);
 
-    expect(this.$('.one-icon')).to.have.class('oneicon-checkbox-filled-x');
+    expect(find('.one-icon')).to.have.class('oneicon-checkbox-filled-x');
   });
 
   it('has "enabled" class if not disabled', async function () {
     await render(hbs `{{remove-icon}}`);
 
-    expect(this.$('.remove-icon')).to.have.class('enabled');
+    expect(find('.remove-icon')).to.have.class('enabled');
   });
 
   it('has "disabled" class if disabled', async function () {
     await render(hbs `{{remove-icon isDisabled=true}}`);
 
-    expect(this.$('.remove-icon')).to.have.class('disabled');
+    expect(find('.remove-icon')).to.have.class('disabled');
   });
 
   it('handles click event', async function () {
@@ -60,13 +59,16 @@ describe('Integration | Component | remove icon', function () {
     await render(hbs `{{remove-icon tooltipText=tooltipText}}`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
-      .then(() => expect($('.tooltip.in').text()).to.contain(tooltipText));
+      .then(() =>
+        expect(document.querySelector('.tooltip.in').textContent)
+        .to.contain(tooltipText)
+      );
   });
 
   it('does not show tooltip if tooltipText property is empty', async function () {
     await render(hbs `{{remove-icon}}`);
 
     return triggerEvent('.remove-icon', 'mouseenter')
-      .then(() => expect($('.tooltip.in')).to.not.exist);
+      .then(() => expect(document.querySelector('.tooltip.in')).to.not.exist);
   });
 });

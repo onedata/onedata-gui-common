@@ -3,7 +3,7 @@
  * Typically, point is yielded from `one-atlas/position` component with
  * injected `positionX` and `positionY`.
  * Example of use can be found in one-atlas component.
- * 
+ *
  * @module components/one-atlas/point
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -63,11 +63,10 @@ export default Component.extend({
     const {
       positionX,
       positionY,
-    } = this.getProperties('positionX', 'positionY');
+      element,
+    } = this.getProperties('positionX', 'positionY', 'element');
 
-    this.$().css({
-      top: positionY,
-      left: positionX,
-    });
+    element.style.top = `${positionY}px`;
+    element.style.left = `${positionX}px`;
   },
 });

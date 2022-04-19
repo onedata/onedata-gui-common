@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { setProperties } from '@ember/object';
@@ -18,7 +18,7 @@ describe('Integration | Component | form component/static text field', function 
     async function () {
       await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$('.static-text-field')).to.exist;
+      expect(find('.static-text-field')).to.exist;
     }
   );
 
@@ -27,7 +27,7 @@ describe('Integration | Component | form component/static text field', function 
     async function () {
       await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$().text().trim()).to.be.empty;
+      expect(this.element.textContent.trim()).to.be.empty;
     }
   );
 
@@ -38,7 +38,7 @@ describe('Integration | Component | form component/static text field', function 
 
       await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$().text().trim()).to.equal('abc');
+      expect(this.element.textContent.trim()).to.equal('abc');
     }
   );
 
@@ -52,7 +52,7 @@ describe('Integration | Component | form component/static text field', function 
 
       await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$().text().trim()).to.equal('def');
+      expect(this.element.textContent.trim()).to.equal('def');
     }
   );
 });

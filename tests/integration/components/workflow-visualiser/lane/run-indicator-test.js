@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import OneTooltipHelper from '../../../../helpers/one-tooltip';
 
@@ -59,13 +59,13 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it(`has class "${componentClassName}"`, async function () {
     await renderComponent();
 
-    expect(this.$().children().eq(0)).to.have.class(componentClassName);
+    expect(this.element.children[0]).to.have.class(componentClassName);
   });
 
   it('has class "status-unknown" when status is not specified', async function () {
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('status-unknown');
+    expect(getComponent()).to.have.class('status-unknown');
   });
 
   for (const { name } of statuses) {
@@ -76,7 +76,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
   it('shows "?" as a run number, when it is not specified', async function () {
     await renderComponent();
 
-    expect(getComponent(this).find('.run-number').text().trim()).to.equal('?');
+    expect(getComponent().querySelector('.run-number').textContent.trim()).to.equal('?');
   });
 
   it('shows "?" as a run number, when passed number is not correct', async function () {
@@ -84,7 +84,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this).find('.run-number').text().trim()).to.equal('?');
+    expect(getComponent().querySelector('.run-number').textContent.trim()).to.equal('?');
   });
 
   it('shows "1" as a run number, when passed number is "1"', async function () {
@@ -92,7 +92,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this).find('.run-number').text().trim()).to.equal('1');
+    expect(getComponent().querySelector('.run-number').textContent.trim()).to.equal('1');
   });
 
   it('has class "one-digit-run" when run number is < 10', async function () {
@@ -100,7 +100,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('one-digit-run');
+    expect(getComponent()).to.have.class('one-digit-run');
   });
 
   it('has class "two-digit-run" when run number is >= 10 && < 100', async function () {
@@ -108,7 +108,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('two-digit-run');
+    expect(getComponent()).to.have.class('two-digit-run');
   });
 
   it('has class "many-digit-run" when run number is >= 10', async function () {
@@ -116,7 +116,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('many-digit-run');
+    expect(getComponent()).to.have.class('many-digit-run');
   });
 
   it('does not have class "selected" when "isSelected" is set to false', async function () {
@@ -124,7 +124,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this)).to.not.have.class('selected');
+    expect(getComponent()).to.not.have.class('selected');
   });
 
   it('has class "selected" when "isSelected" is set to true', async function () {
@@ -132,13 +132,13 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('selected');
+    expect(getComponent()).to.have.class('selected');
   });
 
   it('does not show origin run number if not provided', async function () {
     await renderComponent();
 
-    expect(getComponent(this).find('.origin-run-number')).to.not.exist;
+    expect(getComponent().querySelector('.origin-run-number')).to.not.exist;
   });
 
   it('does not show origin run number if passed number is not correct', async function () {
@@ -146,7 +146,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this).find('.origin-run-number')).to.not.exist;
+    expect(getComponent().querySelector('.origin-run-number')).to.not.exist;
   });
 
   it('does not show origin run number if passed number differs by 1 from run number', async function () {
@@ -157,7 +157,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this).find('.origin-run-number')).to.not.exist;
+    expect(getComponent().querySelector('.origin-run-number')).to.not.exist;
   });
 
   it('shows origin run number "1" if passed number is "1" and run number differs by more than 1 from run number',
@@ -169,13 +169,14 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
       await renderComponent();
 
-      expect(getComponent(this).find('.origin-run-number').text().trim()).to.equal('1');
+      expect(getComponent().querySelector('.origin-run-number').textContent.trim())
+        .to.equal('1');
     });
 
   it('does not have class "clickable" by default', async function () {
     await renderComponent();
 
-    expect(getComponent(this)).to.not.have.class('clickable');
+    expect(getComponent()).to.not.have.class('clickable');
   });
 
   it('has class "clickable" when click handler is specified', async function () {
@@ -183,7 +184,7 @@ describe('Integration | Component | workflow visualiser/lane/run indicator', fun
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('clickable');
+    expect(getComponent()).to.have.class('clickable');
   });
 
   it('has correct tooltip for first run', async function () {
@@ -256,8 +257,8 @@ async function renderComponent() {
   }}`);
 }
 
-function getComponent(testCase) {
-  return testCase.$(`.${componentClassName}`);
+function getComponent() {
+  return find(`.${componentClassName}`);
 }
 
 function itHasStatusClass(status, statusInClass) {
@@ -267,7 +268,7 @@ function itHasStatusClass(status, statusInClass) {
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class(statusClass);
+    expect(getComponent()).to.have.class(statusClass);
   });
 }
 

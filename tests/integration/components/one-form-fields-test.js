@@ -2,7 +2,7 @@ import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form fields', function () {
@@ -22,10 +22,10 @@ describe('Integration | Component | one form fields', function () {
     {{/bs-form}}
     `);
 
-    let formId = this.$('form').attr('id');
+    let formId = find('form').id;
     let inputId = formId + '-one';
 
-    expect(this.$(`label[for='${inputId}']`).text()).to.match(/optional/);
+    expect(find(`label[for='${inputId}']`).textContent).to.match(/optional/);
   });
 
   it('renders label tip if field should have one', async function () {
@@ -42,10 +42,10 @@ describe('Integration | Component | one form fields', function () {
     {{/bs-form}}
     `);
 
-    let formId = this.$('form').attr('id');
+    let formId = find('form').id;
     let inputId = formId + '-one';
 
-    expect(this.$(`label[for='${inputId}'] .one-icon`).length).to.eq(1);
+    expect(findAll(`label[for='${inputId}'] .one-icon`).length).to.eq(1);
   });
 
   it('can render a text type input with given value', async function () {
@@ -66,8 +66,8 @@ describe('Integration | Component | one form fields', function () {
     {{/bs-form}}
     `);
 
-    expect(this.$('input')).to.exist;
-    expect(this.$('input')).to.have.value(VALUE);
+    expect(find('input')).to.exist;
+    expect(find('input').value).to.equal(VALUE);
   });
 
   it('can render form-control-static for type static', async function () {
@@ -88,7 +88,7 @@ describe('Integration | Component | one form fields', function () {
     {{/bs-form}}
     `);
 
-    expect(this.$('.form-control-static'), 'render form-control-static').to.exist;
-    expect(this.$('.form-control-static')).to.contain(VALUE);
+    expect(find('.form-control-static'), 'render form-control-static').to.exist;
+    expect(find('.form-control-static').textContent).to.contain(VALUE);
   });
 });

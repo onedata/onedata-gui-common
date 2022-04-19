@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { next } from '@ember/runloop';
@@ -83,7 +83,7 @@ describe('Integration | Component | one modal', function () {
 
       await render(hbs `{{one-modal class="my-modal"}}`);
 
-      expect(this.$('.my-modal').attr('id')).to.match(/.*-modal/);
+      expect(find('.my-modal').id).to.match(/.*-modal/);
     }
   );
 
@@ -95,7 +95,7 @@ describe('Integration | Component | one modal', function () {
 
       await render(hbs `{{one-modal id="some-id" class="my-modal"}}`);
 
-      expect(this.$('.my-modal')).to.have.id('some-id');
+      expect(find('.my-modal').id).to.equal('some-id');
     }
   );
 });

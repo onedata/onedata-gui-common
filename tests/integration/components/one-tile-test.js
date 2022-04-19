@@ -9,6 +9,6 @@ describe('Integration | Component | one tile', function () {
 
   it('renders tile title', async function () {
     await render(hbs `{{one-tile title="hello"}}`);
-    expect(this.$().text()).to.match(/.*hello.*/);
+    expect(this.element.textContent).to.match(/.*hello.*/);
   });
 });

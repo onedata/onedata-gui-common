@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import VisualiserElement from 'onedata-gui-common/utils/workflow-visualiser/visualiser-element';
 
@@ -11,15 +11,15 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
   it('has class "workflow-visualiser-element', async function () {
     await render(hbs `{{workflow-visualiser/visualiser-element}}`);
 
-    expect(this.$().children()).to.have.length(1);
-    expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-element');
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('workflow-visualiser-element');
   });
 
   it('has not specified "data-visualiser-element-id" attribute when "visualiserElement" is undefined',
     async function () {
       await render(hbs `{{workflow-visualiser/visualiser-element}}`);
 
-      expect(this.$('.workflow-visualiser-lane-element'))
+      expect(find('.workflow-visualiser-element'))
         .to.not.have.attr('data-visualiser-element-id');
     });
 
@@ -32,7 +32,7 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
 
       await render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
 
-      expect(this.$('.workflow-visualiser-element'))
+      expect(find('.workflow-visualiser-element'))
         .to.have.attr('data-visualiser-element-id', elementId);
     });
 
@@ -46,7 +46,7 @@ describe('Integration | Component | workflow visualiser/visualiser element', fun
 
       await render(hbs `{{workflow-visualiser/visualiser-element elementModel=visualiserElement}}`);
 
-      expect(this.$('.workflow-visualiser-element')).to.have.class(modeClass);
+      expect(find('.workflow-visualiser-element')).to.have.class(modeClass);
     });
   });
 });

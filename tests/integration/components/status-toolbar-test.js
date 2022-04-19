@@ -1,8 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import $ from 'jquery';
 
 describe('Integration | Component | status toolbar', function () {
   setupRenderingTest();
@@ -13,7 +14,7 @@ describe('Integration | Component | status toolbar', function () {
         {{toolbar.icon icon="space" enabled=false}}
       {{/status-toolbar}}
     `);
-    expect(this.$('.status-toolbar-icon')).to.be.hidden;
+    expect($(find('.status-toolbar-icon')).is(':hidden')).to.be.true;
   });
 
   it('adds a class to icon based on status property', async function () {
@@ -22,7 +23,7 @@ describe('Integration | Component | status toolbar', function () {
         {{toolbar.icon icon="space" status="some"}}
       {{/status-toolbar}}
     `);
-    expect(this.$('.status-toolbar-icon')).to.have.class('some');
+    expect(find('.status-toolbar-icon')).to.have.class('some');
   });
 
   it('adds a subicon to status icon', async function () {
@@ -31,8 +32,8 @@ describe('Integration | Component | status toolbar', function () {
         {{toolbar.icon icon="space" subIcon="checkbox" subIconClass="subicon"}}
       {{/status-toolbar}}
     `);
-    expect(this.$('.oneicon-checkbox')).to.exist;
-    expect(this.$('.oneicon-checkbox')).to.have.class('subicon');
+    expect(find('.oneicon-checkbox')).to.exist;
+    expect(find('.oneicon-checkbox')).to.have.class('subicon');
   });
 
   it('triggers status icon click action', async function () {

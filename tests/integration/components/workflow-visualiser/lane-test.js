@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -10,7 +10,6 @@ import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/paral
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import { Promise } from 'rsvp';
 import { get, set, setProperties } from '@ember/object';
-import $ from 'jquery';
 import sinon from 'sinon';
 import { getModalBody, getModalFooter } from '../../../helpers/modal';
 
@@ -72,7 +71,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
   it('has class "workflow-visualiser-lane"', async function () {
     await render(hbs `{{workflow-visualiser/lane}}`);
-    expect(this.$('.workflow-visualiser-lane')).to.exist;
+    expect(find('.workflow-visualiser-lane')).to.exist;
   });
 
   context('in "view" mode', function () {
@@ -88,7 +87,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.lane-name .one-label')).to.not.exist;
+      expect(find('.lane-name .one-label')).to.not.exist;
       done();
     });
 
@@ -99,10 +98,11 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .view-lane-action-trigger')[0]);
+      await click(document.querySelector('.webui-popover.in .view-lane-action-trigger'));
 
-      expect(getModalBody().find('.name-field .field-component').text().trim())
-        .to.equal('lane1');
+      expect(
+        getModalBody().querySelector('.name-field .field-component').textContent.trim()
+      ).to.equal('lane1');
       done();
     });
   });
@@ -132,7 +132,7 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       await fillIn('.lane-name input', 'new-name');
       await click('.lane-name .save-icon');
 
-      expect(this.$('.lane-name').text().trim()).to.equal('new-name');
+      expect(find('.lane-name').textContent.trim()).to.equal('new-name');
       done();
     });
 
@@ -145,9 +145,14 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .modify-lane-action-trigger')[0]);
-      await fillIn(getModalBody().find('.name-field .form-control')[0], 'othername');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(
+        document.querySelector('.webui-popover.in .modify-lane-action-trigger')
+      );
+      await fillIn(
+        getModalBody().querySelector('.name-field .form-control'),
+        'othername'
+      );
+      await click(getModalFooter().querySelector('.btn-submit'));
 
       expect(onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.get('lane'), { name: 'othername' });
@@ -165,7 +170,9 @@ describe('Integration | Component | workflow visualiser/lane', function () {
         await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
         await click('.lane-actions-trigger');
-        await click($(`body .webui-popover.in .move-${direction}-lane-action-trigger`)[0]);
+        await click(document.querySelector(
+          `.webui-popover.in .move-${direction}-lane-action-trigger`
+        ));
 
         expect(onMoveSpy).to.be.calledOnce
           .and.to.be.calledWith(this.get('lane'), moveStep);
@@ -178,9 +185,10 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
         await click('.lane-actions-trigger');
 
-        const $actionParent =
-          $(`body .webui-popover.in .move-${direction}-lane-action-trigger`).parent();
-        expect($actionParent).to.have.class('disabled');
+        const actionParent = document.querySelector(
+          `.webui-popover.in .move-${direction}-lane-action-trigger`
+        ).parentElement;
+        expect(actionParent).to.have.class('disabled');
         done();
       });
     });
@@ -204,8 +212,8 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .clear-lane-action-trigger')[0]);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(document.querySelector('.webui-popover.in .clear-lane-action-trigger'));
+      await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onClearSpy).to.be.calledOnce.and.to.be.calledWith(lane);
       done();
@@ -218,9 +226,10 @@ describe('Integration | Component | workflow visualiser/lane', function () {
 
       await click('.lane-actions-trigger');
 
-      const $actionParent =
-        $('body .webui-popover.in .clear-lane-action-trigger').parent();
-      expect($actionParent).to.have.class('disabled');
+      const actionParent = document.querySelector(
+        '.webui-popover.in .clear-lane-action-trigger'
+      ).parentElement;
+      expect(actionParent).to.have.class('disabled');
       done();
     });
 
@@ -233,8 +242,10 @@ describe('Integration | Component | workflow visualiser/lane', function () {
       `);
 
       await click('.lane-actions-trigger');
-      await click($('body .webui-popover.in .remove-lane-action-trigger')[0]);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(
+        document.querySelector('.webui-popover.in .remove-lane-action-trigger')
+      );
+      await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('lane'));
       done();
@@ -249,7 +260,7 @@ function itShowsName() {
 
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    expect(this.$('.lane-name').text().trim()).to.equal(laneName);
+    expect(find('.lane-name').textContent.trim()).to.equal(laneName);
     done();
   });
 }
@@ -273,26 +284,26 @@ function itRendersLaneElements() {
 
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    const $elements = this.$('.workflow-visualiser-lane .workflow-visualiser-element');
-    const $space1Element = $elements.eq(0);
-    const $block1Element = $elements.eq(1);
-    const $space2Element = $elements.eq(2);
-    const $block2Element = $elements.eq(3);
-    const $space3Element = $elements.eq(4);
-    expect($elements).to.have.length(5);
-    expect($space1Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space1Element).to.not.have.attr('data-element-before-id');
-    expect($space1Element).to.have.attr('data-element-after-id', 'b1');
-    expect($block1Element.text().trim()).to.contain('block1');
-    expect($block1Element.is('.workflow-visualiser-parallel-box')).to.be.true;
-    expect($space2Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space2Element).to.have.attr('data-element-before-id', 'b1');
-    expect($space2Element).to.have.attr('data-element-after-id', 'b2');
-    expect($block2Element.text().trim()).to.contain('block2');
-    expect($block2Element.is('.workflow-visualiser-parallel-box')).to.be.true;
-    expect($space3Element.is('.workflow-visualiser-interblock-space')).to.be.true;
-    expect($space3Element).to.have.attr('data-element-before-id', 'b2');
-    expect($space3Element).to.not.have.attr('data-element-after-id');
+    const elements = findAll('.workflow-visualiser-lane .workflow-visualiser-element');
+    const space1Element = elements[0];
+    const block1Element = elements[1];
+    const space2Element = elements[2];
+    const block2Element = elements[3];
+    const space3Element = elements[4];
+    expect(elements).to.have.length(5);
+    expect(space1Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
+    expect(space1Element).to.not.have.attr('data-element-before-id');
+    expect(space1Element).to.have.attr('data-element-after-id', 'b1');
+    expect(block1Element.textContent.trim()).to.contain('block1');
+    expect(block1Element.matches('.workflow-visualiser-parallel-box')).to.be.true;
+    expect(space2Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
+    expect(space2Element).to.have.attr('data-element-before-id', 'b1');
+    expect(space2Element).to.have.attr('data-element-after-id', 'b2');
+    expect(block2Element.textContent.trim()).to.contain('block2');
+    expect(block2Element.matches('.workflow-visualiser-parallel-box')).to.be.true;
+    expect(space3Element.matches('.workflow-visualiser-interblock-space')).to.be.true;
+    expect(space3Element).to.have.attr('data-element-before-id', 'b2');
+    expect(space3Element).to.not.have.attr('data-element-after-id');
     done();
   });
 }
@@ -301,15 +312,15 @@ function itRendersActions(actionsSpec) {
   it('renders actions', async function (done) {
     await render(hbs `{{workflow-visualiser/lane elementModel=lane}}`);
 
-    await click(this.$('.lane-actions-trigger')[0]);
+    await click('.lane-actions-trigger');
 
-    const $actions = $('body .webui-popover.in .actions-popover-content a');
-    expect($actions).to.have.length(actionsSpec.length);
+    const actions = document.querySelectorAll('body .webui-popover.in .actions-popover-content a');
+    expect(actions).to.have.length(actionsSpec.length);
     actionsSpec.forEach(({ className, label, icon }, index) => {
-      const $action = $actions.eq(index);
-      expect($action).to.have.class(className);
-      expect($action.text().trim()).to.equal(label);
-      expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+      const action = actions[index];
+      expect(action).to.have.class(className);
+      expect(action.textContent.trim()).to.equal(label);
+      expect(action.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
     });
     done();
   });

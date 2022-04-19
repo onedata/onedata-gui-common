@@ -1,30 +1,29 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click } from '@ember/test-helpers';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import $ from 'jquery';
 
 describe('Integration | Component | one collapsible toolbar', function () {
   setupRenderingTest();
 
-  // TODO: does not run under xvfb. To check.
-  // it('renders in full version in large container', async function () {
-  //   await render(hbs`
-  //     <div class="bla" style="width: 1000px">
-  //       {{#one-collapsible-toolbar as |toolbar|}}
-  //         {{#toolbar.item}}
-  //           Button
-  //         {{/toolbar.item}}
-  //       {{/one-collapsible-toolbar}}
-  //     </div>
-  //   `);
-  //
-  //   expect(this.$('.collapsible-toolbar-buttons'), 'buttons are visible')
-  //     .to.be.visible;
-  //   expect(this.$('.collapsible-toolbar-toggle'), 'toggle is hidden')
-  //     .to.be.hidden;
-  // });
+  it('renders in full version in large container', async function () {
+    await render(hbs `
+      <div class="bla" style="width: 1000px">
+        {{#one-collapsible-toolbar as |toolbar|}}
+          {{#toolbar.item}}
+            Button
+          {{/toolbar.item}}
+        {{/one-collapsible-toolbar}}
+      </div>
+    `);
+
+    expect($(find('.collapsible-toolbar-buttons')).is(':visible'), 'buttons are visible')
+      .to.be.true;
+    expect($(find('.collapsible-toolbar-toggle')).is(':hidden'), 'toggle is hidden')
+      .to.be.true;
+  });
 
   it('renders in minimized version in small container', async function () {
     await render(hbs `
@@ -37,10 +36,10 @@ describe('Integration | Component | one collapsible toolbar', function () {
       </div>
     `);
 
-    expect(this.$('.collapsible-toolbar-buttons'), 'buttons are hidden')
-      .to.be.hidden;
-    expect(this.$('.collapsible-toolbar-toggle'), 'toggle is visible')
-      .to.be.visible;
+    expect($(find('.collapsible-toolbar-buttons')).is(':hidden'), 'buttons are hidden')
+      .to.be.true;
+    expect($(find('.collapsible-toolbar-toggle')).is(':visible'), 'toggle is visible')
+      .to.be.true;
   });
 
   it('renders buttons properly', async function () {
@@ -57,13 +56,13 @@ describe('Integration | Component | one collapsible toolbar', function () {
       {{/one-collapsible-toolbar}}
     `);
 
-    const button = this.$('button');
+    const button = find('button');
     expect(button, 'button has proper style class').to.have.class(
       'btn-danger');
     expect(button, 'button has trigger class').to.have.class('trigger-class');
     expect(button, 'button has proper size class').to.have.class('btn-xs');
 
-    await click(button[0]);
+    await click(button);
     expect(actionOccurred, 'click action occurred').to.be.true;
   });
 
@@ -83,15 +82,15 @@ describe('Integration | Component | one collapsible toolbar', function () {
     `);
 
     await click('.collapsible-toolbar-toggle');
-    const popover = $('body .webui-popover.in');
-    expect(popover.length, 'shows popover after click').to.equal(1);
-    const item = popover.find('a');
+    const popovers = document.querySelectorAll('.webui-popover.in');
+    expect(popovers.length, 'shows popover after click').to.equal(1);
+    const item = popovers[0].querySelector('a');
     expect(item, 'dropdown item has trigger class')
       .to.have.class('trigger-class');
 
-    await click(item[0]);
+    await click(item);
     expect(actionOccurred, 'click action occurred').to.be.true;
-    expect(popover, 'hides popover after item click').to.not.have
+    expect(popovers[0], 'hides popover after item click').to.not.have
       .class('in');
   });
 });

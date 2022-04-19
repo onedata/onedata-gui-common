@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click, settled, findAll, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import $ from 'jquery';
 import { registerService } from '../../helpers/stub-service';
 
 import EventsBusStub from 'dummy/tests/helpers/events-bus-stub';
@@ -33,13 +32,13 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const treeDirectItems = this.$('.item');
-    const subtreeDirectItems = this.$('.subitem');
+    const treeDirectItems = findAll('.item');
+    const subtreeDirectItems = findAll('.subitem');
     expect(treeDirectItems).to.have.length(2);
     expect(subtreeDirectItems).to.have.length(1);
-    expect($(treeDirectItems[0]).text()).to.contain('item1');
-    expect($(treeDirectItems[1]).text()).to.contain('item2');
-    expect($(subtreeDirectItems[0]).text()).to.contain('item2.1');
+    expect(treeDirectItems[0].textContent).to.contain('item1');
+    expect(treeDirectItems[1].textContent).to.contain('item2');
+    expect(subtreeDirectItems[0].textContent).to.contain('item2.1');
   });
 
   it('collapses/expands subtrees', async function () {
@@ -56,7 +55,7 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const subtree = this.$('.subtree');
+    const subtree = find('.subtree');
     expect(subtree).to.have.class('collapse-hidden');
 
     await click('.item-content');
@@ -82,16 +81,16 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const firstLevelItemContent = this.$('.first-level-item-content');
-    const secondLevelItemContent = this.$('.second-level-item-content');
-    const secondLevelSubtree = this.$('.second-level-subtree');
+    const firstLevelItemContent = find('.first-level-item-content');
+    const secondLevelItemContent = find('.second-level-item-content');
+    const secondLevelSubtree = find('.second-level-subtree');
 
-    await click(firstLevelItemContent[0]);
-    await click(secondLevelItemContent[0]);
+    await click(firstLevelItemContent);
+    await click(secondLevelItemContent);
     expect(secondLevelSubtree).to.not.have.class('collapse-hidden');
 
-    await click(firstLevelItemContent[0]);
-    await click(firstLevelItemContent[0]);
+    await click(firstLevelItemContent);
+    await click(firstLevelItemContent);
     expect(secondLevelSubtree).to.have.class('collapse-hidden');
   });
 
@@ -114,16 +113,16 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const firstLevelItemContent = this.$('.first-level-item-content');
-    const secondLevelItemContent = this.$('.second-level-item-content');
-    const secondLevelSubtree = this.$('.second-level-subtree');
+    const firstLevelItemContent = find('.first-level-item-content');
+    const secondLevelItemContent = find('.second-level-item-content');
+    const secondLevelSubtree = find('.second-level-subtree');
 
-    await click(firstLevelItemContent[0]);
-    await click(secondLevelItemContent[0]);
+    await click(firstLevelItemContent);
+    await click(secondLevelItemContent);
     expect(secondLevelSubtree).to.not.have.class('collapse-hidden');
 
-    await click(firstLevelItemContent[0]);
-    await click(firstLevelItemContent[0]);
+    await click(firstLevelItemContent);
+    await click(firstLevelItemContent);
     expect(secondLevelSubtree).to.not.have.class('collapse-hidden');
   });
 
@@ -143,7 +142,7 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const itemTree = this.$('.item1-tree');
+    const itemTree = find('.item1-tree');
     expect(itemTree).to.have.class('collapse-hidden');
 
     eventsBus.trigger('one-tree:show', 'root', 'item1', true);
@@ -167,7 +166,7 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const subtree = this.$('.subtree');
+    const subtree = find('.subtree');
     expect(subtree).to.have.class('collapse-hidden');
 
     eventsBus.trigger('one-tree:show', 'root', 'item1');
@@ -200,8 +199,8 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    const parentItemTree = this.$('.item1-tree');
-    const childItemTree = this.$('.item11-tree');
+    const parentItemTree = find('.item1-tree');
+    const childItemTree = find('.item11-tree');
     expect(parentItemTree).to.have.class('collapse-hidden');
     expect(childItemTree).to.have.class('collapse-hidden');
 
@@ -228,7 +227,7 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    expect(this.$('.item1')).to.have.class('collapse-hidden');
+    expect(find('.item1')).to.have.class('collapse-hidden');
   });
 
   it('does not filter nested items in items, that match', async function () {
@@ -245,7 +244,7 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    expect(this.$('.item11')).to.not.have.class('collapse-hidden');
+    expect(find('.item11')).to.not.have.class('collapse-hidden');
   });
 
   it('highlights parents of items matched by filter', async function () {
@@ -267,8 +266,8 @@ describe('Integration | Component | one tree', function () {
       {{/one-tree}}
     `);
 
-    expect(this.$('.item1-content')).to.have.class('semibold');
-    expect(this.$('.item11-content')).to.not.have.class('semibold');
-    expect(this.$('.item111-content')).to.not.have.class('semibold');
+    expect(find('.item1-content')).to.have.class('semibold');
+    expect(find('.item11-content')).to.not.have.class('semibold');
+    expect(find('.item111-content')).to.not.have.class('semibold');
   });
 });

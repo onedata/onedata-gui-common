@@ -54,6 +54,7 @@ import { empty, oneWay } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { next, debounce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/one-tree';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,
@@ -236,16 +237,18 @@ export default Component.extend({
       _filteredOutItemsKeys,
       _directItemsKeys,
       treeFilteredOut,
+      element,
     } = this.getProperties(
       '_filteredOutItemsKeys',
       '_directItemsKeys',
-      'treeFilteredOut'
+      'treeFilteredOut',
+      'element'
     );
     let isNotFilteredOut =
       _filteredOutItemsKeys.get('length') !== _directItemsKeys.get('length');
     treeFilteredOut(isNotFilteredOut);
 
-    let itemsNodes = this.$('> .one-tree-list > .one-tree-item');
+    let itemsNodes = $(element).find('> .one-tree-list > .one-tree-item');
     if (itemsNodes) {
       itemsNodes.removeClass('last');
       let visibleItemsNodes = itemsNodes.filter(':not(.collapse-hidden)');

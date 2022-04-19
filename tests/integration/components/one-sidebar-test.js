@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { get, computed } from '@ember/object';
 import sinon from 'sinon';
@@ -33,16 +33,16 @@ describe('Integration | Component | one sidebar', function () {
   it('has class "one-sidebar"', async function () {
     await render(hbs `{{one-sidebar}}`);
 
-    expect(this.$('.one-sidebar')).to.exist;
+    expect(find('.one-sidebar')).to.exist;
   });
 
   it('lists resources passed via model', async function () {
     await render(hbs `{{one-sidebar model=model}}`);
 
-    const $items = this.$('.resource-item');
-    expect($items).to.have.length(2);
-    expect($items.eq(0).text().trim()).to.equal('res1');
-    expect($items.eq(1).text().trim()).to.equal('res2');
+    const items = findAll('.resource-item');
+    expect(items).to.have.length(2);
+    expect(items[0].textContent.trim()).to.equal('res1');
+    expect(items[1].textContent.trim()).to.equal('res2');
   });
 
   it('allows to filter using search-bar', async function () {
@@ -50,9 +50,9 @@ describe('Integration | Component | one sidebar', function () {
 
     return fillIn('.search-bar', '1')
       .then(() => {
-        const $items = this.$('.resource-item');
-        expect($items).to.have.length(1);
-        expect($items.text().trim()).to.equal('res1');
+        const items = findAll('.resource-item');
+        expect(items).to.have.length(1);
+        expect(items[0].textContent.trim()).to.equal('res1');
       });
   });
 
@@ -61,7 +61,7 @@ describe('Integration | Component | one sidebar', function () {
     async function () {
       await render(hbs `{{one-sidebar model=model}}`);
 
-      expect(this.$('.toggle-more-filters')).to.not.exist;
+      expect(find('.toggle-more-filters')).to.not.exist;
     }
   );
 
@@ -73,9 +73,9 @@ describe('Integration | Component | one sidebar', function () {
         advancedFiltersComponent="test-component"
       }}`);
 
-      const $moreFilters = this.$('.toggle-more-filters');
-      expect($moreFilters).to.exist;
-      expect($moreFilters.text().trim()).to.equal('Hide advanced filters');
+      const moreFilters = find('.toggle-more-filters');
+      expect(moreFilters).to.exist;
+      expect(moreFilters.textContent.trim()).to.equal('Hide advanced filters');
     }
   );
 
@@ -88,7 +88,7 @@ describe('Integration | Component | one sidebar', function () {
       }}`);
 
       return click('.toggle-more-filters')
-        .then(() => expect(this.$('.toggle-more-filters').text().trim())
+        .then(() => expect(find('.toggle-more-filters').textContent.trim())
           .to.equal('Show advanced filters')
         );
     }
@@ -102,7 +102,7 @@ describe('Integration | Component | one sidebar', function () {
         advancedFiltersComponent="test-component"
       }}`);
 
-      expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist;
+      expect(find('.advanced-filters-collapse.in .test-component')).to.exist;
     }
   );
 
@@ -116,7 +116,7 @@ describe('Integration | Component | one sidebar', function () {
 
       return click('.toggle-more-filters')
         .then(() =>
-          expect(this.$('.advanced-filters-collapse.in .test-component')).to.not.exist
+          expect(find('.advanced-filters-collapse.in .test-component')).to.not.exist
         );
     }
   );
@@ -127,7 +127,7 @@ describe('Integration | Component | one sidebar', function () {
       advancedFiltersComponent="test-component"
     }}`);
 
-    const testComponent = this.$('.test-component')[0].componentInstance;
+    const testComponent = find('.test-component').componentInstance;
     expect(get(testComponent, 'collection')).to.have.length(2);
   });
 
@@ -147,7 +147,7 @@ describe('Integration | Component | one sidebar', function () {
       advancedFilters=advancedFilters
     }}`);
 
-    const testComponent = this.$('.test-component')[0].componentInstance;
+    const testComponent = find('.test-component').componentInstance;
     get(testComponent, 'onChange')(filters);
     expect(filterChangeSpy).to.be.calledWith('advancedFilters', filters);
   });
@@ -189,7 +189,7 @@ describe('Integration | Component | one sidebar', function () {
         _localStorage=_localStorage
       }}`);
 
-      expect(this.$('.advanced-filters-collapse.in .test-component')).to.not.exist;
+      expect(find('.advanced-filters-collapse.in .test-component')).to.not.exist;
     }
   );
 
@@ -212,7 +212,7 @@ describe('Integration | Component | one sidebar', function () {
           _localStorage=_localStorage
         }}`);
 
-        expect(this.$('.advanced-filters-collapse.in .test-component')).to.exist;
+        expect(find('.advanced-filters-collapse.in .test-component')).to.exist;
       }
     );
   });

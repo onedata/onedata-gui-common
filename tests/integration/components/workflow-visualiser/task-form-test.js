@@ -4,14 +4,13 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import sinon from 'sinon';
-import $ from 'jquery';
 import _ from 'lodash';
 import { classify } from '@ember/string';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { setProperties } from '@ember/object';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { render, settled, fillIn, click, find } from '@ember/test-helpers';
+import { render, settled, fillIn, click, find, findAll } from '@ember/test-helpers';
 
 const componentClass = 'task-form';
 
@@ -489,8 +488,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
   it(`has class "${componentClass}"`, async function () {
     await renderComponent();
 
-    expect(this.$().children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   context('in "create" mode', function () {
@@ -509,17 +508,18 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('renders "name" field', async function (done) {
       await renderComponent();
 
-      const $label = this.$('.name-field .control-label');
-      const $field = this.$('.name-field .form-control');
-      expect($label.text().trim()).to.equal('Name:');
-      expect($field).to.have.attr('type', 'text');
+      const label = find('.name-field .control-label');
+      const field = find('.name-field .form-control');
+      expect(label.textContent.trim()).to.equal('Name:');
+      expect(field.type).to.equal('text');
       done();
     });
 
     it('uses lambda name as default value for name field', async function (done) {
       await renderComponent();
 
-      expect(this.$('.name-field .form-control')).to.have.value(exampleAtmLambdaRevision.name);
+      expect(find('.name-field .form-control').value)
+        .to.equal(exampleAtmLambdaRevision.name);
       done();
     });
 
@@ -528,7 +528,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await fillIn('.name-field .form-control', '');
 
-      expect(this.$('.name-field')).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
       done();
     });
 
@@ -537,7 +537,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await fillIn('.name-field .form-control', 'somename');
 
-      expect(this.$('.name-field')).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
       done();
     });
 
@@ -546,7 +546,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
       await renderComponent();
 
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: exampleAtmLambdaRevision.name,
@@ -558,7 +558,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       changeSpy.reset();
 
       await fillIn('.name-field .form-control', 'someName');
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
@@ -576,21 +576,21 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
         await renderComponent();
 
-        expect(this.$('.argumentMappings-field')).to.not.exist;
+        expect(find('.argumentMappings-field')).to.not.exist;
         done();
       });
 
     it('renders arguments section', async function (done) {
       await renderComponent();
 
-      const $argumentMappings = this.$('.argumentMappings-field');
-      expect($argumentMappings).to.exist;
-      expect($argumentMappings.find('.control-label').eq(0).text().trim())
+      const argumentMappings = find('.argumentMappings-field');
+      expect(argumentMappings).to.exist;
+      expect(argumentMappings.querySelector('.control-label').textContent.trim())
         .to.equal('Arguments');
-      const $arguments = $argumentMappings.find('.argumentMapping-field');
-      expect($arguments).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
+      const args = argumentMappings.querySelectorAll('.argumentMapping-field');
+      expect(args).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
       exampleAtmLambdaRevision.argumentSpecs.forEach(({ name }, idx) => {
-        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+        expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`${name}:`);
       });
       done();
@@ -608,12 +608,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           await renderComponent();
           await clickTrigger('.argumentMapping-field .valueBuilderType-field');
 
-          expect(this.$('.valueBuilderType-field .dropdown-field-trigger').text().trim())
-            .to.equal(valueBuilderTypeLabels[valueBuilderTypes[0]]);
-          const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(valueBuilderTypes.length);
+          expect(
+            find('.valueBuilderType-field .dropdown-field-trigger').textContent.trim()
+          ).to.equal(valueBuilderTypeLabels[valueBuilderTypes[0]]);
+          const options = document.querySelectorAll('.ember-power-select-option');
+          expect(options).to.have.length(valueBuilderTypes.length);
           valueBuilderTypes.forEach((type, idx) =>
-            expect($options.eq(idx).text().trim())
+            expect(options[idx].textContent.trim())
             .to.equal(valueBuilderTypeLabels[type])
           );
           done();
@@ -630,13 +631,14 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           await renderComponent();
           await clickTrigger('.argumentMapping-field .valueBuilderType-field');
 
-          expect(this.$('.valueBuilderType-field .dropdown-field-trigger').text().trim())
-            .to.equal('Leave unassigned');
-          const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(valueBuilderTypes.length + 1);
-          expect($options.eq(0).text().trim()).to.equal('Leave unassigned');
+          expect(
+            find('.valueBuilderType-field .dropdown-field-trigger').textContent.trim()
+          ).to.equal('Leave unassigned');
+          const options = document.querySelectorAll('.ember-power-select-option');
+          expect(options).to.have.length(valueBuilderTypes.length + 1);
+          expect(options[0].textContent.trim()).to.equal('Leave unassigned');
           valueBuilderTypes.forEach((type, idx) =>
-            expect($options.eq(idx + 1).text().trim())
+            expect(options[idx + 1].textContent.trim())
             .to.equal(valueBuilderTypeLabels[type])
           );
           done();
@@ -726,11 +728,11 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             );
             await clickTrigger('.argumentMapping-field .valueBuilderStore-field');
 
-            const $options = $('.ember-power-select-option');
-            expect($options).to.have.length(sortedPossibleStores.length + 1);
-            expect($options.eq(0).text().trim()).to.equal('Create store...');
+            const options = document.querySelectorAll('.ember-power-select-option');
+            expect(options).to.have.length(sortedPossibleStores.length + 1);
+            expect(options[0].textContent.trim()).to.equal('Create store...');
             sortedPossibleStores.forEach(({ name }, idx) =>
-              expect($options.eq(idx + 1).text().trim()).to.equal(name)
+              expect(options[idx + 1].textContent.trim()).to.equal(name)
             );
 
             const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
@@ -787,8 +789,9 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               'Create store...'
             );
 
-            expect(this.$('.valueBuilderStore-field .dropdown-field-trigger').text().trim())
-              .to.equal('new store');
+            expect(
+              find('.valueBuilderStore-field .dropdown-field-trigger').textContent.trim()
+            ).to.equal('new store');
             const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
             expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
             const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
@@ -861,7 +864,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       //       const $options = $('.ember-power-select-option');
       //       expect($options).to.have.length(sortedPossibleStores.length);
       //       sortedPossibleStores.forEach(({ name }, idx) =>
-      //         expect($options.eq(idx).text().trim()).to.equal(name)
+      //         expect($options[idx].textContent.trim()).to.equal(name)
       //       );
 
       //       const storeToSelect = sortedPossibleStores[sortedPossibleStores.length - 1];
@@ -927,21 +930,21 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
         await renderComponent();
 
-        expect(this.$('.resultMappings-field')).to.not.exist;
+        expect(find('.resultMappings-field')).to.not.exist;
         done();
       });
 
     it('renders results section', async function (done) {
       await renderComponent();
 
-      const $resultMappings = this.$('.resultMappings-field');
-      expect($resultMappings).to.exist;
-      expect($resultMappings.find('.control-label').eq(0).text().trim())
+      const resultMappings = find('.resultMappings-field');
+      expect(resultMappings).to.exist;
+      expect(resultMappings.querySelector('.control-label').textContent.trim())
         .to.equal('Results');
-      const $results = $resultMappings.find('.resultMapping-field');
-      expect($results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
+      const results = resultMappings.querySelectorAll('.resultMapping-field');
+      expect(results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
       exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
-        expect($results.eq(idx).find('.control-label').eq(0).text().trim())
+        expect(results[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`${name}:`);
       });
       done();
@@ -973,20 +976,21 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           await renderComponent();
           await clickTrigger('.resultMapping-field .targetStore-field');
 
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
             .to.equal('Leave unassigned');
-          const $options = $('.ember-power-select-option');
+          const options = document.querySelectorAll('.ember-power-select-option');
           const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
-          expect($options)
+          expect(options)
             .to.have.length(sortedPossibleStores.length + extraOptionsCount);
-          expect($options.eq(0).text().trim()).to.equal('Create store...');
-          expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
+          expect(options[0].textContent.trim()).to.equal('Create store...');
+          expect(options[1].textContent.trim()).to.equal('Leave unassigned');
           if (allowSystemAuditLogStores) {
-            expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
-            expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
+            expect(options[2].textContent.trim()).to.equal(taskAuditLogStore.name);
+            expect(options[3].textContent.trim()).to.equal(workflowAuditLogStore.name);
           }
           sortedPossibleStores.forEach((store, idx) =>
-            expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
+            expect(options[idx + extraOptionsCount].textContent.trim())
+            .to.equal(store.name)
           );
           done();
         });
@@ -1004,20 +1008,21 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           await renderComponent();
           await clickTrigger('.resultMapping-field .targetStore-field');
 
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
             .to.equal('Leave unassigned');
-          const $options = $('.ember-power-select-option');
+          const options = document.querySelectorAll('.ember-power-select-option');
           const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
-          expect($options)
+          expect(options)
             .to.have.length(sortedPossibleStoresWithBatch.length + extraOptionsCount);
-          expect($options.eq(0).text().trim()).to.equal('Create store...');
-          expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
+          expect(options[0].textContent.trim()).to.equal('Create store...');
+          expect(options[1].textContent.trim()).to.equal('Leave unassigned');
           if (allowSystemAuditLogStores) {
-            expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
-            expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
+            expect(options[2].textContent.trim()).to.equal(taskAuditLogStore.name);
+            expect(options[3].textContent.trim()).to.equal(workflowAuditLogStore.name);
           }
           sortedPossibleStoresWithBatch.forEach((store, idx) =>
-            expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
+            expect(options[idx + extraOptionsCount].textContent.trim())
+            .to.equal(store.name)
           );
           done();
         });
@@ -1040,7 +1045,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           await renderComponent();
           await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
 
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
             .to.equal('new store');
           const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
           expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
@@ -1074,7 +1079,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           await renderComponent();
           await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
 
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
             .to.equal('new store');
           const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
           expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
@@ -1181,7 +1186,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
         await renderComponent();
 
-        expect(this.$('.dispatchFunction-field')).to.not.exist;
+        expect(find('.dispatchFunction-field')).to.not.exist;
         done();
       });
 
@@ -1252,11 +1257,12 @@ describe('Integration | Component | workflow visualiser/task form', function () 
     it('renders "override resources" toggle, which is unchecked by default', async function (done) {
       await renderComponent();
 
-      const $overrideField = this.$('.overrideResources-field');
-      expect($overrideField).to.have.class('toggle-field-renderer');
-      expect($overrideField.find('.control-label').text().trim())
+      const overrideField = find('.overrideResources-field');
+      expect(overrideField).to.have.class('toggle-field-renderer');
+      expect(overrideField.querySelector('.control-label').textContent.trim())
         .to.equal('Override default resources:');
-      expect($overrideField.find('.one-way-toggle')).to.not.have.class('checked');
+      expect(overrideField.querySelector('.one-way-toggle'))
+        .to.not.have.class('checked');
       done();
     });
 
@@ -1264,14 +1270,14 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       async function (done) {
         await renderComponent();
 
-        const $resourcesSection = this.$('.resources-field');
-        expect($resourcesSection.find('.control-label').eq(0).text().trim())
+        const resourcesSection = find('.resources-field');
+        expect(resourcesSection.querySelector('.control-label').textContent.trim())
           .to.equal('Resources');
         // Check if translations for resources fields are loaded
-        expect($resourcesSection.text()).to.contain('Limit');
+        expect(resourcesSection.textContent).to.contain('Limit');
 
-        expect(this.$('.cpuRequested-field .form-control')).to.have.value('0.1');
-        expect(this.$('.cpuLimit-field .form-control')).to.have.value('');
+        expect(find('.cpuRequested-field .form-control').value).to.equal('0.1');
+        expect(find('.cpuLimit-field .form-control').value).to.equal('');
         [{
           resourceName: 'memory',
           requested: ['128', 'MiB'],
@@ -1281,13 +1287,13 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           requested: ['0', 'MiB'],
           limit: ['', 'MiB'],
         }].forEach(({ resourceName, requested, limit }) => {
-          const $requested = this.$(`.${resourceName}Requested-field`);
-          expect($requested.find('input')).to.have.value(requested[0]);
-          expect($requested.find('.ember-power-select-trigger').text())
+          const requestedElem = find(`.${resourceName}Requested-field`);
+          expect(requestedElem.querySelector('input').value).to.equal(requested[0]);
+          expect(requestedElem.querySelector('.ember-power-select-trigger').textContent)
             .to.contain(requested[1]);
-          const $limit = this.$(`.${resourceName}Limit-field`);
-          expect($limit.find('input')).to.have.value(limit[0]);
-          expect($limit.find('.ember-power-select-trigger').text())
+          const limitElem = find(`.${resourceName}Limit-field`);
+          expect(limitElem.querySelector('input').value).to.equal(limit[0]);
+          expect(limitElem.querySelector('.ember-power-select-trigger').textContent)
             .to.contain(limit[1]);
         });
         done();
@@ -1306,32 +1312,31 @@ describe('Integration | Component | workflow visualiser/task form', function () 
 
         await renderComponent();
 
-        expect(this.$('.cpuRequested-field .form-control')).to.have.value('1');
-        expect(this.$('.cpuLimit-field .form-control')).to.have.value('2');
-        expect(this.$('.memoryRequested-field .form-control')).to.have.value('128');
-        expect(this.$('.memoryLimit-field .form-control')).to.have.value('256');
-        expect(this.$('.ephemeralStorageRequested-field .form-control'))
-          .to.have.value('10');
-        expect(this.$('.ephemeralStorageLimit-field .form-control'))
-          .to.have.value('20');
+        expect(find('.cpuRequested-field .form-control').value).to.equal('1');
+        expect(find('.cpuLimit-field .form-control').value).to.equal('2');
+        expect(find('.memoryRequested-field .form-control').value).to.equal('128');
+        expect(find('.memoryLimit-field .form-control').value).to.equal('256');
+        expect(find('.ephemeralStorageRequested-field .form-control').value)
+          .to.equal('10');
+        expect(find('.ephemeralStorageLimit-field .form-control').value).to.equal('20');
         done();
       });
 
     it('disables "resources" section when "override resources" toggle is unchecked', async function (done) {
       await renderComponent();
 
-      await toggleOverrideResources(this, false);
+      await toggleOverrideResources(false);
 
-      expect(this.$('.resourcesSections-field .field-enabled')).to.not.exist;
+      expect(find('.resourcesSections-field .field-enabled')).to.not.exist;
       done();
     });
 
     it('enables "resources" section when "override resources" toggle is checked', async function (done) {
       await renderComponent();
 
-      await toggleOverrideResources(this, true);
+      await toggleOverrideResources(true);
 
-      expect(this.$('.resourcesSections-field .field-disabled')).to.not.exist;
+      expect(find('.resourcesSections-field .field-disabled')).to.not.exist;
       done();
     });
 
@@ -1339,7 +1344,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
-      await toggleOverrideResources(this, true);
+      await toggleOverrideResources(true);
 
       expect(changeSpy).to.be.calledWith(sinon.match({
         data: sinon.match({
@@ -1360,7 +1365,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
-      await toggleOverrideResources(this, true);
+      await toggleOverrideResources(true);
       await fillIn('.cpuRequested-field input', '2');
       await fillIn('.cpuLimit-field input', '10');
       await fillIn('.memoryRequested-field input', '100');
@@ -1387,7 +1392,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       const changeSpy = this.get('changeSpy');
       await renderComponent();
 
-      await toggleOverrideResources(this, true);
+      await toggleOverrideResources(true);
       await fillIn('.cpuRequested-field input', '2');
       await fillIn('.cpuLimit-field input', '10');
       await fillIn('.memoryRequested-field input', '100');
@@ -1395,14 +1400,14 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       await fillIn('.ephemeralStorageRequested-field input', '100');
       await fillIn('.ephemeralStorageLimit-field input', '200');
       changeSpy.reset();
-      await toggleOverrideResources(this, false);
+      await toggleOverrideResources(false);
 
-      expect(this.$('.cpuRequested-field input')).to.have.value('0.1');
-      expect(this.$('.cpuLimit-field input')).to.have.value('');
-      expect(this.$('.memoryRequested-field input')).to.have.value('128');
-      expect(this.$('.memoryLimit-field input')).to.have.value('');
-      expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('0');
-      expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('');
+      expect(find('.cpuRequested-field input').value).to.equal('0.1');
+      expect(find('.cpuLimit-field input').value).to.equal('');
+      expect(find('.memoryRequested-field input').value).to.equal('128');
+      expect(find('.memoryLimit-field input').value).to.equal('');
+      expect(find('.ephemeralStorageRequested-field input').value).to.equal('0');
+      expect(find('.ephemeralStorageLimit-field input').value).to.equal('');
       expect(changeSpy).to.be.calledWith(
         sinon.match((val) => !('resourceSpecOverride' in val))
       );
@@ -1439,7 +1444,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await settled();
 
-      expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
+      expect(find('.name-field .form-control').value).to.equal(exampleTask.name);
       done();
     });
   });
@@ -1471,7 +1476,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       this.set('task', Object.assign({}, exampleTask, { name: 'task2' }));
       await settled();
 
-      expect(this.$('.name-field .field-component').text().trim())
+      expect(find('.name-field .field-component').textContent.trim())
         .to.equal('task2');
       done();
     });
@@ -1491,15 +1496,15 @@ async function renderComponent() {
   }}`);
 }
 
-async function toggleOverrideResources(testCase, value) {
-  const $overrideToggle = testCase.$('.overrideResources-field .one-way-toggle');
-  if (value !== $overrideToggle.hasClass('checked')) {
-    await click($overrideToggle[0]);
+async function toggleOverrideResources(value) {
+  const overrideToggle = find('.overrideResources-field .one-way-toggle');
+  if (value !== overrideToggle.matches('.checked')) {
+    await click(overrideToggle);
   }
 }
 
-function getComponent(testCase) {
-  return testCase.$(`.${componentClass}`);
+function getComponent() {
+  return find(`.${componentClass}`);
 }
 
 function itHasModeClass(mode) {
@@ -1507,7 +1512,7 @@ function itHasModeClass(mode) {
   it(`has class "${modeClass}"`, async function (done) {
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class(modeClass);
+    expect(getComponent()).to.have.class(modeClass);
     done();
   });
 }
@@ -1516,9 +1521,9 @@ function itHasEnabledFieldsByDefault() {
   it('has all fields enabled by default', async function (done) {
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('form-enabled')
+    expect(getComponent()).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
-    expect(this.$('.field-enabled')).to.exist;
+    expect(find('.field-enabled')).to.exist;
     done();
   });
 }
@@ -1529,9 +1534,9 @@ function itAllowsToDisableAllFields() {
 
     await renderComponent();
 
-    expect(getComponent(this)).to.have.class('form-disabled')
+    expect(getComponent()).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
-    expect(this.$('.field-enabled')).to.not.exist;
+    expect(find('.field-enabled')).to.not.exist;
     done();
   });
 }
@@ -1540,11 +1545,11 @@ function itShowsLambdaInfo() {
   it('shows brief information about used lambda', async function (done) {
     await renderComponent();
 
-    expect(this.$('.atm-lambda-name .value').text().trim())
+    expect(find('.atm-lambda-name .value').textContent.trim())
       .to.equal(exampleAtmLambdaRevision.name);
-    expect(this.$('.atm-lambda-revision-number .value').text().trim())
+    expect(find('.atm-lambda-revision-number .value').textContent.trim())
       .to.equal('1');
-    expect(this.$('.atm-lambda-summary .value').text().trim())
+    expect(find('.atm-lambda-summary .value').textContent.trim())
       .to.equal(exampleAtmLambdaRevision.summary);
     done();
   });
@@ -1566,12 +1571,12 @@ function itProvidesPossibleDispatchFunctionsForResultWithStoreAttached(
       await selectChoose('.resultMapping-field .targetStore-field', targetStore.name);
       await clickTrigger('.resultMapping-field .dispatchFunction-field');
 
-      expect(this.$('.dispatchFunction-field .dropdown-field-trigger').text().trim())
+      expect(find('.dispatchFunction-field .dropdown-field-trigger').textContent.trim())
         .to.equal(dispatchFunctionLabels[dispatchFunctions[0]]);
-      const $options = $('.ember-power-select-option');
-      expect($options).to.have.length(dispatchFunctions.length);
+      const options = document.querySelectorAll('.ember-power-select-option');
+      expect(options).to.have.length(dispatchFunctions.length);
       dispatchFunctions.forEach((dispatchFunction, idx) =>
-        expect($options.eq(idx).text().trim())
+        expect(options[idx].textContent.trim())
         .to.equal(dispatchFunctionLabels[dispatchFunction])
       );
       done();
@@ -1654,18 +1659,20 @@ function itFillsFieldsWithDataOfPassedTask() {
     await renderComponent();
 
     if (inEditMode) {
-      expect(this.$('.name-field .form-control')).to.have.value(exampleTask.name);
+      expect(find('.name-field .form-control').value).to.equal(exampleTask.name);
     } else {
-      expect(this.$('.name-field .field-component').text().trim())
+      expect(find('.name-field .field-component').textContent.trim())
         .to.equal(exampleTask.name);
     }
-    const $arguments = this.$('.argumentMapping-field');
-    expect($arguments).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
+    const args = findAll('.argumentMapping-field');
+    expect(args).to.have.length(exampleAtmLambdaRevision.argumentSpecs.length);
     exampleAtmLambdaRevision.argumentSpecs.forEach(({ name }, idx) => {
-      expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+      expect(args[idx].querySelector('.control-label').textContent.trim())
         .to.equal(`${name}:`);
     });
-    const $argumentValueBuilderTypes = $arguments.find('.valueBuilderType-field');
+    const argumentValueBuilderTypes = args.map((node) =>
+      node.querySelector('.valueBuilderType-field')
+    );
     [
       'Iterated item',
       'Leave unassigned',
@@ -1673,19 +1680,22 @@ function itFillsFieldsWithDataOfPassedTask() {
       // 'Store credentials',
       'OnedataFS credentials',
     ].forEach((builderLabel, idx) =>
-      expect($argumentValueBuilderTypes.eq(idx).find('.field-component').text().trim())
-      .to.equal(builderLabel)
+      expect(
+        argumentValueBuilderTypes[idx]
+        .querySelector('.field-component')
+        .textContent.trim()
+      ).to.equal(builderLabel)
     );
     // TODO: VFS-7816 uncomment or remove future code
-    // expect($arguments.eq(2).find('.valueBuilderStore-field .field-component').text().trim())
+    // expect(args[2].querySelector('.valueBuilderStore-field .field-component').textContent.trim())
     //   .to.equal('singleValueObjectStore');
-    const $results = this.$('.resultMapping-field');
-    expect($results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
+    const results = findAll('.resultMapping-field');
+    expect(results).to.have.length(exampleAtmLambdaRevision.resultSpecs.length);
     exampleAtmLambdaRevision.resultSpecs.forEach(({ name }, idx) => {
-      expect($results.eq(idx).find('.control-label').eq(0).text().trim())
+      expect(results[idx].querySelector('.control-label').textContent.trim())
         .to.equal(`${name}:`);
     });
-    expect(this.$(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
+    expect(find(`.field-${inEditMode ? 'view' : 'edit'}-mode`)).to.not.exist;
     done();
   });
 }
@@ -1698,18 +1708,18 @@ function itFillsFieldsWithDataAboutNoResourceOverride() {
 
       await renderComponent();
 
-      expect(this.$('.overrideResources-field .one-way-toggle'))
+      expect(find('.overrideResources-field .one-way-toggle'))
         .to.not.have.class('checked');
       if (inEditMode) {
-        expect(this.$('.resourcesSections-field')).to.exist;
-        expect(this.$('.cpuRequested-field input')).to.have.value('0.1');
-        expect(this.$('.cpuLimit-field input')).to.have.value('');
-        expect(this.$('.memoryRequested-field input')).to.have.value('128');
-        expect(this.$('.memoryLimit-field input')).to.have.value('');
-        expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('0');
-        expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('');
+        expect(find('.resourcesSections-field')).to.exist;
+        expect(find('.cpuRequested-field input').value).to.equal('0.1');
+        expect(find('.cpuLimit-field input').value).to.equal('');
+        expect(find('.memoryRequested-field input').value).to.equal('128');
+        expect(find('.memoryLimit-field input').value).to.equal('');
+        expect(find('.ephemeralStorageRequested-field input').value).to.equal('0');
+        expect(find('.ephemeralStorageLimit-field input').value).to.equal('');
       } else {
-        expect(this.$('.resourcesSections-field')).to.not.exist;
+        expect(find('.resourcesSections-field')).to.not.exist;
       }
       done();
     });
@@ -1730,23 +1740,31 @@ function itFillsFieldsWithDataAboutResourceOverride() {
 
       await renderComponent();
 
-      expect(this.$('.overrideResources-field .one-way-toggle'))
+      expect(find('.overrideResources-field .one-way-toggle'))
         .to.have.class('checked');
-      expect(this.$('.resourcesSections-field')).to.exist;
+      expect(find('.resourcesSections-field')).to.exist;
       if (inEditMode) {
-        expect(this.$('.cpuRequested-field input')).to.have.value('2');
-        expect(this.$('.cpuLimit-field input')).to.have.value('10');
-        expect(this.$('.memoryRequested-field input')).to.have.value('100');
-        expect(this.$('.memoryLimit-field input')).to.have.value('200');
-        expect(this.$('.ephemeralStorageRequested-field input')).to.have.value('300');
-        expect(this.$('.ephemeralStorageLimit-field input')).to.have.value('400');
+        expect(find('.cpuRequested-field input').value).to.equal('2');
+        expect(find('.cpuLimit-field input').value).to.equal('10');
+        expect(find('.memoryRequested-field input').value).to.equal('100');
+        expect(find('.memoryLimit-field input').value).to.equal('200');
+        expect(find('.ephemeralStorageRequested-field input').value).to.equal('300');
+        expect(find('.ephemeralStorageLimit-field input').value).to.equal('400');
       } else {
-        expect(this.$('.cpuRequested-field .field-component').text().trim()).to.equal('2');
-        expect(this.$('.cpuLimit-field .field-component').text().trim()).to.equal('10');
-        expect(this.$('.memoryRequested-field .field-component').text().trim()).to.equal('100 MiB');
-        expect(this.$('.memoryLimit-field .field-component').text().trim()).to.equal('200 MiB');
-        expect(this.$('.ephemeralStorageRequested-field .field-component').text().trim()).to.equal('300 MiB');
-        expect(this.$('.ephemeralStorageLimit-field .field-component').text().trim()).to.equal('400 MiB');
+        expect(find('.cpuRequested-field .field-component').textContent.trim())
+          .to.equal('2');
+        expect(find('.cpuLimit-field .field-component').textContent.trim())
+          .to.equal('10');
+        expect(find('.memoryRequested-field .field-component').textContent.trim())
+          .to.equal('100 MiB');
+        expect(find('.memoryLimit-field .field-component').textContent.trim())
+          .to.equal('200 MiB');
+        expect(
+          find('.ephemeralStorageRequested-field .field-component').textContent.trim()
+        ).to.equal('300 MiB');
+        expect(
+          find('.ephemeralStorageLimit-field .field-component').textContent.trim()
+        ).to.equal('400 MiB');
       }
       done();
     });
@@ -1772,14 +1790,14 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithIteratedItemValueBuild
 
       await renderComponent();
 
-      const $arguments = this.$('.argumentMapping-field');
-      expect($arguments).to.have.length(possibleDataSpecs.length);
+      const args = findAll('.argumentMapping-field');
+      expect(args).to.have.length(possibleDataSpecs.length);
       possibleDataSpecs.forEach((dataSpec, idx) => {
-        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+        expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`arg${idx}:`);
         expect(
-          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
-          .text().trim()
+          args[idx].querySelector('.valueBuilderType-field .field-component')
+          .textContent.trim()
         ).to.equal('Iterated item');
       });
       done();
@@ -1807,18 +1825,18 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
 
       await renderComponent();
 
-      const $arguments = this.$('.argumentMapping-field');
-      expect($arguments).to.have.length(possibleDataSpecs.length);
+      const args = findAll('.argumentMapping-field');
+      expect(args).to.have.length(possibleDataSpecs.length);
       possibleDataSpecs.forEach((dataSpec, idx) => {
-        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+        expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`arg${idx}:`);
         expect(
-          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
-          .text().trim()
+          args[idx].querySelector('.valueBuilderType-field .field-component')
+          .textContent.trim()
         ).to.equal('Constant value');
         expect(
-          $arguments.eq(idx).find('.valueBuilderConstValue-field .form-control')
-        ).to.have.value(`"${idx}"`);
+          args[idx].querySelector('.valueBuilderConstValue-field .form-control').value
+        ).to.equal(`"${idx}"`);
       });
       done();
     });
@@ -1854,18 +1872,18 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithConstantValueValueBuil
 
 //       await renderComponent();
 
-//       const $arguments = this.$('.argumentMapping-field');
-//       expect($arguments).to.have.length(possibleDataSpecs.length);
+//       const args = findAll('.argumentMapping-field');
+//       expect(args).to.have.length(possibleDataSpecs.length);
 //       possibleDataSpecs.forEach((dataSpec, idx) => {
-//         expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+//         expect(args[idx].querySelector('.control-label').textContent.trim())
 //           .to.equal(`arg${idx}:`);
 //         expect(
-//           $arguments.eq(idx).find('.valueBuilderType-field .field-component')
-//           .text().trim()
+//           args[idx].querySelector('.valueBuilderType-field .field-component')
+//           .textContent.trim()
 //         ).to.equal('Store credentials');
 //         expect(
-//           $arguments.eq(idx).find('.valueBuilderStore-field .field-component')
-//           .text().trim()
+//           args[idx].querySelector('.valueBuilderStore-field .field-component')
+//           .textContent.trim()
 //         ).to.equal(usedStores[idx].name);
 //       });
 //       done();
@@ -1892,14 +1910,14 @@ function itFillsFieldsWithDataAboutArgumentsOfAllTypesWithOnedatafsCredsValueBui
 
       await renderComponent();
 
-      const $arguments = this.$('.argumentMapping-field');
-      expect($arguments).to.have.length(possibleDataSpecs.length);
+      const args = findAll('.argumentMapping-field');
+      expect(args).to.have.length(possibleDataSpecs.length);
       possibleDataSpecs.forEach((dataSpec, idx) => {
-        expect($arguments.eq(idx).find('.control-label').eq(0).text().trim())
+        expect(args[idx].querySelector('.control-label').textContent.trim())
           .to.equal(`arg${idx}:`);
         expect(
-          $arguments.eq(idx).find('.valueBuilderType-field .field-component')
-          .text().trim()
+          args[idx].querySelector('.valueBuilderType-field .field-component')
+          .textContent.trim()
         ).to.equal('OnedataFS credentials');
       });
       done();
@@ -1949,22 +1967,22 @@ function itFillsFieldsWithDataAboutResultsWithAllStoreTypesAndDispatchMethods() 
 
           await renderComponent();
 
-          const $results = this.$('.resultMapping-field');
-          expect($results).to.have.length(dispatchFunctions.length);
+          const results = findAll('.resultMapping-field');
+          expect(results).to.have.length(dispatchFunctions.length);
           dispatchFunctions.forEach((dispatchFunction, idx) => {
-            expect($results.eq(idx).find('.control-label').eq(0).text().trim())
+            expect(results[idx].querySelector('.control-label').textContent.trim())
               .to.equal(`res${idx}:`);
             expect(
-              $results.eq(idx).find('.targetStore-field .field-component')
-              .text().trim()
+              results[idx].querySelector('.targetStore-field .field-component')
+              .textContent.trim()
             ).to.equal(targetStore.name);
             if (dispatchFunction) {
               expect(
-                $results.eq(idx).find('.dispatchFunction-field .field-component')
-                .text().trim()
+                results[idx].querySelector('.dispatchFunction-field .field-component')
+                .textContent.trim()
               ).to.equal(dispatchFunctionLabels[dispatchFunction]);
             } else {
-              expect($results[idx].querySelector('.dispatchFunction-field'))
+              expect(results[idx].querySelector('.dispatchFunction-field'))
                 .to.not.exist;
             }
           });
@@ -1985,14 +2003,14 @@ function itFillsFieldsWithDataAboutResultsThatAreLeftUnassigned() {
 
       await renderComponent();
 
-      const $results = this.$('.resultMapping-field');
-      expect($results).to.have.length(1);
-      expect($results.find('.control-label').eq(0).text().trim()).to.equal('res1:');
+      const results = findAll('.resultMapping-field');
+      expect(results).to.have.length(1);
+      expect(results[0].querySelector('.control-label').textContent.trim()).to.equal('res1:');
       expect(
-        $results.find('.targetStore-field .field-component')
-        .text().trim()
+        results[0].querySelector('.targetStore-field .field-component')
+        .textContent.trim()
       ).to.equal('Leave unassigned');
-      expect($results.find('.dispatchFunction-field')).to.not.exist;
+      expect(results[0].querySelector('.dispatchFunction-field')).to.not.exist;
       done();
     });
 }

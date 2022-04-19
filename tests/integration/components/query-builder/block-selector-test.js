@@ -11,7 +11,7 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import { render, click, fillIn } from '@ember/test-helpers';
+import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 
 const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not'];
@@ -47,7 +47,7 @@ describe('Integration | Component | query builder/block selector', function () {
         valuesBuilder=valuesBuilder
       }}`);
 
-      const operators = this.$('.operator-selector .operator');
+      const operators = findAll('.operator-selector .operator');
       expect(operators).to.have.length(operatorsList.length);
       operatorsList.forEach((operatorName, index) => {
         const operator = operators[index];
@@ -88,7 +88,7 @@ describe('Integration | Component | query builder/block selector', function () {
       await clickTrigger('.property-selector-container');
 
       const queryProperties = this.get('queryProperties');
-      const options = this.$('.ember-power-select-option');
+      const options = findAll('.ember-power-select-option');
       expect(options).to.have.length(queryProperties.length);
       queryProperties.mapBy('key').forEach((key, index) =>
         expect(options[index].textContent.trim()).to.equal(key)
@@ -128,8 +128,8 @@ describe('Integration | Component | query builder/block selector', function () {
         valuesBuilder=valuesBuilder
       }}`);
 
-      expect(this.$('.surround-section')).to.not.exist;
-      expect(this.$('.change-to-section')).to.not.exist;
+      expect(find('.surround-section')).to.not.exist;
+      expect(find('.change-to-section')).to.not.exist;
       done();
     });
   });
@@ -146,7 +146,7 @@ describe('Integration | Component | query builder/block selector', function () {
           mode="edit"
           valuesBuilder=valuesBuilder
         }}`);
-        const operators = this.$('.surround-section .operator-selector .operator');
+        const operators = findAll('.surround-section .operator-selector .operator');
         expect(operators).to.have.length(operatorsList.length);
         operatorsList.forEach((operatorName, index) => {
           const operator = operators[index];
@@ -193,7 +193,7 @@ describe('Integration | Component | query builder/block selector', function () {
           valuesBuilder=valuesBuilder
         }}`);
 
-        const operators = this.$('.change-to-section .operator-selector .operator');
+        const operators = findAll('.change-to-section .operator-selector .operator');
         expect(operators).to.have.length(operatorsList.length);
         operatorsList.forEach((operatorName, index) => {
           const operator = operators[index];
@@ -214,7 +214,7 @@ describe('Integration | Component | query builder/block selector', function () {
           valuesBuilder=valuesBuilder
         }}`);
 
-        expect(this.$('.change-to-section')).to.not.exist;
+        expect(find('.change-to-section')).to.not.exist;
         done();
       }
     );
@@ -247,10 +247,10 @@ describe('Integration | Component | query builder/block selector', function () {
             }}`);
 
             expect(
-              this.$(`.change-to-section .operator-${operatorName}`)
-            ).to.have.attr('disabled');
+              find(`.change-to-section .operator-${operatorName}`).disabled
+            ).to.be.true;
             expect(
-              this.$('.change-to-section .operator:not([disabled])')
+              findAll('.change-to-section .operator:not([disabled])')
             ).to.have.length(operatorsList.length - 1);
             done();
           }
@@ -283,13 +283,12 @@ describe('Integration | Component | query builder/block selector', function () {
             operatorName,
             'not',
           ].forEach(disabledOperator => {
-            expect(this.$(
-              `.change-to-section .operator-${disabledOperator}`
-            )).to.have.attr('disabled');
+            expect(find(`.change-to-section .operator-${disabledOperator}`).disabled)
+              .to.be.true;
           });
 
           expect(
-            this.$('.change-to-section .operator:not([disabled])')
+            findAll('.change-to-section .operator:not([disabled])')
           ).to.have.length(operatorsList.length - 2);
           done();
         }
@@ -341,8 +340,8 @@ describe('Integration | Component | query builder/block selector', function () {
         valuesBuilder=valuesBuilder
       }}`);
 
-      expect(this.$('.add-operator-section')).to.not.exist;
-      expect(this.$('.condition-section')).to.not.exist;
+      expect(find('.add-operator-section')).to.not.exist;
+      expect(find('.condition-section')).to.not.exist;
       done();
     });
   });
