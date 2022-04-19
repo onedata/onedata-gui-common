@@ -597,7 +597,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  */
 
 /**
- * @typedef {Object} RawOTSCSeriesPoint
+ * @typedef {Object} OTSCRawSeriesPoint
  * @property {number} timestamp
  * @property {number} value
  */

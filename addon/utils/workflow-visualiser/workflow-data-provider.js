@@ -36,12 +36,10 @@ export default EmberObject.extend({
 
   /**
    * @param {Utils.WorkflowVisualiser.Store} store
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
+   * @param {AtmStoreContentBrowseOptions} browseOptions
+   * @returns {Promise<AtmStoreContentBrowseResult|null>}
    */
-  getStoreContent(store, ...args) {
+  getStoreContent(store, browseOptions) {
     const executionDataFetcher = this.get('executionDataFetcher');
     if (!executionDataFetcher) {
       console.error(
@@ -56,6 +54,6 @@ export default EmberObject.extend({
       );
       return reject();
     }
-    return executionDataFetcher.fetchStoreContent(storeInstanceId, ...args);
+    return executionDataFetcher.fetchStoreContent(storeInstanceId, browseOptions);
   },
 });

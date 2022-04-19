@@ -1,7 +1,11 @@
 {{#one-collapse class=(concat-classes "fields-group-collapse" (concat name "-collapse")) collapsed=(not isExpanded)}}
   <div class="fields-group-children {{concat name "-children"}}">
     {{#each nestedFields as |nestedField|}}
-      {{#if (and nestedField.isVisible (or (not nestedField.isInViewMode) (not-eq nestedField.isExpanded false)))}}
+      {{#if (and
+        nestedField.isVisible
+        nestedField.fieldComponentName
+        (or (not nestedField.isInViewMode) (not-eq nestedField.isExpanded false))
+      )}}
         {{form-component/field-renderer field=nestedField}}
       {{/if}}
     {{/each}}

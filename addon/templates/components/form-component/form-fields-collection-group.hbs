@@ -1,6 +1,6 @@
 {{#one-collapse class=(concat-classes "fields-group-collapse" (concat name "-collapse")) collapsed=(not isExpanded)}}
   {{#each nestedFields as |nestedField|}}
-    {{#if nestedField.isVisible}}
+    {{#if (and nestedField.isVisible nestedField.fieldComponentName)}}
       <div class="collection-item">
         {{form-component/field-renderer field=nestedField}}
         {{#if (and isInEditMode isCollectionManipulationAllowed)}}
@@ -17,7 +17,7 @@
   {{/each}}
   {{#if (and isInEditMode isCollectionManipulationAllowed)}}
     {{#bs-button
-      class="add-field-button"
+      class=(concat-classes "add-field-button" (concat name "-add-field-button"))
       size="sm"
       disabled=(not isEffectivelyEnabled)
       onClick=(action "addField")

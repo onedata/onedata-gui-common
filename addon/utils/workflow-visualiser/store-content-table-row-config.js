@@ -15,7 +15,7 @@ export default class StoreContentTableRowConfig {
 
   /**
    * @public
-   * @param {StoreContentEntry} entry
+   * @param {StoreContentTableEntry} entry
    * @returns {String}
    */
   getRowClasses(entry) {

@@ -34,16 +34,12 @@ export default FormField.extend({
   /**
    * @type {ComputedProperty<Array<FieldOption>>}
    */
-  preparedOptions: computed('options.[]', 'path', function preparedOptions() {
-    const {
-      options,
-      path,
-    } = this.getProperties('options', 'path');
+  preparedOptions: computed('options.[]', 'translationPath', function preparedOptions() {
 
-    return (options || []).map(option => {
+    return (this.get('options') || []).map(option => {
       const name = get(option, 'name') || String(get(option, 'value'));
       const label = get(option, 'label') ||
-        this.t(`${path}.options.${name}.label`, {}, { defaultValue: '' });
+        this.getTranslation(`options.${name}.label`, {}, { defaultValue: '' });
       return Object.assign({}, option, { name, label });
     });
   }),

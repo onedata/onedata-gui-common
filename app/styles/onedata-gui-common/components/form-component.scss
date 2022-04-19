@@ -49,8 +49,14 @@ $form-component-view-margin: $padding-base-vertical;
     }
   }
 
-  .textarea-field textarea {
-    resize: none;
+  .textarea-field-renderer {
+    textarea {
+      resize: none;
+    }
+
+    .form-control-feedback {
+      display: none;
+    }
   }
 
   .toggle-field-renderer {
@@ -186,6 +192,12 @@ $form-component-view-margin: $padding-base-vertical;
       .form-fields-group-renderer > .control-label {
         margin-bottom: $form-component-view-margin;
       }
+
+      &.textarea-field-renderer {
+        .control-label {
+          padding-top: $padding-base-vertical + 1px;
+        }
+      }
     }
 
     .privileges-field {
@@ -228,6 +240,82 @@ $form-component-view-margin: $padding-base-vertical;
   .has-validation-icon {
     &.text-like-field-renderer input {
       padding-right: 3em;
+    }
+  }
+
+  .form-group-sm {
+    .field-component {
+      font-size: $font-size-small;
+    }
+
+    .loading-field {
+      .spinner-container {
+        position: relative;
+        // Pull up spinner to make it better aligned with text
+        top: -0.15em;
+      }
+    }
+
+    .one-way-toggle.form-control {
+      padding-left: 0;
+      height: auto;
+    }
+
+    .form-fields-collection-group {
+      .remove-field-button-container {
+        height: $input-height-small;
+      }
+
+      .remove-field-button {
+        margin-left: $padding-xs-horizontal;
+      }
+    }
+  }
+
+  .boxes-collection-layout {
+    $-box-spacing: $padding-base-vertical;
+    margin-bottom: $form-group-margin-bottom - $-box-spacing;
+    > .form-fields-collection-group > .fields-group-collapse {
+      &.in {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      > .collection-item {
+        position: relative;
+        margin-right: $-box-spacing;
+        margin-bottom: $-box-spacing;
+        padding: $-box-spacing;
+        border: 1px solid $main-border-color;
+        border-radius: $border-radius-base;
+        background-color: rgba($color-one-semiwhite, 0.2);
+
+        .control-label {
+          min-width: 100%;
+          margin-bottom: 5px;
+          text-align: left;
+        }
+
+        + .add-field-button {
+          align-self: center;
+        }
+
+        > .field-renderer {
+          min-width: 0;
+        }
+
+        > .remove-field-button-container {
+          position: absolute;
+          right: 0.1em;
+          top: 0.35em;
+          display: initial;
+        }
+      }
+
+      .add-field-button {
+        margin-bottom: $-box-spacing;
+      }
     }
   }
 }

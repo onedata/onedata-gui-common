@@ -15,8 +15,6 @@ import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/store-modal/store-form';
 import {
   tag,
-  getBy,
-  conditional,
   eq,
   neq,
   raw,
@@ -38,7 +36,7 @@ import TextareaField from 'onedata-gui-common/utils/form-component/textarea-fiel
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
-import { computed, observer, getProperties, get } from '@ember/object';
+import { computed, observer, getProperties, get, set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';
@@ -48,6 +46,8 @@ import {
   dataSpecToType,
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import { validator } from 'ember-cp-validations';
+import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = [{
   value: 'list',
@@ -57,66 +57,39 @@ const storeTypes = [{
   value: 'singleValue',
 }, {
   value: 'range',
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   value: 'map',
-  // }, {
-  //   value: 'histogram',
 }, {
   value: 'auditLog',
+}, {
+  value: 'timeSeries',
 }];
 
 const dataTypes = [{
   value: 'integer',
-  forbiddenIn: ['treeForest', 'range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram', 'range'],
+  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
 }, {
   value: 'string',
-  forbiddenIn: ['treeForest', 'range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram', 'range'],
+  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
 }, {
   value: 'object',
-  forbiddenIn: ['treeForest', 'range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram', 'range'],
-  // }, {
-  //   value: 'histogram',
-  //   forbiddenIn: ['treeForest', 'range'],
+  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
 }, {
   value: 'anyFile',
-  forbiddenIn: ['range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
+  forbiddenIn: ['range', 'timeSeries'],
 }, {
   value: 'regularFile',
-  forbiddenIn: ['range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
+  forbiddenIn: ['range', 'timeSeries'],
 }, {
   value: 'directory',
-  forbiddenIn: ['range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
+  forbiddenIn: ['range', 'timeSeries'],
 }, {
   value: 'symlink',
-  forbiddenIn: ['range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
+  forbiddenIn: ['range', 'timeSeries'],
 }, {
   value: 'dataset',
-  forbiddenIn: ['range'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['histogram', 'range'],
-  // }, {
-  //   value: 'archive',
-  //   forbiddenIn: ['histogram', 'range'],
+  forbiddenIn: ['range', 'timeSeries'],
 }, {
   value: 'range',
-  forbiddenIn: ['treeForest'],
-  // TODO: VFS-7816 uncomment or remove future code
-  // forbiddenIn: ['treeForest', 'histogram'],
+  forbiddenIn: ['treeForest', 'timeSeries'],
 }];
 
 const defaultRangeStart = 0;
@@ -191,7 +164,11 @@ export default Component.extend(I18n, {
   passedFormValues: computed(
     'store.{name,description,type,dataType,defaultInitialContent,requiresInitialContent}',
     function passedStoreFormValues() {
-      return storeToFormData(this.get('store'));
+      const defaultStoreType = this.getTypeFieldOptions()[0].value;
+      return storeToFormData(this.get('store'), {
+        defaultType: defaultStoreType,
+        defaultDataType: (this.getDataTypeFieldOptions(defaultStoreType)[0] || {}).value,
+      });
     }
   ),
 
@@ -207,6 +184,7 @@ export default Component.extend(I18n, {
       typeField,
       genericStoreConfigFieldsGroup,
       rangeStoreConfigFieldsGroup,
+      timeSeriesStoreConfigFieldsGroup,
       needsUserInputField,
     } = this.getProperties(
       'idField',
@@ -216,6 +194,7 @@ export default Component.extend(I18n, {
       'typeField',
       'genericStoreConfigFieldsGroup',
       'rangeStoreConfigFieldsGroup',
+      'timeSeriesStoreConfigFieldsGroup',
       'needsUserInputField'
     );
 
@@ -237,6 +216,7 @@ export default Component.extend(I18n, {
         typeField,
         genericStoreConfigFieldsGroup,
         rangeStoreConfigFieldsGroup,
+        timeSeriesStoreConfigFieldsGroup,
         needsUserInputField,
       ],
     });
@@ -247,7 +227,7 @@ export default Component.extend(I18n, {
    */
   idField: computed(function idField() {
     return ClipboardField
-      .extend(defaultValueGenerator(this, raw('')), {
+      .extend({
         isVisible: and(neq('component.mode', raw('create')), notEmpty('value')),
       }).create({
         component: this,
@@ -260,7 +240,7 @@ export default Component.extend(I18n, {
    */
   instanceIdField: computed(function instanceIdField() {
     return ClipboardField
-      .extend(defaultValueGenerator(this, raw('')), {
+      .extend({
         isVisible: and(eq('component.mode', raw('view')), notEmpty('value')),
       }).create({
         component: this,
@@ -272,22 +252,19 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
    */
   nameField: computed(function nameField() {
-    return TextField
-      .extend(defaultValueGenerator(this, raw('')), {
-        isVisible: or(neq('component.mode', raw('view')), notEmpty('value')),
-      })
-      .create({
-        component: this,
-        name: 'name',
-      });
+    return TextField.extend({
+      isVisible: or(neq('component.mode', raw('view')), notEmpty('value')),
+    }).create({
+      component: this,
+      name: 'name',
+    });
   }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.TextareaField>}
    */
   descriptionField: computed(function descriptionField() {
-    return TextareaField
-      .extend(defaultValueGenerator(this, raw('')), {
+    return TextareaField.extend({
         isVisible: not(and('isInViewMode', isEmpty('value'))),
       })
       .create({
@@ -302,20 +279,18 @@ export default Component.extend(I18n, {
    */
   typeField: computed(function typeField() {
     const component = this;
-    return DropdownField
-      .extend(defaultValueGenerator(this, 'options.firstObject.value'), {
-        options: computed(
-          'component.{allowedDataTypes,allowedStoreTypes}',
-          function options() {
-            return component.getTypeFieldOptions();
-          }
-        ),
-      })
-      .create({
-        name: 'type',
-        showSearch: false,
-        component,
-      });
+    return DropdownField.extend({
+      options: computed(
+        'component.{allowedDataTypes,allowedStoreTypes}',
+        function options() {
+          return component.getTypeFieldOptions();
+        }
+      ),
+    }).create({
+      name: 'type',
+      showSearch: false,
+      component,
+    });
   }),
 
   /**
@@ -330,7 +305,10 @@ export default Component.extend(I18n, {
       'defaultValueField'
     );
     return FormFieldsGroup.extend({
-      isExpanded: neq('valuesSource.type', raw('range')),
+      isExpanded: and(
+        neq('valuesSource.type', raw('range')),
+        neq('valuesSource.type', raw('timeSeries'))
+      ),
       isVisible: or(eq('mode', raw('edit')), 'isExpanded'),
     }).create({
       name: 'genericStoreConfig',
@@ -346,45 +324,41 @@ export default Component.extend(I18n, {
    */
   dataTypeField: computed(function dataTypeField() {
     const component = this;
-    return DropdownField
-      .extend(defaultValueGenerator(this, 'options.firstObject.value'), {
-        isEnabled: gt(array.length('options'), raw(1)),
-        options: computed(
-          'valuesSource.type',
-          'component.allowedDataTypes',
-          function options() {
-            const storeType = this.get('valuesSource.type');
-            return component.getDataTypeFieldOptions(storeType);
-          }
-        ),
-        storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
-          const {
-            options,
-            value,
-          } = this.getProperties('options', 'value');
-          if (value && options.length && !options.mapBy('value').includes(value)) {
-            this.valueChanged(options[0].value);
-          }
-        }),
-      })
-      .create({
-        name: 'dataType',
-        component,
-      });
+    return DropdownField.extend({
+      isEnabled: gt(array.length('options'), raw(1)),
+      options: computed(
+        'valuesSource.type',
+        'component.allowedDataTypes',
+        function options() {
+          const storeType = this.get('valuesSource.type');
+          return component.getDataTypeFieldOptions(storeType);
+        }
+      ),
+      storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
+        const {
+          options,
+          value,
+        } = this.getProperties('options', 'value');
+        if (value && options.length && !options.mapBy('value').includes(value)) {
+          this.valueChanged(options[0].value);
+        }
+      }),
+    }).create({
+      name: 'dataType',
+      component,
+    });
   }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
    */
   defaultValueField: computed(function defaultValueField() {
-    return JsonField
-      .extend(defaultValueGenerator(this, raw('')), {
-        isVisible: not(and('isInViewMode', isEmpty('value'))),
-      })
-      .create({
-        name: 'defaultValue',
-        isOptional: true,
-      });
+    return JsonField.extend({
+      isVisible: not(and('isInViewMode', isEmpty('value'))),
+    }).create({
+      name: 'defaultValue',
+      isOptional: true,
+    });
   }),
 
   rangeStoreConfigFieldsGroup: computed(function rangeStoreConfigFieldsGroup() {
@@ -414,131 +388,144 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.NumberField>}
    */
   rangeStartField: computed(function rangeStartField() {
-    return NumberField
-      .extend(defaultValueGenerator(this, raw(String(defaultRangeStart))))
-      .create({
-        name: 'rangeStart',
-        integer: true,
-        customValidators: [
-          validator(function (value, options, model) {
-            const field = get(model, 'field');
-            const fieldPath = get(field, 'path');
-            const parsedValue = parseRangeNumberString(value);
-            const rangeEnd = parseRangeNumberString(
-              get(model, 'valuesSource.rangeStoreConfig.rangeEnd')
-            );
-            const rangeStep = parseRangeNumberString(
-              get(model, 'valuesSource.rangeStoreConfig.rangeStep')
-            );
-            if (
-              Number.isNaN(parsedValue) ||
-              Number.isNaN(rangeEnd) ||
-              Number.isNaN(rangeStep) ||
-              rangeStep === 0
-            ) {
-              return true;
-            }
-
-            if (rangeStep > 0 && parsedValue >= rangeEnd) {
-              return String(field.t(`${fieldPath}.errors.gteEndForPositiveStep`));
-            } else if (rangeStep < 0 && parsedValue <= rangeEnd) {
-              return String(field.t(`${fieldPath}.errors.lteEndForNegativeStep`));
-            }
+    return NumberField.create({
+      name: 'rangeStart',
+      integer: true,
+      customValidators: [
+        validator(function (value, options, model) {
+          const field = get(model, 'field');
+          const fieldPath = get(field, 'path');
+          const parsedValue = parseRangeNumberString(value);
+          const rangeEnd = parseRangeNumberString(
+            get(model, 'valuesSource.rangeStoreConfig.rangeEnd')
+          );
+          const rangeStep = parseRangeNumberString(
+            get(model, 'valuesSource.rangeStoreConfig.rangeStep')
+          );
+          if (
+            Number.isNaN(parsedValue) ||
+            Number.isNaN(rangeEnd) ||
+            Number.isNaN(rangeStep) ||
+            rangeStep === 0
+          ) {
             return true;
-          }, {
-            dependentKeys: [
-              'model.valuesSource.rangeStoreConfig.rangeEnd',
-              'model.valuesSource.rangeStoreConfig.rangeStep',
-            ],
-          }),
-        ],
-      });
+          }
+
+          if (rangeStep > 0 && parsedValue >= rangeEnd) {
+            return String(field.t(`${fieldPath}.errors.gteEndForPositiveStep`));
+          } else if (rangeStep < 0 && parsedValue <= rangeEnd) {
+            return String(field.t(`${fieldPath}.errors.lteEndForNegativeStep`));
+          }
+          return true;
+        }, {
+          dependentKeys: [
+            'model.valuesSource.rangeStoreConfig.rangeEnd',
+            'model.valuesSource.rangeStoreConfig.rangeStep',
+          ],
+        }),
+      ],
+    });
   }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.NumberField>}
    */
   rangeEndField: computed(function rangeEndField() {
-    return NumberField
-      .extend(defaultValueGenerator(this, raw('')))
-      .create({
-        name: 'rangeEnd',
-        integer: true,
-        customValidators: [
-          validator(function (value, options, model) {
-            const field = get(model, 'field');
-            const fieldPath = get(field, 'path');
-            const parsedValue = parseRangeNumberString(value);
-            const rangeStart = parseRangeNumberString(
-              get(model, 'valuesSource.rangeStoreConfig.rangeStart')
-            );
-            const rangeStep = parseRangeNumberString(
-              get(model, 'valuesSource.rangeStoreConfig.rangeStep')
-            );
-            if (
-              Number.isNaN(parsedValue) ||
-              Number.isNaN(rangeStart) ||
-              Number.isNaN(rangeStep) ||
-              rangeStep === 0
-            ) {
-              return true;
-            }
-
-            if (rangeStep > 0 && parsedValue <= rangeStart) {
-              return String(field.t(`${fieldPath}.errors.lteStartForPositiveStep`));
-            } else if (rangeStep < 0 && parsedValue >= rangeStart) {
-              return String(field.t(`${fieldPath}.errors.gteStartForPositiveStep`));
-            }
+    return NumberField.create({
+      name: 'rangeEnd',
+      integer: true,
+      customValidators: [
+        validator(function (value, options, model) {
+          const field = get(model, 'field');
+          const fieldPath = get(field, 'path');
+          const parsedValue = parseRangeNumberString(value);
+          const rangeStart = parseRangeNumberString(
+            get(model, 'valuesSource.rangeStoreConfig.rangeStart')
+          );
+          const rangeStep = parseRangeNumberString(
+            get(model, 'valuesSource.rangeStoreConfig.rangeStep')
+          );
+          if (
+            Number.isNaN(parsedValue) ||
+            Number.isNaN(rangeStart) ||
+            Number.isNaN(rangeStep) ||
+            rangeStep === 0
+          ) {
             return true;
-          }, {
-            dependentKeys: [
-              'model.valuesSource.rangeStoreConfig.rangeStart',
-              'model.valuesSource.rangeStoreConfig.rangeStep',
-            ],
-          }),
-        ],
-      });
+          }
+
+          if (rangeStep > 0 && parsedValue <= rangeStart) {
+            return String(field.t(`${fieldPath}.errors.lteStartForPositiveStep`));
+          } else if (rangeStep < 0 && parsedValue >= rangeStart) {
+            return String(field.t(`${fieldPath}.errors.gteStartForPositiveStep`));
+          }
+          return true;
+        }, {
+          dependentKeys: [
+            'model.valuesSource.rangeStoreConfig.rangeStart',
+            'model.valuesSource.rangeStoreConfig.rangeStep',
+          ],
+        }),
+      ],
+    });
   }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.NumberField>}
    */
   rangeStepField: computed(function rangeEndField() {
-    return NumberField
-      .extend(defaultValueGenerator(this, raw(String(defaultRangeStep))))
-      .create({
-        name: 'rangeStep',
-        integer: true,
-        customValidators: [
-          validator('exclusion', {
-            allowBlank: true,
-            in: ['0'],
-          }),
-        ],
-      });
+    return NumberField.create({
+      name: 'rangeStep',
+      integer: true,
+      customValidators: [
+        validator('exclusion', {
+          allowBlank: true,
+          in: ['0'],
+        }),
+      ],
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
+  timeSeriesStoreConfigFieldsGroup: computed(function timeSeriesStoreConfigFieldsGroup() {
+    return FormFieldsGroup.extend({
+      isExpanded: eq('valuesSource.type', raw('timeSeries')),
+      isVisible: or(eq('mode', raw('edit')), 'isExpanded'),
+    }).create({
+      name: 'timeSeriesStoreConfig',
+      fields: [
+        storeConfigEditors.timeSeries.FormElement.create({
+          name: 'configEditor',
+        }),
+      ],
+    });
   }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.ToggleField>}
    */
   needsUserInputField: computed(function needsUserInputField() {
-    return ToggleField
-      .extend(defaultValueGenerator(this, raw(false)))
-      .create({
-        name: 'needsUserInput',
-      });
+    return ToggleField.extend({
+      isEnabled: neq('valuesSource.type', raw('timeSeries')),
+      storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
+        // For time series store change value to `false`
+        if (this.get('valuesSource.type') === 'timeSeries' && this.get('value')) {
+          this.valueChanged(false);
+        }
+      }),
+    }).create({
+      name: 'needsUserInput',
+    });
   }),
 
   formValuesUpdater: observer(
     'mode',
     'passedFormValues',
     function formValuesUpdater() {
-      const {
-        mode,
-        fields,
-      } = this.getProperties('mode', 'fields');
-      if (mode === 'view') {
-        fields.reset();
+      if (this.get('mode') === 'view') {
+        this.resetFormValues();
       }
     }
   ),
@@ -555,8 +542,19 @@ export default Component.extend(I18n, {
   init() {
     this._super(...arguments);
 
+    this.resetFormValues();
     this.formModeUpdater();
-    this.get('fields').reset();
+  },
+
+  resetFormValues() {
+    const {
+      fields,
+      passedFormValues,
+    } = this.getProperties('fields', 'passedFormValues');
+
+    set(fields, 'valuesSource', passedFormValues);
+    fields.useCurrentValueAsDefault();
+    fields.reset();
   },
 
   notifyAboutChange() {
@@ -605,28 +603,26 @@ export default Component.extend(I18n, {
   },
 });
 
-/**
- * Generates mixin-like object, that specifies default value for field. Value in "view"
- * and "edit" mode is taken from component, in "create" mode is equal to passed
- * `createDefaultValue`. It's result should be passed to *Field.extend.
- * @param {Components.Modals.WorkflowVisualiser.StoreModal.StoreForm} component
- * @param {any} createDefaultValue
- * @returns {Object}
- */
-function defaultValueGenerator(component, createDefaultValue) {
-  return {
-    defaultValueSource: component,
-    defaultValue: conditional(
-      eq('defaultValueSource.mode', raw('create')),
-      createDefaultValue,
-      getBy('defaultValueSource', tag `passedFormValues.${'path'}`),
-    ),
-  };
-}
-
-function storeToFormData(store) {
+function storeToFormData(store, { defaultType, defaultDataType }) {
   if (!store) {
-    return {};
+    return createValuesContainer({
+      name: '',
+      description: '',
+      type: defaultType,
+      genericStoreConfig: createValuesContainer({
+        dataType: defaultDataType,
+        defaultValue: '',
+      }),
+      rangeStoreConfig: createValuesContainer({
+        rangeStart: String(defaultRangeStart),
+        rangeEnd: '',
+        rangeStep: String(defaultRangeStep),
+      }),
+      timeSeriesStoreConfig: createValuesContainer({
+        configEditor: storeConfigEditors.timeSeries.storeConfigToFormValues(null),
+      }),
+      needsUserInput: false,
+    });
   }
 
   const {
@@ -636,6 +632,7 @@ function storeToFormData(store) {
     description,
     type,
     writeDataSpec,
+    config,
     defaultInitialContent,
     requiresInitialContent,
   } = getProperties(
@@ -646,6 +643,7 @@ function storeToFormData(store) {
     'description',
     'type',
     'writeDataSpec',
+    'config',
     'defaultInitialContent',
     'requiresInitialContent'
   );
@@ -672,23 +670,29 @@ function storeToFormData(store) {
         'step'
       );
 
-      formData.rangeStoreConfig = {
+      formData.rangeStoreConfig = createValuesContainer({
         rangeStart: String(typeof start === 'number' ? start : defaultRangeStart),
         rangeEnd: String(end),
         rangeStep: String(typeof step === 'number' ? step : defaultRangeStep),
-      };
+      });
       break;
     }
     default:
-      formData.genericStoreConfig = {
+      formData.genericStoreConfig = createValuesContainer({
         dataType: writeDataSpec && dataSpecToType(writeDataSpec).type || undefined,
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
-      };
+      });
       break;
   }
 
-  return formData;
+  formData.timeSeriesStoreConfig = createValuesContainer({
+    configEditor: storeConfigEditors.timeSeries.storeConfigToFormValues(
+      type === 'timeSeries' ? config : null
+    ),
+  });
+
+  return createValuesContainer(formData);
 }
 
 function formDataToStore(formData) {
@@ -698,6 +702,7 @@ function formDataToStore(formData) {
     type,
     genericStoreConfig,
     rangeStoreConfig,
+    timeSeriesStoreConfig,
     needsUserInput,
   } = getProperties(
     formData,
@@ -706,6 +711,7 @@ function formDataToStore(formData) {
     'type',
     'genericStoreConfig',
     'rangeStoreConfig',
+    'timeSeriesStoreConfig',
     'needsUserInput'
   );
 
@@ -736,6 +742,11 @@ function formDataToStore(formData) {
       };
       break;
     }
+    case 'timeSeries':
+      store.config = storeConfigEditors.timeSeries.formValuesToStoreConfig(
+        get(timeSeriesStoreConfig, 'configEditor')
+      );
+      break;
     default: {
       const {
         dataType,

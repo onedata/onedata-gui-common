@@ -1,0 +1,21 @@
+.time-series-store-config-editor {
+  margin-bottom: 0;
+
+  .collection-item {
+    max-width: 20em;
+  }
+
+  .timeSeriesSchema-children > * {
+    flex-wrap: wrap;
+  }
+
+  @media (min-width: $screen-sm-min) {
+    .timeSeriesSchema-children > .field-renderer {
+      margin-bottom: 0;
+
+      &:first-child .control-label {
+        padding-top: 0;
+      }
+    }
+  }
+}

@@ -184,6 +184,7 @@ export default Component.extend({
       animation,
       popoverTrigger,
       popoverStyle,
+      element,
       elementId,
       padding,
       multi,
@@ -196,6 +197,7 @@ export default Component.extend({
       'popoverTrigger',
       'popoverStyle',
       'padding',
+      'element',
       'elementId',
       'multi',
       'arrow',
@@ -211,12 +213,13 @@ export default Component.extend({
 
     this.set('$triggerElement', $triggerElement);
 
+    const isInModal = Boolean(element.closest('.modal'));
     $triggerElement.webuiPopover({
       url: `#${elementId}`,
       animation,
       trigger: popoverTrigger,
       placement: this.getPlacement(),
-      style: popoverStyle,
+      style: (popoverStyle || '') + (isInModal ? ' over-modals' : ''),
       padding,
       container: document.querySelector('.ember-application'),
       multi,

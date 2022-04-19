@@ -60,15 +60,6 @@ const dataSpecs = [{
   // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
   // canContain: ['Any file', 'Regular file', 'Directory', 'Symbolic link', 'Dataset', 'Archive'],
 }, {
-  // TODO: VFS-7816 uncomment or remove future code
-  //   label: 'Histogram',
-  //   name: 'histogram',
-  //   dataSpec: {
-  //     type: 'histogram',
-  //     valueConstraints: {},
-  //   },
-  //   valueBuilderTypes: ['iteratedItem', 'const'],
-  // }, {
   label: 'Any file',
   name: 'anyFile',
   dataSpec: {
@@ -217,6 +208,14 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+}, {
+  label: 'Time series measurement',
+  name: 'timeSeriesMeasurement',
+  dataSpec: {
+    type: 'timeSeriesMeasurement',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['const'],
 }];
 
 const valueBuilderTypeLabels = {
@@ -241,15 +240,16 @@ const allSimpleDataSpecNames = [
   // TODO: VFS-7816 uncomment or remove future code
   // 'archive',
   'range',
+  'timeSeriesMeasurement',
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
-  allowedDataSpecNames: allSimpleDataSpecNames,
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: false,
 }, {
   type: 'list',
-  allowedDataSpecNames: allSimpleDataSpecNames,
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
@@ -279,38 +279,40 @@ const allPossibleStoreSpecs = [{
   allowedDataSpecNames: ['range'],
   acceptsBatch: false,
   dispatchFunctions: [],
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   type: 'histogram',
-  //   allowedDataSpecNames: ['histogram'],
-  //   acceptsBatch: true,
-  //   dispatchFunctions: ['add'],
 }, {
   type: 'auditLog',
-  allowedDataSpecNames: allSimpleDataSpecNames,
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'logContentDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
+}, {
+  type: 'timeSeries',
+  allowedDataSpecNames: ['timeSeriesMeasurement'],
+  acceptsBatch: true,
+  dispatchFunctions: [],
 }];
 const allPossibleStores = [];
-allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
-    type,
-    allowedDataSpecNames,
-    dataSpecConfigKey,
-  }) =>
-  allPossibleStores.push(...allowedDataSpecNames.map(dataSpecName => {
-    const storeLabel = `${type}${classify(dataSpecName)}`;
-    return {
-      id: `${storeLabel}Id`,
-      name: `${storeLabel}Store`,
+allPossibleStoreSpecs
+  .rejectBy('type', 'range')
+  .rejectBy('type', 'timeSeries')
+  .forEach(({
       type,
-      config: {
-        [dataSpecConfigKey]: dataSpecs.findBy('name', dataSpecName).dataSpec,
-      },
-      requiresInitialContent: false,
-    };
-  }))
-);
+      allowedDataSpecNames,
+      dataSpecConfigKey,
+    }) =>
+    allPossibleStores.push(...allowedDataSpecNames.map(dataSpecName => {
+      const storeLabel = `${type}${classify(dataSpecName)}`;
+      return {
+        id: `${storeLabel}Id`,
+        name: `${storeLabel}Store`,
+        type,
+        config: {
+          [dataSpecConfigKey]: dataSpecs.findBy('name', dataSpecName).dataSpec,
+        },
+        requiresInitialContent: false,
+      };
+    }))
+  );
 allPossibleStores.push({
   id: 'rangeRangeId',
   name: 'rangeRangeStore',
@@ -319,6 +321,15 @@ allPossibleStores.push({
     start: 1,
     end: 10,
     step: 2,
+  },
+  requiresInitialContent: false,
+});
+allPossibleStores.push({
+  id: 'timeSeriesTimeSeriesMeasurementId',
+  name: 'timeSeriesTimeSeriesMeasurementStore',
+  type: 'timeSeries',
+  config: {
+    schemas: [],
   },
   requiresInitialContent: false,
 });
@@ -1601,9 +1612,9 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
           resultMappings: [{
             resultName: 'res1',
             storeSchemaId: targetStore.id,
-            storeContentUpdateOptions: {
+            storeContentUpdateOptions: sinon.match({
               type: `${targetStore.type}StoreContentUpdateOptions`,
-            },
+            }),
           }],
         },
         isValid: true,

@@ -57,6 +57,7 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     border: $tags-input-tag-border;
     border-radius: $border-radius-base;
     background-color: $color-one-light-blue;
+    min-width: 0;
 
     &.tag-item-plaintext {
       // @include font-semibold();
@@ -153,7 +154,8 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   }
 
   .tags-input-selector-editor,
-  .tags-input-model-selector-editor {
+  .tags-input-model-selector-editor,
+  .tags-input-time-series-metric-selector-editor {
     align-self: center;
   }
 
@@ -165,8 +167,27 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
     width: 250px;
   }
 
+  .tags-input-time-series-metric-selector-editor {
+    width: 250px;
+  }
+
   .tags-input-external-editor {
     margin: 0;
+  }
+}
+
+.form-group-sm .tags-input {
+  height: initial;
+  min-height: $input-height-small;
+  padding-bottom: 0;
+  line-height: 1.2;
+
+  .input-element {
+    margin-bottom: $padding-small-vertical;
+  }
+
+  .tag-item {
+    padding: 3px;
   }
 }
 
@@ -200,6 +221,15 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
       background-color: darken($color-one-light-blue, 5%);
     }
 
+    &.disabled {
+      color: $main-text-color-disabled;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: initial;
+      }
+    }
+
     & ~ .selector-item {
       margin-top: $padding-xs-vertical;
     }
@@ -225,24 +255,11 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   width: 250px;
   height: 250px;
 
-  .selector-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
   .ember-basic-dropdown,
   .btn-group,
-  .content-separator,
   .records-filter,
   .id-form-group {
     margin-bottom: $padding-small-vertical;
-  }
-
-  .content-separator {
-    width: 100%;
-    margin-top: 0;
-    border-top: 1px solid $main-border-color;
   }
 
   .all-item {
@@ -264,6 +281,30 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
   }
 }
 
+.one-webui-popover.time-series-metric-selector {
+  width: 250px;
+  height: 275px;
+
+  .ember-basic-dropdown,
+  .btn-group {
+    margin-bottom: $padding-small-vertical;
+  }
+
+  .field-renderer:not(.form-fields-group-renderer) {
+    display: grid;
+    grid-template-columns: 7.5em auto;
+
+    .field-message {
+      grid-column: 1 / 3;
+    }
+  }
+
+  .control-label {
+    width: initial;
+    min-width: initial;
+  }
+}
+
 .webui-popover-tags-selector {
   border: $tags-input-tag-border;
   border-radius: $border-radius-base;
@@ -275,5 +316,18 @@ $tags-input-input-padding-bottom: $tags-input-input-padding-top - $padding-xs-ho
 
   &.bottom-right, &.bottom-left, &.bottom {
     transform: translateY(-10px - $tags-input-tag-vertical-padding);
+  }
+
+  .selector-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .content-separator {
+    width: 100%;
+    margin-top: 0;
+    border-top: 1px solid $main-border-color;
+    margin-bottom: $padding-small-vertical;
   }
 }
