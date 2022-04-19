@@ -245,7 +245,9 @@ export default Component.extend(I18n, {
       const paddingRight = parseFloat(
         window.getComputedStyle(element)['padding-right']
       );
-      $(element).width(parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0));
+      $(element).width(
+        parentWidth - toolbarWidth - paddingRight - (toolbarWidth ? 50 : 0)
+      );
     }
   },
 
