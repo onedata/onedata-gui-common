@@ -5,8 +5,8 @@ import ComponentsProviderSpaceMixin from 'onedata-gui-common/mixins/components/p
 
 describe('Unit | Mixin | components/provider space', function () {
   it('finds support size for a specified provider', function () {
-    let ProviderSpaceObject = EmberObject.extend(ComponentsProviderSpaceMixin);
-    let subject = ProviderSpaceObject.create();
+    const ProviderSpaceObject = EmberObject.extend(ComponentsProviderSpaceMixin);
+    const subject = ProviderSpaceObject.create();
     subject.setProperties({
       space: {
         supportSizes: {

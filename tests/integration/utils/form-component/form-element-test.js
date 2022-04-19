@@ -6,6 +6,8 @@ import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 import { setupComponentTest } from 'ember-mocha';
 import _ from 'lodash';
+import EmberObject from '@ember/object';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const fieldModes = [
   'edit',
@@ -319,7 +321,7 @@ describe('Integration | Utility | form component/form element', function () {
       ownerSource: this,
       i18nPrefix: 'some',
       parent: {
-        path: 'parent',
+        translationPath: 'parent',
       },
       name: 'name',
     });
@@ -335,7 +337,7 @@ describe('Integration | Utility | form component/form element', function () {
       ownerSource: this,
       i18nPrefix: 'some',
       parent: {
-        path: 'parent',
+        translationPath: 'parent',
       },
       name: 'name',
     });
@@ -352,6 +354,22 @@ describe('Integration | Utility | form component/form element', function () {
     },
   );
 
+  it('has "size" equal "md" by default when has no parent', function () {
+    const formElement = FormElement.create();
+
+    expect(get(formElement, 'size')).to.equal('md');
+  });
+
+  it('has the same "size" as its parent', function () {
+    const formElement = FormElement.create({
+      parent: FormElement.create({
+        size: 'sm',
+      }),
+    });
+
+    expect(get(formElement, 'size')).to.equal('sm');
+  });
+
   it('has undefined "tooltipClass" by default',
     function () {
       const formField = FormElement.create();
@@ -359,4 +377,24 @@ describe('Integration | Utility | form component/form element', function () {
       expect(get(formField, 'tooltipClass')).to.be.undefined;
     },
   );
+
+  it('copies deeply current value to default value after useCurrentValueAsDefault" method call', function () {
+    const value = createValuesContainer({
+      a: 1,
+      b: EmberObject.create(),
+    });
+    const formElement = FormElement.create({
+      name: 'field',
+      valuesSource: createValuesContainer({
+        field: value,
+      }),
+    });
+
+    formElement.useCurrentValueAsDefault();
+
+    const defaultValue = formElement.dumpDefaultValue();
+    expect(defaultValue).to.not.equal(value);
+    expect(defaultValue.a).to.equal(1);
+    expect(defaultValue.b).to.equal(value.b);
+  });
 });

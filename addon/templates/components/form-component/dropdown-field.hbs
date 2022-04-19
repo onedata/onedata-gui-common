@@ -17,8 +17,15 @@
     triggerId=fieldId
     searchEnabled=showSearch
     matcher=matchDropdownOption
-    triggerClass="dropdown-field-trigger"
-    dropdownClass="dropdown-field-dropdown"
+    triggerClass=(concat-classes
+      "dropdown-field-trigger"
+      (if (eq size "sm") "small")
+    )
+    dropdownClass=(concat-classes
+      "dropdown-field-dropdown"
+      (concat field.name "-field-dropdown")
+      (if (eq size "sm") "small")
+    )
     as |option|
   }}
     <div class="option-container option-{{option.name}}">

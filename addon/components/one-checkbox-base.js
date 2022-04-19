@@ -183,7 +183,7 @@ export default Component.extend({
     this.$('input')
       .change(() => this._toggle())
       .focusout(() => this.get('onFocusOut')())
-      // Fix for Firefox to handle toggle change by 
+      // Fix for Firefox to handle toggle change by
       // label-click and keyboard change on active input
       .click((event) => event.stopImmediatePropagation());
   },
@@ -208,7 +208,7 @@ export default Component.extend({
       'allowThreeStateToggle',
     );
     if (!_lockToggle) {
-      let statesLoop = threeState && allowThreeStateToggle ?
+      const statesLoop = threeState && allowThreeStateToggle ?
         threeStatesLoop : twoStatesLoop;
       if (!statesLoop.includes(checked)) {
         checked = statesLoop[0];

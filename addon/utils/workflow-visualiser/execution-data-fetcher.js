@@ -113,14 +113,6 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
  * @property {Object} dataSpec
  */
 
-/**
- * @typedef {Object} StoreContentEntry
- * @property {String} index
- * @property {Boolean} success
- * @property {any} [value] present when `success` is true
- * @property {any} [error] present when `success` is false
- */
-
 export default EmberObject.extend({
   /**
    * @returns {Promise<AtmExecutionState>}
@@ -131,10 +123,8 @@ export default EmberObject.extend({
 
   /**
    * @param {String} storeInstanceId
-   * @param {String} startFromIndex
-   * @param {number} limit
-   * @param {number} offset
-   * @returns {Promise<{array: Array<StoreContentEntry>, isLast: Boolean}>}
+   * @param {AtmStoreContentBrowseOptions} browseOptions
+   * @returns {Promise<AtmStoreContentBrowseResult|null>}
    */
   async fetchStoreContent() {
     return notImplementedReject();

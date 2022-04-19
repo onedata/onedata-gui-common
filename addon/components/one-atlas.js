@@ -1,5 +1,5 @@
 /**
- * A world map component, on which other components can be placed according 
+ * A world map component, on which other components can be placed according
  * to specified latitude and longitude. Yields hash with "position" component
  * that allows to use x and y computed from given lat./long.
  * Example:
@@ -22,7 +22,7 @@
  *   {{/atlas.position}}
  * {{/one-atlas}}
  * ```
- * 
+ *
  * @module components/one-atlas
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -76,7 +76,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let {
+    const {
       _resizeEventHandler,
       _window,
     } = this.getProperties('_resizeEventHandler', '_window');
@@ -87,7 +87,7 @@ export default Component.extend({
 
   willDestroyElement() {
     try {
-      let {
+      const {
         _resizeEventHandler,
         _window,
       } = this.getProperties('_resizeEventHandler', '_window');
@@ -98,11 +98,11 @@ export default Component.extend({
   },
 
   resizeToFit() {
-    let _sizeRatio = this.get('_sizeRatio');
-    let element = this.$();
-    let parent = element.parent();
-    let parentWidth = parent.width();
-    let parentHeight = parent.height();
+    const _sizeRatio = this.get('_sizeRatio');
+    const element = this.$();
+    const parent = element.parent();
+    const parentWidth = parent.width();
+    const parentHeight = parent.height();
     let newWidth = parentWidth;
     let newHeight = newWidth * (1 / _sizeRatio);
 

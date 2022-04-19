@@ -32,7 +32,7 @@ describe('Integration | Utility | form component/loading field', function () {
         ownerSource: this,
         i18nPrefix: 'some',
         parent: {
-          path: 'parent',
+          translationPath: 'parent',
         },
         name: 'name',
       });

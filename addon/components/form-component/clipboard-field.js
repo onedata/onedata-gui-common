@@ -30,4 +30,9 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<number>}
    */
   textareaRows: reads('field.textareaRows'),
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  clipboardLineClass: reads('field.clipboardLineClass'),
 });

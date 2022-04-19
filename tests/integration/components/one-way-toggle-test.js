@@ -18,14 +18,14 @@ describe('Integration | Component | one way toggle', function () {
   it('renders checked toggle when passed checked value true', function () {
     this.render(hbs `{{one-way-toggle checked=true}}`);
 
-    let $toggle = this.$('.one-way-toggle');
+    const $toggle = this.$('.one-way-toggle');
     expect($toggle).to.have.class('checked');
   });
 
   it('renders unchecked toggle when passed checked value false', function () {
     this.render(hbs `{{one-way-toggle checked=false}}`);
 
-    let $toggle = this.$('.one-way-toggle');
+    const $toggle = this.$('.one-way-toggle');
     expect($toggle).to.not.have.class('checked');
     // TODO: VFS-7482 refactor to unchecked (when acceptance tests will be ready)
     expect($toggle).to.have.class('unselected');
@@ -35,14 +35,14 @@ describe('Integration | Component | one way toggle', function () {
     function () {
       this.render(hbs `{{one-way-toggle threeState=true checked=2}}`);
 
-      let $toggle = this.$('.one-way-toggle');
+      const $toggle = this.$('.one-way-toggle');
       expect($toggle).to.have.class('maybe');
     }
   );
 
   it('can be checked', function (done) {
     this.set('checked', false);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = sinon.spy((value) => this.set('checked', value));
     this.on('update', updateHandler);
 
     this.render(hbs `{{one-way-toggle checked=checked update=(action "update")}}`);
@@ -57,7 +57,7 @@ describe('Integration | Component | one way toggle', function () {
 
   it('can be unchecked', function (done) {
     this.set('checked', true);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = sinon.spy((value) => this.set('checked', value));
     this.on('update', updateHandler);
 
     this.render(hbs `{{one-way-toggle checked=checked update=(action "update")}}`);
@@ -72,7 +72,7 @@ describe('Integration | Component | one way toggle', function () {
 
   it('cannot be semi-checked when threeState=true', function (done) {
     this.set('checked', false);
-    let updateHandler = sinon.spy((value) => this.set('checked', value));
+    const updateHandler = sinon.spy((value) => this.set('checked', value));
     this.on('update', updateHandler);
 
     this.render(hbs `
@@ -94,7 +94,7 @@ describe('Integration | Component | one way toggle', function () {
   it('can be semi-checked when threeState=true and allowThreeStateToggle=true',
     function (done) {
       this.set('checked', false);
-      let updateHandler = sinon.spy((value) => this.set('checked', value));
+      const updateHandler = sinon.spy((value) => this.set('checked', value));
       this.on('update', updateHandler);
 
       this.render(hbs `
@@ -118,7 +118,7 @@ describe('Integration | Component | one way toggle', function () {
   it('can be checked when threeState=true and allowThreeStateToggle=true',
     function (done) {
       this.set('checked', 2);
-      let updateHandler = sinon.spy((value) => this.set('checked', value));
+      const updateHandler = sinon.spy((value) => this.set('checked', value));
       this.on('update', updateHandler);
 
       this.render(hbs `
@@ -142,7 +142,7 @@ describe('Integration | Component | one way toggle', function () {
   it('can be unchecked when threeState=true and allowThreeStateToggle=true',
     function (done) {
       this.set('checked', true);
-      let updateHandler = sinon.spy((value) => this.set('checked', value));
+      const updateHandler = sinon.spy((value) => this.set('checked', value));
       this.on('update', updateHandler);
 
       this.render(hbs `

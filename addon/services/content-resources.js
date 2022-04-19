@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * An abstraction layer for getting data for content of various tabs
  *

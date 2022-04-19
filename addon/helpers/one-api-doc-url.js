@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Generates URL to official Onedata API documentation for a given product and an optional
  * page anchor.

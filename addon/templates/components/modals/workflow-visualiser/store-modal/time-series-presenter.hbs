@@ -1,0 +1,14 @@
+{{#promise-proxy-container proxy=timeSeriesGeneratorsStateProxy}}
+  {{#each chartSpecs as |chartSpec|}}
+    {{modals/workflow-visualiser/store-modal/time-series-presenter/chart
+      chartSpec=chartSpec
+      live=store.contentMayChange
+      timeSeriesQueryBatcher=timeSeriesQueryBatcher
+      timeSeriesGeneratorsState=timeSeriesGeneratorsState
+    }}
+  {{else}}
+    <p class="text-center">{{tt this "noChartsDefined"}}</p>
+  {{/each}}
+{{/promise-proxy-container}}
+
+{{yield}}

@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * A form element abstraction, which is a base for the form field and the form group.
  * The form component mechanism is built using Composite design pattern where
@@ -148,9 +151,10 @@
  *
  * # Values tree
  *
- * All form values are persisted in so-called values tree. Values tree is a simple
- * EmberObject with keys equal to field/group name and value equal to field value /
- * group subtree value. In earlier example with depending fields we have a tree:
+ * All form values are persisted in so-called values tree. Values tree is a
+ * ValuesContainer object with keys equal to field/group name and value equal to
+ * field value / group subtree value. In earlier example with depending fields
+ * we have a tree:
  * ```
  * {
  *   showMore: Boolean,
@@ -168,7 +172,7 @@
  * which will be passed right to the root group and treated as an user input.
  * After changing a value, form field updates its value stored in `value` property
  * which is basically `reads('valuesSource.' + fieldPath)`. Notice that `value`
- * property of the group will be an EmberObject with values of nested fields.
+ * property of the group will be a ValuesContainer with values of nested fields.
  *
  * # Translations
  *
@@ -236,8 +240,17 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { conditional, and, equal, raw, getBy, notEmpty, writable } from 'ember-awesome-macros';
+import { conditional, and, equal, raw, getBy, notEmpty, writable, or } from 'ember-awesome-macros';
 import { A } from '@ember/array';
+import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
+
+/**
+ * @typedef {'md'|'sm'} FormElementSize
+ */
+
+/**
+ * @typedef {'view'|'edit'} FormElementMode
+ */
 
 export default EmberObject.extend(OwnerInjector, I18n, {
   i18n: service(),
@@ -328,7 +341,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   /**
    * Can be modified only via `changeMode()`
-   * @type {string}
+   * @type {FormElementMode}
    */
   mode: 'edit',
 
@@ -360,11 +373,47 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   isGroup: false,
 
   /**
+   * Currently supported values: 'md', 'sm'.
+   * NOTE: Due to the styling strategy, all nested fields of the element, which has size
+   * 'sm', will be mostly rendered as small regardless their own size value.
+   * @virtual optional
+   * @type {ComputedProperty<FormElementSize>}
+   */
+  size: writable(or('parent.sizeForChildren', raw('md'))),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<FormElementSize>}
+   */
+  sizeForChildren: reads('size'),
+
+  /**
    * CSS classes for field component, which are calculated internally by field
    * itself (to not override custom CSS classes passed via `classes`).
    * @type {String}
    */
   internalClasses: '',
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  translationName: reads('name'),
+
+  /**
+   * @virtual optional
+   * @type {ComputedProperty<String>}
+   */
+  translationPath: computed(
+    'parent.translationPath',
+    'translationName',
+    function translationPath() {
+      return this.buildPath(
+        this.get('parent.translationPath'),
+        this.get('translationName')
+      );
+    }
+  ),
 
   /**
    * @virtual optional
@@ -405,7 +454,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   }),
 
   /**
-   * @type {ComputedProperty<EmberObject>}
+   * @type {ComputedProperty<Utils.FormComponent.ValuesContainer>}
    */
   valuesSource: reads('parent.valuesSource'),
 
@@ -432,15 +481,15 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
-  label: computed('i18nPrefix', 'path', function label() {
-    return this.t(`${this.get('path')}.label`, {}, { defaultValue: '' });
+  label: computed('i18nPrefix', 'translationPath', function label() {
+    return this.getTranslation('label', {}, { defaultValue: '' });
   }),
 
   /**
    * @type {ComputedProperty<HtmlSafe>}
    */
-  tip: computed('i18nPrefix', 'path', function tip() {
-    return this.t(`${this.get('path')}.tip`, {}, { defaultValue: '' });
+  tip: computed('i18nPrefix', 'translationPath', function tip() {
+    return this.getTranslation('tip', {}, { defaultValue: '' });
   }),
 
   /**
@@ -473,6 +522,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
   valuesSourceObserver: observer('valuesSource', function valuesSourceObserver() {
     this.notifyPropertyChange('valuePath');
     this.notifyPropertyChange('value');
+    this.get('fields').invoke('valuesSourceObserver');
   }),
 
   init() {
@@ -488,7 +538,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
 
   /**
    * @public
-   * @param {string} mode one of: 'edit', 'show'
+   * @param {FormElementMode} mode
    * @returns {undefined}
    */
   changeMode(mode) {
@@ -530,7 +580,7 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @public
    */
   dumpDefaultValue() {
-    return this.get('defaultValue');
+    return cloneValue(this.get('defaultValue'));
   },
 
   /**
@@ -538,7 +588,14 @@ export default EmberObject.extend(OwnerInjector, I18n, {
    * @public
    */
   dumpValue() {
-    return this.get('value');
+    return cloneValue(this.get('value'));
+  },
+
+  /**
+   * @public
+   */
+  useCurrentValueAsDefault() {
+    this.set('defaultValue', this.dumpValue());
   },
 
   /**
@@ -589,5 +646,14 @@ export default EmberObject.extend(OwnerInjector, I18n, {
     if (name) {
       return parentPath ? `${parentPath}.${name}` : name;
     }
+  },
+
+  getTranslation(translationName, placeholders = {}, options = {}) {
+    let completeTranslationPath = this.get('translationPath');
+    if (completeTranslationPath) {
+      completeTranslationPath += '.';
+    }
+    completeTranslationPath += translationName;
+    return this.t(completeTranslationPath, placeholders, options);
   },
 });

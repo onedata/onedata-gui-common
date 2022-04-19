@@ -56,13 +56,13 @@ describe('Integration | Component | one collapsible toolbar', function () {
     });
     this.render(hbs `
       {{#one-collapsible-toolbar as |toolbar|}}
-        {{#toolbar.item buttonStyle="danger" triggerClasses="trigger-class" 
+        {{#toolbar.item buttonStyle="danger" triggerClasses="trigger-class"
           buttonSize="xs" itemAction=(action "itemAction")}}
           Button
         {{/toolbar.item}}
       {{/one-collapsible-toolbar}}
     `);
-    let button = this.$('button');
+    const button = this.$('button');
     wait().then(() => {
       expect(button, 'button has proper style class').to.have.class(
         'btn-danger');
@@ -93,11 +93,11 @@ describe('Integration | Component | one collapsible toolbar', function () {
     wait().then(() => {
       this.$('.collapsible-toolbar-toggle').click();
       wait().then(() => {
-        let popover = $('body .webui-popover.in');
+        const popover = $('body .webui-popover.in');
         expect(popover.length, 'shows popover after click').to.equal(1);
-        let item = popover.find('a');
+        const item = popover.find('a');
         expect(item, 'dropdown item has trigger class')
-        .to.have.class('trigger-class');
+          .to.have.class('trigger-class');
         item.click();
         wait().then(() => {
           expect(actionOccurred, 'click action occurred').to.be.true;

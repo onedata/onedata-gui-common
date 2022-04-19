@@ -1,7 +1,7 @@
 /**
  * A service that acts as an per-app-instance storage. It is cleared every
  * app reload.
- * 
+ *
  * WARNING: data stored in app-storage is not persisted! It is only stored in memory.
  *
  * @module services/app-storage
@@ -25,7 +25,7 @@ export default Service.extend({
 
   /**
    * Gets data stored under given key.
-   * @param {string} key 
+   * @param {string} key
    * @returns {any}
    */
   getData(key) {
@@ -35,9 +35,9 @@ export default Service.extend({
   /**
    * Sets data - stores value under given key. Creates nested objects to
    * satisfy (possibly nested) given key.
-   * @param {string} key 
-   * @param {any} value 
-   * @return {any} value
+   * @param {string} key
+   * @param {any} value
+   * @returns {any} value
    */
   setData(key, value) {
     const pathElementsNames = key.split('.');

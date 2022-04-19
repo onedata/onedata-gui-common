@@ -12,9 +12,10 @@ module.exports = {
 
   /**
    * Make public files from this addon to be merged into application's public.
+   * @returns {Object}
    */
   treeForPublic: function () {
-    var tree = this._super.treeForPublic.apply(this, arguments);
+    const tree = this._super.treeForPublic.apply(this, arguments);
     if (tree) {
       tree.destDir = '/';
     }

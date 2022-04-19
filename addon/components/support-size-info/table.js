@@ -88,8 +88,8 @@ export default Component.extend({
    * @type {computed.Ember.Array.SupportSizeEntry}
    */
   _processedData: computed('data.[]', function () {
-    let data = this.get('data');
-    let processedData = A();
+    const data = this.get('data');
+    const processedData = A();
     data.forEach((entry) => {
       processedData.pushObject(EmberObject.create({
         supporterName: entry.get('supporterName'),
@@ -105,7 +105,7 @@ export default Component.extend({
    * @type {computed.Array.Object}
    */
   _columns: computed('supporterNameHeader', 'supporterSizeHeader', function () {
-    let {
+    const {
       supporterNameHeader,
       supporterSizeHeader,
     } = this.getProperties('supporterNameHeader', 'supporterSizeHeader');

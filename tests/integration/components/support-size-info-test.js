@@ -58,9 +58,9 @@ describe('Integration | Component | support size info', function () {
         supporterSizeHeader="Support size"}}
     `);
     click('.btn.table-mode').then(() => {
-      let dataRows = this.$('tbody tr');
+      const dataRows = this.$('tbody tr');
       expect(dataRows).to.have.length(2);
-      let dataRow = dataRows.eq(0);
+      const dataRow = dataRows.eq(0);
       expect(dataRow.children()).to.have.length(2);
       expect(dataRow.children().eq(0)).to.contain('Provider1');
       expect(dataRow.children().eq(1)).to.contain('1 MiB');

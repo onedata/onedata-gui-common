@@ -18,9 +18,9 @@ const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
 
 function triggerCopyClick(context, success = true) {
-  // we need to attach this.$ to the whole app $ context, because a popover 
+  // we need to attach this.$ to the whole app $ context, because a popover
   // renders in the body, not inside the component
-  let old$ = context.$;
+  const old$ = context.$;
   context.$ = (selector) => $('body').find(selector);
   if (success) {
     triggerSuccess(context, '.provider-host-copy-btn');
@@ -118,10 +118,10 @@ describe('Integration | Component | provider place', function () {
   it('resizes with parent one-atlas component', function () {
     this.set('atlasWidth', 800);
     this.render(hbs `
-      {{provider-place 
-        provider=provider 
+      {{provider-place
+        provider=provider
         atlasWidth=atlasWidth}}`);
-    let prevWidth = parseFloat(this.$('.circle').css('width'));
+    const prevWidth = parseFloat(this.$('.circle').css('width'));
     this.set('atlasWidth', 400);
     expect(parseFloat(this.$('.circle').css('width')))
       .to.be.equal(prevWidth / 2);
@@ -129,7 +129,7 @@ describe('Integration | Component | provider place', function () {
 
   it('notifies about hostname copy to clipboard success', function (done) {
     this.render(hbs `
-      {{provider-place 
+      {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
       triggerCopyClick(this);
@@ -142,7 +142,7 @@ describe('Integration | Component | provider place', function () {
 
   it('notifies about hostname copy to clipboard error', function (done) {
     this.render(hbs `
-      {{provider-place 
+      {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
       triggerCopyClick(this, false);
@@ -154,12 +154,12 @@ describe('Integration | Component | provider place', function () {
 
   it('shows list of supported spaces', function (done) {
     this.render(hbs `
-      {{provider-place 
+      {{provider-place
         provider=provider}}`);
 
-    let spaces = this.get('spaces');
+    const spaces = this.get('spaces');
     click('.circle').then(() => {
-      let drop = $('.provider-place-drop');
+      const drop = $('.provider-place-drop');
       expect(drop.find('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
@@ -172,7 +172,7 @@ describe('Integration | Component | provider place', function () {
 
   it('shows multiple providers if necessary', function (done) {
     this.render(hbs `
-      {{provider-place 
+      {{provider-place
         provider=providers}}`);
 
     click('.circle').then(() => {

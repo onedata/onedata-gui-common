@@ -10,8 +10,8 @@ export default Component.extend({
 
   steps: null,
   stepsNumClassName: computed('steps', function () {
-    let steps = this.get('steps'),
-      className = 'steps-';
+    const steps = this.get('steps');
+    let className = 'steps-';
     className += steps !== null ? steps.length : 0;
     return className;
   }),
@@ -24,7 +24,7 @@ export default Component.extend({
   },
 
   currentStep: computed('steps.[]', 'currentIndex', function () {
-    let {
+    const {
       steps,
       currentIndex,
     } = this.getProperties('steps', 'currentIndex');
