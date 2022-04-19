@@ -5,7 +5,7 @@ import { render, click, fillIn, waitUntil, findAll, find } from '@ember/test-hel
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { get } from '@ember/object';
-import { selectChoose } from '../../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 
 describe('Integration | Component | query builder/block adder', function () {

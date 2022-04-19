@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { render, settled, fillIn, focus, blur, find } from '@ember/test-helpers';

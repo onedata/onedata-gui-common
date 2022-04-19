@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import _ from 'lodash';
-import { selectChoose, clickTrigger } from './ember-power-select';
+import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import Model from 'onedata-gui-common/utils/one-time-series-chart/model';
 import { find } from '@ember/test-helpers';

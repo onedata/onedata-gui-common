@@ -10,7 +10,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
-import { selectChoose } from '../../../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/modify lane action', function () {
   setupRenderingTest();

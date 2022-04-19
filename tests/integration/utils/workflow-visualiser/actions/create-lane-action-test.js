@@ -9,7 +9,7 @@ import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import { selectChoose } from '../../../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/create lane action', function () {
   setupRenderingTest();
