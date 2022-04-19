@@ -14,7 +14,7 @@ import sinon from 'sinon';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { setProperties } from '@ember/object';
 import { Promise } from 'rsvp';
-import { selectChoose } from '../../../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 const simpliestLane = {
   name: 'lane1',

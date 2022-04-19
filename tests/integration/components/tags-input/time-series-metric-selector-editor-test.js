@@ -3,7 +3,7 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { render, find, findAll, click, fillIn } from '@ember/test-helpers';
-import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';

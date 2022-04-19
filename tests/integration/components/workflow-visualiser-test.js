@@ -14,7 +14,7 @@ import $ from 'jquery';
 import { htmlSafe } from '@ember/string';
 import { dasherize } from '@ember/string';
 import { getModalBody, getModalFooter } from '../../helpers/modal';
-import { selectChoose } from '../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import { resolve, Promise } from 'rsvp';
 import { schedule } from '@ember/runloop';

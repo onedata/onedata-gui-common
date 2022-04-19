@@ -4,7 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import CapacityField from 'onedata-gui-common/utils/form-component/capacity-field';
 import sinon from 'sinon';
-import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 

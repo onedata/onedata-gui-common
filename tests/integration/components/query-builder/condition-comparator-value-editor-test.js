@@ -3,7 +3,7 @@ import { describe, context, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { clickTrigger } from '../../../helpers/ember-power-select';
+import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
 import { render, click, fillIn, blur, triggerKeyEvent, find } from '@ember/test-helpers';
 

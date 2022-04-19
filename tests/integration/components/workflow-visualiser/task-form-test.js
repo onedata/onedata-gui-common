@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import sinon from 'sinon';
 import _ from 'lodash';
 import { classify } from '@ember/string';
