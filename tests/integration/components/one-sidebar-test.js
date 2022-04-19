@@ -3,15 +3,24 @@ import { describe, it, beforeEach, afterEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { get, computed } from '@ember/object';
+import { get } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../helpers/stub-service';
+import OneSidebar from 'onedata-gui-common/components/one-sidebar';
+
+const TestableOneSidebar = OneSidebar.extend({
+  didInsertElement() {
+    this._super(...arguments);
+    this.get('element').componentInstance = this;
+  },
+});
 
 describe('Integration | Component | one sidebar', function () {
   setupRenderingTest();
 
   beforeEach(function () {
     clearLocalStorage();
+    this.owner.register('component:one-sidebar', TestableOneSidebar);
     this.set('model', {
       resourceType: 'testResource',
       collection: {
@@ -132,24 +141,16 @@ describe('Integration | Component | one sidebar', function () {
   });
 
   it('saves changed advanced filters into advancedFilters property', async function () {
-    const filterChangeSpy = sinon.spy();
-    const advancedFilters = computed({
-      get() {
-        return undefined;
-      },
-      set: filterChangeSpy,
-    });
-    this.set('advancedFilters', advancedFilters);
     const filters = { filter: 'a' };
     await render(hbs `{{one-sidebar
       model=model
       advancedFiltersComponent="test-component"
-      advancedFilters=advancedFilters
     }}`);
 
     const testComponent = find('.test-component').componentInstance;
     get(testComponent, 'onChange')(filters);
-    expect(filterChangeSpy).to.be.calledWith('advancedFilters', filters);
+    expect(get(find('.one-sidebar').componentInstance, 'advancedFilters'))
+      .to.equal(filters);
   });
 
   it('passes sidebar context while creating sidebar actions', async function () {
