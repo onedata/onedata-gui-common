@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * Trims token from whitespaces and all special characters. Only digits and
  * ASCII letters are allowed.

@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * A component that displays content using nested lists - tree view.
  * Yields item components, which yields content and subtree components.
@@ -157,7 +160,7 @@ export default Component.extend({
    * @type {computed.boolean}
    */
   _wasRecentlyExpanded: computed('key', 'lastExpandedKey', function () {
-    let {
+    const {
       key,
       lastExpandedKey,
       _isRoot,
@@ -171,7 +174,7 @@ export default Component.extend({
    */
   _isFilteredOut: computed('_directItemsKeys.[]', '_filteredOutItemsKeys.[]',
     function () {
-      let {
+      const {
         _directItemsKeys,
         _filteredOutItemsKeys,
       } = this.getProperties('_directItemsKeys', '_filteredOutItemsKeys');
@@ -232,7 +235,7 @@ export default Component.extend({
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    let {
+    const {
       _filteredOutItemsKeys,
       _directItemsKeys,
       treeFilteredOut,
@@ -241,14 +244,14 @@ export default Component.extend({
       '_directItemsKeys',
       'treeFilteredOut'
     );
-    let isNotFilteredOut =
+    const isNotFilteredOut =
       _filteredOutItemsKeys.get('length') !== _directItemsKeys.get('length');
     treeFilteredOut(isNotFilteredOut);
 
-    let itemsNodes = this.$('> .one-tree-list > .one-tree-item');
+    const itemsNodes = this.$('> .one-tree-list > .one-tree-item');
     if (itemsNodes) {
       itemsNodes.removeClass('last');
-      let visibleItemsNodes = itemsNodes.filter(':not(.collapse-hidden)');
+      const visibleItemsNodes = itemsNodes.filter(':not(.collapse-hidden)');
       visibleItemsNodes.last().addClass('last');
     }
   },
@@ -261,14 +264,14 @@ export default Component.extend({
      * action will toggle subtree visibility
      */
     show(subtreeKeys, subtreeIsExpanded) {
-      let {
+      const {
         _isRoot,
         _activeSubtreeKeys,
         _showAction,
       } = this.getProperties('_isRoot', '_activeSubtreeKeys', '_showAction');
 
       if (_isRoot) {
-        let newActiveSubtreeKeys =
+        const newActiveSubtreeKeys =
           _activeSubtreeKeys.filter(k => subtreeKeys.indexOf(k) === -1);
         if (subtreeIsExpanded === undefined) {
           subtreeIsExpanded = newActiveSubtreeKeys.length + subtreeKeys.length >
@@ -290,8 +293,8 @@ export default Component.extend({
      * @param {boolean} [exists=true] If true, item exists
      */
     itemRegister(itemKey, exists = true) {
-      let _directItemsKeys = this.get('_directItemsKeys');
-      let keysIncludes = _directItemsKeys.includes(itemKey);
+      const _directItemsKeys = this.get('_directItemsKeys');
+      const keysIncludes = _directItemsKeys.includes(itemKey);
 
       next(() => {
         if (!this.isDestroyed && !this.isDestroying) {
@@ -312,8 +315,8 @@ export default Component.extend({
      * @param {boolean} [visible=false] Item visibility state
      */
     itemFilteredOut(itemKey, visible = false) {
-      let _filteredOutItemsKeys = this.get('_filteredOutItemsKeys');
-      let keysIncludes = _filteredOutItemsKeys.includes(itemKey);
+      const _filteredOutItemsKeys = this.get('_filteredOutItemsKeys');
+      const keysIncludes = _filteredOutItemsKeys.includes(itemKey);
 
       if (keysIncludes && visible) {
         _filteredOutItemsKeys.removeObject(itemKey);
@@ -324,7 +327,7 @@ export default Component.extend({
     },
 
     setLastExpandedKey(itemKey) {
-      let {
+      const {
         _isRoot,
         setLastExpandedKey,
         key,

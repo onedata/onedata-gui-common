@@ -92,7 +92,7 @@ export default Component.extend({
       if (withBottomBar) {
         base.push('hidden');
       } else {
-        let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
+        const xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
         base.push(xsClass);
       }
       if (this.get('navigationState.mainMenuColumnExpanded')) {
@@ -112,7 +112,7 @@ export default Component.extend({
       if (this.get('withBottomBar')) {
         base.push('hidden');
       } else {
-        let xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
+        const xsClass = (showMobileSidebar ? 'col-xs-12' : 'hidden-xs');
         base.push(xsClass);
       }
       if (this.get('navigationState.mainMenuColumnExpanded')) {

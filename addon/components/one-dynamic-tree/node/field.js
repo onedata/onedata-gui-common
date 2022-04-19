@@ -1,7 +1,7 @@
 /**
  * A component represents tree node field, used internally by the one-dynamic-tree
  * component. For example of tree usage, see one-dynamic-tree documentation.
- * 
+ *
  * @module components/one-dynamic-tree/node/field
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -56,7 +56,7 @@ export default Component.extend({
    * @type {computed.string}
    */
   inputClass: computed('field', function () {
-    let field = this.get('field');
+    const field = this.get('field');
 
     let classes = `field-${dotToDash([field.name])}`;
     if (field.type !== 'radio-group') {

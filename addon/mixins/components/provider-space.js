@@ -1,6 +1,6 @@
 /**
  * A base to build a component that shows info about space in context of particular provider.
- * 
+ *
  * @module mixins/components/provider-space
  * @author Jakub Liput
  * @copyright (C) 2017 ACK CYFRONET AGH
@@ -48,11 +48,11 @@ export default Mixin.create({
    * @type {computed.number}
    */
   _supportSize: computed('space.supportSizes', 'providerId', function () {
-    let {
+    const {
       space,
       providerId,
     } = this.getProperties('space', 'providerId');
-    let supportSizes = get(space, 'supportSizes');
+    const supportSizes = get(space, 'supportSizes');
 
     if (supportSizes && providerId) {
       return supportSizes[providerId];

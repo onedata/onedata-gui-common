@@ -1,7 +1,11 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+/* eslint-disable max-len */
+
 /**
  * A function that adds a ``conflictLabel`` property for each conflicting record
  * in some array.
- * 
+ *
  * For example, we can have two spaces with the same name. This function will add
  * a property that helps to dinstinguish these two.
  *
@@ -21,9 +25,9 @@ import _ from 'lodash';
 /**
  * Assigns a `conflictLabel` property for each record in array.
  * See utils/conflict-ids for details about conflict ids algorithm.
- * @param {Array.Object|Array.EmberObject} records 
- * @param {string} conflictProperty 
- * @param {string} diffProperty 
+ * @param {Array.Object|Array.EmberObject} records
+ * @param {string} conflictProperty
+ * @param {string} diffProperty
  * @param {string} [defaultId]
  */
 export default function addConflictLabels(
@@ -32,7 +36,7 @@ export default function addConflictLabels(
   diffProperty = 'id',
   defaultId = undefined
 ) {
-  let conflictPropertyMap = groupConflictingRecords(records, conflictProperty);
+  const conflictPropertyMap = groupConflictingRecords(records, conflictProperty);
 
   conflictPropertyMap.forEach(conflictingRecords => {
     assignConflictLabels(conflictingRecords, diffProperty, defaultId);
@@ -46,9 +50,9 @@ export default function addConflictLabels(
  * @returns {Map<string, Ember.Object[]|Object[]>}
  */
 function groupConflictingRecords(records, conflictProperty) {
-  let conflictPropertyMap = new Map();
+  const conflictPropertyMap = new Map();
   records.forEach(record => {
-    let conflictValue = get(record, conflictProperty);
+    const conflictValue = get(record, conflictProperty);
     if (conflictPropertyMap.has(conflictValue)) {
       conflictPropertyMap.get(conflictValue).push(record);
     } else {
@@ -61,16 +65,16 @@ function groupConflictingRecords(records, conflictProperty) {
 /**
  * For collection of conflicting records, compute its conflict label
  * and assign to each record
- * @param {object[]|Ember.Object[]} conflictingRecords 
+ * @param {object[]|Ember.Object[]} conflictingRecords
  * @param {string} diffProperty an object property that is used for computing label
- * @param {string} defaultId 
+ * @param {string} defaultId
  */
 function assignConflictLabels(conflictingRecords, diffProperty, defaultId) {
   if (conflictingRecords.length > 1) {
-    let conflictLabels = conflictIds(_.map(conflictingRecords, r => get(r, diffProperty)));
+    const conflictLabels = conflictIds(_.map(conflictingRecords, r => get(r, diffProperty)));
     // removing conflict labels for defaultId
     for (let i = 0; i < conflictingRecords.length; i += 1) {
-      let record = conflictingRecords[i];
+      const record = conflictingRecords[i];
       const currentConflictLabel = get(record, 'conflictLabel');
       if (currentConflictLabel) {
         if (conflictLabels[i] !== null && conflictLabels[i] > currentConflictLabel.length) {

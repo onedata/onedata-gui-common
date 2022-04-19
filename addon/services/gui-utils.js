@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Provides data and implementation of utils specific for gui,
  * that uses onedata-gui-common.
@@ -34,7 +37,7 @@ export default Service.extend(I18n, {
   }),
 
   /**
-   * E.g. zone name for Onezone. 
+   * E.g. zone name for Onezone.
    * @virtual
    * @type {string}
    */
@@ -83,8 +86,8 @@ export default Service.extend(I18n, {
    * @returns {Promise}
    */
   logout() {
-    let session = this.get('session');
-    let loggingOut = session.invalidate();
+    const session = this.get('session');
+    const loggingOut = session.invalidate();
     loggingOut.then(() =>
       window.location.href = this.getAfterLogoutRedirectUrl()
     );

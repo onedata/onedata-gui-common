@@ -26,7 +26,7 @@ export default Component.extend({
   isMinimized: false,
 
   /**
-   * Button style (from bootstrap). Available values: 
+   * Button style (from bootstrap). Available values:
    * default, primary, success, info, warning, danger, link
    * @type {string}
    */
@@ -41,13 +41,13 @@ export default Component.extend({
 
   /**
    * Button size (from bootstrap). Available values:
-   * xs, sm, lg, empty string means standard size 
+   * xs, sm, lg, empty string means standard size
    * @type {string}
    */
   buttonSize: 'sm',
 
   /**
-   * CSS classes for item trigger. In full mode it is button, 
+   * CSS classes for item trigger. In full mode it is button,
    * in minimized it is dropdown menu item.
    * @type {string}
    */
@@ -79,7 +79,7 @@ export default Component.extend({
   closeDropdown: notImplementedIgnore,
 
   buttonSizeClass: computed('buttonSize', function () {
-    let buttonSize = this.get('buttonSize');
+    const buttonSize = this.get('buttonSize');
     if (buttonSize.length > 0) {
       return 'btn-' + buttonSize;
     } else {

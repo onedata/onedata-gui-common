@@ -1,21 +1,24 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
- * A component that generates forms in the form of a tree using tree structure 
- * definition in json format. For more information about definition format see 
+ * A component that generates forms in the form of a tree using tree structure
+ * definition in json format. For more information about definition format see
  * `definition` property comment.
- * 
- * On each input change the component emits changes and validation state using 
- * injected `valuesChanged`, calling it like: 
- * `valuesChanged(treeValues, isValid)` 
- * Passed treeValues object is a plain js object with a similar logical hierarchy 
- * like it is in the tree `definition`. It is a tree data structure where each 
- * object key is a subnode `name` property taken from `definition`. Leaves 
- * of that tree are values from tree fields. 
- * 
- * To support validation, a new component must be created that inherits from 
+ *
+ * On each input change the component emits changes and validation state using
+ * injected `valuesChanged`, calling it like:
+ * `valuesChanged(treeValues, isValid)`
+ * Passed treeValues object is a plain js object with a similar logical hierarchy
+ * like it is in the tree `definition`. It is a tree data structure where each
+ * object key is a subnode `name` property taken from `definition`. Leaves
+ * of that tree are values from tree fields.
+ *
+ * To support validation, a new component must be created that inherits from
  * this one and uses a validations mixin. Each validator should point to a path
- * like `values.path.to.the.field` - it is the same format that it was used 
+ * like `values.path.to.the.field` - it is the same format that it was used
  * for treeValues passed to `valuesChanged`.
- * 
+ *
  * Example:
  * Let definition looks like:
  * ```
@@ -36,36 +39,36 @@
  *     ],
  *   },
  * ]
- * 
+ *
  * ...
- * 
+ *
  * {{one-dynamic-tree definition=definition valuesChanged=(action "valuesChanged")}}
  * ```
- * 
+ *
  * In this case validator should point to: `values.node1.node11`.
- * Value of `node11` field is available through `valuesChanged` injected 
+ * Value of `node11` field is available through `valuesChanged` injected
  * action as its first argument under the path `node1.node11`.
- * 
- * The component allows to temporarily disable some fields. It can be set 
- * through `disabledFieldsPaths` property. It is an Ember array with paths 
- * (strings) to fields, which should be disabled. It can be an exact path or 
- * a path to a parent node. In the second case, all fields nested in that 
+ *
+ * The component allows to temporarily disable some fields. It can be set
+ * through `disabledFieldsPaths` property. It is an Ember array with paths
+ * (strings) to fields, which should be disabled. It can be an exact path or
+ * a path to a parent node. In the second case, all fields nested in that
  * node will be disabled.
  * Disabled state means that:
- * * validation for fields is turned off (after path remove from 
- *   `disabledFieldsPaths`, newly enabled fields are in state `unchanged` - 
+ * * validation for fields is turned off (after path remove from
+ *   `disabledFieldsPaths`, newly enabled fields are in state `unchanged` -
  *   may be invalid, but error message is not shown until its content change),
  * * value of fields cannot be changed,
- * * toggles are not taken into account in 'select all' functionality 
+ * * toggles are not taken into account in 'select all' functionality
  *   (`allowSubtreeCheckboxSelect`)
  * * node content has a lower opacity.
- * 
- * The component provides 'select all' functionality through nodes' 
- * `allowSubtreeCheckboxSelect` property set to true. In that mode, node will 
+ *
+ * The component provides 'select all' functionality through nodes'
+ * `allowSubtreeCheckboxSelect` property set to true. In that mode, node will
  * have a toggle which state change will change all nested not-disabled toggles.
- * That toggle is set to true if and only if all nested not-disabled toggles 
+ * That toggle is set to true if and only if all nested not-disabled toggles
  * are checked.
- * 
+ *
  * @module components/one-dynamic-tree
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -77,7 +80,7 @@
  * @property {string} name id-like property. It must be unique across
  * level of subtree.
  * @property {string} text content of the node.
- * @property {boolean} [allowSubtreeCheckboxSelect=false] if true, node will have 
+ * @property {boolean} [allowSubtreeCheckboxSelect=false] if true, node will have
  * a toggle, that will select all nested toggles.
  * @property {TreeField} [field=undefined] form field
  * @property {Array.TreeNode} subtree nested nodes
@@ -127,14 +130,14 @@ export default Component.extend(
     compareValues: undefined,
 
     /**
-     * Values used to fill tree form elements. On each change of this property 
+     * Values used to fill tree form elements. On each change of this property
      * all tree values will be refreshed with new values.
      * @type {object}
      */
     overrideValues: undefined,
 
     /**
-     * Values changed action. It will get tree values 
+     * Values changed action. It will get tree values
      * and validation state as arguments.
      * @type {Function}
      */
@@ -159,7 +162,7 @@ export default Component.extend(
     _errors: computed('_fieldsTree', 'validations.errors.[]',
       'disabledFieldsPaths.[]',
       function () {
-        let {
+        const {
           _fieldsTree,
           validations,
         } = this.getProperties('_fieldsTree', 'validations');
@@ -172,7 +175,7 @@ export default Component.extend(
         // Return an error only if a corresponding field exists in the fields tree
         // and is not disabled.
         return validations.get('errors').filter((error) => {
-          let path = error.get('attribute').substring('values.'.length);
+          const path = error.get('attribute').substring('values.'.length);
           return !!_fieldsTree.get(path) && !this.isPathDisabled(path);
         });
       }
@@ -219,13 +222,13 @@ export default Component.extend(
 
     /**
      * Called when tree field value has changed.
-     * @param {boolean} [checkboxChanged=false] if true, value was changed 
+     * @param {boolean} [checkboxChanged=false] if true, value was changed
      * using toggle
      * @param {boolean} [emitValues=true] if true, `valuesChanged` parent action
      * will be invoked
      */
     valuesHaveChanged(checkboxChanged = false, emitValues = true) {
-      let {
+      const {
         _isValid,
         valuesChanged,
       } = this.getProperties('_isValid', 'valuesChanged');
@@ -244,7 +247,7 @@ export default Component.extend(
      * Resets tree state.
      */
     reset() {
-      let definition = this.get('definition');
+      const definition = this.get('definition');
       this.set('values', this._buildEmptyValuesTree(definition, true));
       this._resetFieldsTree();
     },
@@ -264,7 +267,7 @@ export default Component.extend(
      * Sets validation information for tree fields
      */
     _recalculateErrors() {
-      let {
+      const {
         _fieldsTree,
         validations,
       } = this.getProperties(
@@ -283,7 +286,7 @@ export default Component.extend(
      * @param {Ember.Object} node fields tree node
      */
     _recalculateNodeErrors(node) {
-      let {
+      const {
         values,
         _errors,
       } = this.getProperties(
@@ -296,9 +299,9 @@ export default Component.extend(
         });
         error = error.length > 0 ? error[0] : null;
         // show if is not optional or is optional, but not empty
-        let emptyValues = [undefined, null, ''];
-        let notEmpty = emptyValues.indexOf(values.get(node.get('name'))) === -1;
-        let showValidation = node.get('optional') !== true || notEmpty;
+        const emptyValues = [undefined, null, ''];
+        const notEmpty = emptyValues.indexOf(values.get(node.get('name'))) === -1;
+        const showValidation = node.get('optional') !== true || notEmpty;
 
         if (['radio-group', 'checkbox'].indexOf(node.get('type')) === -1) {
           if (node.get('changed') && showValidation) {
@@ -346,7 +349,7 @@ export default Component.extend(
 
     /**
      * Updates modification tree to mark nodes as modified
-     * @param {Object} values 
+     * @param {Object} values
      */
     _updateModificationTree(values) {
       const compareValues = this.get('compareValues');

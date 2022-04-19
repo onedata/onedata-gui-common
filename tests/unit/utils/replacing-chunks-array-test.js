@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import ReplacingChunksArray, { emptyItem } from 'onedata-gui-common/utils/replacing-chunks-array';
@@ -56,6 +59,7 @@ class MockFullArray {
   /**
    * For test purposes, this array ignores completely input params and always returns
    * all the array.
+   * @returns {Promise<Array<Object>>}
    */
   fetch() {
     return Promise.resolve([...this.array]);

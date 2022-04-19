@@ -1,6 +1,10 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Common application route procedures in every Onedata web GUI
- * 
+ *
  * @module routes/application
  * @author Jakub Liput
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -21,7 +25,7 @@ export default Route.extend(ApplicationRouteMixin, {
 
   /**
    * Function for ember-cli-document-title
-   * @param {Array<string>} tokens 
+   * @param {Array<string>} tokens
    */
   title(tokens) {
     const {
@@ -88,7 +92,7 @@ export default Route.extend(ApplicationRouteMixin, {
      * Allows to send transitionTo action from places that not supported it
      */
     transitionTo() {
-      let transition = this.transitionTo(...arguments);
+      const transition = this.transitionTo(...arguments);
       return transition.promise;
     },
   },

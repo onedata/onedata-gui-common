@@ -31,7 +31,7 @@ describe('Integration | Component | one form field', function () {
     this.render(hbs `
       {{one-form-field field=field}}
     `);
-    let $field = this.$('input');
+    const $field = this.$('input');
     expect($field).to.have.class('field-one');
   });
 

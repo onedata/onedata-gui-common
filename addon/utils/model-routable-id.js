@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * Returns id for passed model, that can be used for routing purposes
  * (inside link-to helper, transitionTo function, etc).

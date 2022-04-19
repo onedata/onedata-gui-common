@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable no-param-reassign */
+
 /**
  * Provides viewer and editor of QoS parameters for storage (but is pretty
  * universal an may by used in the future for another similiar problems)
@@ -195,7 +198,7 @@ export default Component.extend(I18n, {
   /**
    * Marks record as removed. It will be removed from `paramEditRecords` after
    * `nodeClearDelay` ms
-   * @param {QosParamRecord} record 
+   * @param {QosParamRecord} record
    */
   removeEditRecord(record) {
     set(record, 'isRemoved', true);
@@ -325,7 +328,7 @@ export default Component.extend(I18n, {
     },
     valueChanged(record, event) {
       set(record, 'value', event.target.value);
-      // If value is empty, then some empty record may be removed from the end 
+      // If value is empty, then some empty record may be removed from the end
       this.removeLastEditRecordIfNeeded(record);
       this.notifyChange();
     },

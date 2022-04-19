@@ -1,0 +1,3 @@
+[submodule "onedata-gui-utils"]
+	path = onedata-gui-utils
+	url = ../onedata-gui-utils.git

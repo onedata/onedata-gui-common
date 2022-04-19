@@ -12,8 +12,8 @@ describe('Integration | Component | promise proxy container', function () {
   });
 
   it('renders error alert if promise has been rejected', function (done) {
-    let rejectReason = 'some reason';
-    let fakeProxy = EmberObject.create({
+    const rejectReason = 'some reason';
+    const fakeProxy = EmberObject.create({
       isSettled: true,
       ifFulfilled: false,
       isRejected: true,
@@ -32,8 +32,8 @@ describe('Integration | Component | promise proxy container', function () {
   });
 
   it('shows error details when clicking on show details', function (done) {
-    let rejectReason = 'some reason';
-    let fakeProxy = EmberObject.create({
+    const rejectReason = 'some reason';
+    const fakeProxy = EmberObject.create({
       isSettled: true,
       ifFulfilled: false,
       isRejected: true,

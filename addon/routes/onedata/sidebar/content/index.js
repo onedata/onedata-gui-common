@@ -57,8 +57,8 @@ export default Route.extend({
   },
 
   renderTemplate(controller, model) {
-    let { resourceType } = this.modelFor('onedata.sidebar');
-    let { resourceId } = model;
+    const { resourceType } = this.modelFor('onedata.sidebar');
+    const { resourceId } = model;
     this.render(`tabs.${resourceType}.${resourceId}`, {
       into: 'onedata.sidebar.content',
       outlet: 'main-content',
