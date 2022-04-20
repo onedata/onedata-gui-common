@@ -237,7 +237,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
         isValid: false,
       });
-      changeSpy.reset();
+      changeSpy.resetHistory();
 
       await fillIn('.name-field .form-control', 'someName');
       expect(find('.has-error')).to.not.exist;

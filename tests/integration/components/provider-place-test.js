@@ -3,10 +3,12 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard';
+import {
+  triggerCopyError,
+  triggerCopySuccess,
+} from 'ember-cli-clipboard/test-support';
 import GlobalNotifyStub from '../../helpers/global-notify-stub';
 import I18nStub from '../../helpers/i18n-stub';
-import $ from 'jquery';
 import EmberObject from '@ember/object';
 import { resolve } from 'rsvp';
 import { registerService } from '../../helpers/stub-service';
@@ -17,17 +19,11 @@ import { promiseArray } from 'onedata-gui-common/utils/ember/promise-array';
 const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
 
-function triggerCopyClick(context, success = true) {
-  // we need to attach this.$ to the whole app $ context, because a popover
-  // renders in the body, not inside the component
-  const newContext = {
-    $: (selector) => $('body').find(selector),
-    container: context.owner,
-  };
+function triggerCopyClick(success = true) {
   if (success) {
-    triggerSuccess(newContext, '.provider-host-copy-btn');
+    triggerCopySuccess('.provider-host-copy-btn');
   } else {
-    triggerError(newContext, '.provider-host-copy-btn');
+    triggerCopyError('.provider-host-copy-btn');
   }
 }
 
@@ -122,9 +118,9 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider
         atlasWidth=atlasWidth}}`);
-    const prevWidth = parseFloat($(find('.circle')).css('width'));
+    const prevWidth = parseFloat(find('.circle').style.width);
     this.set('atlasWidth', 400);
-    expect(parseFloat($(find('.circle')).css('width')))
+    expect(parseFloat(find('.circle').style.width))
       .to.be.equal(prevWidth / 2);
   });
 
@@ -133,7 +129,7 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
-      triggerCopyClick(this);
+      triggerCopyClick();
       expect(this.get('globalNotify.infoMessages')).to.have.length(1);
       expect(this.get('globalNotify.infoMessages')).to.contain(
         COPY_SUCCESS_MSG);
@@ -146,7 +142,7 @@ describe('Integration | Component | provider place', function () {
       {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
-      triggerCopyClick(this, false);
+      triggerCopyClick(false);
       expect(this.get('globalNotify.infoMessages')).to.have.length(1);
       expect(this.get('globalNotify.infoMessages')).to.contain(COPY_ERROR_MSG);
       done();

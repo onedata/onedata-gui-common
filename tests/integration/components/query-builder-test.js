@@ -90,7 +90,7 @@ describe('Integration | Component | query builder main component', function () {
         rootQueryBlock=rootQueryBlock
         valuesBuilder=valuesBuilder
       }}`);
-      notifyUpdateSpy.reset();
+      notifyUpdateSpy.resetHistory();
     });
 
     it('value nested in operators is changed', async function () {

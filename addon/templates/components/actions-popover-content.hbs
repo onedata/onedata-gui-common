@@ -4,7 +4,7 @@
     (if act.disabled "disabled")
     (if (eq nestedActionsOpened act) "expanded")
     }}
-  > 
+  >
     {{#if act.separator}}
       <a>
         <span class="one-label">{{act.title}}</span>
@@ -36,8 +36,14 @@
             onToggle=(action "toggleNestedActions" act)
             multi=true
             placement="context-menu"}}
-            {{#click-outside action=(action "toggleNestedActions" act false) except-selector=(concat "." elementId "-" act.class)}}
-              {{actions-popover-content actionsArray=act.nestedActions actionClicked=actionClicked}}
+            {{#click-outside
+              onClickOutside=(action "toggleNestedActions" act false)
+              exceptSelector=(concat "." elementId "-" act.class)
+            }}
+              {{actions-popover-content
+                actionsArray=act.nestedActions
+                actionClicked=actionClicked
+              }}
             {{/click-outside}}
           {{/one-webui-popover}}
         {{else}}

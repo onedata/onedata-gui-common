@@ -7,7 +7,7 @@
       <div class="onedata-logo"></div>
     </div>
   </div>
-  {{user-account-button 
+  {{user-account-button
     isActive=(eq navigationState.activeResourceType "users")
     onItemClick=(action "mobileMenuItemChanged")
     mobileMode=true}}
@@ -64,8 +64,14 @@
       triggerSelector=".global-menu-toggle"
       open=globalMenuOpened
       onToggle=(action "toggleGlobalMenu")}}
-      {{#click-outside action=(action "toggleGlobalMenu" false) except-selector=".global-menu-toggle-container"}}
-        {{actions-popover-content actionsArray=navigationState.globalMenuActions actionClicked=(action "toggleGlobalMenu" false)}}
+      {{#click-outside
+        onClickOutside=(action "toggleGlobalMenu" false)
+        exceptSelector=".global-menu-toggle-container"
+      }}
+        {{actions-popover-content
+          actionsArray=navigationState.globalMenuActions
+          actionClicked=(action "toggleGlobalMenu" false)
+        }}
       {{/click-outside}}
     {{/one-webui-popover}}
   </div>
@@ -84,12 +90,12 @@
         }}
       {{/promise-proxy-container}}
     {{/one-sidenav}}
-        
+
     {{content-backdrop class="sidenav-backdrop"
       progress=(if sidenavResourceType 100 0)
       click=(action (mut navigationState.globalSidenavResourceType) null bubbles=true)
     }}
-    
+
     {{#perfect-scrollbar-element
       class="col-in-app-layout col-content col-xs-12"
       onScroll=(action "scrollOccurred")

@@ -27,7 +27,7 @@ import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
-import ClickOutside from 'ember-click-outside/mixins/click-outside';
+import ClickOutside from 'ember-click-outside/mixin';
 import ContentOverflowDetector from 'onedata-gui-common/mixins/content-overflow-detector';
 import $ from 'jquery';
 
