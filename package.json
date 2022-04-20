@@ -54,7 +54,6 @@
     "ember-cli-dependency-checker": "3.2.0",
     "ember-cli-document-title": "1.1.0",
     "ember-cli-eslint": "5.1.0",
-    "ember-cli-events-bus": "git+https://github.com/blia/ember-cli-events-bus.git#f0c80d024690338358afb1abd949b8a34e8f0169",
     "ember-cli-htmlbars-inline-precompile": "2.1.0",
     "ember-cli-inject-live-reload": "2.1.0",
     "ember-cli-moment-shim": "3.8.0",
