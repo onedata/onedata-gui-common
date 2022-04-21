@@ -1,19 +1,37 @@
 /**
- * An adapter component for date-time-picker from ember-datetimepicker.
- * 
+ * Reimplemented component taken from package ember-datetimepicker
+ * See more: https://github.com/kellyselden/ember-datetimepicker
+ * We cannot use ember-datetimepicker directly as it is not supported anymore.
+ *
+ * To be functional it needs npm packages:
+ * - jquery-datetimepicker
+ * - ember-cli-moment-shim
+ * and files loaded from node_modules:
+ * - jquery-datetimepicker/build/jquery.datetimepicker.min.css
+ * - jquery-datetimepicker/build/jquery.datetimepicker.full.js
+ *
  * @module components/one-datetime-picker
  * @author Michał Borzęcki
- * @copyright (C) 2019 ACK CYFRONET AGH
+ * @copyright (C) 2019-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import DateTimePicker from 'ember-datetimepicker/components/date-time-picker';
+import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { scheduleOnce } from '@ember/runloop';
 import moment from 'moment';
+import $ from 'jquery';
 
-export default DateTimePicker.extend({
-  classNames: ['one-datetime-picker'],
+export default Component.extend({
+  tagName: 'input',
+  classNames: ['one-datetime-picker', 'date-time-picker'],
   attributeBindings: ['disabled', 'placeholder'],
+
+  /**
+   * @virtual optional
+   * @type {Date|null}
+   */
+  value: null,
 
   /**
    * @virtual optional
@@ -28,12 +46,13 @@ export default DateTimePicker.extend({
   placeholder: undefined,
 
   /**
-   * @type {Function} 
-   * @param {Date} selectedDate
+   * @virtual optional
+   * @type {(selectedDate: Date) => void}
    */
   onChange: undefined,
 
   /**
+   * @virtual optional
    * @type {string}
    */
   customDatetimePickerClassName: 'datetime-picker',
@@ -54,37 +73,109 @@ export default DateTimePicker.extend({
     return initializationTime ? moment(initializationTime).format('Y/M/D') : null;
   }),
 
+  /**
+   * @override
+   */
   init() {
     this._super(...arguments);
 
     this.set('initializationTime', new Date());
-
-    this.addCustomClassToDatetimePicker();
-    this.set('options', Object.assign({
-      lazyInit: true,
-      minDate: this.get('minDate'),
-    }, this.get('options')));
   },
 
   /**
-   * Overrides action callback with onChange callback to be more consistent with
-   * our naming policy.
    * @override
    */
-  action() {
-    return this.get('onChange')(...arguments);
+  didInsertElement() {
+    this._super(...arguments);
+
+    this.updateValue();
+
+    scheduleOnce('afterRender', this, 'initDatetimepicker');
   },
 
-  addCustomClassToDatetimePicker() {
-    const {
-      options,
-      customDatetimePickerClassName,
-    } = this.getProperties('options', 'customDatetimePickerClassName');
+  /**
+   * @override
+   */
+  didUpdateAttrs() {
+    this._super(...arguments);
 
-    if (options.className) {
-      options.className += ' ' + customDatetimePickerClassName;
-    } else {
-      options.className = customDatetimePickerClassName;
+    this.updateValue(true);
+  },
+
+  /**
+   * @override
+   */
+  willDestroyElement() {
+    this._super(...arguments);
+
+    $(this.get('element')).datetimepicker('destroy');
+  },
+
+  /**
+   * @returns {void}
+   */
+  initDatetimepicker() {
+    const {
+      element,
+      minDate,
+      customDatetimePickerClassName,
+    } = this.getProperties(
+      'element',
+      'minDate',
+      'customDatetimePickerClassName'
+    );
+
+    const options = {
+      lazyInit: true,
+      minDate,
+      className: customDatetimePickerClassName,
+      onChangeDateTime: (newDateTime) => {
+        this.changeHandler(newDateTime);
+      },
+    };
+
+    $(element).datetimepicker(options);
+  },
+
+  /**
+   * @param {Date|null} newValue
+   * @returns {void}
+   */
+  changeHandler(newValue) {
+    const {
+      value: oldValue,
+      onChange,
+    } = this.getProperties('value', 'onChange');
+
+    const newDatetimeFormat = newValue ? formatDate(newValue) : undefined;
+    const oldDatetimeFormat = oldValue ? formatDate(oldValue) : undefined;
+
+    if (newDatetimeFormat === oldDatetimeFormat) {
+      return;
+    }
+
+    onChange && onChange(newValue);
+  },
+
+  /**
+   * @param {boolean} shouldForceUpdatePicker
+   * @returns {void}
+   */
+  updateValue(shouldForceUpdatePicker) {
+    const {
+      value,
+      element,
+    } = this.getProperties('value', 'element');
+
+    const valueString = value ? formatDate(value) : '';
+    element.value = valueString;
+
+    if (shouldForceUpdatePicker) {
+      $(element).datetimepicker({ value: valueString });
     }
   },
 });
+
+function formatDate(date) {
+  return moment(date).format('YYYY/MM/DD H:mm');
+}

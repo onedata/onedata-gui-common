@@ -100,10 +100,10 @@ export default Component.extend({
 
   themeInstance: computed('noDataToShowMessage', function themeInstance() {
     return Bootstrap3Theme.create({
-      table: 'table table-striped table-condensed',
+      'table': 'table table-striped table-condensed',
       'sort-asc': 'oneicon oneicon-arrow-up',
       'sort-desc': 'oneicon oneicon-arrow-down',
-      messages: {
+      'messages': {
         noDataToShow: this.get('noDataToShowMessage'),
       },
     });
