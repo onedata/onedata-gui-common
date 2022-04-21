@@ -11,9 +11,7 @@ mocha.setup({
   timeout: 5000,
 });
 setResolver(resolver);
-setApplication(Application.create(
-  Object.assign({}, config.APP, { autoboot: false })
-));
+setApplication(Application.create(config.APP));
 
 afterEach(unsuppressRejections);
 
