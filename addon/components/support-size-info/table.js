@@ -20,6 +20,7 @@ import { A } from '@ember/array';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/support-size-info/table';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
+import Bootstrap3Theme from 'ember-models-table/themes/bootstrap3';
 
 export default Component.extend({
   layout,
@@ -40,23 +41,6 @@ export default Component.extend({
   noDataToShowMessage: '',
 
   /**
-   * Custom classes for ember-models-table addon.
-   * @type {Ember.Object}
-   */
-  _tableCustomClasses: EmberObject.create({
-    table: 'table table-striped table-condensed',
-  }),
-
-  /**
-   * Custom icons for ember-models-table addon.
-   * @type {Ember.Object}
-   */
-  _tableCustomIcons: EmberObject.create({
-    'sort-asc': 'oneicon oneicon-arrow-up',
-    'sort-desc': 'oneicon oneicon-arrow-down',
-  }),
-
-  /**
    * Header title for supporters column.
    * @type {computed.string}
    */
@@ -71,16 +55,6 @@ export default Component.extend({
    */
   supporterSizeHeader: computed(function () {
     return this.get('i18n').t('components.supportSizeInfo.table.supportSizeHeader');
-  }),
-
-  /**
-   * Custom messages for ember-models-table addon.
-   * @type {Ember.Object}
-   */
-  _tableCustomMessages: computed('noDataToShowMessage', function () {
-    return EmberObject.create({
-      noDataToShow: this.get('noDataToShowMessage'),
-    });
   }),
 
   /**
@@ -122,5 +96,16 @@ export default Component.extend({
       sortDirection: 'desc',
       sortPrecedence: 0,
     }];
+  }),
+
+  themeInstance: computed('noDataToShowMessage', function themeInstance() {
+    return Bootstrap3Theme.create({
+      table: 'table table-striped table-condensed',
+      'sort-asc': 'oneicon oneicon-arrow-up',
+      'sort-desc': 'oneicon oneicon-arrow-down',
+      messages: {
+        noDataToShow: this.get('noDataToShowMessage'),
+      },
+    });
   }),
 });
