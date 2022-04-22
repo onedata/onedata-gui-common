@@ -13,11 +13,13 @@
 /* eslint no-restricted-globals: ["error", "window"] */
 
 import Service from '@ember/service';
-import { get } from '@ember/object';
+import { get, computed } from '@ember/object';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import config from 'ember-get-config';
-import { Promise, all as allFulfilled } from 'rsvp';
+import { Promise, all as allFulfilled, resolve, reject } from 'rsvp';
 import _ from 'lodash';
+import { promise } from 'ember-awesome-macros';
+import $ from 'jquery';
 
 export default Service.extend({
   /**
@@ -25,6 +27,12 @@ export default Service.extend({
    * @type {Map<string, PromiseObject<Object|Function|null>>}
    */
   librariesProxiesMap: undefined,
+
+  /**
+   * @private
+   * @type {string}
+   */
+  assetsMapLocation: 'assets/assetMap.json',
 
   /**
    * @private
@@ -38,6 +46,27 @@ export default Service.extend({
    */
   /* eslint-disable-next-line no-restricted-globals */
   window,
+
+  /**
+   * @private
+   * @type {ComputedProperty<PromiseObject<Object>>}
+   */
+  assetsMapProxy: promise.object(
+    computed('assetsMapLocation', function assetsMapProxy() {
+      // Only production build has assets map
+      if (config.environment !== 'production') {
+        return resolve({
+          assets: {},
+        });
+      }
+
+      const assetsMapLocation = this.get('assetsMapLocation');
+      return resolve($.ajax(assetsMapLocation))
+        .catch(() => reject(new Error(
+          `Cannot load assets map: cannot fetch "${assetsMapLocation}".`
+        )));
+    })
+  ),
 
   /**
    * @override
@@ -120,14 +149,10 @@ export default Service.extend({
    * @param {string} path
    * @returns {Promise<void>}
    */
-  fetchScript(libraryName, path) {
+  async fetchScript(libraryName, path) {
     const window = this.get('window');
     const scriptNode = window.document.createElement('script');
-    let normalizedPath = path;
-    if (config.environment === 'test' && !path.startsWith('/')) {
-      normalizedPath = `/${normalizedPath}`;
-    }
-    scriptNode.src = normalizedPath;
+    scriptNode.src = await this.getAssetPathToLoad(path);
     const loadingPromise = new Promise((resolve, reject) => {
       scriptNode.addEventListener('load', () => resolve());
       scriptNode.addEventListener('error', (event) => {
@@ -142,5 +167,23 @@ export default Service.extend({
     });
     window.document.getElementsByTagName('body')[0].appendChild(scriptNode);
     return loadingPromise;
+  },
+
+  /**
+   * @private
+   * @param {string} path
+   * @returns {Promise<string>}
+   */
+  async getAssetPathToLoad(path) {
+    const assetsMap = await this.get('assetsMapProxy');
+    if (!assetsMap || !assetsMap.assets || !(path in assetsMap.assets)) {
+      return path;
+    }
+
+    let pathToLoad = assetsMap.assets[path];
+    if (config.environment === 'test' && !pathToLoad.startsWith('/')) {
+      pathToLoad = `/${pathToLoad}`;
+    }
+    return pathToLoad;
   },
 });
