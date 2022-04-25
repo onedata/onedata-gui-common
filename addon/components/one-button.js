@@ -34,7 +34,7 @@ export default BsButton.extend({
   /**
    * @type {ComputedProperty<boolean>}
    */
-  isInPendingState: or('isPending', eq('textState', raw('pending'))),
+  isInPendingState: or('isPending', eq('state', raw('pending'))),
 
   /**
    * @type {ComputedProperty<boolean>}

@@ -112,7 +112,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       expect(fetchSpy, 'initial fetch').to.be.calledTwice;
       expect(fetchSpy).to.be.calledWith(null, 20, 0);
       expect(fetchSpy).to.be.calledWith(19, chunkSize, 1);
-      fetchSpy.reset();
+      fetchSpy.resetHistory();
       expect(get(array, 'sourceArray.length'), 'source length after init')
         .to.equal(initialEndIndex + chunkSize);
       expect(get(array, 'length'), 'length after init').to.equal(initialEndIndex);
@@ -146,7 +146,7 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
     return settled()
       .then(() => {
-        fetchSpy.reset();
+        fetchSpy.resetHistory();
         return array.scheduleReload();
       })
       .then(() => {
@@ -172,7 +172,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       .then(() => {
         expect(array.toArray(), 'content before load more')
           .to.deep.equal(recordRange(0, 20));
-        fetchSpy.reset();
+        fetchSpy.resetHistory();
         array.setProperties({
           startIndex: 15,
           endIndex: 45,
@@ -200,7 +200,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       });
       return settled()
         .then(() => {
-          fetchSpy.reset();
+          fetchSpy.resetHistory();
           array.setProperties({
             startIndex: 30,
             endIndex: 40,
@@ -632,7 +632,7 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
     return settled()
       .then(() => {
-        fetchSpy.reset();
+        fetchSpy.resetHistory();
         return array.scheduleJump(60, 30);
       })
       .then(() => {
@@ -656,7 +656,7 @@ describe('Unit | Utility | replacing chunks array', function () {
     });
     return settled()
       .then(() => {
-        fetchSpy.reset();
+        fetchSpy.resetHistory();
         return array.scheduleJump(defaultMockArraySize - expectedSize, 50);
       })
       .then(() => {
@@ -680,7 +680,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       });
       return settled()
         .then(() => {
-          fetchSpy.reset();
+          fetchSpy.resetHistory();
           return array.scheduleJump(jumpStart, jumpAreaSize);
         })
         .then(() => {
@@ -716,7 +716,7 @@ describe('Unit | Utility | replacing chunks array', function () {
       return settled()
         .then(() => {
           expect(fetchSpy).to.have.been.calledWith(null, 50, 0);
-          fetchSpy.reset();
+          fetchSpy.resetHistory();
           expect(get(array, 'sourceArray').toArray())
             .to.deep.equal(recordRange(0, 50 + 30));
 
@@ -728,7 +728,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         })
         .then(() => {
           expect(fetchSpy).to.have.been.called;
-          fetchSpy.reset();
+          fetchSpy.resetHistory();
           expect(get(array, 'sourceArray').toArray())
             .to.deep.equal(recordRange(0, 50 + 30 * 2));
 
@@ -744,7 +744,7 @@ describe('Unit | Utility | replacing chunks array', function () {
         .then(() => {
           // last call that should return "isLast: true" flag
           expect(fetchSpy).to.have.been.called;
-          fetchSpy.reset();
+          fetchSpy.resetHistory();
           expect(get(array, 'sourceArray').toArray())
             .to.deep.equal(recordRange(0, 50 + 30 * 3));
 

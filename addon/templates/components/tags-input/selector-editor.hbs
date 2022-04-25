@@ -10,7 +10,10 @@
   as |popover|
 }}
   {{#perfect-scrollbar-element}}
-    {{#click-outside action=onEndTagCreation except-selector=parentTagsInputSelector}}
+    {{#click-outside
+      onClickOutside=onEndTagCreation
+      exceptSelector=parentTagsInputSelector
+    }}
       <ul class="selector-list">
         {{#each tagsToSelect as |tag|}}
           <li class="selector-item" onClick={{action "tagSelected" tag}}>

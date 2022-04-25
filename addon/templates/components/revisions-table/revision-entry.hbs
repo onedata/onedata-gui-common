@@ -26,8 +26,8 @@
         as |popover|
       }}
         {{#click-outside
-          action=(action (mut areActionsOpened) false)
-          except-selector=(concat "#" actionsTriggerId)
+          onClickOutside=(action (mut areActionsOpened) false)
+          exceptSelector=(concat "#" actionsTriggerId)
         }}
           {{actions-popover-content
             actionsArray=revisionActions

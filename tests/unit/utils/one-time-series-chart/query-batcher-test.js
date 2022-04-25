@@ -102,7 +102,7 @@ describe('Unit | Utility | one time series chart/query batcher', function () {
   it('calls fetchData after timeout, which starts according to the first query in batch', function () {
     this.batcher.query(queryParams());
     tickBatchTimeout(this);
-    this.fetchData.reset();
+    this.fetchData.resetHistory();
     tickBatchTimeout(this, 2.5);
 
     expect(this.fetchData).to.be.not.called;

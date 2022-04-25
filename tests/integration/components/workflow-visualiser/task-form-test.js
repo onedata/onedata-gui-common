@@ -569,7 +569,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         },
         isValid: true,
       });
-      changeSpy.reset();
+      changeSpy.resetHistory();
 
       await fillIn('.name-field .form-control', 'someName');
       expect(find('.has-error')).to.not.exist;
@@ -1413,7 +1413,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       await fillIn('.memoryLimit-field input', '200');
       await fillIn('.ephemeralStorageRequested-field input', '100');
       await fillIn('.ephemeralStorageLimit-field input', '200');
-      changeSpy.reset();
+      changeSpy.resetHistory();
       await toggleOverrideResources(false);
 
       expect(find('.cpuRequested-field input').value).to.equal('0.1');

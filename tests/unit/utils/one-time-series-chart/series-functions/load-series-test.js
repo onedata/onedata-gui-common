@@ -380,7 +380,7 @@ function expectFetchSeriesToBeCalled(testCase) {
       lastPointTimestamp: testCase.context.lastPointTimestamp,
       timeResolution: testCase.context.timeResolution,
       pointsCount: testCase.context.pointsCount + 1,
-    }, testCase.functionArguments.sourceParameters.externalSourceParameters));
+    }), testCase.functionArguments.sourceParameters.externalSourceParameters);
 }
 
 function rawPoint(timestamp, value) {

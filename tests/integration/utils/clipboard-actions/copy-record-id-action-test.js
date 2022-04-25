@@ -54,9 +54,9 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
     const result = await action.execute();
 
     expect(globalClipboardCopyStub).to.be.calledOnce.and.to.be.calledWith(
-      record.entityId, {
+      record.entityId, sinon.match({
         string: 'ID',
-      },
+      }),
     );
     expect(get(result, 'status')).to.equal('done');
   });
@@ -73,9 +73,9 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
       const result = await action.execute();
 
       expect(globalClipboardCopyStub).to.be.calledOnce.and.to.be.calledWith(
-        record.entityId, {
+        record.entityId, sinon.match({
           string: 'group ID',
-        },
+        }),
       );
       expect(get(result, 'status')).to.equal('done');
     });
