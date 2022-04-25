@@ -1,4 +1,4 @@
-.content-api-samples {
+.api-samples {
   .table.table-info td.property-name {
     width: 10em;
     @media (max-width: $screen-xs-max) {
@@ -9,9 +9,6 @@
   .api-operation-row {
     display: flex;
     align-items: center;
-
-    padding-top: $ember-power-select-option-small-padding-vertical;
-    padding-bottom: $padding-base-vertical;
 
     .api-command-type {
       display: none;
@@ -55,9 +52,15 @@
       }
     }
   }
+
+  .item-info-row-api-command {
+    .clipboard-line {
+      word-break: break-all;
+    }
+  }
 }
 
-.fb-info-modal, .api-command-type-selector-dropdown {
+.api-command-type-selector-dropdown {
   .api-command-type {
     opacity: $disabled-opacity;
     float: right;

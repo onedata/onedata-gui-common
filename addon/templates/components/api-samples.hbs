@@ -1,7 +1,7 @@
 <table class="table table-info table-info-large table-info-collapsible">
   <tbody>
     <tr class="item-info-row-api-command-name">
-      <td class="property-name with-input">
+      <td class="property-name with-input-sm">
         {{tt this "operation"}}
       </td>
       <td class="property-value">
@@ -10,7 +10,7 @@
             triggerClass="small api-command-type-selector-trigger"
             dropdownClass="small api-command-type-selector-dropdown"
             renderInPlace=false
-            options=availableApiCommands
+            options=apiSamples
             selected=effSelectedApiCommand
             searchEnabled=false
             onchange=(action "selectApiCommand")
@@ -50,7 +50,7 @@
             {{one-icon
               id=apiCommandInfoTriggerId
               icon="browser-info"
-              class="api-command-type-info-trigger hint-trigger"
+              class="api-command-type-info-trigger hint-trigger clickable"
             }}
           </div>
         </div>

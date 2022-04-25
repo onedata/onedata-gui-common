@@ -45,7 +45,7 @@ import publicFooter from './onedata-gui-common/components/public-footer';
 import revisionsTable from './onedata-gui-common/components/revisions-table';
 import wysiwygEditor from './onedata-gui-common/components/wysiwyg-editor';
 import oneTimeSeriesChart from './onedata-gui-common/components/one-time-series-chart';
-import contentApiSamples from './onedata-gui-common/components/content-api-samples';
+import apiSamples from './onedata-gui-common/components/api-samples';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -127,7 +127,7 @@ const translations = {
     revisionsTable,
     wysiwygEditor,
     oneTimeSeriesChart,
-    contentApiSamples,
+    apiSamples,
     alerts: {
       endpointError,
     },

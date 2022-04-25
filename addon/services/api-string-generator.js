@@ -12,7 +12,12 @@ import pupa from 'npm:pupa';
 import shellEscape from 'npm:shell-escape';
 
 export default Service.extend({
-  fillTemplate(apiTemplate, templateParams) {
+  /**
+   * @param {String|Array<String>} apiTemplate
+   * @param {Object} templateParams
+   * @returns {String}
+   */
+  fillTemplate(apiTemplate, templateParams = {}) {
     if (typeof apiTemplate === 'string') {
       return pupa(apiTemplate, templateParams);
     } else if (Array.isArray(apiTemplate)) {

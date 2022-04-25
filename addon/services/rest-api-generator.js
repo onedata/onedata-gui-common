@@ -14,7 +14,27 @@
 import ApiStringGenerator from './api-string-generator';
 import { get } from '@ember/object';
 
+/**
+ * @typedef {Object} ApiSample
+ * @property {string} apiRoot
+ * @property {Object|null} data
+ * @property {string} description
+ * @property {boolean} followRedirects
+ * @property {Object} headers
+ * @property {string} method
+ * @property {string} name
+ * @property {string} path
+ * @property {Object} placeholders
+ * @property {boolean} requiresAuthorization
+ * @property {string} swaggerOperationId
+ * @property {'rest'|'xrootd'} type
+ */
+
 export default ApiStringGenerator.extend({
+  /**
+   * @param {ApiSample} apiSample
+   * @returns {String}
+   */
   generateSample(apiSample) {
     const method = get(apiSample, 'method');
     const path = get(apiSample, 'apiRoot') + get(apiSample, 'path');
