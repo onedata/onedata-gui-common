@@ -19,7 +19,7 @@
       {{else}}
         {{one-sidebar/item-content item=sli sidebar=sidebar iconClass="sidebar-item-icon"}}
       {{/if}}
-      {{#if (and sli.tip (not media.isMobile))}}
+      {{#if (and sli.tip (not (media "isMobile")))}}
         {{one-tooltip
           title=sli.tip
           triggerEvents="hover"

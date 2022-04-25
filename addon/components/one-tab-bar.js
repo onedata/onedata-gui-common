@@ -12,7 +12,6 @@ import Component from '@ember/component';
 import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
-import { inject as service } from '@ember/service';
 import { or, raw } from 'ember-awesome-macros';
 import $ from 'jquery';
 
@@ -20,8 +19,6 @@ export default Component.extend({
   layout,
   classNames: ['one-tab-bar'],
   classNameBindings: ['tabsOverflow:tabs-overflowing'],
-
-  media: service(),
 
   /**
    * Array of items representing each tab. Properties of each:
