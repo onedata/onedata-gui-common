@@ -11,7 +11,7 @@
  */
 
 import _ from 'lodash';
-import { computed, set, get, getProperties } from '@ember/object';
+import { computed, observer, set, get, getProperties } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
@@ -23,6 +23,8 @@ import {
   translatePrefixCombiner,
 } from '../store-content-update-options/time-series';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import { scheduleOnce } from '@ember/runloop';
 
 const FormElement = FormFieldsCollectionGroup.extend({
   /**
@@ -108,6 +110,20 @@ const FormElement = FormFieldsCollectionGroup.extend({
             }));
           }),
           defaultValue: reads('options.firstObject.value'),
+          optionsObserver: observer('options.[]', function optionsObserver() {
+            scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+          }),
+          adjustValueForNewOptions() {
+            safeExec(this, () => {
+              const {
+                options,
+                value,
+              } = this.getProperties('options', 'value');
+              if (!value || !options.findBy('value', value)) {
+                this.valueChanged(get(options[0] || {}, 'value'));
+              }
+            });
+          },
         }).create({
           name: 'timeSeriesNameGenerator',
         }),

@@ -70,6 +70,9 @@ export default {
             __workflowAuditLog: {
               label: 'Workflow system audit log',
             },
+            __taskTimeSeries: {
+              label: 'Current task time series store',
+            }
           },
         },
         dispatchFunction: {
