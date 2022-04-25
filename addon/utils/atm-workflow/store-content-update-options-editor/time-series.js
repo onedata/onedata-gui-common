@@ -33,7 +33,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
 
   /**
    * @virtual
-   * @type {TimeSeriesStoreConfig}
+   * @type {AtmTimeSeriesStoreConfig}
    */
   storeConfig: undefined,
 
@@ -70,7 +70,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
   }),
 
   /**
-   * @type {Array<TimeSeriesSchema>}
+   * @type {Array<AtmTimeSeriesSchema>}
    */
   generatorSchemas: reads('storeConfig.schemas'),
 
@@ -146,7 +146,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from time series
  * store content update options editor
- * @param { storeConfig: TimeSeriesStoreConfig } context
+ * @param { storeConfig: AtmTimeSeriesStoreConfig } context
  * @returns {Object} store content update options
  */
 function formValuesToStoreContentUpdateOptions(values, { storeConfig }) {

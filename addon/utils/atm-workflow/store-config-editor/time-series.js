@@ -177,7 +177,7 @@ const chartSpecsField = JsonField.extend({
 
 /**
  * @param {Utils.FormComponent.ValuesContainer} values Values from time series store config editor
- * @returns {TimeSeriesStoreConfig} store config
+ * @returns {AtmTimeSeriesStoreConfig} store config
  */
 function formValuesToStoreConfig(values) {
   const {
@@ -239,7 +239,7 @@ function formValuesToStoreConfig(values) {
 }
 
 /**
- * @param {TimeSeriesStoreConfig} storeConfig
+ * @param {AtmTimeSeriesStoreConfig} storeConfig
  * @returns {Utils.FormComponent.ValuesContainer} form values ready to use in a form
  */
 function storeConfigToFormValues(storeConfig) {

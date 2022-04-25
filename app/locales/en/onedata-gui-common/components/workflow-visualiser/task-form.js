@@ -92,6 +92,12 @@ export default {
         },
       },
     },
+    timeSeriesStoreSection: {
+      label: 'Time series store',
+      createTimeSeriesStore: {
+        label: 'Create time series store',
+      },
+    },
     resources: {
       label: 'Resources',
       overrideResources: {

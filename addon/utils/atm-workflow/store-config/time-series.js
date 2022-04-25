@@ -10,13 +10,13 @@
 import _ from 'lodash';
 
 /**
- * @typedef {Object} TimeSeriesStoreConfig
- * @property {Array<TimeSeriesSchema>} schemas
+ * @typedef {Object} AtmTimeSeriesStoreConfig
+ * @property {Array<AtmTimeSeriesSchema>} schemas
  * @property {Array<OTSCChartDefinition>} chartSpecs
  */
 
 /**
- * @typedef {Object} TimeSeriesSchema
+ * @typedef {Object} AtmTimeSeriesSchema
  * @property {string} nameGeneratorType for possible values see at
  * `nameGeneratorTypes` below
  * @property {string} nameGenerator

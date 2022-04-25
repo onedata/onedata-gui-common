@@ -43,6 +43,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -210,7 +211,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'task.{name,argumentMappings,resultMappings,resourceSpecOverride}',
+    'task.{name,argumentMappings,resultMappings,timeSeriesStoreConfig,resourceSpecOverride}',
     'atmLambdaRevision',
     function passedStoreFormValues() {
       const {
@@ -229,11 +230,13 @@ export default Component.extend(I18n, {
       nameField,
       argumentMappingsFieldsCollectionGroup,
       resultMappingsFieldsCollectionGroup,
+      timeSeriesStoreSectionFields,
       resourcesFieldsGroup,
     } = this.getProperties(
       'nameField',
       'argumentMappingsFieldsCollectionGroup',
       'resultMappingsFieldsCollectionGroup',
+      'timeSeriesStoreSectionFields',
       'resourcesFieldsGroup'
     );
 
@@ -251,6 +254,7 @@ export default Component.extend(I18n, {
         nameField,
         argumentMappingsFieldsCollectionGroup,
         resultMappingsFieldsCollectionGroup,
+        timeSeriesStoreSectionFields,
         resourcesFieldsGroup,
       ],
     });
@@ -497,6 +501,26 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
+  timeSeriesStoreSectionFields: computed(function timeSeriesStoreSectionFields() {
+    return FormFieldsGroup.create({
+      name: 'timeSeriesStoreSection',
+      addColonToLabel: false,
+      fields: [
+        ToggleField.create({
+          name: 'createTimeSeriesStore',
+        }),
+        storeConfigEditors.timeSeries.FormElement.extend({
+          isExpanded: reads('parent.value.createTimeSeriesStore'),
+        }).create({
+          name: 'timeSeriesStoreConfig',
+        }),
+      ],
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
   resourcesFieldsGroup: computed(function resourcesFieldsGroup() {
     return FormFieldsGroup.create({
       name: 'resources',
@@ -678,12 +702,14 @@ function taskToFormData(task, atmLambdaRevision) {
     argumentMappings,
     resultMappings,
     resourceSpecOverride,
+    timeSeriesStoreConfig,
   } = getProperties(
     task || {},
     'name',
     'argumentMappings',
     'resultMappings',
-    'resourceSpecOverride'
+    'resourceSpecOverride',
+    'timeSeriesStoreConfig'
   );
 
   const {
@@ -803,10 +829,18 @@ function taskToFormData(task, atmLambdaRevision) {
     });
   });
 
+  const timeSeriesStoreSection = {
+    createTimeSeriesStore: Boolean(timeSeriesStoreConfig),
+    timeSeriesStoreConfig: storeConfigEditors.timeSeries.storeConfigToFormValues(
+      timeSeriesStoreConfig
+    ),
+  };
+
   return {
     name: name || lambdaName,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
+    timeSeriesStoreSection,
     resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
   };
 }
@@ -860,12 +894,14 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
     name,
     argumentMappings,
     resultMappings,
+    timeSeriesStoreSection,
     resources,
   } = getProperties(
     formData,
     'name',
     'argumentMappings',
     'resultMappings',
+    'timeSeriesStoreSection',
     'resources'
   );
   const {
@@ -970,6 +1006,23 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
       storeContentUpdateOptions,
     });
   });
+
+  const {
+    createTimeSeriesStore,
+    timeSeriesStoreConfig,
+  } = getProperties(
+    timeSeriesStoreSection,
+    'createTimeSeriesStore',
+    'timeSeriesStoreConfig'
+  );
+
+  if (createTimeSeriesStore) {
+    task.timeSeriesStoreConfig = storeConfigEditors.timeSeries.formValuesToStoreConfig(
+      timeSeriesStoreConfig
+    );
+  } else {
+    task.timeSeriesStoreConfig = null;
+  }
 
   if (overrideResources) {
     task.resourceSpecOverride = serializeTaskResourcesFieldsValues(resourcesSections);

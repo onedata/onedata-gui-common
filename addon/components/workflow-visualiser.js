@@ -987,6 +987,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       lambdaRevisionNumber,
       argumentMappings,
       resultMappings,
+      timeSeriesStoreConfig,
       resourceSpecOverride,
     } = getProperties(
       taskRawData,
@@ -996,6 +997,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'lambdaRevisionNumber',
       'argumentMappings',
       'resultMappings',
+      'timeSeriesStoreConfig',
       'resourceSpecOverride'
     );
 
@@ -1037,6 +1039,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         lambdaRevisionNumber,
         argumentMappings,
         resultMappings,
+        timeSeriesStoreConfig,
         resourceSpecOverride,
       });
       return existingTask;
@@ -1059,6 +1062,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         actionsFactory,
         argumentMappings,
         resultMappings,
+        timeSeriesStoreConfig,
         resourceSpecOverride,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),

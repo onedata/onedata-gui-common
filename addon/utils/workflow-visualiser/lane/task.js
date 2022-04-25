@@ -55,6 +55,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
+   * @type {AtmTimeSeriesStoreConfig|null}
+   */
+  timeSeriesStoreConfig: undefined,
+
+  /**
+   * @virtual
    * @type {Object}
    */
   resourceSpecOverride: undefined,

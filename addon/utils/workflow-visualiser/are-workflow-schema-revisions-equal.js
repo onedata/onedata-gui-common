@@ -70,6 +70,7 @@ function areTasksEqual(task1, task2) {
       case 'resultMappings':
         return checkEqualityOfArrays(val1, val2, 'resultName', areResultMappingsEqual);
       case 'resourceSpecOverride':
+      case 'timeSeriesStoreConfig':
         return (isNone(val1) && isNone(val2)) || _.isEqual(val1, val2);
       default:
         return _.isEqual(val1, val2);
