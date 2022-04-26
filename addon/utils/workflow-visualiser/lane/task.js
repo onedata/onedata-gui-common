@@ -90,7 +90,7 @@ export default VisualiserRecord.extend({
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
-  systemAuditLogStore: reads('visibleRun.systemTimeSeriesStore'),
+  timeSeriesStore: reads('visibleRun.timeSeriesStore'),
 
   /**
    * @type {ComputedProperty<Number>}

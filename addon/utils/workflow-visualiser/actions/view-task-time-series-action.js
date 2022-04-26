@@ -1,9 +1,8 @@
 /**
- * Shows task audit log. Needs `task` and `getAuditLogContentCallback` passed via context.
+ * Shows task time series. Needs `task` and `getTimeSeriesContentCallback` passed via context.
  *
- * @module utils/workflow-visualiser/actions/view-task-audit-log-action
  * @author Michał Borzęcki
- * @copyright (C) 2021 ACK CYFRONET AGH
+ * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
@@ -20,17 +19,17 @@ export default Action.extend({
   /**
    * @override
    */
-  i18nPrefix: 'components.workflowVisualiser.task.actions.viewTaskAuditLog',
+  i18nPrefix: 'components.workflowVisualiser.task.actions.viewTaskTimeSeries',
 
   /**
    * @override
    */
-  className: 'view-task-audit-log-action-trigger',
+  className: 'view-task-time-series-action-trigger',
 
   /**
    * @override
    */
-  disabled: not('task.systemAuditLogStore'),
+  disabled: not('task.timeSeriesStore'),
 
   /**
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Lane.Task>}
@@ -38,10 +37,9 @@ export default Action.extend({
   task: reads('context.task'),
 
   /**
-   * @param {Utils.WorkflowVisualiser.Store} store
    * @type {ComputedProperty<Function>}
    */
-  getAuditLogContentCallback: reads('context.getAuditLogContentCallback'),
+  getTimeSeriesContentCallback: reads('context.getTimeSeriesContentCallback'),
 
   /**
    * @override
@@ -49,24 +47,24 @@ export default Action.extend({
   onExecute() {
     const {
       task,
-      getAuditLogContentCallback,
+      getTimeSeriesContentCallback,
       modalManager,
     } = this.getProperties(
       'task',
-      'getAuditLogContentCallback',
+      'getTimeSeriesContentCallback',
       'modalManager'
     );
-    const systemAuditLogStore = get(task, 'systemAuditLogStore');
+    const timeSeriesStore = get(task, 'timeSeriesStore');
 
     const result = ActionResult.create();
     return modalManager
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
-        viewModeLayout: 'auditLog',
+        viewModeLayout: 'timeSeries',
         subjectName: this.t('subjectName', { taskName: get(task, 'name') }),
-        store: systemAuditLogStore,
+        store: timeSeriesStore,
         getStoreContentCallback: (...args) =>
-          getAuditLogContentCallback(systemAuditLogStore, ...args),
+          getTimeSeriesContentCallback(timeSeriesStore, ...args),
       }).hiddenPromise
       .then(() => {
         set(result, 'status', 'done');

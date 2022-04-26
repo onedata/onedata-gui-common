@@ -19,8 +19,6 @@ describe('Unit | Utility | workflow visualiser/lane/task', function () {
   [
     'instanceId',
     'lambdaId',
-    'systemAuditLogStoreInstanceId',
-    'systemTimeSeriesStoreInstanceId',
     'argumentMappings',
     'resultMappings',
     'timeSeriesStoreConfig',

@@ -77,7 +77,7 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
  * @property {AtmLaneRunNumber} runNumber
  * @property {String} instanceId
  * @property {String} systemAuditLogStoreInstanceId
- * @property {String} systemTimeSeriesStoreInstanceId
+ * @property {String} timeSeriesStoreInstanceId
  * @property {String} status
  * @property {Number} itemsInProcessing
  * @property {Number} itemsProcessed
