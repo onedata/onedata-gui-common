@@ -28,6 +28,8 @@ module.exports = function (defaults) {
         'eot',
       ],
       replaceExtensions: ['html', 'css', 'js', 'webmanifest'],
+      generateAssetMap: true,
+      fingerprintAssetMap: true,
     },
     // options as in `preset-env` in standard Babel config
     'babel': {},
