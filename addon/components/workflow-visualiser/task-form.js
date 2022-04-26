@@ -44,6 +44,7 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
+import { validator } from 'ember-cp-validations';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -208,24 +209,28 @@ export default Component.extend(I18n, {
   resultStores: computed(
     'definedStores.[]',
     'timeSeriesStore',
-    'fields.valuesSource.timeSeriesStoreSection.createTimeSeriesStore',
     function resultStores() {
       const definedStores = this.get('definedStores') || [];
-      const timeSeriesStore = this.get('timeSeriesStore');
-      const isTimeSeriesStoreEnabled = this.get(
-        'fields.valuesSource.timeSeriesStoreSection.createTimeSeriesStore'
-      );
 
-      const systemStores = [taskAuditLogStore, workflowAuditLogStore];
-      if (isTimeSeriesStoreEnabled) {
-        systemStores.push(timeSeriesStore);
-      }
+      const timeSeriesStore = this.get('timeSeriesStore');
+      const systemStores = [
+        taskAuditLogStore,
+        workflowAuditLogStore,
+        timeSeriesStore,
+      ];
 
       return [
         ...systemStores,
         ...definedStores.toArray().compact(),
       ];
     }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isTimeSeriesStoreEnabled: reads(
+    'fields.valuesSource.timeSeriesStoreSection.createTimeSeriesStore'
   ),
 
   /**
@@ -478,6 +483,21 @@ export default Component.extend(I18n, {
               }).create({
                 component,
                 name: 'targetStore',
+                customValidators: [
+                  validator(function (value, options, model) {
+                    const field = get(model, 'field');
+                    const notEnabledTsStoreSelected =
+                      value === taskTimeSeriesDropdownOptionValue &&
+                      !get(field, 'component.isTimeSeriesStoreEnabled');
+                    return notEnabledTsStoreSelected ?
+                      String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
+                      true;
+                  }, {
+                    dependentKeys: [
+                      'model.field.component.isTimeSeriesStoreEnabled',
+                    ],
+                  }),
+                ],
               }),
               DropdownField.extend({
                 isVisible: notEmpty('options'),

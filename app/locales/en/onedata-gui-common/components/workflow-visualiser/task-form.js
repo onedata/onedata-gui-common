@@ -74,6 +74,9 @@ export default {
               label: 'Current task time series store',
             },
           },
+          errors: {
+            notEnabledTsStoreSelected: 'This store is not enabled. See configuration below',
+          },
         },
         dispatchFunction: {
           label: 'Dispatch function',
