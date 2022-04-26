@@ -88,6 +88,11 @@ export default VisualiserRecord.extend({
   systemAuditLogStore: reads('visibleRun.systemAuditLogStore'),
 
   /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
+   */
+  systemAuditLogStore: reads('visibleRun.systemTimeSeriesStore'),
+
+  /**
    * @type {ComputedProperty<Number>}
    */
   itemsInProcessing: or('visibleRun.itemsInProcessing', raw(0)),

@@ -20,8 +20,10 @@ describe('Unit | Utility | workflow visualiser/lane/task', function () {
     'instanceId',
     'lambdaId',
     'systemAuditLogStoreInstanceId',
+    'systemTimeSeriesStoreInstanceId',
     'argumentMappings',
     'resultMappings',
+    'timeSeriesStoreConfig',
   ].forEach(propName => {
     it(`has "${propName}" equal to undefined on init`, function () {
       const task = Task.create();

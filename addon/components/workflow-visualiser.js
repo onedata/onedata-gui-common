@@ -1005,9 +1005,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.task.${id}.runsRegistry`) || {};
     Object.values(runsRegistry).forEach(({ runNumber }) => {
-      const storeInstanceId = runsRegistry[runNumber].systemAuditLogStoreInstanceId;
+      const systemAuditLogStoreInstanceId =
+        runsRegistry[runNumber].systemAuditLogStoreInstanceId;
+      const systemTimeSeriesStoreInstanceId =
+        runsRegistry[runNumber].systemTimeSeriesStoreInstanceId;
       normalizedRunsRegistry[runNumber] = Object.assign({}, runsRegistry[runNumber], {
-        systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
+        systemAuditLogStore: this.getStoreByInstanceId(systemAuditLogStoreInstanceId),
+        systemTimeSeriesStore: this.getStoreByInstanceId(systemTimeSeriesStoreInstanceId),
       });
     });
     parentRunNumbers.forEach((parentRunNumber) => {
@@ -1017,6 +1021,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           instanceId: null,
           status: 'pending',
           systemAuditLogStore: null,
+          systemTimeSeriesStore: null,
           itemsInProcessing: 0,
           itemsProcessed: 0,
           itemsFailed: 0,
