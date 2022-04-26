@@ -72,7 +72,7 @@ export default {
             },
             __taskTimeSeries: {
               label: 'Current task time series store',
-            }
+            },
           },
         },
         dispatchFunction: {

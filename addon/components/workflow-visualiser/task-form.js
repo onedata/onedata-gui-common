@@ -170,7 +170,7 @@ export default Component.extend(I18n, {
         schemas: [],
         chartSpecs: [],
       },
-    })
+    });
   }),
 
   /**
@@ -648,6 +648,7 @@ export default Component.extend(I18n, {
     set(fields, 'valuesSource', passedFormValues);
     fields.useCurrentValueAsDefault();
     fields.reset();
+    this.updateTimeSeriesStoreSchema();
   },
 
   notifyAboutChange() {

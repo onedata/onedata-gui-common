@@ -468,6 +468,7 @@ const exampleTask = {
       function: 'append',
     },
   }],
+  timeSeriesStoreConfig: null,
 };
 
 describe('Integration | Component | workflow visualiser/task form', function () {
@@ -565,6 +566,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           name: exampleAtmLambdaRevision.name,
           argumentMappings: [],
           resultMappings: [],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -577,6 +579,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           name: 'someName',
           argumentMappings: [],
           resultMappings: [],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -669,6 +672,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               name: 'function1',
               argumentMappings: [],
               resultMappings: [],
+              timeSeriesStoreConfig: null,
             },
             isValid: true,
           });
@@ -699,6 +703,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -756,6 +761,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -832,6 +838,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -915,6 +922,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -1101,6 +1109,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             name: 'function1',
             argumentMappings: [],
             resultMappings: [],
+            timeSeriesStoreConfig: null,
           },
           isValid: true,
         });
@@ -1130,6 +1139,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               function: 'append',
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1159,6 +1169,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               function: 'append',
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1585,6 +1596,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
               function: dispatchFunction,
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1616,6 +1628,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
               type: `${targetStore.type}StoreContentUpdateOptions`,
             }),
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
