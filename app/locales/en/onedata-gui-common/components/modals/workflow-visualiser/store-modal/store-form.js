@@ -66,6 +66,9 @@ export default {
           range: {
             label: 'Range',
           },
+          timeSeriesMeasurement: {
+            label: 'Time series measurement',
+          },
         },
       },
       defaultValue: {

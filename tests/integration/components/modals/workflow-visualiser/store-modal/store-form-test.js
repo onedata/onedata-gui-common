@@ -104,6 +104,14 @@ const dataTypes = [{
     type: 'range',
     valueConstraints: {},
   },
+}, {
+  label: 'Time series measurement',
+  dataSpec: {
+    type: 'timeSeriesMeasurement',
+    valueConstraints: {
+      specs: [],
+    },
+  },
 }];
 
 const storeTypesWithGenericConfig = storeTypes

@@ -47,6 +47,7 @@ import {
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import { validator } from 'ember-cp-validations';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
+import dataSpecEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = [{
@@ -90,6 +91,9 @@ const dataTypes = [{
 }, {
   value: 'range',
   forbiddenIn: ['treeForest', 'timeSeries'],
+}, {
+  value: 'timeSeriesMeasurement',
+  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
 }];
 
 const defaultRangeStart = 0;
@@ -299,9 +303,11 @@ export default Component.extend(I18n, {
   genericStoreConfigFieldsGroup: computed(function genericStoreConfigFieldsGroup() {
     const {
       dataTypeField,
+      timeSeriesMeasurementEditorField,
       defaultValueField,
     } = this.getProperties(
       'dataTypeField',
+      'timeSeriesMeasurementEditorField',
       'defaultValueField'
     );
     return FormFieldsGroup.extend({
@@ -314,6 +320,7 @@ export default Component.extend(I18n, {
       name: 'genericStoreConfig',
       fields: [
         dataTypeField,
+        timeSeriesMeasurementEditorField,
         defaultValueField,
       ],
     });
@@ -348,6 +355,26 @@ export default Component.extend(I18n, {
       component,
     });
   }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormElement>}
+   */
+  timeSeriesMeasurementEditorField: computed(
+    function timeSeriesMeasurementEditorField() {
+      return dataSpecEditors.timeSeriesMeasurement.FormElement.extend({
+        isVisible: eq(
+          'valuesSource.genericStoreConfig.dataType',
+          raw('timeSeriesMeasurement')
+        ),
+        init() {
+          this._super(...arguments);
+          this.set('classes', `${this.get('classes') || ''} nowrap-on-desktop`);
+        },
+      }).create({
+        name: 'timeSeriesMeasurementEditor',
+      });
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
@@ -677,13 +704,18 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
       });
       break;
     }
-    default:
+    default: {
+      const dataType = writeDataSpec && dataSpecToType(writeDataSpec).type || undefined;
+      const valueConstraints = writeDataSpec && writeDataSpec.valueConstraints;
       formData.genericStoreConfig = createValuesContainer({
-        dataType: writeDataSpec && dataSpecToType(writeDataSpec).type || undefined,
+        dataType,
+        timeSeriesMeasurementEditor: dataSpecEditors.timeSeriesMeasurement
+          .valueConstraintsToFormValues(valueConstraints),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
       });
       break;
+    }
   }
 
   formData.timeSeriesStoreConfig = createValuesContainer({
@@ -750,10 +782,24 @@ function formDataToStore(formData) {
     default: {
       const {
         dataType,
+        timeSeriesMeasurementEditor,
         defaultValue,
-      } = getProperties(genericStoreConfig || {}, 'dataType', 'defaultValue');
+      } = getProperties(
+        genericStoreConfig || {},
+        'dataType',
+        'timeSeriesMeasurementEditor',
+        'defaultValue'
+      );
 
-      const writeDataSpec = dataType && typeToDataSpec({ type: dataType, isArray: false }) || undefined;
+      const customValueConstraints = dataType === 'timeSeriesMeasurement' ?
+        dataSpecEditors.timeSeriesMeasurement
+        .formValuesToValueConstraints(timeSeriesMeasurementEditor) :
+        undefined;
+      const writeDataSpec = dataType && typeToDataSpec({
+        type: dataType,
+        isArray: false,
+        customValueConstraints,
+      }) || undefined;
       let defaultInitialContent = null;
       if (defaultValue && defaultValue.trim()) {
         try {
