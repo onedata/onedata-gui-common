@@ -1,5 +1,5 @@
-import timeSeriesMeasurement from './data-spec-editor/time-series-measurement';
+import valueConstraintsEditor from './data-spec-editor/value-constraints-editor';
 
 export default {
-  timeSeriesMeasurement,
+  valueConstraintsEditor,
 };

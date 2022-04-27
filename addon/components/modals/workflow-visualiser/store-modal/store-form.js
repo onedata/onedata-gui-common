@@ -47,7 +47,7 @@ import {
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import { validator } from 'ember-cp-validations';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
-import dataSpecEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
+import { valueConstraintsEditor } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = [{
@@ -361,7 +361,7 @@ export default Component.extend(I18n, {
    */
   timeSeriesMeasurementEditorField: computed(
     function timeSeriesMeasurementEditorField() {
-      return dataSpecEditors.timeSeriesMeasurement.FormElement.extend({
+      return valueConstraintsEditor.timeSeriesMeasurement.FormElement.extend({
         isVisible: eq(
           'valuesSource.genericStoreConfig.dataType',
           raw('timeSeriesMeasurement')
@@ -709,7 +709,7 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
       const valueConstraints = writeDataSpec && writeDataSpec.valueConstraints;
       formData.genericStoreConfig = createValuesContainer({
         dataType,
-        timeSeriesMeasurementEditor: dataSpecEditors.timeSeriesMeasurement
+        timeSeriesMeasurementEditor: valueConstraintsEditor.timeSeriesMeasurement
           .valueConstraintsToFormValues(valueConstraints),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
@@ -792,7 +792,7 @@ function formDataToStore(formData) {
       );
 
       const customValueConstraints = dataType === 'timeSeriesMeasurement' ?
-        dataSpecEditors.timeSeriesMeasurement
+        valueConstraintsEditor.timeSeriesMeasurement
         .formValuesToValueConstraints(timeSeriesMeasurementEditor) :
         undefined;
       const writeDataSpec = dataType && typeToDataSpec({

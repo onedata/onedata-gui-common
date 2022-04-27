@@ -1,9 +1,8 @@
 /**
  * Provides a form element capable of showing, creating and modifying time
- * series measurement data type settings. It also provides two methods
+ * series measurement data spec value constraints. It also provides two methods
  * for conversion between form values and value constraints in both directions.
  *
- * @module utils/atm-workflow/data-spec-editor/time-series-measurement
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -26,9 +25,9 @@ import {
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const FormElement = FormFieldsCollectionGroup.extend({
-  classes: 'time-series-measurement-dataspec-editor boxes-collection-layout',
+  classes: 'time-series-measurement-value-constraints-editor boxes-collection-layout',
   isDefaultValueIgnored: false,
-  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.timeSeriesMeasurement.fields',
+  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditor.timeSeriesMeasurement.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
   sizeForChildren: 'sm',
