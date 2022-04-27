@@ -11,6 +11,7 @@ import FieldComponentBase from 'onedata-gui-common/components/form-component/fie
 import layout from '../../templates/components/form-component/clipboard-field';
 import { or } from 'ember-awesome-macros';
 import { reads } from '@ember/object/computed';
+import { and, raw, equal } from 'ember-awesome-macros';
 
 export default FieldComponentBase.extend({
   layout,
@@ -32,7 +33,16 @@ export default FieldComponentBase.extend({
   textareaRows: reads('field.textareaRows'),
 
   /**
-   * @type {ComputedProperty<String>}
+   * @type {ComputedProperty<ClipboardFieldStyle>}
    */
-  clipboardLineClass: reads('field.clipboardLineClass'),
+  fieldStyle: reads('field.fieldStyle'),
+
+  /**
+   * @type {string}
+   * Class for `clipboard-line` components.
+   */
+  clipboardLineClass: or(
+    and(equal('fieldStyle', raw('monospace')), raw('monospace-font')),
+    raw(''),
+  ),
 });
