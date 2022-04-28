@@ -61,7 +61,7 @@ const FormElement = FormFieldsCollectionGroup.extend({
   sizeForChildren: 'sm',
 
   /**
-   * @type {ComputedProperty<Array<TimeSeriesMeasurementSpec>>}
+   * @type {ComputedProperty<Array<AtmTimeSeriesMeasurementSpec>>}
    */
   measurementSpecs: computed('contentUpdateDataSpec', function measurementSpecs() {
     const isArray = this.get('contentUpdateDataSpec.type') === 'array';

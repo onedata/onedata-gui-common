@@ -18,9 +18,7 @@ import {
   eq,
   neq,
   raw,
-  array,
   or,
-  gt,
   not,
   and,
   isEmpty,
@@ -41,13 +39,14 @@ import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import {
-  typeToDataSpec,
-  dataSpecToType,
-} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import { validator } from 'ember-cp-validations';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
-import { valueConstraintsEditor } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
+import {
+  FormElement as DataSpecEditor,
+  formValuesToDataSpec,
+  dataSpecToFormValues,
+  dataSpecTypes,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = [{
@@ -63,6 +62,19 @@ const storeTypes = [{
 }, {
   value: 'timeSeries',
 }];
+
+const forbiddenDataTypesPerStoreType = {
+  treeForest: [
+    'integer',
+    'string',
+    'object',
+    'range',
+    'onedatafsCredentials',
+    'timeSeriesMeasurement',
+  ],
+  range: dataSpecTypes.without('range'),
+  timeSeries: dataSpecTypes,
+};
 
 const dataTypes = [{
   value: 'integer',
@@ -93,7 +105,7 @@ const dataTypes = [{
   forbiddenIn: ['treeForest', 'timeSeries'],
 }, {
   value: 'timeSeriesMeasurement',
-  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
+  forbiddenIn: ['treeForest', 'range'],
 }];
 
 const defaultRangeStart = 0;
@@ -171,7 +183,7 @@ export default Component.extend(I18n, {
       const defaultStoreType = this.getTypeFieldOptions()[0].value;
       return storeToFormData(this.get('store'), {
         defaultType: defaultStoreType,
-        defaultDataType: (this.getDataTypeFieldOptions(defaultStoreType)[0] || {}).value,
+        allowedDataTypes: this.calculateEffAllowedDataTypes(defaultStoreType),
       });
     }
   ),
@@ -302,12 +314,10 @@ export default Component.extend(I18n, {
    */
   genericStoreConfigFieldsGroup: computed(function genericStoreConfigFieldsGroup() {
     const {
-      dataTypeField,
-      timeSeriesMeasurementEditorField,
+      dataSpecEditorField,
       defaultValueField,
     } = this.getProperties(
-      'dataTypeField',
-      'timeSeriesMeasurementEditorField',
+      'dataSpecEditorField',
       'defaultValueField'
     );
     return FormFieldsGroup.extend({
@@ -319,62 +329,31 @@ export default Component.extend(I18n, {
     }).create({
       name: 'genericStoreConfig',
       fields: [
-        dataTypeField,
-        timeSeriesMeasurementEditorField,
+        dataSpecEditorField,
         defaultValueField,
       ],
     });
   }),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
-   */
-  dataTypeField: computed(function dataTypeField() {
-    const component = this;
-    return DropdownField.extend({
-      isEnabled: gt(array.length('options'), raw(1)),
-      options: computed(
-        'valuesSource.type',
-        'component.allowedDataTypes',
-        function options() {
-          const storeType = this.get('valuesSource.type');
-          return component.getDataTypeFieldOptions(storeType);
-        }
-      ),
-      storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
-        const {
-          options,
-          value,
-        } = this.getProperties('options', 'value');
-        if (value && options.length && !options.mapBy('value').includes(value)) {
-          this.valueChanged(options[0].value);
-        }
-      }),
-    }).create({
-      name: 'dataType',
-      component,
-    });
-  }),
-
-  /**
    * @type {ComputedProperty<Utils.FormComponent.FormElement>}
    */
-  timeSeriesMeasurementEditorField: computed(
-    function timeSeriesMeasurementEditorField() {
-      return valueConstraintsEditor.timeSeriesMeasurement.FormElement.extend({
-        isVisible: eq(
-          'valuesSource.genericStoreConfig.dataType',
-          raw('timeSeriesMeasurement')
-        ),
-        init() {
-          this._super(...arguments);
-          this.set('classes', `${this.get('classes') || ''} nowrap-on-desktop`);
-        },
-      }).create({
-        name: 'timeSeriesMeasurementEditor',
-      });
-    }
-  ),
+  dataSpecEditorField: computed(function () {
+    return DataSpecEditor.extend({
+      allowedTypes: computed(
+        'component.allowedDataTypes',
+        'valuesSource.type',
+        function allowedTypes() {
+          return this.get('component').calculateEffAllowedDataTypes(
+            this.get('valuesSource.type')
+          );
+        }
+      ),
+    }).create({
+      component: this,
+      name: 'dataSpec',
+    });
+  }),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.TextField>}
@@ -619,25 +598,21 @@ export default Component.extend(I18n, {
     return options;
   },
 
-  getDataTypeFieldOptions(storeType) {
-    const allowedDataTypes = this.get('allowedDataTypes');
-
-    let options = dataTypes.filter(({ forbiddenIn }) => !forbiddenIn.includes(storeType));
-    if (allowedDataTypes && allowedDataTypes.length) {
-      options = options.filter(({ value }) => allowedDataTypes.includes(value));
-    }
-    return options;
+  calculateEffAllowedDataTypes(storeType) {
+    const allowedDataTypes = this.get('allowedDataTypes') || dataSpecTypes;
+    const forbiddenDataTypes = forbiddenDataTypesPerStoreType[storeType] || [];
+    return allowedDataTypes.filter((type) => !forbiddenDataTypes.includes(type));
   },
 });
 
-function storeToFormData(store, { defaultType, defaultDataType }) {
+function storeToFormData(store, { defaultType, allowedDataTypes }) {
   if (!store) {
     return createValuesContainer({
       name: '',
       description: '',
       type: defaultType,
       genericStoreConfig: createValuesContainer({
-        dataType: defaultDataType,
+        dataSpec: dataSpecToFormValues(null, { allowedTypes: allowedDataTypes }),
         defaultValue: '',
       }),
       rangeStoreConfig: createValuesContainer({
@@ -705,12 +680,8 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
       break;
     }
     default: {
-      const dataType = writeDataSpec && dataSpecToType(writeDataSpec).type || undefined;
-      const valueConstraints = writeDataSpec && writeDataSpec.valueConstraints;
       formData.genericStoreConfig = createValuesContainer({
-        dataType,
-        timeSeriesMeasurementEditor: valueConstraintsEditor.timeSeriesMeasurement
-          .valueConstraintsToFormValues(valueConstraints),
+        dataSpec: dataSpecToFormValues(writeDataSpec, { allowedTypes: allowedDataTypes }),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
       });
@@ -781,25 +752,17 @@ function formDataToStore(formData) {
       break;
     default: {
       const {
-        dataType,
-        timeSeriesMeasurementEditor,
+        dataSpec,
         defaultValue,
       } = getProperties(
         genericStoreConfig || {},
+        'dataSpec',
         'dataType',
         'timeSeriesMeasurementEditor',
         'defaultValue'
       );
 
-      const customValueConstraints = dataType === 'timeSeriesMeasurement' ?
-        valueConstraintsEditor.timeSeriesMeasurement
-        .formValuesToValueConstraints(timeSeriesMeasurementEditor) :
-        undefined;
-      const writeDataSpec = dataType && typeToDataSpec({
-        type: dataType,
-        isArray: false,
-        customValueConstraints,
-      }) || undefined;
+      const writeDataSpec = formValuesToDataSpec(dataSpec);
       let defaultInitialContent = null;
       if (defaultValue && defaultValue.trim()) {
         try {

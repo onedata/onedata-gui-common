@@ -6,8 +6,11 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import timeSeriesMeasurement from './value-constraints-editor/time-series-measurement';
-
-export const valueConstraintsEditor = {
-  timeSeriesMeasurement,
-};
+export { default as valueConstraintsEditor } from './value-constraints-editor';
+export {
+  FormElement,
+  formValuesToDataSpec,
+  dataSpecToFormValues,
+  dataSpecTypes,
+}
+from './data-spec-editor';
