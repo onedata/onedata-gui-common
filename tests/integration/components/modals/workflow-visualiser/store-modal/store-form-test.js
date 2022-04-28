@@ -105,12 +105,6 @@ const dataTypes = [{
     valueConstraints: {},
   },
 }, {
-  label: 'OnedataFS credentials',
-  dataSpec: {
-    type: 'onedatafsCredentials',
-    valueConstraints: {},
-  },
-}, {
   label: 'Time series measurement',
   dataSpec: {
     type: 'timeSeriesMeasurement',
@@ -493,7 +487,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.description-field .form-control', 'someDescription');
       await selectChoose('.type-field', 'Time series');
-      await click('.add-field-button');
+      await click('.timeSeriesSchemas-add-field-button');
       await selectChoose('.nameGeneratorType-field', 'Exact');
       await fillIn('.nameGenerator-field .form-control', 'some_name');
       await selectChoose('.unit-field', 'Bytes');
