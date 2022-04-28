@@ -36,41 +36,6 @@ export default {
       },
     },
     genericStoreConfig: {
-      dataType: {
-        label: 'Data type',
-        options: {
-          integer: {
-            label: 'Integer',
-          },
-          string: {
-            label: 'String',
-          },
-          object: {
-            label: 'Object',
-          },
-          anyFile: {
-            label: 'Any file',
-          },
-          regularFile: {
-            label: 'Regular file',
-          },
-          directory: {
-            label: 'Directory',
-          },
-          symlink: {
-            label: 'Symbolic link',
-          },
-          dataset: {
-            label: 'Dataset',
-          },
-          range: {
-            label: 'Range',
-          },
-          timeSeriesMeasurement: {
-            label: 'Time series measurement',
-          },
-        },
-      },
       defaultValue: {
         label: 'Default value',
       },

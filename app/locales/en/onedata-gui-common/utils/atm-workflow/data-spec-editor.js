@@ -1,7 +1,7 @@
-import valueConstraintsEditor from './data-spec-editor/value-constraints-editor';
+import valueConstraintsEditors from './data-spec-editor/value-constraints-editors';
 
 export default {
-  valueConstraintsEditor,
+  valueConstraintsEditors,
   fields: {
     type: {
       label: 'Data type',
@@ -33,11 +33,11 @@ export default {
         range: {
           label: 'Range',
         },
-        onedatafsCredentials: {
-          label: 'OnedataFS credentials',
-        },
         timeSeriesMeasurement: {
           label: 'Time series measurement',
+        },
+        onedatafsCredentials: {
+          label: 'OnedataFS credentials',
         },
       },
     },

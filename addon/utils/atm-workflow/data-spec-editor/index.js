@@ -6,7 +6,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-export { default as valueConstraintsEditor } from './value-constraints-editor';
+export { default as valueConstraintsEditors } from './value-constraints-editors';
 export {
   FormElement,
   formValuesToDataSpec,

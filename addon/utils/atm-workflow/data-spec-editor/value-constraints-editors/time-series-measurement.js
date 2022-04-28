@@ -27,7 +27,7 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 const FormElement = FormFieldsCollectionGroup.extend({
   classes: 'time-series-measurement-value-constraints-editor boxes-collection-layout',
   isDefaultValueIgnored: false,
-  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditor.timeSeriesMeasurement.fields',
+  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.timeSeriesMeasurement.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
   sizeForChildren: 'sm',

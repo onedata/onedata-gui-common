@@ -17,7 +17,7 @@ import {
   dataSpecToType,
   typeToDataSpec,
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
-import valueConstraintsEditor from './value-constraints-editor';
+import valueConstraintsEditors from './value-constraints-editors';
 
 export const dataSpecTypes = [
   'integer',
@@ -70,8 +70,8 @@ const TypeField = DropdownField.extend({
   }),
 });
 
-const adjustedValueConstraintsEditorFields = Object.keys(valueConstraintsEditor)
-  .map((type) => valueConstraintsEditor[type].FormElement.extend({
+const adjustedValueConstraintsEditorFields = Object.keys(valueConstraintsEditors)
+  .map((type) => valueConstraintsEditors[type].FormElement.extend({
     name: getValueConstraintsFieldName(type),
     isVisible: computed('parent.parent.value.type', function isVisible() {
       return this.get('parent.parent.value.type') === type;
@@ -100,11 +100,11 @@ export function dataSpecToFormValues(dataSpec, { allowedTypes = dataSpecTypes } 
     normalizedDataSpec.valueConstraints;
 
   const valueConstraintsFormValue = {};
-  for (const valueConstraintsType in valueConstraintsEditor) {
+  for (const valueConstraintsType in valueConstraintsEditors) {
     const valueConstraintsForType = valueConstraintsType === type ?
       valueConstraints : undefined;
     const fieldName = getValueConstraintsFieldName(valueConstraintsType);
-    valueConstraintsFormValue[fieldName] = valueConstraintsEditor[valueConstraintsType]
+    valueConstraintsFormValue[fieldName] = valueConstraintsEditors[valueConstraintsType]
       .valueConstraintsToFormValues(valueConstraintsForType);
   }
 
@@ -127,8 +127,8 @@ export function formValuesToDataSpec(values, surroundWithArray = false) {
   } = getProperties(values || {}, 'type', 'valueConstraints');
 
   let customValueConstraints = undefined;
-  if (type in valueConstraintsEditor) {
-    customValueConstraints = valueConstraintsEditor[type].formValuesToValueConstraints(
+  if (type in valueConstraintsEditors) {
+    customValueConstraints = valueConstraintsEditors[type].formValuesToValueConstraints(
       get(valueConstraints, getValueConstraintsFieldName(type))
     );
   }

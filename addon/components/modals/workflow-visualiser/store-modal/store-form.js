@@ -63,6 +63,10 @@ const storeTypes = [{
   value: 'timeSeries',
 }];
 
+const dataTypesForbiddenForAllStores = [
+  'onedatafsCredentials',
+];
+
 const forbiddenDataTypesPerStoreType = {
   treeForest: [
     'integer',
@@ -314,10 +318,10 @@ export default Component.extend(I18n, {
    */
   genericStoreConfigFieldsGroup: computed(function genericStoreConfigFieldsGroup() {
     const {
-      dataSpecEditorField,
+      dataSpecField,
       defaultValueField,
     } = this.getProperties(
-      'dataSpecEditorField',
+      'dataSpecField',
       'defaultValueField'
     );
     return FormFieldsGroup.extend({
@@ -329,7 +333,7 @@ export default Component.extend(I18n, {
     }).create({
       name: 'genericStoreConfig',
       fields: [
-        dataSpecEditorField,
+        dataSpecField,
         defaultValueField,
       ],
     });
@@ -338,7 +342,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormElement>}
    */
-  dataSpecEditorField: computed(function () {
+  dataSpecField: computed(function dataSpecField() {
     return DataSpecEditor.extend({
       allowedTypes: computed(
         'component.allowedDataTypes',
@@ -600,7 +604,10 @@ export default Component.extend(I18n, {
 
   calculateEffAllowedDataTypes(storeType) {
     const allowedDataTypes = this.get('allowedDataTypes') || dataSpecTypes;
-    const forbiddenDataTypes = forbiddenDataTypesPerStoreType[storeType] || [];
+    const forbiddenDataTypes = [
+      ...(forbiddenDataTypesPerStoreType[storeType] || []),
+      ...dataTypesForbiddenForAllStores,
+    ];
     return allowedDataTypes.filter((type) => !forbiddenDataTypes.includes(type));
   },
 });
@@ -679,14 +686,13 @@ function storeToFormData(store, { defaultType, allowedDataTypes }) {
       });
       break;
     }
-    default: {
+    default:
       formData.genericStoreConfig = createValuesContainer({
         dataSpec: dataSpecToFormValues(writeDataSpec, { allowedTypes: allowedDataTypes }),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
       });
       break;
-    }
   }
 
   formData.timeSeriesStoreConfig = createValuesContainer({
@@ -757,8 +763,6 @@ function formDataToStore(formData) {
       } = getProperties(
         genericStoreConfig || {},
         'dataSpec',
-        'dataType',
-        'timeSeriesMeasurementEditor',
         'defaultValue'
       );
 

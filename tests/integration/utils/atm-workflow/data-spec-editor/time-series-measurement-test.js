@@ -6,7 +6,7 @@ import wait from 'ember-test-helpers/wait';
 import { fillIn, find, findAll, click } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editor/time-series-measurement';
+import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
 import { get } from '@ember/object';
 
 const nameMatcherTypeOptions = [{
