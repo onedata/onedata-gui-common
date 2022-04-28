@@ -342,7 +342,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Utils.FormComponent.FormElement>}
    */
   dataSpecField: computed(function dataSpecField() {
-    return DataSpecEditor.extend({
+    const field = DataSpecEditor.extend({
       allowedTypes: computed(
         'component.allowedDataTypes',
         'valuesSource.type',
@@ -356,6 +356,13 @@ export default Component.extend(I18n, {
       component: this,
       name: 'dataSpec',
     });
+    get(field.getFieldByPath('valueConstraints'), 'fields')
+      .forEach((constraintsField) => set(
+        constraintsField,
+        'classes',
+        `${get(constraintsField, 'classes') || ''} nowrap-on-desktop`
+      ));
+    return field;
   }),
 
   /**
