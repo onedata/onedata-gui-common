@@ -7,7 +7,7 @@ import { fillIn, find, findAll, click, focus, blur } from 'ember-native-dom-help
 import { get } from '@ember/object';
 import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import timeSeriesEditor from 'onedata-gui-common/utils/atm-workflow/store-config-editor/time-series';
+import timeSeriesEditor from 'onedata-gui-common/utils/atm-workflow/store-config-editors/time-series';
 
 const nameGeneratorTypeOptions = [{
   value: 'exact',
@@ -70,7 +70,7 @@ const unitOptions = [{
   label: 'Custom',
 }];
 
-describe('Integration | Utility | atm workflow/store config editor/time series', function () {
+describe('Integration | Utility | atm workflow/store config editors/time series', function () {
   setupComponentTest('test-component', {
     integration: true,
   });

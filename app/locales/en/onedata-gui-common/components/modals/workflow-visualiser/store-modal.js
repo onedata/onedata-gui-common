@@ -11,7 +11,8 @@ export default {
     edit: 'Modify store',
     view: {
       store: 'Store details',
-      auditLog: '{{auditLogSubjectName}} audit log',
+      auditLog: '{{subjectName}} audit log',
+      timeSeries: '{{subjectName}} time series',
     },
   },
   tabs: {

@@ -88,6 +88,7 @@ export default Action.extend({
       'name',
       'argumentMappings',
       'resultMappings',
+      'timeSeriesStoreConfig',
       'resourceSpecOverride',
     ];
 

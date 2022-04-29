@@ -11,26 +11,9 @@
     text-align: left;
   }
 
-  .argumentMappings-field,
-  .resultMappings-field,
-  .resources-field {
+  .task-form-section {
     border-top: $section-border;
     margin-bottom: 0;
-  }
-
-  .argumentMappings-field > .control-label,
-  .resultMappings-field > .control-label,
-  .resources-field > .control-label,
-  .section-header {
-    @include font-semibold();
-    text-transform: uppercase;
-    margin-bottom: 0.7em;
-    max-width: initial;
-  }
-
-  .argumentMappings-field,
-  .resultMappings-field,
-  .resources-field {
     min-width: 0;
 
     > .control-label {
@@ -39,8 +22,17 @@
     }
   }
 
+  .task-form-section > .control-label,
+  .section-header {
+    @include font-semibold();
+    text-transform: uppercase;
+    margin-bottom: 0.7em;
+    max-width: initial;
+  }
+
   .argumentMapping-field,
-  .resultMapping-field {
+  .resultMapping-field,
+  .timeSeriesEditor-field {
     min-width: 0;
   }
 
@@ -48,19 +40,8 @@
     height: 6em;
   }
 
-  .valueBuilderType-field,
-  .valueBuilderConstValue-field,
-  .valueBuilderStore-field,
-  .targetStore-field,
-  .dispatchFunction-field,
-  .timeSeriesEditor-field {
-    > .control-label {
-      font-size: $font-size-small;
-    }
-  }
-
-  .timeSeriesEditor-field {
-    min-width: 0;
+  .floating-field-label > .control-label {
+    font-size: $font-size-small;
   }
 
   @media (min-width: $screen-sm-min) {
@@ -83,6 +64,7 @@
     .argumentMapping-children,
     .resultMapping-children {
       display: flex;
+      align-items: flex-start;
     }
 
     .valueBuilderType-field,
@@ -92,18 +74,11 @@
       margin-right: $padding-base-horizontal;
     }
 
-    .valueBuilderType-field,
-    .valueBuilderConstValue-field,
-    .valueBuilderStore-field,
-    .targetStore-field,
-    .dispatchFunction-field,
-    .timeSeriesEditor-field {
-      > .control-label {
-        position: absolute;
-        bottom: calc(100% + 0.3em);
-        padding: 0;
-        width: 100%;
-      }
+    .floating-field-label > .control-label {
+      position: absolute;
+      bottom: calc(100% + 0.3em);
+      padding: 0;
+      width: 100%;
     }
 
     .resourcesSections-field {
