@@ -43,7 +43,7 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
-import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
+import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import { validator } from 'ember-cp-validations';
 
 const createStoreDropdownOptionValue = '__createStore';
@@ -210,9 +210,11 @@ export default Component.extend(I18n, {
     'definedStores.[]',
     'timeSeriesStore',
     function resultStores() {
-      const definedStores = this.get('definedStores') || [];
+      const {
+        definedStores,
+        timeSeriesStore,
+      } = this.getProperties('definedStores', 'timeSeriesStore');
 
-      const timeSeriesStore = this.get('timeSeriesStore');
       const systemStores = [
         taskAuditLogStore,
         workflowAuditLogStore,
@@ -221,7 +223,7 @@ export default Component.extend(I18n, {
 
       return [
         ...systemStores,
-        ...definedStores.toArray().compact(),
+        ...(definedStores || []).toArray().compact(),
       ];
     }
   ),
@@ -352,11 +354,13 @@ export default Component.extend(I18n, {
                   }
                 ),
               }).create({
+                classes: 'floating-field-label',
                 name: 'valueBuilderType',
               }),
               JsonField.extend({
                 isVisible: eq('parent.value.valueBuilderType', raw('const')),
               }).create({
+                classes: 'floating-field-label',
                 name: 'valueBuilderConstValue',
               }),
               DropdownField.extend({
@@ -394,6 +398,7 @@ export default Component.extend(I18n, {
                 },
               }).create({
                 component,
+                classes: 'floating-field-label',
                 name: 'valueBuilderStore',
               }),
             ],
@@ -405,6 +410,7 @@ export default Component.extend(I18n, {
             cloneAsEmberObject(defaultValue) : this._super(...arguments);
         },
       }).create({
+        classes: 'task-form-section',
         name: 'argumentMappings',
         addColonToLabel: false,
         isCollectionManipulationAllowed: false,
@@ -482,6 +488,7 @@ export default Component.extend(I18n, {
                 },
               }).create({
                 component,
+                classes: 'floating-field-label',
                 name: 'targetStore',
                 customValidators: [
                   validator(function (value, options, model) {
@@ -530,6 +537,7 @@ export default Component.extend(I18n, {
                 },
               }).create({
                 component,
+                classes: 'floating-field-label',
                 name: 'dispatchFunction',
               }),
               storeContentUpdateOptionsEditors.timeSeries.FormElement.extend({
@@ -540,6 +548,10 @@ export default Component.extend(I18n, {
                   return selectedTargetStore &&
                     get(selectedTargetStore, 'type') === 'timeSeries';
                 }),
+                init() {
+                  this._super(...arguments);
+                  this.set('classes', `${this.get('classes')} floating-field-label`);
+                },
               }).create({
                 name: 'timeSeriesEditor',
               }),
@@ -552,6 +564,7 @@ export default Component.extend(I18n, {
             cloneAsEmberObject(defaultValue) : this._super(...arguments);
         },
       }).create({
+        classes: 'task-form-section',
         name: 'resultMappings',
         addColonToLabel: false,
         isCollectionManipulationAllowed: false,
@@ -564,6 +577,7 @@ export default Component.extend(I18n, {
    */
   timeSeriesStoreSectionFields: computed(function timeSeriesStoreSectionFields() {
     return FormFieldsGroup.create({
+      classes: 'task-form-section',
       name: 'timeSeriesStoreSection',
       addColonToLabel: false,
       fields: [
@@ -584,6 +598,7 @@ export default Component.extend(I18n, {
    */
   resourcesFieldsGroup: computed(function resourcesFieldsGroup() {
     return FormFieldsGroup.create({
+      classes: 'task-form-section',
       name: 'resources',
       addColonToLabel: false,
       fields: [

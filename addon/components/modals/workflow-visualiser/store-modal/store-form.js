@@ -41,7 +41,7 @@ import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignor
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { validator } from 'ember-cp-validations';
-import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
+import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import {
   FormElement as DataSpecEditor,
   formValuesToDataSpec,
