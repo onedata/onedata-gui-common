@@ -236,10 +236,11 @@ describe('Integration | Utility | atm workflow/store content update options edit
         'Converge'
       );
 
-      const storeContentUpdateOptions = timeSeriesEditor.formValuesToStoreContentUpdateOptions(
-        this.get('rootGroup.valuesSource.updateOptionsEditor'),
-        this.getProperties('storeConfig')
-      );
+      const storeContentUpdateOptions =
+        timeSeriesEditor.formValuesToStoreContentUpdateOptions(
+          this.get('rootGroup.valuesSource.updateOptionsEditor'),
+          this.getProperties('storeConfig')
+        );
       expect(storeContentUpdateOptions).to.deep.equal({
         dispatchRules: [{
           measurementTimeSeriesNameMatcherType: 'exact',

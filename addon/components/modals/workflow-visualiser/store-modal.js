@@ -1,9 +1,10 @@
 /**
  * A modal that allows create, view and modify workflow stores. `modalOptions` fields:
  * - `mode` - one of `'create'`, `'edit'`, `'view'`,
- * - `viewModeLayout` - one of `'store'`, `'auditLog'`. Needed when mode is `'view'`,
- * - `auditLogSubjectName` - name of a subject described by auditlog entries. Needed when
- *   `viewModeLayout` is `'auditLog'`,
+ * - `viewModeLayout` - one of `'store'`, `'auditLog'`, `'timeSeries'`.
+ *   Needed when mode is `'view'`,
+ * - `subjectName` - name of a subject described by data in store. Needed when
+ *   `viewModeLayout` is `'auditLog'` or `'timeSeries'`,
  * - `store` - will be used to fill form data. Needed when mode is `'edit'` or `'view'`,
  * - `allowedStoreTypes` - is taken into account when `mode` is `'create'`,
  * - `allowedDataTypes` - is taken into account when `mode` is `'create'`,
@@ -88,7 +89,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String|undefined>}
    */
-  auditLogSubjectName: reads('modalOptions.auditLogSubjectName'),
+  subjectName: reads('modalOptions.subjectName'),
 
   /**
    * @type {ComputedProperty<Object>}
@@ -125,20 +126,20 @@ export default Component.extend(I18n, {
   headerText: computed(
     'mode',
     'viewModeLayout',
-    'auditLogSubjectName',
+    'subjectName',
     function headerText() {
       const {
         mode,
         viewModeLayout,
-        auditLogSubjectName,
-      } = this.getProperties('mode', 'viewModeLayout', 'auditLogSubjectName');
+        subjectName,
+      } = this.getProperties('mode', 'viewModeLayout', 'subjectName');
 
       let translationKey = `header.${mode}`;
       if (mode === 'view') {
         translationKey += `.${viewModeLayout}`;
       }
 
-      return this.t(translationKey, { auditLogSubjectName });
+      return this.t(translationKey, { subjectName });
     }
   ),
 

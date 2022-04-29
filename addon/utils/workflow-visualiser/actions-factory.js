@@ -40,6 +40,7 @@ import ModifyStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import ViewWorkflowAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-workflow-audit-log-action';
 import ViewTaskAuditLogAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-audit-log-action';
+import ViewTaskTimeSeriesAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-task-time-series-action';
 import ViewLaneFailedItemsAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-failed-items-action';
 import RetryLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/retry-lane-action';
 import RerunLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/rerun-lane-action';
@@ -387,6 +388,20 @@ export default EmberObject.extend(OwnerInjector, {
       ownerSource: this,
       context: Object.assign({
         getAuditLogContentCallback: (...args) =>
+          this.get('workflowDataProvider').getStoreContent(...args),
+      }, context),
+    });
+  },
+
+  /**
+   * @param {Utils.WorkflowVisualiser.Lane.Task} context.task
+   * @returns {Utils.WorkflowVisualiser.Actions.ViewTaskTimeSeriesAction}
+   */
+  createViewTaskTimeSeriesAction(context) {
+    return ViewTaskTimeSeriesAction.create({
+      ownerSource: this,
+      context: Object.assign({
+        getTimeSeriesContentCallback: (...args) =>
           this.get('workflowDataProvider').getStoreContent(...args),
       }, context),
     });
