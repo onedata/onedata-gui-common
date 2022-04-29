@@ -1,0 +1,84 @@
+.api-samples {
+  .table.table-info td.property-name {
+    width: 10em;
+    @media (max-width: $screen-xs-max) {
+      width: auto;
+    }
+  }
+
+  .api-operation-row {
+    display: flex;
+    align-items: center;
+
+    .api-command-type {
+      display: none;
+    }
+
+    .api-command-type-selector-trigger {
+      flex-basis: 25em;
+      @media (max-width: $screen-xs-max) {
+        flex-basis: auto;
+        flex-grow: 1;
+      }
+    }
+
+    .labels-container {
+      flex-grow: 1;
+      display: flex;
+      justify-content: flex-end;
+
+      .label {
+        line-height: initial;
+        font-weight: normal;
+        @include font-semibold;
+      }
+    }
+
+    .bracket-fix {
+      top: -0.05em;
+      position: relative;
+    }
+  }
+
+  .api-type-row {
+    display: flex;
+    align-items: center;
+
+    .api-command-type-info-trigger-container {
+      &.inline-icon-container .oneicon {
+        // makes tooltip to be nearer the icon center
+        line-height: 0.5;
+        transform: translateY(-50%) translateY(2px);
+      }
+    }
+  }
+
+  .item-info-row-api-command {
+    .clipboard-line {
+      word-break: break-all;
+    }
+  }
+}
+
+.api-command-type-selector-dropdown {
+  .api-command-type {
+    opacity: $disabled-opacity;
+    float: right;
+  }
+  .xrootd-api-tag-label {
+    background-color: #a95bde;
+  }
+  .ember-power-select-option {
+    .api-command-type {
+      position: relative;
+    }
+    .api-tag-label {
+      position: relative;
+      top: -0.2em;
+    }
+  }
+  // override to show all options
+  .ember-power-select-options[role=listbox] {
+    max-height: 280px;
+  }
+}
