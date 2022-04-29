@@ -3,7 +3,6 @@
  * series store config. It also provides two methods
  * for conversion between form values and store config in both directions.
  *
- * @module utils/atm-workflow/store-config-editor/time-series
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -34,7 +33,7 @@ import { Tag as MetricTag } from 'onedata-gui-common/components/tags-input/time-
 
 const FormElement = FormFieldsGroup.extend({
   classes: 'time-series-store-config-editor',
-  i18nPrefix: 'utils.atmWorkflow.storeConfigEditor.timeSeries.fields',
+  i18nPrefix: 'utils.atmWorkflow.storeConfigEditors.timeSeries.fields',
   // Does not take parent fields group translation path into account
   translationPath: '',
   fields: computed(() => [

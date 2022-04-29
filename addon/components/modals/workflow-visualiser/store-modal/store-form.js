@@ -46,7 +46,7 @@ import {
   dataSpecToType,
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import { validator } from 'ember-cp-validations';
-import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editor';
+import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = [{
