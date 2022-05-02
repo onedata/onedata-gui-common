@@ -1,6 +1,6 @@
 /**
  * A text form field.
- * 
+ *
  * @module utils/form-component/text-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -33,8 +33,8 @@ export default FormField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  placeholder: computed('i18nPrefix', 'path', function placeholder() {
-    return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
+  placeholder: computed('i18nPrefix', 'translationPath', function placeholder() {
+    return this.getTranslation('placeholder', {}, { defaultValue: '' });
   }),
 
   /**

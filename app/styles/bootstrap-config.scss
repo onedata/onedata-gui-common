@@ -5,6 +5,8 @@
 // Custom variables
 $modal-xl: 1200px;
 $bs-modal-width-full-with-margins: calc(100% - #{$padding-small-horizontal});
+$control-padding-small-vertical: $padding-small-vertical;
+$control-padding-small-horizontal: $padding-small-horizontal * 0.75;
 
 @import "bootstrap/mixins";
 @import "bootstrap-mixins-config";
@@ -67,7 +69,7 @@ $bs-modal-width-full-with-margins: calc(100% - #{$padding-small-horizontal});
   }
   .form-group-sm {
     .form-control {
-      padding-left: $padding-small-horizontal;
+      padding-left: $control-padding-small-horizontal;
     }
     .form-control-feedback {
       width: $input-height-small;
@@ -92,6 +94,10 @@ $bs-modal-width-full-with-margins: calc(100% - #{$padding-small-horizontal});
       }
     }
   }
+}
+.form-group-sm textarea.form-control {
+  padding-top: $control-padding-small-vertical;
+  padding-bottom: $control-padding-small-vertical;
 }
 .has-success input[disabled],
 .has-error input[disabled] {

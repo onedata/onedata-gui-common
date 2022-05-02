@@ -89,7 +89,7 @@ export default Component.extend({
   _isItemCollapsed: computed('_isListCollapsed', '_matchesSearchQuery',
     '_isSelected',
     function () {
-      let {
+      const {
         _isListCollapsed,
         _matchesSearchQuery,
         _isSelected,
@@ -103,7 +103,7 @@ export default Component.extend({
   ),
 
   _isItemFixed: computed('_matchesSearchQuery', '_isSelected', function () {
-    let {
+    const {
       _matchesSearchQuery,
       _isSelected,
     } = this.getProperties('_matchesSearchQuery', '_isSelected');
@@ -111,7 +111,7 @@ export default Component.extend({
   }),
 
   isActive: computed('activeElementId', 'accordionMode', function () {
-    let {
+    const {
       activeElementId,
       elementId,
     } = this.getProperties([
@@ -123,7 +123,7 @@ export default Component.extend({
   }),
 
   _isSelected: computed('_selectedItemValues.[]', 'selectionValue', function () {
-    let {
+    const {
       _selectedItemValues,
       selectionValue,
     } = this.getProperties('_selectedItemValues', 'selectionValue');
@@ -139,7 +139,7 @@ export default Component.extend({
   _matchesSearchQueryAndIsSelectedObserver: observer('_matchesSearchQuery',
     '_isSelected',
     function () {
-      let {
+      const {
         _matchesSearchQuery,
         _isSelected,
         selectionValue,
@@ -178,7 +178,7 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    let {
+    const {
       closeEventName,
       eventsBus,
       selectionValue,
@@ -218,14 +218,14 @@ export default Component.extend({
   },
 
   _checkSearchQuery() {
-    let {
+    const {
       _searchQuery,
       _matchesSearchQuery,
     } = this.getProperties('_searchQuery', '_matchesSearchQuery');
-    let headerTextElement = this.$('.one-collapsible-list-item-header');
-    let oneLabel = headerTextElement.find('.one-label');
-    let targetElement = oneLabel.length ? oneLabel : headerTextElement;
-    let matches = targetElement.text().toLowerCase()
+    const headerTextElement = this.$('.one-collapsible-list-item-header');
+    const oneLabel = headerTextElement.find('.one-label');
+    const targetElement = oneLabel.length ? oneLabel : headerTextElement;
+    const matches = targetElement.text().toLowerCase()
       .search(_searchQuery.trim().toLowerCase()) > -1;
     if (matches !== _matchesSearchQuery && !matches) {
       this.send('toggle', false);

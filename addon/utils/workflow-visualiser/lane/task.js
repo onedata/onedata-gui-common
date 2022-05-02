@@ -55,6 +55,12 @@ export default VisualiserRecord.extend({
 
   /**
    * @virtual
+   * @type {AtmTimeSeriesStoreConfig|null}
+   */
+  timeSeriesStoreConfig: undefined,
+
+  /**
+   * @virtual
    * @type {Object}
    */
   resourceSpecOverride: undefined,
@@ -80,6 +86,11 @@ export default VisualiserRecord.extend({
    * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
    */
   systemAuditLogStore: reads('visibleRun.systemAuditLogStore'),
+
+  /**
+   * @type {ComputedProperty<Utils.WorkflowVisualiser.Store>}
+   */
+  timeSeriesStore: reads('visibleRun.timeSeriesStore'),
 
   /**
    * @type {ComputedProperty<Number>}

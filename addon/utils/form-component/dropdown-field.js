@@ -1,6 +1,6 @@
 /**
  * A dropdown form field.
- * 
+ *
  * @module utils/form-component/dropdown-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -26,8 +26,8 @@ export default OptionsField.extend({
    * @virtual optional
    * @type {ComputedProperty<HtmlSafe>}
    */
-  placeholder: computed('i18nPrefix', 'path', function placeholder() {
+  placeholder: computed('i18nPrefix', 'translationPath', function placeholder() {
     // Null value, because powerselect converts `undefined` to string 'undefined'
-    return this.t(`${this.get('path')}.placeholder`, {}, { defaultValue: '' });
+    return this.getTranslation('placeholder', {}, { defaultValue: null });
   }),
 });

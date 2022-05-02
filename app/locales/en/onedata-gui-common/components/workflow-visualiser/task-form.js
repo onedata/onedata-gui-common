@@ -70,6 +70,12 @@ export default {
             __workflowAuditLog: {
               label: 'Workflow system audit log',
             },
+            __taskTimeSeries: {
+              label: 'Current task time series store',
+            },
+          },
+          errors: {
+            notEnabledTsStoreSelected: 'This store is not enabled. See configuration below',
           },
         },
         dispatchFunction: {
@@ -90,6 +96,12 @@ export default {
             },
           },
         },
+      },
+    },
+    timeSeriesStoreSection: {
+      label: 'Time series store',
+      createTimeSeriesStore: {
+        label: 'Create time series store',
       },
     },
     resources: {

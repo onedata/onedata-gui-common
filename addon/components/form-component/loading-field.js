@@ -1,6 +1,6 @@
 /**
  * A loading form field.
- * 
+ *
  * @module components/form-component/loading-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -10,10 +10,16 @@
 import FieldComponentBase from 'onedata-gui-common/components/form-component/field-component-base';
 import layout from '../../templates/components/form-component/loading-field';
 import { reads } from '@ember/object/computed';
+import { conditional, raw, equal } from 'ember-awesome-macros';
 
 export default FieldComponentBase.extend({
   layout,
   classNames: ['loading-field'],
+
+  /**
+   * @type {ComputedProperty<String>}
+   */
+  spinnerSize: conditional(equal('field.size', raw('sm')), raw('xxs'), raw('xs')),
 
   /**
    * @type {ComputedProperty<boolean>}

@@ -82,7 +82,7 @@ const converters = {
  * @returns {string|object}
  */
 export default function bytesToString(bytes, options = {}) {
-  let iecFormat = options.iecFormat;
+  const iecFormat = options.iecFormat;
   let separated = options.separated;
   let format = options.format;
 

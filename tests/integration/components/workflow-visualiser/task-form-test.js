@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
@@ -57,15 +60,6 @@ const dataSpecs = [{
   // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
   // canContain: ['Any file', 'Regular file', 'Directory', 'Symbolic link', 'Dataset', 'Archive'],
 }, {
-  // TODO: VFS-7816 uncomment or remove future code
-  //   label: 'Histogram',
-  //   name: 'histogram',
-  //   dataSpec: {
-  //     type: 'histogram',
-  //     valueConstraints: {},
-  //   },
-  //   valueBuilderTypes: ['iteratedItem', 'const'],
-  // }, {
   label: 'Any file',
   name: 'anyFile',
   dataSpec: {
@@ -214,6 +208,14 @@ const dataSpecs = [{
     valueConstraints: {},
   },
   valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
+}, {
+  label: 'Time series measurement',
+  name: 'timeSeriesMeasurement',
+  dataSpec: {
+    type: 'timeSeriesMeasurement',
+    valueConstraints: {},
+  },
+  valueBuilderTypes: ['const'],
 }];
 
 const valueBuilderTypeLabels = {
@@ -238,15 +240,16 @@ const allSimpleDataSpecNames = [
   // TODO: VFS-7816 uncomment or remove future code
   // 'archive',
   'range',
+  'timeSeriesMeasurement',
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
-  allowedDataSpecNames: allSimpleDataSpecNames,
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: false,
 }, {
   type: 'list',
-  allowedDataSpecNames: allSimpleDataSpecNames,
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
@@ -276,38 +279,40 @@ const allPossibleStoreSpecs = [{
   allowedDataSpecNames: ['range'],
   acceptsBatch: false,
   dispatchFunctions: [],
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   type: 'histogram',
-  //   allowedDataSpecNames: ['histogram'],
-  //   acceptsBatch: true,
-  //   dispatchFunctions: ['add'],
 }, {
   type: 'auditLog',
-  allowedDataSpecNames: allSimpleDataSpecNames,
+  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
   dataSpecConfigKey: 'logContentDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
+}, {
+  type: 'timeSeries',
+  allowedDataSpecNames: ['timeSeriesMeasurement'],
+  acceptsBatch: true,
+  dispatchFunctions: [],
 }];
 const allPossibleStores = [];
-allPossibleStoreSpecs.rejectBy('type', 'range').forEach(({
-    type,
-    allowedDataSpecNames,
-    dataSpecConfigKey,
-  }) =>
-  allPossibleStores.push(...allowedDataSpecNames.map(dataSpecName => {
-    const storeLabel = `${type}${classify(dataSpecName)}`;
-    return {
-      id: `${storeLabel}Id`,
-      name: `${storeLabel}Store`,
+allPossibleStoreSpecs
+  .rejectBy('type', 'range')
+  .rejectBy('type', 'timeSeries')
+  .forEach(({
       type,
-      config: {
-        [dataSpecConfigKey]: dataSpecs.findBy('name', dataSpecName).dataSpec,
-      },
-      requiresInitialContent: false,
-    };
-  }))
-);
+      allowedDataSpecNames,
+      dataSpecConfigKey,
+    }) =>
+    allPossibleStores.push(...allowedDataSpecNames.map(dataSpecName => {
+      const storeLabel = `${type}${classify(dataSpecName)}`;
+      return {
+        id: `${storeLabel}Id`,
+        name: `${storeLabel}Store`,
+        type,
+        config: {
+          [dataSpecConfigKey]: dataSpecs.findBy('name', dataSpecName).dataSpec,
+        },
+        requiresInitialContent: false,
+      };
+    }))
+  );
 allPossibleStores.push({
   id: 'rangeRangeId',
   name: 'rangeRangeStore',
@@ -316,6 +321,15 @@ allPossibleStores.push({
     start: 1,
     end: 10,
     step: 2,
+  },
+  requiresInitialContent: false,
+});
+allPossibleStores.push({
+  id: 'timeSeriesTimeSeriesMeasurementId',
+  name: 'timeSeriesTimeSeriesMeasurementStore',
+  type: 'timeSeries',
+  config: {
+    schemas: [],
   },
   requiresInitialContent: false,
 });
@@ -340,6 +354,16 @@ const workflowAuditLogStore = {
       type: 'object',
       valueConstraints: {},
     },
+  },
+  requiresInitialContent: false,
+};
+const taskTimeSeriesStore = {
+  id: 'CURRENT_TASK_TIME_SERIES',
+  name: 'Current task time series store',
+  type: 'time series',
+  config: {
+    schemas: [],
+    chartSpecs: [],
   },
   requiresInitialContent: false,
 };
@@ -454,6 +478,7 @@ const exampleTask = {
       function: 'append',
     },
   }],
+  timeSeriesStoreConfig: null,
 };
 
 describe('Integration | Component | workflow visualiser/task form', function () {
@@ -551,6 +576,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           name: exampleAtmLambdaRevision.name,
           argumentMappings: [],
           resultMappings: [],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -563,6 +589,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           name: 'someName',
           argumentMappings: [],
           resultMappings: [],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -655,6 +682,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               name: 'function1',
               argumentMappings: [],
               resultMappings: [],
+              timeSeriesStoreConfig: null,
             },
             isValid: true,
           });
@@ -685,6 +713,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -742,6 +771,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -818,6 +848,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -901,6 +932,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -947,63 +979,49 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         allPossibleStoreSpecs.findBy('type', type).acceptsBatch
       );
       const allowSystemAuditLogStores = compatibleDataSpecNames.includes('object');
+      const allowTaskTimeSeriesStore =
+        compatibleDataSpecNames.includes('timeSeriesMeasurement');
 
-      it(`provides available stores for result of type "${dataSpecName}"`,
-        async function () {
-          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-            name: 'res1',
-            dataSpec,
-          }]);
+      [false, true].forEach((isBatch) => {
+        const sortedPossibleStoresToCheck = isBatch ?
+          sortedPossibleStoresWithBatch : sortedPossibleStores;
+        it(`provides available stores for result of type "${dataSpecName}"`,
+          async function () {
+            setProperties(this.get('atmLambda.revisionRegistry.1'), {
+              preferredBatchSize: isBatch ? 100 : 1,
+              resultSpecs: [{
+                name: 'res1',
+                dataSpec,
+              }],
+            });
 
-          await render(this);
-          await clickTrigger('.resultMapping-field .targetStore-field');
+            await render(this);
+            await clickTrigger('.resultMapping-field .targetStore-field');
 
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
-            .to.equal('Leave unassigned');
-          const $options = $('.ember-power-select-option');
-          const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
-          expect($options)
-            .to.have.length(sortedPossibleStores.length + extraOptionsCount);
-          expect($options.eq(0).text().trim()).to.equal('Create store...');
-          expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
-          if (allowSystemAuditLogStores) {
-            expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
-            expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
-          }
-          sortedPossibleStores.forEach((store, idx) =>
-            expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
-          );
-        });
-
-      it(`provides available stores for result of batched type "${dataSpecName}"`,
-        async function () {
-          setProperties(this.get('atmLambda.revisionRegistry.1'), {
-            preferredBatchSize: 100,
-            resultSpecs: [{
-              name: 'res1',
-              dataSpec,
-            }],
+            expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
+              .to.equal('Leave unassigned');
+            const $options = $('.ember-power-select-option');
+            let extraOptionsCount = 2;
+            if (allowSystemAuditLogStores) {
+              extraOptionsCount += 2;
+            } else if (allowTaskTimeSeriesStore) {
+              extraOptionsCount += 1;
+            }
+            expect($options)
+              .to.have.length(sortedPossibleStoresToCheck.length + extraOptionsCount);
+            expect($options.eq(0).text().trim()).to.equal('Create store...');
+            expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
+            if (allowSystemAuditLogStores) {
+              expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
+              expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
+            } else if (allowTaskTimeSeriesStore) {
+              expect($options.eq(2).text().trim()).to.equal(taskTimeSeriesStore.name);
+            }
+            sortedPossibleStoresToCheck.forEach((store, idx) =>
+              expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
+            );
           });
-
-          await render(this);
-          await clickTrigger('.resultMapping-field .targetStore-field');
-
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
-            .to.equal('Leave unassigned');
-          const $options = $('.ember-power-select-option');
-          const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
-          expect($options)
-            .to.have.length(sortedPossibleStoresWithBatch.length + extraOptionsCount);
-          expect($options.eq(0).text().trim()).to.equal('Create store...');
-          expect($options.eq(1).text().trim()).to.equal('Leave unassigned');
-          if (allowSystemAuditLogStores) {
-            expect($options.eq(2).text().trim()).to.equal(taskAuditLogStore.name);
-            expect($options.eq(3).text().trim()).to.equal(workflowAuditLogStore.name);
-          }
-          sortedPossibleStoresWithBatch.forEach((store, idx) =>
-            expect($options.eq(idx + extraOptionsCount).text().trim()).to.equal(store.name)
-          );
-        });
+      });
 
       it(`allows to create new store for result of type "${dataSpecName}"`,
         async function () {
@@ -1087,6 +1105,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             name: 'function1',
             argumentMappings: [],
             resultMappings: [],
+            timeSeriesStoreConfig: null,
           },
           isValid: true,
         });
@@ -1116,6 +1135,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               function: 'append',
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1145,6 +1165,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               function: 'append',
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1571,6 +1592,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
               function: dispatchFunction,
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1598,10 +1620,11 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
           resultMappings: [{
             resultName: 'res1',
             storeSchemaId: targetStore.id,
-            storeContentUpdateOptions: {
+            storeContentUpdateOptions: sinon.match({
               type: `${targetStore.type}StoreContentUpdateOptions`,
-            },
+            }),
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });

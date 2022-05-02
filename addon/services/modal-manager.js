@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Contains API for showing and hiding modals. Allows to show only one modal at
  * a time. Uses modal components defined inside components/modals. Each modal

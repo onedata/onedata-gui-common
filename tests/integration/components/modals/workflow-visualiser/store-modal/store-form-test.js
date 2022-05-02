@@ -4,7 +4,7 @@ import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
-import { click, fillIn, focus, blur } from 'ember-native-dom-helpers';
+import { click, fillIn, focus, blur, find, findAll } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
 import $ from 'jquery';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -15,10 +15,6 @@ const storeTypes = [{
   label: 'List',
   type: 'list',
   dataSpecConfigKey: 'itemDataSpec',
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   label: 'Map',
-  //   type: 'map',
 }, {
   label: 'Tree forest',
   type: 'treeForest',
@@ -37,16 +33,13 @@ const storeTypes = [{
 }, {
   label: 'Range',
   type: 'range',
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   label: 'Histogram',
-  //   type: 'histogram',
-  //   disabledDataTypeSelection: true,
-  //   availableDataTypeLabels: ['Histogram'],
 }, {
   label: 'Audit log',
   type: 'auditLog',
   dataSpecConfigKey: 'logContentDataSpec',
+}, {
+  label: 'Time series',
+  type: 'timeSeries',
 }];
 
 const dataTypes = [{
@@ -67,13 +60,6 @@ const dataTypes = [{
     type: 'object',
     valueConstraints: {},
   },
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   label: 'Histogram',
-  //   dataSpec: {
-  //     type: 'histogram',
-  //     valueConstraints: {},
-  //   },
 }, {
   label: 'Any file',
   dataSpec: {
@@ -112,13 +98,6 @@ const dataTypes = [{
     type: 'dataset',
     valueConstraints: {},
   },
-  // TODO: VFS-7816 uncomment or remove future code
-  // }, {
-  //   label: 'Archive',
-  //   dataSpec: {
-  //     type: 'archive',
-  //     valueConstraints: {},
-  //   },
 }, {
   label: 'Range',
   dataSpec: {
@@ -127,7 +106,8 @@ const dataTypes = [{
   },
 }];
 
-const storeTypesWithGenericConfig = storeTypes.rejectBy('type', 'range');
+const storeTypesWithGenericConfig = storeTypes
+  .filter(({ type }) => type !== 'range' && type !== 'timeSeries');
 
 describe('Integration | Component | modals/workflow visualiser/store modal/store form', function () {
   setupComponentTest('modals/workflow-visualiser/store-modal/store-form', {
@@ -284,8 +264,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await selectChoose('.type-field', label);
 
-        expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
-        expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expectExpandedConfig('generic');
 
         const $dataTypeField = this.$('.dataType-field');
         expect($dataTypeField.find('.control-label').text().trim()).to.equal('Data type:');
@@ -348,8 +327,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await selectChoose('.type-field', 'Range');
 
-      expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
-      expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
+      expectExpandedConfig('range');
 
       const $rangeStartField = this.$('.rangeStart-field');
       const $rangeEndField = this.$('.rangeEnd-field');
@@ -482,6 +460,60 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(this.$('.rangeStep-field')).to.have.class('has-error');
       });
 
+    it('shows time series configuration fields for store "Time series"', async function (done) {
+      await render(this);
+
+      await selectChoose('.type-field', 'Time series');
+
+      expectExpandedConfig('timeSeries');
+
+      expect(find('.timeSeriesSchema-field')).to.not.exist;
+      done();
+    });
+
+    it('allows to configure new "Time series" store', async function (done) {
+      const changeSpy = this.get('changeSpy');
+
+      await render(this);
+
+      await fillIn('.name-field .form-control', 'someName');
+      await fillIn('.description-field .form-control', 'someDescription');
+      await selectChoose('.type-field', 'Time series');
+      await click('.add-field-button');
+      await selectChoose('.nameGeneratorType-field', 'Exact');
+      await fillIn('.nameGenerator-field .form-control', 'some_name');
+      await selectChoose('.unit-field', 'Bytes');
+      await click('.metrics-field .tag-creator-trigger');
+      await click('.tags-selector .selector-item');
+
+      expect(find('.has-error')).to.not.exist;
+      expect(changeSpy).to.be.calledWith({
+        data: {
+          name: 'someName',
+          description: 'someDescription',
+          type: 'timeSeries',
+          config: {
+            schemas: [{
+              nameGeneratorType: 'exact',
+              nameGenerator: 'some_name',
+              unit: 'bytes',
+              metrics: {
+                sum5s: {
+                  aggregator: 'sum',
+                  resolution: 5,
+                  retention: 1440,
+                },
+              },
+            }],
+            chartSpecs: [],
+          },
+          requiresInitialContent: false,
+        },
+        isValid: true,
+      });
+      done();
+    });
+
     dataTypes.forEach(({ label, dataSpec }) => {
       it(`allows to configure store with "${label}" data type`, async function () {
         const changeSpy = this.get('changeSpy');
@@ -555,8 +587,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         await render(this);
 
-        expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
-        expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expectExpandedConfig('generic');
         expect(this.$('.id-field .form-control')).to.have.value('store1id');
         expect(this.$('.instanceId-field')).to.not.exist;
         expect(this.$('.name-field .form-control')).to.have.value('store1');
@@ -591,8 +622,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
       await render(this);
 
-      expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
-      expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
+      expectExpandedConfig('range');
       expect(this.$('.id-field .form-control')).to.have.value('store1id');
       expect(this.$('.instanceId-field')).to.not.exist;
       expect(this.$('.name-field .form-control')).to.have.value('store1');
@@ -602,6 +632,50 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(this.$('.rangeStart-field .form-control')).to.have.value('2');
       expect(this.$('.rangeEnd-field .form-control')).to.have.value('6');
       expect(this.$('.rangeStep-field .form-control')).to.have.value('3');
+    });
+
+    it('fills fields with data of passed "Time series" store on init', async function (done) {
+      this.set('store', Store.create({
+        schemaId: 'store1id',
+        instanceId: 'incorrect value that should not exist',
+        name: 'store1',
+        description: 'desc',
+        type: 'timeSeries',
+        config: {
+          schemas: [{
+            nameGeneratorType: 'exact',
+            nameGenerator: 'some_name',
+            unit: 'bytes',
+            metrics: {
+              sum5s: {
+                aggregator: 'sum',
+                resolution: 5,
+                retention: 1440,
+              },
+            },
+          }],
+          chartSpecs: undefined,
+        },
+      }));
+
+      await render(this);
+
+      expectExpandedConfig('timeSeries');
+      expect(find('.id-field .form-control').value).to.equal('store1id');
+      expect(find('.instanceId-field')).to.not.exist;
+      expect(find('.name-field .form-control').value).to.equal('store1');
+      expect(find('.description-field .form-control').value).to.equal('desc');
+      expect(find('.type-field .dropdown-field-trigger').textContent)
+        .to.contain('Time series');
+      expect(findAll('.timeSeriesSchema-field')).to.have.length(1);
+      expect(find('.nameGeneratorType-field .dropdown-field-trigger').textContent)
+        .to.contain('Exact');
+      expect(find('.nameGenerator-field .form-control').value).to.equal('some_name');
+      expect(find('.unit-field .dropdown-field-trigger').textContent)
+        .to.contain('Bytes');
+      expect(findAll('.metrics-field .tag-item')).to.have.length(1);
+      expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
+      done();
     });
 
     dataTypes.forEach(({ label, dataSpec }) => {
@@ -675,8 +749,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await render(this);
 
         expect(this.$('.field-edit-mode')).to.not.exist;
-        expect(this.$('.genericStoreConfig-collapse')).to.have.class('in');
-        expect(this.$('.rangeStoreConfig-collapse')).to.not.have.class('in');
+        expectExpandedConfig('generic');
         expect(this.$('.id-field .form-control')).to.have.value('store1id');
         expect(this.$('.instanceId-field .form-control'))
           .to.have.value('store1instanceId');
@@ -718,8 +791,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await render(this);
 
       expect(this.$('.field-edit-mode')).to.not.exist;
-      expect(this.$('.genericStoreConfig-collapse')).to.not.have.class('in');
-      expect(this.$('.rangeStoreConfig-collapse')).to.have.class('in');
+      expectExpandedConfig('range');
       expect(this.$('.id-field .form-control')).to.have.value('store1id');
       expect(this.$('.instanceId-field .form-control'))
         .to.have.value('store1instanceId');
@@ -732,6 +804,51 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(this.$('.rangeStart-field .field-component').text().trim()).to.equal('2');
       expect(this.$('.rangeEnd-field .field-component').text().trim()).to.equal('6');
       expect(this.$('.rangeStep-field .field-component').text().trim()).to.equal('3');
+    });
+
+    it('fills fields with data of passed "Time series" store on init', async function (done) {
+      this.set('store', Store.create({
+        schemaId: 'store1id',
+        instanceId: 'store1instanceId',
+        name: 'store1',
+        description: 'desc',
+        type: 'timeSeries',
+        config: {
+          schemas: [{
+            nameGeneratorType: 'exact',
+            nameGenerator: 'some_name',
+            unit: 'bytes',
+            metrics: {
+              sum5s: {
+                aggregator: 'sum',
+                resolution: 5,
+                retention: 1440,
+              },
+            },
+          }],
+          chartSpecs: [],
+        },
+      }));
+
+      await render(this);
+
+      expect(find('.field-edit-mode')).to.not.exist;
+      expectExpandedConfig('timeSeries');
+      expect(find('.id-field .form-control').value).to.equal('store1id');
+      expect(find('.instanceId-field .form-control').value).to.equal('store1instanceId');
+      expect(find('.name-field .field-component').textContent).to.contain('store1');
+      expect(find('.description-field .field-component').textContent).to.contain('desc');
+      expect(find('.type-field .field-component').textContent)
+        .to.contain('Time series');
+      expect(findAll('.timeSeriesSchema-field')).to.have.length(1);
+      expect(find('.nameGeneratorType-field .field-component').textContent)
+        .to.contain('Exact');
+      expect(find('.nameGenerator-field .field-component').textContent).to.contain('some_name');
+      expect(find('.unit-field .field-component').textContent)
+        .to.contain('Bytes');
+      expect(findAll('.metrics-field .tag-item')).to.have.length(1);
+      expect(find('.metrics-field .tag-item').textContent).to.contain('"sum5s" (sum; 5s; 1440 samp.)');
+      done();
     });
 
     dataTypes.forEach(({ label, dataSpec }) => {
@@ -811,4 +928,15 @@ function itAllowsToDisableAllFields() {
       .and.to.not.have.class('form-enabled');
     expect(this.$('.field-enabled')).to.not.exist;
   });
+}
+
+function expectExpandedConfig(configName) {
+  ['generic', 'range', 'timeSeries'].filter((name) => name !== configName)
+    .forEach((name) => {
+      const collapse = find(`.${name}StoreConfig-collapse`);
+      if (collapse) {
+        expect([...collapse.classList]).to.not.include('in');
+      }
+    });
+  expect([...find(`.${configName}StoreConfig-collapse`).classList]).to.include('in');
 }

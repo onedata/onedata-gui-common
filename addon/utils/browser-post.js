@@ -1,7 +1,7 @@
 /**
  * Make a form-like request from JS
- * 
- * Copied from: https://stackoverflow.com/a/133997 
+ *
+ * Copied from: https://stackoverflow.com/a/133997
  *
  * @module utils/browser-post
  * @author Jakub Liput
@@ -9,18 +9,16 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-export default function browserPost(path, params, method) {
-  method = method || 'post'; // Set method to post by default if not specified.
-
+export default function browserPost(path, params, method = 'post') {
   // The rest of this code assumes you are not using a library.
   // It can be made less wordy if you use one.
-  var form = document.createElement('form');
+  const form = document.createElement('form');
   form.setAttribute('method', method);
   form.setAttribute('action', path);
 
-  for (var key in params) {
+  for (const key in params) {
     if (params.hasOwnProperty(key)) {
-      var hiddenField = document.createElement('input');
+      const hiddenField = document.createElement('input');
       hiddenField.setAttribute('type', 'hidden');
       hiddenField.setAttribute('name', key);
       hiddenField.setAttribute('value', params[key]);

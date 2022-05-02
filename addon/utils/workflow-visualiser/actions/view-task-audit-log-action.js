@@ -63,7 +63,7 @@ export default Action.extend({
       .show('workflow-visualiser/store-modal', {
         mode: 'view',
         viewModeLayout: 'auditLog',
-        auditLogSubjectName: `"${get(task, 'name')}"`,
+        subjectName: this.t('subjectName', { taskName: get(task, 'name') }),
         store: systemAuditLogStore,
         getStoreContentCallback: (...args) =>
           getAuditLogContentCallback(systemAuditLogStore, ...args),

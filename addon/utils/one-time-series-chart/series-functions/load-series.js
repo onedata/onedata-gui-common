@@ -1,3 +1,7 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+/* eslint-disable max-len */
+
 /**
  * A series function, which loads series from the source specified by arguments.
  *

@@ -14,7 +14,7 @@
 import round10 from 'npm:round10';
 
 export default function dynamicRound(value, precision = 1) {
-  let isNumberLowerThanPrecision =
+  const isNumberLowerThanPrecision =
     Math.floor(Math.abs(value) * Math.pow(10, precision)) === 0;
   if (isNumberLowerThanPrecision && value !== 0) {
     return `< ${Math.pow(10, -precision)}`;

@@ -19,22 +19,22 @@ describe('Integration | Component | resource load error', function () {
   });
 
   it('renders custom message if provided', function () {
-    let message = 'some message';
+    const message = 'some message';
     this.set('message', message);
     this.render(hbs `{{resource-load-error message=message}}`);
     expect(this.$().text()).to.match(new RegExp(message));
   });
 
   it('displays error string if an error is plain string', function () {
-    let reason = 'some reason';
+    const reason = 'some reason';
     this.set('reason', reason);
     this.render(hbs `{{resource-load-error reason=reason}}`);
     expect(this.$().text()).to.match(new RegExp(reason));
   });
 
   it('gets description of error when it\'s a response error type ', function () {
-    let description = 'some description';
-    let reason = {
+    const description = 'some description';
+    const reason = {
       response: {
         body: {
           description,

@@ -63,7 +63,7 @@ export default Route.extend({
 
   model({ resource_id: resourceId }, transition) {
     // TODO: validate and use resourceType
-    let {
+    const {
       collection,
       resourceType,
     } = this.modelFor('onedata.sidebar');
@@ -88,7 +88,7 @@ export default Route.extend({
       this.set('navigationState.activeResourceId', existingResourceId);
       if (existingResourceId) {
         return new Promise((resolve, reject) => {
-          let gettingResource = this.get('contentResources')
+          const gettingResource = this.get('contentResources')
             .getModelFor(resourceType, existingResourceId);
           gettingResource.then(resource => resolve({
             resourceId: existingResourceId,
@@ -145,7 +145,7 @@ export default Route.extend({
   },
 
   /**
-   * Checks if collection contains model with specified resourceId. 
+   * Checks if collection contains model with specified resourceId.
    * @param {string} resourceId ID of resource as in URL
    * @param {object} collection collection object
    * @returns {string} id of found model

@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 import { validator } from 'ember-cp-validations';
 import { computed, get, getProperties } from '@ember/object';
 
@@ -9,12 +12,12 @@ const comparableValues = {
 };
 
 function comparableValueForOperator(property, number, operator) {
-  property = parseFloat(property);
-  number = parseFloat(number);
-  if (!isNaN(property) && !isNaN(number)) {
-    return comparableValues[operator](property, number);
+  const propertyFloat = parseFloat(property);
+  const numberFloat = parseFloat(number);
+  if (!isNaN(propertyFloat) && !isNaN(numberFloat)) {
+    return comparableValues[operator](propertyFloat, numberFloat);
   } else {
-    return !isNaN(property) ? property : number;
+    return !isNaN(propertyFloat) ? propertyFloat : numberFloat;
   }
 }
 
@@ -38,9 +41,9 @@ function getValidatorCompareValue(validatorValue, operator) {
 
 /**
  * Generates message for number validator
- * @param {Object} field 
+ * @param {Object} field
  * @param {string} type `type` argument of validator `message` function
- * @param {Ember.Service} i18n 
+ * @param {Ember.Service} i18n
  */
 function getNumberMessage(field, type, i18n) {
   let message;
@@ -70,12 +73,12 @@ function getNumberMessage(field, type, i18n) {
 
 /**
  * Creates an ``ember-cp-validations`` validators for given field specification
- * 
+ *
  * @param {FieldType} field
  * @returns {Array.Validator}
  */
 export default function createFieldValidator(field) {
-  let validations = [];
+  const validations = [];
   const {
     type: fieldType,
     length: textLength,

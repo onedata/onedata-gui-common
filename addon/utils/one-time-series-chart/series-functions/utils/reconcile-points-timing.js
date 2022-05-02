@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable max-len */
+
 /**
  * Alters points arrays so that all have the same timestamps (time domain).
  * All arrays will be aligned to the array with the newest set of points -

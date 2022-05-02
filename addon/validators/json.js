@@ -45,7 +45,7 @@ Json.reopenClass({
    *
    * @param {String}  attribute   The attribute being evaluated
    * @param {Unknown} options     Options passed into your validator
-   * @return {Array}
+   * @returns {Array}
    */
   getDependentsFor( /* attribute, options */ ) {
     return [];

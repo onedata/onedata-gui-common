@@ -15,7 +15,7 @@ describe('Integration | Component | one tree', function () {
   beforeEach(function () {
     this.register('service:events-bus', EventsBusStub);
     this.inject.service('events-bus', { as: 'eventsBus' });
-    let eventsBus = this.container.lookup('service:events-bus');
+    const eventsBus = this.container.lookup('service:events-bus');
     eventsBus.set('callbacks', []);
   });
 
@@ -32,12 +32,12 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item2.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
-    let treeDirectItems = this.$('.item');
-    let subtreeDirectItems = this.$('.subitem');
+    const treeDirectItems = this.$('.item');
+    const subtreeDirectItems = this.$('.subitem');
     expect(treeDirectItems).to.have.length(2);
     expect(subtreeDirectItems).to.have.length(1);
     expect($(treeDirectItems[0]).text()).to.contain('item1');
@@ -55,10 +55,10 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item1.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
-    let subtree = this.$('.subtree');
+    const subtree = this.$('.subtree');
     expect(subtree).to.have.class('collapse-hidden');
     wait().then(() => {
       this.$('.item-content').click();
@@ -84,13 +84,13 @@ describe('Integration | Component | one tree', function () {
               {{/subitem.subtree}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
-    let firstLevelItemContent = this.$('.first-level-item-content');
-    let secondLevelItemContent = this.$('.second-level-item-content');
-    let secondLevelSubtree = this.$('.second-level-subtree');
+    const firstLevelItemContent = this.$('.first-level-item-content');
+    const secondLevelItemContent = this.$('.second-level-item-content');
+    const secondLevelSubtree = this.$('.second-level-subtree');
 
     wait().then(() => {
       firstLevelItemContent.click();
@@ -125,13 +125,13 @@ describe('Integration | Component | one tree', function () {
               {{/subitem.subtree}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
-    let firstLevelItemContent = this.$('.first-level-item-content');
-    let secondLevelItemContent = this.$('.second-level-item-content');
-    let secondLevelSubtree = this.$('.second-level-subtree');
+    const firstLevelItemContent = this.$('.first-level-item-content');
+    const secondLevelItemContent = this.$('.second-level-item-content');
+    const secondLevelSubtree = this.$('.second-level-subtree');
     wait().then(() => {
       firstLevelItemContent.click();
       secondLevelItemContent.click();
@@ -151,7 +151,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('expands/collapses subtree after eventsBus trigger', function (done) {
-    let eventsBus = this.container.lookup('service:events-bus');
+    const eventsBus = this.container.lookup('service:events-bus');
 
     this.render(hbs `
       {{#one-tree key="root" as |tree|}}
@@ -162,11 +162,11 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item1.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
-    let itemTree = this.$('.item1-tree');
+    const itemTree = this.$('.item1-tree');
     expect(itemTree).to.have.class('collapse-hidden');
     eventsBus.trigger('one-tree:show', 'root', 'item1', true);
     wait().then(() => {
@@ -176,7 +176,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('toggles subtree after eventsBus trigger', function (done) {
-    let eventsBus = this.container.lookup('service:events-bus');
+    const eventsBus = this.container.lookup('service:events-bus');
 
     this.render(hbs `
       {{#one-tree key="root" as |tree|}}
@@ -187,11 +187,11 @@ describe('Integration | Component | one tree', function () {
               {{#subitem.content}}item1.1{{/subitem.content}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
-    let subtree = this.$('.subtree');
+    const subtree = this.$('.subtree');
     expect(subtree).to.have.class('collapse-hidden');
     eventsBus.trigger('one-tree:show', 'root', 'item1');
     wait().then(() => {
@@ -205,7 +205,7 @@ describe('Integration | Component | one tree', function () {
   });
 
   it('expands deeply nested subtree after eventsBus trigger', function (done) {
-    let eventsBus = this.container.lookup('service:events-bus');
+    const eventsBus = this.container.lookup('service:events-bus');
 
     this.render(hbs `
       {{#one-tree key="root" as |tree|}}
@@ -221,12 +221,12 @@ describe('Integration | Component | one tree', function () {
               {{/subitem.subtree}}
             {{/subtree.item}}
           {{/item.subtree}}
-        {{/tree.item}} 
+        {{/tree.item}}
       {{/one-tree}}
     `);
 
-    let parentItemTree = this.$('.item1-tree');
-    let childItemTree = this.$('.item11-tree');
+    const parentItemTree = this.$('.item1-tree');
+    const childItemTree = this.$('.item11-tree');
     expect(parentItemTree).to.have.class('collapse-hidden');
     expect(childItemTree).to.have.class('collapse-hidden');
     eventsBus.trigger('one-tree:show', 'root', 'item11', true);

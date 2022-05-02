@@ -13,18 +13,18 @@
 import { isArray } from '@ember/array';
 import { get } from '@ember/object';
 
-// TODO: WARNING this function does not clone object deeply, 
+// TODO: WARNING this function does not clone object deeply,
 // it will just return always a plain object
 
 function emberObjPlainCopy(emberObj, deep = true) {
-  var props = Object.keys(emberObj);
-  var proto = Object.getPrototypeOf(emberObj);
-  for (let p in proto) {
+  const props = Object.keys(emberObj);
+  const proto = Object.getPrototypeOf(emberObj);
+  for (const p in proto) {
     if (proto.hasOwnProperty(p) && typeof (emberObj[p]) !== 'function') {
       props.push(p);
     }
   }
-  var copy = {};
+  const copy = {};
   props.forEach(function (p) {
     const value = get(emberObj, p);
     copy[p] = deep ? plainCopy(value) : value;

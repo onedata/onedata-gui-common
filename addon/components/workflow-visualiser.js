@@ -1,3 +1,6 @@
+// TODO: VFS-9257 fix eslint issues in this file
+/* eslint-disable jsdoc/require-returns */
+
 /**
  * Is responsible for showing and editing workflows.
  *
@@ -984,6 +987,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       lambdaRevisionNumber,
       argumentMappings,
       resultMappings,
+      timeSeriesStoreConfig,
       resourceSpecOverride,
     } = getProperties(
       taskRawData,
@@ -993,6 +997,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
       'lambdaRevisionNumber',
       'argumentMappings',
       'resultMappings',
+      'timeSeriesStoreConfig',
       'resourceSpecOverride'
     );
 
@@ -1000,9 +1005,13 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const normalizedRunsRegistry = {};
     const runsRegistry = this.get(`executionState.task.${id}.runsRegistry`) || {};
     Object.values(runsRegistry).forEach(({ runNumber }) => {
-      const storeInstanceId = runsRegistry[runNumber].systemAuditLogStoreInstanceId;
+      const systemAuditLogStoreInstanceId =
+        runsRegistry[runNumber].systemAuditLogStoreInstanceId;
+      const timeSeriesStoreInstanceId =
+        runsRegistry[runNumber].timeSeriesStoreInstanceId;
       normalizedRunsRegistry[runNumber] = Object.assign({}, runsRegistry[runNumber], {
-        systemAuditLogStore: this.getStoreByInstanceId(storeInstanceId),
+        systemAuditLogStore: this.getStoreByInstanceId(systemAuditLogStoreInstanceId),
+        timeSeriesStore: this.getStoreByInstanceId(timeSeriesStoreInstanceId),
       });
     });
     parentRunNumbers.forEach((parentRunNumber) => {
@@ -1012,6 +1021,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
           instanceId: null,
           status: 'pending',
           systemAuditLogStore: null,
+          timeSeriesStore: null,
           itemsInProcessing: 0,
           itemsProcessed: 0,
           itemsFailed: 0,
@@ -1034,6 +1044,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         lambdaRevisionNumber,
         argumentMappings,
         resultMappings,
+        timeSeriesStoreConfig,
         resourceSpecOverride,
       });
       return existingTask;
@@ -1056,6 +1067,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         actionsFactory,
         argumentMappings,
         resultMappings,
+        timeSeriesStoreConfig,
         resourceSpecOverride,
         onModify: (task, modifiedProps) => this.modifyElement(task, modifiedProps),
         onRemove: task => this.removeElement(task),
@@ -1137,6 +1149,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
     const instanceId = rawInstanceId || (schemaId &&
       this.get(`executionState.store.defined.${schemaId}.instanceId`)
     );
+    const contentMayChange = instanceId && !this.executionHasEnded();
 
     const existingStore =
       (instanceId && this.getCachedElement('store', { instanceId })) ||
@@ -1158,6 +1171,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         config,
         defaultInitialContent,
         requiresInitialContent,
+        contentMayChange,
       });
       return existingStore;
     } else {
@@ -1171,6 +1185,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
         config,
         defaultInitialContent,
         requiresInitialContent,
+        contentMayChange,
         onModify: (store, modifiedProps) => this.modifyElement(store, modifiedProps),
         onRemove: store => this.removeElement(store),
       });
@@ -1544,7 +1559,7 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   executionHasEnded() {
-    return workflowEndedStatuses.includes(this.get('workflow.status'));
+    return workflowEndedStatuses.includes(this.get('executionState.workflow.status'));
   },
 
   async updateExecutionState() {

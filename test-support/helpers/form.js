@@ -8,7 +8,7 @@ export default class FormHelper {
 
   /**
    * @param {string} fieldName
-   * @return {JQuery}
+   * @returns {JQuery}
    */
   getInput(fieldName) {
     return this.$form.find('.field-' + fieldName);
@@ -16,7 +16,7 @@ export default class FormHelper {
 
   /**
    * @param {string} fieldName
-   * @return {JQuery}
+   * @returns {JQuery}
    */
   getToggleInput(fieldName) {
     return this.$form.find('.toggle-field-' + fieldName);

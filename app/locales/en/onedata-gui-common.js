@@ -45,6 +45,7 @@ import publicFooter from './onedata-gui-common/components/public-footer';
 import revisionsTable from './onedata-gui-common/components/revisions-table';
 import wysiwygEditor from './onedata-gui-common/components/wysiwyg-editor';
 import oneTimeSeriesChart from './onedata-gui-common/components/one-time-series-chart';
+import apiSamples from './onedata-gui-common/components/api-samples';
 
 import noPermissions from './onedata-gui-common/components/errors/no-permissions';
 import noClusterPermissions from './onedata-gui-common/components/errors/no-cluster-permissions';
@@ -69,6 +70,7 @@ import insufficientPrivilegesMessage from './onedata-gui-common/utils/i18n/insuf
 import joinStrings from './onedata-gui-common/utils/i18n/join-strings';
 import utilsWorkflowVisualiser from './onedata-gui-common/utils/workflow-visualiser';
 import clipboardActions from './onedata-gui-common/utils/clipboard-actions';
+import atmWorkflow from './onedata-gui-common/utils/atm-workflow';
 
 import backendErrors from './onedata-gui-common/errors/backend-errors';
 
@@ -125,6 +127,7 @@ const translations = {
     revisionsTable,
     wysiwygEditor,
     oneTimeSeriesChart,
+    apiSamples,
     alerts: {
       endpointError,
     },
@@ -162,6 +165,7 @@ const translations = {
     joinStrings,
     workflowVisualiser: utilsWorkflowVisualiser,
     clipboardActions,
+    atmWorkflow,
   },
   errors: {
     backendErrors,
