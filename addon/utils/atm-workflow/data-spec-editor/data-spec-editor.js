@@ -19,7 +19,7 @@ import {
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import valueConstraintsEditors from './value-constraints-editors';
 
-export const dataSpecTypes = [
+export const dataSpecTypes = Object.freeze([
   'integer',
   'string',
   'object',
@@ -31,7 +31,7 @@ export const dataSpecTypes = [
   'range',
   'onedatafsCredentials',
   'timeSeriesMeasurement',
-];
+]);
 
 export const FormElement = FormFieldsGroup.extend({
   /**
@@ -52,7 +52,7 @@ export const FormElement = FormFieldsGroup.extend({
 
 const TypeField = DropdownField.extend({
   name: 'type',
-  options: computed('parent.allowedTypes', function options() {
+  options: computed('parent.allowedTypes.[]', function options() {
     const allowedTypes = this.get('parent.allowedTypes') || dataSpecTypes;
     return dataSpecTypes
       .filter((type) => allowedTypes.includes(type))
@@ -134,7 +134,7 @@ export function formValuesToDataSpec(values, surroundWithArray = false) {
   }
 
   const dataSpec = typeToDataSpec({
-    type: type,
+    type,
     isArray: false,
     customValueConstraints,
   });

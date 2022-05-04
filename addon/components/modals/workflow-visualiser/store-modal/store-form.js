@@ -24,7 +24,6 @@ import {
   isEmpty,
   notEmpty,
 } from 'ember-awesome-macros';
-import _ from 'lodash';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
@@ -50,30 +49,30 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const storeTypes = [
+const storeTypes = Object.freeze([
   'list',
   'treeForest',
   'singleValue',
   'range',
   'auditLog',
   'timeSeries',
-];
+]);
 
-const dataTypesForbiddenForAllStores = [
+const dataTypesForbiddenForAllStores = Object.freeze([
   'onedatafsCredentials',
-];
+]);
 
-const dataTypesForbiddenPerStoreType = {
-  treeForest: [
+const dataTypesForbiddenPerStoreType = Object.freeze({
+  treeForest: Object.freeze([
     'integer',
     'string',
     'object',
     'range',
     'timeSeriesMeasurement',
-  ],
-  range: dataSpecTypes.without('range'),
-  timeSeries: dataSpecTypes.without('timeSeriesMeasurement'),
-};
+  ]),
+  range: Object.freeze(dataSpecTypes.without('range')),
+  timeSeries: Object.freeze(dataSpecTypes.without('timeSeriesMeasurement')),
+});
 
 const defaultRangeStart = 0;
 const defaultRangeStep = 1;
@@ -157,7 +156,9 @@ export default Component.extend(I18n, {
       if (allowedDataTypes && allowedDataTypes.length) {
         effAllowedTypes = effAllowedTypes.filter((type) => {
           const forbiddenDataTypes = dataTypesForbiddenPerStoreType[type] || [];
-          return _.difference(allowedDataTypes, forbiddenDataTypes).length > 0;
+          return allowedDataTypes.some((dataType) =>
+            !forbiddenDataTypes.includes(dataType)
+          );
         });
       }
       return effAllowedTypes;
