@@ -7,6 +7,7 @@ $color-token-bg: #ededed;
 $token-border: 1px solid $color-token-border;
 $token-border-radius: 3px;
 
+$first-column-padding-left: 16px;
 
 @mixin btn-toolbar-float-right() {
   .btn-toolbar {
@@ -641,7 +642,7 @@ $token-border-radius: 3px;
 .table:not(.bt) {
   td:first-child {
     position: relative;
-    padding-left: 16px;
+    padding-left: $first-column-padding-left;
   }
 }
 
