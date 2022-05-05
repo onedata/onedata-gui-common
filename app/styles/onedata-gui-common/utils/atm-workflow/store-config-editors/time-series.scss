@@ -2,7 +2,8 @@
   margin-bottom: 0;
 
   .collection-item {
-    max-width: 20em;
+    min-width: 0;
+    width: 20em;
   }
 
   .timeSeriesSchema-children > * {

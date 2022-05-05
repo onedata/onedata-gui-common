@@ -1206,7 +1206,8 @@ function getSourceDataTypesForType(type) {
         'directory',
         'symlink',
         'dataset',
-        'range'
+        'range',
+        'timeSeriesMeasurement'
       );
       break;
     case 'anyFile':
