@@ -102,6 +102,14 @@ const dataTypes = [{
     type: 'range',
     valueConstraints: {},
   },
+}, {
+  label: 'Time series measurement',
+  dataSpec: {
+    type: 'timeSeriesMeasurement',
+    valueConstraints: {
+      specs: [],
+    },
+  },
 }];
 
 const storeTypesWithGenericConfig = storeTypes
@@ -272,7 +280,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         expectExpandedConfig('generic');
 
-        const dataTypeField = find('.dataType-field');
+        const dataTypeField = find('.dataSpec-field .type-field');
         expect(dataTypeField.querySelector('.control-label').textContent.trim())
           .to.equal('Data type:');
         expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
@@ -282,7 +290,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         } else {
           expect(dataTypeField).to.have.class('field-enabled');
 
-          await clickTrigger('.dataType-field');
+          await clickTrigger('.dataSpec-field .type-field');
 
           const options = document.querySelectorAll('.ember-power-select-option');
           expect(options).to.have.length(availableDataTypeLabels.length);
@@ -308,7 +316,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await selectChoose('.type-field', label);
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         if (!disabledDataTypeSelection) {
-          await selectChoose('.dataType-field', selectedDataTypeLabel);
+          await selectChoose('.dataSpec-field .type-field', selectedDataTypeLabel);
         }
         await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
@@ -496,7 +504,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.description-field .form-control', 'someDescription');
       await selectChoose('.type-field', 'Time series');
-      await click('.add-field-button');
+      await click('.timeSeriesSchemas-add-field-button');
       await selectChoose('.nameGeneratorType-field', 'Exact');
       await fillIn('.nameGenerator-field .form-control', 'some_name');
       await selectChoose('.unit-field', 'Bytes');
@@ -538,7 +546,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await renderComponent();
 
         await selectChoose('.type-field', 'List');
-        await selectChoose('.dataType-field', label);
+        await selectChoose('.dataSpec-field .type-field', label);
 
         expect(changeSpy).to.be.calledWith({
           data: {
@@ -614,7 +622,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(find('.description-field .form-control').value).to.equal('desc');
         expect(find('.type-field .dropdown-field-trigger').textContent.trim())
           .to.equal(label);
-        const dataTypeField = find('.dataType-field');
+        const dataTypeField = find('.dataSpec-field .type-field');
         expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
@@ -713,8 +721,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await renderComponent();
 
-          expect(find('.dataType-field .dropdown-field-trigger').textContent.trim())
-            .to.equal(label);
+          expect(find(
+            '.dataSpec-field .type-field .dropdown-field-trigger'
+          ).textContent.trim()).to.equal(label);
           done();
         });
     });
@@ -785,7 +794,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           .to.equal('desc');
         expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        const dataTypeField = find('.dataType-field');
+        const dataTypeField = find('.dataSpec-field .type-field');
         expect(dataTypeField.querySelector('.field-component').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
@@ -891,7 +900,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await renderComponent();
 
-          expect(find('.dataType-field .field-component').textContent.trim())
+          expect(find('.dataSpec-field .type-field .field-component').textContent.trim())
             .to.equal(label);
           done();
         });

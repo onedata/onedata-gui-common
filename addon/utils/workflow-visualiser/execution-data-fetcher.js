@@ -41,7 +41,6 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
  * @typedef {Object} AtmLaneRunExecutionState
  * @property {AtmLaneRunNumber} runNumber
  * @property {Number|null} originRunNumber
- * @property {String} systemAuditLogStoreInstanceId
  * @property {String} status
  * @property {Boolean} isRetriable
  * @property {Boolean} isRerunable
@@ -78,6 +77,7 @@ import notImplementedReject from 'onedata-gui-common/utils/not-implemented-rejec
  * @property {AtmLaneRunNumber} runNumber
  * @property {String} instanceId
  * @property {String} systemAuditLogStoreInstanceId
+ * @property {String} timeSeriesStoreInstanceId
  * @property {String} status
  * @property {Number} itemsInProcessing
  * @property {Number} itemsProcessed

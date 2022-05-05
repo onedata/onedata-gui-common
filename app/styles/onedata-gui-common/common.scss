@@ -10,6 +10,10 @@ strong {
   @include font-semibold();
 }
 
+.monospace {
+  @include font-monospace;
+}
+
 .custom-font {
   strong {
     font-weight: bold;

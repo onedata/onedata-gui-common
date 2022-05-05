@@ -88,9 +88,6 @@ export function typeToDataSpec({ type, isArray, customValueConstraints }) {
 }
 
 export function getTargetStoreTypesForType(type, isBatch) {
-  if (type === 'timeSeriesMeasurement') {
-    return ['timeSeries'];
-  }
   const targetTypes = ['list', 'auditLog'];
   if (!isBatch) {
     targetTypes.push('singleValue');
@@ -103,6 +100,9 @@ export function getTargetStoreTypesForType(type, isBatch) {
   ) {
     targetTypes.push('treeForest');
   }
+  if (type === 'timeSeriesMeasurement') {
+    targetTypes.push('timeSeries');
+  }
   return targetTypes;
 }
 
@@ -114,6 +114,7 @@ export function getTargetDataTypesForType(type) {
     case 'anyFile':
     case 'dataset':
     case 'range':
+    case 'timeSeriesMeasurement':
       targetTypes.push('object');
       break;
     case 'regularFile':

@@ -43,15 +43,19 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
+import { validator } from 'ember-cp-validations';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
 const taskAuditLogDropdownOptionValue = '__taskAuditLog';
 const workflowAuditLogDropdownOptionValue = '__workflowAuditLog';
+const taskTimeSeriesDropdownOptionValue = '__taskTimeSeries';
 
 const backendStoreIdsMappings = {
   [taskAuditLogDropdownOptionValue]: 'CURRENT_TASK_SYSTEM_AUDIT_LOG',
   [workflowAuditLogDropdownOptionValue]: 'WORKFLOW_SYSTEM_AUDIT_LOG',
+  [taskTimeSeriesDropdownOptionValue]: 'CURRENT_TASK_TIME_SERIES',
 };
 const frontendStoreIdsMappings = _.invert(backendStoreIdsMappings);
 
@@ -157,6 +161,20 @@ export default Component.extend(I18n, {
   actionsFactory: undefined,
 
   /**
+   * @type {Utils.WorkflowVisualiser.Store|null}
+   */
+  timeSeriesStore: computed(function timeSeriesStore() {
+    return Store.create({
+      id: taskTimeSeriesDropdownOptionValue,
+      type: 'timeSeries',
+      config: {
+        schemas: [],
+        chartSpecs: [],
+      },
+    });
+  }),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,
@@ -188,11 +206,34 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Array<Object>>}
    */
-  resultStores: computed('definedStores.[]', function resultStores() {
-    const definedStores = this.get('definedStores') || [];
-    return [taskAuditLogStore, workflowAuditLogStore]
-      .concat(definedStores.toArray().compact());
-  }),
+  resultStores: computed(
+    'definedStores.[]',
+    'timeSeriesStore',
+    function resultStores() {
+      const {
+        definedStores,
+        timeSeriesStore,
+      } = this.getProperties('definedStores', 'timeSeriesStore');
+
+      const systemStores = [
+        taskAuditLogStore,
+        workflowAuditLogStore,
+        timeSeriesStore,
+      ];
+
+      return [
+        ...systemStores,
+        ...(definedStores || []).toArray().compact(),
+      ];
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isTimeSeriesStoreEnabled: reads(
+    'fields.valuesSource.timeSeriesStoreSection.createTimeSeriesStore'
+  ),
 
   /**
    * Union of `argumentStores` and `resultStores`
@@ -210,7 +251,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Object>}
    */
   passedFormValues: computed(
-    'task.{name,argumentMappings,resultMappings,resourceSpecOverride}',
+    'task.{name,argumentMappings,resultMappings,timeSeriesStoreConfig,resourceSpecOverride}',
     'atmLambdaRevision',
     function passedStoreFormValues() {
       const {
@@ -229,11 +270,13 @@ export default Component.extend(I18n, {
       nameField,
       argumentMappingsFieldsCollectionGroup,
       resultMappingsFieldsCollectionGroup,
+      timeSeriesStoreSectionFields,
       resourcesFieldsGroup,
     } = this.getProperties(
       'nameField',
       'argumentMappingsFieldsCollectionGroup',
       'resultMappingsFieldsCollectionGroup',
+      'timeSeriesStoreSectionFields',
       'resourcesFieldsGroup'
     );
 
@@ -241,9 +284,17 @@ export default Component.extend(I18n, {
       i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
       ownerSource: reads('component'),
       isEnabled: not('component.isDisabled'),
-      onValueChange() {
+      onValueChange(value, field) {
         this._super(...arguments);
-        scheduleOnce('afterRender', this.get('component'), 'notifyAboutChange');
+        const component = this.get('component');
+
+        // If something in time series store section is modified, refresh
+        // calculated time series store definition.
+        if (get(field, 'path').startsWith('timeSeriesStoreSection.')) {
+          component.updateTimeSeriesStoreSchema();
+        }
+
+        scheduleOnce('afterRender', component, 'notifyAboutChange');
       },
     }).create({
       component: this,
@@ -251,6 +302,7 @@ export default Component.extend(I18n, {
         nameField,
         argumentMappingsFieldsCollectionGroup,
         resultMappingsFieldsCollectionGroup,
+        timeSeriesStoreSectionFields,
         resourcesFieldsGroup,
       ],
     });
@@ -302,11 +354,13 @@ export default Component.extend(I18n, {
                   }
                 ),
               }).create({
+                classes: 'floating-field-label',
                 name: 'valueBuilderType',
               }),
               JsonField.extend({
                 isVisible: eq('parent.value.valueBuilderType', raw('const')),
               }).create({
+                classes: 'floating-field-label',
                 name: 'valueBuilderConstValue',
               }),
               DropdownField.extend({
@@ -344,6 +398,7 @@ export default Component.extend(I18n, {
                 },
               }).create({
                 component,
+                classes: 'floating-field-label',
                 name: 'valueBuilderStore',
               }),
             ],
@@ -355,6 +410,7 @@ export default Component.extend(I18n, {
             cloneAsEmberObject(defaultValue) : this._super(...arguments);
         },
       }).create({
+        classes: 'task-form-section',
         name: 'argumentMappings',
         addColonToLabel: false,
         isCollectionManipulationAllowed: false,
@@ -432,7 +488,23 @@ export default Component.extend(I18n, {
                 },
               }).create({
                 component,
+                classes: 'floating-field-label',
                 name: 'targetStore',
+                customValidators: [
+                  validator(function (value, options, model) {
+                    const field = get(model, 'field');
+                    const notEnabledTsStoreSelected =
+                      value === taskTimeSeriesDropdownOptionValue &&
+                      !get(field, 'component.isTimeSeriesStoreEnabled');
+                    return notEnabledTsStoreSelected ?
+                      String(field.getTranslation('errors.notEnabledTsStoreSelected')) :
+                      true;
+                  }, {
+                    dependentKeys: [
+                      'model.field.component.isTimeSeriesStoreEnabled',
+                    ],
+                  }),
+                ],
               }),
               DropdownField.extend({
                 isVisible: notEmpty('options'),
@@ -465,6 +537,7 @@ export default Component.extend(I18n, {
                 },
               }).create({
                 component,
+                classes: 'floating-field-label',
                 name: 'dispatchFunction',
               }),
               storeContentUpdateOptionsEditors.timeSeries.FormElement.extend({
@@ -475,6 +548,10 @@ export default Component.extend(I18n, {
                   return selectedTargetStore &&
                     get(selectedTargetStore, 'type') === 'timeSeries';
                 }),
+                init() {
+                  this._super(...arguments);
+                  this.set('classes', `${this.get('classes')} floating-field-label`);
+                },
               }).create({
                 name: 'timeSeriesEditor',
               }),
@@ -487,6 +564,7 @@ export default Component.extend(I18n, {
             cloneAsEmberObject(defaultValue) : this._super(...arguments);
         },
       }).create({
+        classes: 'task-form-section',
         name: 'resultMappings',
         addColonToLabel: false,
         isCollectionManipulationAllowed: false,
@@ -497,8 +575,30 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
    */
+  timeSeriesStoreSectionFields: computed(function timeSeriesStoreSectionFields() {
+    return FormFieldsGroup.create({
+      classes: 'task-form-section',
+      name: 'timeSeriesStoreSection',
+      addColonToLabel: false,
+      fields: [
+        ToggleField.create({
+          name: 'createTimeSeriesStore',
+        }),
+        storeConfigEditors.timeSeries.FormElement.extend({
+          isExpanded: reads('parent.value.createTimeSeriesStore'),
+        }).create({
+          name: 'timeSeriesStoreConfig',
+        }),
+      ],
+    });
+  }),
+
+  /**
+   * @type {ComputedProperty<Utils.FormComponent.FormFieldsGroup>}
+   */
   resourcesFieldsGroup: computed(function resourcesFieldsGroup() {
     return FormFieldsGroup.create({
+      classes: 'task-form-section',
       name: 'resources',
       addColonToLabel: false,
       fields: [
@@ -583,6 +683,7 @@ export default Component.extend(I18n, {
     set(fields, 'valuesSource', passedFormValues);
     fields.useCurrentValueAsDefault();
     fields.reset();
+    this.updateTimeSeriesStoreSchema();
   },
 
   notifyAboutChange() {
@@ -590,14 +691,10 @@ export default Component.extend(I18n, {
       onChange,
       fields,
       mode,
-      atmLambdaRevision,
-      allStores,
     } = this.getProperties(
       'onChange',
       'fields',
       'mode',
-      'atmLambdaRevision',
-      'allStores'
     );
 
     if (mode === 'view') {
@@ -605,9 +702,38 @@ export default Component.extend(I18n, {
     }
 
     onChange && onChange({
-      data: formDataToTask(fields.dumpValue(), atmLambdaRevision, allStores),
+      data: this.dumpToTask(),
       isValid: get(fields, 'isValid'),
     });
+  },
+
+  dumpToTask() {
+    const {
+      fields,
+      atmLambdaRevision,
+      allStores,
+    } = this.getProperties(
+      'fields',
+      'atmLambdaRevision',
+      'allStores'
+    );
+
+    return formDataToTask(fields.dumpValue(), atmLambdaRevision, allStores);
+  },
+
+  updateTimeSeriesStoreSchema() {
+    const timeSeriesStoreSectionField =
+      this.get('fields').getFieldByPath('timeSeriesStoreSection.timeSeriesStoreConfig');
+    if (!get(timeSeriesStoreSectionField, 'isValid')) {
+      return;
+    }
+
+    const taskData = this.dumpToTask();
+    const newConfig = get(taskData, 'timeSeriesStoreConfig') || {
+      schemas: [],
+      chartSpecs: [],
+    };
+    this.set('timeSeriesStore.config', newConfig);
   },
 
   async createSourceStore(sourceStoreField, dataType) {
@@ -678,12 +804,14 @@ function taskToFormData(task, atmLambdaRevision) {
     argumentMappings,
     resultMappings,
     resourceSpecOverride,
+    timeSeriesStoreConfig,
   } = getProperties(
     task || {},
     'name',
     'argumentMappings',
     'resultMappings',
-    'resourceSpecOverride'
+    'resourceSpecOverride',
+    'timeSeriesStoreConfig'
   );
 
   const {
@@ -803,10 +931,18 @@ function taskToFormData(task, atmLambdaRevision) {
     });
   });
 
+  const timeSeriesStoreSection = {
+    createTimeSeriesStore: Boolean(timeSeriesStoreConfig),
+    timeSeriesStoreConfig: storeConfigEditors.timeSeries.storeConfigToFormValues(
+      timeSeriesStoreConfig
+    ),
+  };
+
   return {
     name: name || lambdaName,
     argumentMappings: createValuesContainer(formArgumentMappings),
     resultMappings: createValuesContainer(formResultMappings),
+    timeSeriesStoreSection,
     resources: generateResourcesFormData(resourceSpec, resourceSpecOverride),
   };
 }
@@ -860,12 +996,14 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
     name,
     argumentMappings,
     resultMappings,
+    timeSeriesStoreSection,
     resources,
   } = getProperties(
     formData,
     'name',
     'argumentMappings',
     'resultMappings',
+    'timeSeriesStoreSection',
     'resources'
   );
   const {
@@ -971,6 +1109,23 @@ function formDataToTask(formData, atmLambdaRevision, stores) {
     });
   });
 
+  const {
+    createTimeSeriesStore,
+    timeSeriesStoreConfig,
+  } = getProperties(
+    timeSeriesStoreSection,
+    'createTimeSeriesStore',
+    'timeSeriesStoreConfig'
+  );
+
+  if (createTimeSeriesStore) {
+    task.timeSeriesStoreConfig = storeConfigEditors.timeSeries.formValuesToStoreConfig(
+      timeSeriesStoreConfig
+    );
+  } else {
+    task.timeSeriesStoreConfig = null;
+  }
+
   if (overrideResources) {
     task.resourceSpecOverride = serializeTaskResourcesFieldsValues(resourcesSections);
   }
@@ -1051,7 +1206,8 @@ function getSourceDataTypesForType(type) {
         'directory',
         'symlink',
         'dataset',
-        'range'
+        'range',
+        'timeSeriesMeasurement'
       );
       break;
     case 'anyFile':

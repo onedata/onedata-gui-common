@@ -53,6 +53,7 @@ const dataSpecs = [{
     'symlink',
     'dataset',
     'range',
+    'timeSeriesMeasurement',
   ],
   // TODO: VFS-7816 uncomment or remove future code
   // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
@@ -355,6 +356,16 @@ const workflowAuditLogStore = {
   },
   requiresInitialContent: false,
 };
+const taskTimeSeriesStore = {
+  id: 'CURRENT_TASK_TIME_SERIES',
+  name: 'Current task time series store',
+  type: 'time series',
+  config: {
+    schemas: [],
+    chartSpecs: [],
+  },
+  requiresInitialContent: false,
+};
 
 const dispatchFunctionLabels = {
   // TODO: VFS-7816 uncomment or remove future code
@@ -466,6 +477,7 @@ const exampleTask = {
       function: 'append',
     },
   }],
+  timeSeriesStoreConfig: null,
 };
 
 describe('Integration | Component | workflow visualiser/task form', function () {
@@ -566,6 +578,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           name: exampleAtmLambdaRevision.name,
           argumentMappings: [],
           resultMappings: [],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -578,6 +591,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           name: 'someName',
           argumentMappings: [],
           resultMappings: [],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -677,6 +691,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               name: 'function1',
               argumentMappings: [],
               resultMappings: [],
+              timeSeriesStoreConfig: null,
             },
             isValid: true,
           });
@@ -708,6 +723,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -766,6 +782,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -845,6 +862,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -930,6 +948,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
                   },
                 }],
                 resultMappings: [],
+                timeSeriesStoreConfig: null,
               },
               isValid: true,
             });
@@ -979,132 +998,86 @@ describe('Integration | Component | workflow visualiser/task form', function () 
         allPossibleStoreSpecs.findBy('type', type).acceptsBatch
       );
       const allowSystemAuditLogStores = compatibleDataSpecNames.includes('object');
+      const allowTaskTimeSeriesStore =
+        compatibleDataSpecNames.includes('timeSeriesMeasurement');
 
-      it(`provides available stores for result of type "${dataSpecName}"`,
-        async function (done) {
-          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-            name: 'res1',
-            dataSpec,
-          }]);
+      [false, true].forEach((isBatch) => {
+        const sortedPossibleStoresToCheck = isBatch ?
+          sortedPossibleStoresWithBatch : sortedPossibleStores;
+        it(`provides available stores for result of ${isBatch ? 'batched ' : ''}type "${dataSpecName}"`,
+          async function (done) {
+            setProperties(this.get('atmLambda.revisionRegistry.1'), {
+              preferredBatchSize: isBatch ? 100 : 1,
+              resultSpecs: [{
+                name: 'res1',
+                dataSpec,
+              }],
+            });
 
-          await renderComponent();
-          await clickTrigger('.resultMapping-field .targetStore-field');
+            await renderComponent();
+            await clickTrigger('.resultMapping-field .targetStore-field');
 
-          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
-            .to.equal('Leave unassigned');
-          const options = document.querySelectorAll('.ember-power-select-option');
-          const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
-          expect(options)
-            .to.have.length(sortedPossibleStores.length + extraOptionsCount);
-          expect(options[0].textContent.trim()).to.equal('Create store...');
-          expect(options[1].textContent.trim()).to.equal('Leave unassigned');
-          if (allowSystemAuditLogStores) {
-            expect(options[2].textContent.trim()).to.equal(taskAuditLogStore.name);
-            expect(options[3].textContent.trim()).to.equal(workflowAuditLogStore.name);
-          }
-          sortedPossibleStores.forEach((store, idx) =>
-            expect(options[idx + extraOptionsCount].textContent.trim())
-            .to.equal(store.name)
-          );
-          done();
-        });
-
-      it(`provides available stores for result of batched type "${dataSpecName}"`,
-        async function (done) {
-          setProperties(this.get('atmLambda.revisionRegistry.1'), {
-            preferredBatchSize: 100,
-            resultSpecs: [{
-              name: 'res1',
-              dataSpec,
-            }],
+            expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
+              .to.equal('Leave unassigned');
+            const options = document.querySelectorAll('.ember-power-select-option');
+            let extraOptionsCount = 2;
+            if (allowSystemAuditLogStores) {
+              extraOptionsCount += 2;
+            }
+            if (allowTaskTimeSeriesStore) {
+              extraOptionsCount += 1;
+            }
+            expect(options)
+              .to.have.length(sortedPossibleStoresToCheck.length + extraOptionsCount);
+            expect(options[0].textContent.trim()).to.equal('Create store...');
+            expect(options[1].textContent.trim()).to.equal('Leave unassigned');
+            if (allowSystemAuditLogStores) {
+              expect(options[2].textContent.trim()).to.equal(taskAuditLogStore.name);
+              expect(options[3].textContent.trim()).to.equal(workflowAuditLogStore.name);
+            } else if (allowTaskTimeSeriesStore) {
+              expect(options[2].textContent.trim()).to.equal(taskTimeSeriesStore.name);
+            }
+            sortedPossibleStoresToCheck.forEach((store, idx) =>
+              expect(options[idx + extraOptionsCount].textContent.trim())
+              .to.equal(store.name)
+            );
+            done();
           });
 
-          await renderComponent();
-          await clickTrigger('.resultMapping-field .targetStore-field');
+        it(`allows to create new store for result of  ${isBatch ? 'batched ' : ''}type "${dataSpecName}"`,
+          async function (done) {
+            this.set('newStoreFromCreation', Store.create({
+              id: 'newstore',
+              name: 'new store',
+              config: sortedPossibleStoresToCheck[0].config,
+              type: sortedPossibleStoresToCheck[0].type,
+            }));
+            setProperties(this.get('atmLambda.revisionRegistry.1'), {
+              preferredBatchSize: isBatch ? 100 : 1,
+              resultSpecs: [{
+                name: 'res1',
+                dataSpec,
+              }],
+            });
+            const allowedStoreTypes = sortedPossibleStoresToCheck.mapBy('type').uniq();
+            const allowedDataTypes = [...compatibleDataSpecNames];
 
-          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
-            .to.equal('Leave unassigned');
-          const options = document.querySelectorAll('.ember-power-select-option');
-          const extraOptionsCount = 2 + (allowSystemAuditLogStores ? 2 : 0);
-          expect(options)
-            .to.have.length(sortedPossibleStoresWithBatch.length + extraOptionsCount);
-          expect(options[0].textContent.trim()).to.equal('Create store...');
-          expect(options[1].textContent.trim()).to.equal('Leave unassigned');
-          if (allowSystemAuditLogStores) {
-            expect(options[2].textContent.trim()).to.equal(taskAuditLogStore.name);
-            expect(options[3].textContent.trim()).to.equal(workflowAuditLogStore.name);
-          }
-          sortedPossibleStoresWithBatch.forEach((store, idx) =>
-            expect(options[idx + extraOptionsCount].textContent.trim())
-            .to.equal(store.name)
-          );
-          done();
-        });
+            await renderComponent();
+            await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
 
-      it(`allows to create new store for result of type "${dataSpecName}"`,
-        async function (done) {
-          this.set('newStoreFromCreation', Store.create({
-            id: 'newstore',
-            name: 'new store',
-            config: sortedPossibleStores[0].config,
-            type: sortedPossibleStores[0].type,
-          }));
-          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-            name: 'res1',
-            dataSpec,
-          }]);
-          const allowedStoreTypes = sortedPossibleStores.mapBy('type').uniq();
-          const allowedDataTypes = [...compatibleDataSpecNames];
+            expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
+              .to.equal('new store');
+            const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
+            expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
+            const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
 
-          await renderComponent();
-          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
-
-          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
-            .to.equal('new store');
-          const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
-          expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
-          const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
-
-          expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
-            .to.deep.equal(allowedStoreTypes.sort());
-          expect(lastCreateStoreCallArg.allowedDataTypes.sort())
-            .to.deep.equal(allowedDataTypes.sort());
-          done();
-        });
-
-      it(`allows to create new store for result of batched type "${dataSpecName}"`,
-        async function (done) {
-          this.set('newStoreFromCreation', Store.create({
-            id: 'newstore',
-            name: 'new store',
-            config: sortedPossibleStoresWithBatch[0].config,
-            type: sortedPossibleStoresWithBatch[0].type,
-          }));
-          setProperties(this.get('atmLambda.revisionRegistry.1'), {
-            preferredBatchSize: 100,
-            resultSpecs: [{
-              name: 'res1',
-              dataSpec,
-            }],
+            expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
+              .to.deep.equal(allowedStoreTypes.sort());
+            expect(lastCreateStoreCallArg.allowedDataTypes.sort())
+              .to.deep.equal(allowedDataTypes.sort());
+            done();
           });
-          const allowedStoreTypes = sortedPossibleStoresWithBatch.mapBy('type').uniq();
-          const allowedDataTypes = [...compatibleDataSpecNames];
-
-          await renderComponent();
-          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
-
-          expect(find('.targetStore-field .dropdown-field-trigger').textContent.trim())
-            .to.equal('new store');
-          const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
-          expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
-          const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
-
-          expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
-            .to.deep.equal(allowedStoreTypes.sort());
-          expect(lastCreateStoreCallArg.allowedDataTypes.sort())
-            .to.deep.equal(allowedDataTypes.sort());
-          done();
-        });
+      });
     });
 
     it('allows to setup result to be unassigned',
@@ -1125,6 +1098,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             name: 'function1',
             argumentMappings: [],
             resultMappings: [],
+            timeSeriesStoreConfig: null,
           },
           isValid: true,
         });
@@ -1155,6 +1129,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               function: 'append',
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1185,6 +1160,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
               function: 'append',
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1628,6 +1604,7 @@ function itAllowsToSetupResultToUseStoreWithDispatchFunction(
               function: dispatchFunction,
             },
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });
@@ -1660,6 +1637,7 @@ function itAllowsToSetupResultToUseStoreWithoutDispatchFunction(
               type: `${targetStore.type}StoreContentUpdateOptions`,
             }),
           }],
+          timeSeriesStoreConfig: null,
         },
         isValid: true,
       });

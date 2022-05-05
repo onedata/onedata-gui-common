@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { render, fillIn, find, findAll, click, settled } from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
-import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/time-series-measurement';
+import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
 import { get } from '@ember/object';
 
 const nameMatcherTypeOptions = [{
@@ -77,7 +77,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
       ownerSource: this.owner,
       fields: [
         timeSeriesMeasurementEditor.FormElement.create({
-          name: 'dataSpecEditor',
+          name: 'valueConstraintsEditor',
         }),
       ],
     }));
@@ -194,7 +194,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
 
       const valueConstraints =
         timeSeriesMeasurementEditor.formValuesToValueConstraints(
-          this.get('rootGroup.valuesSource.dataSpecEditor')
+          this.get('rootGroup.valuesSource.valueConstraintsEditor')
         );
       expect(valueConstraints).to.deep.equal({
         specs: [{
@@ -224,7 +224,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
     });
 
     await renderForm();
-    this.set('rootGroup.valuesSource.dataSpecEditor', formValues);
+    this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
     await settled();
 
     expect(findAll('.collection-item')).to.have.length(2);
@@ -248,7 +248,7 @@ async function renderForm() {
 }
 
 function getSpecFormValues(testCase) {
-  const editorValues = testCase.get('rootGroup.valuesSource.dataSpecEditor');
+  const editorValues = testCase.get('rootGroup.valuesSource.valueConstraintsEditor');
   return get(editorValues, '__fieldsValueNames')
     .map((fieldName) => get(editorValues, fieldName));
 }

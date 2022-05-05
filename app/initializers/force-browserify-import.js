@@ -16,6 +16,8 @@ import 'npm:contrast';
 import 'npm:dompurify';
 import 'npm:smoothscroll-polyfill';
 import 'npm:spin.js';
+import 'npm:pupa';
+import 'npm:shell-escape';
 
 export default {
   name: 'force-browserify-import',

@@ -146,6 +146,22 @@ export default VisualiserElement.extend({
   /**
    * @type {ComputedProperty<Utils.Action>}
    */
+  viewTaskTimeSeriesAction: computed(
+    'actionsFactory',
+    'task',
+    function viewTaskTimeSeriesAction() {
+      const {
+        actionsFactory,
+        task,
+      } = this.getProperties('actionsFactory', 'task');
+
+      return actionsFactory.createViewTaskTimeSeriesAction({ task });
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Utils.Action>}
+   */
   viewTaskPodsActivityAction: computed(
     'actionsFactory',
     'task',
@@ -169,16 +185,14 @@ export default VisualiserElement.extend({
    */
   viewTaskActions: computed(
     'viewTaskAuditLogAction.disabled',
+    'viewTaskTimeSeriesAction.disabled',
     'viewTaskPodsActivityAction.disabled',
     function viewTaskActions() {
-      const {
-        viewTaskAuditLogAction,
-        viewTaskPodsActivityAction,
-      } = this.getProperties('viewTaskAuditLogAction', 'viewTaskPodsActivityAction');
       return [
-        viewTaskAuditLogAction,
-        viewTaskPodsActivityAction,
-      ].rejectBy('disabled');
+        'viewTaskAuditLogAction',
+        'viewTaskTimeSeriesAction',
+        'viewTaskPodsActivityAction',
+      ].map((actionPropName) => this.get(actionPropName)).rejectBy('disabled');
     }
   ),
 
