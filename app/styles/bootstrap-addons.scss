@@ -757,4 +757,9 @@ label.align-left {
   &.alert-danger .alert-icon {
     color: $color-one-danger;
   }
+  &.alert-light {
+    color: $main-text-color;
+    border-color: $table-border-color;
+    background-color: darken($table-bg-accent, 1%)
+  }
 }
