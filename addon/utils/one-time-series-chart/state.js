@@ -255,7 +255,8 @@ export default class State {
               seriesGroupSum += yValue;
               const series = seriesMap[seriesId];
               const yAxis = series && yAxesMap[series.yAxisId];
-              const valueFormatter = yAxis ? yAxis.valueFormatter : fallbackValueFormatter;
+              const valueFormatter = yAxis ?
+                yAxis.valueFormatter : fallbackValueFormatter;
               usedValueFormatters.add(valueFormatter);
               return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${_.escape(seriesName)}</span> <span class="tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
             }).join('');

@@ -66,7 +66,9 @@ export default function replaceEmpty(context, args) {
   }
 
   const data = context.evaluateTransformFunction(context, args.data);
-  const strategy = normalizeStrategy(context.evaluateTransformFunction(context, args.strategy));
+  const strategy = normalizeStrategy(
+    context.evaluateTransformFunction(context, args.strategy)
+  );
   const fallbackValue = context.evaluateTransformFunction(context, args.fallbackValue);
 
   if (Array.isArray(data)) {

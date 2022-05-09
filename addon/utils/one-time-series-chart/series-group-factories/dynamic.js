@@ -79,7 +79,8 @@ export default async function dynamic(context, args) {
   switch (sourceType) {
     case 'external': {
       const externalSourceName = sourceParameters && sourceParameters.externalSourceName;
-      const externalSourceParameters = sourceParameters && sourceParameters.externalSourceParameters;
+      const externalSourceParameters = sourceParameters &&
+        sourceParameters.externalSourceParameters;
       if (
         !externalSourceName ||
         !context.externalDataSources[externalSourceName] ||
