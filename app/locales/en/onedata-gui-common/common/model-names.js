@@ -16,4 +16,11 @@ export default {
   atmWorkflowSchema: 'workflow',
   atmLambda: 'lambda',
   atmWorkflowExecutionSummary: 'workflow execution',
+  archive: 'archive',
+  dataset: 'dataset',
+  file: 'file',
+  handleService: 'handle service',
+  handle: 'handle',
+  storage: 'storage',
+  transfer: 'transfer',
 };
