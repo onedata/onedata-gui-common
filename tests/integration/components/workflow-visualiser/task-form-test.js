@@ -55,6 +55,7 @@ const dataSpecs = [{
     'symlink',
     'dataset',
     'range',
+    'timeSeriesMeasurement',
   ],
   // TODO: VFS-7816 uncomment or remove future code
   // valueBuilderTypes: ['iteratedItem', 'const', 'storeCredentials', 'onedatafsCredentials'],
@@ -985,7 +986,7 @@ describe('Integration | Component | workflow visualiser/task form', function () 
       [false, true].forEach((isBatch) => {
         const sortedPossibleStoresToCheck = isBatch ?
           sortedPossibleStoresWithBatch : sortedPossibleStores;
-        it(`provides available stores for result of type "${dataSpecName}"`,
+        it(`provides available stores for result of ${isBatch ? 'batched ' : ''}type "${dataSpecName}"`,
           async function () {
             setProperties(this.get('atmLambda.revisionRegistry.1'), {
               preferredBatchSize: isBatch ? 100 : 1,
@@ -1004,7 +1005,8 @@ describe('Integration | Component | workflow visualiser/task form', function () 
             let extraOptionsCount = 2;
             if (allowSystemAuditLogStores) {
               extraOptionsCount += 2;
-            } else if (allowTaskTimeSeriesStore) {
+            }
+            if (allowTaskTimeSeriesStore) {
               extraOptionsCount += 1;
             }
             expect($options)
@@ -1023,68 +1025,6 @@ describe('Integration | Component | workflow visualiser/task form', function () 
           });
       });
 
-      it(`allows to create new store for result of type "${dataSpecName}"`,
-        async function () {
-          this.set('newStoreFromCreation', Store.create({
-            id: 'newstore',
-            name: 'new store',
-            config: sortedPossibleStores[0].config,
-            type: sortedPossibleStores[0].type,
-          }));
-          this.set('atmLambda.revisionRegistry.1.resultSpecs', [{
-            name: 'res1',
-            dataSpec,
-          }]);
-          const allowedStoreTypes = sortedPossibleStores.mapBy('type').uniq();
-          const allowedDataTypes = [...compatibleDataSpecNames];
-
-          await render(this);
-          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
-
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
-            .to.equal('new store');
-          const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
-          expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
-          const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
-
-          expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
-            .to.deep.equal(allowedStoreTypes.sort());
-          expect(lastCreateStoreCallArg.allowedDataTypes.sort())
-            .to.deep.equal(allowedDataTypes.sort());
-        });
-
-      it(`allows to create new store for result of batched type "${dataSpecName}"`,
-        async function () {
-          this.set('newStoreFromCreation', Store.create({
-            id: 'newstore',
-            name: 'new store',
-            config: sortedPossibleStoresWithBatch[0].config,
-            type: sortedPossibleStoresWithBatch[0].type,
-          }));
-          setProperties(this.get('atmLambda.revisionRegistry.1'), {
-            preferredBatchSize: 100,
-            resultSpecs: [{
-              name: 'res1',
-              dataSpec,
-            }],
-          });
-          const allowedStoreTypes = sortedPossibleStoresWithBatch.mapBy('type').uniq();
-          const allowedDataTypes = [...compatibleDataSpecNames];
-
-          await render(this);
-          await selectChoose('.resultMapping-field .targetStore-field', 'Create store...');
-
-          expect(this.$('.targetStore-field .dropdown-field-trigger').text().trim())
-            .to.equal('new store');
-          const createCreateStoreActionStub = this.get('createCreateStoreActionStub');
-          expect(this.get('createCreateStoreActionStub')).to.be.calledOnce;
-          const lastCreateStoreCallArg = createCreateStoreActionStub.lastCall.args[0];
-
-          expect(lastCreateStoreCallArg.allowedStoreTypes.sort())
-            .to.deep.equal(allowedStoreTypes.sort());
-          expect(lastCreateStoreCallArg.allowedDataTypes.sort())
-            .to.deep.equal(allowedDataTypes.sort());
-        });
     });
 
     it('allows to setup result to be unassigned',

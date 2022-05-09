@@ -1,6 +1,3 @@
-// TODO: VFS-9257 fix eslint issues in this file
-/* eslint-disable no-param-reassign */
-
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import ReplacingChunksArray, { emptyItem } from 'onedata-gui-common/utils/replacing-chunks-array';
@@ -9,47 +6,15 @@ import sinon from 'sinon';
 import wait from 'ember-test-helpers/wait';
 import { Promise, resolve } from 'rsvp';
 import { get } from '@ember/object';
-
-const defaultMockArraySize = 1000;
-
-class Record {
-  constructor(index) {
-    this.index = index;
-    this.id = index;
-  }
-}
-
-function recordRange(start, end) {
-  return _.range(start, end).map(i => new Record(i));
-}
-
-class MockArray {
-  constructor() {
-    this.array = recordRange(0, defaultMockArraySize);
-  }
-  fetch(
-    fromIndex,
-    size = Number.MAX_SAFE_INTEGER,
-    offset = 0
-  ) {
-    if (fromIndex == null) {
-      fromIndex = Number.MIN_SAFE_INTEGER;
-    }
-    let startIndex = 0;
-    for (let i = 0; i < this.array.length; ++i) {
-      startIndex = i;
-      if (this.array[i].index >= fromIndex) {
-        break;
-      }
-    }
-    const startOffset = Math.max(
-      0,
-      Math.min(startIndex + offset, this.array.length)
-    );
-    const endOffset = Math.min(startOffset + size, this.array.length);
-    return resolve(this.array.slice(startOffset, endOffset));
-  }
-}
+import {
+  defaultMockArraySize,
+  MockArray,
+  Record,
+  recordRange,
+  removeFromArray,
+  addToArray,
+  inspect,
+} from '../../helpers/replacing-chunks-array';
 
 class MockFullArray {
   constructor(size = 1000) {
@@ -64,24 +29,6 @@ class MockFullArray {
   fetch() {
     return Promise.resolve([...this.array]);
   }
-}
-
-function removeFromArray(array, pos) {
-  return [...array.slice(0, pos), ...array.slice(pos + 1, array.length)];
-}
-
-function addToArray(array, pos, ...items) {
-  return [...array.slice(0, pos), ...items, ...array.slice(pos, array.length)];
-}
-
-function mapIndex(array) {
-  return array.toArray().map(i => i && get(i, 'index'));
-}
-
-function inspect(rca) {
-  return `_start: ${get(rca, '_start')}; _end: ${get(rca, '_end')}; ` +
-    `array: ${mapIndex(rca)}; ` +
-    `source: ${mapIndex(get(rca, 'sourceArray'))}`;
 }
 
 const gteMatcher = (compareValue) => {

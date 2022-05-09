@@ -1,6 +1,11 @@
-.time-series-measurement-dataspec-editor {
+.time-series-measurement-value-constraints-editor {
   .collection-item {
-    max-width: 20em;
+    min-width: 0;
+    width: 20em;
+  }
+
+  .measurementSpec-children > * {
+    flex-wrap: wrap;
   }
 
   @media (min-width: $screen-sm-min) {
