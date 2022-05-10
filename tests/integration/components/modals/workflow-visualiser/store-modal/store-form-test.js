@@ -104,6 +104,14 @@ const dataTypes = [{
     type: 'range',
     valueConstraints: {},
   },
+}, {
+  label: 'Time series measurement',
+  dataSpec: {
+    type: 'timeSeriesMeasurement',
+    valueConstraints: {
+      specs: [],
+    },
+  },
 }];
 
 const storeTypesWithGenericConfig = storeTypes
@@ -195,8 +203,8 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('renders "type" field with preselected "list" option', async function () {
       await render(this);
 
-      const $label = this.$('.type-field .control-label');
-      const $field = this.$('.type-field .dropdown-field-trigger');
+      const $label = this.$('.type-field .control-label').eq(0);
+      const $field = this.$('.type-field .dropdown-field-trigger').eq(0);
       expect($label.text().trim()).to.equal('Type:');
       expect($field.text().trim()).to.equal('List');
     });
@@ -266,7 +274,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
         expectExpandedConfig('generic');
 
-        const $dataTypeField = this.$('.dataType-field');
+        const $dataTypeField = this.$('.dataSpec-field .type-field');
         expect($dataTypeField.find('.control-label').text().trim()).to.equal('Data type:');
         expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
           .to.equal(defaultDataTypeLabel || availableDataTypeLabels[0]);
@@ -275,7 +283,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         } else {
           expect($dataTypeField).to.have.class('field-enabled');
 
-          await clickTrigger('.dataType-field');
+          await clickTrigger('.dataSpec-field .type-field');
 
           const $options = $('.ember-power-select-option');
           expect($options).to.have.length(availableDataTypeLabels.length);
@@ -300,7 +308,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await selectChoose('.type-field', label);
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         if (!disabledDataTypeSelection) {
-          await selectChoose('.dataType-field', selectedDataTypeLabel);
+          await selectChoose('.dataSpec-field .type-field', selectedDataTypeLabel);
         }
         await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
@@ -479,7 +487,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.description-field .form-control', 'someDescription');
       await selectChoose('.type-field', 'Time series');
-      await click('.add-field-button');
+      await click('.timeSeriesSchemas-add-field-button');
       await selectChoose('.nameGeneratorType-field', 'Exact');
       await fillIn('.nameGenerator-field .form-control', 'some_name');
       await selectChoose('.unit-field', 'Bytes');
@@ -521,7 +529,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await render(this);
 
         await selectChoose('.type-field', 'List');
-        await selectChoose('.dataType-field', label);
+        await selectChoose('.dataSpec-field .type-field', label);
 
         expect(changeSpy).to.be.calledWith({
           data: {
@@ -592,8 +600,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         expect(this.$('.instanceId-field')).to.not.exist;
         expect(this.$('.name-field .form-control')).to.have.value('store1');
         expect(this.$('.description-field .form-control')).to.have.value('desc');
-        expect(this.$('.type-field .dropdown-field-trigger').text().trim()).to.equal(label);
-        const $dataTypeField = this.$('.dataType-field');
+        expect(this.$('.type-field .dropdown-field-trigger').eq(0).text().trim())
+          .to.equal(label);
+        const $dataTypeField = this.$('.dataSpec-field .type-field');
         expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
@@ -627,7 +636,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       expect(this.$('.instanceId-field')).to.not.exist;
       expect(this.$('.name-field .form-control')).to.have.value('store1');
       expect(this.$('.description-field .form-control')).to.have.value('desc');
-      expect(this.$('.type-field .dropdown-field-trigger').text().trim())
+      expect(this.$('.type-field .dropdown-field-trigger').eq(0).text().trim())
         .to.equal('Range');
       expect(this.$('.rangeStart-field .form-control')).to.have.value('2');
       expect(this.$('.rangeEnd-field .form-control')).to.have.value('6');
@@ -690,8 +699,9 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await render(this);
 
-          expect(this.$('.dataType-field .dropdown-field-trigger').text().trim())
-            .to.equal(label);
+          expect(
+            this.$('.dataSpec-field .type-field .dropdown-field-trigger').text().trim()
+          ).to.equal(label);
         });
     });
 
@@ -757,10 +767,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           .to.equal('store1');
         expect(this.$('.description-field .field-component').text().trim())
           .to.equal('desc');
-        expect(this.$('.type-field .field-component').text().trim())
+        expect(this.$('.type-field .field-component').eq(0).text().trim())
           .to.equal(label);
-        const $dataTypeField = this.$('.dataType-field');
-        expect(this.$('.dataType-field .field-component').text().trim())
+        const $dataTypeField = this.$('.dataSpec-field .type-field');
+        expect(this.$('.dataSpec-field .type-field .field-component').text().trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
           expect($dataTypeField).to.have.class('field-disabled');
@@ -799,7 +809,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         .to.equal('store1');
       expect(this.$('.description-field .field-component').text().trim())
         .to.equal('desc');
-      expect(this.$('.type-field .field-component').text().trim())
+      expect(this.$('.type-field .field-component').eq(0).text().trim())
         .to.equal('Range');
       expect(this.$('.rangeStart-field .field-component').text().trim()).to.equal('2');
       expect(this.$('.rangeEnd-field .field-component').text().trim()).to.equal('6');
@@ -863,7 +873,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
           await render(this);
 
-          expect(this.$('.dataType-field .field-component').text().trim())
+          expect(this.$('.dataSpec-field .type-field .field-component').text().trim())
             .to.equal(label);
         });
     });

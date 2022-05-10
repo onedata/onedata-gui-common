@@ -1149,8 +1149,6 @@ function getValueBuilderTypesForArgType(argType, isArray) {
   //   return ['storeCredentials'];
   if (argType === 'onedatafsCredentials') {
     builders = ['onedatafsCredentials'];
-  } else if (argType === 'timeSeriesMeasurement') {
-    builders = ['const'];
   } else if (argType === 'object') {
     builders = [
       'iteratedItem',
@@ -1206,7 +1204,8 @@ function getSourceDataTypesForType(type) {
         'directory',
         'symlink',
         'dataset',
-        'range'
+        'range',
+        'timeSeriesMeasurement'
       );
       break;
     case 'anyFile':

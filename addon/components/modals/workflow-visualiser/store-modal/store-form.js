@@ -18,9 +18,7 @@ import {
   eq,
   neq,
   raw,
-  array,
   or,
-  gt,
   not,
   and,
   isEmpty,
@@ -41,56 +39,40 @@ import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
-import {
-  typeToDataSpec,
-  dataSpecToType,
-} from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 import { validator } from 'ember-cp-validations';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
+import {
+  FormElement as DataSpecEditor,
+  formValuesToDataSpec,
+  dataSpecToFormValues,
+  dataSpecTypes,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
-const storeTypes = [{
-  value: 'list',
-}, {
-  value: 'treeForest',
-}, {
-  value: 'singleValue',
-}, {
-  value: 'range',
-}, {
-  value: 'auditLog',
-}, {
-  value: 'timeSeries',
-}];
+const storeTypes = Object.freeze([
+  'list',
+  'treeForest',
+  'singleValue',
+  'range',
+  'auditLog',
+  'timeSeries',
+]);
 
-const dataTypes = [{
-  value: 'integer',
-  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
-}, {
-  value: 'string',
-  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
-}, {
-  value: 'object',
-  forbiddenIn: ['treeForest', 'range', 'timeSeries'],
-}, {
-  value: 'anyFile',
-  forbiddenIn: ['range', 'timeSeries'],
-}, {
-  value: 'regularFile',
-  forbiddenIn: ['range', 'timeSeries'],
-}, {
-  value: 'directory',
-  forbiddenIn: ['range', 'timeSeries'],
-}, {
-  value: 'symlink',
-  forbiddenIn: ['range', 'timeSeries'],
-}, {
-  value: 'dataset',
-  forbiddenIn: ['range', 'timeSeries'],
-}, {
-  value: 'range',
-  forbiddenIn: ['treeForest', 'timeSeries'],
-}];
+const dataTypesForbiddenForAllStores = Object.freeze([
+  'onedatafsCredentials',
+]);
+
+const dataTypesForbiddenPerStoreType = Object.freeze({
+  treeForest: Object.freeze([
+    'integer',
+    'string',
+    'object',
+    'range',
+    'timeSeriesMeasurement',
+  ]),
+  range: Object.freeze(dataSpecTypes.without('range')),
+  timeSeries: Object.freeze(dataSpecTypes.without('timeSeriesMeasurement')),
+});
 
 const defaultRangeStart = 0;
 const defaultRangeStep = 1;
@@ -154,6 +136,36 @@ export default Component.extend(I18n, {
   isDisabled: false,
 
   /**
+   * @type {ComputedProperty<Array<string>>}
+   */
+  effAllowedStoreTypes: computed(
+    'allowedStoreTypes',
+    'allowedDataTypes',
+    function effAllowedStoreTypes() {
+      const {
+        allowedDataTypes,
+        allowedStoreTypes,
+      } = this.getProperties('allowedDataTypes', 'allowedStoreTypes');
+
+      let effAllowedTypes = storeTypes;
+      if (allowedStoreTypes && allowedStoreTypes.length) {
+        effAllowedTypes = effAllowedTypes.filter((type) =>
+          allowedStoreTypes.includes(type)
+        );
+      }
+      if (allowedDataTypes && allowedDataTypes.length) {
+        effAllowedTypes = effAllowedTypes.filter((type) => {
+          const forbiddenDataTypes = dataTypesForbiddenPerStoreType[type] || [];
+          return allowedDataTypes.some((dataType) =>
+            !forbiddenDataTypes.includes(dataType)
+          );
+        });
+      }
+      return effAllowedTypes;
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<String>}
    */
   modeClass: tag `mode-${'mode'}`,
@@ -163,11 +175,17 @@ export default Component.extend(I18n, {
    */
   passedFormValues: computed(
     'store.{name,description,type,dataType,defaultInitialContent,requiresInitialContent}',
+    'effAllowedStoreTypes',
     function passedStoreFormValues() {
-      const defaultStoreType = this.getTypeFieldOptions()[0].value;
-      return storeToFormData(this.get('store'), {
+      const {
+        store,
+        effAllowedStoreTypes,
+      } = this.getProperties('store', 'effAllowedStoreTypes');
+
+      const defaultStoreType = effAllowedStoreTypes[0];
+      return storeToFormData(store, {
         defaultType: defaultStoreType,
-        defaultDataType: (this.getDataTypeFieldOptions(defaultStoreType)[0] || {}).value,
+        allowedDataTypes: this.calculateEffAllowedDataTypes(defaultStoreType),
       });
     }
   ),
@@ -281,9 +299,11 @@ export default Component.extend(I18n, {
     const component = this;
     return DropdownField.extend({
       options: computed(
-        'component.{allowedDataTypes,allowedStoreTypes}',
+        'component.effAllowedStoreTypes',
         function options() {
-          return component.getTypeFieldOptions();
+          return this.get('component.effAllowedStoreTypes').map((type) => ({
+            value: type,
+          }));
         }
       ),
     }).create({
@@ -298,10 +318,10 @@ export default Component.extend(I18n, {
    */
   genericStoreConfigFieldsGroup: computed(function genericStoreConfigFieldsGroup() {
     const {
-      dataTypeField,
+      dataSpecField,
       defaultValueField,
     } = this.getProperties(
-      'dataTypeField',
+      'dataSpecField',
       'defaultValueField'
     );
     return FormFieldsGroup.extend({
@@ -313,40 +333,37 @@ export default Component.extend(I18n, {
     }).create({
       name: 'genericStoreConfig',
       fields: [
-        dataTypeField,
+        dataSpecField,
         defaultValueField,
       ],
     });
   }),
 
   /**
-   * @type {ComputedProperty<Utils.FormComponent.DropdownField>}
+   * @type {ComputedProperty<Utils.FormComponent.FormElement>}
    */
-  dataTypeField: computed(function dataTypeField() {
-    const component = this;
-    return DropdownField.extend({
-      isEnabled: gt(array.length('options'), raw(1)),
-      options: computed(
-        'valuesSource.type',
+  dataSpecField: computed(function dataSpecField() {
+    const field = DataSpecEditor.extend({
+      allowedTypes: computed(
         'component.allowedDataTypes',
-        function options() {
-          const storeType = this.get('valuesSource.type');
-          return component.getDataTypeFieldOptions(storeType);
+        'valuesSource.type',
+        function allowedTypes() {
+          return this.get('component').calculateEffAllowedDataTypes(
+            this.get('valuesSource.type')
+          );
         }
       ),
-      storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
-        const {
-          options,
-          value,
-        } = this.getProperties('options', 'value');
-        if (value && options.length && !options.mapBy('value').includes(value)) {
-          this.valueChanged(options[0].value);
-        }
-      }),
     }).create({
-      name: 'dataType',
-      component,
+      component: this,
+      name: 'dataSpec',
     });
+    get(field.getFieldByPath('valueConstraints'), 'fields')
+      .forEach((constraintsField) => set(
+        constraintsField,
+        'classes',
+        `${get(constraintsField, 'classes') || ''} nowrap-on-desktop`
+      ));
+    return field;
   }),
 
   /**
@@ -574,43 +591,24 @@ export default Component.extend(I18n, {
     });
   },
 
-  getTypeFieldOptions() {
-    const {
-      allowedDataTypes,
-      allowedStoreTypes,
-    } = this.getProperties('allowedDataTypes', 'allowedStoreTypes');
-
-    let options = storeTypes;
-    if (allowedStoreTypes && allowedStoreTypes.length) {
-      options = options.filter(({ value }) => allowedStoreTypes.includes(value));
-    }
-    if (allowedDataTypes && allowedDataTypes.length) {
-      options = options.filter(({ value }) => allowedDataTypes.some(dataType =>
-        !((dataTypes.findBy('value', dataType) || {}).forbiddenIn || []).includes(value)
-      ));
-    }
-    return options;
-  },
-
-  getDataTypeFieldOptions(storeType) {
-    const allowedDataTypes = this.get('allowedDataTypes');
-
-    let options = dataTypes.filter(({ forbiddenIn }) => !forbiddenIn.includes(storeType));
-    if (allowedDataTypes && allowedDataTypes.length) {
-      options = options.filter(({ value }) => allowedDataTypes.includes(value));
-    }
-    return options;
+  calculateEffAllowedDataTypes(storeType) {
+    const allowedDataTypes = this.get('allowedDataTypes') || dataSpecTypes;
+    const forbiddenDataTypes = [
+      ...(dataTypesForbiddenPerStoreType[storeType] || []),
+      ...dataTypesForbiddenForAllStores,
+    ];
+    return allowedDataTypes.filter((type) => !forbiddenDataTypes.includes(type));
   },
 });
 
-function storeToFormData(store, { defaultType, defaultDataType }) {
+function storeToFormData(store, { defaultType, allowedDataTypes }) {
   if (!store) {
     return createValuesContainer({
       name: '',
       description: '',
       type: defaultType,
       genericStoreConfig: createValuesContainer({
-        dataType: defaultDataType,
+        dataSpec: dataSpecToFormValues(null, { allowedTypes: allowedDataTypes }),
         defaultValue: '',
       }),
       rangeStoreConfig: createValuesContainer({
@@ -679,7 +677,7 @@ function storeToFormData(store, { defaultType, defaultDataType }) {
     }
     default:
       formData.genericStoreConfig = createValuesContainer({
-        dataType: writeDataSpec && dataSpecToType(writeDataSpec).type || undefined,
+        dataSpec: dataSpecToFormValues(writeDataSpec, { allowedTypes: allowedDataTypes }),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
       });
@@ -749,11 +747,15 @@ function formDataToStore(formData) {
       break;
     default: {
       const {
-        dataType,
+        dataSpec,
         defaultValue,
-      } = getProperties(genericStoreConfig || {}, 'dataType', 'defaultValue');
+      } = getProperties(
+        genericStoreConfig || {},
+        'dataSpec',
+        'defaultValue'
+      );
 
-      const writeDataSpec = dataType && typeToDataSpec({ type: dataType, isArray: false }) || undefined;
+      const writeDataSpec = formValuesToDataSpec(dataSpec);
       let defaultInitialContent = null;
       if (defaultValue && defaultValue.trim()) {
         try {

@@ -1,19 +1,25 @@
 /**
- * Contains data and utils related to "time series measurement" automation data spec.
+ * Contains type definitions, data and utils related to "time series measurement"
+ * automation data spec.
  *
- * @module utils/atm-workflow/data-spec/time-series-measurement
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 /**
- * @typedef {Object} TimeSeriesMeasurementValueConstraints
- * @property {Array<TimeSeriesMeasurementSpec>} specs
+ * @typedef {Object} AtmTimeSeriesMeasurementDataSpec
+ * @property {'timeSeriesMeasurement'} type
+ * @property {AtmTimeSeriesMeasurementValueConstraints} valueConstraints
  */
 
 /**
- * @typedef {Object} TimeSeriesMeasurementSpec
+ * @typedef {Object} AtmTimeSeriesMeasurementValueConstraints
+ * @property {Array<AtmTimeSeriesMeasurementSpec>} specs
+ */
+
+/**
+ * @typedef {Object} AtmTimeSeriesMeasurementSpec
  * @property {string} nameMatcherType for possible values see at `nameMatcherTypes` below
  * @property {string} nameMatcher
  * @property {string} unit for possible values see at `units` below
