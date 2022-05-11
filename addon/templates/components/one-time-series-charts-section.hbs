@@ -1,0 +1,46 @@
+<div class="section-header">
+  {{#if sectionSpec.title}}
+    {{#if sectionSpec.title.content}}
+      <h3 class="section-title">{{sectionSpec.title.content}}</h3>
+      <span class="space"></span>
+    {{/if}}
+    {{#if sectionSpec.title.tip}}
+      {{one-label-tip title=sectionSpec.title.tip tooltipClass="tooltip-lg"}}
+    {{/if}}
+  {{/if}}
+  {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
+    {{one-time-series-chart/toolbar models=chartModels}}
+  {{/if}}
+</div>
+
+{{#if sectionSpec.description.content}}
+  <p class="section-description">{{sectionSpec.description.content}}</p>
+{{/if}}
+
+{{#if chartConfigurations.length}}
+  <div class="section-charts">
+    {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
+      {{#each chartModels as |model|}}
+        {{one-time-series-chart/plot model=model}}
+      {{/each}}
+    {{else}}
+      {{#each chartConfigurations as |configuration|}}
+        {{one-time-series-chart configuration=configuration}}
+      {{/each}}
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if sectionSpec.sections.length}}
+  <div class="section-subsections">
+    {{#each sectionSpec.sections as |subsection|}}
+      {{one-time-series-charts-section
+        sectionSpec=subsection
+        timeSeriesSchemas=timeSeriesSchemas
+        externalDataSources=externalDataSources
+      }}
+    {{/each}}
+  </div>
+{{/if}}
+
+{{yield}}
