@@ -11,15 +11,15 @@ $toggle-icon-size: 1.24em;
 
 @mixin toggle-color($base-color) {
   $thumb-color: darken($base-color, 10%);
-  
+
   .one-way-toggle-track {
     background-color: $base-color;
   }
-  
+
   .one-way-toggle-thumb .thumb-icon {
     color: $thumb-color;
   }
-  
+
   &.disabled {
     .one-way-toggle-track {
       background-color: desaturate($base-color, $toggle-disabled-desaturation);
@@ -42,7 +42,7 @@ $toggle-icon-size: 1.24em;
     display: inline-flex;
     align-self: center;
   }
-  
+
   &.form-control {
     background-color: inherit;
     border: 0;
@@ -73,10 +73,10 @@ $toggle-icon-size: 1.24em;
   &.unselected {
     @include toggle-color($toggle-bg-color-unchecked);
   }
-  
+
   &.checked {
     @include toggle-color($toggle-bg-color-checked);
-    
+
     .one-way-toggle-thumb {
       transform: translateX(#{$toggle-slide-space});
     }
@@ -84,7 +84,7 @@ $toggle-icon-size: 1.24em;
 
   &.maybe {
     @include toggle-color($toggle-bg-color-indeterminate);
-    
+
     .one-way-toggle-thumb {
       transform: translateX(#{$toggle-slide-space / 2});
     }
@@ -104,18 +104,18 @@ $toggle-icon-size: 1.24em;
     width: $toggle-width;
     height: 100%;
   }
-  
+
   &.spinner-left {
     flex-direction: row-reverse;
   }
-  
+
   .one-way-toggle-track {
     height: $toggle-track-height;
     flex-basis: 100%;
     transition: transition-ease(background-color), transition-ease(opacity);
     border-radius: $toggle-track-height / 2;
   }
-  
+
   .one-way-toggle-thumb {
     position: absolute;
     display: flex;
@@ -142,24 +142,24 @@ $toggle-icon-size: 1.24em;
     font-size: 120%;
     line-height: 0;
   }
-  
+
   &.in-progress {
-    $spinner-position-delta: 12px;
+    $spinner-position-delta: 6px;
     width: 1.55 * $toggle-width;
     .spin-spinner-block {
       position: absolute;
-      right: 0.55 * $toggle-width;
-      transform: translateX($spinner-position-delta);
-      // fix vertical position a little bit
+      left: $toggle-width;
+      transform: translateX($spinner-position-delta) translateY(-50%);
+      // -1px to fix vertical position a little bit
       top: calc(50% - 1px);
     }
     &.spinner-left {
       .spin-spinner-block {
-        transform: translateX(calc(-#{$toggle-width} + #{$spinner-position-delta}));
+        left: 0;
       }
     }
   }
-  
+
   div.clickable::before {
     cursor: pointer;
   }
@@ -169,7 +169,7 @@ $toggle-icon-size: 1.24em;
   .control-label {
     padding-top: 0;
   }
-  
+
   & + .form-control-feedback {
     display: none;
   }
