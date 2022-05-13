@@ -759,7 +759,7 @@ label.align-left {
   }
   &.alert-light {
     color: $main-text-color;
-    border-color: $table-border-color;
-    background-color: darken($table-bg-accent, 1%)
+    border-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.04);
   }
 }
