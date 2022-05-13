@@ -29,8 +29,8 @@ export const dataSpecTypes = Object.freeze([
   'symlink',
   'dataset',
   'range',
-  'onedatafsCredentials',
   'timeSeriesMeasurement',
+  'onedatafsCredentials',
 ]);
 
 export const FormElement = FormFieldsGroup.extend({
