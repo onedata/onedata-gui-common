@@ -2,10 +2,13 @@
   {{#if sectionSpec.title}}
     {{#if sectionSpec.title.content}}
       <h3 class="section-title">{{sectionSpec.title.content}}</h3>
-      <span class="space"></span>
     {{/if}}
     {{#if sectionSpec.title.tip}}
-      {{one-label-tip title=sectionSpec.title.tip tooltipClass="tooltip-lg"}}
+      {{one-label-tip
+        class="section-title-tip"
+        title=sectionSpec.title.tip
+        tooltipClass="tooltip-lg"
+      }}
     {{/if}}
   {{/if}}
   {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
@@ -21,11 +24,15 @@
   <div class="section-charts">
     {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
       {{#each chartModels as |model|}}
-        {{one-time-series-chart/plot model=model}}
+        <div class="section-chart">
+          {{one-time-series-chart/plot model=model}}
+        </div>
       {{/each}}
     {{else}}
       {{#each chartConfigurations as |configuration|}}
-        {{one-time-series-chart configuration=configuration}}
+        <div class="section-chart">
+          {{one-time-series-chart configuration=configuration}}
+        </div>
       {{/each}}
     {{/if}}
   </div>
