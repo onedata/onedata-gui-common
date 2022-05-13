@@ -22,6 +22,7 @@ const dataSpecTypes = [
   'file',
   'dataset',
   'range',
+  'timeSeriesMeasurement',
 ];
 const dataSpecTypeDataExamples = {
   integer: 1,
@@ -30,6 +31,7 @@ const dataSpecTypeDataExamples = {
   file: {},
   dataset: {},
   range: {},
+  timeSeriesMeasurement: {},
 };
 const specificColumnsForStoreType = {
   list: [],
@@ -44,6 +46,7 @@ const initialColumnsForDataSpecType = {
   file: [],
   dataset: [],
   range: ['start', 'end', 'step'],
+  timeSeriesMeasurement: ['tsName', 'tsTimestamp', 'tsValue'],
 };
 const dataSpecTypesForStoreType = {
   list: dataSpecTypes,

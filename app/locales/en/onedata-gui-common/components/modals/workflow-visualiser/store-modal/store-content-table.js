@@ -11,6 +11,9 @@ export default {
     rangeStart: 'Start',
     rangeEnd: 'End',
     rangeStep: 'Step',
+    timeSeriesMeasurementSeriesName: 'Time series name',
+    timeSeriesMeasurementTimestamp: 'Measurement time',
+    timeSeriesMeasurementValue: 'Measurement value',
   },
   tableRow: {
     storeAccessError: 'Cannot fetch entry due to error',
