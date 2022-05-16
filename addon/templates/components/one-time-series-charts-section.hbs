@@ -1,15 +1,11 @@
 <div class="section-header">
-  {{#if sectionSpec.title}}
-    {{#if sectionSpec.title.content}}
-      <h3 class="section-title">{{sectionSpec.title.content}}</h3>
-    {{/if}}
-    {{#if sectionSpec.title.tip}}
-      {{one-label-tip
-        class="section-title-tip"
-        title=sectionSpec.title.tip
-        tooltipClass="tooltip-lg"
-      }}
-    {{/if}}
+  {{#if titleContent}}
+    <h3 class="section-title">{{titleContent}}</h3>
+  {{/if}}
+  {{#if titleTip}}
+    {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
+      {{titleTip}}
+    {{/one-label-tip}}
   {{/if}}
   {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
     {{one-time-series-chart/toolbar models=chartModels}}

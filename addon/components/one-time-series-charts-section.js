@@ -2,12 +2,14 @@ import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { htmlSafe } from '@ember/string';
 import _ from 'lodash';
 import { resolve } from 'rsvp';
 import layout from '../templates/components/one-time-series-charts-section';
 import OTSCConfiguration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import OTSCModel from 'onedata-gui-common/utils/one-time-series-chart/model';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
+import escapeTipHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-tip-html';
 import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
 
 /**
@@ -84,6 +86,21 @@ export default Component.extend({
   defaultCallbacks: undefined,
 
   /**
+   * @type {ComputedProperty<string>}
+   */
+  titleContent: computed('sectionSpec.title.content', function titleContent() {
+    return this.get('sectionSpec.title.content') || null;
+  }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  titleTip: computed('sectionSpec.title.tip', function titleTip() {
+    const escapedTip = escapeTipHtml(this.get('sectionSpec.title.tip') || '');
+    return escapedTip ? htmlSafe(escapedTip) : null;
+  }),
+
+  /**
    * @type {ComputedProperty<number>}
    */
   globalTimeSecondsOffset: reads('onedataConnection.globalTimeSecondsOffset'),
@@ -134,9 +151,7 @@ export default Component.extend({
         const configuration = new OTSCConfiguration({
           nowTimestampOffset: globalTimeSecondsOffset || 0,
           chartDefinition: chartSpec,
-          timeResolutionSpecs: this.getTimeResolutionSpecs({
-            chartDefinition: chartSpec,
-          }),
+          timeResolutionSpecs: this.getTimeResolutionSpecs(chartSpec),
           externalDataSources: normalizedExternalDataSources,
         });
         configuration.setViewParameters({ live: true });
@@ -199,7 +214,7 @@ export default Component.extend({
       }, {}));
   },
 
-  getTimeResolutionSpecs({ chartDefinition }) {
+  getTimeResolutionSpecs(chartDefinition) {
     const {
       onGetTimeResolutionSpecs,
       defaultCallbacks,
