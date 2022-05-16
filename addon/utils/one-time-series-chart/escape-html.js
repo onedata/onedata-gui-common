@@ -1,5 +1,5 @@
 /**
- * Escapes chart-related tips from unwanted HTML tags.
+ * Escapes chart-related contents from unwanted HTML tags.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -22,8 +22,8 @@ const allowedAttributes = [];
  * @param {string} tip
  * @returns {string}
  */
-export default function escapeTipHtml(tip) {
-  return DOMPurify.sanitize(tip, {
+export default function escapeHtml(content) {
+  return DOMPurify.sanitize(content, {
     ALLOWED_TAGS: allowedTags,
     ALLOWED_ATTR: allowedAttributes,
   });

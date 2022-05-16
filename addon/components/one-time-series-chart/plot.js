@@ -17,7 +17,7 @@ import { reads } from '@ember/object/computed';
 import { htmlSafe } from '@ember/string';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../templates/components/one-time-series-chart/plot';
-import escapeTipHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-tip-html';
+import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 
 export default Component.extend(I18n, {
   layout,
@@ -66,7 +66,7 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<string>}
    */
   titleTip: computed('state.title.tip', function titleTip() {
-    const escapedTip = escapeTipHtml(this.get('state.title.tip'));
+    const escapedTip = escapeHtml(this.get('state.title.tip'));
     return escapedTip ? htmlSafe(escapedTip) : null;
   }),
 

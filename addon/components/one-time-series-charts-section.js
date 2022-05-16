@@ -9,7 +9,7 @@ import layout from '../templates/components/one-time-series-charts-section';
 import OTSCConfiguration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import OTSCModel from 'onedata-gui-common/utils/one-time-series-chart/model';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
-import escapeTipHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-tip-html';
+import escapeHtml from 'onedata-gui-common/utils/one-time-series-chart/escape-html';
 import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/store-config/time-series';
 
 /**
@@ -96,9 +96,22 @@ export default Component.extend({
    * @type {ComputedProperty<SafeString>}
    */
   titleTip: computed('sectionSpec.title.tip', function titleTip() {
-    const escapedTip = escapeTipHtml(this.get('sectionSpec.title.tip') || '');
+    const escapedTip = escapeHtml(this.get('sectionSpec.title.tip') || '');
     return escapedTip ? htmlSafe(escapedTip) : null;
   }),
+
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  descriptionContent: computed(
+    'sectionSpec.description.content',
+    function descriptionContent() {
+      const escapedDescription = escapeHtml(
+        this.get('sectionSpec.description.content') || ''
+      );
+      return escapedDescription ? htmlSafe(escapedDescription) : null;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<number>}

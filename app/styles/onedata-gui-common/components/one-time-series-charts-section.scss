@@ -30,16 +30,19 @@
     margin-right: 0.4em;
   }
 
+  .section-description {
+    margin-bottom: 0;
+  }
+
+  > :first-child ~ * {
+    margin-top: 1em;
+  }
+
   .section-charts,
   .section-subsections {
     display: grid;
     place-items: stretch;
     gap: 1em;
-  }
-
-  * ~ .section-charts,
-  * ~ .section-subsections {
-    margin-top: 1em;
   }
 
   .section-charts {
