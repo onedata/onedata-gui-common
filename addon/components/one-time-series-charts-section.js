@@ -37,7 +37,7 @@ export default Component.extend({
   layout,
   classNames: ['one-time-series-charts-section'],
 
-  onedataConnection: service(),
+  guiUtils: service(),
 
   /**
    * @virtual
@@ -101,6 +101,18 @@ export default Component.extend({
   }),
 
   /**
+   * @type {ComputedProperty<boolean>}
+   */
+  isSharedNavVisible: computed(
+    'sectionSpec.chartsNavigation',
+    'chartConfigurations.length',
+    function isSharedNavVisible() {
+      return this.get('sectionSpec.chartsNavigation') === 'sharedForSection' &&
+        this.get('chartConfigurations.length') > 0;
+    }
+  ),
+
+  /**
    * @type {ComputedProperty<SafeString>}
    */
   descriptionContent: computed(
@@ -116,7 +128,7 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<number>}
    */
-  globalTimeSecondsOffset: reads('onedataConnection.globalTimeSecondsOffset'),
+  globalTimeSecondsOffset: reads('guiUtils.globalTimeSecondsOffset'),
 
   /**
    * @type {ComputedProperty<OTSCExternalDataSources>}
@@ -124,7 +136,7 @@ export default Component.extend({
   normalizedExternalDataSources: computed(
     'externalDataSources',
     function normalizedExternalDataSources() {
-      const externalDataSources = this.get('externalDataSources');
+      const externalDataSources = this.get('externalDataSources') || {};
       const normalizedSources = {};
 
       Object.keys(externalDataSources).forEach((sourceName) => {

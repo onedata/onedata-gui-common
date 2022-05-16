@@ -1,16 +1,21 @@
-<div class="section-header">
-  {{#if titleContent}}
-    <h3 class="section-title">{{titleContent}}</h3>
-  {{/if}}
-  {{#if titleTip}}
-    {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
-      {{titleTip}}
-    {{/one-label-tip}}
-  {{/if}}
-  {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
-    {{one-time-series-chart/toolbar models=chartModels}}
-  {{/if}}
-</div>
+{{#if (or titleContent titleTip isSharedNavVisible)}}
+  <div class="section-header">
+    {{#if titleContent}}
+      <h3 class="section-title">{{titleContent}}</h3>
+    {{/if}}
+    {{#if titleTip}}
+      {{#one-label-tip class="section-title-tip" tooltipClass="tooltip-lg"}}
+        {{titleTip}}
+      {{/one-label-tip}}
+    {{/if}}
+    {{#if isSharedNavVisible}}
+      {{one-time-series-chart/toolbar
+        class="section-charts-shared-navigation"
+        models=chartModels
+      }}
+    {{/if}}
+  </div>
+{{/if}}
 
 {{#if descriptionContent}}
   <p class="section-description">{{descriptionContent}}</p>
@@ -18,7 +23,7 @@
 
 {{#if chartConfigurations.length}}
   <div class="section-charts">
-    {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
+    {{#if isSharedNavVisible}}
       {{#each chartModels as |model|}}
         {{one-time-series-chart/plot model=model class="section-chart"}}
       {{/each}}
