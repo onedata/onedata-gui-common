@@ -1,7 +1,7 @@
 /**
  * A component for predefined, usually nearly full-screen messages - content fillers.
  * Uses one-image to show a placeholder image.
- * Typical usage: 
+ * Typical usage:
  * ```
  * {{content-info
  *   class="scroll-breakpoint-700"
@@ -14,7 +14,7 @@
  *   buttonAction=(action "mainButtonClicked")
  * }}
  * ```
- * 
+ *
  * @module components/content-info
  * @author Jakub Liput, Michal Borzecki
  * @copyright (C) 2017-2018 ACK CYFRONET AGH
@@ -100,6 +100,12 @@ export default Component.extend({
    * @type {boolean}
    */
   buttonDisabled: false,
+
+  /**
+   * Tooltip text for primary button. Works also for disabled button.
+   * @type {string}
+   */
+  buttonTip: '',
 
   _actionInProgress: false,
 
