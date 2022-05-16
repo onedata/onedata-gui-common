@@ -83,6 +83,7 @@ $one-font-family-monospace: "Source Code Pro";
 
 @mixin font-semibold() {
   font-family: $one-font-family-semibold;
+  font-weight: normal;
 }
 
 @mixin font-bold() {

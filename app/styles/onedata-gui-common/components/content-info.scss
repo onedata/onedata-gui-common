@@ -1,6 +1,6 @@
 .content-info {
   $-content-margin: 2.5em;
-  
+
   @mixin centered-content-info {
     .world-map {
       position: absolute;
@@ -12,9 +12,9 @@
       padding: $padding-large-horizontal;
     }
   }
-  
+
   // scroll-breakpoint-[number] toggles between two modes:
-  // - centered horizontally and vertically (on large screens) 
+  // - centered horizontally and vertically (on large screens)
   // - normally positiononed with scroll (on small screens)
   // Mode changes when screen is [number]px high.
   // On mobile screens we need more space (we have less space horizontally),
@@ -100,5 +100,29 @@
       max-width: 740px;
       width: 100%;
     }
+  }
+}
+
+.modal .content-info {
+  .btn-primary {
+    font-size: 110%;
+  }
+  h1, h2 {
+    letter-spacing: inherit;
+  }
+  h1 {
+    font-size: 140%;
+    margin-bottom: 1.5em;
+    @include font-semibold;
+  }
+  h2 {
+    font-size: 110%;
+    margin-bottom: 1em;
+  }
+  .one-image .image {
+    max-height: 200px;
+  }
+  p.lead {
+    font-size: 120%;
   }
 }
