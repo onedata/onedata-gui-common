@@ -30,31 +30,31 @@
     margin-right: 0.4em;
   }
 
-  .section-charts {
+  .section-charts,
+  .section-subsections {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
     place-items: stretch;
     gap: 1em;
   }
 
-  * ~ .section-charts {
+  * ~ .section-charts,
+  * ~ .section-subsections {
     margin-top: 1em;
   }
 
-  .section-chart {
-    height: 300px;
-    display: flex;
-    place-items: stretch;
+  .section-charts {
+    grid-template-columns: repeat(auto-fit, minmax(25em, 1fr));
+    grid-auto-rows: 20em;
+  }
+
+  .section-subsections {
+    grid-template-columns: 1fr;
   }
 
   .section-chart {
-    > .one-time-series-chart-plot,
-    > .one-time-series-chart {
-      flex-grow: 1;
-      background-color: $color-one-white;
-      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 3px;
-      border: 1px solid rgba(0, 0, 0, 0.03);
-      border-radius: $border-radius-base;
-    }
+    background-color: $color-one-white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 3px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: $border-radius-base;
   }
 }

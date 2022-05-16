@@ -24,15 +24,14 @@
   <div class="section-charts">
     {{#if (eq sectionSpec.chartsNavigation "sharedForSection")}}
       {{#each chartModels as |model|}}
-        <div class="section-chart">
-          {{one-time-series-chart/plot model=model}}
-        </div>
+        {{one-time-series-chart/plot model=model class="section-chart"}}
       {{/each}}
     {{else}}
       {{#each chartConfigurations as |configuration|}}
-        <div class="section-chart">
-          {{one-time-series-chart configuration=configuration}}
-        </div>
+        {{one-time-series-chart
+          configuration=configuration
+          class="section-chart"
+        }}
       {{/each}}
     {{/if}}
   </div>
@@ -45,6 +44,7 @@
         sectionSpec=subsection
         timeSeriesSchemas=timeSeriesSchemas
         externalDataSources=externalDataSources
+        queryBatchers=queryBatchers
       }}
     {{/each}}
   </div>

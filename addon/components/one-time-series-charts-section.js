@@ -55,6 +55,19 @@ export default Component.extend({
   externalDataSources: undefined,
 
   /**
+   * Contains query batchers per each external data source name.
+   * At least one of `queryBatchers` or `onQueryBatcherFetchData` must be provided during
+   * component instantiation.
+   * @virtual optional
+   * @type {Object<string, Utils.OneTimeSeriesChart.QueryBatcher>}
+   */
+  queryBatchers: undefined,
+
+  /**
+   * Callback, which should provide response data for batched time series queries.
+   * At least one of `queryBatchers` or `onQueryBatcherFetchData` must be provided during
+   * component instantiation.
+   * @virtual optional
    * @type {({ dataSourceName: string, batchedQuery: BatchedTimeSeriesQuery }) => Promise<BatchedTimeSeriesQueryResult>}
    */
   onQueryBatcherFetchData: undefined,
@@ -102,22 +115,6 @@ export default Component.extend({
   ),
 
   /**
-   * @type {ComputedProperty<Object<string, Utils.OneTimeSeriesChart.QueryBatcher>>}
-   */
-  queryBatchers: computed('externalDataSources', function queryBatchers() {
-    return Object.keys(this.get('externalDataSources') || {})
-      .reduce((acc, dataSourceName) => {
-        acc[dataSourceName] = new QueryBatcher({
-          fetchData: (batchedQuery) => this.get('onQueryBatcherFetchData')({
-            dataSourceName,
-            batchedQuery,
-          }),
-        });
-        return acc;
-      }, {});
-  }),
-
-  /**
    * @type {ComputedProperty<Array<Utils.OneTimeSeriesChart.Configuration>>}
    */
   chartConfigurations: computed(
@@ -163,11 +160,17 @@ export default Component.extend({
       timeSeriesSchemas,
       queryBatchers,
     } = this.getProperties('timeSeriesSchemas', 'queryBatchers');
+
+    let normalizedQueryBatchers = queryBatchers;
+    if (!normalizedQueryBatchers) {
+      this.initializeQueryBatchers();
+      normalizedQueryBatchers = this.get('queryBatchers');
+    }
+
     this.set('defaultCallbacks', new DefaultCallbacks({
       timeSeriesSchemas,
-      queryBatchers,
+      queryBatchers: normalizedQueryBatchers,
     }));
-    window.test = this;
   },
 
   willDestroyElement() {
@@ -181,6 +184,19 @@ export default Component.extend({
         chartConfigurations.forEach((config) => config.destroy());
       }
     }
+  },
+
+  initializeQueryBatchers() {
+    this.set('queryBatchers', Object.keys(this.get('externalDataSources') || {})
+      .reduce((acc, dataSourceName) => {
+        acc[dataSourceName] = new QueryBatcher({
+          fetchData: (batchedQuery) => this.get('onQueryBatcherFetchData')({
+            dataSourceName,
+            batchedQuery,
+          }),
+        });
+        return acc;
+      }, {}));
   },
 
   getTimeResolutionSpecs({ chartDefinition }) {
