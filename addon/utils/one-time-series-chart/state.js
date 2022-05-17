@@ -217,6 +217,39 @@ export default class State {
     }))];
     const fallbackValueFormatter = (val) => val;
 
+    // Generate Echart series representation
+    const echartSeries = this.series.map((series) => {
+      const seriesGroup = seriesGroupsMap[series.groupId];
+      const stackId = seriesGroup && seriesGroup.stack ? seriesGroup.id : null;
+      return {
+        id: series.id,
+        name: series.name,
+        type: series.type,
+        yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
+        color: series.color,
+        stack: stackId,
+        areaStyle: stackId ? {} : null,
+        smooth: 0.2,
+        data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
+      };
+    });
+
+    // Sort Echart series to preserve "natural" order of stacked series (first
+    // series in a stack should be at the top).
+    const orderedEchartSeries = [];
+    const echartSeriesPerStack =
+      _.groupBy(echartSeries.filterBy('stack'), 'stack');
+    for (const echartSingleSeries of echartSeries) {
+      if (!echartSingleSeries.stack) {
+        orderedEchartSeries.push(echartSingleSeries);
+      } else if (echartSingleSeries.stack in echartSeriesPerStack) {
+        orderedEchartSeries.push(
+          ...echartSeriesPerStack[echartSingleSeries.stack].reverse()
+        );
+        delete echartSeriesPerStack[echartSingleSeries.stack];
+      }
+    }
+
     return {
       tooltip: {
         trigger: 'axis',
@@ -308,21 +341,7 @@ export default class State {
           alignWithLabel: true,
         },
       },
-      series: this.series.map((series) => {
-        const seriesGroup = seriesGroupsMap[series.groupId];
-        const stackId = seriesGroup && seriesGroup.stack ? seriesGroup.id : null;
-        return {
-          id: series.id,
-          name: series.name,
-          type: series.type,
-          yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
-          color: series.color,
-          stack: stackId,
-          areaStyle: stackId ? {} : null,
-          smooth: 0.2,
-          data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
-        };
-      }),
+      series: orderedEchartSeries,
     };
   }
 }
