@@ -21,30 +21,35 @@
       {{one-image
         imagePath=imagePath
         imageTextClass=imageTextClass
-        imageText=imageText}}
+        imageText=imageText
+      }}
     {{/if}}
     {{#if hasBlock}}
       <div class="row row-yield">
         {{yield (hash
-            buttonAction=(action _buttonAction)
-            actionInProgress=_actionInProgress
-          )
-        }}
+          buttonAction=(action _buttonAction)
+          actionInProgress=_actionInProgress
+        )}}
       </div>
     {{/if}}
     {{#if _showButton}}
       <div class="row text-center {{unless (or text imagePath hasBlock) "row-button-margin-top"}}">
         <div class="col-xs-12">
-          {{#one-button
-            type="primary"
-            buttonType="submit"
-            class=(concat "btn-content-info " buttonClass)
-            onClick=(action _buttonAction)
-            isPending=_actionInProgress
-            disabled=buttonDisabled
-          }}
-            {{buttonLabel}}
-          {{/one-button}}
+          <div class="btn-tooltip-container">
+            {{#one-button
+              type="primary"
+              buttonType="submit"
+              class=(concat "btn-content-info " buttonClass)
+              onClick=(action _buttonAction)
+              isPending=_actionInProgress
+              disabled=buttonDisabled
+            }}
+              {{buttonLabel}}
+            {{/one-button}}
+            {{#if buttonTip}}
+              {{one-tooltip title=buttonTip}}
+            {{/if}}
+          </div>
         </div>
       </div>
     {{/if}}

@@ -33,7 +33,7 @@ export default Component.extend(I18n, {
   i18nPrefix: 'components.actionsPopoverContent',
 
   /**
-   * @type {Array<Action>>}
+   * @type {Array<Utils.Action|Action>>}
    */
   actionsArray: Object.freeze([]),
 

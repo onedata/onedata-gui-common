@@ -23,6 +23,7 @@
         {{component
           (concat "modals/workflow-visualiser/store-modal/store-content-table/" columnData.componentName)
           value=columnData.value
+          settings=columnData.componentSettings
         }}
       {{else}}
         {{#if (gt columnData.value.length 20)}}

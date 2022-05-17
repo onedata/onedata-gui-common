@@ -112,7 +112,11 @@ export default class StoreContentTableColumns {
           label: String(this.t('logTime')),
           valuePath: ['value', 'timestamp'],
           type: 'storeSpecific',
-          componentName: 'cell-timestamp-ms',
+          componentName: 'cell-timestamp',
+          componentSettings: {
+            timestampUnit: 'millisecond',
+            areMillisecondsVisible: true,
+          },
         }, {
           name: 'severity',
           label: String(this.t('severity')),
@@ -139,14 +143,41 @@ export default class StoreContentTableColumns {
    * @private
    */
   getStoreDataSpecSpecificColumns() {
+    const pathToValueContent = ['value'];
+    if (this.storeType === 'auditLog') {
+      pathToValueContent.push('content');
+    }
+
     switch (this.storeDataSpec.type) {
       case 'range':
         return ['start', 'end', 'step'].map((field) => ({
           name: field,
           label: String(this.t(camelize(`range-${field}`))),
-          valuePath: ['value', field],
+          valuePath: [...pathToValueContent, field],
           type: 'storeSpecific',
         }));
+      case 'timeSeriesMeasurement':
+        return [{
+          name: 'tsName',
+          label: String(this.t('timeSeriesMeasurementSeriesName')),
+          valuePath: [...pathToValueContent, 'tsName'],
+          type: 'storeSpecific',
+        }, {
+          name: 'tsTimestamp',
+          label: String(this.t('timeSeriesMeasurementTimestamp')),
+          valuePath: [...pathToValueContent, 'timestamp'],
+          type: 'storeSpecific',
+          componentName: 'cell-timestamp',
+          componentSettings: {
+            timestampUnit: 'second',
+            areMillisecondsVisible: false,
+          },
+        }, {
+          name: 'tsValue',
+          label: String(this.t('timeSeriesMeasurementValue')),
+          valuePath: [...pathToValueContent, 'value'],
+          type: 'storeSpecific',
+        }];
       default:
         return [];
     }
