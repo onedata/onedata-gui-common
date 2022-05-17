@@ -14,7 +14,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
   beforeEach(function () {
     this.context = createContext();
     this.context.lastPointTimestamp = 20;
-    this.context.nowTimestamp = 22;
+    this.context.newestPointTimestamp = 22;
     this.context.timeResolution = 2;
     this.context.pointsCount = 5;
   });
@@ -307,7 +307,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
     });
 
     testFetchSeriesScenario({
-      title: 'produces series acquired from custom source (lastPointTimestamp == nowTimestamp)',
+      title: 'produces series acquired from custom source (lastPointTimestamp == newestPointTimestamp)',
       lastPointTimestamp: 22,
       sourceData: [
         rawPoint(10, -2),

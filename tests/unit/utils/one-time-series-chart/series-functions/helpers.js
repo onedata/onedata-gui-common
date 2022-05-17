@@ -4,12 +4,12 @@ import seriesFunctionsIndex from 'onedata-gui-common/utils/one-time-series-chart
 import { evaluateTransformFunction } from '../transform-functions/helpers';
 
 export function createContext() {
-  const nowTimestamp = Math.floor(Date.now() / 1000);
+  const newestPointTimestamp = Math.floor(Date.now() / 1000);
   return {
     evaluateTransformFunction: sinon.spy(evaluateTransformFunction),
     evaluateSeriesFunction: sinon.spy(evaluateSeriesFunction),
-    nowTimestamp,
-    lastPointTimestamp: nowTimestamp,
+    newestPointTimestamp,
+    lastPointTimestamp: newestPointTimestamp,
     timeResolution: 60,
     pointsCount: 60,
   };
