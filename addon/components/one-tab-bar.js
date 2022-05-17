@@ -13,7 +13,7 @@ import layout from '../templates/components/one-tab-bar';
 import { sort } from '@ember/object/computed';
 import { get, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { or, raw } from 'ember-awesome-macros';
+import { or, raw, conditional } from 'ember-awesome-macros';
 
 export default Component.extend({
   layout,
@@ -65,7 +65,16 @@ export default Component.extend({
 
   itemsSorting: Object.freeze(['name']),
 
-  sortedItems: sort('items', 'itemsSorting'),
+  /**
+   * @type {boolean}
+   */
+  isSorted: true,
+
+  sortedItems: conditional(
+    'isSorted',
+    sort('items', 'itemsSorting'),
+    'items'
+  ),
 
   init() {
     this._super(...arguments);
