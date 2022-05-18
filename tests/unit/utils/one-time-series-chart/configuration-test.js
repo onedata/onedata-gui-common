@@ -367,6 +367,223 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     }
   });
 
+  it('calculates empty series groups state when there are no series groups defined', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([]);
+  });
+
+  it('calculates series groups state using static factory', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [dummyStaticSeriesGroupFactory(1)],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([dummyStaticSeriesGroupFactoryState(1)]);
+  });
+
+  it('calculates series groups state using dynamic factory (multiple scenario)', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [{
+          factoryName: 'dynamic',
+          factoryArguments: {
+            dynamicSeriesGroupConfigsSource: {
+              sourceType: 'external',
+              sourceParameters: {
+                externalSourceName: 'dummyDynamic',
+              },
+            },
+            seriesGroupTemplate: {
+              id: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'id',
+                },
+              },
+              name: 'group1',
+            },
+          },
+        }],
+      },
+      externalDataSources: {
+        dummyDynamic: {
+          fetchDynamicSeriesGroupConfigs: () => [{ id: 'g1' }, { id: 'g2' }],
+        },
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal(['g1', 'g2'].map((id) => ({
+      id,
+      name: 'group1',
+      stack: false,
+      showSeriesSum: false,
+    })));
+  });
+
+  it('calculates series groups state using dynamic factory (empty scenario)', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [{
+          factoryName: 'dynamic',
+          factoryArguments: {
+            dynamicSeriesGroupsConfigs: {
+              sourceType: 'external',
+              sourceParameters: {
+                externalSourceName: 'dummyDynamic',
+              },
+            },
+            seriesGroupTemplate: {
+              id: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'id',
+                },
+              },
+              name: 'group1',
+            },
+          },
+        }],
+      },
+      externalDataSources: {
+        dummyDynamic: {
+          fetchDynamicSeriesGroupConfigs: () => [],
+        },
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([]);
+  });
+
+  it('calculates series groups state when all group fields are defined', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [{
+          factoryName: 'static',
+          factoryArguments: {
+            seriesGroupTemplate: {
+              id: 'g1',
+              name: 'group1',
+              stack: true,
+              showSeriesSum: true,
+            },
+          },
+        }],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([{
+      id: 'g1',
+      name: 'group1',
+      stack: true,
+      showSeriesSum: true,
+    }]);
+  });
+
+  it('calculates series groups state when optional group fields are not defined', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [{
+          factoryName: 'static',
+          factoryArguments: {
+            seriesGroupTemplate: {
+              id: 'g1',
+            },
+          },
+        }],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([{
+      id: 'g1',
+      name: '',
+      stack: false,
+      showSeriesSum: false,
+    }]);
+  });
+
+  it('calculates series state when all possible series fields are functions', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [{
+          factoryName: 'dynamic',
+          factoryArguments: {
+            dynamicSeriesGroupConfigsSource: {
+              sourceType: 'external',
+              sourceParameters: {
+                externalSourceName: 'dummyDynamic',
+              },
+            },
+            seriesGroupTemplate: {
+              id: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'id',
+                },
+              },
+              name: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'name',
+                },
+              },
+              stack: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'stack',
+                },
+              },
+              showSeriesSum: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'showSeriesSum',
+                },
+              },
+            },
+          },
+        }],
+      },
+      externalDataSources: {
+        dummyDynamic: {
+          fetchDynamicSeriesGroupConfigs: () => {
+            return [{
+              id: 'g1',
+              name: 'group1',
+              stack: true,
+              showSeriesSum: true,
+            }];
+          },
+        },
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([{
+      id: 'g1',
+      name: 'group1',
+      stack: true,
+      showSeriesSum: true,
+    }]);
+  });
+
   it('calculates empty series state when there are no series defined', async function () {
     const config = new Configuration({
       chartDefinition: {
@@ -407,7 +624,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       type: 'bar',
       yAxisId: 'a1',
       color: null,
-      stackId: null,
+      groupId: null,
       data: [
         point(18, null, { oldest: true, fake: true }),
         point(20, 2, { oldest: true, newest: true }),
@@ -421,7 +638,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -472,7 +689,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       type: 'bar',
       yAxisId: 'a1',
       color: null,
-      stackId: null,
+      groupId: null,
       data: [
         point(18, null, { oldest: true, fake: true }),
         point(20, 2, { oldest: true, newest: true }),
@@ -486,7 +703,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -546,7 +763,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
               type: 'bar',
               yAxisId: 'a1',
               color: '#ff0000',
-              stackId: 'stack1',
+              groupId: 'stack1',
               data: {
                 functionName: 'loadSeries',
                 functionArguments: {
@@ -579,7 +796,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       type: 'bar',
       yAxisId: 'a1',
       color: '#ff0000',
-      stackId: 'stack1',
+      groupId: 'stack1',
       data: [
         point(18, null, { oldest: true, fake: true }),
         point(20, 2, { oldest: true, newest: true }),
@@ -628,7 +845,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       type: 'bar',
       yAxisId: 'a1',
       color: null,
-      stackId: null,
+      groupId: null,
       data: [],
     }]);
   });
@@ -639,7 +856,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         series: [{
           factoryName: 'dynamic',
           factoryArguments: {
-            dynamicSeriesConfigs: {
+            dynamicSeriesConfigsSource: {
               sourceType: 'external',
               sourceParameters: {
                 externalSourceName: 'dummyDynamic',
@@ -676,10 +893,10 @@ describe('Unit | Utility | one time series chart/configuration', function () {
                   propertyName: 'color',
                 },
               },
-              stackId: {
+              groupId: {
                 functionName: 'getDynamicSeriesConfigData',
                 functionArguments: {
-                  propertyName: 'stackId',
+                  propertyName: 'groupId',
                 },
               },
               data: {
@@ -709,7 +926,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
               type: 'bar',
               yAxisId: 'a1',
               color: '#ff0000',
-              stackId: 'stack1',
+              groupId: 'stack1',
             }];
           },
         },
@@ -724,7 +941,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       type: 'bar',
       yAxisId: 'a1',
       color: '#ff0000',
-      stackId: 'stack1',
+      groupId: 'stack1',
       data: [],
     }]);
   });
@@ -783,7 +1000,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       type: 'bar',
       yAxisId: 'a1',
       color: null,
-      stackId: null,
+      groupId: null,
       data: [point(18, 3, { oldest: true }), point(20, 6, { newest: true })],
     }]);
   });
@@ -1081,6 +1298,27 @@ function dummyDataSource(points) {
   };
 }
 
+function dummyStaticSeriesGroupFactory(seriesGroupNo) {
+  return {
+    factoryName: 'static',
+    factoryArguments: {
+      seriesGroupTemplate: {
+        id: `g${seriesGroupNo}`,
+        name: `series${seriesGroupNo}`,
+      },
+    },
+  };
+}
+
+function dummyStaticSeriesGroupFactoryState(seriesGroupNo) {
+  return {
+    id: `g${seriesGroupNo}`,
+    name: `series${seriesGroupNo}`,
+    stack: false,
+    showSeriesSum: false,
+  };
+}
+
 function dummyStaticSeriesFactory(seriesNo, externalSourceName) {
   return {
     factoryName: 'static',
@@ -1111,7 +1349,7 @@ function dummyStaticSeriesFactoryState(seriesNo, data) {
     type: 'bar',
     yAxisId: 'a1',
     color: null,
-    stackId: null,
+    groupId: null,
     data,
   };
 }
