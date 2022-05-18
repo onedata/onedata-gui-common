@@ -17,6 +17,10 @@
     line-height: 1;
   }
 
+  .tooltip-group-header {
+    @include font-semibold();
+  }
+
   .tooltip-series {
     display: flex;
     line-height: 1;

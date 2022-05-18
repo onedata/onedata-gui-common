@@ -44,13 +44,22 @@ import _ from 'lodash';
  */
 
 /**
+ * @typedef {Object} OTSCSeriesGroup Represents a group of series. Allows stacking
+ * and special formatting of series entries in tooltip.
+ * @property {string} id
+ * @property {string} name series group name (visible in tooltip)
+ * @property {boolean} stack if true, all series in group will be stacked
+ * @property {boolean} showSeriesSum if true, tooltip will show sum of all series in group
+ */
+
+/**
  * @typedef {Object} OTSCSeries
  * @property {string} id
  * @property {string} name
  * @property {OTSCChartType} type
  * @property {string} yAxisId
  * @property {string|null} color
- * @property {string|undefined} stackId
+ * @property {string|null} groupId
  * @property {OTSCSeriesPoint[]} data
  */
 
@@ -98,6 +107,13 @@ export default class State {
       timestamps: [],
       timestampFormatter: (value) => value,
     };
+
+    /**
+     * @public
+     * @readonly
+     * @type {OTSCSeriesGroup[]}
+     */
+    this.seriesGroups = options.seriesGroups || [];
 
     /**
      * @public
@@ -175,6 +191,31 @@ export default class State {
       acc[yAxis.id] = idx;
       return acc;
     }, {});
+    const yAxesMap = _.keyBy(this.yAxes, 'id');
+    const seriesMap = _.keyBy(this.series, 'id');
+    const seriesGroupsMap = _.keyBy(this.seriesGroups, 'id');
+
+    const seriesIdsWithoutGroup = [];
+    const seriesGroupIdToSeriesIdsMap = new Map();
+    for (const singleSeries of this.series) {
+      if (singleSeries.groupId) {
+        if (seriesGroupIdToSeriesIdsMap.has(singleSeries.groupId)) {
+          seriesGroupIdToSeriesIdsMap.get(singleSeries.groupId).push(singleSeries.id);
+        } else {
+          seriesGroupIdToSeriesIdsMap.set(singleSeries.groupId, [singleSeries.id]);
+        }
+      } else {
+        seriesIdsWithoutGroup.push(singleSeries.id);
+      }
+    }
+    const seriesGroupsForTooltip = [{
+      stack: false,
+      showSeriesSum: false,
+      seriesIds: seriesIdsWithoutGroup,
+    }, ...this.seriesGroups.map((seriesGroup) => Object.assign({}, seriesGroup, {
+      seriesIds: seriesGroupIdToSeriesIdsMap.get(seriesGroup.id) || [],
+    }))];
+    const fallbackValueFormatter = (val) => val;
 
     return {
       tooltip: {
@@ -190,23 +231,50 @@ export default class State {
           if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
             return null;
           }
+          const seriesIdToParamMap = _.keyBy(paramsArray, 'seriesId');
+
           const timestamp = Number.parseInt(paramsArray[0].value[0]);
           const formattedTimestamp = this.xAxis.timestampFormatter(timestamp);
           const headerHtml =
             `<div class="tooltip-header">${_.escape(formattedTimestamp)}</div>`;
-          const seriesHtml = paramsArray.map(({
-            seriesId,
-            seriesName,
-            value: [, yValue],
-            marker,
-          }) => {
-            const series = this.series.findBy('id', seriesId);
-            const yAxis = series && this.yAxes.findBy('id', series.yAxisId);
-            const valueFormatter = yAxis ? yAxis.valueFormatter : (val) => val;
-            return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${_.escape(seriesName)}</span> <span class="tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
+
+          const seriesGroupsHtml = seriesGroupsForTooltip.map((seriesGroup) => {
+            const involvedSeriesIds = seriesGroup.seriesIds
+              .filter((seriesId) => seriesId in seriesIdToParamMap);
+            if (!involvedSeriesIds.length) {
+              return '';
+            }
+            let seriesGroupSum = 0;
+            const usedValueFormatters = new Set();
+            const seriesHtml = seriesGroup.seriesIds.map((seriesId) => {
+              const {
+                seriesName,
+                value: [, yValue],
+                marker,
+              } = seriesIdToParamMap[seriesId];
+              seriesGroupSum += yValue;
+              const series = seriesMap[seriesId];
+              const yAxis = series && yAxesMap[series.yAxisId];
+              const valueFormatter = yAxis ?
+                yAxis.valueFormatter : fallbackValueFormatter;
+              usedValueFormatters.add(valueFormatter);
+              return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${_.escape(seriesName)}</span> <span class="tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
+            }).join('');
+            let groupHeaderHtml = '<hr class="tooltip-series-separator" />';
+            if (seriesGroup.name) {
+              let sumHtml = '';
+              if (seriesGroup.showSeriesSum && usedValueFormatters.size === 1) {
+                const sumValueFormatter = [...usedValueFormatters][0];
+                sumHtml =
+                  `<span class="tooltip-series-value">${_.escape(sumValueFormatter(seriesGroupSum))}</span>`;
+              }
+              groupHeaderHtml +=
+                `<div class="tooltip-series tooltip-group-header"><span class="tooltip-series-label">${_.escape(seriesGroup.name)}</span> ${sumHtml}</div>`;
+            }
+            return `${groupHeaderHtml}${seriesHtml}`;
           }).join('');
 
-          return `${headerHtml}${seriesHtml}`;
+          return `${headerHtml}${seriesGroupsHtml}`;
         },
       },
       grid: {
@@ -240,17 +308,21 @@ export default class State {
           alignWithLabel: true,
         },
       },
-      series: this.series.map((series) => ({
-        id: series.id,
-        name: series.name,
-        type: series.type,
-        yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
-        color: series.color,
-        stack: series.stackId,
-        areaStyle: series.stackId ? {} : null,
-        smooth: 0.2,
-        data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
-      })),
+      series: this.series.map((series) => {
+        const seriesGroup = seriesGroupsMap[series.groupId];
+        const stackId = seriesGroup && seriesGroup.stack ? seriesGroup.id : null;
+        return {
+          id: series.id,
+          name: series.name,
+          type: series.type,
+          yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
+          color: series.color,
+          stack: stackId,
+          areaStyle: stackId ? {} : null,
+          smooth: 0.2,
+          data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
+        };
+      }),
     };
   }
 }
