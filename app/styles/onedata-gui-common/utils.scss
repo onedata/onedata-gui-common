@@ -205,3 +205,15 @@ $top-shadow-zindex: 1002;
   margin-left: -$content-col-padding;
   margin-right: -$content-col-padding;
 }
+
+@mixin content-shadow-leftovers {
+  &::before {
+    width: auto;
+  }
+  &:first-of-type::before {
+    left: -$content-col-padding;
+  }
+  &:last-of-type::before {
+    right: -$content-col-padding;
+  }
+}
