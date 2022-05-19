@@ -6,16 +6,4 @@
   padding-bottom: $content-col-padding;
   padding-left: $content-col-padding;
   padding-right: $content-col-padding;
-
-  h1, h2 {
-    font-size: 100%;
-    text-transform: uppercase;
-    margin: 0;
-    padding: 17px 0px;
-    font-weight: bold;
-    .btn-group {
-      position: relative;
-      top: -9px;
-    }
-  }
 }
