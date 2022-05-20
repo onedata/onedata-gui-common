@@ -464,7 +464,7 @@ export default ArraySlice.extend(Evented, {
       sourceArray,
       indexMargin,
     } = this.getProperties('sourceArray', 'indexMargin');
-    return this.fetchWrapper(
+    const updatePromise = this.fetchWrapper(
         index,
         size + indexMargin * 2,
         -indexMargin,
@@ -494,6 +494,8 @@ export default ArraySlice.extend(Evented, {
           return this;
         }
       });
+    this.trigger('willExpandArrayBeginning', updatePromise);
+    return updatePromise;
   },
 
   scheduleJump(index, size) {
