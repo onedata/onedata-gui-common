@@ -516,58 +516,6 @@ describe('Unit | Utility | replacing chunks array', function () {
     }
   );
 
-  it('uses offset if there are index duplicates', function () {
-    const duplicatedIndex = 15;
-    const marray = this.mockArray.array;
-    const chunkSize = 16;
-    const duplicates = [
-      { index: duplicatedIndex, id: duplicatedIndex + 'a' },
-      { index: duplicatedIndex, id: duplicatedIndex + 'b' },
-      { index: duplicatedIndex, id: duplicatedIndex + 'c' },
-    ];
-    // create mock source array: [ 0, 1, 2, ..., 13, 14, 15a, 15b, 15c, 16, 17, ... ]
-    this.mockArray.array = [
-      ...marray.slice(0, duplicatedIndex),
-      ...duplicates,
-      ...marray.slice(duplicatedIndex + 1, marray.length),
-    ];
-    const fetchSpy = sinon.spy(this.fetch);
-    const array = ReplacingChunksArray.create({
-      fetch: fetchSpy,
-      startIndex: 0,
-      // adding 3 because need to reach 3rd duplicate (it should be on the end)
-      endIndex: duplicatedIndex + 3,
-      indexMargin: 0,
-      chunkSize,
-    });
-
-    return wait()
-      .then(() => {
-        expect(fetchSpy, 'initial fetch').to.be.calledWith(null, duplicatedIndex + 3, 0);
-        array.setProperties({
-          startIndex: duplicatedIndex - 5,
-          endIndex: duplicatedIndex + 15,
-        });
-        return wait();
-      })
-      .then(() => {
-        expect(fetchSpy, 'fetch after index change')
-          .to.be.calledWith(duplicatedIndex, chunkSize, 3);
-        const expectedArray = [
-          ...recordRange(
-            duplicatedIndex - 5,
-            duplicatedIndex
-          ),
-          ...duplicates,
-          ...recordRange(
-            duplicatedIndex + 1,
-            duplicatedIndex + 1 + 15 - 3,
-          ),
-        ];
-        expect(array.toArray(), 'content after reload').to.deep.equal(expectedArray);
-      });
-  });
-
   it('replaces array content by jumping to index forward without cache', function () {
     const fetchSpy = sinon.spy(this.fetch);
     const indexMargin = 2;
