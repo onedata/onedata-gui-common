@@ -48,8 +48,8 @@
  * @typedef {''|'K'|'M'|'G'|'T'|'P'|'E'|'Z'|'Y'} MetricSuffix
  */
 
-const suffixes = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-const suffixMultipliers = {
+export const suffixes = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+export const suffixMultipliers = {
   decimal: {},
   binary: {},
 };
@@ -64,7 +64,7 @@ suffixes.forEach((suffix, idx) => {
  * @returns {GetNumberMetricSuffixResult}
  */
 export default function getNumberMetricSuffix(number, { metric = 'decimal' } = {}) {
-  if (typeof number !== 'number' || !Number.isFinite(number)) {
+  if (!Number.isFinite(number)) {
     return {
       originalNumber: 0,
       suffixedNumber: 0,

@@ -2,69 +2,68 @@
  * Util for converting number of bytes to size string.
  *
  * @module utils/bytes-to-string
- * @author Jakub Liput, Michal Borzecki
- * @copyright (C) 2016-2020 ACK CYFRONET AGH
+ * @author Jakub Liput, Michał Borzęcki
+ * @copyright (C) 2016-2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-const bytesPrefixes = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+import getNumberMetricSuffix, { suffixes, suffixMultipliers } from 'onedata-gui-common/utils/get-number-metric-suffix';
 
-export const siUnits =
-  bytesPrefixes.map(
-    (prefix, index) => ({
-      name: prefix + 'B',
-      multiplicator: Math.pow(1000, index),
-    })
-  );
+export const siUnits = ['', ...suffixes].map((metricSuffix) => ({
+  name: metricSuffix + 'B',
+  multiplicator: suffixMultipliers.decimal[metricSuffix] || 1,
+}));
 
-export const iecUnits =
-  bytesPrefixes.map(
-    (prefix, index) => ({
-      name: prefix === '' ? 'B' : prefix + 'iB',
-      multiplicator: Math.pow(1024, index),
-    })
-  );
+export const iecUnits = ['', ...suffixes].map((metricSuffix) => ({
+  name: metricSuffix ? metricSuffix + 'iB' : 'B',
+  multiplicator: suffixMultipliers.binary[metricSuffix] || 1,
+}));
 
 function bytesToStringIEC(bytes) {
-  let number = bytes;
-  let unit = iecUnits[0];
-  for (let i = 1; i < iecUnits.length && bytes >= iecUnits[i].multiplicator; i++) {
-    unit = iecUnits[i];
-    number = bytes / iecUnits[i].multiplicator;
-  }
-  return [number, unit.multiplicator, unit.name];
+  const {
+    suffixedNumber,
+    suffix,
+    suffixMultiplicator,
+  } = getNumberMetricSuffix(bytes, { metric: 'binary' });
+
+  return [suffixedNumber, suffixMultiplicator, suffix ? `${suffix}iB` : 'B'];
 }
 
 function bytesToStringSI(bytes) {
-  let number = bytes;
-  let unit = siUnits[0];
-  for (let i = 1; i < siUnits.length && bytes >= siUnits[i].multiplicator; i++) {
-    unit = siUnits[i];
-    number = bytes / siUnits[i].multiplicator;
-  }
-  return [number, unit.multiplicator, unit.name];
+  const {
+    suffixedNumber,
+    suffix,
+    suffixMultiplicator,
+  } = getNumberMetricSuffix(bytes);
+
+  return [suffixedNumber, suffixMultiplicator, `${suffix}B`];
 }
 
 function byteBitUnit(unit) {
-  if (unit[0] === 'B') {
+  if (unit === 'B') {
     return 'b';
-  } else if (unit[0] === 'K') {
-    // kilo is an exception when the first letter is small
-    return 'kb';
-  } else {
-    return unit[0] + 'b';
   }
+
+  // kilo is an exception when the first letter is small
+  const firstLetter = unit[0] === 'K' ? 'k' : unit[0];
+  return `${firstLetter}${unit.slice(1, -1)}b`;
 }
 
-function bytesToStringBit(bytes) {
+function bytesToStringBitSi(bytes) {
   const [number, multiplicator, unit] = bytesToStringSI(bytes * 8);
+  return [number, multiplicator, byteBitUnit(unit)];
+}
+
+function bytesToStringBitIec(bytes) {
+  const [number, multiplicator, unit] = bytesToStringIEC(bytes * 8);
   return [number, multiplicator, byteBitUnit(unit)];
 }
 
 const converters = {
   si: bytesToStringSI,
   iec: bytesToStringIEC,
-  bit: bytesToStringBit,
+  bitSi: bytesToStringBitSi,
+  bitIec: bytesToStringBitIec,
 };
 
 /**
@@ -75,7 +74,7 @@ const converters = {
  * @param {Object} [options]
  * @param {Boolean} [options.iecFormat=true] If true, use IEC format: KiB, MiB, GiB
  *    DEPRECATED, use `options.format` instead. If `options.format` is specified it will be ignored.
- * @param {Boolean} [options.format=si] One of: si, iec, bit
+ * @param {Boolean} [options.format=si] One of: si, iec, bitSi, bitIec
  * @param {Boolean} [options.separated=false] If true, instead of string,
  * object with fields: number {number}, multiplicator {number}, unit {string}
  * will be returned.
@@ -96,11 +95,11 @@ export default function bytesToString(bytes, options = {}) {
     separated = false;
   }
 
-  if (!bytes && bytes !== 0) {
+  const bytesAsNumber = Number.parseFloat(bytes);
+  if (Number.isNaN(bytesAsNumber)) {
     return '';
   } else {
-    const isInputNegative = bytes <= -1;
-    let [number, multiplicator, unit] = converters[format](Math.abs(bytes));
+    let [number, multiplicator, unit] = converters[format](bytesAsNumber);
     number = Math.round(number * 10) / 10;
     if (separated) {
       return {
@@ -109,7 +108,7 @@ export default function bytesToString(bytes, options = {}) {
         unit,
       };
     } else {
-      return `${isInputNegative ? '-' : ''}${number} ${unit}`;
+      return `${number} ${unit}`;
     }
   }
 }

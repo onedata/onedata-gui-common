@@ -94,18 +94,28 @@ describe('Unit | Utility | bytes to string', function () {
   });
 
   it('can convert to bit', function () {
-    const result = bytesToString(1, { format: 'bit' });
+    const result = bytesToString(1, { format: 'bitSi' });
     expect(result).to.be.equal('8 b');
   });
 
   it('can convert to kbit', function () {
-    const result = bytesToString(8000, { format: 'bit' });
+    const result = bytesToString(8000, { format: 'bitSi' });
     expect(result).to.be.equal('64 kb');
   });
 
   it('can convert to Mbit', function () {
-    const result = bytesToString(625000, { format: 'bit' });
+    const result = bytesToString(625000, { format: 'bitSi' });
     expect(result).to.be.equal('5 Mb');
+  });
+
+  it('can convert to kibit', function () {
+    const result = bytesToString(8192, { format: 'bitIec' });
+    expect(result).to.be.equal('64 kib');
+  });
+
+  it('can convert to Mibit', function () {
+    const result = bytesToString(655360, { format: 'bitIec' });
+    expect(result).to.be.equal('5 Mib');
   });
 
   it('deals with negative values', function () {

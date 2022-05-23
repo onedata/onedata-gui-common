@@ -282,8 +282,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           id: 'a2',
           name: 'axis2',
           valueFormatter: {
-            functionName: 'asBytes',
+            functionName: 'formatWithUnit',
             functionArguments: {
+              unitName: 'bytes',
               data: {
                 functionName: 'multiply',
                 functionArguments: {
