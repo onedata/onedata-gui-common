@@ -18,7 +18,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
         })),
       };
       const args = {
-        dynamicSeriesConfigs: {
+        dynamicSeriesConfigsSource: {
           sourceType: 'external',
           sourceParameters: {
             externalSourceName: 'mysource',
@@ -43,7 +43,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       }]);
       expect(context.externalDataSources.mysource.fetchDynamicSeriesConfigs)
         .to.be.calledOnce.and.to.be.calledWith(
-          args.dynamicSeriesConfigs.sourceParameters.externalSourceParameters
+          args.dynamicSeriesConfigsSource.sourceParameters.externalSourceParameters
         );
       expect(context.evaluateSeries).to.be.calledTwice
         .and.to.be.calledWith(
@@ -66,7 +66,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       evaluateSeries: sinon.spy(() => {}),
     };
     const args = {
-      dynamicSeriesConfigs: {
+      dynamicSeriesConfigsSource: {
         sourceType: 'external',
         sourceParameters: {
           externalSourceName: 'mysource',
@@ -87,7 +87,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       evaluateSeries: sinon.spy(() => {}),
     };
     const args = {
-      dynamicSeriesConfigs: {
+      dynamicSeriesConfigsSource: {
         sourceType: 'external',
         sourceParameters: {
           externalSourceName: 'mysource',
@@ -102,7 +102,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
     expect(context.evaluateSeries).to.be.not.called;
   });
 
-  it('generates no series when dynamicSeriesConfigs object is not provided', async function () {
+  it('generates no series when dynamicSeriesConfigsSource object is not provided', async function () {
     const context = {
       externalDataSources: {},
       evaluateSeries: sinon.spy(() => {}),
@@ -126,7 +126,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
         evaluateSeries: sinon.spy(() => {}),
       };
       const args = {
-        dynamicSeriesConfigs: {
+        dynamicSeriesConfigsSource: {
           sourceType: 'external',
           sourceParameters: {
             externalSourceName: 'mysource',

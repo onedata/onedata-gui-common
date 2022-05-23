@@ -1,7 +1,7 @@
 /**
- * Groups all available series factories into a single factories index.
+ * Groups all available series group factories into a single factories index.
  *
- * @module utils/one-time-series-chart/series-factories/index
+ * @module utils/one-time-series-chart/series-group-factories/index
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -11,9 +11,9 @@
 import staticFactory from './static';
 import dynamic from './dynamic';
 
-const seriesFactoriesIndex = {
+const seriesGroupFactoriesIndex = {
   static: staticFactory,
   dynamic,
 };
 
-export default seriesFactoriesIndex;
+export default seriesGroupFactoriesIndex;
