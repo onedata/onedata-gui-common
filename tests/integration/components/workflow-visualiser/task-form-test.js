@@ -214,7 +214,7 @@ const dataSpecs = [{
     type: 'timeSeriesMeasurement',
     valueConstraints: {},
   },
-  valueBuilderTypes: ['const'],
+  valueBuilderTypes: ['iteratedItem', 'singleValueStoreContent', 'const'],
 }];
 
 const valueBuilderTypeLabels = {
@@ -243,12 +243,12 @@ const allSimpleDataSpecNames = [
 ];
 const allPossibleStoreSpecs = [{
   type: 'singleValue',
-  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
+  allowedDataSpecNames: allSimpleDataSpecNames,
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: false,
 }, {
   type: 'list',
-  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
+  allowedDataSpecNames: allSimpleDataSpecNames,
   dataSpecConfigKey: 'itemDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],
@@ -280,7 +280,7 @@ const allPossibleStoreSpecs = [{
   dispatchFunctions: [],
 }, {
   type: 'auditLog',
-  allowedDataSpecNames: allSimpleDataSpecNames.without('timeSeriesMeasurement'),
+  allowedDataSpecNames: allSimpleDataSpecNames,
   dataSpecConfigKey: 'logContentDataSpec',
   acceptsBatch: true,
   dispatchFunctions: ['append', 'extend'],

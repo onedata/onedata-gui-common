@@ -3,11 +3,13 @@
  *
  * Arguments:
  * - `data` - can be a single value, array of values, array of points or a series
- *     function, that will be evaluated. It is data, where empty values should
- *     be replaced.
+ *   function, that will be evaluated. It is data, where empty values should
+ *   be replaced.
+ * - `strategy` - (optional) defines the way how empty values should be replaced.
+ *   There are two possible modes: `useFallback` (default) and `usePrevious`
  * - `fallbackValue` - can be any value, array of values, array of points or
- *     a series function, that will be evaluated. Provides values, which should
- *     be used to replace empty values in `data`.
+ *   a series function, that will be evaluated. Provides values, which should
+ *   be used to replace empty values in `data`.
  *
  * This function is an extension of `replace-empty` transform function, so it works
  * exactly the same for single values and arrays of values. In case when `data`
@@ -16,12 +18,13 @@
  * ```
  * {
  *   data: [{ timestamp: 1, value: 4 }, { timestamp: 2, value: null }],
+ *   strategy: 'useFallback',
  *   fallbackValue: 0
  * }
  * ```
  * result will be: `[{ timestamp: 1, value: 4 }, { timestamp: 2, value: 0 }]`.
  *
- * Special cases:
+ * Special cases in `useFallback` strategy:
  * - `data` is a points array, `fallbackValue` is a simple values array -> points have
  *   empty values replaced element-wise. [arrays lengths must match]
  * - `data` and `fallbackValue` are both points arrays -> as a fallback for each point
@@ -44,8 +47,13 @@ import mergePointsArrays from './utils/merge-points-arrays';
 
 /**
  * @typedef {Object} OTSCReplaceEmptySeriesFunctionArguments
- * @property {Array<OTSCRawFunction|Array<number|null>|number|null>} data
- * @property {Array<OTSCRawFunction|Array<number|null>|number|null>} fallbackValue
+ * @property {OTSCRawFunction|Array<unknown|null>|unknown|null} data
+ * @property {OTSCRawFunction|OTSCReplaceEmptySeriesFunctionStrategy} [strategy]
+ * @property {OTSCRawFunction|Array<unknown|null>|unknown|null} fallbackValue
+ */
+
+/**
+ * @typedef {OTSCReplaceEmptyTransformFunctionStrategy} OTSCReplaceEmptySeriesFunctionStrategy
  */
 
 /**
@@ -61,8 +69,9 @@ export default async function multiply(context, args) {
     };
   }
 
-  const [data, fallbackValue] = await allFulfilled([
+  const [data, strategy, fallbackValue] = await allFulfilled([
     context.evaluateSeriesFunction(context, args.data),
+    context.evaluateSeriesFunction(context, args.strategy),
     context.evaluateSeriesFunction(context, args.fallbackValue),
   ]);
 
@@ -98,6 +107,7 @@ export default async function multiply(context, args) {
     functionName: 'replaceEmpty',
     functionArguments: {
       data: data.type === 'points' ? data.data.mapBy('value') : data.data,
+      strategy: strategy.data,
       fallbackValue: fallbackValueForTransform,
     },
   });

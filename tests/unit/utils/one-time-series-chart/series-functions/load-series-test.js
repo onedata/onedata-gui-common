@@ -14,7 +14,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
   beforeEach(function () {
     this.context = createContext();
     this.context.lastPointTimestamp = 20;
-    this.context.nowTimestamp = 22;
+    this.context.newestPointTimestamp = 22;
     this.context.timeResolution = 2;
     this.context.pointsCount = 5;
   });
@@ -307,7 +307,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
     });
 
     testFetchSeriesScenario({
-      title: 'produces series acquired from custom source (lastPointTimestamp == nowTimestamp)',
+      title: 'produces series acquired from custom source (lastPointTimestamp == newestPointTimestamp)',
       lastPointTimestamp: 22,
       sourceData: [
         rawPoint(10, -2),
@@ -355,14 +355,100 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
       });
       done();
     });
+
+    testFetchSeriesScenario({
+      title: 'allows to replace empty series points with specified fallback value',
+      replaceEmptyOptions: {
+        strategy: 'useFallback',
+        fallbackValue: 100,
+      },
+      sourceData: [
+        rawPoint(10, -2),
+        rawPoint(12, -1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, -1),
+        point(14, 100, { fake: true }),
+        point(16, 100, { fake: true }),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchSeriesScenario({
+      title: 'allows to replace empty series points with previous point value',
+      replaceEmptyOptions: {
+        strategy: 'usePrevious',
+        fallbackValue: 100,
+      },
+      sourceData: [
+        rawPoint(10, -2),
+        rawPoint(12, -1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, -1),
+        point(14, -1, { fake: true }),
+        point(16, -1, { fake: true }),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchSeriesScenario({
+      title: 'allows to replace empty series points with previous point value when previous point is outside context',
+      replaceEmptyOptions: {
+        strategy: 'usePrevious',
+        fallbackValue: 100,
+      },
+      sourceData: [
+        rawPoint(2, -2),
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, -2, { fake: true }),
+        point(14, -2, { fake: true }),
+        point(16, 1),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
+
+    testFetchSeriesScenario({
+      title: 'allows to replace empty series points with previous point value when previous point does not exist',
+      replaceEmptyOptions: {
+        strategy: 'usePrevious',
+        fallbackValue: 100,
+      },
+      sourceData: [
+        rawPoint(16, 1),
+        rawPoint(18, 2),
+        rawPoint(20, 3),
+      ],
+      expectedPoints: [
+        point(12, 100, { fake: true, oldest: true }),
+        point(14, 100, { fake: true, oldest: true }),
+        point(16, 1, { oldest: true }),
+        point(18, 2),
+        point(20, 3),
+      ],
+    });
   });
 });
 
-function testFetchSeriesScenario({ title, lastPointTimestamp, sourceData, expectedPoints }) {
+function testFetchSeriesScenario({ title, lastPointTimestamp, replaceEmptyOptions, sourceData, expectedPoints }) {
   it(title, async function (done) {
     this.customSourceData = sourceData;
     if (lastPointTimestamp !== undefined) {
       this.context.lastPointTimestamp = lastPointTimestamp;
+    }
+    if (replaceEmptyOptions) {
+      this.functionArguments.replaceEmptyOptions = replaceEmptyOptions;
     }
 
     expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({
