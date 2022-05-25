@@ -1,4 +1,5 @@
 export function registerService(testCase, name, stub) {
+  testCase.owner.unregister(`service:${name}`);
   testCase.owner.register(`service:${name}`, stub);
   return lookupService(testCase, name);
 }
