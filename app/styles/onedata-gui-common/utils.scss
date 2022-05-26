@@ -206,14 +206,14 @@ $top-shadow-zindex: 1002;
   margin-right: -$content-col-padding;
 }
 
-@mixin content-shadow-leftovers {
+@mixin content-shadow-leftovers($vertical-offset: -$content-col-padding) {
   &::before {
     width: auto;
   }
   &:first-of-type::before {
-    left: -$content-col-padding;
+    left: $vertical-offset;
   }
   &:last-of-type::before {
-    right: -$content-col-padding;
+    right: $vertical-offset;
   }
 }

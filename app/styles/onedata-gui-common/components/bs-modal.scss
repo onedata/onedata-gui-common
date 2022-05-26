@@ -16,10 +16,16 @@ $modal-scroll-margin: 14px;
   .modal-header {
     @include before-bottom-shadow;
     @include reposition-inner-shadow;
+    &.hide-before-shadow {
+      @include hide-before-shadow;
+    }
   }
   .modal-footer {
     @include before-top-shadow;
     @include reposition-inner-shadow;
+    &.hide-before-shadow {
+      @include hide-before-shadow;
+    }
   }
   .modal-dialog {
     &.scroll-on-top {
@@ -46,7 +52,22 @@ $modal-scroll-margin: 14px;
       height: 100%;
       margin-right: -$modal-scroll-margin;
       padding-right: $modal-scroll-margin;
-    }    
+    }
+    &.full-width-body {
+      .bs-modal-body-scroll {
+        $parent-margin-sum: "#{$modal-content-horizontal-padding} + #{$modal-inner-padding}";
+        $positive-parent-margin: calc(#{$parent-margin-sum});
+        $negative-parent-margin: calc(-1 * (#{$parent-margin-sum}));
+
+        margin-left: $negative-parent-margin;
+        margin-right: $negative-parent-margin;
+        padding-right: 0;
+        > .full-width-body-content {
+          padding-left: $positive-parent-margin;
+          padding-right: $positive-parent-margin;
+        }
+      }
+    }
   }
   .modal-footer {
     padding-top: $modal-footer-vertical-padding;
