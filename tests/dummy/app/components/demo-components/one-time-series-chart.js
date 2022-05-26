@@ -69,6 +69,12 @@ export default Component.extend({
               },
               stack: true,
               showSeriesSum: true,
+              subgroups: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'subgroups',
+                },
+              },
             },
           },
         }],
@@ -133,7 +139,12 @@ export default Component.extend({
               },
               type: 'bar',
               yAxisId: 'axis1',
-              groupId: 'group2',
+              groupId: {
+                functionName: 'getDynamicSeriesConfigData',
+                functionArguments: {
+                  propertyName: 'groupId',
+                },
+              },
               data: {
                 functionName: 'abs',
                 functionArguments: {
@@ -191,12 +202,17 @@ export default Component.extend({
             return [{
               id: 'group2',
               name: namePrefix + '2',
+              subgroups: [{
+                id: 'group2.1',
+                name: namePrefix + '2.1',
+              }],
             }];
           },
           fetchDynamicSeriesConfigs: () => {
             return [{
               id: 'abcid',
               name: 'abc',
+              groupId: 'group2',
               loadSeriesSourceParameters: {
                 externalSourceName: 'myTimeSeriesSource',
                 externalSourceParameters: {
@@ -207,6 +223,7 @@ export default Component.extend({
             }, {
               id: 'defid',
               name: 'def',
+              groupId: 'group2.1',
               loadSeriesSourceParameters: {
                 externalSourceName: 'myTimeSeriesSource',
                 externalSourceParameters: {
