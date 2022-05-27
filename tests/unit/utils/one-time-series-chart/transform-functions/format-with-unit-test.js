@@ -43,16 +43,16 @@ describe('Unit | Utility | one time series chart/transform functions/format with
   testFormatWithUnit(-1024, '-1 KiB', 'bytes');
 
   testFormatWithUnit(0, '0 B', 'bytes', { format: 'si' });
-  testFormatWithUnit(1000, '1 KB', 'bytes', { format: 'si' });
-  testFormatWithUnit(1024, '1 KB', 'bytes', { format: 'si' });
-  testFormatWithUnit(1500, '1.5 KB', 'bytes', { format: 'si' });
-  testFormatWithUnit(-1000, '-1 KB', 'bytes', { format: 'si' });
+  testFormatWithUnit(1000, '1 kB', 'bytes', { format: 'si' });
+  testFormatWithUnit(1024, '1 kB', 'bytes', { format: 'si' });
+  testFormatWithUnit(1500, '1.5 kB', 'bytes', { format: 'si' });
+  testFormatWithUnit(-1000, '-1 kB', 'bytes', { format: 'si' });
 
   testFormatWithUnit(0, '0 b', 'bits');
   testFormatWithUnit(1000, '1000 b', 'bits');
-  testFormatWithUnit(1024, '1 kib', 'bits');
-  testFormatWithUnit(1536, '1.5 kib', 'bits');
-  testFormatWithUnit(-1024, '-1 kib', 'bits');
+  testFormatWithUnit(1024, '1 Kib', 'bits');
+  testFormatWithUnit(1536, '1.5 Kib', 'bits');
+  testFormatWithUnit(-1024, '-1 Kib', 'bits');
 
   testFormatWithUnit(0, '0 b', 'bits', { format: 'si' });
   testFormatWithUnit(1000, '1 kb', 'bits', { format: 'si' });
@@ -67,10 +67,10 @@ describe('Unit | Utility | one time series chart/transform functions/format with
   testFormatWithUnit(-1024, '-1 KiB/s', 'bytesPerSec');
 
   testFormatWithUnit(0, '0 B/s', 'bytesPerSec', { format: 'si' });
-  testFormatWithUnit(1000, '1 KB/s', 'bytesPerSec', { format: 'si' });
-  testFormatWithUnit(1024, '1 KB/s', 'bytesPerSec', { format: 'si' });
-  testFormatWithUnit(1500, '1.5 KB/s', 'bytesPerSec', { format: 'si' });
-  testFormatWithUnit(-1000, '-1 KB/s', 'bytesPerSec', { format: 'si' });
+  testFormatWithUnit(1000, '1 kB/s', 'bytesPerSec', { format: 'si' });
+  testFormatWithUnit(1024, '1 kB/s', 'bytesPerSec', { format: 'si' });
+  testFormatWithUnit(1500, '1.5 kB/s', 'bytesPerSec', { format: 'si' });
+  testFormatWithUnit(-1000, '-1 kB/s', 'bytesPerSec', { format: 'si' });
 
   testFormatWithUnit(0, '0 Hz', 'hertz');
   testFormatWithUnit(1000, '1 kHz', 'hertz');

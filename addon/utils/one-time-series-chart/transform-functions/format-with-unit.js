@@ -83,8 +83,6 @@ import _ from 'lodash';
  * be shortened using metric suffix (like 1000000 -> 1M)
  */
 
-export const possibleFormats = ['iec', 'si', 'bit'];
-
 const unitSuffixes = {
   hertz: 'Hz',
   countsPerSec: 'c/s',
@@ -154,8 +152,8 @@ export default function formatWithUnit(context, args) {
         return isPerSec ? `${stringifiedValue}/s` : stringifiedValue;
       }
       case 'hertz': {
-        const { suffixedNumber, suffix } = getNumberMetricSuffix(value);
-        return `${suffixedNumber} ${suffix === 'K' ? 'k' : suffix}${unitSuffixes[unitName]}`;
+        const { suffixedNumber, prefixForUnit } = getNumberMetricSuffix(value);
+        return `${suffixedNumber} ${prefixForUnit}${unitSuffixes[unitName]}`;
       }
       case 'countsPerSec':
       case 'operationsPerSec':
@@ -163,8 +161,8 @@ export default function formatWithUnit(context, args) {
       case 'readsPerSec':
       case 'writesPerSec':
       case 'ioOperationsPerSec': {
-        const { formattedNumber } = getNumberMetricSuffix(value);
-        return `${formattedNumber} ${unitSuffixes[unitName]}`;
+        const { formattedString } = getNumberMetricSuffix(value);
+        return `${formattedString} ${unitSuffixes[unitName]}`;
       }
       case 'percent':
       case 'percentNormalized': {
@@ -175,7 +173,7 @@ export default function formatWithUnit(context, args) {
         return value === 0 ? 'False' : 'True';
       case 'custom': {
         const stringifiedValue = unitOptions && unitOptions.useMetricSuffix === true ?
-          getNumberMetricSuffix(value).formattedNumber : String(value);
+          getNumberMetricSuffix(value).formattedString : String(value);
         const customUnitName = unitOptions &&
           unitOptions.customName &&
           typeof unitOptions.customName === 'string' ?

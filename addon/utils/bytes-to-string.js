@@ -7,46 +7,46 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import getNumberMetricSuffix, { suffixes, suffixMultipliers } from 'onedata-gui-common/utils/get-number-metric-suffix';
+import getNumberMetricSuffix, { suffixesSpec } from 'onedata-gui-common/utils/get-number-metric-suffix';
 
-export const siUnits = ['', ...suffixes].map((metricSuffix) => ({
-  name: metricSuffix + 'B',
-  multiplicator: suffixMultipliers.decimal[metricSuffix] || 1,
-}));
+export const siUnits = [{
+  name: 'B',
+  multiplicator: 1,
+}, ...suffixesSpec.decimal.map(({ prefixForUnit, multiplicator }) => ({
+  name: `${prefixForUnit}B`,
+  multiplicator,
+}))];
 
-export const iecUnits = ['', ...suffixes].map((metricSuffix) => ({
-  name: metricSuffix ? metricSuffix + 'iB' : 'B',
-  multiplicator: suffixMultipliers.binary[metricSuffix] || 1,
-}));
+export const iecUnits = [{
+  name: 'B',
+  multiplicator: 1,
+}, ...suffixesSpec.binary.map(({ prefixForUnit, multiplicator }) => ({
+  name: `${prefixForUnit}B`,
+  multiplicator,
+}))];
 
 function bytesToStringIEC(bytes) {
   const {
     suffixedNumber,
-    suffix,
+    prefixForUnit,
     suffixMultiplicator,
   } = getNumberMetricSuffix(bytes, { metric: 'binary' });
 
-  return [suffixedNumber, suffixMultiplicator, suffix ? `${suffix}iB` : 'B'];
+  return [suffixedNumber, suffixMultiplicator, `${prefixForUnit}B`];
 }
 
 function bytesToStringSI(bytes) {
   const {
     suffixedNumber,
-    suffix,
+    prefixForUnit,
     suffixMultiplicator,
   } = getNumberMetricSuffix(bytes);
 
-  return [suffixedNumber, suffixMultiplicator, `${suffix}B`];
+  return [suffixedNumber, suffixMultiplicator, `${prefixForUnit}B`];
 }
 
 function byteBitUnit(unit) {
-  if (unit === 'B') {
-    return 'b';
-  }
-
-  // kilo is an exception when the first letter is small
-  const firstLetter = unit[0] === 'K' ? 'k' : unit[0];
-  return `${firstLetter}${unit.slice(1, -1)}b`;
+  return `${unit.slice(0, -1)}b`;
 }
 
 function bytesToStringBitSi(bytes) {

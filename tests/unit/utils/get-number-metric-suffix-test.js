@@ -2,17 +2,25 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import getNumberMetricSuffix from 'onedata-gui-common/utils/get-number-metric-suffix';
 
-const metricSuffixes = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-const lowestSuffix = metricSuffixes[0];
-const highestSuffix = metricSuffixes[metricSuffixes.length - 1];
-const suffixMultipliers = {
+export const suffixes = {
+  decimal: ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
+  binary: ['Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi', 'Yi'],
+};
+export const suffixMultipliers = {
   decimal: {},
   binary: {},
 };
-metricSuffixes.forEach((suffix, idx) => {
+suffixes.decimal.forEach((suffix, idx) => {
   suffixMultipliers.decimal[suffix] = Math.pow(1000, idx + 1);
+});
+suffixes.binary.forEach((suffix, idx) => {
   suffixMultipliers.binary[suffix] = Math.pow(2, 10 * (idx + 1));
 });
+const lowestDecimalSuffix = suffixes.decimal[0];
+
+function prefixForUnit(suffix) {
+  return suffix === 'K' ? 'k' : suffix;
+}
 
 describe('Unit | Utility | get number metric suffix', function () {
   [
@@ -30,13 +38,16 @@ describe('Unit | Utility | get number metric suffix', function () {
         originalNumber: 0,
         suffixedNumber: 0,
         suffix: '',
+        prefixForUnit: '',
         suffixMultiplicator: 1,
-        formattedNumber: '0',
+        formattedString: '0',
       });
     });
   });
 
   ['decimal', 'binary'].forEach((metric) => {
+    const lowestSuffix = suffixes[metric][0];
+    const highestSuffix = suffixes[metric][suffixes[metric].length - 1];
     const highestNumWithoutSuffix = suffixMultipliers[metric][lowestSuffix] - 1;
 
     [-0.5, 0, 0.5, 1, 10].forEach((number) => {
@@ -46,8 +57,9 @@ describe('Unit | Utility | get number metric suffix', function () {
           originalNumber: number,
           suffixedNumber: number,
           suffix: '',
+          prefixForUnit: '',
           suffixMultiplicator: 1,
-          formattedNumber: String(number),
+          formattedString: String(number),
         });
       });
     });
@@ -58,12 +70,13 @@ describe('Unit | Utility | get number metric suffix', function () {
         originalNumber: highestNumWithoutSuffix,
         suffixedNumber: highestNumWithoutSuffix,
         suffix: '',
+        prefixForUnit: '',
         suffixMultiplicator: 1,
-        formattedNumber: String(highestNumWithoutSuffix),
+        formattedString: String(highestNumWithoutSuffix),
       });
     });
 
-    metricSuffixes.forEach((suffix) => {
+    suffixes[metric].forEach((suffix) => {
       const lowestNumWithSuffix = suffixMultipliers[metric][suffix];
       it(`finds suffix "${suffix}" for ${lowestNumWithSuffix} in ${metric} metric`, function () {
         const result = getNumberMetricSuffix(lowestNumWithSuffix, { metric });
@@ -71,8 +84,9 @@ describe('Unit | Utility | get number metric suffix', function () {
           originalNumber: lowestNumWithSuffix,
           suffixedNumber: 1,
           suffix: suffix,
+          prefixForUnit: prefixForUnit(suffix),
           suffixMultiplicator: lowestNumWithSuffix,
-          formattedNumber: `1${suffix}`,
+          formattedString: `1${suffix}`,
         });
       });
     });
@@ -85,33 +99,36 @@ describe('Unit | Utility | get number metric suffix', function () {
           originalNumber: number,
           suffixedNumber: 1000000,
           suffix: highestSuffix,
+          prefixForUnit: prefixForUnit(highestSuffix),
           suffixMultiplicator: suffixMultipliers[metric][highestSuffix],
-          formattedNumber: `1000000${highestSuffix}`,
+          formattedString: `1000000${highestSuffix}`,
         });
       });
   });
 
   it('rounds formatted number to the first fractional digit', function () {
-    const number = suffixMultipliers.decimal[lowestSuffix] * 1.123;
+    const number = suffixMultipliers.decimal[lowestDecimalSuffix] * 1.123;
     const result = getNumberMetricSuffix(number);
     expect(result).to.deep.equal({
       originalNumber: number,
-      suffixedNumber: number / suffixMultipliers.decimal[lowestSuffix],
-      suffix: lowestSuffix,
-      suffixMultiplicator: suffixMultipliers.decimal[lowestSuffix],
-      formattedNumber: `1.1${lowestSuffix}`,
+      suffixedNumber: number / suffixMultipliers.decimal[lowestDecimalSuffix],
+      suffix: lowestDecimalSuffix,
+      prefixForUnit: prefixForUnit(lowestDecimalSuffix),
+      suffixMultiplicator: suffixMultipliers.decimal[lowestDecimalSuffix],
+      formattedString: `1.1${lowestDecimalSuffix}`,
     });
   });
 
   it('finds suffix for negative numbers', function () {
-    const number = -suffixMultipliers.decimal[lowestSuffix];
+    const number = -suffixMultipliers.decimal[lowestDecimalSuffix];
     const result = getNumberMetricSuffix(number);
     expect(result).to.deep.equal({
       originalNumber: number,
       suffixedNumber: -1,
-      suffix: lowestSuffix,
-      suffixMultiplicator: suffixMultipliers.decimal[lowestSuffix],
-      formattedNumber: `-1${lowestSuffix}`,
+      suffix: lowestDecimalSuffix,
+      prefixForUnit: prefixForUnit(lowestDecimalSuffix),
+      suffixMultiplicator: suffixMultipliers.decimal[lowestDecimalSuffix],
+      formattedString: `-1${lowestDecimalSuffix}`,
     });
   });
 });
