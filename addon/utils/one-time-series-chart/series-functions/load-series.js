@@ -133,8 +133,10 @@ async function fitPointsToContext(context, replaceEmptyOptions, points) {
     );
   }
 
-  const isLastPointNewest = !context.lastPointTimestamp ||
-    (context.nowTimestamp - context.lastPointTimestamp) < context.timeResolution;
+  const isLastPointNewest = !context.lastPointTimestamp || (
+    context.newestPointTimestamp &&
+    (context.newestPointTimestamp - context.lastPointTimestamp) < context.timeResolution
+  );
 
   // Find out timestamp of globally oldest point
   let globallyOldestPointTimestamp = null;
