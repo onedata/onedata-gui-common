@@ -72,6 +72,18 @@ describe('Unit | Utility | one time series chart/transform functions/format with
   testFormatWithUnit(1500, '1.5 kB/s', 'bytesPerSec', { format: 'si' });
   testFormatWithUnit(-1000, '-1 kB/s', 'bytesPerSec', { format: 'si' });
 
+  testFormatWithUnit(0, '0 b/s', 'bitsPerSec');
+  testFormatWithUnit(1000, '1000 b/s', 'bitsPerSec');
+  testFormatWithUnit(1024, '1 Kib/s', 'bitsPerSec');
+  testFormatWithUnit(1536, '1.5 Kib/s', 'bitsPerSec');
+  testFormatWithUnit(-1024, '-1 Kib/s', 'bitsPerSec');
+
+  testFormatWithUnit(0, '0 b/s', 'bitsPerSec', { format: 'si' });
+  testFormatWithUnit(1000, '1 kb/s', 'bitsPerSec', { format: 'si' });
+  testFormatWithUnit(1024, '1 kb/s', 'bitsPerSec', { format: 'si' });
+  testFormatWithUnit(1500, '1.5 kb/s', 'bitsPerSec', { format: 'si' });
+  testFormatWithUnit(-1000, '-1 kb/s', 'bitsPerSec', { format: 'si' });
+
   testFormatWithUnit(0, '0 Hz', 'hertz');
   testFormatWithUnit(1000, '1 kHz', 'hertz');
   testFormatWithUnit(1500, '1.5 kHz', 'hertz');

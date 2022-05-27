@@ -53,6 +53,7 @@ import _ from 'lodash';
  *   'bytes' |
  *   'hertz' |
  *   'countsPerSec' |
+ *   'bitsPerSec' |
  *   'bytesPerSec' |
  *   'operationsPerSec' |
  *   'requestsPerSec' |
@@ -136,9 +137,10 @@ export default function formatWithUnit(context, args) {
       }
       case 'bits':
       case 'bytes':
+      case 'bitsPerSec':
       case 'bytesPerSec': {
-        const isPerSec = unitName === 'bytesPerSec';
-        const areBits = unitName === 'bits';
+        const isPerSec = unitName === 'bytesPerSec' || unitName === 'bitsPerSec';
+        const areBits = unitName === 'bits' || unitName === 'bitsPerSec';
         const formatFromOptions = unitOptions && (
           unitOptions.format === 'iec' || unitOptions.format === 'si'
         ) ? unitOptions.format : 'iec';
