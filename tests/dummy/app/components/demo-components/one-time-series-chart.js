@@ -19,8 +19,9 @@ export default Component.extend({
           id: 'axis1',
           name: 'Axis 1',
           valueFormatter: {
-            functionName: 'asBytes',
+            functionName: 'formatWithUnit',
             functionArguments: {
+              unitName: 'bytes',
               data: {
                 functionName: 'abs',
                 functionArguments: {
