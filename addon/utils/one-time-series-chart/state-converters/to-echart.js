@@ -105,7 +105,7 @@ function getEchartTooltipFormatter(state) {
         seriesIdToParamMap,
       });
       return htmlContent;
-    }).join('');
+    }).filter(Boolean).join('<hr class="tooltip-series-separator" />');
 
     return `${headerHtml}${seriesGroupsHtml ? '<hr class="tooltip-series-separator" />' : ''}${seriesGroupsHtml}`;
   };

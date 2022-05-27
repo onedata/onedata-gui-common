@@ -486,14 +486,17 @@ describe('Unit | Utility | one time series chart/state', function () {
         }]), 'text/html');
 
         const tooltipEntries = tooltipDom.querySelectorAll('.tooltip-header ~ *');
-        expect(tooltipEntries).to.have.length(5);
+        expect(tooltipEntries).to.have.length(8);
 
         // separator after header
         expect(tooltipEntries[0].matches('.tooltip-series-separator')).to.be.true;
-        // series groups
-        [...tooltipEntries].slice(1).forEach((entry) => {
-          expect(entry.matches('.tooltip-series-group')).to.be.true;
-        });
+        expect(tooltipEntries[1].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[2].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[3].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[4].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[5].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[6].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[7].matches('.tooltip-series-group')).to.be.true;
 
         // ungrouped series
         expect(tooltipEntries[1].children).to.have.length(1);
@@ -501,29 +504,29 @@ describe('Unit | Utility | one time series chart/state', function () {
         expect(tooltipEntries[1].children[0].textContent).to.match(/series3\s+7 bytes/);
 
         // first group, without sum
-        expect(tooltipEntries[2].children).to.have.length(3);
-        expect(tooltipEntries[2].children[0].matches('.tooltip-series-group-header'))
-          .to.be.true;
-        expect(tooltipEntries[2].children[0].textContent).to.match(/group1/);
-        expect(tooltipEntries[2].children[1].matches('.tooltip-series')).to.be.true;
-        expect(tooltipEntries[2].children[1].textContent).to.match(/series1\s+5 bytes/);
-        expect(tooltipEntries[2].children[2].matches('.tooltip-series')).to.be.true;
-        expect(tooltipEntries[2].children[2].textContent).to.match(/series4\s+8 bytes/);
-
-        // second group, with sum
         expect(tooltipEntries[3].children).to.have.length(3);
         expect(tooltipEntries[3].children[0].matches('.tooltip-series-group-header'))
           .to.be.true;
-        expect(tooltipEntries[3].children[0].textContent).to.match(/group2\s+15 bytes/);
+        expect(tooltipEntries[3].children[0].textContent).to.match(/group1/);
         expect(tooltipEntries[3].children[1].matches('.tooltip-series')).to.be.true;
-        expect(tooltipEntries[3].children[1].textContent).to.match(/series2\s+6 bytes/);
+        expect(tooltipEntries[3].children[1].textContent).to.match(/series1\s+5 bytes/);
         expect(tooltipEntries[3].children[2].matches('.tooltip-series')).to.be.true;
-        expect(tooltipEntries[3].children[2].textContent).to.match(/series5\s+9 bytes/);
+        expect(tooltipEntries[3].children[2].textContent).to.match(/series4\s+8 bytes/);
+
+        // second group, with sum
+        expect(tooltipEntries[5].children).to.have.length(3);
+        expect(tooltipEntries[5].children[0].matches('.tooltip-series-group-header'))
+          .to.be.true;
+        expect(tooltipEntries[5].children[0].textContent).to.match(/group2\s+15 bytes/);
+        expect(tooltipEntries[5].children[1].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[5].children[1].textContent).to.match(/series2\s+6 bytes/);
+        expect(tooltipEntries[5].children[2].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[5].children[2].textContent).to.match(/series5\s+9 bytes/);
 
         // third group, without header
-        expect(tooltipEntries[4].children).to.have.length(1);
-        expect(tooltipEntries[4].children[0].matches('.tooltip-series')).to.be.true;
-        expect(tooltipEntries[4].children[0].textContent).to.match(/series6\s+10 bytes/);
+        expect(tooltipEntries[7].children).to.have.length(1);
+        expect(tooltipEntries[7].children[0].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[7].children[0].textContent).to.match(/series6\s+10 bytes/);
       });
 
     it('creates tooltip formatter which allows nested series groups',
