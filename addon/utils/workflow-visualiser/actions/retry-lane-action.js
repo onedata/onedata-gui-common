@@ -13,7 +13,14 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { equal, getBy, notEmpty, raw, not, and } from 'ember-awesome-macros';
+import {
+  equal,
+  getBy,
+  notEmpty,
+  raw,
+  not,
+  and,
+} from 'ember-awesome-macros';
 import { workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 
 export default Action.extend({

@@ -76,7 +76,14 @@
 
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
-import { computed, observer, get, getProperties, set, setProperties } from '@ember/object';
+import {
+  computed,
+  observer,
+  get,
+  getProperties,
+  set,
+  setProperties,
+} from '@ember/object';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import WorkflowDataProvider from 'onedata-gui-common/utils/workflow-visualiser/workflow-data-provider';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -91,13 +98,23 @@ import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { conditional, raw, tag, string, promise, array } from 'ember-awesome-macros';
+import {
+  conditional,
+  raw,
+  tag,
+  string,
+  promise,
+  array,
+} from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { scheduleOnce, run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
-import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import {
+  translateWorkflowStatus,
+  workflowEndedStatuses,
+} from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
 import $ from 'jquery';

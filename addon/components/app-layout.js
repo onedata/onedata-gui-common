@@ -11,7 +11,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { reads } from '@ember/object/computed';
+import { reads, equal } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
@@ -40,7 +40,7 @@ export default Component.extend({
 
   rowAppClass: 'row row-app full-height',
 
-  showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
+  showMobileSidebar: equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavResourceType: reads('navigationState.globalSidenavResourceType'),
 

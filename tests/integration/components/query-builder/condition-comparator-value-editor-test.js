@@ -5,7 +5,14 @@ import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import { render, click, fillIn, blur, triggerKeyEvent, find } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  fillIn,
+  blur,
+  triggerKeyEvent,
+  find,
+} from '@ember/test-helpers';
 
 const mathOperators = ['eq', 'lt', 'lte', 'gt', 'gte'];
 

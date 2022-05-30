@@ -11,7 +11,15 @@ import {
 import {
   setupRenderingTest,
 } from 'ember-mocha';
-import { render, settled, focus, blur, click, fillIn, find } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  focus,
+  blur,
+  click,
+  fillIn,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 

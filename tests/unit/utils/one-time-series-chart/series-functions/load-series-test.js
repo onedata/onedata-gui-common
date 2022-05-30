@@ -2,7 +2,13 @@
 /* eslint-disable max-len */
 
 import { expect } from 'chai';
-import { describe, it, context, beforeEach, afterEach } from 'mocha';
+import {
+  describe,
+  it,
+  context,
+  beforeEach,
+  afterEach,
+} from 'mocha';
 import loadSeries from 'onedata-gui-common/utils/one-time-series-chart/series-functions/load-series';
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
 import { createContext } from './helpers';

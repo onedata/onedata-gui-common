@@ -1,7 +1,15 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, focus, blur, fillIn, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  focus,
+  blur,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import TagsField from 'onedata-gui-common/utils/form-component/tags-field';
 import sinon from 'sinon';

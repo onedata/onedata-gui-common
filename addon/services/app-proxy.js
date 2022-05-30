@@ -9,7 +9,12 @@
  */
 
 import Service from '@ember/service';
-import EmberObject, { computed, set, observer, setProperties } from '@ember/object';
+import EmberObject, {
+  computed,
+  set,
+  observer,
+  setProperties,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import {
   sharedObjectName,

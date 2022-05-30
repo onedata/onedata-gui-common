@@ -1,7 +1,14 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, fillIn, focus, blur, triggerKeyEvent, find } from '@ember/test-helpers';
+import {
+  render,
+  fillIn,
+  focus,
+  blur,
+  triggerKeyEvent,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';

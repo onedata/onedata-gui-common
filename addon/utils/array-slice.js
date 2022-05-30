@@ -9,6 +9,8 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { alias } from '@ember/object/computed';
+
 import ArrayProxy from '@ember/array/proxy';
 import { computed, observer } from '@ember/object';
 
@@ -20,7 +22,7 @@ export default ArrayProxy.extend({
   _startCache: undefined,
   _endCache: undefined,
 
-  sourceArray: computed.alias('content'),
+  sourceArray: alias('content'),
 
   _start: computed('startIndex', 'indexMargin', function _start() {
     const {

@@ -1,7 +1,14 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, blur, triggerKeyEvent, find } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  fillIn,
+  blur,
+  triggerKeyEvent,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
 import sinon from 'sinon';

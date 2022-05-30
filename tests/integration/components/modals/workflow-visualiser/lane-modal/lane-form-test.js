@@ -7,7 +7,14 @@ import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import { A } from '@ember/array';
 import { resolve } from 'rsvp';
-import { render, settled, fillIn, focus, blur, find } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  fillIn,
+  focus,
+  blur,
+  find,
+} from '@ember/test-helpers';
 
 const componentClass = 'lane-form';
 

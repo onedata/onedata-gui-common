@@ -15,7 +15,12 @@
 import Component from '@ember/component';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
-import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
+import EmberObject, {
+  computed,
+  observer,
+  get,
+  getProperties,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { tag } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';

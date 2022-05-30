@@ -1,7 +1,13 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, find, waitUntil } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  find,
+  waitUntil,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 

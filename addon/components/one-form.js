@@ -26,7 +26,11 @@
 import { empty } from '@ember/object/computed';
 
 import Component from '@ember/component';
-import EmberObject, { observer, computed, set } from '@ember/object';
+import EmberObject, {
+  observer,
+  computed,
+  set,
+} from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-form';
 import config from 'ember-get-config';
 import _ from 'lodash';

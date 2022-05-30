@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { runsRegistryToSortedArray, inAdvanceRunNumber } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import {
+  runsRegistryToSortedArray,
+  inAdvanceRunNumber,
+} from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 
 describe('Unit | Utility | workflow visualiser/run utils', function () {
   describe('runsRegistryToSortedArray', function () {

@@ -13,7 +13,14 @@ import { A } from '@ember/array';
 import { resolve } from 'rsvp';
 import { setProperties } from '@ember/object';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
-import { render, settled, fillIn, click, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  fillIn,
+  click,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 
 const componentClass = 'task-form';
 

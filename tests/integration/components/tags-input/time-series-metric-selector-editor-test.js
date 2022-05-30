@@ -2,7 +2,13 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { render, find, findAll, click, fillIn } from '@ember/test-helpers';
+import {
+  render,
+  find,
+  findAll,
+  click,
+  fillIn,
+} from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';

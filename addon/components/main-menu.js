@@ -8,7 +8,11 @@
  */
 
 import Component from '@ember/component';
-import EmberObject, { observer, set, setProperties } from '@ember/object';
+import EmberObject, {
+  observer,
+  set,
+  setProperties,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/main-menu';

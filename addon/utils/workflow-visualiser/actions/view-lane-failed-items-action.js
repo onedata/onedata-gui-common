@@ -13,7 +13,13 @@ import ActionResult from 'onedata-gui-common/utils/action-result';
 import { set } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { isEmpty, conditional, getBy, raw, or } from 'ember-awesome-macros';
+import {
+  isEmpty,
+  conditional,
+  getBy,
+  raw,
+  or,
+} from 'ember-awesome-macros';
 import computedT from 'onedata-gui-common/utils/computed-t';
 
 export default Action.extend({

@@ -14,9 +14,23 @@
 import Component from '@ember/component';
 import layout from '../../templates/components/workflow-visualiser/task-form';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
-import { tag, not, eq, raw, notEmpty, or, gt } from 'ember-awesome-macros';
+import {
+  tag,
+  not,
+  eq,
+  raw,
+  notEmpty,
+  or,
+  gt,
+} from 'ember-awesome-macros';
 import { inject as service } from '@ember/service';
-import { computed, observer, getProperties, get, set } from '@ember/object';
+import {
+  computed,
+  observer,
+  getProperties,
+  get,
+  set,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';

@@ -14,7 +14,12 @@
 
 import Component from '@ember/component';
 import layout from '../../templates/components/tags-input/model-selector-editor';
-import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
+import EmberObject, {
+  computed,
+  observer,
+  get,
+  getProperties,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { or } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';

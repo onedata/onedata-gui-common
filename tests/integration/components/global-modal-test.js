@@ -1,7 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, triggerKeyEvent } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  triggerKeyEvent,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../helpers/stub-service';
 import sinon from 'sinon';

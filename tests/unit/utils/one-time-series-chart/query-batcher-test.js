@@ -2,11 +2,20 @@
 /* eslint-disable max-len */
 
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {
+  describe,
+  it,
+  beforeEach,
+  afterEach,
+} from 'mocha';
 import sinon from 'sinon';
 import QueryBatcher from 'onedata-gui-common/utils/one-time-series-chart/query-batcher';
 import { run } from '@ember/runloop';
-import { all as allFulfilled, resolve, reject } from 'rsvp';
+import {
+  all as allFulfilled,
+  resolve,
+  reject,
+} from 'rsvp';
 import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 const defaultBatchAccumulationTime = 5;

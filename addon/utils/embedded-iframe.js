@@ -21,7 +21,11 @@
  *   the iframe.
  */
 
-import EmberObject, { computed, get, observer } from '@ember/object';
+import EmberObject, {
+  computed,
+  get,
+  observer,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import {
@@ -315,7 +319,7 @@ export default EmberObject.extend({
   /**
    * Calls action from callParentCallbacks according to iframe rpc data and
    * then returns the result back to the iframe.
-   * @param {string} method 
+   * @param {string} method
    * @param  {Array<any>} args
    * @returns {any}
    */

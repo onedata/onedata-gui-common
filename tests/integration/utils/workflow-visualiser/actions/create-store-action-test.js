@@ -7,7 +7,12 @@ import CreateStoreAction from 'onedata-gui-common/utils/workflow-visualiser/acti
 import { getProperties, get } from '@ember/object';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 
 describe('Integration | Utility | workflow visualiser/actions/create store action', function () {
   setupRenderingTest();
