@@ -11,7 +11,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import round10 from 'npm:round10';
+import round10 from 'round10';
 
 export default function dynamicRound(value, precision = 1) {
   const isNumberLowerThanPrecision =

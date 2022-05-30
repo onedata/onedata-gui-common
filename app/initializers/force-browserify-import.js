@@ -8,16 +8,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import 'npm:perfect-scrollbar';
-import 'npm:round10';
-import 'npm:color';
-import 'npm:basictable';
-import 'npm:contrast';
-import 'npm:dompurify';
-import 'npm:smoothscroll-polyfill';
-import 'npm:spin.js';
-import 'npm:pupa';
-import 'npm:shell-escape';
+// FIXME: to remove
 
 export default {
   name: 'force-browserify-import',

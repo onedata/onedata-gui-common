@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import smoothscroll from 'npm:smoothscroll-polyfill';
+import smoothscroll from 'smoothscroll-polyfill';
 import { inject as service } from '@ember/service';
 
 export default Route.extend({

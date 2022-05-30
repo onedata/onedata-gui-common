@@ -4,7 +4,7 @@ import { run, debounce, scheduleOnce } from '@ember/runloop';
 import layout from 'onedata-gui-common/templates/components/basic-table';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import $ from 'jquery';
-import 'npm:basictable';
+import 'basictable';
 
 /**
  * Creates a table element which uses JQuery Basic Table to handle with small devices.
