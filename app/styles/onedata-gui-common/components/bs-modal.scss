@@ -55,18 +55,26 @@ $modal-scroll-margin: 14px;
       padding-right: $modal-scroll-margin;
     }
     &.full-width-body {
-      .bs-modal-body-scroll {
-        $parent-margin-sum: "#{$modal-content-horizontal-padding} + #{$modal-inner-padding}";
-        $positive-parent-margin: calc(#{$parent-margin-sum});
-        $negative-parent-margin: calc(-1 * (#{$parent-margin-sum}));
+      @mixin body-scroll-paddings($content-horizontal-padding) {
+        .bs-modal-body-scroll {
+          $parent-margin-sum: "#{$content-horizontal-padding} + #{$modal-inner-padding}";
+          $positive-parent-margin: calc(#{$parent-margin-sum});
+          $negative-parent-margin: calc(-1 * (#{$parent-margin-sum}));
 
-        margin-left: $negative-parent-margin;
-        margin-right: $negative-parent-margin;
-        padding-right: 0;
-        > .full-width-body-content {
-          padding-left: $positive-parent-margin;
-          padding-right: $positive-parent-margin;
+          margin-left: $negative-parent-margin;
+          margin-right: $negative-parent-margin;
+          > .full-width-body-content {
+            padding-left: $positive-parent-margin;
+            padding-right: $positive-parent-margin;
+          }
         }
+      }
+
+      padding-right: 0;
+
+      @include body-scroll-paddings($modal-content-horizontal-padding);
+      @media (max-width: $screen-xs-max) {
+        @include body-scroll-paddings($modal-content-horizontal-padding-mobile);
       }
     }
   }
@@ -91,8 +99,8 @@ $modal-scroll-margin: 14px;
 @media (max-width: $screen-xs-max) {
   .modal.in .modal-dialog {
     width: calc(100% - 16px);
-    .modal-content {
-      padding: 0;
-    }
+  }
+  .modal-content {
+    padding: $modal-content-horizontal-padding-mobile;
   }
 }

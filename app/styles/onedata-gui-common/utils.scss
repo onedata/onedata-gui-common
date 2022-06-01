@@ -206,7 +206,10 @@ $top-shadow-zindex: 1002;
   margin-right: -$content-col-padding;
 }
 
-@mixin content-shadow-leftovers($vertical-offset: -$content-col-padding) {
+@mixin content-shadow-leftovers(
+    $vertical-offset: -$content-col-padding,
+    $vertical-offset-mobile: 0
+  ) {
   &::before {
     width: auto;
   }
@@ -215,5 +218,13 @@ $top-shadow-zindex: 1002;
   }
   &:last-of-type::before {
     right: $vertical-offset;
+  }
+  @media (max-width: $screen-xs-max) {
+    &:first-of-type::before {
+      left: $vertical-offset-mobile;
+    }
+    &:last-of-type::before {
+      right: $vertical-offset-mobile;
+    }
   }
 }
