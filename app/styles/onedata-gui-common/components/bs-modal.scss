@@ -76,6 +76,10 @@ $modal-scroll-margin: 14px;
       @media (max-width: $screen-xs-max) {
         @include body-scroll-paddings($modal-content-horizontal-padding-mobile);
       }
+
+      .ps__rail-y {
+        transform: translateX(-#{$modal-scroll-margin});
+      }
     }
   }
   .modal-footer {
