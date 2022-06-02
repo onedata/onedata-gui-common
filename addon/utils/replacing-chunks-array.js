@@ -494,7 +494,7 @@ export default ArraySlice.extend(Evented, {
           return this;
         }
       });
-    this.trigger('willExpandArrayBeginning', updatePromise);
+    this.trigger('willExpandArrayBeginning', updatePromise.then(() => 0));
     return updatePromise;
   },
 
