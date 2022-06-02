@@ -75,8 +75,9 @@
  *   name: 'Bytes',
  *   minInterval: 1,
  *   valueFormatter: {
- *     functionName: 'asBytes',
+ *     functionName: 'formatWithUnit',
  *     functionArguments: {
+ *       unitName: 'bytes',
  *       data: {
  *         functionName: 'abs',
  *         functionArguments: {
@@ -90,7 +91,7 @@
  * }
  * ```
  * Above example specifies Y axis with id "bytesAxis", name "Bytes" and value formatter,
- * which performs `asBytes(abs(value_from_axis))`.
+ * which performs `formatWithUnit('bytes', abs(value_from_axis))`.
  *
  * As you can see function definitions can be nested (which argument can receive
  * a nested function is specific for each function). There is also a special function,
@@ -391,11 +392,12 @@
  *       id: 'bytesAxis',
  *       name: 'Bytes',
  *       valueFormatter: {
- *         functionName: 'asBytes',
+ *         functionName: 'formatWithUnit',
  *         functionArguments: {
  *           data: {
  *             functionName: 'abs',
  *             functionArguments: {
+ *               unitName: 'bytes',
  *               data: {
  *                 functionName: 'supplyValue',
  *               },
@@ -639,9 +641,8 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  *   additional points).
  * @property {OTSCExternalDataSources} externalDataSources reference to data sources
  *   so all chart functions have an access to external data
- * @property {number} nowTimestamp timestamp (in seconds) considered to be a "now"
- *   time. Passed to synchronize all chart element and to not depend on own
- *   "now" timestamps calculations
+ * @property {number} newestPointTimestamp timestamp (in seconds) of the globally newest
+ *  possible point
  * @property {number} lastPointTimestamp timestamp of a point, that should be the
  *   newest point in the current view. It usually is at the right edge of the
  *   chart (edge of "newer" points) and corresponds to `lastPointTimestamp` in
@@ -767,8 +768,8 @@ export default class Configuration {
     this.updateInterval = null;
 
     /**
-     * Significant only in non-live mode. In live mode current time is the newest
-     * timestamp.
+     * In live mode - is always null as it changes over time.
+     * In non-live mode - contains timestamp of the globally newest point.
      * @private
      * @type {number|null}
      */
@@ -827,6 +828,9 @@ export default class Configuration {
   setViewParameters(parameters) {
     if (parameters.live !== undefined) {
       this.live = parameters.live;
+      if (this.live) {
+        this.newestPointTimestamp = null;
+      }
     }
     if (parameters.timeResolution !== undefined) {
       this.changeTimeResolution(parameters.timeResolution);
@@ -868,32 +872,22 @@ export default class Configuration {
    * @returns {Promise<OTSCState>}
    */
   async getState() {
-    const nowTimestamp = this.getNowTimestamp();
-    const [series, seriesGroups] = await allFulfilled([
-      this.getAllSeriesState({ nowTimestamp }),
-      this.getSeriesGroupsState(),
-    ]);
     if (!this.live && !this.newestPointTimestamp && this.timeResolutionSpecs.length) {
-      let seriesWithNewestTimestamp = series;
-      // Finding resolution with points aggregating the smallest portion of time.
       const smallestTimeResolution =
         this.timeResolutionSpecs.sortBy('timeResolution')[0].timeResolution;
-      if (
-        this.lastPointTimestamp ||
-        this.timeResolution !== smallestTimeResolution ||
-        !this.pointsCount
-      ) {
-        seriesWithNewestTimestamp = await this.getAllSeriesState({
-          lastPointTimestamp: null,
-          timeResolution: smallestTimeResolution,
-          pointsCount: 1,
-          nowTimestamp,
-        });
-      }
-      this.acquireNewestPointTimestamp(seriesWithNewestTimestamp);
+      const preflightSeries = await this.getAllSeriesState({
+        lastPointTimestamp: null,
+        timeResolution: smallestTimeResolution,
+        pointsCount: 1,
+      });
+      this.acquireNewestPointTimestamp(preflightSeries, smallestTimeResolution);
     }
+    const [series, seriesGroups] = await allFulfilled([
+      this.getAllSeriesState(),
+      this.getSeriesGroupsState(),
+    ]);
 
-    if (this.newestPointTimestamp && series.length && series[0].data.length) {
+    if (this.newestPointTimestamp && series.length) {
       for (const singleSeries of series) {
         for (let i = singleSeries.data.length - 1; i >= 0; i--) {
           if (singleSeries.data[i].timestamp < this.newestPointTimestamp) {
@@ -918,11 +912,36 @@ export default class Configuration {
 
   /**
    * @param {OTSCSeries} series
+   * @param {number} usedTimeResolution
    * @returns {void}
    */
-  async acquireNewestPointTimestamp(series) {
-    this.newestPointTimestamp = series.length && series[0].data.length ?
-      series[0].data[series[0].data.length - 1].timestamp : this.getNowTimestamp();
+  async acquireNewestPointTimestamp(series, usedTimeResolution) {
+    let foundNewestTimestampInSeries = 0;
+    if (series && series.length) {
+      series.forEach((singleSeries) => {
+        if (singleSeries.data && singleSeries.data.length) {
+          const lastPoint = singleSeries.data[singleSeries.data.length - 1];
+          if (lastPoint.timestamp > foundNewestTimestampInSeries) {
+            foundNewestTimestampInSeries = lastPoint.timestamp;
+          }
+        }
+      });
+    }
+    if (foundNewestTimestampInSeries === 0) {
+      this.newestPointTimestamp = this.getNowTimestamp();
+      return;
+    }
+
+    const lastSecondOfNewestPoint = foundNewestTimestampInSeries + usedTimeResolution - 1;
+    let foundGloballyNewestTimestamp = foundNewestTimestampInSeries;
+    this.timeResolutionSpecs.forEach(({ timeResolution }) => {
+      const thisResolutionNewestTimestamp =
+        lastSecondOfNewestPoint - (lastSecondOfNewestPoint % timeResolution);
+      if (thisResolutionNewestTimestamp > foundGloballyNewestTimestamp) {
+        foundGloballyNewestTimestamp = thisResolutionNewestTimestamp;
+      }
+    });
+    this.newestPointTimestamp = foundGloballyNewestTimestamp;
   }
 
   /**
@@ -1254,19 +1273,18 @@ export default class Configuration {
    * @returns {OTSCSeriesContext}
    */
   normalizeSeriesContext(context) {
+    const nowTimestamp = this.getNowTimestamp();
     const normalizedContext = context ? Object.assign({}, context) : {};
     if (!normalizedContext.externalDataSources) {
       normalizedContext.externalDataSources = this.externalDataSources;
     }
-    if (!normalizedContext.nowTimestamp) {
-      normalizedContext.nowTimestamp = this.getNowTimestamp();
+    if (!normalizedContext.newestPointTimestamp) {
+      normalizedContext.newestPointTimestamp = this.live ?
+        nowTimestamp : this.newestPointTimestamp;
     }
     if (!('lastPointTimestamp' in normalizedContext)) {
-      if (this.live && !this.lastPointTimestamp) {
-        normalizedContext.lastPointTimestamp = normalizedContext.nowTimestamp;
-      } else {
-        normalizedContext.lastPointTimestamp = this.lastPointTimestamp;
-      }
+      normalizedContext.lastPointTimestamp =
+        this.lastPointTimestamp || normalizedContext.newestPointTimestamp;
     }
     if (typeof normalizedContext.timeResolution !== 'number') {
       normalizedContext.timeResolution = this.timeResolution;
