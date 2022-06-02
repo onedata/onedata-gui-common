@@ -259,8 +259,10 @@ export default ArraySlice.extend(Evented, {
             // there is more data on the array start, so we must make additional space
             const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
             this.trigger(
-              'willExpandArrayBeginning',
-              updatePromise.then(() => additionalFrontSpace)
+              'willChangeArrayBeginning', {
+                updatePromise,
+                newItemsCount: additionalFrontSpace,
+              }
             );
             sourceArray.unshift(..._.times(
               additionalFrontSpace,
@@ -494,7 +496,9 @@ export default ArraySlice.extend(Evented, {
           return this;
         }
       });
-    this.trigger('willExpandArrayBeginning', updatePromise.then(() => 0));
+    this.trigger('willResetArray', {
+      updatePromise,
+    });
     return updatePromise;
   },
 
