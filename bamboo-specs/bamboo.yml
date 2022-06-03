@@ -1,0 +1,122 @@
+---
+version: 2
+plan:
+  project-key: VFS
+  key: ODGC
+  name: onedata-gui-common
+stages:
+- Test:
+    manual: false
+    final: false
+    jobs:
+    - Test
+Test:
+  key: TEST
+  description: Build app in test environment and invoke ember tests
+  other:
+    clean-working-dir: true
+    all-other-apps:
+      custom:
+        auto: {}
+        clover:
+          useLocalLicenseKey: 'true'
+        buildHangingConfig.enabled: 'false'
+  tasks:
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |
+        docker pull onedata/gui_builder:latest
+      description: Update gui_builder image
+  - checkout:
+      repository: bamboos
+      path: bamboos
+      force-clean-build: 'false'
+      description: Get bamboos scripts
+  - checkout:
+      path: onedata-gui-common
+      force-clean-build: 'true'
+      description: Get the code
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        git remote set-url origin ${bamboo.repository.git.repositoryUrl}
+        git remote -v
+        # added for VFS-7135, currently optionally - output should checked after merge
+        make submodules || true
+      working-dir: onedata-gui-common
+      description: Init submodules
+  - script:
+      interpreter: BINSH_OR_CMDEXE
+      scripts:
+      - |-
+        # docker run -v ${PWD}:/build onedata/gui_builder:latest bash -c 'cd build && npm run test-ci'
+        ../bamboos/make.py -i onedata/gui_builder:latest test_ci
+        TEST_EXITCODE=$?
+        echo "Trying to copy test results from legacy location... (do not bother when there will be cp error)"
+        cp tests/test-results.xml tmp/test-results.xml || true
+        exit $TEST_EXITCODE
+      working-dir: onedata-gui-common
+      description: Run CI Ember tests
+  final-tasks:
+  - test-parser:
+      type: junit
+      ignore-time: 'false'
+      test-results: onedata-gui-common/tmp/test-results.xml
+      description: Parse test results
+  - script:
+      interpreter: BINSH_OR_CMDEXE
+      scripts:
+      - curl ${bamboo.OnedataFinalTasksURL} | bash -
+      description: Clear env
+  requirements:
+  - gui
+  artifact-subscriptions: []
+repositories:
+- onedata-gui-common:
+    scope: global
+- bamboos:
+    scope: global
+branches:
+  create: for-new-branch
+  delete:
+    after-deleted-days: 7
+    after-inactive-days: 30
+  link-to-jira: true
+notifications:
+- events:
+  - job-failed
+  recipients:
+  - users:
+    - plgjliput
+- events:
+  - plan-status-changed
+  recipients:
+  - users:
+    - plgjliput
+labels: []
+dependencies:
+  require-all-stages-passing: false
+  enabled-for-branches: true
+  block-strategy: none
+  plans: []
+other:
+  concurrent-build-plugin: system-default
+---
+version: 2
+plan:
+  key: VFS-ODGC
+plan-permissions:
+- users:
+  - plgborzecki
+  - plgjliput
+  groups:
+  - plggveildev
+  permissions:
+  - view
+  - edit
+  - build
+  - clone
+  - admin
+...
