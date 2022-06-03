@@ -10,7 +10,14 @@
 
 import Component from '@ember/component';
 import layout from '../../../../templates/components/modals/workflow-visualiser/lane-modal/lane-form';
-import { tag, getBy, raw, conditional, eq, not } from 'ember-awesome-macros';
+import {
+  tag,
+  getBy,
+  raw,
+  conditional,
+  eq,
+  not,
+} from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -19,7 +26,12 @@ import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
-import { computed, observer, getProperties, get } from '@ember/object';
+import {
+  computed,
+  observer,
+  getProperties,
+  get,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { scheduleOnce } from '@ember/runloop';
 

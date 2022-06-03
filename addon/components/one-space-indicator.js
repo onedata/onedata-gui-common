@@ -16,7 +16,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import layout from '../templates/components/one-space-indicator';
-import { gt } from '@ember/object/computed';
+import { gt, and } from '@ember/object/computed';
 
 export default Component.extend({
   layout,
@@ -114,7 +114,7 @@ export default Component.extend({
   /**
    * @type {Ember.ComputedProperty<boolean>}
    */
-  _isDataValid: computed.and('_isCurrentTotalSizeValid', '_isOccupiedSizeValid'),
+  _isDataValid: and('_isCurrentTotalSizeValid', '_isOccupiedSizeValid'),
 
   /**
    * @type {Ember.ComputedProperty<number>}

@@ -3,7 +3,15 @@ import { reject } from 'rsvp';
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, fillIn, focus, settled, click, find } from '@ember/test-helpers';
+import {
+  render,
+  blur,
+  fillIn,
+  focus,
+  settled,
+  click,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 const errorMsg = 'error!';

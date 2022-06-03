@@ -5,7 +5,12 @@ import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModifyLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-action';
 import { get, getProperties } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';

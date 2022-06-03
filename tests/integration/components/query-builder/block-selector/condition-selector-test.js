@@ -3,9 +3,19 @@ import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { clickTrigger, selectChoose, typeInSearch } from 'ember-power-select/test-support/helpers';
+import {
+  clickTrigger,
+  selectChoose,
+  typeInSearch,
+} from 'ember-power-select/test-support/helpers';
 import setDefaultQueryValuesBuilder from '../../../../helpers/set-default-query-values-builder';
-import { render, click, fillIn, findAll, find } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  fillIn,
+  findAll,
+  find,
+} from '@ember/test-helpers';
 
 const numberComparators = [{
   operator: 'eq',

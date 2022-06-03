@@ -6,7 +6,12 @@ import hbs from 'htmlbars-inline-precompile';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import RemoveStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-store-action';
 import { getProperties, get } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 

@@ -1,7 +1,20 @@
 import { expect } from 'chai';
-import { describe, it, context, before, beforeEach, afterEach } from 'mocha';
+import {
+  describe,
+  it,
+  context,
+  before,
+  beforeEach,
+  afterEach,
+} from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';

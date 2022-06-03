@@ -2,8 +2,15 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import replaceEmpty from 'onedata-gui-common/utils/one-time-series-chart/series-functions/replace-empty';
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
-import { createContext, expectFunctionsEvaluation, createConstArgument, stringifyArgumentData } from './helpers';
-import { casesToCheck as transformCasesToCheck } from '../transform-functions/replace-empty-test';
+import {
+  createContext,
+  expectFunctionsEvaluation,
+  createConstArgument,
+  stringifyArgumentData,
+} from './helpers';
+import {
+  casesToCheck as transformCasesToCheck,
+} from '../transform-functions/replace-empty-test';
 
 const normalizedTransformCasesToCheck =
   transformCasesToCheck.map(({ data, strategy, fallbackValue, output }) => ({

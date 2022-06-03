@@ -1,7 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, click, focus, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  blur,
+  click,
+  focus,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { lookupService } from '../../../helpers/stub-service';

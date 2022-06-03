@@ -8,7 +8,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { get, getProperties, computed, observer } from '@ember/object';
+import {
+  get,
+  getProperties,
+  computed,
+  observer,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';

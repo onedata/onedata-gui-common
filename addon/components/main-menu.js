@@ -8,7 +8,11 @@
  */
 
 import Component from '@ember/component';
-import EmberObject, { observer, set, setProperties } from '@ember/object';
+import EmberObject, {
+  observer,
+  set,
+  defineProperty,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/main-menu';
@@ -73,10 +77,12 @@ export default Component.extend({
         const conditionEnv = EmberObject.create();
         if (visibilityCondition !== undefined) {
           const serviceName = visibilityCondition.split('.')[0];
-          setProperties(conditionEnv, {
-            [serviceName]: getOwner(this).lookup(`service:${serviceName}`),
-            isVisible: reads(visibilityCondition),
-          });
+          set(
+            conditionEnv,
+            'isVisible',
+            getOwner(this).lookup(`service:${serviceName}`)
+          );
+          defineProperty(conditionEnv, 'isVisible', reads(visibilityCondition));
         } else {
           set(conditionEnv, 'isVisible', true);
         }

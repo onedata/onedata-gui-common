@@ -1,5 +1,10 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {
+  describe,
+  it,
+  beforeEach,
+  afterEach,
+} from 'mocha';
 import createThrottledFunction from 'onedata-gui-common/utils/create-throttled-function';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';

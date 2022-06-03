@@ -8,7 +8,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { set, get, getProperties, computed, observer, defineProperty } from '@ember/object';
+import {
+  set,
+  get,
+  getProperties,
+  computed,
+  observer,
+  defineProperty,
+} from '@ember/object';
 import { eq, raw } from 'ember-awesome-macros';
 import { validator } from 'ember-cp-validations';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';

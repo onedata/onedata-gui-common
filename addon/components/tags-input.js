@@ -13,8 +13,19 @@ import Component from '@ember/component';
 import layout from '../templates/components/tags-input';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { later } from '@ember/runloop';
-import { computed, observer, get, getProperties } from '@ember/object';
-import { writable, conditional, not, or, and } from 'ember-awesome-macros';
+import {
+  computed,
+  observer,
+  get,
+  getProperties,
+} from '@ember/object';
+import {
+  writable,
+  conditional,
+  not,
+  or,
+  and,
+} from 'ember-awesome-macros';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import config from 'ember-get-config';
 import I18n from 'onedata-gui-common/mixins/components/i18n';

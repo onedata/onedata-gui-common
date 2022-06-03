@@ -11,7 +11,11 @@
 import Component from '@ember/component';
 
 import { reads } from '@ember/object/computed';
-import EmberObject, { observer, computed, defineProperty } from '@ember/object';
+import EmberObject, {
+  observer,
+  computed,
+  defineProperty,
+} from '@ember/object';
 import layout from '../../templates/components/one-dynamic-tree/node';
 import DisabledPaths from 'onedata-gui-common/mixins/components/one-dynamic-tree/disabled-paths';
 import { dotToDash } from 'onedata-gui-common/helpers/dot-to-dash';

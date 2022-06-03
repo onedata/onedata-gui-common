@@ -1,5 +1,10 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
+import {
+  describe,
+  it,
+  beforeEach,
+  afterEach,
+} from 'mocha';
 import Looper from 'onedata-gui-common/utils/looper';
 import sinon from 'sinon';
 import { settled } from '@ember/test-helpers';

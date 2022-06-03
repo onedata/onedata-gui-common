@@ -6,7 +6,12 @@ import hbs from 'htmlbars-inline-precompile';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import RemoveParallelBoxAction from 'onedata-gui-common/utils/workflow-visualiser/actions/remove-parallel-box-action';
 import { getProperties, get } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 

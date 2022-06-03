@@ -9,7 +9,13 @@
  */
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
-import { computed, observer, set, get, getProperties } from '@ember/object';
+import {
+  computed,
+  observer,
+  set,
+  get,
+  getProperties,
+} from '@ember/object';
 import { array, raw, isEmpty } from 'ember-awesome-macros';
 import _ from 'lodash';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';

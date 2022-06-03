@@ -11,7 +11,13 @@ import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/conditio
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
-import { render, click, fillIn, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  click,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 
 const multiOperandOperatorsList = ['and', 'or', 'except'];
 const singleOperandOperatorsList = ['not'];

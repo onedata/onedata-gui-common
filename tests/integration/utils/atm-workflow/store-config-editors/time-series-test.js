@@ -2,7 +2,16 @@ import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import { render, fillIn, find, findAll, click, focus, blur, settled } from '@ember/test-helpers';
+import {
+  render,
+  fillIn,
+  find,
+  findAll,
+  click,
+  focus,
+  blur,
+  settled,
+} from '@ember/test-helpers';
 import { get } from '@ember/object';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';

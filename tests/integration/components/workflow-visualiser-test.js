@@ -4,7 +4,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click, fillIn, find, findAll } from '@ember/test-helpers';
+import {
+  render,
+  settled,
+  click,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 // TODO: VFS-9129 use scrollTo helper from @ember/test-helpers after upgrading it to 2.0
 import { scrollTo } from 'ember-native-dom-helpers';

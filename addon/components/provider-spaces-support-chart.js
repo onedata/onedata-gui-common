@@ -9,7 +9,12 @@
 
 import OnePieChart from 'onedata-gui-common/components/one-pie-chart';
 import { inject as service } from '@ember/service';
-import EmberObject, { computed, observer, get, defineProperty } from '@ember/object';
+import EmberObject, {
+  computed,
+  observer,
+  get,
+  defineProperty,
+} from '@ember/object';
 import ColorGenerator from 'onedata-gui-common/utils/color-generator';
 import bytesToString from 'onedata-gui-common/utils/bytes-to-string';
 import { A } from '@ember/array';

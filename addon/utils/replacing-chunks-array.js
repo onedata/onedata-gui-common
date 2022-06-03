@@ -19,7 +19,11 @@ import { get, set, computed, observer } from '@ember/object';
 import { reads, not } from '@ember/object/computed';
 import { A, isArray } from '@ember/array';
 import _ from 'lodash';
-import { resolve, all as allFulfilled, allSettled } from 'rsvp';
+import {
+  resolve,
+  all as allFulfilled,
+  allSettled,
+} from 'rsvp';
 import Evented from '@ember/object/evented';
 import OneSingletonTaskQueue from 'onedata-gui-common/utils/one-singleton-task-queue';
 

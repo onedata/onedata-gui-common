@@ -1,5 +1,11 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach, context } from 'mocha';
+import {
+  describe,
+  it,
+  beforeEach,
+  afterEach,
+  context,
+} from 'mocha';
 import sinon from 'sinon';
 import Configuration from 'onedata-gui-common/utils/one-time-series-chart/configuration';
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
