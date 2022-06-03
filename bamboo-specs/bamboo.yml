@@ -1,9 +1,55 @@
 ---
 version: 2
 plan:
+  key: VFS-ODGC
+plan-permissions:
+- users:
+  - plgborzecki
+  - plgjliput
+  groups:
+  - plggveildev
+  permissions:
+  - view
+  - edit
+  - build
+  - clone
+  - admin
+---
+version: 2
+plan:
   project-key: VFS
   key: ODGC
   name: onedata-gui-common
+repositories:
+- onedata-gui-common:
+    scope: global
+- bamboos:
+    scope: global
+branches:
+  create: for-new-branch
+  delete:
+    after-deleted-days: 7
+    after-inactive-days: 30
+  link-to-jira: true
+notifications:
+- events:
+  - job-failed
+  recipients:
+  - users:
+    - plgjliput
+- events:
+  - plan-status-changed
+  recipients:
+  - users:
+    - plgjliput
+labels: []
+dependencies:
+  require-all-stages-passing: false
+  enabled-for-branches: true
+  block-strategy: none
+  plans: []
+other:
+  concurrent-build-plugin: system-default
 stages:
 - Test:
     manual: false
@@ -26,6 +72,7 @@ Test:
       interpreter: SHELL
       scripts:
       - |
+        echo "NEW VERSION FIXME:"
         docker pull onedata/gui_builder:latest
       description: Update gui_builder image
   - checkout:
@@ -73,50 +120,4 @@ Test:
   requirements:
   - gui
   artifact-subscriptions: []
-repositories:
-- onedata-gui-common:
-    scope: global
-- bamboos:
-    scope: global
-branches:
-  create: for-new-branch
-  delete:
-    after-deleted-days: 7
-    after-inactive-days: 30
-  link-to-jira: true
-notifications:
-- events:
-  - job-failed
-  recipients:
-  - users:
-    - plgjliput
-- events:
-  - plan-status-changed
-  recipients:
-  - users:
-    - plgjliput
-labels: []
-dependencies:
-  require-all-stages-passing: false
-  enabled-for-branches: true
-  block-strategy: none
-  plans: []
-other:
-  concurrent-build-plugin: system-default
----
-version: 2
-plan:
-  key: VFS-ODGC
-plan-permissions:
-- users:
-  - plgborzecki
-  - plgjliput
-  groups:
-  - plggveildev
-  permissions:
-  - view
-  - edit
-  - build
-  - clone
-  - admin
 ...
