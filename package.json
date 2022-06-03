@@ -20,7 +20,9 @@
     "test-ci": "npm run deps && xvfb-run ember test -r xunit",
     "test": "ember test",
     "tdd": "ember test --server",
-    "clean": "rm -rf tmp dist node_modules .sass-cache tests/test-results.xml"
+    "clean": "rm -rf tmp dist node_modules .sass-cache tests/test-results.xml",
+    "lint": "npm run-script lint:js",
+    "lint:js": "./onedata-gui-utils/scripts/eslint-all.sh"
   },
   "dependencies": {
     "@babel/runtime": "7.18.3",
@@ -96,7 +98,7 @@
     "ember-root-url": "0.2.0",
     "ember-side-menu": "0.2.0",
     "ember-simple-auth": "1.8.2",
-    "ember-sinon": "3.0.0",
+    "ember-sinon": "4.1.1",
     "ember-source": "3.4.8",
     "ember-source-channel-url": "1.1.0",
     "ember-sticky-element": "0.2.3",
@@ -112,8 +114,8 @@
     "loader.js": "4.7.0",
     "sass": "1.17.0",
     "showdown": "1.9.1",
-    "sinon": "4.2.0",
-    "sinon-chai": "2.14.0",
+    "sinon": "7.2.0",
+    "sinon-chai": "3.7.0",
     "webpack": "5.72.1",
     "webui-popover": "git+https://github.com/michalborzecki/webui-popover.git#83d0eca5b89b1dec86bdcbba463fe7b94f2e3ae0"
   },
