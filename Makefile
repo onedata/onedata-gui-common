@@ -5,14 +5,19 @@ all: test
 clean:
 	npm run clean
 
-deps:
+deps: node_modules
+
+node_modules: package.json
 	npm run deps
 
-test:
-	npm run deps && npm run test
+test: node_modules
+	npm run test
 
-test_ci:
+test_ci: node_modules
 	npm run test-ci
+
+lint: node_modules
+	npm run-script lint
 
 submodules:
 	git submodule sync --recursive ${submodule}

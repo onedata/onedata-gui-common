@@ -68,13 +68,6 @@ Test:
           useLocalLicenseKey: 'true'
         buildHangingConfig.enabled: 'false'
   tasks:
-  - script:
-      interpreter: SHELL
-      scripts:
-      - |
-        echo "NEW VERSION FIXME:"
-        docker pull onedata/gui_builder:latest
-      description: Update gui_builder image
   - checkout:
       repository: bamboos
       path: bamboos
@@ -90,22 +83,25 @@ Test:
       - |-
         git remote set-url origin ${bamboo.repository.git.repositoryUrl}
         git remote -v
-        # added for VFS-7135, currently optionally - output should checked after merge
-        make submodules || true
+        make submodules
       working-dir: onedata-gui-common
       description: Init submodules
   - script:
       interpreter: BINSH_OR_CMDEXE
       scripts:
       - |-
-        # docker run -v ${PWD}:/build onedata/gui_builder:latest bash -c 'cd build && npm run test-ci'
-        ../bamboos/make.py -i onedata/gui_builder:latest test_ci
-        TEST_EXITCODE=$?
-        echo "Trying to copy test results from legacy location... (do not bother when there will be cp error)"
-        cp tests/test-results.xml tmp/test-results.xml || true
-        exit $TEST_EXITCODE
+        ../bamboos/make.py lint
+        LINT_RESULT=$?
+        ../bamboos/make.py test_ci
+        TEST_CI_RESULT=$?
+        if [ $LINT_RESULT -ne 0 ]; then
+          exit $LINT_RESULT
+        fi
+        if [ $TEST_CI_RESULT -ne 0 ]; then
+          exit $TEST_CI_RESULT
+        fi
       working-dir: onedata-gui-common
-      description: Run CI Ember tests
+      description: Run CI Ember tests and linter
   final-tasks:
   - test-parser:
       type: junit
