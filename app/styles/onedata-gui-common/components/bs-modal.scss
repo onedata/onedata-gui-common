@@ -103,8 +103,8 @@ $modal-scroll-margin: 14px;
 @media (max-width: $screen-xs-max) {
   .modal.in .modal-dialog {
     width: calc(100% - 16px);
-  }
-  .modal-content {
-    padding: $modal-content-horizontal-padding-mobile;
+    .modal-content {
+      padding: $modal-content-horizontal-padding-mobile;
+    }
   }
 }

@@ -206,6 +206,12 @@ $top-shadow-zindex: 1002;
   margin-right: -$content-col-padding;
 }
 
+// There are some elements that have shadow applied using eg. before-bottom-shadow mixin.
+// If the element that has the shadow applied is full-width in the container, sometimes we
+// want the shadow to reach left and right edge of the container. This mixin expands
+// shadow of the elements in one horizontal line to be full-width in container.
+// By default it works for scrollable-content, but can be configured for other containers
+// (eg. content-overlay modals)
 @mixin content-shadow-leftovers(
     $vertical-offset: -$content-col-padding,
     $vertical-offset-mobile: 0
