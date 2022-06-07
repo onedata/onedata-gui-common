@@ -69,3 +69,9 @@
   $color-file-selected,
   $color-file-highlighted
 );
+
+@include animation-bg-color-attention-fadeout(
+  pulse-bg-file-highlight,
+  transparent,
+  $color-file-highlighted
+);
