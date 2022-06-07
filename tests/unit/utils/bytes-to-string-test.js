@@ -122,11 +122,4 @@ describe('Unit | Utility | bytes to string', function () {
     const result = bytesToString(-1024, { iecFormat: true });
     expect(result).to.be.equal('-1 KiB');
   });
-
-  it('generates valid kB string with iecFormat=false as in bytes-to-string util',
-    function () {
-      const result = bytesToString([1500], { iecFormat: false });
-      expect(result).to.be.equal('1.5 kB');
-    }
-  );
 });
