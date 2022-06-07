@@ -117,6 +117,9 @@ export default Component.extend(PerfectScrollbarMixin, WindowResizeHandler, {
       handler: detectEdgeScrollHandler,
       passive: true,
     }, {
+      eventName: 'parentrender',
+      handler: detectEdgeScrollHandler,
+    }, {
       eventName: 'transitionend',
       handler: detectEdgeScrollHandler,
     }, {
