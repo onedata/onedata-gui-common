@@ -53,8 +53,6 @@ Test:
     all-other-apps:
       custom:
         auto: {}
-        clover:
-          useLocalLicenseKey: 'true'
         buildHangingConfig.enabled: 'false'
   tasks:
   - checkout:
@@ -80,7 +78,6 @@ Test:
       interpreter: BINSH_OR_CMDEXE
       scripts:
       - |-
-        # docker run -v ${PWD}:/build onedata/gui_builder:latest bash -c 'cd build && npm run test-ci'
         ../bamboos/make.py test_ci
         TEST_EXITCODE=$?
         echo "Trying to copy test results from legacy location... (do not bother when there will be cp error)"
