@@ -86,6 +86,9 @@ $collapsible-list-item-header-opened-hover: darken($main-content-hover-backgroun
         margin-bottom: 0;
         margin-top: $padding-base-vertical;
         margin-right: -$padding-large-horizontal;
+        .input-group { 
+          z-index: 0;
+        }
       }
       .collapsible-toolbar-toggle {
         top: 10px;

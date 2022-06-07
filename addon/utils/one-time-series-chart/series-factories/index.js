@@ -1,5 +1,5 @@
 /**
- * Groups all available factories into a single factories index.
+ * Groups all available series factories into a single factories index.
  *
  * @module utils/one-time-series-chart/series-factories/index
  * @author Michał Borzęcki

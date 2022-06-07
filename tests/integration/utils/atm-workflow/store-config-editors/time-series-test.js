@@ -39,6 +39,9 @@ const unitOptions = [{
   value: 'countsPerSec',
   label: 'Counts per sec.',
 }, {
+  value: 'bitsPerSec',
+  label: 'Bits per sec.',
+}, {
   value: 'bytesPerSec',
   label: 'Bytes per sec.',
 }, {

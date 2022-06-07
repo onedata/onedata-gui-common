@@ -76,7 +76,7 @@ export default BsModal.extend({
     if (modalElement) {
       const scrollableArea = modalElement.querySelector('.bs-modal-body-scroll');
       if (scrollableArea) {
-        scrollableArea.dispatchEvent(new Event('scroll'));
+        scrollableArea.dispatchEvent(new Event('parentrender'));
       }
     }
   },

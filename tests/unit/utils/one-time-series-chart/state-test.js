@@ -12,6 +12,7 @@ describe('Unit | Utility | one time series chart/state', function () {
   });
   testStateContainsCopiedProperty({ propName: 'yAxes', value: [] });
   testStateContainsCopiedProperty({ propName: 'xAxis', value: {} });
+  testStateContainsCopiedProperty({ propName: 'seriesGroups', value: [] });
   testStateContainsCopiedProperty({ propName: 'series', value: [] });
   testStateContainsCopiedProperty({ propName: 'timeResolution', value: 10 });
   testStateContainsCopiedProperty({ propName: 'pointsCount', value: 10 });
@@ -188,13 +189,24 @@ describe('Unit | Utility | one time series chart/state', function () {
         }, {
           id: 'a2',
         }],
+        seriesGroups: [{
+          id: 'group1',
+          stack: true,
+          showSeriesSum: false,
+          subgroups: [],
+        }, {
+          id: 'group2',
+          stack: false,
+          showSeriesSum: false,
+          subgroups: [],
+        }],
         series: [{
           id: 's1',
           name: 'series 1',
           type: 'bar',
           yAxisId: 'a2',
           color: '#ff0000',
-          stackId: 'abc',
+          groupId: 'group1',
           data: [{
             timestamp: 10,
             value: 1,
@@ -208,7 +220,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           type: 'line',
           yAxisId: 'a1',
           color: null,
-          stackId: null,
+          groupId: 'group2',
           data: [{
             timestamp: 10,
             value: null,
@@ -226,7 +238,7 @@ describe('Unit | Utility | one time series chart/state', function () {
         type: 'bar',
         yAxisIndex: 1,
         color: '#ff0000',
-        stack: 'abc',
+        stack: 'group1',
         areaStyle: {},
         smooth: 0.2,
         data: [
@@ -262,6 +274,7 @@ describe('Unit | Utility | one time series chart/state', function () {
             show: false,
           },
         },
+        className: 'chart-tooltip',
       });
       expect(typeof echartState.tooltip.formatter).to.equal('function');
     });
@@ -376,6 +389,349 @@ describe('Unit | Utility | one time series chart/state', function () {
         expect(tooltipDom.querySelectorAll('.value-injection')).to.have.length(0);
         expect(tooltipDom.querySelectorAll('.name-injection')).to.have.length(0);
       });
+
+    it('creates tooltip formatter which allows series groups',
+      function () {
+        const state = new State({
+          xAxis: {
+            timestamps: [],
+            timestampFormatter: (value) => value + 's',
+          },
+          yAxes: [{
+            id: 'a1',
+            valueFormatter: (value) => value + ' bytes',
+          }],
+          seriesGroups: [{
+            id: 'g1',
+            name: 'group1',
+            stack: false,
+            showSeriesSum: false,
+            subgroups: [],
+          }, {
+            id: 'g2',
+            name: 'group2',
+            stack: false,
+            showSeriesSum: true,
+            subgroups: [],
+          }, {
+            id: 'g3',
+            stack: false,
+            showSeriesSum: false,
+            subgroups: [],
+          }],
+          series: [{
+            id: 's1',
+            yAxisId: 'a1',
+            groupId: 'g1',
+            data: [],
+          }, {
+            id: 's2',
+            yAxisId: 'a1',
+            groupId: 'g2',
+            data: [],
+          }, {
+            id: 's3',
+            yAxisId: 'a1',
+            data: [],
+          }, {
+            id: 's4',
+            yAxisId: 'a1',
+            groupId: 'g1',
+            data: [],
+          }, {
+            id: 's5',
+            yAxisId: 'a1',
+            groupId: 'g2',
+            data: [],
+          }, {
+            id: 's6',
+            yAxisId: 'a1',
+            groupId: 'g3',
+            data: [],
+          }],
+        });
+        const echartState = state.asEchartState();
+
+        const parser = new DOMParser();
+        const tooltipDom = parser.parseFromString(echartState.tooltip.formatter([{
+          seriesId: 's1',
+          seriesName: 'series1',
+          value: ['10', 5],
+          marker: '<span class="marker-s1"></span>',
+        }, {
+          seriesId: 's2',
+          seriesName: 'series2',
+          value: ['10', 6],
+          marker: '<span class="marker-s2"></span>',
+        }, {
+          seriesId: 's3',
+          seriesName: 'series3',
+          value: ['10', 7],
+          marker: '<span class="marker-s3"></span>',
+        }, {
+          seriesId: 's4',
+          seriesName: 'series4',
+          value: ['10', 8],
+          marker: '<span class="marker-s4"></span>',
+        }, {
+          seriesId: 's5',
+          seriesName: 'series5',
+          value: ['10', 9],
+          marker: '<span class="marker-s5"></span>',
+        }, {
+          seriesId: 's6',
+          seriesName: 'series6',
+          value: ['10', 10],
+          marker: '<span class="marker-s6"></span>',
+        }]), 'text/html');
+
+        const tooltipEntries = tooltipDom.querySelectorAll('.tooltip-header ~ *');
+        expect(tooltipEntries).to.have.length(8);
+
+        // separator after header
+        expect(tooltipEntries[0].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[1].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[2].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[3].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[4].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[5].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[6].matches('.tooltip-series-separator')).to.be.true;
+        expect(tooltipEntries[7].matches('.tooltip-series-group')).to.be.true;
+
+        // ungrouped series
+        expect(tooltipEntries[1].children).to.have.length(1);
+        expect(tooltipEntries[1].children[0].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[1].children[0].textContent).to.match(/series3\s+7 bytes/);
+
+        // first group, without sum
+        expect(tooltipEntries[3].children).to.have.length(3);
+        expect(tooltipEntries[3].children[0].matches('.tooltip-series-group-header'))
+          .to.be.true;
+        expect(tooltipEntries[3].children[0].textContent).to.match(/group1/);
+        expect(tooltipEntries[3].children[1].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[3].children[1].textContent).to.match(/series1\s+5 bytes/);
+        expect(tooltipEntries[3].children[2].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[3].children[2].textContent).to.match(/series4\s+8 bytes/);
+
+        // second group, with sum
+        expect(tooltipEntries[5].children).to.have.length(3);
+        expect(tooltipEntries[5].children[0].matches('.tooltip-series-group-header'))
+          .to.be.true;
+        expect(tooltipEntries[5].children[0].textContent).to.match(/group2\s+15 bytes/);
+        expect(tooltipEntries[5].children[1].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[5].children[1].textContent).to.match(/series2\s+6 bytes/);
+        expect(tooltipEntries[5].children[2].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[5].children[2].textContent).to.match(/series5\s+9 bytes/);
+
+        // third group, without header
+        expect(tooltipEntries[7].children).to.have.length(1);
+        expect(tooltipEntries[7].children[0].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[7].children[0].textContent).to.match(/series6\s+10 bytes/);
+      });
+
+    it('creates tooltip formatter which allows nested series groups',
+      function () {
+        const state = new State({
+          xAxis: {
+            timestamps: [],
+            timestampFormatter: (value) => value + 's',
+          },
+          yAxes: [{
+            id: 'a1',
+            valueFormatter: (value) => value + ' bytes',
+          }],
+          seriesGroups: [{
+            id: 'g1',
+            name: 'group1',
+            stack: false,
+            showSeriesSum: true,
+            subgroups: [{
+              id: 'g11',
+              name: 'group11',
+              stack: false,
+              showSeriesSum: false,
+              subgroups: [],
+            }, {
+              id: 'g12',
+              name: 'group12',
+              stack: false,
+              showSeriesSum: true,
+              subgroups: [],
+            }],
+          }],
+          series: [{
+            id: 's1',
+            yAxisId: 'a1',
+            groupId: 'g1',
+            data: [],
+          }, {
+            id: 's2',
+            yAxisId: 'a1',
+            groupId: 'g12',
+            data: [],
+          }, {
+            id: 's3',
+            yAxisId: 'a1',
+            groupId: 'g11',
+            data: [],
+          }, {
+            id: 's4',
+            yAxisId: 'a1',
+            groupId: 'g12',
+            data: [],
+          }],
+        });
+        const echartState = state.asEchartState();
+
+        const parser = new DOMParser();
+        const tooltipDom = parser.parseFromString(echartState.tooltip.formatter([{
+          seriesId: 's1',
+          seriesName: 'series1',
+          value: ['10', 5],
+          marker: '<span class="marker-s1"></span>',
+        }, {
+          seriesId: 's2',
+          seriesName: 'series2',
+          value: ['10', 6],
+          marker: '<span class="marker-s2"></span>',
+        }, {
+          seriesId: 's3',
+          seriesName: 'series3',
+          value: ['10', 7],
+          marker: '<span class="marker-s3"></span>',
+        }, {
+          seriesId: 's4',
+          seriesName: 'series4',
+          value: ['10', 8],
+          marker: '<span class="marker-s4"></span>',
+        }]), 'text/html');
+
+        const tooltipEntries = tooltipDom.querySelectorAll('.tooltip-header ~ *');
+        expect(tooltipEntries).to.have.length(2);
+        // separator after header
+        expect(tooltipEntries[0].matches('.tooltip-series-separator')).to.be.true;
+
+        expect(tooltipEntries[1].matches('.tooltip-series-group')).to.be.true;
+        expect(tooltipEntries[1].children).to.have.length(4);
+        expect(tooltipEntries[1].children[0].matches('.tooltip-series-group-header')).to.be.true;
+        expect(tooltipEntries[1].children[0].textContent).to.match(/group1\s+26 bytes/);
+        expect(tooltipEntries[1].children[1].matches('.tooltip-series')).to.be.true;
+        expect(tooltipEntries[1].children[1].textContent).to.match(/series1\s+5 bytes/);
+
+        const firstSubgroup = tooltipEntries[1].children[2];
+        expect(firstSubgroup.matches('.tooltip-series-group')).to.be.true;
+        expect(firstSubgroup.children).to.have.length(2);
+        expect(firstSubgroup.children[0].matches('.tooltip-series-group-header')).to.be.true;
+        expect(firstSubgroup.children[0].textContent).to.match(/group11\s+$/);
+        expect(firstSubgroup.children[1].matches('.tooltip-series')).to.be.true;
+        expect(firstSubgroup.children[1].textContent).to.match(/series3\s+7 bytes/);
+
+        const secondSubgroup = tooltipEntries[1].children[3];
+        expect(secondSubgroup.matches('.tooltip-series-group')).to.be.true;
+        expect(secondSubgroup.children).to.have.length(3);
+        expect(secondSubgroup.children[0].matches('.tooltip-series-group-header')).to.be.true;
+        expect(secondSubgroup.children[0].textContent).to.match(/group12\s+14 bytes/);
+        expect(secondSubgroup.children[1].matches('.tooltip-series')).to.be.true;
+        expect(secondSubgroup.children[1].textContent).to.match(/series2\s+6 bytes/);
+        expect(secondSubgroup.children[2].matches('.tooltip-series')).to.be.true;
+        expect(secondSubgroup.children[2].textContent).to.match(/series4\s+8 bytes/);
+      });
+
+    it('stacks series in nested groups when needed', function () {
+      const state = new State({
+        xAxis: {
+          timestamps: [],
+          timestampFormatter: (value) => value + 's',
+        },
+        yAxes: [{
+          id: 'a1',
+          valueFormatter: (value) => value + ' bytes',
+        }],
+        seriesGroups: [{
+          id: 'g1',
+          name: 'group1',
+          stack: true,
+          showSeriesSum: false,
+          subgroups: [{
+            id: 'g11',
+            name: 'group11',
+            stack: false,
+            showSeriesSum: false,
+            subgroups: [],
+          }],
+        }, {
+          id: 'g2',
+          name: 'group2',
+          stack: false,
+          showSeriesSum: false,
+          subgroups: [{
+            id: 'g21',
+            name: 'group21',
+            stack: true,
+            showSeriesSum: false,
+            subgroups: [],
+          }],
+        }, {
+          id: 'g3',
+          name: 'group2',
+          stack: false,
+          showSeriesSum: false,
+          subgroups: [{
+            id: 'g31',
+            name: 'group31',
+            stack: false,
+            showSeriesSum: false,
+            subgroups: [],
+          }],
+        }],
+        series: [{
+          id: 's1',
+          yAxisId: 'a1',
+          groupId: 'g1',
+          data: [],
+        }, {
+          id: 's2',
+          yAxisId: 'a1',
+          groupId: 'g11',
+          data: [],
+        }, {
+          id: 's3',
+          yAxisId: 'a1',
+          groupId: 'g2',
+          data: [],
+        }, {
+          id: 's4',
+          yAxisId: 'a1',
+          groupId: 'g21',
+          data: [],
+        }, {
+          id: 's5',
+          yAxisId: 'a1',
+          groupId: 'g3',
+          data: [],
+        }, {
+          id: 's6',
+          yAxisId: 'a1',
+          groupId: 'g31',
+          data: [],
+        }],
+      });
+      const echartState = state.asEchartState();
+
+      const series = echartState.series;
+      expect(series[0].id).to.equal('s2');
+      expect(series[0].stack).to.equal('g1');
+      expect(series[1].id).to.equal('s1');
+      expect(series[1].stack).to.equal('g1');
+      expect(series[2].id).to.equal('s3');
+      expect(series[2].stack).to.be.null;
+      expect(series[3].id).to.equal('s4');
+      expect(series[3].stack).to.equal('g21');
+      expect(series[4].id).to.equal('s5');
+      expect(series[4].stack).to.be.null;
+      expect(series[5].id).to.equal('s6');
+      expect(series[5].stack).to.be.null;
+    });
   });
 });
 

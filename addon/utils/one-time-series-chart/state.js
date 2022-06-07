@@ -9,7 +9,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import _ from 'lodash';
+import stateToEchart from './state-converters/to-echart';
 
 /**
  * @typedef {Object} OTSCStateInitOptions
@@ -44,13 +44,23 @@ import _ from 'lodash';
  */
 
 /**
+ * @typedef {Object} OTSCSeriesGroup Represents a group of series. Allows stacking
+ * and special formatting of series entries in tooltip.
+ * @property {string} id
+ * @property {string} name series group name (visible in tooltip)
+ * @property {boolean} stack if true, all series in group will be stacked
+ * @property {boolean} showSeriesSum if true, tooltip will show sum of all series in group
+ * @property {Array<OTSCSeriesGroup>} subgroups
+ */
+
+/**
  * @typedef {Object} OTSCSeries
  * @property {string} id
  * @property {string} name
  * @property {OTSCChartType} type
  * @property {string} yAxisId
  * @property {string|null} color
- * @property {string|undefined} stackId
+ * @property {string|null} groupId
  * @property {OTSCSeriesPoint[]} data
  */
 
@@ -98,6 +108,13 @@ export default class State {
       timestamps: [],
       timestampFormatter: (value) => value,
     };
+
+    /**
+     * @public
+     * @readonly
+     * @type {OTSCSeriesGroup[]}
+     */
+    this.seriesGroups = options.seriesGroups || [];
 
     /**
      * @public
@@ -171,86 +188,6 @@ export default class State {
    * @returns {ECOption}
    */
   asEchartState() {
-    const yAxisIdToIdxMap = this.yAxes.reduce((acc, yAxis, idx) => {
-      acc[yAxis.id] = idx;
-      return acc;
-    }, {});
-
-    return {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          label: {
-            show: false,
-          },
-        },
-        confine: true,
-        formatter: (paramsArray) => {
-          if (!Array.isArray(paramsArray) || paramsArray.length === 0) {
-            return null;
-          }
-          const timestamp = Number.parseInt(paramsArray[0].value[0]);
-          const formattedTimestamp = this.xAxis.timestampFormatter(timestamp);
-          const headerHtml =
-            `<div class="tooltip-header">${_.escape(formattedTimestamp)}</div>`;
-          const seriesHtml = paramsArray.map(({
-            seriesId,
-            seriesName,
-            value: [, yValue],
-            marker,
-          }) => {
-            const series = this.series.findBy('id', seriesId);
-            const yAxis = series && this.yAxes.findBy('id', series.yAxisId);
-            const valueFormatter = yAxis ? yAxis.valueFormatter : (val) => val;
-            return `<div class="tooltip-series"><span class="tooltip-series-label">${marker} ${_.escape(seriesName)}</span> <span class="tooltip-series-value">${_.escape(valueFormatter(yValue))}</span></div>`;
-          }).join('');
-
-          return `${headerHtml}${seriesHtml}`;
-        },
-      },
-      grid: {
-        containLabel: true,
-        left: 10,
-        bottom: 10,
-        top: 30,
-        right: 30,
-      },
-      yAxis: this.yAxes.map((yAxis) => ({
-        type: 'value',
-        name: yAxis.name,
-        minInterval: yAxis.minInterval,
-        min: ({ min }) => Number.isNaN(min) ? 0 : null,
-        max: ({ max }) => Number.isNaN(max) ? 0 : null,
-        axisLine: {
-          show: true,
-        },
-        axisLabel: {
-          formatter: (value) => yAxis.valueFormatter(value),
-        },
-      })),
-      xAxis: {
-        type: 'category',
-        data: this.xAxis.timestamps.map(timestamp => String(timestamp)),
-        axisLabel: {
-          showMaxLabel: true,
-          formatter: (value) => this.xAxis.timestampFormatter(value),
-        },
-        axisTick: {
-          alignWithLabel: true,
-        },
-      },
-      series: this.series.map((series) => ({
-        id: series.id,
-        name: series.name,
-        type: series.type,
-        yAxisIndex: yAxisIdToIdxMap[series.yAxisId],
-        color: series.color,
-        stack: series.stackId,
-        areaStyle: series.stackId ? {} : null,
-        smooth: 0.2,
-        data: series.data.map(({ timestamp, value }) => [String(timestamp), value]),
-      })),
-    };
+    return stateToEchart(this);
   }
 }

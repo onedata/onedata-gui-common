@@ -45,6 +45,7 @@ export const units = [
   'bytes',
   'hertz',
   'countsPerSec',
+  'bitsPerSec',
   'bytesPerSec',
   'operationsPerSec',
   'requestsPerSec',

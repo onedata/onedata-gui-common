@@ -203,23 +203,6 @@ export default ArraySlice.extend(Evented, {
     return get(record, 'index');
   },
 
-  countEndDuplicates(array) {
-    const lastIndex = get(array, 'lastObject.index');
-    if (lastIndex) {
-      let count = 0;
-      for (let i = get(array, 'length') - 2; i >= 0; --i) {
-        if (this.getIndex(array.objectAt(i)) === lastIndex) {
-          count += 1;
-        } else {
-          return count;
-        }
-      }
-      return count;
-    } else {
-      return 0;
-    }
-  },
-
   /**
    * Expand array's beginning using data retrieved with fetch.
    * This method should be not used directly - instead use `scheduleTask('fetchPrev')`
@@ -276,8 +259,10 @@ export default ArraySlice.extend(Evented, {
             // there is more data on the array start, so we must make additional space
             const additionalFrontSpace = fetchedArraySize - emptyIndex - 1;
             this.trigger(
-              'willExpandArrayBeginning',
-              updatePromise.then(() => additionalFrontSpace)
+              'willChangeArrayBeginning', {
+                updatePromise,
+                newItemsCount: additionalFrontSpace,
+              }
             );
             sourceArray.unshift(..._.times(
               additionalFrontSpace,
@@ -347,7 +332,6 @@ export default ArraySlice.extend(Evented, {
     const sourceArrayLength = get(sourceArray, 'length');
     const lastItem = sourceArray[sourceArrayLength - 1];
     const fetchStartIndex = lastItem ? this.getIndex(lastItem) : null;
-    const duplicateCount = this.countEndDuplicates(sourceArray);
 
     this.trigger('fetchNextStarted');
     return this.fetchWrapper(
@@ -356,7 +340,7 @@ export default ArraySlice.extend(Evented, {
         // the workaround is to use []
         fetchStartIndex,
         fetchSize,
-        (lastItem ? 1 : 0) + duplicateCount,
+        (lastItem ? 1 : 0),
       )
       .then(({ arrayUpdate, endReached }) => {
         if (endReached === undefined) {
@@ -482,7 +466,7 @@ export default ArraySlice.extend(Evented, {
       sourceArray,
       indexMargin,
     } = this.getProperties('sourceArray', 'indexMargin');
-    return this.fetchWrapper(
+    const updatePromise = this.fetchWrapper(
         index,
         size + indexMargin * 2,
         -indexMargin,
@@ -512,6 +496,10 @@ export default ArraySlice.extend(Evented, {
           return this;
         }
       });
+    this.trigger('willResetArray', {
+      updatePromise,
+    });
+    return updatePromise;
   },
 
   scheduleJump(index, size) {
