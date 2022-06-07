@@ -31,17 +31,6 @@ branches:
     after-deleted-days: 7
     after-inactive-days: 30
   link-to-jira: true
-notifications:
-- events:
-  - job-failed
-  recipients:
-  - users:
-    - plgjliput
-- events:
-  - plan-status-changed
-  recipients:
-  - users:
-    - plgjliput
 labels: []
 dependencies:
   require-all-stages-passing: false
@@ -64,8 +53,6 @@ Test:
     all-other-apps:
       custom:
         auto: {}
-        clover:
-          useLocalLicenseKey: 'true'
         buildHangingConfig.enabled: 'false'
   tasks:
   - checkout:
