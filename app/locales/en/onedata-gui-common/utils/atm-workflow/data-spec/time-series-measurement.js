@@ -11,6 +11,7 @@ export default {
     bytes: 'Bytes',
     hertz: 'Hertz',
     countsPerSec: 'Counts per sec.',
+    bitsPerSec: 'Bits per sec.',
     bytesPerSec: 'Bytes per sec.',
     operationsPerSec: 'Operations per sec.',
     requestsPerSec: 'Requests per sec.',

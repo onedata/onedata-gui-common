@@ -78,9 +78,9 @@ describe('Unit | Utility | bytes to string', function () {
     expect(result).to.be.equal('1 MB');
   });
 
-  it('can convert byte size to KB string', function () {
+  it('can convert byte size to kB string', function () {
     const result = bytesToString(1000, { iecFormat: false });
-    expect(result).to.be.equal('1 KB');
+    expect(result).to.be.equal('1 kB');
   });
 
   it('rounds size in string to 1 digit after comma by default (w/o IEC)', function () {
@@ -94,18 +94,28 @@ describe('Unit | Utility | bytes to string', function () {
   });
 
   it('can convert to bit', function () {
-    const result = bytesToString(1, { format: 'bit' });
+    const result = bytesToString(1, { format: 'bitSi' });
     expect(result).to.be.equal('8 b');
   });
 
   it('can convert to kbit', function () {
-    const result = bytesToString(8000, { format: 'bit' });
+    const result = bytesToString(8000, { format: 'bitSi' });
     expect(result).to.be.equal('64 kb');
   });
 
   it('can convert to Mbit', function () {
-    const result = bytesToString(625000, { format: 'bit' });
+    const result = bytesToString(625000, { format: 'bitSi' });
     expect(result).to.be.equal('5 Mb');
+  });
+
+  it('can convert to Kibit', function () {
+    const result = bytesToString(8192, { format: 'bitIec' });
+    expect(result).to.be.equal('64 Kib');
+  });
+
+  it('can convert to Mibit', function () {
+    const result = bytesToString(655360, { format: 'bitIec' });
+    expect(result).to.be.equal('5 Mib');
   });
 
   it('deals with negative values', function () {
