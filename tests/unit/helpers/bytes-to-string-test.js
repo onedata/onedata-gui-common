@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { bytesToString } from 'onepanel-gui/helpers/bytes-to-string';
+import { bytesToString } from 'onedata-gui-common/helpers/bytes-to-string';
 
 describe('Unit | Helper | bytes to string', function () {
   it('supports iecFormat option of bytes-to-string util', function () {
