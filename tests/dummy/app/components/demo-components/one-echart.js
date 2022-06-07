@@ -34,6 +34,7 @@ export default Component.extend({
             show: false,
           },
         },
+        className: 'chart-tooltip',
         formatter(seriesArr) {
           const timestamp = seriesArr[0].value.timestamp;
           const totalSizeSeries = seriesArr.findBy('seriesId', 'totalSize');
@@ -52,7 +53,7 @@ export default Component.extend({
           );
           const seriesHtml = [mainSeriesHtml, storagesHtml].filter(Boolean).join(
             '<hr class="tooltip-series-separator" />');
-          return `${headerHtml}${seriesHtml}`;
+          return `${headerHtml}<hr class="tooltip-series-separator" />${seriesHtml}`;
         },
       },
       legend: {
@@ -195,5 +196,5 @@ function tooltipSeriesEntry(series, valueFormatter = (val => val)) {
     return '';
   }
   const value = series.value[series.seriesId];
-  return `<div class="tooltip-series"><span class="tooltip-series-label">${series.marker} ${series.seriesName}</span> <span class="tooltip-series-value">${valueFormatter(value)}</span></div>`;
+  return `<div class="tooltip-series"><span class="tooltip-label tooltip-series-label">${series.marker} ${series.seriesName}</span> <span class="tooltip-value tooltip-series-value">${valueFormatter(value)}</span></div>`;
 }

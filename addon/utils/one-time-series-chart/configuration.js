@@ -542,6 +542,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {string} [name]
  * @property {boolean} [stack]
  * @property {boolean} [showSeriesSum]
+ * @property {Array<OTSCRawSeriesGroup>} [subgroups]
  */
 
 /**
@@ -1042,11 +1043,13 @@ export default class Configuration {
       name,
       stack,
       showSeriesSum,
+      subgroups,
     ] = [
       'id',
       'name',
       'stack',
       'showSeriesSum',
+      'subgroups',
     ].map(propName =>
       this.evaluateTransformFunction(context, seriesGroup[propName])
     );
@@ -1055,6 +1058,9 @@ export default class Configuration {
       name: name || '',
       stack: Boolean(stack),
       showSeriesSum: Boolean(showSeriesSum),
+      subgroups: (subgroups || []).map((rawSubgroup) =>
+        this.getSeriesGroupState(context, rawSubgroup)
+      ),
     };
   }
 
