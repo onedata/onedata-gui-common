@@ -75,8 +75,9 @@
  *   name: 'Bytes',
  *   minInterval: 1,
  *   valueFormatter: {
- *     functionName: 'asBytes',
+ *     functionName: 'formatWithUnit',
  *     functionArguments: {
+ *       unitName: 'bytes',
  *       data: {
  *         functionName: 'abs',
  *         functionArguments: {
@@ -90,7 +91,7 @@
  * }
  * ```
  * Above example specifies Y axis with id "bytesAxis", name "Bytes" and value formatter,
- * which performs `asBytes(abs(value_from_axis))`.
+ * which performs `formatWithUnit('bytes', abs(value_from_axis))`.
  *
  * As you can see function definitions can be nested (which argument can receive
  * a nested function is specific for each function). There is also a special function,
@@ -391,11 +392,12 @@
  *       id: 'bytesAxis',
  *       name: 'Bytes',
  *       valueFormatter: {
- *         functionName: 'asBytes',
+ *         functionName: 'formatWithUnit',
  *         functionArguments: {
  *           data: {
  *             functionName: 'abs',
  *             functionArguments: {
+ *               unitName: 'bytes',
  *               data: {
  *                 functionName: 'supplyValue',
  *               },
@@ -540,6 +542,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {string} [name]
  * @property {boolean} [stack]
  * @property {boolean} [showSeriesSum]
+ * @property {Array<OTSCRawSeriesGroup>} [subgroups]
  */
 
 /**
@@ -1040,11 +1043,13 @@ export default class Configuration {
       name,
       stack,
       showSeriesSum,
+      subgroups,
     ] = [
       'id',
       'name',
       'stack',
       'showSeriesSum',
+      'subgroups',
     ].map(propName =>
       this.evaluateTransformFunction(context, seriesGroup[propName])
     );
@@ -1053,6 +1058,9 @@ export default class Configuration {
       name: name || '',
       stack: Boolean(stack),
       showSeriesSum: Boolean(showSeriesSum),
+      subgroups: (subgroups || []).map((rawSubgroup) =>
+        this.getSeriesGroupState(context, rawSubgroup)
+      ),
     };
   }
 

@@ -8,8 +8,7 @@
  */
 
 import abs from './abs';
-import asBytes from './as-bytes';
-import asBytesPerSecond from './as-bytes-per-second';
+import formatWithUnit from './format-with-unit';
 import getDynamicSeriesGroupConfigData from './get-dynamic-series-group-config-data';
 import multiply from './multiply';
 import replaceEmpty from './replace-empty';
@@ -17,8 +16,7 @@ import supplyValue from './supply-value';
 
 const transformsFunctionsIndex = {
   abs,
-  asBytes,
-  asBytesPerSecond,
+  formatWithUnit,
   getDynamicSeriesGroupConfigData,
   multiply,
   replaceEmpty,

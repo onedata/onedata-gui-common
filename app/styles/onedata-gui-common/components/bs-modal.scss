@@ -16,10 +16,16 @@ $modal-scroll-margin: 14px;
   .modal-header {
     @include before-bottom-shadow;
     @include reposition-inner-shadow;
+    &.hide-before-shadow {
+      @include hide-before-shadow;
+    }
   }
   .modal-footer {
     @include before-top-shadow;
     @include reposition-inner-shadow;
+    &.hide-before-shadow {
+      @include hide-before-shadow;
+    }
   }
   .modal-dialog {
     &.scroll-on-top {
@@ -43,10 +49,38 @@ $modal-scroll-margin: 14px;
 .modal.in .modal-dialog {
   .modal-body {
     .bs-modal-body-scroll {
+      @include fill-flex-using-column;
       height: 100%;
       margin-right: -$modal-scroll-margin;
       padding-right: $modal-scroll-margin;
-    }    
+    }
+    &.full-width-body {
+      @mixin body-scroll-paddings($content-horizontal-padding) {
+        .bs-modal-body-scroll {
+          $parent-margin-sum: "#{$content-horizontal-padding} + #{$modal-inner-padding}";
+          $positive-parent-margin: calc(#{$parent-margin-sum});
+          $negative-parent-margin: calc(-1 * (#{$parent-margin-sum}));
+
+          margin-left: $negative-parent-margin;
+          margin-right: $negative-parent-margin;
+          > .full-width-body-content {
+            padding-left: $positive-parent-margin;
+            padding-right: $positive-parent-margin;
+          }
+        }
+      }
+
+      padding-right: 0;
+
+      @include body-scroll-paddings($modal-content-horizontal-padding);
+      @media (max-width: $screen-xs-max) {
+        @include body-scroll-paddings($modal-content-horizontal-padding-mobile);
+      }
+
+      .ps__rail-y {
+        transform: translateX(-#{$modal-scroll-margin});
+      }
+    }
   }
   .modal-footer {
     padding-top: $modal-footer-vertical-padding;
@@ -70,7 +104,7 @@ $modal-scroll-margin: 14px;
   .modal.in .modal-dialog {
     width: calc(100% - 16px);
     .modal-content {
-      padding: 0;
+      padding: $modal-content-horizontal-padding-mobile;
     }
   }
 }

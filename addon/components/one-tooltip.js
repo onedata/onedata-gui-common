@@ -39,10 +39,21 @@ export default BsTooltip.extend({
   arrowOffset: 20,
 
   /**
+   * If true, the global scrollState will be observed and tooltip will be hidden
+   * when user scrolls.
+   * @type {boolean}
+   */
+  hideOnScroll: true,
+
+  /**
    * Hides tooltip on page scroll
    */
   _scrollStateObserver: observer('scrollState.lastScrollEvent', function () {
-    if (this.get('inDom')) {
+    const {
+      hideOnScroll,
+      inDom,
+    } = this.getProperties('hideOnScroll', 'inDom');
+    if (hideOnScroll && inDom) {
       this.hide();
     }
   }),

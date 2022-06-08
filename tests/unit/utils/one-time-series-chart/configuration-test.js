@@ -299,8 +299,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           id: 'a2',
           name: 'axis2',
           valueFormatter: {
-            functionName: 'asBytes',
+            functionName: 'formatWithUnit',
             functionArguments: {
+              unitName: 'bytes',
               data: {
                 functionName: 'multiply',
                 functionArguments: {
@@ -446,6 +447,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'group1',
       stack: false,
       showSeriesSum: false,
+      subgroups: [],
     })));
   });
 
@@ -496,6 +498,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
               name: 'group1',
               stack: true,
               showSeriesSum: true,
+              subgroups: [{
+                id: 'g11',
+                name: 'group11',
+                stack: false,
+                showSeriesSum: true,
+                subgroups: [],
+              }],
             },
           },
         }],
@@ -509,6 +518,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'group1',
       stack: true,
       showSeriesSum: true,
+      subgroups: [{
+        id: 'g11',
+        name: 'group11',
+        stack: false,
+        showSeriesSum: true,
+        subgroups: [],
+      }],
     }]);
   });
 
@@ -533,6 +549,44 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: '',
       stack: false,
       showSeriesSum: false,
+      subgroups: [],
+    }]);
+  });
+
+  it('calculates series groups state when subgroup optional fields are not defined', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        seriesGroups: [{
+          factoryName: 'static',
+          factoryArguments: {
+            seriesGroupTemplate: {
+              id: 'g1',
+              name: 'group1',
+              stack: true,
+              showSeriesSum: true,
+              subgroups: [{
+                id: 'g11',
+              }],
+            },
+          },
+        }],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(state.seriesGroups).to.deep.equal([{
+      id: 'g1',
+      name: 'group1',
+      stack: true,
+      showSeriesSum: true,
+      subgroups: [{
+        id: 'g11',
+        name: '',
+        stack: false,
+        showSeriesSum: false,
+        subgroups: [],
+      }],
     }]);
   });
 
@@ -573,6 +627,12 @@ describe('Unit | Utility | one time series chart/configuration', function () {
                   propertyName: 'showSeriesSum',
                 },
               },
+              subgroups: {
+                functionName: 'getDynamicSeriesGroupConfigData',
+                functionArguments: {
+                  propertyName: 'subgroups',
+                },
+              },
             },
           },
         }],
@@ -585,6 +645,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
               name: 'group1',
               stack: true,
               showSeriesSum: true,
+              subgroups: [{
+                id: 'g11',
+                name: 'group11',
+                stack: false,
+                showSeriesSum: true,
+                subgroups: [],
+              }],
             }];
           },
         },
@@ -598,6 +665,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'group1',
       stack: true,
       showSeriesSum: true,
+      subgroups: [{
+        id: 'g11',
+        name: 'group11',
+        stack: false,
+        showSeriesSum: true,
+        subgroups: [],
+      }],
     }]);
   });
 
@@ -1427,6 +1501,7 @@ function dummyStaticSeriesGroupFactoryState(seriesGroupNo) {
     name: `series${seriesGroupNo}`,
     stack: false,
     showSeriesSum: false,
+    subgroups: [],
   };
 }
 
