@@ -259,8 +259,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'axis2',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueFormatter(123)).to.equal(123);
-    expect(state.yAxes[1].valueFormatter(123)).to.equal(123);
+    expect(state.yAxes[0].valueTransformer(123)).to.equal(123);
+    expect(state.yAxes[1].valueTransformer(123)).to.equal(123);
   });
 
   it('calculates y axes state with custom value formatters', async function () {
@@ -270,7 +270,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
           id: 'a1',
           name: 'axis1',
           minInterval: 1,
-          valueFormatter: {
+          valueTransformer: {
             functionName: 'abs',
             functionArguments: {
               data: {
@@ -281,7 +281,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         }, {
           id: 'a2',
           name: 'axis2',
-          valueFormatter: {
+          valueTransformer: {
             functionName: 'formatWithUnit',
             functionArguments: {
               unitName: 'bytes',
@@ -310,8 +310,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'axis2',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueFormatter(-123)).to.equal(123);
-    expect(state.yAxes[1].valueFormatter(123)).to.equal('246 B');
+    expect(state.yAxes[0].valueTransformer(-123)).to.equal(123);
+    expect(state.yAxes[1].valueTransformer(123)).to.equal('246 B');
   });
 
   it('calculates x axis state', async function () {

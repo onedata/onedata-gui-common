@@ -5,7 +5,6 @@
  *
  * Arguments: this function does not accept any arguments.
  *
- * @module utils/one-time-series-chart/series-functions/supply-value
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -21,5 +20,5 @@
  * @returns {unknown}
  */
 export default function supplyValue(context /**, args */ ) {
-  return 'valueToSupply' in context ? context.valueToSupply : null;
+  return 'currentValue' in context ? context.currentValue : null;
 }

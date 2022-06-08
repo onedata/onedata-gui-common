@@ -46,7 +46,7 @@ import mergePointsArrays from './utils/merge-points-arrays';
  * @returns {Promise<OTSCSeriesFunctionGenericResult<Array<number|null>|number|null>>}
  */
 export default async function multiply(context, args) {
-  const normalizedOperands = args && args.operands || [];
+  const normalizedOperands = args && args.operandGenerators || [];
   if (!Array.isArray(normalizedOperands) || !normalizedOperands.length) {
     return {
       type: 'basic',
@@ -63,9 +63,12 @@ export default async function multiply(context, args) {
   const multiplicationResult = context.evaluateTransformFunction(null, {
     functionName: 'multiply',
     functionArguments: {
-      operands: evaluatedOperands.map(operand =>
-        operand.type === 'points' ? operand.data.mapBy('value') : operand.data
-      ),
+      operandProviders: evaluatedOperands.map(operand => ({
+        functionName: 'literal',
+        functionArguments: {
+          value: operand.type === 'points' ? operand.data.mapBy('value') : operand.data,
+        },
+      })),
     },
   });
 

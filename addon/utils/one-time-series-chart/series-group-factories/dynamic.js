@@ -60,6 +60,8 @@
  * @typedef {OTSCExternalDataSourceRef} OTSCRawDynamicSeriesGroupConfigsSource
  */
 
+import { all as allFulfilled } from 'rsvp';
+
 /**
  * @param {OTSCSeriesGroupFactoryContext} context
  * @param {OTSCDynamicSeriesGroupFactoryArguments} args
@@ -72,15 +74,15 @@ export default async function dynamic(context, args) {
 
   const {
     sourceType,
-    sourceParameters,
+    sourceSpec,
   } = args.dynamicSeriesGroupConfigsSource;
 
   let dynamicSeriesGroupConfigs;
   switch (sourceType) {
     case 'external': {
-      const externalSourceName = sourceParameters && sourceParameters.externalSourceName;
-      const externalSourceParameters = sourceParameters &&
-        sourceParameters.externalSourceParameters;
+      const externalSourceName = sourceSpec && sourceSpec.externalSourceName;
+      const externalSourceParameters = sourceSpec &&
+        sourceSpec.externalSourceParameters;
       if (
         !externalSourceName ||
         !context.externalDataSources[externalSourceName] ||
@@ -98,10 +100,10 @@ export default async function dynamic(context, args) {
       break;
   }
 
-  return dynamicSeriesGroupConfigs.map((dynamicSeriesGroupConfig) =>
+  return allFulfilled(dynamicSeriesGroupConfigs.map((dynamicSeriesGroupConfig) =>
     context.evaluateSeriesGroup(
       Object.assign({}, context, { dynamicSeriesGroupConfig }),
       args.seriesGroupTemplate
     )
-  );
+  ));
 }

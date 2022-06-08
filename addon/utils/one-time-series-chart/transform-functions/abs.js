@@ -36,7 +36,7 @@ export default function abs(context, args) {
     return null;
   }
 
-  const data = context.evaluateTransformFunction(context, args.data);
+  const data = context.evaluateTransformFunction(context, args.inputDataProvider);
   const dataIsArray = Array.isArray(data);
   const dataAsArray = dataIsArray ? data : [data];
 

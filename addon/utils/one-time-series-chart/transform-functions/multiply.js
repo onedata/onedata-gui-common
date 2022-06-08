@@ -50,12 +50,12 @@ import _ from 'lodash';
  * @returns {Array<number|null>|number|null}
  */
 export default function multiply(context, args) {
-  if (!args || !Array.isArray(args.operands)) {
+  if (!args || !Array.isArray(args.operandProviders)) {
     return null;
   }
 
   const operands =
-    args.operands.map(value => context.evaluateTransformFunction(context, value));
+    args.operandProviders.map(value => context.evaluateTransformFunction(context, value));
 
   let arrayOperandOccurred = false;
   let arrayLength = null;

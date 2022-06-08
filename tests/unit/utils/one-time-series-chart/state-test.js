@@ -152,11 +152,11 @@ describe('Unit | Utility | one time series chart/state', function () {
         yAxes: [{
           name: 'axis1',
           minInterval: 1,
-          valueFormatter: (value) => value + ' bytes',
+          valueTransformer: (value) => value + ' bytes',
         }, {
           name: 'axis2',
           minInterval: null,
-          valueFormatter: (value) => value + ' bits',
+          valueTransformer: (value) => value + ' bits',
         }],
       });
       const echartState = state.asEchartState();
@@ -302,10 +302,10 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueFormatter: (value) => value + ' bytes',
+            valueTransformer: (value) => value + ' bytes',
           }, {
             id: 'a2',
-            valueFormatter: (value) => value + ' bits',
+            valueTransformer: (value) => value + ' bits',
           }],
           series: [{
             id: 's1',
@@ -367,7 +367,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueFormatter: () => '<span class="value-injection"></span>',
+            valueTransformer: () => '<span class="value-injection"></span>',
           }],
           series: [{
             id: 's1',
@@ -399,7 +399,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueFormatter: (value) => value + ' bytes',
+            valueTransformer: (value) => value + ' bytes',
           }],
           seriesGroups: [{
             id: 'g1',
@@ -538,7 +538,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueFormatter: (value) => value + ' bytes',
+            valueTransformer: (value) => value + ' bytes',
           }],
           seriesGroups: [{
             id: 'g1',
@@ -645,7 +645,7 @@ describe('Unit | Utility | one time series chart/state', function () {
         },
         yAxes: [{
           id: 'a1',
-          valueFormatter: (value) => value + ' bytes',
+          valueTransformer: (value) => value + ' bytes',
         }],
         seriesGroups: [{
           id: 'g1',

@@ -16,6 +16,8 @@
  * @property {OTSCRawSeries} seriesGroupTemplate
  */
 
+import { all as allFulfilled } from 'rsvp';
+
 /**
  * @param {OTSCSeriesGroupFactoryContext} context
  * @param {OTSCStaticSeriesGroupFactoryArguments} args
@@ -26,5 +28,5 @@ export default async function staticFactory(context, args) {
     return [];
   }
 
-  return [context.evaluateSeriesGroup(context, args.seriesGroupTemplate)];
+  return allFulfilled([context.evaluateSeriesGroup(context, args.seriesGroupTemplate)]);
 }

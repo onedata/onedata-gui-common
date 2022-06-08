@@ -80,8 +80,8 @@ function getEchartTooltipFormatter(state) {
   }
   const seriesGroupsForTooltip = [{
     id: null,
-    stack: false,
-    showSeriesSum: false,
+    stacked: false,
+    showSum: false,
   }, ...state.seriesGroups];
 
   return (paramsArray) => {
@@ -179,7 +179,7 @@ function formatEchartTooltipSeriesGroup({
     let groupHeaderHtml = '';
     if (seriesGroup.name) {
       let sumHtml = '';
-      if (seriesGroup.showSeriesSum) {
+      if (seriesGroup.showSum) {
         sumValueFormatter = sumValueFormatter || defaultValueFormatter;
         sumHtml =
           `<span class="tooltip-value tooltip-series-group-sum">${_.escape(sumValueFormatter(seriesSum))}</span>`;
@@ -262,7 +262,7 @@ function getEchartSeries(state) {
     let stackId = null;
     let groupWithPossibleStack = seriesGroup;
     while (!stackId && groupWithPossibleStack) {
-      if (groupWithPossibleStack.stack) {
+      if (groupWithPossibleStack.stacked) {
         stackId = groupWithPossibleStack.id;
       }
       groupWithPossibleStack = seriesGroupParentsMap[groupWithPossibleStack.id];

@@ -15,9 +15,9 @@ import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/stor
 /**
  * @typedef {Object} OneTimeSeriesChartsSectionSpec
  * @property {OneTimeSeriesChartsSectionTitleSpec} [title]
- * @property {OneTimeSeriesChartsSectionDescriptionSpec} [description]
+ * @property {string} [description]
  * @property {boolean} [isExpandedByDefault]
- * @property {'perChart'|'sharedForSection'} [chartsNavigation]
+ * @property {'independent'|'sharedWithinSection'} [chartNavigation]
  * @property {Array<OTSCChartDefinition>} [charts]
  * @property {Array<OneTimeSeriesChartsSectionSpec>} [sections]
  */
@@ -26,11 +26,6 @@ import { metricResolutionsMap } from 'onedata-gui-common/utils/atm-workflow/stor
  * @typedef {Object} OneTimeSeriesChartsSectionTitleSpec
  * @property {string} content
  * @property {string} [tip]
- */
-
-/**
- * @typedef {Object} OneTimeSeriesChartsSectionDescriptionSpec
- * @property {string} content
  */
 
 export default Component.extend({
@@ -104,10 +99,10 @@ export default Component.extend({
    * @type {ComputedProperty<boolean>}
    */
   isSharedNavVisible: computed(
-    'sectionSpec.chartsNavigation',
+    'sectionSpec.chartNavigation',
     'chartConfigurations.length',
     function isSharedNavVisible() {
-      return this.get('sectionSpec.chartsNavigation') === 'sharedForSection' &&
+      return this.get('sectionSpec.chartNavigation') === 'sharedWithinSection' &&
         this.get('chartConfigurations.length') > 0;
     }
   ),
@@ -116,10 +111,10 @@ export default Component.extend({
    * @type {ComputedProperty<SafeString>}
    */
   descriptionContent: computed(
-    'sectionSpec.description.content',
+    'sectionSpec.description',
     function descriptionContent() {
       const escapedDescription = escapeHtml(
-        this.get('sectionSpec.description.content') || ''
+        this.get('sectionSpec.description') || ''
       );
       return escapedDescription ? htmlSafe(escapedDescription) : null;
     }
@@ -294,26 +289,20 @@ function getTimeResolutionSpecs({
   chartDefinition,
   timeSeriesSchemas,
 }) {
-  const seriesFactoriesSpecs = (chartDefinition && chartDefinition.series || [])
+  const seriesBuildersSpecs = (chartDefinition && chartDefinition.seriesBuilders || [])
     .filter(Boolean);
   const foundSeriesSources = [];
 
   // Extract series loaded via `loadSeries` function
-  const objectsToCheck = seriesFactoriesSpecs
-    .map((factory) => get(factory, 'factoryArguments.seriesTemplate.data'))
+  const objectsToCheck = seriesBuildersSpecs
+    .map((builder) => get(builder, 'builderRecipe.seriesTemplate.dataGenerator'))
     .filter(Boolean);
   while (objectsToCheck.length) {
     const objectToCheck = objectsToCheck.pop();
-    if (
-      objectToCheck.functionName === 'loadSeries' &&
-      isExternalDataSourceRef(objectToCheck.functionArguments)
-    ) {
-      foundSeriesSources.push(
-        objectToCheck
-        .functionArguments
-        .sourceParameters
-        .externalSourceParameters
-      );
+    const externalSourceRef = objectToCheck.functionName === 'loadSeries' &&
+      extractExternalDataSourceRef(objectToCheck.functionArguments);
+    if (externalSourceRef) {
+      foundSeriesSources.push(externalSourceRef.externalSourceParameters);
     } else if (Array.isArray(objectToCheck)) {
       for (const item of objectToCheck) {
         if (typeof item === 'object' && item) {
@@ -330,21 +319,21 @@ function getTimeResolutionSpecs({
   }
 
   // Extract series loaded via dynamic series
-  seriesFactoriesSpecs
-    .map(({ factoryName, factoryArguments }) =>
-      factoryName === 'dynamic' &&
-      factoryArguments &&
-      factoryArguments.dynamicSeriesConfigs ||
+  seriesBuildersSpecs
+    .map(({ builderName, builderRecipe }) =>
+      builderName === 'dynamic' &&
+      builderRecipe &&
+      builderRecipe.dynamicSeriesConfigsSource &&
+      extractExternalDataSourceRef(builderRecipe.dynamicSeriesConfigsSource) ||
       null
     )
-    .filter((dynamicSeriesConfigs) =>
-      isExternalDataSourceRef(dynamicSeriesConfigs)
-    )
-    .forEach((dynamicSeriesConfigs) =>
-      foundSeriesSources.push(
-        dynamicSeriesConfigs.sourceParameters.externalSourceParameters
-      )
-    );
+    .forEach((externalSourceRef) => {
+      if (externalSourceRef) {
+        foundSeriesSources.push(
+          externalSourceRef.externalSourceParameters
+        );
+      }
+    });
 
   // Map found series sources to resolutions
   const resolutionsPerSource = foundSeriesSources
@@ -363,12 +352,29 @@ function getTimeResolutionSpecs({
   })).filter(({ pointsCount }) => Boolean(pointsCount));
 }
 
-function isExternalDataSourceRef(sourceRef) {
-  return sourceRef &&
-    sourceRef.sourceType === 'external' &&
-    sourceRef.sourceParameters &&
-    sourceRef.sourceParameters.externalSourceName &&
-    sourceRef.sourceParameters.externalSourceParameters;
+function extractExternalDataSourceRef(possibleSourceRef) {
+  let refCandidate = null;
+  if (possibleSourceRef && possibleSourceRef.sourceType === 'external') {
+    if (possibleSourceRef.sourceSpecGenerator &&
+      possibleSourceRef.sourceSpecGenerator.functionName === 'literal' &&
+      possibleSourceRef.sourceSpecGenerator.functionArguments
+    ) {
+      refCandidate = possibleSourceRef.sourceSpecGenerator.functionArguments.data;
+    } else if (possibleSourceRef.sourceSpec) {
+      refCandidate = possibleSourceRef.sourceSpec;
+
+    }
+  }
+
+  if (
+    refCandidate &&
+    refCandidate.externalSourceName &&
+    refCandidate.externalSourceParameters
+  ) {
+    return refCandidate;
+  }
+
+  return null;
 }
 
 function getResolutionsForMetricIds({

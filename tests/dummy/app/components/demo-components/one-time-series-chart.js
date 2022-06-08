@@ -18,7 +18,7 @@ export default Component.extend({
         yAxes: [{
           id: 'axis1',
           name: 'Axis 1',
-          valueFormatter: {
+          valueTransformer: {
             functionName: 'formatWithUnit',
             functionArguments: {
               unitName: 'bytes',

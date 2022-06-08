@@ -44,12 +44,18 @@ export default async function abs(context, args) {
     };
   }
 
-  const evaluatedData = await context.evaluateSeriesFunction(context, args.data);
+  const evaluatedData =
+    await context.evaluateSeriesFunction(context, args.inputDataProvider);
   const absValues = context.evaluateTransformFunction(null, {
     functionName: 'abs',
     functionArguments: {
-      data: evaluatedData.type === 'points' ?
-        evaluatedData.data.mapBy('value') : evaluatedData.data,
+      inputDataProvider: {
+        functionName: 'literal',
+        functionArguments: {
+          data: evaluatedData.type === 'points' ?
+            evaluatedData.data.mapBy('value') : evaluatedData.data,
+        },
+      },
     },
   });
 

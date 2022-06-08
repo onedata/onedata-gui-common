@@ -61,11 +61,11 @@
  * - minInterval - optional number value, which determines minimum values gap between
  *   Y axis split lines. For example setting it to `1` will force only integer Y axis
  *   split lines.
- * - valueFormatter - optional specification of a transform function, that should be used
+ * - valueTransformer - optional specification of a transform function, that should be used
  *   to stringify value from Y axis and make it human-readable. E.g. it may
  *   transform an integer to a size in bytes. This function will also be used
  *   to render information tooltip about series related to this axis.
- *   NOTE: only transform functions are allowed to be used in valueFormatter function
+ *   NOTE: only transform functions are allowed to be used in valueTransformer function
  *   specification. See more in section "Functions types".
  *
  * Example of Y axis definition:
@@ -74,7 +74,7 @@
  *   id: 'bytesAxis',
  *   name: 'Bytes',
  *   minInterval: 1,
- *   valueFormatter: {
+ *   valueTransformer: {
  *     functionName: 'formatWithUnit',
  *     functionArguments: {
  *       unitName: 'bytes',
@@ -95,7 +95,7 @@
  *
  * As you can see function definitions can be nested (which argument can receive
  * a nested function is specific for each function). There is also a special function,
- * which have to be used in `valueFormatter` definition - `supplyValue` function.
+ * which have to be used in `valueTransformer` definition - `supplyValue` function.
  * It is replaced by the value from the Y axis.
  *
  * ### Series definitions (type Array<OTSCRawSeriesFactory>)
@@ -391,7 +391,7 @@
  *     yAxes: [{
  *       id: 'bytesAxis',
  *       name: 'Bytes',
- *       valueFormatter: {
+ *       valueTransformer: {
  *         functionName: 'formatWithUnit',
  *         functionArguments: {
  *           data: {
@@ -492,6 +492,7 @@ import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
 import seriesFactoriesIndex from './series-factories';
 import seriesGroupFactoriesIndex from './series-group-factories';
+import formatValueFromUnit from './format-value-with-unit';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
 import moment from 'moment';
@@ -526,7 +527,9 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {string} id
  * @property {string} name will be visible as an axis label
  * @property {number} [minInterval] minimum gap between axis split lines.
- * @property {OTSCRawFunction} [valueFormatter] definition of a chart values
+ * @property {string} [unitName]
+ * @property {BytesUnitOptions|BitsUnitFormat|CustomUnitOptions} [unitOptions]
+ * @property {OTSCRawFunction} [valueProvier] definition of a chart values
  * converter, that makes them more human-readable
  */
 
@@ -972,14 +975,17 @@ export default class Configuration {
   getYAxesState() {
     const rawYAxes = this.chartDefinition && this.chartDefinition.yAxes || [];
     return rawYAxes.map((rawYAxis) => {
-      const rawValueFormatter = this.isRawFunction(rawYAxis.valueFormatter) ?
-        rawYAxis.valueFormatter : {
-          functionName: 'supplyValue',
+      const rawValueProvider = this.isRawFunction(rawYAxis.valueProvider) ?
+        rawYAxis.valueProvider : {
+          functionName: 'currentValue',
         };
-      const valueFormatter = (value) =>
-        this.evaluateTransformFunction({
-          valueToSupply: value,
-        }, rawValueFormatter);
+      const valueFormatter = (value) => formatValueFromUnit({
+        value: this.evaluateTransformFunction({
+          currentValue: value,
+        }, rawValueProvider),
+        unitName: rawYAxis.unitName,
+        unitOptions: rawYAxis.unitOptions,
+      });
 
       return {
         id: rawYAxis.id,
@@ -1008,27 +1014,28 @@ export default class Configuration {
    * @returns {Promise<OTSCSeriesGroup[]>}
    */
   async getSeriesGroupsState() {
-    const rawFactories = this.chartDefinition && this.chartDefinition.seriesGroups || [];
+    const rawBuilders = this.chartDefinition &&
+      this.chartDefinition.seriesGroupBuilders || [];
     const context = {
       externalDataSources: this.externalDataSources,
       evaluateSeriesGroup: (...args) => this.getSeriesGroupState(...args),
-      evaluateTransformFunction: (...args) => this.evaluateTransformFunction(...args),
+      // evaluateSeriesFunction: (...args) => this.evaluateSeriesFunction(...args),
     };
-    const groupsPerFactory = await allFulfilled(
-      rawFactories.map((seriesGroupFactory) => {
-        const factoryFunction = seriesGroupFactoriesIndex[seriesGroupFactory.factoryName];
-        if (!factoryFunction) {
+    const groupsPerBuilder = await allFulfilled(
+      rawBuilders.map((seriesGroupBuilder) => {
+        const builderFunction = seriesGroupFactoriesIndex[seriesGroupBuilder.builderName];
+        if (!builderFunction) {
           throw {
-            id: 'unknownOTSCFactory',
+            id: 'unknownOTSCBuilder',
             details: {
-              factoryName: seriesGroupFactory.factoryName,
+              builderName: seriesGroupBuilder.builderName,
             },
           };
         }
-        return factoryFunction(context, seriesGroupFactory.factoryArguments);
+        return builderFunction(context, seriesGroupBuilder.builderRecipe);
       })
     );
-    return _.flatten(groupsPerFactory);
+    return _.flatten(groupsPerBuilder);
   }
 
   /**
@@ -1037,30 +1044,38 @@ export default class Configuration {
    * @param {OTSCRawSeriesGroup} seriesGroup
    * @returns {OTSCSeriesGroup}
    */
-  getSeriesGroupState(context, seriesGroup) {
+  async getSeriesGroupState(context, seriesGroup) {
     const [
-      id,
-      name,
-      stack,
-      showSeriesSum,
-      subgroups,
-    ] = [
+      { data: id },
+      { data: name },
+      { data: stacked },
+      { data: showSum },
+      { data: subgroups },
+    ] = await allFulfilled([
       'id',
       'name',
-      'stack',
-      'showSeriesSum',
+      'stacked',
+      'showSum',
       'subgroups',
-    ].map(propName =>
-      this.evaluateTransformFunction(context, seriesGroup[propName])
-    );
+    ].map(propName => {
+      const providerPropName = `${propName}Provider`;
+      const seriesFunction = providerPropName in seriesGroup ?
+        seriesGroup[providerPropName] : {
+          functionName: 'literal',
+          functionArguments: {
+            data: seriesGroup[propName],
+          },
+        };
+      return this.evaluateSeriesFunction(context, seriesFunction);
+    }));
     return {
       id,
       name: name || '',
-      stack: Boolean(stack),
-      showSeriesSum: Boolean(showSeriesSum),
-      subgroups: (subgroups || []).map((rawSubgroup) =>
+      stacked: Boolean(stacked),
+      showSum: Boolean(showSum),
+      subgroups: await allFulfilled((subgroups || []).map((rawSubgroup) =>
         this.getSeriesGroupState(context, rawSubgroup)
-      ),
+      )),
     };
   }
 
@@ -1074,22 +1089,23 @@ export default class Configuration {
     if (!normalizedContext.evaluateSeries) {
       normalizedContext.evaluateSeries = (...args) => this.getSeriesState(...args);
     }
-    const rawSeries = this.chartDefinition && this.chartDefinition.series || [];
-    const seriesPerFactory = await allFulfilled(
-      rawSeries.map((seriesFactory) => {
-        const factoryFunction = seriesFactoriesIndex[seriesFactory.factoryName];
-        if (!factoryFunction) {
+    const rawSeriesBuilders = this.chartDefinition &&
+      this.chartDefinition.seriesBuilders || [];
+    const seriesPerBuilder = await allFulfilled(
+      rawSeriesBuilders.map((seriesBuilder) => {
+        const builderFunction = seriesFactoriesIndex[seriesBuilder.builderName];
+        if (!builderFunction) {
           throw {
-            id: 'unknownOTSCFactory',
+            id: 'unknownOTSCBuilder',
             details: {
-              factoryName: seriesFactory.factoryName,
+              builderName: seriesBuilder.builderName,
             },
           };
         }
-        return factoryFunction(normalizedContext, seriesFactory.factoryArguments);
+        return builderFunction(normalizedContext, seriesBuilder.builderRecipe);
       })
     );
-    const allSeries = _.flatten(seriesPerFactory);
+    const allSeries = _.flatten(seriesPerBuilder);
     reconcilePointsTiming(allSeries.mapBy('data'));
     return allSeries;
   }
@@ -1117,9 +1133,17 @@ export default class Configuration {
       'color',
       'groupId',
       'data',
-    ].map(propName =>
-      this.evaluateSeriesFunction(context, series[propName])
-    ));
+    ].map(propName => {
+      const providerPropName = `${propName}Provider`;
+      const seriesFunction = providerPropName in series ?
+        series[providerPropName] : {
+          functionName: 'literal',
+          functionArguments: {
+            data: series[propName],
+          },
+        };
+      return this.evaluateSeriesFunction(context, seriesFunction);
+    }));
     const normalizedData = data.type === 'points' ? data.data : [];
     return {
       id,

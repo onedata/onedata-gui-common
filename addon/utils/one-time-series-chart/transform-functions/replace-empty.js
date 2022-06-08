@@ -61,15 +61,16 @@ import _ from 'lodash';
  * @returns {Array<unknown|null>|unknown|null}
  */
 export default function replaceEmpty(context, args) {
-  if (!args || !('data' in args) || !('fallbackValue' in args)) {
+  if (!args || !('inputDataProvider' in args) || !('fallbackValueProvider' in args)) {
     return null;
   }
 
-  const data = context.evaluateTransformFunction(context, args.data);
+  const data = context.evaluateTransformFunction(context, args.inputDataProvider);
   const strategy = normalizeStrategy(
-    context.evaluateTransformFunction(context, args.strategy)
+    context.evaluateTransformFunction(context, args.strategyProvider)
   );
-  const fallbackValue = context.evaluateTransformFunction(context, args.fallbackValue);
+  const fallbackValue =
+    context.evaluateTransformFunction(context, args.fallbackValueProvider);
 
   if (Array.isArray(data)) {
     let normalizedFallbackValues;

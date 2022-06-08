@@ -34,7 +34,7 @@ import stateToEchart from './state-converters/to-echart';
  * @property {string} id
  * @property {string} name
  * @property {number|null} minInterval
- * @property {(value: unknown) => string} valueFormatter
+ * @property {(value: unknown) => string} valueTransformer
  */
 
 /**

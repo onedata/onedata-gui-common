@@ -62,7 +62,7 @@ import mergePointsArrays from './utils/merge-points-arrays';
  * @returns {Promise<OTSCSeriesFunctionGenericResult<Array<number|null>|number|null>>}
  */
 export default async function multiply(context, args) {
-  if (!args || !('data' in args) || !('fallbackValue' in args)) {
+  if (!args || !('inputDataProvider' in args) || !('fallbackValueProvider' in args)) {
     return {
       type: 'basic',
       data: null,
@@ -70,9 +70,9 @@ export default async function multiply(context, args) {
   }
 
   const [data, strategy, fallbackValue] = await allFulfilled([
-    context.evaluateSeriesFunction(context, args.data),
-    context.evaluateSeriesFunction(context, args.strategy),
-    context.evaluateSeriesFunction(context, args.fallbackValue),
+    context.evaluateSeriesFunction(context, args.inputDataProvider),
+    context.evaluateSeriesFunction(context, args.strategyProvider),
+    context.evaluateSeriesFunction(context, args.fallbackValueProvider),
   ]);
 
   let fallbackValueForTransform;
@@ -106,9 +106,24 @@ export default async function multiply(context, args) {
   const valuesAfterReplace = context.evaluateTransformFunction(null, {
     functionName: 'replaceEmpty',
     functionArguments: {
-      data: data.type === 'points' ? data.data.mapBy('value') : data.data,
-      strategy: strategy.data,
-      fallbackValue: fallbackValueForTransform,
+      inputDataProvider: {
+        functionName: 'literal',
+        functionArguments: {
+          data: data.type === 'points' ? data.data.mapBy('value') : data.data,
+        },
+      },
+      strategyProvider: {
+        functionName: 'literal',
+        functionArguments: {
+          data: strategy.data,
+        },
+      },
+      fallbackValueProvider: {
+        functionName: 'literal',
+        functionArguments: {
+          data: fallbackValueForTransform,
+        },
+      },
     },
   });
 

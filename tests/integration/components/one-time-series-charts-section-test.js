@@ -131,11 +131,11 @@ describe('Integration | Component | one time series charts section', function ()
     expect(find('.section-description').textContent).to.equal(description);
   });
 
-  ['perChart', 'sharedForSection'].forEach((chartsNavigation) => {
-    it(`does not render charts shared navigation when "chartsNavigation" is "${chartsNavigation}" and there are no charts`,
+  ['independent', 'sharedWithinSection'].forEach((chartNavigation) => {
+    it(`does not render charts shared navigation when "chartNavigation" is "${chartNavigation}" and there are no charts`,
       async function () {
         useSectionSpec(this, {
-          chartsNavigation,
+          chartNavigation,
         });
         await renderComponent(this);
 
@@ -180,9 +180,9 @@ describe('Integration | Component | one time series charts section', function ()
       });
   });
 
-  it('shows two navigation toolbars when "chartsNavigation" is "perChart"', async function () {
+  it('shows two navigation toolbars when "chartNavigation" is "independent"', async function () {
     useSectionSpec(this, {
-      chartsNavigation: 'perChart',
+      chartNavigation: 'independent',
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
     await renderComponent(this);
@@ -190,9 +190,9 @@ describe('Integration | Component | one time series charts section', function ()
     expect(findAll('.one-time-series-chart-toolbar')).to.have.length(2);
   });
 
-  it('changes resolution only for one chart at a time when "chartsNavigation" is "perChart"', async function () {
+  it('changes resolution only for one chart at a time when "chartNavigation" is "independent"', async function () {
     useSectionSpec(this, {
-      chartsNavigation: 'perChart',
+      chartNavigation: 'independent',
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
     await renderComponent(this);
@@ -203,9 +203,9 @@ describe('Integration | Component | one time series charts section', function ()
     expect(resolutionTriggers[1].textContent).to.contain('1 min');
   });
 
-  it('shows one navigation toolbar when "chartsNavigation" is "sharedForSection"', async function () {
+  it('shows one navigation toolbar when "chartNavigation" is "sharedWithinSection"', async function () {
     useSectionSpec(this, {
-      chartsNavigation: 'sharedForSection',
+      chartNavigation: 'sharedWithinSection',
       charts: [simpleChartDefinition, simpleChartDefinition],
     });
     await renderComponent(this);
@@ -213,10 +213,10 @@ describe('Integration | Component | one time series charts section', function ()
     expect(findAll('.one-time-series-chart-toolbar')).to.have.length(1);
   });
 
-  it('changes resolution for all charts in the same time when "chartsNavigation" is "sharedForSection"',
+  it('changes resolution for all charts in the same time when "chartNavigation" is "sharedWithinSection"',
     async function () {
       useSectionSpec(this, {
-        chartsNavigation: 'sharedForSection',
+        chartNavigation: 'sharedWithinSection',
         charts: [simpleChartDefinition, simpleChartDefinition],
       });
       await renderComponent(this);
@@ -226,10 +226,10 @@ describe('Integration | Component | one time series charts section', function ()
       expect(getEchartOption(1).series[0].data.pop()[1]).to.equal(36000);
     });
 
-  it('allows to use only common charts resolutions when "chartsNavigation" is "sharedForSection"',
+  it('allows to use only common charts resolutions when "chartNavigation" is "sharedWithinSection"',
     async function () {
       useSectionSpec(this, {
-        chartsNavigation: 'sharedForSection',
+        chartNavigation: 'sharedWithinSection',
         charts: [simpleChartDefinition, hourOnlySimpleChartDefinition],
       });
       await renderComponent(this);

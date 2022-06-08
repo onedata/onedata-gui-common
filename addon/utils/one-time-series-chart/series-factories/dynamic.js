@@ -88,14 +88,14 @@ export default async function dynamic(context, args) {
 
   const {
     sourceType,
-    sourceParameters,
+    sourceSpec,
   } = args.dynamicSeriesConfigsSource;
 
   let dynamicSeriesConfigs;
   switch (sourceType) {
     case 'external': {
-      const externalSourceName = sourceParameters && sourceParameters.externalSourceName;
-      const externalSourceParameters = sourceParameters && sourceParameters.externalSourceParameters;
+      const externalSourceName = sourceSpec && sourceSpec.externalSourceName;
+      const externalSourceParameters = sourceSpec && sourceSpec.externalSourceParameters;
       if (
         !externalSourceName ||
         !context.externalDataSources[externalSourceName] ||

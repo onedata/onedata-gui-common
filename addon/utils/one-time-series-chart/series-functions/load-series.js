@@ -49,8 +49,18 @@ import mergePointsArrays from './utils/merge-points-arrays';
 const defaultReplaceEmptyOptionsArg = {
   type: 'basic',
   data: {
-    strategy: 'useFallback',
-    fallbackValue: null,
+    strategyProvider: {
+      functionName: 'literal',
+      functionArguments: {
+        data: 'useFallback',
+      },
+    },
+    fallbackValueProvider: {
+      functionName: 'literal',
+      functionArguments: {
+        data: null,
+      },
+    },
   },
 };
 
@@ -69,12 +79,12 @@ export default async function loadSeries(context, args) {
 
   const [
     { data: sourceType },
-    { data: sourceParameters },
+    { data: sourceSpec },
     { data: replaceEmptyOptions },
   ] = await allFulfilled([
     context.evaluateSeriesFunction(context, args.sourceType),
-    context.evaluateSeriesFunction(context, args.sourceParameters),
-    context.evaluateSeriesFunction(context, args.replaceEmptyOptions)
+    context.evaluateSeriesFunction(context, args.sourceSpecProvider),
+    context.evaluateSeriesFunction(context, args.replaceEmptyOptionsProvider)
     .then((replaceEmptyOptionsArg) => normalizeReplaceEmptyOptionsArg(replaceEmptyOptionsArg)),
   ]);
 
@@ -82,7 +92,7 @@ export default async function loadSeries(context, args) {
   switch (sourceType) {
     case 'external': {
       const externalDataSource =
-        context.externalDataSources[sourceParameters.externalSourceName];
+        context.externalDataSources[sourceSpec.externalSourceName];
       if (!externalDataSource) {
         points = [];
       } else {
@@ -95,7 +105,7 @@ export default async function loadSeries(context, args) {
         };
         const rawPoints = await externalDataSource.fetchSeries(
           fetchParams,
-          sourceParameters.externalSourceParameters
+          sourceSpec.externalSourceParameters
         );
         points = await fitPointsToContext(context, replaceEmptyOptions, rawPoints);
       }
@@ -272,7 +282,12 @@ async function replaceEmpty(context, replaceEmptyOptions, points) {
   const valuesAfterReplacement = await context.evaluateTransformFunction(context, {
     functionName: 'replaceEmpty',
     functionArguments: Object.assign({}, replaceEmptyOptions, {
-      data: points.map(({ value }) => value),
+      inputDataProvider: {
+        functionName: 'literal',
+        functionArguments: {
+          data: points.map(({ value }) => value),
+        },
+      },
     }),
   });
   return mergePointsArrays([points], valuesAfterReplacement);
