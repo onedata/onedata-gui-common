@@ -4,8 +4,6 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
 import { setupTest } from 'ember-mocha';
-import localeConfig from 'ember-i18n/config/en';
-import { getOwner } from '@ember/application';
 import StoreContentTableColumns from 'onedata-gui-common/utils/workflow-visualiser/store-content-table-columns';
 import _ from 'lodash';
 
@@ -61,19 +59,10 @@ const dataSpecTypesWithVariableColumns = [
 ];
 
 describe('Unit | Utility | workflow visualiser/store content table columns', function () {
-  setupTest('util:workflow-visualiser/store-content-table-columns', {
-    needs: [
-      'service:i18n',
-      'locale:en/translations',
-      'util:i18n/missing-message',
-      'util:i18n/compile-template',
-      'config:environment',
-    ],
-  });
+  setupTest();
 
   beforeEach(function () {
-    this.i18n = getOwner(this).lookup('service:i18n');
-    this.register('locale:en/config', localeConfig);
+    this.i18n = this.owner.lookup('service:i18n');
   });
 
   storeTypes.forEach(storeType => {
