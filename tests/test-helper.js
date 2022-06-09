@@ -9,7 +9,7 @@ import handleHidepassed from './handle-hidepassed';
 import sinon from 'sinon';
 
 mocha.setup({
-  timeout: 5000,
+  timeout: 15000,
 });
 setResolver(resolver);
 setApplication(Application.create(config.APP));
