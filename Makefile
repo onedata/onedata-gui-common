@@ -17,7 +17,7 @@ test_ci: node_modules
 	npm run test-ci
 
 lint: node_modules
-	npm run-script lint
+	npm run lint
 
 submodules:
 	git submodule sync --recursive ${submodule}
