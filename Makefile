@@ -1,22 +1,22 @@
-.PHONY: clean deps test test_ci submodules
+.PHONY: clean deps test test_ci submodules lint
 
 all: test
 
 clean:
 	npm run clean
 
-deps: node_modules
-
 node_modules: package.json
 	npm run deps
 
-test: node_modules
+deps: node_modules
+
+test: deps
 	npm run test
 
-test_ci: node_modules
+test_ci: deps
 	npm run test-ci
 
-lint: node_modules
+lint: deps
 	npm run lint
 
 submodules:
