@@ -80,13 +80,7 @@ Test:
         ../bamboos/make.py lint
         LINT_RESULT=$?
         ../bamboos/make.py test_ci
-        TEST_CI_RESULT=$?
-        if [ $LINT_RESULT -ne 0 ]; then
-          exit $LINT_RESULT
-        fi
-        if [ $TEST_CI_RESULT -ne 0 ]; then
-          exit $TEST_CI_RESULT
-        fi
+        return `expr $LINT_RESULT + $?`
       working-dir: onedata-gui-common
       description: Run CI Ember tests and linter
   final-tasks:
