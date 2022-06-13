@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import componentsList from 'dummy/components-list';
-import smoothscroll from 'npm:smoothscroll-polyfill';
+import smoothscroll from 'smoothscroll-polyfill';
 
 export default Route.extend({
   model() {

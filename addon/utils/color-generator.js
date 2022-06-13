@@ -12,7 +12,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import Color from 'npm:color';
+import Color from 'color';
 import config from 'ember-get-config';
 
 export default class ColorGenerator {

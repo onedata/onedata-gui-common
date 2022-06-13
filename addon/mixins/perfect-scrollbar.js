@@ -1,12 +1,12 @@
 /**
  * Fork of https://github.com/briarsweetbriar/ember-perfect-scrollbar/
  * that works with new perfect-scrollbar versions.
- * 
+ *
  * Last upstream update from revision: `01580ba9bcbf6c8dd48a22d5a809e2e0f0da310c`
- * 
+ *
  * Needs importing `node_modules/perfect-scrollbar/css/perfect-scrollbar.css`
  * to vendor CSS.
- * 
+ *
  * @module mixins/perfect-scrollbar
  * @author Jakub Liput
  * @copyright (C) 2018 briarsweetbriar
@@ -16,7 +16,7 @@
 
 import Mixin from '@ember/object/mixin';
 import { isPresent } from '@ember/utils';
-import PerfectScrollbar from 'npm:perfect-scrollbar';
+import PerfectScrollbar from 'perfect-scrollbar';
 import { computed } from '@ember/object';
 
 export default Mixin.create({
