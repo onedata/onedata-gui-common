@@ -78,7 +78,6 @@ module.exports = function (defaults) {
   */
 
   const NODE_ASSETS = [
-    'showdown/dist/showdown.js',
     'chartist-plugin-legend/chartist-plugin-legend.js',
     'input-tokenizer/tokenizer.min.js',
     'perfect-scrollbar/css/perfect-scrollbar.css',
