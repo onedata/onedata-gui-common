@@ -1,0 +1,99 @@
+---
+version: 2
+plan:
+  key: VFS-ODGC
+plan-permissions:
+- users:
+  - plgborzecki
+  - plgjliput
+  groups:
+  - plggveildev
+  permissions:
+  - view
+  - edit
+  - build
+  - clone
+  - admin
+---
+version: 2
+plan:
+  project-key: VFS
+  key: ODGC
+  name: onedata-gui-common
+repositories:
+- onedata-gui-common:
+    scope: global
+branches:
+  create: for-new-branch
+  delete:
+    after-deleted-days: 7
+    after-inactive-days: 30
+  link-to-jira: true
+labels: []
+dependencies:
+  require-all-stages-passing: false
+  enabled-for-branches: true
+  block-strategy: none
+  plans: []
+other:
+  concurrent-build-plugin: system-default
+stages:
+- Test:
+    manual: false
+    final: false
+    jobs:
+    - Test
+Test:
+  key: TEST
+  description: Build app in test environment and invoke ember tests
+  other:
+    clean-working-dir: true
+    all-other-apps:
+      custom:
+        auto: {}
+        buildHangingConfig.enabled: 'false'
+  tasks:
+  - checkout:
+      path: onedata-gui-common
+      force-clean-build: 'true'
+      description: Get the code
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        git clone ssh://git@git.onedata.org:7999/vfs/bamboos.git
+      description: Get bamboos scripts
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        git remote set-url origin ${bamboo.repository.git.repositoryUrl}
+        git remote -v
+        make submodules
+      working-dir: onedata-gui-common
+      description: Init submodules
+  - script:
+      interpreter: BINSH_OR_CMDEXE
+      scripts:
+      - |-
+        ../bamboos/make.py lint
+        LINT_RESULT=$?
+        ../bamboos/make.py test_ci
+        return `expr $LINT_RESULT + $?`
+      working-dir: onedata-gui-common
+      description: Run CI Ember tests and linter
+  final-tasks:
+  - test-parser:
+      type: junit
+      ignore-time: 'false'
+      test-results: onedata-gui-common/tmp/test-results.xml
+      description: Parse test results
+  - script:
+      interpreter: BINSH_OR_CMDEXE
+      scripts:
+      - curl ${bamboo.OnedataFinalTasksURL} | bash -
+      description: Clear env
+  requirements:
+  - gui
+  artifact-subscriptions: []
+...
