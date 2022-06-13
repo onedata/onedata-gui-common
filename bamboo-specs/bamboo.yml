@@ -51,8 +51,6 @@ Test:
     all-other-apps:
       custom:
         auto: {}
-        clover:
-          useLocalLicenseKey: 'true'
         buildHangingConfig.enabled: 'false'
   tasks:
   - checkout:
