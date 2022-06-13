@@ -62,8 +62,7 @@ Test:
   - script:
       interpreter: SHELL
       scripts:
-      - |-
-        git clone ssh://git@git.onedata.org:7999/vfs/bamboos.git
+      - git clone ssh://git@git.onedata.org:7999/vfs/bamboos.git
       description: Get bamboos scripts
   - script:
       interpreter: SHELL
@@ -77,8 +76,7 @@ Test:
   - script:
       interpreter: BINSH_OR_CMDEXE
       scripts:
-      - |-
-        ../bamboos/make.py test_ci
+      - ../bamboos/make.py test_ci
       working-dir: onedata-gui-common
       description: Run CI Ember tests
   final-tasks:
