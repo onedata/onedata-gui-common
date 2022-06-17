@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import sinon from 'sinon';
-import dynamicFactory from 'onedata-gui-common/utils/one-time-series-chart/series-factories/dynamic';
+import dynamicBuilder from 'onedata-gui-common/utils/one-time-series-chart/series-builders/dynamic';
 
-describe('Unit | Utility | one time series chart/series factories/dynamic', function () {
+describe('Unit | Utility | one time series chart/series builders/dynamic', function () {
   it('generates multiple series based on external source and injects dynamic config into each of them',
     async function () {
       const context = {
@@ -30,7 +30,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
         seriesTemplate: { name: '123' },
       };
 
-      expect(await dynamicFactory(context, args)).to.deep.equal([{
+      expect(await dynamicBuilder(context, args)).to.deep.equal([{
         name: '123',
         dynamicCfg: {
           x: 1,
@@ -75,7 +75,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       seriesTemplate: { name: '123' },
     };
 
-    expect(await dynamicFactory(context, args)).to.deep.equal([]);
+    expect(await dynamicBuilder(context, args)).to.deep.equal([]);
     expect(context.evaluateSeries).to.be.not.called;
   });
 
@@ -96,9 +96,9 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       seriesTemplate: { name: '123' },
     };
 
-    expect(await dynamicFactory(context, args)).to.deep.equal([]);
+    expect(await dynamicBuilder(context, args)).to.deep.equal([]);
     delete context.externalDataSources.mysource;
-    expect(await dynamicFactory(context, args)).to.deep.equal([]);
+    expect(await dynamicBuilder(context, args)).to.deep.equal([]);
     expect(context.evaluateSeries).to.be.not.called;
   });
 
@@ -111,7 +111,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       seriesTemplate: { name: '123' },
     };
 
-    expect(await dynamicFactory(context, args)).to.deep.equal([]);
+    expect(await dynamicBuilder(context, args)).to.deep.equal([]);
     expect(context.evaluateSeries).to.be.not.called;
   });
 
@@ -134,7 +134,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
         },
       };
 
-      expect(await dynamicFactory(context, args)).to.deep.equal([]);
+      expect(await dynamicBuilder(context, args)).to.deep.equal([]);
       expect(context.evaluateSeries).to.be.not.called;
     });
 });

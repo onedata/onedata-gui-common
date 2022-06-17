@@ -1,39 +1,44 @@
 /**
- * Factory function responsible for generating series groups from `dynamic`
- * raw factory configuration.
+ * Builder function responsible for generating series groups from `dynamic`
+ * raw builder configuration.
  *
- * `dynamic` factory returns (possibly) many series groups generated from
- * `factoryArguments.seriesGroupTemplate`. The number of series groups depends
+ * `dynamic` builder returns (possibly) many series groups generated from
+ * `builderRecipe.seriesGroupTemplate`. The number of series groups depends
  * on the size of dynamic configs array which is generated according to the spec in
- * `factoryArguments.dynamicSeriesGroupConfigsSource` field.
+ * `builderRecipe.dynamicSeriesGroupConfigsSource` field.
  *
  * For now there is only one possibility to specify dynamic configs in
- * `factoryArguments.dynamicSeriesGroupConfigsSource` - through external data source. Example:
+ * `builderRecipe.dynamicSeriesGroupConfigsSource` - through external data source. Example:
  * ```
  * {
- *   factoryName: 'dynamic',
- *   factoryArguments: {
+ *   builderName: 'dynamic',
+ *   builderRecipe: {
  *     dynamicSeriesGroupConfigsSource: {
  *       sourceType: 'external',
- *       sourceParameters: {
+ *       sourceSpec: {
  *         externalSourceName: 'mySource',
  *         externalSourceParameters: { ... },
  *       },
  *     },
  *     seriesGroupTemplate: {
- *       id: {
- *         functionName: 'getDynamicSeriesGroupConfigData',
+ *       idProvider: {
+ *         functionName: 'getDynamicSeriesGroupConfig',
  *         functionArguments: {
  *           propertyName: 'id',
  *         },
  *       },
- *       name: 'group1',
+ *       nameProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'group1',
+ *         },
+ *       },
  *     },
  *   },
  * }
  * ```
  *
- * In the above example factory will acquire dynamic configs from external data source
+ * In the above example builder will acquire dynamic configs from external data source
  * (`'mySource'`). That source should have method `fetchDynamicSeriesGroupConfigs`, which
  * should return an array of objects - dynamic configs.
  *
@@ -44,14 +49,13 @@
  * returned result like `[{id: 's1'}, {id: 's2'}]`, then two series groups would be
  * generated - one with id = `'s1'` and another with id = `'s2'`.
  *
- * @module utils/one-time-series-chart/series-group-factories/dynamic
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
 /**
- * @typedef {Object} OTSCDynamicSeriesGroupFactoryArguments
+ * @typedef {Object} OTSCDynamicSeriesGroupBuilderArguments
  * @property {OTSCRawDynamicSeriesGroupConfigsSource} dynamicSeriesGroupConfigsSource
  * @property {OTSCRawSeriesGroup} seriesGroupTemplate
  */
@@ -63,8 +67,8 @@
 import { all as allFulfilled } from 'rsvp';
 
 /**
- * @param {OTSCSeriesGroupFactoryContext} context
- * @param {OTSCDynamicSeriesGroupFactoryArguments} args
+ * @param {OTSCSeriesGroupBuilderContext} context
+ * @param {OTSCDynamicSeriesGroupBuilderArguments} args
  * @returns {Promise<OTSCSeriesGroup[]>}
  */
 export default async function dynamic(context, args) {

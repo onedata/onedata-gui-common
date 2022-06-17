@@ -490,8 +490,8 @@
 import State from './state';
 import transformFunctionsIndex from './transform-functions';
 import seriesFunctionsIndex from './series-functions';
-import seriesFactoriesIndex from './series-factories';
-import seriesGroupFactoriesIndex from './series-group-factories';
+import seriesBuildersIndex from './series-builders';
+import seriesGroupBuildersIndex from './series-group-builders';
 import formatValueFromUnit from './format-value-with-unit';
 import _ from 'lodash';
 import { all as allFulfilled } from 'rsvp';
@@ -1023,7 +1023,7 @@ export default class Configuration {
     };
     const groupsPerBuilder = await allFulfilled(
       rawBuilders.map((seriesGroupBuilder) => {
-        const builderFunction = seriesGroupFactoriesIndex[seriesGroupBuilder.builderName];
+        const builderFunction = seriesGroupBuildersIndex[seriesGroupBuilder.builderName];
         if (!builderFunction) {
           throw {
             id: 'unknownOTSCBuilder',
@@ -1093,7 +1093,7 @@ export default class Configuration {
       this.chartDefinition.seriesBuilders || [];
     const seriesPerBuilder = await allFulfilled(
       rawSeriesBuilders.map((seriesBuilder) => {
-        const builderFunction = seriesFactoriesIndex[seriesBuilder.builderName];
+        const builderFunction = seriesBuildersIndex[seriesBuilder.builderName];
         if (!builderFunction) {
           throw {
             id: 'unknownOTSCBuilder',

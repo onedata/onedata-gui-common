@@ -2,43 +2,63 @@
 /* eslint-disable max-len */
 
 /**
- * Factory function responsible for generating series from `dynamic`
- * raw factory configuration.
+ * Builder function responsible for generating series from `dynamic`
+ * raw builder configuration.
  *
- * `dynamic` factory returns (possibly) many series generated from
- * `factoryArguments.seriesTemplate`. The number of series depends on the size of
+ * `dynamic` builder returns (possibly) many series generated from
+ * `builderRecipe.seriesTemplate`. The number of series depends on the size of
  * dynamic configs array which is generated according to the spec in
- * `factoryArguments.dynamicSeriesConfigsSource` field.
+ * `builderRecipe.dynamicSeriesConfigsSource` field.
  *
  * For now there is only one possibility to specify dynamic configs in
- * `factoryArguments.dynamicSeriesConfigsSource` - through external data source. Example:
+ * `builderRecipe.dynamicSeriesConfigsSource` - through external data source. Example:
  * ```
  * {
- *   factoryName: 'dynamic',
- *   factoryArguments: {
+ *   builderName: 'dynamic',
+ *   builderRecipe: {
  *     dynamicSeriesConfigsSource: {
  *       sourceType: 'external',
- *       sourceParameters: {
+ *       sourceSpec: {
  *         externalSourceName: 'mySource',
  *         externalSourceParameters: { ... },
  *       },
  *     },
  *     seriesTemplate: {
- *       id: {
- *         functionName: 'getDynamicSeriesConfigData',
+ *       idProvider: {
+ *         functionName: 'getDynamicSeriesConfig',
  *         functionArguments: {
  *           propertyName: 'id',
  *         },
  *       },
- *       name: 'series1',
- *       type: 'bar',
- *       yAxisId: 'a1',
- *       data: {
+ *       nameProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'series1',
+ *         },
+ *       },
+ *       typeProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'bar',
+ *         },
+ *       },
+ *       yAxisIdProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'a1',
+ *         },
+ *       },
+ *       dataProvider: {
  *         functionName: 'loadSeries',
  *         functionArguments: {
  *           sourceType: 'external',
- *           sourceParameters: {
- *             externalSourceName: 'dummy',
+ *           sourceSpecProvider: {
+ *             functionName: 'literal',
+ *             functionArguments: {
+ *               data: {
+ *                 externalSourceName: 'dummy',
+ *               },
+ *             },
  *           },
  *         },
  *       },
@@ -47,7 +67,7 @@
  * }
  * ```
  *
- * In the above example factory will acquire dynamic configs from external data source
+ * In the above example builder will acquire dynamic configs from external data source
  * (`'mySource'`). That source should have method `fetchDynamicSeriesConfigs`, which
  * should return an array of objects - dynamic configs.
  *
@@ -58,7 +78,6 @@
  * returned result like `[{id: 's1'}, {id: 's2'}]`, then two series would be generated -
  * one with id = `'s1'` and another with id = `'s2'`.
  *
- * @module utils/one-time-series-chart/series-factories/dynamic
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -67,7 +86,7 @@
 import { all as allFulfilled } from 'rsvp';
 
 /**
- * @typedef {Object} OTSCDynamicSeriesFactoryArguments
+ * @typedef {Object} OTSCDynamicSeriesBuilderArguments
  * @property {OTSCRawDynamicSeriesConfigsSource} dynamicSeriesConfigsSource
  * @property {OTSCRawSeries} seriesTemplate
  */
@@ -77,8 +96,8 @@ import { all as allFulfilled } from 'rsvp';
  */
 
 /**
- * @param {OTSCSeriesFactoryContext} context
- * @param {OTSCDynamicSeriesFactoryArguments} args
+ * @param {OTSCSeriesBuilderContext} context
+ * @param {OTSCDynamicSeriesBuilderArguments} args
  * @returns {Promise<OTSCSeries[]>}
  */
 export default async function dynamic(context, args) {
