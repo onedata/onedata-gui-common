@@ -68,13 +68,13 @@ function testMultiply(rawOperands, output) {
   it(`returns ${stringifiedOutput} for ${stringifiedInput}`, async function () {
     const context = createContext();
 
-    const preparedOperands = Array.isArray(rawOperands) ?
+    const operandProviders = Array.isArray(rawOperands) ?
       rawOperands.map(operand => createConstArgument(operand)) :
       createConstArgument(rawOperands);
-    expect(await multiply(context, { operands: preparedOperands })).to.deep.equal(output);
+    expect(await multiply(context, { operandProviders })).to.deep.equal(output);
     expectFunctionsEvaluation(
       context,
-      Array.isArray(rawOperands) ? preparedOperands : []
+      Array.isArray(operandProviders) ? operandProviders : []
     );
   });
 }

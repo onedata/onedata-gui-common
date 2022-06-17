@@ -1182,7 +1182,7 @@ export default class Configuration {
       transformFunctionsIndex[transformFunctionOrValue.functionName];
     if (!transformFunctionCallback) {
       throw {
-        id: 'unknownOTSCFactory',
+        id: 'unknownOTSCFunction',
         details: {
           functionName: transformFunctionOrValue.functionName,
         },
@@ -1228,7 +1228,7 @@ export default class Configuration {
       seriesFunctionsIndex[seriesFunctionOrValue.functionName];
     if (!seriesFunctionCallback) {
       throw {
-        id: 'unknownOTSCFactory',
+        id: 'unknownOTSCFunction',
         details: {
           functionName: seriesFunctionOrValue.functionName,
         },

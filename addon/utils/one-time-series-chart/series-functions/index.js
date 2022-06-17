@@ -9,6 +9,7 @@
 
 import abs from './abs';
 import getDynamicSeriesConfig from './get-dynamic-series-config';
+import getDynamicSeriesGroupConfig from './get-dynamic-series-group-config';
 import literal from './literal';
 import loadSeries from './load-series';
 import multiply from './multiply';
@@ -17,6 +18,7 @@ import replaceEmpty from './replace-empty';
 const seriesFunctionsIndex = {
   abs,
   getDynamicSeriesConfig,
+  getDynamicSeriesGroupConfig,
   literal,
   loadSeries,
   multiply,

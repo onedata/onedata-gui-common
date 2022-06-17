@@ -152,11 +152,11 @@ describe('Unit | Utility | one time series chart/state', function () {
         yAxes: [{
           name: 'axis1',
           minInterval: 1,
-          valueTransformer: (value) => value + ' bytes',
+          valueFormatter: (value) => value + ' bytes',
         }, {
           name: 'axis2',
           minInterval: null,
-          valueTransformer: (value) => value + ' bits',
+          valueFormatter: (value) => value + ' bits',
         }],
       });
       const echartState = state.asEchartState();
@@ -191,13 +191,13 @@ describe('Unit | Utility | one time series chart/state', function () {
         }],
         seriesGroups: [{
           id: 'group1',
-          stack: true,
-          showSeriesSum: false,
+          stacked: true,
+          showSum: false,
           subgroups: [],
         }, {
           id: 'group2',
-          stack: false,
-          showSeriesSum: false,
+          stacked: false,
+          showSum: false,
           subgroups: [],
         }],
         series: [{
@@ -302,10 +302,10 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueTransformer: (value) => value + ' bytes',
+            valueFormatter: (value) => value + ' bytes',
           }, {
             id: 'a2',
-            valueTransformer: (value) => value + ' bits',
+            valueFormatter: (value) => value + ' bits',
           }],
           series: [{
             id: 's1',
@@ -367,7 +367,7 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueTransformer: () => '<span class="value-injection"></span>',
+            valueFormatter: () => '<span class="value-injection"></span>',
           }],
           series: [{
             id: 's1',
@@ -399,24 +399,24 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueTransformer: (value) => value + ' bytes',
+            valueFormatter: (value) => value + ' bytes',
           }],
           seriesGroups: [{
             id: 'g1',
             name: 'group1',
-            stack: false,
-            showSeriesSum: false,
+            stacked: false,
+            showSum: false,
             subgroups: [],
           }, {
             id: 'g2',
             name: 'group2',
-            stack: false,
-            showSeriesSum: true,
+            stacked: false,
+            showSum: true,
             subgroups: [],
           }, {
             id: 'g3',
-            stack: false,
-            showSeriesSum: false,
+            stacked: false,
+            showSum: false,
             subgroups: [],
           }],
           series: [{
@@ -538,24 +538,24 @@ describe('Unit | Utility | one time series chart/state', function () {
           },
           yAxes: [{
             id: 'a1',
-            valueTransformer: (value) => value + ' bytes',
+            valueFormatter: (value) => value + ' bytes',
           }],
           seriesGroups: [{
             id: 'g1',
             name: 'group1',
-            stack: false,
-            showSeriesSum: true,
+            stacked: false,
+            showSum: true,
             subgroups: [{
               id: 'g11',
               name: 'group11',
-              stack: false,
-              showSeriesSum: false,
+              stacked: false,
+              showSum: false,
               subgroups: [],
             }, {
               id: 'g12',
               name: 'group12',
-              stack: false,
-              showSeriesSum: true,
+              stacked: false,
+              showSum: true,
               subgroups: [],
             }],
           }],
@@ -645,42 +645,42 @@ describe('Unit | Utility | one time series chart/state', function () {
         },
         yAxes: [{
           id: 'a1',
-          valueTransformer: (value) => value + ' bytes',
+          valueFormatter: (value) => value + ' bytes',
         }],
         seriesGroups: [{
           id: 'g1',
           name: 'group1',
-          stack: true,
-          showSeriesSum: false,
+          stacked: true,
+          showSum: false,
           subgroups: [{
             id: 'g11',
             name: 'group11',
-            stack: false,
-            showSeriesSum: false,
+            stacked: false,
+            showSum: false,
             subgroups: [],
           }],
         }, {
           id: 'g2',
           name: 'group2',
-          stack: false,
-          showSeriesSum: false,
+          stacked: false,
+          showSum: false,
           subgroups: [{
             id: 'g21',
             name: 'group21',
-            stack: true,
-            showSeriesSum: false,
+            stacked: true,
+            showSum: false,
             subgroups: [],
           }],
         }, {
           id: 'g3',
           name: 'group2',
-          stack: false,
-          showSeriesSum: false,
+          stacked: false,
+          showSum: false,
           subgroups: [{
             id: 'g31',
             name: 'group31',
-            stack: false,
-            showSeriesSum: false,
+            stacked: false,
+            showSum: false,
             subgroups: [],
           }],
         }],

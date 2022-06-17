@@ -295,7 +295,7 @@ function getTimeResolutionSpecs({
 
   // Extract series loaded via `loadSeries` function
   const objectsToCheck = seriesBuildersSpecs
-    .map((builder) => get(builder, 'builderRecipe.seriesTemplate.dataGenerator'))
+    .map((builder) => get(builder, 'builderRecipe.seriesTemplate.dataProvider'))
     .filter(Boolean);
   while (objectsToCheck.length) {
     const objectToCheck = objectsToCheck.pop();
@@ -355,11 +355,11 @@ function getTimeResolutionSpecs({
 function extractExternalDataSourceRef(possibleSourceRef) {
   let refCandidate = null;
   if (possibleSourceRef && possibleSourceRef.sourceType === 'external') {
-    if (possibleSourceRef.sourceSpecGenerator &&
-      possibleSourceRef.sourceSpecGenerator.functionName === 'literal' &&
-      possibleSourceRef.sourceSpecGenerator.functionArguments
+    if (possibleSourceRef.sourceSpecProvider &&
+      possibleSourceRef.sourceSpecProvider.functionName === 'literal' &&
+      possibleSourceRef.sourceSpecProvider.functionArguments
     ) {
-      refCandidate = possibleSourceRef.sourceSpecGenerator.functionArguments.data;
+      refCandidate = possibleSourceRef.sourceSpecProvider.functionArguments.data;
     } else if (possibleSourceRef.sourceSpec) {
       refCandidate = possibleSourceRef.sourceSpec;
 

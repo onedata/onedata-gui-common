@@ -17,22 +17,27 @@ function getEchartOption(chartIdx = 0) {
 
 const simpleChartDefinition = {
   yAxes: [{ id: 'axis' }],
-  series: [{
-    factoryName: 'static',
-    factoryArguments: {
+  seriesBuilders: [{
+    builderName: 'static',
+    builderRecipe: {
       seriesTemplate: {
         id: 'valuesTotal',
         yAxisId: 'axis',
-        data: {
+        dataProvider: {
           functionName: 'loadSeries',
           functionArguments: {
             sourceType: 'external',
-            sourceParameters: {
-              externalSourceName: 'chartData',
-              externalSourceParameters: {
-                timeSeriesNameGenerator: 'values-total',
-                timeSeriesName: 'values-total',
-                metricIds: ['60', '3600'],
+            sourceSpecProvider: {
+              functionName: 'literal',
+              functionArguments: {
+                data: {
+                  externalSourceName: 'chartData',
+                  externalSourceParameters: {
+                    timeSeriesNameGenerator: 'values-total',
+                    timeSeriesName: 'values-total',
+                    metricIds: ['60', '3600'],
+                  },
+                },
               },
             },
           },
@@ -42,8 +47,9 @@ const simpleChartDefinition = {
   }],
 };
 const hourOnlySimpleChartDefinition = _.cloneDeep(simpleChartDefinition);
-hourOnlySimpleChartDefinition.series[0].factoryArguments.seriesTemplate.data
-  .functionArguments.sourceParameters.externalSourceParameters.metricIds = ['3600'];
+hourOnlySimpleChartDefinition.seriesBuilders[0].builderRecipe.seriesTemplate
+  .dataProvider.functionArguments.sourceSpecProvider.functionArguments.data
+  .externalSourceParameters.metricIds = ['3600'];
 
 describe('Integration | Component | one time series charts section', function () {
   setupComponentTest('one-time-series-charts-section', {
@@ -124,7 +130,7 @@ describe('Integration | Component | one time series charts section', function ()
   it('renders section description', async function () {
     const description = 'my description';
     useSectionSpec(this, {
-      description: { content: description },
+      description,
     });
     await renderComponent(this);
 

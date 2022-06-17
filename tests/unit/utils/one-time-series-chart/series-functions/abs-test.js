@@ -67,9 +67,9 @@ function testAbs(input, output) {
 
   it(`returns ${stringifiedOutput} for ${stringifiedInput}`, async function () {
     const context = createContext();
-    const data = createConstArgument(input);
+    const inputDataProvider = createConstArgument(input);
 
-    expect(await abs(context, { data })).to.deep.equal(output);
-    expectFunctionsEvaluation(context, [data]);
+    expect(await abs(context, { inputDataProvider })).to.deep.equal(output);
+    expectFunctionsEvaluation(context, [inputDataProvider]);
   });
 }

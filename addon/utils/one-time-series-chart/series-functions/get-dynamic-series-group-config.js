@@ -37,5 +37,8 @@ export default function getDynamicSeriesGroupConfig(context, args) {
     }
   }
 
-  return data;
+  return {
+    type: 'basic',
+    data,
+  };
 }

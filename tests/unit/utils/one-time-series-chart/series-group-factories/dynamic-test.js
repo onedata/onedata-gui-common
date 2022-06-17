@@ -20,7 +20,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
       const args = {
         dynamicSeriesGroupConfigsSource: {
           sourceType: 'external',
-          sourceParameters: {
+          sourceSpec: {
             externalSourceName: 'mysource',
             externalSourceParameters: {
               a: 1,
@@ -43,7 +43,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
       }]);
       expect(context.externalDataSources.mysource.fetchDynamicSeriesGroupConfigs)
         .to.be.calledOnce.and.to.be.calledWith(
-          args.dynamicSeriesGroupConfigsSource.sourceParameters.externalSourceParameters
+          args.dynamicSeriesGroupConfigsSource.sourceSpec.externalSourceParameters
         );
       expect(context.evaluateSeriesGroup).to.be.calledTwice
         .and.to.be.calledWith(
@@ -68,7 +68,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
     const args = {
       dynamicSeriesGroupConfigsSource: {
         sourceType: 'external',
-        sourceParameters: {
+        sourceSpec: {
           externalSourceName: 'mysource',
         },
       },
@@ -89,7 +89,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
     const args = {
       dynamicSeriesGroupConfigsSource: {
         sourceType: 'external',
-        sourceParameters: {
+        sourceSpec: {
           externalSourceName: 'mysource',
         },
       },
@@ -128,7 +128,7 @@ describe('Unit | Utility | one time series chart/series group factories/dynamic'
       const args = {
         dynamicSeriesGroupConfigsSource: {
           sourceType: 'external',
-          sourceParameters: {
+          sourceSpec: {
             externalSourceName: 'mysource',
           },
         },

@@ -1,7 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-time-series-chart/transform-functions/multiply';
-import { createContext, expectFunctionsEvaluation, stringifyArgumentData } from './helpers';
+import {
+  createContext,
+  createConstArgument,
+  expectFunctionsEvaluation,
+  stringifyArgumentData,
+} from './helpers';
 
 export const casesToCheck = [{
   input: 123,
@@ -127,7 +132,12 @@ function testMultiply(rawOperands, output) {
   it(`returns ${stringifiedOutput} for ${stringifiedInput} operand(s)`, function () {
     const context = createContext();
 
-    expect(multiply(context, { operands: rawOperands })).to.deep.equal(output);
-    expectFunctionsEvaluation(context, Array.isArray(rawOperands) ? rawOperands : []);
+    const operandProviders = Array.isArray(rawOperands) ?
+      rawOperands.map((operand) => createConstArgument(operand)) : rawOperands;
+    expect(multiply(context, { operandProviders })).to.deep.equal(output);
+    expectFunctionsEvaluation(
+      context,
+      Array.isArray(operandProviders) ? operandProviders : []
+    );
   });
 }

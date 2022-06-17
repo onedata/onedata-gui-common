@@ -20,7 +20,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       const args = {
         dynamicSeriesConfigsSource: {
           sourceType: 'external',
-          sourceParameters: {
+          sourceSpec: {
             externalSourceName: 'mysource',
             externalSourceParameters: {
               a: 1,
@@ -43,7 +43,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       }]);
       expect(context.externalDataSources.mysource.fetchDynamicSeriesConfigs)
         .to.be.calledOnce.and.to.be.calledWith(
-          args.dynamicSeriesConfigsSource.sourceParameters.externalSourceParameters
+          args.dynamicSeriesConfigsSource.sourceSpec.externalSourceParameters
         );
       expect(context.evaluateSeries).to.be.calledTwice
         .and.to.be.calledWith(
@@ -68,7 +68,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
     const args = {
       dynamicSeriesConfigsSource: {
         sourceType: 'external',
-        sourceParameters: {
+        sourceSpec: {
           externalSourceName: 'mysource',
         },
       },
@@ -89,7 +89,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
     const args = {
       dynamicSeriesConfigsSource: {
         sourceType: 'external',
-        sourceParameters: {
+        sourceSpec: {
           externalSourceName: 'mysource',
         },
       },
@@ -128,7 +128,7 @@ describe('Unit | Utility | one time series chart/series factories/dynamic', func
       const args = {
         dynamicSeriesConfigsSource: {
           sourceType: 'external',
-          sourceParameters: {
+          sourceSpec: {
             externalSourceName: 'mysource',
           },
         },

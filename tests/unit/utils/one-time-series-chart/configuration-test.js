@@ -259,41 +259,40 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'axis2',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueTransformer(123)).to.equal(123);
-    expect(state.yAxes[1].valueTransformer(123)).to.equal(123);
+    expect(state.yAxes[0].valueFormatter(123)).to.equal('123');
+    expect(state.yAxes[1].valueFormatter(123)).to.equal('123');
   });
 
-  it('calculates y axes state with custom value formatters', async function () {
+  it('calculates y axis state with custom value provider', async function () {
     const config = new Configuration({
       chartDefinition: {
         yAxes: [{
           id: 'a1',
           name: 'axis1',
           minInterval: 1,
-          valueTransformer: {
+          valueProvider: {
             functionName: 'abs',
             functionArguments: {
-              data: {
-                functionName: 'supplyValue',
+              inputDataProvider: {
+                functionName: 'multiply',
+                functionArguments: {
+                  operandProviders: [{
+                    functionName: 'currentValue',
+                  }, {
+                    functionName: 'literal',
+                    functionArguments: {
+                      data: 2,
+                    },
+                  }],
+                },
               },
             },
           },
         }, {
           id: 'a2',
           name: 'axis2',
-          valueTransformer: {
-            functionName: 'formatWithUnit',
-            functionArguments: {
-              unitName: 'bytes',
-              data: {
-                functionName: 'multiply',
-                functionArguments: {
-                  operands: [{
-                    functionName: 'supplyValue',
-                  }, 2],
-                },
-              },
-            },
+          valueProvider: {
+            functionName: 'currentValue',
           },
         }],
       },
@@ -310,14 +309,70 @@ describe('Unit | Utility | one time series chart/configuration', function () {
       name: 'axis2',
       minInterval: null,
     }]);
-    expect(state.yAxes[0].valueTransformer(-123)).to.equal(123);
-    expect(state.yAxes[1].valueTransformer(123)).to.equal('246 B');
+    expect(state.yAxes[0].valueFormatter(-123)).to.equal('246');
+    expect(state.yAxes[1].valueFormatter(-123)).to.equal('-123');
+  });
+
+  it('calculates y axis state with custom unit', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        yAxes: [{
+          id: 'a1',
+          name: 'axis1',
+          unitName: 'bytes',
+          unitOptions: {
+            format: 'si',
+          },
+        }],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(asPlainJson(state.yAxes)).to.deep.equal([{
+      id: 'a1',
+      name: 'axis1',
+      minInterval: null,
+    }]);
+    expect(state.yAxes[0].valueFormatter(1000)).to.equal('1 kB');
+  });
+
+  it('calculates y axis state with both custom unit and value provider', async function () {
+    const config = new Configuration({
+      chartDefinition: {
+        yAxes: [{
+          id: 'a1',
+          name: 'axis1',
+          unitName: 'bytes',
+          unitOptions: {
+            format: 'si',
+          },
+          valueProvider: {
+            functionName: 'abs',
+            functionArguments: {
+              inputDataProvider: {
+                functionName: 'currentValue',
+              },
+            },
+          },
+        }],
+      },
+    });
+
+    const state = await config.getState();
+
+    expect(asPlainJson(state.yAxes)).to.deep.equal([{
+      id: 'a1',
+      name: 'axis1',
+      minInterval: null,
+    }]);
+    expect(state.yAxes[0].valueFormatter(-1000)).to.equal('1 kB');
   });
 
   it('calculates x axis state', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [dummyStaticSeriesFactory(1, 'dummy')],
+        seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
@@ -383,7 +438,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series groups state using static factory', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [dummyStaticSeriesGroupFactory(1)],
+        seriesGroupBuilders: [dummyStaticSeriesGroupFactory(1)],
       },
     });
 
@@ -395,23 +450,28 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series groups state using dynamic factory (multiple scenario)', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [{
-          factoryName: 'dynamic',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderName: 'dynamic',
+          builderRecipe: {
             dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'dummyDynamic',
               },
             },
             seriesGroupTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: 'group1',
+              nameProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'group1',
+                },
+              },
             },
           },
         }],
@@ -428,8 +488,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(state.seriesGroups).to.deep.equal(['g1', 'g2'].map((id) => ({
       id,
       name: 'group1',
-      stack: false,
-      showSeriesSum: false,
+      stacked: false,
+      showSum: false,
       subgroups: [],
     })));
   });
@@ -437,23 +497,28 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series groups state using dynamic factory (empty scenario)', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [{
-          factoryName: 'dynamic',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderName: 'dynamic',
+          builderRecipe: {
             dynamicSeriesGroupsConfigs: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'dummyDynamic',
               },
             },
             seriesGroupTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: 'group1',
+              nameProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'group1',
+                },
+              },
             },
           },
         }],
@@ -473,19 +538,19 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series groups state when all group fields are defined', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderName: 'static',
+          builderRecipe: {
             seriesGroupTemplate: {
               id: 'g1',
               name: 'group1',
-              stack: true,
-              showSeriesSum: true,
+              stacked: true,
+              showSum: true,
               subgroups: [{
                 id: 'g11',
                 name: 'group11',
-                stack: false,
-                showSeriesSum: true,
+                stacked: false,
+                showSum: true,
                 subgroups: [],
               }],
             },
@@ -499,13 +564,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
       name: 'group1',
-      stack: true,
-      showSeriesSum: true,
+      stacked: true,
+      showSum: true,
       subgroups: [{
         id: 'g11',
         name: 'group11',
-        stack: false,
-        showSeriesSum: true,
+        stacked: false,
+        showSum: true,
         subgroups: [],
       }],
     }]);
@@ -514,9 +579,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series groups state when optional group fields are not defined', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderName: 'static',
+          builderRecipe: {
             seriesGroupTemplate: {
               id: 'g1',
             },
@@ -530,8 +595,8 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
       name: '',
-      stack: false,
-      showSeriesSum: false,
+      stacked: false,
+      showSum: false,
       subgroups: [],
     }]);
   });
@@ -539,14 +604,14 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series groups state when subgroup optional fields are not defined', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderName: 'static',
+          builderRecipe: {
             seriesGroupTemplate: {
               id: 'g1',
               name: 'group1',
-              stack: true,
-              showSeriesSum: true,
+              stacked: true,
+              showSum: true,
               subgroups: [{
                 id: 'g11',
               }],
@@ -561,57 +626,57 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
       name: 'group1',
-      stack: true,
-      showSeriesSum: true,
+      stacked: true,
+      showSum: true,
       subgroups: [{
         id: 'g11',
         name: '',
-        stack: false,
-        showSeriesSum: false,
+        stacked: false,
+        showSum: false,
         subgroups: [],
       }],
     }]);
   });
 
-  it('calculates series state when all possible series fields are functions', async function () {
+  it('calculates series group state when all possible series fields are functions', async function () {
     const config = new Configuration({
       chartDefinition: {
-        seriesGroups: [{
-          factoryName: 'dynamic',
-          factoryArguments: {
+        seriesGroupBuilders: [{
+          builderName: 'dynamic',
+          builderRecipe: {
             dynamicSeriesGroupConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'dummyDynamic',
               },
             },
             seriesGroupTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              nameProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'name',
                 },
               },
-              stack: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              stackedProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
-                  propertyName: 'stack',
+                  propertyName: 'stacked',
                 },
               },
-              showSeriesSum: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              showSumProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
-                  propertyName: 'showSeriesSum',
+                  propertyName: 'showSum',
                 },
               },
-              subgroups: {
-                functionName: 'getDynamicSeriesGroupConfigData',
+              subgroupsProvider: {
+                functionName: 'getDynamicSeriesGroupConfig',
                 functionArguments: {
                   propertyName: 'subgroups',
                 },
@@ -626,13 +691,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
             return [{
               id: 'g1',
               name: 'group1',
-              stack: true,
-              showSeriesSum: true,
+              stacked: true,
+              showSum: true,
               subgroups: [{
                 id: 'g11',
                 name: 'group11',
-                stack: false,
-                showSeriesSum: true,
+                stacked: false,
+                showSum: true,
                 subgroups: [],
               }],
             }];
@@ -646,13 +711,13 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     expect(state.seriesGroups).to.deep.equal([{
       id: 'g1',
       name: 'group1',
-      stack: true,
-      showSeriesSum: true,
+      stacked: true,
+      showSum: true,
       subgroups: [{
         id: 'g11',
         name: 'group11',
-        stack: false,
-        showSeriesSum: true,
+        stacked: false,
+        showSum: true,
         subgroups: [],
       }],
     }]);
@@ -661,7 +726,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates empty series state when there are no series defined', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [],
+        seriesBuilders: [],
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
@@ -677,7 +742,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state using static factory', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [dummyStaticSeriesFactory(1, 'dummy')],
+        seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
       },
       timeResolutionSpecs: [{
         timeResolution: 2,
@@ -709,31 +774,51 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state using dynamic factory (multiple scenario)', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [{
-          factoryName: 'dynamic',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderName: 'dynamic',
+          builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'dummyDynamic',
               },
             },
             seriesTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: 'series1',
-              type: 'bar',
-              yAxisId: 'a1',
-              data: {
+              nameProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'series1',
+                },
+              },
+              typeProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'bar',
+                },
+              },
+              yAxisIdProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'a1',
+                },
+              },
+              dataProvider: {
                 functionName: 'loadSeries',
                 functionArguments: {
                   sourceType: 'external',
-                  sourceParameters: {
-                    externalSourceName: 'dummy',
+                  sourceSpecProvider: {
+                    functionName: 'literal',
+                    functionArguments: {
+                      data: {
+                        externalSourceName: 'dummy',
+                      },
+                    },
                   },
                 },
               },
@@ -774,31 +859,51 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state using dynamic factory (empty scenario)', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [{
-          factoryName: 'dynamic',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderName: 'dynamic',
+          builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'dummyDynamic',
               },
             },
             seriesTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: 'series1',
-              type: 'bar',
-              yAxisId: 'a1',
-              data: {
+              nameProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'series1',
+                },
+              },
+              typeProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'bar',
+                },
+              },
+              yAxisIdProvider: {
+                functionName: 'literal',
+                functionArguments: {
+                  data: 'a1',
+                },
+              },
+              dataProvider: {
                 functionName: 'loadSeries',
                 functionArguments: {
                   sourceType: 'external',
-                  sourceParameters: {
-                    externalSourceName: 'dummy',
+                  sourceSpecProvider: {
+                    functionName: 'literal',
+                    functionArguments: {
+                      data: {
+                        externalSourceName: 'dummy',
+                      },
+                    },
                   },
                 },
               },
@@ -828,9 +933,9 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state when all series fields are defined', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderName: 'static',
+          builderRecipe: {
             seriesTemplate: {
               id: 's1',
               name: 'series1',
@@ -838,12 +943,17 @@ describe('Unit | Utility | one time series chart/configuration', function () {
               yAxisId: 'a1',
               color: '#ff0000',
               groupId: 'stack1',
-              data: {
+              dataProvider: {
                 functionName: 'loadSeries',
                 functionArguments: {
                   sourceType: 'external',
-                  sourceParameters: {
-                    externalSourceName: 'dummy',
+                  sourceSpecProvider: {
+                    functionName: 'literal',
+                    functionArguments: {
+                      data: {
+                        externalSourceName: 'dummy',
+                      },
+                    },
                   },
                 },
               },
@@ -881,20 +991,25 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state when optional series fields are not defined', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderName: 'static',
+          builderRecipe: {
             seriesTemplate: {
               id: 's1',
               name: 'series1',
               type: 'bar',
               yAxisId: 'a1',
-              data: {
+              dataProvider: {
                 functionName: 'loadSeries',
                 functionArguments: {
                   sourceType: 'external',
-                  sourceParameters: {
-                    externalSourceName: 'dummy',
+                  sourceSpecProvider: {
+                    functionName: 'literal',
+                    functionArguments: {
+                      data: {
+                        externalSourceName: 'dummy',
+                      },
+                    },
                   },
                 },
               },
@@ -932,58 +1047,63 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state when all possible series fields are functions', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [{
-          factoryName: 'dynamic',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderName: 'dynamic',
+          builderRecipe: {
             dynamicSeriesConfigsSource: {
               sourceType: 'external',
-              sourceParameters: {
+              sourceSpec: {
                 externalSourceName: 'dummyDynamic',
               },
             },
             seriesTemplate: {
-              id: {
-                functionName: 'getDynamicSeriesConfigData',
+              idProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'id',
                 },
               },
-              name: {
-                functionName: 'getDynamicSeriesConfigData',
+              nameProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'name',
                 },
               },
-              type: {
-                functionName: 'getDynamicSeriesConfigData',
+              typeProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'type',
                 },
               },
-              yAxisId: {
-                functionName: 'getDynamicSeriesConfigData',
+              yAxisIdProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'yAxisId',
                 },
               },
-              color: {
-                functionName: 'getDynamicSeriesConfigData',
+              colorProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'color',
                 },
               },
-              groupId: {
-                functionName: 'getDynamicSeriesConfigData',
+              groupIdProvider: {
+                functionName: 'getDynamicSeriesConfig',
                 functionArguments: {
                   propertyName: 'groupId',
                 },
               },
-              data: {
+              dataProvider: {
                 functionName: 'loadSeries',
                 functionArguments: {
                   sourceType: 'external',
-                  sourceParameters: {
-                    externalSourceName: 'dummy',
+                  sourceSpecProvider: {
+                    functionName: 'literal',
+                    functionArguments: {
+                      data: {
+                        externalSourceName: 'dummy',
+                      },
+                    },
                   },
                 },
               },
@@ -1033,29 +1153,39 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates series state with nested series functions', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [{
-          factoryName: 'static',
-          factoryArguments: {
+        seriesBuilders: [{
+          builderName: 'static',
+          builderRecipe: {
             seriesTemplate: {
               id: 's1',
               name: 'series1',
               type: 'bar',
               yAxisId: 'a1',
-              data: {
+              dataProvider: {
                 functionName: 'abs',
                 functionArguments: {
-                  data: {
+                  inputDataProvider: {
                     functionName: 'multiply',
                     functionArguments: {
-                      operands: [{
+                      operandProviders: [{
                         functionName: 'loadSeries',
                         functionArguments: {
                           sourceType: 'external',
-                          sourceParameters: {
-                            externalSourceName: 'dummy',
+                          sourceSpecProvider: {
+                            functionName: 'literal',
+                            functionArguments: {
+                              data: {
+                                externalSourceName: 'dummy',
+                              },
+                            },
                           },
                         },
-                      }, 3],
+                      }, {
+                        functionName: 'literal',
+                        functionArguments: {
+                          data: 3,
+                        },
+                      }],
                     },
                   },
                 },
@@ -1092,7 +1222,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
   it('calculates synchronized series state based on badly-timed series', async function () {
     const config = new Configuration({
       chartDefinition: {
-        series: [
+        seriesBuilders: [
           dummyStaticSeriesFactory(1, 'dummy1'),
           dummyStaticSeriesFactory(2, 'dummy2'),
         ],
@@ -1133,7 +1263,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
     ]);
     const config = new Configuration({
       chartDefinition: {
-        series: [dummyStaticSeriesFactory(1, 'dummy')],
+        seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
       },
       timeResolutionSpecs: [{
         timeResolution: 1,
@@ -1178,7 +1308,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         ]);
         const config = new Configuration({
           chartDefinition: {
-            series: [dummyStaticSeriesFactory(1, 'dummy')],
+            seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
@@ -1226,7 +1356,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         ]);
         const config = new Configuration({
           chartDefinition: {
-            series: [
+            seriesBuilders: [
               dummyStaticSeriesFactory(1, 'dummy1'),
               dummyStaticSeriesFactory(2, 'dummy2'),
             ],
@@ -1300,7 +1430,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         };
         const config = new Configuration({
           chartDefinition: {
-            series: [dummyStaticSeriesFactory(1, 'dummy')],
+            seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
@@ -1354,7 +1484,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         };
         const config = new Configuration({
           chartDefinition: {
-            series: [dummyStaticSeriesFactory(1, 'dummy')],
+            seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 1,
@@ -1410,7 +1540,7 @@ describe('Unit | Utility | one time series chart/configuration', function () {
         };
         const config = new Configuration({
           chartDefinition: {
-            series: [dummyStaticSeriesFactory(1, 'dummy')],
+            seriesBuilders: [dummyStaticSeriesFactory(1, 'dummy')],
           },
           timeResolutionSpecs: [{
             timeResolution: 6,
@@ -1468,11 +1598,11 @@ function dummyDataSource(points) {
 
 function dummyStaticSeriesGroupFactory(seriesGroupNo) {
   return {
-    factoryName: 'static',
-    factoryArguments: {
+    builderName: 'static',
+    builderRecipe: {
       seriesGroupTemplate: {
-        id: `g${seriesGroupNo}`,
-        name: `series${seriesGroupNo}`,
+        idProvider: `g${seriesGroupNo}`,
+        nameProvider: `series${seriesGroupNo}`,
       },
     },
   };
@@ -1482,27 +1612,32 @@ function dummyStaticSeriesGroupFactoryState(seriesGroupNo) {
   return {
     id: `g${seriesGroupNo}`,
     name: `series${seriesGroupNo}`,
-    stack: false,
-    showSeriesSum: false,
+    stacked: false,
+    showSum: false,
     subgroups: [],
   };
 }
 
 function dummyStaticSeriesFactory(seriesNo, externalSourceName) {
   return {
-    factoryName: 'static',
-    factoryArguments: {
+    builderName: 'static',
+    builderRecipe: {
       seriesTemplate: {
         id: `s${seriesNo}`,
         name: `series${seriesNo}`,
         type: 'bar',
         yAxisId: 'a1',
-        data: {
+        dataProvider: {
           functionName: 'loadSeries',
           functionArguments: {
             sourceType: 'external',
-            sourceParameters: {
-              externalSourceName,
+            sourceSpecProvider: {
+              functionName: 'literal',
+              functionArguments: {
+                data: {
+                  externalSourceName,
+                },
+              },
             },
           },
         },
