@@ -45,10 +45,10 @@
  * - yAxes - (type Array<OTSCRawYAxis>) an array of Y axes definitions. Usually
  *   only one Y axis will be necessary, but for more complicated usecases it is
  *   possible to render more of them and visualise data from different domains.
- * - series - (type Array<OTSCRawSeriesFactory>) an array of series definitions
- *   which describe from which data and how points should be rendered.
- * - seriesGroups - (type Array<OTSCRawSeriesGroupFactory> an array of series
- *   group definitions which describe how series in a specific group should behave.
+ * - seriesBuilders - (type Array<OTSCRawSeriesBuilder>) an array of series builder
+ *   definitions which describe from which data and how points should be rendered.
+ * - seriesGroupBuilders - (type Array<OTSCRawSeriesGroupBuilder> an array of series
+ *   group builder definitions which describe how series in a specific group should behave.
  *
  * As you can see there is no X axis configuration. Time series charts are always
  * based on time X axis, so there is nothing to configure.
@@ -61,10 +61,12 @@
  * - minInterval - optional number value, which determines minimum values gap between
  *   Y axis split lines. For example setting it to `1` will force only integer Y axis
  *   split lines.
- * - valueTransformer - optional specification of a transform function, that should be used
- *   to stringify value from Y axis and make it human-readable. E.g. it may
- *   transform an integer to a size in bytes. This function will also be used
- *   to render information tooltip about series related to this axis.
+ * - unitName - optional string value which describes which unit should be used to format
+ *   value. E.g. 'bytes'. By default it is undefined and the value will be rendered as is.
+ * - unitOptions - optional object providing additional parameters to the specified
+ *   `unitName`.
+ * - valueTransformer - optional specification of a transform function, that should
+ *   be used to transform value before formatting it with unit.
  *   NOTE: only transform functions are allowed to be used in valueTransformer function
  *   specification. See more in section "Functions types".
  *
@@ -74,48 +76,43 @@
  *   id: 'bytesAxis',
  *   name: 'Bytes',
  *   minInterval: 1,
+ *   unitName: 'bytes',
  *   valueTransformer: {
- *     functionName: 'formatWithUnit',
+ *     functionName: 'abs',
  *     functionArguments: {
- *       unitName: 'bytes',
- *       data: {
- *         functionName: 'abs',
- *         functionArguments: {
- *           data: {
- *             functionName: 'supplyValue',
- *           },
- *         },
+ *       inputDataProvider: {
+ *         functionName: 'currentValue',
  *       },
  *     },
  *   },
  * }
  * ```
- * Above example specifies Y axis with id "bytesAxis", name "Bytes" and value formatter,
- * which performs `formatWithUnit('bytes', abs(value_from_axis))`.
+ * Above example specifies Y axis with id "bytesAxis", name "Bytes",
+ * formatted in bytes and value transformer which performs `abs(value_from_axis)`.
  *
  * As you can see function definitions can be nested (which argument can receive
  * a nested function is specific for each function). There is also a special function,
- * which have to be used in `valueTransformer` definition - `supplyValue` function.
+ * which have to be used in `valueTransformer` definition - `currentValue` function.
  * It is replaced by the value from the Y axis.
  *
- * ### Series definitions (type Array<OTSCRawSeriesFactory>)
+ * ### Series definitions (type Array<OTSCRawSeriesBuilder>)
  *
- * Defining series starts with defining so-called "series factories". Series factory
- * is responsible for generating series definitions. There are two types of factories:
+ * Defining series starts with defining so-called "series builders". Series builder
+ * is responsible for generating series definitions. There are two types of builders:
  * - static - creates one series from template,
  * - dynamic - creates many series based on template and data from data source.
- * Static factory is a good choice for series, which are known in advance and are
- * always present. Dynamic factory is handful in situations, when series are generated
+ * Static builder is a good choice for series, which are known in advance and are
+ * always present. Dynamic builder is handful in situations, when series are generated
  * depending on some backend data and the number of them is not known during the
  * configuration initialization.
  *
- * #### Series template (type OTSCRawSeries)
+ * #### Series template (types OTSCRawStaticSeries, OTSCRawDynamicSeries)
  *
- * Before we go to the details of each series factory type, we need to get familiar with
+ * Before we go to the details of each series builder type, we need to get familiar with
  * series template.
  *
- * It is a template, which is used by series factories as a base for new series
- * configurations. In static factory template is copied once as it is, in dynamic factory
+ * It is a template, which is used by series builders as a base for new series
+ * configurations. In static builder template is copied once as it is, in dynamic builder
  * it is copied multiple times with small changes. Series template consists of:
  * - id - string id which allows to reference to it later,
  * - name - human-readable label for series,
@@ -124,11 +121,11 @@
  * - color - (optional) string describing color of points (in hex format e.g. `'#ff0000'`),
  * - groupId - (optional) string id, which allows to include series into
  *   a specific series group,
- * - data - spefication of a series function, that calculates points to render.
+ * - dataProvider - spefication of a series function, that calculates points to render.
  *   NOTE: only series functions are allowed to be used in data function specification.
  *   See more in section "Functions types".
  *
- * Example series template:
+ * Example static series template:
  * ```
  * {
  *   id: 'bytesSent',
@@ -136,18 +133,23 @@
  *   type: 'line',
  *   yAxisId: 'bytesAxis',
  *   color: '#ff0000',
- *   data: {
+ *   dataProvider: {
  *     functionName: 'abs',
  *     functionArguments: {
- *       data: {
+ *       inputDataProvider: {
  *         functionName: 'loadSeries',
  *         functionArguments: {
  *           sourceType: 'external',
- *           sourceParameters: {
- *             externalSourceName: 'throughputSource',
- *             externalSourceParameters: {
- *               seriesNameId: 'upload',
- *             },
+ *           sourceSpecProvider: {
+ *             functionName: 'literal',
+ *             functionArguments: {
+ *               data: {
+ *                 externalSourceName: 'throughputSource',
+ *                 externalSourceParameters: {
+ *                   seriesNameId: 'upload',
+ *                 },
+ *               }
+ *             }
  *           },
  *         },
  *       },
@@ -160,35 +162,45 @@
  * label "Sent", rendered using red line and based on data from function
  * `abs(loadSeries('external', 'throughputSource', { seriesNameId: 'upload' }))`.
  *
- * #### Static series factory
+ * There is also another version of the template - OTSCRawDynamicSeries. It differs
+ * from the static in terms of fields notation. In dynamic version every field name
+ * ends with "Provider" - "idProvider", "nameProvider" etc and each of them must
+ * be a series function definition.
+ *
+ * #### Static series builder
  *
  * It has only one argument - seriesTemplate. That template will be copied once
  * and returned.
  *
- * Example of a static series factory:
+ * Example of a static series builder:
  *
  * ```
  * {
- *   factoryName: 'static',
- *   factoryArguments: {
+ *   builderName: 'static',
+ *   builderRecipe: {
  *     seriesTemplate: {
  *       id: 'bytesSent',
  *       name: 'Sent',
  *       type: 'line',
  *       yAxisId: 'bytesAxis',
  *       color: '#ff0000',
- *       data: {
+ *       dataProvider: {
  *         functionName: 'abs',
  *         functionArguments: {
- *           data: {
+ *           inputDataProvider: {
  *             functionName: 'loadSeries',
  *             functionArguments: {
  *               sourceType: 'external',
- *               sourceParameters: {
- *                 externalSourceName: 'throughputSource',
- *                 externalSourceParameters: {
- *                   seriesNameId: 'upload',
- *                 },
+ *               sourceSpecProvider: {
+ *                 functionName: 'literal',
+ *                 functionArguments: {
+ *                   data: {
+ *                     externalSourceName: 'throughputSource',
+ *                     externalSourceParameters: {
+ *                       seriesNameId: 'upload',
+ *                     },
+ *                   }
+ *                 }
  *               },
  *             },
  *           },
@@ -199,7 +211,7 @@
  * }
  * ```
  *
- * #### Dynamic series factory
+ * #### Dynamic series builder
  *
  * It has two arguments:
  * - seriesTemplate - already described earlier,
@@ -208,34 +220,54 @@
  * The number of generated series will match the length of the series configs array
  * returned by the data source from `dynamicSeriesConfigsSource`.
  *
- * Example of a dynamic series factory:
+ * Example of a dynamic series builder:
  * ```
  * {
- *   factoryName: 'dynamic',
- *   factoryArguments: {
+ *   builderName: 'dynamic',
+ *   builderRecipe: {
  *     dynamicSeriesConfigsSource: {
  *       sourceType: 'external',
- *       sourceParameters: {
+ *       sourceSpec: {
  *         externalSourceName: 'mySource',
  *         externalSourceParameters: { ... },
  *       },
  *     },
  *     seriesTemplate: {
- *       id: {
- *         functionName: 'getDynamicSeriesConfigData',
+ *       idProvider: {
+ *         functionName: 'getDynamicSeriesConfig',
  *         functionArguments: {
  *           propertyName: 'id',
  *         },
  *       },
- *       name: 'series1',
- *       type: 'bar',
- *       yAxisId: 'a1',
- *       data: {
+ *       nameProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'series1',
+ *         },
+ *       },
+ *       typeProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'bar',
+ *         },
+ *       },
+ *       yAxisIdProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'a1',
+ *         },
+ *       },
+ *       dataProvider: {
  *         functionName: 'loadSeries',
  *         functionArguments: {
  *           sourceType: 'external',
- *           sourceParameters: {
- *             externalSourceName: 'dummy',
+ *           sourceSpecProvider: {
+ *             functionName: 'literal',
+ *             functionArguments: {
+ *               data: {
+ *                 externalSourceName: 'dummy',
+ *               }
+ *             }
  *           },
  *         },
  *       },
@@ -244,32 +276,35 @@
  * }
  * ```
  *
- * As it is shown by the example, there is a special function `getDynamicSeriesConfigData`,
+ * As it is shown by the example, there is a special function `getDynamicSeriesConfig`,
  * which allows to access series config object. It is especially handful for
  * id, name and color fields.
  *
- * ### Series group definitions (type Array<OTSCRawSeriesGroupFactory>)
+ * ### Series group definitions (type Array<OTSCRawSeriesGroupBuilder>)
  *
  * Series groups is an optional feature which allows to aggregate series into groups
  * which provides possibility to:
  * - introduce stacking,
  * - group series in tooltip with optional group name and values sum.
  *
- * Like series, series groups are also created using factories - static and dynamic -
- * inside array `chartConfiguration.seriesGroups`. Series group template
+ * Like series, series groups are also created using builders - static and dynamic -
+ * inside array `chartConfiguration.seriesGroupBuilders`. Series group template
  * (type OTSCRawSeriesGroup) consists of:
  * - id - string id of a group,
  * - name - (optional) group name, that will be visible in tooltip,
- * - stack - (optional) boolean flag which turns on series stacking,
- * - showSeriesSum - (optional) boolean flag which enables showing total value of
+ * - stacked - (optional) boolean flag which turns on series stacking,
+ * - showSum - (optional) boolean flag which enables showing total value of
  *   all series related to a group. It will be visible next to the group name in tooltip
+ *
+ * Like with dynamic series, there is a dynamic version of series group template
+ * with all fields ending with "Provider" and each of them requireing series function.
  *
  * Examples:
  * ```
- * // Static series group factory
+ * // Static series group builder
  * {
- *   factoryName: 'static',
- *   factoryArguments: {
+ *   builderName: 'static',
+ *   builderRecipe: {
  *     seriesGroupTemplate: {
  *       id: 'g1,
  *       name: 'group1',
@@ -279,27 +314,42 @@
  *   },
  * }
  *
- * // Dynamic series group factory
+ * // Dynamic series group builder
  * {
- *   factoryName: 'dynamic',
- *   factoryArguments: {
+ *   builderName: 'dynamic',
+ *   builderRecipe: {
  *     dynamicSeriesGroupConfigsSource: {
  *       sourceType: 'external',
- *       sourceParameters: {
+ *       sourceSpec: {
  *         externalSourceName: 'mySource',
  *         externalSourceParameters: { ... },
  *       },
  *     },
  *     seriesGroupTemplate: {
- *       id: {
+ *       idProvider: {
  *         functionName: 'getDynamicSeriesGroupConfigData',
  *         functionArguments: {
  *           propertyName: 'id',
  *         },
  *       },
- *       name: 'group2',
- *       stack: true,
- *       showSeriesSum: false,
+ *       nameProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: 'group2',
+ *         },
+ *       },
+ *       stackProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: true,
+ *         },
+ *       },
+ *       showSeriesSumProvider: {
+ *         functionName: 'literal',
+ *         functionArguments: {
+ *           data: false,
+ *         },
+ *       },
  *     },
  *   },
  * }
@@ -319,7 +369,7 @@
  * or many different callbacks, which are used to provide chart data. There are two
  * callbacks for now:
  * - fetchSeries - returns array of series points,
- * - fetchDynamicSeriesConfigs - returns array of series configs for dynamic series factory.
+ * - fetchDynamicSeriesConfigs - returns array of series configs for dynamic series builder.
  *
  * Example of data source configuration:
  * ```
@@ -406,27 +456,32 @@
  *         },
  *       },
  *     }],
- *     series: [{
- *       factoryName: 'static',
- *       factoryArguments: {
+ *     seriesBuilders: [{
+ *       builderName: 'static',
+ *       builderRecipe: {
  *         seriesTemplate: {
  *           id: 'bytesSent',
  *           name: 'Sent',
  *           type: 'line',
  *           yAxisId: 'bytesAxis',
  *           color: '#ff0000',
- *           data: {
+ *           dataProvider: {
  *             functionName: 'abs',
  *             functionArguments: {
- *               data: {
+ *               inputDataProvider: {
  *                 functionName: 'loadSeries',
  *                 functionArguments: {
  *                   sourceType: 'external',
- *                   sourceParameters: {
- *                     externalSourceName: 'throughputSource',
- *                     externalSourceParameters: {
- *                       seriesNameId: 'upload',
- *                     },
+ *                   sourceSpecProvider: {
+ *                     functionName: 'literal',
+ *                     functionArguments: {
+ *                       data: {
+ *                         externalSourceName: 'throughputSource',
+ *                         externalSourceParameters: {
+ *                           seriesNameId: 'upload',
+ *                         },
+ *                       }
+ *                     }
  *                   },
  *                 },
  *               },
@@ -512,8 +567,8 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @typedef {Object} OTSCChartDefinition
  * @property {OTSCRawTitle} [title]
  * @property {OTSCRawYAxis[]} yAxes
- * @property {OTSCRawSeriesGroupFactory[]} seriesGroups
- * @property {OTSCRawSeriesFactory[]} series
+ * @property {OTSCRawSeriesGroupBuilder[]} seriesGroupBuilders
+ * @property {OTSCRawSeriesBuilder[]} seriesBuilders
  */
 
 /**
@@ -527,31 +582,31 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {string} id
  * @property {string} name will be visible as an axis label
  * @property {number} [minInterval] minimum gap between axis split lines.
- * @property {string} [unitName]
+ * @property {string} [unitName] for possible values see `formatValueWithUnit` util
  * @property {BytesUnitOptions|BitsUnitFormat|CustomUnitOptions} [unitOptions]
- * @property {OTSCRawFunction} [valueProvier] definition of a chart values
- * converter, that makes them more human-readable
+ * @property {OTSCRawFunction} [valueProvider] definition of a chart values
+ * source to draw on the Y axis.
  */
 
 /**
- * @typedef {Object} OTSCRawSeriesGroupFactory
- * @property {string} factoryName
- * @property {Object} factoryArguments
+ * @typedef {Object} OTSCRawSeriesGroupBuilder
+ * @property {string} builderName
+ * @property {Object} builderRecipe
  */
 
 /**
  * @typedef {Object} OTSCRawSeriesGroup
  * @property {string} id
  * @property {string} [name]
- * @property {boolean} [stack]
- * @property {boolean} [showSeriesSum]
+ * @property {boolean} [stacked]
+ * @property {boolean} [showSum]
  * @property {Array<OTSCRawSeriesGroup>} [subgroups]
  */
 
 /**
- * @typedef {Object} OTSCRawSeriesFactory
- * @property {string} factoryName
- * @property {Object} factoryArguments
+ * @typedef {Object} OTSCRawSeriesBuilder
+ * @property {string} builderName
+ * @property {Object} builderRecipe
  */
 
 /**
@@ -562,7 +617,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  * @property {string} yAxisId id of Y axis, which should be used to draw points
  * @property {string} [color] color in hex format, e.g. `'#ff0000'`
  * @property {string} [groupId] adds series to a specific series group
- * @property {OTSCRawFunction} data definition of function responsible for
+ * @property {OTSCRawFunction} dataProvider definition of function responsible for
  *   generating series points
  */
 
@@ -597,7 +652,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
 /**
  * @typedef {Object} OTSCExternalDataSourceRef
  * @property {'external'} sourceType
- * @property {OTSCExternalDataSourceRefParameters} sourceParameters
+ * @property {OTSCRawFunction} sourceSpecProvider
  */
 
 /**
@@ -656,7 +711,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  */
 
 /**
- * @typedef {OTSCSeriesContext} OTSCSeriesFactoryContext
+ * @typedef {OTSCSeriesContext} OTSCSeriesBuilderContext
  * @property {(context: Partial<OTSCSeriesFunctionContext>, seriesTemplate: OTSCRawSeries) => Promise<OTSCSeries>} evaluateSeries
  */
 
@@ -672,7 +727,7 @@ import reconcilePointsTiming from './series-functions/utils/reconcile-points-tim
  */
 
 /**
- * @typedef {Object} OTSCSeriesGroupFactoryContext
+ * @typedef {Object} OTSCSeriesGroupBuilderContext
  * @property {OTSCExternalDataSources} externalDataSources
  * @property {(context: Partial<OTSCTransformFunctionContext>, seriesGroupTemplate: OTSCRawSeriesGroup) => OTSCSeriesGroup} evaluateSeriesGroup
  */

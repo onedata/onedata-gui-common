@@ -363,7 +363,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with specified fallback value',
-      replaceEmptyOptionsProvider: {
+      replaceEmptyParametersProvider: {
         strategyProvider: {
           functionName: 'literal',
           functionArguments: {
@@ -394,7 +394,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with previous point value',
-      replaceEmptyOptionsProvider: {
+      replaceEmptyParametersProvider: {
         strategyProvider: {
           functionName: 'literal',
           functionArguments: {
@@ -425,7 +425,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with previous point value when previous point is outside context',
-      replaceEmptyOptionsProvider: {
+      replaceEmptyParametersProvider: {
         strategyProvider: {
           functionName: 'literal',
           functionArguments: {
@@ -456,7 +456,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 
     testFetchSeriesScenario({
       title: 'allows to replace empty series points with previous point value when previous point does not exist',
-      replaceEmptyOptionsProvider: {
+      replaceEmptyParametersProvider: {
         strategyProvider: {
           functionName: 'literal',
           functionArguments: {
@@ -489,7 +489,7 @@ describe('Unit | Utility | one time series chart/series functions/load series', 
 function testFetchSeriesScenario({
   title,
   lastPointTimestamp,
-  replaceEmptyOptionsProvider,
+  replaceEmptyParametersProvider,
   sourceData,
   expectedPoints,
 }) {
@@ -498,8 +498,9 @@ function testFetchSeriesScenario({
     if (lastPointTimestamp !== undefined) {
       this.context.lastPointTimestamp = lastPointTimestamp;
     }
-    if (replaceEmptyOptionsProvider) {
-      this.functionArguments.replaceEmptyOptionsProvider = replaceEmptyOptionsProvider;
+    if (replaceEmptyParametersProvider) {
+      this.functionArguments.replaceEmptyParametersProvider =
+        replaceEmptyParametersProvider;
     }
 
     expect(await loadSeries(this.context, this.functionArguments)).to.deep.equal({

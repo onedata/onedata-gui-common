@@ -11,14 +11,14 @@
  */
 
 /**
- * @typedef {Object} OTSCSupplyValueTransformFunctionArguments
+ * @typedef {Object} OTSCCurrentValueTransformFunctionArguments
  */
 
 /**
  * @param {OTSCTransformFunctionContext} context
- * @param {OTSCSupplyValueTransformFunctionArguments} args
+ * @param {OTSCCurrentValueTransformFunctionArguments} args
  * @returns {unknown}
  */
-export default function supplyValue(context /**, args */ ) {
+export default function currentValue(context /**, args */ ) {
   return 'currentValue' in context ? context.currentValue : null;
 }

@@ -2,41 +2,60 @@
  * A transform function, which replaces empty (null) values according to passed strategy.
  *
  * Arguments:
- * - `data` - can be any value, array of values or a transform function,
- *   that will be evaluated. It is data, where empty values should be replaced.
- * - `strategy` - (optional) defines the way how empty values should be replaced.
- *   There are two possible modes: `useFallback` (default) and `usePrevious`
- * - `fallbackValue` - can be any value, array of values or a transform function,
- *   that will be evaluated. Provides values, which should be used to replace
- *   empty values in `data`. How this argument will be used depends on strategy.
+ * - `inputDataProvider` - must be a transform function spec, which should evaluate
+ *   to a function returning a number|null or an array of number|null. It is data,
+ *   where empty (null) values should be replaced.
+ * - `strategyProvider` - (optional) must be a transform function spec, which should
+ *   evaluate to a function returning OTSCReplaceEmptyTransformFunctionStrategy.
+ *   Defines the way how empty values should be replaced. There are two possible
+ *   modes: `useFallback` (default) and `usePrevious`
+ * - `fallbackValueProvider` - must be a transform function spec, which should
+ *   evaluate to a function returning any value or an array of any values.
+ *   Provides values, which should be used to replace empty values loaded
+ *   from `inputDataProvider`. How this argument will be used depends on strategy.
  *
- * When strategy is `useFallback` then `fallbackValue` is a source of replacements for
- * empty values in `data`.
- * - If both - `data` and `fallbackValue` - evaluate to arrays, then empty values
- *   substitution will be performed element-wise. Hence lengths of these arrays
- *   must match.
- * - If `data` is an array and `fallbackValue` is a single value, then all empty
- *   values in `data` will be replaced with the same value.
- * - When both - `data` and `fallbackValue` - evaluate to single values, then an
- *   empty value substitution is obvious.
+ * When strategy is `useFallback` then `fallbackValueProvider` provides a source
+ * of replacements for empty values in data from `inputDataProvider`.
+ * - If both - `inputDataProvider` and `fallbackValueProvider` - return arrays,
+ *   then empty values substitution will be performed element-wise.
+ *   Hence lengths of these arrays must match.
+ * - If `inputDataProvider` returns an array and `fallbackValuePovider` returns
+ *   a single value, then all empty values in `data` will be replaced with
+ *   the same value.
+ * - When both - `inputDataProvider` and `fallbackValueProvider` - evaluate to
+ *   single values, then an empty value substitution is obvious.
  *
  * When strategy is `usePrevious` then it replaces empty values with the closest
- * previous non-empty value from `data`. If there is no such previous value, then
- * `useFallback` strategy is used. Example:
+ * previous non-empty value from `inputDataProvider`. If there is no such previous
+ * value, then `useFallback` strategy is used. Example:
  * Input:
  * ```
  * {
- *   data: [null, null, 1, null, null, 2, null],
- *   strategy: 'usePrevious',
- *   fallbackValue: 100,
+ *   inputDataProvider: {
+ *     functionName: 'literal',
+ *     functionArguments: {
+ *       data: [null, null, 1, null, null, 2, null],
+ *     },
+ *   },
+ *   strategyProvider: {
+ *     functionName: 'literal',
+ *     functionArguments: {
+ *       data: 'usePrevious',
+ *     },
+ *   },
+ *   fallbackValueProvider: {
+ *     functionName: 'literal',
+ *     functionArguments: {
+ *       data: 100,
+ *     },
+ *   },
  * }
  * ```
  * Output: `[100, 100, 1, 1, 1, 2, 2]`
  *
- * Situation, when `data` is a single value and `fallbackValue` is an array is
- * invalid.
+ * Situation, when `inputDataProvider` evaluates to a single value and
+ * `fallbackValueProvider` evaluates to an array is invalid.
  *
- * @module utils/one-time-series-chart/transform-functions/replace-empty
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -46,9 +65,9 @@ import _ from 'lodash';
 
 /**
  * @typedef {Object} OTSCReplaceEmptyTransformFunctionArguments
- * @property {OTSCRawFunction|Array<unknown|null>|unknown|null} data
- * @property {OTSCRawFunction|OTSCReplaceEmptyTransformFunctionStrategy} [strategy]
- * @property {OTSCRawFunction|Array<unknown|null>|unknown|null} fallbackValue
+ * @property {OTSCRawFunction} inputDataProvider
+ * @property {OTSCRawFunction} [strategyProvider]
+ * @property {OTSCRawFunction} fallbackValueProvider
  */
 
 /**

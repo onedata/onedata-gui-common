@@ -7,13 +7,32 @@
  *
  * Arguments:
  * - sourceType - for now only `'external'` is available
- * - sourceParameters - additional parameters specific for each source type.
- * - replaceEmptyOptions - specifies how empty points should be filled with values.
- *   Contains two fields: `strategy`, and `fallbackValue`. Read more about them in
- *   `replaceEmpty` transform function documentation. When not provided it equals to:
- *   `{ strategy: 'useFallback', fallbackValue: null }`.
+ * - sourceSpecProvider - a series function spec, which should evaluate to a
+ *   function returning additional parameters specific for source type.
+ * - replaceEmptyParametersProvider - a series function spec, which should evaluate
+ *   to a function returning settings how empty points should be filled with values.
+ *   Contains two fields: `strategyProvider`, and `fallbackValueProvider`.
+ *   Read more about them in `replaceEmpty` series function documentation.
+ *   When not provided, it equals to:
+ *   ```
+ *   {
+ *     strategyProvider: {
+ *       functionName: 'literal',
+ *       functionArguments: {
+ *         data: 'useFallback',
+ *       },
+ *     },
+ *     fallbackValueProvider: {
+ *       functionName: 'literal',
+ *       functionArguments: {
+ *         data: null,
+ *       },
+ *     },
+ *   }
+ *   ```
  *
- * For `externalSource` type `sourceParameters` are:
+ * For `externalSource` type `sourceSpecProvider` should evaluate to an object
+ * with properties:
  * - externalSourceName - name of an external source, which is able to provide series data.
  * - externalSourceParameters - additional parameters, that should be passed to the
  *   external source described by `externalSourceName` during data fetching.
@@ -25,7 +44,6 @@
  * Using these arguments external source should return a promise, which will eventually
  * resolve to an array of points.
  *
- * @module utils/one-time-series-chart/series-functions/load-series
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -37,16 +55,16 @@ import mergePointsArrays from './utils/merge-points-arrays';
 
 /**
  * @typedef {OTSCExternalDataSourceRef} OTSCLoadSeriesSeriesFunctionArguments
- * @typedef {OTSCLoadSeriesSeriesFunctionReplaceEmptyOptions} [replaceEmptyOptions]
+ * @typedef {OTSCRawFunction} [replaceEmptyParametersProvider]
  */
 
 /**
- * @typedef {Object} OTSCLoadSeriesSeriesFunctionReplaceEmptyOptions
- * @property {OTSCReplaceEmptySeriesFunctionStrategy} [strategy]
- * @property {Array<unknown|null>|unknown|null} fallbackValue
+ * @typedef {Object} OTSCLoadSeriesSeriesFunctionReplaceEmptyParameters
+ * @property {OTSCRawFunction} [strategyProvider]
+ * @property {OTSCRawFunction} fallbackValueProvider
  */
 
-const defaultReplaceEmptyOptionsArg = {
+const defaultReplaceEmptyParametersArg = {
   type: 'basic',
   data: {
     strategyProvider: {
@@ -80,12 +98,14 @@ export default async function loadSeries(context, args) {
   const [
     { data: sourceType },
     { data: sourceSpec },
-    { data: replaceEmptyOptions },
+    { data: replaceEmptyParameters },
   ] = await allFulfilled([
     context.evaluateSeriesFunction(context, args.sourceType),
     context.evaluateSeriesFunction(context, args.sourceSpecProvider),
-    context.evaluateSeriesFunction(context, args.replaceEmptyOptionsProvider)
-    .then((replaceEmptyOptionsArg) => normalizeReplaceEmptyOptionsArg(replaceEmptyOptionsArg)),
+    context.evaluateSeriesFunction(context, args.replaceEmptyParametersProvider)
+    .then((replaceEmptyParametersArg) =>
+      normalizeReplaceEmptyParametersArg(replaceEmptyParametersArg)
+    ),
   ]);
 
   let points;
@@ -107,7 +127,7 @@ export default async function loadSeries(context, args) {
           fetchParams,
           sourceSpec.externalSourceParameters
         );
-        points = await fitPointsToContext(context, replaceEmptyOptions, rawPoints);
+        points = await fitPointsToContext(context, replaceEmptyParameters, rawPoints);
       }
       break;
     }
@@ -123,10 +143,10 @@ export default async function loadSeries(context, args) {
 
 /**
  * @param {OTSCSeriesFunctionContext} context
- * @param {OTSCLoadSeriesSeriesFunctionReplaceEmpty} replaceEmptyOptions
+ * @param {OTSCLoadSeriesSeriesFunctionReplaceEmpty} replaceEmptyParameters
  * @param {OTSCSeriesPoint[]} points
  */
-async function fitPointsToContext(context, replaceEmptyOptions, points) {
+async function fitPointsToContext(context, replaceEmptyParameters, points) {
   if (!isRawPointsArray(points)) {
     return [];
   }
@@ -165,7 +185,7 @@ async function fitPointsToContext(context, replaceEmptyOptions, points) {
       return await generateFakePoints(
         context,
         context.lastPointTimestamp,
-        replaceEmptyOptions, {
+        replaceEmptyParameters, {
           oldest: true,
           newest: isLastPointNewest,
         });
@@ -229,7 +249,7 @@ async function fitPointsToContext(context, replaceEmptyOptions, points) {
   }
   normalizedPoints = (await replaceEmpty(
     context,
-    replaceEmptyOptions,
+    replaceEmptyParameters,
     [...normalizedPoints, nonEmptyPointBeforeOldestNormalized].reverse()
   )).reverse().slice(0, -1);
 
@@ -266,22 +286,27 @@ function isRawPointsArray(pointsArray) {
   );
 }
 
-async function generateFakePoints(context, lastPointTimestamp, replaceEmptyOptions, pointParams = {}) {
+async function generateFakePoints(
+  context,
+  lastPointTimestamp,
+  replaceEmptyParameters,
+  pointParams = {}
+) {
   const normalizedLastPointTimestamp = lastPointTimestamp -
     (lastPointTimestamp % context.timeResolution);
   const points = await fitPointsToContext(
     context,
-    replaceEmptyOptions,
+    replaceEmptyParameters,
     [point(normalizedLastPointTimestamp, null)]
   );
   points.forEach((point) => Object.assign(point, { fake: true }, pointParams));
   return points;
 }
 
-async function replaceEmpty(context, replaceEmptyOptions, points) {
+async function replaceEmpty(context, replaceEmptyParameters, points) {
   const valuesAfterReplacement = await context.evaluateTransformFunction(context, {
     functionName: 'replaceEmpty',
-    functionArguments: Object.assign({}, replaceEmptyOptions, {
+    functionArguments: Object.assign({}, replaceEmptyParameters, {
       inputDataProvider: {
         functionName: 'literal',
         functionArguments: {
@@ -293,13 +318,13 @@ async function replaceEmpty(context, replaceEmptyOptions, points) {
   return mergePointsArrays([points], valuesAfterReplacement);
 }
 
-function normalizeReplaceEmptyOptionsArg(replaceEmptyOptionsArg) {
+function normalizeReplaceEmptyParametersArg(replaceEmptyParametersArg) {
   if (
-    !replaceEmptyOptionsArg ||
-    replaceEmptyOptionsArg.type !== 'basic' ||
-    !replaceEmptyOptionsArg.data
+    !replaceEmptyParametersArg ||
+    replaceEmptyParametersArg.type !== 'basic' ||
+    !replaceEmptyParametersArg.data
   ) {
-    return defaultReplaceEmptyOptionsArg;
+    return defaultReplaceEmptyParametersArg;
   }
-  return replaceEmptyOptionsArg;
+  return replaceEmptyParametersArg;
 }

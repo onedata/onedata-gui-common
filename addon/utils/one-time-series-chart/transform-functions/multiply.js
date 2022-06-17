@@ -2,14 +2,10 @@
  * A transform function, which calculates result of multiplying given operands.
  *
  * Arguments:
- * - `operands` - is an array of (mixed):
- *     - numbers,
- *     - arrays of numbers,
- *     - transform functions that will evaluate to one of above types.
+ * - `operandProviders` - is an array of transform function specs, each of which
+ *   should evaluate to a function returning a number or an array of numbers.
  *
- * If some operands are transform functions, then they are evaluated before further processing.
- * NOTE: All array operands (also those obtained from transform functions evaluation)
- * must have the same length. Otherwise, null will be returned.
+ * NOTE: All array operands must have the same length. Otherwise, null will be returned.
  *
  * In case of numbers operands multiplication result is straightforward. For operands
  * `[ 2, 3 ]` the result will be `6`.
@@ -31,7 +27,6 @@
  * In case of any non-number value, it will be converted to null. Any multiplication by
  * null will result in null. Example: `[[2, 3], [4, null]]` will result in `[8, null]`.
  *
- * @module utils/one-time-series-chart/transform-functions/multiply
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -41,7 +36,7 @@ import _ from 'lodash';
 
 /**
  * @typedef {Object} OTSCMultiplyTransformFunctionArguments
- * @property {Array<OTSCRawFunction|Array<number|null>|number|null>} operands
+ * @property {Array<OTSCRawFunction>} operandProviders
  */
 
 /**

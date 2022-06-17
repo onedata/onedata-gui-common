@@ -2,20 +2,17 @@
  * A series function, which calculates result of multiplying given operands.
  *
  * Arguments:
- * - `operands` - is an array of (mixed):
- *     - numbers,
- *     - arrays of numbers,
- *     - arrays of points,
- *     - series functions that will evaluate to one of above types.
+ * - `operandProviders` - is an array of series function specs, each of which
+ *   should evaluate to a function returning a number, an array of numbers or
+ *   an array of points.
  *
- * If some operands are series functions, then they are evaluated before further processing.
- * NOTE: All array operands (also those obtained from series functions evaluation)
- * must have the same length. Otherwise, null will be returned.
+ * NOTE: All array operands must have the same length. Otherwise, null will be returned.
  *
  * This function is an extension of `multiply` transform function, so it works
  * exactly the same for numbers and arrays for numbers. In case when one of
  * operands is an array of points, then the result will also be an array of points
- * with untouched timestamps and multiplied values. For example for input:
+ * with untouched timestamps and multiplied values. For example for operands
+ * (after providers evaluation):
  * ```
  * [
  *    [2, 3],
@@ -25,7 +22,6 @@
  * ```
  * result will be: `[{ timestamp: 1, value: 16 }, { timestamp: 2, value: 30 }]`.
  *
- * @module utils/one-time-series-chart/series-functions/multiply
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
@@ -37,7 +33,7 @@ import mergePointsArrays from './utils/merge-points-arrays';
 
 /**
  * @typedef {Object} OTSCMultiplySeriesFunctionArguments
- * @property {Array<OTSCRawFunction|Array<number|null>|number|null>} operands
+ * @property {Array<OTSCRawFunction>} operandProviders
  */
 
 /**

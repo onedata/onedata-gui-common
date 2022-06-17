@@ -2,30 +2,15 @@
  * A transform function, which formats given value according to specified unit.
  *
  * Arguments:
- * - `data` - must be of type:
- *     - number,
- *     - array of numbers,
- *     - transform function that will evaluate to one of above types.
- * - `unitName` - must be of type:
- *     - UnitName,
- *     - transform function that will evaluate to UnitName.
+ * - `data` - must be of type number.
+ * - `unitName` - must be of type UnitName.
  * - `unitOptions` - must be of type (depending on used `unitName`):
  *     - BytesUnitOptions,
  *     - BitsUnitFormat,
- *     - CustomUnitOptions,
- *     - transform function that will evaluate to one of above types.
+ *     - CustomUnitOptions.
  *
- *
- * If some argument is a transform function, it is evaluated before further processing.
- *
- * In case of a single number in `data` the function will return its stringified value
- * in a format appropriate for a choosen unit.
- * Example: `1024` -> `'1 KiB'` (when `unitName` is `'bytes'`).
- * In case of an array of numbers in `data` the function will return an array with
- * stringified values in a format appropriate for a choosen unit for each number
- * from the argument. Example:
- * `[1024, 2048]` -> `['1 KiB', '2 KiB']` (when `unitName` is `'bytes'`).
- * In case of any non-number value (also in array), it will be converted to null. *
+ * The function will return stringified number in a format appropriate for a choosen unit.
+ * In case of any non-number value, it will be converted to null.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH

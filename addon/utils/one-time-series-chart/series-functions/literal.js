@@ -1,4 +1,6 @@
 /**
+ * A special series function, which returns data provided in `data` argument.
+ * Type of `data` does not matter.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -11,7 +13,7 @@
  */
 
 /**
- * @param {OTSCTransformFunctionContext} context
+ * @param {OTSCSeriesFunctionContext} context
  * @param {OTSCLiteralSeriesFunctionArguments} args
  * @returns {unknown}
  */
