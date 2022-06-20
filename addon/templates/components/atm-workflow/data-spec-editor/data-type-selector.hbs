@@ -1,0 +1,9 @@
+{{#one-dropdown
+  options=selectorOptions
+  onchange=(action "dataTypeSelected")
+  placeholder=(tt this "selectorPlaceholder")
+  as |option|
+}}
+  {{option.label}}
+{{/one-dropdown}}
+{{yield}}

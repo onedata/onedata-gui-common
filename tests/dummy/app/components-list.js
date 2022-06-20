@@ -1,5 +1,6 @@
 export default [
   'animations',
+  'atm-workflow/data-spec-editor',
   'bezier-curve',
   'checkbox-list',
   'fast-double-click',

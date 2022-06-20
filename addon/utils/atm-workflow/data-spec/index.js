@@ -19,3 +19,26 @@
  *   AtmTimeSeriesMeasurementDataSpec
  * } AtmDataSpec
  */
+
+export const dataSpecTypes = Object.freeze([
+  'integer',
+  'string',
+  'object',
+  'file',
+  'dataset',
+  'range',
+  'array',
+  'timeSeriesMeasurement',
+  'onedatafsCredentials',
+]);
+
+/**
+ * @param {Ember.Service} i18n
+ * @param {string} dataSpecType
+ * @returns {SafeString}
+ */
+export function translateDataSpecType(i18n, dataSpecType) {
+  const i18nPath = dataSpecType &&
+    `utils.atmWorkflow.dataSpec.types.${dataSpecType}`;
+  return i18nPath ? i18n.t(i18nPath, {}, { defaultValue: '' }) : '';
+}

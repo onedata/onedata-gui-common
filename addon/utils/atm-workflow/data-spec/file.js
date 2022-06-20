@@ -14,5 +14,9 @@
 
 /**
  * @typedef {Object} AtmFileValueConstraints
- * @property {'REG'|'DIR'|'SYMLNK'|'ANY'} fileType
+ * @property {AtmFileType} fileType
+ */
+
+/**
+ * @typedef {'REG'|'DIR'|'SYMLNK'|'ANY'} AtmFileType
  */

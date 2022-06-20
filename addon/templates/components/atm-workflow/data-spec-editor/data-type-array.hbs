@@ -1,0 +1,11 @@
+{{dataTypeTranslation}}
+{{atm-workflow/data-spec-editor/data-type-toolbar
+  editorElement=editorElement
+  onElementChange=onElementChange
+}}
+{{atm-workflow/data-spec-editor/editor-element-renderer
+  editorElement=editorElement.config.item
+  editorElementsContextMap=editorElementsContextMap
+  onElementChange=(action "itemElementChanged")
+}}
+{{yield}}
