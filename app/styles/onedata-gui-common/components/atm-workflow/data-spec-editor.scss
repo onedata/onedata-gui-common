@@ -45,4 +45,14 @@
       padding-top: 0;
     }
   }
+
+  .array-data-type-editor > .data-type-header {
+    margin-top: -0.5em;
+    margin-bottom: -0.5em;
+    font-size: 80%;
+
+    .data-type-name {
+      text-transform: uppercase;
+    }
+  }
 }

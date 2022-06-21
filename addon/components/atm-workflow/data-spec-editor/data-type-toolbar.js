@@ -7,6 +7,7 @@ import layout from '../../../templates/components/atm-workflow/data-spec-editor/
 
 export default Component.extend({
   layout,
+  classNames: ['data-type-toolbar'],
 
   /**
    * @virtual
