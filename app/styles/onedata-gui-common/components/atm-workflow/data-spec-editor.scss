@@ -1,0 +1,28 @@
+.data-spec-editor {
+  .data-type-editor {
+    padding: 0.7em;
+    border: 1px solid $input-border;
+    border-radius: $input-border-radius;
+  }
+
+  .data-type-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & ~ * {
+      margin-top: 0.7em;
+      margin-bottom: 0;
+    }
+  }
+
+  .time-series-measurement-value-constraints-editor {
+    flex-wrap: wrap;
+    margin-bottom: 0;
+    > .control-label {
+      flex-basis: 100%;
+      text-align: left;
+      padding-top: 0;
+    }
+  }
+}

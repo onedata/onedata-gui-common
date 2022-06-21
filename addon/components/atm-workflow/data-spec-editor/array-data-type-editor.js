@@ -1,9 +1,10 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
-import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-array';
+import layout from '../../../templates/components/atm-workflow/data-spec-editor/array-data-type-editor';
 
 export default Component.extend({
+  classNames: ['data-type-editor', 'array-data-type-editor'],
   layout,
 
   /**

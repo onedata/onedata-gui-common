@@ -7,8 +7,8 @@ const editorElementComponentsPath = 'atm-workflow/data-spec-editor';
 const editorElementComponentNames = Object.freeze({
   dataTypeSelector: `${editorElementComponentsPath}/data-type-selector`,
   dataType: {
-    default: `${editorElementComponentsPath}/data-type-specific`,
-    array: `${editorElementComponentsPath}/data-type-array`,
+    default: `${editorElementComponentsPath}/default-data-type-editor`,
+    array: `${editorElementComponentsPath}/array-data-type-editor`,
   },
 });
 

@@ -1,0 +1,13 @@
+<div class="data-type-header">
+  <span class="data-type-name">{{dataTypeTranslation}}</span>
+  {{atm-workflow/data-spec-editor/data-type-toolbar
+    editorElement=editorElement
+    onElementChange=onElementChange
+  }}
+</div>
+{{atm-workflow/data-spec-editor/editor-element-renderer
+  editorElement=editorElement.config.item
+  editorElementsContextMap=editorElementsContextMap
+  onElementChange=(action "itemElementChanged")
+}}
+{{yield}}

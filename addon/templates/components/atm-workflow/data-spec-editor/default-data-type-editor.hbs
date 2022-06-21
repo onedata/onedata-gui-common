@@ -1,0 +1,12 @@
+<div class="data-type-header">
+  <span class="data-type-name">{{dataTypeTranslation}}</span>
+  {{atm-workflow/data-spec-editor/data-type-toolbar
+    editorElement=editorElement
+    onElementChange=onElementChange
+  }}
+</div>
+{{#if formRootGroup}}
+  <hr />
+  {{form-component/field-renderer field=formRootGroup}}
+{{/if}}
+{{yield}}

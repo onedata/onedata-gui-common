@@ -68,6 +68,7 @@ import layout from '../../templates/components/atm-workflow/data-spec-editor';
 
 export default FieldComponentBase.extend({
   layout,
+  classNames: ['data-spec-editor'],
 
   /**
    * @type {Map<string, DataSpecEditorElementContext>}
