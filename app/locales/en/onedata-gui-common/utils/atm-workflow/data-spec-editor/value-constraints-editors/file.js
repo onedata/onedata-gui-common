@@ -4,4 +4,5 @@ export default {
       label: 'File type',
     },
   },
+  summary: 'File type: {{fileType}}',
 };

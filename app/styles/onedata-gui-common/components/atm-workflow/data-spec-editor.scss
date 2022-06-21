@@ -16,6 +16,18 @@
     }
   }
 
+  .form-summary-toggle {
+    font-size: 80%;
+    * {
+      vertical-align: middle;
+    }
+  }
+
+  .form-summary-icon {
+    margin-left: -0.15em;
+    font-size: 170%;
+  }
+
   .time-series-measurement-value-constraints-editor {
     flex-wrap: wrap;
     margin-bottom: 0;
@@ -27,8 +39,6 @@
   }
 
   .file-value-constraints-editor {
-    // flex-wrap: wrap;
-    // margin-bottom: 0;
     .control-label {
       flex-basis: 100%;
       text-align: left;

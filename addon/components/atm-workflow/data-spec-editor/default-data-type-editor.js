@@ -1,12 +1,16 @@
 import Component from '@ember/component';
-import { computed, observer, set } from '@ember/object';
+import { computed, observer, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/default-data-type-editor';
 
 export default Component.extend({
   classNames: ['data-type-editor', 'default-data-type-editor'],
   layout,
+
+  i18n: service(),
 
   /**
    * @virtual
@@ -24,6 +28,11 @@ export default Component.extend({
    * @type {(updatedElement: DataSpecEditorElement) => void}
    */
   onElementChange: undefined,
+
+  /**
+   * @type {boolean}
+   */
+  isFormVisible: false,
 
   /**
    * @type {ComputedProperty<string>}
@@ -56,6 +65,23 @@ export default Component.extend({
    */
   formValues: reads('editorElement.config.formValues'),
 
+  /**
+   * @type {ComputedProperty<SafeString>}
+   */
+  formSummary: computed('dataType', 'formValues', function formSummary() {
+    const {
+      dataType,
+      formValues,
+      i18n,
+    } = this.getProperties('dataType', 'formValues', 'i18n');
+
+    const summarizeFormValues = dataType in valueConstraintsEditors &&
+      valueConstraintsEditors[dataType].summarizeFormValues;
+    if (summarizeFormValues) {
+      return summarizeFormValues(i18n, get(formValues || {}, 'dataTypeEditor'));
+    }
+  }),
+
   formValuesObserver: observer('formValues', function formValuesObserver() {
     const {
       formValues,
@@ -74,7 +100,10 @@ export default Component.extend({
       set(
         formRootGroup,
         'onNotifyAboutChange',
-        (formValues) => this.notifyFormChange(formValues)
+        (formValues) => {
+          this.notifyFormChange(formValues);
+          this.notifyPropertyChange('formValues');
+        }
       );
     }
   },
@@ -97,5 +126,11 @@ export default Component.extend({
         formValues,
       }),
     }));
+  },
+
+  actions: {
+    toggleFormVisibility() {
+      this.toggleProperty('isFormVisible');
+    },
   },
 });

@@ -8,6 +8,7 @@ import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-sele
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
 import { get } from '@ember/object';
+import { lookupService } from '../../../../helpers/stub-service';
 
 const nameMatcherTypeOptions = [{
   value: 'exact',
@@ -246,6 +247,38 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
     expect(find('.collection-item:nth-child(2) .customUnit-field .form-control').value)
       .to.equal('Liters');
     expect(this.get('rootGroup.isValid')).to.be.true;
+  });
+
+  it('shows summary when no measurements are specified', function () {
+    const formValues = timeSeriesMeasurementEditor.valueConstraintsToFormValues({
+      specs: [],
+    });
+    const i18n = lookupService(this, 'i18n');
+
+    const summary =
+      String(timeSeriesMeasurementEditor.summarizeFormValues(i18n, formValues));
+
+    expect(summary).to.equal('Defined measurements: 0');
+  });
+
+  it('shows summary when two measurements are specified', function () {
+    const formValues = timeSeriesMeasurementEditor.valueConstraintsToFormValues({
+      specs: [{
+        nameMatcherType: 'hasPrefix',
+        nameMatcher: 'name_',
+        unit: 'bytes',
+      }, {
+        nameMatcherType: 'exact',
+        nameMatcher: 'my_name',
+        unit: 'custom:Liters',
+      }],
+    });
+    const i18n = lookupService(this, 'i18n');
+
+    const summary =
+      String(timeSeriesMeasurementEditor.summarizeFormValues(i18n, formValues));
+
+    expect(summary).to.equal('Defined measurements: 2');
   });
 });
 

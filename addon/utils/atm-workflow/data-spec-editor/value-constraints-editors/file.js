@@ -17,9 +17,11 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
+const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.file';
+
 const FormElement = FormFieldsGroup.extend({
   classes: 'file-value-constraints-editor',
-  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.file.fields',
+  i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
   translationPath: '',
   size: 'sm',
@@ -64,8 +66,17 @@ function valueConstraintsToFormValues(valueConstraints) {
   });
 }
 
+function summarizeFormValues(i18n, values) {
+  const formFileType = values && get(values, 'fileType');
+  const fileType = fileTypes.includes(formFileType) ? formFileType : fileTypes[0];
+  return i18n.t(`${i18nPrefix}.summary`, {
+    fileType: translateFileType(i18n, fileType),
+  });
+}
+
 export default {
   FormElement,
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
+  summarizeFormValues,
 };

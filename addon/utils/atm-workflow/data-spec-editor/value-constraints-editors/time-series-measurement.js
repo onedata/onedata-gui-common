@@ -24,10 +24,12 @@ import {
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurement';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
+const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.timeSeriesMeasurement';
+
 const FormElement = FormFieldsCollectionGroup.extend({
   classes: 'time-series-measurement-value-constraints-editor boxes-collection-layout',
   isDefaultValueIgnored: false,
-  i18nPrefix: 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.timeSeriesMeasurement.fields',
+  i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
   translationPath: '',
   sizeForChildren: 'sm',
@@ -157,8 +159,14 @@ function valueConstraintsToFormValues(valueConstraints) {
   return values;
 }
 
+function summarizeFormValues(i18n, values) {
+  const measurementsCount = values && get(values, '__fieldsValueNames.length') || 0;
+  return i18n.t(`${i18nPrefix}.summary`, { measurementsCount });
+}
+
 export default {
   FormElement,
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
+  summarizeFormValues,
 };

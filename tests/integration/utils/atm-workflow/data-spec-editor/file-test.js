@@ -7,6 +7,7 @@ import { find } from 'ember-native-dom-helpers';
 import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
+import { lookupService } from '../../../../helpers/stub-service';
 
 const fileTypeOptions = [{
   value: 'ANY',
@@ -92,6 +93,19 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
       .to.equal('Regular');
     expect(this.get('rootGroup.isValid')).to.be.true;
   });
+
+  for (const { label, value } of fileTypeOptions) {
+    it(`shows summary for selected "${label}" file type`, function () {
+      const formValues = fileEditor.valueConstraintsToFormValues({
+        fileType: value,
+      });
+      const i18n = lookupService(this, 'i18n');
+
+      const summary = String(fileEditor.summarizeFormValues(i18n, formValues));
+
+      expect(summary).to.equal(`File type: ${label}`);
+    });
+  }
 });
 
 async function renderForm(testCase) {

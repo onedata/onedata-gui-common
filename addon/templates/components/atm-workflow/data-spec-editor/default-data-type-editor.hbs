@@ -6,7 +6,13 @@
   }}
 </div>
 {{#if formRootGroup}}
-  <hr />
-  {{form-component/field-renderer field=formRootGroup}}
+  <a class="azure clickable form-summary-toggle" {{action "toggleFormVisibility"}}>
+    {{one-icon class="form-summary-icon" icon="settings"}}
+    <span class="form-summary">{{formSummary}}</span>
+  </a>
+  {{#if isFormVisible}}
+    <hr />
+    {{form-component/field-renderer field=formRootGroup}}
+  {{/if}}
 {{/if}}
 {{yield}}
