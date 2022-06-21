@@ -1,3 +1,6 @@
 export default {
-  selectorPlaceholder: 'Select type...',
+  placeholder: {
+    default: 'Select type...',
+    array: 'Select item type...',
+  },
 };

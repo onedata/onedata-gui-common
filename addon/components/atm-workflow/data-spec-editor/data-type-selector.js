@@ -18,6 +18,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {DataSpecEditorElement|null}
+   */
+  parentEditorElement: undefined,
+
+  /**
+   * @virtual
    * @type {(updatedElement: DataSpecEditorElement) => void}
    */
   onElementChange: undefined,
@@ -31,6 +37,15 @@ export default Component.extend(I18n, {
       value: dataSpecType,
       label: translateDataSpecType(i18n, dataSpecType),
     }));
+  }),
+
+  /**
+   * @type {ComputedProperty<string>}
+   */
+  selectorPlaceholder: computed('parentEditorElement', function selectorPlaceholder() {
+    const parentDataType = this.get('parentEditorElement.config.dataType');
+    const translationName = parentDataType === 'array' ? 'array' : 'default';
+    return this.t(`placeholder.${translationName}`);
   }),
 
   /**

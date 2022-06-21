@@ -23,6 +23,12 @@ export default Component.extend({
   editorElement: undefined,
 
   /**
+   * @virtual
+   * @type {DataSpecEditorElement|null}
+   */
+  parentEditorElement: undefined,
+
+  /**
    * @type {Map<string, DataSpecEditorElementContext>}
    */
   editorElementsContextMap: undefined,
