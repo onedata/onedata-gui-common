@@ -1,2 +1,6 @@
+{{#if (eq editorElement.config.dataType "array")}}
+  {{one-icon click=(action "unpackFromArray") icon="arrow-up"}}
+{{/if}}
+{{one-icon click=(action "packIntoArray") icon="arrow-down"}}
 {{remove-icon onClick=(action "remove")}}
 {{yield}}

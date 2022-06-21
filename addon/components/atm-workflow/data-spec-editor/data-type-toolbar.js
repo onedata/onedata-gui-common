@@ -1,5 +1,8 @@
 import Component from '@ember/component';
-import generateId from 'onedata-gui-common/utils/generate-id';
+import {
+  createDataTypeSelectorElement,
+  createDataTypeElement,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-toolbar';
 
 export default Component.extend({
@@ -31,10 +34,17 @@ export default Component.extend({
 
   actions: {
     remove() {
-      this.notifyElementChange({
-        id: generateId(),
-        type: 'dataTypeSelector',
-      });
+      this.notifyElementChange(createDataTypeSelectorElement());
+    },
+    packIntoArray() {
+      this.notifyElementChange(createDataTypeElement('array', {
+        item: this.get('editorElement'),
+      }));
+    },
+    unpackFromArray() {
+      this.notifyElementChange(
+        this.get('editorElement.config.item') || createDataTypeSelectorElement()
+      );
     },
   },
 });

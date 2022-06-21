@@ -7,18 +7,18 @@ export function createDataTypeSelectorElement() {
   };
 }
 
-export function createDataTypeElement(dataType) {
-  const config = {
+export function createDataTypeElement(dataType, config = {}) {
+  const completeConfig = Object.assign({}, config, {
     dataType,
-  };
+  });
 
-  if (dataType === 'array') {
-    config.item = createDataTypeSelectorElement();
+  if (dataType === 'array' && !completeConfig.item) {
+    completeConfig.item = createDataTypeSelectorElement();
   }
 
   return {
     id: generateId(),
     type: 'dataType',
-    config,
+    config: completeConfig,
   };
 }
