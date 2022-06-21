@@ -152,7 +152,7 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
     this._super(...arguments);
     const onNotifyAboutChange = this.get('onNotifyAboutChange');
     if (onNotifyAboutChange) {
-      onNotifyAboutChange(this.dumpValue());
+      onNotifyAboutChange();
     }
   },
 });

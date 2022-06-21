@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, observer, set, get } from '@ember/object';
+import { computed, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
@@ -54,11 +54,15 @@ export default Component.extend({
   /**
    * @type {ComputedProperty<string>}
    */
-  formRootGroup: computed('editorElementsContextMap', 'editorElement.id', function formRootGroup() {
-    const elementContext =
-      this.get('editorElementsContextMap').get(this.get('editorElement.id'));
-    return elementContext && elementContext.formRootGroup;
-  }),
+  formRootGroup: computed(
+    'editorElementsContextMap',
+    'editorElement.id',
+    function formRootGroup() {
+      const elementContext =
+        this.get('editorElementsContextMap').get(this.get('editorElement.id'));
+      return elementContext && elementContext.formRootGroup;
+    }
+  ),
 
   /**
    * @type {ComputedProperty<Utils.FormComponent.ValuesContainer|undefined>}
@@ -82,29 +86,20 @@ export default Component.extend({
     }
   }),
 
-  formValuesObserver: observer('formValues', function formValuesObserver() {
+  init() {
+    this._super(...arguments);
+
     const {
       formValues,
       formRootGroup,
     } = this.getProperties('formValues', 'formRootGroup');
-    if (formValues && formRootGroup) {
-      set(formRootGroup, 'valuesSource', formValues);
-    }
-  }),
 
-  init() {
-    this._super(...arguments);
-
-    const formRootGroup = this.get('formRootGroup');
     if (formRootGroup) {
-      set(
-        formRootGroup,
-        'onNotifyAboutChange',
-        (formValues) => {
-          this.notifyFormChange(formValues);
-          this.notifyPropertyChange('formValues');
-        }
-      );
+      if (formValues && formValues !== get(formRootGroup, 'valuesSource')) {
+        set(formRootGroup, 'valuesSource', formValues);
+      }
+
+      set(formRootGroup, 'onNotifyAboutChange', () => this.notifyFormChange());
     }
   },
 
@@ -120,12 +115,10 @@ export default Component.extend({
     }
   },
 
-  notifyFormChange(formValues) {
-    this.notifyElementChange(Object.assign({}, this.get('editorElement'), {
-      config: Object.assign({}, this.get('editorElement.config'), {
-        formValues,
-      }),
-    }));
+  notifyFormChange() {
+    // Prepare shallow copy of the editorElement only to introduce some difference.
+    // Form values are collected in EmberObject `formValues` and are mutated in place.
+    this.notifyElementChange(Object.assign({}, this.get('editorElement')));
   },
 
   actions: {
