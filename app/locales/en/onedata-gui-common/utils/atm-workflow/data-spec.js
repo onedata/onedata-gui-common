@@ -1,3 +1,4 @@
+import file from './data-spec/file';
 import timeSeriesMeasurement from './data-spec/time-series-measurement';
 
 export default {
@@ -12,5 +13,6 @@ export default {
     timeSeriesMeasurement: 'Time series measurement',
     onedatafsCredentials: 'OnedataFS credentials',
   },
+  file,
   timeSeriesMeasurement,
 };

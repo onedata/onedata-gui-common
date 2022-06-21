@@ -25,4 +25,14 @@
       padding-top: 0;
     }
   }
+
+  .file-value-constraints-editor {
+    // flex-wrap: wrap;
+    // margin-bottom: 0;
+    .control-label {
+      flex-basis: 100%;
+      text-align: left;
+      padding-top: 0;
+    }
+  }
 }
