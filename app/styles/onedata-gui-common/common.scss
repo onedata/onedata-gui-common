@@ -906,5 +906,13 @@ p.text-separated {
         color: $color-one-danger;
       }
     }
+
+    &.auditlog-severity-success {
+      background-color: lighten($color-one-success, 35%);
+
+      .one-icon.severity-icon {
+        color: $color-one-success;
+      }
+    }
   }
 }

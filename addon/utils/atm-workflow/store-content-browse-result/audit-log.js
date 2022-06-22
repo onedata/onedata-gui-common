@@ -21,5 +21,5 @@
  */
 
 /**
- * @typedef {'debug'|'info'|'notice'|'warning'|'alert'|'error'|'critical'|'emergency'} AtmAuditLogStoreResultEntrySeverity
+ * @typedef {JsonInfiniteLogSeverity} AtmAuditLogStoreResultEntrySeverity
  */
