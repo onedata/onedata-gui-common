@@ -2,5 +2,38 @@
   {{one-icon click=(action "unpackFromArray") icon="arrow-up"}}
 {{/if}}
 {{one-icon click=(action "packIntoArray") icon="arrow-down"}}
-{{remove-icon onClick=(action "remove")}}
+{{remove-icon
+  class="remove-trigger"
+  onClick=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
+}}
+{{#render-later triggerRender=isRemoveWarnOpened}}
+  {{#one-webui-popover
+    triggerSelector=(local-selector elementId ".remove-trigger")
+    open=isRemoveWarnOpened
+  }}
+    {{#click-outside
+      action=(action "toggleRemoveWarn" false)
+      except-selector=(local-selector elementId ".remove-trigger")
+    }}
+      <p>{{tt this "removeWarn.content"}}</p>
+      <div class="text-right">
+        {{#one-button
+          type="default"
+          size="sm"
+          onClick=(action "toggleRemoveWarn" false)
+        }}
+          {{tt this "removeWarn.no"}}
+        {{/one-button}}
+        &nbsp;
+        {{#one-button
+          type="danger"
+          size="sm"
+          onClick=(action "remove")
+        }}
+          {{tt this "removeWarn.yes"}}
+        {{/one-button}}
+      </div>
+    {{/click-outside}}
+  {{/one-webui-popover}}
+{{/render-later}}
 {{yield}}

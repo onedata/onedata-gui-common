@@ -74,9 +74,14 @@ function summarizeFormValues(i18n, values) {
   });
 }
 
+function shouldWarnOnRemove() {
+  return false;
+}
+
 export default {
   FormElement,
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
   summarizeFormValues,
+  shouldWarnOnRemove,
 };

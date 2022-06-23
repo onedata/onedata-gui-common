@@ -164,9 +164,14 @@ function summarizeFormValues(i18n, values) {
   return i18n.t(`${i18nPrefix}.summary`, { measurementsCount });
 }
 
+function shouldWarnOnRemove(values) {
+  return values && get(values, '__fieldsValueNames.length') > 0;
+}
+
 export default {
   FormElement,
   formValuesToValueConstraints,
   valueConstraintsToFormValues,
   summarizeFormValues,
+  shouldWarnOnRemove,
 };
