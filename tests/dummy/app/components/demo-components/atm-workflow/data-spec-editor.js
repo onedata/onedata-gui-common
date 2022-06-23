@@ -38,6 +38,6 @@ const RootGroup = FormFieldsRootGroup.extend({
     scheduleOnce('afterRender', this, 'logValues');
   },
   logValues() {
-    console.log(this.dumpValue());
+    console.log('isValid:', this.get('isValid'), 'values:', this.dumpValue());
   },
 });

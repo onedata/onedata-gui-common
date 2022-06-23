@@ -1,5 +1,6 @@
 import generateId from 'onedata-gui-common/utils/generate-id';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 export function createDataTypeSelectorElement() {
   return {
@@ -18,8 +19,10 @@ export function createDataTypeElement(dataType, config = {}) {
   }
 
   if (dataType in valueConstraintsEditors && !completeConfig.formValues) {
-    completeConfig.formValues =
-      valueConstraintsEditors[dataType].valueConstraintsToFormValues(null);
+    completeConfig.formValues = createValuesContainer({
+      dataTypeEditor: valueConstraintsEditors[dataType]
+        .valueConstraintsToFormValues(null),
+    });
   }
 
   return {

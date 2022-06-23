@@ -1,9 +1,73 @@
+import { get, set, computed } from '@ember/object';
+import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from './create-data-spec-editor-element';
 import valueConstraintsEditors from './value-constraints-editors';
+import { validator } from 'ember-cp-validations';
+
+/**
+ * @typedef {Object} DataSpecEditorElementBase
+ * @property {string} id
+ */
+
+/**
+ * @typedef {DataSpecEditorElementBase} DataSpecEditorDataTypeSelector
+ * @property {'dataTypeSelector'} type
+ */
+
+/**
+ * @typedef {DataSpecEditorElementBase} DataSpecEditorDataType
+ * @property {'dataType'} type
+ * @property {DataSpecEditorDataTypeConfig} config
+ */
+
+/**
+ * @typedef {
+ *   DataSpecEditorDataTypeSelector |
+ *   DataSpecEditorDataType
+ * } DataSpecEditorElement
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeSimpleConfig
+ * @property {
+ *   'integer' |
+ *   'string' |
+ *   'object' |
+ *   'dataset' |
+ *   'range' |
+ *   'onedatafsCredentials'
+ * } dataType
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeArrayConfig
+ * @property {'array'} dataType
+ * @property {DataSpecEditorDataTypeConfig} item
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorDataTypeCustomConfig
+ * @property {'file'|'timeSeriesMeasurement'} dataType
+ * @property {Utils.FormComponent.ValuesContainer} formValues
+ */
+
+/**
+ * @typedef {
+ *   DataSpecEditorDataTypeSimpleConfig |
+ *   DataSpecEditorDataTypeArrayConfig |
+ *   DataSpecEditorDataTypeCustomConfig |
+ * } DataSpecEditorDataTypeConfig
+ */
+
+/**
+ * @typedef {Object} DataSpecEditorElementContext
+ * @property {DataSpecEditorElement} editorElement
+ * @property {Utils.FormComponent.FormFieldsRootGroup} [formRootGroup]
+ */
 
 export const FormElement = FormField.extend({
   /**
@@ -15,6 +79,152 @@ export const FormElement = FormField.extend({
    * @override
    */
   withValidationIcon: false,
+
+  /**
+   * @override
+   */
+  areValidationClassesEnabled: false,
+
+  /**
+   * @type {Map<string, DataSpecEditorElementContext>}
+   */
+  editorElementsContextMapCache: null,
+
+  /** */
+  editorElementsContextMap: computed('value', function editorElementsContextMap() {
+    const {
+      editorElementsContextMapCache: elementsMap,
+      value,
+    } = this.getProperties('editorElementsContextMapCache', 'value');
+
+    const proviousElementIds = new Set(elementsMap.keys());
+
+    const currentElementIds = new Set();
+    const elementsToProcess = [value];
+    while (elementsToProcess.length) {
+      const newElement = elementsToProcess.pop();
+      if (!newElement) {
+        continue;
+      }
+      currentElementIds.add(newElement.id);
+
+      const mapValue =
+        Object.assign({}, elementsMap.get(newElement.id) || {}, {
+          element: newElement,
+        });
+      elementsMap.set(newElement.id, mapValue);
+
+      if (newElement.type === 'dataType') {
+        const dataType = get(newElement, 'config.dataType');
+        switch (dataType) {
+          case 'array':
+            elementsToProcess.push(get(newElement, 'config.item'));
+            break;
+          default: {
+            const dataTypeEditorClass = dataType in valueConstraintsEditors &&
+              valueConstraintsEditors[dataType].FormElement;
+            if (!mapValue.formRootGroup && dataTypeEditorClass) {
+              mapValue.formRootGroup = EditorElementFormRootGroup.create({
+                ownerSource: this,
+                dataTypeEditorClass,
+              });
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    for (const elementId of proviousElementIds) {
+      if (!currentElementIds.has(elementId)) {
+        const elementToRemove = elementsMap.get(elementId);
+        if (elementToRemove.formRootGroup) {
+          elementToRemove.formRootGroup.destroy();
+        }
+        elementsMap.delete(elementId);
+      }
+    }
+
+    return elementsMap;
+  }),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  nestedFormsValidator: computed(() => validator(function (value, options, model) {
+    const field = get(model, 'field');
+    return !field.getNestedForms().findBy('isValid', false);
+  })),
+
+  /**
+   * @type {ComputedProperty<Object>}
+   */
+  leftDataTypeSelectorsValidator: computed(() =>
+    validator(function (value, options, model) {
+      const editorElementsContextMap = get(model, 'field.editorElementsContextMap');
+      for (const { element } of editorElementsContextMap.values()) {
+        if (get(element, 'type') === 'dataTypeSelector') {
+          return false;
+        }
+      }
+      return true;
+    })
+  ),
+
+  /**
+   * @override
+   */
+  init() {
+    this._super(...arguments);
+
+    this.set('editorElementsContextMapCache', new Map());
+    this.registerInternalValidator('nestedFormsValidator');
+    this.registerInternalValidator('leftDataTypeSelectorsValidator');
+  },
+
+  /**
+   * @override
+   */
+  updateOwner() {
+    this._super(...arguments);
+
+    const ownerSource = this.get('ownerSource');
+    if (ownerSource) {
+      for (const form of this.getNestedForms()) {
+        if (!get(form, 'ownerSource')) {
+          set(form, 'ownerSource', ownerSource);
+        }
+      }
+    }
+  },
+
+  /**
+   * @returns {Array<Utils.FormComponent.FormFieldsRootGroup>}
+   */
+  getNestedForms() {
+    const forms = [];
+    for (const elementCtx of this.get('editorElementsContextMap').values()) {
+      if (elementCtx.formRootGroup) {
+        forms.push(elementCtx.formRootGroup);
+      }
+    }
+    return forms;
+  },
+});
+
+const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
+  dataTypeEditorClass: undefined,
+  onNotifyAboutChange: undefined,
+  fields: computed(function fields() {
+    return [this.get('dataTypeEditorClass').create({ name: 'dataTypeEditor' })];
+  }),
+  onValueChange() {
+    this._super(...arguments);
+    const onNotifyAboutChange = this.get('onNotifyAboutChange');
+    if (onNotifyAboutChange) {
+      onNotifyAboutChange();
+    }
+  },
 });
 
 export function dataSpecToFormValues(dataSpec) {
