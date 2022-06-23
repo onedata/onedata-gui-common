@@ -3,12 +3,14 @@
   {{#if (eq mode "edit")}}
     {{atm-workflow/data-spec-editor/data-type-toolbar
       editorElement=editorElement
+      isEnabled=isEnabled
       onElementChange=onElementChange
     }}
   {{/if}}
 </div>
 {{atm-workflow/data-spec-editor/editor-element-renderer
   mode=mode
+  isEnabled=isEnabled
   editorElement=editorElement.config.item
   parentEditorElement=editorElement
   editorElementsContextMap=editorElementsContextMap

@@ -1,9 +1,18 @@
 {{#if (eq editorElement.config.dataType "array")}}
-  {{one-icon click=(action "unpackFromArray") icon="arrow-up"}}
+  {{one-icon
+    click=(action "unpackFromArray")
+    icon="arrow-up"
+    class=(concat-classes "unpack-from-array" (if (not isEnabled) "disabled"))
+  }}
 {{/if}}
-{{one-icon click=(action "packIntoArray") icon="arrow-down"}}
+{{one-icon
+  click=(action "packIntoArray")
+  icon="arrow-down"
+  class=(concat-classes "pack-into-array" (if (not isEnabled) "disabled"))
+}}
 {{remove-icon
   class="remove-trigger"
+  isDisabled=(not isEnabled)
   onClick=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
 }}
 {{#render-later triggerRender=isRemoveWarnOpened}}

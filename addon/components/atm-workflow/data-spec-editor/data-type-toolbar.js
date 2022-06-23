@@ -22,6 +22,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {boolean}
+   */
+  isEnabled: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement}
    */
   editorElement: undefined,
@@ -73,21 +79,36 @@ export default Component.extend(I18n, {
 
   actions: {
     remove() {
+      if (!this.get('isEnabled')) {
+        return;
+      }
+
       this.notifyElementChange(createDataTypeSelectorElement());
     },
     toggleRemoveWarn(newState) {
-      this.set(
-        'isRemoveWarnOpened',
-        newState !== undefined ?
-        Boolean(newState) : !this.get('isRemoveWarnOpened')
-      );
+      const calculatedState = newState !== undefined ?
+        Boolean(newState) : !this.get('isRemoveWarnOpened');
+
+      if (!this.get('isEnabled') && calculatedState) {
+        return;
+      }
+
+      this.set('isRemoveWarnOpened', calculatedState);
     },
     packIntoArray() {
+      if (!this.get('isEnabled')) {
+        return;
+      }
+
       this.notifyElementChange(createDataTypeElement('array', {
         item: this.get('editorElement'),
       }));
     },
     unpackFromArray() {
+      if (!this.get('isEnabled')) {
+        return;
+      }
+
       this.notifyElementChange(
         this.get('editorElement.config.item') || createDataTypeSelectorElement()
       );

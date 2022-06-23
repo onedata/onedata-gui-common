@@ -24,6 +24,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {boolean}
+   */
+  isEnabled: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement|null}
    */
   parentEditorElement: undefined,

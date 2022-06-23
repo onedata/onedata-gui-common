@@ -1,4 +1,5 @@
 import { get, set, computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
 import {
@@ -230,6 +231,7 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
   fields: computed(function fields() {
     return [this.get('dataTypeEditorClass').create({ name: 'dataTypeEditor' })];
   }),
+  isEnabled: reads('dataSpecEditorInstance.isEffectivelyEnabled'),
   onValueChange() {
     this._super(...arguments);
     const onNotifyAboutChange = this.get('onNotifyAboutChange');
