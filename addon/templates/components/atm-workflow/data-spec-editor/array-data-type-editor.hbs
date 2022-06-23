@@ -1,14 +1,18 @@
 <div class="data-type-header">
   <span class="data-type-name">{{dataTypeTranslation}}</span>
-  {{atm-workflow/data-spec-editor/data-type-toolbar
-    editorElement=editorElement
-    onElementChange=onElementChange
-  }}
+  {{#if (eq mode "edit")}}
+    {{atm-workflow/data-spec-editor/data-type-toolbar
+      editorElement=editorElement
+      onElementChange=onElementChange
+    }}
+  {{/if}}
 </div>
 {{atm-workflow/data-spec-editor/editor-element-renderer
+  mode=mode
   editorElement=editorElement.config.item
   parentEditorElement=editorElement
   editorElementsContextMap=editorElementsContextMap
   onElementChange=(action "itemElementChanged")
+  onFocusLost=onFocusLost
 }}
 {{yield}}

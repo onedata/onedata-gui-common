@@ -14,6 +14,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {FormElementMode}
+   */
+  mode: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement}
    */
   editorElement: undefined,

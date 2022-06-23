@@ -1,9 +1,11 @@
 <div class="data-type-header">
   <span class="data-type-name">{{dataTypeTranslation}}</span>
-  {{atm-workflow/data-spec-editor/data-type-toolbar
-    editorElement=editorElement
-    onElementChange=onElementChange
-  }}
+  {{#if (eq mode "edit")}}
+    {{atm-workflow/data-spec-editor/data-type-toolbar
+      editorElement=editorElement
+      onElementChange=onElementChange
+    }}
+  {{/if}}
 </div>
 {{#if formRootGroup}}
   <a class="azure clickable form-summary-toggle" {{action "toggleFormVisibility"}}>

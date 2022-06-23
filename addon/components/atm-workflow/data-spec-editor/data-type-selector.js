@@ -18,6 +18,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {FormElementMode}
+   */
+  mode: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement|null}
    */
   parentEditorElement: undefined,

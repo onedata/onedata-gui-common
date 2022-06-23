@@ -9,6 +9,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {FormElementMode}
+   */
+  mode: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement}
    */
   editorElement: undefined,
@@ -23,6 +29,12 @@ export default Component.extend({
    * @type {(updatedElement: DataSpecEditorElement) => void}
    */
   onElementChange: undefined,
+
+  /**
+   * @virtual
+   * @type {() => void}
+   */
+  onFocusLost: undefined,
 
   /**
    * @type {ComputedProperty<SafeString>}

@@ -28,6 +28,10 @@
     font-size: 170%;
   }
 
+  .dataTypeEditor-children > :last-child {
+    margin-bottom: 0;
+  }
+
   .time-series-measurement-value-constraints-editor {
     flex-wrap: wrap;
     margin-bottom: 0;
@@ -40,9 +44,17 @@
 
   .file-value-constraints-editor {
     .control-label {
-      flex-basis: 100%;
       text-align: left;
       padding-top: 0;
+    }
+
+    &.field-edit-mode .control-label {
+      flex-basis: 100%;
+    }
+
+    &.field-view-mode .control-label {
+      min-width: initial;
+      width: initial;
     }
   }
 

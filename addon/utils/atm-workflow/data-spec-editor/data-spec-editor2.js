@@ -95,7 +95,8 @@ export const FormElement = FormField.extend({
     const {
       editorElementsContextMapCache: elementsMap,
       value,
-    } = this.getProperties('editorElementsContextMapCache', 'value');
+      mode,
+    } = this.getProperties('editorElementsContextMapCache', 'value', 'mode');
 
     const proviousElementIds = new Set(elementsMap.keys());
 
@@ -129,6 +130,7 @@ export const FormElement = FormField.extend({
                 dataSpecEditorInstance: this,
                 dataTypeEditorClass,
               });
+              mapValue.formRootGroup.changeMode(mode);
             }
             break;
           }
@@ -197,6 +199,14 @@ export const FormElement = FormField.extend({
         }
       }
     }
+  },
+
+  /**
+   * @overide
+   */
+  changeMode(mode) {
+    this._super(...arguments);
+    this.getNestedForms().forEach((form) => form.changeMode(mode));
   },
 
   /**
