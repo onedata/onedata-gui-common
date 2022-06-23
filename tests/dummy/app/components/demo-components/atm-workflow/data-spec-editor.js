@@ -23,6 +23,7 @@ export default Component.extend({
       dataSpec: dataSpecToFormValues(),
     }));
     rootGroup.useCurrentValueAsDefault();
+    console.log(rootGroup);
   },
 });
 
@@ -38,6 +39,10 @@ const RootGroup = FormFieldsRootGroup.extend({
     scheduleOnce('afterRender', this, 'logValues');
   },
   logValues() {
-    console.log('isValid:', this.get('isValid'), 'values:', this.dumpValue());
+    console.log(
+      'isValid:', this.get('isValid'),
+      'isModified:', this.get('isModified'),
+      'values:', this.dumpValue()
+    );
   },
 });

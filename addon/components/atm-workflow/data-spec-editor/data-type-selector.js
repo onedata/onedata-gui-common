@@ -29,6 +29,12 @@ export default Component.extend(I18n, {
   onElementChange: undefined,
 
   /**
+   * @virtual
+   * @type {() => void}
+   */
+  onFocusLost: undefined,
+
+  /**
    * @type {ComputedProperty<{ value: string, label: SafeString }>}
    */
   selectorOptions: computed(function selectorOptions() {

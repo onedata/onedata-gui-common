@@ -126,6 +126,7 @@ export const FormElement = FormField.extend({
             if (!mapValue.formRootGroup && dataTypeEditorClass) {
               mapValue.formRootGroup = EditorElementFormRootGroup.create({
                 ownerSource: this,
+                dataSpecEditorInstance: this,
                 dataTypeEditorClass,
               });
             }
@@ -213,6 +214,7 @@ export const FormElement = FormField.extend({
 });
 
 const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
+  dataSpecEditorInstance: undefined,
   dataTypeEditorClass: undefined,
   onNotifyAboutChange: undefined,
   fields: computed(function fields() {
@@ -224,6 +226,10 @@ const EditorElementFormRootGroup = FormFieldsRootGroup.extend({
     if (onNotifyAboutChange) {
       onNotifyAboutChange();
     }
+  },
+  onFocusLost() {
+    this._super(...arguments);
+    this.get('dataSpecEditorInstance').focusLost();
   },
 });
 

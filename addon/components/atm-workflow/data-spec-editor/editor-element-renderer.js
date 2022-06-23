@@ -40,6 +40,12 @@ export default Component.extend({
   onElementChange: undefined,
 
   /**
+   * @virtual
+   * @type {() => void}
+   */
+  onFocusLost: undefined,
+
+  /**
    * @type {Object}
    */
   editorElementComponentNames,
