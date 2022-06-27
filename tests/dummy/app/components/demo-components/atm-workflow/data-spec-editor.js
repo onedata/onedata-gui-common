@@ -7,6 +7,7 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 import {
   FormElement as DataSpecEditor,
   dataSpecToFormValues,
+  formValuesToDataSpec,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
 
 export default Component.extend({
@@ -15,6 +16,15 @@ export default Component.extend({
       component: this,
     });
   }),
+
+  latestUserValue: null,
+
+  formattedLatestUserValue: computed(
+    'latestUserValue',
+    function formattedLatestUserValue() {
+      return JSON.stringify(this.get('latestUserValue'), null, 2);
+    }
+  ),
 
   init() {
     this._super(...arguments);
@@ -39,10 +49,12 @@ const RootGroup = FormFieldsRootGroup.extend({
     scheduleOnce('afterRender', this, 'logValues');
   },
   logValues() {
+    const value = this.dumpValue();
+    this.set('component.latestUserValue', formValuesToDataSpec(value.dataSpec));
     console.log(
       'isValid:', this.get('isValid'),
       'isModified:', this.get('isModified'),
-      'values:', this.dumpValue()
+      'value:', value
     );
   },
 });

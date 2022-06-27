@@ -270,7 +270,7 @@ export function dataSpecToFormValues(dataSpec) {
 export function formValuesToDataSpec(values) {
   if (
     !values ||
-    !values.type !== 'dataType' ||
+    values.type !== 'dataType' ||
     !values.config ||
     !values.config.dataType
   ) {
@@ -280,10 +280,12 @@ export function formValuesToDataSpec(values) {
   const dataType = values.config.dataType;
 
   if (dataType in valueConstraintsEditors) {
+    const dataTypeEditorValues =
+      get(values.config, 'formValues.dataTypeEditor');
     return {
       type: dataType,
       valueConstraints: valueConstraintsEditors[dataType]
-        .formValuesToValueConstraints(values.config.formValues),
+        .formValuesToValueConstraints(dataTypeEditorValues),
     };
   } else if (dataType === 'array') {
     return {
