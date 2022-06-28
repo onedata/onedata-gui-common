@@ -1,11 +1,14 @@
 import Component from '@ember/component';
 import { computed, get } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/array-data-type-editor';
 
 export default Component.extend({
   classNames: ['data-type-editor', 'array-data-type-editor'],
   layout,
+
+  i18n: service(),
 
   /**
    * @virtual
