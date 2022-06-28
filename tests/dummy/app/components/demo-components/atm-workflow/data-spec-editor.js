@@ -41,7 +41,16 @@ const RootGroup = FormFieldsRootGroup.extend({
   ownerSource: reads('component'),
   fields: computed(function fields() {
     return [
-      DataSpecEditor.create({ name: 'dataSpec' }),
+      DataSpecEditor.create({
+        name: 'dataSpec',
+        dataTypeFilters: [{
+          filterType: 'forbiddenType',
+          forbiddenType: {
+            type: 'onedatafsCredentials',
+          },
+          ignoredContexts: ['root'],
+        }],
+      }),
     ];
   }),
   onValueChange() {

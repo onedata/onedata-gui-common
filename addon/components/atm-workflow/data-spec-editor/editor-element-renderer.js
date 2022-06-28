@@ -80,7 +80,7 @@ export default Component.extend({
       } = this.getProperties('editorElement', 'editorElementComponentNames');
 
       if (!editorElement || !(editorElement.type in editorElementComponentNames)) {
-        return;
+        return editorElementComponentNames.dataTypeSelector;
       }
 
       if (editorElement.type === 'dataType') {

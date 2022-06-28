@@ -57,12 +57,12 @@ export const dataSpecSupertypes = Object.freeze({
 export const dataSpecSubtypes = Object.freeze(
   dataSpecTypes.reduce((acc, dataSpecType) => {
     acc[dataSpecType] = acc[dataSpecType] || [];
-    dataSpecSupertypes[dataSpecSupertypes].forEach((superType) => {
+    dataSpecSupertypes[dataSpecType].forEach((superType) => {
       acc[superType] = acc[superType] || [];
       acc[superType].push(dataSpecType);
     });
     return acc;
-  })
+  }, {})
 );
 
 /**
