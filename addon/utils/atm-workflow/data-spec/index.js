@@ -8,7 +8,6 @@
 
 /**
  * @typedef {
- *   AtmArrayDataSpec |
  *   AtmDatasetDataSpec |
  *   AtmFileDataSpec |
  *   AtmIntegerDataSpec |
@@ -17,6 +16,17 @@
  *   AtmRangeDataSpec |
  *   AtmStringDataSpec |
  *   AtmTimeSeriesMeasurementDataSpec
+ * } AtmLeafDataSpec
+ */
+
+/**
+ * @typedef {AtmArrayDataSpec} AtmContainerDataSpec
+ */
+
+/**
+ * @typedef {
+ *   AtmLeafDataSpec |
+ *   AtmContainerDataSpec
  * } AtmDataSpec
  */
 
@@ -31,6 +41,29 @@ export const dataSpecTypes = Object.freeze([
   'timeSeriesMeasurement',
   'onedatafsCredentials',
 ]);
+
+export const dataSpecSupertypes = Object.freeze({
+  integer: [],
+  string: [],
+  object: [],
+  file: ['object'],
+  dataset: ['object'],
+  range: ['object'],
+  array: [],
+  timeSeriesMeasurement: ['object'],
+  onedatafsCredentials: ['object'],
+});
+
+export const dataSpecSubtypes = Object.freeze(
+  dataSpecTypes.reduce((acc, dataSpecType) => {
+    acc[dataSpecType] = acc[dataSpecType] || [];
+    dataSpecSupertypes[dataSpecSupertypes].forEach((superType) => {
+      acc[superType] = acc[superType] || [];
+      acc[superType].push(dataSpecType);
+    });
+    return acc;
+  })
+);
 
 /**
  * @param {Ember.Service} i18n

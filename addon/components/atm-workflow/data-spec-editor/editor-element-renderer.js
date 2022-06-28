@@ -30,6 +30,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {Array<DataSpecEditorFilter>}
+   */
+  dataTypeFilters: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement}
    */
   editorElement: undefined,

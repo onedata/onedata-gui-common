@@ -8,11 +8,14 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { get, computed } from '@ember/object';
+import { get, computed, observer } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import {
   fileTypes,
+  fileSupertypes,
+  fileSubtypes,
   translateFileType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -20,6 +23,54 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.file';
 
 const FormElement = FormFieldsGroup.extend({
+  /**
+   * @virtual
+   * @type {Array<DataSpecEditorFilter>}
+   */
+  dataTypeFilters: undefined,
+
+  /**
+   * @type {ComputedProperty<Array<AtmFileType>>}
+   */
+  allowedFileTypes: computed('dataTypeFilters', function allowedFileTypes() {
+    const dataTypeFilters = this.get('dataTypeFilters') || [];
+    const allowedTypes = [];
+    for (const fileType of fileTypes) {
+      let typeRejected = false;
+      for (const dataTypeFilter of dataTypeFilters) {
+        const fileTypeFromFilter = getFileTypeFromDataTypeFilter(dataTypeFilter);
+        switch (dataTypeFilter.filterType) {
+          case 'typeOrSupertype':
+            if (
+              fileType !== fileTypeFromFilter &&
+              !(fileSupertypes[fileTypeFromFilter] || []).includes(fileType)
+            ) {
+              typeRejected = true;
+            }
+            break;
+          case 'typeOrSubtype':
+            if (
+              fileType !== fileTypeFromFilter &&
+              !(fileSubtypes[fileTypeFromFilter] || []).includes(fileType)
+            ) {
+              typeRejected = true;
+            }
+            break;
+          case 'forbiddenType':
+            // `forbiddenType` filter works only at the whole data specs level.
+            break;
+        }
+        if (typeRejected) {
+          break;
+        }
+      }
+      if (!typeRejected) {
+        allowedTypes.push(fileType);
+      }
+    }
+    return allowedTypes;
+  }),
+
   classes: 'file-value-constraints-editor',
   i18nPrefix: `${i18nPrefix}.fields`,
   // Does not take parent fields group translation path into account
@@ -32,16 +83,41 @@ const FormElement = FormFieldsGroup.extend({
   }),
 });
 
+function getFileTypeFromDataTypeFilter(dataTypeFilter) {
+  let fileDataSpec = null;
+  switch (dataTypeFilter && dataTypeFilter.filterType) {
+    case 'typeOrSupertype':
+    case 'typeOrSubtype':
+      fileDataSpec = get(dataTypeFilter, 'type');
+      break;
+    case 'forbiddenType':
+      fileDataSpec = get(dataTypeFilter, 'forbiddenType');
+      break;
+  }
+  return fileDataSpec && fileDataSpec.type === 'file' &&
+    get(fileDataSpec, 'valuConstraints.fileType') || null;
+}
+
 const FileTypeDropdown = DropdownField.extend({
-  options: computed(function options() {
+  options: computed('parent.allowedFileTypes', function options() {
     const i18n = this.get('i18n');
-    return fileTypes.map((fileType) => ({
+    return this.get('parent.allowedFileTypes').map((fileType) => ({
       value: fileType,
       label: translateFileType(i18n, fileType),
     }));
   }),
+  defaultValue: reads('parent.allowedFileTypes.0'),
   name: 'fileType',
-  defaultValue: fileTypes[0],
+  allowedFileTypesObserver: observer(
+    'parent.allowedFileTypes',
+    function allowedFileTypesObserver() {
+      const value = this.get('value');
+      const allowedFileTypes = this.get('parent.allowedFileTypes');
+      if (value && !allowedFileTypes.includes(value)) {
+        this.valueChanged(allowedFileTypes[0]);
+      }
+    }
+  ),
 });
 
 /**

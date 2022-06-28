@@ -1,7 +1,12 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { dataSpecTypes, translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import {
+  dataSpecTypes,
+  dataSpecSupertypes,
+  dataSpecSubtypes,
+  translateDataSpecType,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec';
 import { createDataTypeElement } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-selector';
@@ -30,6 +35,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {Array<DataSpecEditorFilter>}
+   */
+  dataTypeFilters: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement|null}
    */
   parentEditorElement: undefined,
@@ -47,22 +58,85 @@ export default Component.extend(I18n, {
   onFocusLost: undefined,
 
   /**
+   * @type {ComputedProperty<DataSpecEditorPlacementContext>}
+   */
+  placementContext: computed('parentEditorElement', function placementContext() {
+    const parentDataType = this.get('parentEditorElement.config.dataType');
+    if (!parentDataType) {
+      return 'root';
+    } else if (parentDataType === 'array') {
+      return 'array';
+    } else {
+      return 'default';
+    }
+  }),
+
+  /**
    * @type {ComputedProperty<{ value: string, label: SafeString }>}
    */
-  selectorOptions: computed(function selectorOptions() {
-    const i18n = this.get('i18n');
-    return dataSpecTypes.map((dataSpecType) => ({
-      value: dataSpecType,
-      label: translateDataSpecType(i18n, dataSpecType),
-    }));
-  }),
+  selectorOptions: computed(
+    'dataTypeFilters',
+    'placementContext',
+    function selectorOptions() {
+      const {
+        i18n,
+        dataTypeFilters,
+        placementContext,
+      } = this.getProperties('i18n', 'dataTypeFilters', 'placementContext');
+
+      const allowedDataSpecTypes = [];
+      for (const dataSpecType of dataSpecTypes) {
+        let typeRejected = false;
+        for (const dataTypeFilter of (dataTypeFilters || [])) {
+          switch (dataTypeFilter.filterType) {
+            case 'typeOrSupertype':
+              if (dataTypeFilter.type && dataTypeFilter.type.type &&
+                dataSpecType !== dataTypeFilter.type.type &&
+                !(dataSpecSupertypes[dataTypeFilter.type.type] || [])
+                .includes(dataSpecType)
+              ) {
+                typeRejected = true;
+              }
+              break;
+            case 'typeOrSubtype':
+              if (dataTypeFilter.type && dataTypeFilter.type.type &&
+                dataSpecType !== dataTypeFilter.type.type &&
+                !(dataSpecSubtypes[dataTypeFilter.type.type] || []).includes(dataSpecType)
+              ) {
+                typeRejected = true;
+              }
+              break;
+            case 'forbiddenType':
+              if (dataTypeFilter.forbiddenType && dataTypeFilter.forbiddenType.type &&
+                dataTypeFilter.forbiddenType.type === dataSpecType &&
+                !(dataTypeFilter.ignoredContexts || []).includes(placementContext)
+              ) {
+                typeRejected = true;
+              }
+              break;
+          }
+          if (typeRejected) {
+            break;
+          }
+        }
+        if (!typeRejected) {
+          allowedDataSpecTypes.push(dataSpecType);
+        }
+      }
+
+      return allowedDataSpecTypes.map((dataSpecType) => ({
+        value: dataSpecType,
+        label: translateDataSpecType(i18n, dataSpecType),
+      }));
+    }
+  ),
 
   /**
    * @type {ComputedProperty<string>}
    */
-  selectorPlaceholder: computed('parentEditorElement', function selectorPlaceholder() {
-    const parentDataType = this.get('parentEditorElement.config.dataType');
-    const translationName = parentDataType === 'array' ? 'array' : 'default';
+  selectorPlaceholder: computed('placementContext', function selectorPlaceholder() {
+    const placementContext = this.get('placementContext');
+    const translationName = placementContext === 'array' ? 'array' : 'default';
     return this.t(`placeholder.${translationName}`);
   }),
 

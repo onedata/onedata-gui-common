@@ -10,4 +10,9 @@ export default FieldComponentBase.extend({
    * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
    */
   editorElementsContextMap: reads('field.editorElementsContextMap'),
+
+  /**
+   * @type {ComputedProperty<Array<DataSpecEditorFilter>>}
+   */
+  dataTypeFilters: reads('field.dataTypeFilters'),
 });

@@ -28,6 +28,20 @@ export const fileTypes = Object.freeze([
   'SYMLNK',
 ]);
 
+export const fileSupertypes = Object.freeze({
+  ANY: [],
+  REG: ['ANY'],
+  DIR: ['ANY'],
+  SYMLNK: ['ANY'],
+});
+
+export const fileSubtypes = Object.freeze({
+  ANY: ['REG', 'DIR', 'SYMLNK'],
+  REG: [],
+  DIR: [],
+  SYMLNK: [],
+});
+
 /**
  * @param {Ember.Service} i18n
  * @param {AtmFileType} fileType

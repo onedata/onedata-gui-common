@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, set, get } from '@ember/object';
+import { computed, observer, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
@@ -23,6 +23,12 @@ export default Component.extend({
    * @type {boolean}
    */
   isEnabled: undefined,
+
+  /**
+   * @virtual
+   * @type {Array<DataSpecEditorFilter>}
+   */
+  dataTypeFilters: undefined,
 
   /**
    * @virtual
@@ -98,6 +104,21 @@ export default Component.extend({
     }
   }),
 
+  dataTypeFiltersObserver: observer(
+    'dataTypeFilters',
+    function dataTypeFiltersObserver() {
+      const {
+        dataTypeFilters,
+        formRootGroup,
+      } = this.getProperties('dataTypeFilters', 'formRootGroup');
+      const dataTypeEditor = formRootGroup &&
+        formRootGroup.getFieldByPath('dataTypeEditor');
+      if (dataTypeEditor && get(dataTypeEditor, 'dataTypeFilters') !== dataTypeFilters) {
+        set(dataTypeEditor, 'dataTypeFilters', dataTypeFilters);
+      }
+    }
+  ),
+
   init() {
     this._super(...arguments);
 
@@ -113,6 +134,7 @@ export default Component.extend({
 
       set(formRootGroup, 'onNotifyAboutChange', () => this.notifyFormChange());
     }
+    this.dataTypeFiltersObserver();
   },
 
   /**
