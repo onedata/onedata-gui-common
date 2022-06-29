@@ -79,7 +79,7 @@ export default Component.extend({
           const serviceName = visibilityCondition.split('.')[0];
           set(
             conditionEnv,
-            'isVisible',
+            serviceName,
             getOwner(this).lookup(`service:${serviceName}`)
           );
           defineProperty(conditionEnv, 'isVisible', reads(visibilityCondition));
