@@ -99,7 +99,7 @@ describe('Integration | Component | form component/toggle field', function () {
     async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       expect(await getDisabledControlTip()).to.equal('Locked');
     });
@@ -109,7 +109,7 @@ describe('Integration | Component | form component/toggle field', function () {
       this.set('field.isEnabled', false);
       this.set('field.disabledControlTip', 'test');
 
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       expect(await getDisabledControlTip()).to.equal('test');
     });
@@ -119,7 +119,7 @@ describe('Integration | Component | form component/toggle field', function () {
       this.get('field').changeMode('view');
       this.set('field.disabledControlTip', 'test');
 
-      this.render(hbs `{{form-component/toggle-field field=field}}`);
+      await render(hbs `{{form-component/toggle-field field=field}}`);
 
       expect(await getDisabledControlTip()).to.equal('Locked');
     });
