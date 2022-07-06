@@ -34,7 +34,7 @@
     "ember-auto-import": "2.4.2",
     "ember-cli-babel": "7.26.11",
     "ember-cli-htmlbars": "3.0.0",
-    "moment": "2.19.3",
+    "moment": "2.29.2",
     "perfect-scrollbar": "1.4.0",
     "pupa": "2.1.1",
     "round10": "1.0.3",
