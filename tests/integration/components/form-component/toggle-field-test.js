@@ -5,6 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
 import { focus, blur, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
+import OneTooltipHelper from '../../../helpers/one-tooltip';
 
 describe('Integration | Component | form component/toggle field', function () {
   setupComponentTest('form-component/toggle-field', {
@@ -95,4 +96,37 @@ describe('Integration | Component | form component/toggle field', function () {
 
     expect(this.$('.one-way-toggle')).to.have.class('disabled');
   });
+
+  it('shows default tooltip for disabled toggle in "edit" mode when no "disabledControlTip" is specified',
+    async function () {
+      this.set('field.isEnabled', false);
+
+      this.render(hbs `{{form-component/toggle-field field=field}}`);
+
+      expect(await getDisabledControlTip()).to.equal('Locked');
+    });
+
+  it('shows custom tooltip for disabled toggle in "edit" mode when "disabledControlTip" is specified',
+    async function () {
+      this.set('field.isEnabled', false);
+      this.set('field.disabledControlTip', 'test');
+
+      this.render(hbs `{{form-component/toggle-field field=field}}`);
+
+      expect(await getDisabledControlTip()).to.equal('test');
+    });
+
+  it('does not show custom tooltip for toggle in "view" mode when "disabledControlTip" is specified',
+    async function () {
+      this.get('field').changeMode('view');
+      this.set('field.disabledControlTip', 'test');
+
+      this.render(hbs `{{form-component/toggle-field field=field}}`);
+
+      expect(await getDisabledControlTip()).to.equal('Locked');
+    });
 });
+
+async function getDisabledControlTip() {
+  return await new OneTooltipHelper('.one-way-toggle .tooltip-container').getText();
+}

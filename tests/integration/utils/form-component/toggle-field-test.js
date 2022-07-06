@@ -19,4 +19,9 @@ describe('Integration | Utility | form component/toggle field', function () {
     const field = ToggleField.create();
     expect(get(field, 'withValidationIcon')).to.be.false;
   });
+
+  it('has undefined "disabledControlTip" by default', function () {
+    const field = ToggleField.create();
+    expect(get(field, 'disabledControlTip')).to.be.undefined;
+  });
 });
