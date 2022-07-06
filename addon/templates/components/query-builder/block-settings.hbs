@@ -11,8 +11,8 @@
   }}
     {{#click-outside
       class="click-outside"
-      action=popover.hide
-      except-selector=clickOutsideExceptSelector
+      onClickOutside=popover.hide
+      exceptSelector=clickOutsideExceptSelector
     }}
       {{query-builder/block-selector
         mode="edit"

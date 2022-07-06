@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { createValuesContainer, isValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import {
+  createValuesContainer,
+  isValuesContainer,
+} from 'onedata-gui-common/utils/form-component/values-container';
 import { typeOf } from '@ember/utils';
 import EmberObject from '@ember/object';
 

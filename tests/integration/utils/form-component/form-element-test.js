@@ -4,7 +4,7 @@ import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import { get } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import _ from 'lodash';
 import EmberObject from '@ember/object';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
@@ -16,9 +16,7 @@ const fieldModes = [
 ];
 
 describe('Integration | Utility | form component/form element', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it('has an empty fields array', function () {
     const formElement = FormElement.create();
@@ -318,7 +316,7 @@ describe('Integration | Utility | form component/form element', function () {
       .withArgs('some.parent.name.label')
       .returns('labelText');
     const formField = FormElement.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'some',
       parent: {
         translationPath: 'parent',
@@ -334,7 +332,7 @@ describe('Integration | Utility | form component/form element', function () {
       .withArgs('some.parent.name.tip')
       .returns('tipText');
     const formField = FormElement.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'some',
       parent: {
         translationPath: 'parent',

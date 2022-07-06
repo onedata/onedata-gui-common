@@ -10,7 +10,7 @@
   <div class="form-control-column {{layoutConfig.formInputColumns}}">
     {{#if (eq field.type "datetime")}}
       {{one-datetime-picker
-        datetime=value
+        value=value
         id=inputId
         class=inputClasses
         onChange=(action "inputChanged" field.name)

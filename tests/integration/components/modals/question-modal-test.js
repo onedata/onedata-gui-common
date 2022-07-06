@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, click } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
 import hbs from 'htmlbars-inline-precompile';
 import {
@@ -10,13 +11,10 @@ import {
   getModalFooter,
 } from '../../../helpers/modal';
 import sinon from 'sinon';
-import { click } from 'ember-native-dom-helpers';
 import { Promise } from 'rsvp';
 
 describe('Integration | Component | modals/question modal', function () {
-  setupComponentTest('modals/question-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -33,17 +31,18 @@ describe('Integration | Component | modals/question modal', function () {
     function () {
       return showModal(this)
         .then(() => {
-          const $modalFooter = getModalFooter();
-          const $noBtn = $modalFooter.find('.question-no');
-          const $yesBtn = $modalFooter.find('.question-yes');
+          const modalFooter = getModalFooter();
+          const noBtn = modalFooter.querySelector('.question-no');
+          const yesBtn = modalFooter.querySelector('.question-yes');
           expect(getModal()).to.have.class('question-modal');
-          expect(getModalHeader().find('h1').text().trim()).to.equal('headertext');
-          expect(getModalHeader().find('.oneicon')).to.not.exist;
-          expect(getModalBody().text().trim()).to.be.empty;
-          expect($noBtn.text().trim()).to.equal('Cancel');
-          expect($noBtn).to.not.have.attr('disabled');
-          expect($yesBtn.text().trim()).to.equal('Apply');
-          expect($yesBtn).to.have.class('btn-primary');
+          expect(getModalHeader().querySelector('h1').textContent.trim())
+            .to.equal('headertext');
+          expect(getModalHeader().querySelector('.oneicon')).to.not.exist;
+          expect(getModalBody().textContent.trim()).to.be.empty;
+          expect(noBtn.textContent.trim()).to.equal('Cancel');
+          expect(noBtn).to.not.have.attr('disabled');
+          expect(yesBtn.textContent.trim()).to.equal('Apply');
+          expect(yesBtn).to.have.class('btn-primary');
         });
     }
   );
@@ -53,7 +52,8 @@ describe('Integration | Component | modals/question modal', function () {
 
     return showModal(this)
       .then(() =>
-        expect(getModalHeader().find('.oneicon-sign-warning-rounded')).to.exist
+        expect(getModalHeader().querySelector('.oneicon-sign-warning-rounded'))
+        .to.exist
       );
   });
 
@@ -67,11 +67,11 @@ describe('Integration | Component | modals/question modal', function () {
 
     return showModal(this)
       .then(() => {
-        const $paragraphs = getModalBody().find('p');
-        expect($paragraphs).to.have.length(2);
-        expect($paragraphs.eq(0)).to.have.class('p1class');
-        expect($paragraphs.eq(0).text().trim()).to.equal('p1');
-        expect($paragraphs.eq(1).text().trim()).to.equal('p2');
+        const paragraphs = getModalBody().querySelectorAll('p');
+        expect(paragraphs).to.have.length(2);
+        expect(paragraphs[0]).to.have.class('p1class');
+        expect(paragraphs[0].textContent.trim()).to.equal('p1');
+        expect(paragraphs[1].textContent.trim()).to.equal('p2');
       });
   });
 
@@ -80,9 +80,9 @@ describe('Integration | Component | modals/question modal', function () {
 
     return showModal(this)
       .then(() => {
-        const $yesBtn = getModalFooter().find('.question-yes');
-        expect($yesBtn).to.not.have.class('btn-primary');
-        expect($yesBtn).to.have.class('btn-warning');
+        const yesBtn = getModalFooter().querySelector('.question-yes');
+        expect(yesBtn).to.not.have.class('btn-primary');
+        expect(yesBtn).to.have.class('btn-warning');
       });
   });
 
@@ -90,14 +90,14 @@ describe('Integration | Component | modals/question modal', function () {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
 
-    let $yesBtn;
+    let yesBtn;
     return showModal(this)
       .then(() => {
-        $yesBtn = getModalFooter().find('.question-yes');
-        return click($yesBtn[0]);
+        yesBtn = getModalFooter().querySelector('.question-yes');
+        return click(yesBtn);
       })
       .then(() => {
-        expect($yesBtn).to.have.class('pending');
+        expect(yesBtn).to.have.class('pending');
         expect(submitStub).to.be.calledOnce;
       });
   });
@@ -108,7 +108,7 @@ describe('Integration | Component | modals/question modal', function () {
     return showModal(this)
       .then(() => {
         expect(onHideSpy).to.not.been.called;
-        return click(getModalFooter().find('.question-no')[0]);
+        return click(getModalFooter().querySelector('.question-no'));
       })
       .then(() => expect(onHideSpy).to.be.calledOnce);
   });
@@ -117,7 +117,7 @@ describe('Integration | Component | modals/question modal', function () {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     return showModal(this)
-      .then(() => click(getModal()[0]))
+      .then(() => click(getModal()))
       .then(() => expect(onHideSpy).to.be.calledOnce);
   });
 
@@ -126,9 +126,9 @@ describe('Integration | Component | modals/question modal', function () {
     this.set('modalOptions.onSubmit', submitStub);
 
     return showModal(this)
-      .then(() => click(getModalFooter().find('.question-yes')[0]))
+      .then(() => click(getModalFooter().querySelector('.question-yes')))
       .then(() => expect(
-        getModalFooter().find('.question-no')
+        getModalFooter().querySelector('.question-no')
       ).to.have.attr('disabled'));
   });
 
@@ -138,8 +138,8 @@ describe('Integration | Component | modals/question modal', function () {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     return showModal(this)
-      .then(() => click(getModalFooter().find('.question-yes')[0]))
-      .then(() => click(getModal()[0]))
+      .then(() => click(getModalFooter().querySelector('.question-yes')))
+      .then(() => click(getModal()))
       .then(() => expect(onHideSpy).to.not.be.called);
   });
 
@@ -147,7 +147,7 @@ describe('Integration | Component | modals/question modal', function () {
     'does not show "understand notice" when checkboxMessage is not specified (by default)',
     function () {
       return showModal(this)
-        .then(() => expect(getModalBody().find('.row-understand-notice')).to.not.exist);
+        .then(() => expect(getModalBody().querySelector('.row-understand-notice')).to.not.exist);
     }
 
   );
@@ -159,12 +159,13 @@ describe('Integration | Component | modals/question modal', function () {
 
       return showModal(this)
         .then(() => {
-          const $notice = getModalBody().find('.row-understand-notice');
-          expect($notice).to.exist;
-          const $checkbox = $notice.find('.one-checkbox');
-          expect($checkbox).to.exist;
-          expect($checkbox).to.not.have.class('checked');
-          expect($notice.find('.text-understand').text().trim()).to.equal('understand?');
+          const notice = getModalBody().querySelector('.row-understand-notice');
+          expect(notice).to.exist;
+          const checkbox = notice.querySelector('.one-checkbox');
+          expect(checkbox).to.exist;
+          expect(checkbox).to.not.have.class('checked');
+          expect(notice.querySelector('.text-understand').textContent.trim())
+            .to.equal('understand?');
         });
     }
   );
@@ -175,9 +176,10 @@ describe('Integration | Component | modals/question modal', function () {
       this.set('modalOptions.checkboxMessage', 'understand?');
 
       return showModal(this)
-        .then(() => click(getModalBody().find('.text-understand')[0]))
+        .then(() => click(getModalBody().querySelector('.text-understand')))
         .then(() =>
-          expect(getModalBody().find('.one-checkbox')).to.have.class('checked')
+          expect(getModalBody().querySelector('.one-checkbox'))
+          .to.have.class('checked')
         );
     }
   );
@@ -187,7 +189,8 @@ describe('Integration | Component | modals/question modal', function () {
 
     return showModal(this)
       .then(() =>
-        expect(getModalFooter().find('.question-yes')).to.have.attr('disabled')
+        expect(getModalFooter().querySelector('.question-yes'))
+        .to.have.attr('disabled')
       );
   });
 
@@ -195,9 +198,10 @@ describe('Integration | Component | modals/question modal', function () {
     this.set('modalOptions.checkboxMessage', 'understand?');
 
     return showModal(this)
-      .then(() => click(getModalBody().find('.one-checkbox')[0]))
+      .then(() => click(getModalBody().querySelector('.one-checkbox')))
       .then(() =>
-        expect(getModalFooter().find('.question-yes')).to.not.have.attr('disabled')
+        expect(getModalFooter().querySelector('.question-yes'))
+        .to.not.have.attr('disabled')
       );
   });
 
@@ -209,7 +213,7 @@ describe('Integration | Component | modals/question modal', function () {
 
       return showModal(this)
         .then(() =>
-          expect(getModalFooter().find('.question-yes')).to.not.have.attr('disabled')
+          expect(getModalFooter().querySelector('.question-yes')).to.not.have.attr('disabled')
         );
     }
   );
@@ -222,7 +226,7 @@ describe('Integration | Component | modals/question modal', function () {
     this.set('modalOptions.isCheckboxBlocking', false);
 
     return showModal(this)
-      .then(() => click(getModalFooter().find('.question-yes')[0]))
+      .then(() => click(getModalFooter().querySelector('.question-yes')))
       .then(() => expect(submitStub).to.be.calledWith(sinon.match({
         isCheckboxChecked: false,
       })));
@@ -236,21 +240,21 @@ describe('Integration | Component | modals/question modal', function () {
     this.set('modalOptions.isCheckboxBlocking', false);
 
     return showModal(this)
-      .then(() => click(getModalBody().find('.one-checkbox')[0]))
-      .then(() => click(getModalFooter().find('.question-yes')[0]))
+      .then(() => click(getModalBody().querySelector('.one-checkbox')))
+      .then(() => click(getModalFooter().querySelector('.question-yes')))
       .then(() => expect(submitStub).to.be.calledWith(sinon.match({
         isCheckboxChecked: true,
       })));
   });
 });
 
-function showModal(testCase) {
+async function showModal(testCase) {
   const {
     modalManager,
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   return modalManager.show('question-modal', modalOptions).shownPromise;
 }

@@ -1,25 +1,23 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, click, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import { click } from 'ember-native-dom-helpers';
 
 const allowedOperatorsList = ['and', 'or', 'except', 'not'];
 
 describe(
   'Integration | Component | query builder/block selector/operator selector',
   function () {
-    setupComponentTest('query-builder/block-selector/operator-selector', {
-      integration: true,
-    });
+    setupRenderingTest();
 
     it(
       `renders four operators: ${allowedOperatorsList.map(s => s.toUpperCase()).join(', ')} by default`,
       async function () {
-        this.render(hbs `{{query-builder/block-selector/operator-selector}}`);
+        await render(hbs `{{query-builder/block-selector/operator-selector}}`);
 
-        const operators = this.$('.operator-selector .operator');
+        const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(4);
         allowedOperatorsList.forEach((operatorName, index) =>
           checkOperatorButton(operators[index], operatorName)
@@ -33,7 +31,7 @@ describe(
         async function () {
           const addSpy = this.set('addSpy', sinon.spy());
 
-          this.render(hbs `{{query-builder/block-selector/operator-selector
+          await render(hbs `{{query-builder/block-selector/operator-selector
             onOperatorSelected=addSpy
           }}`);
 
@@ -48,11 +46,11 @@ describe(
       'renders only specified subset of operators',
       async function () {
 
-        this.render(hbs `{{query-builder/block-selector/operator-selector
+        await render(hbs `{{query-builder/block-selector/operator-selector
           operators=(array "and" "or")
         }}`);
 
-        const operators = this.$('.operator-selector .operator');
+        const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(2);
         ['and', 'or'].forEach((operatorName, index) =>
           checkOperatorButton(operators[index], operatorName)
@@ -64,11 +62,11 @@ describe(
       'does not render incorrect operators',
       async function () {
 
-        this.render(hbs `{{query-builder/block-selector/operator-selector
+        await render(hbs `{{query-builder/block-selector/operator-selector
           operators=(array "and" "xor")
         }}`);
 
-        const operators = this.$('.operator-selector .operator');
+        const operators = findAll('.operator-selector .operator');
         expect(operators).to.have.length(1);
         checkOperatorButton(operators[0], 'and');
       }
@@ -77,23 +75,23 @@ describe(
     it(
       'does not disable any operator by default',
       async function () {
-        this.render(hbs `{{query-builder/block-selector/operator-selector}}`);
+        await render(hbs `{{query-builder/block-selector/operator-selector}}`);
 
-        expect(this.$('.operator-selector .operator[disabled]')).to.not.exist;
+        expect(find('.operator-selector .operator[disabled]')).to.not.exist;
       }
     );
 
     it(
       'disables specified operators',
       async function () {
-        this.render(hbs `{{query-builder/block-selector/operator-selector
+        await render(hbs `{{query-builder/block-selector/operator-selector
           disabledOperators=(array "and" "or")
         }}`);
 
-        expect(this.$('.operator-selector .operator[disabled]'))
+        expect(findAll('.operator-selector .operator[disabled]'))
           .to.have.length(2);
-        expect(this.$('.operator-selector .operator-not'))
-          .to.not.have.attr('disabled');
+        expect(find('.operator-selector .operator-not').disabled)
+          .to.be.false;
       }
     );
   }

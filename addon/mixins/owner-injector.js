@@ -2,7 +2,7 @@
  * Use this mixin in objects, that does not have information about Ember owner
  * and cannot resolve service injections on their own. Needs specified `ownerSource`
  * (usually whatever component or service), that hold a reference to the Ember owner.
- * 
+ *
  * @module mixins/owner-injector
  * @author Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -25,7 +25,8 @@ export default Mixin.create({
     const ownerSource = this.get('ownerSource');
 
     if (ownerSource && !getOwner(this)) {
-      const ownerInjection = getOwner(ownerSource).ownerInjection();
+      const ownerInjection = typeof ownerSource.ownerInjection === 'function' ?
+        ownerSource.ownerInjection() : getOwner(ownerSource).ownerInjection();
       this.setProperties(ownerInjection);
     }
   }),

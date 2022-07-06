@@ -1,25 +1,21 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { fillIn } from 'ember-native-dom-helpers';
-import { clickTrigger, selectChoose } from '../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import { createTaskResourcesFields } from 'onedata-gui-common/utils/workflow-visualiser/task-resources-fields';
 import _ from 'lodash';
-import $ from 'jquery';
+import { render, fillIn, find } from '@ember/test-helpers';
 
 describe('Integration | Utility | workflow visualiser/task resources fields', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   describe('createTaskResourcesFields', function () {
     beforeEach(function () {
       this.set('rootGroup', FormFieldsRootGroup.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         i18nPrefix: 'utils.workflowVisualiser',
         fields: [
           FormFieldsGroup.create({
@@ -46,101 +42,98 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
     });
 
     it('has cpu, memory and storage fields groups', async function () {
-      await render(this);
+      await renderComponent();
 
-      const $cpuSection = this.$('.cpu-field');
-      expect($cpuSection.find('.control-label').eq(0).text().trim())
+      expect(find('.cpu-field .control-label').textContent.trim())
         .to.equal('CPU cores:');
-      expectResourceFieldsLabels(this, 'cpu');
-      expectResourceFieldsType(this, 'cpu', 'text-like');
-      expectResourceTextValue(this, 'cpu', 'requested', '0.1');
-      expectResourceTextValue(this, 'cpu', 'limit', '1');
+      expectResourceFieldsLabels('cpu');
+      expectResourceFieldsType('cpu', 'text-like');
+      expectResourceTextValue('cpu', 'requested', '0.1');
+      expectResourceTextValue('cpu', 'limit', '1');
 
-      const $memorySection = this.$('.memory-field');
-      expect($memorySection.find('.control-label').eq(0).text().trim())
+      expect(find('.memory-field .control-label').textContent.trim())
         .to.equal('Memory:');
-      expectResourceFieldsLabels(this, 'memory');
-      expectResourceFieldsType(this, 'memory', 'capacity');
-      expectResourceCapacityValue(this, 'memory', 'requested', ['128', 'MiB']);
+      expectResourceFieldsLabels('memory');
+      expectResourceFieldsType('memory', 'capacity');
+      expectResourceCapacityValue('memory', 'requested', ['128', 'MiB']);
       await expectResourceCapacityUnits('memory', 'requested', ['MiB', 'GiB']);
-      expectResourceCapacityValue(this, 'memory', 'limit', ['512', 'MiB']);
+      expectResourceCapacityValue('memory', 'limit', ['512', 'MiB']);
       await expectResourceCapacityUnits('memory', 'limit', ['MiB', 'GiB']);
 
-      const $ephemeralStorageSection = this.$('.ephemeralStorage-field');
-      expect($ephemeralStorageSection.find('.control-label').eq(0).text().trim())
+      expect(find('.ephemeralStorage-field .control-label').textContent.trim())
         .to.equal('Ephemeral storage:');
-      expectResourceFieldsLabels(this, 'ephemeralStorage');
-      expectResourceFieldsType(this, 'ephemeralStorage', 'capacity');
-      expectResourceCapacityValue(this, 'ephemeralStorage', 'requested', ['0', 'MiB']);
+      expectResourceFieldsLabels('ephemeralStorage');
+      expectResourceFieldsType('ephemeralStorage', 'capacity');
+      expectResourceCapacityValue('ephemeralStorage', 'requested', ['0', 'MiB']);
       await expectResourceCapacityUnits('ephemeralStorage', 'requested', ['MiB', 'GiB', 'TiB']);
-      expectResourceCapacityValue(this, 'ephemeralStorage', 'limit', ['1', 'GiB']);
+      expectResourceCapacityValue('ephemeralStorage', 'limit', ['1', 'GiB']);
       await expectResourceCapacityUnits('ephemeralStorage', 'limit', ['MiB', 'GiB', 'TiB']);
     });
 
     it('has validation error when requested cpu value is negative', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '-3');
-      await inputResourceTextValue(this, 'cpu', 'limit', '');
+      await inputResourceTextValue('cpu', 'requested', '-3');
+      await inputResourceTextValue('cpu', 'limit', '');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.have.class('has-error');
     });
 
     it('has validation error when requested cpu value is zero', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '0');
-      await inputResourceTextValue(this, 'cpu', 'limit', '');
+      await inputResourceTextValue('cpu', 'requested', '0');
+      await inputResourceTextValue('cpu', 'limit', '');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.have.class('has-error');
     });
 
     it('has validation error when requested cpu value is empty', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '');
-      await inputResourceTextValue(this, 'cpu', 'limit', '');
+      await inputResourceTextValue('cpu', 'requested', '');
+      await inputResourceTextValue('cpu', 'limit', '');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.have.class('has-error');
     });
 
     it('has no validation error when requested cpu value is positive', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '0.5');
-      await inputResourceTextValue(this, 'cpu', 'limit', '');
+      await inputResourceTextValue('cpu', 'requested', '0.5');
+      await inputResourceTextValue('cpu', 'limit', '');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.not.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.not.have.class('has-error');
     });
 
     it('has validation error when requested cpu value is larger than limit cpu value', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '3');
-      await inputResourceTextValue(this, 'cpu', 'limit', '1');
+      await inputResourceTextValue('cpu', 'requested', '3');
+      await inputResourceTextValue('cpu', 'limit', '1');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.have.class('has-error');
-      expect(getResourceField(this, 'cpu', 'limit')).to.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.have.class('has-error');
+      expect(getResourceField('cpu', 'limit')).to.have.class('has-error');
     });
 
     it('has no validation error when requested cpu value is equal to limit cpu value', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '1');
-      await inputResourceTextValue(this, 'cpu', 'limit', '1');
+      await inputResourceTextValue('cpu', 'requested', '1');
+      await inputResourceTextValue('cpu', 'limit', '1');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.not.have.class('has-error');
-      expect(getResourceField(this, 'cpu', 'limit')).to.not.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.not.have.class('has-error');
+      expect(getResourceField('cpu', 'limit')).to.not.have.class('has-error');
     });
 
     it('has no validation error when requested cpu value is smaller to limit cpu value', async function () {
-      await render(this);
+      await renderComponent();
 
-      await inputResourceTextValue(this, 'cpu', 'requested', '1');
-      await inputResourceTextValue(this, 'cpu', 'limit', '2');
+      await inputResourceTextValue('cpu', 'requested', '1');
+      await inputResourceTextValue('cpu', 'limit', '2');
 
-      expect(getResourceField(this, 'cpu', 'requested')).to.not.have.class('has-error');
-      expect(getResourceField(this, 'cpu', 'limit')).to.not.have.class('has-error');
+      expect(getResourceField('cpu', 'requested')).to.not.have.class('has-error');
+      expect(getResourceField('cpu', 'limit')).to.not.have.class('has-error');
     });
 
     [{
@@ -170,23 +163,23 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
         if (invalidFor.includes(resourceName)) {
           it(`has validation error when requested ${resourceDescription} value is ${valueDescription}`,
             async function () {
-              await render(this);
+              await renderComponent();
 
-              await inputResourceCapacityValue(this, resourceName, 'requested', value);
-              await inputResourceCapacityValue(this, resourceName, 'limit', ['', 'MiB']);
+              await inputResourceCapacityValue(resourceName, 'requested', value);
+              await inputResourceCapacityValue(resourceName, 'limit', ['', 'MiB']);
 
-              expect(getResourceField(this, resourceName, 'requested'))
+              expect(getResourceField(resourceName, 'requested'))
                 .to.have.class('has-error');
             });
         } else {
           it(`has no validation error when requested ${resourceDescription} value is ${valueDescription}`,
             async function () {
-              await render(this);
+              await renderComponent();
 
-              await inputResourceCapacityValue(this, resourceName, 'requested', value);
-              await inputResourceCapacityValue(this, resourceName, 'limit', ['', 'MiB']);
+              await inputResourceCapacityValue(resourceName, 'requested', value);
+              await inputResourceCapacityValue(resourceName, 'limit', ['', 'MiB']);
 
-              expect(getResourceField(this, resourceName, 'requested'))
+              expect(getResourceField(resourceName, 'requested'))
                 .to.not.have.class('has-error');
             });
         }
@@ -216,20 +209,20 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
       }].forEach(({ comparisonDescription, hasError, values }) => {
         it(`has${hasError ? '' : ' no'} validation error when requested ${resourceDescription} value ${comparisonDescription} limit ${resourceDescription} value`,
           async function () {
-            await render(this);
+            await renderComponent();
 
-            await inputResourceCapacityValue(this, resourceName, 'requested', values[0]);
-            await inputResourceCapacityValue(this, resourceName, 'limit', values[1]);
+            await inputResourceCapacityValue(resourceName, 'requested', values[0]);
+            await inputResourceCapacityValue(resourceName, 'limit', values[1]);
 
-            const $requestedField = getResourceField(this, resourceName, 'requested');
-            const $limitField = getResourceField(this, resourceName, 'limit');
+            const requestedField = getResourceField(resourceName, 'requested');
+            const limitField = getResourceField(resourceName, 'limit');
 
             if (hasError) {
-              expect($requestedField).to.have.class('has-error');
-              expect($limitField).to.have.class('has-error');
+              expect(requestedField).to.have.class('has-error');
+              expect(limitField).to.have.class('has-error');
             } else {
-              expect($requestedField).to.not.have.class('has-error');
-              expect($limitField).to.not.have.class('has-error');
+              expect(requestedField).to.not.have.class('has-error');
+              expect(limitField).to.not.have.class('has-error');
             }
           });
       });
@@ -243,65 +236,64 @@ describe('Integration | Utility | workflow visualiser/task resources fields', fu
         );
         this.get('rootGroup').changeMode('view');
 
-        await render(this);
+        await renderComponent();
 
-        expect(this.$(`.${resourceName}Limit-field .field-component`)).to.not.exist;
-        expect(this.$(`.${resourceName}LimitUnlimitedDesc-field .field-component`).text().trim())
-          .to.equal('Unlimited');
+        expect(find(`.${resourceName}Limit-field .field-component`)).to.not.exist;
+        expect(
+          find(`.${resourceName}LimitUnlimitedDesc-field .field-component`)
+          .textContent.trim()
+        ).to.equal('Unlimited');
       });
     });
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
 }
 
 function getResourceFieldSelector(resourceName, resourceBoundary) {
   return `.${resourceName}${_.upperFirst(resourceBoundary)}-field`;
 }
 
-function getResourceField(testCase, resourceName, resourceBoundary) {
-  return testCase.$(getResourceFieldSelector(resourceName, resourceBoundary));
+function getResourceField(resourceName, resourceBoundary) {
+  return find(getResourceFieldSelector(resourceName, resourceBoundary));
 }
 
-function expectResourceFieldsLabels(testCase, resourceName) {
-  const $requestedField = getResourceField(testCase, resourceName, 'requested');
-  const $limitField = getResourceField(testCase, resourceName, 'limit');
-  expect($requestedField.find('.control-label').text().trim())
+function expectResourceFieldsLabels(resourceName) {
+  const requestedField = getResourceField(resourceName, 'requested');
+  const limitField = getResourceField(resourceName, 'limit');
+  expect(requestedField.querySelector('.control-label').textContent.trim())
     .to.equal('Requested:');
-  expect($limitField.find('.control-label').text().trim())
+  expect(limitField.querySelector('.control-label').textContent.trim())
     .to.equal('Limit:');
 }
 
-function expectResourceFieldsType(testCase, resourceName, type) {
-  const $requestedField = getResourceField(testCase, resourceName, 'requested');
-  const $limitField = getResourceField(testCase, resourceName, 'limit');
+function expectResourceFieldsType(resourceName, type) {
+  const requestedField = getResourceField(resourceName, 'requested');
+  const limitField = getResourceField(resourceName, 'limit');
   const className = `${type}-field-renderer`;
-  expect($requestedField).to.have.class(className);
-  expect($limitField).to.have.class(className);
+  expect(requestedField).to.have.class(className);
+  expect(limitField).to.have.class(className);
 }
 
 function expectResourceTextValue(
-  testCase,
   resourceName,
   resourceBoundary,
   expectedValue
 ) {
-  const $field = getResourceField(testCase, resourceName, resourceBoundary);
-  expect($field.find('.form-control')).to.have.value(expectedValue);
+  const field = getResourceField(resourceName, resourceBoundary);
+  expect(field.querySelector('.form-control')).to.have.value(expectedValue);
 }
 
 function expectResourceCapacityValue(
-  testCase,
   resourceName,
   resourceBoundary,
   [expectedNumber, expectedUnit]
 ) {
-  const $field = getResourceField(testCase, resourceName, resourceBoundary);
-  expect($field.find('input')).to.have.value(expectedNumber);
-  expect($field.find('.ember-power-select-trigger').text())
+  const field = getResourceField(resourceName, resourceBoundary);
+  expect(field.querySelector('input')).to.have.value(expectedNumber);
+  expect(field.querySelector('.ember-power-select-trigger').textContent)
     .to.contain(expectedUnit);
 }
 
@@ -311,25 +303,24 @@ async function expectResourceCapacityUnits(
   expectedUnits
 ) {
   await clickTrigger(getResourceFieldSelector(resourceName, resourceBoundary));
-  const $options = $('.ember-power-select-option');
-  expect($options).to.have.length(expectedUnits.length);
+  const options = document.querySelectorAll('.ember-power-select-option');
+  expect(options).to.have.length(expectedUnits.length);
   expectedUnits.forEach((unit, idx) => {
-    expect($options.eq(idx).text().trim()).to.equal(unit);
+    expect(options[idx].textContent.trim()).to.equal(unit);
   });
 }
 
-async function inputResourceTextValue(testCase, resourceName, resourceBoundary, value) {
-  const $field = getResourceField(testCase, resourceName, resourceBoundary);
-  await fillIn($field.find('.form-control')[0], value);
+async function inputResourceTextValue(resourceName, resourceBoundary, value) {
+  const field = getResourceField(resourceName, resourceBoundary);
+  await fillIn(field.querySelector('.form-control'), value);
 }
 
 async function inputResourceCapacityValue(
-  testCase,
   resourceName,
   resourceBoundary,
   [valueNumber, valueUnit]
 ) {
-  const $field = getResourceField(testCase, resourceName, resourceBoundary);
-  await fillIn($field.find('input')[0], valueNumber);
-  await selectChoose($field[0], valueUnit);
+  const field = getResourceField(resourceName, resourceBoundary);
+  await fillIn(field.querySelector('input'), valueNumber);
+  await selectChoose(field, valueUnit);
 }

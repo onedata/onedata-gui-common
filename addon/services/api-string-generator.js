@@ -8,8 +8,8 @@
  */
 
 import Service from '@ember/service';
-import pupa from 'npm:pupa';
-import shellEscape from 'npm:shell-escape';
+import pupa from 'pupa';
+import shellEscape from 'shell-escape';
 
 export default Service.extend({
   /**

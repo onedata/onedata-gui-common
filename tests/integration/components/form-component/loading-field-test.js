@@ -1,67 +1,51 @@
 import { expect } from 'chai';
-import { describe, it, beforeEach, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { describe, it, beforeEach } from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import LoadingField from 'onedata-gui-common/utils/form-component/loading-field';
 import { setProperties } from '@ember/object';
 import { Promise, resolve, reject } from 'rsvp';
 import PromiseObject from 'onedata-gui-common/utils/ember/promise-object';
-import wait from 'ember-test-helpers/wait';
-import TestAdapter from '@ember/test/adapter';
-import Ember from 'ember';
+import { suppressRejections } from '../../../helpers/suppress-rejections';
 
 describe('Integration | Component | form component/loading field', function () {
-  setupComponentTest('form-component/loading-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    this.originalLoggerError = Ember.Logger.error;
-    this.originalTestAdapterException = TestAdapter.exception;
-    Ember.Logger.error = function () {};
-    Ember.Test.adapter.exception = function () {};
-
     this.set('field', LoadingField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       loadingText: 'Loading...',
     }));
   });
 
-  afterEach(function () {
-    Ember.Logger.error = this.originalLoggerError;
-    Ember.Test.adapter.exception = this.originalTestAdapterException;
-  });
-
   it(
     'has class "loading-field"',
-    function () {
-      this.render(hbs `{{form-component/loading-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.loading-field')).to.exist;
+      expect(find('.loading-field')).to.exist;
     }
   );
 
   it(
     'shows spinner and loading text when loadingProxy is pending',
-    function () {
+    async function () {
       this.set('field.loadingProxy', PromiseObject.create({
         promise: new Promise(() => {}),
       }));
 
-      this.render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.spin-spinner')).to.exist;
-          expect(this.$('.loading-text').text().trim()).to.equal('Loading...');
-          expect(this.$('.resource-load-error')).to.not.exist;
-        });
+      expect(find('.spin-spinner')).to.exist;
+      expect(find('.loading-text').textContent.trim()).to.equal('Loading...');
+      expect(find('.resource-load-error')).to.not.exist;
     }
   );
 
   it(
     'shows only spinner when loadingProxy is pending and loading text is undefined',
-    function () {
+    async function () {
       setProperties(this.get('field'), {
         loadingProxy: PromiseObject.create({
           promise: new Promise(() => {}),
@@ -69,45 +53,39 @@ describe('Integration | Component | form component/loading field', function () {
         loadingText: undefined,
       });
 
-      this.render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.spin-spinner')).to.exist;
-          expect(this.$('.loading-text')).to.not.exist;
-        });
+      expect(find('.spin-spinner')).to.exist;
+      expect(find('.loading-text')).to.not.exist;
     }
   );
 
   it(
     'shows reasource load error when loadingProxy is rejected',
-    function () {
+    async function () {
+      suppressRejections();
       this.set('field.loadingProxy', PromiseObject.create({
         promise: reject('err'),
       }));
 
-      this.render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('.resource-load-error')).to.exist;
-          expect(this.$('.resource-load-error .error-details').text().trim())
-            .to.equal('"err"');
-        });
+      expect(find('.resource-load-error')).to.exist;
+      expect(find('.resource-load-error .error-details').textContent.trim())
+        .to.equal('"err"');
     }
   );
 
   it(
     'does not show anything when loadingProxy is fulfilled',
-    function () {
+    async function () {
       this.set('field.loadingProxy', PromiseObject.create({
         promise: resolve(),
       }));
 
-      this.render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `{{form-component/loading-field field=field}}`);
 
-      return wait()
-        .then(() => expect(this.$('.loading-field *')).to.not.exist);
+      expect(find('.loading-field *')).to.not.exist;
     }
   );
 
@@ -115,7 +93,7 @@ describe('Integration | Component | form component/loading field', function () {
     ['md', 'xs'],
     ['sm', 'xxs'],
   ].forEach(([size, spinnerClass]) => {
-    it(`uses "${spinnerClass}" spinner size for "${size}" field size`, function () {
+    it(`uses "${spinnerClass}" spinner size for "${size}" field size`, async function () {
       setProperties(this.get('field'), {
         loadingProxy: PromiseObject.create({
           promise: new Promise(() => {}),
@@ -123,9 +101,9 @@ describe('Integration | Component | form component/loading field', function () {
         size: size,
       });
 
-      this.render(hbs `{{form-component/loading-field field=field}}`);
+      await render(hbs `{{form-component/loading-field field=field}}`);
 
-      expect(this.$('.spinner-container')).to.have.class(spinnerClass);
+      expect(find('.spinner-container')).to.have.class(spinnerClass);
     });
   });
 });

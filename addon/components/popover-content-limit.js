@@ -1,6 +1,6 @@
 /**
  * Modifies child element of popover to be auto resized to fit screen with a scrollbar.
- * 
+ *
  * @module components/popover-content-limit
  * @author Jakub Liput
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -10,7 +10,7 @@
 import Component from '@ember/component';
 import layout from '../templates/components/popover-content-limit';
 import { computed, observer } from '@ember/object';
-import PerfectScrollbar from 'npm:perfect-scrollbar';
+import PerfectScrollbar from 'perfect-scrollbar';
 import { scheduleOnce } from '@ember/runloop';
 
 export default Component.extend({

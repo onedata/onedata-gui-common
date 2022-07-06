@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, blur, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DatetimeField from 'onedata-gui-common/utils/form-component/datetime-field';
-import { blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import OneDatetimePickerHelper from '../../../helpers/one-datetime-picker';
 import moment from 'moment';
@@ -12,9 +12,7 @@ import { set } from '@ember/object';
 const datetimeFormat = 'YYYY/MM/DD H:mm';
 
 describe('Integration | Component | form component/datetime field', function () {
-  setupComponentTest('form-component/datetime-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', DatetimeField.create());
@@ -22,20 +20,20 @@ describe('Integration | Component | form component/datetime field', function () 
 
   it(
     'has class "datetime-field"',
-    function () {
-      this.render(hbs `{{form-component/datetime-field field=textField}}`);
+    async function () {
+      await render(hbs `{{form-component/datetime-field field=textField}}`);
 
-      expect(this.$('.datetime-field')).to.exist;
+      expect(find('.datetime-field')).to.exist;
     }
   );
 
   it(
     'renders text input and datetime picker',
-    function () {
-      this.render(hbs `{{form-component/datetime-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      expect(this.$('input')).to.exist;
-      const picker = new OneDatetimePickerHelper(this.$('input'));
+      expect(find('input')).to.exist;
+      const picker = new OneDatetimePickerHelper(find('input'));
       return picker.openPicker()
         .then(() => expect(picker.getPickerElement()).to.exist);
     }
@@ -43,23 +41,23 @@ describe('Integration | Component | form component/datetime field', function () 
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      expect(this.$('input')).to.have.attr('disabled');
+      expect(find('input').disabled).to.be.true;
     }
   );
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      const picker = new OneDatetimePickerHelper(this.$('input'));
+      const picker = new OneDatetimePickerHelper(find('input'));
       return picker.openPicker(true)
         .then(() => blur('input'))
         .then(() => expect(focusLostSpy).to.be.calledOnce);
@@ -68,12 +66,12 @@ describe('Integration | Component | form component/datetime field', function () 
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/datetime-field field=field}}`);
+      await render(hbs `{{form-component/datetime-field field=field}}`);
 
-      const picker = new OneDatetimePickerHelper(this.$('input'));
+      const picker = new OneDatetimePickerHelper(find('input'));
       return picker.selectToday()
         .then(() => {
           expect(valueChangedSpy).to.be.calledOnce;
@@ -82,31 +80,31 @@ describe('Integration | Component | form component/datetime field', function () 
     }
   );
 
-  it('sets input value to date specified in field object', function () {
+  it('sets input value to date specified in field object', async function () {
     const date = new Date();
     this.set('field.value', date);
 
-    this.render(hbs `{{form-component/datetime-field field=field}}`);
+    await render(hbs `{{form-component/datetime-field field=field}}`);
 
     const expectedValue = moment(date).format(datetimeFormat);
-    expect(this.$('input').val()).to.equal(expectedValue);
+    expect(find('input').value).to.equal(expectedValue);
   });
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `{{form-component/datetime-field field=field fieldId="abc"}}`);
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `{{form-component/datetime-field field=field fieldId="abc"}}`);
 
-    expect(this.$('input#abc')).to.exist;
+    expect(find('input#abc')).to.exist;
   });
 
-  it('renders raw datetime value when field is in "view" mode', function () {
+  it('renders raw datetime value when field is in "view" mode', async function () {
     const field = this.get('field');
     const date = new Date();
     set(field, 'value', date);
     field.changeMode('view');
 
-    this.render(hbs `{{form-component/datetime-field field=field}}`);
+    await render(hbs `{{form-component/datetime-field field=field}}`);
 
-    expect(this.$().text().trim()).to.equal(moment(date).format(datetimeFormat));
-    expect(this.$('input')).to.not.exist;
+    expect(this.element.textContent.trim()).to.equal(moment(date).format(datetimeFormat));
+    expect(find('input')).to.not.exist;
   });
 });

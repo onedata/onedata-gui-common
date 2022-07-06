@@ -15,7 +15,7 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 import _ from 'lodash';
-import smoothscroll from 'npm:smoothscroll-polyfill';
+import smoothscroll from 'smoothscroll-polyfill';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
 export default Route.extend(ApplicationRouteMixin, {

@@ -1,13 +1,20 @@
 import { expect } from 'chai';
 import { describe, it, context, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import wait from 'ember-test-helpers/wait';
-import { click, fillIn, focus, blur, find, findAll } from 'ember-native-dom-helpers';
-import { clickTrigger, selectChoose } from '../../../../../helpers/ember-power-select';
-import $ from 'jquery';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
+import {
+  render,
+  settled,
+  click,
+  fillIn,
+  focus,
+  blur,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 
 const componentClass = 'store-form';
 
@@ -118,9 +125,7 @@ const storeTypesWithGenericConfig = storeTypes
   .filter(({ type }) => type !== 'range' && type !== 'timeSeries');
 
 describe('Integration | Component | modals/workflow visualiser/store modal/store form', function () {
-  setupComponentTest('modals/workflow-visualiser/store-modal/store-form', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -130,10 +135,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
   });
 
   it(`has class "${componentClass}"`, async function () {
-    this.render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
+    await render(hbs `{{modals/workflow-visualiser/store-modal/store-form}}`);
 
-    expect(this.$().children()).to.have.class(componentClass)
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class(componentClass);
   });
 
   context('in "create" mode', function () {
@@ -141,92 +146,101 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('mode', 'create');
     });
 
-    it('has class "mode-create', async function () {
-      await render(this);
+    it('has class "mode-create', async function (done) {
+      await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('mode-create');
+      expect(find(`.${componentClass}`)).to.have.class('mode-create');
+      done();
     });
 
-    it('does not render "id" and "instance id" fields', async function () {
-      await render(this);
+    it('does not render "id" and "instance id" fields', async function (done) {
+      await renderComponent();
 
-      expect(this.$('.id-field')).to.not.exist;
-      expect(this.$('.instanceId-field')).to.not.exist;
+      expect(find('.id-field')).to.not.exist;
+      expect(find('.instanceId-field')).to.not.exist;
+      done();
     });
 
-    it('renders empty "name" field', async function () {
-      await render(this);
+    it('renders empty "name" field', async function (done) {
+      await renderComponent();
 
-      const $label = this.$('.name-field .control-label');
-      const $field = this.$('.name-field .form-control');
-      expect($label.text().trim()).to.equal('Name:');
-      expect($field).to.have.attr('type', 'text');
-      expect($field).to.have.value('');
+      const label = find('.name-field .control-label');
+      const field = find('.name-field .form-control');
+      expect(label.textContent.trim()).to.equal('Name:');
+      expect(field.type).to.equal('text');
+      expect(field.value).to.equal('');
+      done();
     });
 
-    it('marks "name" field as invalid when it is empty', async function () {
-      await render(this);
+    it('marks "name" field as invalid when it is empty', async function (done) {
+      await renderComponent();
 
       await focus('.name-field .form-control');
       await blur('.name-field .form-control');
 
-      expect(this.$('.name-field')).to.have.class('has-error');
+      expect(find('.name-field')).to.have.class('has-error');
+      done();
     });
 
-    it('marks "name" field as valid when it is not empty', async function () {
-      await render(this);
+    it('marks "name" field as valid when it is not empty', async function (done) {
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'somename');
 
-      expect(this.$('.name-field')).to.have.class('has-success');
+      expect(find('.name-field')).to.have.class('has-success');
+      done();
     });
 
-    it('renders empty "description" field', async function () {
-      await render(this);
+    it('renders empty "description" field', async function (done) {
+      await renderComponent();
 
-      const $label = this.$('.description-field .control-label');
-      const $field = this.$('.description-field .form-control');
-      expect($label.text().trim()).to.equal('Description (optional):');
-      expect($field).to.match('textarea');
-      expect($field).to.have.value('');
+      const label = find('.description-field .control-label');
+      const field = find('.description-field .form-control');
+      expect(label.textContent.trim()).to.equal('Description (optional):');
+      expect(field.matches('textarea')).to.be.true;
+      expect(field.value).to.equal('');
+      done();
     });
 
-    it('marks "description" field as valid when it is empty', async function () {
-      await render(this);
+    it('marks "description" field as valid when it is empty', async function (done) {
+      await renderComponent();
 
       await focus('.description-field .form-control');
       await blur('.description-field .form-control');
 
-      expect(this.$('.description-field')).to.have.class('has-success');
+      expect(find('.description-field')).to.have.class('has-success');
+      done();
     });
 
-    it('renders "type" field with preselected "list" option', async function () {
-      await render(this);
+    it('renders "type" field with preselected "list" option', async function (done) {
+      await renderComponent();
 
-      const $label = this.$('.type-field .control-label').eq(0);
-      const $field = this.$('.type-field .dropdown-field-trigger').eq(0);
-      expect($label.text().trim()).to.equal('Type:');
-      expect($field.text().trim()).to.equal('List');
+      const label = find('.type-field .control-label');
+      const field = find('.type-field .dropdown-field-trigger');
+      expect(label.textContent.trim()).to.equal('Type:');
+      expect(field.textContent.trim()).to.equal('List');
+      done();
     });
 
-    it('provides all needed options to choose in "type" field', async function () {
-      await render(this);
+    it('provides all needed options to choose in "type" field', async function (done) {
+      await renderComponent();
 
       await clickTrigger('.type-field');
 
-      const $options = $('.ember-power-select-option');
-      expect($options).to.have.length(storeTypes.length);
+      const options = document.querySelectorAll('.ember-power-select-option');
+      expect(options).to.have.length(storeTypes.length);
       storeTypes.forEach(({ label }, idx) =>
-        expect($options.eq(idx).text().trim()).to.equal(label)
+        expect(options[idx].textContent.trim()).to.equal(label)
       );
+      done();
     });
 
-    it('notifies about changes of values and validation state', async function () {
+    it('notifies about changes of values and validation state', async function (done) {
       const changeSpy = this.get('changeSpy');
 
-      await render(this);
+      await renderComponent();
 
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: '',
@@ -240,10 +254,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
         isValid: false,
       });
-      changeSpy.reset();
+      changeSpy.resetHistory();
 
       await fillIn('.name-field .form-control', 'someName');
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
@@ -257,6 +271,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
         isValid: true,
       });
+      done();
     });
 
     storeTypesWithGenericConfig.forEach(({
@@ -267,41 +282,43 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       dataSpecConfigKey,
       defaultDataTypeLabel,
     }) => {
-      it(`shows generic configuration fields for store "${label}"`, async function () {
-        await render(this);
+      it(`shows generic configuration fields for store "${label}"`, async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', label);
 
         expectExpandedConfig('generic');
 
-        const $dataTypeField = this.$('.dataSpec-field .type-field');
-        expect($dataTypeField.find('.control-label').text().trim()).to.equal('Data type:');
-        expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
+        const dataTypeField = find('.dataSpec-field .type-field');
+        expect(dataTypeField.querySelector('.control-label').textContent.trim())
+          .to.equal('Data type:');
+        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(defaultDataTypeLabel || availableDataTypeLabels[0]);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
 
           await clickTrigger('.dataSpec-field .type-field');
 
-          const $options = $('.ember-power-select-option');
-          expect($options).to.have.length(availableDataTypeLabels.length);
+          const options = document.querySelectorAll('.ember-power-select-option');
+          expect(options).to.have.length(availableDataTypeLabels.length);
           availableDataTypeLabels.forEach((label, idx) =>
-            expect($options.eq(idx).text().trim()).to.equal(label)
+            expect(options[idx].textContent.trim()).to.equal(label)
           );
         }
 
-        const $defaultValueField = this.$('.defaultValue-field');
-        expect($defaultValueField.find('.control-label').text().trim())
+        const defaultValueField = find('.defaultValue-field');
+        expect(defaultValueField.querySelector('.control-label').textContent.trim())
           .to.equal('Default value:');
-        expect($defaultValueField.find('.form-control')).to.have.value('');
+        expect(defaultValueField.querySelector('.form-control').value).to.equal('');
+        done();
       });
 
-      it(`allows to configure new "${label}" store`, async function () {
+      it(`allows to configure new "${label}" store`, async function (done) {
         const changeSpy = this.get('changeSpy');
 
-        await render(this);
+        await renderComponent();
 
         await fillIn('.name-field .form-control', 'someName');
         await fillIn('.description-field .form-control', 'someDescription');
@@ -313,7 +330,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.defaultValue-field .form-control', '"someDefault"');
         await click('.needsUserInput-field .one-way-toggle');
 
-        expect(this.$('.has-error')).to.not.exist;
+        expect(find('.has-error')).to.not.exist;
         expect(changeSpy).to.be.calledWith({
           data: {
             name: 'someName',
@@ -327,34 +344,36 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           },
           isValid: true,
         });
+        done();
       });
     });
 
-    it('shows range configuration fields for store "Range"', async function () {
-      await render(this);
+    it('shows range configuration fields for store "Range"', async function (done) {
+      await renderComponent();
 
       await selectChoose('.type-field', 'Range');
 
       expectExpandedConfig('range');
 
-      const $rangeStartField = this.$('.rangeStart-field');
-      const $rangeEndField = this.$('.rangeEnd-field');
-      const $rangeStepField = this.$('.rangeStep-field');
-      expect($rangeStartField.find('.control-label').text().trim())
+      const rangeStartField = find('.rangeStart-field');
+      const rangeEndField = find('.rangeEnd-field');
+      const rangeStepField = find('.rangeStep-field');
+      expect(rangeStartField.querySelector('.control-label').textContent.trim())
         .to.equal('Range start:');
-      expect($rangeStartField.find('.form-control')).to.have.value('0');
-      expect($rangeEndField.find('.control-label').text().trim())
+      expect(rangeStartField.querySelector('.form-control').value).to.equal('0');
+      expect(rangeEndField.querySelector('.control-label').textContent.trim())
         .to.equal('Range end:');
-      expect($rangeEndField.find('.form-control')).to.have.value('');
-      expect($rangeStepField.find('.control-label').text().trim())
+      expect(rangeEndField.querySelector('.form-control').value).to.equal('');
+      expect(rangeStepField.querySelector('.control-label').textContent.trim())
         .to.equal('Range step:');
-      expect($rangeStepField.find('.form-control')).to.have.value('1');
+      expect(rangeStepField.querySelector('.form-control').value).to.equal('1');
+      done();
     });
 
-    it('allows to configure new "Range" store', async function () {
+    it('allows to configure new "Range" store', async function (done) {
       const changeSpy = this.get('changeSpy');
 
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.description-field .form-control', 'someDescription');
@@ -363,7 +382,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       await fillIn('.rangeEnd-field .form-control', '10');
       await fillIn('.rangeStep-field .form-control', '2');
 
-      expect(this.$('.has-error')).to.not.exist;
+      expect(find('.has-error')).to.not.exist;
       expect(changeSpy).to.be.calledWith({
         data: {
           name: 'someName',
@@ -378,11 +397,12 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
         isValid: true,
       });
+      done();
     });
 
     it('has invalid start, end and step fields in "Range" store, when are empty',
-      async function () {
-        await render(this);
+      async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '');
@@ -390,13 +410,14 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '');
 
         ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(this.$(`.${fieldName}-field`)).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
+        done();
       });
 
     it('has invalid start, end and step fields in "Range" store, when are floats',
-      async function () {
-        await render(this);
+      async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '0.5');
@@ -404,72 +425,77 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         await fillIn('.rangeStep-field .form-control', '1.5');
 
         ['rangeStart', 'rangeEnd', 'rangeStep'].forEach(fieldName =>
-          expect(this.$(`.${fieldName}-field`)).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
+        done();
       });
 
     it('has invalid start and end fields in "Range" store, when are equal',
-      async function () {
-        await render(this);
+      async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '2');
         await fillIn('.rangeEnd-field .form-control', '2');
 
         ['rangeStart', 'rangeEnd'].forEach(fieldName =>
-          expect(this.$(`.${fieldName}-field`)).to.have.class('has-error')
+          expect(find(`.${fieldName}-field`)).to.have.class('has-error')
         );
-        expect(this.$('.rangeStep-field')).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
+        done();
       });
 
     it('has invalid start and end fields in "Range" store, when start > end and step > 0',
-      async function () {
-        await render(this);
+      async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '3');
         await fillIn('.rangeEnd-field .form-control', '2');
         await fillIn('.rangeStep-field .form-control', '1');
 
-        expect(this.$('.rangeStart-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
           'This field must be less than the range end when the range step is positive'
         );
-        expect(this.$('.rangeEnd-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
           'This field must be greater than the range start when the range step is positive'
         );
-        expect(this.$('.rangeStep-field')).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
+        done();
       });
 
-    it('has invalid start and end fields in "Range" store, when start > end and step > 0',
-      async function () {
-        await render(this);
+    it('has invalid start and end fields in "Range" store, when start < end and step < 0',
+      async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStart-field .form-control', '2');
         await fillIn('.rangeEnd-field .form-control', '3');
         await fillIn('.rangeStep-field .form-control', '-1');
 
-        expect(this.$('.rangeStart-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeStart-field .field-message').textContent.trim()).to.equal(
           'This field must be greater than the range end when the range step is negative'
         );
-        expect(this.$('.rangeEnd-field .field-message').text().trim()).to.equal(
+        expect(find('.rangeEnd-field .field-message').textContent.trim()).to.equal(
           'This field must be less than the range start when the range step is negative'
         );
-        expect(this.$('.rangeStep-field')).to.not.have.class('has-error');
+        expect(find('.rangeStep-field')).to.not.have.class('has-error');
+        done();
       });
 
     it('has invalid step field in "Range" store, when step is 0',
-      async function () {
-        await render(this);
+      async function (done) {
+        await renderComponent();
 
         await selectChoose('.type-field', 'Range');
         await fillIn('.rangeStep-field .form-control', '     0 ');
 
-        expect(this.$('.rangeStep-field')).to.have.class('has-error');
+        expect(find('.rangeStep-field')).to.have.class('has-error');
+        done();
       });
 
     it('shows time series configuration fields for store "Time series"', async function (done) {
-      await render(this);
+      await renderComponent();
 
       await selectChoose('.type-field', 'Time series');
 
@@ -482,7 +508,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     it('allows to configure new "Time series" store', async function (done) {
       const changeSpy = this.get('changeSpy');
 
-      await render(this);
+      await renderComponent();
 
       await fillIn('.name-field .form-control', 'someName');
       await fillIn('.description-field .form-control', 'someDescription');
@@ -523,10 +549,10 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
     });
 
     dataTypes.forEach(({ label, dataSpec }) => {
-      it(`allows to configure store with "${label}" data type`, async function () {
+      it(`allows to configure store with "${label}" data type`, async function (done) {
         const changeSpy = this.get('changeSpy');
 
-        await render(this);
+        await renderComponent();
 
         await selectChoose('.type-field', 'List');
         await selectChoose('.dataSpec-field .type-field', label);
@@ -544,16 +570,18 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           },
           isValid: false,
         });
+        done();
       });
     });
 
-    it('renders unchecked "needs user input" toggle', async function () {
-      await render(this);
+    it('renders unchecked "needs user input" toggle', async function (done) {
+      await renderComponent();
 
-      const $label = this.$('.needsUserInput-field .control-label');
-      const $toggle = this.$('.needsUserInput-field .one-way-toggle');
-      expect($label.text().trim()).to.equal('Needs user input:');
-      expect($toggle).to.not.have.class('checked');
+      const label = find('.needsUserInput-field .control-label');
+      const toggle = find('.needsUserInput-field .one-way-toggle');
+      expect(label.textContent.trim()).to.equal('Needs user input:');
+      expect(toggle).to.not.have.class('checked');
+      done();
     });
 
     itHasAllFieldsEnabledByDefault();
@@ -565,10 +593,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('mode', 'edit');
     });
 
-    it('has class "mode-edit', async function () {
-      await render(this);
+    it('has class "mode-edit', async function (done) {
+      await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('mode-edit');
+      expect(find(`.${componentClass}`)).to.have.class('mode-edit');
+      done();
     });
 
     storeTypesWithGenericConfig.forEach(({
@@ -578,7 +607,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       dataSpecConfigKey,
       disabledDataTypeSelection = false,
     }) => {
-      it(`fills fields with data of passed "${label}" store on init`, async function () {
+      it(`fills fields with data of passed "${label}" store on init`, async function (done) {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', Store.create({
           schemaId: 'store1id',
@@ -593,29 +622,30 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           requiresInitialContent: true,
         }));
 
-        await render(this);
+        await renderComponent();
 
         expectExpandedConfig('generic');
-        expect(this.$('.id-field .form-control')).to.have.value('store1id');
-        expect(this.$('.instanceId-field')).to.not.exist;
-        expect(this.$('.name-field .form-control')).to.have.value('store1');
-        expect(this.$('.description-field .form-control')).to.have.value('desc');
-        expect(this.$('.type-field .dropdown-field-trigger').eq(0).text().trim())
+        expect(find('.id-field .form-control').value).to.equal('store1id');
+        expect(find('.instanceId-field')).to.not.exist;
+        expect(find('.name-field .form-control').value).to.equal('store1');
+        expect(find('.description-field .form-control').value).to.equal('desc');
+        expect(find('.type-field .dropdown-field-trigger').textContent.trim())
           .to.equal(label);
-        const $dataTypeField = this.$('.dataSpec-field .type-field');
-        expect($dataTypeField.find('.dropdown-field-trigger').text().trim())
+        const dataTypeField = find('.dataSpec-field .type-field');
+        expect(dataTypeField.querySelector('.dropdown-field-trigger').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
         }
-        expect(this.$('.defaultValue-field .form-control')).to.have.value('"someDefault"');
-        expect(this.$('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
+        expect(find('.defaultValue-field .form-control').value).to.equal('"someDefault"');
+        expect(find('.needsUserInput-field .one-way-toggle')).to.have.class('checked');
+        done();
       });
     });
 
-    it('fills fields with data of passed "Range" store on init', async function () {
+    it('fills fields with data of passed "Range" store on init', async function (done) {
       this.set('store', Store.create({
         schemaId: 'store1id',
         instanceId: 'incorrect value that should not exist',
@@ -629,18 +659,19 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
       }));
 
-      await render(this);
+      await renderComponent();
 
       expectExpandedConfig('range');
-      expect(this.$('.id-field .form-control')).to.have.value('store1id');
-      expect(this.$('.instanceId-field')).to.not.exist;
-      expect(this.$('.name-field .form-control')).to.have.value('store1');
-      expect(this.$('.description-field .form-control')).to.have.value('desc');
-      expect(this.$('.type-field .dropdown-field-trigger').eq(0).text().trim())
+      expect(find('.id-field .form-control').value).to.equal('store1id');
+      expect(find('.instanceId-field')).to.not.exist;
+      expect(find('.name-field .form-control').value).to.equal('store1');
+      expect(find('.description-field .form-control').value).to.equal('desc');
+      expect(find('.type-field .dropdown-field-trigger').textContent.trim())
         .to.equal('Range');
-      expect(this.$('.rangeStart-field .form-control')).to.have.value('2');
-      expect(this.$('.rangeEnd-field .form-control')).to.have.value('6');
-      expect(this.$('.rangeStep-field .form-control')).to.have.value('3');
+      expect(find('.rangeStart-field .form-control').value).to.equal('2');
+      expect(find('.rangeEnd-field .form-control').value).to.equal('6');
+      expect(find('.rangeStep-field .form-control').value).to.equal('3');
+      done();
     });
 
     it('fills fields with data of passed "Time series" store on init', async function (done) {
@@ -667,7 +698,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
       }));
 
-      await render(this);
+      await renderComponent();
 
       expectExpandedConfig('timeSeries');
       expect(find('.id-field .form-control').value).to.equal('store1id');
@@ -689,7 +720,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     dataTypes.forEach(({ label, dataSpec }) => {
       it(`fills fields with data of passed store with "${label}" data type`,
-        async function () {
+        async function (done) {
           this.set('store', Store.create({
             type: 'list',
             config: {
@@ -697,26 +728,28 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
           }));
 
-          await render(this);
+          await renderComponent();
 
-          expect(
-            this.$('.dataSpec-field .type-field .dropdown-field-trigger').text().trim()
-          ).to.equal(label);
+          expect(find(
+            '.dataSpec-field .type-field .dropdown-field-trigger'
+          ).textContent.trim()).to.equal(label);
+          done();
         });
     });
 
-    it('does not update form values on passed store change', async function () {
+    it('does not update form values on passed store change', async function (done) {
       const store1 = this.set('store', Store.create({
         name: 'store1',
         description: 'desc',
         type: 'singleValue',
       }));
-      await render(this);
+      await renderComponent();
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
-      await wait();
+      await settled();
 
-      expect(this.$('.name-field .form-control')).to.have.value('store1');
+      expect(find('.name-field .form-control').value).to.equal('store1');
+      done();
     });
 
     itHasAllFieldsEnabledByDefault();
@@ -728,10 +761,11 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       this.set('mode', 'view');
     });
 
-    it('has class "mode-view', async function () {
-      await render(this);
+    it('has class "mode-view', async function (done) {
+      await renderComponent();
 
-      expect(this.$(`.${componentClass}`)).to.have.class('mode-view');
+      expect(find(`.${componentClass}`)).to.have.class('mode-view');
+      done();
     });
 
     storeTypesWithGenericConfig.forEach(({
@@ -741,7 +775,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
       dataSpecConfigKey,
       disabledDataTypeSelection = false,
     }) => {
-      it(`fills fields with data of passed "${label}" store`, async function () {
+      it(`fills fields with data of passed "${label}" store`, async function (done) {
         const selectedDataTypeLabel = availableDataTypeLabels[0];
         this.set('store', Store.create({
           schemaId: 'store1id',
@@ -756,35 +790,36 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
           requiresInitialContent: true,
         }));
 
-        await render(this);
+        await renderComponent();
 
-        expect(this.$('.field-edit-mode')).to.not.exist;
+        expect(find('.field-edit-mode')).to.not.exist;
         expectExpandedConfig('generic');
-        expect(this.$('.id-field .form-control')).to.have.value('store1id');
-        expect(this.$('.instanceId-field .form-control'))
-          .to.have.value('store1instanceId');
-        expect(this.$('.name-field .field-component').text().trim())
+        expect(find('.id-field .form-control').value).to.equal('store1id');
+        expect(find('.instanceId-field .form-control').value)
+          .to.equal('store1instanceId');
+        expect(find('.name-field .field-component').textContent.trim())
           .to.equal('store1');
-        expect(this.$('.description-field .field-component').text().trim())
+        expect(find('.description-field .field-component').textContent.trim())
           .to.equal('desc');
-        expect(this.$('.type-field .field-component').eq(0).text().trim())
+        expect(find('.type-field .field-component').textContent.trim())
           .to.equal(label);
-        const $dataTypeField = this.$('.dataSpec-field .type-field');
-        expect(this.$('.dataSpec-field .type-field .field-component').text().trim())
+        const dataTypeField = find('.dataSpec-field .type-field');
+        expect(dataTypeField.querySelector('.field-component').textContent.trim())
           .to.equal(selectedDataTypeLabel);
         if (disabledDataTypeSelection) {
-          expect($dataTypeField).to.have.class('field-disabled');
+          expect(dataTypeField).to.have.class('field-disabled');
         } else {
-          expect($dataTypeField).to.have.class('field-enabled');
+          expect(dataTypeField).to.have.class('field-enabled');
         }
-        expect(this.$('.defaultValue-field .form-control'))
-          .to.have.value('"someDefault"');
-        expect(this.$('.needsUserInput-field .one-way-toggle'))
+        expect(find('.defaultValue-field .form-control').value)
+          .to.equal('"someDefault"');
+        expect(find('.needsUserInput-field .one-way-toggle'))
           .to.have.class('checked');
+        done();
       });
     });
 
-    it('fills fields with data of passed "Range" store on init', async function () {
+    it('fills fields with data of passed "Range" store on init', async function (done) {
       this.set('store', Store.create({
         schemaId: 'store1id',
         instanceId: 'store1instanceId',
@@ -798,22 +833,23 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
       }));
 
-      await render(this);
+      await renderComponent();
 
-      expect(this.$('.field-edit-mode')).to.not.exist;
+      expect(find('.field-edit-mode')).to.not.exist;
       expectExpandedConfig('range');
-      expect(this.$('.id-field .form-control')).to.have.value('store1id');
-      expect(this.$('.instanceId-field .form-control'))
-        .to.have.value('store1instanceId');
-      expect(this.$('.name-field .field-component').text().trim())
+      expect(find('.id-field .form-control').value).to.equal('store1id');
+      expect(find('.instanceId-field .form-control').value)
+        .to.equal('store1instanceId');
+      expect(find('.name-field .field-component').textContent.trim())
         .to.equal('store1');
-      expect(this.$('.description-field .field-component').text().trim())
+      expect(find('.description-field .field-component').textContent.trim())
         .to.equal('desc');
-      expect(this.$('.type-field .field-component').eq(0).text().trim())
+      expect(find('.type-field .field-component').textContent.trim())
         .to.equal('Range');
-      expect(this.$('.rangeStart-field .field-component').text().trim()).to.equal('2');
-      expect(this.$('.rangeEnd-field .field-component').text().trim()).to.equal('6');
-      expect(this.$('.rangeStep-field .field-component').text().trim()).to.equal('3');
+      expect(find('.rangeStart-field .field-component').textContent.trim()).to.equal('2');
+      expect(find('.rangeEnd-field .field-component').textContent.trim()).to.equal('6');
+      expect(find('.rangeStep-field .field-component').textContent.trim()).to.equal('3');
+      done();
     });
 
     it('fills fields with data of passed "Time series" store on init', async function (done) {
@@ -840,7 +876,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
         },
       }));
 
-      await render(this);
+      await renderComponent();
 
       expect(find('.field-edit-mode')).to.not.exist;
       expectExpandedConfig('timeSeries');
@@ -863,7 +899,7 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
 
     dataTypes.forEach(({ label, dataSpec }) => {
       it(`fills fields with data of passed store with "${label}" data type`,
-        async function () {
+        async function (done) {
           this.set('store', Store.create({
             type: 'list',
             config: {
@@ -871,72 +907,77 @@ describe('Integration | Component | modals/workflow visualiser/store modal/store
             },
           }));
 
-          await render(this);
+          await renderComponent();
 
-          expect(this.$('.dataSpec-field .type-field .field-component').text().trim())
+          expect(find('.dataSpec-field .type-field .field-component').textContent.trim())
             .to.equal(label);
+          done();
         });
     });
 
-    it('updates form values on passed store change', async function () {
+    it('updates form values on passed store change', async function (done) {
       const store1 = this.set('store', {
         name: 'store1',
       });
-      await render(this);
+      await renderComponent();
 
       this.set('store', Object.assign({}, store1, { name: 'store2' }));
-      await wait();
+      await settled();
 
-      expect(this.$('.name-field .field-component').text().trim()).to.equal('store2');
+      expect(find('.name-field .field-component').textContent.trim()).to.equal('store2');
+      done();
     });
 
-    it('hides description field, when description is empty', async function () {
+    it('hides description field, when description is empty', async function (done) {
       this.set('store', {});
 
-      await render(this);
+      await renderComponent();
 
-      expect(this.$('.description-field')).to.not.exist;
+      expect(find('.description-field')).to.not.exist;
+      done();
     });
 
-    it('hides default value field, when default value is empty', async function () {
+    it('hides default value field, when default value is empty', async function (done) {
       this.set('store', { defaultInitialContent: null });
 
-      await render(this);
+      await renderComponent();
 
-      expect(this.$('.defaultValue-field')).to.not.exist;
+      expect(find('.defaultValue-field')).to.not.exist;
+      done();
     });
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{modals/workflow-visualiser/store-modal/store-form
+async function renderComponent() {
+  await render(hbs `{{modals/workflow-visualiser/store-modal/store-form
     mode=mode
     store=store
     isDisabled=isDisabled
     onChange=changeSpy
   }}`);
-  await wait();
 }
 
 function itHasAllFieldsEnabledByDefault() {
-  it('has all fields enabled by default', async function () {
-    await render(this);
+  it('has all fields enabled by default', async function (done) {
+    await renderComponent();
 
-    expect(this.$('.store-form')).to.have.class('form-enabled')
+    expect(find('.store-form')).to.have.class('form-enabled')
       .and.to.not.have.class('form-disabled');
-    expect(this.$('.field-disabled')).to.not.exist;
+    expect(find('.field-disabled')).to.not.exist;
+    done();
   });
 }
 
 function itAllowsToDisableAllFields() {
-  it('allows to disable all fields', async function () {
+  it('allows to disable all fields', async function (done) {
     this.set('isDisabled', true);
 
-    await render(this);
+    await renderComponent();
 
-    expect(this.$('.store-form')).to.have.class('form-disabled')
+    expect(find('.store-form')).to.have.class('form-disabled')
       .and.to.not.have.class('form-enabled');
-    expect(this.$('.field-enabled')).to.not.exist;
+    expect(find('.field-enabled')).to.not.exist;
+    done();
   });
 }
 
@@ -945,8 +986,8 @@ function expectExpandedConfig(configName) {
     .forEach((name) => {
       const collapse = find(`.${name}StoreConfig-collapse`);
       if (collapse) {
-        expect([...collapse.classList]).to.not.include('in');
+        expect(collapse).to.not.have.class('in');
       }
     });
-  expect([...find(`.${configName}StoreConfig-collapse`).classList]).to.include('in');
+  expect(find(`.${configName}StoreConfig-collapse`)).to.have.class('in');
 }

@@ -1,8 +1,7 @@
 import { expect } from 'chai';
-import { describe, it, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { describe, it } from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 import {
   createDummyChartDefinition,
   createDummyConfiguration,
@@ -11,14 +10,12 @@ import {
   expectActiveResolution,
   changeResolution,
 } from '../../../helpers/one-time-series-chart';
-import { click } from 'ember-native-dom-helpers';
 import { get } from '@ember/object';
 import { all as allFulfilled } from 'rsvp';
+import { render, settled, click, find } from '@ember/test-helpers';
 
 describe('Integration | Component | one time series chart/toolbar', function () {
-  setupComponentTest('one-time-series-chart/toolbar', {
-    integration: true,
-  });
+  const { afterEach } = setupRenderingTest();
 
   afterEach(function () {
     const models = this.get('models');
@@ -28,10 +25,10 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   });
 
   it('has class "one-time-series-chart-toolbar"', async function () {
-    await render(this);
+    await renderComponent();
 
-    expect(this.$().children()).to.have.class('one-time-series-chart-toolbar')
-      .and.to.have.length(1);
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('one-time-series-chart-toolbar');
   });
 
   it('renders time resolutions according to the resolutions defined in a single model',
@@ -53,10 +50,10 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       }]);
       model.setViewParameters({ timeResolution: 48 * 3600 });
 
-      await render(this);
+      await renderComponent();
 
       await expectResolutions(['1 min', '1 hr', '2 days']);
-      expectActiveResolution(this, '2 days');
+      expectActiveResolution('2 days');
     });
 
   it('renders time resolutions according to the resolutions defined in multiple models',
@@ -97,10 +94,10 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       model1.setViewParameters({ timeResolution: 3600 });
       model2.setViewParameters({ timeResolution: 3600 });
 
-      await render(this);
+      await renderComponent();
 
       await expectResolutions(['1 min', '1 hr', '2 days']);
-      expectActiveResolution(this, '1 hr');
+      expectActiveResolution('1 hr');
     });
 
   it('changes time resolution of all models', async function () {
@@ -131,11 +128,11 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     }]);
     model1.setViewParameters({ timeResolution: 60 });
     model2.setViewParameters({ timeResolution: 60 });
-    await render(this);
+    await renderComponent();
 
     await changeResolution('1 hr');
 
-    expectActiveResolution(this, '1 hr');
+    expectActiveResolution('1 hr');
     expect(get(model1, 'lastViewParameters.timeResolution')).to.equal(3600);
     expect(get(model2, 'lastViewParameters.timeResolution')).to.equal(3600);
   });
@@ -155,12 +152,12 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       },
     }]);
     model.setViewParameters({ timeResolution: 60 });
-    await render(this);
+    await renderComponent();
 
     model.setViewParameters({ timeResolution: 3600 });
-    await wait();
+    await settled();
 
-    expectActiveResolution(this, '1 hr');
+    expectActiveResolution('1 hr');
   });
 
   it('blocks "newer" and "newest" buttons when charts show the newest points', async function () {
@@ -170,9 +167,9 @@ describe('Integration | Component | one time series chart/toolbar', function () 
     ]);
     await waitForModelStates(this);
 
-    await render(this);
+    await renderComponent();
 
-    expectDisabledNavigation(this, ['newer', 'newest']);
+    expectDisabledNavigation(['newer', 'newest']);
   });
 
   it('allows to move to the newest points (all charts)', async function () {
@@ -187,7 +184,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newest');
 
@@ -204,7 +201,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newest');
 
@@ -224,7 +221,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newer');
 
@@ -244,7 +241,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newer');
 
@@ -264,7 +261,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('newer');
 
@@ -284,7 +281,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('older');
 
@@ -304,7 +301,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('older');
 
@@ -324,7 +321,7 @@ describe('Integration | Component | one time series chart/toolbar', function () 
       lastPointTimestamp: 2000000,
     });
     await waitForModelStates(this);
-    await render(this);
+    await renderComponent();
 
     await clickNavBtn('older');
 
@@ -333,9 +330,8 @@ describe('Integration | Component | one time series chart/toolbar', function () 
   });
 });
 
-async function render(testCase) {
-  testCase.render(hbs `{{one-time-series-chart/toolbar models=models}}`);
-  await wait();
+async function renderComponent() {
+  await render(hbs `{{one-time-series-chart/toolbar models=models}}`);
 }
 
 function setupModels(testCase, configInitOptionsArr) {
@@ -345,18 +341,18 @@ function setupModels(testCase, configInitOptionsArr) {
   );
 }
 
-function expectDisabledNavigation(testCase, disabledButtons) {
+function expectDisabledNavigation(disabledButtons) {
   const buttons = {
-    older: testCase.$('.show-older-btn'),
-    newer: testCase.$('.show-newer-btn'),
-    newest: testCase.$('.show-newest-btn'),
+    older: find('.show-older-btn'),
+    newer: find('.show-newer-btn'),
+    newest: find('.show-newest-btn'),
   };
 
   Object.keys(buttons).forEach((button) => {
     if (disabledButtons.includes(button)) {
-      expect(buttons[button]).to.be.disabled;
+      expect(buttons[button].disabled).to.be.true;
     } else {
-      expect(buttons[button]).to.be.enabled;
+      expect(buttons[button].disabled).to.be.false;
     }
   });
 }

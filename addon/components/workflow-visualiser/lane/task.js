@@ -13,7 +13,10 @@ import { get, computed } from '@ember/object';
 import { reads, collect } from '@ember/object/computed';
 import { tag, raw, conditional, equal, or } from 'ember-awesome-macros';
 import { scheduleOnce } from '@ember/runloop';
-import { normalizeTaskStatus, translateTaskStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import {
+  normalizeTaskStatus,
+  translateTaskStatus,
+} from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { inject as service } from '@ember/service';
 
 export default VisualiserElement.extend({

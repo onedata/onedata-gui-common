@@ -1,12 +1,14 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, click, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click } from 'ember-native-dom-helpers';
-import { triggerError, triggerSuccess } from '../../helpers/ember-cli-clipboard';
+import {
+  triggerCopyError,
+  triggerCopySuccess,
+} from 'ember-cli-clipboard/test-support';
 import GlobalNotifyStub from '../../helpers/global-notify-stub';
 import I18nStub from '../../helpers/i18n-stub';
-import $ from 'jquery';
 import EmberObject from '@ember/object';
 import { resolve } from 'rsvp';
 import { registerService } from '../../helpers/stub-service';
@@ -17,17 +19,12 @@ import { promiseArray } from 'onedata-gui-common/utils/ember/promise-array';
 const COPY_SUCCESS_MSG = 'copySuccess';
 const COPY_ERROR_MSG = 'copyError';
 
-function triggerCopyClick(context, success = true) {
-  // we need to attach this.$ to the whole app $ context, because a popover
-  // renders in the body, not inside the component
-  const old$ = context.$;
-  context.$ = (selector) => $('body').find(selector);
+function triggerCopyClick(success = true) {
   if (success) {
-    triggerSuccess(context, '.provider-host-copy-btn');
+    triggerCopySuccess('.provider-host-copy-btn');
   } else {
-    triggerError(context, '.provider-host-copy-btn');
+    triggerCopyError('.provider-host-copy-btn');
   }
-  context.$ = old$;
 }
 
 const GuiUtils = Service.extend({
@@ -43,19 +40,19 @@ const Router = Service.extend({
 });
 
 describe('Integration | Component | provider place', function () {
-  setupComponentTest('provider-place', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    registerService(this, 'globalNotify', GlobalNotifyStub);
+    const globalNotify = this.set(
+      'globalNotify',
+      registerService(this, 'globalNotify', GlobalNotifyStub)
+    );
     registerService(this, 'guiUtils', GuiUtils);
     registerService(this, 'router', Router);
+    this.set('i18n', registerService(this, 'i18n', I18nStub));
 
-    this.get('globalNotify')._clearMessages();
+    globalNotify._clearMessages();
 
-    this.register('service:i18n', I18nStub);
-    this.inject.service('i18n', { as: 'i18n' });
     this.set('i18n.translations', {
       components: {
         providerPlace: {
@@ -108,31 +105,31 @@ describe('Integration | Component | provider place', function () {
     ]);
   });
 
-  it('shows provider status', function () {
-    this.render(hbs `{{provider-place provider=provider}}`);
-    const $providerPlace = this.$('.provider-place');
-    expect($providerPlace).to.exist;
-    expect($providerPlace, $providerPlace.attr('class')).to.have.class('online');
+  it('shows provider status', async function () {
+    await render(hbs `{{provider-place provider=provider}}`);
+    const providerPlace = find('.provider-place');
+    expect(providerPlace).to.exist;
+    expect(providerPlace).to.have.class('online');
   });
 
-  it('resizes with parent one-atlas component', function () {
+  it('resizes with parent one-atlas component', async function () {
     this.set('atlasWidth', 800);
-    this.render(hbs `
+    await render(hbs `
       {{provider-place
         provider=provider
         atlasWidth=atlasWidth}}`);
-    const prevWidth = parseFloat(this.$('.circle').css('width'));
+    const prevWidth = parseFloat(find('.circle').style.width);
     this.set('atlasWidth', 400);
-    expect(parseFloat(this.$('.circle').css('width')))
+    expect(parseFloat(find('.circle').style.width))
       .to.be.equal(prevWidth / 2);
   });
 
-  it('notifies about hostname copy to clipboard success', function (done) {
-    this.render(hbs `
+  it('notifies about hostname copy to clipboard success', async function (done) {
+    await render(hbs `
       {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
-      triggerCopyClick(this);
+      triggerCopyClick();
       expect(this.get('globalNotify.infoMessages')).to.have.length(1);
       expect(this.get('globalNotify.infoMessages')).to.contain(
         COPY_SUCCESS_MSG);
@@ -140,46 +137,46 @@ describe('Integration | Component | provider place', function () {
     });
   });
 
-  it('notifies about hostname copy to clipboard error', function (done) {
-    this.render(hbs `
+  it('notifies about hostname copy to clipboard error', async function (done) {
+    await render(hbs `
       {{provider-place
         provider=provider}}`);
     click('.circle').then(() => {
-      triggerCopyClick(this, false);
+      triggerCopyClick(false);
       expect(this.get('globalNotify.infoMessages')).to.have.length(1);
       expect(this.get('globalNotify.infoMessages')).to.contain(COPY_ERROR_MSG);
       done();
     });
   });
 
-  it('shows list of supported spaces', function (done) {
-    this.render(hbs `
+  it('shows list of supported spaces', async function (done) {
+    await render(hbs `
       {{provider-place
         provider=provider}}`);
 
     const spaces = this.get('spaces');
     click('.circle').then(() => {
-      const drop = $('.provider-place-drop');
-      expect(drop.find('.provider-place-drop-space'))
+      const drop = document.querySelector('.provider-place-drop');
+      expect(drop.querySelectorAll('.provider-place-drop-space'))
         .to.have.length(spaces.length);
       spaces.forEach((space) => {
-          expect(drop.text()).to.contain(space.name);
+          expect(drop.textContent).to.contain(space.name);
         }),
-        expect(drop.text()).to.contain('1 MiB');
+        expect(drop.textContent).to.contain('1 MiB');
       done();
     });
   });
 
-  it('shows multiple providers if necessary', function (done) {
-    this.render(hbs `
+  it('shows multiple providers if necessary', async function (done) {
+    await render(hbs `
       {{provider-place
         provider=providers}}`);
 
     click('.circle').then(() => {
-      const dropContainer = $('.provider-place-drop-container');
-      expect(dropContainer.find('.oneproviders-list-item'))
+      const dropContainer = document.querySelector('.provider-place-drop-container');
+      expect(dropContainer.querySelectorAll('.oneproviders-list-item'))
         .to.have.length(2);
-      expect(dropContainer.find('.oneproviders-list-item.active')).to.exist;
+      expect(dropContainer.querySelector('.oneproviders-list-item.active')).to.exist;
       done();
     });
   });

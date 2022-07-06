@@ -1,38 +1,36 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form field static', function () {
-  setupComponentTest('one-form-field-static', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('renders with value', function () {
+  it('renders with value', async function () {
     this.set('field', {
       name: 'one',
       type: 'static',
     });
     this.set('value', 'hello');
-    this.render(hbs `
+    await render(hbs `
       {{one-form-field-static field=field value=value}}
     `);
 
-    const $field = this.$('.form-control-static');
-    expect($field).to.have.length(1);
-    expect($field.text()).to.match(new RegExp('hello'));
+    const fieldElem = find('.form-control-static');
+    expect(fieldElem).to.exist;
+    expect(fieldElem.textContent).to.match(new RegExp('hello'));
   });
 
-  it('has a class with field name', function () {
+  it('has a class with field name', async function () {
     this.set('field', {
       name: 'one',
       type: 'static',
     });
-    this.render(hbs `
+    await render(hbs `
       {{one-form-field-static field=field}}
     `);
 
-    const $field = this.$('.form-control-static');
-    expect($field).to.have.class('field-one');
+    expect(find('.form-control-static')).to.have.class('field-one');
   });
 });

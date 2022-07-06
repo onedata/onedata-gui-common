@@ -1,7 +1,7 @@
 /**
  * A tags (tokenizer) input editor, which allows to add tags using simple text input.
  * Tags are added after separator character detection or on Enter keydown.
- * 
+ *
  * @module components/tags-input/text-editor
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -23,7 +23,7 @@ export default Component.extend({
   /**
    * @virtual optional
    * @type {Object}
-   * 
+   *
    * Supported settings: {
    *   separators: Array<String> - tag separators, default [',']
    *   regexp: RegExp - if passed, then each new tag must match regexp to be accepted
@@ -81,14 +81,20 @@ export default Component.extend({
   focusIn(event) {
     if (!$(event.target).hasClass('text-editor-input')) {
       // Redirect component focus to text input
-      this.$('.text-editor-input').focus();
+      const input = this.getInput();
+      if (input) {
+        input.focus();
+      }
     }
   },
 
   didInsertElement() {
     this._super(...arguments);
 
-    this.$('.text-editor-input').focus();
+    const input = this.getInput();
+    if (input) {
+      input.focus();
+    }
   },
 
   extractTagsLabels(value, acceptLastWithoutSeparator) {
@@ -165,8 +171,16 @@ export default Component.extend({
       // When input was empty and after filling it in with string "sthsth,"
       // it again becomes empty, then ember does not clean the input value
       // because `newTags.firstObject.label` (input value) was empty all the time.
-      this.$('.text-editor-input').val('');
+      const input = this.getInput();
+      if (input) {
+        input.value = '';
+      }
     }
+  },
+
+  getInput() {
+    const element = this.get('element');
+    return element ? element.querySelector('.text-editor-input') : null;
   },
 
   actions: {

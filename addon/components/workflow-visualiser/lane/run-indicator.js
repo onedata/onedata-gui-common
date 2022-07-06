@@ -10,7 +10,10 @@
 import Component from '@ember/component';
 import layout from '../../../templates/components/workflow-visualiser/lane/run-indicator';
 import { computed } from '@ember/object';
-import { normalizeLaneStatus, translateLaneStatus } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import {
+  normalizeLaneStatus,
+  translateLaneStatus,
+} from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { tag } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';

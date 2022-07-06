@@ -9,23 +9,24 @@ import {
   beforeEach,
 } from 'mocha';
 import {
-  setupComponentTest,
+  setupRenderingTest,
 } from 'ember-mocha';
-import wait from 'ember-test-helpers/wait';
-import hbs from 'htmlbars-inline-precompile';
 import {
+  render,
+  settled,
+  focus,
+  blur,
   click,
   fillIn,
-} from 'ember-native-dom-helpers';
+  find,
+} from '@ember/test-helpers';
+import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import $ from 'jquery';
 
 const ERROR_MSG = 'error!';
 
 describe('Integration | Component | one dynamic tree', function () {
-  setupComponentTest('one-dynamic-tree', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('definition', [{
@@ -110,193 +111,198 @@ describe('Integration | Component | one dynamic tree', function () {
     }));
   });
 
-  it('renders fields', function () {
-    this.render(hbs `{{one-dynamic-tree definition=definition}}`);
-    expect(this.$('.field-node1-node11'), 'node 1.1').to.exist;
-    expect(this.$('.field-node1-node12'), 'node 1.2').to.exist;
-    expect(this.$('input[type="text"]')).to.exist;
-    expect(this.$('.one-way-radio-group')).to.exist;
+  it('renders fields', async function () {
+    await render(hbs `{{one-dynamic-tree definition=definition}}`);
+
+    expect(find('.field-node1-node11'), 'node 1.1').to.exist;
+    expect(find('.field-node1-node12'), 'node 1.2').to.exist;
+    expect(find('input[type="text"]')).to.exist;
+    expect(find('.one-way-radio-group')).to.exist;
   });
 
-  it('disables field', function () {
+  it('disables field', async function () {
     this.set('disabledPaths', A(['node1.node11']));
-    this.render(hbs `
+    await render(hbs `
       {{one-dynamic-tree
         definition=definition
-        disabledFieldsPaths=disabledPaths}}`);
-    expect(this.$('.field-node1-node11')).to.be.disabled;
-    expect(this.$('.field-node1-node12 input[type="radio"]')).to.not.be.disabled;
+        disabledFieldsPaths=disabledPaths
+      }}
+    `);
+
+    expect(find('.field-node1-node11').disabled).to.be.true;
+    expect(find('.field-node1-node12 input[type="radio"]').disabled).to.be.false;
   });
 
-  it('disables nested field', function () {
+  it('disables nested field', async function () {
     this.set('disabledPaths', A(['node1']));
-    this.render(hbs `
+    await render(hbs `
       {{one-dynamic-tree
         definition=definition
-        disabledFieldsPaths=disabledPaths}}`);
-    expect(this.$('.field-node1-node11')).to.be.disabled;
-    expect(this.$('.field-node1-node12 input[type="radio"]')).to.be.disabled;
+        disabledFieldsPaths=disabledPaths
+      }}
+    `);
+
+    expect(find('.field-node1-node11').disabled).to.be.true;
+    expect(find('.field-node1-node12 input[type="radio"]').disabled).to.be.true;
   });
 
-  it('validates data', function (done) {
-    this.render(hbs `
-      {{one-dynamic-tree
-        definition=definition
-        validations=validations}}`);
-
-    expect(this.$('.has-error')).to.not.exist;
-    $('input[type="text"]').blur();
-    wait().then(() => {
-      expect(this.$('.has-error')).to.exist;
-      expect(this.$('.has-error .form-message')).to.contain(ERROR_MSG);
-      done();
-    });
-  });
-
-  it('does not validate data in disabled fields', function (done) {
-    this.set('disabledPaths', A());
-    this.render(hbs `
+  it('validates data', async function () {
+    await render(hbs `
       {{one-dynamic-tree
         definition=definition
         validations=validations
-        disabledFieldsPaths=disabledPaths}}`);
+      }}
+    `);
 
-    $('input[type="text"]').blur();
-    wait().then(() => {
-      expect(this.$('.has-error')).to.exist;
-      this.get('disabledPaths').pushObject('node1.node11');
-      wait().then(() => {
-        expect(this.$('.has-error')).to.not.exist;
-        done();
-      });
-    });
+    expect(find('.has-error')).to.not.exist;
+
+    await focus('input[type="text"]');
+    await blur('input[type="text"]');
+    expect(find('.has-error')).to.exist;
+    expect(find('.has-error .form-message').textContent).to.contain(ERROR_MSG);
   });
 
-  it('allows data change', function (done) {
+  it('does not validate data in disabled fields', async function () {
+    this.set('disabledPaths', A());
+    await render(hbs `
+      {{one-dynamic-tree
+        definition=definition
+        validations=validations
+        disabledFieldsPaths=disabledPaths
+      }}
+    `);
+
+    await focus('input[type="text"]');
+    await blur('input[type="text"]');
+    expect(find('.has-error')).to.exist;
+
+    this.get('disabledPaths').pushObject('node1.node11');
+    await settled();
+    expect(find('.has-error')).to.not.exist;
+
+  });
+
+  it('allows data change', async function () {
     const newTextValue = 'text';
     const valuesChangedHandler = sinon.spy();
 
-    this.on('valuesChanged', valuesChangedHandler);
-    this.render(hbs `
+    this.set('valuesChanged', valuesChangedHandler);
+    await render(hbs `
       {{one-dynamic-tree
         definition=definition
-        valuesChanged=(action "valuesChanged")}}`);
+        valuesChanged=(action valuesChanged)
+      }}
+    `);
 
-    fillIn('input[type="text"]', newTextValue).then(() => {
-      const newValues = this.get('values');
-      newValues.node1.node11 = newTextValue;
-      expect(valuesChangedHandler).to.be.calledOnce;
-      expect(valuesChangedHandler.firstCall).calledWithExactly(newValues, true);
-      done();
-    });
+    await fillIn('input[type="text"]', newTextValue);
+
+    const newValues = this.get('values');
+    newValues.node1.node11 = newTextValue;
+    expect(valuesChangedHandler).calledWithExactly(newValues, true);
   });
 
   it(
     'marks "select all" toggle as semi-checked when not all nested toggles are checked',
-    function () {
-      this.render(hbs `
-        {{one-dynamic-tree
-          definition=definition}}`);
+    async function () {
+      await render(hbs `{{one-dynamic-tree definition=definition}}`);
 
-      expect(this.$('.field-node2')).to.have.class('maybe');
+      expect(find('.field-node2')).to.have.class('maybe');
     }
   );
 
-  it('allows to select all nested checkbox fields', function (done) {
-    this.render(hbs `
-      {{one-dynamic-tree
-        definition=definition}}`);
+  it('allows to select all nested checkbox fields', async function () {
+    await render(hbs `{{one-dynamic-tree definition=definition}}`);
 
-    click('.field-node2').then(() => {
-      expect(this.$('.field-node2-node21')).to.have.class('checked');
-      expect(this.$('.field-node2-node22')).to.have.class('checked');
-      expect(this.$('.field-node2')).to.have.class('checked');
-      done();
-    });
+    await click('.field-node2');
+
+    expect(find('.field-node2-node21')).to.have.class('checked');
+    expect(find('.field-node2-node22')).to.have.class('checked');
+    expect(find('.field-node2')).to.have.class('checked');
   });
 
   it('does not ignore disabled toggle state in "select all" toggle state',
-    function () {
+    async function () {
       this.set('disabledPaths', A(['node2.node21']));
-      this.render(hbs `
+      await render(hbs `
         {{one-dynamic-tree
           definition=definition
-          disabledFieldsPaths=disabledPaths}}`);
-      expect(this.$('.field-node2')).to.have.class('maybe');
+          disabledFieldsPaths=disabledPaths
+        }}
+      `);
+
+      expect(find('.field-node2')).to.have.class('maybe');
     }
   );
 
   it('ignores disabled toggle on "select all" toggle change',
-    function (done) {
+    async function () {
       this.set('disabledPaths', A(['node2.node22']));
-      this.render(hbs `
+      await render(hbs `
         {{one-dynamic-tree
           definition=definition
-          disabledFieldsPaths=disabledPaths}}`);
+          disabledFieldsPaths=disabledPaths
+        }}
+      `);
 
-      const node21Field = this.$('.field-node2-node21');
-      const node22Field = this.$('.field-node2-node22');
-      click('.field-node2').then(() => {
-        expect(node21Field).to.have.class('checked');
-        expect(node22Field).to.have.class('checked');
-        click('.field-node2').then(() => {
-          expect(node21Field).to.not.have.class('checked');
-          expect(node22Field).to.have.class('checked');
-          done();
-        });
-      });
+      const node21Field = find('.field-node2-node21');
+      const node22Field = find('.field-node2-node22');
+      await click('.field-node2');
+      expect(node21Field).to.have.class('checked');
+      expect(node22Field).to.have.class('checked');
+
+      await click('.field-node2');
+      expect(node21Field).to.not.have.class('checked');
+      expect(node22Field).to.have.class('checked');
     }
   );
 
-  it('allows to override tree values', function (done) {
+  it('allows to override tree values', async function () {
     let treeValues;
     this.set('overrideValues', undefined);
-    this.on('valuesChanged', (values) => {
+    this.set('valuesChanged', (values) => {
       if (!treeValues) {
         treeValues = values;
       }
     });
-    this.render(hbs `
+    await render(hbs `
       {{one-dynamic-tree
         definition=definition
         overrideValues=overrideValues
-        valuesChanged=(action "valuesChanged")}}
+        valuesChanged=(action valuesChanged)
+      }}
     `);
+
     const overrideValue = 'override';
-    fillIn('.field-node1-node11', 'test').then(() => {
-      treeValues.node1.node11 = overrideValue;
-      this.set('overrideValues', treeValues);
-      wait().then(() => {
-        expect(this.$('.field-node1-node11').val())
-          .to.be.equal(overrideValue);
-        done();
-      });
-    });
+    await fillIn('.field-node1-node11', 'test');
+    treeValues.node1.node11 = overrideValue;
+    this.set('overrideValues', treeValues);
+    await settled();
+    expect(find('.field-node1-node11').value)
+      .to.be.equal(overrideValue);
   });
 
-  it('shows modification state', function (done) {
+  it('shows modification state', async function () {
     let treeValues;
     this.set('compareValues', undefined);
-    this.on('valuesChanged', (values) => {
+    this.set('valuesChanged', (values) => {
       if (!treeValues) {
         treeValues = values;
       }
     });
-    this.render(hbs `
+    await render(hbs `
       {{one-dynamic-tree
         definition=definition
         compareValues=compareValues
-        valuesChanged=(action "valuesChanged")}}
+        valuesChanged=(action valuesChanged)
+      }}
     `);
     const compareValue = 'compare';
-    fillIn('.field-node1-node11', 'test').then(() => {
-      expect(this.$('.modified-node-label')).to.not.exist;
-      treeValues.node1.node11 = compareValue;
-      this.set('compareValues', treeValues);
-      wait().then(() => {
-        expect(this.$('.modified-node-label')).to.exist;
-        done();
-      });
-    });
+    await fillIn('.field-node1-node11', 'test');
+    expect(find('.modified-node-label')).to.not.exist;
+
+    treeValues.node1.node11 = compareValue;
+    this.set('compareValues', treeValues);
+    await settled();
+    expect(find('.modified-node-label')).to.exist;
   });
 });

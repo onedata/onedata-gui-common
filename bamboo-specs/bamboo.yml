@@ -74,9 +74,13 @@ Test:
   - script:
       interpreter: BINSH_OR_CMDEXE
       scripts:
-      - ../bamboos/make.py test_ci
+      - |-
+        ../bamboos/make.py lint
+        LINT_RESULT=$?
+        ../bamboos/make.py test_ci
+        return `expr $LINT_RESULT + $?`
       working-dir: onedata-gui-common
-      description: Run CI Ember tests
+      description: Run CI Ember tests and linter
   final-tasks:
   - test-parser:
       type: junit

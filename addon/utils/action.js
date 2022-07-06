@@ -164,7 +164,9 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {HtmlSafe}
    */
   getSuccessNotificationText(actionResult) {
-    return this.t('successNotificationText', get(actionResult || {}, 'result') || {}, {
+    const result = get(actionResult || {}, 'result');
+    const placeholders = typeof result === 'object' && result ? result : {};
+    return this.t('successNotificationText', placeholders, {
       defaultValue: '',
     });
   },
@@ -175,9 +177,11 @@ export default EmberObject.extend(I18n, OwnerInjector, {
    * @returns {HtmlSafe}
    */
   getFailureNotificationActionName(actionResult) {
+    const error = get(actionResult || {}, 'error');
+    const placeholders = typeof error === 'object' && error ? error : {};
     return this.t(
       'failureNotificationActionName',
-      get(actionResult || {}, 'error') || {}, {
+      placeholders, {
         defaultValue: '',
       }
     );

@@ -76,7 +76,14 @@
 
 import Component from '@ember/component';
 import layout from 'onedata-gui-common/templates/components/workflow-visualiser';
-import { computed, observer, get, getProperties, set, setProperties } from '@ember/object';
+import {
+  computed,
+  observer,
+  get,
+  getProperties,
+  set,
+  setProperties,
+} from '@ember/object';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import WorkflowDataProvider from 'onedata-gui-common/utils/workflow-visualiser/workflow-data-provider';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
@@ -91,15 +98,26 @@ import { resolve, Promise } from 'rsvp';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
-import { conditional, raw, tag, string, promise, array } from 'ember-awesome-macros';
+import {
+  conditional,
+  raw,
+  tag,
+  string,
+  promise,
+  array,
+} from 'ember-awesome-macros';
 import config from 'ember-get-config';
 import WindowResizeHandler from 'onedata-gui-common/mixins/components/window-resize-handler';
 import { scheduleOnce, run } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import Looper from 'onedata-gui-common/utils/looper';
-import { translateWorkflowStatus, workflowEndedStatuses } from 'onedata-gui-common/utils/workflow-visualiser/statuses';
+import {
+  translateWorkflowStatus,
+  workflowEndedStatuses,
+} from 'onedata-gui-common/utils/workflow-visualiser/statuses';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
 import { typeOf } from '@ember/utils';
+import $ from 'jquery';
 
 const isInTestingEnv = config.environment === 'test';
 const windowResizeDebounceTime = isInTestingEnv ? 0 : 30;
@@ -512,21 +530,23 @@ export default Component.extend(I18n, WindowResizeHandler, {
   },
 
   detectHorizontalOverflow() {
-    if (!this.$()) {
+    const element = this.get('element');
+    if (!element) {
       return;
     }
+    const $element = $(element);
 
     // Scrolling is not pixel-perfect. Without that epsilon test cases break down.
     const checksPxEpsilon = 1;
 
-    const $lanesContainer = this.$('.visualiser-elements');
+    const $lanesContainer = $element.find('.visualiser-elements');
     if (!$lanesContainer.length) {
       return;
     }
     const viewOffset = $lanesContainer.offset().left;
     const viewWidth = $lanesContainer.width();
 
-    const $lanes = this.$('.workflow-visualiser-lane');
+    const $lanes = $element.find('.workflow-visualiser-lane');
     const lanesOffset = $lanes.map(idx => $lanes.eq(idx).offset().left);
     const lanesWidth = $lanes.map(idx => $lanes.eq(idx).width());
 
@@ -560,13 +580,14 @@ export default Component.extend(I18n, WindowResizeHandler, {
     if (laneIdx === null) {
       return;
     }
+    const $element = $(this.get('element'));
 
-    const $lanesContainer = this.$('.visualiser-elements');
+    const $lanesContainer = $element.find('.visualiser-elements');
     const viewOffset = $lanesContainer.offset().left;
     const viewWidth = $lanesContainer.width();
     const viewScroll = $lanesContainer.scrollLeft();
 
-    const $lanes = this.$('.workflow-visualiser-lane');
+    const $lanes = $element.find('.workflow-visualiser-lane');
 
     let scrollPosition;
     if (laneIdx <= 0) {

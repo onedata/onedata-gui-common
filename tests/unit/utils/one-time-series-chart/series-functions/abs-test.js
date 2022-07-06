@@ -5,8 +5,15 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import abs from 'onedata-gui-common/utils/one-time-series-chart/series-functions/abs';
 import point from 'onedata-gui-common/utils/one-time-series-chart/series-functions/utils/point';
-import { createContext, createConstArgument, expectFunctionsEvaluation, stringifyArgumentData } from './helpers';
-import { casesToCheck as transformCasesToCheck } from '../transform-functions/abs-test';
+import {
+  createContext,
+  createConstArgument,
+  expectFunctionsEvaluation,
+  stringifyArgumentData,
+} from './helpers';
+import {
+  casesToCheck as transformCasesToCheck,
+} from '../transform-functions/abs-test';
 
 const normalizedTransformCasesToCheck = transformCasesToCheck.map(({ input, output }) => ({
   input: {

@@ -12,7 +12,12 @@ import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { reads, equal, sort } from '@ember/object/computed';
 import { isEmpty } from '@ember/utils';
-import EmberObject, { computed, observer, get, setProperties } from '@ember/object';
+import EmberObject, {
+  computed,
+  observer,
+  get,
+  setProperties,
+} from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-sidebar';
 import { array, raw } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';

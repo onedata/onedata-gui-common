@@ -11,7 +11,13 @@
  */
 
 import _ from 'lodash';
-import { computed, observer, set, get, getProperties } from '@ember/object';
+import {
+  computed,
+  observer,
+  set,
+  get,
+  getProperties,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';

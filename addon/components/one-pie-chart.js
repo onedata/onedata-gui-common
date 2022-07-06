@@ -222,9 +222,14 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    $(window).on('resize', this.get('_windowResizeHandler'));
+    const {
+      element,
+      _windowResizeHandler,
+    } = this.getProperties('element', '_windowResizeHandler');
+
+    $(window).on('resize', _windowResizeHandler);
     this._windowResized();
-    this.$('.ct-chart').mousemove((event) => {
+    $(element).mousemove((event) => {
       let parentGroup = $(event.target).parents('.ct-series');
       if (parentGroup.length) {
         // extract series id from group class name `slice-id-[series.id]`
@@ -475,7 +480,9 @@ export default Component.extend({
    * @returns {string} stroke-opacity value
    */
   _getSliceOpacity(series) {
-    return this.$(`.slice-id-${series.get('id')} path`).css('stroke-opacity');
+    return $(
+      this.get('element').querySelector(`.slice-id-${series.get('id')} path`)
+    ).css('stroke-opacity');
   },
 
   /**
@@ -484,7 +491,9 @@ export default Component.extend({
    * @returns {string} opacity value
    */
   _getLabelOpacity(series) {
-    return this.$('.label-id-' + series.get('id')).css('opacity');
+    return $(
+      this.get('element').querySelector('.label-id-' + series.get('id'))
+    ).css('opacity');
   },
 
   /**

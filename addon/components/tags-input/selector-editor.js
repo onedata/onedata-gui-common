@@ -1,7 +1,7 @@
 /**
  * A tags (tokenizer) input editor, which allows to add tags using dropdown-like selector.
  * Tags are added on click on selector list item.
- * 
+ *
  * @module components/tags-input/selector-editor
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -14,6 +14,7 @@ import { computed, observer, get } from '@ember/object';
 import { or } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';
+import $ from 'jquery';
 
 export default Component.extend({
   layout,
@@ -22,7 +23,7 @@ export default Component.extend({
   /**
    * @virtual
    * @type {Object}
-   * 
+   *
    * Supported settings: {
    *   allowedTags: Array<Tag> - tags available for user to select
    * }
@@ -110,7 +111,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = this.$().parents('.tags-input');
+    const $parentTagsInput = $(this.get('element')).parents('.tags-input');
     this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
   },
 

@@ -1,11 +1,19 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { fillIn, find, findAll, click, focus, blur } from 'ember-native-dom-helpers';
+import {
+  render,
+  fillIn,
+  find,
+  findAll,
+  click,
+  focus,
+  blur,
+  settled,
+} from '@ember/test-helpers';
 import { get } from '@ember/object';
-import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import timeSeriesEditor from 'onedata-gui-common/utils/atm-workflow/store-config-editors/time-series';
 
@@ -74,13 +82,11 @@ const unitOptions = [{
 }];
 
 describe('Integration | Utility | atm workflow/store config editors/time series', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       fields: [
         timeSeriesEditor.FormElement.create({
           name: 'storeEditor',
@@ -90,13 +96,13 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 
   it('shows no series at the beginning', async function () {
-    await renderForm(this);
+    await renderForm();
 
     expect(find('.timeSeriesSchema-field')).to.not.exist;
   });
 
   it('allows to add new series', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
 
@@ -115,7 +121,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 
   it('has correct list of available name generator types', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await clickTrigger('.nameGeneratorType-field');
@@ -129,7 +135,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
 
   for (const { label, value } of nameGeneratorTypeOptions) {
     it(`allows to choose "${label}" name generator type`, async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       await selectChoose('.nameGeneratorType-field', label);
@@ -139,7 +145,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   }
 
   it('has correct list of available units', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await clickTrigger('.unit-field');
@@ -153,7 +159,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
 
   for (const { label, value } of unitOptions) {
     it(`allows to choose "${label}" unit`, async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       await selectChoose('.unit-field', label);
@@ -163,7 +169,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   }
 
   it('shows custom unit input only when custom unit has been selected', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     expect(find('.customUnit-field')).to.not.exist;
@@ -175,7 +181,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 
   it('marks name generator and custom unit fields as invalid, when empty', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.unit-field', 'Custom');
@@ -187,7 +193,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 
   it('marks two name generators as conflicted in case of common prefix', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await fillIn('.nameGenerator-field .form-control', 'abc');
@@ -200,7 +206,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 
   it('marks two name generators as conflicted in case of the same trimmed value', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await fillIn('.nameGenerator-field .form-control', 'abc  ');
@@ -211,7 +217,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 
   it('marks empty metrics field as invalid', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await focus('.metrics-field .tags-input');
@@ -222,7 +228,7 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
 
   it('allows to provide complete time series config and convert it to store config',
     async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       const firstSeries = find('.timeSeriesSchema-field');
@@ -319,9 +325,9 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
       chartSpecs: undefined,
     });
 
-    await renderForm(this);
+    await renderForm();
     this.set('rootGroup.valuesSource.storeEditor', formValues);
-    await wait();
+    await settled();
 
     const series = findAll('.timeSeriesSchema-field');
     expect(series).to.have.length(2);
@@ -342,9 +348,8 @@ describe('Integration | Utility | atm workflow/store config editors/time series'
   });
 });
 
-async function renderForm(testCase) {
-  testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
-  await wait();
+async function renderForm() {
+  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
 }
 
 function getSeriesFormValues(testCase) {

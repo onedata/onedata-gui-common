@@ -1,7 +1,7 @@
 // TODO: VFS-9257 fix eslint issues in this file
 /* eslint-disable jsdoc/require-returns */
 
-import { click } from 'ember-native-dom-helpers';
+import { click } from '@ember/test-helpers';
 
 /**
  * @deprecated Use `ember-power-select/test-support` instead

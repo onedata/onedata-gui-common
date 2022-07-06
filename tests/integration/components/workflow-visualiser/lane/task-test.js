@@ -1,14 +1,26 @@
 import { expect } from 'chai';
-import { describe, it, context, before, beforeEach, afterEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import {
+  describe,
+  it,
+  context,
+  before,
+  beforeEach,
+  afterEach,
+} from 'mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  click,
+  fillIn,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Task from 'onedata-gui-common/utils/workflow-visualiser/lane/task';
-import { click, fillIn } from 'ember-native-dom-helpers';
 import { Promise, resolve } from 'rsvp';
 import { set, setProperties } from '@ember/object';
 import sinon from 'sinon';
-import $ from 'jquery';
 import { getModalFooter } from '../../../../helpers/modal';
 import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-record-id-action';
 
@@ -23,21 +35,19 @@ const taskActionsSpec = [{
 }];
 
 describe('Integration | Component | workflow visualiser/lane/task', function () {
-  setupComponentTest('workflow-visualiser/lane/task', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('task', Task.create({
-      actionsFactory: ActionsFactory.create({ ownerSource: this }),
+      actionsFactory: ActionsFactory.create({ ownerSource: this.owner }),
     }));
   });
 
-  it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', function () {
-    render(this);
+  it('has classes "workflow-visualiser-task" and "workflow-visualiser-element"', async function () {
+    await renderComponent();
 
-    expect(this.$().children()).to.have.length(1);
-    expect(this.$().children().eq(0)).to.have.class('workflow-visualiser-task')
+    expect(this.element.children).to.have.length(1);
+    expect(this.element.children[0]).to.have.class('workflow-visualiser-task')
       .and.to.have.class('workflow-visualiser-element');
   });
 
@@ -61,34 +71,38 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
     itShowsTaskName();
 
-    it('does not allow to modify task name', async function () {
+    it('does not allow to modify task name', async function (done) {
       this.set('task.name', 'my-task');
-      render(this);
+      await renderComponent();
 
       // .one-label is a trigger for one-inline-editor
-      expect(this.$('.task-name .one-label')).to.not.exist;
+      expect(find('.task-name .one-label')).to.not.exist;
+      done();
     });
 
-    it('does not render actions', function () {
-      render(this);
+    it('does not render actions', async function (done) {
+      await renderComponent();
 
-      expect(this.$('.task-actions-trigger')).to.not.exist;
+      expect(find('.task-actions-trigger')).to.not.exist;
+      done();
     });
 
-    it('has collapsed details section by default', function () {
-      render(this);
+    it('has collapsed details section by default', async function (done) {
+      await renderComponent();
 
-      expect(this.$('.task-details-collapse')).to.not.have.class('in');
+      expect(find('.task-details-collapse')).to.not.have.class('in');
+      done();
     });
 
-    it('expands details section on task click', async function () {
-      render(this);
+    it('expands details section on task click', async function (done) {
+      await renderComponent();
       await expandDetails();
 
-      expect(this.$('.task-details-collapse')).to.have.class('in');
+      expect(find('.task-details-collapse')).to.have.class('in');
+      done();
     });
 
-    it('shows task details values', async function () {
+    it('shows task details values', async function (done) {
       setProperties(this.get('task'), {
         instanceId: 'someId',
         runsRegistry: {
@@ -101,10 +115,10 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
           },
         },
       });
-      render(this);
+      await renderComponent();
       await expandDetails();
 
-      const $entries = this.$('.detail-entry');
+      const entries = findAll('.detail-entry');
       [
         ['instance-id', 'Instance ID', 'someId'],
         ['status', 'Status', 'Pending'],
@@ -112,11 +126,14 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         ['items-processed', 'Processed', '2'],
         ['items-failed', 'Failed', '3'],
       ].forEach(([classNameElement, label, value], idx) => {
-        const $entry = $entries.eq(idx);
-        expect($entry).to.have.class(`${classNameElement}-detail`);
-        expect($entry.find('.detail-label').text().trim()).to.equal(`${label}:`);
-        expect($entry.find('.detail-value').text().trim()).to.equal(value);
+        const entry = entries[idx];
+        expect(entry).to.have.class(`${classNameElement}-detail`);
+        expect(entry.querySelector('.detail-label').textContent.trim())
+          .to.equal(`${label}:`);
+        expect(entry.querySelector('.detail-value').textContent.trim())
+          .to.equal(value);
       });
+      done();
     });
 
     itShowsStatus('pending', 'Pending');
@@ -128,7 +145,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
     itShowsStatus('failed', 'Failed');
     itShowsStatus('unknown', 'Unknown');
 
-    it('allows to copy task instance id', async function () {
+    it('allows to copy task instance id', async function (done) {
       const executeStub = sinon.stub(
         CopyRecordIdAction.prototype,
         'execute'
@@ -137,12 +154,13 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
         return resolve({ status: 'done' });
       });
       this.set('task.instanceId', 'someId');
-      render(this);
+      await renderComponent();
       await expandDetails();
 
       await click('.copy-record-id-action-trigger');
 
       expect(executeStub).to.be.calledOnce;
+      done();
     });
   });
 
@@ -153,7 +171,7 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
 
     itShowsTaskName();
 
-    it('allows to modify task name', async function () {
+    it('allows to modify task name', async function (done) {
       setProperties(this.get('task'), {
         name: 'my-task',
         onModify(task, { name }) {
@@ -163,44 +181,49 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
           });
         },
       });
-      render(this);
+      await renderComponent();
 
       await click('.task-name .one-label');
       await fillIn('.task-name input', 'new-name');
       await click('.task-name .save-icon');
 
-      expect(this.$('.task-name').text().trim()).to.equal('new-name');
+      expect(find('.task-name').textContent.trim()).to.equal('new-name');
+      done();
     });
 
-    it('renders actions', async function () {
-      render(this);
+    it('renders actions', async function (done) {
+      await renderComponent();
 
-      const $actionsTrigger = this.$('.task-actions-trigger');
-      expect($actionsTrigger).to.exist;
+      const actionsTrigger = find('.task-actions-trigger');
+      expect(actionsTrigger).to.exist;
 
-      await click($actionsTrigger[0]);
+      await click(actionsTrigger);
 
-      const $actions = $('body .webui-popover.in .actions-popover-content a');
-      expect($actions).to.have.length(taskActionsSpec.length);
+      const actions =
+        document.querySelectorAll('.webui-popover.in .actions-popover-content a');
+      expect(actions).to.have.length(taskActionsSpec.length);
       taskActionsSpec.forEach(({ className, label, icon }, index) => {
-        const $action = $actions.eq(index);
-        expect($action).to.have.class(className);
-        expect($action.text().trim()).to.equal(label);
-        expect($action.find('.one-icon')).to.have.class(`oneicon-${icon}`);
+        const action = actions[index];
+        expect(action).to.have.class(className);
+        expect(action.textContent.trim()).to.equal(label);
+        expect(action.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
       });
+      done();
     });
 
-    it('allows to modify task', async function () {
+    it('allows to modify task', async function (done) {
       const taskDiff = { name: 'someName' };
       const detailsProviderStub = sinon.stub().resolves(taskDiff);
       this.get('task.actionsFactory')
         .setGetTaskModificationDataCallback(detailsProviderStub);
       const onModifySpy = sinon.stub().resolves();
       this.set('task.onModify', onModifySpy);
-      render(this);
+      await renderComponent();
 
       await click('.task-actions-trigger');
-      await click($('body .webui-popover.in .modify-task-action-trigger')[0]);
+      await click(
+        document.querySelector('.webui-popover.in .modify-task-action-trigger')
+      );
 
       expect(detailsProviderStub).to.be.calledWith({
         definedStores: sinon.match.any,
@@ -208,58 +231,65 @@ describe('Integration | Component | workflow visualiser/lane/task', function () 
       });
       expect(onModifySpy).to.be.calledOnce
         .and.to.be.calledWith(this.get('task'), taskDiff);
+      done();
     });
 
-    it('allows to remove task', async function () {
+    it('allows to remove task', async function (done) {
       const onRemoveSpy = sinon.stub().resolves();
       this.set('task.onRemove', onRemoveSpy);
-      render(this);
+      await renderComponent();
 
       await click('.task-actions-trigger');
-      await click($('body .webui-popover.in .remove-task-action-trigger')[0]);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(
+        document.querySelector('body .webui-popover.in .remove-task-action-trigger')
+      );
+      await click(getModalFooter().querySelector('.question-yes'));
 
       expect(onRemoveSpy).to.be.calledOnce.and.to.be.calledWith(this.get('task'));
+      done();
     });
 
-    it('it does not show status', function () {
+    it('it does not show status', async function (done) {
       setProperties(this.get('task'), {
         name: 'my-task',
         status: 'finished',
       });
-      render(this);
+      await renderComponent();
 
-      expect(this.$('.workflow-visualiser-task')).to.not.have.class('status-finished');
+      expect(find('.workflow-visualiser-task')).to.not.have.class('status-finished');
+      done();
     });
   });
 });
 
 function itShowsTaskName() {
-  it('shows task name', function () {
+  it('shows task name', async function (done) {
     const taskName = 'task1';
     this.set('task.name', taskName);
 
-    render(this);
+    await renderComponent();
 
-    expect(this.$('.task-name').text().trim()).to.equal(taskName);
+    expect(find('.task-name').textContent.trim()).to.equal(taskName);
+    done();
   });
 }
 
 function itShowsStatus(status, statusTranslation) {
-  it(`shows "${status}" status`, async function () {
+  it(`shows "${status}" status`, async function (done) {
     this.set('task.status', status);
 
-    render(this);
+    await renderComponent();
     await expandDetails();
 
-    expect(this.$('.workflow-visualiser-task')).to.have.class(`status-${status}`);
-    expect(this.$('.status-detail .detail-value').text().trim())
+    expect(find('.workflow-visualiser-task')).to.have.class(`status-${status}`);
+    expect(find('.status-detail .detail-value').textContent.trim())
       .to.equal(statusTranslation);
+    done();
   });
 }
 
-function render(testCase) {
-  testCase.render(hbs `
+async function renderComponent() {
+  await render(hbs `
     {{global-modal-mounter}}
     {{workflow-visualiser/lane/task elementModel=task}}
   `);

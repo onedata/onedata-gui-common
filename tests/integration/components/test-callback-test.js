@@ -1,21 +1,20 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
 
 describe('Integration | Component | test callback', function () {
-  setupComponentTest('test-callback', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('immediately invokes callback', function () {
+  it('immediately invokes callback', async function () {
     const spy = sinon.spy();
     const callback = function (testCallbackComponent) {
       spy(testCallbackComponent.get('x'), testCallbackComponent.get('y'));
     };
     this.set('callback', callback);
-    this.render(hbs `
+    await render(hbs `
       {{test-callback callback=callback x=1 y=2}}
     `);
     expect(spy).to.be.calledOnce;

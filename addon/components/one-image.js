@@ -4,15 +4,15 @@ import $ from 'jquery';
 
 /**
  * Inserts an image with optional - dynamicly sized - text.
- * Typical usage: 
+ * Typical usage:
  * ```
- * {{one-image 
- *   imagePath='some/image.png' 
- *   imageText='some text' 
+ * {{one-image
+ *   imagePath='some/image.png'
+ *   imageText='some text'
  *   imageTextClass='classForTextElement'
  * }}
  * ```
- * 
+ *
  * @module components/one-image
  * @author Michal Borzecki
  * @copyright (C) 2017-2020 ACK CYFRONET AGH
@@ -49,22 +49,31 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    $(window).resize(this.get('_onResizeHandler'));
-    this.$('.image').on('load', this.get('_onResizeHandler'));
+    const {
+      _onResizeHandler,
+      element,
+    } = this.getProperties('_onResizeHandler', 'element');
+
+    window.addEventListener('resize', _onResizeHandler);
+    element.querySelector('.image').addEventListener('load', _onResizeHandler);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    $(window).off('resize', this.get('_onResizeHandler'));
+    window.removeEventListener('resize', this.get('_onResizeHandler'));
   },
 
   _recalculateImageFontSize() {
-    if (this.get('imageText')) {
+    const {
+      element,
+      imageText,
+    } = this.getProperties('element', 'imageText');
+    if (imageText) {
       // 10% of image width
-      const image = this.$('.image');
-      if (image) {
-        const fontSize = image.width() * 0.10;
-        this.$().css('font-size', fontSize);
+      const $image = $(element.querySelector('.image'));
+      if ($image.length) {
+        const fontSize = $image.width() * 0.10;
+        element.style.fontSize = `${fontSize}px`;
       }
     }
   },
