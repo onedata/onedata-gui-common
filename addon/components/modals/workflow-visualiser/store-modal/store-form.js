@@ -45,9 +45,13 @@ import {
   FormElement as DataSpecEditor,
   formValuesToDataSpec,
   dataSpecToFormValues,
-  dataSpecTypes,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
+import {
+  dataSpecSupertypes,
+  dataSpecSubtypes,
+} from 'onedata-gui-common/utils/atm-workflow/data-spec';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import _ from 'lodash';
 
 const storeTypes = Object.freeze([
   'list',
@@ -58,21 +62,14 @@ const storeTypes = Object.freeze([
   'timeSeries',
 ]);
 
-const dataTypesForbiddenForAllStores = Object.freeze([
-  'onedatafsCredentials',
-]);
-
-const dataTypesForbiddenPerStoreType = Object.freeze({
-  treeForest: Object.freeze([
-    'integer',
-    'string',
-    'object',
-    'range',
-    'timeSeriesMeasurement',
-  ]),
-  range: Object.freeze(dataSpecTypes.without('range')),
-  timeSeries: Object.freeze(dataSpecTypes.without('timeSeriesMeasurement')),
+const storeSpecificDataSpecTypes = Object.freeze({
+  treeForest: 'file',
+  range: 'range',
+  timeSeries: 'timeSeriesMeasurement',
 });
+
+const storeTypesNotExpandingArrays = ['singleValue', 'range'];
+const storeTypesWithoutArrayData = ['treeForest', 'range', 'timeSeries'];
 
 const defaultRangeStart = 0;
 const defaultRangeStep = 1;
@@ -106,9 +103,14 @@ export default Component.extend(I18n, {
   store: undefined,
 
   /**
-   * @type {Array<String>|undefined}
+   * @type {AtmDataSpec|undefined}
    */
-  allowedDataTypes: undefined,
+  allowedStoreReadDataSpec: undefined,
+
+  /**
+   * @type {AtmDataSpec|undefined}
+   */
+  allowedStoreWriteDataSpec: undefined,
 
   /**
    * @type {Array<String>|undefined}
@@ -139,28 +141,73 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<Array<string>>}
    */
   effAllowedStoreTypes: computed(
+    'allowedStoreReadDataSpec',
+    'allowedStoreWriteDataSpec',
     'allowedStoreTypes',
-    'allowedDataTypes',
     function effAllowedStoreTypes() {
       const {
-        allowedDataTypes,
+        allowedStoreReadDataSpec,
+        allowedStoreWriteDataSpec,
         allowedStoreTypes,
-      } = this.getProperties('allowedDataTypes', 'allowedStoreTypes');
+      } = this.getProperties(
+        'allowedStoreReadDataSpec',
+        'allowedStoreWriteDataSpec',
+        'allowedStoreTypes'
+      );
 
       let effAllowedTypes = storeTypes;
+
       if (allowedStoreTypes && allowedStoreTypes.length) {
         effAllowedTypes = effAllowedTypes.filter((type) =>
           allowedStoreTypes.includes(type)
         );
       }
-      if (allowedDataTypes && allowedDataTypes.length) {
-        effAllowedTypes = effAllowedTypes.filter((type) => {
-          const forbiddenDataTypes = dataTypesForbiddenPerStoreType[type] || [];
-          return allowedDataTypes.some((dataType) =>
-            !forbiddenDataTypes.includes(dataType)
-          );
-        });
+
+      const storeTypesToReject = new Set();
+
+      if (allowedStoreReadDataSpec && allowedStoreReadDataSpec.type) {
+        const constrainedType = allowedStoreReadDataSpec.type;
+        for (const storeType of Object.keys(storeSpecificDataSpecTypes)) {
+          const storeSpecificDataType = storeSpecificDataSpecTypes[storeType];
+          if (
+            storeSpecificDataType !== constrainedType &&
+            !(dataSpecSupertypes[storeSpecificDataType] || []).includes(constrainedType)
+          ) {
+            storeTypesToReject.add(storeType);
+          }
+        }
+        if (constrainedType === 'array') {
+          storeTypesWithoutArrayData
+            .forEach((storeType) => storeTypesToReject.add(storeType));
+        }
       }
+
+      if (allowedStoreWriteDataSpec && allowedStoreWriteDataSpec.type) {
+        const constrainedType = allowedStoreWriteDataSpec.type;
+        const constrainedItemType =
+          get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec.type');
+        for (const storeType of Object.keys(storeSpecificDataSpecTypes)) {
+          const storeSpecificDataType = storeSpecificDataSpecTypes[storeType];
+          const storeNotAcceptTypeDirectly =
+            storeSpecificDataType !== constrainedType &&
+            !(dataSpecSubtypes[storeSpecificDataType] || []).includes(constrainedType);
+          const storeNotAcceptTypeInArray = constrainedType === 'array' ?
+            storeSpecificDataType !== constrainedItemType &&
+            !(dataSpecSubtypes[storeSpecificDataType] || []).includes(constrainedItemType) :
+            true;
+          if (storeNotAcceptTypeDirectly && storeNotAcceptTypeInArray) {
+            storeTypesToReject.add(storeType);
+          }
+        }
+        if (constrainedType === 'array') {
+          _.intersection(storeTypesWithoutArrayData, storeTypesNotExpandingArrays)
+            .forEach((storeType) => storeTypesToReject.add(storeType));
+        }
+      }
+
+      effAllowedTypes = effAllowedTypes
+        .filter((storeType) => !storeTypesToReject.has(storeType));
+
       return effAllowedTypes;
     }
   ),
@@ -168,7 +215,7 @@ export default Component.extend(I18n, {
   /**
    * @type {ComputedProperty<String>}
    */
-  modeClass: tag `mode-${'mode'}`,
+  modeClass: tag`mode-${'mode'}`,
 
   /**
    * @type {ComputedProperty<Object>}
@@ -185,8 +232,53 @@ export default Component.extend(I18n, {
       const defaultStoreType = effAllowedStoreTypes[0];
       return storeToFormData(store, {
         defaultType: defaultStoreType,
-        allowedDataTypes: this.calculateEffAllowedDataTypes(defaultStoreType),
+        // allowedDataTypes: this.calculateEffDataSpecFilters(defaultStoreType),
       });
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<Array<>>}
+   */
+  dataSpecFilters: computed(
+    'allowedStoreReadDataSpec',
+    'allowedStoreWriteDataSpec',
+    function dataSpecFilters() {
+      const {
+        allowedStoreReadDataSpec,
+        allowedStoreWriteDataSpec,
+      } = this.getProperties(
+        'allowedStoreReadDataSpec',
+        'allowedStoreWriteDataSpec',
+      );
+
+      const filters = [{
+        filterType: 'forbiddenType',
+        forbiddenTypes: [{
+          type: 'onedatafsCredentials',
+        }],
+      }];
+
+      if (allowedStoreReadDataSpec) {
+        filters.push({
+          filterType: 'typeOrSubtype',
+          types: [allowedStoreReadDataSpec],
+        });
+      }
+      if (allowedStoreWriteDataSpec) {
+        const typeOrSupertypeFilter = {
+          filterType: 'typeOrSupertype',
+          types: [allowedStoreWriteDataSpec],
+        };
+        if (allowedStoreWriteDataSpec.type === 'array') {
+          typeOrSupertypeFilter.types.push(
+            get(allowedStoreWriteDataSpec, 'config.itemDataSpec')
+          );
+        }
+        filters.push(typeOrSupertypeFilter);
+      }
+
+      return filters;
     }
   ),
 
@@ -217,7 +309,7 @@ export default Component.extend(I18n, {
     );
 
     return FormFieldsRootGroup.extend({
-      i18nPrefix: tag `${'component.i18nPrefix'}.fields`,
+      i18nPrefix: tag`${'component.i18nPrefix'}.fields`,
       ownerSource: reads('component'),
       isEnabled: not('component.isDisabled'),
       onValueChange() {
@@ -344,11 +436,11 @@ export default Component.extend(I18n, {
    */
   dataSpecField: computed(function dataSpecField() {
     const field = DataSpecEditor.extend({
-      allowedTypes: computed(
-        'component.allowedDataTypes',
+      dataTypeFilters: computed(
+        'component.dataSpecFilters',
         'valuesSource.type',
-        function allowedTypes() {
-          return this.get('component').calculateEffAllowedDataTypes(
+        function dataTypeFilters() {
+          return this.get('component').calculateEffDataSpecFilters(
             this.get('valuesSource.type')
           );
         }
@@ -357,12 +449,6 @@ export default Component.extend(I18n, {
       component: this,
       name: 'dataSpec',
     });
-    get(field.getFieldByPath('valueConstraints'), 'fields')
-      .forEach((constraintsField) => set(
-        constraintsField,
-        'classes',
-        `${get(constraintsField, 'classes') || ''} nowrap-on-desktop`
-      ));
     return field;
   }),
 
@@ -591,24 +677,33 @@ export default Component.extend(I18n, {
     });
   },
 
-  calculateEffAllowedDataTypes(storeType) {
-    const allowedDataTypes = this.get('allowedDataTypes') || dataSpecTypes;
-    const forbiddenDataTypes = [
-      ...(dataTypesForbiddenPerStoreType[storeType] || []),
-      ...dataTypesForbiddenForAllStores,
+  calculateEffDataSpecFilters(storeType) {
+    const constantDataSpecFilters = this.get('dataSpecFilters');
+    const storeSpecificDataSpecFilters = [];
+    if (storeType in storeSpecificDataSpecTypes) {
+      const specificDataSpecFilter = {
+        filterType: 'typeOrSubtype',
+        types: [{
+          type: storeSpecificDataSpecTypes[storeType],
+        }],
+      };
+      storeSpecificDataSpecFilters.push(specificDataSpecFilter);
+    }
+    return [
+      ...constantDataSpecFilters,
+      ...storeSpecificDataSpecFilters,
     ];
-    return allowedDataTypes.filter((type) => !forbiddenDataTypes.includes(type));
   },
 });
 
-function storeToFormData(store, { defaultType, allowedDataTypes }) {
+function storeToFormData(store, { defaultType }) {
   if (!store) {
     return createValuesContainer({
       name: '',
       description: '',
       type: defaultType,
       genericStoreConfig: createValuesContainer({
-        dataSpec: dataSpecToFormValues(null, { allowedTypes: allowedDataTypes }),
+        dataSpec: dataSpecToFormValues(null),
         defaultValue: '',
       }),
       rangeStoreConfig: createValuesContainer({
@@ -677,7 +772,7 @@ function storeToFormData(store, { defaultType, allowedDataTypes }) {
     }
     default:
       formData.genericStoreConfig = createValuesContainer({
-        dataSpec: dataSpecToFormValues(writeDataSpec, { allowedTypes: allowedDataTypes }),
+        dataSpec: dataSpecToFormValues(writeDataSpec),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
       });

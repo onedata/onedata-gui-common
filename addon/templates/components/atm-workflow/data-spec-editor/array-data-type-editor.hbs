@@ -2,6 +2,8 @@
   <span class="data-type-name">{{dataTypeTranslation}}</span>
   {{#if (eq mode "edit")}}
     {{atm-workflow/data-spec-editor/data-type-toolbar
+      placementContext=placementContext
+      dataTypeFilters=dataTypeFilters
       editorElement=editorElement
       isEnabled=isEnabled
       onElementChange=onElementChange

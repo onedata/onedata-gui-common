@@ -10,6 +10,8 @@
 
 import { get, computed, observer } from '@ember/object';
 import { reads } from '@ember/object/computed';
+import { scheduleOnce } from '@ember/runloop';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import {
@@ -38,24 +40,30 @@ const FormElement = FormFieldsGroup.extend({
     for (const fileType of fileTypes) {
       let typeRejected = false;
       for (const dataTypeFilter of dataTypeFilters) {
-        const fileTypeFromFilter = getFileTypeFromDataTypeFilter(dataTypeFilter);
+        const fileTypesFromFilter = getFileTypesFromDataTypeFilter(dataTypeFilter);
+        if (!fileTypesFromFilter.length) {
+          continue;
+        }
         switch (dataTypeFilter.filterType) {
-          case 'typeOrSupertype':
-            if (
-              fileType !== fileTypeFromFilter &&
-              !(fileSupertypes[fileTypeFromFilter] || []).includes(fileType)
-            ) {
+          case 'typeOrSupertype': {
+            const fileTypeMatchesSupertype = fileTypesFromFilter.some(
+              (filterFileType) =>
+              (fileSupertypes[filterFileType] || []).includes(fileType)
+            );
+            if (!fileTypesFromFilter.includes(fileType) && !fileTypeMatchesSupertype) {
               typeRejected = true;
             }
             break;
-          case 'typeOrSubtype':
-            if (
-              fileType !== fileTypeFromFilter &&
-              !(fileSubtypes[fileTypeFromFilter] || []).includes(fileType)
-            ) {
+          }
+          case 'typeOrSubtype': {
+            const fileTypeMatchesSubtype = fileTypesFromFilter.some(
+              (filterFileType) => (fileSubtypes[filterFileType] || []).includes(fileType)
+            );
+            if (!fileTypesFromFilter.includes(fileType) && !fileTypeMatchesSubtype) {
               typeRejected = true;
             }
             break;
+          }
           case 'forbiddenType':
             // `forbiddenType` filter works only at the whole data specs level.
             break;
@@ -83,19 +91,21 @@ const FormElement = FormFieldsGroup.extend({
   }),
 });
 
-function getFileTypeFromDataTypeFilter(dataTypeFilter) {
-  let fileDataSpec = null;
+function getFileTypesFromDataTypeFilter(dataTypeFilter) {
+  let fileDataSpecs = [];
   switch (dataTypeFilter && dataTypeFilter.filterType) {
     case 'typeOrSupertype':
     case 'typeOrSubtype':
-      fileDataSpec = get(dataTypeFilter, 'type');
+      fileDataSpecs = get(dataTypeFilter, 'types');
       break;
     case 'forbiddenType':
-      fileDataSpec = get(dataTypeFilter, 'forbiddenType');
+      fileDataSpecs = get(dataTypeFilter, 'forbiddenTypes');
       break;
   }
-  return fileDataSpec && fileDataSpec.type === 'file' &&
-    get(fileDataSpec, 'valuConstraints.fileType') || null;
+  return fileDataSpecs.filter((dataSpec) =>
+    dataSpec && dataSpec.type === 'file' &&
+    get(dataSpec, 'valueConstraints.fileType')
+  ).map((dataSpec) => dataSpec.valueConstraints.fileType).compact().uniq();
 }
 
 const FileTypeDropdown = DropdownField.extend({
@@ -111,13 +121,18 @@ const FileTypeDropdown = DropdownField.extend({
   allowedFileTypesObserver: observer(
     'parent.allowedFileTypes',
     function allowedFileTypesObserver() {
+      scheduleOnce('afterRender', this, 'adjustValueForNewOptions');
+    }
+  ),
+  adjustValueForNewOptions() {
+    safeExec(this, () => {
       const value = this.get('value');
       const allowedFileTypes = this.get('parent.allowedFileTypes');
       if (value && !allowedFileTypes.includes(value)) {
         this.valueChanged(allowedFileTypes[0]);
       }
-    }
-  ),
+    });
+  },
 });
 
 /**

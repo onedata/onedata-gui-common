@@ -5,6 +5,8 @@ import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
+import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
+import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-toolbar';
@@ -28,6 +30,18 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {DataSpecEditorPlacementContext}
+   */
+  placementContext: undefined,
+
+  /**
+   * @virtual
+   * @type {Array<DataSpecEditorFilter>}
+   */
+  dataTypeFilters: undefined,
+
+  /**
+   * @virtual
    * @type {DataSpecEditorElement}
    */
   editorElement: undefined,
@@ -42,6 +56,54 @@ export default Component.extend(I18n, {
    * @type {boolean}
    */
   isRemoveWarnOpened: false,
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  canUnpackFromArray: computed(
+    'editorElement.config.dataType',
+    'dataTypeFilters',
+    'placementContext',
+    function canUnpackFromArray() {
+      const {
+        dataTypeFilters,
+        placementContext,
+      } = this.getProperties('dataTypeFilters', 'placementContext');
+
+      if (this.get('editorElement.config.dataType') !== 'array') {
+        return false;
+      }
+
+      const itemDataSpec = formValuesToDataSpec(this.get('editorElement.config.item'));
+      return dataSpecMatchesFilters(itemDataSpec, dataTypeFilters, placementContext);
+    }
+  ),
+
+  /**
+   * @type {ComputedProperty<boolean>}
+   */
+  canPackIntoArray: computed(
+    'dataTypeFilters',
+    'placementContext',
+    function canPackIntoArray() {
+      const {
+        dataTypeFilters,
+        placementContext,
+      } = this.getProperties('dataTypeFilters', 'placementContext');
+
+      const packedDataSpec = {
+        type: 'array',
+        valueConstraints: {
+          itemDataSpec: formValuesToDataSpec(this.get('editorElement')),
+        },
+      };
+      return dataSpecMatchesFilters(
+        packedDataSpec,
+        dataTypeFilters,
+        placementContext,
+      );
+    }
+  ),
 
   /**
    * @type {ComputedProperty<boolean>}

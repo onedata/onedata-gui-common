@@ -102,9 +102,14 @@ export default Component.extend(I18n, {
   allowedStoreTypes: reads('modalOptions.allowedStoreTypes'),
 
   /**
-   * @type {ComputedProperty<Array<String|undefined>>}
+   * @type {ComputedProperty<AtmDataSpec|undefined>}
    */
-  allowedDataTypes: reads('modalOptions.allowedDataTypes'),
+  allowedStoreReadDataSpec: reads('modalOptions.allowedStoreReadDataSpec'),
+
+  /**
+   * @type {ComputedProperty<AtmDataSpec|undefined>}
+   */
+  allowedStoreWriteDataSpec: reads('modalOptions.allowedStoreWriteDataSpec'),
 
   /**
    * @type {ComputedProperty<Function>}

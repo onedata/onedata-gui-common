@@ -1,15 +1,17 @@
-{{#if (eq editorElement.config.dataType "array")}}
+{{#if canUnpackFromArray}}
   {{one-icon
     click=(action "unpackFromArray")
     icon="arrow-up"
     class=(concat-classes "unpack-from-array" (if (not isEnabled) "disabled"))
   }}
 {{/if}}
-{{one-icon
-  click=(action "packIntoArray")
-  icon="arrow-down"
-  class=(concat-classes "pack-into-array" (if (not isEnabled) "disabled"))
-}}
+{{#if canPackIntoArray}}
+  {{one-icon
+    click=(action "packIntoArray")
+    icon="arrow-down"
+    class=(concat-classes "pack-into-array" (if (not isEnabled) "disabled"))
+  }}
+{{/if}}
 {{remove-icon
   class="remove-trigger"
   isDisabled=(not isEnabled)

@@ -45,9 +45,9 @@ const RootGroup = FormFieldsRootGroup.extend({
         name: 'dataSpec',
         dataTypeFilters: [{
           filterType: 'forbiddenType',
-          forbiddenType: {
+          forbiddenTypes: [{
             type: 'onedatafsCredentials',
-          },
+          }],
           ignoredContexts: ['root'],
         }],
       }),

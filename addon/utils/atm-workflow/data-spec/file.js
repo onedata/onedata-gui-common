@@ -43,6 +43,29 @@ export const fileSubtypes = Object.freeze({
 });
 
 /**
+ * @param {AtmFileValueConstraints} targetConstraints
+ * @param {AtmFileValueConstraints} sourceConstraints
+ * @returns {boolean}
+ */
+export function canValueConstraintsContain(targetConstraints, sourceConstraints) {
+  if (
+    !targetConstraints ||
+    !targetConstraints.fileType ||
+    !sourceConstraints ||
+    !sourceConstraints.fileType
+  ) {
+    return false;
+  }
+
+  if (targetConstraints.fileType === sourceConstraints.fileType) {
+    return true;
+  } else {
+    return (fileSupertypes[sourceConstraints.fileType] || [])
+      .includes(targetConstraints.fileType);
+  }
+}
+
+/**
  * @param {Ember.Service} i18n
  * @param {AtmFileType} fileType
  * @returns {SafeString}

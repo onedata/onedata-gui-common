@@ -73,19 +73,19 @@ import { validator } from 'ember-cp-validations';
 /**
  * @typedef {Object} DataSpecEditorSupertypeFilter
  * @property {'typeOrSupertype'} filterType
- * @property {AtmDataSpec} type
+ * @property {Array<AtmDataSpec>} types
  */
 
 /**
  * @typedef {Object} DataSpecEditorSubtypeFilter
  * @property {'typeOrSubtype'} filterType
- * @property {AtmDataSpec} type
+ * @property {Array<AtmDataSpec>} types
  */
 
 /**
  * @typedef {Object} DataSpecEditorForbiddenFilter
  * @property {'forbiddenType'} filterType
- * @property {AtmLeafDataSpec} forbiddenType
+ * @property {Array<AtmLeafDataSpec>} forbiddenTypes
  * @property {Array<DataSpecEditorPlacementContext>} ignoredContexts
  */
 

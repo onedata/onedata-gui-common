@@ -26,6 +26,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {DataSpecEditorPlacementContext}
+   */
+  placementContext: undefined,
+
+  /**
+   * @virtual
    * @type {Array<DataSpecEditorFilter>}
    */
   dataTypeFilters: undefined,

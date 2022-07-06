@@ -35,6 +35,12 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
+   * @type {DataSpecEditorPlacementContext}
+   */
+  placementContext: undefined,
+
+  /**
+   * @virtual
    * @type {Array<DataSpecEditorFilter>}
    */
   dataTypeFilters: undefined,
@@ -58,20 +64,6 @@ export default Component.extend(I18n, {
   onFocusLost: undefined,
 
   /**
-   * @type {ComputedProperty<DataSpecEditorPlacementContext>}
-   */
-  placementContext: computed('parentEditorElement', function placementContext() {
-    const parentDataType = this.get('parentEditorElement.config.dataType');
-    if (!parentDataType) {
-      return 'root';
-    } else if (parentDataType === 'array') {
-      return 'array';
-    } else {
-      return 'default';
-    }
-  }),
-
-  /**
    * @type {ComputedProperty<{ value: string, label: SafeString }>}
    */
   selectorOptions: computed(
@@ -89,31 +81,49 @@ export default Component.extend(I18n, {
         let typeRejected = false;
         for (const dataTypeFilter of (dataTypeFilters || [])) {
           switch (dataTypeFilter.filterType) {
-            case 'typeOrSupertype':
-              if (dataTypeFilter.type && dataTypeFilter.type.type &&
-                dataSpecType !== dataTypeFilter.type.type &&
-                !(dataSpecSupertypes[dataTypeFilter.type.type] || [])
-                .includes(dataSpecType)
-              ) {
-                typeRejected = true;
+            case 'typeOrSupertype': {
+              let thisFilterRejects = true;
+              for (const filteredType of dataTypeFilter.types) {
+                if (
+                  filteredType.type && (
+                    dataSpecType === filteredType.type ||
+                    (dataSpecSupertypes[filteredType.type] || []).includes(dataSpecType)
+                  )
+                ) {
+                  thisFilterRejects = false;
+                }
               }
+              typeRejected = typeRejected || thisFilterRejects;
               break;
-            case 'typeOrSubtype':
-              if (dataTypeFilter.type && dataTypeFilter.type.type &&
-                dataSpecType !== dataTypeFilter.type.type &&
-                !(dataSpecSubtypes[dataTypeFilter.type.type] || []).includes(dataSpecType)
-              ) {
-                typeRejected = true;
+            }
+            case 'typeOrSubtype': {
+              let thisFilterRejects = true;
+              for (const filteredType of dataTypeFilter.types) {
+                if (
+                  filteredType.type && (
+                    dataSpecType === filteredType.type ||
+                    (dataSpecSubtypes[filteredType.type] || []).includes(dataSpecType)
+                  )
+                ) {
+                  thisFilterRejects = false;
+                }
               }
+              typeRejected = typeRejected || thisFilterRejects;
               break;
-            case 'forbiddenType':
-              if (dataTypeFilter.forbiddenType && dataTypeFilter.forbiddenType.type &&
-                dataTypeFilter.forbiddenType.type === dataSpecType &&
-                !(dataTypeFilter.ignoredContexts || []).includes(placementContext)
-              ) {
-                typeRejected = true;
+            }
+            case 'forbiddenType': {
+              let thisFilterRejects = false;
+              if ((dataTypeFilter.ignoredContexts || []).includes(placementContext)) {
+                break;
               }
+              for (const filteredType of dataTypeFilter.forbiddenTypes) {
+                if (filteredType.type && dataSpecType === filteredType.type) {
+                  thisFilterRejects = true;
+                }
+              }
+              typeRejected = typeRejected || thisFilterRejects;
               break;
+            }
           }
           if (typeRejected) {
             break;

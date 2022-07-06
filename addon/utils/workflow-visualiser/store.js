@@ -11,6 +11,7 @@ import EmberObject, { computed } from '@ember/object';
 import { resolve } from 'rsvp';
 import {
   getStoreWriteDataSpec,
+  getStoreWriteAlternativeDataSpecs,
   getStoreReadDataSpec,
 } from 'onedata-gui-common/utils/workflow-visualiser/data-spec-converters';
 
@@ -105,6 +106,19 @@ export default EmberObject.extend({
   writeDataSpec: computed('type', 'config', function writeDataSpec() {
     return getStoreWriteDataSpec(this.getProperties('type', 'config'));
   }),
+
+  /**
+   * @type {ComputedProperty<Array<AtmDataSpec>>}
+   */
+  writeAlternativeDataSpecs: computed(
+    'type',
+    'config',
+    function writeAlternativeDataSpecs() {
+      return getStoreWriteAlternativeDataSpecs(
+        this.getProperties('type', 'config')
+      );
+    }
+  ),
 
   /**
    * @type {ComputedProperty<AtmDataSpec>}

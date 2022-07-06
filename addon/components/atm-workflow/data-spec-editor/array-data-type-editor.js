@@ -24,6 +24,12 @@ export default Component.extend({
 
   /**
    * @virtual
+   * @type {DataSpecEditorPlacementContext}
+   */
+  placementContext: undefined,
+
+  /**
+   * @virtual
    * @type {Array<DataSpecEditorFilter>}
    */
   dataTypeFilters: undefined,
@@ -70,10 +76,10 @@ export default Component.extend({
         switch (dataTypeFilter.filterType) {
           case 'typeOrSupertype':
           case 'typeOrSubtype': {
-            const itemType =
-              extractItemTypeFromArrayDataSpec(dataTypeFilter.type);
-            return itemType ? Object.assign({}, dataTypeFilter, {
-              type: itemType,
+            const itemTypes = dataTypeFilter.types.map((type) =>
+              extractItemTypeFromArrayDataSpec(type)).compact();
+            return itemTypes.length ? Object.assign({}, dataTypeFilter, {
+              types: itemTypes,
             }) : null;
           }
           case 'forbiddenType':

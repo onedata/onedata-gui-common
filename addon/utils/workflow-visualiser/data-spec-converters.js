@@ -149,6 +149,29 @@ export function getStoreWriteDataSpec({ type, config }) {
 }
 
 /**
+ * Return an array of data specs which are accepted during writing to a store
+ * and which are additional formats besides the main write data spec.
+ * @param {{ type, config }} storeProperties
+ * @returns {Array<AtmDataSpec>}
+ */
+export function getStoreWriteAlternativeDataSpecs({ type }) {
+  switch (type) {
+    case 'timeSeries':
+      return [{
+        type: 'array',
+        valueConstraints: {
+          itemDataSpec: {
+            type: 'timeSeriesMeasurement',
+            valueConstraints: {},
+          },
+        },
+      }];
+    default:
+      return [];
+  }
+}
+
+/**
  * @param {{ type, config }} storeProperties
  * @returns {AtmDataSpec|null} null when reading from store is not constrained by
  * data specs mechanism

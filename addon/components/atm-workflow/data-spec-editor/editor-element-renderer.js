@@ -91,4 +91,18 @@ export default Component.extend({
       }
     }
   ),
+
+  /**
+   * @type {ComputedProperty<DataSpecEditorPlacementContext>}
+   */
+  placementContext: computed('parentEditorElement', function placementContext() {
+    const parentDataType = this.get('parentEditorElement.config.dataType');
+    if (!parentDataType) {
+      return 'root';
+    } else if (parentDataType === 'array') {
+      return 'array';
+    } else {
+      return 'default';
+    }
+  }),
 });

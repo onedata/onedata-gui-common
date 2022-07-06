@@ -30,6 +30,9 @@
  * } AtmDataSpec
  */
 
+import { get } from '@ember/object';
+import { canValueConstraintsContain as canFileValueConstraintsContain } from './file';
+
 export const dataSpecTypes = Object.freeze([
   'integer',
   'string',
@@ -64,6 +67,44 @@ export const dataSpecSubtypes = Object.freeze(
     return acc;
   }, {})
 );
+
+/**
+ * @param {AtmDataSpec} targetDataSpec
+ * @param {AtmDataSpec} sourceDataSpec
+ * @returns {boolean}
+ */
+export function canDataSpecContain(targetDataSpec, sourceDataSpec) {
+  if (
+    !targetDataSpec ||
+    !targetDataSpec.type ||
+    !sourceDataSpec ||
+    !sourceDataSpec.type
+  ) {
+    return false;
+  }
+
+  if (targetDataSpec.type === 'array' && sourceDataSpec.type === 'array') {
+    return canDataSpecContain(
+      get(targetDataSpec, 'valueConstraints.itemDataSpec'),
+      get(sourceDataSpec, 'valueConstraints.itemDataSpec')
+    );
+  } else if (
+    (dataSpecSupertypes[targetDataSpec.type] || []).includes(sourceDataSpec.type)
+  ) {
+    return true;
+  } else if (targetDataSpec.type === sourceDataSpec.type) {
+    if (targetDataSpec.type === 'file') {
+      return canFileValueConstraintsContain(
+        targetDataSpec.valueConstraints,
+        sourceDataSpec.valueConstraints
+      );
+    } else {
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
 
 /**
  * @param {Ember.Service} i18n
