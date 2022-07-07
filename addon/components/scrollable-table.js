@@ -106,7 +106,7 @@ export default Component.extend(WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  renderedInSafari: equal('browser.browser.browserCode', raw('safari')),
+  renderedInSafari: equal('browser.browserName', raw('safari')),
 
   /**
    * @type {ComputedProperty<String>}
