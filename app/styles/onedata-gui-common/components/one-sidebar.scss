@@ -1,3 +1,7 @@
+$sidebar-item-line-height-desktop: 50px;
+$sidebar-item-line-height-mobile: 54px;
+$sidebar-item-line-height-double-line: 54px;
+
 .one-sidebar {
   .row-heading {
     position: relative;
@@ -45,7 +49,7 @@
 }
 
 .two-level-sidebar {
-  $title-with-subtitle-pull-up: -7px;
+  $title-with-subtitle-pull-up: -4px;
 
   @mixin item-header-elements-color($color) {
     .sidebar-item-icon,
@@ -59,6 +63,19 @@
   font-size: 13px;
   @include font-semibold();
   padding-bottom: 20px;
+
+  .one-list-item {
+    line-height: $sidebar-item-line-height-desktop;
+    @media (max-width: $screen-xs-max) {
+      line-height: $sidebar-item-line-height-mobile;
+    }
+  }
+  .one-list.one-list-level-2 .one-list-item {
+    line-height: $sidebar-item-line-height-desktop - 4px;
+    @media (max-width: $screen-xs-max) {
+      line-height: $sidebar-item-line-height-mobile - 2px;
+    }
+  }
 
   .sidebar-filters-container {
     padding: $padding-large-vertical $padding-large-horizontal;
@@ -155,7 +172,7 @@
   .sidebar-item-title-upper,
   .sidebar-item-title-lower {
     position: relative;
-    line-height: $one-list-item-line-height / 2;
+    line-height: $sidebar-item-line-height-double-line / 2;
   }
 
   .sidebar-item-title-upper {
@@ -230,9 +247,12 @@
   }
 
   .one-inline-editor.editor {
-    $-height: $one-list-item-line-height - 2 * $padding-base-vertical;
-    height: $-height;
+    height: $sidebar-item-line-height-desktop - 2 * $padding-base-vertical;
     margin: $padding-base-vertical 0;
+
+    @media (max-width: $screen-xs-max) {
+      height: $sidebar-item-line-height-mobile - 2 * $padding-base-vertical;
+    }
 
     .one-icon {
       margin-right: 0;
@@ -269,5 +289,19 @@
     margin-right: -0.2em;
     font-size: $menu-icon-font-size;
     color: disabled-color($main-text-color);
+  }
+
+  .one-list.one-list-level-2 .one-list-item {
+    @include font-regular;
+    .item-header {
+      padding-left: 42px;
+      @media (max-width: $screen-sm-max) {
+        padding-left: 32px;
+      }
+    }
+    .sidebar-item-icon {
+      font-size: 2em;
+      margin-right: $padding-small-horizontal * 0.8;
+    }
   }
 }
