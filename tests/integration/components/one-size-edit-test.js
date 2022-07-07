@@ -4,13 +4,7 @@ import { setupRenderingTest } from 'ember-mocha';
 import { render, click, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
-
-class SizeUnitSelectHelper extends EmberPowerSelectHelper {
-  constructor() {
-    super('.size-unit-select-group', '.ember-basic-dropdown-content');
-  }
-}
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Component | one size edit', function () {
   setupRenderingTest();
@@ -42,9 +36,7 @@ describe('Integration | Component | one size edit', function () {
     await render(hbs `{{one-size-edit value=value forceStartEdit=true onSave=onSave}}`);
 
     await fillIn('.size-number-input', '2');
-    const select = new SizeUnitSelectHelper();
-    // option 1: MiB, option 2: GiB
-    await select.selectOption(2);
+    await selectChoose('.size-unit-select-group', 'GiB');
     expect(
       find(
         '.size-unit-select-group .ember-power-select-selected-item'

@@ -11,13 +11,7 @@ import {
 } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import sinon from 'sinon';
-import EmberPowerSelectHelper from '../../helpers/ember-power-select-helper';
-
-class UnitSelectHelper extends EmberPowerSelectHelper {
-  constructor() {
-    super('.one-way-capacity', '.ember-basic-dropdown-content');
-  }
-}
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Component | one way capacity', function () {
   setupRenderingTest();
@@ -56,7 +50,7 @@ describe('Integration | Component | one way capacity', function () {
     this.set('changed', changeSpy);
     await render(hbs `{{one-way-capacity value=capacity onChange=(action changed)}}`);
 
-    await new UnitSelectHelper().selectOption(2);
+    await selectChoose('.one-way-capacity', 'GiB');
     expect(changeSpy).to.be.calledWith(String(1024 * 1024 * 1024));
   });
 
