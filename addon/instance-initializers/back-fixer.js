@@ -1,6 +1,6 @@
 /**
  * Fixes JS evaluation in Firefox and Safari after back button press.
- * 
+ *
  * @module instance-initializers/back-fixer
  * @author Jakub Liput, Michał Borzęcki
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -16,7 +16,7 @@ export function initialize(applicationInstance) {
 
   // Hack to not use Safari cache
   const browser = applicationInstance.lookup('service:browser');
-  const isSafari = browser.get('browser.browserCode') === 'safari';
+  const isSafari = browser.get('browserName') === 'safari';
   if (isSafari) {
     $(window).bind('pagehide', function () {
       window.onedataIsReloadingApp = 1;

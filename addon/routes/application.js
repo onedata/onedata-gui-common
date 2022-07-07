@@ -79,7 +79,7 @@ export default Route.extend(ApplicationRouteMixin, {
   },
 
   smoothScrollPolyfill() {
-    if (this.get('browser.browser.browserCode') === 'firefox') {
+    if (this.get('browser.browserName') === 'firefox') {
       // Firefox does not handle smooth scroll for perfect scrollbar. Enforce smooth scroll
       // polyfill.
       window.__forceSmoothScrollPolyfill__ = true;
