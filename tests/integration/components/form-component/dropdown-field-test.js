@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, focus, fillIn, find, findAll } from '@ember/test-helpers';
+import { render, blur, focus, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
+import { selectChoose, clickTrigger, typeInSearch } from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {
@@ -165,7 +165,7 @@ describe('Integration | Component | form component/dropdown field', function () 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
     await clickTrigger('.dropdown-field');
-    await fillIn(find('.ember-power-select-search-input'), ' Eco');
+    await typeInSearch(' Eco');
 
     const options = findAll('.ember-power-select-option');
     expect(options).to.have.length(1);
