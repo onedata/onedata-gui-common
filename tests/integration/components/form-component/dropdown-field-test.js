@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, blur, focus, fillIn, find } from '@ember/test-helpers';
+import { render, blur, focus, fillIn, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
+import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/dropdown field', function () {
@@ -57,9 +57,9 @@ describe('Integration | Component | form component/dropdown field', function () 
     async function () {
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdown = new DropdownHelper();
-      await dropdown.open();
+      await clickTrigger('.dropdown-field');
 
+      const options = findAll('.ember-power-select-option');
       [{
         label: 'First',
         icon: 'space',
@@ -68,8 +68,8 @@ describe('Integration | Component | form component/dropdown field', function () 
       }, {
         label: 'Third',
       }].forEach(({ label, icon }, index) => {
-        const option = dropdown.getNthOption(index + 1);
-        expect(option.querySelector('.text').textContent.trim()).to.equal(label);
+        const option = options[index];
+        expect(option.querySelector('.text')).to.have.trimmed.text(label);
         if (icon) {
           expect(option.querySelector('.one-icon')).to.have.class(`oneicon-${icon}`);
         }
@@ -84,8 +84,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdownTrigger = new DropdownHelper().getTrigger();
-      expect(dropdownTrigger).to.have.attr('aria-disabled', 'true');
+      expect(find('.ember-basic-dropdown-trigger'))
+        .to.have.attr('aria-disabled', 'true');
     }
   );
 
@@ -96,7 +96,7 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdownTrigger = new DropdownHelper().getTrigger();
+      const dropdownTrigger = find('.ember-basic-dropdown-trigger');
       await focus(dropdownTrigger);
       await blur(dropdownTrigger);
 
@@ -111,8 +111,7 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdown = new DropdownHelper();
-      await dropdown.selectOption(2);
+      await selectChoose('.dropdown-field', 'Second');
 
       expect(valueChangedSpy).to.be.calledOnce;
       expect(valueChangedSpy).to.be.calledWith(2);
@@ -124,8 +123,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-    const dropdownTrigger = new DropdownHelper().getTrigger();
-    expect(dropdownTrigger.textContent.trim()).to.equal('Second');
+    const dropdownTrigger = find('.ember-basic-dropdown-trigger');
+    expect(dropdownTrigger).to.have.trimmed.text('Second');
   });
 
   it('sets input id according to "fieldId"', async function () {
@@ -133,7 +132,7 @@ describe('Integration | Component | form component/dropdown field', function () 
       {{form-component/dropdown-field field=field fieldId="abc"}}
     `);
 
-    const dropdownTrigger = new DropdownHelper().getTrigger();
+    const dropdownTrigger = find('.ember-basic-dropdown-trigger');
     expect(dropdownTrigger).to.have.attr('id', 'abc');
   });
 
@@ -146,8 +145,8 @@ describe('Integration | Component | form component/dropdown field', function () 
 
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdownTrigger = new DropdownHelper().getTrigger();
-      expect(dropdownTrigger.textContent.trim()).to.equal('Select option...');
+      const dropdownTrigger = find('.ember-basic-dropdown-trigger');
+      expect(dropdownTrigger).to.have.trimmed.text('Select option...');
     }
   );
 
@@ -156,23 +155,21 @@ describe('Integration | Component | form component/dropdown field', function () 
     async function () {
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdown = new DropdownHelper();
-      await dropdown.open();
+      await clickTrigger('.dropdown-field');
 
-      expect(dropdown.getSearchInput()).to.exist;
+      expect(find('.ember-power-select-search-input')).to.exist;
     }
   );
 
   it('filters available options according to query in search input', async function () {
     await render(hbs `{{form-component/dropdown-field field=field}}`);
-    const dropdown = new DropdownHelper();
 
-    await dropdown.open();
-    await fillIn(dropdown.getSearchInput(), ' Eco');
+    await clickTrigger('.dropdown-field');
+    await fillIn(find('.ember-power-select-search-input'), ' Eco');
 
-    const option = dropdown.getNthOption(1);
-    expect(option.querySelector('.text').textContent.trim()).to.equal('Second');
-    expect(dropdown.getNthOption(2)).to.not.exist;
+    const options = findAll('.ember-power-select-option');
+    expect(options).to.have.length(1);
+    expect(options[0].querySelector('.text')).to.have.trimmed.text('Second');
   });
 
   it(
@@ -181,10 +178,9 @@ describe('Integration | Component | form component/dropdown field', function () 
       this.set('field.showSearch', false);
       await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-      const dropdown = new DropdownHelper();
-      await dropdown.open();
+      await clickTrigger('.dropdown-field');
 
-      expect(dropdown.getSearchInput()).to.not.exist;
+      expect(find('.ember-power-select-search-input')).to.not.exist;
     }
   );
 
@@ -195,7 +191,7 @@ describe('Integration | Component | form component/dropdown field', function () 
 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-    expect(find('.text').textContent.trim()).to.equal('First');
+    expect(find('.text')).to.have.trimmed.text('First');
     expect(find('.one-icon')).to.have.class('oneicon-space');
     expect(find('.ember-basic-dropdown')).to.not.exist;
   });
@@ -205,10 +201,9 @@ describe('Integration | Component | form component/dropdown field', function () 
 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-    const dropdown = new DropdownHelper();
-    await dropdown.open();
-    expect(new DropdownHelper().getTrigger()).to.not.have.class('small');
-    expect(document.querySelector('.ember-basic-dropdown-content'))
+    await clickTrigger('.dropdown-field');
+    expect(find('.ember-basic-dropdown-trigger')).to.not.have.class('small');
+    expect(find('.ember-basic-dropdown-content'))
       .to.not.have.class('small');
   });
 
@@ -217,16 +212,9 @@ describe('Integration | Component | form component/dropdown field', function () 
 
     await render(hbs `{{form-component/dropdown-field field=field}}`);
 
-    const dropdown = new DropdownHelper();
-    await dropdown.open();
-    expect(new DropdownHelper().getTrigger()).to.have.class('small');
-    expect(document.querySelector('.ember-basic-dropdown-content'))
+    await clickTrigger('.dropdown-field');
+    expect(find('.ember-basic-dropdown-trigger')).to.have.class('small');
+    expect(find('.ember-basic-dropdown-content'))
       .to.have.class('small');
   });
 });
-
-class DropdownHelper extends EmberPowerSelectHelper {
-  constructor() {
-    super('.dropdown-field', '.ember-basic-dropdown-content');
-  }
-}

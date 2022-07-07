@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
 import { setupRenderingTest } from 'ember-mocha';
-import { render, settled, click } from '@ember/test-helpers';
+import { render, settled, click, find, findAll } from '@ember/test-helpers';
 import { lookupService } from '../../../helpers/stub-service';
 import hbs from 'htmlbars-inline-precompile';
 import {
@@ -10,7 +10,7 @@ import {
   getModalBody,
   getModalFooter,
 } from '../../../helpers/modal';
-import EmberPowerSelectHelper from '../../../helpers/ember-power-select-helper';
+import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import { Promise, resolve, reject } from 'rsvp';
 import { A } from '@ember/array';
 import sinon from 'sinon';
@@ -70,53 +70,51 @@ describe('Integration | Component | modals/record selector modal', async functio
       'modalOptions.recordsPromise',
       new Promise(resolve => recordsResolve = resolve)
     );
-    const recordHelper = new RecordHelper();
 
     await showModal(this);
 
     expect(getModalBody().querySelector('.spinner')).to.exist;
-    expect(recordHelper.getTrigger()).to.not.exist;
+    expect(find('.ember-basic-dropdown-trigger')).to.not.exist;
 
     recordsResolve([]);
     await settled();
-    expect(recordHelper.getTrigger()).to.exist;
+    expect(find('.ember-basic-dropdown-trigger')).to.exist;
   });
 
   it('renders passed dropdown placeholder', async function () {
-    const recordHelper = new RecordHelper();
     await showModal(this);
 
-    expect(recordHelper.getTrigger().innerText.trim()).to.equal('Select...');
+    expect(find('.ember-basic-dropdown-trigger')).to.have.trimmed.text('Select...');
   });
 
   it('renders passed records in dropdown', async function () {
-    const recordHelper = new RecordHelper();
-
     await showModal(this);
-    await recordHelper.open();
+    await clickTrigger('.record-selector-modal');
 
-    expect(recordHelper.getNthOption(1).innerText.trim()).to.equal('group1');
-    expect(recordHelper.getNthOption(1).querySelector('.oneicon-group')).to.exist;
-    expect(recordHelper.getNthOption(2).innerText.trim()).to.equal('space1');
-    expect(recordHelper.getNthOption(2).querySelector('.oneicon-space')).to.exist;
+    const options = findAll('.ember-power-select-option');
+    expect(options).to.have.length(2);
+    expect(options[0]).to.have.trimmed.text('group1');
+    expect(options[0].querySelector('.oneicon-group')).to.exist;
+    expect(options[1]).to.have.trimmed.text('space1');
+    expect(options[1].querySelector('.oneicon-space')).to.exist;
   });
 
   it('clears selection when selected record is removed from records list', async function () {
-    const recordHelper = new RecordHelper();
     const records = this.get('records');
 
     await showModal(this);
-    await recordHelper.selectOption(1);
+    await selectChoose('.record-selector-modal', 'group1');
 
-    expect(recordHelper.getTrigger().innerText.trim()).to.equal('group1');
+    expect(find('.ember-basic-dropdown-trigger')).to.have.trimmed.text('group1');
 
     records.removeObject(records.findBy('name', 'group1'));
     await settled();
-    expect(recordHelper.getTrigger().innerText.trim()).to.not.equal('group1');
+    expect(find('.ember-basic-dropdown-trigger')).to.not.have.trimmed.text('group1');
 
-    await recordHelper.open();
-    expect(recordHelper.getNthOption(1).innerText.trim()).to.equal('space1');
-    expect(recordHelper.getNthOption(2)).to.not.exist;
+    await clickTrigger('.record-selector-modal');
+    const options = findAll('.ember-power-select-option');
+    expect(options).to.have.length(1);
+    expect(options[0]).to.have.trimmed.text('space1');
   });
 
   it('disables submit button when nothing is selected', async function () {
@@ -128,22 +126,19 @@ describe('Integration | Component | modals/record selector modal', async functio
   });
 
   it('enables submit button when record is selected', async function () {
-    const recordHelper = new RecordHelper();
-
     await showModal(this);
-    await recordHelper.selectOption(1);
+    await selectChoose('.record-selector-modal', 'group1');
 
     expect(getModalFooter().querySelector('.record-selector-submit'))
       .to.not.have.attr('disabled');
   });
 
   it('submits selected record', async function () {
-    const recordHelper = new RecordHelper();
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
 
     await showModal(this);
-    await recordHelper.selectOption(1);
+    await selectChoose('.record-selector-modal', 'group1');
 
     const submitButton =
       getModalFooter().querySelector('.record-selector-submit');
@@ -173,12 +168,11 @@ describe('Integration | Component | modals/record selector modal', async functio
   });
 
   it('disables cancel button while submitting', async function () {
-    const recordHelper = new RecordHelper();
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
 
     await showModal(this);
-    await recordHelper.selectOption(1);
+    await selectChoose('.record-selector-modal', 'group1');
     await click(getModalFooter().querySelector('.record-selector-submit'));
 
     expect(getModalFooter().querySelector('.record-selector-cancel'))
@@ -186,13 +180,12 @@ describe('Integration | Component | modals/record selector modal', async functio
   });
 
   it('does not close modal on backdrop click when submitting', async function () {
-    const recordHelper = new RecordHelper();
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
-    await recordHelper.selectOption(1);
+    await selectChoose('.record-selector-modal', 'group1');
     await click(getModalFooter().querySelector('.record-selector-submit'));
     await click(getModal());
 
@@ -202,22 +195,15 @@ describe('Integration | Component | modals/record selector modal', async functio
   it('renders loading error when records cannot be loaded', async function () {
     suppressRejections();
     this.set('modalOptions.recordsPromise', reject('loadError'));
-    const recordHelper = new RecordHelper();
 
     await showModal(this);
 
-    expect(recordHelper.getTrigger()).to.not.exist;
+    expect(find('.ember-basic-dropdown-trigger')).to.not.exist;
     const loadError = getModalBody().querySelector('.resource-load-error');
     expect(loadError).to.exist;
     expect(loadError.textContent).to.contain('loadError');
   });
 });
-
-class RecordHelper extends EmberPowerSelectHelper {
-  constructor() {
-    super('.modal-content', 'body .ember-basic-dropdown-content');
-  }
-}
 
 async function showModal(testCase) {
   const {
