@@ -26,6 +26,7 @@ import {
 } from 'ember-awesome-macros';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import { inject as service } from '@ember/service';
+import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import ClipboardField from 'onedata-gui-common/utils/form-component/clipboard-field';
 import TextField from 'onedata-gui-common/utils/form-component/text-field';
@@ -46,12 +47,8 @@ import {
   formValuesToDataSpec,
   dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
-import {
-  dataSpecSupertypes,
-  dataSpecSubtypes,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
-import _ from 'lodash';
 
 const storeTypes = Object.freeze([
   'list',
@@ -68,8 +65,7 @@ const storeSpecificDataSpecTypes = Object.freeze({
   timeSeries: 'timeSeriesMeasurement',
 });
 
-const storeTypesNotExpandingArrays = ['singleValue', 'range'];
-const storeTypesWithoutArrayData = ['treeForest', 'range', 'timeSeries'];
+const storeTypesExpandingArrays = ['list', 'treeForest', 'auditLog', 'timeSeries'];
 
 const defaultRangeStart = 0;
 const defaultRangeStep = 1;
@@ -88,34 +84,6 @@ export default Component.extend(I18n, {
    * @override
    */
   i18nPrefix: 'components.modals.workflowVisualiser.storeModal.storeForm',
-
-  /**
-   * One of: `'create'`, `'edit'`, `'view'`
-   * @type {String}
-   */
-  mode: undefined,
-
-  /**
-   * Needed when `mode` is `'edit'` or `'view'`
-   * @virtual optional
-   * @type {Object}
-   */
-  store: undefined,
-
-  /**
-   * @type {AtmDataSpec|undefined}
-   */
-  allowedStoreReadDataSpec: undefined,
-
-  /**
-   * @type {AtmDataSpec|undefined}
-   */
-  allowedStoreWriteDataSpec: undefined,
-
-  /**
-   * @type {Array<String>|undefined}
-   */
-  allowedStoreTypes: undefined,
 
   /**
    * Needed when `mode` is `'create'` or `'edit'`
@@ -163,50 +131,28 @@ export default Component.extend(I18n, {
         );
       }
 
-      const storeTypesToReject = new Set();
-
       if (allowedStoreReadDataSpec && allowedStoreReadDataSpec.type) {
-        const constrainedType = allowedStoreReadDataSpec.type;
-        for (const storeType of Object.keys(storeSpecificDataSpecTypes)) {
-          const storeSpecificDataType = storeSpecificDataSpecTypes[storeType];
-          if (
-            storeSpecificDataType !== constrainedType &&
-            !(dataSpecSupertypes[storeSpecificDataType] || []).includes(constrainedType)
-          ) {
-            storeTypesToReject.add(storeType);
-          }
-        }
-        if (constrainedType === 'array') {
-          storeTypesWithoutArrayData
-            .forEach((storeType) => storeTypesToReject.add(storeType));
-        }
+        effAllowedTypes = effAllowedTypes.filter((storeType) =>
+          isDataSpecValidForStoreConfig(allowedStoreReadDataSpec, storeType)
+        );
       }
 
       if (allowedStoreWriteDataSpec && allowedStoreWriteDataSpec.type) {
-        const constrainedType = allowedStoreWriteDataSpec.type;
-        const constrainedItemType =
-          get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec.type');
-        for (const storeType of Object.keys(storeSpecificDataSpecTypes)) {
-          const storeSpecificDataType = storeSpecificDataSpecTypes[storeType];
-          const storeNotAcceptTypeDirectly =
-            storeSpecificDataType !== constrainedType &&
-            !(dataSpecSubtypes[storeSpecificDataType] || []).includes(constrainedType);
-          const storeNotAcceptTypeInArray = constrainedType === 'array' ?
-            storeSpecificDataType !== constrainedItemType &&
-            !(dataSpecSubtypes[storeSpecificDataType] || []).includes(constrainedItemType) :
-            true;
-          if (storeNotAcceptTypeDirectly && storeNotAcceptTypeInArray) {
-            storeTypesToReject.add(storeType);
+        effAllowedTypes = effAllowedTypes.filter((storeType) => {
+          let isOk = isDataSpecValidForStoreConfig(allowedStoreWriteDataSpec, storeType);
+          if (
+            !isOk &&
+            allowedStoreWriteDataSpec.type === 'array' &&
+            storeTypesExpandingArrays.includes(storeType)
+          ) {
+            isOk = isDataSpecValidForStoreConfig(
+              get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec'),
+              storeType
+            );
           }
-        }
-        if (constrainedType === 'array') {
-          _.intersection(storeTypesWithoutArrayData, storeTypesNotExpandingArrays)
-            .forEach((storeType) => storeTypesToReject.add(storeType));
-        }
+          return isOk;
+        });
       }
-
-      effAllowedTypes = effAllowedTypes
-        .filter((storeType) => !storeTypesToReject.has(storeType));
 
       return effAllowedTypes;
     }
@@ -232,53 +178,7 @@ export default Component.extend(I18n, {
       const defaultStoreType = effAllowedStoreTypes[0];
       return storeToFormData(store, {
         defaultType: defaultStoreType,
-        // allowedDataTypes: this.calculateEffDataSpecFilters(defaultStoreType),
       });
-    }
-  ),
-
-  /**
-   * @type {ComputedProperty<Array<>>}
-   */
-  dataSpecFilters: computed(
-    'allowedStoreReadDataSpec',
-    'allowedStoreWriteDataSpec',
-    function dataSpecFilters() {
-      const {
-        allowedStoreReadDataSpec,
-        allowedStoreWriteDataSpec,
-      } = this.getProperties(
-        'allowedStoreReadDataSpec',
-        'allowedStoreWriteDataSpec',
-      );
-
-      const filters = [{
-        filterType: 'forbiddenType',
-        forbiddenTypes: [{
-          type: 'onedatafsCredentials',
-        }],
-      }];
-
-      if (allowedStoreReadDataSpec) {
-        filters.push({
-          filterType: 'typeOrSubtype',
-          types: [allowedStoreReadDataSpec],
-        });
-      }
-      if (allowedStoreWriteDataSpec) {
-        const typeOrSupertypeFilter = {
-          filterType: 'typeOrSupertype',
-          types: [allowedStoreWriteDataSpec],
-        };
-        if (allowedStoreWriteDataSpec.type === 'array') {
-          typeOrSupertypeFilter.types.push(
-            get(allowedStoreWriteDataSpec, 'config.itemDataSpec')
-          );
-        }
-        filters.push(typeOrSupertypeFilter);
-      }
-
-      return filters;
     }
   ),
 
@@ -437,7 +337,6 @@ export default Component.extend(I18n, {
   dataSpecField: computed(function dataSpecField() {
     const field = DataSpecEditor.extend({
       dataTypeFilters: computed(
-        'component.dataSpecFilters',
         'valuesSource.type',
         function dataTypeFilters() {
           return this.get('component').calculateEffDataSpecFilters(
@@ -445,6 +344,20 @@ export default Component.extend(I18n, {
           );
         }
       ),
+      storeTypeObserver: observer('valuesSource.type', function storeTypeObserver() {
+        scheduleOnce('afterRender', this, 'adjustValueForSelectedStoreType');
+      }),
+      adjustValueForSelectedStoreType() {
+        safeExec(this, () => {
+          const storeType = this.get('valuesSource.type');
+          const dataSpec = formValuesToDataSpec(this.get('value'));
+          const newDataSpecFilters = this.get('component')
+            .calculateEffDataSpecFilters(storeType);
+          if (!dataSpecMatchesFilters(dataSpec, newDataSpecFilters, 'root')) {
+            this.valueChanged(dataSpecToFormValues(null));
+          }
+        });
+      },
     }).create({
       component: this,
       name: 'dataSpec',
@@ -678,8 +591,40 @@ export default Component.extend(I18n, {
   },
 
   calculateEffDataSpecFilters(storeType) {
-    const constantDataSpecFilters = this.get('dataSpecFilters');
-    const storeSpecificDataSpecFilters = [];
+    const {
+      allowedStoreReadDataSpec,
+      allowedStoreWriteDataSpec,
+    } = this.getProperties(
+      'allowedStoreReadDataSpec',
+      'allowedStoreWriteDataSpec',
+    );
+
+    const filters = [{
+      filterType: 'forbiddenType',
+      forbiddenTypes: [{
+        type: 'onedatafsCredentials',
+      }],
+    }];
+
+    if (allowedStoreReadDataSpec) {
+      filters.push({
+        filterType: 'typeOrSubtype',
+        types: [allowedStoreReadDataSpec],
+      });
+    }
+    if (allowedStoreWriteDataSpec) {
+      const typeOrSupertypeFilter = {
+        filterType: 'typeOrSupertype',
+        types: [allowedStoreWriteDataSpec],
+      };
+      const arrayItemDataSpec = allowedStoreWriteDataSpec.type === 'array' &&
+        get(allowedStoreWriteDataSpec, 'valueConstraints.itemDataSpec');
+      if (arrayItemDataSpec && storeTypesExpandingArrays.includes(storeType)) {
+        typeOrSupertypeFilter.types.push(arrayItemDataSpec);
+      }
+      filters.push(typeOrSupertypeFilter);
+    }
+
     if (storeType in storeSpecificDataSpecTypes) {
       const specificDataSpecFilter = {
         filterType: 'typeOrSubtype',
@@ -687,12 +632,10 @@ export default Component.extend(I18n, {
           type: storeSpecificDataSpecTypes[storeType],
         }],
       };
-      storeSpecificDataSpecFilters.push(specificDataSpecFilter);
+      filters.push(specificDataSpecFilter);
     }
-    return [
-      ...constantDataSpecFilters,
-      ...storeSpecificDataSpecFilters,
-    ];
+
+    return filters;
   },
 });
 
@@ -883,4 +826,24 @@ function parseRangeNumberString(rangeNumberString) {
     rangeNumberString &&
     rangeNumberString.trim().length ?
     stringAsNumber : NaN;
+}
+
+function isDataSpecValidForStoreConfig(dataSpec, storeType) {
+  if (!dataSpec || !dataSpec.type) {
+    return true;
+  }
+
+  switch (storeType) {
+    case 'treeForest':
+      return dataSpec.type === 'file';
+    case 'range':
+      return dataSpec.type === 'range';
+    case 'timeSeries':
+      return dataSpec.type === 'timeSeriesMeasurement';
+    case 'list':
+    case 'singleValue':
+    case 'auditLog':
+    default:
+      return true;
+  }
 }

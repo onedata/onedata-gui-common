@@ -2,6 +2,7 @@ import { get, set, computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';
+import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import {
   createDataTypeSelectorElement,
   createDataTypeElement,
@@ -293,8 +294,10 @@ export function dataSpecToFormValues(dataSpec) {
 
   if (dataType in valueConstraintsEditors) {
     return createDataTypeElement(dataType, {
-      formValues: valueConstraintsEditors[dataType]
-        .valueConstraintsToFormValues(valueConstraints),
+      formValues: createValuesContainer({
+        dataTypeEditor: valueConstraintsEditors[dataType]
+          .valueConstraintsToFormValues(valueConstraints),
+      }),
     });
   } else if (dataType === 'array') {
     return createDataTypeElement(dataType, {
