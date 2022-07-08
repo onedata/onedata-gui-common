@@ -71,38 +71,37 @@ export const dataSpecSubtypes = Object.freeze(
 /**
  * @param {AtmDataSpec} targetDataSpec
  * @param {AtmDataSpec} sourceDataSpec
+ * @param {boolean} [ignoreEmpty]
  * @returns {boolean}
  */
-export function canDataSpecContain(targetDataSpec, sourceDataSpec) {
+export function canDataSpecContain(targetDataSpec, sourceDataSpec, ignoreEmpty = false) {
   if (
     !targetDataSpec ||
     !targetDataSpec.type ||
     !sourceDataSpec ||
     !sourceDataSpec.type
   ) {
-    return false;
+    return ignoreEmpty;
   }
 
   if (targetDataSpec.type === 'array' && sourceDataSpec.type === 'array') {
     return canDataSpecContain(
       get(targetDataSpec, 'valueConstraints.itemDataSpec'),
-      get(sourceDataSpec, 'valueConstraints.itemDataSpec')
+      get(sourceDataSpec, 'valueConstraints.itemDataSpec'),
+      ignoreEmpty
     );
-  } else if (
-    (dataSpecSupertypes[targetDataSpec.type] || []).includes(sourceDataSpec.type)
-  ) {
-    return true;
   } else if (targetDataSpec.type === sourceDataSpec.type) {
     if (targetDataSpec.type === 'file') {
       return canFileValueConstraintsContain(
         targetDataSpec.valueConstraints,
-        sourceDataSpec.valueConstraints
+        sourceDataSpec.valueConstraints,
+        ignoreEmpty
       );
     } else {
       return true;
     }
   } else {
-    return false;
+    return (dataSpecSupertypes[sourceDataSpec.type] || []).includes(targetDataSpec.type);
   }
 }
 

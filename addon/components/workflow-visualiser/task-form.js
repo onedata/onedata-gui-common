@@ -41,6 +41,10 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import { validator } from 'ember-cp-validations';
 import { canDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import {
+  doesDataSpecFitToStoreRead,
+  doesDataSpecFitToStoreWrite,
+} from 'onedata-gui-common/utils/atm-workflow/store-config';
 
 const createStoreDropdownOptionValue = '__createStore';
 const leaveUnassignedDropdownOptionValue = '__leaveUnassigned';
@@ -1150,26 +1154,33 @@ function getValueBuilderTypesForDataSpec(dataSpec) {
 // }
 
 function getSourceStoreForDataSpec(availableStores, dataSpec) {
-  return (availableStores || []).filter((store) => {
-    const {
-      type,
-      readDataSpec,
-    } = getProperties(store || {}, 'type', 'readDataSpec');
-
-    return type === 'singleValue' || canDataSpecContain(dataSpec, readDataSpec);
+  return availableStores.filter((store) => {
+    const storeType = store && get(store, 'type');
+    return storeType === 'singleValue' && doesDataSpecFitToStoreRead(dataSpec, store);
   });
+  // return (availableStores || []).filter((store) => {
+  //   const {
+  //     type,
+  //     readDataSpec,
+  //   } = getProperties(store || {}, 'type', 'readDataSpec');
+
+  //   return type === 'singleValue' || canDataSpecContain(dataSpec, readDataSpec);
+  // });
 }
 
 function getTargetStoresForDataSpec(availableStores, dataSpec) {
   return availableStores.filter((store) => {
-    const {
-      writeDataSpec,
-      writeAlternativeDataSpecs,
-    } = getProperties(store || {}, 'writeDataSpec', 'writeAlternativeDataSpecs');
-
-    return [writeDataSpec, ...writeAlternativeDataSpecs]
-      .some((ds) => canDataSpecContain(ds, dataSpec));
+    return doesDataSpecFitToStoreWrite(dataSpec, store);
   });
+  // return availableStores.filter((store) => {
+  //   const {
+  //     writeDataSpec,
+  //     writeAlternativeDataSpecs,
+  //   } = getProperties(store || {}, 'writeDataSpec', 'writeAlternativeDataSpecs');
+
+  //   return [writeDataSpec, ...writeAlternativeDataSpecs]
+  //     .some((ds) => canDataSpecContain(ds, dataSpec));
+  // });
 }
 
 function getDispatchFunctionsForStoreType(storeType) {

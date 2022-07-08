@@ -353,7 +353,7 @@ export default Component.extend(I18n, {
           const dataSpec = formValuesToDataSpec(this.get('value'));
           const newDataSpecFilters = this.get('component')
             .calculateEffDataSpecFilters(storeType);
-          if (!dataSpecMatchesFilters(dataSpec, newDataSpecFilters, 'root')) {
+          if (!dataSpecMatchesFilters(dataSpec, newDataSpecFilters)) {
             this.valueChanged(dataSpecToFormValues(null));
           }
         });

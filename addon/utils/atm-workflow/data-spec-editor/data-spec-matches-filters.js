@@ -1,10 +1,7 @@
 import { get } from '@ember/object';
-import {
-  dataSpecSupertypes,
-  dataSpecSubtypes,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import { canDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec';
 
-export default function dataSpecMatchesFilters(dataSpec, filters, placementContext) {
+export default function dataSpecMatchesFilters(dataSpec, filters, placementContext = 'root') {
   const dataSpecType = dataSpec && dataSpec.type;
   // Absence of `dataSpec.type` means, that data spec is not complete (probably under
   // edition). It's emptiness does not directly violate any filter as there is still
@@ -18,12 +15,7 @@ export default function dataSpecMatchesFilters(dataSpec, filters, placementConte
       case 'typeOrSupertype': {
         let thisFilterRejects = true;
         for (const filteredType of filter.types) {
-          if (
-            filteredType.type && (
-              dataSpecType === filteredType.type ||
-              (dataSpecSupertypes[filteredType.type] || []).includes(dataSpecType)
-            )
-          ) {
+          if (filteredType && canDataSpecContain(dataSpec, filteredType, true)) {
             thisFilterRejects = false;
           }
         }
@@ -35,12 +27,7 @@ export default function dataSpecMatchesFilters(dataSpec, filters, placementConte
       case 'typeOrSubtype': {
         let thisFilterRejects = true;
         for (const filteredType of filter.types) {
-          if (
-            filteredType.type && (
-              dataSpecType === filteredType.type ||
-              (dataSpecSubtypes[filteredType.type] || []).includes(dataSpecType)
-            )
-          ) {
+          if (filteredType && canDataSpecContain(filteredType, dataSpec, true)) {
             thisFilterRejects = false;
           }
         }
@@ -71,17 +58,8 @@ export default function dataSpecMatchesFilters(dataSpec, filters, placementConte
       switch (filter.filterType) {
         case 'typeOrSupertype':
         case 'typeOrSubtype': {
-          const itemTypes = [];
-          for (const type of filter.types) {
-            if (type.type === 'array') {
-              itemTypes.push(get(type, 'valueConstraints.itemDataSpec'));
-            }
-          }
-          if (itemTypes.length) {
-            itemFilters.push(Object.assign({}, filter, {
-              types: itemTypes,
-            }));
-          }
+          // Any filters of the above types check all levels of nesting out of
+          // the box (see `canDataSpecContain`) and we don't have to pass them deeper.
           break;
         }
         case 'forbiddenType':

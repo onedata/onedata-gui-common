@@ -8,6 +8,7 @@
  */
 
 import _ from 'lodash';
+import { commonDataSpecFilters } from './commons';
 
 /**
  * @typedef {Object} AtmTimeSeriesStoreConfig
@@ -111,3 +112,35 @@ export function translateMetricAggregator(
     `utils.atmWorkflow.storeConfig.timeSeries.metricAggregators.${short ? 'short' : 'standard'}.${metricAggregator}`;
   return i18n.t(i18nPath, {}, { defaultValue: '' });
 }
+
+/**
+ * @returns {Array<DataSpecEditorFilter>}
+ */
+export function getReadDataSpecFilters() {
+  return [...commonDataSpecFilters, {
+    filterType: 'typeOrSupertype',
+    types: [{ type: 'timeSeriesMeasurement' }],
+  }];
+}
+
+/**
+ * @returns {Array<DataSpecEditorFilter>}
+ */
+export function getWriteDataSpecFilters() {
+  return [...commonDataSpecFilters, {
+    filterType: 'typeOrSubtype',
+    types: [{ type: 'timeSeriesMeasurement' }],
+  }];
+}
+
+export default {
+  nameGeneratorTypes,
+  metricResolutionsMap,
+  metricResolutions,
+  metricAggregators,
+  translateNameGeneratorType,
+  translateMetricResolution,
+  translateMetricAggregator,
+  getReadDataSpecFilters,
+  getWriteDataSpecFilters,
+};

@@ -45,16 +45,21 @@ export const fileSubtypes = Object.freeze({
 /**
  * @param {AtmFileValueConstraints} targetConstraints
  * @param {AtmFileValueConstraints} sourceConstraints
+ * @param {boolean} [ignoreEmpty]
  * @returns {boolean}
  */
-export function canValueConstraintsContain(targetConstraints, sourceConstraints) {
+export function canValueConstraintsContain(
+  targetConstraints,
+  sourceConstraints,
+  ignoreEmpty = false,
+) {
   if (
     !targetConstraints ||
     !targetConstraints.fileType ||
     !sourceConstraints ||
     !sourceConstraints.fileType
   ) {
-    return false;
+    return ignoreEmpty;
   }
 
   if (targetConstraints.fileType === sourceConstraints.fileType) {
