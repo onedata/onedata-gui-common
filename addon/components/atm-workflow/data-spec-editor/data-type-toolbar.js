@@ -6,7 +6,7 @@ import {
   createDataTypeElement,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
 import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
-import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
+import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-toolbar';

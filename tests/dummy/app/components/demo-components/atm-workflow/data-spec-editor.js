@@ -8,7 +8,7 @@ import {
   FormElement as DataSpecEditor,
   dataSpecToFormValues,
   formValuesToDataSpec,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 
 export default Component.extend({
   rootGroup: computed(function rootGroup() {

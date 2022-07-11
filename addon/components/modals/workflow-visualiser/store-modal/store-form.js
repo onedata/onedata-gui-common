@@ -46,7 +46,7 @@ import {
   FormElement as DataSpecEditor,
   formValuesToDataSpec,
   dataSpecToFormValues,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-editor2';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
