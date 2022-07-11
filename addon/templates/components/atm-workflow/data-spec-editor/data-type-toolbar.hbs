@@ -1,15 +1,15 @@
 {{#if canUnpackFromArray}}
   {{one-icon
     click=(action "unpackFromArray")
-    icon="arrow-up"
-    class=(concat-classes "unpack-from-array" (if (not isEnabled) "disabled"))
+    icon="flatten"
+    class=(concat-classes "unpack-from-array custom-icon-btn" (if (not isEnabled) "disabled"))
   }}
 {{/if}}
 {{#if canPackIntoArray}}
   {{one-icon
     click=(action "packIntoArray")
-    icon="arrow-down"
-    class=(concat-classes "pack-into-array" (if (not isEnabled) "disabled"))
+    icon="array"
+    class=(concat-classes "pack-into-array custom-icon-btn" (if (not isEnabled) "disabled"))
   }}
 {{/if}}
 {{remove-icon
