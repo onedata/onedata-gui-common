@@ -33,7 +33,17 @@ export default FormFieldsGroup.extend({
   /**
    * @override
    */
+  translationName: '',
+
+  /**
+   * @override
+   */
   translationPath: '',
+
+  /**
+   * @override
+   */
+  valueName: '',
 
   /**
    * @override

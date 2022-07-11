@@ -129,6 +129,11 @@ export const FormElement = FormField.extend({
   /**
    * @override
    */
+  internalClasses: 'nowrap-on-desktop',
+
+  /**
+   * @override
+   */
   withValidationIcon: false,
 
   /**

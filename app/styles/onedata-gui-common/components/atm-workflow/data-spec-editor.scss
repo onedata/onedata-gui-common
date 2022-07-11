@@ -16,6 +16,10 @@
     }
   }
 
+  .data-type-toolbar {
+    margin-right: -0.4em;
+  }
+
   .form-summary-toggle {
     font-size: 80%;
     * {
@@ -66,5 +70,9 @@
     .data-type-name {
       text-transform: uppercase;
     }
+  }
+
+  .default-data-type-editor {
+    padding: $padding-base-vertical $padding-large-horizontal;
   }
 }
