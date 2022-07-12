@@ -1,3 +1,14 @@
+/**
+ * Renders dropdown element with all possible data spec types. "Possible", because
+ * types can be narrowed by `dataSpecFilters`.
+ *
+ * It's the main component for building data specs in a typical happy path.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -7,7 +18,7 @@ import {
   dataSpecSubtypes,
   translateDataSpecType,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
-import { createDataTypeElement } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
+import { createDataTypeElement } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-selector';
 
@@ -35,13 +46,13 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {DataSpecPlacementContext}
+   * @type {AtmDataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 

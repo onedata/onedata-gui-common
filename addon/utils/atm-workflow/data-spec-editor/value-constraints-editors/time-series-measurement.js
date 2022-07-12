@@ -159,11 +159,20 @@ function valueConstraintsToFormValues(valueConstraints) {
   return values;
 }
 
+/**
+ * @param {Ember.Service} i18n
+ * @param {Utils.FormComponent.ValuesContainer} values
+ * @returns {SafeString}
+ */
 function summarizeFormValues(i18n, values) {
   const measurementsCount = values && get(values, '__fieldsValueNames.length') || 0;
   return i18n.t(`${i18nPrefix}.summary`, { measurementsCount });
 }
 
+/**
+ * @param {Utils.FormComponent.ValuesContainer} values
+ * @returns {boolean}
+ */
 function shouldWarnOnRemove(values) {
   return values && get(values, '__fieldsValueNames.length') > 0;
 }

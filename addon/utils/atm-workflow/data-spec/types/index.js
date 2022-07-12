@@ -1,5 +1,5 @@
 /**
- * Contains general typedefs related to automation data specs
+ * Contains general typedefs, data and functions related to automation data specs types.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -80,38 +80,49 @@ export function translateDataSpecType(i18n, dataSpecType) {
 }
 
 /**
- * @param {AtmDataSpec} targetDataSpec
- * @param {AtmDataSpec} sourceDataSpec
+ * Returns true, when data fulfilling `toContainDataSpec` can be persisted
+ * inside data container fulfilling `containerDataSpec`.
+ *
+ * @param {AtmDataSpec} containerDataSpec
+ * @param {AtmDataSpec} toContainDataSpec
  * @param {boolean} [ignoreEmpty]
  * @returns {boolean}
  */
-export function canDataSpecContain(targetDataSpec, sourceDataSpec, ignoreEmpty = false) {
+export function canDataSpecContain(
+  containerDataSpec,
+  toContainDataSpec,
+  ignoreEmpty = false,
+) {
   if (
-    !targetDataSpec ||
-    !targetDataSpec.type ||
-    !sourceDataSpec ||
-    !sourceDataSpec.type
+    !containerDataSpec ||
+    !containerDataSpec.type ||
+    !toContainDataSpec ||
+    !toContainDataSpec.type
   ) {
     return ignoreEmpty;
   }
 
-  if (targetDataSpec.type === 'array' && sourceDataSpec.type === 'array') {
+  if (
+    containerDataSpec.type === 'array' &&
+    toContainDataSpec.type === 'array'
+  ) {
     return canDataSpecContain(
-      get(targetDataSpec, 'valueConstraints.itemDataSpec'),
-      get(sourceDataSpec, 'valueConstraints.itemDataSpec'),
+      get(containerDataSpec, 'valueConstraints.itemDataSpec'),
+      get(toContainDataSpec, 'valueConstraints.itemDataSpec'),
       ignoreEmpty
     );
-  } else if (targetDataSpec.type === sourceDataSpec.type) {
-    if (targetDataSpec.type === 'file') {
+  } else if (containerDataSpec.type === toContainDataSpec.type) {
+    if (containerDataSpec.type === 'file') {
       return canFileValueConstraintsContain(
-        targetDataSpec.valueConstraints,
-        sourceDataSpec.valueConstraints,
+        containerDataSpec.valueConstraints,
+        toContainDataSpec.valueConstraints,
         ignoreEmpty
       );
     } else {
       return true;
     }
   } else {
-    return (dataSpecSupertypes[sourceDataSpec.type] || []).includes(targetDataSpec.type);
+    return (dataSpecSupertypes[toContainDataSpec.type] || [])
+      .includes(containerDataSpec.type);
   }
 }

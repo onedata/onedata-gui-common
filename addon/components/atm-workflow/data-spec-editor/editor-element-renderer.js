@@ -1,3 +1,12 @@
+/**
+ * It's a renderer component which renders needed editor elements according to
+ * element specification (`editorElement`).
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/editor-element-renderer';
@@ -30,7 +39,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 
@@ -47,6 +56,7 @@ export default Component.extend({
   parentEditorElement: undefined,
 
   /**
+   * @virtual
    * @type {Map<string, DataSpecEditorElementContext>}
    */
   editorElementsContextMap: undefined,
@@ -73,6 +83,7 @@ export default Component.extend({
    */
   editorElementComponentName: computed(
     'editorElement',
+    'editorElementComponentNames',
     function editorElementComponentName() {
       const {
         editorElement,
@@ -93,7 +104,7 @@ export default Component.extend({
   ),
 
   /**
-   * @type {ComputedProperty<DataSpecPlacementContext>}
+   * @type {ComputedProperty<AtmDataSpecPlacementContext>}
    */
   placementContext: computed('parentEditorElement', function placementContext() {
     const parentDataType = this.get('parentEditorElement.config.dataType');

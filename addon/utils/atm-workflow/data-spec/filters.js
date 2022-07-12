@@ -1,37 +1,58 @@
 /**
- * @typedef {Object} DataSpecSupertypeFilter
+ * Contains typedefs and functions related to automation data specs filters.
+ *
+ * Filters allow to check wheather or not some dataspec fulfills specific conditions
+ * like being a subtype of some type.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+/**
+ * @typedef {Object} AtmDataSpecSupertypeFilter
  * @property {'typeOrSupertype'} filterType
  * @property {Array<AtmDataSpec>} types
  */
 
 /**
- * @typedef {Object} DataSpecSubtypeFilter
+ * @typedef {Object} AtmDataSpecSubtypeFilter
  * @property {'typeOrSubtype'} filterType
  * @property {Array<AtmDataSpec>} types
  */
 
 /**
- * @typedef {Object} DataSpecForbiddenFilter
+ * @typedef {Object} AtmDataSpecForbiddenFilter
  * @property {'forbiddenType'} filterType
  * @property {Array<AtmLeafDataSpec>} forbiddenTypes
- * @property {Array<DataSpecPlacementContext>} ignoredContexts
+ * @property {Array<AtmDataSpecPlacementContext>} ignoredContexts
  */
 
 /**
- * @typedef {'root'|'array'} DataSpecPlacementContext
+ * @typedef {'root'|'array'|'default'} AtmDataSpecPlacementContext
+ * Describes where data spec is placed. "root" means that it is not a nested part
+ * of some broader data spec, "array" means that this data spec describes an array
+ * item. For all other use cases, "default" should be used.
  */
 
 /**
  * @typedef {
- *   DataSpecSupertypeFilter |
- *   DataSpecSubtypeFilter |
- *   DataSpecForbiddenFilter
- * } DataSpecFilter
+ *   AtmDataSpecSupertypeFilter |
+ *   AtmDataSpecSubtypeFilter |
+ *   AtmDataSpecForbiddenFilter
+ * } AtmDataSpecFilter
  */
 
 import { get } from '@ember/object';
 import { canDataSpecContain } from './types';
 
+/**
+ * Returns true when passed `dataSpec` fulfills all given `filters`.
+ * @param {AtmDataSpec} dataSpec
+ * @param {Array<AtmDataSpecFilter>} filters
+ * @param {AtmDataSpecPlacementContext} [placementContext]
+ * @returns {boolean}
+ */
 export function dataSpecMatchesFilters(dataSpec, filters, placementContext = 'root') {
   const dataSpecType = dataSpec && dataSpec.type;
   // Absence of `dataSpec.type` means, that data spec is not complete (probably under

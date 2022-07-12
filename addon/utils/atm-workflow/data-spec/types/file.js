@@ -1,5 +1,5 @@
 /**
- * Contains type definitions related to "file" automation data spec.
+ * Contains type definitions, data and utils related to "file" automation data spec.
  *
  * @author Michał Borzęcki
  * @copyright (C) 2022 ACK CYFRONET AGH
@@ -43,30 +43,33 @@ export const fileSubtypes = Object.freeze({
 });
 
 /**
- * @param {AtmFileValueConstraints} targetConstraints
- * @param {AtmFileValueConstraints} sourceConstraints
+ * Returns true, when data fulfilling `toContainConstraints` can be persisted
+ * inside data container fulfilling `containerConstraints`.
+ *
+ * @param {AtmFileValueConstraints} containerConstraints
+ * @param {AtmFileValueConstraints} toContainConstraints
  * @param {boolean} [ignoreEmpty]
  * @returns {boolean}
  */
 export function canValueConstraintsContain(
-  targetConstraints,
-  sourceConstraints,
+  containerConstraints,
+  toContainConstraints,
   ignoreEmpty = false,
 ) {
   if (
-    !targetConstraints ||
-    !targetConstraints.fileType ||
-    !sourceConstraints ||
-    !sourceConstraints.fileType
+    !containerConstraints ||
+    !containerConstraints.fileType ||
+    !toContainConstraints ||
+    !toContainConstraints.fileType
   ) {
     return ignoreEmpty;
   }
 
-  if (targetConstraints.fileType === sourceConstraints.fileType) {
+  if (containerConstraints.fileType === toContainConstraints.fileType) {
     return true;
   } else {
-    return (fileSupertypes[sourceConstraints.fileType] || [])
-      .includes(targetConstraints.fileType);
+    return (fileSupertypes[toContainConstraints.fileType] || [])
+      .includes(containerConstraints.fileType);
   }
 }
 

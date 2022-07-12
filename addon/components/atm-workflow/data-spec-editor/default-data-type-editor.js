@@ -1,3 +1,13 @@
+/**
+ * Renders a representation of data spec type. In simple cases it is only name + toolbar.
+ * It more complicated (like "timeSeriesMeasurement" type) renders also a form with
+ * additional controls for value constraints.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, observer, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
@@ -26,13 +36,13 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {DataSpecPlacementContext}
+   * @type {AtmDataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 

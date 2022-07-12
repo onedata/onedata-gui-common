@@ -1,3 +1,13 @@
+/**
+ * Renders a representation of the "array" data spec type. Depending on the current
+ * state of the editor, it renders array item data type element or a dropdown which allows
+ * to select one.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed, get } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -24,13 +34,13 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {DataSpecPlacementContext}
+   * @type {AtmDataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 
@@ -66,7 +76,7 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFiltersForItems: computed(
     'dataSpecFilters',

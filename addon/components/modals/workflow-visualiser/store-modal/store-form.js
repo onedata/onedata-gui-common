@@ -60,9 +60,9 @@ const storeTypes = Object.freeze([
 ]);
 
 const storeSpecificDataSpecTypes = Object.freeze({
-  treeForest: 'file',
-  range: 'range',
-  timeSeries: 'timeSeriesMeasurement',
+  treeForest: ['file', 'dataset'],
+  range: ['range'],
+  timeSeries: ['timeSeriesMeasurement'],
 });
 
 const storeTypesExpandingArrays = ['list', 'treeForest', 'auditLog', 'timeSeries'];
@@ -628,9 +628,9 @@ export default Component.extend(I18n, {
     if (storeType in storeSpecificDataSpecTypes) {
       const specificDataSpecFilter = {
         filterType: 'typeOrSubtype',
-        types: [{
-          type: storeSpecificDataSpecTypes[storeType],
-        }],
+        types: storeSpecificDataSpecTypes[storeType].map((type) => ({
+          type,
+        })),
       };
       filters.push(specificDataSpecFilter);
     }
@@ -833,17 +833,9 @@ function isDataSpecValidForStoreConfig(dataSpec, storeType) {
     return true;
   }
 
-  switch (storeType) {
-    case 'treeForest':
-      return dataSpec.type === 'file';
-    case 'range':
-      return dataSpec.type === 'range';
-    case 'timeSeries':
-      return dataSpec.type === 'timeSeriesMeasurement';
-    case 'list':
-    case 'singleValue':
-    case 'auditLog':
-    default:
-      return true;
+  if (storeType in storeSpecificDataSpecTypes) {
+    return storeSpecificDataSpecTypes[storeType].includes(dataSpec.type);
   }
+
+  return true;
 }

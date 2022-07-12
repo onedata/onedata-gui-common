@@ -14,7 +14,7 @@ import { commonDataSpecFilters } from './commons';
  */
 
 /**
- * @returns {Array<DataSpecFilter>}
+ * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
   return [...commonDataSpecFilters, {
@@ -25,7 +25,7 @@ export function getReadDataSpecFilters() {
 
 /**
  * @param {AtmListStoreConfig} [storeConfig]
- * @returns {Array<DataSpecFilter>}
+ * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters(storeConfig) {
   const filters = [...commonDataSpecFilters];

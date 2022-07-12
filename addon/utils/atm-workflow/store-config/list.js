@@ -15,7 +15,7 @@ import { commonDataSpecFilters } from './commons';
 
 /**
  * @param {AtmListStoreConfig} [storeConfig]
- * @returns {Array<DataSpecFilter>}
+ * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters(storeConfig) {
   const filters = [...commonDataSpecFilters];
@@ -33,7 +33,7 @@ export function getReadDataSpecFilters(storeConfig) {
 
 /**
  * @param {AtmListStoreConfig} [storeConfig]
- * @returns {Array<DataSpecFilter>}
+ * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters(storeConfig) {
   const filters = [...commonDataSpecFilters];

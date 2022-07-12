@@ -114,7 +114,7 @@ export function translateMetricAggregator(
 }
 
 /**
- * @returns {Array<DataSpecFilter>}
+ * @returns {Array<AtmDataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
   return [...commonDataSpecFilters, {
@@ -124,7 +124,7 @@ export function getReadDataSpecFilters() {
 }
 
 /**
- * @returns {Array<DataSpecFilter>}
+ * @returns {Array<AtmDataSpecFilter>}
  */
 export function getWriteDataSpecFilters() {
   return [...commonDataSpecFilters, {

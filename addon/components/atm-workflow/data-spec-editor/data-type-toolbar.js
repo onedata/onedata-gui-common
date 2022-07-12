@@ -1,10 +1,24 @@
+/**
+ * Renders a simple toolbar with actions specific for data types. Allows:
+ * - removing editor element,
+ * - wrapping existing element with an array,
+ * - flattening array to it's item's type.
+ *
+ * Some buttons can be hidden if are not applicable due to the current
+ * `dataSpecFilters`.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import {
   createDataTypeSelectorElement,
   createDataTypeElement,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/editor-element-creators';
 import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
@@ -31,13 +45,13 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {DataSpecPlacementContext}
+   * @type {AtmDataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 
@@ -84,18 +98,24 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   canPackIntoArray: computed(
+    'editorElement',
     'dataSpecFilters',
     'placementContext',
     function canPackIntoArray() {
       const {
+        editorElement,
         dataSpecFilters,
         placementContext,
-      } = this.getProperties('dataSpecFilters', 'placementContext');
+      } = this.getProperties(
+        'editorElement',
+        'dataSpecFilters',
+        'placementContext',
+      );
 
       const packedDataSpec = {
         type: 'array',
         valueConstraints: {
-          itemDataSpec: formValuesToDataSpec(this.get('editorElement')),
+          itemDataSpec: formValuesToDataSpec(editorElement),
         },
       };
       return dataSpecMatchesFilters(

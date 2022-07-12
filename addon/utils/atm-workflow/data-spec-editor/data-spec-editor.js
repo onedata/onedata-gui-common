@@ -6,7 +6,7 @@ import { createValuesContainer } from 'onedata-gui-common/utils/form-component/v
 import {
   createDataTypeSelectorElement,
   createDataTypeElement,
-} from './create-data-spec-editor-element';
+} from './editor-element-creators';
 import valueConstraintsEditors from './value-constraints-editors';
 import { validator } from 'ember-cp-validations';
 
@@ -75,7 +75,7 @@ export const FormElement = FormField.extend({
   /**
    * Array of filters used to narrow available data types.
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 
@@ -115,7 +115,13 @@ export const FormElement = FormField.extend({
    */
   editorElementsContextMapCache: null,
 
-  /** */
+  /**
+   * Contains contextual data for editor elements. For now it preserves only `formRootGroup`
+   * for each editor element with dedicated value constraints form. It allows
+   * to have the same form state regardless element nesting manipulation and component
+   * rerenders.
+   * @type {ComputedProperty<Map<string, DataSpecEditorElementContext>>}
+   */
   editorElementsContextMap: computed('value', function editorElementsContextMap() {
     const {
       editorElementsContextMapCache: elementsMap,

@@ -27,7 +27,7 @@ const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.fil
 const FormElement = FormFieldsGroup.extend({
   /**
    * @virtual
-   * @type {Array<DataSpecFilter>}
+   * @type {Array<AtmDataSpecFilter>}
    */
   dataSpecFilters: undefined,
 
@@ -157,6 +157,11 @@ function valueConstraintsToFormValues(valueConstraints) {
   });
 }
 
+/**
+ * @param {Ember.Service} i18n
+ * @param {Utils.FormComponent.ValuesContainer} values
+ * @returns {SafeString}
+ */
 function summarizeFormValues(i18n, values) {
   const formFileType = values && get(values, 'fileType');
   const fileType = fileTypes.includes(formFileType) ? formFileType : fileTypes[0];
@@ -165,6 +170,9 @@ function summarizeFormValues(i18n, values) {
   });
 }
 
+/**
+ * @returns {boolean}
+ */
 function shouldWarnOnRemove() {
   return false;
 }
