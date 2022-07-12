@@ -427,10 +427,10 @@ export default Component.extend(I18n, {
             return true;
           }
 
-          if (rangeStep > 0 && parsedValue >= rangeEnd) {
-            return String(field.t(`${fieldPath}.errors.gteEndForPositiveStep`));
-          } else if (rangeStep < 0 && parsedValue <= rangeEnd) {
-            return String(field.t(`${fieldPath}.errors.lteEndForNegativeStep`));
+          if (rangeStep > 0 && parsedValue > rangeEnd) {
+            return String(field.t(`${fieldPath}.errors.gtEndForPositiveStep`));
+          } else if (rangeStep < 0 && parsedValue < rangeEnd) {
+            return String(field.t(`${fieldPath}.errors.ltEndForNegativeStep`));
           }
           return true;
         }, {
@@ -470,10 +470,10 @@ export default Component.extend(I18n, {
             return true;
           }
 
-          if (rangeStep > 0 && parsedValue <= rangeStart) {
-            return String(field.t(`${fieldPath}.errors.lteStartForPositiveStep`));
-          } else if (rangeStep < 0 && parsedValue >= rangeStart) {
-            return String(field.t(`${fieldPath}.errors.gteStartForPositiveStep`));
+          if (rangeStep > 0 && parsedValue < rangeStart) {
+            return String(field.t(`${fieldPath}.errors.ltStartForPositiveStep`));
+          } else if (rangeStep < 0 && parsedValue > rangeStart) {
+            return String(field.t(`${fieldPath}.errors.gtStartForPositiveStep`));
           }
           return true;
         }, {
