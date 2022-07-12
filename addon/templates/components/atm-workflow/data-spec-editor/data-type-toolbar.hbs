@@ -1,20 +1,29 @@
 {{#if canUnpackFromArray}}
-  {{one-icon
+  {{#one-icon
     click=(action "unpackFromArray")
     icon="flatten"
     class=(concat-classes "unpack-from-array custom-icon-btn" (if (not isEnabled) "disabled"))
   }}
+    {{#if isEnabled}}
+      {{one-tooltip title=(tt this "actions.unpackFromArray")}}
+    {{/if}}
+  {{/one-icon}}
 {{/if}}
 {{#if canPackIntoArray}}
-  {{one-icon
+  {{#one-icon
     click=(action "packIntoArray")
     icon="array"
     class=(concat-classes "pack-into-array custom-icon-btn" (if (not isEnabled) "disabled"))
   }}
+    {{#if isEnabled}}
+      {{one-tooltip title=(tt this "actions.packIntoArray")}}
+    {{/if}}
+  {{/one-icon}}
 {{/if}}
 {{remove-icon
   class="remove-trigger"
   isDisabled=(not isEnabled)
+  tooltipText=(tt this "actions.remove")
   onClick=(action (if shouldWarnOnRemove "toggleRemoveWarn" "remove"))
 }}
 {{#render-later triggerRender=isRemoveWarnOpened}}

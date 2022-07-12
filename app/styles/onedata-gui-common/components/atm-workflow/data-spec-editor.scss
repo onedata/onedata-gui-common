@@ -22,8 +22,8 @@
     font-size: 1.7em;
 
     .one-icon {
-      line-height: 0;
-      margin: 0 -0.05em;
+      // -1em to reduce excessive icons padding
+      margin: -1em -0.05em;
     }
 
     .custom-icon-btn {
@@ -33,9 +33,9 @@
     }
 
     .remove-trigger {
-      display: flex;
-      align-items: center;
-      margin-top: 0;
+      // -1em to reduce excessive icons padding
+      margin: -1em 0;
+      line-height: 0;
       font-size: inherit;
     }
 
