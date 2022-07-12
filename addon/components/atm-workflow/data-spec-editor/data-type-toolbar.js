@@ -5,7 +5,7 @@ import {
   createDataTypeSelectorElement,
   createDataTypeElement,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
-import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
+import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { formValuesToDataSpec } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
@@ -31,15 +31,15 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {DataSpecEditorPlacementContext}
+   * @type {DataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecEditorFilter>}
+   * @type {Array<DataSpecFilter>}
    */
-  dataTypeFilters: undefined,
+  dataSpecFilters: undefined,
 
   /**
    * @virtual
@@ -63,20 +63,20 @@ export default Component.extend(I18n, {
    */
   canUnpackFromArray: computed(
     'editorElement.config.dataType',
-    'dataTypeFilters',
+    'dataSpecFilters',
     'placementContext',
     function canUnpackFromArray() {
       const {
-        dataTypeFilters,
+        dataSpecFilters,
         placementContext,
-      } = this.getProperties('dataTypeFilters', 'placementContext');
+      } = this.getProperties('dataSpecFilters', 'placementContext');
 
       if (this.get('editorElement.config.dataType') !== 'array') {
         return false;
       }
 
       const itemDataSpec = formValuesToDataSpec(this.get('editorElement.config.item'));
-      return dataSpecMatchesFilters(itemDataSpec, dataTypeFilters, placementContext);
+      return dataSpecMatchesFilters(itemDataSpec, dataSpecFilters, placementContext);
     }
   ),
 
@@ -84,13 +84,13 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<boolean>}
    */
   canPackIntoArray: computed(
-    'dataTypeFilters',
+    'dataSpecFilters',
     'placementContext',
     function canPackIntoArray() {
       const {
-        dataTypeFilters,
+        dataSpecFilters,
         placementContext,
-      } = this.getProperties('dataTypeFilters', 'placementContext');
+      } = this.getProperties('dataSpecFilters', 'placementContext');
 
       const packedDataSpec = {
         type: 'array',
@@ -100,7 +100,7 @@ export default Component.extend(I18n, {
       };
       return dataSpecMatchesFilters(
         packedDataSpec,
-        dataTypeFilters,
+        dataSpecFilters,
         placementContext,
       );
     }

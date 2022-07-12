@@ -21,7 +21,7 @@ import {
   units,
   translateNameMatcherType,
   translateUnit,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurement';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/types/time-series-measurement';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.timeSeriesMeasurement';

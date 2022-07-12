@@ -16,7 +16,7 @@ import { reads } from '@ember/object/computed';
 import FormFieldsCollectionGroup from 'onedata-gui-common/utils/form-component/form-fields-collection-group';
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
-import { translateNameMatcherType } from '../data-spec/time-series-measurement';
+import { translateNameMatcherType } from '../data-spec/types/time-series-measurement';
 import { translateNameGeneratorType } from '../store-config/time-series';
 import {
   prefixCombiners,

@@ -12,7 +12,7 @@ export default FieldComponentBase.extend({
   editorElementsContextMap: reads('field.editorElementsContextMap'),
 
   /**
-   * @type {ComputedProperty<Array<DataSpecEditorFilter>>}
+   * @type {ComputedProperty<Array<DataSpecFilter>>}
    */
-  dataTypeFilters: reads('field.dataTypeFilters'),
+  dataSpecFilters: reads('field.dataSpecFilters'),
 });

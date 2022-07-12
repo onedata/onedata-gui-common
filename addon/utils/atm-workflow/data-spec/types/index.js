@@ -6,6 +6,9 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
+import { get } from '@ember/object';
+import { canValueConstraintsContain as canFileValueConstraintsContain } from './file';
+
 /**
  * @typedef {
  *   AtmDatasetDataSpec |
@@ -29,9 +32,6 @@
  *   AtmContainerDataSpec
  * } AtmDataSpec
  */
-
-import { get } from '@ember/object';
-import { canValueConstraintsContain as canFileValueConstraintsContain } from './file';
 
 export const dataSpecTypes = Object.freeze([
   'integer',
@@ -69,6 +69,17 @@ export const dataSpecSubtypes = Object.freeze(
 );
 
 /**
+ * @param {Ember.Service} i18n
+ * @param {string} dataSpecType
+ * @returns {SafeString}
+ */
+export function translateDataSpecType(i18n, dataSpecType) {
+  const i18nPath = dataSpecType &&
+    `utils.atmWorkflow.dataSpec.types.${dataSpecType}`;
+  return i18nPath ? i18n.t(i18nPath, {}, { defaultValue: '' }) : '';
+}
+
+/**
  * @param {AtmDataSpec} targetDataSpec
  * @param {AtmDataSpec} sourceDataSpec
  * @param {boolean} [ignoreEmpty]
@@ -103,15 +114,4 @@ export function canDataSpecContain(targetDataSpec, sourceDataSpec, ignoreEmpty =
   } else {
     return (dataSpecSupertypes[sourceDataSpec.type] || []).includes(targetDataSpec.type);
   }
-}
-
-/**
- * @param {Ember.Service} i18n
- * @param {string} dataSpecType
- * @returns {SafeString}
- */
-export function translateDataSpecType(i18n, dataSpecType) {
-  const i18nPath = dataSpecType &&
-    `utils.atmWorkflow.dataSpec.types.${dataSpecType}`;
-  return i18nPath ? i18n.t(i18nPath, {}, { defaultValue: '' }) : '';
 }

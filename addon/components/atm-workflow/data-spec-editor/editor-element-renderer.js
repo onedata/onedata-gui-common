@@ -30,9 +30,9 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {Array<DataSpecEditorFilter>}
+   * @type {Array<DataSpecFilter>}
    */
-  dataTypeFilters: undefined,
+  dataSpecFilters: undefined,
 
   /**
    * @virtual
@@ -93,7 +93,7 @@ export default Component.extend({
   ),
 
   /**
-   * @type {ComputedProperty<DataSpecEditorPlacementContext>}
+   * @type {ComputedProperty<DataSpecPlacementContext>}
    */
   placementContext: computed('parentEditorElement', function placementContext() {
     const parentDataType = this.get('parentEditorElement.config.dataType');

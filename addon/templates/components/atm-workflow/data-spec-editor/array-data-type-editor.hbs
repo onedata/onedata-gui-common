@@ -3,7 +3,7 @@
   {{#if (eq mode "edit")}}
     {{atm-workflow/data-spec-editor/data-type-toolbar
       placementContext=placementContext
-      dataTypeFilters=dataTypeFilters
+      dataSpecFilters=dataSpecFilters
       editorElement=editorElement
       isEnabled=isEnabled
       onElementChange=onElementChange
@@ -13,7 +13,7 @@
 {{atm-workflow/data-spec-editor/editor-element-renderer
   mode=mode
   isEnabled=isEnabled
-  dataTypeFilters=dataTypeFiltersForItems
+  dataSpecFilters=dataSpecFiltersForItems
   editorElement=editorElement.config.item
   parentEditorElement=editorElement
   editorElementsContextMap=editorElementsContextMap

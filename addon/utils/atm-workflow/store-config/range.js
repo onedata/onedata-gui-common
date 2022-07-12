@@ -13,7 +13,7 @@ import { commonDataSpecFilters } from './commons';
  */
 
 /**
- * @returns {Array<DataSpecEditorFilter>}
+ * @returns {Array<DataSpecFilter>}
  */
 export function getReadDataSpecFilters() {
   return [...commonDataSpecFilters, {
@@ -23,7 +23,7 @@ export function getReadDataSpecFilters() {
 }
 
 /**
- * @returns {Array<DataSpecEditorFilter>}
+ * @returns {Array<DataSpecFilter>}
  */
 export function getWriteDataSpecFilters() {
   return [...commonDataSpecFilters, {

@@ -19,7 +19,7 @@ import {
   fileSupertypes,
   fileSubtypes,
   translateFileType,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec/file';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/types/file';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.file';
@@ -27,24 +27,24 @@ const i18nPrefix = 'utils.atmWorkflow.dataSpecEditor.valueConstraintsEditors.fil
 const FormElement = FormFieldsGroup.extend({
   /**
    * @virtual
-   * @type {Array<DataSpecEditorFilter>}
+   * @type {Array<DataSpecFilter>}
    */
-  dataTypeFilters: undefined,
+  dataSpecFilters: undefined,
 
   /**
    * @type {ComputedProperty<Array<AtmFileType>>}
    */
-  allowedFileTypes: computed('dataTypeFilters', function allowedFileTypes() {
-    const dataTypeFilters = this.get('dataTypeFilters') || [];
+  allowedFileTypes: computed('dataSpecFilters', function allowedFileTypes() {
+    const dataSpecFilters = this.get('dataSpecFilters') || [];
     const allowedTypes = [];
     for (const fileType of fileTypes) {
       let typeRejected = false;
-      for (const dataTypeFilter of dataTypeFilters) {
-        const fileTypesFromFilter = getFileTypesFromDataTypeFilter(dataTypeFilter);
+      for (const dataSpecFilter of dataSpecFilters) {
+        const fileTypesFromFilter = getFileTypesFromDataSpecFilter(dataSpecFilter);
         if (!fileTypesFromFilter.length) {
           continue;
         }
-        switch (dataTypeFilter.filterType) {
+        switch (dataSpecFilter.filterType) {
           case 'typeOrSupertype': {
             const fileTypeMatchesSupertype = fileTypesFromFilter.some(
               (filterFileType) =>
@@ -91,15 +91,15 @@ const FormElement = FormFieldsGroup.extend({
   }),
 });
 
-function getFileTypesFromDataTypeFilter(dataTypeFilter) {
+function getFileTypesFromDataSpecFilter(dataSpecFilter) {
   let fileDataSpecs = [];
-  switch (dataTypeFilter && dataTypeFilter.filterType) {
+  switch (dataSpecFilter && dataSpecFilter.filterType) {
     case 'typeOrSupertype':
     case 'typeOrSubtype':
-      fileDataSpecs = get(dataTypeFilter, 'types');
+      fileDataSpecs = get(dataSpecFilter, 'types');
       break;
     case 'forbiddenType':
-      fileDataSpecs = get(dataTypeFilter, 'forbiddenTypes');
+      fileDataSpecs = get(dataSpecFilter, 'forbiddenTypes');
       break;
   }
   return fileDataSpecs.filter((dataSpec) =>

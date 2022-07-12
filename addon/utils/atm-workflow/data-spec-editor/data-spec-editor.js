@@ -71,44 +71,13 @@ import { validator } from 'ember-cp-validations';
  * @property {Utils.FormComponent.FormFieldsRootGroup} [formRootGroup]
  */
 
-/**
- * @typedef {Object} DataSpecEditorSupertypeFilter
- * @property {'typeOrSupertype'} filterType
- * @property {Array<AtmDataSpec>} types
- */
-
-/**
- * @typedef {Object} DataSpecEditorSubtypeFilter
- * @property {'typeOrSubtype'} filterType
- * @property {Array<AtmDataSpec>} types
- */
-
-/**
- * @typedef {Object} DataSpecEditorForbiddenFilter
- * @property {'forbiddenType'} filterType
- * @property {Array<AtmLeafDataSpec>} forbiddenTypes
- * @property {Array<DataSpecEditorPlacementContext>} ignoredContexts
- */
-
-/**
- * @typedef {'root'|'array'} DataSpecEditorPlacementContext
- */
-
-/**
- * @typedef {
- *   DataSpecEditorSupertypeFilter |
- *   DataSpecEditorSubtypeFilter |
- *   DataSpecEditorForbiddenFilter
- * } DataSpecEditorFilter
- */
-
 export const FormElement = FormField.extend({
   /**
    * Array of filters used to narrow available data types.
    * @virtual
-   * @type {Array<DataSpecEditorFilter>}
+   * @type {Array<DataSpecFilter>}
    */
-  dataTypeFilters: undefined,
+  dataSpecFilters: undefined,
 
   /**
    * @override

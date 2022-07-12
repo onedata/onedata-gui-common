@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed, observer, set, get } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import { translateDataSpecType } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import valueConstraintsEditors from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/default-data-type-editor';
 
@@ -26,15 +26,15 @@ export default Component.extend({
 
   /**
    * @virtual
-   * @type {DataSpecEditorPlacementContext}
+   * @type {DataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecEditorFilter>}
+   * @type {Array<DataSpecFilter>}
    */
-  dataTypeFilters: undefined,
+  dataSpecFilters: undefined,
 
   /**
    * @virtual
@@ -110,17 +110,17 @@ export default Component.extend({
     }
   }),
 
-  dataTypeFiltersObserver: observer(
-    'dataTypeFilters',
-    function dataTypeFiltersObserver() {
+  dataSpecFiltersObserver: observer(
+    'dataSpecFilters',
+    function dataSpecFiltersObserver() {
       const {
-        dataTypeFilters,
+        dataSpecFilters,
         formRootGroup,
-      } = this.getProperties('dataTypeFilters', 'formRootGroup');
+      } = this.getProperties('dataSpecFilters', 'formRootGroup');
       const dataTypeEditor = formRootGroup &&
         formRootGroup.getFieldByPath('dataTypeEditor');
-      if (dataTypeEditor && get(dataTypeEditor, 'dataTypeFilters') !== dataTypeFilters) {
-        set(dataTypeEditor, 'dataTypeFilters', dataTypeFilters);
+      if (dataTypeEditor && get(dataTypeEditor, 'dataSpecFilters') !== dataSpecFilters) {
+        set(dataTypeEditor, 'dataSpecFilters', dataSpecFilters);
       }
     }
   ),
@@ -140,7 +140,7 @@ export default Component.extend({
 
       set(formRootGroup, 'onNotifyAboutChange', () => this.notifyFormChange());
     }
-    this.dataTypeFiltersObserver();
+    this.dataSpecFiltersObserver();
   },
 
   /**

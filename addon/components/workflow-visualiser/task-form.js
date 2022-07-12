@@ -40,7 +40,7 @@ import storeContentUpdateOptionsEditors from 'onedata-gui-common/utils/atm-workf
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import storeConfigEditors from 'onedata-gui-common/utils/atm-workflow/store-config-editors';
 import { validator } from 'ember-cp-validations';
-import { canDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec';
+import { canDataSpecContain } from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import {
   doesDataSpecFitToStoreRead,
   doesDataSpecFitToStoreWrite,

@@ -6,4 +6,4 @@ export {
   translateNameMatcherType,
   translateUnit,
 }
-from 'onedata-gui-common/utils/atm-workflow/data-spec/time-series-measurement';
+from 'onedata-gui-common/utils/atm-workflow/data-spec/types/time-series-measurement';

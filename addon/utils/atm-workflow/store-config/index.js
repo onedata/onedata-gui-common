@@ -1,5 +1,5 @@
 import { getProperties } from '@ember/object';
-import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
+import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import auditLog from './audit-log';
 import list from './list';
 import range from './range';

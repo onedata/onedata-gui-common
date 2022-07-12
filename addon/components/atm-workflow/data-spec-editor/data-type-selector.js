@@ -6,7 +6,7 @@ import {
   dataSpecSupertypes,
   dataSpecSubtypes,
   translateDataSpecType,
-} from 'onedata-gui-common/utils/atm-workflow/data-spec';
+} from 'onedata-gui-common/utils/atm-workflow/data-spec/types';
 import { createDataTypeElement } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/create-data-spec-editor-element';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 import layout from '../../../templates/components/atm-workflow/data-spec-editor/data-type-selector';
@@ -35,15 +35,15 @@ export default Component.extend(I18n, {
 
   /**
    * @virtual
-   * @type {DataSpecEditorPlacementContext}
+   * @type {DataSpecPlacementContext}
    */
   placementContext: undefined,
 
   /**
    * @virtual
-   * @type {Array<DataSpecEditorFilter>}
+   * @type {Array<DataSpecFilter>}
    */
-  dataTypeFilters: undefined,
+  dataSpecFilters: undefined,
 
   /**
    * @virtual
@@ -67,23 +67,23 @@ export default Component.extend(I18n, {
    * @type {ComputedProperty<{ value: string, label: SafeString }>}
    */
   selectorOptions: computed(
-    'dataTypeFilters',
+    'dataSpecFilters',
     'placementContext',
     function selectorOptions() {
       const {
         i18n,
-        dataTypeFilters,
+        dataSpecFilters,
         placementContext,
-      } = this.getProperties('i18n', 'dataTypeFilters', 'placementContext');
+      } = this.getProperties('i18n', 'dataSpecFilters', 'placementContext');
 
       const allowedDataSpecTypes = [];
       for (const dataSpecType of dataSpecTypes) {
         let typeRejected = false;
-        for (const dataTypeFilter of (dataTypeFilters || [])) {
-          switch (dataTypeFilter.filterType) {
+        for (const dataSpecFilter of (dataSpecFilters || [])) {
+          switch (dataSpecFilter.filterType) {
             case 'typeOrSupertype': {
               let thisFilterRejects = true;
-              for (const filteredType of dataTypeFilter.types) {
+              for (const filteredType of dataSpecFilter.types) {
                 if (
                   filteredType.type && (
                     dataSpecType === filteredType.type ||
@@ -98,7 +98,7 @@ export default Component.extend(I18n, {
             }
             case 'typeOrSubtype': {
               let thisFilterRejects = true;
-              for (const filteredType of dataTypeFilter.types) {
+              for (const filteredType of dataSpecFilter.types) {
                 if (
                   filteredType.type && (
                     dataSpecType === filteredType.type ||
@@ -113,10 +113,10 @@ export default Component.extend(I18n, {
             }
             case 'forbiddenType': {
               let thisFilterRejects = false;
-              if ((dataTypeFilter.ignoredContexts || []).includes(placementContext)) {
+              if ((dataSpecFilter.ignoredContexts || []).includes(placementContext)) {
                 break;
               }
-              for (const filteredType of dataTypeFilter.forbiddenTypes) {
+              for (const filteredType of dataSpecFilter.forbiddenTypes) {
                 if (filteredType.type && dataSpecType === filteredType.type) {
                   thisFilterRejects = true;
                 }

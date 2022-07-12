@@ -47,7 +47,7 @@ import {
   formValuesToDataSpec,
   dataSpecToFormValues,
 } from 'onedata-gui-common/utils/atm-workflow/data-spec-editor';
-import dataSpecMatchesFilters from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/data-spec-matches-filters';
+import { dataSpecMatchesFilters } from 'onedata-gui-common/utils/atm-workflow/data-spec/filters';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 
 const storeTypes = Object.freeze([
@@ -336,9 +336,9 @@ export default Component.extend(I18n, {
    */
   dataSpecField: computed(function dataSpecField() {
     const field = DataSpecEditor.extend({
-      dataTypeFilters: computed(
+      dataSpecFilters: computed(
         'valuesSource.type',
-        function dataTypeFilters() {
+        function dataSpecFilters() {
           return this.get('component').calculateEffDataSpecFilters(
             this.get('valuesSource.type')
           );
