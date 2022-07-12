@@ -1,10 +1,9 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { find } from 'ember-native-dom-helpers';
-import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
+import { find, render, settled } from 'ember-native-dom-helpers';
+import { selectChoose, clickTrigger } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import fileEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
 import { lookupService } from '../../../../helpers/stub-service';
@@ -24,9 +23,7 @@ const fileTypeOptions = [{
 }];
 
 describe('Integration | Utility | atm workflow/data spec editor/file', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
@@ -40,7 +37,7 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
   });
 
   it('shows dropdown with file types', async function () {
-    await renderForm(this);
+    await renderForm();
 
     expect(find('.fileType-field .control-label').textContent.trim())
       .to.equal('File type:');
@@ -58,7 +55,7 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
 
   for (const { label, value } of fileTypeOptions) {
     it(`allows to choose "${label}" file type`, async function () {
-      await renderForm(this);
+      await renderForm();
 
       await selectChoose('.fileType-field', label);
 
@@ -67,7 +64,7 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
   }
 
   it('allows to provide value constraints', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await selectChoose('.fileType-field', 'Regular');
 
@@ -85,9 +82,9 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
       fileType: 'REG',
     });
 
-    await renderForm(this);
+    await renderForm();
     this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
-    await wait();
+    await settled();
 
     expect(find('.fileType-field .dropdown-field-trigger').textContent.trim())
       .to.equal('Regular');
@@ -108,9 +105,8 @@ describe('Integration | Utility | atm workflow/data spec editor/file', function 
   }
 });
 
-async function renderForm(testCase) {
-  testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
-  await wait();
+async function renderForm() {
+  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
 }
 
 function getSelectedFileTypeValue(testCase) {
