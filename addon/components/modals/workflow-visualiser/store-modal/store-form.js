@@ -667,7 +667,6 @@ function storeToFormData(store, { defaultType }) {
     name,
     description,
     type,
-    writeDataSpec,
     config,
     defaultInitialContent,
     requiresInitialContent,
@@ -678,7 +677,6 @@ function storeToFormData(store, { defaultType }) {
     'name',
     'description',
     'type',
-    'writeDataSpec',
     'config',
     'defaultInitialContent',
     'requiresInitialContent'
@@ -715,7 +713,9 @@ function storeToFormData(store, { defaultType }) {
     }
     default:
       formData.genericStoreConfig = createValuesContainer({
-        dataSpec: dataSpecToFormValues(writeDataSpec),
+        dataSpec: dataSpecToFormValues(
+          config && (config.logContentDataSpec || config.itemDataSpec)
+        ),
         defaultValue: [undefined, null].includes(defaultInitialContent) ?
           '' : JSON.stringify(defaultInitialContent, null, 2),
       });
@@ -785,7 +785,7 @@ function formDataToStore(formData) {
       break;
     default: {
       const {
-        dataSpec,
+        dataSpec: formDataSpec,
         defaultValue,
       } = getProperties(
         genericStoreConfig || {},
@@ -793,7 +793,7 @@ function formDataToStore(formData) {
         'defaultValue'
       );
 
-      const writeDataSpec = formValuesToDataSpec(dataSpec);
+      const dataSpec = formValuesToDataSpec(formDataSpec);
       let defaultInitialContent = null;
       if (defaultValue && defaultValue.trim()) {
         try {
@@ -804,9 +804,9 @@ function formDataToStore(formData) {
       }
 
       const config = type === 'auditLog' ? {
-        logContentDataSpec: writeDataSpec,
+        logContentDataSpec: dataSpec,
       } : {
-        itemDataSpec: writeDataSpec,
+        itemDataSpec: dataSpec,
       };
 
       Object.assign(store, {

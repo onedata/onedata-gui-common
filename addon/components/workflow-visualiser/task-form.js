@@ -1133,54 +1133,17 @@ function getValueBuilderTypesForDataSpec(dataSpec) {
   }
 }
 
-// TODO: VFS-7816 uncomment or remove future code
-// function getStoreTypesForArgType(argType) {
-//   if (!argType) {
-//     return [];
-//   } else if (argType.endsWith('Store')) {
-//     return argType.slice(0, -('Store'.length));
-//   } else if (argType === 'object') {
-//     return [
-//       'singleValue',
-//       'list',
-//       'map',
-//       'treeForest',
-//       'range',
-//       'histogram',
-//       'auditLog',
-//     ];
-//   }
-//   return [];
-// }
-
 function getSourceStoreForDataSpec(availableStores, dataSpec) {
   return availableStores.filter((store) => {
     const storeType = store && get(store, 'type');
     return storeType === 'singleValue' && doesDataSpecFitToStoreRead(dataSpec, store);
   });
-  // return (availableStores || []).filter((store) => {
-  //   const {
-  //     type,
-  //     readDataSpec,
-  //   } = getProperties(store || {}, 'type', 'readDataSpec');
-
-  //   return type === 'singleValue' || canDataSpecContain(dataSpec, readDataSpec);
-  // });
 }
 
 function getTargetStoresForDataSpec(availableStores, dataSpec) {
   return availableStores.filter((store) => {
     return doesDataSpecFitToStoreWrite(dataSpec, store);
   });
-  // return availableStores.filter((store) => {
-  //   const {
-  //     writeDataSpec,
-  //     writeAlternativeDataSpecs,
-  //   } = getProperties(store || {}, 'writeDataSpec', 'writeAlternativeDataSpecs');
-
-  //   return [writeDataSpec, ...writeAlternativeDataSpecs]
-  //     .some((ds) => canDataSpecContain(ds, dataSpec));
-  // });
 }
 
 function getDispatchFunctionsForStoreType(storeType) {
