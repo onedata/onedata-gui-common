@@ -1,7 +1,11 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import multiply from 'onedata-gui-common/utils/one-time-series-chart/transform-functions/multiply';
-import { createContext, expectFunctionsEvaluation, stringifyArgumentData } from './helpers';
+import {
+  createContext,
+  expectFunctionsEvaluation,
+  stringifyArgumentData,
+} from './helpers';
 
 export const casesToCheck = [{
   input: 123,

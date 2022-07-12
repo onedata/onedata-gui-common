@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import ActionsFactory from 'onedata-gui-common/utils/workflow-visualiser/actions-factory';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
@@ -28,12 +28,10 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Integration | Utility | workflow visualiser/actions factory', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it('creates action "CreateLaneAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
@@ -52,7 +50,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   });
 
   it('creates action "ModifyLaneAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
@@ -77,7 +75,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesLaneAction('RemoveLaneAction', RemoveLaneAction);
 
   it('creates action "CreateParallelBoxAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const createParallelBoxCallback = () => {};
 
     const action = factory.createCreateParallelBoxAction({
@@ -94,7 +92,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesParallelBoxAction('RemoveParallelBoxAction', RemoveParallelBoxAction);
 
   it('creates action "CreateTaskAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
@@ -116,7 +114,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   });
 
   it('creates action "ModifyTaskAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create({
       id: 's1',
       name: 'store1',
@@ -140,7 +138,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   itCreatesTaskAction('RemoveTaskAction', RemoveTaskAction);
 
   it('creates action "CreateStoreAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const createStoreCallback = () => {};
     factory.setCreateStoreCallback(createStoreCallback);
 
@@ -151,7 +149,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
   });
 
   it('creates action "ViewStoreAction"', function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const workflowDataProvider = {
       getStoreContent: sinon.stub().resolves(),
     };
@@ -174,7 +172,7 @@ describe('Integration | Utility | workflow visualiser/actions factory', function
 
 function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     let store;
     if (includeStores) {
       store = Store.create({
@@ -199,7 +197,7 @@ function itCreatesLaneAction(actionName, actionClass, includeStores = false) {
 
 function itCreatesParallelBoxAction(actionName, actionClass) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const parallelBox = ParallelBox.create();
 
     const action = factory[`create${actionName}`]({ parallelBox });
@@ -211,7 +209,7 @@ function itCreatesParallelBoxAction(actionName, actionClass) {
 
 function itCreatesTaskAction(actionName, actionClass) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const task = Task.create();
 
     const action = factory[`create${actionName}`]({ task });
@@ -223,7 +221,7 @@ function itCreatesTaskAction(actionName, actionClass) {
 
 function itCreatesStoreAction(actionName, actionClass) {
   it(`creates action "${actionName}"`, function () {
-    const factory = ActionsFactory.create({ ownerSource: this });
+    const factory = ActionsFactory.create({ ownerSource: this.owner });
     const store = Store.create();
 
     const action = factory[`create${actionName}`]({ store });

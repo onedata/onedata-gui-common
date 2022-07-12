@@ -4,7 +4,7 @@
 <span class="one-label sidebar-item-title">{{item.label}}</span>
 {{#if item.warningMessage}}
   <img class="warning-icon {{item.id}}-warning-icon" src={{root-url "assets/images/sign-warning-large.svg"}}>
-  {{#unless media.isMobile}}
+  {{#unless (media "isMobile")}}
     {{one-tooltip
       title=item.warningMessage
       triggerElement=(concat ".item-" item.id " .warning-icon")

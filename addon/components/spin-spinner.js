@@ -11,7 +11,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
-import Spinner from 'npm:spin.js';
+import Spinner from 'spin.js';
 
 export default Component.extend({
   classNames: ['spin-spinner'],
@@ -19,7 +19,7 @@ export default Component.extend({
   attributeBindings: ['style'],
 
   lines: 12,
-  
+
   length: 12,
 
   width: 10,

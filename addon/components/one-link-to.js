@@ -32,7 +32,7 @@ export default LinkComponent.extend({
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  isInFirefox: equal('browser.browser.browserCode', raw('firefox')),
+  isInFirefox: equal('browser.browserName', raw('firefox')),
 
   init() {
     this._super(...arguments);

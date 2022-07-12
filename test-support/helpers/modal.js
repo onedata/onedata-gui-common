@@ -1,28 +1,28 @@
-import wait from 'ember-test-helpers/wait';
-
-import $ from 'jquery';
+import { click } from '@ember/test-helpers';
 
 export function getModal(modalClass) {
-  return $(`.modal.in${modalClass ? `.${modalClass}` : ''}`);
+  return document.querySelector(`.modal.in${modalClass ? `.${modalClass}` : ''}`);
 }
 
 export function getModalHeader(modalClass) {
-  return getModal(modalClass).find('.modal-header');
+  const modal = getModal(modalClass);
+  return modal ? modal.querySelector('.modal-header') : modal;
 }
 
 export function getModalBody(modalClass) {
-  return getModal(modalClass).find('.modal-body');
+  const modal = getModal(modalClass);
+  return modal ? modal.querySelector('.modal-body') : modal;
 }
 
 export function getModalFooter(modalClass) {
-  return getModal(modalClass).find('.modal-footer');
+  const modal = getModal(modalClass);
+  return modal ? modal.querySelector('.modal-footer') : modal;
 }
 
 export function isModalOpened(modalClass) {
-  return Boolean(getModal(modalClass).length);
+  return Boolean(getModal(modalClass));
 }
 
 export async function closeModalUsingBackground() {
-  document.querySelector('.modal').click();
-  return wait();
+  await click(document.querySelector('.modal'));
 }

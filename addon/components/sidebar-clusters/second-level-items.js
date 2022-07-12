@@ -1,6 +1,6 @@
 /**
  * Second level sidebar items component base for clusters.
- * 
+ *
  * @module component/sidebar-cluster/second-level-items
  * @author Michał Borzęcki, Jakub Liput
  * @copyright (C) 2019 ACK CYFRONET AGH
@@ -10,7 +10,7 @@
 import SecondLevelItems from 'onedata-gui-common/components/one-sidebar/second-level-items';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-sidebar/second-level-items';
-import { computed } from '@ember/object';
+import { computed, defineProperty } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
 
@@ -189,6 +189,6 @@ export default SecondLevelItems.extend(I18n, {
   init() {
     this._super(...arguments);
     // overwrite injected property
-    this.set('internalSecondLevelItems', reads('clusterSecondLevelItems'));
+    defineProperty(this, 'internalSecondLevelItems', reads('clusterSecondLevelItems'));
   },
 });

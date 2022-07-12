@@ -1,18 +1,22 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  blur,
+  click,
+  focus,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import RadioField from 'onedata-gui-common/utils/form-component/radio-field';
 import { lookupService } from '../../../helpers/stub-service';
 import sinon from 'sinon';
-import { blur, click, focus } from 'ember-native-dom-helpers';
-import wait from 'ember-test-helpers/wait';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/radio field', function () {
-  setupComponentTest('form-component/radio-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     sinon.stub(lookupService(this, 'i18n'), 't')
@@ -24,7 +28,7 @@ describe('Integration | Component | form component/radio field', function () {
       .returns('Third');
 
     this.set('field', RadioField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       i18nPrefix: 'somePrefix',
       name: 'field1',
       options: [{
@@ -42,100 +46,91 @@ describe('Integration | Component | form component/radio field', function () {
 
   it(
     'has class "radio-field"',
-    function () {
-      this.render(hbs `{{form-component/radio-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect(this.$('.radio-field')).to.exist;
+      expect(find('.radio-field')).to.exist;
     }
   );
 
   it(
     'renders three radio inputs with labels',
-    function () {
-      this.render(hbs `{{form-component/radio-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/radio-field field=field}}`);
 
-      return wait()
-        .then(() => {
-          expect(this.$('input')).to.have.length(3);
-          expect(this.$('.option-first .one-label').text().trim())
-            .to.equal('First');
-          expect(this.$('.option-second .one-label').text().trim())
-            .to.equal('Second');
-          expect(this.$('.option-third .one-label').text().trim())
-            .to.equal('Third');
-        });
+      expect(findAll('input')).to.have.length(3);
+      expect(find('.option-first .one-label').textContent.trim())
+        .to.equal('First');
+      expect(find('.option-second .one-label').textContent.trim())
+        .to.equal('Second');
+      expect(find('.option-third .one-label').textContent.trim())
+        .to.equal('Third');
     }
   );
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `{{form-component/radio-field field=field}}`);
 
-      expect(this.$('.one-way-radio-group')).to.have.class('disabled');
+      expect(find('.one-way-radio-group')).to.have.class('disabled');
     }
   );
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `{{form-component/radio-field field=field}}`);
 
-      return wait()
-        .then(() => focus('.option-first input'))
-        .then(() => blur('.option-first input'))
-        .then(() => expect(focusLostSpy).to.be.calledOnce);
+      await focus('.option-first input');
+      await blur('.option-first input');
+
+      expect(focusLostSpy).to.be.calledOnce;
     }
   );
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/radio-field field=field}}`);
+      await render(hbs `{{form-component/radio-field field=field}}`);
 
-      return wait()
-        .then(() => click('.option-first'))
-        .then(() => {
-          expect(valueChangedSpy).to.be.calledOnce;
-          expect(valueChangedSpy).to.be.calledWith(1);
-        });
+      await click('.option-first');
+
+      expect(valueChangedSpy).to.be.calledOnce;
+      expect(valueChangedSpy).to.be.calledWith(1);
     }
   );
 
-  it('sets input value to value specified in field object', function () {
+  it('sets input value to value specified in field object', async function () {
     this.set('field.value', 2);
 
-    this.render(hbs `{{form-component/radio-field field=field}}`);
+    await render(hbs `{{form-component/radio-field field=field}}`);
 
-    return wait()
-      .then(() =>
-        expect(this.$('.option-second input').prop('checked')).to.equal(true)
-      );
+    expect(find('.option-second input').checked).to.equal(true);
   });
 
-  it('sets input id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets input id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/radio-field field=field fieldId="abc"}}
     `);
 
-    return wait()
-      .then(() => expect(this.$('input#abc')).to.exist);
+    expect(find('input#abc')).to.exist;
   });
 
-  it('renders selected option label when field is in "view" mode', function () {
+  it('renders selected option label when field is in "view" mode', async function () {
     const field = this.get('field');
     set(field, 'value', 2);
     field.changeMode('view');
 
-    this.render(hbs `{{form-component/radio-field field=field}}`);
+    await render(hbs `{{form-component/radio-field field=field}}`);
 
-    expect(this.$().text().trim()).to.equal('Second');
-    expect(this.$('input')).to.not.exist;
+    expect(this.element.textContent.trim()).to.equal('Second');
+    expect(find('input')).to.not.exist;
   });
 });

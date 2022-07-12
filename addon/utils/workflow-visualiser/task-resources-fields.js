@@ -15,7 +15,16 @@ import CapacityField from 'onedata-gui-common/utils/form-component/capacity-fiel
 import FormFieldsGroup from 'onedata-gui-common/utils/form-component/form-fields-group';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { get } from '@ember/object';
-import { not, and, raw, eq, conditional, gte, or, math } from 'ember-awesome-macros';
+import {
+  not,
+  and,
+  raw,
+  eq,
+  conditional,
+  gte,
+  or,
+  math,
+} from 'ember-awesome-macros';
 
 /**
  * @typedef {Object} AtmResourceSpec

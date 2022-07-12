@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach, context } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, fillIn, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { lookupService } from '../../../../helpers/stub-service';
 import {
@@ -10,7 +11,6 @@ import {
   getModalFooter,
 } from '../../../../helpers/modal';
 import { setProperties } from '@ember/object';
-import { fillIn, click } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { Promise, resolve } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
@@ -30,9 +30,7 @@ const simplestStore = {
 };
 
 describe('Integration | Component | modals/workflow visualiser/store modal', function () {
-  setupComponentTest('modals/workflow-visualiser/store-modal', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.setProperties({
@@ -52,33 +50,36 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       this.set('modalOptions.mode', 'create');
     });
 
-    it('shows correct header, form in "create" mode and footer', async function () {
+    it('shows correct header, form in "create" mode and footer', async function (done) {
       await showModal(this);
 
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Create new store');
-      expect(getModalBody().find('.store-form')).to.have.class('mode-create')
+      expect(getModalHeader().querySelector('h1').textContent.trim())
+        .to.equal('Create new store');
+      expect(getModalBody().querySelector('.store-form')).to.have.class('mode-create')
         .and.to.have.class('form-enabled');
-      const $modalFooter = getModalFooter();
-      const $cancelBtn = $modalFooter.find('.btn-cancel');
-      const $submitBtn = $modalFooter.find('.btn-submit');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Cancel');
-      expect($submitBtn).to.have.class('btn-primary');
-      expect($submitBtn.text().trim()).to.equal('Create');
+      const modalFooter = getModalFooter();
+      const cancelBtn = modalFooter.querySelector('.btn-cancel');
+      const submitBtn = modalFooter.querySelector('.btn-submit');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Cancel');
+      expect(submitBtn).to.have.class('btn-primary');
+      expect(submitBtn.textContent.trim()).to.equal('Create');
+      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function () {
+      async function (done) {
         await showModal(this);
 
-        const $submitBtn = getModalFooter().find('.btn-submit');
-        expect($submitBtn).to.be.disabled;
+        const submitBtn = getModalFooter().querySelector('.btn-submit');
+        expect(submitBtn.disabled).to.be.true;
 
         await fillIn('.name-field .form-control', 'store1');
-        expect($submitBtn).to.be.not.disabled;
+        expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', '');
-        expect($submitBtn).to.be.disabled;
+        expect(submitBtn.disabled).to.be.true;
+        done();
       });
 
     itDoesNotShowTabs();
@@ -100,34 +101,38 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       });
     });
 
-    it('shows correct header, form in "edit" mode and footer', async function () {
+    it('shows correct header, form in "edit" mode and footer', async function (done) {
       await showModal(this);
 
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Modify store');
-      const $form = getModalBody().find('.store-form');
-      expect($form).to.have.class('mode-edit').and.to.have.class('form-enabled');
-      expect($form.find('.name-field .form-control')).to.have.value(simplestStore.name);
-      const $modalFooter = getModalFooter();
-      const $cancelBtn = $modalFooter.find('.btn-cancel');
-      const $submitBtn = $modalFooter.find('.btn-submit');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Cancel');
-      expect($submitBtn).to.have.class('btn-primary');
-      expect($submitBtn.text().trim()).to.equal('OK');
+      expect(getModalHeader().querySelector('h1').textContent.trim())
+        .to.equal('Modify store');
+      const form = getModalBody().querySelector('.store-form');
+      expect(form).to.have.class('mode-edit').and.to.have.class('form-enabled');
+      expect(form.querySelector('.name-field .form-control'))
+        .to.have.value(simplestStore.name);
+      const modalFooter = getModalFooter();
+      const cancelBtn = modalFooter.querySelector('.btn-cancel');
+      const submitBtn = modalFooter.querySelector('.btn-submit');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Cancel');
+      expect(submitBtn).to.have.class('btn-primary');
+      expect(submitBtn.textContent.trim()).to.equal('OK');
+      done();
     });
 
     it('disables submit when form is invalid and enables it, when becomes valid',
-      async function () {
+      async function (done) {
         await showModal(this);
 
-        const $submitBtn = getModalFooter().find('.btn-submit');
-        expect($submitBtn).to.be.not.disabled;
+        const submitBtn = getModalFooter().querySelector('.btn-submit');
+        expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', 'anothername');
-        expect($submitBtn).to.be.not.disabled;
+        expect(submitBtn.disabled).to.be.false;
 
         await fillIn('.name-field .form-control', '');
-        expect($submitBtn).to.be.disabled;
+        expect(submitBtn.disabled).to.be.true;
+        done();
       });
 
     itDoesNotShowTabs();
@@ -151,31 +156,34 @@ describe('Integration | Component | modals/workflow visualiser/store modal', fun
       });
     });
 
-    it('shows correct header, form in "view" mode and footer', async function () {
+    it('shows correct header, form in "view" mode and footer', async function (done) {
       await showModal(this);
 
-      expect(getModalHeader().find('h1').text().trim()).to.equal('Store details');
-      const $form = getModalBody().find('.store-form');
-      expect($form).to.have.class('mode-view');
-      expect($form.find('.name-field .field-component').text().trim())
+      expect(getModalHeader().querySelector('h1').textContent.trim())
+        .to.equal('Store details');
+      const form = getModalBody().querySelector('.store-form');
+      expect(form).to.have.class('mode-view');
+      expect(form.querySelector('.name-field .field-component').textContent.trim())
         .to.equal(simplestStore.name);
-      const $modalFooter = getModalFooter();
-      const $cancelBtn = $modalFooter.find('.btn-cancel');
-      const $submitBtn = $modalFooter.find('.btn-submit');
-      expect($cancelBtn).to.have.class('btn-default');
-      expect($cancelBtn.text().trim()).to.equal('Close');
-      expect($submitBtn).to.not.exist;
+      const modalFooter = getModalFooter();
+      const cancelBtn = modalFooter.querySelector('.btn-cancel');
+      const submitBtn = modalFooter.querySelector('.btn-submit');
+      expect(cancelBtn).to.have.class('btn-default');
+      expect(cancelBtn.textContent.trim()).to.equal('Close');
+      expect(submitBtn).to.not.exist;
+      done();
     });
 
-    it('shows tabs with "details" tab preselected', async function () {
+    it('shows tabs with "details" tab preselected', async function (done) {
       await showModal(this);
 
-      const $tabs = getModalBody().find('.bs-tab-onedata .nav-link');
-      expect($tabs).to.have.length(2);
-      expect($tabs.eq(0).text().trim()).to.equal('Details');
-      expect($tabs.eq(1).text().trim()).to.equal('Content');
-      expect($tabs.eq(0).parent()).to.have.class('active');
-      expect(getModalBody().find('.store-form')).to.exist;
+      const tabs = getModalBody().querySelectorAll('.bs-tab-onedata .nav-link');
+      expect(tabs).to.have.length(2);
+      expect(tabs[0].textContent.trim()).to.equal('Details');
+      expect(tabs[1].textContent.trim()).to.equal('Content');
+      expect(tabs[0].parentElement).to.have.class('active');
+      expect(getModalBody().querySelector('.store-form')).to.exist;
+      done();
     });
 
     itClosesModalOnCancelClick();
@@ -189,88 +197,95 @@ async function showModal(testCase) {
     modalOptions,
   } = testCase.getProperties('modalManager', 'modalOptions');
 
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
 
   await modalManager
     .show('workflow-visualiser/store-modal', modalOptions)
     .shownPromise;
   if (testCase.get('modalOptions.mode') === 'view') {
-    await click(getModalBody().find('.bs-tab-onedata .nav-link')[0]);
+    await click(getModalBody().querySelector('.bs-tab-onedata .nav-link'));
   }
 }
 
 function itDoesNotShowTabs() {
-  it('does not show tabs', async function () {
+  it('does not show tabs', async function (done) {
     await showModal(this);
 
-    expect(getModalBody().find('.bs-tab-onedata')).to.not.exist;
+    expect(getModalBody().querySelector('.bs-tab-onedata')).to.not.exist;
+    done();
   });
 }
 
 function itClosesModalOnCancelClick() {
-  it('closes modal on cancel click', async function () {
+  it('closes modal on cancel click', async function (done) {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
     expect(onHideSpy).to.not.been.called;
 
-    await click(getModalFooter().find('.btn-cancel')[0]);
+    await click(getModalFooter().querySelector('.btn-cancel'));
     expect(onHideSpy).to.be.calledOnce;
+    done();
   });
 }
 
 function itClosesModalOnBackdropClick() {
-  it('closes modal on backdrop click', async function () {
+  it('closes modal on backdrop click', async function (done) {
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
 
     await showModal(this);
     expect(onHideSpy).to.not.been.called;
 
-    await click(getModal()[0]);
+    await click(getModal());
     expect(onHideSpy).to.be.calledOnce;
+    done();
   });
 }
 
 function itPassesStoreProvidedByFormOnSubmit(fillForm = () => {}, expectedData) {
-  it('passes store from form on submit', async function () {
+  it('passes store from form on submit', async function (done) {
     const submitStub = sinon.stub().resolves();
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
 
     await fillForm(this);
-    await click(getModalFooter().find('.btn-submit')[0]);
+    await click(getModalFooter().querySelector('.btn-submit'));
 
     expect(submitStub).to.be.calledWith(expectedData);
+    done();
   });
 }
 
 function itDisablesAllControlsWhileSubmitting(fillForm = () => {}) {
-  it('disables all controls while submitting', async function () {
+  it('disables all controls while submitting', async function (done) {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     await showModal(this);
 
     await fillForm(this);
-    await click(getModalFooter().find('.btn-submit')[0]);
+    await click(getModalFooter().querySelector('.btn-submit'));
 
-    expect(getModalBody().find('.store-form')).to.have.class('form-disabled');
-    const $modalFooter = getModalFooter();
-    expect($modalFooter.find('.btn-cancel')).to.have.attr('disabled');
-    expect($modalFooter.find('.btn-submit')).to.have.attr('disabled');
+    expect(getModalBody().querySelector('.store-form'))
+      .to.have.class('form-disabled');
+    const modalFooter = getModalFooter();
+    expect(modalFooter.querySelector('.btn-cancel')).to.have.attr('disabled');
+    expect(modalFooter.querySelector('.btn-submit')).to.have.attr('disabled');
+    done();
   });
 }
 
 function itDoesNotCloseModalOnBackdropClickWhenSubmitting(fillForm = () => {}) {
-  it('does not close modal on backdrop click when submitting', async function () {
+  it('does not close modal on backdrop click when submitting', async function (done) {
     const submitStub = sinon.stub().returns(new Promise(() => {}));
     this.set('modalOptions.onSubmit', submitStub);
     const onHideSpy = sinon.spy(this.get('modalManager'), 'onModalHide');
     await showModal(this);
 
     await fillForm(this);
-    await click(getModalFooter().find('.btn-submit')[0]);
-    await click(getModal()[0]);
+    await click(getModalFooter().querySelector('.btn-submit'));
+    await click(getModal());
 
     expect(onHideSpy).to.not.be.called;
+    done();
   });
 }

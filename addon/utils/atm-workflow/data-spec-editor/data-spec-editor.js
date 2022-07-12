@@ -1,4 +1,18 @@
-import { get, set, computed } from '@ember/object';
+/**
+ * Provides a form element capable of showing, creating and modifying data specs.
+ * It also provides two methods for conversion between form values and data spec
+ * in both directions.
+ *
+ * @author Michał Borzęcki
+ * @copyright (C) 2022 ACK CYFRONET AGH
+ * @license This software is released under the MIT license cited in 'LICENSE.txt'.
+ */
+
+import {
+  get,
+  set,
+  computed,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import FormField from 'onedata-gui-common/utils/form-component/form-field';

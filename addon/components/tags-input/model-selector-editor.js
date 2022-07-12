@@ -14,7 +14,12 @@
 
 import Component from '@ember/component';
 import layout from '../../templates/components/tags-input/model-selector-editor';
-import EmberObject, { computed, observer, get, getProperties } from '@ember/object';
+import EmberObject, {
+  computed,
+  observer,
+  get,
+  getProperties,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import { or } from 'ember-awesome-macros';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
@@ -23,6 +28,7 @@ import { inject as service } from '@ember/service';
 import { resolve } from 'rsvp';
 import { promise, array, raw, isEmpty } from 'ember-awesome-macros';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
+import $ from 'jquery';
 
 const supportedModels = [
   'user',
@@ -385,7 +391,7 @@ export default Component.extend(I18n, {
   didInsertElement() {
     this._super(...arguments);
 
-    const $parentTagsInput = this.$().parents('.tags-input');
+    const $parentTagsInput = $(this.get('element')).parents('.tags-input');
     this.set('parentTagsInputSelector', `#${$parentTagsInput.attr('id')}`);
   },
 

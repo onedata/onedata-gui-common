@@ -36,7 +36,7 @@ import Component from '@ember/component';
 import { debounce, next } from '@ember/runloop';
 import { observer, computed } from '@ember/object';
 import layout from 'onedata-gui-common/templates/components/one-switchable-popover-modal';
-import ClickOutside from 'ember-click-outside/mixins/click-outside';
+import ClickOutside from 'ember-click-outside/mixin';
 import $ from 'jquery';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { resolve } from 'rsvp';

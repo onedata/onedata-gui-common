@@ -1,59 +1,58 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import StaticTextField from 'onedata-gui-common/utils/form-component/static-text-field';
 import { setProperties } from '@ember/object';
 
 describe('Integration | Component | form component/static text field', function () {
-  setupComponentTest('form-component/static-text-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
-    this.set('field', StaticTextField.create({ ownerSource: this }));
+    this.set('field', StaticTextField.create({ ownerSource: this.owner }));
   });
 
   it(
     'has class "static-text-field"',
-    function () {
-      this.render(hbs `{{form-component/static-text-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$('.static-text-field')).to.exist;
+      expect(find('.static-text-field')).to.exist;
     }
   );
 
   it(
     'renders no content when both "text" and "value" field properties are empty',
-    function () {
-      this.render(hbs `{{form-component/static-text-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$().text().trim()).to.be.empty;
+      expect(this.element.textContent.trim()).to.be.empty;
     }
   );
 
   it(
     'renders text from field.text property when field.value is empty',
-    function () {
+    async function () {
       this.set('field.text', 'abc');
 
-      this.render(hbs `{{form-component/static-text-field field=field}}`);
+      await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$().text().trim()).to.equal('abc');
+      expect(this.element.textContent.trim()).to.equal('abc');
     }
   );
 
   it(
     'renders text from field.value property when field.value and field.text are not empty',
-    function () {
+    async function () {
       setProperties(this.get('field'), {
         text: 'abc',
         value: 'def',
       });
 
-      this.render(hbs `{{form-component/static-text-field field=field}}`);
+      await render(hbs `{{form-component/static-text-field field=field}}`);
 
-      expect(this.$().text().trim()).to.equal('def');
+      expect(this.element.textContent.trim()).to.equal('def');
     }
   );
 });

@@ -9,6 +9,7 @@ body {
   }
 }
 
+@import 'onedata-gui-common/tests';
 @import 'onedata-gui-common/colors';
 @import 'onedata-gui-common/utils';
 @import 'onedata-gui-common/fonts';
@@ -40,7 +41,7 @@ $disabled-opacity: 0.6;
 // Addons
 @import 'side-menu';
 
-@import 'chartist';
+@import 'chartist/chartist';
 @import 'onedata-gui-common/chartist-overrides';
 @import 'onedata-gui-common/input-tokenizer';
 @import 'onedata-gui-common/ember-datetimepicker-overrides';

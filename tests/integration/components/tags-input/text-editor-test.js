@@ -1,84 +1,90 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  click,
+  fillIn,
+  triggerKeyEvent,
+  blur,
+  find,
+  findAll,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { click, fillIn, keyEvent, blur } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | tags input/text editor', function () {
-  setupComponentTest('tags-input/text-editor', {
-    integration: true,
+  setupRenderingTest();
+
+  it('has class "tags-input-text-editor"', async function () {
+    await render(hbs `{{tags-input/text-editor}}`);
+
+    expect(find('.tags-input-text-editor')).to.exist;
   });
 
-  it('has class "tags-input-text-editor"', function () {
-    this.render(hbs `{{tags-input/text-editor}}`);
+  it('renders empty text input with class "text-editor-input"', async function () {
+    await render(hbs `{{tags-input/text-editor}}`);
 
-    expect(this.$('.tags-input-text-editor')).to.exist;
+    expect(find('input[type="text"]')).to.exist;
   });
 
-  it('renders empty text input with class "text-editor-input"', function () {
-    this.render(hbs `{{tags-input/text-editor}}`);
-
-    expect(this.$('input[type="text"]')).to.exist;
-  });
-
-  it('adds tag on enter', function () {
+  it('adds tag on enter', async function () {
     this.set('tags', []);
-    this.on('change', (tags) => this.set('tags', tags));
+    this.set('change', (tags) => this.set('tags', tags));
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag'))
-      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.be.empty;
-        const $tagItems = this.$('.tag-item');
-        expect($tagItems).to.have.length(1);
-        expect($tagItems.text().trim()).to.equal('someTag');
+        expect(find('.text-editor-input').value).to.be.empty;
+        const tagItems = findAll('.tag-item');
+        expect(tagItems).to.have.length(1);
+        expect(tagItems[0].textContent.trim()).to.equal('someTag');
       });
   });
 
-  it('separates new tags using comma', function () {
+  it('separates new tags using comma', async function () {
     this.set('tags', []);
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag,'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.be.empty;
+        expect(find('.text-editor-input').value).to.be.empty;
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }]);
       });
   });
 
-  it('separates multiple new tags using comma', function () {
+  it('separates multiple new tags using comma', async function () {
     this.set('tags', []);
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', 'someTag,someTag2,someTag3'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('someTag3');
+        expect(find('.text-editor-input').value).to.equal('someTag3');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
@@ -87,16 +93,16 @@ describe('Integration | Component | tags input/text editor', function () {
       });
   });
 
-  it('separates new tags using custom separators', function () {
+  it('separates new tags using custom separators', async function () {
     this.set('tags', []);
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
       tagEditorSettings=(hash separators=(array ";" "/"))
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
@@ -105,7 +111,7 @@ describe('Integration | Component | tags input/text editor', function () {
         'someTag;someTag2/someTag3,someTag4'
       ))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('someTag3,someTag4');
+        expect(find('.text-editor-input').value).to.equal('someTag3,someTag4');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
@@ -114,39 +120,39 @@ describe('Integration | Component | tags input/text editor', function () {
       });
   });
 
-  it('turns off edition after loosing focus with empty input', function () {
-    this.render(hbs `{{tags-input
+  it('turns off edition after loosing focus with empty input', async function () {
+    await render(hbs `{{tags-input
       tagEditorComponentName="tags-input/text-editor"
     }}`);
 
     return click('.tag-creator-trigger')
       .then(() => blur('.text-editor-input'))
-      .then(() => expect(this.$('.text-editor-input')).to.not.exist);
+      .then(() => expect(find('.text-editor-input')).to.not.exist);
   });
 
   it(
     'does not turn off edition after loosing focus with filled input',
-    function () {
-      this.render(hbs `{{tags-input
+    async function () {
+      await render(hbs `{{tags-input
         tagEditorComponentName="tags-input/text-editor"
       }}`);
 
       return click('.tag-creator-trigger')
         .then(() => fillIn('.text-editor-input', 'abc'))
         .then(() => blur('.text-editor-input'))
-        .then(() => expect(this.$('.text-editor-input')).to.exist);
+        .then(() => expect(find('.text-editor-input')).to.exist);
     }
   );
 
-  it('trims tags', function () {
+  it('trims tags', async function () {
     this.set('tags', []);
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
 
     return click('.tag-creator-trigger')
@@ -155,7 +161,7 @@ describe('Integration | Component | tags input/text editor', function () {
         '    someTag ,  someTag2, , someTag3   '
       ))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal(' someTag3   ');
+        expect(find('.text-editor-input').value).to.equal(' someTag3   ');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: 'someTag',
         }, {
@@ -164,7 +170,7 @@ describe('Integration | Component | tags input/text editor', function () {
       });
   });
 
-  it('does not add tag which not match settings.regexp', function () {
+  it('does not add tag which not match settings.regexp', async function () {
     this.setProperties({
       tags: [],
       settings: {
@@ -172,25 +178,25 @@ describe('Integration | Component | tags input/text editor', function () {
       },
     });
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
       tagEditorSettings=settings
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', '1a'))
-      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('1a');
-        expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
+        expect(find('.text-editor-input').value).to.equal('1a');
+        expect(find('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy).to.not.been.called;
       });
   });
 
-  it('does not add multiple tags which not match settings.regexp', function () {
+  it('does not add multiple tags which not match settings.regexp', async function () {
     this.setProperties({
       tags: [],
       settings: {
@@ -198,26 +204,26 @@ describe('Integration | Component | tags input/text editor', function () {
       },
     });
     const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-    this.on('change', changeSpy);
+    this.set('change', changeSpy);
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
       tagEditorSettings=settings
-      onChange=(action "change")
+      onChange=(action change)
     }}`);
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', '234,1a,cvs,sd,2'))
       .then(() => {
-        expect(this.$('.text-editor-input').val()).to.equal('1a,cvs,sd,2');
-        expect(this.$('.tags-input-text-editor')).to.have.class('has-error');
+        expect(find('.text-editor-input').value).to.equal('1a,cvs,sd,2');
+        expect(find('.tags-input-text-editor')).to.have.class('has-error');
         expect(changeSpy.lastCall.args[0]).to.deep.equal([{
           label: '234',
         }]);
       });
   });
 
-  it('removes error indication after modifying input value', function () {
+  it('removes error indication after modifying input value', async function () {
     this.setProperties({
       tags: [],
       settings: {
@@ -225,23 +231,23 @@ describe('Integration | Component | tags input/text editor', function () {
       },
     });
 
-    this.render(hbs `{{tags-input
+    await render(hbs `{{tags-input
       tags=tags
       tagEditorComponentName="tags-input/text-editor"
       tagEditorSettings=settings
     }}`);
     return click('.tag-creator-trigger')
       .then(() => fillIn('.text-editor-input', '1a'))
-      .then(() => keyEvent('.text-editor-input', 'keydown', 13))
+      .then(() => triggerKeyEvent('.text-editor-input', 'keydown', 'Enter'))
       .then(() => fillIn('.text-editor-input', '1ab'))
       .then(() =>
-        expect(this.$('.tags-input-text-editor')).to.not.have.class('has-error')
+        expect(find('.tags-input-text-editor')).to.not.have.class('has-error')
       );
   });
 
   it(
     'transforms each new tag label using settings.transform, if it was provided',
-    function () {
+    async function () {
       this.setProperties({
         tags: [],
         settings: {
@@ -249,13 +255,13 @@ describe('Integration | Component | tags input/text editor', function () {
         },
       });
       const changeSpy = sinon.spy((tags) => this.set('tags', tags));
-      this.on('change', changeSpy);
+      this.set('change', changeSpy);
 
-      this.render(hbs `{{tags-input
+      await render(hbs `{{tags-input
         tags=tags
         tagEditorComponentName="tags-input/text-editor"
         tagEditorSettings=settings
-        onChange=(action "change")
+        onChange=(action change)
       }}`);
       return click('.tag-creator-trigger')
         .then(() => fillIn('.text-editor-input', 'pl,'))
@@ -265,19 +271,19 @@ describe('Integration | Component | tags input/text editor', function () {
 
   it(
     'uses placeholder taken form settings.placeholder',
-    function () {
+    async function () {
       this.set('settings', {
         placeholder: 'sometext',
       });
 
-      this.render(hbs `{{tags-input
+      await render(hbs `{{tags-input
         tagEditorComponentName="tags-input/text-editor"
         tagEditorSettings=settings
       }}`);
 
       return click('.tag-creator-trigger')
         .then(() =>
-          expect(this.$('.text-editor-input').attr('placeholder')).to.equal('sometext')
+          expect(find('.text-editor-input').placeholder).to.equal('sometext')
         );
     }
   );

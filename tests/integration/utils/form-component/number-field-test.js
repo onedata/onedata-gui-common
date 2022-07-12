@@ -2,12 +2,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import NumberField from 'onedata-gui-common/utils/form-component/number-field';
 import { get } from '@ember/object';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 
 describe('Integration | Utility | form component/number field', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   it('defines inputType as "number"', function () {
     const field = NumberField.create();
@@ -161,7 +159,7 @@ describe('Integration | Utility | form component/number field', function () {
         `has number validation error for value "${value}" and ${boundingDescription}`,
         function () {
           const field = NumberField.create(Object.assign({
-            ownerSource: this,
+            ownerSource: this.owner,
             name: 'a',
             valuesSource: {
               a: value,
@@ -178,7 +176,7 @@ describe('Integration | Utility | form component/number field', function () {
         `does not have number validation error for value "${value}" and ${boundingDescription}`,
         function () {
           const field = NumberField.create(Object.assign({
-            ownerSource: this,
+            ownerSource: this.owner,
             name: 'a',
             valuesSource: {
               a: value,
@@ -195,7 +193,7 @@ describe('Integration | Utility | form component/number field', function () {
     'does not have number validation error for value "123.123" and integer == false',
     function () {
       const field = NumberField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         integer: false,
         name: 'a',
         valuesSource: {
@@ -211,7 +209,7 @@ describe('Integration | Utility | form component/number field', function () {
     'has number validation error for value "123.123" and integer == true',
     function () {
       const field = NumberField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         integer: true,
         name: 'a',
         valuesSource: {
@@ -229,7 +227,7 @@ describe('Integration | Utility | form component/number field', function () {
     'does not have number validation error for value "123" and integer == true',
     function () {
       const field = NumberField.create({
-        ownerSource: this,
+        ownerSource: this.owner,
         integer: true,
         name: 'a',
         valuesSource: {

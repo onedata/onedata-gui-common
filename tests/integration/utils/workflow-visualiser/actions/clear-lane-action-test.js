@@ -1,24 +1,26 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 import ParallelBox from 'onedata-gui-common/utils/workflow-visualiser/lane/parallel-box';
 import InterblockSpace from 'onedata-gui-common/utils/workflow-visualiser/lane/interblock-space';
 import ClearLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/clear-lane-action';
 import { getProperties, get } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 
 const laneName = 'lane1';
 
 describe('Integration | Utility | workflow visualiser/actions/clear lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -26,7 +28,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
       elements: [ParallelBox.create()],
     });
     const action = ClearLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: { lane },
     });
     this.setProperties({ lane, action });
@@ -59,21 +61,22 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
     await executeAction(this);
 
     expect(getModal()).to.have.class('question-modal');
-    expect(getModalHeader().find('.oneicon-sign-warning-rounded')).to.exist;
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Clear lane');
-    expect(getModalBody().text().trim()).to.contain(
+    expect(getModalHeader().querySelector('.oneicon-sign-warning-rounded')).to.exist;
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Clear lane');
+    expect(getModalBody().textContent.trim()).to.contain(
       `You are about to clear the lane "${laneName}".`
     );
-    const $yesButton = getModalFooter().find('.question-yes');
-    expect($yesButton.text().trim()).to.equal('Clear');
-    expect($yesButton).to.have.class('btn-danger');
+    const yesButton = getModalFooter().querySelector('.question-yes');
+    expect(yesButton.textContent.trim()).to.equal('Clear');
+    expect(yesButton).to.have.class('btn-danger');
   });
 
   it(
     'returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-no')[0]);
+      await click(getModalFooter().querySelector('.question-no'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('cancelled');
@@ -86,7 +89,7 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
       const clearLaneStub = sinon.stub(this.get('lane'), 'clear').resolves();
 
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       const actionResult = await resultPromise;
 
       expect(clearLaneStub).to.be.calledOnce;
@@ -102,9 +105,9 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
         .returns(new Promise((resolve, reject) => rejectClear = reject));
 
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.question-yes')[0]);
+      await click(getModalFooter().querySelector('.question-yes'));
       rejectClear();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(clearLaneStub).to.be.calledOnce;
@@ -114,8 +117,8 @@ describe('Integration | Utility | workflow visualiser/actions/clear lane action'
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

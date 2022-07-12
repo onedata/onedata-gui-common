@@ -27,7 +27,7 @@ import { computed, observer } from '@ember/object';
 import { next } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 import layout from 'onedata-gui-common/templates/components/one-collapsible-toolbar';
-import ClickOutside from 'ember-click-outside/mixins/click-outside';
+import ClickOutside from 'ember-click-outside/mixin';
 import ContentOverflowDetector from 'onedata-gui-common/mixins/content-overflow-detector';
 import $ from 'jquery';
 
@@ -153,10 +153,11 @@ export default Component.extend(ClickOutside, ContentOverflowDetector, {
       }
       this.addClickOutsideListener();
     });
+    const $element = $(this.get('element'));
     this.setProperties({
-      overflowElement: this.$('.collapsible-toolbar-buttons'),
-      overflowParentElement: this.$().parent(),
-      overflowSiblingsElements: this.$().siblings(),
+      overflowElement: $element.find('.collapsible-toolbar-buttons'),
+      overflowParentElement: $element.parent(),
+      overflowSiblingsElements: $element.siblings(),
     });
     this.overflowDetectorMounter();
     this.get('eventsBus').on(

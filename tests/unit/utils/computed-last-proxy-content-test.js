@@ -1,7 +1,12 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import computedLastProxyContent from 'onedata-gui-common/utils/computed-last-proxy-content';
-import EmberObject, { set, get, computed, observer } from '@ember/object';
+import EmberObject, {
+  set,
+  get,
+  computed,
+  observer,
+} from '@ember/object';
 import { promise, raw } from 'ember-awesome-macros';
 import { Promise, resolve, reject } from 'rsvp';
 

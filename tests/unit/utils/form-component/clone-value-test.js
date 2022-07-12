@@ -1,7 +1,10 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
-import { createValuesContainer, isValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
+import {
+  createValuesContainer,
+  isValuesContainer,
+} from 'onedata-gui-common/utils/form-component/values-container';
 import EmberObject, { get } from '@ember/object';
 
 describe('Unit | Utility | form component/clone value', function () {

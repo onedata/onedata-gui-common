@@ -1,19 +1,21 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ViewLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-lane-action';
 import { get, getProperties } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
 
 describe('Integration | Utility | workflow visualiser/actions/view lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -26,7 +28,7 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
       },
     });
     const action = ViewLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         definedStores: [
           Store.create({
@@ -59,18 +61,22 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
     await executeAction(this);
 
     expect(getModal()).to.have.class('lane-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Lane details');
-    expect(getModalBody().find('.name-field .field-component').text().trim())
-      .to.equal('lane1');
-    expect(getModalBody().find('.sourceStore-field .field-component').text().trim())
-      .to.equal('store1');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Lane details');
+    expect(
+      getModalBody().querySelector('.name-field .field-component').textContent.trim()
+    ).to.equal('lane1');
+    expect(
+      getModalBody().querySelector('.sourceStore-field .field-component')
+      .textContent.trim()
+    ).to.equal('store1');
   });
 
   it(
     'returns promise with successful ActionResult after execute() and modal close using "Close"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('done');
@@ -79,8 +85,8 @@ describe('Integration | Utility | workflow visualiser/actions/view lane action',
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

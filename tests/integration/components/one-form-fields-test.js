@@ -1,15 +1,14 @@
 import EmberObject from '@ember/object';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 describe('Integration | Component | one form fields', function () {
-  setupComponentTest('one-form-fields', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('puts an "optional" label in optional inputs', function () {
+  it('puts an "optional" label in optional inputs', async function () {
     const fields = [
       { name: 'one', type: 'text', label: 'One field', optional: true },
     ];
@@ -17,19 +16,19 @@ describe('Integration | Component | one form fields', function () {
     this.set('fields', fields);
     this.set('formValues', EmberObject.create({}));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields}}
     {{/bs-form}}
     `);
 
-    const formId = this.$('form').attr('id');
+    const formId = find('form').id;
     const inputId = formId + '-one';
 
-    expect(this.$(`label[for='${inputId}']`).text()).to.match(/optional/);
+    expect(find(`label[for='${inputId}']`).textContent).to.match(/optional/);
   });
 
-  it('renders label tip if field should have one', function () {
+  it('renders label tip if field should have one', async function () {
     const fields = [
       { name: 'one', type: 'text', label: 'One field', tip: 'Field tip' },
     ];
@@ -37,19 +36,19 @@ describe('Integration | Component | one form fields', function () {
     this.set('fields', fields);
     this.set('formValues', EmberObject.create({}));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields}}
     {{/bs-form}}
     `);
 
-    const formId = this.$('form').attr('id');
+    const formId = find('form').id;
     const inputId = formId + '-one';
 
-    expect(this.$(`label[for='${inputId}'] .one-icon`).length).to.eq(1);
+    expect(findAll(`label[for='${inputId}'] .one-icon`).length).to.eq(1);
   });
 
-  it('can render a text type input with given value', function () {
+  it('can render a text type input with given value', async function () {
     const VALUE = 'some value';
 
     const fields = [
@@ -61,17 +60,17 @@ describe('Integration | Component | one form fields', function () {
       one: VALUE,
     }));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields formValues=formValues}}
     {{/bs-form}}
     `);
 
-    expect(this.$('input')).to.exist;
-    expect(this.$('input')).to.have.value(VALUE);
+    expect(find('input')).to.exist;
+    expect(find('input').value).to.equal(VALUE);
   });
 
-  it('can render form-control-static for type static', function () {
+  it('can render form-control-static for type static', async function () {
     const VALUE = 'some value';
 
     const fields = [
@@ -83,13 +82,13 @@ describe('Integration | Component | one form fields', function () {
       one: VALUE,
     }));
 
-    this.render(hbs `
+    await render(hbs `
     {{#bs-form as |form|}}
       {{one-form-fields bsForm=form fields=fields formValues=formValues}}
     {{/bs-form}}
     `);
 
-    expect(this.$('.form-control-static'), 'render form-control-static').to.exist;
-    expect(this.$('.form-control-static')).to.contain(VALUE);
+    expect(find('.form-control-static'), 'render form-control-static').to.exist;
+    expect(find('.form-control-static').textContent).to.contain(VALUE);
   });
 });

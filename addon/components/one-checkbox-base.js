@@ -3,6 +3,7 @@ import Component from '@ember/component';
 import { Promise } from 'rsvp';
 import { computed } from '@ember/object';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
+import $ from 'jquery';
 
 /**
  * Creates a base for checkbox-like components using the one-way-checkbox component.
@@ -180,7 +181,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.$('input')
+    $(this.get('element').querySelector('input'))
       .change(() => this._toggle())
       .focusout(() => this.get('onFocusOut')())
       // Fix for Firefox to handle toggle change by

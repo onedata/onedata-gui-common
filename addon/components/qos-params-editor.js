@@ -14,7 +14,13 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { get, set, getProperties, computed, observer } from '@ember/object';
+import {
+  get,
+  set,
+  getProperties,
+  computed,
+  observer,
+} from '@ember/object';
 import { A } from '@ember/array';
 import { array, raw, not } from 'ember-awesome-macros';
 import { later } from '@ember/runloop';
@@ -23,7 +29,9 @@ import safeExec from 'onedata-gui-common/utils/safe-method-execution';
 import { resolve } from 'rsvp';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import layout from '../templates/components/qos-params-editor';
-import QosParamRecord, { defaultValidate as defaultQosParamRecordValidate } from 'onedata-gui-common/utils/qos-param-record';
+import QosParamRecord, {
+  defaultValidate as defaultQosParamRecordValidate,
+} from 'onedata-gui-common/utils/qos-param-record';
 
 const nodeClearDelay = 500;
 

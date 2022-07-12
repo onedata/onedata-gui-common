@@ -32,6 +32,10 @@ export function isDevelopment(config) {
   return MOCK_BACKEND === true;
 }
 
+function isTest(config) {
+  return config.environment === 'test';
+}
+
 export const mockGuiContext = {
   guiMode: 'unified',
   serviceType: 'worker',
@@ -43,7 +47,8 @@ export const mockGuiContext = {
 
 export function initialize(application) {
   application.guiContextProxy = PromiseObject.create({
-    promise: resolve($.ajax('./gui-context'))
+    promise: isTest(config) ?
+      resolve(mockGuiContext) : resolve($.ajax('./gui-context'))
       .catch(error => {
         if (isDevelopment(config)) {
           return mockGuiContext;

@@ -1,7 +1,7 @@
 /**
  * A form field base class. Introduces validators mechanism. Provides one internal
  * validator - presenceValidator - which can be controlled by flag isOptional.
- * 
+ *
  * @module utils/form-component/form-field
  * @author Michał Borzęcki
  * @copyright (C) 2020 ACK CYFRONET AGH
@@ -10,7 +10,7 @@
 
 import FormElement from 'onedata-gui-common/utils/form-component/form-element';
 import FormFieldValidator from 'onedata-gui-common/utils/form-component/form-field-validator';
-import { computed } from '@ember/object';
+import { computed, defineProperty } from '@ember/object';
 import { union } from '@ember/object/computed';
 import { A } from '@ember/array';
 import { buildValidations } from 'ember-cp-validations';
@@ -117,13 +117,13 @@ export default FormElement.extend({
   /**
    * Registers new internal validator as a string, which is a field property name where
    * the validator is defined. Ignores duplicates.
-   * @param {String} propertyName 
+   * @param {String} propertyName
    */
   registerInternalValidator(propertyName) {
     this.get('internalValidatorsProps').addObject(propertyName);
     const internalValidatorsProps = this.get('internalValidatorsProps');
 
-    this.set('internalValidators', computed(
+    defineProperty(this, 'internalValidators', computed(
       ...internalValidatorsProps,
       function internalValidators() {
         return internalValidatorsProps

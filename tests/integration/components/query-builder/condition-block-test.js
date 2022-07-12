@@ -1,9 +1,16 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import {
+  render,
+  click,
+  fillIn,
+  blur,
+  triggerKeyEvent,
+  find,
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ConditionQueryBlock from 'onedata-gui-common/utils/query-builder/condition-query-block';
-import { click, fillIn, blur, keyEvent } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { get } from '@ember/object';
 import setDefaultQueryValuesBuilder from '../../../helpers/set-default-query-values-builder';
@@ -26,9 +33,7 @@ const mathOperators = [{
 }];
 
 describe('Integration | Component | query builder/condition block', function () {
-  setupComponentTest('query-builder/condition-block', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   setDefaultQueryValuesBuilder();
 
@@ -41,12 +46,12 @@ describe('Integration | Component | query builder/condition block', function () 
         comparatorValue: 'hello',
       }));
 
-      this.render(hbs `{{query-builder/condition-block
+      await render(hbs `{{query-builder/condition-block
         queryBlock=queryBlock
         valuesBuilder=valuesBuilder
       }}`);
 
-      expect(this.$('.query-builder-block.query-builder-condition-block')).to.exist;
+      expect(find('.query-builder-block.query-builder-condition-block')).to.exist;
     }
   );
 
@@ -81,14 +86,15 @@ describe('Integration | Component | query builder/condition block', function () 
           })
         );
 
-        this.render(hbs `{{query-builder/condition-block
+        await render(hbs `{{query-builder/condition-block
           queryBlock=queryBlock
           valuesBuilder=valuesBuilder
         }}`);
 
-        expect(this.$('.property-key').text().trim()).to.equal('some_key');
-        expect(this.$('.comparator').text().trim()).to.equal(comparatorSymbol);
-        expect(this.$('.comparator-value').text().trim()).to.equal(comparatorViewValue);
+        expect(find('.property-key').textContent.trim()).to.equal('some_key');
+        expect(find('.comparator').textContent.trim()).to.equal(comparatorSymbol);
+        expect(find('.comparator-value').textContent.trim())
+          .to.equal(comparatorViewValue);
       }
     );
   });
@@ -100,7 +106,7 @@ describe('Integration | Component | query builder/condition block', function () 
       comparatorValue: 'hello',
     }));
 
-    this.render(hbs `{{#query-builder/condition-block
+    await render(hbs `{{#query-builder/condition-block
       queryBlock=queryBlock
       valuesBuilder=valuesBuilder
     }}
@@ -108,7 +114,7 @@ describe('Integration | Component | query builder/condition block', function () 
     {{/query-builder/condition-block}}
     `);
 
-    expect(this.$('.test-element')).to.exist;
+    expect(find('.test-element')).to.exist;
   });
 
   it('starts comparator value edition on value click', async function () {
@@ -124,7 +130,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionStartSpy: sinon.spy(),
     });
 
-    this.render(hbs `{{query-builder/condition-block
+    await render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionStart=editionStartSpy
       valuesBuilder=valuesBuilder
@@ -133,8 +139,8 @@ describe('Integration | Component | query builder/condition block', function () 
     expect(editionStartSpy).to.not.be.called;
     await click('.comparator-value');
 
-    expect(this.$('.comparator-value-editor')).to.exist;
-    expect(this.$('input[type="text"]')).to.exist;
+    expect(find('.comparator-value-editor')).to.exist;
+    expect(find('input[type="text"]')).to.exist;
     expect(editionStartSpy).to.be.calledOnce.and.to.be.calledWith(queryBlock);
   });
 
@@ -153,7 +159,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionValidityChangeSpy: sinon.spy(),
     });
 
-    this.render(hbs `{{query-builder/condition-block
+    await render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionEnd=editionEndSpy
       onConditionEditionValidityChange=editionValidityChangeSpy
@@ -166,8 +172,8 @@ describe('Integration | Component | query builder/condition block', function () 
     expect(editionEndSpy).to.not.be.called;
     await blur('.comparator-value');
 
-    expect(this.$('.comparator-value').text().trim()).to.equal('"def"');
-    expect(this.$('input[type="text"]')).to.not.exist;
+    expect(find('.comparator-value').textContent.trim()).to.equal('"def"');
+    expect(find('input[type="text"]')).to.not.exist;
     expect(get(queryBlock, 'comparatorValue')).to.equal('def');
     expect(editionValidityChangeSpy)
       .to.be.calledOnce
@@ -190,7 +196,7 @@ describe('Integration | Component | query builder/condition block', function () 
       editionValidityChangeSpy: sinon.spy(),
     });
 
-    this.render(hbs `{{query-builder/condition-block
+    await render(hbs `{{query-builder/condition-block
       queryBlock=queryBlock
       onConditionEditionEnd=editionEndSpy
       onConditionEditionValidityChange=editionValidityChangeSpy
@@ -202,13 +208,13 @@ describe('Integration | Component | query builder/condition block', function () 
     await fillIn('.comparator-value', 'def');
     expect(editionEndSpy).to.not.be.called;
 
-    await keyEvent('.comparator-value', 'keydown', 'Escape');
+    await triggerKeyEvent('.comparator-value', 'keydown', 'Escape');
 
     expect(editionEndSpy).to.be.calledOnce.and.to.be.calledWith(queryBlock);
 
-    expect(this.$('.comparator-value').text().trim(), 'comparator-value text')
+    expect(find('.comparator-value').textContent.trim(), 'comparator-value text')
       .to.equal('"abc"');
-    expect(this.$('input[type="text"]')).to.not.exist;
+    expect(find('input[type="text"]')).to.not.exist;
     expect(get(queryBlock, 'comparatorValue'), 'query block comparatorValue')
       .to.equal('abc');
     expect(editionValidityChangeSpy, 'editionValidityChange')
@@ -240,19 +246,19 @@ describe('Integration | Component | query builder/condition block', function () 
               comparatorValue: initialValue,
             }));
 
-            this.render(hbs `{{query-builder/condition-block
+            await render(hbs `{{query-builder/condition-block
               queryBlock=queryBlock
               valuesBuilder=valuesBuilder
             }}`);
 
             await click('.comparator-value');
 
-            expect(this.$('input[type="text"].comparator-value'))
+            expect(find('input[type="text"].comparator-value'))
               .to.exist.to.not.have.class('is-invalid');
 
             await fillIn('.comparator-value', incorrectValue);
 
-            expect(this.$('input[type="text"].comparator-value'))
+            expect(find('input[type="text"].comparator-value'))
               .to.exist.and.to.have.class('is-invalid');
           }
         );
@@ -274,7 +280,7 @@ describe('Integration | Component | query builder/condition block', function () 
               editionValidityChangeSpy: sinon.spy(),
             });
 
-            this.render(hbs `{{query-builder/condition-block
+            await render(hbs `{{query-builder/condition-block
               queryBlock=queryBlock
               onConditionEditionEnd=editionEndSpy
               onConditionEditionValidityChange=editionValidityChangeSpy
@@ -285,7 +291,7 @@ describe('Integration | Component | query builder/condition block', function () 
             await fillIn('.comparator-value', incorrectValue);
             await blur('.comparator-value');
 
-            expect(this.$('input[type="text"]')).to.exist;
+            expect(find('input[type="text"]')).to.exist;
             expect(get(queryBlock, 'comparatorValue')).to.equal(initialValue);
             expect(editionValidityChangeSpy).to.be.calledOnce
               .and.to.be.calledWith(queryBlock, false);

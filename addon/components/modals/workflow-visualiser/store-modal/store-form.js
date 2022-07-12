@@ -35,7 +35,13 @@ import TextareaField from 'onedata-gui-common/utils/form-component/textarea-fiel
 import DropdownField from 'onedata-gui-common/utils/form-component/dropdown-field';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
 import ToggleField from 'onedata-gui-common/utils/form-component/toggle-field';
-import { computed, observer, getProperties, get, set } from '@ember/object';
+import {
+  computed,
+  observer,
+  getProperties,
+  get,
+  set,
+} from '@ember/object';
 import { reads } from '@ember/object/computed';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { scheduleOnce } from '@ember/runloop';

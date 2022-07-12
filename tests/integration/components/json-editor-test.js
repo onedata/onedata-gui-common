@@ -1,24 +1,22 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import { fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 
 describe('Integration | Component | json editor', function () {
-  setupComponentTest('json-editor', {
-    integration: true,
-  });
+  setupRenderingTest();
 
-  it('shows passed value', function () {
+  it('shows passed value', async function () {
     const value = { a: 'a' };
     this.set('value', JSON.stringify(value));
-    this.render(hbs `{{json-editor value=value}}`);
+    await render(hbs `{{json-editor value=value}}`);
 
-    expect(JSON.parse(this.$('textarea').val())).to.deep.equal(value);
+    expect(JSON.parse(find('textarea').value)).to.deep.equal(value);
   });
 
-  it('notifies about correct data', function () {
+  it('notifies about correct data', async function () {
     const value = { a: 'a' };
     this.set('value', JSON.stringify(value));
     const spy = sinon.spy((res) => {
@@ -26,15 +24,15 @@ describe('Integration | Component | json editor', function () {
       expect(res.parsedValue).to.deep.equal(value);
       expect(res.isValid).to.be.true;
     });
-    this.on('onChange', spy);
-    this.render(hbs `{{json-editor onChange=(action "onChange")}}`);
+    this.set('onChange', spy);
+    await render(hbs `{{json-editor onChange=(action onChange)}}`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value)).then(() => {
       expect(spy).to.be.calledOnce;
     });
   });
 
-  it('notifies about incorrect data', function () {
+  it('notifies about incorrect data', async function () {
     const value = { a: 'a' };
     this.set('value', JSON.stringify(value));
     const spy = sinon.spy((res) => {
@@ -42,25 +40,25 @@ describe('Integration | Component | json editor', function () {
       expect(res.parsedValue).to.be.undefined;
       expect(res.isValid).to.be.false;
     });
-    this.on('onChange', spy);
-    this.render(hbs `{{json-editor onChange=(action "onChange")}}`);
+    this.set('onChange', spy);
+    await render(hbs `{{json-editor onChange=(action onChange)}}`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
       expect(spy).to.be.calledOnce;
     });
   });
 
-  it('shows information about invalid data', function () {
+  it('shows information about invalid data', async function () {
     const value = { a: 'a' };
     this.set('value', '{}');
-    this.on('onChange', (res) => {
+    this.set('onChange', (res) => {
       this.set('value', res.value);
     });
-    this.render(hbs `{{json-editor value=value onChange=(action "onChange")}}`);
+    await render(hbs `{{json-editor value=value onChange=(action onChange)}}`);
 
     return fillIn('.json-editor-textarea', JSON.stringify(value) + 'x').then(() => {
-      expect(this.$('.form-message')).to.exist;
-      expect(this.$('.json-editor.has-error')).to.exist;
+      expect(find('.form-message')).to.exist;
+      expect(find('.json-editor.has-error')).to.exist;
     });
   });
 });

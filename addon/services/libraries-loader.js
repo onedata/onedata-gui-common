@@ -16,7 +16,12 @@ import Service from '@ember/service';
 import { get, computed } from '@ember/object';
 import { promiseObject } from 'onedata-gui-common/utils/ember/promise-object';
 import config from 'ember-get-config';
-import { Promise, all as allFulfilled, resolve, reject } from 'rsvp';
+import {
+  Promise,
+  all as allFulfilled,
+  resolve,
+  reject,
+} from 'rsvp';
 import _ from 'lodash';
 import { promise } from 'ember-awesome-macros';
 import $ from 'jquery';

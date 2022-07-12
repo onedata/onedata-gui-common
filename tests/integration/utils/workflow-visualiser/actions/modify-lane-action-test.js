@@ -1,22 +1,24 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click, fillIn } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ModifyLaneAction from 'onedata-gui-common/utils/workflow-visualiser/actions/modify-lane-action';
 import { get, getProperties } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click, fillIn } from 'ember-native-dom-helpers';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import sinon from 'sinon';
 import { Promise } from 'rsvp';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import Lane from 'onedata-gui-common/utils/workflow-visualiser/lane';
-import { selectChoose } from '../../../../helpers/ember-power-select';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 
 describe('Integration | Utility | workflow visualiser/actions/modify lane action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const lane = Lane.create({
@@ -28,7 +30,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
       },
     });
     const action = ModifyLaneAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         definedStores: [
           Store.create({
@@ -61,17 +63,21 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
     await executeAction(this);
 
     expect(getModal()).to.have.class('lane-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Modify lane');
-    expect(getModalBody().find('.name-field .form-control')).to.have.value('lane1');
-    expect(getModalBody().find('.sourceStore-field .dropdown-field-trigger').text().trim())
-      .to.equal('store1');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Modify lane');
+    expect(getModalBody().querySelector('.name-field .form-control'))
+      .to.have.value('lane1');
+    expect(
+      getModalBody().querySelector('.sourceStore-field .dropdown-field-trigger')
+      .textContent.trim()
+    ).to.equal('store1');
   });
 
   it(
     'returns promise with cancelled ActionResult after execute() and modal close using "Cancel"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('cancelled');
@@ -85,7 +91,7 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
 
       const { resultPromise } = await executeAction(this);
       await fillIn('.name-field .form-control', 'lane2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(getModalFooter().querySelector('.btn-submit'));
       const actionResult = await resultPromise;
 
       expect(modifyLaneStub).to.be.calledOnce.and.to.be.calledWith({
@@ -104,9 +110,9 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
 
       const { resultPromise } = await executeAction(this);
       await fillIn('.name-field .form-control', 'lane2');
-      await click(getModalFooter().find('.btn-submit')[0]);
+      await click(getModalFooter().querySelector('.btn-submit'));
       rejectRemove();
-      await wait();
+      await settled();
       const actionResult = await resultPromise;
 
       expect(modifyLaneStub).to.be.calledOnce;
@@ -121,15 +127,18 @@ describe('Integration | Utility | workflow visualiser/actions/modify lane action
     await executeAction(this);
 
     expect(executeStub).to.not.be.called;
-    await selectChoose(getModalBody().find('.sourceStore-field')[0], 'Create store...');
+    await selectChoose(
+      getModalBody().querySelector('.sourceStore-field'),
+      'Create store...'
+    );
 
     expect(executeStub).to.be.calledOnce;
   });
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

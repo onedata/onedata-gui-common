@@ -10,8 +10,12 @@
 
 import Component from '@ember/component';
 
-import { readOnly } from '@ember/object/computed';
-import EmberObject, { observer, computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
+import EmberObject, {
+  observer,
+  computed,
+  defineProperty,
+} from '@ember/object';
 import layout from '../../templates/components/one-dynamic-tree/node';
 import DisabledPaths from 'onedata-gui-common/mixins/components/one-dynamic-tree/disabled-paths';
 import { dotToDash } from 'onedata-gui-common/helpers/dot-to-dash';
@@ -176,9 +180,10 @@ export default Component.extend(DisabledPaths, {
       CHECKBOX_SELECTION_PATH_REPLACE_REGEX,
       '.nodes.'
     );
-    this.set(
+    defineProperty(
+      this,
       '_areNestedCheckboxesSelected',
-      readOnly(`checkboxSelection.nodes.${selectionPath}.value`)
+      reads(`checkboxSelection.nodes.${selectionPath}.value`)
     );
   }),
 

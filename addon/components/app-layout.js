@@ -11,7 +11,7 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-import { reads } from '@ember/object/computed';
+import { reads, equal } from '@ember/object/computed';
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { computed, observer } from '@ember/object';
@@ -40,7 +40,7 @@ export default Component.extend({
 
   rowAppClass: 'row row-app full-height',
 
-  showMobileSidebar: computed.equal('navigationState.activeContentLevel', 'sidebar'),
+  showMobileSidebar: equal('navigationState.activeContentLevel', 'sidebar'),
 
   sidenavResourceType: reads('navigationState.globalSidenavResourceType'),
 
@@ -129,8 +129,14 @@ export default Component.extend({
   sidebarClassObserver: observer(
     'colSidebarClassArray',
     function moveSidebar() {
-      const colSidebarClassArray = this.get('colSidebarClassArray');
-      const $colSidebar = this.$('#col-sidebar');
+      const {
+        colSidebarClassArray,
+        element,
+      } = this.getProperties('colSidebarClassArray', 'element');
+      const colSidebar = element.querySelector('#col-sidebar');
+      if (!colSidebar) {
+        return;
+      }
       const knownColSidebarClasses = [
         'col-sidebar',
         'full-height',
@@ -141,10 +147,10 @@ export default Component.extend({
         'with-place-for-menu',
       ];
       knownColSidebarClasses.forEach(cls => {
-        $colSidebar.removeClass(cls);
+        colSidebar.classList.remove(cls);
       });
       colSidebarClassArray.forEach(cls => {
-        $colSidebar.addClass(cls);
+        colSidebar.classList.add(cls);
       });
     }
   ),

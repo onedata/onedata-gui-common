@@ -5,10 +5,10 @@ import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-
 import { get } from '@ember/object';
 
 describe('Unit | Service | clipboard actions', function () {
-  setupTest('service:clipboard-actions', {});
+  setupTest();
 
   it('creates action "CopyRecordIdAction"', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:clipboard-actions');
     const record = {};
 
     const action = service.createCopyRecordIdAction({ record });

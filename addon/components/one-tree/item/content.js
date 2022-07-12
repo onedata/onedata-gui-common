@@ -67,30 +67,32 @@ export default Component.extend({
         searchQuery,
         itemFilteredOut,
         isSubtreeFilteredOut,
+        element,
       } = this.getProperties(
         'searchQuery',
         'itemFilteredOut',
-        'isSubtreeFilteredOut'
+        'isSubtreeFilteredOut',
+        'element'
       );
       searchQuery = searchQuery.trim();
 
       // There is a priority of elements, where searchQuery should be searched:
       // .tree-label or .one-label or the whole content
-      let textElement = this.$();
-      const treeLabel = textElement.find('.tree-label');
-      const oneLabel = textElement.find('.one-label');
-      if (treeLabel.length) {
+      let textElement = element;
+      const treeLabel = textElement.querySelector('.tree-label');
+      const oneLabel = textElement.querySelector('.one-label');
+      if (treeLabel) {
         textElement = treeLabel;
-      } else if (oneLabel.length) {
+      } else if (oneLabel) {
         textElement = oneLabel;
       }
 
-      const isNotFilteredOut = textElement.text().toLowerCase()
+      const isNotFilteredOut = textElement.textContent.toLowerCase()
         .indexOf(searchQuery.toLowerCase()) > -1;
       if (searchQuery.length > 0 && !isSubtreeFilteredOut) {
-        textElement.addClass('semibold');
+        textElement.classList.add('semibold');
       } else {
-        textElement.removeClass('semibold');
+        textElement.classList.remove('semibold');
       }
       itemFilteredOut(isNotFilteredOut);
     }

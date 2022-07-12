@@ -6,15 +6,13 @@ import { A } from '@ember/array';
 import { createValuesContainer } from 'onedata-gui-common/utils/form-component/values-container';
 import { get, set } from '@ember/object';
 import sinon from 'sinon';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe(
   'Integration | Utility | form component/form fields collection group',
   function () {
-    setupComponentTest('test-component', {
-      integration: true,
-    });
+    setupTest();
 
     it('has "isCollectionManipulationAllowed" set to true by default', function () {
       const collectionGroup = FormFieldsCollectionGroup.create();
@@ -183,7 +181,7 @@ describe(
       'provides default translation for "addButtonText"',
       function () {
         const collectionGroup = FormFieldsCollectionGroup.create({
-          ownerSource: this,
+          ownerSource: this.owner,
           name: 'abc',
         });
 
@@ -199,7 +197,7 @@ describe(
           .returns('specificText');
 
         const collectionGroup = FormFieldsCollectionGroup.create({
-          ownerSource: this,
+          ownerSource: this.owner,
           name: 'abc',
         });
 

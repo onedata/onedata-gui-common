@@ -240,7 +240,16 @@ import { reads } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 import OwnerInjector from 'onedata-gui-common/mixins/owner-injector';
 import I18n from 'onedata-gui-common/mixins/components/i18n';
-import { conditional, and, equal, raw, getBy, notEmpty, writable, or } from 'ember-awesome-macros';
+import {
+  conditional,
+  and,
+  equal,
+  raw,
+  getBy,
+  notEmpty,
+  writable,
+  or,
+} from 'ember-awesome-macros';
 import { A } from '@ember/array';
 import cloneValue from 'onedata-gui-common/utils/form-component/clone-value';
 

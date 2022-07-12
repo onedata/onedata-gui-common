@@ -1,5 +1,5 @@
 /**
- * A world map component, on which other components can be placed according 
+ * A world map component, on which other components can be placed according
  * to specified latitude and longitude. Yields hash with "position" component
  * that allows to use x and y computed from given lat./long.
  * Example:
@@ -10,7 +10,7 @@
  *   {{/map.position}}
  * {{/one-atlas}}
  * ```
- * 
+ *
  * @module components/one-map
  * @author Michal Borzecki
  * @copyright (C) 2018-2020 ACK CYFRONET AGH
@@ -114,8 +114,9 @@ export default Component.extend({
     const {
       _initialState,
       zoomOnScroll,
-    } = this.getProperties('_initialState', 'zoomOnScroll');
-    const $mapContainer = this.$('.one-map-container');
+      element,
+    } = this.getProperties('_initialState', 'zoomOnScroll', 'element');
+    const $mapContainer = $(element.querySelector('.one-map-container'));
     this.set('$mapContainer', $mapContainer);
     this.set('_mapInstance',
       $mapContainer.vectorMap({
@@ -142,7 +143,7 @@ export default Component.extend({
         return false;
       }
     };
-    this.$().on('wheel', scrollRedirectHandler);
+    $(element).on('wheel', scrollRedirectHandler);
   },
 
   willDestroyElement() {
@@ -172,8 +173,8 @@ export default Component.extend({
 
   /**
    * Handles map viewport change event.
-   * @param {JQuery.Event} event 
-   * @param {number} scale 
+   * @param {JQuery.Event} event
+   * @param {number} scale
    */
   _handleViewportChange(event, scale) {
     const {

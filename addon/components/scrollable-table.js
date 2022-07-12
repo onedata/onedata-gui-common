@@ -43,6 +43,7 @@ import { computed, observer } from '@ember/object';
 import notImplementedIgnore from 'onedata-gui-common/utils/not-implemented-ignore';
 import { inject as service } from '@ember/service';
 import { equal, raw } from 'ember-awesome-macros';
+import $ from 'jquery';
 
 const initialEdgeScrollState = Object.freeze({
   top: true,
@@ -105,7 +106,7 @@ export default Component.extend(WindowResizeHandler, {
   /**
    * @type {ComputedProperty<Boolean>}
    */
-  renderedInSafari: equal('browser.browser.browserCode', raw('safari')),
+  renderedInSafari: equal('browser.browserName', raw('safari')),
 
   /**
    * @type {ComputedProperty<String>}
@@ -150,14 +151,16 @@ export default Component.extend(WindowResizeHandler, {
   },
 
   recalculateTableLayout() {
-    if (!this.get('element')) {
+    const {
+      element,
+      scrollPosition,
+    } = this.getProperties('element', 'scrollPosition');
+    if (!element) {
       return;
     }
-
-    const scrollPosition = this.get('scrollPosition');
-    const $columnLabels = this.$('> .ps > table > tr > .column-label:not(.row-label)');
-    const $rowLabels = this.$('> .ps > table > tr > .row-label:not(.column-label)');
-    const $columnAndRowLabels = this.$('> .ps > table > tr > .row-label.column-label');
+    const $columnLabels = $(element).find('> .ps > table > tr > .column-label:not(.row-label)');
+    const $rowLabels = $(element).find('> .ps > table > tr > .row-label:not(.column-label)');
+    const $columnAndRowLabels = $(element).find('> .ps > table > tr > .row-label.column-label');
 
     // For the origin or translateZ property usage see comments in scrollable-table.scss.
     $columnLabels.css({
@@ -183,7 +186,7 @@ export default Component.extend(WindowResizeHandler, {
     } = this.getProperties('disableScroll', 'element');
 
     if (!disableScroll && element) {
-      const $ps = this.$('.ps');
+      const $ps = $(element.querySelector('.ps'));
       this.set('scrollPosition', {
         top: $ps.scrollTop(),
         left: $ps.scrollLeft(),

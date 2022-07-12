@@ -1,10 +1,9 @@
-import { camelize } from '@ember/string';
-
 export function registerService(testCase, name, stub) {
-  testCase.register(`service:${name}`, stub);
-  return testCase.inject.service(name, { as: camelize(name) });
+  testCase.owner.unregister(`service:${name}`);
+  testCase.owner.register(`service:${name}`, stub);
+  return lookupService(testCase, name);
 }
 
 export function lookupService(testCase, name) {
-  return testCase.container.lookup(`service:${name}`);
+  return testCase.owner.lookup(`service:${name}`);
 }

@@ -1,19 +1,22 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, settled, click } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import ViewStoreAction from 'onedata-gui-common/utils/workflow-visualiser/actions/view-store-action';
 import { get } from '@ember/object';
-import { getModal, getModalHeader, getModalBody, getModalFooter } from '../../../../helpers/modal';
-import wait from 'ember-test-helpers/wait';
-import { click } from 'ember-native-dom-helpers';
+import {
+  getModal,
+  getModalHeader,
+  getModalBody,
+  getModalFooter,
+} from '../../../../helpers/modal';
 import Store from 'onedata-gui-common/utils/workflow-visualiser/store';
 import { resolve } from 'rsvp';
+import $ from 'jquery';
 
 describe('Integration | Utility | workflow visualiser/actions/view store action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     const store = Store.create({
@@ -32,7 +35,7 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
       requiresInitialContent: false,
     });
     const action = ViewStoreAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         store,
         getStoreContentCallback: () => resolve({ array: [], isLast: true }),
@@ -45,21 +48,23 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
     await executeAction(this);
 
     expect(getModal()).to.have.class('store-modal');
-    expect(getModalHeader().find('h1').text().trim()).to.equal('Store details');
+    expect(getModalHeader().querySelector('h1').textContent.trim())
+      .to.equal('Store details');
 
     await click(
-      getModalBody().find('.bs-tab-onedata .nav-link:contains("Details")')[0]
+      $(getModalBody()).find('.bs-tab-onedata .nav-link:contains("Details")')[0]
     );
 
-    expect(getModalBody().find('.name-field .field-component').text().trim())
-      .to.equal('store1');
+    expect(
+      getModalBody().querySelector('.name-field .field-component').textContent.trim()
+    ).to.equal('store1');
   });
 
   it(
     'returns promise with successful ActionResult after execute() and modal close using "Close"',
     async function () {
       const { resultPromise } = await executeAction(this);
-      await click(getModalFooter().find('.btn-cancel')[0]);
+      await click(getModalFooter().querySelector('.btn-cancel'));
       const actionResult = await resultPromise;
 
       expect(get(actionResult, 'status')).to.equal('done');
@@ -68,8 +73,8 @@ describe('Integration | Utility | workflow visualiser/actions/view store action'
 });
 
 async function executeAction(testCase) {
-  testCase.render(hbs `{{global-modal-mounter}}`);
+  await render(hbs `{{global-modal-mounter}}`);
   const resultPromise = testCase.get('action').execute();
-  await wait();
+  await settled();
   return { resultPromise };
 }

@@ -1,58 +1,56 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
+import { render, focus, blur, fillIn, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import JsonField from 'onedata-gui-common/utils/form-component/json-field';
-import { focus, blur, fillIn } from 'ember-native-dom-helpers';
 import sinon from 'sinon';
 import { set } from '@ember/object';
 
 describe('Integration | Component | form component/json field', function () {
-  setupComponentTest('form-component/json-field', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('field', JsonField.create({
-      ownerSource: this,
+      ownerSource: this.owner,
     }));
   });
 
   it(
     'has class "json-field"',
-    function () {
-      this.render(hbs `{{form-component/json-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/json-field field=field}}`);
 
-      expect(this.$('.json-field')).to.exist;
+      expect(find('.json-field')).to.exist;
     }
   );
 
   it(
     'renders textarea',
-    function () {
-      this.render(hbs `{{form-component/json-field field=field}}`);
+    async function () {
+      await render(hbs `{{form-component/json-field field=field}}`);
 
-      expect(this.$('textarea')).to.exist;
+      expect(find('textarea')).to.exist;
     }
   );
 
   it(
     'can be disabled',
-    function () {
+    async function () {
       this.set('field.isEnabled', false);
 
-      this.render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `{{form-component/json-field field=field}}`);
 
-      expect(this.$('textarea')).to.have.attr('disabled');
+      expect(find('textarea').disabled).to.be.true;
     }
   );
 
   it(
     'notifies field object about lost focus',
-    function () {
+    async function () {
       const focusLostSpy = sinon.spy(this.get('field'), 'focusLost');
 
-      this.render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `{{form-component/json-field field=field}}`);
 
       return focus('textarea')
         .then(() => blur('textarea'))
@@ -62,10 +60,10 @@ describe('Integration | Component | form component/json field', function () {
 
   it(
     'notifies field object about changed value',
-    function () {
+    async function () {
       const valueChangedSpy = sinon.spy(this.get('field'), 'valueChanged');
 
-      this.render(hbs `{{form-component/json-field field=field}}`);
+      await render(hbs `{{form-component/json-field field=field}}`);
 
       return fillIn('textarea', '"test"')
         .then(() => {
@@ -75,38 +73,38 @@ describe('Integration | Component | form component/json field', function () {
     }
   );
 
-  it('sets textarea value to string specified in field object', function () {
+  it('sets textarea value to string specified in field object', async function () {
     this.set('field.value', '"test"');
 
-    this.render(hbs `{{form-component/json-field field=field}}`);
+    await render(hbs `{{form-component/json-field field=field}}`);
 
-    expect(this.$('textarea').val()).to.equal('"test"');
+    expect(find('textarea').value).to.equal('"test"');
   });
 
-  it('sets textarea id according to "fieldId"', function () {
-    this.render(hbs `
+  it('sets textarea id according to "fieldId"', async function () {
+    await render(hbs `
       {{form-component/json-field field=field fieldId="abc"}}
     `);
 
-    expect(this.$('textarea#abc')).to.exist;
+    expect(find('textarea#abc')).to.exist;
   });
 
-  it('renders readonly value when field is in "view" mode', function () {
+  it('renders readonly value when field is in "view" mode', async function () {
     const field = this.get('field');
     set(field, 'value', '"test"');
     field.changeMode('view');
 
-    this.render(hbs `{{form-component/json-field field=field}}`);
+    await render(hbs `{{form-component/json-field field=field}}`);
 
-    expect(this.$('textarea').val()).to.equal('"test"');
-    expect(this.$('textarea')).to.have.attr('readonly');
+    expect(find('textarea').value).to.equal('"test"');
+    expect(find('textarea').readOnly).to.be.true;
   });
 
-  it('sets placeholder according to "placeholder"', function () {
+  it('sets placeholder according to "placeholder"', async function () {
     this.set('field.placeholder', 'test');
 
-    this.render(hbs `{{form-component/json-field field=field}}`);
+    await render(hbs `{{form-component/json-field field=field}}`);
 
-    expect(this.$('textarea').attr('placeholder')).to.equal('test');
+    expect(find('textarea').placeholder).to.equal('test');
   });
 });

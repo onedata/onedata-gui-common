@@ -1,10 +1,16 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupRenderingTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
-import { fillIn, find, findAll, click } from 'ember-native-dom-helpers';
-import { clickTrigger, selectChoose } from '../../../../helpers/ember-power-select';
+import {
+  render,
+  fillIn,
+  find,
+  findAll,
+  click,
+  settled,
+} from '@ember/test-helpers';
+import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import FormFieldsRootGroup from 'onedata-gui-common/utils/form-component/form-fields-root-group';
 import timeSeriesMeasurementEditor from 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
 import { get } from '@ember/object';
@@ -75,13 +81,11 @@ const unitOptions = [{
 }];
 
 describe('Integration | Utility | atm workflow/data spec editor/time series measurement', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupRenderingTest();
 
   beforeEach(function () {
     this.set('rootGroup', FormFieldsRootGroup.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       fields: [
         timeSeriesMeasurementEditor.FormElement.create({
           name: 'valueConstraintsEditor',
@@ -91,13 +95,13 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
   });
 
   it('shows no specs at the beginning', async function () {
-    await renderForm(this);
+    await renderForm();
 
     expect(find('.measurementSpec-field')).to.not.exist;
   });
 
   it('allows to add new measurement spec', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
 
@@ -114,7 +118,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
   });
 
   it('has correct list of available name matcher types', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await clickTrigger('.nameMatcherType-field');
@@ -128,7 +132,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
 
   for (const { label, value } of nameMatcherTypeOptions) {
     it(`allows to choose "${label}" name matcher type`, async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       await selectChoose('.nameMatcherType-field', label);
@@ -138,7 +142,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
   }
 
   it('has correct list of available units', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await clickTrigger('.unit-field');
@@ -152,7 +156,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
 
   for (const { label, value } of unitOptions) {
     it(`allows to choose "${label}" unit`, async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       await selectChoose('.unit-field', label);
@@ -162,7 +166,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
   }
 
   it('shows custom unit input only when custom unit has been selected', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     expect(find('.customUnit-field')).to.not.exist;
@@ -174,7 +178,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
   });
 
   it('marks name matcher and custom unit fields as invalid, when empty', async function () {
-    await renderForm(this);
+    await renderForm();
 
     await click('.add-field-button');
     await selectChoose('.unit-field', 'Custom');
@@ -187,7 +191,7 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
 
   it('allows to provide complete measurement specs and convert it to value constraints',
     async function () {
-      await renderForm(this);
+      await renderForm();
 
       await click('.add-field-button');
       await selectChoose('.nameMatcherType-field', 'Has prefix');
@@ -230,9 +234,9 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
       }],
     });
 
-    await renderForm(this);
+    await renderForm();
     this.set('rootGroup.valuesSource.valueConstraintsEditor', formValues);
-    await wait();
+    await settled();
 
     expect(findAll('.collection-item')).to.have.length(2);
     expect(find('.nameMatcherType-field').textContent).to.contain('Has prefix');
@@ -282,9 +286,8 @@ describe('Integration | Utility | atm workflow/data spec editor/time series meas
   });
 });
 
-async function renderForm(testCase) {
-  testCase.render(hbs `{{form-component/field-renderer field=rootGroup}}`);
-  await wait();
+async function renderForm() {
+  await render(hbs `{{form-component/field-renderer field=rootGroup}}`);
 }
 
 function getSpecFormValues(testCase) {

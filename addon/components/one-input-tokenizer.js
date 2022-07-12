@@ -60,7 +60,13 @@ export default Component.extend({
   internalDisabledChanged: observer('internalDisabled', function internalDisabledChanged() {
     const internalDisabled = this.get('internalDisabled');
     if (!internalDisabled) {
-      scheduleOnce('afterRender', () => this.$('.tknz-input').focus());
+      scheduleOnce('afterRender', () => {
+        const element = this.get('element');
+        const input = element && element.querySelector('.tknz-input');
+        if (input) {
+          input.focus();
+        }
+      });
     }
   }),
 
@@ -97,21 +103,24 @@ export default Component.extend({
 
   // TODO: currently only makes input larger, not smaller
   adjustHeight() {
+    const element = this.get('element');
     /** @type {HTMLElement} */
-    const inputWrapper = this.$('.tknz-input-wrapper')[0];
+    const inputWrapper = element && element.querySelector('.tknz-input-wrapper')[0];
     /** @type {HTMLElement} */
-    const wrapper = this.$('.tknz-wrapper')[0];
+    const wrapper = element && element.querySelector('.tknz-wrapper')[0];
     if (!inputWrapper || !wrapper) {
       return;
     }
     if (inputWrapper.offsetTop + inputWrapper.offsetHeight > wrapper.offsetHeight) {
       const currentHeight = parseInt(window.getComputedStyle(wrapper).height);
-      $(wrapper).css('height', currentHeight + 24 + 'px');
+      wrapper.style.height = currentHeight + 24 + 'px';
     }
   },
 
   getTokenInput() {
-    return this.$(`#${this.get('inputId')}`);
+    const element = this.get('element');
+    const input = element && element.querySelector(`#${this.get('inputId')}`);
+    return input ? $(input) : $();
   },
 
   initInputTokenizer() {
@@ -119,7 +128,8 @@ export default Component.extend({
       placeholder,
       separators,
       tokensChanged,
-    } = this.getProperties('placeholder', 'separators', 'tokensChanged');
+      element,
+    } = this.getProperties('placeholder', 'separators', 'tokensChanged', 'element');
 
     const $tokenInput = this.getTokenInput();
 
@@ -138,7 +148,7 @@ export default Component.extend({
     });
 
     // prevent invoking "back" in Firefox when pressing backspace
-    this.$().on('keydown', event => {
+    element.addEventListener('keydown', (event) => {
       if (event.which === 8) {
         event.stopPropagation();
       }

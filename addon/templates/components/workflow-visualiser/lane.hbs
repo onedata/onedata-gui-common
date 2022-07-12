@@ -40,8 +40,8 @@
           as |popover|
         }}
           {{#click-outside
-            action=(action (mut areActionsOpened) false)
-            except-selector=(concat ".actions-trigger-" elementId)
+            onClickOutside=(action (mut areActionsOpened) false)
+            exceptSelector=(concat ".actions-trigger-" elementId)
           }}
             {{actions-popover-content
               actionsArray=laneActions
@@ -93,8 +93,8 @@
           as |popover|
         }}
           {{#click-outside
-            action=(action (mut areRunActionsOpened) false)
-            except-selector=(concat ".run-actions-trigger-" elementId)
+            onClickOutside=(action (mut areRunActionsOpened) false)
+            exceptSelector=(concat ".run-actions-trigger-" elementId)
           }}
             {{actions-popover-content
               actionsArray=laneRunActions

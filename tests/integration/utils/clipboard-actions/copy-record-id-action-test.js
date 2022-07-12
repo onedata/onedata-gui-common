@@ -1,15 +1,13 @@
 import { expect } from 'chai';
 import { describe, it, beforeEach } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
+import { setupTest } from 'ember-mocha';
 import CopyRecordIdAction from 'onedata-gui-common/utils/clipboard-actions/copy-record-id-action';
 import { get, getProperties, set } from '@ember/object';
 import sinon from 'sinon';
 import { lookupService } from '../../../helpers/stub-service';
 
 describe('Integration | Utility | clipboard actions/copy record id action', function () {
-  setupComponentTest('test-component', {
-    integration: true,
-  });
+  setupTest();
 
   beforeEach(function () {
     const record = {
@@ -19,7 +17,7 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
       entityId: 'someId',
     };
     const action = CopyRecordIdAction.create({
-      ownerSource: this,
+      ownerSource: this.owner,
       context: {
         record,
       },
@@ -56,9 +54,9 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
     const result = await action.execute();
 
     expect(globalClipboardCopyStub).to.be.calledOnce.and.to.be.calledWith(
-      record.entityId, {
+      record.entityId, sinon.match({
         string: 'ID',
-      },
+      }),
     );
     expect(get(result, 'status')).to.equal('done');
   });
@@ -75,9 +73,9 @@ describe('Integration | Utility | clipboard actions/copy record id action', func
       const result = await action.execute();
 
       expect(globalClipboardCopyStub).to.be.calledOnce.and.to.be.calledWith(
-        record.entityId, {
+        record.entityId, sinon.match({
           string: 'group ID',
-        },
+        }),
       );
       expect(get(result, 'status')).to.equal('done');
     });

@@ -1,4 +1,4 @@
-import { triggerEvent } from 'ember-native-dom-helpers';
+import { triggerEvent } from '@ember/test-helpers';
 
 export default class OneTooltipHelper {
   /**

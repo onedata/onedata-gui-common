@@ -5,15 +5,15 @@ import { get } from '@ember/object';
 import sinon from 'sinon';
 
 describe('Unit | Service | url action runner', function () {
-  setupTest('service:url-action-runner', {});
+  setupTest();
 
   it('has empty actionRunners map on init', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:url-action-runner');
     expect(get(service, 'actionRunners')).to.be.empty;
   });
 
   it('allows to register and obtain registered action runner', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:url-action-runner');
     const runner = () => {};
 
     service.registerActionRunner('myAction', runner);
@@ -22,7 +22,7 @@ describe('Unit | Service | url action runner', function () {
   });
 
   it('allows to register and then deregister action runner', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:url-action-runner');
     const runner = () => {};
 
     service.registerActionRunner('myAction', runner);
@@ -32,7 +32,7 @@ describe('Unit | Service | url action runner', function () {
   });
 
   it('remembers only the last registered runner for specific action', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:url-action-runner');
     const runner1 = () => {};
     const runner2 = () => {};
 
@@ -43,7 +43,7 @@ describe('Unit | Service | url action runner', function () {
   });
 
   it('runs an action according to passed Transition object', function () {
-    const service = this.subject();
+    const service = this.owner.lookup('service:url-action-runner');
     const transition = {
       queryParams: {
         action_name: 'myAction',
@@ -68,7 +68,7 @@ describe('Unit | Service | url action runner', function () {
     it(
       `runs an "empty" action according to Transition object, when no runner was found for given action name ${JSON.stringify(actionName)}`,
       function () {
-        const service = this.subject();
+        const service = this.owner.lookup('service:url-action-runner');
         const transition = {
           queryParams: {
             action_name: actionName,

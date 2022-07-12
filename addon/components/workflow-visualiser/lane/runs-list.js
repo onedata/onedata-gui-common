@@ -115,8 +115,9 @@ import layout from '../../../templates/components/workflow-visualiser/lane/runs-
 import { observer, getProperties, computed } from '@ember/object';
 import { next, later, cancel, scheduleOnce } from '@ember/runloop';
 import safeExec from 'onedata-gui-common/utils/safe-method-execution';
-import { array, raw } from 'ember-awesome-macros';
+import { or, neq, array, raw } from 'ember-awesome-macros';
 import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-visualiser/run-utils';
+import config from 'ember-get-config';
 
 /**
  * @typedef {Object} RunsListVisibleRunsPosition
@@ -127,6 +128,7 @@ import { runsRegistryToSortedArray } from 'onedata-gui-common/utils/workflow-vis
 export default Component.extend({
   layout,
   classNames: ['runs-list'],
+  classNameBindings: ['isAnimating:is-animating'],
 
   /**
    * The same as `runsRegistry` field in Lane object.
@@ -227,6 +229,14 @@ export default Component.extend({
    * @type {Boolean}
    */
   updateRunsArrayAfterAnimation: false,
+
+  /**
+   * @type {ComputedProperty<Boolean>}
+   */
+  isAnimating: or(
+    neq('moveAnimationFsm.state', raw('idle')),
+    neq('visibleRunsPositionChangesQueue.length', raw(0))
+  ),
 
   /**
    * @type {ComputedProperty<Array<AtmLaneRunNumber>>}
@@ -429,7 +439,10 @@ export default Component.extend({
       visibleRunsPositionChangesQueue.length === 0 &&
       this.get('moveAnimationFsm.state') === 'idle';
 
-    visibleRunsPositionChangesQueue.push(visibleRunsPosition);
+    this.set('visibleRunsPositionChangesQueue', [
+      ...visibleRunsPositionChangesQueue,
+      visibleRunsPosition,
+    ]);
     if (shouldApplyPositionNow) {
       this.applyNextVisibleRunsPosition();
     }
@@ -556,9 +569,12 @@ export default Component.extend({
       this.updateRunsArray();
     }
     // Remove position change that has been just applied.
-    visibleRunsPositionChangesQueue.shift();
+    const newVisibleRunsPositionChangesQueue = this.set(
+      'visibleRunsPositionChangesQueue',
+      visibleRunsPositionChangesQueue.slice(1)
+    );
     // Run next position change if needed
-    if (visibleRunsPositionChangesQueue.length) {
+    if (newVisibleRunsPositionChangesQueue.length) {
       this.applyNextVisibleRunsPosition();
     }
   },
@@ -660,7 +676,10 @@ export default Component.extend({
       element.removeEventListener('transitioncancel', endTransitionHandler);
       this.scheduleActionOnAnimationFsm('removeIndicators', { moveStep });
     };
-    transitionTimeoutTimerId = later(endTransitionHandler, 400);
+    transitionTimeoutTimerId = later(
+      endTransitionHandler,
+      config.environment === 'test' ? 1 : 400
+    );
     element.addEventListener('transitionend', endTransitionHandler);
     element.addEventListener('transitioncancel', endTransitionHandler);
   },
