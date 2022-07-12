@@ -4,6 +4,10 @@
     width: 15em;
   }
 
+  > .control-label {
+    margin-bottom: 5px;
+  }
+
   .measurementSpec-children > * {
     flex-wrap: wrap;
   }

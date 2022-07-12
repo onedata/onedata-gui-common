@@ -95,6 +95,7 @@ $collapse-transition-vertical: $width-collapse-transition, transition-linear(pad
 @import 'onedata-gui-common/utils/embedded-iframe';
 @import 'onedata-gui-common/utils/task-resources-fields';
 @import 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/time-series-measurement';
+@import 'onedata-gui-common/utils/atm-workflow/data-spec-editor/value-constraints-editors/file';
 @import 'onedata-gui-common/utils/atm-workflow/store-config-editors/time-series';
 @import 'onedata-gui-common/utils/atm-workflow/store-content-update-options-editor/time-series';
 
