@@ -9,6 +9,10 @@
     text-align: left;
   }
 
+  > .field-component {
+    margin-bottom: -$padding-base-vertical;
+  }
+
   .collection-item {
     min-width: 0;
     width: 15em;

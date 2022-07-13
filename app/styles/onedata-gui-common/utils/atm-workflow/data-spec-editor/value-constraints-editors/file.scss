@@ -1,8 +1,10 @@
 .file-value-constraints-editor {
-  .control-label {
-    padding-top: 0;
-    margin-bottom: 5px;
-    text-align: left;
+  .form-group {
+    .control-label {
+      padding-top: 0;
+      margin-bottom: 5px;
+      text-align: left;
+    }
   }
 
   &.field-edit-mode .control-label {

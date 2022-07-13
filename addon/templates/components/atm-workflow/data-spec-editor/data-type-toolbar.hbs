@@ -32,8 +32,8 @@
     open=isRemoveWarnOpened
   }}
     {{#click-outside
-      action=(action "toggleRemoveWarn" false)
-      except-selector=(local-selector elementId ".remove-trigger")
+      onClickOutside=(action "toggleRemoveWarn" false)
+      exceptSelector=(local-selector elementId ".remove-trigger")
     }}
       <p>{{tt this "removeWarn.content"}}</p>
       <div class="text-right">
